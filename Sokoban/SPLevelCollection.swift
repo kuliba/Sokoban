@@ -33,7 +33,7 @@ class SPLevelCollection: NSObject, XMLParserDelegate {
         }
     }
     
-    func Load(FileName: String) {
+    func LoadLevelCollection(FileName: String) {
         self.fileName = FileName
         let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
         let url = NSURL(fileURLWithPath: path)

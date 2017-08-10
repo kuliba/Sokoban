@@ -16,7 +16,7 @@ final class SPStorage: NSObject {
         get {
             let CurrentLevelCollection = SPLevelCollection.shared
             if CurrentLevelCollection.levels.count == 0 || CurrentLevelCollection.fileName != SPSettings.shared.CurrentLevelCollectionFileName {
-                CurrentLevelCollection.Load(FileName: SPSettings.shared.CurrentLevelCollectionFileName
+                CurrentLevelCollection.LoadLevelCollection(FileName: SPSettings.shared.CurrentLevelCollectionFileName
                 )
             }
             return CurrentLevelCollection

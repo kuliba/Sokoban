@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="WLc-V9-UvM">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -9,37 +9,45 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
-        <scene sceneID="tne-QT-ifu">
+        <!--Level View Controller-->
+        <scene sceneID="0yy-ge-gjP">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Sokoban" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="levelViewController" id="WLc-V9-UvM" customClass="LevelViewController" customModule="Sokoban" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
-                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                        <viewControllerLayoutGuide type="top" id="5Xs-FN-Hw8"/>
+                        <viewControllerLayoutGuide type="bottom" id="zWs-Dj-EJ7"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                    <view key="view" contentMode="scaleToFill" id="tlD-9p-XXH">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aE5-ka-cKe">
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="xPF-ed-QRd">
+                                <rect key="frame" x="170" y="316" width="37" height="37"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </activityIndicatorView>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZGD-m1-oWW">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <color key="backgroundColor" red="0.29803921570000003" green="0.68627450980000004" blue="0.31372549020000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <connections>
+                                    <outlet property="delegate" destination="WLc-V9-UvM" id="dWd-s4-bXg"/>
+                                </connections>
                             </scrollView>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="aE5-ka-cKe" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="EJu-mT-DXv"/>
-                            <constraint firstItem="aE5-ka-cKe" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="dZE-yJ-UYG"/>
-                            <constraint firstItem="aE5-ka-cKe" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="flY-DE-oLT"/>
-                            <constraint firstItem="aE5-ka-cKe" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="hyA-9T-ggV"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="aE5-ka-cKe" secondAttribute="bottom" id="iFQ-sh-hDB"/>
-                            <constraint firstAttribute="trailing" secondItem="aE5-ka-cKe" secondAttribute="trailing" id="wRp-We-N2I"/>
+                            <constraint firstItem="ZGD-m1-oWW" firstAttribute="top" secondItem="tlD-9p-XXH" secondAttribute="top" id="3aO-Rh-bkO"/>
+                            <constraint firstAttribute="trailing" secondItem="ZGD-m1-oWW" secondAttribute="trailing" id="AMa-uX-QFZ"/>
+                            <constraint firstItem="ZGD-m1-oWW" firstAttribute="bottom" secondItem="zWs-Dj-EJ7" secondAttribute="top" id="Hhe-6M-WQ4"/>
+                            <constraint firstItem="ZGD-m1-oWW" firstAttribute="leading" secondItem="tlD-9p-XXH" secondAttribute="leading" id="Rkx-fv-eLK"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="ActivityIndicatorView" destination="xPF-ed-QRd" id="YUE-e1-3xe"/>
+                        <outlet property="levelScrollView" destination="ZGD-m1-oWW" id="6zd-Gl-2Mf"/>
+                    </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yzd-Wf-408" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="136.80000000000001" y="107.49625187406298"/>
+            <point key="canvasLocation" x="-532" y="400.74962518740631"/>
         </scene>
     </scenes>
 </document>

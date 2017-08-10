@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 class SPLevel: NSObject {
 
@@ -18,9 +19,29 @@ class SPLevel: NSObject {
     var height: Int {
         get { return table.count }
     }
+    var staticElements: Array<UIImageView>?
+    var shownPossibleMoves = false
+    var shownPossiblePushes = false
+    var isProcessing = false
+    var selectedBox: SPCell? {
+        get {
+            for (_, row) in table.enumerated() {
+                for (_, cell) in row.enumerated() {
+                    if cell.boxSelected { return cell }
+                }
+            }
+            return nil
+        }
+        set {
+            for (_, row) in table.enumerated() {
+                for (_, cell) in row.enumerated() {
+                    cell.boxSelected = false
+                }
+            }
+        }
+    }
     
     func Load(level: String, id: String) {
-        
         self.id = id
         
         func initRow(rowString: String) -> (Array<SPCell>) {
@@ -49,8 +70,7 @@ class SPLevel: NSObject {
                 }
                 
                 rowArray.append(cell)
-            }
-            
+            }            
             return rowArray
         }
         
@@ -119,14 +139,14 @@ class SPLevel: NSObject {
         }
         
         // инициализируем внешний вид стенок
-        for i in 0...table.count - 1 {
-            for j in 0...table[i].count {
-                guard table[i][j].type == .wall else { continue }
+        for (i, row) in table.enumerated() {
+            for (j, cell) in row.enumerated() {
+                guard cell.type == .wall else { continue }
                 let wallTopExists = i > 0 && table[i - 1][j].type == .wall
                 let wallRightExists = j < table[i].count - 1 && table[i][j + 1].type == .wall
                 let wallBottomExists = i < table.count - 1 && table[i + 1][j].type == .wall
                 let wallLeftExists = j > 0 && table[i][j - 1].type == .wall
-            
+
                 if wallTopExists && wallRightExists && !wallBottomExists && !wallLeftExists {
                     table[i][j].wallFigure = .topRight
                 } else if  wallTopExists &&  wallRightExists && !wallBottomExists &&  wallLeftExists {
@@ -154,11 +174,34 @@ class SPLevel: NSObject {
                 } else if !wallTopExists && !wallRightExists && !wallBottomExists &&  wallLeftExists {
                     table[i][j].wallFigure = .left
                 } else if  wallTopExists && !wallRightExists && !wallBottomExists && !wallLeftExists {
-                    table[i][j].wallFigure = .topRigthLeft
+                    table[i][j].wallFigure = .top
                 } else if  wallTopExists && !wallRightExists &&  wallBottomExists && !wallLeftExists {
                     table[i][j].wallFigure = .topBottom
-                } else if !wallTopExists && !wallRightExists && !wallBottomExists && !wallLeftExists {
+                } else if !wallTopExists && !wallRightExists &&  wallBottomExists && !wallLeftExists {
                     table[i][j].wallFigure = .bottom
+                } else {
+                    table[i][j].wallFigure = .undefined
+                }
+            }
+        }
+    }
+
+    func startProcessing() {
+        let operaionQueue = OperationQueue()
+        operaionQueue.maxConcurrentOperationCount = 1
+        for (i, row) in table.enumerated() {
+            for (j, cell) in row.enumerated() {
+                if cell.type == .player || cell.type == .playerOnAGoal {
+                    // Запускаем рассчет возможных передвижений игрока
+                    let moveProcessingOperation = SPMoveProcessingOperation(table: table, playerRow: i, playerColumn: j)
+//                    moveProcessingOperation.queuePriority = .veryLow
+                    operaionQueue.addOperation(moveProcessingOperation)
+                } else if cell.type == .box || cell.type == .boxOnAGoal {
+                    // Запускаем рассчет возможных перемещений ящика
+                    let pushProcessingOperation = SPPushProcessingOperation(table: table, boxRow: i, boxColumn: j)
+                    cell.dynamicElement?.alpha = 0.3
+//                    pushProcessingOperation.queuePriority = .veryLow
+                    operaionQueue.addOperation(pushProcessingOperation)
                 }
             }
         }

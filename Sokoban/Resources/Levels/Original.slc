@@ -5,6 +5,24 @@
 The 50 original levels from Sokoban plus the 40 from Extra.
   </Description>
   <LevelCollection Copyright="Thinking Rabbit" MaxWidth="20" MaxHeight="17">
+      <Level Id="1" Width="28" Height="16">
+          <L>                ###</L>
+          <L>               #   #</L>
+          <L>              #     #</L>
+          <L>             #   . . #</L>
+          <L>     ####   #   # #  #</L>
+          <L>    #   #  #  #  . . #####</L>
+          <L>    #   # #      #   #   #</L>
+          <L>     #  ## $$ # #. . #   #</L>
+          <L>     ## $ $  $  ##   #   #</L>
+          <L>    ##  $$  #@$ #. . #   #</L>
+          <L>  ### . $ $    $##   #   #</L>
+          <L>###.      $ #  $ #   #   #</L>
+          <L>   #  .### # #   . . #   ###</L>
+          <L>    ###  # # ####    #</L>
+          <L>         # # #       #</L>
+          <L>         ### #########</L>
+      </Level>
     <Level Id="1" Width="19" Height="11">
       <L>    #####</L>
       <L>    #   #</L>

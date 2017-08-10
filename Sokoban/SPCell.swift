@@ -39,47 +39,74 @@ enum SPWallFigure {
     case bottom
 }
 
-class SPCell: NSObject {
+class SPCell {
     var type: SPCellType = .undefined
     var wallFigure: SPWallFigure = .undefined
+    var dynamicElement: UIImageView?
+    var boxSelected = false
+    var processingCells: Array<(Int, Int)>? // Массив с индексами ячеек, куда возможно передвинуть ящик или пойти игроком
     var imageName: String {
         get {
+            if type == .goal {
+                return "goal"
+            } else if type == .box {
+                return "box"
+            } else if type == .player {
+                return "player"
+            } else if type == .boxOnAGoal {
+                return "boxOnAGoal"
+            } else if type == .playerOnAGoal {
+                return "player"
+            }
+            
             switch self.wallFigure {
                 case .topRight:
-                    return "topRight.png"
+                    return "wallTopRight"
                 case .topRigthLeft:
-                    return "topRightLeft.png"
+                    return "wallTopRightLeft"
                 case .topLeft:
-                    return "topLeft.png"
+                    return "wallTopLeft"
                 case .topRightBottom:
-                    return "topRightBottom.png"
+                    return "wallTopRightBottom"
                 case .topRightBottomLeft:
-                    return "topRightBottomLeft"
+                    return "wallTopRightBottomLeft"
                 case .topBottomLeft:
-                    return "topBottomLeft"
+                    return "wallTopBottomLeft"
                 case .rightBottom:
-                    return "rightBottom"
+                    return "wallRightBottom"
                 case .rightBottomLeft:
-                    return "rightBottomLeft"
+                    return "wallRightBottomLeft"
                 case .bottomLeft:
-                    return "bottomLeft.png"
+                    return "wallBottomLeft"
                 case .center:
-                    return "center.png"
+                    return "wallCenter"
                 case .right:
-                    return "right.png"
+                    return "wallRight"
                 case .rightLeft:
-                    return "rightLeft.png"
+                    return "wallRightLeft"
                 case .left:
-                    return "left.png"
+                    return "wallLeft"
                 case .top:
-                    return "top.png"
+                    return "wallTop"
                 case .topBottom:
-                    return "topBottom.png"
+                    return "wallTopBottom"
                 case .bottom:
-                    return "bottom.png"
+                    return "wallBottom"
                 default:
-                    return "space.png"
+                    return "space"
             }
         }
+    }
+    
+    func copy() -> SPCell {
+        let result = SPCell()
+        
+        result.type = self.type
+        result.wallFigure = self.wallFigure
+        result.dynamicElement = self.dynamicElement
+        result.boxSelected = self.boxSelected
+        result.processingCells = self.processingCells
+        
+        return result
     }
 }

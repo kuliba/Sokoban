@@ -11,8 +11,11 @@
 		A78096541EEFB749007F8203 /* SPLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78096531EEFB749007F8203 /* SPLevel.swift */; };
 		A7901D161EE69BC30099A145 /* SPLevelCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7901D151EE69BC30099A145 /* SPLevelCollection.swift */; };
 		A7901D181EE69EF80099A145 /* SPSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7901D171EE69EF80099A145 /* SPSettings.swift */; };
+		A795698F1EFD3A9500065639 /* LevelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A795698E1EFD3A9500065639 /* LevelViewController.swift */; };
+		A79569961F0389E500065639 /* SPRoutines.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79569951F0389E500065639 /* SPRoutines.swift */; };
+		A7F38BC41F33985D003E42FD /* SPMoveProcessingOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F38BC31F33985D003E42FD /* SPMoveProcessingOperation.swift */; };
+		A7F38BC61F385A1E003E42FD /* SPPushProcessingOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F38BC51F385A1E003E42FD /* SPPushProcessingOperation.swift */; };
 		A7F969801EDFEB9D0086C5F5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F9697F1EDFEB9D0086C5F5 /* AppDelegate.swift */; };
-		A7F969821EDFEB9D0086C5F5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F969811EDFEB9D0086C5F5 /* ViewController.swift */; };
 		A7F969851EDFEB9D0086C5F5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A7F969831EDFEB9D0086C5F5 /* Main.storyboard */; };
 		A7F969871EDFEB9D0086C5F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A7F969861EDFEB9D0086C5F5 /* Assets.xcassets */; };
 		A7F9698A1EDFEB9D0086C5F5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A7F969881EDFEB9D0086C5F5 /* LaunchScreen.storyboard */; };
@@ -20,14 +23,30 @@
 		A7F969981EE00C5A0086C5F5 /* Original.slc in Resources */ = {isa = PBXBuildFile; fileRef = A7F969971EE00C5A0086C5F5 /* Original.slc */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		A7D531A41F3C33100029284F /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		A71142E41EF260AD00F07ECF /* SPCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPCell.swift; sourceTree = "<group>"; };
 		A78096531EEFB749007F8203 /* SPLevel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPLevel.swift; sourceTree = "<group>"; };
+		A78E4E051EFB8FA70037A4D4 /* Sokoban.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sokoban.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7901D151EE69BC30099A145 /* SPLevelCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPLevelCollection.swift; sourceTree = "<group>"; };
 		A7901D171EE69EF80099A145 /* SPSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPSettings.swift; sourceTree = "<group>"; };
-		A7F9697C1EDFEB9D0086C5F5 /* Sokoban.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = Sokoban.app; path = "/Users/Valentin/Dropbox/Clickwood/Sokoban/build/Debug-iphoneos/Sokoban.app"; sourceTree = "<absolute>"; };
+		A795698E1EFD3A9500065639 /* LevelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LevelViewController.swift; sourceTree = "<group>"; };
+		A79569951F0389E500065639 /* SPRoutines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPRoutines.swift; sourceTree = "<group>"; };
+		A7F38BC31F33985D003E42FD /* SPMoveProcessingOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPMoveProcessingOperation.swift; sourceTree = "<group>"; };
+		A7F38BC51F385A1E003E42FD /* SPPushProcessingOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPPushProcessingOperation.swift; sourceTree = "<group>"; };
 		A7F9697F1EDFEB9D0086C5F5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		A7F969811EDFEB9D0086C5F5 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		A7F969841EDFEB9D0086C5F5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A7F969861EDFEB9D0086C5F5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A7F969891EDFEB9D0086C5F5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -47,9 +66,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A79569921F0385E100065639 /* Production */ = {
+			isa = PBXGroup;
+			children = (
+				A78E4E051EFB8FA70037A4D4 /* Sokoban.app */,
+			);
+			name = Production;
+			sourceTree = "<group>";
+		};
 		A7F969731EDFEB9D0086C5F5 = {
 			isa = PBXGroup;
 			children = (
+				A79569921F0385E100065639 /* Production */,
 				A7F9697E1EDFEB9D0086C5F5 /* Sokoban */,
 			);
 			sourceTree = "<group>";
@@ -57,14 +85,17 @@
 		A7F9697E1EDFEB9D0086C5F5 /* Sokoban */ = {
 			isa = PBXGroup;
 			children = (
+				A7F38BC31F33985D003E42FD /* SPMoveProcessingOperation.swift */,
+				A7F38BC51F385A1E003E42FD /* SPPushProcessingOperation.swift */,
 				A7F9697F1EDFEB9D0086C5F5 /* AppDelegate.swift */,
-				A7F969811EDFEB9D0086C5F5 /* ViewController.swift */,
 				A7F969831EDFEB9D0086C5F5 /* Main.storyboard */,
+				A795698E1EFD3A9500065639 /* LevelViewController.swift */,
 				A7F969911EDFEDF30086C5F5 /* SPStorage.swift */,
 				A7901D151EE69BC30099A145 /* SPLevelCollection.swift */,
 				A7901D171EE69EF80099A145 /* SPSettings.swift */,
 				A78096531EEFB749007F8203 /* SPLevel.swift */,
 				A71142E41EF260AD00F07ECF /* SPCell.swift */,
+				A79569951F0389E500065639 /* SPRoutines.swift */,
 				A7F969861EDFEB9D0086C5F5 /* Assets.xcassets */,
 				A7F969881EDFEB9D0086C5F5 /* LaunchScreen.storyboard */,
 				A7F9698B1EDFEB9D0086C5F5 /* Info.plist */,
@@ -99,6 +130,7 @@
 				A7F969781EDFEB9D0086C5F5 /* Sources */,
 				A7F969791EDFEB9D0086C5F5 /* Frameworks */,
 				A7F9697A1EDFEB9D0086C5F5 /* Resources */,
+				A7D531A41F3C33100029284F /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -106,7 +138,7 @@
 			);
 			name = Sokoban;
 			productName = Sokoban;
-			productReference = A7F9697C1EDFEB9D0086C5F5 /* Sokoban.app */;
+			productReference = A78E4E051EFB8FA70037A4D4 /* Sokoban.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -163,13 +195,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A7F969821EDFEB9D0086C5F5 /* ViewController.swift in Sources */,
 				A78096541EEFB749007F8203 /* SPLevel.swift in Sources */,
 				A7901D161EE69BC30099A145 /* SPLevelCollection.swift in Sources */,
+				A795698F1EFD3A9500065639 /* LevelViewController.swift in Sources */,
 				A7F969921EDFEDF30086C5F5 /* SPStorage.swift in Sources */,
 				A71142E51EF260AD00F07ECF /* SPCell.swift in Sources */,
+				A79569961F0389E500065639 /* SPRoutines.swift in Sources */,
+				A7F38BC41F33985D003E42FD /* SPMoveProcessingOperation.swift in Sources */,
 				A7901D181EE69EF80099A145 /* SPSettings.swift in Sources */,
 				A7F969801EDFEB9D0086C5F5 /* AppDelegate.swift in Sources */,
+				A7F38BC61F385A1E003E42FD /* SPPushProcessingOperation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -299,6 +334,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.clickwood.Sokoban;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -312,6 +348,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.clickwood.Sokoban;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
