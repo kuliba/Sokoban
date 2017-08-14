@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A70281D01F416AD000580B64 /* SPMD5.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70281CF1F416AD000580B64 /* SPMD5.swift */; };
 		A71142E51EF260AD00F07ECF /* SPCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A71142E41EF260AD00F07ECF /* SPCell.swift */; };
 		A78096541EEFB749007F8203 /* SPLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78096531EEFB749007F8203 /* SPLevel.swift */; };
 		A7901D161EE69BC30099A145 /* SPLevelCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7901D151EE69BC30099A145 /* SPLevelCollection.swift */; };
@@ -37,6 +38,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A70281CF1F416AD000580B64 /* SPMD5.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPMD5.swift; sourceTree = "<group>"; };
 		A71142E41EF260AD00F07ECF /* SPCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPCell.swift; sourceTree = "<group>"; };
 		A78096531EEFB749007F8203 /* SPLevel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPLevel.swift; sourceTree = "<group>"; };
 		A78E4E051EFB8FA70037A4D4 /* Sokoban.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sokoban.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -85,6 +87,7 @@
 		A7F9697E1EDFEB9D0086C5F5 /* Sokoban */ = {
 			isa = PBXGroup;
 			children = (
+				A70281CF1F416AD000580B64 /* SPMD5.swift */,
 				A7F38BC31F33985D003E42FD /* SPMoveProcessingOperation.swift */,
 				A7F38BC51F385A1E003E42FD /* SPPushProcessingOperation.swift */,
 				A7F9697F1EDFEB9D0086C5F5 /* AppDelegate.swift */,
@@ -199,6 +202,7 @@
 				A7901D161EE69BC30099A145 /* SPLevelCollection.swift in Sources */,
 				A795698F1EFD3A9500065639 /* LevelViewController.swift in Sources */,
 				A7F969921EDFEDF30086C5F5 /* SPStorage.swift in Sources */,
+				A70281D01F416AD000580B64 /* SPMD5.swift in Sources */,
 				A71142E51EF260AD00F07ECF /* SPCell.swift in Sources */,
 				A79569961F0389E500065639 /* SPRoutines.swift in Sources */,
 				A7F38BC41F33985D003E42FD /* SPMoveProcessingOperation.swift in Sources */,

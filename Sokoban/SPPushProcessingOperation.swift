@@ -23,7 +23,7 @@ class SPPushProcessingOperation: Operation {
 
     override func main() {
         
-        var levelStringArray = Array<String>()
+        var MD5Array = Array<String>()
         
         func canToPush(levelTable: Array<Array<SPCell>>, keyCellsInfo: keyCellsInfo) -> Bool {
             
@@ -177,9 +177,10 @@ class SPPushProcessingOperation: Operation {
         func checkPossibleToPush(levelTable: Array<Array<SPCell>>, path: String) {
 
             let levelString = levelToString(table: levelTable)
+            let MD5String = MD5(levelString)
  
-            if levelStringArray.contains(levelString) { return }
-            levelStringArray.append(levelString)
+            if MD5Array.contains(MD5String) { return }
+            MD5Array.append(MD5String)
             
             for k in 0...3 {
                 let keyCellsInfo = getKeyCellsInfo(table: levelTable)
