@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  ForaBank
 //
-//  Created by IM on 25/09/2018.
+//  Created by Ilya Masalov (xmasalov@gmail.com) on 25/09/2018.
 //  Copyright © 2018 BraveRobin. All rights reserved.
 //
 

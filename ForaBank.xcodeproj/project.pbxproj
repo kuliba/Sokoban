@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		09797559215A49020044C00A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09797558215A49020044C00A /* AppDelegate.swift */; };
-		0979755B215A49020044C00A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0979755A215A49020044C00A /* ViewController.swift */; };
 		0979755E215A49020044C00A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0979755C215A49020044C00A /* Main.storyboard */; };
 		09797560215A49040044C00A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0979755F215A49040044C00A /* Assets.xcassets */; };
 		09797563215A49040044C00A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 09797561215A49040044C00A /* LaunchScreen.storyboard */; };
@@ -17,7 +16,6 @@
 /* Begin PBXFileReference section */
 		09797555215A49020044C00A /* ForaBank.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ForaBank.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		09797558215A49020044C00A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		0979755A215A49020044C00A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		0979755D215A49020044C00A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0979755F215A49040044C00A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		09797562215A49040044C00A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -55,13 +53,36 @@
 			isa = PBXGroup;
 			children = (
 				09797558215A49020044C00A /* AppDelegate.swift */,
-				0979755A215A49020044C00A /* ViewController.swift */,
 				0979755C215A49020044C00A /* Main.storyboard */,
 				0979755F215A49040044C00A /* Assets.xcassets */,
 				09797561215A49040044C00A /* LaunchScreen.storyboard */,
+				09E0F131215A617A0042FB6A /* Controller */,
+				09E0F132215A61850042FB6A /* Model */,
+				09E0F133215A618E0042FB6A /* View */,
 				09797564215A49040044C00A /* Info.plist */,
 			);
 			path = ForaBank;
+			sourceTree = "<group>";
+		};
+		09E0F131215A617A0042FB6A /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		09E0F132215A61850042FB6A /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		09E0F133215A618E0042FB6A /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -135,7 +156,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0979755B215A49020044C00A /* ViewController.swift in Sources */,
 				09797559215A49020044C00A /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
