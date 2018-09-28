@@ -40,6 +40,7 @@
 		09E0F146215A68DC0042FB6A /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E0F145215A68DC0042FB6A /* CustomTabBar.swift */; };
 		09E0F148215A69310042FB6A /* CustomTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E0F147215A69310042FB6A /* CustomTabBarItem.swift */; };
 		09E0F14A215A6C2F0042FB6A /* TabBar.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0979755C215A49020044C00A /* TabBar.storyboard */; };
+		09FC8FED215BB2B200A4694B /* ProfileMenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,6 +79,7 @@
 		09E0F143215A65F10042FB6A /* Profile.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
 		09E0F145215A68DC0042FB6A /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
 		09E0F147215A69310042FB6A /* CustomTabBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarItem.swift; sourceTree = "<group>"; };
+		09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileMenuTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +148,7 @@
 			children = (
 				09E0F12F215A5B9D0042FB6A /* TabBarController.swift */,
 				0930F167215B653D00CFB593 /* ProfileViewController.swift */,
+				09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -286,6 +289,7 @@
 				09E0F130215A5B9D0042FB6A /* TabBarController.swift in Sources */,
 				0930F16A215B6CB800CFB593 /* GradientView.swift in Sources */,
 				0930F16C215B704A00CFB593 /* CircularImageView.swift in Sources */,
+				09FC8FED215BB2B200A4694B /* ProfileMenuTableViewController.swift in Sources */,
 				09D3C04C215E5AE800998F57 /* ChatDialogsTableView.swift in Sources */,
 				09797559215A49020044C00A /* AppDelegate.swift in Sources */,
 				09E0F148215A69310042FB6A /* CustomTabBarItem.swift in Sources */,
