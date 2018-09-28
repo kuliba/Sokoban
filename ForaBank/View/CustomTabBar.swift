@@ -21,7 +21,6 @@ class CustomTabBar: UITabBar {
 private extension CustomTabBar {
     
     func setTabBarWhite() {
-        backgroundImage = UIImage()
-        shadowImage = UIImage()
+        backgroundImage = nil
     }
 }
