@@ -17,6 +17,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: - Lifecycle
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        setNavigationBarAppearance()
+        
         return true
     }
 
@@ -45,4 +48,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 // MARK: - Private methods
 private extension AppDelegate {
+    
+    func setNavigationBarAppearance() {
+        // Set navigation bar to transparent
+        UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
+        UINavigationBar.appearance().shadowImage = UIImage()
+        
+        // Set navigation bar font
+        let font = UIFont(name: "Roboto-Regular", size: 16) ?? UIFont.systemFont(ofSize: 16)
+        UINavigationBar.appearance().titleTextAttributes = [
+            NSAttributedString.Key.font: font,
+            NSAttributedString.Key.foregroundColor: UIColor.white
+        ]
+    }
 }
