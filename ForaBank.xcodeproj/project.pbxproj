@@ -22,6 +22,8 @@
 		09797559215A49020044C00A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09797558215A49020044C00A /* AppDelegate.swift */; };
 		09797560215A49040044C00A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0979755F215A49040044C00A /* Assets.xcassets */; };
 		09797563215A49040044C00A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 09797561215A49040044C00A /* LaunchScreen.storyboard */; };
+		09D3C03D215CD03E00998F57 /* SearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D3C03B215CD03E00998F57 /* SearchCell.swift */; };
+		09D3C03E215CD03E00998F57 /* SearchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09D3C03C215CD03E00998F57 /* SearchCell.xib */; };
 		09E0F130215A5B9D0042FB6A /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E0F12F215A5B9D0042FB6A /* TabBarController.swift */; };
 		09E0F135215A61EB0042FB6A /* Feed.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 09E0F134215A61EB0042FB6A /* Feed.storyboard */; };
 		09E0F13D215A65310042FB6A /* Deposits.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 09E0F13B215A65310042FB6A /* Deposits.storyboard */; };
@@ -52,6 +54,8 @@
 		0979755F215A49040044C00A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		09797562215A49040044C00A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		09797564215A49040044C00A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		09D3C03B215CD03E00998F57 /* SearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCell.swift; sourceTree = "<group>"; };
+		09D3C03C215CD03E00998F57 /* SearchCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchCell.xib; sourceTree = "<group>"; };
 		09E0F12F215A5B9D0042FB6A /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		09E0F134215A61EB0042FB6A /* Feed.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Feed.storyboard; sourceTree = "<group>"; };
 		09E0F13C215A65310042FB6A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = ForaBank/Base.lproj/Deposits.storyboard; sourceTree = "<group>"; };
@@ -143,6 +147,8 @@
 			children = (
 				09E0F145215A68DC0042FB6A /* CustomTabBar.swift */,
 				09E0F147215A69310042FB6A /* CustomTabBarItem.swift */,
+				09D3C03B215CD03E00998F57 /* SearchCell.swift */,
+				09D3C03C215CD03E00998F57 /* SearchCell.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -237,6 +243,7 @@
 				0930F17E215B78B000CFB593 /* Roboto-Italic.ttf in Resources */,
 				0930F17D215B78B000CFB593 /* Roboto-BoldItalic.ttf in Resources */,
 				0930F17A215B78B000CFB593 /* Roboto-Black.ttf in Resources */,
+				09D3C03E215CD03E00998F57 /* SearchCell.xib in Resources */,
 				0930F184215B78B000CFB593 /* Roboto-Thin.ttf in Resources */,
 				0930F17B215B78B000CFB593 /* Roboto-BlackItalic.ttf in Resources */,
 			);
@@ -249,6 +256,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				09D3C03D215CD03E00998F57 /* SearchCell.swift in Sources */,
 				09E0F146215A68DC0042FB6A /* CustomTabBar.swift in Sources */,
 				09E0F130215A5B9D0042FB6A /* TabBarController.swift in Sources */,
 				09797559215A49020044C00A /* AppDelegate.swift in Sources */,
