@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0930F166215B5CDB00CFB593 /* RoundedEdgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0930F165215B5CDB00CFB593 /* RoundedEdgeView.swift */; };
+		0930F168215B653D00CFB593 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0930F167215B653D00CFB593 /* ProfileViewController.swift */; };
 		0930F16A215B6CB800CFB593 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0930F169215B6CB800CFB593 /* GradientView.swift */; };
 		0930F16C215B704A00CFB593 /* CircularImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0930F16B215B704A00CFB593 /* CircularImageView.swift */; };
 		0930F17A215B78B000CFB593 /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0930F174215B78A200CFB593 /* Roboto-Black.ttf */; };
@@ -43,6 +44,7 @@
 
 /* Begin PBXFileReference section */
 		0930F165215B5CDB00CFB593 /* RoundedEdgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedEdgeView.swift; sourceTree = "<group>"; };
+		0930F167215B653D00CFB593 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ProfileViewController.swift; path = ForaBank/Controller/ProfileViewController.swift; sourceTree = SOURCE_ROOT; };
 		0930F169215B6CB800CFB593 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		0930F16B215B704A00CFB593 /* CircularImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularImageView.swift; sourceTree = "<group>"; };
 		0930F16E215B78A100CFB593 /* Roboto-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-LightItalic.ttf"; sourceTree = "<group>"; };
@@ -143,6 +145,7 @@
 			isa = PBXGroup;
 			children = (
 				09E0F12F215A5B9D0042FB6A /* TabBarController.swift */,
+				0930F167215B653D00CFB593 /* ProfileViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -277,6 +280,7 @@
 			files = (
 				09D3C041215CE5D100998F57 /* DialogCell.swift in Sources */,
 				09D3C03D215CD03E00998F57 /* SearchCell.swift in Sources */,
+				0930F168215B653D00CFB593 /* ProfileViewController.swift in Sources */,
 				0930F166215B5CDB00CFB593 /* RoundedEdgeView.swift in Sources */,
 				09E0F146215A68DC0042FB6A /* CustomTabBar.swift in Sources */,
 				09E0F130215A5B9D0042FB6A /* TabBarController.swift in Sources */,
