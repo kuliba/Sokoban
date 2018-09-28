@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0930F16A215B6CB800CFB593 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0930F169215B6CB800CFB593 /* GradientView.swift */; };
 		0930F17A215B78B000CFB593 /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0930F174215B78A200CFB593 /* Roboto-Black.ttf */; };
 		0930F17B215B78B000CFB593 /* Roboto-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0930F179215B78A200CFB593 /* Roboto-BlackItalic.ttf */; };
 		0930F17C215B78B000CFB593 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0930F177215B78A200CFB593 /* Roboto-Bold.ttf */; };
@@ -38,6 +39,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0930F169215B6CB800CFB593 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		0930F16E215B78A100CFB593 /* Roboto-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-LightItalic.ttf"; sourceTree = "<group>"; };
 		0930F16F215B78A100CFB593 /* Roboto-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Medium.ttf"; sourceTree = "<group>"; };
 		0930F170215B78A100CFB593 /* Roboto-MediumItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-MediumItalic.ttf"; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 			children = (
 				09E0F145215A68DC0042FB6A /* CustomTabBar.swift */,
 				09E0F147215A69310042FB6A /* CustomTabBarItem.swift */,
+				0930F169215B6CB800CFB593 /* GradientView.swift */,
 				09D3C03F215CE5D100998F57 /* DialogCell.swift */,
 				09D3C040215CE5D100998F57 /* DialogCell.xib */,
 				09D3C03B215CD03E00998F57 /* SearchCell.swift */,
@@ -267,6 +270,7 @@
 				09D3C03D215CD03E00998F57 /* SearchCell.swift in Sources */,
 				09E0F146215A68DC0042FB6A /* CustomTabBar.swift in Sources */,
 				09E0F130215A5B9D0042FB6A /* TabBarController.swift in Sources */,
+				0930F16A215B6CB800CFB593 /* GradientView.swift in Sources */,
 				09797559215A49020044C00A /* AppDelegate.swift in Sources */,
 				09E0F148215A69310042FB6A /* CustomTabBarItem.swift in Sources */,
 			);
