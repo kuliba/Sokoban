@@ -140,6 +140,9 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
+                    <connections>
+                        <segue destination="qdQ-aJ-GbA" kind="show" identifier="1" id="fa6-vN-d8x"/>
+                    </connections>
                 </viewController>
             </objects>
             <point key="canvasLocation" x="1880.8" y="1255.3223388305848"/>
@@ -277,6 +280,22 @@
                 </tableViewController>
             </objects>
             <point key="canvasLocation" x="1881" y="1767"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="lje-Lj-eEY">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ysu-ac-0wa" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <navigationController id="qdQ-aJ-GbA" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="K7D-eI-RyS">
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="rxI-46-uH9">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
+                </navigationController>
+            </objects>
+            <point key="canvasLocation" x="2738" y="1254"/>
         </scene>
     </scenes>
     <resources>
