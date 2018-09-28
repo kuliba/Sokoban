@@ -26,6 +26,7 @@
 		09797559215A49020044C00A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09797558215A49020044C00A /* AppDelegate.swift */; };
 		09797560215A49040044C00A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0979755F215A49040044C00A /* Assets.xcassets */; };
 		09797563215A49040044C00A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 09797561215A49040044C00A /* LaunchScreen.storyboard */; };
+		09D3C03A215CBCAB00998F57 /* ChatDialogsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D3C039215CBCAB00998F57 /* ChatDialogsViewController.swift */; };
 		09D3C03D215CD03E00998F57 /* SearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D3C03B215CD03E00998F57 /* SearchCell.swift */; };
 		09D3C03E215CD03E00998F57 /* SearchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09D3C03C215CD03E00998F57 /* SearchCell.xib */; };
 		09D3C041215CE5D100998F57 /* DialogCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D3C03F215CE5D100998F57 /* DialogCell.swift */; };
@@ -66,6 +67,7 @@
 		0979755F215A49040044C00A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		09797562215A49040044C00A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		09797564215A49040044C00A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		09D3C039215CBCAB00998F57 /* ChatDialogsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDialogsViewController.swift; sourceTree = "<group>"; };
 		09D3C03B215CD03E00998F57 /* SearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCell.swift; sourceTree = "<group>"; };
 		09D3C03C215CD03E00998F57 /* SearchCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchCell.xib; sourceTree = "<group>"; };
 		09D3C03F215CE5D100998F57 /* DialogCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogCell.swift; sourceTree = "<group>"; };
@@ -149,6 +151,7 @@
 				09E0F12F215A5B9D0042FB6A /* TabBarController.swift */,
 				0930F167215B653D00CFB593 /* ProfileViewController.swift */,
 				09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */,
+				09D3C039215CBCAB00998F57 /* ChatDialogsViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -282,6 +285,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				09D3C041215CE5D100998F57 /* DialogCell.swift in Sources */,
+				09D3C03A215CBCAB00998F57 /* ChatDialogsViewController.swift in Sources */,
 				09D3C03D215CD03E00998F57 /* SearchCell.swift in Sources */,
 				0930F168215B653D00CFB593 /* ProfileViewController.swift in Sources */,
 				0930F166215B5CDB00CFB593 /* RoundedEdgeView.swift in Sources */,
