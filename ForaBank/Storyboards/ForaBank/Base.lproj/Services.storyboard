@@ -1,32 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="d3q-dq-y1n">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="4gh-wK-jlW">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
-        <scene sceneID="3qL-r9-DzR">
+        <!--Navigation Controller-->
+        <scene sceneID="1O9-ly-JCQ">
             <objects>
-                <viewController id="d3q-dq-y1n" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="x3N-Yz-Cmq">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <viewLayoutGuide key="safeArea" id="Ya6-hg-2qo"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="" image="tabbar_icon_services" id="XOm-9y-wS8" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
-                        <inset key="imageInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="-10"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8Az-aj-ShT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <navigationController id="4gh-wK-jlW" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="" image="tabbar_icon_services" id="pgG-Wr-fpE" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
+                        <inset key="imageInsets" minX="0.0" minY="7" maxX="0.0" maxY="-7"/>
                         <inset key="largeContentSizeImageInsets" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
                     </tabBarItem>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ewQ-bk-tNo" sceneMemberID="firstResponder"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Hr6-i7-vuv">
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="7lb-5K-lYB">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
+                    <connections>
+                        <segue destination="smd-I1-boP" kind="relationship" relationship="rootViewController" id="gVK-89-Edt"/>
+                    </connections>
+                </navigationController>
             </objects>
-            <point key="canvasLocation" x="1018" y="928"/>
+            <point key="canvasLocation" x="1937" y="927"/>
+        </scene>
+        <!--Услуги и сервисы-->
+        <scene sceneID="Cm6-C2-zak">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pqm-52-7jq" sceneMemberID="firstResponder"/>
+                <viewController id="smd-I1-boP" customClass="ServicesViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ylB-eo-lbV" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ftx-3n-jka" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="45" width="375" height="622"/>
+                                <subviews>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="60" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="F1R-yf-RXr" customClass="ChatDialogsTableView" customModule="ForaBank" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="622"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="sectionIndexTrackingBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </tableView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="F1R-yf-RXr" firstAttribute="leading" secondItem="ftx-3n-jka" secondAttribute="leading" id="1eU-6u-YdY"/>
+                                    <constraint firstAttribute="trailing" secondItem="F1R-yf-RXr" secondAttribute="trailing" id="Ob7-cA-Fqa"/>
+                                    <constraint firstItem="F1R-yf-RXr" firstAttribute="top" secondItem="ftx-3n-jka" secondAttribute="top" id="Y3f-rZ-TSY"/>
+                                    <constraint firstAttribute="bottom" secondItem="F1R-yf-RXr" secondAttribute="bottom" id="l9d-FC-UEU"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="0.77384895090000005" green="0.36048567300000001" blue="0.38817185160000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <constraints>
+                            <constraint firstItem="ftx-3n-jka" firstAttribute="leading" secondItem="XqB-3N-d8c" secondAttribute="leading" id="9MI-WU-Sea"/>
+                            <constraint firstItem="ftx-3n-jka" firstAttribute="top" secondItem="ylB-eo-lbV" secondAttribute="top" constant="45" id="M40-Kg-yEN"/>
+                            <constraint firstItem="ftx-3n-jka" firstAttribute="trailing" secondItem="XqB-3N-d8c" secondAttribute="trailing" id="Res-A7-eGI"/>
+                            <constraint firstAttribute="bottom" secondItem="ftx-3n-jka" secondAttribute="bottom" id="hMW-7S-9EW"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="XqB-3N-d8c"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="color" keyPath="color1">
+                                <color key="value" red="0.71372549019999998" green="0.13725490200000001" blue="0.13725490200000001" alpha="1" colorSpace="calibratedRGB"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="color" keyPath="color2">
+                                <color key="value" red="0.12941176469999999" green="0.1176470588" blue="0.1176470588" alpha="1" colorSpace="calibratedRGB"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" title="Услуги и сервисы" id="at1-tg-5XA"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="375" height="667"/>
+                    <connections>
+                        <outlet property="tableView" destination="F1R-yf-RXr" id="Kd7-Ag-pgi"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="2785" y="928"/>
         </scene>
     </scenes>
     <resources>
