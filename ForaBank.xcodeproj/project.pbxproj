@@ -23,6 +23,12 @@
 		0930F183215B78B000CFB593 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0930F171215B78A100CFB593 /* Roboto-Regular.ttf */; };
 		0930F184215B78B000CFB593 /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0930F172215B78A100CFB593 /* Roboto-Thin.ttf */; };
 		0930F185215B78B000CFB593 /* Roboto-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0930F173215B78A200CFB593 /* Roboto-ThinItalic.ttf */; };
+		093B862C216209B0008A5222 /* ServicesSearchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 093B862B216209B0008A5222 /* ServicesSearchCell.xib */; };
+		093B862E21620B1F008A5222 /* ServicesSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 093B862D21620B1F008A5222 /* ServicesSearchCell.swift */; };
+		093B863121620EE8008A5222 /* ServicesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 093B862F21620EE8008A5222 /* ServicesCell.swift */; };
+		093B863221620EE8008A5222 /* ServicesCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 093B863021620EE8008A5222 /* ServicesCell.xib */; };
+		093B8634216224C3008A5222 /* ServicesHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 093B8633216224C3008A5222 /* ServicesHeader.swift */; };
+		093B8636216224CC008A5222 /* ServicesHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 093B8635216224CC008A5222 /* ServicesHeader.xib */; };
 		0942B86D21625F7800370C71 /* Friend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0942B86C21625F7800370C71 /* Friend.swift */; };
 		09797559215A49020044C00A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09797558215A49020044C00A /* AppDelegate.swift */; };
 		09797560215A49040044C00A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0979755F215A49040044C00A /* Assets.xcassets */; };
@@ -63,6 +69,12 @@
 		0930F177215B78A200CFB593 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		0930F178215B78A200CFB593 /* Roboto-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-BoldItalic.ttf"; sourceTree = "<group>"; };
 		0930F179215B78A200CFB593 /* Roboto-BlackItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-BlackItalic.ttf"; sourceTree = "<group>"; };
+		093B862B216209B0008A5222 /* ServicesSearchCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ServicesSearchCell.xib; sourceTree = "<group>"; };
+		093B862D21620B1F008A5222 /* ServicesSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesSearchCell.swift; sourceTree = "<group>"; };
+		093B862F21620EE8008A5222 /* ServicesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesCell.swift; sourceTree = "<group>"; };
+		093B863021620EE8008A5222 /* ServicesCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ServicesCell.xib; sourceTree = "<group>"; };
+		093B8633216224C3008A5222 /* ServicesHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesHeader.swift; sourceTree = "<group>"; };
+		093B8635216224CC008A5222 /* ServicesHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ServicesHeader.xib; sourceTree = "<group>"; };
 		0942B86C21625F7800370C71 /* Friend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Friend.swift; sourceTree = "<group>"; };
 		09797555215A49020044C00A /* ForaBank.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ForaBank.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		09797558215A49020044C00A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -182,6 +194,12 @@
 				09D3C03B215CD03E00998F57 /* SearchCell.swift */,
 				09D3C03C215CD03E00998F57 /* SearchCell.xib */,
 				09D3C04B215E5AE800998F57 /* ChatDialogsTableView.swift */,
+				093B862D21620B1F008A5222 /* ServicesSearchCell.swift */,
+				093B862B216209B0008A5222 /* ServicesSearchCell.xib */,
+				093B862F21620EE8008A5222 /* ServicesCell.swift */,
+				093B863021620EE8008A5222 /* ServicesCell.xib */,
+				093B8633216224C3008A5222 /* ServicesHeader.swift */,
+				093B8635216224CC008A5222 /* ServicesHeader.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -263,6 +281,7 @@
 				09E0F14A215A6C2F0042FB6A /* TabBar.storyboard in Resources */,
 				09E0F135215A61EB0042FB6A /* Feed.storyboard in Resources */,
 				09E0F13D215A65310042FB6A /* Deposits.storyboard in Resources */,
+				093B863221620EE8008A5222 /* ServicesCell.xib in Resources */,
 				09E0F13F215A65AE0042FB6A /* Payment.storyboard in Resources */,
 				09E0F142215A65D40042FB6A /* Services.storyboard in Resources */,
 				09E0F144215A65F10042FB6A /* Profile.storyboard in Resources */,
@@ -275,8 +294,10 @@
 				0930F17F215B78B000CFB593 /* Roboto-Light.ttf in Resources */,
 				0930F17C215B78B000CFB593 /* Roboto-Bold.ttf in Resources */,
 				0930F17E215B78B000CFB593 /* Roboto-Italic.ttf in Resources */,
+				093B8636216224CC008A5222 /* ServicesHeader.xib in Resources */,
 				0930F17D215B78B000CFB593 /* Roboto-BoldItalic.ttf in Resources */,
 				0930F17A215B78B000CFB593 /* Roboto-Black.ttf in Resources */,
+				093B862C216209B0008A5222 /* ServicesSearchCell.xib in Resources */,
 				09D3C03E215CD03E00998F57 /* SearchCell.xib in Resources */,
 				0930F184215B78B000CFB593 /* Roboto-Thin.ttf in Resources */,
 				0930F17B215B78B000CFB593 /* Roboto-BlackItalic.ttf in Resources */,
@@ -296,6 +317,8 @@
 				0930F168215B653D00CFB593 /* ProfileViewController.swift in Sources */,
 				0930F166215B5CDB00CFB593 /* RoundedEdgeView.swift in Sources */,
 				09E0F146215A68DC0042FB6A /* CustomTabBar.swift in Sources */,
+				093B863121620EE8008A5222 /* ServicesCell.swift in Sources */,
+				093B8634216224C3008A5222 /* ServicesHeader.swift in Sources */,
 				09E0F130215A5B9D0042FB6A /* TabBarController.swift in Sources */,
 				0930F16A215B6CB800CFB593 /* GradientView.swift in Sources */,
 				0930F16C215B704A00CFB593 /* CircularImageView.swift in Sources */,
@@ -303,6 +326,7 @@
 				09FC8FED215BB2B200A4694B /* ProfileMenuTableViewController.swift in Sources */,
 				0942B86D21625F7800370C71 /* Friend.swift in Sources */,
 				09D3C04C215E5AE800998F57 /* ChatDialogsTableView.swift in Sources */,
+				093B862E21620B1F008A5222 /* ServicesSearchCell.swift in Sources */,
 				09797559215A49020044C00A /* AppDelegate.swift in Sources */,
 				09E0F148215A69310042FB6A /* CustomTabBarItem.swift in Sources */,
 			);
