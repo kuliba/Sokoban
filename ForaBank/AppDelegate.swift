@@ -57,8 +57,8 @@ private extension AppDelegate {
         // Set navigation bar font
         let font = UIFont(name: "Roboto-Regular", size: 16) ?? UIFont.systemFont(ofSize: 16)
         UINavigationBar.appearance().titleTextAttributes = [
-            NSAttributedString.Key.font: font,
-            NSAttributedString.Key.foregroundColor: UIColor.white
+            .font: font,
+            .foregroundColor: UIColor.white
         ]
     }
 }

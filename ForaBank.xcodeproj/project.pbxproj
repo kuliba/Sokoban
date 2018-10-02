@@ -23,6 +23,7 @@
 		0930F183215B78B000CFB593 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0930F171215B78A100CFB593 /* Roboto-Regular.ttf */; };
 		0930F184215B78B000CFB593 /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0930F172215B78A100CFB593 /* Roboto-Thin.ttf */; };
 		0930F185215B78B000CFB593 /* Roboto-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0930F173215B78A200CFB593 /* Roboto-ThinItalic.ttf */; };
+		0942B86D21625F7800370C71 /* Friend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0942B86C21625F7800370C71 /* Friend.swift */; };
 		09797559215A49020044C00A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09797558215A49020044C00A /* AppDelegate.swift */; };
 		09797560215A49040044C00A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0979755F215A49040044C00A /* Assets.xcassets */; };
 		09797563215A49040044C00A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 09797561215A49040044C00A /* LaunchScreen.storyboard */; };
@@ -62,6 +63,7 @@
 		0930F177215B78A200CFB593 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		0930F178215B78A200CFB593 /* Roboto-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-BoldItalic.ttf"; sourceTree = "<group>"; };
 		0930F179215B78A200CFB593 /* Roboto-BlackItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-BlackItalic.ttf"; sourceTree = "<group>"; };
+		0942B86C21625F7800370C71 /* Friend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Friend.swift; sourceTree = "<group>"; };
 		09797555215A49020044C00A /* ForaBank.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ForaBank.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		09797558215A49020044C00A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0979755D215A49020044C00A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/TabBar.storyboard; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 		09E0F132215A61850042FB6A /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				0942B86C21625F7800370C71 /* Friend.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -298,6 +301,7 @@
 				0930F16C215B704A00CFB593 /* CircularImageView.swift in Sources */,
 				09D3C048215E07DB00998F57 /* ChatMessagesViewController.swift in Sources */,
 				09FC8FED215BB2B200A4694B /* ProfileMenuTableViewController.swift in Sources */,
+				0942B86D21625F7800370C71 /* Friend.swift in Sources */,
 				09D3C04C215E5AE800998F57 /* ChatDialogsTableView.swift in Sources */,
 				09797559215A49020044C00A /* AppDelegate.swift in Sources */,
 				09E0F148215A69310042FB6A /* CustomTabBarItem.swift in Sources */,

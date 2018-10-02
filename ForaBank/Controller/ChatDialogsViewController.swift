@@ -8,11 +8,6 @@
 
 import UIKit
 
-struct Friend {
-   let name: String
-   let message: String
-}
-
 class ChatDialogsViewController: UIViewController {
     
     // MARK: - Properties

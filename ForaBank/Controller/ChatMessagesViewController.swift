@@ -36,6 +36,7 @@ class ChatMessagesViewController: UIViewController {
     }
 }
 
+// MARK: - Private methods
 private extension ChatMessagesViewController {
     
     func setKeyboardObservers() {
