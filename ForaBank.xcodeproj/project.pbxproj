@@ -41,7 +41,7 @@
 		09D3C041215CE5D100998F57 /* DialogCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D3C03F215CE5D100998F57 /* DialogCell.swift */; };
 		09D3C042215CE5D100998F57 /* DialogCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09D3C040215CE5D100998F57 /* DialogCell.xib */; };
 		09D3C048215E07DB00998F57 /* ChatMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D3C047215E07DB00998F57 /* ChatMessagesViewController.swift */; };
-		09D3C04C215E5AE800998F57 /* ChatDialogsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D3C04B215E5AE800998F57 /* ChatDialogsTableView.swift */; };
+		09D3C04C215E5AE800998F57 /* CustomTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D3C04B215E5AE800998F57 /* CustomTableView.swift */; };
 		09E0F130215A5B9D0042FB6A /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E0F12F215A5B9D0042FB6A /* TabBarController.swift */; };
 		09E0F135215A61EB0042FB6A /* Feed.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 09E0F134215A61EB0042FB6A /* Feed.storyboard */; };
 		09E0F13D215A65310042FB6A /* Deposits.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 09E0F13B215A65310042FB6A /* Deposits.storyboard */; };
@@ -92,7 +92,7 @@
 		09D3C03F215CE5D100998F57 /* DialogCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogCell.swift; sourceTree = "<group>"; };
 		09D3C040215CE5D100998F57 /* DialogCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DialogCell.xib; sourceTree = "<group>"; };
 		09D3C047215E07DB00998F57 /* ChatMessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesViewController.swift; sourceTree = "<group>"; };
-		09D3C04B215E5AE800998F57 /* ChatDialogsTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDialogsTableView.swift; sourceTree = "<group>"; };
+		09D3C04B215E5AE800998F57 /* CustomTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableView.swift; sourceTree = "<group>"; };
 		09E0F12F215A5B9D0042FB6A /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		09E0F134215A61EB0042FB6A /* Feed.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Feed.storyboard; sourceTree = "<group>"; };
 		09E0F13C215A65310042FB6A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = ForaBank/Base.lproj/Deposits.storyboard; sourceTree = "<group>"; };
@@ -199,7 +199,7 @@
 				09D3C040215CE5D100998F57 /* DialogCell.xib */,
 				09D3C03B215CD03E00998F57 /* SearchCell.swift */,
 				09D3C03C215CD03E00998F57 /* SearchCell.xib */,
-				09D3C04B215E5AE800998F57 /* ChatDialogsTableView.swift */,
+				09D3C04B215E5AE800998F57 /* CustomTableView.swift */,
 				093B862D21620B1F008A5222 /* ServicesSearchCell.swift */,
 				093B862B216209B0008A5222 /* ServicesSearchCell.xib */,
 				093B862F21620EE8008A5222 /* ServicesCell.swift */,
@@ -332,7 +332,7 @@
 				09D3C048215E07DB00998F57 /* ChatMessagesViewController.swift in Sources */,
 				09FC8FED215BB2B200A4694B /* ProfileMenuTableViewController.swift in Sources */,
 				0942B86D21625F7800370C71 /* Friend.swift in Sources */,
-				09D3C04C215E5AE800998F57 /* ChatDialogsTableView.swift in Sources */,
+				09D3C04C215E5AE800998F57 /* CustomTableView.swift in Sources */,
 				093B862E21620B1F008A5222 /* ServicesSearchCell.swift in Sources */,
 				0942B86B21625F4800370C71 /* Service.swift in Sources */,
 				09797559215A49020044C00A /* AppDelegate.swift in Sources */,

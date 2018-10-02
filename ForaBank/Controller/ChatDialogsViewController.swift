@@ -11,7 +11,7 @@ import UIKit
 class ChatDialogsViewController: UIViewController {
     
     // MARK: - Properties
-    @IBOutlet weak var tableView: ChatDialogsTableView!
+    @IBOutlet weak var tableView: CustomTableView!
     @IBOutlet weak var backButton: UIButton!
     
     let refreshControl = UIRefreshControl()

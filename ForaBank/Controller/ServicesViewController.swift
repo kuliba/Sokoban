@@ -11,7 +11,7 @@ import UIKit
 class ServicesViewController: UIViewController {
     
     // MARK: - Properties
-    @IBOutlet weak var tableView: ChatDialogsTableView!
+    @IBOutlet weak var tableView: CustomTableView!
     
     let serviceCellId = "ServicesCell"
     

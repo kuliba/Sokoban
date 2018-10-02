@@ -1,5 +1,5 @@
 //
-//  ChatDialogsTableView.swift
+//  CustomTableView.swift
 //  ForaBank
 //
 //  Created by Ilya Masalov (xmasalov@gmail.com) on 28/09/2018.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ChatDialogsTableView: UITableView {
+class CustomTableView: UITableView {
     
     // MARK: - Lifecycle
     override func awakeFromNib() {
@@ -19,7 +19,7 @@ class ChatDialogsTableView: UITableView {
 }
 
 // MARK: - Private methods
-private extension ChatDialogsTableView {
+private extension CustomTableView {
     
     func setContentInset() {
         contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
