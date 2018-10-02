@@ -23,6 +23,7 @@
 		0930F183215B78B000CFB593 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0930F171215B78A100CFB593 /* Roboto-Regular.ttf */; };
 		0930F184215B78B000CFB593 /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0930F172215B78A100CFB593 /* Roboto-Thin.ttf */; };
 		0930F185215B78B000CFB593 /* Roboto-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0930F173215B78A200CFB593 /* Roboto-ThinItalic.ttf */; };
+		093B862A21620806008A5222 /* ServicesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 093B862921620806008A5222 /* ServicesViewController.swift */; };
 		093B862C216209B0008A5222 /* ServicesSearchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 093B862B216209B0008A5222 /* ServicesSearchCell.xib */; };
 		093B862E21620B1F008A5222 /* ServicesSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 093B862D21620B1F008A5222 /* ServicesSearchCell.swift */; };
 		093B863121620EE8008A5222 /* ServicesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 093B862F21620EE8008A5222 /* ServicesCell.swift */; };
@@ -70,6 +71,7 @@
 		0930F177215B78A200CFB593 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		0930F178215B78A200CFB593 /* Roboto-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-BoldItalic.ttf"; sourceTree = "<group>"; };
 		0930F179215B78A200CFB593 /* Roboto-BlackItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-BlackItalic.ttf"; sourceTree = "<group>"; };
+		093B862921620806008A5222 /* ServicesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesViewController.swift; sourceTree = "<group>"; };
 		093B862B216209B0008A5222 /* ServicesSearchCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ServicesSearchCell.xib; sourceTree = "<group>"; };
 		093B862D21620B1F008A5222 /* ServicesSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesSearchCell.swift; sourceTree = "<group>"; };
 		093B862F21620EE8008A5222 /* ServicesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesCell.swift; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 			isa = PBXGroup;
 			children = (
 				09E0F12F215A5B9D0042FB6A /* TabBarController.swift */,
+				093B862921620806008A5222 /* ServicesViewController.swift */,
 				0930F167215B653D00CFB593 /* ProfileViewController.swift */,
 				09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */,
 				09D3C039215CBCAB00998F57 /* ChatDialogsViewController.swift */,
@@ -317,6 +320,7 @@
 				09D3C041215CE5D100998F57 /* DialogCell.swift in Sources */,
 				09D3C03A215CBCAB00998F57 /* ChatDialogsViewController.swift in Sources */,
 				09D3C03D215CD03E00998F57 /* SearchCell.swift in Sources */,
+				093B862A21620806008A5222 /* ServicesViewController.swift in Sources */,
 				0930F168215B653D00CFB593 /* ProfileViewController.swift in Sources */,
 				0930F166215B5CDB00CFB593 /* RoundedEdgeView.swift in Sources */,
 				09E0F146215A68DC0042FB6A /* CustomTabBar.swift in Sources */,
