@@ -32,6 +32,7 @@
 		093B8636216224CC008A5222 /* ServicesHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 093B8635216224CC008A5222 /* ServicesHeader.xib */; };
 		0942B86B21625F4800370C71 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0942B86A21625F4800370C71 /* Service.swift */; };
 		0942B86D21625F7800370C71 /* Friend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0942B86C21625F7800370C71 /* Friend.swift */; };
+		096BCB072163518A005BC02B /* PaymentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096BCB062163518A005BC02B /* PaymentsViewController.swift */; };
 		096BCB0A216361AA005BC02B /* PaymentTemplateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096BCB08216361AA005BC02B /* PaymentTemplateCell.swift */; };
 		096BCB0B216361AA005BC02B /* PaymentTemplateCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 096BCB09216361AA005BC02B /* PaymentTemplateCell.xib */; };
 		096BCB0E21637E27005BC02B /* PaymentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096BCB0C21637E27005BC02B /* PaymentCell.swift */; };
@@ -84,6 +85,7 @@
 		093B8635216224CC008A5222 /* ServicesHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ServicesHeader.xib; sourceTree = "<group>"; };
 		0942B86A21625F4800370C71 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		0942B86C21625F7800370C71 /* Friend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Friend.swift; sourceTree = "<group>"; };
+		096BCB062163518A005BC02B /* PaymentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsViewController.swift; sourceTree = "<group>"; };
 		096BCB08216361AA005BC02B /* PaymentTemplateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentTemplateCell.swift; sourceTree = "<group>"; };
 		096BCB09216361AA005BC02B /* PaymentTemplateCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentTemplateCell.xib; sourceTree = "<group>"; };
 		096BCB0C21637E27005BC02B /* PaymentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCell.swift; sourceTree = "<group>"; };
@@ -177,6 +179,7 @@
 			isa = PBXGroup;
 			children = (
 				09E0F12F215A5B9D0042FB6A /* TabBarController.swift */,
+				096BCB062163518A005BC02B /* PaymentsViewController.swift */,
 				093B862921620806008A5222 /* ServicesViewController.swift */,
 				0930F167215B653D00CFB593 /* ProfileViewController.swift */,
 				09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */,
@@ -348,6 +351,7 @@
 				09D3C048215E07DB00998F57 /* ChatMessagesViewController.swift in Sources */,
 				09FC8FED215BB2B200A4694B /* ProfileMenuTableViewController.swift in Sources */,
 				0942B86D21625F7800370C71 /* Friend.swift in Sources */,
+				096BCB072163518A005BC02B /* PaymentsViewController.swift in Sources */,
 				09D3C04C215E5AE800998F57 /* CustomTableView.swift in Sources */,
 				093B862E21620B1F008A5222 /* ServicesSearchCell.swift in Sources */,
 				0942B86B21625F4800370C71 /* Service.swift in Sources */,
