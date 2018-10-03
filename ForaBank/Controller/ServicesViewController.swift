@@ -34,7 +34,7 @@ class ServicesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setTableViewDelegateAndDataSource()
-        setAutomaticrowheight()
+        setAutomaticRowHeight()
         registerNibCell()
         setSearchView()
     }
@@ -52,10 +52,6 @@ class ServicesViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        //            if let vc = segue.destination as? ChatMessagesViewController,
-        //                let index = sender as? Int {
-        //                vc.dialogName  = data_[index].name
-        //            }
     }
 }
 
@@ -110,7 +106,7 @@ private extension ServicesViewController {
         tableView.delegate = self
     }
     
-    func setAutomaticrowheight() {
+    func setAutomaticRowHeight() {
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
     }
