@@ -162,6 +162,8 @@ private extension ChatDialogsViewController {
     func animateBackButton() {
         UIView.animate(
             withDuration: 0.25,
+            delay: 0,
+            options: [.allowUserInteraction],
             animations: {
                 self.backButton.alpha = 1
                 self.backButton.frame.origin.x -= 5
