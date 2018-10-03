@@ -1,35 +1,106 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cE2-pM-RQq">
-    <device id="retina4_7" orientation="portrait">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="bh3-Fs-6KR">
+    <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
-        <scene sceneID="ga2-5B-RLW">
+        <!--Navigation Controller-->
+        <scene sceneID="DTi-PL-Hfg">
             <objects>
-                <viewController id="cE2-pM-RQq" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="aAC-2b-nrP">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <viewLayoutGuide key="safeArea" id="feh-ev-y9K"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="" image="tabbar_icon_payment" id="zme-td-7Wj" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
-                        <inset key="imageInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="-10"/>
+                <navigationController id="bh3-Fs-6KR" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="" image="tabbar_icon_payment" id="UWG-PT-doj" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
+                        <inset key="imageInsets" minX="0.0" minY="7" maxX="0.0" maxY="-7"/>
                         <inset key="largeContentSizeImageInsets" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
                     </tabBarItem>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="mHi-Dc-Wgc" sceneMemberID="firstResponder"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="rMG-8q-fkw">
+                        <rect key="frame" x="0.0" y="20" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="VUZ-Ok-h4g">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
+                    <connections>
+                        <segue destination="OPN-w7-Pxo" kind="relationship" relationship="rootViewController" id="sGH-71-tDg"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="G1U-4O-BmZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="750" y="1050"/>
+            <point key="canvasLocation" x="1377" y="1039"/>
+        </scene>
+        <!--Платежи и переводы-->
+        <scene sceneID="2lK-ok-2qs">
+            <objects>
+                <viewController id="OPN-w7-Pxo" customClass="PaymentsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="YRK-kd-i2t" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Yz-SV-jwE" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="45" width="320" height="523"/>
+                                <subviews>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" sectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="dNT-nK-TXt" customClass="CustomTableView" customModule="ForaBank" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="523"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="sectionIndexTrackingBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </tableView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="dNT-nK-TXt" firstAttribute="top" secondItem="8Yz-SV-jwE" secondAttribute="top" id="7kf-Tm-03c"/>
+                                    <constraint firstItem="dNT-nK-TXt" firstAttribute="leading" secondItem="8Yz-SV-jwE" secondAttribute="leading" id="GkD-xi-7XQ"/>
+                                    <constraint firstAttribute="bottom" secondItem="dNT-nK-TXt" secondAttribute="bottom" id="dP8-q8-ylK"/>
+                                    <constraint firstAttribute="trailing" secondItem="dNT-nK-TXt" secondAttribute="trailing" id="hPB-N0-LXB"/>
+                                </constraints>
+                            </view>
+                            <imageView userInteractionEnabled="NO" alpha="0.5" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Screenshot 2018-10-02 at 15.16.44" translatesAutoresizingMaskIntoConstraints="NO" id="rFg-XA-bAh">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="8Yz-SV-jwE" firstAttribute="leading" secondItem="x4g-jI-9Ny" secondAttribute="leading" id="89h-Pe-PH0"/>
+                            <constraint firstAttribute="bottom" secondItem="8Yz-SV-jwE" secondAttribute="bottom" id="WCm-SP-KaF"/>
+                            <constraint firstItem="8Yz-SV-jwE" firstAttribute="trailing" secondItem="x4g-jI-9Ny" secondAttribute="trailing" id="fgT-B5-9b3"/>
+                            <constraint firstItem="8Yz-SV-jwE" firstAttribute="top" secondItem="YRK-kd-i2t" secondAttribute="top" constant="45" id="mtR-t3-pnc"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="x4g-jI-9Ny"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="color" keyPath="color1">
+                                <color key="value" red="0.32785412669181824" green="0.2250635027885437" blue="0.52929860353469849" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="color" keyPath="color2">
+                                <color key="value" red="0.70747262239456177" green="0.21387490630149841" blue="0.33714783191680908" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="rFg-XA-bAh"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" title="Платежи и переводы" id="QDA-v9-Z6f"/>
+                    <connections>
+                        <outlet property="tableView" destination="dNT-nK-TXt" id="JpD-Kc-twN"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="a3Z-UH-zhd" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2223.75" y="1038.3802816901409"/>
         </scene>
     </scenes>
     <resources>
+        <image name="Screenshot 2018-10-02 at 15.16.44" width="308" height="544"/>
         <image name="tabbar_icon_payment" width="25" height="20"/>
     </resources>
 </document>
