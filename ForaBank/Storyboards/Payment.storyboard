@@ -90,6 +90,7 @@
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Платежи и переводы" id="QDA-v9-Z6f"/>
+                    <size key="freeformSize" width="320" height="568"/>
                     <connections>
                         <outlet property="tableView" destination="dNT-nK-TXt" id="JpD-Kc-twN"/>
                     </connections>
