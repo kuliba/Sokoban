@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		09045056216B51B400F3B295 /* FeedOffersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09045055216B51B400F3B295 /* FeedOffersViewController.swift */; };
+		09045059216B5ADC00F3B295 /* FeedOffersCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09045057216B5ADC00F3B295 /* FeedOffersCell.swift */; };
+		0904505A216B5ADC00F3B295 /* FeedOffersCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09045058216B5ADC00F3B295 /* FeedOffersCell.xib */; };
+		0904505D216B774600F3B295 /* FeedOfferCustom1Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0904505B216B774600F3B295 /* FeedOfferCustom1Cell.swift */; };
+		0904505E216B774600F3B295 /* FeedOfferCustom1Cell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0904505C216B774600F3B295 /* FeedOfferCustom1Cell.xib */; };
+		09203D87216CA79C00902BD2 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09203D86216CA79C00902BD2 /* FeedViewController.swift */; };
+		09203D8B216CC19900902BD2 /* TabBar.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 09203D8A216CC19900902BD2 /* TabBar.storyboard */; };
+		09203D95216E13A700902BD2 /* FeedOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09203D93216E13A700902BD2 /* FeedOptionCell.swift */; };
+		09203D96216E13A700902BD2 /* FeedOptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09203D94216E13A700902BD2 /* FeedOptionCell.xib */; };
+		09203D98216E150500902BD2 /* FeedOptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09203D97216E150500902BD2 /* FeedOptionsViewController.swift */; };
 		0930F166215B5CDB00CFB593 /* RoundedEdgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0930F165215B5CDB00CFB593 /* RoundedEdgeView.swift */; };
 		0930F168215B653D00CFB593 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0930F167215B653D00CFB593 /* ProfileViewController.swift */; };
 		0930F16A215B6CB800CFB593 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0930F169215B6CB800CFB593 /* GradientView.swift */; };
@@ -40,6 +50,20 @@
 		09797559215A49020044C00A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09797558215A49020044C00A /* AppDelegate.swift */; };
 		09797560215A49040044C00A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0979755F215A49040044C00A /* Assets.xcassets */; };
 		09797563215A49040044C00A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 09797561215A49040044C00A /* LaunchScreen.storyboard */; };
+		09AF7078216F4A9600E7FCFC /* FeedUpcomingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AF7077216F4A9600E7FCFC /* FeedUpcomingViewController.swift */; };
+		09AF707B216F4B5000E7FCFC /* FeedUpcomingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AF7079216F4B5000E7FCFC /* FeedUpcomingCell.swift */; };
+		09AF707C216F4B5000E7FCFC /* FeedUpcomingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09AF707A216F4B5000E7FCFC /* FeedUpcomingCell.xib */; };
+		09AF707E216F676300E7FCFC /* FeedCurrentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AF707D216F676300E7FCFC /* FeedCurrentViewController.swift */; };
+		09AF7081216F6B6F00E7FCFC /* FeedCurrent1Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AF707F216F6B6F00E7FCFC /* FeedCurrent1Cell.swift */; };
+		09AF7082216F6B6F00E7FCFC /* FeedCurrent1Cell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09AF7080216F6B6F00E7FCFC /* FeedCurrent1Cell.xib */; };
+		09AF708C216F73FD00E7FCFC /* FeedCurrent2Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AF7084216F73FC00E7FCFC /* FeedCurrent2Cell.swift */; };
+		09AF708D216F73FD00E7FCFC /* FeedCurrent4Cell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09AF7085216F73FC00E7FCFC /* FeedCurrent4Cell.xib */; };
+		09AF708E216F73FD00E7FCFC /* FeedCurrent2Cell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09AF7086216F73FC00E7FCFC /* FeedCurrent2Cell.xib */; };
+		09AF708F216F73FD00E7FCFC /* FeedCurrent5Cell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09AF7087216F73FC00E7FCFC /* FeedCurrent5Cell.xib */; };
+		09AF7090216F73FD00E7FCFC /* FeedCurrent3Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AF7088216F73FC00E7FCFC /* FeedCurrent3Cell.swift */; };
+		09AF7091216F73FD00E7FCFC /* FeedCurrent3Cell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09AF7089216F73FD00E7FCFC /* FeedCurrent3Cell.xib */; };
+		09AF7092216F73FD00E7FCFC /* FeedCurrent4Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AF708A216F73FD00E7FCFC /* FeedCurrent4Cell.swift */; };
+		09AF7093216F73FD00E7FCFC /* FeedCurrent5Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AF708B216F73FD00E7FCFC /* FeedCurrent5Cell.swift */; };
 		09D3C03A215CBCAB00998F57 /* ChatDialogsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D3C039215CBCAB00998F57 /* ChatDialogsViewController.swift */; };
 		09D3C03D215CD03E00998F57 /* SearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D3C03B215CD03E00998F57 /* SearchCell.swift */; };
 		09D3C03E215CD03E00998F57 /* SearchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09D3C03C215CD03E00998F57 /* SearchCell.xib */; };
@@ -55,12 +79,31 @@
 		09E0F144215A65F10042FB6A /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 09E0F143215A65F10042FB6A /* Profile.storyboard */; };
 		09E0F146215A68DC0042FB6A /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E0F145215A68DC0042FB6A /* CustomTabBar.swift */; };
 		09E0F148215A69310042FB6A /* CustomTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E0F147215A69310042FB6A /* CustomTabBarItem.swift */; };
-		09E0F14A215A6C2F0042FB6A /* TabBar.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0979755C215A49020044C00A /* TabBar.storyboard */; };
+		09F240FA216F8335007B7D73 /* FeedCurrent6Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F240F8216F8335007B7D73 /* FeedCurrent6Cell.swift */; };
+		09F240FB216F8335007B7D73 /* FeedCurrent6Cell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09F240F9216F8335007B7D73 /* FeedCurrent6Cell.xib */; };
+		09F2410121707B3B007B7D73 /* FeedInfo1Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F240FF21707B3B007B7D73 /* FeedInfo1Cell.swift */; };
+		09F2410221707B3B007B7D73 /* FeedInfo1Cell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09F2410021707B3B007B7D73 /* FeedInfo1Cell.xib */; };
+		09F2410521707B7B007B7D73 /* FeedInfo2Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F2410321707B7B007B7D73 /* FeedInfo2Cell.swift */; };
+		09F2410621707B7B007B7D73 /* FeedInfo2Cell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09F2410421707B7B007B7D73 /* FeedInfo2Cell.xib */; };
+		09F2410921707B86007B7D73 /* FeedInfo3Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F2410721707B86007B7D73 /* FeedInfo3Cell.swift */; };
+		09F2410A21707B86007B7D73 /* FeedInfo3Cell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09F2410821707B86007B7D73 /* FeedInfo3Cell.xib */; };
+		09F2410C2170871F007B7D73 /* FeedInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F2410B2170871F007B7D73 /* FeedInfoViewController.swift */; };
 		09FC8FED215BB2B200A4694B /* ProfileMenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */; };
 		B8323065D0D76292CEB00626 /* Pods_ForaBank.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8EB261ED46D5F939F8B2E27 /* Pods_ForaBank.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		09045055216B51B400F3B295 /* FeedOffersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedOffersViewController.swift; sourceTree = "<group>"; };
+		09045057216B5ADC00F3B295 /* FeedOffersCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedOffersCell.swift; sourceTree = "<group>"; };
+		09045058216B5ADC00F3B295 /* FeedOffersCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FeedOffersCell.xib; sourceTree = "<group>"; };
+		0904505B216B774600F3B295 /* FeedOfferCustom1Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedOfferCustom1Cell.swift; sourceTree = "<group>"; };
+		0904505C216B774600F3B295 /* FeedOfferCustom1Cell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FeedOfferCustom1Cell.xib; sourceTree = "<group>"; };
+		09203D86216CA79C00902BD2 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
+		09203D8A216CC19900902BD2 /* TabBar.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = TabBar.storyboard; path = Base.lproj/TabBar.storyboard; sourceTree = "<group>"; };
+		09203D91216E0D7600902BD2 /* ForaBank-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ForaBank-Bridging-Header.h"; sourceTree = "<group>"; };
+		09203D93216E13A700902BD2 /* FeedOptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedOptionCell.swift; sourceTree = "<group>"; };
+		09203D94216E13A700902BD2 /* FeedOptionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FeedOptionCell.xib; sourceTree = "<group>"; };
+		09203D97216E150500902BD2 /* FeedOptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedOptionsViewController.swift; sourceTree = "<group>"; };
 		0930F165215B5CDB00CFB593 /* RoundedEdgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedEdgeView.swift; sourceTree = "<group>"; };
 		0930F167215B653D00CFB593 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ProfileViewController.swift; path = ForaBank/Controller/ProfileViewController.swift; sourceTree = SOURCE_ROOT; };
 		0930F169215B6CB800CFB593 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
@@ -93,10 +136,23 @@
 		096BCB0D21637E27005BC02B /* PaymentCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentCell.xib; sourceTree = "<group>"; };
 		09797555215A49020044C00A /* ForaBank.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ForaBank.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		09797558215A49020044C00A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		0979755D215A49020044C00A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/TabBar.storyboard; sourceTree = "<group>"; };
 		0979755F215A49040044C00A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		09797562215A49040044C00A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		09797564215A49040044C00A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		09AF7077216F4A9600E7FCFC /* FeedUpcomingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedUpcomingViewController.swift; sourceTree = "<group>"; };
+		09AF7079216F4B5000E7FCFC /* FeedUpcomingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedUpcomingCell.swift; sourceTree = "<group>"; };
+		09AF707A216F4B5000E7FCFC /* FeedUpcomingCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FeedUpcomingCell.xib; sourceTree = "<group>"; };
+		09AF707D216F676300E7FCFC /* FeedCurrentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCurrentViewController.swift; sourceTree = "<group>"; };
+		09AF707F216F6B6F00E7FCFC /* FeedCurrent1Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCurrent1Cell.swift; sourceTree = "<group>"; };
+		09AF7080216F6B6F00E7FCFC /* FeedCurrent1Cell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FeedCurrent1Cell.xib; sourceTree = "<group>"; };
+		09AF7084216F73FC00E7FCFC /* FeedCurrent2Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedCurrent2Cell.swift; sourceTree = "<group>"; };
+		09AF7085216F73FC00E7FCFC /* FeedCurrent4Cell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedCurrent4Cell.xib; sourceTree = "<group>"; };
+		09AF7086216F73FC00E7FCFC /* FeedCurrent2Cell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedCurrent2Cell.xib; sourceTree = "<group>"; };
+		09AF7087216F73FC00E7FCFC /* FeedCurrent5Cell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedCurrent5Cell.xib; sourceTree = "<group>"; };
+		09AF7088216F73FC00E7FCFC /* FeedCurrent3Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedCurrent3Cell.swift; sourceTree = "<group>"; };
+		09AF7089216F73FD00E7FCFC /* FeedCurrent3Cell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedCurrent3Cell.xib; sourceTree = "<group>"; };
+		09AF708A216F73FD00E7FCFC /* FeedCurrent4Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedCurrent4Cell.swift; sourceTree = "<group>"; };
+		09AF708B216F73FD00E7FCFC /* FeedCurrent5Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedCurrent5Cell.swift; sourceTree = "<group>"; };
 		09D3C039215CBCAB00998F57 /* ChatDialogsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDialogsViewController.swift; sourceTree = "<group>"; };
 		09D3C03B215CD03E00998F57 /* SearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCell.swift; sourceTree = "<group>"; };
 		09D3C03C215CD03E00998F57 /* SearchCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchCell.xib; sourceTree = "<group>"; };
@@ -112,6 +168,15 @@
 		09E0F143215A65F10042FB6A /* Profile.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
 		09E0F145215A68DC0042FB6A /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
 		09E0F147215A69310042FB6A /* CustomTabBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarItem.swift; sourceTree = "<group>"; };
+		09F240F8216F8335007B7D73 /* FeedCurrent6Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedCurrent6Cell.swift; sourceTree = "<group>"; };
+		09F240F9216F8335007B7D73 /* FeedCurrent6Cell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedCurrent6Cell.xib; sourceTree = "<group>"; };
+		09F240FF21707B3B007B7D73 /* FeedInfo1Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedInfo1Cell.swift; sourceTree = "<group>"; };
+		09F2410021707B3B007B7D73 /* FeedInfo1Cell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FeedInfo1Cell.xib; sourceTree = "<group>"; };
+		09F2410321707B7B007B7D73 /* FeedInfo2Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedInfo2Cell.swift; sourceTree = "<group>"; };
+		09F2410421707B7B007B7D73 /* FeedInfo2Cell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FeedInfo2Cell.xib; sourceTree = "<group>"; };
+		09F2410721707B86007B7D73 /* FeedInfo3Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedInfo3Cell.swift; sourceTree = "<group>"; };
+		09F2410821707B86007B7D73 /* FeedInfo3Cell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FeedInfo3Cell.xib; sourceTree = "<group>"; };
+		09F2410B2170871F007B7D73 /* FeedInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedInfoViewController.swift; sourceTree = "<group>"; };
 		09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileMenuTableViewController.swift; sourceTree = "<group>"; };
 		B7304E53553072E2F516AE5B /* Pods-ForaBank.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ForaBank.release.xcconfig"; path = "Target Support Files/Pods-ForaBank/Pods-ForaBank.release.xcconfig"; sourceTree = "<group>"; };
 		B745669DC4B425C3C513CBBC /* Pods-ForaBank.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ForaBank.debug.xcconfig"; path = "Target Support Files/Pods-ForaBank/Pods-ForaBank.debug.xcconfig"; sourceTree = "<group>"; };
@@ -130,6 +195,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		09203D92216E136300902BD2 /* Feed */ = {
+			isa = PBXGroup;
+			children = (
+				09AF7083216F738B00E7FCFC /* Current */,
+				09F240FC217079D1007B7D73 /* Offers */,
+				09F240FD217079D9007B7D73 /* Options */,
+				09F240FE217079E2007B7D73 /* Upcoming */,
+				09F2410D21709C1E007B7D73 /* Info */,
+			);
+			path = Feed;
+			sourceTree = "<group>";
+		};
+		09203D99216E150C00902BD2 /* Feed */ = {
+			isa = PBXGroup;
+			children = (
+				09203D86216CA79C00902BD2 /* FeedViewController.swift */,
+				09045055216B51B400F3B295 /* FeedOffersViewController.swift */,
+				09AF707D216F676300E7FCFC /* FeedCurrentViewController.swift */,
+				09F2410B2170871F007B7D73 /* FeedInfoViewController.swift */,
+				09AF7077216F4A9600E7FCFC /* FeedUpcomingViewController.swift */,
+				09203D97216E150500902BD2 /* FeedOptionsViewController.swift */,
+			);
+			path = Feed;
+			sourceTree = "<group>";
+		};
 		0930F16D215B788100CFB593 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
@@ -183,10 +273,30 @@
 			path = ForaBank;
 			sourceTree = "<group>";
 		};
+		09AF7083216F738B00E7FCFC /* Current */ = {
+			isa = PBXGroup;
+			children = (
+				09AF707F216F6B6F00E7FCFC /* FeedCurrent1Cell.swift */,
+				09AF7080216F6B6F00E7FCFC /* FeedCurrent1Cell.xib */,
+				09AF7084216F73FC00E7FCFC /* FeedCurrent2Cell.swift */,
+				09AF7086216F73FC00E7FCFC /* FeedCurrent2Cell.xib */,
+				09AF7088216F73FC00E7FCFC /* FeedCurrent3Cell.swift */,
+				09AF7089216F73FD00E7FCFC /* FeedCurrent3Cell.xib */,
+				09AF708A216F73FD00E7FCFC /* FeedCurrent4Cell.swift */,
+				09AF7085216F73FC00E7FCFC /* FeedCurrent4Cell.xib */,
+				09AF708B216F73FD00E7FCFC /* FeedCurrent5Cell.swift */,
+				09AF7087216F73FC00E7FCFC /* FeedCurrent5Cell.xib */,
+				09F240F8216F8335007B7D73 /* FeedCurrent6Cell.swift */,
+				09F240F9216F8335007B7D73 /* FeedCurrent6Cell.xib */,
+			);
+			path = Current;
+			sourceTree = "<group>";
+		};
 		09E0F131215A617A0042FB6A /* Controller */ = {
 			isa = PBXGroup;
 			children = (
 				09E0F12F215A5B9D0042FB6A /* TabBarController.swift */,
+				09203D99216E150C00902BD2 /* Feed */,
 				096BCB062163518A005BC02B /* PaymentsViewController.swift */,
 				093B862921620806008A5222 /* ServicesViewController.swift */,
 				0930F167215B653D00CFB593 /* ProfileViewController.swift */,
@@ -209,6 +319,7 @@
 		09E0F133215A618E0042FB6A /* View */ = {
 			isa = PBXGroup;
 			children = (
+				09203D92216E136300902BD2 /* Feed */,
 				0930F165215B5CDB00CFB593 /* RoundedEdgeView.swift */,
 				09E0F145215A68DC0042FB6A /* CustomTabBar.swift */,
 				09E0F147215A69310042FB6A /* CustomTabBarItem.swift */,
@@ -236,7 +347,7 @@
 		09E0F149215A6B170042FB6A /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
-				0979755C215A49020044C00A /* TabBar.storyboard */,
+				09203D8A216CC19900902BD2 /* TabBar.storyboard */,
 				09E0F134215A61EB0042FB6A /* Feed.storyboard */,
 				09E0F13B215A65310042FB6A /* Deposits.storyboard */,
 				09E0F13E215A65AE0042FB6A /* Payment.storyboard */,
@@ -245,6 +356,48 @@
 				09797561215A49040044C00A /* LaunchScreen.storyboard */,
 			);
 			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		09F240FC217079D1007B7D73 /* Offers */ = {
+			isa = PBXGroup;
+			children = (
+				09045057216B5ADC00F3B295 /* FeedOffersCell.swift */,
+				09045058216B5ADC00F3B295 /* FeedOffersCell.xib */,
+				0904505B216B774600F3B295 /* FeedOfferCustom1Cell.swift */,
+				0904505C216B774600F3B295 /* FeedOfferCustom1Cell.xib */,
+			);
+			path = Offers;
+			sourceTree = "<group>";
+		};
+		09F240FD217079D9007B7D73 /* Options */ = {
+			isa = PBXGroup;
+			children = (
+				09203D93216E13A700902BD2 /* FeedOptionCell.swift */,
+				09203D94216E13A700902BD2 /* FeedOptionCell.xib */,
+			);
+			path = Options;
+			sourceTree = "<group>";
+		};
+		09F240FE217079E2007B7D73 /* Upcoming */ = {
+			isa = PBXGroup;
+			children = (
+				09AF7079216F4B5000E7FCFC /* FeedUpcomingCell.swift */,
+				09AF707A216F4B5000E7FCFC /* FeedUpcomingCell.xib */,
+			);
+			path = Upcoming;
+			sourceTree = "<group>";
+		};
+		09F2410D21709C1E007B7D73 /* Info */ = {
+			isa = PBXGroup;
+			children = (
+				09F240FF21707B3B007B7D73 /* FeedInfo1Cell.swift */,
+				09F2410021707B3B007B7D73 /* FeedInfo1Cell.xib */,
+				09F2410321707B7B007B7D73 /* FeedInfo2Cell.swift */,
+				09F2410421707B7B007B7D73 /* FeedInfo2Cell.xib */,
+				09F2410721707B86007B7D73 /* FeedInfo3Cell.swift */,
+				09F2410821707B86007B7D73 /* FeedInfo3Cell.xib */,
+			);
+			path = Info;
 			sourceTree = "<group>";
 		};
 		17646B619EE7583F4162F550 /* Pods */ = {
@@ -325,19 +478,28 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0904505A216B5ADC00F3B295 /* FeedOffersCell.xib in Resources */,
 				09D3C042215CE5D100998F57 /* DialogCell.xib in Resources */,
 				09797563215A49040044C00A /* LaunchScreen.storyboard in Resources */,
 				096BCB0B216361AA005BC02B /* PaymentTemplateCell.xib in Resources */,
-				09E0F14A215A6C2F0042FB6A /* TabBar.storyboard in Resources */,
+				09AF708E216F73FD00E7FCFC /* FeedCurrent2Cell.xib in Resources */,
+				09203D96216E13A700902BD2 /* FeedOptionCell.xib in Resources */,
+				09F240FB216F8335007B7D73 /* FeedCurrent6Cell.xib in Resources */,
+				09AF708F216F73FD00E7FCFC /* FeedCurrent5Cell.xib in Resources */,
 				09E0F135215A61EB0042FB6A /* Feed.storyboard in Resources */,
 				096BCB0F21637E27005BC02B /* PaymentCell.xib in Resources */,
 				09E0F13D215A65310042FB6A /* Deposits.storyboard in Resources */,
+				09AF707C216F4B5000E7FCFC /* FeedUpcomingCell.xib in Resources */,
 				093B863221620EE8008A5222 /* ServicesCell.xib in Resources */,
+				09F2410A21707B86007B7D73 /* FeedInfo3Cell.xib in Resources */,
 				09E0F13F215A65AE0042FB6A /* Payment.storyboard in Resources */,
 				09E0F142215A65D40042FB6A /* Services.storyboard in Resources */,
 				09E0F144215A65F10042FB6A /* Profile.storyboard in Resources */,
+				09AF7082216F6B6F00E7FCFC /* FeedCurrent1Cell.xib in Resources */,
 				09797560215A49040044C00A /* Assets.xcassets in Resources */,
+				09AF708D216F73FD00E7FCFC /* FeedCurrent4Cell.xib in Resources */,
 				0930F185215B78B000CFB593 /* Roboto-ThinItalic.ttf in Resources */,
+				09AF7091216F73FD00E7FCFC /* FeedCurrent3Cell.xib in Resources */,
 				0930F182215B78B000CFB593 /* Roboto-MediumItalic.ttf in Resources */,
 				0930F181215B78B000CFB593 /* Roboto-Medium.ttf in Resources */,
 				0930F180215B78B000CFB593 /* Roboto-LightItalic.ttf in Resources */,
@@ -345,12 +507,16 @@
 				0930F17F215B78B000CFB593 /* Roboto-Light.ttf in Resources */,
 				0930F17C215B78B000CFB593 /* Roboto-Bold.ttf in Resources */,
 				0930F17E215B78B000CFB593 /* Roboto-Italic.ttf in Resources */,
+				09F2410621707B7B007B7D73 /* FeedInfo2Cell.xib in Resources */,
+				09203D8B216CC19900902BD2 /* TabBar.storyboard in Resources */,
 				093B8636216224CC008A5222 /* ServicesHeader.xib in Resources */,
 				0930F17D215B78B000CFB593 /* Roboto-BoldItalic.ttf in Resources */,
 				0930F17A215B78B000CFB593 /* Roboto-Black.ttf in Resources */,
+				09F2410221707B3B007B7D73 /* FeedInfo1Cell.xib in Resources */,
 				093B862C216209B0008A5222 /* ServicesSearchCell.xib in Resources */,
 				09D3C03E215CD03E00998F57 /* SearchCell.xib in Resources */,
 				0930F184215B78B000CFB593 /* Roboto-Thin.ttf in Resources */,
+				0904505E216B774600F3B295 /* FeedOfferCustom1Cell.xib in Resources */,
 				0930F17B215B78B000CFB593 /* Roboto-BlackItalic.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -411,8 +577,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				09F2410521707B7B007B7D73 /* FeedInfo2Cell.swift in Sources */,
 				09D3C041215CE5D100998F57 /* DialogCell.swift in Sources */,
+				09203D87216CA79C00902BD2 /* FeedViewController.swift in Sources */,
 				09D3C03A215CBCAB00998F57 /* ChatDialogsViewController.swift in Sources */,
+				09F2410921707B86007B7D73 /* FeedInfo3Cell.swift in Sources */,
 				09D3C03D215CD03E00998F57 /* SearchCell.swift in Sources */,
 				093B862A21620806008A5222 /* ServicesViewController.swift in Sources */,
 				0930F168215B653D00CFB593 /* ProfileViewController.swift in Sources */,
@@ -420,19 +589,35 @@
 				09E0F146215A68DC0042FB6A /* CustomTabBar.swift in Sources */,
 				093B863121620EE8008A5222 /* ServicesCell.swift in Sources */,
 				093B8634216224C3008A5222 /* ServicesHeader.swift in Sources */,
+				09045056216B51B400F3B295 /* FeedOffersViewController.swift in Sources */,
 				09E0F130215A5B9D0042FB6A /* TabBarController.swift in Sources */,
+				09F240FA216F8335007B7D73 /* FeedCurrent6Cell.swift in Sources */,
 				096BCB0E21637E27005BC02B /* PaymentCell.swift in Sources */,
 				096BCB0A216361AA005BC02B /* PaymentTemplateCell.swift in Sources */,
+				09AF7081216F6B6F00E7FCFC /* FeedCurrent1Cell.swift in Sources */,
 				0930F16A215B6CB800CFB593 /* GradientView.swift in Sources */,
 				0930F16C215B704A00CFB593 /* CircularImageView.swift in Sources */,
+				09AF7093216F73FD00E7FCFC /* FeedCurrent5Cell.swift in Sources */,
+				09AF707E216F676300E7FCFC /* FeedCurrentViewController.swift in Sources */,
+				09F2410121707B3B007B7D73 /* FeedInfo1Cell.swift in Sources */,
+				0904505D216B774600F3B295 /* FeedOfferCustom1Cell.swift in Sources */,
 				09D3C048215E07DB00998F57 /* ChatMessagesViewController.swift in Sources */,
 				09FC8FED215BB2B200A4694B /* ProfileMenuTableViewController.swift in Sources */,
 				0942B86D21625F7800370C71 /* Friend.swift in Sources */,
+				09045059216B5ADC00F3B295 /* FeedOffersCell.swift in Sources */,
+				09AF7090216F73FD00E7FCFC /* FeedCurrent3Cell.swift in Sources */,
 				096BCB072163518A005BC02B /* PaymentsViewController.swift in Sources */,
+				09203D98216E150500902BD2 /* FeedOptionsViewController.swift in Sources */,
 				09D3C04C215E5AE800998F57 /* CustomTableView.swift in Sources */,
 				093B862E21620B1F008A5222 /* ServicesSearchCell.swift in Sources */,
+				09AF7092216F73FD00E7FCFC /* FeedCurrent4Cell.swift in Sources */,
+				09203D95216E13A700902BD2 /* FeedOptionCell.swift in Sources */,
+				09AF708C216F73FD00E7FCFC /* FeedCurrent2Cell.swift in Sources */,
+				09F2410C2170871F007B7D73 /* FeedInfoViewController.swift in Sources */,
+				09AF7078216F4A9600E7FCFC /* FeedUpcomingViewController.swift in Sources */,
 				0942B86B21625F4800370C71 /* Service.swift in Sources */,
 				09797559215A49020044C00A /* AppDelegate.swift in Sources */,
+				09AF707B216F4B5000E7FCFC /* FeedUpcomingCell.swift in Sources */,
 				09E0F148215A69310042FB6A /* CustomTabBarItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -440,14 +625,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		0979755C215A49020044C00A /* TabBar.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				0979755D215A49020044C00A /* Base */,
-			);
-			name = TabBar.storyboard;
-			sourceTree = "<group>";
-		};
 		09797561215A49040044C00A /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -608,6 +785,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ForaBank;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ForaBank/ForaBank-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -630,7 +808,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ForaBank;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ForaBank/ForaBank-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

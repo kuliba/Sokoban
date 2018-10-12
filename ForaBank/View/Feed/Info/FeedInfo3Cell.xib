@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.23.1" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.16.1"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Roboto-Regular.ttf">
+            <string>Roboto-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FeedInfo3Cell" rowHeight="522" id="MvE-e1-vXq" customClass="FeedInfo3Cell" customModule="ForaBank" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="MvE-e1-vXq" id="uTm-jc-oBn">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="567.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YiX-Jw-2S6">
+                        <rect key="frame" x="10" y="137" width="300" height="357"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="feed_info_currency" translatesAutoresizingMaskIntoConstraints="NO" id="o3D-vv-Tz5">
+                                <rect key="frame" x="8" y="0.0" width="284" height="265"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lhU-xP-v9F">
+                                <rect key="frame" x="8" y="289.5" width="284" height="47"/>
+                                <color key="backgroundColor" red="0.84133863450000002" green="0.32575434450000001" blue="0.30580860380000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="47" id="8V4-3q-x8r"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Купить валюту">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="o3D-vv-Tz5" secondAttribute="trailing" constant="8" id="Bk9-LR-dck"/>
+                            <constraint firstItem="lhU-xP-v9F" firstAttribute="top" secondItem="o3D-vv-Tz5" secondAttribute="bottom" constant="24.5" id="FaH-JM-vBa"/>
+                            <constraint firstAttribute="bottom" secondItem="lhU-xP-v9F" secondAttribute="bottom" constant="20.5" id="HkG-VW-slv"/>
+                            <constraint firstItem="o3D-vv-Tz5" firstAttribute="leading" secondItem="YiX-Jw-2S6" secondAttribute="leading" constant="8" id="IiE-zp-npz"/>
+                            <constraint firstAttribute="height" constant="357" id="Oxv-iy-ekK"/>
+                            <constraint firstItem="o3D-vv-Tz5" firstAttribute="top" secondItem="YiX-Jw-2S6" secondAttribute="top" id="RIV-IH-vRg"/>
+                            <constraint firstItem="lhU-xP-v9F" firstAttribute="leading" secondItem="YiX-Jw-2S6" secondAttribute="leading" constant="8" id="b8a-kP-fEE"/>
+                            <constraint firstAttribute="trailing" secondItem="lhU-xP-v9F" secondAttribute="trailing" constant="8" id="kB2-rl-qyH"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <color key="backgroundColor" red="0.12941176470588234" green="0.12941176470588234" blue="0.12941176470588234" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="YiX-Jw-2S6" secondAttribute="trailing" constant="10" id="464-Sz-jRc"/>
+                    <constraint firstItem="YiX-Jw-2S6" firstAttribute="centerY" secondItem="uTm-jc-oBn" secondAttribute="centerY" constant="31.75" id="jAG-P9-Q0A"/>
+                    <constraint firstItem="YiX-Jw-2S6" firstAttribute="leading" secondItem="uTm-jc-oBn" secondAttribute="leading" constant="10" id="mGh-Kv-a9b"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="A9B-DY-d2p"/>
+            <connections>
+                <outlet property="button" destination="lhU-xP-v9F" id="6QW-Sy-Qy0"/>
+            </connections>
+            <point key="canvasLocation" x="132.80000000000001" y="271.664167916042"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="feed_info_currency" width="498" height="465"/>
+    </resources>
+</document>

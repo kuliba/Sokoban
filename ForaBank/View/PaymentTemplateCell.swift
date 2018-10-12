@@ -2,7 +2,7 @@
 //  PaymentTemplateCell.swift
 //  ForaBank
 //
-//  Created by IM on 02/10/2018.
+//  Created by Ilya Masalov on 02/10/2018.
 //  Copyright © 2018 BraveRobin. All rights reserved.
 //
 

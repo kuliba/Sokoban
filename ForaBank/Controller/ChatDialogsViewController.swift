@@ -38,17 +38,13 @@ class ChatDialogsViewController: UIViewController {
         setTableViewDelegateAndDataSource()
         addRefreshControl()
         registerNibCell()
+        setSearchView()
         
         // Prepare button for animation
         backButton.alpha = 0
         backButton.frame.origin.x += 5
 
-        // Add search text field
-        if let searchCell = UINib(nibName: "SearchCell", bundle: nil).instantiate(withOwner: nil, options: nil)[0] as? UIView {
-            let searchView = UIView(frame: searchCell.frame)
-            searchView.addSubview(searchCell)
-            tableView.tableHeaderView = searchView
-        }
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -171,5 +167,15 @@ private extension ChatDialogsViewController {
             completion: { _ in
                 
         })
+    }
+    
+    func setSearchView() {
+        guard let searchCell = UINib(nibName: "SearchCell", bundle: nil)
+            .instantiate(withOwner: nil, options: nil)[0] as? UIView else {
+                return
+        }
+        let searchView = UIView(frame: searchCell.frame)
+        searchView.addSubview(searchCell)
+        tableView.tableHeaderView = searchView
     }
 }

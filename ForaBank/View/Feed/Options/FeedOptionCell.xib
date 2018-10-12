@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.23.1" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.16.1"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Roboto-Light.ttf">
+            <string>Roboto-Light</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FeedOptionCell" id="LwO-8t-Pfa" customClass="FeedOptionCell" customModule="ForaBank" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="LwO-8t-Pfa" id="wwz-fB-JfF">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="49.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Screenshot 2018-10-01 at 12.15.32" translatesAutoresizingMaskIntoConstraints="NO" id="bnc-M5-8AD">
+                        <rect key="frame" x="0.0" y="-36" width="320" height="126"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="payments_services_phone-billing" translatesAutoresizingMaskIntoConstraints="NO" id="6hz-fb-JhD">
+                        <rect key="frame" x="20" y="18" width="15" height="15"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="15" id="9Pc-7g-qBR"/>
+                            <constraint firstAttribute="height" constant="15" id="Rcc-Lk-yQC"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Счета" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ALz-gk-mvh">
+                        <rect key="frame" x="43" y="15" width="200" height="19.5"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zpa-Tk-aEG">
+                        <rect key="frame" x="20" y="49" width="280" height="0.5"/>
+                        <color key="backgroundColor" red="0.82745098039999998" green="0.82745098039999998" blue="0.82745098039999998" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="0.5" id="dOV-s4-Isr"/>
+                        </constraints>
+                    </view>
+                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sgq-Rn-jsG">
+                        <rect key="frame" x="251" y="9" width="51" height="31"/>
+                    </switch>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="ALz-gk-mvh" firstAttribute="centerY" secondItem="wwz-fB-JfF" secondAttribute="centerY" id="0qZ-mj-Mxd"/>
+                    <constraint firstItem="sgq-Rn-jsG" firstAttribute="top" secondItem="wwz-fB-JfF" secondAttribute="top" constant="9" id="FHz-Gl-sJd"/>
+                    <constraint firstAttribute="bottom" secondItem="ALz-gk-mvh" secondAttribute="bottom" constant="15" id="NDo-hT-I5p"/>
+                    <constraint firstAttribute="bottom" secondItem="sgq-Rn-jsG" secondAttribute="bottom" constant="9.5" id="VQv-KC-x5K"/>
+                    <constraint firstItem="6hz-fb-JhD" firstAttribute="leading" secondItem="wwz-fB-JfF" secondAttribute="leading" constant="20" id="XHA-Xc-pUB"/>
+                    <constraint firstAttribute="trailing" secondItem="sgq-Rn-jsG" secondAttribute="trailing" constant="20" id="fe5-eg-G4f"/>
+                    <constraint firstItem="6hz-fb-JhD" firstAttribute="top" secondItem="ALz-gk-mvh" secondAttribute="top" constant="3" id="h2y-xv-wj9"/>
+                    <constraint firstItem="sgq-Rn-jsG" firstAttribute="leading" secondItem="ALz-gk-mvh" secondAttribute="trailing" constant="8" id="hSs-A1-Yb4"/>
+                    <constraint firstItem="ALz-gk-mvh" firstAttribute="top" secondItem="wwz-fB-JfF" secondAttribute="top" constant="15" id="hfs-zH-ujl"/>
+                    <constraint firstItem="Zpa-Tk-aEG" firstAttribute="leading" secondItem="wwz-fB-JfF" secondAttribute="leading" constant="20" id="ioP-G1-2Wu"/>
+                    <constraint firstAttribute="trailing" secondItem="Zpa-Tk-aEG" secondAttribute="trailing" constant="20" id="l0U-qr-NJD"/>
+                    <constraint firstAttribute="bottom" secondItem="Zpa-Tk-aEG" secondAttribute="bottom" id="s5z-Eg-lBP"/>
+                    <constraint firstItem="ALz-gk-mvh" firstAttribute="leading" secondItem="6hz-fb-JhD" secondAttribute="trailing" constant="8" id="vrs-fd-X8b"/>
+                </constraints>
+                <variation key="default">
+                    <mask key="subviews">
+                        <exclude reference="bnc-M5-8AD"/>
+                    </mask>
+                </variation>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="SSe-t4-uua"/>
+            <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+            <connections>
+                <outlet property="iconImageView" destination="6hz-fb-JhD" id="0VM-qS-KJl"/>
+                <outlet property="titleLabel" destination="ALz-gk-mvh" id="fgi-W1-EhJ"/>
+            </connections>
+            <point key="canvasLocation" x="137.59999999999999" y="235.68215892053973"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="Screenshot 2018-10-01 at 12.15.32" width="850" height="206"/>
+        <image name="payments_services_phone-billing" width="12" height="20"/>
+    </resources>
+</document>
