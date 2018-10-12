@@ -1,0 +1,20 @@
+PODS:
+  - DeviceKit (1.8.1)
+  - iCarousel (1.8.3)
+
+DEPENDENCIES:
+  - DeviceKit
+  - iCarousel
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - DeviceKit
+    - iCarousel
+
+SPEC CHECKSUMS:
+  DeviceKit: eb29be542f5473b46b1c719011cf7de3ec5264ca
+  iCarousel: d782f635afac190c49bb8ee455882284cff8b85f
+
+PODFILE CHECKSUM: 441ee76f26de879c2a25ef6a13c327e52e5dde69
+
+COCOAPODS: 1.6.0.beta.1

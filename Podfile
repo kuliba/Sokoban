@@ -6,4 +6,6 @@ target 'ForaBank' do
   use_frameworks!
 
   # Pods for ForaBank
+  pod 'iCarousel'
+  pod 'DeviceKit'
 end
