@@ -176,6 +176,7 @@
 				09E0F132215A61850042FB6A /* Model */,
 				09E0F133215A618E0042FB6A /* View */,
 				09797564215A49040044C00A /* Info.plist */,
+				09203D91216E0D7600902BD2 /* ForaBank-Bridging-Header.h */,
 				0979755F215A49040044C00A /* Assets.xcassets */,
 				0930F16D215B788100CFB593 /* Fonts */,
 			);
@@ -606,6 +607,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ForaBank;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ForaBank/ForaBank-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -627,6 +629,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ForaBank;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ForaBank/ForaBank-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
