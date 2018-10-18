@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.23.1" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.16.1"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Roboto-Light.ttf">
+            <string>Roboto-Light</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="DepositsObligationsCell" id="04G-BD-UVp" customClass="DepositsObligationsCell" customModule="ForaBank" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="65"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="04G-BD-UVp" id="6mN-Io-30C">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="64.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Screenshot 2018-10-02 at 12.21.23" translatesAutoresizingMaskIntoConstraints="NO" id="YaK-8s-iUk">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="65"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="500 ₽" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fET-uS-1sc">
+                        <rect key="frame" x="230" y="18" width="70" height="30"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="70" id="ko2-q4-cF6"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="payments_template_alfabank" translatesAutoresizingMaskIntoConstraints="NO" id="0r2-a4-NgP">
+                        <rect key="frame" x="20" y="18" width="32" height="32"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="32" id="YxM-HF-EOO"/>
+                            <constraint firstAttribute="height" constant="32" id="c8t-yK-N8g"/>
+                        </constraints>
+                    </imageView>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bIP-8e-93z">
+                        <rect key="frame" x="20" y="64" width="280" height="0.5"/>
+                        <color key="backgroundColor" red="0.82745098039999998" green="0.82745098039999998" blue="0.82745098039999998" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="0.5" id="ZLy-lY-bKl"/>
+                        </constraints>
+                    </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Мобилка мск у" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EG9-cF-eMb">
+                        <rect key="frame" x="60" y="14" width="162" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="21" id="Vjk-2f-uk4"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Последний: 25 сентября у" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hbu-Ip-pxu">
+                        <rect key="frame" x="60" y="33" width="162" height="17"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="17" id="To4-tQ-loK"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="13"/>
+                        <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="Hbu-Ip-pxu" firstAttribute="top" secondItem="EG9-cF-eMb" secondAttribute="bottom" constant="-2" id="Fu0-Ef-OfF"/>
+                    <constraint firstItem="fET-uS-1sc" firstAttribute="leading" secondItem="Hbu-Ip-pxu" secondAttribute="trailing" constant="8" id="PGr-Sr-qMF"/>
+                    <constraint firstItem="EG9-cF-eMb" firstAttribute="top" secondItem="6mN-Io-30C" secondAttribute="top" constant="14" id="R4Z-MB-cA9"/>
+                    <constraint firstAttribute="trailing" secondItem="fET-uS-1sc" secondAttribute="trailing" constant="20" id="R7g-cL-5ze"/>
+                    <constraint firstItem="fET-uS-1sc" firstAttribute="leading" secondItem="EG9-cF-eMb" secondAttribute="trailing" constant="8" id="SZD-Ef-ki9"/>
+                    <constraint firstAttribute="trailing" secondItem="bIP-8e-93z" secondAttribute="trailing" constant="20" id="TvJ-c5-KvK"/>
+                    <constraint firstAttribute="bottom" secondItem="fET-uS-1sc" secondAttribute="bottom" constant="16.5" id="Vw6-Ru-anl"/>
+                    <constraint firstItem="bIP-8e-93z" firstAttribute="leading" secondItem="6mN-Io-30C" secondAttribute="leading" constant="20" id="Ws9-M4-o6K"/>
+                    <constraint firstAttribute="bottom" secondItem="Hbu-Ip-pxu" secondAttribute="bottom" constant="14.5" id="YRW-yU-S8Y"/>
+                    <constraint firstAttribute="bottom" secondItem="bIP-8e-93z" secondAttribute="bottom" id="a9P-uY-lfC"/>
+                    <constraint firstAttribute="bottom" secondItem="0r2-a4-NgP" secondAttribute="bottom" constant="14.5" id="cLO-C7-fpS"/>
+                    <constraint firstItem="fET-uS-1sc" firstAttribute="top" secondItem="6mN-Io-30C" secondAttribute="top" constant="18" id="gQc-RY-WdK"/>
+                    <constraint firstItem="EG9-cF-eMb" firstAttribute="leading" secondItem="0r2-a4-NgP" secondAttribute="trailing" constant="8" id="iFO-uA-OmF"/>
+                    <constraint firstItem="Hbu-Ip-pxu" firstAttribute="leading" secondItem="0r2-a4-NgP" secondAttribute="trailing" constant="8" id="mSL-f4-0ou"/>
+                    <constraint firstItem="0r2-a4-NgP" firstAttribute="leading" secondItem="6mN-Io-30C" secondAttribute="leading" constant="20" id="t0b-1d-I55"/>
+                    <constraint firstItem="0r2-a4-NgP" firstAttribute="top" secondItem="6mN-Io-30C" secondAttribute="top" constant="18" id="uT9-dU-GLB"/>
+                </constraints>
+                <variation key="default">
+                    <mask key="subviews">
+                        <exclude reference="YaK-8s-iUk"/>
+                    </mask>
+                </variation>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="rl1-ca-Uc9"/>
+            <inset key="separatorInset" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
+            <connections>
+                <outlet property="bottomSeparatorView" destination="bIP-8e-93z" id="iBA-zT-Z3A"/>
+                <outlet property="descriptionLabel" destination="fET-uS-1sc" id="GU1-Fx-oWZ"/>
+                <outlet property="iconImageView" destination="0r2-a4-NgP" id="7dq-A5-EPB"/>
+                <outlet property="subTitleLabel" destination="Hbu-Ip-pxu" id="wAb-Sy-YSH"/>
+                <outlet property="titleLabel" destination="EG9-cF-eMb" id="kPO-8L-iYy"/>
+            </connections>
+            <point key="canvasLocation" x="150" y="278"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="Screenshot 2018-10-02 at 12.21.23" width="16" height="16"/>
+        <image name="payments_template_alfabank" width="30" height="30"/>
+    </resources>
+</document>

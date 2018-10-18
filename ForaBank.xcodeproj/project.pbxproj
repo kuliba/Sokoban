@@ -33,6 +33,8 @@
 		0930F183215B78B000CFB593 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0930F171215B78A100CFB593 /* Roboto-Regular.ttf */; };
 		0930F184215B78B000CFB593 /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0930F172215B78A100CFB593 /* Roboto-Thin.ttf */; };
 		0930F185215B78B000CFB593 /* Roboto-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0930F173215B78A200CFB593 /* Roboto-ThinItalic.ttf */; };
+		0939B5F92177266B0029F03D /* DepositsHistoryDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0939B5F82177266B0029F03D /* DepositsHistoryDetailsViewController.swift */; };
+		0939B5FB21774EA70029F03D /* DoubleRoundedEdgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0939B5FA21774EA70029F03D /* DoubleRoundedEdgeView.swift */; };
 		093B862A21620806008A5222 /* ServicesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 093B862921620806008A5222 /* ServicesViewController.swift */; };
 		093B862C216209B0008A5222 /* ServicesSearchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 093B862B216209B0008A5222 /* ServicesSearchCell.xib */; };
 		093B862E21620B1F008A5222 /* ServicesSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 093B862D21620B1F008A5222 /* ServicesSearchCell.swift */; };
@@ -64,6 +66,17 @@
 		09AF7091216F73FD00E7FCFC /* FeedCurrent3Cell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09AF7089216F73FD00E7FCFC /* FeedCurrent3Cell.xib */; };
 		09AF7092216F73FD00E7FCFC /* FeedCurrent4Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AF708A216F73FD00E7FCFC /* FeedCurrent4Cell.swift */; };
 		09AF7093216F73FD00E7FCFC /* FeedCurrent5Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AF708B216F73FD00E7FCFC /* FeedCurrent5Cell.swift */; };
+		09C7C30D21747293000EE472 /* DepositsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C7C30C21747293000EE472 /* DepositsViewController.swift */; };
+		09C7C30F2174888B000EE472 /* DepositsObligationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C7C30E2174888B000EE472 /* DepositsObligationsViewController.swift */; };
+		09C7C31221749151000EE472 /* DepositsObligationsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C7C31021749151000EE472 /* DepositsObligationsCell.swift */; };
+		09C7C31321749151000EE472 /* DepositsObligationsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09C7C31121749151000EE472 /* DepositsObligationsCell.xib */; };
+		09C7C3162174A362000EE472 /* DepositsSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C7C3142174A361000EE472 /* DepositsSearchCell.swift */; };
+		09C7C3172174A362000EE472 /* DepositsSearchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09C7C3152174A362000EE472 /* DepositsSearchCell.xib */; };
+		09C7C3352175CC47000EE472 /* DepositsHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C7C3342175CC47000EE472 /* DepositsHistoryViewController.swift */; };
+		09C7C3382175E486000EE472 /* DepositsHistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C7C3362175E486000EE472 /* DepositsHistoryCell.swift */; };
+		09C7C3392175E486000EE472 /* DepositsHistoryCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09C7C3372175E486000EE472 /* DepositsHistoryCell.xib */; };
+		09C7C33C2175FADE000EE472 /* DepositsHistoryHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09C7C33A2175FADD000EE472 /* DepositsHistoryHeader.xib */; };
+		09C7C33D2175FADE000EE472 /* DepositsHistoryHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C7C33B2175FADD000EE472 /* DepositsHistoryHeader.swift */; };
 		09D3C03A215CBCAB00998F57 /* ChatDialogsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D3C039215CBCAB00998F57 /* ChatDialogsViewController.swift */; };
 		09D3C03D215CD03E00998F57 /* SearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D3C03B215CD03E00998F57 /* SearchCell.swift */; };
 		09D3C03E215CD03E00998F57 /* SearchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09D3C03C215CD03E00998F57 /* SearchCell.xib */; };
@@ -120,6 +133,8 @@
 		0930F177215B78A200CFB593 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		0930F178215B78A200CFB593 /* Roboto-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-BoldItalic.ttf"; sourceTree = "<group>"; };
 		0930F179215B78A200CFB593 /* Roboto-BlackItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-BlackItalic.ttf"; sourceTree = "<group>"; };
+		0939B5F82177266B0029F03D /* DepositsHistoryDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsHistoryDetailsViewController.swift; sourceTree = "<group>"; };
+		0939B5FA21774EA70029F03D /* DoubleRoundedEdgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleRoundedEdgeView.swift; sourceTree = "<group>"; };
 		093B862921620806008A5222 /* ServicesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesViewController.swift; sourceTree = "<group>"; };
 		093B862B216209B0008A5222 /* ServicesSearchCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ServicesSearchCell.xib; sourceTree = "<group>"; };
 		093B862D21620B1F008A5222 /* ServicesSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesSearchCell.swift; sourceTree = "<group>"; };
@@ -153,6 +168,17 @@
 		09AF7089216F73FD00E7FCFC /* FeedCurrent3Cell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedCurrent3Cell.xib; sourceTree = "<group>"; };
 		09AF708A216F73FD00E7FCFC /* FeedCurrent4Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedCurrent4Cell.swift; sourceTree = "<group>"; };
 		09AF708B216F73FD00E7FCFC /* FeedCurrent5Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedCurrent5Cell.swift; sourceTree = "<group>"; };
+		09C7C30C21747293000EE472 /* DepositsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsViewController.swift; sourceTree = "<group>"; };
+		09C7C30E2174888B000EE472 /* DepositsObligationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsObligationsViewController.swift; sourceTree = "<group>"; };
+		09C7C31021749151000EE472 /* DepositsObligationsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsObligationsCell.swift; sourceTree = "<group>"; };
+		09C7C31121749151000EE472 /* DepositsObligationsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositsObligationsCell.xib; sourceTree = "<group>"; };
+		09C7C3142174A361000EE472 /* DepositsSearchCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsSearchCell.swift; sourceTree = "<group>"; };
+		09C7C3152174A362000EE472 /* DepositsSearchCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DepositsSearchCell.xib; sourceTree = "<group>"; };
+		09C7C3342175CC47000EE472 /* DepositsHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsHistoryViewController.swift; sourceTree = "<group>"; };
+		09C7C3362175E486000EE472 /* DepositsHistoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsHistoryCell.swift; sourceTree = "<group>"; };
+		09C7C3372175E486000EE472 /* DepositsHistoryCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositsHistoryCell.xib; sourceTree = "<group>"; };
+		09C7C33A2175FADD000EE472 /* DepositsHistoryHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DepositsHistoryHeader.xib; sourceTree = "<group>"; };
+		09C7C33B2175FADD000EE472 /* DepositsHistoryHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsHistoryHeader.swift; sourceTree = "<group>"; };
 		09D3C039215CBCAB00998F57 /* ChatDialogsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDialogsViewController.swift; sourceTree = "<group>"; };
 		09D3C03B215CD03E00998F57 /* SearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCell.swift; sourceTree = "<group>"; };
 		09D3C03C215CD03E00998F57 /* SearchCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchCell.xib; sourceTree = "<group>"; };
@@ -292,11 +318,23 @@
 			path = Current;
 			sourceTree = "<group>";
 		};
+		09C7C30B2174727A000EE472 /* Deposits */ = {
+			isa = PBXGroup;
+			children = (
+				09C7C30C21747293000EE472 /* DepositsViewController.swift */,
+				09C7C30E2174888B000EE472 /* DepositsObligationsViewController.swift */,
+				09C7C3342175CC47000EE472 /* DepositsHistoryViewController.swift */,
+				0939B5F82177266B0029F03D /* DepositsHistoryDetailsViewController.swift */,
+			);
+			path = Deposits;
+			sourceTree = "<group>";
+		};
 		09E0F131215A617A0042FB6A /* Controller */ = {
 			isa = PBXGroup;
 			children = (
 				09E0F12F215A5B9D0042FB6A /* TabBarController.swift */,
 				09203D99216E150C00902BD2 /* Feed */,
+				09C7C30B2174727A000EE472 /* Deposits */,
 				096BCB062163518A005BC02B /* PaymentsViewController.swift */,
 				093B862921620806008A5222 /* ServicesViewController.swift */,
 				0930F167215B653D00CFB593 /* ProfileViewController.swift */,
@@ -319,8 +357,11 @@
 		09E0F133215A618E0042FB6A /* View */ = {
 			isa = PBXGroup;
 			children = (
+				09C7C31021749151000EE472 /* DepositsObligationsCell.swift */,
+				09C7C31121749151000EE472 /* DepositsObligationsCell.xib */,
 				09203D92216E136300902BD2 /* Feed */,
 				0930F165215B5CDB00CFB593 /* RoundedEdgeView.swift */,
+				0939B5FA21774EA70029F03D /* DoubleRoundedEdgeView.swift */,
 				09E0F145215A68DC0042FB6A /* CustomTabBar.swift */,
 				09E0F147215A69310042FB6A /* CustomTabBarItem.swift */,
 				0930F169215B6CB800CFB593 /* GradientView.swift */,
@@ -340,6 +381,12 @@
 				096BCB09216361AA005BC02B /* PaymentTemplateCell.xib */,
 				096BCB0C21637E27005BC02B /* PaymentCell.swift */,
 				096BCB0D21637E27005BC02B /* PaymentCell.xib */,
+				09C7C3142174A361000EE472 /* DepositsSearchCell.swift */,
+				09C7C3152174A362000EE472 /* DepositsSearchCell.xib */,
+				09C7C3362175E486000EE472 /* DepositsHistoryCell.swift */,
+				09C7C3372175E486000EE472 /* DepositsHistoryCell.xib */,
+				09C7C33B2175FADD000EE472 /* DepositsHistoryHeader.swift */,
+				09C7C33A2175FADD000EE472 /* DepositsHistoryHeader.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -481,10 +528,12 @@
 				0904505A216B5ADC00F3B295 /* FeedOffersCell.xib in Resources */,
 				09D3C042215CE5D100998F57 /* DialogCell.xib in Resources */,
 				09797563215A49040044C00A /* LaunchScreen.storyboard in Resources */,
+				09C7C31321749151000EE472 /* DepositsObligationsCell.xib in Resources */,
 				096BCB0B216361AA005BC02B /* PaymentTemplateCell.xib in Resources */,
 				09AF708E216F73FD00E7FCFC /* FeedCurrent2Cell.xib in Resources */,
 				09203D96216E13A700902BD2 /* FeedOptionCell.xib in Resources */,
 				09F240FB216F8335007B7D73 /* FeedCurrent6Cell.xib in Resources */,
+				09C7C3172174A362000EE472 /* DepositsSearchCell.xib in Resources */,
 				09AF708F216F73FD00E7FCFC /* FeedCurrent5Cell.xib in Resources */,
 				09E0F135215A61EB0042FB6A /* Feed.storyboard in Resources */,
 				096BCB0F21637E27005BC02B /* PaymentCell.xib in Resources */,
@@ -504,6 +553,7 @@
 				0930F181215B78B000CFB593 /* Roboto-Medium.ttf in Resources */,
 				0930F180215B78B000CFB593 /* Roboto-LightItalic.ttf in Resources */,
 				0930F183215B78B000CFB593 /* Roboto-Regular.ttf in Resources */,
+				09C7C33C2175FADE000EE472 /* DepositsHistoryHeader.xib in Resources */,
 				0930F17F215B78B000CFB593 /* Roboto-Light.ttf in Resources */,
 				0930F17C215B78B000CFB593 /* Roboto-Bold.ttf in Resources */,
 				0930F17E215B78B000CFB593 /* Roboto-Italic.ttf in Resources */,
@@ -512,6 +562,7 @@
 				093B8636216224CC008A5222 /* ServicesHeader.xib in Resources */,
 				0930F17D215B78B000CFB593 /* Roboto-BoldItalic.ttf in Resources */,
 				0930F17A215B78B000CFB593 /* Roboto-Black.ttf in Resources */,
+				09C7C3392175E486000EE472 /* DepositsHistoryCell.xib in Resources */,
 				09F2410221707B3B007B7D73 /* FeedInfo1Cell.xib in Resources */,
 				093B862C216209B0008A5222 /* ServicesSearchCell.xib in Resources */,
 				09D3C03E215CD03E00998F57 /* SearchCell.xib in Resources */,
@@ -580,12 +631,17 @@
 				09F2410521707B7B007B7D73 /* FeedInfo2Cell.swift in Sources */,
 				09D3C041215CE5D100998F57 /* DialogCell.swift in Sources */,
 				09203D87216CA79C00902BD2 /* FeedViewController.swift in Sources */,
+				09C7C30F2174888B000EE472 /* DepositsObligationsViewController.swift in Sources */,
 				09D3C03A215CBCAB00998F57 /* ChatDialogsViewController.swift in Sources */,
 				09F2410921707B86007B7D73 /* FeedInfo3Cell.swift in Sources */,
+				0939B5FB21774EA70029F03D /* DoubleRoundedEdgeView.swift in Sources */,
 				09D3C03D215CD03E00998F57 /* SearchCell.swift in Sources */,
 				093B862A21620806008A5222 /* ServicesViewController.swift in Sources */,
+				09C7C30D21747293000EE472 /* DepositsViewController.swift in Sources */,
 				0930F168215B653D00CFB593 /* ProfileViewController.swift in Sources */,
 				0930F166215B5CDB00CFB593 /* RoundedEdgeView.swift in Sources */,
+				09C7C33D2175FADE000EE472 /* DepositsHistoryHeader.swift in Sources */,
+				09C7C3352175CC47000EE472 /* DepositsHistoryViewController.swift in Sources */,
 				09E0F146215A68DC0042FB6A /* CustomTabBar.swift in Sources */,
 				093B863121620EE8008A5222 /* ServicesCell.swift in Sources */,
 				093B8634216224C3008A5222 /* ServicesHeader.swift in Sources */,
@@ -594,8 +650,11 @@
 				09F240FA216F8335007B7D73 /* FeedCurrent6Cell.swift in Sources */,
 				096BCB0E21637E27005BC02B /* PaymentCell.swift in Sources */,
 				096BCB0A216361AA005BC02B /* PaymentTemplateCell.swift in Sources */,
+				09C7C31221749151000EE472 /* DepositsObligationsCell.swift in Sources */,
+				0939B5F92177266B0029F03D /* DepositsHistoryDetailsViewController.swift in Sources */,
 				09AF7081216F6B6F00E7FCFC /* FeedCurrent1Cell.swift in Sources */,
 				0930F16A215B6CB800CFB593 /* GradientView.swift in Sources */,
+				09C7C3162174A362000EE472 /* DepositsSearchCell.swift in Sources */,
 				0930F16C215B704A00CFB593 /* CircularImageView.swift in Sources */,
 				09AF7093216F73FD00E7FCFC /* FeedCurrent5Cell.swift in Sources */,
 				09AF707E216F676300E7FCFC /* FeedCurrentViewController.swift in Sources */,
@@ -605,6 +664,7 @@
 				09FC8FED215BB2B200A4694B /* ProfileMenuTableViewController.swift in Sources */,
 				0942B86D21625F7800370C71 /* Friend.swift in Sources */,
 				09045059216B5ADC00F3B295 /* FeedOffersCell.swift in Sources */,
+				09C7C3382175E486000EE472 /* DepositsHistoryCell.swift in Sources */,
 				09AF7090216F73FD00E7FCFC /* FeedCurrent3Cell.swift in Sources */,
 				096BCB072163518A005BC02B /* PaymentsViewController.swift in Sources */,
 				09203D98216E150500902BD2 /* FeedOptionsViewController.swift in Sources */,
