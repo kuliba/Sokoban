@@ -11,7 +11,6 @@ import UIKit
 class DepositsObligationsViewController: UIViewController {
 
     // MARK: - Properties
-   
     @IBOutlet weak var tableView: CustomTableView!
     
     let data_ = [

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 48;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -46,6 +46,12 @@
 		0942B86D21625F7800370C71 /* Friend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0942B86C21625F7800370C71 /* Friend.swift */; };
 		095D158721789B9900F5266C /* DepositsCardsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D158621789B9900F5266C /* DepositsCardsViewController.swift */; };
 		095D158921789BB100F5266C /* DepositsCardsDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D158821789BB100F5266C /* DepositsCardsDetailsViewController.swift */; };
+		096B4F4D2183089900C69E52 /* OneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096B4F4B2183089800C69E52 /* OneViewController.swift */; };
+		096B4F4E2183089900C69E52 /* TwoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096B4F4C2183089900C69E52 /* TwoViewController.swift */; };
+		096B4F502183257300C69E52 /* ThreeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096B4F4F2183257300C69E52 /* ThreeViewController.swift */; };
+		096B4F542186E29300C69E52 /* DepositsCardsDetailsManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096B4F532186E29300C69E52 /* DepositsCardsDetailsManagementViewController.swift */; };
+		096B4F562186F03A00C69E52 /* DepositsCardsDetailsAboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096B4F552186F03A00C69E52 /* DepositsCardsDetailsAboutViewController.swift */; };
+		096B4F58218704AA00C69E52 /* DepositsCardsDetailsStatementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096B4F57218704AA00C69E52 /* DepositsCardsDetailsStatementViewController.swift */; };
 		096BCB072163518A005BC02B /* PaymentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096BCB062163518A005BC02B /* PaymentsViewController.swift */; };
 		096BCB0A216361AA005BC02B /* PaymentTemplateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096BCB08216361AA005BC02B /* PaymentTemplateCell.swift */; };
 		096BCB0B216361AA005BC02B /* PaymentTemplateCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 096BCB09216361AA005BC02B /* PaymentTemplateCell.xib */; };
@@ -94,6 +100,7 @@
 		09E0F144215A65F10042FB6A /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 09E0F143215A65F10042FB6A /* Profile.storyboard */; };
 		09E0F146215A68DC0042FB6A /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E0F145215A68DC0042FB6A /* CustomTabBar.swift */; };
 		09E0F148215A69310042FB6A /* CustomTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E0F147215A69310042FB6A /* CustomTabBarItem.swift */; };
+		09E2141F21873DCA00D16D21 /* DepositsCardsDetailsStatementDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E2141E21873DCA00D16D21 /* DepositsCardsDetailsStatementDetailsViewController.swift */; };
 		09F0E5CD2179DC3B0016BB6E /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F0E5CC2179DC3B0016BB6E /* CardView.swift */; };
 		09F240FA216F8335007B7D73 /* FeedCurrent6Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F240F8216F8335007B7D73 /* FeedCurrent6Cell.swift */; };
 		09F240FB216F8335007B7D73 /* FeedCurrent6Cell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09F240F9216F8335007B7D73 /* FeedCurrent6Cell.xib */; };
@@ -149,6 +156,12 @@
 		0942B86C21625F7800370C71 /* Friend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Friend.swift; sourceTree = "<group>"; };
 		095D158621789B9900F5266C /* DepositsCardsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsCardsViewController.swift; sourceTree = "<group>"; };
 		095D158821789BB100F5266C /* DepositsCardsDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsCardsDetailsViewController.swift; sourceTree = "<group>"; };
+		096B4F4B2183089800C69E52 /* OneViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OneViewController.swift; sourceTree = "<group>"; };
+		096B4F4C2183089900C69E52 /* TwoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwoViewController.swift; sourceTree = "<group>"; };
+		096B4F4F2183257300C69E52 /* ThreeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreeViewController.swift; sourceTree = "<group>"; };
+		096B4F532186E29300C69E52 /* DepositsCardsDetailsManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsCardsDetailsManagementViewController.swift; sourceTree = "<group>"; };
+		096B4F552186F03A00C69E52 /* DepositsCardsDetailsAboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsCardsDetailsAboutViewController.swift; sourceTree = "<group>"; };
+		096B4F57218704AA00C69E52 /* DepositsCardsDetailsStatementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsCardsDetailsStatementViewController.swift; sourceTree = "<group>"; };
 		096BCB062163518A005BC02B /* PaymentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsViewController.swift; sourceTree = "<group>"; };
 		096BCB08216361AA005BC02B /* PaymentTemplateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentTemplateCell.swift; sourceTree = "<group>"; };
 		096BCB09216361AA005BC02B /* PaymentTemplateCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentTemplateCell.xib; sourceTree = "<group>"; };
@@ -199,6 +212,7 @@
 		09E0F143215A65F10042FB6A /* Profile.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
 		09E0F145215A68DC0042FB6A /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
 		09E0F147215A69310042FB6A /* CustomTabBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarItem.swift; sourceTree = "<group>"; };
+		09E2141E21873DCA00D16D21 /* DepositsCardsDetailsStatementDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsCardsDetailsStatementDetailsViewController.swift; sourceTree = "<group>"; };
 		09F0E5CC2179DC3B0016BB6E /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		09F240F8216F8335007B7D73 /* FeedCurrent6Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedCurrent6Cell.swift; sourceTree = "<group>"; };
 		09F240F9216F8335007B7D73 /* FeedCurrent6Cell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedCurrent6Cell.xib; sourceTree = "<group>"; };
@@ -276,6 +290,13 @@
 			children = (
 				095D158621789B9900F5266C /* DepositsCardsViewController.swift */,
 				095D158821789BB100F5266C /* DepositsCardsDetailsViewController.swift */,
+				096B4F532186E29300C69E52 /* DepositsCardsDetailsManagementViewController.swift */,
+				096B4F57218704AA00C69E52 /* DepositsCardsDetailsStatementViewController.swift */,
+				09E2141E21873DCA00D16D21 /* DepositsCardsDetailsStatementDetailsViewController.swift */,
+				096B4F552186F03A00C69E52 /* DepositsCardsDetailsAboutViewController.swift */,
+				096B4F4B2183089800C69E52 /* OneViewController.swift */,
+				096B4F4C2183089900C69E52 /* TwoViewController.swift */,
+				096B4F4F2183257300C69E52 /* ThreeViewController.swift */,
 			);
 			path = Cards;
 			sourceTree = "<group>";
@@ -524,11 +545,12 @@
 					09797554215A49020044C00A = {
 						CreatedOnToolsVersion = 10.0;
 						LastSwiftMigration = 1010;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
 			buildConfigurationList = 09797550215A49020044C00A /* Build configuration list for PBXProject "ForaBank" */;
-			compatibilityVersion = "Xcode 9.3";
+			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -662,6 +684,7 @@
 				09F2410921707B86007B7D73 /* FeedInfo3Cell.swift in Sources */,
 				0939B5FB21774EA70029F03D /* DoubleRoundedEdgeView.swift in Sources */,
 				09D3C03D215CD03E00998F57 /* SearchCell.swift in Sources */,
+				096B4F562186F03A00C69E52 /* DepositsCardsDetailsAboutViewController.swift in Sources */,
 				093B862A21620806008A5222 /* ServicesViewController.swift in Sources */,
 				09C7C30D21747293000EE472 /* DepositsViewController.swift in Sources */,
 				0930F168215B653D00CFB593 /* ProfileViewController.swift in Sources */,
@@ -676,14 +699,19 @@
 				09F240FA216F8335007B7D73 /* FeedCurrent6Cell.swift in Sources */,
 				096BCB0E21637E27005BC02B /* PaymentCell.swift in Sources */,
 				096BCB0A216361AA005BC02B /* PaymentTemplateCell.swift in Sources */,
+				09E2141F21873DCA00D16D21 /* DepositsCardsDetailsStatementDetailsViewController.swift in Sources */,
 				09C7C31221749151000EE472 /* DepositsObligationsCell.swift in Sources */,
+				096B4F502183257300C69E52 /* ThreeViewController.swift in Sources */,
 				0939B5F92177266B0029F03D /* DepositsHistoryDetailsViewController.swift in Sources */,
 				09AF7081216F6B6F00E7FCFC /* FeedCurrent1Cell.swift in Sources */,
+				096B4F4D2183089900C69E52 /* OneViewController.swift in Sources */,
 				0930F16A215B6CB800CFB593 /* GradientView.swift in Sources */,
 				09C7C3162174A362000EE472 /* DepositsSearchCell.swift in Sources */,
 				09F0E5CD2179DC3B0016BB6E /* CardView.swift in Sources */,
 				0930F16C215B704A00CFB593 /* CircularImageView.swift in Sources */,
 				09AF7093216F73FD00E7FCFC /* FeedCurrent5Cell.swift in Sources */,
+				096B4F58218704AA00C69E52 /* DepositsCardsDetailsStatementViewController.swift in Sources */,
+				096B4F4E2183089900C69E52 /* TwoViewController.swift in Sources */,
 				095D158921789BB100F5266C /* DepositsCardsDetailsViewController.swift in Sources */,
 				09AF707E216F676300E7FCFC /* FeedCurrentViewController.swift in Sources */,
 				09F2410121707B3B007B7D73 /* FeedInfo1Cell.swift in Sources */,
@@ -694,6 +722,7 @@
 				09045059216B5ADC00F3B295 /* FeedOffersCell.swift in Sources */,
 				09C7C3382175E486000EE472 /* DepositsHistoryCell.swift in Sources */,
 				09AF7090216F73FD00E7FCFC /* FeedCurrent3Cell.swift in Sources */,
+				096B4F542186E29300C69E52 /* DepositsCardsDetailsManagementViewController.swift in Sources */,
 				096BCB072163518A005BC02B /* PaymentsViewController.swift in Sources */,
 				09203D98216E150500902BD2 /* FeedOptionsViewController.swift in Sources */,
 				09D3C04C215E5AE800998F57 /* CustomTableView.swift in Sources */,
@@ -850,8 +879,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -866,10 +894,7 @@
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ForaBank;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ForaBank/ForaBank-Bridging-Header.h";
@@ -889,10 +914,7 @@
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ForaBank;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ForaBank/ForaBank-Bridging-Header.h";

@@ -14,6 +14,9 @@ class CardView: UIView {
         super.awakeFromNib()
         
         layer.cornerRadius = 10
+        clipsToBounds = true
+        layer.borderWidth = 1
+        layer.borderColor = UIColor.white.withAlphaComponent(0.25).cgColor
     }
 
 }
