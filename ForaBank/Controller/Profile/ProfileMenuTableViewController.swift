@@ -12,7 +12,11 @@ class ProfileMenuTableViewController: UITableViewController {
     
     // MARK: - Actions
     @IBAction func messagesButtonClicked(_ sender: Any) {
-        parent?.performSegue(withIdentifier: "1", sender: nil)
+        parent?.performSegue(withIdentifier: "ChatDialogsViewController", sender: nil)
+    }
+    
+    @IBAction func quitButtonClicked(_ sender: Any) {
+        parent?.performSegue(withIdentifier: "RegistrationViewController", sender: nil)
     }
     
     // MARK: - Lifecycle

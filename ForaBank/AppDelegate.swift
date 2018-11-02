@@ -19,6 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         setNavigationBarAppearance()
+        setupTextField()
         
         return true
     }
@@ -50,7 +51,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 private extension AppDelegate {
     
     func setNavigationBarAppearance() {
-        // Set navigation bar to transparent
+        // Set navigation bar transparented
         UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
         UINavigationBar.appearance().shadowImage = UIImage()
         
@@ -60,5 +61,10 @@ private extension AppDelegate {
             .font: font,
             .foregroundColor: UIColor.white
         ]
+    }
+    
+    func setupTextField() {
+        UITextField.appearance().tintColor = .black
+        UITextField.appearance().backgroundColor = UIColor(red: 0.889415, green: 0.889436, blue: 0.889424, alpha: 0.25 )
     }
 }

@@ -138,7 +138,7 @@ class OneViewController: UIViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "TransitionToSecondViewController") {
-            let secondViewController = segue.destination as! TwoViewController
+            //let secondViewController = segue.destination as! TwoViewController
             // Pass data to secondViewController before the transition
   
         }

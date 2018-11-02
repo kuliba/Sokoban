@@ -8,4 +8,6 @@ target 'ForaBank' do
   # Pods for ForaBank
   pod 'iCarousel'
   pod 'DeviceKit'
+  pod 'FlexiblePageControl'
+  pod 'IQKeyboardManager'
 end

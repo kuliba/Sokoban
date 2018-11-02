@@ -10,49 +10,6 @@ import UIKit
 import iCarousel
 import DeviceKit
 
-extension UIColor {
-    convenience init(hexFromString:String, alpha:CGFloat = 1.0) {
-        var cString:String = hexFromString.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
-        var rgbValue:UInt32 = 10066329 //color #999999 if string has wrong format
-        
-        if (cString.hasPrefix("#")) {
-            cString.remove(at: cString.startIndex)
-        }
-        
-        if ((cString.count) == 6) {
-            Scanner(string: cString).scanHexInt32(&rgbValue)
-        }
-        
-        self.init(
-            red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
-            green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
-            blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
-            alpha: alpha
-        )
-    }
-}
-
-class GradientView2: UIView {
-    
-    var color1: UIColor = .white
-    var color2: UIColor = .black
-    
-    func addGradientView() {
-        let gradientFrame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
-        let gradientView = UIView(frame: gradientFrame)
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.frame.size = gradientView.frame.size
-        gradientLayer.startPoint = CGPoint(x: 0, y: 1)
-        gradientLayer.endPoint = CGPoint(x: 1, y: 1)
-        gradientLayer.colors = [
-            color1.cgColor,
-            color2.cgColor
-        ]
-        gradientView.layer.addSublayer(gradientLayer)
-        addSubview(gradientView)
-    }
-}
-
 class FeedViewController: UIViewController {
     
     var gradientViews = [GradientView2]()
@@ -223,11 +180,11 @@ extension FeedViewController: iCarouselDataSource, iCarouselDelegate {
             
         }
         
-        //set item label
-        //remember to always set any properties of your carousel item
-        //views outside of the `if (view == nil) {...}` check otherwise
-        //you'll get weird issues with carousel item content appearing
-        //in the wrong place in the carousel
+        // set item label
+        // remember to always set any properties of your carousel item
+        // views outside of the `if (view == nil) {...}` check otherwise
+        // you'll get weird issues with carousel item content appearing
+        // in the wrong place in the carousel
         label.text = "\(items[index])"
         
         return itemView

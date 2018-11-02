@@ -44,6 +44,10 @@
 		093B8636216224CC008A5222 /* ServicesHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 093B8635216224CC008A5222 /* ServicesHeader.xib */; };
 		0942B86B21625F4800370C71 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0942B86A21625F4800370C71 /* Service.swift */; };
 		0942B86D21625F7800370C71 /* Friend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0942B86C21625F7800370C71 /* Friend.swift */; };
+		094FFC0D218837580069DDCB /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094FFC09218837580069DDCB /* RegistrationViewController.swift */; };
+		094FFC0E218837580069DDCB /* RegistrationCodeVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094FFC0A218837580069DDCB /* RegistrationCodeVerificationViewController.swift */; };
+		094FFC0F218837580069DDCB /* LoginOrSignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094FFC0B218837580069DDCB /* LoginOrSignupViewController.swift */; };
+		094FFC10218837580069DDCB /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094FFC0C218837580069DDCB /* Helpers.swift */; };
 		095D158721789B9900F5266C /* DepositsCardsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D158621789B9900F5266C /* DepositsCardsViewController.swift */; };
 		095D158921789BB100F5266C /* DepositsCardsDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D158821789BB100F5266C /* DepositsCardsDetailsViewController.swift */; };
 		096B4F4D2183089900C69E52 /* OneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096B4F4B2183089800C69E52 /* OneViewController.swift */; };
@@ -60,6 +64,8 @@
 		09797559215A49020044C00A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09797558215A49020044C00A /* AppDelegate.swift */; };
 		09797560215A49040044C00A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0979755F215A49040044C00A /* Assets.xcassets */; };
 		09797563215A49040044C00A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 09797561215A49040044C00A /* LaunchScreen.storyboard */; };
+		097A6DCC21884B6D00E6C69E /* ButtonRounded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 097A6DCB21884B6D00E6C69E /* ButtonRounded.swift */; };
+		097A6DCE21899C5B00E6C69E /* RegistrationLoginPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 097A6DCD21899C5B00E6C69E /* RegistrationLoginPasswordViewController.swift */; };
 		09AF7078216F4A9600E7FCFC /* FeedUpcomingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AF7077216F4A9600E7FCFC /* FeedUpcomingViewController.swift */; };
 		09AF707B216F4B5000E7FCFC /* FeedUpcomingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AF7079216F4B5000E7FCFC /* FeedUpcomingCell.swift */; };
 		09AF707C216F4B5000E7FCFC /* FeedUpcomingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09AF707A216F4B5000E7FCFC /* FeedUpcomingCell.xib */; };
@@ -74,6 +80,8 @@
 		09AF7091216F73FD00E7FCFC /* FeedCurrent3Cell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09AF7089216F73FD00E7FCFC /* FeedCurrent3Cell.xib */; };
 		09AF7092216F73FD00E7FCFC /* FeedCurrent4Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AF708A216F73FD00E7FCFC /* FeedCurrent4Cell.swift */; };
 		09AF7093216F73FD00E7FCFC /* FeedCurrent5Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AF708B216F73FD00E7FCFC /* FeedCurrent5Cell.swift */; };
+		09BE35EF218C726800EA7B24 /* GradientView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09BE35EE218C726800EA7B24 /* GradientView2.swift */; };
+		09BE35F1218C729C00EA7B24 /* ButtonRoundedBordered.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09BE35F0218C729C00EA7B24 /* ButtonRoundedBordered.swift */; };
 		09C7C30D21747293000EE472 /* DepositsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C7C30C21747293000EE472 /* DepositsViewController.swift */; };
 		09C7C30F2174888B000EE472 /* DepositsObligationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C7C30E2174888B000EE472 /* DepositsObligationsViewController.swift */; };
 		09C7C31221749151000EE472 /* DepositsObligationsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C7C31021749151000EE472 /* DepositsObligationsCell.swift */; };
@@ -111,6 +119,9 @@
 		09F2410921707B86007B7D73 /* FeedInfo3Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F2410721707B86007B7D73 /* FeedInfo3Cell.swift */; };
 		09F2410A21707B86007B7D73 /* FeedInfo3Cell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09F2410821707B86007B7D73 /* FeedInfo3Cell.xib */; };
 		09F2410C2170871F007B7D73 /* FeedInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F2410B2170871F007B7D73 /* FeedInfoViewController.swift */; };
+		09F54A0A218B24DA003CB6D3 /* RegistrationPermissionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F54A09218B24DA003CB6D3 /* RegistrationPermissionsViewController.swift */; };
+		09F5DCE6218C3E7200390304 /* RegistrationFinishViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F5DCE5218C3E7200390304 /* RegistrationFinishViewController.swift */; };
+		09F5DCE8218C4A5200390304 /* RegistrationTouchIDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F5DCE7218C4A5200390304 /* RegistrationTouchIDViewController.swift */; };
 		09FC8FED215BB2B200A4694B /* ProfileMenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */; };
 		B8323065D0D76292CEB00626 /* Pods_ForaBank.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8EB261ED46D5F939F8B2E27 /* Pods_ForaBank.framework */; };
 /* End PBXBuildFile section */
@@ -128,7 +139,7 @@
 		09203D94216E13A700902BD2 /* FeedOptionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FeedOptionCell.xib; sourceTree = "<group>"; };
 		09203D97216E150500902BD2 /* FeedOptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedOptionsViewController.swift; sourceTree = "<group>"; };
 		0930F165215B5CDB00CFB593 /* RoundedEdgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedEdgeView.swift; sourceTree = "<group>"; };
-		0930F167215B653D00CFB593 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ProfileViewController.swift; path = ForaBank/Controller/ProfileViewController.swift; sourceTree = SOURCE_ROOT; };
+		0930F167215B653D00CFB593 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ProfileViewController.swift; path = ForaBank/Controller/Profile/ProfileViewController.swift; sourceTree = SOURCE_ROOT; };
 		0930F169215B6CB800CFB593 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		0930F16B215B704A00CFB593 /* CircularImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularImageView.swift; sourceTree = "<group>"; };
 		0930F16E215B78A100CFB593 /* Roboto-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-LightItalic.ttf"; sourceTree = "<group>"; };
@@ -154,6 +165,10 @@
 		093B8635216224CC008A5222 /* ServicesHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ServicesHeader.xib; sourceTree = "<group>"; };
 		0942B86A21625F4800370C71 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		0942B86C21625F7800370C71 /* Friend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Friend.swift; sourceTree = "<group>"; };
+		094FFC09218837580069DDCB /* RegistrationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
+		094FFC0A218837580069DDCB /* RegistrationCodeVerificationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationCodeVerificationViewController.swift; sourceTree = "<group>"; };
+		094FFC0B218837580069DDCB /* LoginOrSignupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginOrSignupViewController.swift; sourceTree = "<group>"; };
+		094FFC0C218837580069DDCB /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		095D158621789B9900F5266C /* DepositsCardsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsCardsViewController.swift; sourceTree = "<group>"; };
 		095D158821789BB100F5266C /* DepositsCardsDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsCardsDetailsViewController.swift; sourceTree = "<group>"; };
 		096B4F4B2183089800C69E52 /* OneViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OneViewController.swift; sourceTree = "<group>"; };
@@ -172,6 +187,8 @@
 		0979755F215A49040044C00A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		09797562215A49040044C00A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		09797564215A49040044C00A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		097A6DCB21884B6D00E6C69E /* ButtonRounded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonRounded.swift; sourceTree = "<group>"; };
+		097A6DCD21899C5B00E6C69E /* RegistrationLoginPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationLoginPasswordViewController.swift; sourceTree = "<group>"; };
 		09AF7077216F4A9600E7FCFC /* FeedUpcomingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedUpcomingViewController.swift; sourceTree = "<group>"; };
 		09AF7079216F4B5000E7FCFC /* FeedUpcomingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedUpcomingCell.swift; sourceTree = "<group>"; };
 		09AF707A216F4B5000E7FCFC /* FeedUpcomingCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FeedUpcomingCell.xib; sourceTree = "<group>"; };
@@ -186,6 +203,8 @@
 		09AF7089216F73FD00E7FCFC /* FeedCurrent3Cell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedCurrent3Cell.xib; sourceTree = "<group>"; };
 		09AF708A216F73FD00E7FCFC /* FeedCurrent4Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedCurrent4Cell.swift; sourceTree = "<group>"; };
 		09AF708B216F73FD00E7FCFC /* FeedCurrent5Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedCurrent5Cell.swift; sourceTree = "<group>"; };
+		09BE35EE218C726800EA7B24 /* GradientView2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView2.swift; sourceTree = "<group>"; };
+		09BE35F0218C729C00EA7B24 /* ButtonRoundedBordered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonRoundedBordered.swift; sourceTree = "<group>"; };
 		09C7C30C21747293000EE472 /* DepositsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsViewController.swift; sourceTree = "<group>"; };
 		09C7C30E2174888B000EE472 /* DepositsObligationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsObligationsViewController.swift; sourceTree = "<group>"; };
 		09C7C31021749151000EE472 /* DepositsObligationsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsObligationsCell.swift; sourceTree = "<group>"; };
@@ -223,6 +242,9 @@
 		09F2410721707B86007B7D73 /* FeedInfo3Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedInfo3Cell.swift; sourceTree = "<group>"; };
 		09F2410821707B86007B7D73 /* FeedInfo3Cell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FeedInfo3Cell.xib; sourceTree = "<group>"; };
 		09F2410B2170871F007B7D73 /* FeedInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedInfoViewController.swift; sourceTree = "<group>"; };
+		09F54A09218B24DA003CB6D3 /* RegistrationPermissionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationPermissionsViewController.swift; sourceTree = "<group>"; };
+		09F5DCE5218C3E7200390304 /* RegistrationFinishViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationFinishViewController.swift; sourceTree = "<group>"; };
+		09F5DCE7218C4A5200390304 /* RegistrationTouchIDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationTouchIDViewController.swift; sourceTree = "<group>"; };
 		09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileMenuTableViewController.swift; sourceTree = "<group>"; };
 		B7304E53553072E2F516AE5B /* Pods-ForaBank.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ForaBank.release.xcconfig"; path = "Target Support Files/Pods-ForaBank/Pods-ForaBank.release.xcconfig"; sourceTree = "<group>"; };
 		B745669DC4B425C3C513CBBC /* Pods-ForaBank.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ForaBank.debug.xcconfig"; path = "Target Support Files/Pods-ForaBank/Pods-ForaBank.debug.xcconfig"; sourceTree = "<group>"; };
@@ -336,6 +358,7 @@
 				09E0F131215A617A0042FB6A /* Controller */,
 				09E0F132215A61850042FB6A /* Model */,
 				09E0F133215A618E0042FB6A /* View */,
+				094FFC0C218837580069DDCB /* Helpers.swift */,
 				09797564215A49040044C00A /* Info.plist */,
 				09203D91216E0D7600902BD2 /* ForaBank-Bridging-Header.h */,
 				0979755F215A49040044C00A /* Assets.xcassets */,
@@ -363,6 +386,32 @@
 			path = Current;
 			sourceTree = "<group>";
 		};
+		09BE35EC218C627700EA7B24 /* Registration */ = {
+			isa = PBXGroup;
+			children = (
+				094FFC0B218837580069DDCB /* LoginOrSignupViewController.swift */,
+				094FFC09218837580069DDCB /* RegistrationViewController.swift */,
+				094FFC0A218837580069DDCB /* RegistrationCodeVerificationViewController.swift */,
+				097A6DCD21899C5B00E6C69E /* RegistrationLoginPasswordViewController.swift */,
+				09F54A09218B24DA003CB6D3 /* RegistrationPermissionsViewController.swift */,
+				09F5DCE5218C3E7200390304 /* RegistrationFinishViewController.swift */,
+				09F5DCE7218C4A5200390304 /* RegistrationTouchIDViewController.swift */,
+			);
+			path = Registration;
+			sourceTree = "<group>";
+		};
+		09BE35ED218C629100EA7B24 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				0930F167215B653D00CFB593 /* ProfileViewController.swift */,
+				09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */,
+				09D3C039215CBCAB00998F57 /* ChatDialogsViewController.swift */,
+				09D3C047215E07DB00998F57 /* ChatMessagesViewController.swift */,
+				09BE35EC218C627700EA7B24 /* Registration */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
 		09C7C30B2174727A000EE472 /* Deposits */ = {
 			isa = PBXGroup;
 			children = (
@@ -382,10 +431,7 @@
 				09C7C30B2174727A000EE472 /* Deposits */,
 				096BCB062163518A005BC02B /* PaymentsViewController.swift */,
 				093B862921620806008A5222 /* ServicesViewController.swift */,
-				0930F167215B653D00CFB593 /* ProfileViewController.swift */,
-				09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */,
-				09D3C039215CBCAB00998F57 /* ChatDialogsViewController.swift */,
-				09D3C047215E07DB00998F57 /* ChatMessagesViewController.swift */,
+				09BE35ED218C629100EA7B24 /* Profile */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -433,6 +479,9 @@
 				09C7C33B2175FADD000EE472 /* DepositsHistoryHeader.swift */,
 				09C7C33A2175FADD000EE472 /* DepositsHistoryHeader.xib */,
 				09F0E5CC2179DC3B0016BB6E /* CardView.swift */,
+				097A6DCB21884B6D00E6C69E /* ButtonRounded.swift */,
+				09BE35EE218C726800EA7B24 /* GradientView2.swift */,
+				09BE35F0218C729C00EA7B24 /* ButtonRoundedBordered.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -654,6 +703,8 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ForaBank/Pods-ForaBank-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/DeviceKit/DeviceKit.framework",
+				"${BUILT_PRODUCTS_DIR}/FlexiblePageControl/FlexiblePageControl.framework",
+				"${BUILT_PRODUCTS_DIR}/IQKeyboardManager/IQKeyboardManager.framework",
 				"${BUILT_PRODUCTS_DIR}/iCarousel/iCarousel.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -661,6 +712,8 @@
 			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DeviceKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FlexiblePageControl.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManager.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/iCarousel.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -683,6 +736,7 @@
 				09D3C03A215CBCAB00998F57 /* ChatDialogsViewController.swift in Sources */,
 				09F2410921707B86007B7D73 /* FeedInfo3Cell.swift in Sources */,
 				0939B5FB21774EA70029F03D /* DoubleRoundedEdgeView.swift in Sources */,
+				094FFC0D218837580069DDCB /* RegistrationViewController.swift in Sources */,
 				09D3C03D215CD03E00998F57 /* SearchCell.swift in Sources */,
 				096B4F562186F03A00C69E52 /* DepositsCardsDetailsAboutViewController.swift in Sources */,
 				093B862A21620806008A5222 /* ServicesViewController.swift in Sources */,
@@ -690,6 +744,7 @@
 				0930F168215B653D00CFB593 /* ProfileViewController.swift in Sources */,
 				0930F166215B5CDB00CFB593 /* RoundedEdgeView.swift in Sources */,
 				09C7C33D2175FADE000EE472 /* DepositsHistoryHeader.swift in Sources */,
+				09F5DCE8218C4A5200390304 /* RegistrationTouchIDViewController.swift in Sources */,
 				09C7C3352175CC47000EE472 /* DepositsHistoryViewController.swift in Sources */,
 				09E0F146215A68DC0042FB6A /* CustomTabBar.swift in Sources */,
 				093B863121620EE8008A5222 /* ServicesCell.swift in Sources */,
@@ -697,13 +752,16 @@
 				09045056216B51B400F3B295 /* FeedOffersViewController.swift in Sources */,
 				09E0F130215A5B9D0042FB6A /* TabBarController.swift in Sources */,
 				09F240FA216F8335007B7D73 /* FeedCurrent6Cell.swift in Sources */,
+				094FFC10218837580069DDCB /* Helpers.swift in Sources */,
 				096BCB0E21637E27005BC02B /* PaymentCell.swift in Sources */,
 				096BCB0A216361AA005BC02B /* PaymentTemplateCell.swift in Sources */,
 				09E2141F21873DCA00D16D21 /* DepositsCardsDetailsStatementDetailsViewController.swift in Sources */,
 				09C7C31221749151000EE472 /* DepositsObligationsCell.swift in Sources */,
 				096B4F502183257300C69E52 /* ThreeViewController.swift in Sources */,
+				09BE35EF218C726800EA7B24 /* GradientView2.swift in Sources */,
 				0939B5F92177266B0029F03D /* DepositsHistoryDetailsViewController.swift in Sources */,
 				09AF7081216F6B6F00E7FCFC /* FeedCurrent1Cell.swift in Sources */,
+				094FFC0E218837580069DDCB /* RegistrationCodeVerificationViewController.swift in Sources */,
 				096B4F4D2183089900C69E52 /* OneViewController.swift in Sources */,
 				0930F16A215B6CB800CFB593 /* GradientView.swift in Sources */,
 				09C7C3162174A362000EE472 /* DepositsSearchCell.swift in Sources */,
@@ -721,17 +779,23 @@
 				0942B86D21625F7800370C71 /* Friend.swift in Sources */,
 				09045059216B5ADC00F3B295 /* FeedOffersCell.swift in Sources */,
 				09C7C3382175E486000EE472 /* DepositsHistoryCell.swift in Sources */,
+				097A6DCC21884B6D00E6C69E /* ButtonRounded.swift in Sources */,
 				09AF7090216F73FD00E7FCFC /* FeedCurrent3Cell.swift in Sources */,
 				096B4F542186E29300C69E52 /* DepositsCardsDetailsManagementViewController.swift in Sources */,
+				09F54A0A218B24DA003CB6D3 /* RegistrationPermissionsViewController.swift in Sources */,
 				096BCB072163518A005BC02B /* PaymentsViewController.swift in Sources */,
 				09203D98216E150500902BD2 /* FeedOptionsViewController.swift in Sources */,
 				09D3C04C215E5AE800998F57 /* CustomTableView.swift in Sources */,
 				093B862E21620B1F008A5222 /* ServicesSearchCell.swift in Sources */,
 				09AF7092216F73FD00E7FCFC /* FeedCurrent4Cell.swift in Sources */,
 				09203D95216E13A700902BD2 /* FeedOptionCell.swift in Sources */,
+				09F5DCE6218C3E7200390304 /* RegistrationFinishViewController.swift in Sources */,
 				09AF708C216F73FD00E7FCFC /* FeedCurrent2Cell.swift in Sources */,
 				09F2410C2170871F007B7D73 /* FeedInfoViewController.swift in Sources */,
 				09AF7078216F4A9600E7FCFC /* FeedUpcomingViewController.swift in Sources */,
+				097A6DCE21899C5B00E6C69E /* RegistrationLoginPasswordViewController.swift in Sources */,
+				09BE35F1218C729C00EA7B24 /* ButtonRoundedBordered.swift in Sources */,
+				094FFC0F218837580069DDCB /* LoginOrSignupViewController.swift in Sources */,
 				0942B86B21625F4800370C71 /* Service.swift in Sources */,
 				09797559215A49020044C00A /* AppDelegate.swift in Sources */,
 				09AF707B216F4B5000E7FCFC /* FeedUpcomingCell.swift in Sources */,

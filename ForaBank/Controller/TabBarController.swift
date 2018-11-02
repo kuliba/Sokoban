@@ -21,9 +21,7 @@ class TabBarController: UITabBarController {
 private extension TabBarController {
 
     func setSelectedIndexToLast() {
-        guard let tabs = tabBar.items else {
-            return
-        }
+        guard let tabs = tabBar.items else { return }
         selectedIndex = tabs.endIndex - 1
     }
     

@@ -2,7 +2,7 @@
 //  DepositsCardsDetailsManagementViewController.swift
 //  ForaBank
 //
-//  Created by IM on 29/10/2018.
+//  Created by Ilya Masalov (xmasalov@gmail.com) on 29/10/2018.
 //  Copyright © 2018 BraveRobin. All rights reserved.
 //
 
