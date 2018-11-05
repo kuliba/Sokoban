@@ -42,6 +42,7 @@
 		093B863221620EE8008A5222 /* ServicesCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 093B863021620EE8008A5222 /* ServicesCell.xib */; };
 		093B8634216224C3008A5222 /* ServicesHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 093B8633216224C3008A5222 /* ServicesHeader.swift */; };
 		093B8636216224CC008A5222 /* ServicesHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 093B8635216224CC008A5222 /* ServicesHeader.xib */; };
+		0941525B219028000068B6B1 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0941525A219028000068B6B1 /* SignInViewController.swift */; };
 		0942B86B21625F4800370C71 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0942B86A21625F4800370C71 /* Service.swift */; };
 		0942B86D21625F7800370C71 /* Friend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0942B86C21625F7800370C71 /* Friend.swift */; };
 		094FFC0D218837580069DDCB /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094FFC09218837580069DDCB /* RegistrationViewController.swift */; };
@@ -163,6 +164,7 @@
 		093B863021620EE8008A5222 /* ServicesCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ServicesCell.xib; sourceTree = "<group>"; };
 		093B8633216224C3008A5222 /* ServicesHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesHeader.swift; sourceTree = "<group>"; };
 		093B8635216224CC008A5222 /* ServicesHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ServicesHeader.xib; sourceTree = "<group>"; };
+		0941525A219028000068B6B1 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		0942B86A21625F4800370C71 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		0942B86C21625F7800370C71 /* Friend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Friend.swift; sourceTree = "<group>"; };
 		094FFC09218837580069DDCB /* RegistrationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
@@ -354,6 +356,7 @@
 			isa = PBXGroup;
 			children = (
 				09797558215A49020044C00A /* AppDelegate.swift */,
+				0941525A219028000068B6B1 /* SignInViewController.swift */,
 				09E0F149215A6B170042FB6A /* Storyboards */,
 				09E0F131215A617A0042FB6A /* Controller */,
 				09E0F132215A61850042FB6A /* Model */,
@@ -758,6 +761,7 @@
 				09E2141F21873DCA00D16D21 /* DepositsCardsDetailsStatementDetailsViewController.swift in Sources */,
 				09C7C31221749151000EE472 /* DepositsObligationsCell.swift in Sources */,
 				096B4F502183257300C69E52 /* ThreeViewController.swift in Sources */,
+				0941525B219028000068B6B1 /* SignInViewController.swift in Sources */,
 				09BE35EF218C726800EA7B24 /* GradientView2.swift in Sources */,
 				0939B5F92177266B0029F03D /* DepositsHistoryDetailsViewController.swift in Sources */,
 				09AF7081216F6B6F00E7FCFC /* FeedCurrent1Cell.swift in Sources */,

@@ -21,11 +21,6 @@ class LoginOrSignupViewController: UIViewController {
     @IBOutlet weak var registrationButton: UIButton!
     @IBOutlet weak var signInButton: UIButton!
     
-    // MARK: - Actions
-    @IBAction func signInButtonClicked(_ sender: Any) {
-        dismiss(animated: true)
-    }
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
