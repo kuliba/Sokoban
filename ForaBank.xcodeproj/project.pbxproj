@@ -45,6 +45,7 @@
 		0941525B219028000068B6B1 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0941525A219028000068B6B1 /* SignInViewController.swift */; };
 		0942B86B21625F4800370C71 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0942B86A21625F4800370C71 /* Service.swift */; };
 		0942B86D21625F7800370C71 /* Friend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0942B86C21625F7800370C71 /* Friend.swift */; };
+		0943729221907198003A66CC /* PaymentsDetailsSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0943729121907198003A66CC /* PaymentsDetailsSuccessViewController.swift */; };
 		094FFC0D218837580069DDCB /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094FFC09218837580069DDCB /* RegistrationViewController.swift */; };
 		094FFC0E218837580069DDCB /* RegistrationCodeVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094FFC0A218837580069DDCB /* RegistrationCodeVerificationViewController.swift */; };
 		094FFC0F218837580069DDCB /* LoginOrSignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094FFC0B218837580069DDCB /* LoginOrSignupViewController.swift */; };
@@ -65,6 +66,7 @@
 		09797559215A49020044C00A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09797558215A49020044C00A /* AppDelegate.swift */; };
 		09797560215A49040044C00A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0979755F215A49040044C00A /* Assets.xcassets */; };
 		09797563215A49040044C00A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 09797561215A49040044C00A /* LaunchScreen.storyboard */; };
+		0979D95021903DF700034BC0 /* PaymentsDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0979D94F21903DF700034BC0 /* PaymentsDetailsViewController.swift */; };
 		097A6DCC21884B6D00E6C69E /* ButtonRounded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 097A6DCB21884B6D00E6C69E /* ButtonRounded.swift */; };
 		097A6DCE21899C5B00E6C69E /* RegistrationLoginPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 097A6DCD21899C5B00E6C69E /* RegistrationLoginPasswordViewController.swift */; };
 		09AF7078216F4A9600E7FCFC /* FeedUpcomingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AF7077216F4A9600E7FCFC /* FeedUpcomingViewController.swift */; };
@@ -167,6 +169,7 @@
 		0941525A219028000068B6B1 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		0942B86A21625F4800370C71 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		0942B86C21625F7800370C71 /* Friend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Friend.swift; sourceTree = "<group>"; };
+		0943729121907198003A66CC /* PaymentsDetailsSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsDetailsSuccessViewController.swift; sourceTree = "<group>"; };
 		094FFC09218837580069DDCB /* RegistrationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
 		094FFC0A218837580069DDCB /* RegistrationCodeVerificationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationCodeVerificationViewController.swift; sourceTree = "<group>"; };
 		094FFC0B218837580069DDCB /* LoginOrSignupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginOrSignupViewController.swift; sourceTree = "<group>"; };
@@ -189,6 +192,7 @@
 		0979755F215A49040044C00A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		09797562215A49040044C00A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		09797564215A49040044C00A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0979D94F21903DF700034BC0 /* PaymentsDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsDetailsViewController.swift; sourceTree = "<group>"; };
 		097A6DCB21884B6D00E6C69E /* ButtonRounded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonRounded.swift; sourceTree = "<group>"; };
 		097A6DCD21899C5B00E6C69E /* RegistrationLoginPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationLoginPasswordViewController.swift; sourceTree = "<group>"; };
 		09AF7077216F4A9600E7FCFC /* FeedUpcomingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedUpcomingViewController.swift; sourceTree = "<group>"; };
@@ -356,7 +360,6 @@
 			isa = PBXGroup;
 			children = (
 				09797558215A49020044C00A /* AppDelegate.swift */,
-				0941525A219028000068B6B1 /* SignInViewController.swift */,
 				09E0F149215A6B170042FB6A /* Storyboards */,
 				09E0F131215A617A0042FB6A /* Controller */,
 				09E0F132215A61850042FB6A /* Model */,
@@ -406,6 +409,7 @@
 		09BE35ED218C629100EA7B24 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				0941525A219028000068B6B1 /* SignInViewController.swift */,
 				0930F167215B653D00CFB593 /* ProfileViewController.swift */,
 				09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */,
 				09D3C039215CBCAB00998F57 /* ChatDialogsViewController.swift */,
@@ -433,6 +437,8 @@
 				09203D99216E150C00902BD2 /* Feed */,
 				09C7C30B2174727A000EE472 /* Deposits */,
 				096BCB062163518A005BC02B /* PaymentsViewController.swift */,
+				0979D94F21903DF700034BC0 /* PaymentsDetailsViewController.swift */,
+				0943729121907198003A66CC /* PaymentsDetailsSuccessViewController.swift */,
 				093B862921620806008A5222 /* ServicesViewController.swift */,
 				09BE35ED218C629100EA7B24 /* Profile */,
 			);
@@ -751,6 +757,7 @@
 				09C7C3352175CC47000EE472 /* DepositsHistoryViewController.swift in Sources */,
 				09E0F146215A68DC0042FB6A /* CustomTabBar.swift in Sources */,
 				093B863121620EE8008A5222 /* ServicesCell.swift in Sources */,
+				0979D95021903DF700034BC0 /* PaymentsDetailsViewController.swift in Sources */,
 				093B8634216224C3008A5222 /* ServicesHeader.swift in Sources */,
 				09045056216B51B400F3B295 /* FeedOffersViewController.swift in Sources */,
 				09E0F130215A5B9D0042FB6A /* TabBarController.swift in Sources */,
@@ -768,6 +775,7 @@
 				094FFC0E218837580069DDCB /* RegistrationCodeVerificationViewController.swift in Sources */,
 				096B4F4D2183089900C69E52 /* OneViewController.swift in Sources */,
 				0930F16A215B6CB800CFB593 /* GradientView.swift in Sources */,
+				0943729221907198003A66CC /* PaymentsDetailsSuccessViewController.swift in Sources */,
 				09C7C3162174A362000EE472 /* DepositsSearchCell.swift in Sources */,
 				09F0E5CD2179DC3B0016BB6E /* CardView.swift in Sources */,
 				0930F16C215B704A00CFB593 /* CircularImageView.swift in Sources */,

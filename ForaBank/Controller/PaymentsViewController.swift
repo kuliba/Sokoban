@@ -84,6 +84,10 @@ class PaymentsViewController: UIViewController {
 // MARK: - UITableView DataSource and Delegate
 extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "PaymentsDetailsViewController", sender: nil)
+    }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return data_.count
     }
