@@ -13,14 +13,9 @@ class DepositsCardsDetailsManagementViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
-        
         tableView.tableFooterView = UIView()
-        
         tableView.contentInset.top = 50
         tableView.contentInset.bottom = 25
-        
-        
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false

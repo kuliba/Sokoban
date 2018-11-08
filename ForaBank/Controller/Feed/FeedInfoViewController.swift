@@ -2,7 +2,7 @@
 //  FeedInfoViewController.swift
 //  ForaBank
 //
-//  Created by Ilya Masalov on 12/10/2018.
+//  Created by Ilya Masalov (xmasalov@gmail.com) on 12/10/2018.
 //  Copyright © 2018 BraveRobin. All rights reserved.
 //
 
@@ -19,6 +19,8 @@ class FeedInfoViewController: UIViewController {
 
     var cellHeight: CGFloat = 0
     
+    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -99,6 +101,5 @@ private extension FeedInfoViewController {
         
         let nibCell3 = UINib(nibName: cellId3, bundle: nil)
         tableView.register(nibCell3, forCellReuseIdentifier: cellId3)
-
     }
 }

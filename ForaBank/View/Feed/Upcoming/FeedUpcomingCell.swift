@@ -2,7 +2,7 @@
 //  FeedUpcomingCell.swift
 //  ForaBank
 //
-//  Created by Ilya Masalov on 11/10/2018.
+//  Created by Ilya Masalov (xmasalov@gmail.com) on 11/10/2018.
 //  Copyright © 2018 BraveRobin. All rights reserved.
 //
 
@@ -10,8 +10,7 @@ import UIKit
 
 class FeedUpcomingCell: UITableViewCell {
     
-    
-    @IBOutlet weak var logoImageView: UIImageView!
+   @IBOutlet weak var logoImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var position1name: UILabel!

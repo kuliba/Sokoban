@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         setNavigationBarAppearance()
-        setupTextField()
+        setTextFieldAppearance()
         
         return true
     }
@@ -51,11 +51,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 private extension AppDelegate {
     
     func setNavigationBarAppearance() {
-        // Set navigation bar transparented
+        setNavigationBarTransparent()
+        setNavigationBarFont()
+    }
+    
+    func setNavigationBarTransparent() {
         UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
         UINavigationBar.appearance().shadowImage = UIImage()
-        
-        // Set navigation bar font
+    }
+    
+    func setNavigationBarFont() {
         let font = UIFont(name: "Roboto-Regular", size: 16) ?? UIFont.systemFont(ofSize: 16)
         UINavigationBar.appearance().titleTextAttributes = [
             .font: font,
@@ -63,7 +68,7 @@ private extension AppDelegate {
         ]
     }
     
-    func setupTextField() {
+    func setTextFieldAppearance() {
         UITextField.appearance().tintColor = .black
         UITextField.appearance().backgroundColor = UIColor(red: 0.889415, green: 0.889436, blue: 0.889424, alpha: 0.25 )
     }

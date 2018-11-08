@@ -48,6 +48,7 @@ class FeedOffersViewController: UIViewController {
         // FeedOfferCustom2()
     ]
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -110,7 +111,6 @@ extension FeedOffersViewController: UITableViewDataSource, UITableViewDelegate {
         }
 
         var cellToSwipe = Double(Float((scrollView.contentOffset.y)) / Float((cellHeight + minSpace))) + Double(0.5) + mod
-
 
         if cellToSwipe < 0 {
             cellToSwipe = 0

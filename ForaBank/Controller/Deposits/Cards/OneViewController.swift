@@ -2,7 +2,7 @@
 //  OneViewController.swift
 //  testTest
 //
-//  Created by Ilya Masalov on 25/10/2018.
+//  Created by Ilya Masalov (xmasalov@gmail.com) on 25/10/2018.
 //  Copyright © 2018 Ilya Masalov. All rights reserved.
 //
 

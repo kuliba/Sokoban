@@ -2,7 +2,7 @@
 //  FeedOptionCell.swift
 //  ForaBank
 //
-//  Created by Ilya Masalov on 10/10/2018.
+//  Created by Ilya Masalov (xmasalov@gmail.com) on 10/10/2018.
 //  Copyright © 2018 BraveRobin. All rights reserved.
 //
 

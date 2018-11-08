@@ -9,8 +9,7 @@
 import UIKit
 
 class DoubleRoundedEdgeView: UIView {
-    
-    
+
     // MARK: - Properties
     let viewMask = CAShapeLayer()
     
@@ -23,8 +22,8 @@ class DoubleRoundedEdgeView: UIView {
     override func draw(_ rect: CGRect) {
         setTopEdgeRounded(rect)
     }
-    
 }
+
 // MARK: - Private methods
 private extension DoubleRoundedEdgeView {
     

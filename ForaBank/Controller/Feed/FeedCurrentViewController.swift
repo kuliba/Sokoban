@@ -2,7 +2,7 @@
 //  FeedCurrentViewController.swift
 //  ForaBank
 //
-//  Created by Ilya Masalov on 11/10/2018.
+//  Created by Ilya Masalov (xmasalov@gmail.com) on 11/10/2018.
 //  Copyright © 2018 BraveRobin. All rights reserved.
 //
 
