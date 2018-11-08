@@ -13,6 +13,8 @@ class DepositsObligationsViewController: UIViewController {
     // MARK: - Properties
     @IBOutlet weak var tableView: CustomTableView!
     
+    let cellId = "DepositsObligationsCell"
+    
     let data_ = [
         ["deposits_obligations_afk",
          "АФК-Система, Sistema-19",
@@ -39,16 +41,10 @@ class DepositsObligationsViewController: UIViewController {
         ]
     ]
     
-    let cellId = "DepositsObligationsCell"
-    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setTableViewDelegateAndDataSource()
-        setAutomaticRowHeight()
-        registerNibCell()
-        setSearchView()
-        
-        tableView.contentInset = UIEdgeInsets(top: 15, left: 0, bottom: 0, right: 0)
+        setUpTableView()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -80,7 +76,6 @@ extension DepositsObligationsViewController: UITableViewDataSource, UITableViewD
         cell.bottomSeparatorView.isHidden = indexPath.row == data_.endIndex - 1
         
         return cell
-    
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
@@ -118,9 +113,21 @@ extension DepositsObligationsViewController: UITableViewDataSource, UITableViewD
 // MARK: - Private methods
 private extension DepositsObligationsViewController {
     
+    func setUpTableView() {
+        setTableViewDelegateAndDataSource()
+        setTableViewContentInsets()
+        setAutomaticRowHeight()
+        registerNibCell()
+        setSearchView()
+    }
+    
     func setTableViewDelegateAndDataSource() {
         tableView.dataSource = self
         tableView.delegate = self
+    }
+    
+    func setTableViewContentInsets() {
+        tableView.contentInset.top = 15
     }
     
     func setAutomaticRowHeight() {
@@ -131,8 +138,6 @@ private extension DepositsObligationsViewController {
     func registerNibCell() {
         let nibTemplateCell = UINib(nibName: cellId, bundle: nil)
         tableView.register(nibTemplateCell, forCellReuseIdentifier: cellId)
-        
-      
     }
     
     func setSearchView() {

@@ -9,12 +9,12 @@
 import UIKit
 
 class DepositsCardsDetailsStatementViewController: UIViewController {
-
     
     // MARK: - Properties
     @IBOutlet weak var tableView: CustomTableView!
     
     let cellId = "DepositsHistoryCell"
+    
     let data_ = [
         DepositHistoryDate(date: "Вчера, 5 сентября", amountTotal: "+560,15 ₽", transactions: [
             DepositHistoryTransaction(imageName: "deposit_history_transaction_capitalization", title: "Капитализация средств", subtitle: "Внутрибанковские операции", value: "5560,15 ₽", subvalue: ""),
@@ -47,19 +47,10 @@ class DepositsCardsDetailsStatementViewController: UIViewController {
             ])
     ]
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.contentInset.top = 35
-        tableView.contentInset.bottom = 10
-        
-        
-        registerNibCell()
-        setSearchView()
-        
-        
+        setUpTableView()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -102,22 +93,19 @@ extension DepositsCardsDetailsStatementViewController: UITableViewDataSource, UI
         cell.bottomSeparatorView.isHidden = indexPath.row == data_[indexPath.section].transactions.endIndex - 1
         
         return cell
-        
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
-        
-        let headerCell = UINib(nibName: "DepositsHistoryHeader", bundle: nil)
-            .instantiate(withOwner: nil, options: nil)[0] as! DepositsHistoryHeader
-        
-        let headerView = UIView(frame: headerCell.frame)
-        headerView.addSubview(headerCell)
-        headerView.backgroundColor = .clear
-        headerCell.titleLabel.text = data_[section].date
-        headerCell.subTitleLabel.text = data_[section].amountTotal
-        return headerView
-        
+        if let headerCell = UINib(nibName: "DepositsHistoryHeader", bundle: nil)
+            .instantiate(withOwner: nil, options: nil)[0] as? DepositsHistoryHeader {
+            let headerView = UIView(frame: headerCell.frame)
+            headerView.addSubview(headerCell)
+            headerView.backgroundColor = .clear
+            headerCell.titleLabel.text = data_[section].date
+            headerCell.subTitleLabel.text = data_[section].amountTotal
+            return headerView
+        }
+        return nil
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -127,10 +115,10 @@ extension DepositsCardsDetailsStatementViewController: UITableViewDataSource, UI
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 35
     }
-//
-//    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-//        return 95
-//    }
+    
+    //    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    //        return 95
+    //    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "testtest", sender: nil)
@@ -139,13 +127,27 @@ extension DepositsCardsDetailsStatementViewController: UITableViewDataSource, UI
 
 // MARK: - Private methods
 private extension DepositsCardsDetailsStatementViewController {
-
+    
+    func setUpTableView() {
+        setTableViewDelegateAndDataSource()
+        setTableViewContentInsets()
+        registerNibCell()
+        setSearchView()
+    }
+    
+    func setTableViewDelegateAndDataSource() {
+        tableView.delegate = self
+        tableView.dataSource = self
+    }
+    
+    func setTableViewContentInsets() {
+        tableView.contentInset.top = 35
+        tableView.contentInset.bottom = 10
+    }
     
     func registerNibCell() {
         let nibTemplateCell = UINib(nibName: cellId, bundle: nil)
         tableView.register(nibTemplateCell, forCellReuseIdentifier: cellId)
-        
-        
     }
     
     func setSearchView() {

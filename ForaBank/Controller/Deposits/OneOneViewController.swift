@@ -1,8 +1,8 @@
 //
-//  DepositsCardsDetailsViewController.swift
+//  OneOneViewController.swift
 //  ForaBank
 //
-//  Created by Ilya Masalov (xmasalov@gmail.com) on 18/10/2018.
+//  Created by Ilya Masalov (xmasalov@gmail.com) on 07/11/2018.
 //  Copyright © 2018 BraveRobin. All rights reserved.
 //
 
@@ -10,60 +10,94 @@ import UIKit
 import iCarousel
 import DeviceKit
 
-class DepositsCardsDetailsViewController: UIViewController {
-    
-    // MARK: - Properties
-    @IBOutlet weak var cardView: CardView!
+class OneOneViewController: UIViewController {
+
+    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var header: UIView!
+    @IBOutlet weak var container: UIView!
+    @IBOutlet weak var containerHeight: NSLayoutConstraint!
     @IBOutlet var carousel: iCarousel!
-    @IBOutlet weak var containerView: UIView!
     
-    let iphone5Devices: [Device] = Constants.iphone5Devices
-    let xDevices = Constants.xDevices
     weak var currentViewController: UIViewController?
-    var items = ["Управление", "Выписка", "О карте"]
+    var previousOffset: CGFloat = 0
+    var items = ["Управление", "Выписка", "О счете"]
+    var lastScrollViewOffset: CGFloat = 0
+    
+    var offset: CGFloat = {
+        if Device().isOneOf(Constants.xDevices) {
+            return 100 // models: x
+        } else {
+            return 75 // models 7 7+ se
+        }
+    }()
     
     // MARK: - Actions
     @IBAction func backButtonClicked(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true)
     }
-    
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
-        currentViewController = storyboard?.instantiateViewController(withIdentifier: "feed0")
+        currentViewController = storyboard?.instantiateViewController(withIdentifier: "feedfeed0")
         currentViewController!.view.translatesAutoresizingMaskIntoConstraints = false
         addChild(currentViewController!)
-        addSubview(self.currentViewController!.view, toView: self.containerView)
+        addSubview(self.currentViewController!.view, toView: self.container)
         
         super.viewDidLoad()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleScroll(_:)), name: NSNotification.Name("TableViewScrolled"), object: nil)
+        scrollView.isScrollEnabled = false
         
         carousel.delegate = self
         carousel.dataSource = self
         carousel.type = .wheel
         carousel.bounces = false
-        // carousel.isPagingEnabled = true
-        // carousel.isScrollEnabled = false
-        
-        cardView.clipsToBounds = true
-        cardView.layer.borderWidth = 0.5
-        
-        cardView.layer.borderColor = UIColor.white.withAlphaComponent(0.25).cgColor
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
-        if Device().isOneOf(xDevices) {
-            carousel.frame.size.height = 120
-        } else {
-            carousel.frame.size.height = 90
+        containerHeight.constant = -offset
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "TransitionToSecondViewController" {
+            //let secondViewController = segue.destination as! TwoViewController
+            // Pass data to secondViewController before the transition
         }
     }
 }
 
-// MARK: - Private methods
-private extension DepositsCardsDetailsViewController {
+private extension OneOneViewController {
     
-    func addSubview(_ subView: UIView, toView parentView: UIView) {
+    @objc func handleScroll(_ notification: Notification?) {
+        let tableScrollView = notification?.userInfo?["tableView"] as? UIScrollView
+        var currentOffset = tableScrollView?.contentOffset.y
+        
+        let distanceFromBottom = (tableScrollView?.contentSize.height ?? 0.0) - (currentOffset ?? 0.0)
+        
+        if previousOffset < (currentOffset ?? 0.0) && distanceFromBottom > (tableScrollView?.frame.size.height ?? 0.0) {
+            if (currentOffset ?? 0.0) > header.frame.height - offset {
+                currentOffset = header.frame.height - offset
+            }
+        
+            scrollView.contentOffset.y -= previousOffset - (currentOffset ?? 0.0)
+            previousOffset = currentOffset ?? 0.0
+
+        } else {
+            if previousOffset > (currentOffset ?? 0.0) {
+                if (currentOffset ?? 0.0) < 0 {
+                    currentOffset = 0
+                }
+                
+                scrollView.contentOffset.y -= previousOffset - (currentOffset ?? 0.0)
+                previousOffset = currentOffset ?? 0.0
+            }
+        }
+        
+        print(previousOffset, currentOffset!, lastScrollViewOffset)
+    }
+    
+    func addSubview(_ subView:UIView, toView parentView:UIView) {
         parentView.addSubview(subView)
         
         var viewBindingsDict = [String: AnyObject]()
@@ -80,24 +114,21 @@ private extension DepositsCardsDetailsViewController {
     }
     
     func showComponent(index: Int) {
-        let newViewController = self.storyboard?.instantiateViewController(withIdentifier: "feed\(index)")
+        let newViewController = storyboard?.instantiateViewController(withIdentifier: "feedfeed\(index)")
         newViewController!.view.translatesAutoresizingMaskIntoConstraints = false
-        self.cycleFromViewController(oldViewController: self.currentViewController!, toViewController: newViewController!)
-        self.currentViewController = newViewController
+        cycleFromViewController(oldViewController: currentViewController!, toViewController: newViewController!)
+        currentViewController = newViewController
     }
     
     func cycleFromViewController(oldViewController: UIViewController, toViewController newViewController: UIViewController) {
         oldViewController.willMove(toParent: nil)
-        self.addChild(newViewController)
-        self.addSubview(newViewController.view, toView:self.containerView!)
+        addChild(newViewController)
+        addSubview(newViewController.view, toView: container!)
         // TODO: Set the starting state of your constraints here
         newViewController.view.alpha = 0
         newViewController.view.bounds.origin.y -= 10
-        
         newViewController.view.layoutIfNeeded()
-        
         // TODO: Set the ending state of your constraints here
-        
         UIView.animate(withDuration: 0.25, animations: {
             oldViewController.view.alpha = 0
             oldViewController.view.bounds.origin.y -= 10
@@ -116,7 +147,7 @@ private extension DepositsCardsDetailsViewController {
     }
 }
 
-extension DepositsCardsDetailsViewController: iCarouselDataSource, iCarouselDelegate {
+extension OneOneViewController: iCarouselDataSource, iCarouselDelegate {
     
     func numberOfItems(in carousel: iCarousel) -> Int {
         return items.count
@@ -135,7 +166,7 @@ extension DepositsCardsDetailsViewController: iCarouselDataSource, iCarouselDele
             //don't do anything specific to the index within
             //this `if ... else` statement because the view will be
             //recycled and used with other index values later
-            itemView = UIImageView(frame: CGRect(x: 0, y: 0, width: 120, height: 40))
+            itemView = UIImageView(frame: CGRect(x: 0, y: 0, width: 120, height: 100))
             itemView.backgroundColor = .clear
             
             label = UILabel(frame: itemView.bounds)
@@ -143,10 +174,10 @@ extension DepositsCardsDetailsViewController: iCarouselDataSource, iCarouselDele
             label.backgroundColor = .clear
             label.textAlignment = .center
             label.textColor = .white
+            
             label.font = UIFont(name: "Roboto-Regular", size: 16)
             label.tag = 1
             itemView.addSubview(label)
-            
         }
         
         //set item label
@@ -161,14 +192,14 @@ extension DepositsCardsDetailsViewController: iCarouselDataSource, iCarouselDele
     
     func carousel(_ carousel: iCarousel, valueFor option: iCarouselOption, withDefault value: CGFloat) -> CGFloat {
         
-        if (option == .wrap) {
+        if option == .wrap {
             return 0.0
         }
         
         if option == .arc {
-            if Device().isOneOf(iphone5Devices) {
+            if Device().isOneOf(Constants.iphone5Devices) {
                 return CGFloat(Double.pi) / 2.5 // 2.75 - if not authorized
-            } else if Device().isOneOf(xDevices) {
+            } else if Device().isOneOf(Constants.xDevices) {
                 return CGFloat(Double.pi) / 3.25 // 3.5 - if not authorized
             } else {
                 return CGFloat(Double.pi) / 3.25 // 3.5 - if not authorized
@@ -176,9 +207,9 @@ extension DepositsCardsDetailsViewController: iCarouselDataSource, iCarouselDele
         }
         
         if option == .radius {
-            if Device().isOneOf(iphone5Devices) {
+            if Device().isOneOf(Constants.iphone5Devices) {
                 return 800
-            } else if Device().isOneOf(xDevices) {
+            } else if Device().isOneOf(Constants.xDevices) {
                 return 1300
             } else {
                 return 1300

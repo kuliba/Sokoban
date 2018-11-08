@@ -12,110 +12,17 @@ import iCarousel
 
 class DepositsViewController: UIViewController {
 
-    var gradientViews = [GradientView2]()
-    
-    func addGradients() {
-        for gradient in [
-            (UIColor(hexFromString: "F1AE73"), UIColor(hexFromString: "EB4340")),
-            (UIColor(hexFromString: "EC4645"), UIColor(hexFromString: "9B305C")),
-            (UIColor(hexFromString: "ED5D4B"), UIColor(hexFromString: "B03456")),
-            (UIColor(hexFromString: "ED4F48"), UIColor(hexFromString: "9F3057")),
-            (UIColor(hexFromString: "ED4F48"), UIColor(hexFromString: "9F3057")),
-            (UIColor(hexFromString: "C8394C"), UIColor(hexFromString: "1B0E2F"))
-            ] {
-                let v = GradientView2()
-                v.color1 = gradient.0
-                v.color2 = gradient.1
-                v.alpha = 0
-                v.frame = view.frame
-                v.addGradientView()
-                v.layoutIfNeeded()
-                gradientViews.append(v)
-                view.insertSubview(v, at: 0)
-        }
-    }
-    
-    
-    
-    
-    let iphone5Devices: [Device] = [.iPhone5, .iPhone5c, .iPhone5s, .iPhoneSE,
-                                    .simulator(.iPhone5), .simulator(.iPhone5c), .simulator(.iPhone5s), .simulator(.iPhoneSE)]
-    
-    let xDevices: [Device] = [
-        .iPhoneX,
-        .iPhoneX,
-        .iPhoneXr,
-        .iPhoneXs,
-        .iPhoneXsMax,
-        
-        .simulator(.iPhoneX),
-        .simulator(.iPhoneX),
-        .simulator(.iPhoneXr),
-        .simulator(.iPhoneXs),
-        .simulator(.iPhoneXsMax)
-    ]
-    
+    // MARK: - Properties
     @IBOutlet var carousel: iCarousel!
     @IBOutlet weak var containerView: UIView!
+    
+    var gradientViews = [GradientView2]()
+    let xDevices = Constants.xDevices
     weak var currentViewController: UIViewController?
     
     var items = ["Карты", "Счета", "Облигации", "Ячейки", "История", "Статистика"]
     
-    
-    func addSubview(_ subView:UIView, toView parentView:UIView) {
-        parentView.addSubview(subView)
-        
-        var viewBindingsDict = [String: AnyObject]()
-        viewBindingsDict["subView"] = subView
-        parentView.addConstraints(
-            NSLayoutConstraint.constraints(withVisualFormat: "H:|[subView]|",
-                                           options: [], metrics: nil, views: viewBindingsDict
-        ))
-        
-        parentView.addConstraints(
-            NSLayoutConstraint.constraints(withVisualFormat: "V:|[subView]|",
-                                           options: [], metrics: nil, views: viewBindingsDict
-        ))
-    }
-    
-    func showComponent(index: Int) {
-        
-        let newViewController = self.storyboard?.instantiateViewController(withIdentifier: "deposits\(index)")
-        newViewController!.view.translatesAutoresizingMaskIntoConstraints = false
-        self.cycleFromViewController(oldViewController: self.currentViewController!, toViewController: newViewController!)
-        self.currentViewController = newViewController
-        
-    }
-    
-    func cycleFromViewController(oldViewController: UIViewController, toViewController newViewController: UIViewController) {
-        oldViewController.willMove(toParent: nil)
-        self.addChild(newViewController)
-        self.addSubview(newViewController.view, toView:self.containerView!)
-        // TODO: Set the starting state of your constraints here
-        newViewController.view.alpha = 0
-        newViewController.view.bounds.origin.y -= 10
-        
-        newViewController.view.layoutIfNeeded()
-        
-        // TODO: Set the ending state of your constraints here
-        
-        UIView.animate(withDuration: 0.25, animations: {
-            oldViewController.view.alpha = 0
-            oldViewController.view.bounds.origin.y -= 10
-            // only need to call layoutIfNeeded here
-            newViewController.view.layoutIfNeeded()
-        }, completion: { _ in
-            UIView.animate(withDuration: 0.25, animations: {
-                newViewController.view.alpha = 1
-                newViewController.view.bounds.origin.y += 10
-            }, completion: { _ in
-                oldViewController.view.removeFromSuperview()
-                oldViewController.removeFromParent()
-                newViewController.didMove(toParent: self)
-            })
-        })
-    }
-    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         currentViewController = storyboard?.instantiateViewController(withIdentifier: "deposits0")
         currentViewController!.view.translatesAutoresizingMaskIntoConstraints = false
@@ -137,14 +44,7 @@ class DepositsViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
-        if Device().isOneOf(xDevices) {
-            
-            carousel.frame.size.height = 120
-        } else {
-            carousel.frame.size.height = 90
-        }
-        
+        carousel.frame.size.height = Device().isOneOf(xDevices) ? 120 : 90
     }
 }
 
@@ -178,7 +78,6 @@ extension DepositsViewController: iCarouselDataSource, iCarouselDelegate {
             label.font = UIFont(name: "Roboto-Regular", size: 16)
             label.tag = 1
             itemView.addSubview(label)
-            
         }
         
         //set item label
@@ -193,12 +92,12 @@ extension DepositsViewController: iCarouselDataSource, iCarouselDelegate {
     
     func carousel(_ carousel: iCarousel, valueFor option: iCarouselOption, withDefault value: CGFloat) -> CGFloat {
         
-        if (option == .wrap) {
+        if option == .wrap {
             return 0.0
         }
         
         if option == .arc {
-            if Device().isOneOf(iphone5Devices) {
+            if Device().isOneOf(Constants.iphone5Devices) {
                 return CGFloat(Double.pi) / 1.75 // 2.75 - if not authorized
             } else if Device().isOneOf(xDevices) {
                 return CGFloat(Double.pi) / 3.5 // 3.5 - if not authorized
@@ -208,7 +107,7 @@ extension DepositsViewController: iCarouselDataSource, iCarouselDelegate {
         }
         
         if option == .radius {
-            if Device().isOneOf(iphone5Devices) {
+            if Device().isOneOf(Constants.iphone5Devices) {
                 return 800
             } else if Device().isOneOf(xDevices) {
                 return 1300
@@ -234,6 +133,81 @@ extension DepositsViewController: iCarouselDataSource, iCarouselDelegate {
                 n.alpha = index == i ? 1 : 0
             })
         }
+    }
+}
+
+private extension DepositsViewController {
+    func addGradients() {
+        for gradient in [
+            (UIColor(hexFromString: "F1AE73"), UIColor(hexFromString: "EB4340")),
+            (UIColor(hexFromString: "EC4645"), UIColor(hexFromString: "9B305C")),
+            (UIColor(hexFromString: "ED5D4B"), UIColor(hexFromString: "B03456")),
+            (UIColor(hexFromString: "ED4F48"), UIColor(hexFromString: "9F3057")),
+            (UIColor(hexFromString: "ED4F48"), UIColor(hexFromString: "9F3057")),
+            (UIColor(hexFromString: "C8394C"), UIColor(hexFromString: "1B0E2F"))
+            ] {
+                let v = GradientView2()
+                v.color1 = gradient.0
+                v.color2 = gradient.1
+                v.alpha = 0
+                v.frame = view.frame
+                v.addGradientView()
+                v.layoutIfNeeded()
+                gradientViews.append(v)
+                view.insertSubview(v, at: 0)
+        }
+    }
+    
+    func addSubview(_ subView:UIView, toView parentView:UIView) {
+        parentView.addSubview(subView)
+        
+        var viewBindingsDict = [String: AnyObject]()
+        viewBindingsDict["subView"] = subView
+        parentView.addConstraints(
+            NSLayoutConstraint.constraints(withVisualFormat: "H:|[subView]|",
+                                           options: [], metrics: nil, views: viewBindingsDict
+        ))
+        
+        parentView.addConstraints(
+            NSLayoutConstraint.constraints(withVisualFormat: "V:|[subView]|",
+                                           options: [], metrics: nil, views: viewBindingsDict
+        ))
+    }
+    
+    func showComponent(index: Int) {
+        let newViewController = storyboard?.instantiateViewController(withIdentifier: "deposits\(index)")
+        newViewController!.view.translatesAutoresizingMaskIntoConstraints = false
+        cycleFromViewController(oldViewController: self.currentViewController!, toViewController: newViewController!)
+        currentViewController = newViewController
+    }
+    
+    func cycleFromViewController(oldViewController: UIViewController, toViewController newViewController: UIViewController) {
+        oldViewController.willMove(toParent: nil)
+        addChild(newViewController)
+        addSubview(newViewController.view, toView:self.containerView!)
+        // TODO: Set the starting state of your constraints here
+        newViewController.view.alpha = 0
+        newViewController.view.bounds.origin.y -= 10
+        
+        newViewController.view.layoutIfNeeded()
+        
+        // TODO: Set the ending state of your constraints here
+        
+        UIView.animate(withDuration: 0.25, animations: {
+            oldViewController.view.alpha = 0
+            oldViewController.view.bounds.origin.y -= 10
+            // only need to call layoutIfNeeded here
+            newViewController.view.layoutIfNeeded()
+        }, completion: { _ in
+            UIView.animate(withDuration: 0.25, animations: {
+                newViewController.view.alpha = 1
+                newViewController.view.bounds.origin.y += 10
+            }, completion: { _ in
+                oldViewController.view.removeFromSuperview()
+                oldViewController.removeFromParent()
+                newViewController.didMove(toParent: self)
+            })
+        })
     }
 }
 

@@ -13,39 +13,14 @@ class ThreeViewController: UIViewController {
     // MARK: - Properties
     @IBOutlet weak var tableView: UITableView!
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
         setUpTableView()
     }
-    
-    
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
 
-
-private extension ThreeViewController {
-    
-    func setUpTableView() {
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.contentInset.top = 50
-        tableView.contentInset.bottom = 25
-    }
-}
-
+// MARK: - TableView Delegate and DataSource
 extension ThreeViewController: UITableViewDelegate, UITableViewDataSource {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let scrollUserInfo = ["tableView": tableView]
@@ -58,8 +33,7 @@ extension ThreeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
-        let labelView = UILabel()
-        labelView.frame = cell.frame
+        let labelView = UILabel(frame: cell.frame)
         labelView.text = "Cell #\(indexPath.row)"
         cell.addSubview(labelView)
         return cell
@@ -68,5 +42,23 @@ extension ThreeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 50
     }
+}
+
+// MARK: - Private methods
+private extension ThreeViewController {
     
+    func setUpTableView() {
+        setTableViewDelegateAndDataSource()
+        setTableViewContentInsets()
+    }
+    
+    func setTableViewDelegateAndDataSource() {
+        tableView.delegate = self
+        tableView.dataSource = self
+    }
+    
+    func setTableViewContentInsets() {
+        tableView.contentInset.top = 50
+        tableView.contentInset.bottom = 25
+    }
 }

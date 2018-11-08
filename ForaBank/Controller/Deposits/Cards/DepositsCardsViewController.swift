@@ -10,6 +10,8 @@ import UIKit
 
 class DepositsCardsViewController: UIViewController {
 
+    // MARK: - Properties
+    @IBOutlet weak var picker: UIView!
     @IBOutlet weak var selector: UIView!
     @IBOutlet weak var card1: UIView!
     @IBOutlet weak var card2: UIView!
@@ -18,8 +20,9 @@ class DepositsCardsViewController: UIViewController {
 
     @IBOutlet weak var addCardButton: UIButton!
     
-    // соотношение 1.75 между сторонами карты
+    // соотношение между сторонами карты - 1.75
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -35,10 +38,13 @@ class DepositsCardsViewController: UIViewController {
         card3.layer.cornerRadius = 10
         card4.layer.cornerRadius = 10
         
-        let gesture = UITapGestureRecognizer(target: self, action:  #selector (cardViewClicked (_:)))
+        let gesture = UITapGestureRecognizer(target: self, action: #selector (cardViewClicked (_:)))
         card4.addGestureRecognizer(gesture)
+        
+        picker.layer.cornerRadius = 3
     }
     
+    // MARK: - Methods
     @objc func cardViewClicked(_ sender: UITapGestureRecognizer) {
         performSegue(withIdentifier: "DepositsCardsDetailsViewController", sender: nil)
     }

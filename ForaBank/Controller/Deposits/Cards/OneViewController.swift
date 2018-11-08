@@ -12,45 +12,67 @@ import DeviceKit
 
 class OneViewController: UIViewController {
     
-    weak var currentViewController: UIViewController?
-    
-    @IBAction func backButtonClicked(_ sender: Any) {
-        
-        dismiss(animated: true, completion: nil)
-    }
-    
-    static let iphone5Devices: [Device] = [.iPhone5, .iPhone5c, .iPhone5s, .iPhoneSE,
-                                           .simulator(.iPhone5), .simulator(.iPhone5c), .simulator(.iPhone5s), .simulator(.iPhoneSE)]
-    
-    static let xDevices: [Device] = [
-        .iPhoneX,
-        .iPhoneX,
-        .iPhoneXr,
-        .iPhoneXs,
-        .iPhoneXsMax,
-        
-        .simulator(.iPhoneX),
-        .simulator(.iPhoneX),
-        .simulator(.iPhoneXr),
-        .simulator(.iPhoneXs),
-        .simulator(.iPhoneXsMax)
-    ]
-    
+    // MARK: - Properties
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var header: UIView!
     @IBOutlet weak var container: UIView!
-    
     @IBOutlet weak var containerHeight: NSLayoutConstraint!
-    
     @IBOutlet var carousel: iCarousel!
     
     var offset: CGFloat = {
-        if Device().isOneOf(xDevices) {
-            return 100
+        if Device().isOneOf(Constants.xDevices) {
+            return 100 // models: x
         } else {
-            return 75
+            return 75 // models 7 7+ se
         }
-    }() // 75 - 7, se 7+ , 100 - xsmax
+    }()
+    
+    weak var currentViewController: UIViewController?
+    
+    var previousOffset: CGFloat = 0
+    
+    var items = ["Управление", "Выписка", "О карте"]
+    
+    var lastScrollViewOffset: CGFloat = 0
+    
+    @IBAction func backButtonClicked(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    // MARK: - Lifecycle
+    override func viewDidLoad() {
+        
+        currentViewController = storyboard?.instantiateViewController(withIdentifier: "feed0")
+        currentViewController!.view.translatesAutoresizingMaskIntoConstraints = false
+        addChild(currentViewController!)
+        addSubview(self.currentViewController!.view, toView: self.container)
+        
+        super.viewDidLoad()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleScroll(_:)), name: NSNotification.Name("TableViewScrolled"), object: nil)
+        scrollView.isScrollEnabled = false
+        
+        carousel.delegate = self
+        carousel.dataSource = self
+        carousel.type = .wheel
+        carousel.bounces = false
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        containerHeight.constant = -offset
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "TransitionToSecondViewController" {
+            //let secondViewController = segue.destination as! TwoViewController
+            // Pass data to secondViewController before the transition
+        }
+    }
+}
+
+private extension OneViewController {
     
     func addSubview(_ subView:UIView, toView parentView:UIView) {
         parentView.addSubview(subView)
@@ -69,12 +91,10 @@ class OneViewController: UIViewController {
     }
     
     func showComponent(index: Int) {
-        
-        let newViewController = self.storyboard?.instantiateViewController(withIdentifier: "feed\(index)")
+        let newViewController = storyboard?.instantiateViewController(withIdentifier: "feed\(index)")
         newViewController!.view.translatesAutoresizingMaskIntoConstraints = false
-        self.cycleFromViewController(oldViewController: self.currentViewController!, toViewController: newViewController!)
-        self.currentViewController = newViewController
-        
+        cycleFromViewController(oldViewController: self.currentViewController!, toViewController: newViewController!)
+        currentViewController = newViewController
     }
     
     func cycleFromViewController(oldViewController: UIViewController, toViewController newViewController: UIViewController) {
@@ -106,53 +126,7 @@ class OneViewController: UIViewController {
         })
     }
     
-    var previousOffset: CGFloat = 0
-    
-    var items = ["Управление", "Выписка", "О карте"]
-    
-    override func viewDidLoad() {
-        
-        currentViewController = storyboard?.instantiateViewController(withIdentifier: "feed0")
-        currentViewController!.view.translatesAutoresizingMaskIntoConstraints = false
-        addChild(currentViewController!)
-        addSubview(self.currentViewController!.view, toView: self.container)
-        
-        super.viewDidLoad()
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(handleScroll(_:)), name: NSNotification.Name("TableViewScrolled"), object: nil)
-        scrollView.isScrollEnabled = false
-        
-        carousel.delegate = self
-        carousel.dataSource = self
-        carousel.type = .wheel
-        carousel.bounces = false
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        containerHeight.constant = -offset
-        
-        
-    }
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if (segue.identifier == "TransitionToSecondViewController") {
-            //let secondViewController = segue.destination as! TwoViewController
-            // Pass data to secondViewController before the transition
-  
-        }
-    }
-    
-    var lastScrollViewOffset: CGFloat = 0
-}
-
-private extension OneViewController {
-    
     @objc func handleScroll(_ notification: Notification?) {
-        
-        
-        
         let tableScrollView = notification?.userInfo?["tableView"] as? UIScrollView
         var currentOffset = tableScrollView?.contentOffset.y
         
@@ -162,15 +136,7 @@ private extension OneViewController {
             if (currentOffset ?? 0.0) > header.frame.height - offset {
                 currentOffset = header.frame.height - offset
             }
-            
-            
-            
-            
             scrollView.contentOffset.y -= previousOffset - (currentOffset ?? 0.0)
-            
-            
-            
-            
             previousOffset = currentOffset ?? 0.0
             
         } else {
@@ -178,25 +144,11 @@ private extension OneViewController {
                 if (currentOffset ?? 0.0) < 0 {
                     currentOffset = 0
                 }
-                
-                
-                
-                
-                
                 scrollView.contentOffset.y -= previousOffset - (currentOffset ?? 0.0)
-                
-                
-                
                 previousOffset = currentOffset ?? 0.0
             }
         }
-        
-        
-        
-        
         print(previousOffset, currentOffset!, lastScrollViewOffset)
-        
-        
     }
 }
 
@@ -251,9 +203,9 @@ extension OneViewController: iCarouselDataSource, iCarouselDelegate {
         }
         
         if option == .arc {
-            if Device().isOneOf(OneViewController.iphone5Devices) {
+            if Device().isOneOf(Constants.iphone5Devices) {
                 return CGFloat(Double.pi) / 2.5 // 2.75 - if not authorized
-            } else if Device().isOneOf(OneViewController.xDevices) {
+            } else if Device().isOneOf(Constants.xDevices) {
                 return CGFloat(Double.pi) / 3.25 // 3.5 - if not authorized
             } else {
                 return CGFloat(Double.pi) / 3.25 // 3.5 - if not authorized
@@ -261,9 +213,9 @@ extension OneViewController: iCarouselDataSource, iCarouselDelegate {
         }
         
         if option == .radius {
-            if Device().isOneOf(OneViewController.iphone5Devices) {
+            if Device().isOneOf(Constants.iphone5Devices) {
                 return 800
-            } else if Device().isOneOf(OneViewController.xDevices) {
+            } else if Device().isOneOf(Constants.xDevices) {
                 return 1300
             } else {
                 return 1300
@@ -282,6 +234,5 @@ extension OneViewController: iCarouselDataSource, iCarouselDelegate {
     
     func carousel(_ carousel: iCarousel, didSelectItemAt index: Int) {
         showComponent(index: index)
-        
     }
 }

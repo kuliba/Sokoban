@@ -2,7 +2,7 @@
 //  FeedOptionsViewController.swift
 //  ForaBank
 //
-//  Created by Ilya Masalov on 10/10/2018.
+//  Created by Ilya Masalov (xmasalov@gmail.com) on 10/10/2018.
 //  Copyright © 2018 BraveRobin. All rights reserved.
 //
 
@@ -48,15 +48,14 @@ class FeedOptionsViewController: UIViewController {
         ]
     ]
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        setTableViewDelegateAndDataSource()
-        setAutomaticRowHeight()
-        registerNibCell()
+        setUpTableView()
     }
 }
 
+// MARK: - UITableView Delegate and DataSource
 extension FeedOptionsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -92,10 +91,16 @@ extension FeedOptionsViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 35
     }
-    
 }
 
+// MARK: - Private methods
 private extension FeedOptionsViewController {
+    
+    func setUpTableView() {
+        setTableViewDelegateAndDataSource()
+        setAutomaticRowHeight()
+        registerNibCell()
+    }
     
     func setTableViewDelegateAndDataSource() {
         tableView.dataSource = self

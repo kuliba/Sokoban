@@ -31,6 +31,13 @@ class ProfileMenuTableViewController: UITableViewController {
         
     }
     
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let requestAction = UITableViewRowAction(style: .normal, title: "Запросить") { action, indexPath in
+        }
+        requestAction.backgroundColor = UIColor(red: 26/255, green: 188/255, blue: 156/255, alpha: 1)
+        return [requestAction]
+    }
+    
     // MARK: - Table view data source
     /*
      override func numberOfSections(in tableView: UITableView) -> Int {
@@ -100,5 +107,4 @@ class ProfileMenuTableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
      }
      */
-    
 }

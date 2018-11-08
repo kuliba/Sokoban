@@ -13,7 +13,6 @@ class FeedCurrentViewController: UIViewController {
     // MARK: - Properties
     @IBOutlet weak var tableView: UITableView!
     
-    
     let cellId1 = "FeedCurrent1Cell"
     let cellId2 = "FeedCurrent2Cell"
     let cellId3 = "FeedCurrent3Cell"
@@ -21,9 +20,9 @@ class FeedCurrentViewController: UIViewController {
     let cellId5 = "FeedCurrent5Cell"
     let cellId6 = "FeedCurrent6Cell"
     
-    
     var cellHeight: CGFloat = 0
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -34,8 +33,6 @@ class FeedCurrentViewController: UIViewController {
         
         tableView.decelerationRate = .normal
     }
-    
-    
 }
 
 // MARK: - UITableView DataSource and Delegate

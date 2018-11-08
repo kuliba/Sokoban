@@ -64,13 +64,10 @@ class PaymentsViewController: UIViewController {
         ]
     ]
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setTableViewDelegateAndDataSource()
-        setAutomaticRowHeight()
-        registerNibCell()
-        
-        tableView.contentInset = UIEdgeInsets(top: -10, left: 0, bottom: 0, right: 0)
+        setUpTableView()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -84,10 +81,6 @@ class PaymentsViewController: UIViewController {
 // MARK: - UITableView DataSource and Delegate
 extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "PaymentsDetailsViewController", sender: nil)
-    }
-    
     func numberOfSections(in tableView: UITableView) -> Int {
         return data_.count
     }
@@ -100,8 +93,6 @@ extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
         
         let section = data_[indexPath.section]
         let index = indexPath.row
-        
-        
         
         if let templates = section as? [PaymentTemplate],
             let templateCell = tableView.dequeueReusableCell(withIdentifier: templateCellId, for: indexPath) as? PaymentTemplateCell {
@@ -128,14 +119,16 @@ extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
             serviceCell.iconImageView.image = UIImage(named: services[index].iconName)
             serviceCell.titleLabel.text = services[index].name
             
-            
             serviceCell.bottomSeparatorView.isHidden = index == services.endIndex - 1
-            
             
             return serviceCell
         } else {
             return UITableViewCell()
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "PaymentsDetailsViewController", sender: nil)
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -167,19 +160,12 @@ extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
             let footerView = UIView(frame: CGRect(x: tableView.frame.minX + 20, y: 0, width: tableView.frame.width - 40, height: 95))
             let doneButton = UIButton(frame: CGRect(x: footerView.frame.minX, y: footerView.frame.minY + 15, width: footerView.frame.width, height: 45))
             
-            
             doneButton.setTitle("Создать шаблон", for: .normal)
-            
             doneButton.titleLabel?.font = UIFont(name: "Roboto-Regular", size: 16)
-            
             doneButton.setTitleColor(.black, for: [])
-            
-            
             doneButton.layer.borderWidth = 0.5
             doneButton.layer.borderColor = UIColor(red: 211/255, green: 211/255, blue: 211/255, alpha: 1).cgColor
-            
             doneButton.layer.cornerRadius = doneButton.frame.height / 2
-            
             
             footerView.addSubview(doneButton)
             return footerView
@@ -203,6 +189,17 @@ extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
 
 // MARK: - Private methods
 private extension PaymentsViewController {
+    
+    func setUpTableView() {
+        setTableViewDelegateAndDataSource()
+        setTableViewContentInsets()
+        setAutomaticRowHeight()
+        registerNibCell()
+    }
+    
+    func setTableViewContentInsets() {
+        tableView.contentInset.top = -10
+    }
     
     func setTableViewDelegateAndDataSource() {
         tableView.dataSource = self

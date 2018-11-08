@@ -38,9 +38,9 @@ class RegistrationViewController: UIViewController {
     var previousTextFieldContent: String?
     var previousSelection: UITextRange?
     
-    let pageControl = FlexiblePageControl()
-    
     weak var delegate: LoginOrSignupViewControllerDelegate?
+    
+    let pageControl = FlexiblePageControl()
     
     let gradientView = UIView()
     let circleView = UIView()
@@ -171,10 +171,7 @@ private extension RegistrationViewController {
     func setUpCardNumberTextField() {
         cardNumberTextField.addTarget(self, action: #selector(reformatAsCardNumber), for: .editingChanged)
         
-        let iphone5Devices: [Device] = [.iPhone5, .iPhone5c, .iPhone5s, .iPhoneSE,
-                                        .simulator(.iPhone5), .simulator(.iPhone5c), .simulator(.iPhone5s), .simulator(.iPhoneSE)]
-        
-        if Device().isOneOf(iphone5Devices) {
+        if Device().isOneOf(Constants.iphone5Devices) {
             cardNumberTextField.font = cardNumberTextField.font!.withSize(14)
         }
         
@@ -217,7 +214,7 @@ private extension RegistrationViewController {
         
         var cardNumberWithoutSpaces = ""
         if let text = textField.text {
-            cardNumberWithoutSpaces = self.removeNonDigits(string: text, andPreserveCursorPosition: &targetCursorPosition)
+            cardNumberWithoutSpaces = removeNonDigits(string: text, andPreserveCursorPosition: &targetCursorPosition)
         }
         
         if cardNumberWithoutSpaces.count > 19 {
@@ -226,7 +223,7 @@ private extension RegistrationViewController {
             return
         }
         
-        let cardNumberWithSpaces = self.insertCreditCardSpaces(cardNumberWithoutSpaces, preserveCursorPosition: &targetCursorPosition)
+        let cardNumberWithSpaces = insertCreditCardSpaces(cardNumberWithoutSpaces, preserveCursorPosition: &targetCursorPosition)
         textField.text = cardNumberWithSpaces
         
         if let targetPosition = textField.position(from: textField.beginningOfDocument, offset: targetCursorPosition) {

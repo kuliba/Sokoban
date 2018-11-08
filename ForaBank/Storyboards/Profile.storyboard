@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.23.1" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="qWl-sN-RH1">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="qWl-sN-RH1">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.16.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -344,7 +344,7 @@
                             <constraint firstItem="QkO-QE-wao" firstAttribute="trailing" secondItem="gMx-PE-PnW" secondAttribute="trailing" id="70j-8Z-rgP"/>
                             <constraint firstAttribute="bottom" secondItem="QkO-QE-wao" secondAttribute="bottom" id="QZ6-d6-TOE"/>
                             <constraint firstItem="QkO-QE-wao" firstAttribute="leading" secondItem="gMx-PE-PnW" secondAttribute="leading" id="gxl-Lm-BjX"/>
-                            <constraint firstItem="QkO-QE-wao" firstAttribute="top" secondItem="Kc3-wm-miW" secondAttribute="top" constant="45" id="zut-OH-xHI"/>
+                            <constraint firstItem="QkO-QE-wao" firstAttribute="top" secondItem="gMx-PE-PnW" secondAttribute="top" constant="-19" id="zut-OH-xHI"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="gMx-PE-PnW"/>
                         <userDefinedRuntimeAttributes>
@@ -439,6 +439,9 @@
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FIg-Mr-uhe">
                                                                         <rect key="frame" x="0.0" y="0.0" width="45.5" height="47"/>
                                                                         <state key="normal" image="icon_chat_money"/>
+                                                                        <connections>
+                                                                            <action selector="sendMoneyButtonClicked:" destination="VLH-Pb-qfl" eventType="touchUpInside" id="WKx-n8-Pjy"/>
+                                                                        </connections>
                                                                     </button>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tgf-v1-cpo">
                                                                         <rect key="frame" x="47.5" y="0.0" width="45" height="47"/>
@@ -498,12 +501,12 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" red="0.77384895090000005" green="0.36048567300000001" blue="0.38817185160000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="1HD-17-MaS" firstAttribute="leading" secondItem="kcZ-hh-b3J" secondAttribute="leading" id="ItY-qm-w1d"/>
                             <constraint firstItem="1HD-17-MaS" firstAttribute="trailing" secondItem="kcZ-hh-b3J" secondAttribute="trailing" id="QWP-Ma-6Ui"/>
                             <constraint firstItem="1HD-17-MaS" firstAttribute="bottom" secondItem="kcZ-hh-b3J" secondAttribute="bottom" id="VXt-9z-fDT"/>
-                            <constraint firstItem="1HD-17-MaS" firstAttribute="top" secondItem="k2f-Vx-13l" secondAttribute="top" constant="45" id="hrc-a6-A15"/>
+                            <constraint firstItem="1HD-17-MaS" firstAttribute="top" secondItem="kcZ-hh-b3J" secondAttribute="top" constant="-19" id="hrc-a6-A15"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="kcZ-hh-b3J"/>
                         <userDefinedRuntimeAttributes>

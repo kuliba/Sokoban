@@ -40,11 +40,9 @@ class ChatDialogsViewController: UIViewController {
         registerNibCell()
         setSearchView()
         
-        // Prepare button for animation
+        // Prepare back button for animation
         backButton.alpha = 0
         backButton.frame.origin.x += 5
-
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -89,8 +87,8 @@ extension ChatDialogsViewController: UITableViewDataSource, UITableViewDelegate 
             fatalError()
         }
         
-        // Remove last separator
         if indexPath.row == data_.endIndex {
+            // Remove last separator
             cell.separatorInset = UIEdgeInsets(top: 0, left: cell.bounds.size.width, bottom: 0, right: 0)
         }
         
@@ -124,12 +122,12 @@ extension ChatDialogsViewController: UITableViewDataSource, UITableViewDelegate 
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let delete = UITableViewRowAction(style: .destructive, title: "Удалить") { action, indexPath in
-            self.data_.remove(at: indexPath.row)
+        let deleteRowAction = UITableViewRowAction(style: .destructive, title: "Удалить") { [weak self] action, indexPath in
+            self?.data_.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
         
-        return [delete]
+        return [deleteRowAction]
     }
 }
 

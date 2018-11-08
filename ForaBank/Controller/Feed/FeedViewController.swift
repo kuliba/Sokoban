@@ -2,7 +2,7 @@
 //  FeedViewController.swift
 //  ForaBank
 //
-//  Created by Ilya Masalov on 09/10/2018.
+//  Created by Ilya Masalov (xmasalov@gmail.com) on 09/10/2018.
 //  Copyright © 2018 BraveRobin. All rights reserved.
 //
 
@@ -12,109 +12,20 @@ import DeviceKit
 
 class FeedViewController: UIViewController {
     
-    var gradientViews = [GradientView2]()
-    
-    func addGradients() {
-        for gradient in [
-            (UIColor(hexFromString: "EA4644"), UIColor(hexFromString: "F1AD72")),
-            (UIColor(hexFromString: "F1AD72"), UIColor(hexFromString: "EA4544")),
-            (UIColor(hexFromString: "EA4544"), UIColor(hexFromString: "F1AD72")),
-            (UIColor(hexFromString: "F1AD72"), UIColor(hexFromString: "EA4544")),
-            (UIColor(hexFromString: "EA4544"), UIColor(hexFromString: "F1AD72"))
-            ] {
-                let v = GradientView2()
-                v.color1 = gradient.0
-                v.color2 = gradient.1
-                v.alpha = 0
-                v.frame = view.frame
-                v.addGradientView()
-                v.layoutIfNeeded()
-                gradientViews.append(v)
-                view.insertSubview(v, at: 0)
-        }
-    }
-    
-    
-    
-    
-    let iphone5Devices: [Device] = [.iPhone5, .iPhone5c, .iPhone5s, .iPhoneSE,
-                                    .simulator(.iPhone5), .simulator(.iPhone5c), .simulator(.iPhone5s), .simulator(.iPhoneSE)]
-    
-    let xDevices: [Device] = [
-        .iPhoneX,
-        .iPhoneX,
-        .iPhoneXr,
-        .iPhoneXs,
-        .iPhoneXsMax,
-        
-        .simulator(.iPhoneX),
-        .simulator(.iPhoneX),
-        .simulator(.iPhoneXr),
-        .simulator(.iPhoneXs),
-        .simulator(.iPhoneXsMax)
-    ]
-    
+    // MARK: - Properties
     @IBOutlet var carousel: iCarousel!
     @IBOutlet weak var containerView: UIView!
+    
+    var gradientViews = [GradientView2]()
+    
+    let iphone5Devices = Constants.iphone5Devices
+    let xDevices = Constants.xDevices
+    
     weak var currentViewController: UIViewController?
     
     var items = ["Текущее", "Предстоящее", "Предложения", "Информация", "Настройки"]
     
-    
-    func addSubview(_ subView:UIView, toView parentView:UIView) {
-        parentView.addSubview(subView)
-        
-        var viewBindingsDict = [String: AnyObject]()
-        viewBindingsDict["subView"] = subView
-        parentView.addConstraints(
-            NSLayoutConstraint.constraints(withVisualFormat: "H:|[subView]|",
-                                           options: [], metrics: nil, views: viewBindingsDict
-        ))
-        
-        parentView.addConstraints(
-            NSLayoutConstraint.constraints(withVisualFormat: "V:|[subView]|",
-                                           options: [], metrics: nil, views: viewBindingsDict
-        ))
-    }
-    
-    func showComponent(index: Int) {
-        
-        let newViewController = self.storyboard?.instantiateViewController(withIdentifier: "feed\(index)")
-        newViewController!.view.translatesAutoresizingMaskIntoConstraints = false
-        self.cycleFromViewController(oldViewController: self.currentViewController!, toViewController: newViewController!)
-        self.currentViewController = newViewController
-        
-    }
-    
-    func cycleFromViewController(oldViewController: UIViewController, toViewController newViewController: UIViewController) {
-        oldViewController.willMove(toParent: nil)
-        self.addChild(newViewController)
-        self.addSubview(newViewController.view, toView:self.containerView!)
-        // TODO: Set the starting state of your constraints here
-        newViewController.view.alpha = 0
-        newViewController.view.bounds.origin.y -= 10
-        
-        newViewController.view.layoutIfNeeded()
-        
-        // TODO: Set the ending state of your constraints here
-        
-        UIView.animate(withDuration: 0.25, animations: {
-            oldViewController.view.alpha = 0
-            oldViewController.view.bounds.origin.y -= 10
-            // only need to call layoutIfNeeded here
-            newViewController.view.layoutIfNeeded()
-        }, completion: { _ in
-            UIView.animate(withDuration: 0.25, animations: {
-                newViewController.view.alpha = 1
-                newViewController.view.bounds.origin.y += 10
-            }, completion: { _ in
-                oldViewController.view.removeFromSuperview()
-                oldViewController.removeFromParent()
-                newViewController.didMove(toParent: self)
-            })
-        })
-    }
-    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         currentViewController = storyboard?.instantiateViewController(withIdentifier: "feed0")
         currentViewController!.view.translatesAutoresizingMaskIntoConstraints = false
@@ -138,15 +49,14 @@ class FeedViewController: UIViewController {
         super.viewDidLayoutSubviews()
         
         if Device().isOneOf(xDevices) {
-            
             carousel.frame.size.height = 120
         } else {
             carousel.frame.size.height = 90
         }
-        
     }
 }
 
+// MARK: - iCarousel Delegate and DataSource
 extension FeedViewController: iCarouselDataSource, iCarouselDelegate {
     
     func numberOfItems(in carousel: iCarousel) -> Int {
@@ -177,7 +87,6 @@ extension FeedViewController: iCarouselDataSource, iCarouselDelegate {
             label.font = UIFont(name: "Roboto-Regular", size: 16)
             label.tag = 1
             itemView.addSubview(label)
-            
         }
         
         // set item label
@@ -192,7 +101,7 @@ extension FeedViewController: iCarouselDataSource, iCarouselDelegate {
     
     func carousel(_ carousel: iCarousel, valueFor option: iCarouselOption, withDefault value: CGFloat) -> CGFloat {
         
-        if (option == .wrap) {
+        if option == .wrap {
             return 0.0
         }
         
@@ -215,6 +124,7 @@ extension FeedViewController: iCarouselDataSource, iCarouselDelegate {
                 return 1300
             }
         }
+        
         return value
     }
     
@@ -233,5 +143,82 @@ extension FeedViewController: iCarouselDataSource, iCarouselDelegate {
                 n.alpha = index == i ? 1 : 0
             })
         }
+    }
+}
+
+// MARK: - Private methods
+private extension FeedViewController {
+    func addSubview(_ subView:UIView, toView parentView:UIView) {
+        parentView.addSubview(subView)
+        
+        var viewBindingsDict = [String: AnyObject]()
+        viewBindingsDict["subView"] = subView
+        parentView.addConstraints(
+            NSLayoutConstraint.constraints(withVisualFormat: "H:|[subView]|",
+                                           options: [], metrics: nil, views: viewBindingsDict
+        ))
+        
+        parentView.addConstraints(
+            NSLayoutConstraint.constraints(withVisualFormat: "V:|[subView]|",
+                                           options: [], metrics: nil, views: viewBindingsDict
+        ))
+    }
+    
+    func addGradients() {
+        let gradients = [
+            (UIColor(hexFromString: "EA4644"), UIColor(hexFromString: "F1AD72")),
+            (UIColor(hexFromString: "F1AD72"), UIColor(hexFromString: "EA4544")),
+            (UIColor(hexFromString: "EA4544"), UIColor(hexFromString: "F1AD72")),
+            (UIColor(hexFromString: "F1AD72"), UIColor(hexFromString: "EA4544")),
+            (UIColor(hexFromString: "EA4544"), UIColor(hexFromString: "F1AD72"))
+        ]
+        
+        for gradient in gradients {
+            let v = GradientView2()
+            v.color1 = gradient.0
+            v.color2 = gradient.1
+            v.alpha = 0
+            v.frame = view.frame
+            v.addGradientView()
+            v.layoutIfNeeded()
+            gradientViews.append(v)
+            view.insertSubview(v, at: 0)
+        }
+    }
+    
+    func showComponent(index: Int) {
+        let newViewController = self.storyboard?.instantiateViewController(withIdentifier: "feed\(index)")
+        newViewController!.view.translatesAutoresizingMaskIntoConstraints = false
+        cycleFromViewController(oldViewController: self.currentViewController!, toViewController: newViewController!)
+        currentViewController = newViewController
+    }
+    
+    func cycleFromViewController(oldViewController: UIViewController, toViewController newViewController: UIViewController) {
+        oldViewController.willMove(toParent: nil)
+        addChild(newViewController)
+        addSubview(newViewController.view, toView:self.containerView!)
+        // TODO: Set the starting state of your constraints here
+        newViewController.view.alpha = 0
+        newViewController.view.bounds.origin.y -= 10
+        
+        newViewController.view.layoutIfNeeded()
+        
+        // TODO: Set the ending state of your constraints here
+        
+        UIView.animate(withDuration: 0.25, animations: {
+            oldViewController.view.alpha = 0
+            oldViewController.view.bounds.origin.y -= 10
+            // only need to call layoutIfNeeded here
+            newViewController.view.layoutIfNeeded()
+        }, completion: { _ in
+            UIView.animate(withDuration: 0.25, animations: {
+                newViewController.view.alpha = 1
+                newViewController.view.bounds.origin.y += 10
+            }, completion: { _ in
+                oldViewController.view.removeFromSuperview()
+                oldViewController.removeFromParent()
+                newViewController.didMove(toParent: self)
+            })
+        })
     }
 }

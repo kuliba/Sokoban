@@ -2,34 +2,35 @@
 //  FeedUpcomingViewController.swift
 //  ForaBank
 //
-//  Created by Ilya Masalov on 11/10/2018.
+//  Created by Ilya Masalov (xmasalov@gmail.com) on 11/10/2018.
 //  Copyright © 2018 BraveRobin. All rights reserved.
 //
 
 import UIKit
 
 class FeedUpcomingViewController: UIViewController {
-
+    
     // MARK: - Properties
     @IBOutlet weak var tableView: UITableView!
     
     let data_ = [
-    
-        ["feed_upcoming_credit_logo", "Платеж по кредиту уже завтра", "Договор №4556***90", "Ежемесячный платеж", "23 450 ₽", "Остаток долга", "320 950 ₽", "Оплатить сейчас", "#FFFFFF", "#E84647", "Настроить", "#FFFFFF", "#FFFFFF"],
-        
-        ["feed_upcoming_beeline_logo", "Ближайший платеж ожидается через два дня", "Услуги сотовой связи", "+7916*****79", "450 ₽", "Автоплатеж", "5 декабря", "Оплатить сейчас", "#000000", "#FFFFFF", "Настроить", "#F5BC31", "#F5BC31"],
-        
-        ["feed_upcoming_akado_logo", "Создайте шаблон для своевременной оплаты", "Интернет и домашнее ТВ", "Ежемесячный платеж", "650 ₽", "Оплачено", "4 дня назад", "Создать шаблон", "#FFFFFF", "#E84647", "Настроить", "#FFFFFF", "#FFFFFF"]
-        
+        [
+            "feed_upcoming_credit_logo", "Платеж по кредиту уже завтра", "Договор №4556***90", "Ежемесячный платеж", "23 450 ₽", "Остаток долга", "320 950 ₽", "Оплатить сейчас", "#FFFFFF", "#E84647", "Настроить", "#FFFFFF", "#FFFFFF"
+        ], [
+            "feed_upcoming_beeline_logo", "Ближайший платеж ожидается через два дня", "Услуги сотовой связи", "+7916*****79", "450 ₽", "Автоплатеж", "5 декабря", "Оплатить сейчас", "#000000", "#FFFFFF", "Настроить", "#F5BC31", "#F5BC31"
+        ], [
+            "feed_upcoming_akado_logo", "Создайте шаблон для своевременной оплаты", "Интернет и домашнее ТВ", "Ежемесячный платеж", "650 ₽", "Оплачено", "4 дня назад", "Создать шаблон", "#FFFFFF", "#E84647", "Настроить", "#FFFFFF", "#FFFFFF"
+        ]
     ]
     
     let cellId = "FeedUpcomingCell"
     
     var cellHeight: CGFloat = 0
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         setTableViewDelegateAndDataSource()
         registerNibCell()
         
@@ -66,13 +67,12 @@ extension FeedUpcomingViewController: UITableViewDataSource, UITableViewDelegate
         cell.button1.backgroundColor = UIColor(hexFromString: data_[indexPath.row][9])
         
         cell.button2.setTitle(data_[indexPath.row][10], for: [])
-
+        
         cell.button2.backgroundColor = UIColor(hexFromString: data_[indexPath.row][11])
         
         cell.backgroundColor = UIColor(hexFromString: data_[indexPath.row][12])
-
+        
         return cell
-       
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -93,7 +93,6 @@ extension FeedUpcomingViewController: UITableViewDataSource, UITableViewDelegate
         
         var cellToSwipe = Double(Float((scrollView.contentOffset.y)) / Float((cellHeight + minSpace))) + Double(0.5) + mod
         
-        
         if cellToSwipe < 0 {
             cellToSwipe = 0
         } else if cellToSwipe >= Double(tableView.numberOfRows(inSection: 0)) {
@@ -107,7 +106,6 @@ extension FeedUpcomingViewController: UITableViewDataSource, UITableViewDelegate
 
 // MARK: - Private methods
 private extension FeedUpcomingViewController {
-    
     func setTableViewDelegateAndDataSource() {
         tableView.dataSource = self
         tableView.delegate = self

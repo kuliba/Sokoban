@@ -20,19 +20,18 @@ class ChatMessagesViewController: UIViewController {
         }
     }
     
+    // MARK: - Actions
+    @IBAction func sendMoneyButtonClicked(_ sender: Any) {
+        instantiatePaymentsDetailsViewController()
+    }
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setKeyboardObservers()
+        addBackButton()
         
         navigationController?.interactivePopGestureRecognizer?.delegate = self as? UIGestureRecognizerDelegate
-        
-        // Add back button
-        let btnLeftMenu = UIButton(frame: CGRect(x: 0, y: 0, width: 33 / 2, height: 27 / 2))
-        btnLeftMenu.setImage(UIImage(named: "icon_navigation_back"), for: [])
-        btnLeftMenu.addTarget(self, action: #selector(backButtonClicked), for: .touchUpInside)
-        let barButton = UIBarButtonItem(customView: btnLeftMenu)
-        navigationItem.leftBarButtonItem = barButton
     }
 }
 
@@ -65,5 +64,19 @@ private extension ChatMessagesViewController {
     
     @objc func backButtonClicked() {
         navigationController?.popViewController(animated: true)
+    }
+    
+    func addBackButton() {
+        let btnLeftMenu = UIButton(frame: CGRect(x: 0, y: 0, width: 33/2, height: 27/2))
+        btnLeftMenu.setImage(UIImage(named: "icon_navigation_back"), for: [])
+        btnLeftMenu.addTarget(self, action: #selector(backButtonClicked), for: .touchUpInside)
+        let barButton = UIBarButtonItem(customView: btnLeftMenu)
+        navigationItem.leftBarButtonItem = barButton
+    }
+    
+    func instantiatePaymentsDetailsViewController() {
+        if let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentsDetailsViewController") as? PaymentsDetailsViewController {
+            present(vc, animated: true)
+        }
     }
 }

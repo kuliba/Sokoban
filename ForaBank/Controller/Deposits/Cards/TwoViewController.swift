@@ -16,21 +16,11 @@ class TwoViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setUpTableView()
     }
 }
 
-private extension TwoViewController {
-    
-    func setUpTableView() {
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.contentInset.top = 25
-        tableView.contentInset.bottom = 25
-    }
-}
-
+// MARK: - TableView Delegate and DataSource
 extension TwoViewController: UITableViewDelegate, UITableViewDataSource {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let scrollUserInfo = ["tableView": tableView]
@@ -43,8 +33,7 @@ extension TwoViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
-        let labelView = UILabel()
-        labelView.frame = cell.frame
+        let labelView = UILabel(frame: cell.frame)
         labelView.text = "Cell #\(indexPath.row)"
         cell.addSubview(labelView)
         return cell
@@ -53,5 +42,23 @@ extension TwoViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 50
     }
+}
+
+// MARK: - Private methods
+private extension TwoViewController {
     
+    func setUpTableView() {
+        setTableViewDelegateAndDataSource()
+        setTableViewContentInsets()
+    }
+    
+    func setTableViewDelegateAndDataSource() {
+        tableView.delegate = self
+        tableView.dataSource = self
+    }
+    
+    func setTableViewContentInsets() {
+        tableView.contentInset.top = 25
+        tableView.contentInset.bottom = 25
+    }
 }

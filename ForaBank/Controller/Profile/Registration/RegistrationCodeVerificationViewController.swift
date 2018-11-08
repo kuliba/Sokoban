@@ -106,6 +106,5 @@ private extension RegistrationCodeVerificationViewController {
         let count = text.count + string.count - range.length
         continueButton.isHidden = count < 3
         return count <= 3
-        
     }
 }

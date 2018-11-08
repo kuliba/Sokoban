@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import DeviceKit
 
 extension UIDevice {
     static var hasNotchedDisplay: Bool {
@@ -129,4 +130,24 @@ extension UIColor {
             alpha: alpha
         )
     }
+}
+
+enum Constants {
+    
+    static let iphone5Devices: [Device] = [.iPhone5, .iPhone5c, .iPhone5s, .iPhoneSE,
+                                           .simulator(.iPhone5), .simulator(.iPhone5c), .simulator(.iPhone5s), .simulator(.iPhoneSE)]
+    
+    static let xDevices: [Device] = [
+        .iPhoneX,
+        .iPhoneX,
+        .iPhoneXr,
+        .iPhoneXs,
+        .iPhoneXsMax,
+        
+        .simulator(.iPhoneX),
+        .simulator(.iPhoneX),
+        .simulator(.iPhoneXr),
+        .simulator(.iPhoneXs),
+        .simulator(.iPhoneXsMax)
+    ]
 }
