@@ -25,7 +25,7 @@ class DepositsCardsViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        print("DepositsCardsViewController viewDidLoad")
         selector.layer.cornerRadius = 3
         
         addCardButton.layer.cornerRadius = addCardButton.frame.height / 2
@@ -43,9 +43,14 @@ class DepositsCardsViewController: UIViewController {
         
         picker.layer.cornerRadius = 3
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        print("DepositsCardsViewController viewWillAppear")
+    }
+
     
     // MARK: - Methods
     @objc func cardViewClicked(_ sender: UITapGestureRecognizer) {
-        performSegue(withIdentifier: "DepositsCardsDetailsViewController", sender: nil)
+        performSegue(withIdentifier: "CardListOnholdNavigation", sender: nil)
     }
 }
