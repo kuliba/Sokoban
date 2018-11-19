@@ -10,6 +10,11 @@ import UIKit
 
 class DepositsCardsListViewController: UIViewController {
     
+    var panGesture       = UIPanGestureRecognizer()
+    var lastCardViewCenter: CGPoint = CGPoint.zero
+    var firstCardViewCenter: CGPoint = CGPoint.zero
+    var selectedCardView: DetailedCardView? = nil
+    
     var cards: [Card] = [Card]()
     var cardViews : [DetailedCardView] = [DetailedCardView]()
     let scrollView: UIScrollView = {
@@ -99,6 +104,9 @@ class DepositsCardsListViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if cardViews.count != 0 {
+            return
+        }
         
         if CardManager.shared().hasBlockedCard {
             cards = CardManager.shared().cards.reversed()
@@ -188,8 +196,16 @@ class DepositsCardsListViewController: UIViewController {
                 let gesture = UITapGestureRecognizer(target: self, action: #selector (cardViewClicked (_:)))
                 cardView.addGestureRecognizer(gesture)
             }
+            cardViews.append(cardView)
         }
-        
+        panGesture = UIPanGestureRecognizer(target: self, action: #selector(draggedView(_:)))
+        selectedCardView = cardViews.last
+        selectedCardView!.isUserInteractionEnabled = true
+        selectedCardView!.addGestureRecognizer(panGesture)
+//        print(cardViews.last?.isUserInteractionEnabled as Any)
+//        let swipeDown = UISwipeGestureRecognizer.init(target: self, action: #selector(testSwipe(_:)))
+//        swipeDown.direction = .down
+//        cardViews.last?.addGestureRecognizer(swipeDown)
         
         // constrain cardsStackView
 //        let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[cardsStackView]-0-|", options: [], metrics: nil, views: ["cardsStackView":cardsStackView])
@@ -213,6 +229,10 @@ class DepositsCardsListViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         scrollView.contentSize = CGSize(width: contentView.bounds.width, height: contentView.bounds.height)
+        lastCardViewCenter = cardViews.last!.center
+        firstCardViewCenter = cardViews.first!.center
+        print(lastCardViewCenter)
+        print(firstCardViewCenter)
 //        print(scrollView.contentSize)
 //        print(contentView.bounds)
 //        print(cardsStackView.bounds)
@@ -225,4 +245,60 @@ class DepositsCardsListViewController: UIViewController {
         performSegue(withIdentifier: "CardListOnholdNavigation", sender: nil)
     }
     
+    @objc func testSwipe(_ g: UISwipeGestureRecognizer) {
+        print("swipeDown")
+    }
+    @objc func draggedView(_ sender:UIPanGestureRecognizer){
+        //self.view.bringSubviewToFront(sender.view!)
+        let translation = sender.translation(in: contentView)
+//        cardViews.last?.center = CGPoint(x: cardViews.last!.center.x + translation.x, y: cardViews.last!.center.y + translation.y)
+        let newCenterY = sender.view!.center.y + translation.y
+        let newBottomY = newCenterY + sender.view!.frame.size.height/2
+        let newTopY = newCenterY - sender.view!.frame.size.height/2
+        let setY = (newBottomY < addCardButton.frame.origin.y && newTopY > sortPickerButton.frame.origin.y+sortPickerButton.frame.size.height) ? newCenterY : sender.view!.center.y
+        sender.view?.center = CGPoint(x: sender.view!.center.x, y: setY)
+        sender.setTranslation(CGPoint.zero, in: self.view)
+        
+        if sender.state == .ended {
+            if sender.view!.center.y > self.lastCardViewCenter.y {
+                UIView.animate(withDuration: 0.25,
+                               delay: 0,
+                               options: .curveEaseIn,
+                               animations: {sender.view!.center = self.lastCardViewCenter},
+                               completion: nil)
+            } else {
+                sendFrontCardViewToBack()
+            }
+        }
+    }
+    
+    func sendFrontCardViewToBack() {
+        print(cards)
+        print(cardViews)
+        let tempCard = cards.last
+        cards[cards.count-1] = cards[0]
+        cards[0] = tempCard!
+        let tempCardView = cardViews.last
+        cardViews[cardViews.count-1] = cardViews[0]
+        cardViews[0] = tempCardView!
+        print(cards)
+        print(cardViews)
+//        UIView.animate(withDuration: 1,
+//                       delay: 0,
+//                       options: .beginFromCurrentState,
+//                       animations: {
+//                        for (i,c) in self.cardViews.enumerated() {
+//                            if i == self.cardViews.count-1 {
+//                                c.frame.origin.y = self.firstCardViewCenter.y
+//                            } else {
+//                                c.frame.origin.y += 50
+//                            }
+//                        }
+//
+//                    },
+//                       completion:  { (f: Bool) in self.contentView.sendSubviewToBack(self.selectedCardView!)
+//                        //print(self.cards)
+//                        print(self.cardViews)
+//        })
+    }
 }

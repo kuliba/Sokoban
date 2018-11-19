@@ -27,7 +27,7 @@ class FeedViewController: UIViewController {
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
-        currentViewController = storyboard?.instantiateViewController(withIdentifier: "feed0")
+        currentViewController = storyboard?.instantiateViewController(withIdentifier: "feed2")
         currentViewController!.view.translatesAutoresizingMaskIntoConstraints = false
         addChild(currentViewController!)
         addSubview(self.currentViewController!.view, toView: self.containerView)

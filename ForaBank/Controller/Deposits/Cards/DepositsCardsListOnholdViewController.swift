@@ -14,17 +14,27 @@ class DepositsCardsListOnholdViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         //UIImageView вместо UINavigationBar
-        let backToCardsView = UIImageView()
-        if Device().isOneOf(Constants.xDevices) {
-            backToCardsView.image = UIImage(named: "deposit_cards_list_onhold_navigation_bar88")// models: x
-        } else {
-            backToCardsView.image = UIImage(named: "deposit_cards_list_onhold_navigation_bar64")// models 7 7+ se
-        }
-        backToCardsView.isUserInteractionEnabled = true
-        let gesture = UITapGestureRecognizer(target: self, action: #selector (backToCardsViewClicked (_:)))
-        backToCardsView.addGestureRecognizer(gesture)
-        self.view.addSubview(backToCardsView)
-
+//        let backToCardsView = UIImageView()
+//        if Device().isOneOf(Constants.xDevices) {
+//            backToCardsView.image = UIImage(named: "deposit_cards_list_onhold_navigation_bar88")// models: x
+//        } else {
+//            backToCardsView.image = UIImage(named: "deposit_cards_list_onhold_navigation_bar64")// models 7 7+ se
+//        }
+//        backToCardsView.isUserInteractionEnabled = true
+//        let gesture = UITapGestureRecognizer(target: self, action: #selector (backToCardsViewClicked (_:)))
+//        backToCardsView.addGestureRecognizer(gesture)
+//        self.view.addSubview(backToCardsView)
+        //кнопка назад
+        let backButton = UIButton(type: .system)
+        backButton.tintColor = .black
+        backButton.setImage(UIImage(named: "back_button"), for: .normal)
+        self.view.addSubview(backButton)
+        backButton.addTarget(self, action: #selector(backButtonClicked(_:)), for: .touchUpInside)
+        //заголовок экрана
+        let titleLabel = UILabel()
+        titleLabel.text = "Блокировка карты"
+        self.view.addSubview(titleLabel)
+        
         //view карты
         let selectedCardView = DetailedCardView()
         //тестовые данные
@@ -69,18 +79,47 @@ class DepositsCardsListOnholdViewController: UIViewController {
         
         //constraints
         selectedCardView.translatesAutoresizingMaskIntoConstraints = false
-        backToCardsView.translatesAutoresizingMaskIntoConstraints = false
+//        backToCardsView.translatesAutoresizingMaskIntoConstraints = false
         allActionButton.translatesAutoresizingMaskIntoConstraints = false
         sendMoneyButton.translatesAutoresizingMaskIntoConstraints = false
         addMoneyButton.translatesAutoresizingMaskIntoConstraints = false
         blockCardButton.translatesAutoresizingMaskIntoConstraints = false
-        
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
         //for header
-        var horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-[backToCardsView]-|", options: .alignAllCenterY, metrics: nil, views: ["backToCardsView":backToCardsView])
-        let metrics = ["viewHeight":(Device().isOneOf(Constants.xDevices) ? 88 : 64)]
-        var verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(0)-[backToCardsView(viewHeight)]", options: .alignAllCenterX, metrics: metrics, views: ["backToCardsView":backToCardsView])
-        view.addConstraints(horizontalConstraints)
+//        var horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-[backToCardsView]-|", options: .alignAllCenterY, metrics: nil, views: ["backToCardsView":backToCardsView])
+//        let metrics = ["viewHeight":(Device().isOneOf(Constants.xDevices) ? 88 : 64)]
+//        var verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(0)-[backToCardsView(viewHeight)]", options: .alignAllCenterX, metrics: metrics, views: ["backToCardsView":backToCardsView])
+//        view.addConstraints(horizontalConstraints)
+//        view.addConstraints(verticalConstraints)
+        //title
+        view.addConstraint(NSLayoutConstraint(item: titleLabel,
+                                              attribute: .centerX,
+                                              relatedBy: .equal,
+                                              toItem: view,
+                                              attribute: .centerX,
+                                              multiplier: 1,
+                                              constant: 0))
+        view.addConstraint(NSLayoutConstraint(item: titleLabel,
+                                              attribute: .width,
+                                              relatedBy: .equal,
+                                              toItem: nil,
+                                              attribute: .notAnAttribute,
+                                              multiplier: 1,
+                                              constant: 150))
+        let metrics = ["yPos":UIApplication.shared.statusBarFrame.height+5]
+        var verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(yPos)-[titleLabel(20)]", options: [], metrics: metrics, views: ["titleLabel":titleLabel])
         view.addConstraints(verticalConstraints)
+        //back button
+        var horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[backButton(8)]", options: [], metrics: nil, views: ["backButton":backButton])
+        view.addConstraints(horizontalConstraints)
+        view.addConstraint(NSLayoutConstraint(item: backButton,
+                                              attribute: .centerY,
+                                              relatedBy: .equal,
+                                              toItem: titleLabel,
+                                              attribute: .centerY,
+                                              multiplier: 1,
+                                              constant: 2))
         //for card view
         //соотношения сторон карты (280к160) 1.75 или 0.57143
         //ширина карты к экрану 0.875
@@ -171,6 +210,11 @@ class DepositsCardsListOnholdViewController: UIViewController {
     
     @objc func blockCardButtonClicked(_ sender: UIButton!) {
         performSegue(withIdentifier: "CardListOnholdBlock", sender: nil)
+    }
+    
+    @objc func backButtonClicked(_ sender: UIButton!) {
+        dismiss(animated: true, completion: nil)
+        //navigationController?.popViewController(animated: true)
     }
 
 }

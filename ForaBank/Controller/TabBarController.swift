@@ -13,7 +13,8 @@ class TabBarController: UITabBarController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setSelectedIndexToLast()
+        //setSelectedIndexToLast()
+        selectedIndex = 0
     }
 }
 
