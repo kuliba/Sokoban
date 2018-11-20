@@ -207,17 +207,17 @@ class DepositsCardsListOnholdBlockViewController: UIViewController {
     }
     
     @objc func backButtonClicked(_ sender: UIButton!) {
-        //dismiss(animated: true, completion: nil)
-        navigationController?.popViewController(animated: true)
+        dismiss(animated: true, completion: nil)
+        //navigationController?.popViewController(animated: true)
     }
     
     @objc func blockButtonClicked(_ sender: UIButton!) {
-        //dismiss(animated: true, completion: nil)
         //print(self.navigationController as Any)
         //print(self.navigationController?.viewControllers as Any)
         //navigationController?.popToRootViewController(animated: true)
         CardManager.shared().blockCard(withNumber: "2345 4567 8907 9706")
-        navigationController?.dismiss(animated: true, completion: nil)
+        //navigationController?.dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
     @objc func reasonPickerButtonClicked(_ sender: UIButton!) {
