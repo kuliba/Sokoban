@@ -10,12 +10,12 @@ import UIKit
 
 class DepositsCardsListOnholdBlockViewController: UIViewController {
 
-    //let popupVC: PopupPickerViewController2 = UIStoryboard(name: "Deposits", bundle: nil).instantiateViewController(withIdentifier: "PopupPickerViewController") as! PopupPickerViewController2
+    var card: Card? = nil
     let ppvc: PopupPickerViewController = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "ppvc") as! PopupPickerViewController
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(self.navigationController as Any)
+
         //кнопка назад
         let backButton = UIButton(type: .system)
         backButton.tintColor = .black
@@ -27,15 +27,15 @@ class DepositsCardsListOnholdBlockViewController: UIViewController {
         titleLabel.text = "Блокировка карты"
         self.view.addSubview(titleLabel)
         //view карты
-        let selectedCardView = DetailedCardView()
+        let selectedCardView = DetailedCardView(withCard: card!)
         //тестовые данные
-        selectedCardView.titleLabel.attributedText = NSAttributedString(string: "Visa Gold Cashback", attributes: [.font:UIFont.systemFont(ofSize: 16), .foregroundColor : UIColor.white])
-        selectedCardView.cardCashLabel.attributedText = NSAttributedString(string: "21 350 ₽", attributes: [.font:UIFont.systemFont(ofSize: 16), .foregroundColor : UIColor.white])
-        selectedCardView.backgroundImageView.image = UIImage(named: "card_visa_gold")
-        selectedCardView.cardNumberLabel.attributedText = NSAttributedString(string: "2345 4567 8907 9706", attributes: [.font:UIFont.systemFont(ofSize: 12), .foregroundColor : UIColor.white])
-        selectedCardView.cardValidityPeriodLabel.attributedText = NSAttributedString(string: "08/18", attributes: [.font:UIFont.systemFont(ofSize: 12), .foregroundColor : UIColor.white])
-        selectedCardView.logoImageView.image = UIImage(named: "deposit_cards_list_onhold_visa_logo")
-        selectedCardView.paypassLogoImageView.image = UIImage(named: "deposit_cards_list_onhold_paypass_logo")
+//        selectedCardView.titleLabel.attributedText = NSAttributedString(string: "Visa Gold Cashback", attributes: [.font:UIFont.systemFont(ofSize: 16), .foregroundColor : UIColor.white])
+//        selectedCardView.cardCashLabel.attributedText = NSAttributedString(string: "21 350 ₽", attributes: [.font:UIFont.systemFont(ofSize: 16), .foregroundColor : UIColor.white])
+//        selectedCardView.backgroundImageView.image = UIImage(named: "card_visa_gold")
+//        selectedCardView.cardNumberLabel.attributedText = NSAttributedString(string: "2345 4567 8907 9706", attributes: [.font:UIFont.systemFont(ofSize: 12), .foregroundColor : UIColor.white])
+//        selectedCardView.cardValidityPeriodLabel.attributedText = NSAttributedString(string: "08/18", attributes: [.font:UIFont.systemFont(ofSize: 12), .foregroundColor : UIColor.white])
+//        selectedCardView.logoImageView.image = UIImage(named: "deposit_cards_list_onhold_visa_logo")
+//        selectedCardView.paypassLogoImageView.image = UIImage(named: "deposit_cards_list_onhold_paypass_logo")
         self.view.addSubview(selectedCardView)
         //label причина блокировки
         let reasonLabel = UILabel()
@@ -212,10 +212,8 @@ class DepositsCardsListOnholdBlockViewController: UIViewController {
     }
     
     @objc func blockButtonClicked(_ sender: UIButton!) {
-        //print(self.navigationController as Any)
-        //print(self.navigationController?.viewControllers as Any)
         //navigationController?.popToRootViewController(animated: true)
-        CardManager.shared().blockCard(withNumber: "2345 4567 8907 9706")
+        CardManager.shared().blockCard(withNumber: card!.number)
         //navigationController?.dismiss(animated: true, completion: nil)
         dismiss(animated: true, completion: nil)
     }

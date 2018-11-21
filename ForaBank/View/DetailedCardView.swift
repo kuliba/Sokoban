@@ -152,4 +152,11 @@ class DetailedCardView: UIView {
                                               multiplier: 1,
                                               constant: 99))
     }
+    
+    func blockCard() {
+        print(card?.blocked as Any)
+        if card!.blocked {
+            cardBlockedImageView.image = UIImage(named: "card_blocked")
+        }
+    }
 }

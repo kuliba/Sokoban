@@ -15,7 +15,7 @@ class FeedUpcomingViewController: UIViewController {
     
     let data_ = [
         [
-            "feed_upcoming_credit_logo", "Платеж по кредиту уже завтра", "Договор №4556***90", "Ежемесячный платеж", "23 450 ₽", "Остаток долга", "320 950 ₽", "Оплатить сейчас", "#FFFFFF", "#E84647", "Настроить", "#FFFFFF", "#FFFFFF"
+            "feed_upcoming_credit_gif", "Платеж по кредиту уже завтра", "Договор №4556***90", "Ежемесячный платеж", "23 450 ₽", "Остаток долга", "320 950 ₽", "Оплатить сейчас", "#FFFFFF", "#E84647", "Настроить", "#FFFFFF", "#FCFCFF"
         ], [
             "feed_upcoming_beeline_logo", "Ближайший платеж ожидается через два дня", "Услуги сотовой связи", "+7916*****79", "450 ₽", "Автоплатеж", "5 декабря", "Оплатить сейчас", "#000000", "#FFFFFF", "Настроить", "#F5BC31", "#F5BC31"
         ], [
@@ -30,13 +30,21 @@ class FeedUpcomingViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         setTableViewDelegateAndDataSource()
         registerNibCell()
-        
-        cellHeight = view.frame.height - 80 // - 49
+        //cellHeight = view.frame.height - 80 // - 49
         
         tableView.decelerationRate = .normal
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        let window = UIApplication.shared.keyWindow
+        let topPadding = window?.safeAreaInsets.top ?? 44
+        let tabBarHeight = self.parent?.tabBarController?.tabBar.frame.height ?? 49
+        cellHeight = view.frame.height - tabBarHeight - topPadding - 25 // 25 - top constraint for FeedViewController container View
+        print(cellHeight)
     }
 }
 
@@ -51,8 +59,20 @@ extension FeedUpcomingViewController: UITableViewDataSource, UITableViewDelegate
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? FeedUpcomingCell  else {
             fatalError()
         }
-        
-        cell.logoImageView.image = UIImage(named: data_[indexPath.row][0])
+        //let imageData = try? Data(contentsOf: Bundle.main.url(forResource: "play", withExtension: "gif")!)
+//        guard let imageData = NSDataAsset(name: data_[indexPath.row][0]) else {
+//            print("image named \"\(data_[indexPath.row][0])\" into NSData")
+//            return
+//        }
+        print(data_[indexPath.row][0] as Any)
+        if data_[indexPath.row][0].range(of: "gif") != nil {
+            print("gif")
+            let imageData = NSDataAsset(name: data_[indexPath.row][0])
+            cell.logoImageView.image = UIImage.gifImageWithData(imageData!.data)
+        } else {
+            print("not gif")
+            cell.logoImageView.image = UIImage(named: data_[indexPath.row][0])
+        }
         cell.titleLabel.text = data_[indexPath.row][1]
         cell.subtitleLabel.text = data_[indexPath.row][2]
         
@@ -79,29 +99,29 @@ extension FeedUpcomingViewController: UITableViewDataSource, UITableViewDelegate
         return cellHeight
     }
     
-    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        targetContentOffset.pointee = scrollView.contentOffset
-        
-        let minSpace: CGFloat = 10.0
-        
-        var mod: Double = 0
-        if velocity.y > 1 {
-            mod = 0.5
-        } else if velocity.y < -1 {
-            mod = -0.5
-        }
-        
-        var cellToSwipe = Double(Float((scrollView.contentOffset.y)) / Float((cellHeight + minSpace))) + Double(0.5) + mod
-        
-        if cellToSwipe < 0 {
-            cellToSwipe = 0
-        } else if cellToSwipe >= Double(tableView.numberOfRows(inSection: 0)) {
-            cellToSwipe = Double(tableView.numberOfRows(inSection: 0)) - Double(1)
-        }
-        
-        let indexPath = IndexPath(row: Int(cellToSwipe), section:0)
-        tableView.scrollToRow(at:indexPath, at: .middle, animated: true)
-    }
+//    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+//        targetContentOffset.pointee = scrollView.contentOffset
+//
+//        let minSpace: CGFloat = 10.0
+//
+//        var mod: Double = 0
+//        if velocity.y > 1 {
+//            mod = 0.5
+//        } else if velocity.y < -1 {
+//            mod = -0.5
+//        }
+//
+//        var cellToSwipe = Double(Float((scrollView.contentOffset.y)) / Float((cellHeight + minSpace))) + Double(0.5) + mod
+//
+//        if cellToSwipe < 0 {
+//            cellToSwipe = 0
+//        } else if cellToSwipe >= Double(tableView.numberOfRows(inSection: 0)) {
+//            cellToSwipe = Double(tableView.numberOfRows(inSection: 0)) - Double(1)
+//        }
+//
+//        let indexPath = IndexPath(row: Int(cellToSwipe), section:0)
+//        tableView.scrollToRow(at:indexPath, at: .middle, animated: true)
+//    }
 }
 
 // MARK: - Private methods

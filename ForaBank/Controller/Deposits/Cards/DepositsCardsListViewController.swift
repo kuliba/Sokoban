@@ -232,6 +232,10 @@ class DepositsCardsListViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if cardViews.count != 0 {
+            if CardManager.shared().hasBlockedCard {
+                selectedCardView?.blockCard()
+                animateCardViewsToDefaultState()
+            }
             return
         }
         
@@ -245,12 +249,7 @@ class DepositsCardsListViewController: UIViewController {
         let cardsCount = CGFloat(cards.count)
 //        cardsStackView.spacing = 40-cardHeight
         cardsStackHeight = cardsCount*(cardViewHeight!)+(cardsCount-1)*(50-cardViewHeight!)
-//        print(UIScreen.main.bounds)
-//        print(sortPickerButton.bounds)
-//        print(cardWidth)
-//        print(cardHeight)
-//        print(cardsCount)
-//        print(cardsStackHeight)
+
         contentViewHeightConstraint = NSLayoutConstraint(item: contentView,
                                                          attribute: .height,
                                                          relatedBy: .equal,
@@ -309,19 +308,13 @@ class DepositsCardsListViewController: UIViewController {
 //        performSegue(withIdentifier: "CardListOnholdNavigation", sender: nil)
 //    }
     @objc func longPressCardView(_ sender:UILongPressGestureRecognizer){
-        //print(self.scrollView.contentOffset)
-        //self.contentViewHeightConstraint?.constant = self.scrollView.frame.height
-        //scrollView.setNeedsUpdateConstraints()
-        if sender.state == .ended {
+
+        if sender.state == .began {
             self.selectedCardView?.removeGestureRecognizer(self.longPressGesture)
             sendMoneyButton.alpha = 0
             blockCardButton.alpha = 0
             addMoneyButton.alpha = 0
-            print("longPressCardView")
-            print("selectedCardViewCenterYConstraint")
-            print(self.selectedCardViewCenterYConstraint as Any)
-            print("cardViewsTopConstraints.last")
-            print(self.cardViewsTopConstraints.last as Any)
+
             UIView.animate(withDuration: 0.25,
                            delay: 0,
                            options: .layoutSubviews,
@@ -373,8 +366,7 @@ class DepositsCardsListViewController: UIViewController {
                            completion: { (f: Bool) in
                             self.panGesture.removeTarget(self, action: #selector(self.dragUnselectedCardView(_:)))
                             self.panGesture.addTarget(self, action: #selector(self.dragSelectedCardView(_:)))
-                            //self.s
-                            //print(self.scrollView.contentOffset)
+
             })
         }
         
@@ -420,45 +412,8 @@ class DepositsCardsListViewController: UIViewController {
         sender.view?.center = CGPoint(x: sender.view!.center.x, y: setY)
         sender.setTranslation(CGPoint.zero, in: self.view)
         
-        addCardButton.alpha = 0
         if sender.state == .ended {
-            UIView.animate(withDuration: 0.25,
-                           delay: 0,
-                           options: .curveEaseIn,
-                           animations: {
-                            self.addCardButton.isHidden = false
-                            self.sendMoneyButton.isHidden = true
-                            self.addMoneyButton.isHidden = true
-                            self.blockCardButton.isHidden = true
-                            self.allActionButton.isHidden = true
-                            self.sendMoneyButton.alpha = 0
-                            self.blockCardButton.alpha = 0
-                            self.addMoneyButton.alpha = 0
-                            self.addCardButton.alpha = 1
-                            self.contentViewHeightConstraint?.constant = self.cardsStackHeight!+180
-                            self.sortPickerButtonTopConstraint?.constant = 40
-                            print(self.selectedCardViewCenterYConstraint as Any)
-                            print(self.cardViewsTopConstraints.last as Any)
-                            self.contentView.removeConstraint(self.selectedCardViewCenterYConstraint!)
-                            
-                            self.contentView.addConstraint(self.cardViewsTopConstraints.last!)
-                            for i in 0..<self.cardViewsTopConstraints.count {
-                                if i != self.cardViewsTopConstraints.count-1 {
-                                    self.cardViewsTopConstraints[i].constant = 20+CGFloat(i)*50.0
-                                }
-                            }
-                            self.contentView.removeConstraint(self.allActionButtonTopConstraint!)
-                            self.contentView.addConstraint(self.allActionButtonBottomConstraint!)
-                            self.contentView.removeConstraint(self.addCardButtonTopConstraint!)
-                            self.contentView.addConstraint(self.addCardButtonBottomConstraint!)
-                            self.scrollView.layoutIfNeeded()
-
-            },
-                           completion: {(f:Bool) in
-                            self.selectedCardView?.addGestureRecognizer(self.longPressGesture)
-                            self.panGesture.removeTarget(self, action: #selector(self.dragSelectedCardView(_:)))
-                            self.panGesture.addTarget(self, action: #selector(self.dragUnselectedCardView(_:)))
-            })
+            animateCardViewsToDefaultState()
         }
     }
     
@@ -497,15 +452,54 @@ class DepositsCardsListViewController: UIViewController {
         })
     }
     
+    func animateCardViewsToDefaultState() {
+        addCardButton.alpha = 0
+        UIView.animate(withDuration: 0.25,
+                       delay: 0,
+                       options: .curveEaseIn,
+                       animations: {
+                        self.addCardButton.isHidden = false
+                        self.sendMoneyButton.isHidden = true
+                        self.addMoneyButton.isHidden = true
+                        self.blockCardButton.isHidden = true
+                        self.allActionButton.isHidden = true
+                        self.sendMoneyButton.alpha = 0
+                        self.blockCardButton.alpha = 0
+                        self.addMoneyButton.alpha = 0
+                        self.addCardButton.alpha = 1
+                        self.contentViewHeightConstraint?.constant = self.cardsStackHeight!+180
+                        self.sortPickerButtonTopConstraint?.constant = 40
+                        self.contentView.removeConstraint(self.selectedCardViewCenterYConstraint!)
+                        
+                        self.contentView.addConstraint(self.cardViewsTopConstraints.last!)
+                        for i in 0..<self.cardViewsTopConstraints.count {
+                            if i != self.cardViewsTopConstraints.count-1 {
+                                self.cardViewsTopConstraints[i].constant = 20+CGFloat(i)*50.0
+                            }
+                        }
+                        self.contentView.removeConstraint(self.allActionButtonTopConstraint!)
+                        self.contentView.addConstraint(self.allActionButtonBottomConstraint!)
+                        self.contentView.removeConstraint(self.addCardButtonTopConstraint!)
+                        self.contentView.addConstraint(self.addCardButtonBottomConstraint!)
+                        self.scrollView.layoutIfNeeded()
+                        
+        },
+                       completion: {(f:Bool) in
+                        self.selectedCardView?.addGestureRecognizer(self.longPressGesture)
+                        self.panGesture.removeTarget(self, action: #selector(self.dragSelectedCardView(_:)))
+                        self.panGesture.addTarget(self, action: #selector(self.dragUnselectedCardView(_:)))
+        })
+    }
+    
     @objc func blockCardButtonClicked(_ sender: UIButton!) {
         performSegue(withIdentifier: "DepositsCardListOnholdBlock", sender: nil)
     }
     
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if segue.identifier == "CardListOnholdNavigation" {
-//            if let destinationVC = segue.destination as? ExampleSegueVC {
-//                destinationVC.exampleStringProperty = "Example"
-//            }
-//        }
-//    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "DepositsCardListOnholdBlock" {
+            if let destinationVC = segue.destination as? DepositsCardsListOnholdBlockViewController {
+                destinationVC.card = self.cards.last
+            }
+        }
+    }
 }
