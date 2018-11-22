@@ -7,9 +7,13 @@
 //
 
 import UIKit
+import AVFoundation
+import AVKit
 
 class FeedCurrent6Cell: UITableViewCell {
 
+    @IBOutlet weak var currencyImageView: UIImageView!
+    @IBOutlet weak var currencyImageViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var logoImageView: UIImageView!
     @IBOutlet weak var title: UILabel!
     @IBOutlet weak var subtitle: UILabel!
@@ -25,6 +29,16 @@ class FeedCurrent6Cell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         button.layer.cornerRadius = button.frame.height / 2
+        
+    }
+    
+    func animateCurrencyLogo() {
+        UIView.animate(withDuration: 0.6, delay: 0, options: [.repeat, .autoreverse, .curveEaseInOut], animations: {
+            self.currencyImageViewBottomConstraint.constant += 35
+            self.contentView.layoutIfNeeded()
+        }, completion: {(_) in
+            self.currencyImageViewBottomConstraint.constant = 30
+        })
     }
 }
 

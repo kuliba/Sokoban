@@ -25,6 +25,7 @@ class FeedCurrent2Cell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         button.layer.cornerRadius = button.frame.height / 2
+        self.backgroundColor =  UIColor(hexFromString: "#F7F7F7")
     }
 }
 

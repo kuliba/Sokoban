@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.23.1" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.16.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -34,7 +34,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.20000000298023224" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ceJ-4u-uf9">
-                                <rect key="frame" x="8" y="117" width="284" height="65"/>
+                                <rect key="frame" x="8" y="133" width="284" height="65"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="65" id="PDf-DP-bsc"/>
                                 </constraints>
@@ -44,7 +44,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="39 500 ₽" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.20000000298023224" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jls-pN-JSZ">
-                                <rect key="frame" x="0.0" y="168" width="300" height="42"/>
+                                <rect key="frame" x="0.0" y="184" width="300" height="42"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="42" id="QQ4-Ae-J1b"/>
                                 </constraints>
@@ -52,7 +52,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="yE5-LZ-xpo">
-                                <rect key="frame" x="8" y="241" width="284" height="105"/>
+                                <rect key="frame" x="8" y="257" width="284" height="105"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Недавние операции" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UR9-g4-pci">
                                         <rect key="frame" x="0.0" y="0.0" width="284" height="22.5"/>
@@ -107,18 +107,18 @@
                                     </stackView>
                                 </subviews>
                             </stackView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="feed_current_account_logo" translatesAutoresizingMaskIntoConstraints="NO" id="y6y-5D-zpf">
-                                <rect key="frame" x="90.5" y="58" width="119" height="56"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="feed_current_account_logo" translatesAutoresizingMaskIntoConstraints="NO" id="y6y-5D-zpf">
+                                <rect key="frame" x="90.5" y="60" width="119" height="70"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="56" id="KW6-oz-W07"/>
+                                    <constraint firstAttribute="height" constant="70" id="KW6-oz-W07"/>
                                     <constraint firstAttribute="width" constant="119" id="irb-5d-Gnc"/>
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9NB-vk-ViC">
-                                <rect key="frame" x="8" y="366" width="284" height="47"/>
+                                <rect key="frame" x="8" y="382" width="284" height="45"/>
                                 <color key="backgroundColor" red="0.8413386344909668" green="0.32575434446334839" blue="0.30580860376358032" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="47" id="EYG-f5-pSS"/>
+                                    <constraint firstAttribute="height" constant="45" id="EYG-f5-pSS"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -137,10 +137,9 @@
                             <constraint firstItem="9NB-vk-ViC" firstAttribute="leading" secondItem="2C0-sI-YPe" secondAttribute="leading" constant="8" id="RZx-EN-AJr"/>
                             <constraint firstAttribute="trailing" secondItem="yE5-LZ-xpo" secondAttribute="trailing" constant="8" id="TpR-lb-gem"/>
                             <constraint firstItem="yE5-LZ-xpo" firstAttribute="leading" secondItem="2C0-sI-YPe" secondAttribute="leading" constant="8" id="ZRX-Gh-smQ"/>
-                            <constraint firstAttribute="bottom" secondItem="9NB-vk-ViC" secondAttribute="bottom" constant="54.5" id="b8l-cE-8ht"/>
                             <constraint firstItem="yE5-LZ-xpo" firstAttribute="top" secondItem="jls-pN-JSZ" secondAttribute="bottom" constant="31" id="dB2-L7-gEi"/>
                             <constraint firstAttribute="trailing" secondItem="9NB-vk-ViC" secondAttribute="trailing" constant="8" id="eKE-d4-pfX"/>
-                            <constraint firstItem="y6y-5D-zpf" firstAttribute="top" secondItem="2C0-sI-YPe" secondAttribute="top" constant="58" id="hi8-Q2-GlO"/>
+                            <constraint firstItem="y6y-5D-zpf" firstAttribute="top" secondItem="2C0-sI-YPe" secondAttribute="top" constant="60" id="hi8-Q2-GlO"/>
                             <constraint firstItem="jls-pN-JSZ" firstAttribute="top" secondItem="ceJ-4u-uf9" secondAttribute="bottom" constant="-14" id="mfO-Ls-tAf"/>
                             <constraint firstAttribute="height" constant="467.5" id="qox-1k-Fuu"/>
                             <constraint firstItem="y6y-5D-zpf" firstAttribute="centerX" secondItem="2C0-sI-YPe" secondAttribute="centerX" id="ucA-oY-twI"/>

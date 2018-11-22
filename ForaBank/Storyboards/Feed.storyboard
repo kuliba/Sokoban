@@ -176,15 +176,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="kGb-2l-DBT">
-                                <rect key="frame" x="0.0" y="15" width="414" height="847"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" pagingEnabled="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="kGb-2l-DBT">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="862"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="kGb-2l-DBT" firstAttribute="bottom" secondItem="ITs-L7-D53" secondAttribute="bottom" id="Gd9-01-c6C"/>
-                            <constraint firstItem="kGb-2l-DBT" firstAttribute="top" secondItem="Pp8-3d-dZl" secondAttribute="top" constant="15" id="UA2-Ne-Gh0"/>
+                            <constraint firstItem="kGb-2l-DBT" firstAttribute="top" secondItem="Pp8-3d-dZl" secondAttribute="top" id="UA2-Ne-Gh0"/>
                             <constraint firstItem="kGb-2l-DBT" firstAttribute="leading" secondItem="ITs-L7-D53" secondAttribute="leading" id="bqN-xm-6en"/>
                             <constraint firstItem="kGb-2l-DBT" firstAttribute="trailing" secondItem="ITs-L7-D53" secondAttribute="trailing" id="pkm-vG-AZp"/>
                         </constraints>

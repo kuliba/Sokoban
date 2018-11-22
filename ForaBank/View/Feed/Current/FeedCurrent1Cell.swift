@@ -25,7 +25,14 @@ class FeedCurrent1Cell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         button.layer.cornerRadius = button.frame.height / 2
+        self.backgroundColor =  UIColor(hexFromString: "#FCFCFF")
     }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+    }
+    
 }
 
 

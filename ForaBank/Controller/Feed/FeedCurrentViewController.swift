@@ -29,9 +29,18 @@ class FeedCurrentViewController: UIViewController {
         setTableViewDelegateAndDataSource()
         registerNibCell()
         
-        cellHeight = view.frame.height - 80 // - 49
+        //cellHeight = view.frame.height - 80 // - 49
         
-        tableView.decelerationRate = .normal
+        tableView.decelerationRate = .fast
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        let window = UIApplication.shared.keyWindow
+        let topPadding = window?.safeAreaInsets.top ?? 44
+        let tabBarHeight = self.parent?.tabBarController?.tabBar.frame.height ?? 49
+        cellHeight = view.frame.height - tabBarHeight - topPadding - 25 // 25 - top constraint for FeedViewController container View
+        //        print(cellHeight)
     }
 }
 
@@ -46,21 +55,29 @@ extension FeedCurrentViewController: UITableViewDataSource, UITableViewDelegate 
 
         if indexPath.row == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: cellId1, for: indexPath) as! FeedCurrent1Cell
+            let imageData = NSDataAsset(name: "feed_current_account_gif")
+            cell.logoImageView.image = UIImage.gifImageWithData(imageData!.data)
             return cell
         }
         
         if indexPath.row == 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: cellId2, for: indexPath) as! FeedCurrent2Cell
+            let imageData = NSDataAsset(name: "feed_current_deposit_gif")
+            cell.logoImageView.image = UIImage.gifImageWithData(imageData!.data)
             return cell
         }
         
         if indexPath.row == 2 {
             let cell = tableView.dequeueReusableCell(withIdentifier: cellId3, for: indexPath) as! FeedCurrent3Cell
+            let imageData = NSDataAsset(name: "feed_current_turn_gif")
+            cell.logoImageView.image = UIImage.gifImageWithData(imageData!.data)
             return cell
         }
         
         if indexPath.row == 3 {
             let cell = tableView.dequeueReusableCell(withIdentifier: cellId4, for: indexPath) as! FeedCurrent4Cell
+            //let imageData = NSDataAsset(name: "feed_current_food_gif")
+            //cell.logoImageView.image = UIImage.gifImageWithData(imageData!.data)
             return cell
         }
         
@@ -71,6 +88,7 @@ extension FeedCurrentViewController: UITableViewDataSource, UITableViewDelegate 
         
         if indexPath.row == 5 {
             let cell = tableView.dequeueReusableCell(withIdentifier: cellId6, for: indexPath) as! FeedCurrent6Cell
+            cell.animateCurrencyLogo()
             return cell
         }
         
@@ -81,24 +99,24 @@ extension FeedCurrentViewController: UITableViewDataSource, UITableViewDelegate 
         return cellHeight
     }
     
-    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        targetContentOffset.pointee = scrollView.contentOffset
-        let minSpace: CGFloat = 10.0
-        var mod: Double = 0
-        if velocity.y > 1 {
-            mod = 0.5
-        } else if velocity.y < -1 {
-            mod = -0.5
-        }
-        var cellToSwipe = Double(Float((scrollView.contentOffset.y)) / Float((cellHeight + minSpace))) + Double(0.5) + mod
-        if cellToSwipe < 0 {
-            cellToSwipe = 0
-        } else if cellToSwipe >= Double(tableView.numberOfRows(inSection: 0)) {
-            cellToSwipe = Double(tableView.numberOfRows(inSection: 0)) - Double(1)
-        }
-        let indexPath = IndexPath(row: Int(cellToSwipe), section:0)
-        tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
-    }
+//    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+//        targetContentOffset.pointee = scrollView.contentOffset
+//        let minSpace: CGFloat = 10.0
+//        var mod: Double = 0
+//        if velocity.y > 1 {
+//            mod = 0.5
+//        } else if velocity.y < -1 {
+//            mod = -0.5
+//        }
+//        var cellToSwipe = Double(Float((scrollView.contentOffset.y)) / Float((cellHeight + minSpace))) + Double(0.5) + mod
+//        if cellToSwipe < 0 {
+//            cellToSwipe = 0
+//        } else if cellToSwipe >= Double(tableView.numberOfRows(inSection: 0)) {
+//            cellToSwipe = Double(tableView.numberOfRows(inSection: 0)) - Double(1)
+//        }
+//        let indexPath = IndexPath(row: Int(cellToSwipe), section:0)
+//        tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+//    }
 }
 
 // MARK: - Private methods

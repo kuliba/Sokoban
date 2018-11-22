@@ -35,7 +35,7 @@ class FeedUpcomingViewController: UIViewController {
         registerNibCell()
         //cellHeight = view.frame.height - 80 // - 49
         
-        tableView.decelerationRate = .normal
+        tableView.decelerationRate = .fast
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -44,8 +44,14 @@ class FeedUpcomingViewController: UIViewController {
         let topPadding = window?.safeAreaInsets.top ?? 44
         let tabBarHeight = self.parent?.tabBarController?.tabBar.frame.height ?? 49
         cellHeight = view.frame.height - tabBarHeight - topPadding - 25 // 25 - top constraint for FeedViewController container View
-        print(cellHeight)
+//        print(cellHeight)
     }
+    
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//        print(tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as Any)
+//
+//    }
 }
 
 // MARK: - UITableView DataSource and Delegate
@@ -64,14 +70,16 @@ extension FeedUpcomingViewController: UITableViewDataSource, UITableViewDelegate
 //            print("image named \"\(data_[indexPath.row][0])\" into NSData")
 //            return
 //        }
-        print(data_[indexPath.row][0] as Any)
+        //print(data_[indexPath.row][0] as Any)
         if data_[indexPath.row][0].range(of: "gif") != nil {
-            print("gif")
+            //print("gif")
             let imageData = NSDataAsset(name: data_[indexPath.row][0])
             cell.logoImageView.image = UIImage.gifImageWithData(imageData!.data)
+            cell.logoImageView.contentMode = .scaleAspectFill
         } else {
-            print("not gif")
+            //print("not gif")
             cell.logoImageView.image = UIImage(named: data_[indexPath.row][0])
+            cell.logoImageView.contentMode = .scaleAspectFit
         }
         cell.titleLabel.text = data_[indexPath.row][1]
         cell.subtitleLabel.text = data_[indexPath.row][2]
