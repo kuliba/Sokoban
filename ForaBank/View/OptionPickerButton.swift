@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PickerButton: UIButton {
+class OptionPickerButton: UIButton {
 
     override init(frame: CGRect) {
         super.init(frame: frame)

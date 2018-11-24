@@ -57,11 +57,10 @@ class DepositsCardsListViewController: UIViewController {
         return ab
     }()
 
-    let sortPickerButton: PickerButton = {
-        let b = PickerButton(type: .system)
+    let optionPickerButton: OptionPickerButton = {
+        let b = OptionPickerButton(type: .system)
         b.tintColor = .black
         b.setTitle("Сортировать по состоянию счета", for: .normal)
-        //b.setTitleColor(UIColor.black, for: .normal)
         b.contentHorizontalAlignment = .left
         b.translatesAutoresizingMaskIntoConstraints = false
         return b
@@ -129,7 +128,8 @@ class DepositsCardsListViewController: UIViewController {
        
         
         //pickerButton
-        contentView.addSubview(sortPickerButton)
+        optionPickerButton.addTarget(self, action: #selector(optionPickerButtonClicked(_:)), for: .touchUpInside)
+        contentView.addSubview(optionPickerButton)
         //reasonPickerButton.addTarget(self, action: #selector(reasonPickerButtonClicked(_:)), for: .touchUpInside)
         
         //addCardButton
@@ -215,11 +215,11 @@ class DepositsCardsListViewController: UIViewController {
         contentView.addConstraints(verticalConstraints)
         
         // constrain sortPickerButton
-        horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[sortPickerButton]-20-|", options: [], metrics: nil, views: ["sortPickerButton":sortPickerButton])
+        horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[sortPickerButton]-20-|", options: [], metrics: nil, views: ["sortPickerButton":optionPickerButton])
 //        verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-40-[sortPickerButton(35)]", options: [], metrics: nil, views: ["sortPickerButton":sortPickerButton])
         contentView.addConstraints(horizontalConstraints)
 //        contentView.addConstraints(verticalConstraints)
-        sortPickerButtonTopConstraint = NSLayoutConstraint(item: sortPickerButton,
+        sortPickerButtonTopConstraint = NSLayoutConstraint(item: optionPickerButton,
                                                            attribute: .top,
                                                            relatedBy: .equal,
                                                            toItem: contentView,
@@ -227,7 +227,7 @@ class DepositsCardsListViewController: UIViewController {
                                                            multiplier: 1,
                                                            constant: 40)
         contentView.addConstraint(sortPickerButtonTopConstraint!)
-        contentView.addConstraint(NSLayoutConstraint(item: sortPickerButton,
+        contentView.addConstraint(NSLayoutConstraint(item: optionPickerButton,
                                                      attribute: .height,
                                                      relatedBy: .equal,
                                                      toItem: nil,
@@ -278,7 +278,7 @@ class DepositsCardsListViewController: UIViewController {
             let cardViewTopConstraint = NSLayoutConstraint(item: cardView,
                                                            attribute: .top,
                                                            relatedBy: .equal,
-                                                           toItem: sortPickerButton,
+                                                           toItem: optionPickerButton,
                                                            attribute: .bottom,
                                                            multiplier: 1,
                                                            constant: 20+CGFloat(i)*50.0)
@@ -395,7 +395,7 @@ class DepositsCardsListViewController: UIViewController {
         let newCenterY = sender.view!.center.y + translation.y
         let newBottomY = newCenterY + sender.view!.frame.size.height/2
         let newTopY = newCenterY - sender.view!.frame.size.height/2
-        let setY = (newBottomY < addCardButton.frame.origin.y && newTopY > sortPickerButton.frame.origin.y+sortPickerButton.frame.size.height) ? newCenterY : sender.view!.center.y
+        let setY = (newBottomY < addCardButton.frame.origin.y && newTopY > optionPickerButton.frame.origin.y+optionPickerButton.frame.size.height) ? newCenterY : sender.view!.center.y
         sender.view?.center = CGPoint(x: sender.view!.center.x, y: setY)
         sender.setTranslation(CGPoint.zero, in: self.view)
         
@@ -421,7 +421,7 @@ class DepositsCardsListViewController: UIViewController {
         let newCenterY = sender.view!.center.y + translation.y
         let newBottomY = newCenterY + sender.view!.frame.size.height/2
         let newTopY = newCenterY - sender.view!.frame.size.height/2
-        let setY = (newBottomY < addCardButton.frame.origin.y && newTopY > sortPickerButton.frame.origin.y+sortPickerButton.frame.size.height) ? newCenterY : sender.view!.center.y
+        let setY = (newBottomY < addCardButton.frame.origin.y && newTopY > optionPickerButton.frame.origin.y+optionPickerButton.frame.size.height) ? newCenterY : sender.view!.center.y
         sender.view?.center = CGPoint(x: sender.view!.center.x, y: setY)
         sender.setTranslation(CGPoint.zero, in: self.view)
         
@@ -513,6 +513,29 @@ class DepositsCardsListViewController: UIViewController {
             if let destinationVC = segue.destination as? DepositsCardsListOnholdBlockViewController {
                 destinationVC.card = self.cards.last
             }
+        }
+    }
+    
+    @objc func optionPickerButtonClicked(_ sender: UIButton!) {
+        
+        if let vc = UIStoryboard(name: "Payment", bundle: nil)
+            .instantiateViewController(withIdentifier: "ppvc") as? OptionPickerViewController {
+            
+            // Pass picker frame to determine picker popup coordinates
+            vc.pickerFrame = contentView.convert(optionPickerButton.frame, to: nil)
+            vc.pickerFrame.origin.x = vc.pickerFrame.origin.x + 25
+            vc.pickerFrame.size.width = vc.pickerFrame.size.width - 25
+            vc.pickerOptions = ["по состоянию счета", "по сроку годности", "по имени"]
+            vc.delegate = self
+            present(vc, animated: true, completion: nil)
+        }
+    }
+}
+
+extension DepositsCardsListViewController: OptionPickerDelegate {
+    func setSelectedOption(option: String?) {
+        if let option = option {
+            optionPickerButton.setTitle("Сортировать \(option)", for: [])
         }
     }
 }
