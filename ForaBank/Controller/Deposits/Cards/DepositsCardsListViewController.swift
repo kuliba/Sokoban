@@ -293,19 +293,16 @@ class DepositsCardsListViewController: UIViewController {
                                                          constant: cardViewHeight!))
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(cardViewClicked(_:)))
             cardView.addGestureRecognizer(tapGesture)
-            print(tapGesture)
             cardViews.append(cardView)
         }
 //        panGesture = UIPanGestureRecognizer(target: self, action: #selector(dragUnselectedCardView(_:)))
         selectedCardView = cardViews.last
         selectedCardView!.isUserInteractionEnabled = true
         selectedCardView!.addGestureRecognizer(panGesture)
-        print(panGesture)
         contentViewConstraints = contentView.constraints
 //        longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressCardView(_:)))
         
         selectedCardView!.addGestureRecognizer(longPressGesture)
-        print(longPressGesture)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -321,12 +318,10 @@ class DepositsCardsListViewController: UIViewController {
     }
     
     @objc func cardViewClicked(_ sender: UITapGestureRecognizer) {
-        print("cardViewClicked")
         performSegue(withIdentifier: "DepositsCardsDetailsViewController", sender: nil)
     }
     
     @objc func longPressCardView(_ sender:UILongPressGestureRecognizer){
-        print("longPressCardView")
         if sender.state == .began {
             self.selectedCardView?.removeGestureRecognizer(self.longPressGesture)
             sendMoneyButton.alpha = 0
@@ -396,7 +391,6 @@ class DepositsCardsListViewController: UIViewController {
     }
     
     @objc func dragUnselectedCardView(_ sender:UIPanGestureRecognizer){
-        print("dragUnselectedCardView")
         let translation = sender.translation(in: contentView)
         let newCenterY = sender.view!.center.y + translation.y
         let newBottomY = newCenterY + sender.view!.frame.size.height/2
@@ -423,7 +417,6 @@ class DepositsCardsListViewController: UIViewController {
     }
     
     @objc func dragSelectedCardView(_ sender:UIPanGestureRecognizer){
-        print("dragSelectedCardView")
         let translation = sender.translation(in: contentView)
         let newCenterY = sender.view!.center.y + translation.y
         let newBottomY = newCenterY + sender.view!.frame.size.height/2

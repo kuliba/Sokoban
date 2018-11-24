@@ -16,6 +16,18 @@ class FeedViewController: UIViewController {
     @IBOutlet var carousel: iCarousel!
     @IBOutlet weak var containerView: UIView!
     
+    lazy var leftSwipeRecognizer: UISwipeGestureRecognizer = {
+        let recognizer = UISwipeGestureRecognizer(target: self, action: #selector(swipeAction(_:)))
+        recognizer.direction = .left
+        return recognizer
+    }()
+    lazy var rightSwipeRecognizer: UISwipeGestureRecognizer = {
+        let recognizer = UISwipeGestureRecognizer(target: self, action: #selector(swipeAction(_:)))
+        recognizer.direction = .right
+        return recognizer
+    }()
+    var previousIndex = -1
+    
     var gradientViews = [GradientView2]()
     
     let iphone5Devices = Constants.iphone5Devices
@@ -40,9 +52,13 @@ class FeedViewController: UIViewController {
         carousel.bounces = false
         // carousel.isPagingEnabled = true
         // carousel.isScrollEnabled = false
-        
+        //carousel.currentItemIndex = 2
+        carousel.scrollToItem(at: 2, animated: false)
         addGradients()
         gradientViews[0].alpha = 1
+        
+        containerView.addGestureRecognizer(leftSwipeRecognizer)
+        containerView.addGestureRecognizer(rightSwipeRecognizer)
     }
     
     override func viewDidLayoutSubviews() {
@@ -144,6 +160,20 @@ extension FeedViewController: iCarouselDataSource, iCarouselDelegate {
             })
         }
     }
+    
+    func carouselDidEndScrollingAnimation(_ carousel: iCarousel) {
+        if previousIndex<0 {
+            previousIndex = carousel.currentItemIndex
+            return
+        }
+        previousIndex = carousel.currentItemIndex
+        showComponent(index: carousel.currentItemIndex)
+        for (i, n) in gradientViews.enumerated() {
+            UIView.animate(withDuration: 0.25, animations: {
+                n.alpha = carousel.currentItemIndex == i ? 1 : 0
+            })
+        }
+    }
 }
 
 // MARK: - Private methods
@@ -220,5 +250,17 @@ private extension FeedViewController {
                 newViewController.didMove(toParent: self)
             })
         })
+    }
+    
+    @objc func swipeAction(_ gesture: UISwipeGestureRecognizer) {
+        if gesture.direction == .left {
+            if carousel.currentItemIndex < carousel.numberOfItems-1 {
+                carousel.scrollToItem(at: carousel.currentItemIndex+1, animated: true)
+            }
+        } else if gesture.direction == .right {
+            if carousel.currentItemIndex > 0 {
+                carousel.scrollToItem(at: carousel.currentItemIndex-1, animated: true)
+            }
+        }
     }
 }
