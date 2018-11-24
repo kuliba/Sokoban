@@ -9,13 +9,15 @@
 import UIKit
 
 class DepositsCardsListOnholdBlockViewController: UIViewController {
-
+    
     var card: Card? = nil
-    let ppvc: PopupPickerViewController = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "ppvc") as! PopupPickerViewController
+    let ppvc: OptionPickerViewController = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "ppvc") as! OptionPickerViewController
+    
+    let optionPickerButton = OptionPickerButton(type: .system)
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         //кнопка назад
         let backButton = UIButton(type: .system)
         backButton.tintColor = .black
@@ -29,26 +31,26 @@ class DepositsCardsListOnholdBlockViewController: UIViewController {
         //view карты
         let selectedCardView = DetailedCardView(withCard: card!)
         //тестовые данные
-//        selectedCardView.titleLabel.attributedText = NSAttributedString(string: "Visa Gold Cashback", attributes: [.font:UIFont.systemFont(ofSize: 16), .foregroundColor : UIColor.white])
-//        selectedCardView.cardCashLabel.attributedText = NSAttributedString(string: "21 350 ₽", attributes: [.font:UIFont.systemFont(ofSize: 16), .foregroundColor : UIColor.white])
-//        selectedCardView.backgroundImageView.image = UIImage(named: "card_visa_gold")
-//        selectedCardView.cardNumberLabel.attributedText = NSAttributedString(string: "2345 4567 8907 9706", attributes: [.font:UIFont.systemFont(ofSize: 12), .foregroundColor : UIColor.white])
-//        selectedCardView.cardValidityPeriodLabel.attributedText = NSAttributedString(string: "08/18", attributes: [.font:UIFont.systemFont(ofSize: 12), .foregroundColor : UIColor.white])
-//        selectedCardView.logoImageView.image = UIImage(named: "deposit_cards_list_onhold_visa_logo")
-//        selectedCardView.paypassLogoImageView.image = UIImage(named: "deposit_cards_list_onhold_paypass_logo")
+        //        selectedCardView.titleLabel.attributedText = NSAttributedString(string: "Visa Gold Cashback", attributes: [.font:UIFont.systemFont(ofSize: 16), .foregroundColor : UIColor.white])
+        //        selectedCardView.cardCashLabel.attributedText = NSAttributedString(string: "21 350 ₽", attributes: [.font:UIFont.systemFont(ofSize: 16), .foregroundColor : UIColor.white])
+        //        selectedCardView.backgroundImageView.image = UIImage(named: "card_visa_gold")
+        //        selectedCardView.cardNumberLabel.attributedText = NSAttributedString(string: "2345 4567 8907 9706", attributes: [.font:UIFont.systemFont(ofSize: 12), .foregroundColor : UIColor.white])
+        //        selectedCardView.cardValidityPeriodLabel.attributedText = NSAttributedString(string: "08/18", attributes: [.font:UIFont.systemFont(ofSize: 12), .foregroundColor : UIColor.white])
+        //        selectedCardView.logoImageView.image = UIImage(named: "deposit_cards_list_onhold_visa_logo")
+        //        selectedCardView.paypassLogoImageView.image = UIImage(named: "deposit_cards_list_onhold_paypass_logo")
         self.view.addSubview(selectedCardView)
         //label причина блокировки
         let reasonLabel = UILabel()
         reasonLabel.attributedText = NSAttributedString(string: "Причина блокировки", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 12), NSAttributedString.Key.foregroundColor : UIColor.lightGray])
         self.view.addSubview(reasonLabel)
         //pickerButton
-        let reasonPickerButton = PickerButton(type: .system)
-        reasonPickerButton.tintColor = .black
-        reasonPickerButton.setTitle("Карта утеряна", for: .normal)
-        reasonPickerButton.setTitleColor(UIColor.black, for: .normal)
-        reasonPickerButton.contentHorizontalAlignment = .left
-        self.view.addSubview(reasonPickerButton)
-        reasonPickerButton.addTarget(self, action: #selector(reasonPickerButtonClicked(_:)), for: .touchUpInside)
+        
+        optionPickerButton.tintColor = .black
+        optionPickerButton.setTitle("Карта утеряна", for: .normal)
+        optionPickerButton.setTitleColor(UIColor.black, for: .normal)
+        optionPickerButton.contentHorizontalAlignment = .left
+        self.view.addSubview(optionPickerButton)
+        optionPickerButton.addTarget(self, action: #selector(optionPickerButtonClicked(_:)), for: .touchUpInside)
         //popupPickerVC
         //popupVC.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
         //popupVC.modalTransitionStyle = .crossDissolve
@@ -67,7 +69,7 @@ class DepositsCardsListOnholdBlockViewController: UIViewController {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         selectedCardView.translatesAutoresizingMaskIntoConstraints = false
         reasonLabel.translatesAutoresizingMaskIntoConstraints = false
-        reasonPickerButton.translatesAutoresizingMaskIntoConstraints = false
+        optionPickerButton.translatesAutoresizingMaskIntoConstraints = false
         blockButton.translatesAutoresizingMaskIntoConstraints = false
         //title
         view.addConstraint(NSLayoutConstraint(item: titleLabel,
@@ -147,28 +149,28 @@ class DepositsCardsListOnholdBlockViewController: UIViewController {
         verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[selectedCardView]-15-[reasonLabel(15)]", options: [], metrics: nil, views: ["reasonLabel":reasonLabel,"selectedCardView":selectedCardView])
         view.addConstraints(verticalConstraints)
         //reasonPickerButton
-        view.addConstraint(NSLayoutConstraint(item: reasonPickerButton,
+        view.addConstraint(NSLayoutConstraint(item: optionPickerButton,
                                               attribute: .centerX,
                                               relatedBy: .equal,
                                               toItem: selectedCardView,
                                               attribute: .centerX,
                                               multiplier: 1,
                                               constant: 0))
-        view.addConstraint(NSLayoutConstraint(item: reasonPickerButton,
+        view.addConstraint(NSLayoutConstraint(item: optionPickerButton,
                                               attribute: .width,
                                               relatedBy: .equal,
                                               toItem: selectedCardView,
                                               attribute: .width,
                                               multiplier: 1,
                                               constant: 0))
-        view.addConstraint(NSLayoutConstraint(item: reasonPickerButton,
+        view.addConstraint(NSLayoutConstraint(item: optionPickerButton,
                                               attribute: .top,
                                               relatedBy: .equal,
                                               toItem: reasonLabel,
                                               attribute: .bottom,
                                               multiplier: 1,
                                               constant: 5))
-        view.addConstraint(NSLayoutConstraint(item: reasonPickerButton,
+        view.addConstraint(NSLayoutConstraint(item: optionPickerButton,
                                               attribute: .height,
                                               relatedBy: .equal,
                                               toItem: nil,
@@ -193,7 +195,7 @@ class DepositsCardsListOnholdBlockViewController: UIViewController {
         view.addConstraint(NSLayoutConstraint(item: blockButton,
                                               attribute: .top,
                                               relatedBy: .equal,
-                                              toItem: reasonPickerButton,
+                                              toItem: optionPickerButton,
                                               attribute: .bottom,
                                               multiplier: 1,
                                               constant: 20))
@@ -218,11 +220,25 @@ class DepositsCardsListOnholdBlockViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
-    @objc func reasonPickerButtonClicked(_ sender: UIButton!) {
-        //view.addSubview(popupVC.view)
-        //popupVC.didMove(toParent: self)
-        //self.present(popupVC, animated: true)
-        self.present(ppvc, animated: true)
+    @objc func optionPickerButtonClicked(_ sender: UIButton!) {
+        if let vc = UIStoryboard(name: "Payment", bundle: nil)
+            .instantiateViewController(withIdentifier: "ppvc") as? OptionPickerViewController {
+            
+            // Pass picker frame to determine picker popup coordinates
+            vc.pickerFrame = optionPickerButton.frame
+            vc.pickerFrame.origin.x = vc.pickerFrame.origin.x + 25
+            vc.pickerFrame.size.width = vc.pickerFrame.size.width - 25
+            vc.pickerOptions = ["Карта утеряна", "Карта украдена", "Компроментация карты", "Карта изъята банком"]
+            vc.delegate = self
+            present(vc, animated: true, completion: nil)
+        }
     }
-    
+}
+
+extension DepositsCardsListOnholdBlockViewController: OptionPickerDelegate {
+    func setSelectedOption(option: String?) {
+        if let option = option {
+            optionPickerButton.setTitle(option, for: [])
+        }
+    }
 }
