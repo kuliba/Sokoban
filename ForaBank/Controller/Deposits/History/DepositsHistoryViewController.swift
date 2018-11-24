@@ -27,6 +27,8 @@ class DepositsHistoryViewController: UIViewController {
     // MARK: - Properties
     @IBOutlet weak var tableView: CustomTableView!
     
+    let transitionAnimator = DepositsHistoryDetailsSegueAnimator()
+    
     let cellId = "DepositsHistoryCell"
     
     let data_ = [
@@ -72,6 +74,11 @@ class DepositsHistoryViewController: UIViewController {
         if let selectedRow = tableView.indexPathForSelectedRow {
             tableView.deselectRow(at: selectedRow, animated: false)
         }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let toViewController = segue.destination as UIViewController
+        toViewController.transitioningDelegate = self
     }
 }
 
@@ -164,5 +171,15 @@ private extension DepositsHistoryViewController {
         let searchView = UIView(frame: searchCell.frame)
         searchView.addSubview(searchCell)
         tableView.tableHeaderView = searchView
+    }
+}
+
+extension DepositsHistoryViewController: UIViewControllerTransitioningDelegate {
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        print("animationController")
+        print(presented)
+        print(presenting)
+        print(source)
+        return transitionAnimator
     }
 }

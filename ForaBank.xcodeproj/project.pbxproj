@@ -139,6 +139,7 @@
 		A55B7B8021A6B51E00A8A7FE /* 10.mov in Resources */ = {isa = PBXBuildFile; fileRef = A55B7B7F21A6B51E00A8A7FE /* 10.mov */; };
 		A55B7B8221A6B59A00A8A7FE /* 18.mov in Resources */ = {isa = PBXBuildFile; fileRef = A55B7B8121A6B59A00A8A7FE /* 18.mov */; };
 		A55B7B8421A6C09300A8A7FE /* feed_current_outlay.mov in Resources */ = {isa = PBXBuildFile; fileRef = A55B7B8321A6C09300A8A7FE /* feed_current_outlay.mov */; };
+		A55B7B8621A7E86200A8A7FE /* DepositsHistoryDetailsSegueAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55B7B8521A7E86200A8A7FE /* DepositsHistoryDetailsSegueAnimator.swift */; };
 		A5C5E6D421A2B3DC001D6250 /* DepositsCardsDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6D321A2B3DC001D6250 /* DepositsCardsDetailsViewController.swift */; };
 		A5C5E6D621A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6D521A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift */; };
 		A5C5E6D821A2B403001D6250 /* DepositsCardsListOnholdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6D721A2B403001D6250 /* DepositsCardsListOnholdViewController.swift */; };
@@ -288,6 +289,7 @@
 		A55B7B7F21A6B51E00A8A7FE /* 10.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = 10.mov; sourceTree = "<group>"; };
 		A55B7B8121A6B59A00A8A7FE /* 18.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = 18.mov; sourceTree = "<group>"; };
 		A55B7B8321A6C09300A8A7FE /* feed_current_outlay.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = feed_current_outlay.mov; sourceTree = "<group>"; };
+		A55B7B8521A7E86200A8A7FE /* DepositsHistoryDetailsSegueAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsHistoryDetailsSegueAnimator.swift; sourceTree = "<group>"; };
 		A5C5E6D321A2B3DC001D6250 /* DepositsCardsDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsCardsDetailsViewController.swift; sourceTree = "<group>"; };
 		A5C5E6D521A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsCardsListOnholdBlockViewController.swift; sourceTree = "<group>"; };
 		A5C5E6D721A2B403001D6250 /* DepositsCardsListOnholdViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsCardsListOnholdViewController.swift; sourceTree = "<group>"; };
@@ -384,6 +386,7 @@
 			children = (
 				09C7C3342175CC47000EE472 /* DepositsHistoryViewController.swift */,
 				0939B5F82177266B0029F03D /* DepositsHistoryDetailsViewController.swift */,
+				A55B7B8521A7E86200A8A7FE /* DepositsHistoryDetailsSegueAnimator.swift */,
 			);
 			path = History;
 			sourceTree = "<group>";
@@ -848,6 +851,7 @@
 				09F2410921707B86007B7D73 /* FeedInfo3Cell.swift in Sources */,
 				89C8DF0C21918DDC00D92B0A /* PopupPickerViewController.swift in Sources */,
 				0939B5FB21774EA70029F03D /* DoubleRoundedEdgeView.swift in Sources */,
+				A55B7B8621A7E86200A8A7FE /* DepositsHistoryDetailsSegueAnimator.swift in Sources */,
 				094FFC0D218837580069DDCB /* RegistrationViewController.swift in Sources */,
 				09D3C03D215CD03E00998F57 /* SearchCell.swift in Sources */,
 				096B4F562186F03A00C69E52 /* DepositsCardsDetailsAboutViewController.swift in Sources */,

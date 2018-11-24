@@ -10,8 +10,14 @@ import UIKit
 
 class DepositsCardsListViewController: UIViewController {
     
-    var panGesture = UIPanGestureRecognizer()
-    var longPressGesture = UILongPressGestureRecognizer()
+    lazy var panGesture: UIPanGestureRecognizer = {
+        let gesture = UIPanGestureRecognizer(target: self, action: #selector(dragUnselectedCardView(_:)))
+        return gesture
+    }()
+    lazy var longPressGesture: UILongPressGestureRecognizer = {
+        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressCardView(_:)))
+        return gesture
+    }()
     var lastCardViewCenter: CGPoint = CGPoint.zero
     var selectedCardView: DetailedCardView? = nil
     
@@ -67,6 +73,7 @@ class DepositsCardsListViewController: UIViewController {
         b.tintColor = .black
         b.translatesAutoresizingMaskIntoConstraints = false
         b.isHidden = true
+        b.addTarget(self, action: #selector(allActionButtonClicked(_:)), for: .touchUpInside)
         return b
     }()
     
@@ -284,16 +291,21 @@ class DepositsCardsListViewController: UIViewController {
                                                          attribute: .height,
                                                          multiplier: 1,
                                                          constant: cardViewHeight!))
-
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(cardViewClicked(_:)))
+            cardView.addGestureRecognizer(tapGesture)
+            print(tapGesture)
             cardViews.append(cardView)
         }
-        panGesture = UIPanGestureRecognizer(target: self, action: #selector(dragUnselectedCardView(_:)))
+//        panGesture = UIPanGestureRecognizer(target: self, action: #selector(dragUnselectedCardView(_:)))
         selectedCardView = cardViews.last
         selectedCardView!.isUserInteractionEnabled = true
         selectedCardView!.addGestureRecognizer(panGesture)
+        print(panGesture)
         contentViewConstraints = contentView.constraints
-        longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressCardView(_:)))
+//        longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressCardView(_:)))
+        
         selectedCardView!.addGestureRecognizer(longPressGesture)
+        print(longPressGesture)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -304,11 +316,17 @@ class DepositsCardsListViewController: UIViewController {
     }
 
     // MARK: - Methods
-//    @objc func cardViewClicked(_ sender: UITapGestureRecognizer) {
-//        performSegue(withIdentifier: "CardListOnholdNavigation", sender: nil)
-//    }
+    @objc func allActionButtonClicked(_ sender: UIButton!) {
+        performSegue(withIdentifier: "DepositsCardsDetailsViewController", sender: nil)
+    }
+    
+    @objc func cardViewClicked(_ sender: UITapGestureRecognizer) {
+        print("cardViewClicked")
+        performSegue(withIdentifier: "DepositsCardsDetailsViewController", sender: nil)
+    }
+    
     @objc func longPressCardView(_ sender:UILongPressGestureRecognizer){
-
+        print("longPressCardView")
         if sender.state == .began {
             self.selectedCardView?.removeGestureRecognizer(self.longPressGesture)
             sendMoneyButton.alpha = 0
@@ -378,6 +396,7 @@ class DepositsCardsListViewController: UIViewController {
     }
     
     @objc func dragUnselectedCardView(_ sender:UIPanGestureRecognizer){
+        print("dragUnselectedCardView")
         let translation = sender.translation(in: contentView)
         let newCenterY = sender.view!.center.y + translation.y
         let newBottomY = newCenterY + sender.view!.frame.size.height/2
@@ -404,6 +423,7 @@ class DepositsCardsListViewController: UIViewController {
     }
     
     @objc func dragSelectedCardView(_ sender:UIPanGestureRecognizer){
+        print("dragSelectedCardView")
         let translation = sender.translation(in: contentView)
         let newCenterY = sender.view!.center.y + translation.y
         let newBottomY = newCenterY + sender.view!.frame.size.height/2

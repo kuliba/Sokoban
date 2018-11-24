@@ -10,6 +10,8 @@ import UIKit
 
 class DepositsHistoryDetailsViewController: UIViewController {
 
+    @IBOutlet weak var scrollView: UIScrollView!
+    
     @IBAction func backButtonClicked(_ sender: Any) {
         dismiss(animated: true)
     }
