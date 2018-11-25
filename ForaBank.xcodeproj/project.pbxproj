@@ -140,6 +140,10 @@
 		A55B7B8221A6B59A00A8A7FE /* 18.mov in Resources */ = {isa = PBXBuildFile; fileRef = A55B7B8121A6B59A00A8A7FE /* 18.mov */; };
 		A55B7B8421A6C09300A8A7FE /* feed_current_outlay.mov in Resources */ = {isa = PBXBuildFile; fileRef = A55B7B8321A6C09300A8A7FE /* feed_current_outlay.mov */; };
 		A55B7B8621A7E86200A8A7FE /* DepositsHistoryDetailsSegueAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55B7B8521A7E86200A8A7FE /* DepositsHistoryDetailsSegueAnimator.swift */; };
+		A55B7B8821AA698900A8A7FE /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55B7B8721AA698900A8A7FE /* ChatMessage.swift */; };
+		A55B7B8C21AA713600A8A7FE /* ChatMessagesOutgoingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55B7B8B21AA713600A8A7FE /* ChatMessagesOutgoingTableViewCell.swift */; };
+		A55B7B8E21AA8EB600A8A7FE /* ChatMessagesIncomingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55B7B8D21AA8EB600A8A7FE /* ChatMessagesIncomingTableViewCell.swift */; };
+		A55B7B9021AAAAB300A8A7FE /* ChatMessagesTransferRequestTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55B7B8F21AAAAB300A8A7FE /* ChatMessagesTransferRequestTableViewCell.swift */; };
 		A5C5E6D421A2B3DC001D6250 /* DepositsCardsDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6D321A2B3DC001D6250 /* DepositsCardsDetailsViewController.swift */; };
 		A5C5E6D621A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6D521A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift */; };
 		A5C5E6D821A2B403001D6250 /* DepositsCardsListOnholdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6D721A2B403001D6250 /* DepositsCardsListOnholdViewController.swift */; };
@@ -290,6 +294,10 @@
 		A55B7B8121A6B59A00A8A7FE /* 18.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = 18.mov; sourceTree = "<group>"; };
 		A55B7B8321A6C09300A8A7FE /* feed_current_outlay.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = feed_current_outlay.mov; sourceTree = "<group>"; };
 		A55B7B8521A7E86200A8A7FE /* DepositsHistoryDetailsSegueAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsHistoryDetailsSegueAnimator.swift; sourceTree = "<group>"; };
+		A55B7B8721AA698900A8A7FE /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
+		A55B7B8B21AA713600A8A7FE /* ChatMessagesOutgoingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesOutgoingTableViewCell.swift; sourceTree = "<group>"; };
+		A55B7B8D21AA8EB600A8A7FE /* ChatMessagesIncomingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesIncomingTableViewCell.swift; sourceTree = "<group>"; };
+		A55B7B8F21AAAAB300A8A7FE /* ChatMessagesTransferRequestTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesTransferRequestTableViewCell.swift; sourceTree = "<group>"; };
 		A5C5E6D321A2B3DC001D6250 /* DepositsCardsDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsCardsDetailsViewController.swift; sourceTree = "<group>"; };
 		A5C5E6D521A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsCardsListOnholdBlockViewController.swift; sourceTree = "<group>"; };
 		A5C5E6D721A2B403001D6250 /* DepositsCardsListOnholdViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsCardsListOnholdViewController.swift; sourceTree = "<group>"; };
@@ -506,6 +514,7 @@
 			isa = PBXGroup;
 			children = (
 				0942B86A21625F4800370C71 /* Service.swift */,
+				A55B7B8721AA698900A8A7FE /* ChatMessage.swift */,
 				0942B86C21625F7800370C71 /* Friend.swift */,
 				A5C5E6DF21A2B443001D6250 /* Card.swift */,
 				A5C5E6E021A2B443001D6250 /* CardManager.swift */,
@@ -518,6 +527,7 @@
 			children = (
 				89C8DF0F2191AE7A00D92B0A /* Deposits */,
 				09203D92216E136300902BD2 /* Feed */,
+				A55B7B8921AA70A600A8A7FE /* Profile */,
 				A5C5E6E321A2B491001D6250 /* CardActionRoundedButton.swift */,
 				A5C5E6E421A2B491001D6250 /* DetailedCardView.swift */,
 				A5C5E6E721A2B49A001D6250 /* OptionPickerButton.swift */,
@@ -662,6 +672,24 @@
 				A55B7B7921A6B4F400A8A7FE /* feed_current_food.mov */,
 			);
 			path = animation;
+			sourceTree = "<group>";
+		};
+		A55B7B8921AA70A600A8A7FE /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				A55B7B8A21AA70C100A8A7FE /* Chat */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		A55B7B8A21AA70C100A8A7FE /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				A55B7B8B21AA713600A8A7FE /* ChatMessagesOutgoingTableViewCell.swift */,
+				A55B7B8D21AA8EB600A8A7FE /* ChatMessagesIncomingTableViewCell.swift */,
+				A55B7B8F21AAAAB300A8A7FE /* ChatMessagesTransferRequestTableViewCell.swift */,
+			);
+			path = Chat;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -878,6 +906,7 @@
 				096BCB0A216361AA005BC02B /* PaymentTemplateCell.swift in Sources */,
 				89C8DF0E2191ADF200D92B0A /* DepositsDepositsViewController.swift in Sources */,
 				09E2141F21873DCA00D16D21 /* DepositsCardsDetailsStatementDetailsViewController.swift in Sources */,
+				A55B7B9021AAAAB300A8A7FE /* ChatMessagesTransferRequestTableViewCell.swift in Sources */,
 				A55B7B5721A5866F00A8A7FE /* UIImage+GIF.swift in Sources */,
 				09C7C31221749151000EE472 /* DepositsObligationsCell.swift in Sources */,
 				096B4F502183257300C69E52 /* ThreeViewController.swift in Sources */,
@@ -891,6 +920,7 @@
 				0930F16A215B6CB800CFB593 /* GradientView.swift in Sources */,
 				0943729221907198003A66CC /* PaymentsDetailsSuccessViewController.swift in Sources */,
 				09C7C3162174A362000EE472 /* DepositsSearchCell.swift in Sources */,
+				A55B7B8821AA698900A8A7FE /* ChatMessage.swift in Sources */,
 				09F0E5CD2179DC3B0016BB6E /* CardView.swift in Sources */,
 				0930F16C215B704A00CFB593 /* CircularImageView.swift in Sources */,
 				A5C5E6E821A2B49A001D6250 /* OptionPickerButton.swift in Sources */,
@@ -923,9 +953,11 @@
 				09AF708C216F73FD00E7FCFC /* FeedCurrent2Cell.swift in Sources */,
 				09F2410C2170871F007B7D73 /* FeedInfoViewController.swift in Sources */,
 				09AF7078216F4A9600E7FCFC /* FeedUpcomingViewController.swift in Sources */,
+				A55B7B8E21AA8EB600A8A7FE /* ChatMessagesIncomingTableViewCell.swift in Sources */,
 				A5C5E6DE21A2B41F001D6250 /* PopupPickerViewController2.swift in Sources */,
 				097A6DCE21899C5B00E6C69E /* RegistrationLoginPasswordViewController.swift in Sources */,
 				09BE35F1218C729C00EA7B24 /* ButtonRoundedBordered.swift in Sources */,
+				A55B7B8C21AA713600A8A7FE /* ChatMessagesOutgoingTableViewCell.swift in Sources */,
 				094FFC0F218837580069DDCB /* LoginOrSignupViewController.swift in Sources */,
 				0942B86B21625F4800370C71 /* Service.swift in Sources */,
 				09797559215A49020044C00A /* AppDelegate.swift in Sources */,
@@ -1087,7 +1119,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = UQFHVUUHB2;
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1107,7 +1139,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = UQFHVUUHB2;
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

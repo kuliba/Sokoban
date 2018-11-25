@@ -153,6 +153,7 @@ extension FeedViewController: iCarouselDataSource, iCarouselDelegate {
     }
     
     func carousel(_ carousel: iCarousel, didSelectItemAt index: Int) {
+        previousIndex = index
         showComponent(index: index)
         for (i, n) in gradientViews.enumerated() {
             UIView.animate(withDuration: 0.25, animations: {
@@ -162,7 +163,7 @@ extension FeedViewController: iCarouselDataSource, iCarouselDelegate {
     }
     
     func carouselDidEndScrollingAnimation(_ carousel: iCarousel) {
-        if previousIndex<0 {
+        if previousIndex<0 || previousIndex == carousel.currentItemIndex{
             previousIndex = carousel.currentItemIndex
             return
         }
