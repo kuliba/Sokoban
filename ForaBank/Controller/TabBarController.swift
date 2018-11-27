@@ -16,6 +16,8 @@ class TabBarController: UITabBarController {
         //setSelectedIndexToLast()
         selectedIndex = 0
     }
+    
+    @IBAction func unwindSegue(segue:UIStoryboardSegue) { }
 }
 
 // MARK: - Private methods
@@ -29,5 +31,25 @@ private extension TabBarController {
     func setNumberOfTabsAvailable() {
         // if !signedIn (!authorized)
         viewControllers?.remove(at: 1)
+    }
+}
+
+extension TabBarController: CustomTransitionOriginator, CustomTransitionDestination {
+    var fromAnimatedSubviews: [String : UIView] {
+        var views = [String : UIView]()
+        guard let c = selectedViewController as? CustomTransitionOriginator else {
+            return views
+        }
+        views.merge(c.fromAnimatedSubviews, uniquingKeysWith: { (first, _) in first })
+        return views
+    }
+    
+    var toAnimatedSubviews: [String : UIView] {
+        var views = [String : UIView]()
+        guard let c = selectedViewController as? CustomTransitionDestination else {
+            return views
+        }
+        views.merge(c.toAnimatedSubviews, uniquingKeysWith: { (first, _) in first })
+        return views
     }
 }

@@ -13,6 +13,7 @@ class GradientView: UIView {
     // MARK: - Properties
     @IBInspectable var color1: UIColor = .white
     @IBInspectable var color2: UIColor = .black
+    let gradientLayer = CAGradientLayer()
     
     // MARK: - Lifecycle
     override func awakeFromNib() {
@@ -33,7 +34,6 @@ private extension GradientView {
     func setGradientView() {
         let gradientFrame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
         let gradientView = UIView(frame: gradientFrame)
-        let gradientLayer = CAGradientLayer()
         gradientLayer.frame.size = gradientView.frame.size
         gradientLayer.startPoint = CGPoint(x: 0, y: 1)
         gradientLayer.endPoint = CGPoint(x: 1, y: 1)

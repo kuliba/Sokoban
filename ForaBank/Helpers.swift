@@ -151,3 +151,19 @@ enum Constants {
         .simulator(.iPhoneXsMax)
     ]
 }
+
+enum Direction {
+    case left
+    case right
+    case top
+    case bottom
+    case none
+}
+
+protocol CustomTransitionOriginator {
+    var fromAnimatedSubviews: [String : UIView] { get }
+}
+
+protocol CustomTransitionDestination {
+    var toAnimatedSubviews: [String : UIView] { get }
+}

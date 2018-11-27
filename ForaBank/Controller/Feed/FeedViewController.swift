@@ -28,6 +28,7 @@ class FeedViewController: UIViewController {
     }()
     var previousIndex = -1
     
+    var labels = [UILabel?]()
     var gradientViews = [GradientView2]()
     
     let iphone5Devices = Constants.iphone5Devices
@@ -44,6 +45,7 @@ class FeedViewController: UIViewController {
         addChild(currentViewController!)
         addSubview(self.currentViewController!.view, toView: self.containerView)
         
+        labels = [UILabel?].init(repeating: nil, count: items.count)
         super.viewDidLoad()
         
         carousel.delegate = self
@@ -99,7 +101,7 @@ extension FeedViewController: iCarouselDataSource, iCarouselDelegate {
             
             label.backgroundColor = .clear
             label.textAlignment = .center
-            label.textColor = .white
+            label.textColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
             label.font = UIFont(name: "Roboto-Regular", size: 16)
             label.tag = 1
             itemView.addSubview(label)
@@ -111,7 +113,7 @@ extension FeedViewController: iCarouselDataSource, iCarouselDelegate {
         // you'll get weird issues with carousel item content appearing
         // in the wrong place in the carousel
         label.text = "\(items[index])"
-        
+        labels[index] = label
         return itemView
     }
     
@@ -153,6 +155,8 @@ extension FeedViewController: iCarouselDataSource, iCarouselDelegate {
     }
     
     func carousel(_ carousel: iCarousel, didSelectItemAt index: Int) {
+        labels[previousIndex]?.textColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
+        labels[index]?.textColor = .white
         previousIndex = index
         showComponent(index: index)
         for (i, n) in gradientViews.enumerated() {
@@ -165,8 +169,11 @@ extension FeedViewController: iCarouselDataSource, iCarouselDelegate {
     func carouselDidEndScrollingAnimation(_ carousel: iCarousel) {
         if previousIndex<0 || previousIndex == carousel.currentItemIndex{
             previousIndex = carousel.currentItemIndex
+            labels[carousel.currentItemIndex]?.textColor = .white
             return
         }
+        labels[previousIndex]?.textColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
+        labels[carousel.currentItemIndex]?.textColor = .white
         previousIndex = carousel.currentItemIndex
         showComponent(index: carousel.currentItemIndex)
         for (i, n) in gradientViews.enumerated() {

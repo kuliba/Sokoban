@@ -230,3 +230,19 @@ extension OneOneViewController: iCarouselDataSource, iCarouselDelegate {
         showComponent(index: index)
     }
 }
+
+extension OneOneViewController: CustomTransitionOriginator, CustomTransitionDestination {
+    var fromAnimatedSubviews: [String : UIView] {
+        var views = [String : UIView]()
+        views["header"] = header
+        views["container"] = container
+        return views
+    }
+    
+    var toAnimatedSubviews: [String : UIView] {
+        var views = [String : UIView]()
+        views["header"] = header
+        views["container"] = container
+        return views
+    }
+}

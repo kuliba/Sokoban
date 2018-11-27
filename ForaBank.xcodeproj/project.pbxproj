@@ -144,6 +144,7 @@
 		A55B7B8C21AA713600A8A7FE /* ChatMessagesOutgoingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55B7B8B21AA713600A8A7FE /* ChatMessagesOutgoingTableViewCell.swift */; };
 		A55B7B8E21AA8EB600A8A7FE /* ChatMessagesIncomingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55B7B8D21AA8EB600A8A7FE /* ChatMessagesIncomingTableViewCell.swift */; };
 		A55B7B9021AAAAB300A8A7FE /* ChatMessagesTransferRequestTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55B7B8F21AAAAB300A8A7FE /* ChatMessagesTransferRequestTableViewCell.swift */; };
+		A56B59FA21AD623B00CE4798 /* DepositsDepositsSegueAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56B59F921AD623B00CE4798 /* DepositsDepositsSegueAnimator.swift */; };
 		A5C5E6D421A2B3DC001D6250 /* DepositsCardsDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6D321A2B3DC001D6250 /* DepositsCardsDetailsViewController.swift */; };
 		A5C5E6D621A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6D521A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift */; };
 		A5C5E6D821A2B403001D6250 /* DepositsCardsListOnholdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6D721A2B403001D6250 /* DepositsCardsListOnholdViewController.swift */; };
@@ -298,6 +299,7 @@
 		A55B7B8B21AA713600A8A7FE /* ChatMessagesOutgoingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesOutgoingTableViewCell.swift; sourceTree = "<group>"; };
 		A55B7B8D21AA8EB600A8A7FE /* ChatMessagesIncomingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesIncomingTableViewCell.swift; sourceTree = "<group>"; };
 		A55B7B8F21AAAAB300A8A7FE /* ChatMessagesTransferRequestTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesTransferRequestTableViewCell.swift; sourceTree = "<group>"; };
+		A56B59F921AD623B00CE4798 /* DepositsDepositsSegueAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsDepositsSegueAnimator.swift; sourceTree = "<group>"; };
 		A5C5E6D321A2B3DC001D6250 /* DepositsCardsDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsCardsDetailsViewController.swift; sourceTree = "<group>"; };
 		A5C5E6D521A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsCardsListOnholdBlockViewController.swift; sourceTree = "<group>"; };
 		A5C5E6D721A2B403001D6250 /* DepositsCardsListOnholdViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsCardsListOnholdViewController.swift; sourceTree = "<group>"; };
@@ -490,6 +492,7 @@
 				895768D02192E9F0005754D5 /* DepositsStatsDetailsViewController.swift */,
 				095D158A21789BB700F5266C /* Cards */,
 				89C8DF0D2191ADF200D92B0A /* DepositsDepositsViewController.swift */,
+				A56B59F921AD623B00CE4798 /* DepositsDepositsSegueAnimator.swift */,
 				09C7C30E2174888B000EE472 /* DepositsObligationsViewController.swift */,
 				895768CC2192D992005754D5 /* OneOneViewController.swift */,
 				095D158B21789BC100F5266C /* History */,
@@ -956,6 +959,7 @@
 				A55B7B8E21AA8EB600A8A7FE /* ChatMessagesIncomingTableViewCell.swift in Sources */,
 				A5C5E6DE21A2B41F001D6250 /* PopupPickerViewController2.swift in Sources */,
 				097A6DCE21899C5B00E6C69E /* RegistrationLoginPasswordViewController.swift in Sources */,
+				A56B59FA21AD623B00CE4798 /* DepositsDepositsSegueAnimator.swift in Sources */,
 				09BE35F1218C729C00EA7B24 /* ButtonRoundedBordered.swift in Sources */,
 				A55B7B8C21AA713600A8A7FE /* ChatMessagesOutgoingTableViewCell.swift in Sources */,
 				094FFC0F218837580069DDCB /* LoginOrSignupViewController.swift in Sources */,

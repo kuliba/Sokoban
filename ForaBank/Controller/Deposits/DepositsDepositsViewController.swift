@@ -13,6 +13,8 @@ class DepositsDepositsViewController: UIViewController {
     // MARK: - Properties
     @IBOutlet weak var tableView: CustomTableView!
     
+    let transitionAnimator = DepositsDepositsSegueAnimator()
+    
     let cellId = "DepositsDepositCell"
     
     let data_ = [
@@ -49,6 +51,13 @@ class DepositsDepositsViewController: UIViewController {
         super.viewDidDisappear(animated)
         if let selectedRow = tableView.indexPathForSelectedRow {
             tableView.deselectRow(at: selectedRow, animated: false)
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "OneOneViewController" {
+            let toViewController = segue.destination as UIViewController
+            toViewController.transitioningDelegate = transitionAnimator
         }
     }
 }
@@ -154,5 +163,19 @@ private extension DepositsDepositsViewController {
     func registerTableViewNibCell() {
         let nibTemplateCell = UINib(nibName: cellId, bundle: nil)
         tableView.register(nibTemplateCell, forCellReuseIdentifier: cellId)
+    }
+}
+
+extension DepositsDepositsViewController: CustomTransitionOriginator, CustomTransitionDestination {
+    var fromAnimatedSubviews: [String : UIView] {
+        var views = [String : UIView]()
+        views["tableView"] = tableView
+        return views
+    }
+    
+    var toAnimatedSubviews: [String : UIView] {
+        var views = [String : UIView]()
+        views["tableView"] = tableView
+        return views
     }
 }

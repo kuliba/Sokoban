@@ -28,7 +28,16 @@ class DepositsViewController: UIViewController {
     }()
     var previousIndex = -1
     
-    var gradientViews = [GradientView2]()
+    var labels = [UILabel?]()
+    let gradientView = GradientView()
+    let gradients = [
+        [UIColor(hexFromString: "F1AE73"), UIColor(hexFromString: "EB4340")],
+        [UIColor(hexFromString: "EC4645"), UIColor(hexFromString: "9B305C")],
+        [UIColor(hexFromString: "ED5D4B"), UIColor(hexFromString: "B03456")],
+        [UIColor(hexFromString: "ED4F48"), UIColor(hexFromString: "9F3057")],
+        [UIColor(hexFromString: "ED4F48"), UIColor(hexFromString: "9F3057")],
+        [UIColor(hexFromString: "C8394C"), UIColor(hexFromString: "1B0E2F")]
+    ]
     let xDevices = Constants.xDevices
     weak var currentViewController: UIViewController?
     
@@ -40,7 +49,8 @@ class DepositsViewController: UIViewController {
         currentViewController!.view.translatesAutoresizingMaskIntoConstraints = false
         addChild(currentViewController!)
         addSubview(self.currentViewController!.view, toView: self.containerView)
-        
+
+        labels = [UILabel?].init(repeating: nil, count: items.count)
         super.viewDidLoad()
         
         carousel.delegate = self
@@ -50,10 +60,13 @@ class DepositsViewController: UIViewController {
         // carousel.isPagingEnabled = true
         // carousel.isScrollEnabled = false
         
-        addGradients()
-        gradientViews[0].alpha = 1
+        gradientView.frame = view.frame
+        gradientView.color1 = gradients[0][0]
+        gradientView.color2 = gradients[0][1]
+        view.insertSubview(gradientView, at: 0)
         containerView.addGestureRecognizer(leftSwipeRecognizer)
         containerView.addGestureRecognizer(rightSwipeRecognizer)
+        
     }
     
     override func viewDidLayoutSubviews() {
@@ -70,38 +83,21 @@ extension DepositsViewController: iCarouselDataSource, iCarouselDelegate {
     
     func carousel(_ carousel: iCarousel, viewForItemAt index: Int, reusing view: UIView?) -> UIView {
         var label: UILabel
-        var itemView: UIImageView
-        
-        //reuse view if available, otherwise create a new view
-        if let view = view as? UIImageView {
-            itemView = view
-            //get a reference to the label in the recycled view
-            label = itemView.viewWithTag(1) as! UILabel
+
+        if let view = view as? UILabel {
+            label = view
         } else {
-            //don't do anything specific to the index within
-            //this `if ... else` statement because the view will be
-            //recycled and used with other index values later
-            itemView = UIImageView(frame: CGRect(x: 0, y: 0, width: 120, height: 40))
-            itemView.backgroundColor = .clear
-            
-            label = UILabel(frame: itemView.bounds)
+            label = UILabel(frame: CGRect(x: 0, y: 0, width: 120, height: 40))
             
             label.backgroundColor = .clear
             label.textAlignment = .center
-            label.textColor = .white
+            label.textColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
             label.font = UIFont(name: "Roboto-Regular", size: 16)
             label.tag = 1
-            itemView.addSubview(label)
         }
-        
-        //set item label
-        //remember to always set any properties of your carousel item
-        //views outside of the `if (view == nil) {...}` check otherwise
-        //you'll get weird issues with carousel item content appearing
-        //in the wrong place in the carousel
         label.text = "\(items[index])"
-        
-        return itemView
+        labels[index] = label
+        return label
     }
     
     func carousel(_ carousel: iCarousel, valueFor option: iCarouselOption, withDefault value: CGFloat) -> CGFloat {
@@ -141,51 +137,64 @@ extension DepositsViewController: iCarouselDataSource, iCarouselDelegate {
     }
     
     func carousel(_ carousel: iCarousel, didSelectItemAt index: Int) {
-        previousIndex = index
-        showComponent(index: index)
-        for (i, n) in gradientViews.enumerated() {
-            UIView.animate(withDuration: 0.25, animations: {
-                n.alpha = index == i ? 1 : 0
-            })
+        labels[previousIndex]?.textColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
+        labels[index]?.textColor = .white
+        let indexOffset = index - previousIndex
+        let direction: Direction
+        switch indexOffset {
+        case ..<0:
+            direction = .left
+        case 1...:
+            direction = .right
+        default:
+            direction = .none
         }
+        previousIndex = index
+        
+        showComponent(index: index, direction: direction)
+        UIView.animate(withDuration: 1,
+                       delay: 0,
+                       options: .beginFromCurrentState,
+                       animations: {
+            self.gradientView.gradientLayer.colors = [self.gradients[index][0].cgColor,
+                                                      self.gradients[index][1].cgColor]
+        }, completion: nil)
     }
     
     func carouselDidEndScrollingAnimation(_ carousel: iCarousel) {
+        print(CACurrentMediaTime())
+
         if previousIndex<0 || previousIndex == carousel.currentItemIndex{
             previousIndex = carousel.currentItemIndex
+            labels[carousel.currentItemIndex]?.textColor = .white
             return
         }
-        previousIndex = carousel.currentItemIndex
-        showComponent(index: carousel.currentItemIndex)
-        for (i, n) in gradientViews.enumerated() {
-            UIView.animate(withDuration: 0.25, animations: {
-                n.alpha = carousel.currentItemIndex == i ? 1 : 0
-            })
+        labels[previousIndex]?.textColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
+        labels[carousel.currentItemIndex]?.textColor = .white
+        
+        let indexOffset = carousel.currentItemIndex - previousIndex
+        let direction: Direction
+        switch indexOffset {
+        case ..<0:
+            direction = .left
+        case 1...:
+            direction = .right
+        default:
+            direction = .none
         }
+        previousIndex = carousel.currentItemIndex
+        showComponent(index: carousel.currentItemIndex, direction: direction)
+        UIView.animate(withDuration: 1,
+                       delay: 0,
+                       options: .beginFromCurrentState,
+                       animations: {
+            self.gradientView.gradientLayer.colors = [self.gradients[self.previousIndex][0].cgColor,
+                                                      self.gradients[self.previousIndex][1].cgColor]
+            }, completion: nil)
     }
 }
 
 private extension DepositsViewController {
-    func addGradients() {
-        for gradient in [
-            (UIColor(hexFromString: "F1AE73"), UIColor(hexFromString: "EB4340")),
-            (UIColor(hexFromString: "EC4645"), UIColor(hexFromString: "9B305C")),
-            (UIColor(hexFromString: "ED5D4B"), UIColor(hexFromString: "B03456")),
-            (UIColor(hexFromString: "ED4F48"), UIColor(hexFromString: "9F3057")),
-            (UIColor(hexFromString: "ED4F48"), UIColor(hexFromString: "9F3057")),
-            (UIColor(hexFromString: "C8394C"), UIColor(hexFromString: "1B0E2F"))
-            ] {
-                let v = GradientView2()
-                v.color1 = gradient.0
-                v.color2 = gradient.1
-                v.alpha = 0
-                v.frame = view.frame
-                v.addGradientView()
-                v.layoutIfNeeded()
-                gradientViews.append(v)
-                view.insertSubview(v, at: 0)
-        }
-    }
     
     func addSubview(_ subView:UIView, toView parentView:UIView) {
         parentView.addSubview(subView)
@@ -203,39 +212,62 @@ private extension DepositsViewController {
         ))
     }
     
-    func showComponent(index: Int) {
+    func showComponent(index: Int, direction: Direction) {
         let newViewController = storyboard?.instantiateViewController(withIdentifier: "deposits\(index)")
         newViewController!.view.translatesAutoresizingMaskIntoConstraints = false
-        cycleFromViewController(oldViewController: self.currentViewController!, toViewController: newViewController!)
+        cycleFromViewController(oldViewController: self.currentViewController!, toViewController: newViewController!, direction: direction)
         currentViewController = newViewController
     }
     
-    func cycleFromViewController(oldViewController: UIViewController, toViewController newViewController: UIViewController) {
+    func cycleFromViewController(oldViewController: UIViewController, toViewController newViewController: UIViewController, direction: Direction) {
         oldViewController.willMove(toParent: nil)
         addChild(newViewController)
-        addSubview(newViewController.view, toView:self.containerView!)
+        addSubview(newViewController.view, toView:containerView)
         // TODO: Set the starting state of your constraints here
-        newViewController.view.alpha = 0
-        newViewController.view.bounds.origin.y -= 10
+        switch direction {
+        case .left:
+            newViewController.view.bounds.origin.x += containerView.frame.width
+        case .right:
+            newViewController.view.bounds.origin.x -= containerView.frame.width
+        default:
+            newViewController.view.alpha = 0
+            newViewController.view.bounds.origin.y -= 10
+        }
         
         newViewController.view.layoutIfNeeded()
         
         // TODO: Set the ending state of your constraints here
-        
-        UIView.animate(withDuration: 0.25, animations: {
-            oldViewController.view.alpha = 0
-            oldViewController.view.bounds.origin.y -= 10
+
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
+            switch direction {
+            case .left:
+                oldViewController.view.bounds.origin.x -= self.containerView.frame.width
+                newViewController.view.bounds.origin.x -= self.containerView.frame.width
+            case .right:
+                oldViewController.view.bounds.origin.x += self.containerView.frame.width
+                newViewController.view.bounds.origin.x += self.containerView.frame.width
+            default:
+                oldViewController.view.alpha = 0
+                oldViewController.view.bounds.origin.y -= 10
+            }
             // only need to call layoutIfNeeded here
             newViewController.view.layoutIfNeeded()
         }, completion: { _ in
-            UIView.animate(withDuration: 0.25, animations: {
-                newViewController.view.alpha = 1
-                newViewController.view.bounds.origin.y += 10
-            }, completion: { _ in
+            if direction != .left && direction != .right {
+                UIView.animate(withDuration: 0.25, animations: {
+                    newViewController.view.alpha = 1
+                    newViewController.view.bounds.origin.y += 10
+                    
+                }, completion: { _ in
+                    oldViewController.view.removeFromSuperview()
+                    oldViewController.removeFromParent()
+                    newViewController.didMove(toParent: self)
+                })
+            } else {
                 oldViewController.view.removeFromSuperview()
                 oldViewController.removeFromParent()
                 newViewController.didMove(toParent: self)
-            })
+            }
         })
     }
     
@@ -252,3 +284,26 @@ private extension DepositsViewController {
     }
 }
 
+extension DepositsViewController: CustomTransitionOriginator, CustomTransitionDestination {
+    var fromAnimatedSubviews: [String : UIView] {
+        var views = [String : UIView]()
+        views["gradientView"] = gradientView
+        views["carousel"] = carousel
+        guard let c = currentViewController as? CustomTransitionOriginator else {
+            return views
+        }
+        views.merge(c.fromAnimatedSubviews, uniquingKeysWith: { (first, _) in first })
+        return views
+    }
+    
+    var toAnimatedSubviews: [String : UIView] {
+        var views = [String : UIView]()
+        views["gradientView"] = gradientView
+        views["carousel"] = carousel
+        guard let c = currentViewController as? CustomTransitionDestination else {
+            return views
+        }
+        views.merge(c.toAnimatedSubviews, uniquingKeysWith: { (first, _) in first })
+        return views
+    }
+}

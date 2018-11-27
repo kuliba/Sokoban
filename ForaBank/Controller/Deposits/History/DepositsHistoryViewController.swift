@@ -77,8 +77,11 @@ class DepositsHistoryViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let toViewController = segue.destination as UIViewController
-        toViewController.transitioningDelegate = self
+//        print("prepare for segue \(segue.identifier ?? "nil")")
+        if segue.identifier == "DepositsHistoryDetailsViewController" {
+            let toViewController = segue.destination as UIViewController
+            toViewController.transitioningDelegate = transitionAnimator
+        }
     }
 }
 
@@ -171,15 +174,5 @@ private extension DepositsHistoryViewController {
         let searchView = UIView(frame: searchCell.frame)
         searchView.addSubview(searchCell)
         tableView.tableHeaderView = searchView
-    }
-}
-
-extension DepositsHistoryViewController: UIViewControllerTransitioningDelegate {
-    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        print("animationController")
-        print(presented)
-        print(presenting)
-        print(source)
-        return transitionAnimator
     }
 }
