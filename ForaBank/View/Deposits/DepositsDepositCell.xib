@@ -23,10 +23,6 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="64.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Screenshot 2018-10-02 at 12.21.23" translatesAutoresizingMaskIntoConstraints="NO" id="YaK-8s-iUk">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="65"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="500 ₽" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fET-uS-1sc">
                         <rect key="frame" x="183" y="18" width="117" height="30"/>
                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
@@ -59,6 +55,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
                     <constraint firstItem="EG9-cF-eMb" firstAttribute="leading" secondItem="6mN-Io-30C" secondAttribute="leading" constant="20" id="93b-bV-PDa"/>
                     <constraint firstItem="Hbu-Ip-pxu" firstAttribute="top" secondItem="EG9-cF-eMb" secondAttribute="bottom" constant="-2" id="Fu0-Ef-OfF"/>
@@ -74,12 +71,8 @@
                     <constraint firstAttribute="bottom" secondItem="bIP-8e-93z" secondAttribute="bottom" id="a9P-uY-lfC"/>
                     <constraint firstItem="fET-uS-1sc" firstAttribute="top" secondItem="6mN-Io-30C" secondAttribute="top" constant="18" id="gQc-RY-WdK"/>
                 </constraints>
-                <variation key="default">
-                    <mask key="subviews">
-                        <exclude reference="YaK-8s-iUk"/>
-                    </mask>
-                </variation>
             </tableViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <viewLayoutGuide key="safeArea" id="rl1-ca-Uc9"/>
             <inset key="separatorInset" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
             <connections>
@@ -91,7 +84,4 @@
             <point key="canvasLocation" x="148.80000000000001" y="277.51124437781112"/>
         </tableViewCell>
     </objects>
-    <resources>
-        <image name="Screenshot 2018-10-02 at 12.21.23" width="16" height="16"/>
-    </resources>
 </document>

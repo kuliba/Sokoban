@@ -14,7 +14,7 @@ class DepositsViewController: UIViewController {
 
     // MARK: - Properties
     @IBOutlet var carousel: iCarousel!
-    @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var containerView: RoundedEdgeView!
     
     lazy var leftSwipeRecognizer: UISwipeGestureRecognizer = {
         let recognizer = UISwipeGestureRecognizer(target: self, action: #selector(swipeAction(_:)))
@@ -73,6 +73,11 @@ class DepositsViewController: UIViewController {
         super.viewDidLayoutSubviews()
         carousel.frame.size.height = Device().isOneOf(xDevices) ? 120 : 90
     }
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//        print("deposits view controller \(containerView.viewMask.path)")
+//        print("container \(containerView)")
+//    }
 }
 
 extension DepositsViewController: iCarouselDataSource, iCarouselDelegate {
@@ -162,8 +167,6 @@ extension DepositsViewController: iCarouselDataSource, iCarouselDelegate {
     }
     
     func carouselDidEndScrollingAnimation(_ carousel: iCarousel) {
-        print(CACurrentMediaTime())
-
         if previousIndex<0 || previousIndex == carousel.currentItemIndex{
             previousIndex = carousel.currentItemIndex
             labels[carousel.currentItemIndex]?.textColor = .white
@@ -287,7 +290,8 @@ private extension DepositsViewController {
 extension DepositsViewController: CustomTransitionOriginator, CustomTransitionDestination {
     var fromAnimatedSubviews: [String : UIView] {
         var views = [String : UIView]()
-        views["gradientView"] = gradientView
+        
+
         views["carousel"] = carousel
         guard let c = currentViewController as? CustomTransitionOriginator else {
             return views
@@ -298,7 +302,7 @@ extension DepositsViewController: CustomTransitionOriginator, CustomTransitionDe
     
     var toAnimatedSubviews: [String : UIView] {
         var views = [String : UIView]()
-        views["gradientView"] = gradientView
+
         views["carousel"] = carousel
         guard let c = currentViewController as? CustomTransitionDestination else {
             return views

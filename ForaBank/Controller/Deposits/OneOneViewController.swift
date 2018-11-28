@@ -14,7 +14,7 @@ class OneOneViewController: UIViewController {
 
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var header: UIView!
-    @IBOutlet weak var container: UIView!
+    @IBOutlet weak var container: RoundedEdgeView!
     @IBOutlet weak var containerHeight: NSLayoutConstraint!
     @IBOutlet var carousel: iCarousel!
     
@@ -233,16 +233,43 @@ extension OneOneViewController: iCarouselDataSource, iCarouselDelegate {
 
 extension OneOneViewController: CustomTransitionOriginator, CustomTransitionDestination {
     var fromAnimatedSubviews: [String : UIView] {
+        print("OneOneViewController fromAnimatedSubviews")
         var views = [String : UIView]()
-        views["header"] = header
-        views["container"] = container
+        let tableSnapshot = view.snapshotView(afterScreenUpdates: true)!
+        let rectMask = CAShapeLayer()
+        tableSnapshot.layer.mask = rectMask
+        print(container.frame)
+        let rectPath = CGPath(rect: CGRect(x: 0, y: container.frame.origin.y+33, width: tableSnapshot.frame.width, height: container.frame.height), transform: nil)
+        rectMask.path = rectPath
+        views["tableView"] = tableSnapshot
+        
+        guard let c = currentViewController as? CustomTransitionOriginator else {
+            print("OneOneViewController guard return")
+            return views
+        }
+        views.merge(c.fromAnimatedSubviews, uniquingKeysWith: { (first, _) in first })
+        print("OneOneViewController views merged")
         return views
     }
     
     var toAnimatedSubviews: [String : UIView] {
+        print("OneOneViewController toAnimatedSubviews")
         var views = [String : UIView]()
-        views["header"] = header
-        views["container"] = container
+//        views["header"] = header
+        let tableSnapshot = view.snapshotView(afterScreenUpdates: true)!
+        let rectMask = CAShapeLayer()
+        tableSnapshot.layer.mask = rectMask
+        print(container.frame)
+        let rectPath = CGPath(rect: CGRect(x: 0, y: container.frame.origin.y+33, width: tableSnapshot.frame.width, height: container.frame.height), transform: nil)
+        rectMask.path = rectPath
+        views["tableView"] = tableSnapshot
+        
+        guard let c = currentViewController as? CustomTransitionDestination else {
+            print("OneOneViewController guard return")
+            return views
+        }
+        views.merge(c.toAnimatedSubviews, uniquingKeysWith: { (first, _) in first })
+        print("OneOneViewController views merged")
         return views
     }
 }
