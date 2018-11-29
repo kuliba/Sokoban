@@ -132,6 +132,7 @@
 		89C8DF0E2191ADF200D92B0A /* DepositsDepositsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C8DF0D2191ADF200D92B0A /* DepositsDepositsViewController.swift */; };
 		89C8DF122191AFA700D92B0A /* DepositsDepositCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C8DF102191AFA600D92B0A /* DepositsDepositCell.swift */; };
 		89C8DF132191AFA700D92B0A /* DepositsDepositCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89C8DF112191AFA700D92B0A /* DepositsDepositCell.xib */; };
+		A528EF4021B00C9300D189DD /* MonthCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A528EF3F21B00C9300D189DD /* MonthCollectionViewCell.swift */; };
 		A55B7B5721A5866F00A8A7FE /* UIImage+GIF.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55B7B5621A5866F00A8A7FE /* UIImage+GIF.swift */; };
 		A55B7B7A21A6B4F400A8A7FE /* feed_current_food.mov in Resources */ = {isa = PBXBuildFile; fileRef = A55B7B7921A6B4F400A8A7FE /* feed_current_food.mov */; };
 		A55B7B7C21A6B4FB00A8A7FE /* 1.mov in Resources */ = {isa = PBXBuildFile; fileRef = A55B7B7B21A6B4FB00A8A7FE /* 1.mov */; };
@@ -287,6 +288,7 @@
 		89C8DF0D2191ADF200D92B0A /* DepositsDepositsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsDepositsViewController.swift; sourceTree = "<group>"; };
 		89C8DF102191AFA600D92B0A /* DepositsDepositCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsDepositCell.swift; sourceTree = "<group>"; };
 		89C8DF112191AFA700D92B0A /* DepositsDepositCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DepositsDepositCell.xib; sourceTree = "<group>"; };
+		A528EF3F21B00C9300D189DD /* MonthCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthCollectionViewCell.swift; sourceTree = "<group>"; };
 		A55B7B5621A5866F00A8A7FE /* UIImage+GIF.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+GIF.swift"; sourceTree = "<group>"; };
 		A55B7B7921A6B4F400A8A7FE /* feed_current_food.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = feed_current_food.mov; sourceTree = "<group>"; };
 		A55B7B7B21A6B4FB00A8A7FE /* 1.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = 1.mov; sourceTree = "<group>"; };
@@ -488,8 +490,7 @@
 			isa = PBXGroup;
 			children = (
 				09C7C30C21747293000EE472 /* DepositsViewController.swift */,
-				895768CE2192E768005754D5 /* DepositsStatsViewController.swift */,
-				895768D02192E9F0005754D5 /* DepositsStatsDetailsViewController.swift */,
+				A528EF3D21B00C0500D189DD /* Stats */,
 				095D158A21789BB700F5266C /* Cards */,
 				89C8DF0D2191ADF200D92B0A /* DepositsDepositsViewController.swift */,
 				A56B59F921AD623B00CE4798 /* DepositsDepositsSegueAnimator.swift */,
@@ -639,6 +640,7 @@
 		89C8DF0F2191AE7A00D92B0A /* Deposits */ = {
 			isa = PBXGroup;
 			children = (
+				A528EF3E21B00C5C00D189DD /* Stats */,
 				89C8DF102191AFA600D92B0A /* DepositsDepositCell.swift */,
 				89C8DF112191AFA700D92B0A /* DepositsDepositCell.xib */,
 				09C7C31021749151000EE472 /* DepositsObligationsCell.swift */,
@@ -662,6 +664,23 @@
 				89C8DF0B21918DDC00D92B0A /* OptionPickerViewController.swift */,
 			);
 			path = Payments;
+			sourceTree = "<group>";
+		};
+		A528EF3D21B00C0500D189DD /* Stats */ = {
+			isa = PBXGroup;
+			children = (
+				895768CE2192E768005754D5 /* DepositsStatsViewController.swift */,
+				895768D02192E9F0005754D5 /* DepositsStatsDetailsViewController.swift */,
+			);
+			path = Stats;
+			sourceTree = "<group>";
+		};
+		A528EF3E21B00C5C00D189DD /* Stats */ = {
+			isa = PBXGroup;
+			children = (
+				A528EF3F21B00C9300D189DD /* MonthCollectionViewCell.swift */,
+			);
+			path = Stats;
 			sourceTree = "<group>";
 		};
 		A55B7B7821A6B4A200A8A7FE /* animation */ = {
@@ -884,6 +903,7 @@
 				0939B5FB21774EA70029F03D /* DoubleRoundedEdgeView.swift in Sources */,
 				A55B7B8621A7E86200A8A7FE /* DepositsHistoryDetailsSegueAnimator.swift in Sources */,
 				094FFC0D218837580069DDCB /* RegistrationViewController.swift in Sources */,
+				A528EF4021B00C9300D189DD /* MonthCollectionViewCell.swift in Sources */,
 				09D3C03D215CD03E00998F57 /* SearchCell.swift in Sources */,
 				096B4F562186F03A00C69E52 /* DepositsCardsDetailsAboutViewController.swift in Sources */,
 				093B862A21620806008A5222 /* ServicesViewController.swift in Sources */,

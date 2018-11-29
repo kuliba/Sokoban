@@ -23,7 +23,7 @@ class DepositsDepositsSegueAnimator: NSObject, UIViewControllerAnimatedTransitio
     // MARK: методы протокола UIViewControllerAnimatedTransitioning
     
     open func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.6
+        return 0.4
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
