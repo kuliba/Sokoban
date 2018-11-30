@@ -496,7 +496,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="SwH-EG-Ylj">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" alwaysBounceVertical="YES" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fjj-Nf-2c5" customClass="BubblesStatsScrollView" customModule="ForaBank" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="-1" width="375" height="779"/>
+                            </scrollView>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="SwH-EG-Ylj">
                                 <rect key="frame" x="0.0" y="718" width="375" height="60"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -515,11 +518,16 @@
                         <constraints>
                             <constraint firstItem="SwH-EG-Ylj" firstAttribute="leading" secondItem="KTG-vc-KNJ" secondAttribute="leading" id="F4n-TZ-U44"/>
                             <constraint firstItem="KTG-vc-KNJ" firstAttribute="bottom" secondItem="SwH-EG-Ylj" secondAttribute="bottom" id="cOJ-ib-e5l"/>
+                            <constraint firstItem="Fjj-Nf-2c5" firstAttribute="top" secondItem="KTG-vc-KNJ" secondAttribute="top" constant="-45" id="fkJ-Je-Bgk"/>
+                            <constraint firstItem="Fjj-Nf-2c5" firstAttribute="leading" secondItem="KTG-vc-KNJ" secondAttribute="leading" id="p3z-xT-azi"/>
                             <constraint firstItem="KTG-vc-KNJ" firstAttribute="trailing" secondItem="SwH-EG-Ylj" secondAttribute="trailing" id="qPc-SX-hh4"/>
+                            <constraint firstItem="KTG-vc-KNJ" firstAttribute="trailing" secondItem="Fjj-Nf-2c5" secondAttribute="trailing" id="rBL-PZ-Ejq"/>
+                            <constraint firstItem="KTG-vc-KNJ" firstAttribute="bottom" secondItem="Fjj-Nf-2c5" secondAttribute="bottom" id="uAg-vf-zwb"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="KTG-vc-KNJ"/>
                     </view>
                     <connections>
+                        <outlet property="bubblesStatsScrollView" destination="Fjj-Nf-2c5" id="fig-E8-mv3"/>
                         <outlet property="monthCollectionView" destination="SwH-EG-Ylj" id="6hA-fd-JCc"/>
                     </connections>
                 </viewController>

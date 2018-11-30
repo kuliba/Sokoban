@@ -15,6 +15,7 @@ class MonthCollectionViewCell: UICollectionViewCell {
         l.textColor = .lightGray
         l.font = UIFont.systemFont(ofSize: 14)
         l.textAlignment = .center
+        l.backgroundColor = .clear
         l.translatesAutoresizingMaskIntoConstraints = false
         return l
     }()
@@ -28,7 +29,8 @@ class MonthCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+        contentView.backgroundColor = .clear
+        backgroundColor = .clear
         contentView.addSubview(monthLabel)
         
         contentView.addConstraints(

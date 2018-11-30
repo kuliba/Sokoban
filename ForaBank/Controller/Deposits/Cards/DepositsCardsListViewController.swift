@@ -145,7 +145,7 @@ class DepositsCardsListViewController: UIViewController {
                                                              toItem: contentView,
                                                              attribute: .bottom,
                                                              multiplier: 1,
-                                                             constant: 20)
+                                                             constant: -20)
         contentView.addConstraint(addCardButtonBottomConstraint!)
         contentView.addConstraint(NSLayoutConstraint(item: addCardButton,
                                                      attribute: .height,
@@ -307,7 +307,7 @@ class DepositsCardsListViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        scrollView.contentSize = CGSize(width: contentView.bounds.width, height: contentView.bounds.height)
+        scrollView.contentSize = CGSize(width: contentView.frame.width, height: contentView.frame.height)
         lastCardViewCenter = cardViews.last!.center
 
     }
