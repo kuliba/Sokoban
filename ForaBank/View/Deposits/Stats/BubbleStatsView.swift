@@ -19,10 +19,8 @@ class BubbleStatsView: UIView {
         l.textColor = .white
         l.font = UIFont.systemFont(ofSize: 12)
         l.adjustsFontSizeToFitWidth = true
-        l.adjustsFontForContentSizeCategory = true
-        l.minimumScaleFactor = 0.5
-//        l.clipsToBounds = false
-//        l.translatesAutoresizingMaskIntoConstraints = false
+        l.minimumScaleFactor = 0.1
+        l.translatesAutoresizingMaskIntoConstraints = false
         return l
     }()
     let secondTextLabel: UILabel = {
@@ -33,14 +31,12 @@ class BubbleStatsView: UIView {
         l.textAlignment = .center
         l.textColor = .white
         l.adjustsFontSizeToFitWidth = true
-        l.adjustsFontForContentSizeCategory = true
-        l.font = UIFont.systemFont(ofSize: 18)
-        l.minimumScaleFactor = 0.2
-        //        l.translatesAutoresizingMaskIntoConstraints = false
-//        l.clipsToBounds = false
+        l.minimumScaleFactor = 0.1
+        l.translatesAutoresizingMaskIntoConstraints = false
         return l
     }()
-    
+    var scale: CGFloat = 1
+    var needLayout: Bool = true
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -55,20 +51,69 @@ class BubbleStatsView: UIView {
     private func commonInit() {
         addSubview(textLabel)
         addSubview(secondTextLabel)
-        self.contentMode = .center
+        self.addConstraint(NSLayoutConstraint(item: textLabel,
+                                              attribute: .top,
+                                              relatedBy: .equal,
+                                              toItem: self,
+                                              attribute: .centerY,
+                                              multiplier: 0.5,
+                                              constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: textLabel,
+                                              attribute: .centerX,
+                                              relatedBy: .equal,
+                                              toItem: self,
+                                              attribute: .centerX,
+                                              multiplier: 1,
+                                              constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: textLabel,
+                                              attribute: .width,
+                                              relatedBy: .lessThanOrEqual,
+                                              toItem: self,
+                                              attribute: .width,
+                                              multiplier: 0.88,
+                                              constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: textLabel,
+                                              attribute: .height,
+                                              relatedBy: .equal,
+                                              toItem: self,
+                                              attribute: .height,
+                                              multiplier: 0.29,
+                                              constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: secondTextLabel,
+                                              attribute: .top,
+                                              relatedBy: .equal,
+                                              toItem: self,
+                                              attribute: .centerY,
+                                              multiplier: 1.1,
+                                              constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: secondTextLabel,
+                                              attribute: .centerX,
+                                              relatedBy: .equal,
+                                              toItem: self,
+                                              attribute: .centerX,
+                                              multiplier: 1,
+                                              constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: secondTextLabel,
+                                              attribute: .width,
+                                              relatedBy: .lessThanOrEqual,
+                                              toItem: self,
+                                              attribute: .width,
+                                              multiplier: 0.88,
+                                              constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: secondTextLabel,
+                                              attribute: .height,
+                                              relatedBy: .lessThanOrEqual,
+                                              toItem: self,
+                                              attribute: .height,
+                                              multiplier: 0.2,
+                                              constant: 0))
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-//        print(textLabel.text)
-        textLabel.frame = CGRect(x: frame.width*0.06,
-                                 y: frame.height*0.25,
-                                 width: frame.width*0.88,
-                                 height: frame.height*0.3)
-        secondTextLabel.frame = CGRect(x: frame.width*0.07,
-                                       y: frame.height*0.55,
-                                       width: frame.width*0.86,
-                                       height: frame.height*0.2)
+        layer.anchorPoint = CGPoint(x: 0, y: 0)
+        let t = CGAffineTransform(scaleX: scale, y: scale)
+        transform = t
     }
     
     /*

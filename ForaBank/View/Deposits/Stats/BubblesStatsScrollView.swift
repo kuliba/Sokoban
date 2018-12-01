@@ -22,22 +22,49 @@ class BubblesStatsScrollView: UIScrollView {
     }()
     var bubblesDelegate: BubblesStatsDelegate? = nil {
         didSet {
+            print("bubblesDelegate didSet \(String(describing: bubblesDelegate))")
+            count = bubblesDelegate!.numberOfBubbleViews()
+            resizeScales = Array.init(repeating: 1, count: count)
             addBubbleViews()
+            calculateFrames()
+            
+            for i in 0..<count {
+                bubbleViews[i].frame = viewFrames[i]
+                bubbleViews[i].layer.cornerRadius = bubblesDelegate!.radiusOfBubbleView(atIndex: i) //* resizeScales[i]
+            }
+            
+            xOffset = -minX //frame.width/2 > -minX ? frame.width/2 : -minX
+            yOffset = -minY //frame.height/2 > -minY ? frame.height/2 : -minY
+            let contentSize = CGSize(width: maxX+xOffset+10, height: maxY+yOffset)
+            for i in 0..<count {
+                bubbleViews[i].frame.origin.x = viewFrames[i].origin.x + xOffset+10
+                bubbleViews[i].frame.origin.y = viewFrames[i].origin.y + yOffset
+            }
+//            centralBubbleCenter = bubbleViews[0].center
+            
+            contentView.frame = CGRect(origin: CGPoint.zero, size: contentSize)
+            self.contentSize = contentSize
+ 
+            isSized = true
         }
     }
     var bubbleMargin: Double = 3
     var xOffset: CGFloat = 0
     var yOffset: CGFloat = 0
     var bubbleViews: [BubbleStatsView] = [BubbleStatsView]()
+    var baseOffset: CGPoint = CGPoint.zero
 
     private var count = 0
-    private var bubbleRadiuses: [Double] = [Double]()
+//    private var bubbleRadiuses: [Double] = [Double]()
     private var minX: CGFloat = 0
     private var minY: CGFloat = 0
     private var maxX: CGFloat = 0
     private var maxY: CGFloat = 0
     private var viewFrames = [CGRect]()
     private var isSized = false
+//    private var centralBubbleCenter: CGPoint = CGPoint.zero
+    private var distances = [Double]()
+    private var resizeScales = [CGFloat]()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -52,29 +79,109 @@ class BubblesStatsScrollView: UIScrollView {
     private func commonInit() {
         print("commonInit")
         addSubview(contentView)
-        decelerationRate = .normal
     }
     
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-//        print("layoutSubviews \(frame)")
-        if !isSized {
-            xOffset = frame.width/2 > -minX ? frame.width/2 : -minX
-            yOffset = frame.height/2 > -minY ? frame.height/2 : -minY
-            let contentSize = CGSize(width: maxX+xOffset+10, height: maxY+yOffset)
-            for i in 0..<count {
-                bubbleViews[i].frame.origin.x = viewFrames[i].origin.x + xOffset+10
-                bubbleViews[i].frame.origin.y = viewFrames[i].origin.y + yOffset
+    func updateBubbles() {
+//        resizeScales = Array.init(repeating: 1, count: count)
+        calculateFrames()
+        
+        self.isUserInteractionEnabled = false
+        UIView.animate(withDuration: 0.3, delay: 0, options: .beginFromCurrentState, animations: {
+            
+            for i in 0..<self.count {
+                
+                self.bubblesDelegate?.setup(bubbleView: self.bubbleViews[i], atIndex: i)
+                self.bubbleViews[i].frame = self.viewFrames[i]
+//                print("i \(i)")
+//                print("scale \(self.resizeScales[i])")
+//                print("last corner \(self.bubbleViews[i].layer.cornerRadius)")
+//                print("last rad \(self.bubbleViews[i].frame.width/2)")
+//                print("last rad/scale \(self.bubbleViews[i].frame.width/(2*self.resizeScales[i]))")
+//                self.bubbleViews[i].layer.cornerRadius = self.bubblesDelegate!.radiusOfBubbleView(atIndex: i) //* self.resizeScales[i]
+//                print("new corner \(self.bubbleViews[i].layer.cornerRadius)")
+//                print("new rad \(self.bubblesDelegate!.radiusOfBubbleView(atIndex: i))")
+//                print("new rad/scale \(self.bubblesDelegate!.radiusOfBubbleView(atIndex: i) / self.resizeScales[i])")
             }
-            
-            
-            contentView.frame = CGRect(origin: CGPoint.zero, size: contentSize)
+//
+            self.xOffset = -self.minX //frame.width/2 > -minX ? frame.width/2 : -minX
+            self.yOffset = -self.minY //frame.height/2 > -minY ? frame.height/2 : -minY
+            let contentSize = CGSize(width: self.maxX+self.xOffset+10, height: self.maxY+self.yOffset)
+            for i in 0..<self.count {
+                self.bubbleViews[i].frame.origin.x = self.viewFrames[i].origin.x + self.xOffset+10
+                self.bubbleViews[i].frame.origin.y = self.viewFrames[i].origin.y + self.yOffset
+//                self.bubbleViews[i].layoutIfNeeded()
+            }
+//
+            self.contentView.frame = CGRect(origin: CGPoint.zero, size: contentSize)
             self.contentSize = contentSize
-            isSized = true
+            print(self.contentInset.top)
+            print(contentSize.height)
+            print(self.bounds.height)
+            print( (-self.contentSize.height + self.bounds.height - 60)/2 )
+
+            self.contentInset = UIEdgeInsets(top: (-self.contentSize.height + self.bounds.height - 60)/2, left: 0, bottom: 0, right: 0)
+            self.layoutIfNeeded()
+
+        }, completion: {(_) in
+            self.isUserInteractionEnabled = true
+        })
+        for i in 0..<self.count {
+            let animation = CABasicAnimation(keyPath:"cornerRadius")
+//            animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.default)
+            animation.fromValue = self.bubbleViews[i].layer.cornerRadius
+            animation.toValue = self.bubblesDelegate!.radiusOfBubbleView(atIndex: i)
+            animation.duration = 0.3
+            bubbleViews[i].layer.add(animation, forKey: "cornerRadius")
+            bubbleViews[i].layer.cornerRadius = self.bubblesDelegate!.radiusOfBubbleView(atIndex: i)
         }
         
-//        contentOffset = CGPoint(x: -(frame.width-contentSize.width)/2, y: -(frame.height-contentSize.height)/2)
+    }
+    
+    override func layoutSubviews() {
+//        print("layoutSubviews \(frame)")
+        if isSized {
+
+            let offset = CGPoint(x: -contentOffset.x+baseOffset.x,
+                                 y: -contentOffset.y+baseOffset.y )
+            let centerOffset = CGPoint(x: -offset.x+bubbleViews[0].center.x,
+                                       y: -offset.y+bubbleViews[0].center.y )
+
+            let maxDiff: Float = 50
+            for i in 0..<count {
+                let dx = centerOffset.x - bubbleViews[i].center.x
+                let dy = centerOffset.y - bubbleViews[i].center.y //+ contentInset.top
+                let distanceToCenter = sqrtf(Float(dx*dx + dy*dy))
+                
+                var diff = distanceToCenter - Float(distances[i])
+//                print("diff \(diff)")
+                diff /= 5
+                var scale: CGFloat = 0
+                if Float(diff)>maxDiff {
+                    scale = 0.5
+                } else if Float(diff) < -maxDiff {
+                    scale = 1.5
+                } else {
+                    scale = CGFloat(1 - (Float(diff)/(1.8*maxDiff)))
+                }
+//                print("scale \(scale)")
+                resizeScales[i] = scale
+//                bubbleViews[i].transform = CGAffineTransform(scaleX: scale, y: scale)
+            }
+            calculateFrames()
+            
+            xOffset = -minX //frame.width/2 > -minX ? frame.width/2 : -minX
+            yOffset = -minY //frame.height/2 > -minY ? frame.height/2 : -minY
+            for i in 0..<count {
+
+                bubbleViews[i].frame.origin.x = viewFrames[i].origin.x + xOffset+10
+                bubbleViews[i].frame.origin.y = viewFrames[i].origin.y + yOffset
+
+                bubbleViews[i].scale = resizeScales[i]
+                
+            }
+        }
+        super.layoutSubviews()
+
     }
     
     /*
@@ -90,78 +197,67 @@ class BubblesStatsScrollView: UIScrollView {
 //MARK: - set up private methods
 private extension BubblesStatsScrollView {
     func addBubbleViews() {
-        print("addBubbleViews")
-        count = bubblesDelegate!.numberOfBubbleViews()
-//        let centralView = UIView()
-        let centralViewRadius = Double(bubblesDelegate!.radiusOfBubbleView(atIndex: 0))
-//        centralView.frame = CGRect(x: 0, y: 0, width: centralViewRadius*2, height: centralViewRadius*2)
-////        print(centralView.frame)
-//        centralView.backgroundColor = UIColor(red: 0.12, green: 0.57, blue: 0.45, alpha: 1)
-//        centralView.layer.cornerRadius = centralViewRadius
-//        contentView.addSubview(centralView)
+        for i in 0..<count {
+            let view = BubbleStatsView()
+            view.backgroundColor = UIColor(red: 0.12, green: 0.57, blue: 0.45, alpha: 1)
+//            view.layer.cornerRadius = bubblesDelegate!.radiusOfBubbleView(atIndex: i)
+            contentView.addSubview(view)
+            bubbleViews.append(view)
+            bubblesDelegate?.setup(bubbleView: view, atIndex: i)
+        }
+    }
+    
+    func calculateFrames() {
+//        print("calculateFrames")
+        let centralViewRadius = Double(bubblesDelegate!.radiusOfBubbleView(atIndex: 0) * resizeScales[0])
         
         var viewAlphas = [Double]()
         var sumOfAlphas: Double = 0
-        var radiuses = [Double]()
+        distances = [0]
         for i in 1..<count {
-            let viewRadius = Double(bubblesDelegate!.radiusOfBubbleView(atIndex: i))
+            let viewRadius = Double(bubblesDelegate!.radiusOfBubbleView(atIndex: i) * resizeScales[i])
             //максимальный требуемый угол для размещения соседнего баббла обозначим maxAlpha
             //чтобы его посчитать воспользуемся формулой 2 * asin( (viewRadius + bubbleMargin) / (centralViewRadius + viewRadius + 2*bubbleMargin) )
-//            print("viewRadius \(viewRadius)")
-            radiuses.append(centralViewRadius + viewRadius + 2*bubbleMargin)
-//            print("beetween centers \(radiuses[i-1])")
-            let maxAlpha = 2 * asin( (viewRadius + bubbleMargin) / (radiuses[i-1] ) )
-//            print("alpha_i \(maxAlpha)")
+            //            print("viewRadius \(viewRadius)")
+            distances.append(centralViewRadius + viewRadius + 2*bubbleMargin)
+            //            print("beetween centers \(radiuses[i-1])")
+            let maxAlpha = 2 * asin( (viewRadius + bubbleMargin) / (distances[i] ) )
+            //            print("alpha_i \(maxAlpha)")
             viewAlphas.append(maxAlpha)
             sumOfAlphas += maxAlpha
         }
         //теперь нужно пропорционально увеличить или уменьшить альфы чтобы их сумма была = 360 * 180 / Double.pi
         //коэффициент умножения назовем lambda
-//        print(360 * Double.pi / 180)
+        //        print(360 * Double.pi / 180)
         let lambda = 360 * Double.pi / (180  * sumOfAlphas ) // для равномерного распределения
-//        let lambda = ((360 * Double.pi) / 180 - viewAlphas[0] - viewAlphas[1] - viewAlphas[4]) / (viewAlphas[2] + viewAlphas[3])
-//        for a in viewAlphas {
-//            print(lambda * a)
-//        }
-//        print(sumOfAlphas * lambda)
-        
+        //        let lambda = ((360 * Double.pi) / 180 - viewAlphas[0] - viewAlphas[1] - viewAlphas[4]) / (viewAlphas[2] + viewAlphas[3])
+
         var centeredPositions = [CGPoint]()
         centeredPositions.append(CGPoint(x: 0, y: 0))
         var angleOffset: Double = 0
         
-        viewFrames.append(CGRect(x: -centralViewRadius,
-                                 y: -centralViewRadius,
-                                 width: centralViewRadius*2,
-                                 height: centralViewRadius*2))
+        viewFrames = [CGRect(x: -centralViewRadius,
+                             y: -centralViewRadius,
+                             width: centralViewRadius*2,
+                             height: centralViewRadius*2)]
         
         
-//        print(centralViewRadius)
         for i in 1..<count {
-            let viewRadius = Double(bubblesDelegate!.radiusOfBubbleView(atIndex: i))
-//            viewAlphas[i-1] *= i==2||i==3 ? lambda : 1
+            let viewRadius = Double(bubblesDelegate!.radiusOfBubbleView(atIndex: i) * resizeScales[i])
             viewAlphas[i-1] *= lambda
             
             let newR = (viewRadius + bubbleMargin) / sin(viewAlphas[i-1] / 2)
-//            print(radiuses[i-1])
-//            print(newR)
-            radiuses[i-1] = newR < radiuses[i-1] ? radiuses[i-1] : newR
-//            print(radiuses[i-1])
+            distances[i] = newR < distances[i] ? distances[i] : newR
             angleOffset += i==1 ? 0 : viewAlphas[i-1] / 2
-//            print("angleOffset \(angleOffset * 180 / Double.pi)")
             let positionAngle: Double = i==1 ? 0 : viewAlphas[i-1] / 2 + angleOffset
-//            print("positionAngle \(positionAngle * 180 / Double.pi)")
-            let cx = cos(positionAngle) * radiuses[i-1]
-//            print("cx \(cx)")
-            let cy = sin(positionAngle) * radiuses[i-1]
-//            print("cy \(cy)")
+            let cx = cos(positionAngle) * distances[i]
+            let cy = sin(positionAngle) * distances[i]
             angleOffset += i==1 ? 0 : viewAlphas[i-1] / 2
             
-//            print(viewRadius)
             let viewFrame = CGRect(x: cx-viewRadius,
                                    y: -cy-viewRadius,
                                    width: viewRadius*2,
                                    height: viewRadius*2)
-//            print(viewFrame)
             viewFrames.append(viewFrame)
             if i==1 {
                 minX = viewFrames[1].origin.x
@@ -177,32 +273,7 @@ private extension BubblesStatsScrollView {
                     maxY : viewFrames[i].origin.y + viewFrames[i].height
             }
         }
-//        print(viewFrames)
-//        print(minX)
-//        print(minY)
-//        print(maxX)
-//        print(maxY)
-//        print("frame \(frame)")
-//        let xOffset = frame.width/2 > -minX ? frame.width/2 : -minX
-//        let yOffset = frame.height/2 > -minY ? frame.height/2 : -minY
-//        let contentSize = CGSize(width: maxX+xOffset, height: maxY+yOffset)
-//        print(contentSize)
-        for i in 0..<count {
-//            viewFrames[i].origin.x += xOffset
-//            viewFrames[i].origin.y += yOffset //+ viewFrames[i].height
-            let view = BubbleStatsView()
-            view.backgroundColor = UIColor(red: 0.12, green: 0.57, blue: 0.45, alpha: 1)
-            view.layer.cornerRadius = bubblesDelegate!.radiusOfBubbleView(atIndex: i)
-            view.frame = viewFrames[i]
-            contentView.addSubview(view)
-            bubbleViews.append(view)
-            bubblesDelegate?.setup(bubbleView: view, atIndex: i)
-        }
-//        print(viewFrames)
-//
-//
-//        contentView.frame = CGRect(origin: CGPoint.zero, size: contentSize)
-//        self.contentSize = contentSize
+        
     }
-    
 }
+
