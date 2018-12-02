@@ -148,6 +148,8 @@
 		A55B7B8E21AA8EB600A8A7FE /* ChatMessagesIncomingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55B7B8D21AA8EB600A8A7FE /* ChatMessagesIncomingTableViewCell.swift */; };
 		A55B7B9021AAAAB300A8A7FE /* ChatMessagesTransferRequestTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55B7B8F21AAAAB300A8A7FE /* ChatMessagesTransferRequestTableViewCell.swift */; };
 		A56B59FA21AD623B00CE4798 /* DepositsDepositsSegueAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56B59F921AD623B00CE4798 /* DepositsDepositsSegueAnimator.swift */; };
+		A5B473C121B3BBCD00F2E41F /* RemittancePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B473C021B3BBCD00F2E41F /* RemittancePickerViewController.swift */; };
+		A5B473C421B3C0D200F2E41F /* RemittanceOptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B473C321B3C0D200F2E41F /* RemittanceOptionView.swift */; };
 		A5C5E6D421A2B3DC001D6250 /* DepositsCardsDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6D321A2B3DC001D6250 /* DepositsCardsDetailsViewController.swift */; };
 		A5C5E6D621A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6D521A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift */; };
 		A5C5E6D821A2B403001D6250 /* DepositsCardsListOnholdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6D721A2B403001D6250 /* DepositsCardsListOnholdViewController.swift */; };
@@ -306,6 +308,8 @@
 		A55B7B8D21AA8EB600A8A7FE /* ChatMessagesIncomingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesIncomingTableViewCell.swift; sourceTree = "<group>"; };
 		A55B7B8F21AAAAB300A8A7FE /* ChatMessagesTransferRequestTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesTransferRequestTableViewCell.swift; sourceTree = "<group>"; };
 		A56B59F921AD623B00CE4798 /* DepositsDepositsSegueAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsDepositsSegueAnimator.swift; sourceTree = "<group>"; };
+		A5B473C021B3BBCD00F2E41F /* RemittancePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemittancePickerViewController.swift; sourceTree = "<group>"; };
+		A5B473C321B3C0D200F2E41F /* RemittanceOptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemittanceOptionView.swift; sourceTree = "<group>"; };
 		A5C5E6D321A2B3DC001D6250 /* DepositsCardsDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsCardsDetailsViewController.swift; sourceTree = "<group>"; };
 		A5C5E6D521A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsCardsListOnholdBlockViewController.swift; sourceTree = "<group>"; };
 		A5C5E6D721A2B403001D6250 /* DepositsCardsListOnholdViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsCardsListOnholdViewController.swift; sourceTree = "<group>"; };
@@ -533,6 +537,7 @@
 		09E0F133215A618E0042FB6A /* View */ = {
 			isa = PBXGroup;
 			children = (
+				A5B473C221B3C09800F2E41F /* Payments */,
 				89C8DF0F2191AE7A00D92B0A /* Deposits */,
 				09203D92216E136300902BD2 /* Feed */,
 				A55B7B8921AA70A600A8A7FE /* Profile */,
@@ -666,6 +671,7 @@
 				0979D94F21903DF700034BC0 /* PaymentsDetailsViewController.swift */,
 				0943729121907198003A66CC /* PaymentsDetailsSuccessViewController.swift */,
 				89C8DF0B21918DDC00D92B0A /* OptionPickerViewController.swift */,
+				A5B473C021B3BBCD00F2E41F /* RemittancePickerViewController.swift */,
 			);
 			path = Payments;
 			sourceTree = "<group>";
@@ -718,6 +724,14 @@
 				A55B7B8F21AAAAB300A8A7FE /* ChatMessagesTransferRequestTableViewCell.swift */,
 			);
 			path = Chat;
+			sourceTree = "<group>";
+		};
+		A5B473C221B3C09800F2E41F /* Payments */ = {
+			isa = PBXGroup;
+			children = (
+				A5B473C321B3C0D200F2E41F /* RemittanceOptionView.swift */,
+			);
+			path = Payments;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -926,6 +940,7 @@
 				093B863121620EE8008A5222 /* ServicesCell.swift in Sources */,
 				0979D95021903DF700034BC0 /* PaymentsDetailsViewController.swift in Sources */,
 				093B8634216224C3008A5222 /* ServicesHeader.swift in Sources */,
+				A5B473C121B3BBCD00F2E41F /* RemittancePickerViewController.swift in Sources */,
 				09045056216B51B400F3B295 /* FeedOffersViewController.swift in Sources */,
 				09E0F130215A5B9D0042FB6A /* TabBarController.swift in Sources */,
 				895768D12192E9F0005754D5 /* DepositsStatsDetailsViewController.swift in Sources */,
@@ -951,6 +966,7 @@
 				0943729221907198003A66CC /* PaymentsDetailsSuccessViewController.swift in Sources */,
 				09C7C3162174A362000EE472 /* DepositsSearchCell.swift in Sources */,
 				A55B7B8821AA698900A8A7FE /* ChatMessage.swift in Sources */,
+				A5B473C421B3C0D200F2E41F /* RemittanceOptionView.swift in Sources */,
 				09F0E5CD2179DC3B0016BB6E /* CardView.swift in Sources */,
 				0930F16C215B704A00CFB593 /* CircularImageView.swift in Sources */,
 				A5C5E6E821A2B49A001D6250 /* OptionPickerButton.swift in Sources */,

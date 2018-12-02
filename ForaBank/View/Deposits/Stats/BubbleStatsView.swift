@@ -114,6 +114,7 @@ class BubbleStatsView: UIView {
         layer.anchorPoint = CGPoint(x: 0, y: 0)
         let t = CGAffineTransform(scaleX: scale, y: scale)
         transform = t
+        layer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
     }
     
     /*

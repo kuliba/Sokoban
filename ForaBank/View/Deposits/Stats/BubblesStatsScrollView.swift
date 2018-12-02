@@ -22,7 +22,7 @@ class BubblesStatsScrollView: UIScrollView {
     }()
     var bubblesDelegate: BubblesStatsDelegate? = nil {
         didSet {
-            print("bubblesDelegate didSet \(String(describing: bubblesDelegate))")
+//            print("bubblesDelegate didSet \(String(describing: bubblesDelegate))")
             count = bubblesDelegate!.numberOfBubbleViews()
             resizeScales = Array.init(repeating: 1, count: count)
             addBubbleViews()
@@ -77,12 +77,20 @@ class BubblesStatsScrollView: UIScrollView {
     }
     
     private func commonInit() {
-        print("commonInit")
+//        print("commonInit")
         addSubview(contentView)
     }
     
     func updateBubbles() {
 //        resizeScales = Array.init(repeating: 1, count: count)
+//        isSized = false
+//        print("updateBubbles")
+//        print("center.y \(self.bubbleViews[0].center.y)")
+//        print("content size \(self.contentSize)")
+//        print("scroll h/2 \(self.frame.height/2)")
+//        print("inset \(self.frame.height/2 - 30 - self.bubbleViews[0].center.y)")
+//        print("offset \(self.contentOffset)")
+
         calculateFrames()
         
         self.isUserInteractionEnabled = false
@@ -92,6 +100,7 @@ class BubblesStatsScrollView: UIScrollView {
                 
                 self.bubblesDelegate?.setup(bubbleView: self.bubbleViews[i], atIndex: i)
                 self.bubbleViews[i].frame = self.viewFrames[i]
+//                self.bubbleViews[i].layoutIfNeeded()
 //                print("i \(i)")
 //                print("scale \(self.resizeScales[i])")
 //                print("last corner \(self.bubbleViews[i].layer.cornerRadius)")
@@ -114,16 +123,31 @@ class BubblesStatsScrollView: UIScrollView {
 //
             self.contentView.frame = CGRect(origin: CGPoint.zero, size: contentSize)
             self.contentSize = contentSize
-            print(self.contentInset.top)
-            print(contentSize.height)
-            print(self.bounds.height)
-            print( (-self.contentSize.height + self.bounds.height - 60)/2 )
+//            print("animate")
+//            print("center.y \(self.bubbleViews[0].center.y)")
+//            print("content size \(self.contentSize)")
+//            print("scroll h/2 \(self.frame.height/2)")
+//            print("inset \(self.frame.height/2 - 30 - self.bubbleViews[0].center.y)")
+//            print("offset \(self.contentOffset)")
 
-            self.contentInset = UIEdgeInsets(top: (-self.contentSize.height + self.bounds.height - 60)/2, left: 0, bottom: 0, right: 0)
+            var left: CGFloat = 0
+            if self.bubbleViews[0].center.x < self.frame.width/2 {
+                left = self.frame.width/2 - self.bubbleViews[0].center.x
+            }
+            self.contentInset = UIEdgeInsets(
+                top: self.frame.height/2 - 30 - self.bubbleViews[0].center.y, left: left, bottom: 0, right: 0)
+            self.baseOffset = CGPoint(
+                x: -self.frame.width/2 + self.bubbleViews[0].center.x,
+                y: -self.contentInset.top)
+//            self.contentOffset = self.baseOffset
+//            self.layoutIfNeeded()
             self.layoutIfNeeded()
+            self.layoutSubviews()
 
         }, completion: {(_) in
             self.isUserInteractionEnabled = true
+//            self.isSized = true
+//            self.layoutSubviews()
         })
         for i in 0..<self.count {
             let animation = CABasicAnimation(keyPath:"cornerRadius")
@@ -171,17 +195,22 @@ class BubblesStatsScrollView: UIScrollView {
             
             xOffset = -minX //frame.width/2 > -minX ? frame.width/2 : -minX
             yOffset = -minY //frame.height/2 > -minY ? frame.height/2 : -minY
+//            print("xOffset \(xOffset)")
+//            print("yOffset \(yOffset)")
             for i in 0..<count {
 
                 bubbleViews[i].frame.origin.x = viewFrames[i].origin.x + xOffset+10
                 bubbleViews[i].frame.origin.y = viewFrames[i].origin.y + yOffset
 
                 bubbleViews[i].scale = resizeScales[i]
-                
+//                print("scaled width \(bubbleViews[i].frame.width * resizeScales[i])")
             }
         }
         super.layoutSubviews()
-
+//        for i in 0..<count {
+//            print("bubbleViews[\(i)].scale \(bubbleViews[i].scale)")
+//        }
+//        print(bubbleViews[0].center.y)
     }
     
     /*

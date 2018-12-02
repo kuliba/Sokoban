@@ -33,12 +33,12 @@ class DepositsStatsViewController: UIViewController {
     ]
     
     private let data_: [String : [CGFloat]] = [
-        "Еда, продукты питания" : [24567.07, 28567.07],
-        "Снято наличными" : [31800.00, 14567.07],
-        "Межбанковские переводы" : [7950.00, 10432.00],
-        "Мобильная связь" : [5650.00, 520.00],
-        "Одежда и обувь" : [14500.00, 2000.00],
-        "Коммунальные услуги" : [9600.00, 7800.0]
+        "Еда, продукты питания" :   [24567.07,  28567.07,   0,      7900],
+        "Снято наличными" :         [31800.00,  14567.07,   5100,   0],
+        "Межбанковские переводы" :  [7950.00,   10432.00,   2100,   20000],
+        "Мобильная связь" :         [5650.00,   520.00,     1050,   0],
+        "Одежда и обувь" :          [14500.00,  2000.00,    5550,   0],
+        "Коммунальные услуги" :     [9600.00,   7800.0,     6100,   0]
     ]
     private var normalizedData_: [String : (CGFloat, CGFloat)] = [String : (CGFloat, CGFloat)]()
     private var bubbleRadiuses = [CGFloat]()
@@ -49,7 +49,7 @@ class DepositsStatsViewController: UIViewController {
         didSet {
             print("selectedMonth didSet \(selectedMonth)")
 
-            normalizeData(atIndex: selectedMonth%2)
+            normalizeData(atIndex: selectedMonth % data_[sortedNames[0]]!.count)
             if selectedMonth > 0 && bubblesStatsScrollView.bubblesDelegate == nil {
                 bubblesStatsScrollView.bubblesDelegate = self
             } else {
@@ -62,7 +62,7 @@ class DepositsStatsViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        bubblesStatsScrollView.contentInset = UIEdgeInsets(top: 30, left: 0, bottom: 0, right: 0)
+//        bubblesStatsScrollView.contentInset = UIEdgeInsets(top: 30, left: 0, bottom: 0, right: 0)
 
         setUpSelectedMonth()
         setUpCollectionView()
@@ -72,11 +72,25 @@ class DepositsStatsViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         monthCollectionView.selectItem(at: IndexPath(row: /*infiniteSize/2+*/selectedMonth, section: 0), animated: false, scrollPosition: .centeredHorizontally)
- 
+        
+        var left: CGFloat = 0
+        if bubblesStatsScrollView.bubbleViews[0].center.x < bubblesStatsScrollView.frame.width/2 {
+            left = bubblesStatsScrollView.frame.width/2 - bubblesStatsScrollView.bubbleViews[0].center.x
+        }
+        bubblesStatsScrollView.contentInset = UIEdgeInsets(
+            top: bubblesStatsScrollView.frame.height/2 - 30 - bubblesStatsScrollView.bubbleViews[0].center.y, left: left, bottom: 0, right: 0)
         bubblesStatsScrollView.contentOffset = CGPoint(
             x: -bubblesStatsScrollView.frame.width/2 + bubblesStatsScrollView.bubbleViews[0].center.x,
             y: -bubblesStatsScrollView.contentInset.top)
         bubblesStatsScrollView.baseOffset = bubblesStatsScrollView.contentOffset
+//        print("viewDidAppear")
+//        print("center.y \(bubblesStatsScrollView.bubbleViews[0].center.y)")
+//        print("center.y \(bubblesStatsScrollView.contentSize)")
+//        print("scroll h/2 \(bubblesStatsScrollView.frame.height/2)")
+//        print("collection h \(monthCollectionView.frame.height)")
+//        print("inset \(bubblesStatsScrollView.frame.height/2 - 30 - bubblesStatsScrollView.bubbleViews[0].center.y)")
+//        print("offset \(bubblesStatsScrollView.contentOffset)")
+
     }
 }
 
@@ -111,6 +125,13 @@ extension DepositsStatsViewController: UICollectionViewDataSource, UICollectionV
         return true
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        print("didSelectItemAt")
+//        print("center.y \(bubblesStatsScrollView.bubbleViews[0].center.y)")
+//        print("center.y \(bubblesStatsScrollView.contentSize)")
+//        print("scroll h/2 \(bubblesStatsScrollView.frame.height/2)")
+//        print("collection h \(monthCollectionView.frame.height)")
+//        print("inset \(bubblesStatsScrollView.frame.height/2 - 30 - bubblesStatsScrollView.bubbleViews[0].center.y)")
+//        print("offset \(bubblesStatsScrollView.contentOffset)")
         selectedMonth = indexPath.row// % months_.count
         collectionView.scrollToItem(at: indexPath, at: UICollectionView.ScrollPosition.centeredHorizontally, animated: true)
     }
@@ -183,8 +204,11 @@ private extension DepositsStatsViewController {
             let maxValue = log(sortedData.last?.value[index] ?? 1)
             for d in sortedData {
                 let a = data_[d.key]!
-                normalizedData_[d.key] = (a[index] ,0.6 * log(d.value[index]) / maxValue + 1)
-                
+                if d.value[index] == 0 {
+                    normalizedData_[d.key] = (a[index], 0)
+                } else {
+                    normalizedData_[d.key] = (a[index] ,0.6 * log(d.value[index]) / maxValue + 1)
+                }
             }
         }
         print("normalizedData_ \(normalizedData_)")
@@ -207,7 +231,7 @@ extension DepositsStatsViewController: BubblesStatsDelegate {
         var sum: NSNumber = 0
         if let a = data_[sortedNames[index]], a.count>0 {
 //            print(selectedMonth%2)
-            sum = NSNumber(value: Float(a[selectedMonth%2]))
+            sum = NSNumber(value: Float(a[selectedMonth % data_[sortedNames[0]]!.count]))
         }
         bubbleView.secondTextLabel.text = formatter.string(from: sum)
         let fontScale = ((normalizedData_[sortedNames[index]]?.1 ?? 1) - 1) / 2 + 1
@@ -221,6 +245,7 @@ extension DepositsStatsViewController: BubblesStatsDelegate {
     }
     
     func radiusOfBubbleView(atIndex index: Int) -> CGFloat {
+//        print("radiusOfBubbleView \(index) \((normalizedData_[sortedNames[index]]?.1 ?? 1) * minRadius)")
         return (normalizedData_[sortedNames[index]]?.1 ?? 1) * minRadius
     }
     
