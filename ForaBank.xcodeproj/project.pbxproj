@@ -150,6 +150,10 @@
 		A56B59FA21AD623B00CE4798 /* DepositsDepositsSegueAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56B59F921AD623B00CE4798 /* DepositsDepositsSegueAnimator.swift */; };
 		A5B473C121B3BBCD00F2E41F /* RemittancePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B473C021B3BBCD00F2E41F /* RemittancePickerViewController.swift */; };
 		A5B473C421B3C0D200F2E41F /* RemittanceOptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B473C321B3C0D200F2E41F /* RemittanceOptionView.swift */; };
+		A5B473C621B52D4500F2E41F /* BubblesDetailedStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B473C521B52D4500F2E41F /* BubblesDetailedStatsView.swift */; };
+		A5B473C821B52E0B00F2E41F /* GroupedBubblesStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B473C721B52E0B00F2E41F /* GroupedBubblesStatsView.swift */; };
+		A5C5C03A21B537AB005D6B8F /* BubblesDetailedStatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5C03921B537AB005D6B8F /* BubblesDetailedStatsViewController.swift */; };
+		A5C5C03C21B66485005D6B8F /* BubbleDetailedStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5C03B21B66485005D6B8F /* BubbleDetailedStatsView.swift */; };
 		A5C5E6D421A2B3DC001D6250 /* DepositsCardsDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6D321A2B3DC001D6250 /* DepositsCardsDetailsViewController.swift */; };
 		A5C5E6D621A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6D521A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift */; };
 		A5C5E6D821A2B403001D6250 /* DepositsCardsListOnholdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6D721A2B403001D6250 /* DepositsCardsListOnholdViewController.swift */; };
@@ -310,6 +314,10 @@
 		A56B59F921AD623B00CE4798 /* DepositsDepositsSegueAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsDepositsSegueAnimator.swift; sourceTree = "<group>"; };
 		A5B473C021B3BBCD00F2E41F /* RemittancePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemittancePickerViewController.swift; sourceTree = "<group>"; };
 		A5B473C321B3C0D200F2E41F /* RemittanceOptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemittanceOptionView.swift; sourceTree = "<group>"; };
+		A5B473C521B52D4500F2E41F /* BubblesDetailedStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubblesDetailedStatsView.swift; sourceTree = "<group>"; };
+		A5B473C721B52E0B00F2E41F /* GroupedBubblesStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupedBubblesStatsView.swift; sourceTree = "<group>"; };
+		A5C5C03921B537AB005D6B8F /* BubblesDetailedStatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubblesDetailedStatsViewController.swift; sourceTree = "<group>"; };
+		A5C5C03B21B66485005D6B8F /* BubbleDetailedStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleDetailedStatsView.swift; sourceTree = "<group>"; };
 		A5C5E6D321A2B3DC001D6250 /* DepositsCardsDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsCardsDetailsViewController.swift; sourceTree = "<group>"; };
 		A5C5E6D521A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsCardsListOnholdBlockViewController.swift; sourceTree = "<group>"; };
 		A5C5E6D721A2B403001D6250 /* DepositsCardsListOnholdViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsCardsListOnholdViewController.swift; sourceTree = "<group>"; };
@@ -681,6 +689,7 @@
 			children = (
 				895768CE2192E768005754D5 /* DepositsStatsViewController.swift */,
 				895768D02192E9F0005754D5 /* DepositsStatsDetailsViewController.swift */,
+				A5C5C03921B537AB005D6B8F /* BubblesDetailedStatsViewController.swift */,
 			);
 			path = Stats;
 			sourceTree = "<group>";
@@ -690,7 +699,10 @@
 			children = (
 				A528EF3F21B00C9300D189DD /* MonthCollectionViewCell.swift */,
 				A528EF4121B106CE00D189DD /* BubblesStatsScrollView.swift */,
+				A5B473C521B52D4500F2E41F /* BubblesDetailedStatsView.swift */,
+				A5B473C721B52E0B00F2E41F /* GroupedBubblesStatsView.swift */,
 				A528EF4321B16D8A00D189DD /* BubbleStatsView.swift */,
+				A5C5C03B21B66485005D6B8F /* BubbleDetailedStatsView.swift */,
 			);
 			path = Stats;
 			sourceTree = "<group>";
@@ -934,6 +946,7 @@
 				0930F166215B5CDB00CFB593 /* RoundedEdgeView.swift in Sources */,
 				A528EF4221B106CF00D189DD /* BubblesStatsScrollView.swift in Sources */,
 				09C7C33D2175FADE000EE472 /* DepositsHistoryHeader.swift in Sources */,
+				A5B473C621B52D4500F2E41F /* BubblesDetailedStatsView.swift in Sources */,
 				09F5DCE8218C4A5200390304 /* RegistrationTouchIDViewController.swift in Sources */,
 				09C7C3352175CC47000EE472 /* DepositsHistoryViewController.swift in Sources */,
 				09E0F146215A68DC0042FB6A /* CustomTabBar.swift in Sources */,
@@ -951,6 +964,7 @@
 				096BCB0A216361AA005BC02B /* PaymentTemplateCell.swift in Sources */,
 				89C8DF0E2191ADF200D92B0A /* DepositsDepositsViewController.swift in Sources */,
 				09E2141F21873DCA00D16D21 /* DepositsCardsDetailsStatementDetailsViewController.swift in Sources */,
+				A5C5C03C21B66485005D6B8F /* BubbleDetailedStatsView.swift in Sources */,
 				A55B7B9021AAAAB300A8A7FE /* ChatMessagesTransferRequestTableViewCell.swift in Sources */,
 				A55B7B5721A5866F00A8A7FE /* UIImage+GIF.swift in Sources */,
 				09C7C31221749151000EE472 /* DepositsObligationsCell.swift in Sources */,
@@ -964,6 +978,7 @@
 				096B4F4D2183089900C69E52 /* OneViewController.swift in Sources */,
 				0930F16A215B6CB800CFB593 /* GradientView.swift in Sources */,
 				0943729221907198003A66CC /* PaymentsDetailsSuccessViewController.swift in Sources */,
+				A5B473C821B52E0B00F2E41F /* GroupedBubblesStatsView.swift in Sources */,
 				09C7C3162174A362000EE472 /* DepositsSearchCell.swift in Sources */,
 				A55B7B8821AA698900A8A7FE /* ChatMessage.swift in Sources */,
 				A5B473C421B3C0D200F2E41F /* RemittanceOptionView.swift in Sources */,
@@ -981,6 +996,7 @@
 				09D3C048215E07DB00998F57 /* ChatMessagesViewController.swift in Sources */,
 				09FC8FED215BB2B200A4694B /* ProfileMenuTableViewController.swift in Sources */,
 				0942B86D21625F7800370C71 /* Friend.swift in Sources */,
+				A5C5C03A21B537AB005D6B8F /* BubblesDetailedStatsViewController.swift in Sources */,
 				09045059216B5ADC00F3B295 /* FeedOffersCell.swift in Sources */,
 				09C7C3382175E486000EE472 /* DepositsHistoryCell.swift in Sources */,
 				097A6DCC21884B6D00E6C69E /* ButtonRounded.swift in Sources */,

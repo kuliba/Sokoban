@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol BubblesStatsDelegate {
+protocol BubblesStatsDelegate: class {
     func setup(bubbleView: BubbleStatsView, atIndex index: Int)
     func numberOfBubbleViews() -> Int
     func radiusOfBubbleView(atIndex index: Int) -> CGFloat
@@ -20,7 +20,7 @@ class BubblesStatsScrollView: UIScrollView {
         let v = UIView()
         return v
     }()
-    var bubblesDelegate: BubblesStatsDelegate? = nil {
+    weak var bubblesDelegate: BubblesStatsDelegate? = nil {
         didSet {
 //            print("bubblesDelegate didSet \(String(describing: bubblesDelegate))")
             count = bubblesDelegate!.numberOfBubbleViews()
@@ -270,6 +270,10 @@ private extension BubblesStatsScrollView {
                              width: centralViewRadius*2,
                              height: centralViewRadius*2)]
         
+        minX = viewFrames[0].origin.x
+        minY = viewFrames[0].origin.y
+        maxX = viewFrames[0].origin.x + viewFrames[0].width
+        maxY = viewFrames[0].origin.y + viewFrames[0].height
         
         for i in 1..<count {
             let viewRadius = Double(bubblesDelegate!.radiusOfBubbleView(atIndex: i) * resizeScales[i])
@@ -278,29 +282,22 @@ private extension BubblesStatsScrollView {
             let newR = (viewRadius + bubbleMargin) / sin(viewAlphas[i-1] / 2)
             distances[i] = newR < distances[i] ? distances[i] : newR
             angleOffset += i==1 ? 0 : viewAlphas[i-1] / 2
-            let positionAngle: Double = i==1 ? 0 : viewAlphas[i-1] / 2 + angleOffset
-            let cx = cos(positionAngle) * distances[i]
-            let cy = sin(positionAngle) * distances[i]
-            angleOffset += i==1 ? 0 : viewAlphas[i-1] / 2
+            let cx = cos(angleOffset) * distances[i]
+            let cy = sin(angleOffset) * distances[i]
+            angleOffset += viewAlphas[i-1] / 2
             
             let viewFrame = CGRect(x: cx-viewRadius,
                                    y: -cy-viewRadius,
                                    width: viewRadius*2,
                                    height: viewRadius*2)
             viewFrames.append(viewFrame)
-            if i==1 {
-                minX = viewFrames[1].origin.x
-                minY = viewFrames[1].origin.y
-                maxX = viewFrames[1].origin.x + viewFrames[1].width
-                maxY = viewFrames[1].origin.y + viewFrames[1].height
-            } else {
-                minX = minX < viewFrames[i].origin.x ? minX : viewFrames[i].origin.x
-                minY = minY < viewFrames[i].origin.y ? minY : viewFrames[i].origin.y
-                maxX = maxX > viewFrames[i].origin.x + viewFrames[i].width ?
-                    maxX : viewFrames[i].origin.x + viewFrames[i].width
-                maxY = maxY > viewFrames[i].origin.y + viewFrames[i].height ?
-                    maxY : viewFrames[i].origin.y + viewFrames[i].height
-            }
+
+            minX = minX < viewFrames[i].origin.x ? minX : viewFrames[i].origin.x
+            minY = minY < viewFrames[i].origin.y ? minY : viewFrames[i].origin.y
+            maxX = maxX > viewFrames[i].origin.x + viewFrames[i].width ?
+                maxX : viewFrames[i].origin.x + viewFrames[i].width
+            maxY = maxY > viewFrames[i].origin.y + viewFrames[i].height ?
+                maxY : viewFrames[i].origin.y + viewFrames[i].height
         }
         
     }

@@ -499,6 +499,12 @@
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" alwaysBounceVertical="YES" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fjj-Nf-2c5" customClass="BubblesStatsScrollView" customModule="ForaBank" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="44" width="375" height="734"/>
                             </scrollView>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qpa-Mm-Cai">
+                                <rect key="frame" x="0.0" y="44" width="375" height="734"/>
+                                <connections>
+                                    <segue destination="sL6-vn-o8d" kind="embed" id="cxU-gW-ap1"/>
+                                </connections>
+                            </containerView>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gNB-zO-BYN">
                                 <rect key="frame" x="0.0" y="380.66666666666669" width="375" height="1"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -534,9 +540,13 @@
                             <constraint firstItem="gNB-zO-BYN" firstAttribute="centerY" secondItem="Fjj-Nf-2c5" secondAttribute="centerY" constant="-30" id="7bC-C9-3fb"/>
                             <constraint firstItem="igh-sD-O1w" firstAttribute="top" secondItem="Fjj-Nf-2c5" secondAttribute="top" id="D0s-BQ-adl"/>
                             <constraint firstItem="SwH-EG-Ylj" firstAttribute="leading" secondItem="KTG-vc-KNJ" secondAttribute="leading" id="F4n-TZ-U44"/>
+                            <constraint firstItem="Qpa-Mm-Cai" firstAttribute="bottom" secondItem="KTG-vc-KNJ" secondAttribute="bottom" id="Jxt-gL-mCU"/>
                             <constraint firstItem="KTG-vc-KNJ" firstAttribute="bottom" secondItem="SwH-EG-Ylj" secondAttribute="bottom" id="cOJ-ib-e5l"/>
                             <constraint firstItem="Fjj-Nf-2c5" firstAttribute="top" secondItem="KTG-vc-KNJ" secondAttribute="top" id="fkJ-Je-Bgk"/>
+                            <constraint firstItem="Qpa-Mm-Cai" firstAttribute="leading" secondItem="KTG-vc-KNJ" secondAttribute="leading" id="jpZ-uX-SbG"/>
                             <constraint firstItem="gNB-zO-BYN" firstAttribute="leading" secondItem="KTG-vc-KNJ" secondAttribute="leading" id="klf-8k-oTS"/>
+                            <constraint firstItem="Qpa-Mm-Cai" firstAttribute="trailing" secondItem="KTG-vc-KNJ" secondAttribute="trailing" id="mmX-b7-Ml6"/>
+                            <constraint firstItem="Qpa-Mm-Cai" firstAttribute="top" secondItem="KTG-vc-KNJ" secondAttribute="top" id="oth-al-IMd"/>
                             <constraint firstItem="Fjj-Nf-2c5" firstAttribute="leading" secondItem="KTG-vc-KNJ" secondAttribute="leading" id="p3z-xT-azi"/>
                             <constraint firstItem="KTG-vc-KNJ" firstAttribute="trailing" secondItem="SwH-EG-Ylj" secondAttribute="trailing" id="qPc-SX-hh4"/>
                             <constraint firstItem="KTG-vc-KNJ" firstAttribute="trailing" secondItem="Fjj-Nf-2c5" secondAttribute="trailing" id="rBL-PZ-Ejq"/>
@@ -548,6 +558,7 @@
                     </view>
                     <connections>
                         <outlet property="bubblesStatsScrollView" destination="Fjj-Nf-2c5" id="fig-E8-mv3"/>
+                        <outlet property="detailedStatsContainer" destination="Qpa-Mm-Cai" id="0sw-pd-XrB"/>
                         <outlet property="monthCollectionView" destination="SwH-EG-Ylj" id="6hA-fd-JCc"/>
                     </connections>
                 </viewController>
@@ -2834,6 +2845,35 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nYg-Kv-iTL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2826" y="50"/>
+        </scene>
+        <!--Bubbles Detailed Stats View Controller-->
+        <scene sceneID="wxw-dd-43H">
+            <objects>
+                <viewController id="sL6-vn-o8d" customClass="BubblesDetailedStatsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="2M2-TG-Mfw">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="734"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" alwaysBounceHorizontal="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yVC-DS-7Gg">
+                                <rect key="frame" x="0.0" y="44" width="375" height="656"/>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="yVC-DS-7Gg" firstAttribute="top" secondItem="PAJ-5L-nj1" secondAttribute="top" id="6Ec-d9-2rC"/>
+                            <constraint firstItem="PAJ-5L-nj1" firstAttribute="trailing" secondItem="yVC-DS-7Gg" secondAttribute="trailing" id="9M2-Kl-BxH"/>
+                            <constraint firstItem="PAJ-5L-nj1" firstAttribute="bottom" secondItem="yVC-DS-7Gg" secondAttribute="bottom" id="jS3-gj-feJ"/>
+                            <constraint firstItem="yVC-DS-7Gg" firstAttribute="leading" secondItem="PAJ-5L-nj1" secondAttribute="leading" id="yb1-3W-TkJ"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="PAJ-5L-nj1"/>
+                    </view>
+                    <connections>
+                        <outlet property="scrollView" destination="yVC-DS-7Gg" id="meq-DE-cEI"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="69e-y3-0yT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1870" y="811"/>
         </scene>
     </scenes>
     <resources>

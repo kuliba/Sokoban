@@ -12,6 +12,7 @@ class DepositsStatsViewController: UIViewController {
     // MARK: - Properties
     @IBOutlet weak var monthCollectionView: UICollectionView!
     @IBOutlet weak var bubblesStatsScrollView: BubblesStatsScrollView!
+    @IBOutlet weak var detailedStatsContainer: UIView!
     
     private let reuseId = "cell"
     
@@ -63,10 +64,19 @@ class DepositsStatsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 //        bubblesStatsScrollView.contentInset = UIEdgeInsets(top: 30, left: 0, bottom: 0, right: 0)
-
+        detailedStatsContainer.alpha = 0
+        detailedStatsContainer.transform = CGAffineTransform(scaleX: 2, y: 2)
+        detailedStatsContainer.isUserInteractionEnabled = false
+        
         setUpSelectedMonth()
         setUpCollectionView()
         monthCollectionView.backgroundColor = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 0.9)
+        
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(swapStats))
+        bubblesStatsScrollView.addGestureRecognizer(gesture)
+        
+        let gesture2 = UITapGestureRecognizer(target: self, action: #selector(swapStats))
+        detailedStatsContainer.addGestureRecognizer(gesture2)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -91,6 +101,30 @@ class DepositsStatsViewController: UIViewController {
 //        print("inset \(bubblesStatsScrollView.frame.height/2 - 30 - bubblesStatsScrollView.bubbleViews[0].center.y)")
 //        print("offset \(bubblesStatsScrollView.contentOffset)")
 
+    }
+    
+    @objc func swapStats() {
+        if detailedStatsContainer.alpha == 0 {
+            UIView.animate(withDuration: 0.3, delay: 0, options: .beginFromCurrentState, animations: {
+                self.bubblesStatsScrollView.alpha = 0
+                self.bubblesStatsScrollView.transform = CGAffineTransform(scaleX: 2, y: 2)
+                self.detailedStatsContainer.alpha = 1
+                self.detailedStatsContainer.transform = CGAffineTransform.identity
+            }, completion: { (_) in
+                self.detailedStatsContainer.isUserInteractionEnabled = true
+                self.bubblesStatsScrollView.isUserInteractionEnabled = false
+            })
+        } else {
+            UIView.animate(withDuration: 0.3, delay: 0, options: .beginFromCurrentState, animations: {
+                self.bubblesStatsScrollView.alpha = 1
+                self.bubblesStatsScrollView.transform = CGAffineTransform.identity
+                self.detailedStatsContainer.alpha = 0
+                self.detailedStatsContainer.transform = CGAffineTransform(scaleX: 2, y: 2)
+            }, completion: { (_) in
+                self.detailedStatsContainer.isUserInteractionEnabled = false
+                self.bubblesStatsScrollView.isUserInteractionEnabled = true
+            })
+        }
     }
 }
 
