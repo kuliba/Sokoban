@@ -97,7 +97,7 @@ extension DepositsViewController: iCarouselDataSource, iCarouselDelegate {
             label.backgroundColor = .clear
             label.textAlignment = .center
             label.textColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
-            label.font = UIFont(name: "Roboto-Regular", size: 16)
+            label.font = UIFont(name: "Roboto-Light", size: 16)
             label.tag = 1
         }
         label.text = "\(items[index])"
@@ -143,7 +143,11 @@ extension DepositsViewController: iCarouselDataSource, iCarouselDelegate {
     
     func carousel(_ carousel: iCarousel, didSelectItemAt index: Int) {
         labels[previousIndex]?.textColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
+        labels[previousIndex]?.font = UIFont(name: "Roboto-Light", size: 16)
+
         labels[index]?.textColor = .white
+        labels[index]?.font = UIFont(name: "Roboto-Regular", size: 16)
+
         let indexOffset = index - previousIndex
         let direction: Direction
         switch indexOffset {
@@ -170,11 +174,15 @@ extension DepositsViewController: iCarouselDataSource, iCarouselDelegate {
         if previousIndex<0 || previousIndex == carousel.currentItemIndex{
             previousIndex = carousel.currentItemIndex
             labels[carousel.currentItemIndex]?.textColor = .white
+            labels[carousel.currentItemIndex]?.font = UIFont(name: "Roboto-Regular", size: 16)
             return
         }
         labels[previousIndex]?.textColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
+        labels[previousIndex]?.font = UIFont(name: "Roboto-Light", size: 16)
+
         labels[carousel.currentItemIndex]?.textColor = .white
-        
+        labels[carousel.currentItemIndex]?.font = UIFont(name: "Roboto-Regular", size: 16)
+
         let indexOffset = carousel.currentItemIndex - previousIndex
         let direction: Direction
         switch indexOffset {

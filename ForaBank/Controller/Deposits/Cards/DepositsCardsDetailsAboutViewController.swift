@@ -15,8 +15,8 @@ class DepositsCardsDetailsAboutViewController: UITableViewController {
         
         tableView.tableFooterView = UIView()
         
-        tableView.contentInset.top = 50
-        tableView.contentInset.bottom = 25
+        tableView.contentInset.top = 35
+        tableView.contentInset.bottom = 10
         
         // Uncomment the following line to pre10
         //         serve selection between presentations
@@ -25,7 +25,10 @@ class DepositsCardsDetailsAboutViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
-    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let scrollUserInfo = ["tableView": tableView]
+        NotificationCenter.default.post(name: NSNotification.Name("TableViewScrolled"), object: nil, userInfo: scrollUserInfo as [AnyHashable: Any])
+    }
     // MARK: - Table view data source
     
     //    override func numberOfSections(in tableView: UITableView) -> Int {

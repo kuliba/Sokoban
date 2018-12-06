@@ -13,11 +13,14 @@ import DeviceKit
 class OneViewController: UIViewController {
     
     // MARK: - Properties
-    @IBOutlet weak var scrollView: UIScrollView!
+//    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var header: UIView!
     @IBOutlet weak var container: UIView!
     @IBOutlet weak var containerHeight: NSLayoutConstraint!
     @IBOutlet var carousel: iCarousel!
+    @IBOutlet weak var contentView: UIView!
+    @IBOutlet weak var contentViewTop: NSLayoutConstraint!
+    @IBOutlet weak var contentViewHeight: NSLayoutConstraint!
     
     var offset: CGFloat = {
         if Device().isOneOf(Constants.xDevices) {
@@ -50,18 +53,11 @@ class OneViewController: UIViewController {
         super.viewDidLoad()
         
         NotificationCenter.default.addObserver(self, selector: #selector(handleScroll(_:)), name: NSNotification.Name("TableViewScrolled"), object: nil)
-        scrollView.isScrollEnabled = false
         
         carousel.delegate = self
         carousel.dataSource = self
         carousel.type = .wheel
         carousel.bounces = false
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        containerHeight.constant = -offset
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -91,6 +87,7 @@ private extension OneViewController {
     }
     
     func showComponent(index: Int) {
+        NotificationCenter.default.removeObserver(self)
         let newViewController = storyboard?.instantiateViewController(withIdentifier: "feed\(index)")
         newViewController!.view.translatesAutoresizingMaskIntoConstraints = false
         cycleFromViewController(oldViewController: self.currentViewController!, toViewController: newViewController!)
@@ -114,6 +111,9 @@ private extension OneViewController {
             oldViewController.view.bounds.origin.y -= 10
             // only need to call layoutIfNeeded here
             newViewController.view.layoutIfNeeded()
+            self.contentViewTop.constant = 0
+            self.previousOffset = 0
+            self.view.layoutIfNeeded()
         }, completion: { _ in
             UIView.animate(withDuration: 0.25, animations: {
                 newViewController.view.alpha = 1
@@ -122,33 +122,42 @@ private extension OneViewController {
                 oldViewController.view.removeFromSuperview()
                 oldViewController.removeFromParent()
                 newViewController.didMove(toParent: self)
+                NotificationCenter.default.addObserver(self, selector: #selector(self.handleScroll(_:)), name: NSNotification.Name("TableViewScrolled"), object: nil)
             })
         })
     }
     
     @objc func handleScroll(_ notification: Notification?) {
-        let tableScrollView = notification?.userInfo?["tableView"] as? UIScrollView
-        var currentOffset = tableScrollView?.contentOffset.y
+        guard let tableScrollView = notification?.userInfo?["tableView"] as? UIScrollView else {
+            return
+        }
+        var currentOffset = tableScrollView.contentOffset.y
         
-        let distanceFromBottom = (tableScrollView?.contentSize.height ?? 0.0) - (currentOffset ?? 0.0)
-        
-        if previousOffset < (currentOffset ?? 0.0) && distanceFromBottom > (tableScrollView?.frame.size.height ?? 0.0) {
-            if (currentOffset ?? 0.0) > header.frame.height - offset {
+        let distanceFromBottom = tableScrollView.contentSize.height - currentOffset
+        if previousOffset < currentOffset && distanceFromBottom > tableScrollView.frame.size.height {
+            if currentOffset > header.frame.height - offset {
                 currentOffset = header.frame.height - offset
             }
-            scrollView.contentOffset.y -= previousOffset - (currentOffset ?? 0.0)
-            previousOffset = currentOffset ?? 0.0
+            UIView.animate(withDuration: 0.1, delay: 0, options: .beginFromCurrentState, animations: {
+                self.contentViewTop.constant += self.previousOffset - currentOffset
+                self.previousOffset = currentOffset
+                self.view.layoutIfNeeded()
+            }, completion: nil)
+            
             
         } else {
-            if previousOffset > (currentOffset ?? 0.0) {
-                if (currentOffset ?? 0.0) < 0 {
+            if previousOffset > currentOffset {
+                if currentOffset < 0 {
                     currentOffset = 0
                 }
-                scrollView.contentOffset.y -= previousOffset - (currentOffset ?? 0.0)
-                previousOffset = currentOffset ?? 0.0
+                UIView.animate(withDuration: 0.1, delay: 0, options: .beginFromCurrentState, animations: {
+                    self.contentViewTop.constant += self.previousOffset - currentOffset
+                    self.previousOffset = currentOffset
+                    self.view.layoutIfNeeded()
+                }, completion: nil)
             }
         }
-        print(previousOffset, currentOffset!, lastScrollViewOffset)
+        container.setNeedsDisplay()
     }
 }
 

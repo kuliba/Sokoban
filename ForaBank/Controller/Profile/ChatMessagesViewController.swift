@@ -122,7 +122,7 @@ extension ChatMessagesViewController: UITableViewDataSource, UITableViewDelegate
             guard let c = cell as? ChatMessagesIncomingTableViewCell else {
                 return cell
             }
-            print(c.frameView)
+//            print(c.frameView)
             c.messageLabel.text = reversedMessages_[indexPath.section][indexPath.row].message
             c.timeLabel.text = reversedMessages_[indexPath.section][indexPath.row].time
 
@@ -162,6 +162,8 @@ private extension ChatMessagesViewController {
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             // Move chat container view up
+            print("keyboardSize \(keyboardSize)")
+            print(self.chatContainerView.frame.origin.y)
             if self.chatContainerView.frame.origin.y == 0 {
                 self.chatContainerView.frame.origin.y -= keyboardSize.height
             }
@@ -170,6 +172,8 @@ private extension ChatMessagesViewController {
     
     @objc func keyboardWillHide(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            print("keyboardSize \(keyboardSize)")
+            print(self.chatContainerView.frame.origin.y)
             // Move chat container view down
             if self.chatContainerView.frame.origin.y != 0 {
                 self.chatContainerView.frame.origin.y += keyboardSize.height

@@ -142,7 +142,7 @@ private extension DepositsCardsDetailsStatementViewController {
     
     func setTableViewContentInsets() {
         tableView.contentInset.top = 35
-        tableView.contentInset.bottom = 10
+        tableView.contentInset.bottom = -30
     }
     
     func registerNibCell() {

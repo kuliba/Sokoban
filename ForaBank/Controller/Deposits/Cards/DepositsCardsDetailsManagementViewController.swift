@@ -14,14 +14,19 @@ class DepositsCardsDetailsManagementViewController: UITableViewController {
         super.viewDidLoad()
         
         tableView.tableFooterView = UIView()
-        tableView.contentInset.top = 50
-        tableView.contentInset.bottom = 25
+        tableView.contentInset.top = 35
+        tableView.contentInset.bottom = 10
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
+    }
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let scrollUserInfo = ["tableView": tableView]
+        NotificationCenter.default.post(name: NSNotification.Name("TableViewScrolled"), object: nil, userInfo: scrollUserInfo as [AnyHashable: Any])
     }
     
     // MARK: - Table view data source
