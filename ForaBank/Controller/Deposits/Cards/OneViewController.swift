@@ -13,15 +13,12 @@ import DeviceKit
 class OneViewController: UIViewController {
     
     // MARK: - Properties
-//    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var header: UIView!
     @IBOutlet weak var container: UIView!
-    @IBOutlet weak var containerHeight: NSLayoutConstraint!
     @IBOutlet var carousel: iCarousel!
-    @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var contentViewTop: NSLayoutConstraint!
-    @IBOutlet weak var contentViewHeight: NSLayoutConstraint!
-    
+    var previousIndex = -1
+
     var offset: CGFloat = {
         if Device().isOneOf(Constants.xDevices) {
             return 100 // models: x
@@ -31,11 +28,9 @@ class OneViewController: UIViewController {
     }()
     
     weak var currentViewController: UIViewController?
-    
     var previousOffset: CGFloat = 0
-    
     var items = ["Управление", "Выписка", "О карте"]
-    
+    var labels = [UILabel?]()
     var lastScrollViewOffset: CGFloat = 0
     
     @IBAction func backButtonClicked(_ sender: Any) {
@@ -50,6 +45,8 @@ class OneViewController: UIViewController {
         addChild(currentViewController!)
         addSubview(self.currentViewController!.view, toView: self.container)
         
+        labels = [UILabel?].init(repeating: nil, count: items.count)
+
         super.viewDidLoad()
         
         NotificationCenter.default.addObserver(self, selector: #selector(handleScroll(_:)), name: NSNotification.Name("TableViewScrolled"), object: nil)
@@ -69,6 +66,39 @@ class OneViewController: UIViewController {
 }
 
 private extension OneViewController {
+    
+    @objc func handleScroll(_ notification: Notification?) {
+        guard let tableScrollView = notification?.userInfo?["tableView"] as? UIScrollView else {
+            return
+        }
+        var currentOffset = tableScrollView.contentOffset.y
+        
+        let distanceFromBottom = tableScrollView.contentSize.height - currentOffset
+        if previousOffset < currentOffset && distanceFromBottom > tableScrollView.frame.size.height {
+            if currentOffset > header.frame.height - offset {
+                currentOffset = header.frame.height - offset
+            }
+            UIView.animate(withDuration: 0.1, delay: 0, options: .beginFromCurrentState, animations: {
+                self.contentViewTop.constant += self.previousOffset - currentOffset
+                self.previousOffset = currentOffset
+                self.view.layoutIfNeeded()
+            }, completion: nil)
+            
+            
+        } else {
+            if previousOffset > currentOffset {
+                if currentOffset < 0 {
+                    currentOffset = 0
+                }
+                UIView.animate(withDuration: 0.1, delay: 0, options: .beginFromCurrentState, animations: {
+                    self.contentViewTop.constant += self.previousOffset - currentOffset
+                    self.previousOffset = currentOffset
+                    self.view.layoutIfNeeded()
+                }, completion: nil)
+            }
+        }
+        container.setNeedsDisplay()
+    }
     
     func addSubview(_ subView:UIView, toView parentView:UIView) {
         parentView.addSubview(subView)
@@ -105,15 +135,16 @@ private extension OneViewController {
         newViewController.view.layoutIfNeeded()
         
         // TODO: Set the ending state of your constraints here
-        
+        UIView.animate(withDuration: 0.5, delay: 0, options: .beginFromCurrentState, animations: {
+            self.contentViewTop.constant = 0
+            self.previousOffset = 0
+            self.view.layoutIfNeeded()
+        }, completion: nil)
         UIView.animate(withDuration: 0.25, animations: {
             oldViewController.view.alpha = 0
             oldViewController.view.bounds.origin.y -= 10
             // only need to call layoutIfNeeded here
             newViewController.view.layoutIfNeeded()
-            self.contentViewTop.constant = 0
-            self.previousOffset = 0
-            self.view.layoutIfNeeded()
         }, completion: { _ in
             UIView.animate(withDuration: 0.25, animations: {
                 newViewController.view.alpha = 1
@@ -125,39 +156,6 @@ private extension OneViewController {
                 NotificationCenter.default.addObserver(self, selector: #selector(self.handleScroll(_:)), name: NSNotification.Name("TableViewScrolled"), object: nil)
             })
         })
-    }
-    
-    @objc func handleScroll(_ notification: Notification?) {
-        guard let tableScrollView = notification?.userInfo?["tableView"] as? UIScrollView else {
-            return
-        }
-        var currentOffset = tableScrollView.contentOffset.y
-        
-        let distanceFromBottom = tableScrollView.contentSize.height - currentOffset
-        if previousOffset < currentOffset && distanceFromBottom > tableScrollView.frame.size.height {
-            if currentOffset > header.frame.height - offset {
-                currentOffset = header.frame.height - offset
-            }
-            UIView.animate(withDuration: 0.1, delay: 0, options: .beginFromCurrentState, animations: {
-                self.contentViewTop.constant += self.previousOffset - currentOffset
-                self.previousOffset = currentOffset
-                self.view.layoutIfNeeded()
-            }, completion: nil)
-            
-            
-        } else {
-            if previousOffset > currentOffset {
-                if currentOffset < 0 {
-                    currentOffset = 0
-                }
-                UIView.animate(withDuration: 0.1, delay: 0, options: .beginFromCurrentState, animations: {
-                    self.contentViewTop.constant += self.previousOffset - currentOffset
-                    self.previousOffset = currentOffset
-                    self.view.layoutIfNeeded()
-                }, completion: nil)
-            }
-        }
-        container.setNeedsDisplay()
     }
 }
 
@@ -180,28 +178,26 @@ extension OneViewController: iCarouselDataSource, iCarouselDelegate {
             //don't do anything specific to the index within
             //this `if ... else` statement because the view will be
             //recycled and used with other index values later
-            itemView = UIImageView(frame: CGRect(x: 0, y: 0, width: 120, height: 100))
+            itemView = UIImageView(frame: CGRect(x: 0, y: 0, width: 120, height: 40))
             itemView.backgroundColor = .clear
             
             label = UILabel(frame: itemView.bounds)
             
             label.backgroundColor = .clear
             label.textAlignment = .center
-            label.textColor = .white
-            
-            label.font = UIFont(name: "Roboto-Regular", size: 16)
+            label.textColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
+            label.font = UIFont(name: "Roboto-Light", size: 16)
             label.tag = 1
             itemView.addSubview(label)
-            
         }
         
-        //set item label
-        //remember to always set any properties of your carousel item
-        //views outside of the `if (view == nil) {...}` check otherwise
-        //you'll get weird issues with carousel item content appearing
-        //in the wrong place in the carousel
+        // set item label
+        // remember to always set any properties of your carousel item
+        // views outside of the `if (view == nil) {...}` check otherwise
+        // you'll get weird issues with carousel item content appearing
+        // in the wrong place in the carousel
         label.text = "\(items[index])"
-        
+        labels[index] = label
         return itemView
     }
     
@@ -242,6 +238,27 @@ extension OneViewController: iCarouselDataSource, iCarouselDelegate {
     }
     
     func carousel(_ carousel: iCarousel, didSelectItemAt index: Int) {
+        labels[previousIndex]?.textColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
+        labels[previousIndex]?.font = UIFont(name: "Roboto-Light", size: 16)
+        
+        labels[index]?.textColor = .white
+        labels[index]?.font = UIFont(name: "Roboto-Regular", size: 16)
+        previousIndex = index
         showComponent(index: index)
+    }
+    
+    func carouselDidEndScrollingAnimation(_ carousel: iCarousel) {
+        if previousIndex<0 || previousIndex == carousel.currentItemIndex{
+            previousIndex = carousel.currentItemIndex
+            labels[carousel.currentItemIndex]?.textColor = .white
+            labels[carousel.currentItemIndex]?.font = UIFont(name: "Roboto-Regular", size: 16)
+            return
+        }
+        labels[previousIndex]?.textColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
+        labels[previousIndex]?.font = UIFont(name: "Roboto-Light", size: 16)
+        labels[carousel.currentItemIndex]?.textColor = .white
+        labels[carousel.currentItemIndex]?.font = UIFont(name: "Roboto-Regular", size: 16)
+        previousIndex = carousel.currentItemIndex
+        showComponent(index: carousel.currentItemIndex)
     }
 }

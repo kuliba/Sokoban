@@ -18,4 +18,5 @@ class DepositsCardsDetailsStatementDetailsViewController: UIViewController {
         super.viewDidLoad()
         
     }
+    
 }

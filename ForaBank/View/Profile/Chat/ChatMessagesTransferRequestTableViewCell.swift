@@ -74,7 +74,7 @@ class ChatMessagesTransferRequestTableViewCell: UITableViewCell {
         contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[frameView]|", options: [], metrics: nil, views: ["frameView":frameView]))
         contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[frameView]|", options: [], metrics: nil, views: ["frameView":frameView]))
         frameView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-15-[coinImageView(41)]-7-[messageLabel]-10-[sumLabel]-10-[timeLabel]-15-|", options: [], metrics: nil, views: ["coinImageView":coinImageView, "messageLabel":messageLabel, "sumLabel":sumLabel, "timeLabel":timeLabel]))
-        frameView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[sendButton]|", options: [], metrics: nil, views: ["sendButton":sendButton]))
+        frameView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-15-[sendButton]-15-|", options: [], metrics: nil, views: ["sendButton":sendButton]))
         frameView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[sendButton(45)]-10-|", options: [], metrics: nil, views: ["sendButton":sendButton]))
         frameView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-15-[coinImageView(41)]", options: [], metrics: nil, views: ["coinImageView":coinImageView]))
         frameView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-15-[messageLabel(41)]", options: [], metrics: nil, views: ["messageLabel":messageLabel]))

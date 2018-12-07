@@ -105,6 +105,7 @@ class DepositsStatsViewController: UIViewController {
     
     @objc func swapStats() {
         if detailedStatsContainer.alpha == 0 {
+            self.detailedStatsContainer.transform = CGAffineTransform(scaleX: 2, y: 2)
             UIView.animate(withDuration: 0.3, delay: 0, options: .beginFromCurrentState, animations: {
                 self.bubblesStatsScrollView.alpha = 0
                 self.bubblesStatsScrollView.transform = CGAffineTransform(scaleX: 2, y: 2)
@@ -113,8 +114,10 @@ class DepositsStatsViewController: UIViewController {
             }, completion: { (_) in
                 self.detailedStatsContainer.isUserInteractionEnabled = true
                 self.bubblesStatsScrollView.isUserInteractionEnabled = false
+                self.bubblesStatsScrollView.transform = CGAffineTransform.identity
             })
         } else {
+            self.bubblesStatsScrollView.transform = CGAffineTransform(scaleX: 2, y: 2)
             UIView.animate(withDuration: 0.3, delay: 0, options: .beginFromCurrentState, animations: {
                 self.bubblesStatsScrollView.alpha = 1
                 self.bubblesStatsScrollView.transform = CGAffineTransform.identity
@@ -123,6 +126,7 @@ class DepositsStatsViewController: UIViewController {
             }, completion: { (_) in
                 self.detailedStatsContainer.isUserInteractionEnabled = false
                 self.bubblesStatsScrollView.isUserInteractionEnabled = true
+                self.detailedStatsContainer.transform = CGAffineTransform.identity
             })
         }
     }

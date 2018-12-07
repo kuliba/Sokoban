@@ -9,5 +9,5 @@ target 'ForaBank' do
   pod 'iCarousel'
   pod 'DeviceKit'
   pod 'FlexiblePageControl'
-  pod 'IQKeyboardManager'
+  pod 'IQKeyboardManagerSwift'
 end
