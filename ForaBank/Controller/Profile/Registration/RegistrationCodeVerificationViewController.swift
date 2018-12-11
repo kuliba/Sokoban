@@ -30,8 +30,21 @@ class RegistrationCodeVerificationViewController: UIViewController, UITextFieldD
                 self.gradientView.alpha = 0
         },
             completion: { _ in
-                self.dismiss(animated: false)
+//                self.dismiss(animated: false)
+                self.navigationController?.popViewController(animated: true)
         })
+    }
+    @IBAction func continueButtonClicked(_ sender: Any) {
+        view.endEditing(true)
+        NetworkManager.shared().checkVerificationCode(code: self.codeNumberTextField.text ?? "") { [unowned self] (success) in
+            if success {
+                let rootVC:ProfileViewController = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
+                if let t = self.tabBarController as? TabBarController {
+                    t.setNumberOfTabsAvailable()
+                }
+                self.navigationController?.setViewControllers([rootVC], animated: true)
+            }
+        }
     }
     
     // MARK: - Lifecycle

@@ -16,7 +16,10 @@ class ProfileMenuTableViewController: UITableViewController {
     }
     
     @IBAction func quitButtonClicked(_ sender: Any) {
-        parent?.performSegue(withIdentifier: "RegistrationViewController", sender: nil)
+//        parent?.performSegue(withIdentifier: "RegistrationViewController", sender: nil)
+        let rootVC:LoginOrSignupViewController = self.storyboard?.instantiateViewController(withIdentifier: "LoginOrSignupViewController") as! LoginOrSignupViewController
+        navigationController?.setViewControllers([rootVC], animated: true)
+        
     }
     
     // MARK: - Lifecycle

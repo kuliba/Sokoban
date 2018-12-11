@@ -24,7 +24,11 @@ class RegistrationFinishViewController: UIViewController {
             second.view.isHidden = true
             first.view.isHidden = true
             
-            sixth.dismiss(animated: false)
+//            sixth.dismiss(animated: false)
+            
         }
+//        self.navigationController?.popToRootViewController(animated: true)
+        let rootVC:ProfileViewController = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
+        navigationController?.setViewControllers([rootVC], animated: true)
     }
 }

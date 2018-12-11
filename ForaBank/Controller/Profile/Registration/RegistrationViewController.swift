@@ -52,22 +52,23 @@ class RegistrationViewController: UIViewController {
         delegate?.hideContainerView()
         view.endEditing(true)
         
-        UIView.animate(
-            withDuration: 0.35,
-            animations: {
-                self.registrationLabel.alpha = 0
-                self.backButton.alpha = 0
-                self.gradientView.alpha = 0
-                self.pageControl.alpha = 0
-                self.segmentedOuterView.alpha = 0
-                self.cardView.alpha = 0
-                self.descriptionLabel.alpha = 0
-                self.continueButton.alpha = 0
-                self.circleView.frame.origin.y = self.view.frame.maxY
-        },
-            completion: { _ in
-                self.dismiss(animated: false, completion: self.delegate?.animateShowContainerView)
-        })
+//        UIView.animate(
+//            withDuration: 0.35,
+//            animations: {
+//                self.registrationLabel.alpha = 0
+//                self.backButton.alpha = 0
+//                self.gradientView.alpha = 0
+//                self.pageControl.alpha = 0
+//                self.segmentedOuterView.alpha = 0
+//                self.cardView.alpha = 0
+//                self.descriptionLabel.alpha = 0
+//                self.continueButton.alpha = 0
+//                self.circleView.frame.origin.y = self.view.frame.maxY
+//        },
+//            completion: { _ in
+//                self.dismiss(animated: false, completion: self.delegate?.animateShowContainerView)
+//        })
+        self.navigationController?.popViewController(animated: true)
     }
     
     // MARK: - Lifecycle
@@ -83,10 +84,10 @@ class RegistrationViewController: UIViewController {
         
         setUpTextFieldDelegates()
         
-        segmentedOuterView.alpha = 0
-        cardView.alpha = 0
-        descriptionLabel.alpha = 0
-        continueButton.alpha = 0
+//        segmentedOuterView.alpha = 0
+//        cardView.alpha = 0
+//        descriptionLabel.alpha = 0
+//        continueButton.alpha = 0
     }
     
     override func viewDidLayoutSubviews() {
@@ -98,23 +99,23 @@ class RegistrationViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        UIView.animate(
-            withDuration: 0.25,
-            animations: {
-                self.registrationLabel.alpha = 1
-                self.backButton.alpha = 1
-                self.pageControl.alpha = 1
-                self.segmentedOuterView.alpha = 1
-                self.cardView.alpha = 1
-                self.descriptionLabel.alpha = 1
-                self.continueButton.alpha = 1
-                self.gradientView.alpha = 1
-        },
-            completion: { _ in
-                UIView.animate(withDuration: 0.2) {
-                    self.backButton.frame.origin.x -= 5
-                }
-        })
+//        UIView.animate(
+//            withDuration: 0.25,
+//            animations: {
+//                self.registrationLabel.alpha = 1
+//                self.backButton.alpha = 1
+//                self.pageControl.alpha = 1
+//                self.segmentedOuterView.alpha = 1
+//                self.cardView.alpha = 1
+//                self.descriptionLabel.alpha = 1
+//                self.continueButton.alpha = 1
+//                self.gradientView.alpha = 1
+//        },
+//            completion: { _ in
+//                UIView.animate(withDuration: 0.2) {
+//                    self.backButton.frame.origin.x -= 5
+//                }
+//        })
         
         _ = cardNumberTextField.becomeFirstResponder()
     }
@@ -130,7 +131,7 @@ private extension RegistrationViewController {
         gradientLayer.endPoint = CGPoint(x: 1, y: 1)
         gradientLayer.colors = [UIColor(red: 237/255, green: 73/255, blue: 73/255, alpha: 1).cgColor, UIColor(red: 241/255, green: 176/255, blue: 116/255, alpha: 1).cgColor]
         gradientView.layer.addSublayer(gradientLayer)
-        gradientView.alpha = 0
+//        gradientView.alpha = 0
         view.insertSubview(gradientView, at: 0)
     }
     
@@ -148,7 +149,7 @@ private extension RegistrationViewController {
     }
     
     func setUpPageControl() {
-        pageControl.alpha = 0
+//        pageControl.alpha = 0
         pageControl.numberOfPages = 12
         pageControl.pageIndicatorTintColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)
         pageControl.currentPageIndicatorTintColor = UIColor(red: 234/255, green: 68/255, blue: 66/255, alpha: 1)

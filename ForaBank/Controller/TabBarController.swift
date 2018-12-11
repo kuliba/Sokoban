@@ -14,10 +14,26 @@ class TabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         //setSelectedIndexToLast()
+        setNumberOfTabsAvailable()
         selectedIndex = 0
     }
     
     @IBAction func unwindSegue(segue:UIStoryboardSegue) { }
+    
+    // MARK: - public methods
+    func setNumberOfTabsAvailable() {
+        // if !signedIn (!authorized)
+        NetworkManager.shared().isSignedIn { [unowned self] (flag)  in
+            if !flag && self.viewControllers?.count == 5 {
+                self.viewControllers?.remove(at: 1)
+            }
+            else if self.viewControllers?.count == 4 {
+                let depositsStoryboard: UIStoryboard = UIStoryboard(name: "Deposits", bundle: nil)
+                let depositsRootVC = depositsStoryboard.instantiateViewController(withIdentifier: "depositsRoot") as! DepositsViewController
+                self.viewControllers?.insert(depositsRootVC, at: 1)
+            }
+        }
+    }
 }
 
 // MARK: - Private methods
@@ -26,11 +42,6 @@ private extension TabBarController {
     func setSelectedIndexToLast() {
         guard let tabs = tabBar.items else { return }
         selectedIndex = tabs.endIndex - 1
-    }
-    
-    func setNumberOfTabsAvailable() {
-        // if !signedIn (!authorized)
-        viewControllers?.remove(at: 1)
     }
 }
 

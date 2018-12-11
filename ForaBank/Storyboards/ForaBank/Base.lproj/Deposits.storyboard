@@ -17,7 +17,7 @@
         <!--Deposits View Controller-->
         <scene sceneID="jnb-tn-H9V">
             <objects>
-                <viewController id="Zlb-hj-4wP" customClass="DepositsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="depositsRoot" id="Zlb-hj-4wP" customClass="DepositsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="724-JE-xJK"/>
                         <viewControllerLayoutGuide type="bottom" id="SvR-3c-ruB"/>
@@ -2878,7 +2878,7 @@
         <image name="visalogo" width="41" height="18"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="HSU-U3-jID"/>
+        <segue reference="xAX-aZ-8L4"/>
         <segue reference="X0W-6q-ICg"/>
     </inferredMetricsTieBreakers>
 </document>

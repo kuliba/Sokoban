@@ -28,7 +28,8 @@ class ChatDialogsViewController: UIViewController {
     
     // MARK: - Actions
     @IBAction func backButtonClicked(_ sender: Any) {
-        dismiss(animated: true)
+//        dismiss(animated: true)
+        self.navigationController?.popViewController(animated: true)
     }
     
     // MARK: - Lifecycle
@@ -47,6 +48,7 @@ class ChatDialogsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
         refreshData()
     }
     
@@ -58,6 +60,7 @@ class ChatDialogsViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         view.endEditing(true)
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
     override func viewDidDisappear(_ animated: Bool) {

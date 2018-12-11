@@ -11,6 +11,7 @@ import UIKit
 class RegistrationTouchIDViewController: UIViewController {
 
     @IBAction func backButtonClicked(_ sender: Any) {
-        dismiss(animated: true)
+//        dismiss(animated: true)
+        self.navigationController?.popViewController(animated: true)
     }
 }

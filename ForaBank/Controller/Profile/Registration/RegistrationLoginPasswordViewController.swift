@@ -28,7 +28,8 @@ class RegistrationLoginPasswordViewController: UIViewController {
             animations: {
                 self.gradientView.alpha = 0
         }, completion: { _ in
-            self.dismiss(animated: false)
+//            self.dismiss(animated: false)
+            self.navigationController?.popViewController(animated: true)
         })
     }
     

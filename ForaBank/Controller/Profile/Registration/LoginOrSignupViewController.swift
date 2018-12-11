@@ -31,17 +31,17 @@ class LoginOrSignupViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        UIView.animate(withDuration: 250, animations: {
-            self.backgroundImageView.alpha = 0.1
-        })
+//        UIView.animate(withDuration: 250, animations: {
+//            self.backgroundImageView.alpha = 0.1
+//        })
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        UIView.animate(withDuration: 250, animations: {
-            self.backgroundImageView.alpha = 0
-        })
+//        UIView.animate(withDuration: 250, animations: {
+//            self.backgroundImageView.alpha = 0
+//        })
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -63,12 +63,12 @@ class LoginOrSignupViewController: UIViewController {
 // MARK: - LoginOrSignupViewControllerDelegate
 extension LoginOrSignupViewController: LoginOrSignupViewControllerDelegate {
     func hideContainerView() {
-        containerView.alpha = 0
+//        containerView.alpha = 0
     }
     
     func animateShowContainerView() {
-        UIView.animate(withDuration: 0.25, delay: 0.25, options: [], animations: {
-            self.containerView.alpha = 1
-        })
+//        UIView.animate(withDuration: 0.25, delay: 0.25, options: [], animations: {
+//            self.containerView.alpha = 1
+//        })
     }
 }

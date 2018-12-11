@@ -65,6 +65,17 @@ class ChatMessagesViewController: UIViewController {
         tableView.register(ChatMessagesIncomingTableViewCell.self, forCellReuseIdentifier: MessageType.incoming.rawValue)
         tableView.register(ChatMessagesTransferRequestTableViewCell.self, forCellReuseIdentifier: MessageType.transferRequest.rawValue)
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        view.endEditing(true)
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
+    }
 }
 
 extension ChatMessagesViewController: UITableViewDataSource, UITableViewDelegate {
