@@ -52,10 +52,10 @@ class NetworkManager {
             completionHandler(true)
             return
         }
-        else {
-            completionHandler(true)
-            return
-        }
+//        else {
+//            completionHandler(true)
+//            return
+//        }
         let url = baseURLString + "csrf"
         Alamofire.request(url, headers: self.headers)
             .validate(statusCode: 200..<300)
@@ -149,10 +149,10 @@ class NetworkManager {
             completionHandler(isSigned!)
             return
         }
-        else {
-            completionHandler(true)
-            return
-        }
+//        else {
+//            completionHandler(true)
+//            return
+//        }
         let url = baseURLString + "login.do"
         let parameters: [String: AnyObject] = [
             "appId": "AND" as AnyObject,
@@ -188,10 +188,11 @@ class NetworkManager {
             completionHandler(isSigned!)
             return
         }
-        else {
-            completionHandler(true)
-            return
-        }
+//        else {
+//            isSigned = true
+//            completionHandler(true)
+//            return
+//        }
         let url = baseURLString + "verify/checkVerificationCode"
         let parameters: [String: AnyObject] = [
             "appId": "AND" as AnyObject,
@@ -217,6 +218,13 @@ class NetworkManager {
                     //                    self.isSigned = false
                     completionHandler(false)
                 }
+        }
+    }
+    
+    func logOut(completionHandler: CompletionHandler?) {
+        isSigned = false
+        if completionHandler != nil {
+            completionHandler!(true)
         }
     }
 }

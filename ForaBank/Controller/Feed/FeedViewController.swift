@@ -38,6 +38,15 @@ class FeedViewController: UIViewController {
     
     var items = ["Текущее", "Предстоящее", "Предложения", "Информация", "Настройки"]
     
+    private var isSignedUp: Bool? = nil {
+        didSet {
+            if isSignedUp != nil {
+                self.previousIndex = -1
+                self.carousel.reloadData()
+            }
+        }
+    }
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         currentViewController = storyboard?.instantiateViewController(withIdentifier: "feed2")
@@ -55,12 +64,23 @@ class FeedViewController: UIViewController {
         // carousel.isPagingEnabled = true
         // carousel.isScrollEnabled = false
         //carousel.currentItemIndex = 2
-        carousel.scrollToItem(at: 2, animated: false)
         addGradients()
         gradientViews[0].alpha = 1
         
         containerView.addGestureRecognizer(leftSwipeRecognizer)
         containerView.addGestureRecognizer(rightSwipeRecognizer)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        NetworkManager.shared().isSignedIn { [unowned self] (flag) in
+            self.isSignedUp = flag
+            if flag {
+                self.carousel.scrollToItem(at: 2, animated: false)
+            } else {
+                self.carousel.scrollToItem(at: 0, animated: false)
+            }
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -78,13 +98,21 @@ class FeedViewController: UIViewController {
 extension FeedViewController: iCarouselDataSource, iCarouselDelegate {
     
     func numberOfItems(in carousel: iCarousel) -> Int {
-        return items.count
+        switch isSignedUp {
+        case true:
+            return items.count
+        case false:
+            return items.count-2
+        default:
+            return 0
+        }
+//        return items.count
     }
     
     func carousel(_ carousel: iCarousel, viewForItemAt index: Int, reusing view: UIView?) -> UIView {
         var label: UILabel
         var itemView: UIImageView
-        
+        let i = (isSignedUp == true) ? index : index+2
         //reuse view if available, otherwise create a new view
         if let view = view as? UIImageView {
             itemView = view
@@ -112,8 +140,9 @@ extension FeedViewController: iCarouselDataSource, iCarouselDelegate {
         // views outside of the `if (view == nil) {...}` check otherwise
         // you'll get weird issues with carousel item content appearing
         // in the wrong place in the carousel
-        label.text = "\(items[index])"
-        labels[index] = label
+        
+        label.text = "\(items[i])"
+        labels[i] = label
         return itemView
     }
     
@@ -147,7 +176,7 @@ extension FeedViewController: iCarouselDataSource, iCarouselDelegate {
     }
     
     func numberOfPlaceholders(in carousel: iCarousel) -> Int {
-        return 6
+        return 30
     }
     
     func carousel(_ carousel: iCarousel, placeholderViewAt index: Int, reusing view: UIView?) -> UIView {
@@ -155,36 +184,41 @@ extension FeedViewController: iCarouselDataSource, iCarouselDelegate {
     }
     
     func carousel(_ carousel: iCarousel, didSelectItemAt index: Int) {
+        let i = (isSignedUp == true) ? index : index+2
+
         labels[previousIndex]?.textColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
         labels[previousIndex]?.font = UIFont(name: "Roboto-Light", size: 16)
 
-        labels[index]?.textColor = .white
-        labels[index]?.font = UIFont(name: "Roboto-Regular", size: 16)
+        labels[i]?.textColor = .white
+        labels[i]?.font = UIFont(name: "Roboto-Regular", size: 16)
         previousIndex = index
-        showComponent(index: index)
-        for (i, n) in gradientViews.enumerated() {
+        showComponent(index: i)
+        for (j, n) in gradientViews.enumerated() {
             UIView.animate(withDuration: 0.25, animations: {
-                n.alpha = index == i ? 1 : 0
+                n.alpha = i == j ? 1 : 0
             })
         }
     }
     
     func carouselDidEndScrollingAnimation(_ carousel: iCarousel) {
-        if previousIndex<0 || previousIndex == carousel.currentItemIndex{
+        let i = (isSignedUp == true) ? carousel.currentItemIndex : carousel.currentItemIndex+2
+        let pi = (isSignedUp == true) ? previousIndex : previousIndex+2
+
+        if previousIndex<0 || previousIndex == carousel.currentItemIndex {
             previousIndex = carousel.currentItemIndex
-            labels[carousel.currentItemIndex]?.textColor = .white
-            labels[carousel.currentItemIndex]?.font = UIFont(name: "Roboto-Regular", size: 16)
+            labels[i]?.textColor = .white
+            labels[i]?.font = UIFont(name: "Roboto-Regular", size: 16)
             return
         }
-        labels[previousIndex]?.textColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
-        labels[previousIndex]?.font = UIFont(name: "Roboto-Light", size: 16)
-        labels[carousel.currentItemIndex]?.textColor = .white
-        labels[carousel.currentItemIndex]?.font = UIFont(name: "Roboto-Regular", size: 16)
+        labels[pi]?.textColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
+        labels[pi]?.font = UIFont(name: "Roboto-Light", size: 16)
+        labels[i]?.textColor = .white
+        labels[i]?.font = UIFont(name: "Roboto-Regular", size: 16)
         previousIndex = carousel.currentItemIndex
-        showComponent(index: carousel.currentItemIndex)
-        for (i, n) in gradientViews.enumerated() {
+        showComponent(index: i)
+        for (j, n) in gradientViews.enumerated() {
             UIView.animate(withDuration: 0.25, animations: {
-                n.alpha = carousel.currentItemIndex == i ? 1 : 0
+                n.alpha = i == j ? 1 : 0
             })
         }
     }

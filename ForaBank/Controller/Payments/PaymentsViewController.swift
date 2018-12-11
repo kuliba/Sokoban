@@ -63,6 +63,13 @@ class PaymentsViewController: UIViewController {
             PaymentService(iconName: "payments_services_other", name: "Прочее")
         ]
     ]
+    private var isSignedUp: Bool? = nil {
+        didSet {
+            if isSignedUp != nil {
+                self.tableView.reloadData()
+            }
+        }
+    }
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -70,6 +77,13 @@ class PaymentsViewController: UIViewController {
         setUpTableView()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        NetworkManager.shared().isSignedIn { [unowned self] (flag) in
+//            print("viewWillAppear \(flag)")
+            self.isSignedUp = flag
+        }
+    }
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         if let selectedRow = tableView.indexPathForSelectedRow {
@@ -82,16 +96,26 @@ class PaymentsViewController: UIViewController {
 extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return data_.count
+        switch isSignedUp {
+        case true:
+            return data_.count
+        case false:
+            return data_.count-1
+        default:
+            return 0
+        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data_[section].count
+        let s = (isSignedUp == true) ? section : section+1
+        return data_[s].count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let section = data_[indexPath.section]
+        let s = (isSignedUp == true) ? indexPath.section : indexPath.section+1
+        
+        let section = data_[s]
         let index = indexPath.row
         
         if let templates = section as? [PaymentTemplate],
@@ -139,12 +163,13 @@ extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
         headerView.addSubview(headerCell)
         
         headerCell.titleLabel.text = {
-            
-            if section == 0 {
+            let s = (isSignedUp == true) ? section : section+1
+
+            if s == 0 {
                 return "Шаблоны"
-            } else if section == 1 {
+            } else if s == 1 {
                 return "Переводы"
-            } else if section == 2 {
+            } else if s == 2 {
                 return "Оплата услуг"
             } else {
                 return ""
@@ -155,7 +180,7 @@ extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if section == 0 {
+        if isSignedUp == true && section == 0 {
             
             let footerView = UIView(frame: CGRect(x: tableView.frame.minX + 20, y: 0, width: tableView.frame.width - 40, height: 95))
             let doneButton = UIButton(frame: CGRect(x: footerView.frame.minX, y: footerView.frame.minY + 15, width: footerView.frame.width, height: 45))
@@ -175,7 +200,7 @@ extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if section == 0 {
+        if isSignedUp == true && section == 0 {
             return 95
         } else {
             return 0
