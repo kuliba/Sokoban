@@ -502,7 +502,7 @@
         <!--Login Or Signup View Controller-->
         <scene sceneID="Tnx-XC-EHJ">
             <objects>
-                <viewController storyboardIdentifier="LoginOrSignupViewController" id="hQB-Xh-8wq" customClass="LoginOrSignupViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginOrSignupViewController" modalTransitionStyle="flipHorizontal" id="hQB-Xh-8wq" customClass="LoginOrSignupViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ZgG-7W-rWO" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -640,7 +640,7 @@
         <!--Registration View Controller-->
         <scene sceneID="JMR-a8-C45">
             <objects>
-                <viewController modalPresentationStyle="overCurrentContext" id="hLn-po-byv" customClass="RegistrationViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalTransitionStyle="flipHorizontal" id="hLn-po-byv" customClass="RegistrationViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ZPV-Nb-wQk">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -844,7 +844,7 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
-                                            <segue destination="l0I-L2-AWq" kind="show" animates="NO" id="GBO-Oe-wyk"/>
+                                            <segue destination="l0I-L2-AWq" kind="show" id="GBO-Oe-wyk"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -904,7 +904,7 @@
         <!--Registration Code Verification View Controller-->
         <scene sceneID="mOt-Zr-gXe">
             <objects>
-                <viewController modalPresentationStyle="overCurrentContext" id="l0I-L2-AWq" customClass="RegistrationCodeVerificationViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalTransitionStyle="flipHorizontal" modalPresentationStyle="overFullScreen" id="l0I-L2-AWq" customClass="RegistrationCodeVerificationViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="WEa-y7-S2h">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -948,6 +948,14 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MrB-Sk-vNf">
                                 <rect key="frame" x="0.0" y="67" width="375" height="600"/>
                                 <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mnd-ir-Kf1" customClass="FlexiblePageControl" customModule="FlexiblePageControl">
+                                        <rect key="frame" x="152.5" y="10" width="70" height="10"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="10" id="QLH-I0-F8k"/>
+                                            <constraint firstAttribute="width" constant="70" id="UW3-Qh-Ndn"/>
+                                        </constraints>
+                                    </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e3e-3y-EcT">
                                         <rect key="frame" x="8" y="208.5" width="359" height="183"/>
                                         <subviews>
@@ -981,7 +989,7 @@
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
                                                 <connections>
-                                                    <segue destination="qDb-5Z-fyW" kind="show" animates="NO" id="G9z-5z-0yv"/>
+                                                    <segue destination="qDb-5Z-fyW" kind="show" id="G9z-5z-0yv"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -1005,6 +1013,8 @@
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="e3e-3y-EcT" secondAttribute="trailing" constant="8" id="8Ix-Xg-0SU"/>
                                     <constraint firstItem="e3e-3y-EcT" firstAttribute="centerY" secondItem="MrB-Sk-vNf" secondAttribute="centerY" id="KI7-BM-lkJ"/>
+                                    <constraint firstItem="mnd-ir-Kf1" firstAttribute="top" secondItem="MrB-Sk-vNf" secondAttribute="top" constant="10" id="X39-jO-938"/>
+                                    <constraint firstItem="mnd-ir-Kf1" firstAttribute="centerX" secondItem="MrB-Sk-vNf" secondAttribute="centerX" id="myS-3U-b2K"/>
                                     <constraint firstItem="e3e-3y-EcT" firstAttribute="leading" secondItem="MrB-Sk-vNf" secondAttribute="leading" constant="8" id="wgb-MH-j2H"/>
                                 </constraints>
                             </view>
@@ -1026,6 +1036,7 @@
                         <outlet property="codeNumberTextField" destination="eIc-vu-Aoa" id="fzG-Ss-tQK"/>
                         <outlet property="containerView" destination="MrB-Sk-vNf" id="eRS-9v-oiZ"/>
                         <outlet property="continueButton" destination="f7h-Sd-6c8" id="QkO-j1-aZa"/>
+                        <outlet property="pageControl" destination="mnd-ir-Kf1" id="dQW-Y6-BUC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="A50-gF-kGM" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1035,7 +1046,7 @@
         <!--Registration Login Password View Controller-->
         <scene sceneID="AfB-Ct-jcl">
             <objects>
-                <viewController modalPresentationStyle="overCurrentContext" id="qDb-5Z-fyW" customClass="RegistrationLoginPasswordViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalTransitionStyle="flipHorizontal" id="qDb-5Z-fyW" customClass="RegistrationLoginPasswordViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="j1x-Xo-kJU">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1186,7 +1197,7 @@
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
                                                 <connections>
-                                                    <segue destination="Ftx-Ta-bTi" kind="show" animates="NO" id="EHG-zD-nPi"/>
+                                                    <segue destination="Ftx-Ta-bTi" kind="show" id="EHG-zD-nPi"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UFc-zB-g6i">

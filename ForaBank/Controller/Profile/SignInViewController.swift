@@ -22,7 +22,7 @@ class SignInViewController: UIViewController {
 //        presentingViewController?.presentingViewController?.dismiss(animated: true)
 //        navigationController?.popViewController(animated: true)
         NetworkManager.shared().csrf { [unowned self] (success) in
-            print("!!signInButtonClicked completion")
+//            print("!!signInButtonClicked completion")
             if success {
                 NetworkManager.shared().loginDo(login: self.loginTextField.text ?? "",
                                                 password: self.passwordTextField.text ?? "",

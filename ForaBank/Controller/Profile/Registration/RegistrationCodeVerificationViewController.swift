@@ -16,26 +16,28 @@ class RegistrationCodeVerificationViewController: UIViewController, UITextFieldD
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var codeNumberTextField: UITextField!
     @IBOutlet weak var continueButton: ButtonRounded!
+    @IBOutlet weak var pageControl: FlexiblePageControl!
     
-    let pageControl = FlexiblePageControl()
+//    let pageControl = FlexiblePageControl()
     let gradientView = UIView()
     let circleView = UIView()
     
     // MARK: - Actions
     @IBAction func backButtonCLicked(_ sender: Any) {
         view.endEditing(true)
-        UIView.animate(
-            withDuration: 0.35,
-            animations: {
-                self.gradientView.alpha = 0
-        },
-            completion: { _ in
+//        UIView.animate(
+//            withDuration: 0.35,
+//            animations: {
+//                self.gradientView.alpha = 0
+//        },
+//            completion: { _ in
 //                self.dismiss(animated: false)
                 self.navigationController?.popViewController(animated: true)
-        })
+//        })
     }
     @IBAction func continueButtonClicked(_ sender: Any) {
         view.endEditing(true)
+//        print("continueButtonClicked")
         NetworkManager.shared().checkVerificationCode(code: self.codeNumberTextField.text ?? "") { [unowned self] (success) in
             if success {
                 let rootVC:ProfileViewController = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
@@ -53,17 +55,20 @@ class RegistrationCodeVerificationViewController: UIViewController, UITextFieldD
         
         addGradientLayerView()
         addCircleView()
-        setUpPageControl()
+        if pageControl != nil {
+            setUpPageControl()
+        }
         
         codeNumberTextField.delegate = self
+        view.clipsToBounds = true
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        UIView.animate(withDuration: 0.25) {
-            self.gradientView.alpha = 1
-        }
+//        UIView.animate(withDuration: 0.25) {
+//            self.gradientView.alpha = 1
+//        }
     }
 }
 
@@ -77,7 +82,7 @@ private extension RegistrationCodeVerificationViewController {
         gradientLayer.endPoint = CGPoint(x: 1, y: 1)
         gradientLayer.colors = [UIColor(red: 241/255, green: 176/255, blue: 116/255, alpha: 1).cgColor, UIColor(red: 237/255, green: 73/255, blue: 73/255, alpha: 1).cgColor]
         gradientView.layer.addSublayer(gradientLayer)
-        gradientView.alpha = 0
+//        gradientView.alpha = 0
         view.insertSubview(gradientView, at: 0)
     }
     

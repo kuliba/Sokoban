@@ -23,14 +23,14 @@ class RegistrationLoginPasswordViewController: UIViewController {
     // MARK: - Actions
     @IBAction func backButtonCLicked(_ sender: Any) {
         view.endEditing(true)
-        UIView.animate(
-            withDuration: 0.35,
-            animations: {
-                self.gradientView.alpha = 0
-        }, completion: { _ in
+//        UIView.animate(
+//            withDuration: 0.35,
+//            animations: {
+//                self.gradientView.alpha = 0
+//        }, completion: { _ in
 //            self.dismiss(animated: false)
             self.navigationController?.popViewController(animated: true)
-        })
+//        })
     }
     
     // MARK: - Lifecycle
@@ -40,14 +40,15 @@ class RegistrationLoginPasswordViewController: UIViewController {
         addGradientLayerView()
         addCircleView()
         setPageControl()
+        view.clipsToBounds = true
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        UIView.animate(withDuration: 0.25) {
-            self.gradientView.alpha = 1
-        }
+//        UIView.animate(withDuration: 0.25) {
+//            self.gradientView.alpha = 1
+//        }
     }
     
     // MARK: - Methods
@@ -59,7 +60,7 @@ class RegistrationLoginPasswordViewController: UIViewController {
         gradientLayer.endPoint = CGPoint(x: 1, y: 1)
         gradientLayer.colors = [UIColor(red: 241/255, green: 176/255, blue: 116/255, alpha: 1).cgColor, UIColor(red: 237/255, green: 73/255, blue: 73/255, alpha: 1).cgColor]
         gradientView.layer.addSublayer(gradientLayer)
-        gradientView.alpha = 0
+//        gradientView.alpha = 0
         view.insertSubview(gradientView, at: 0)
     }
     

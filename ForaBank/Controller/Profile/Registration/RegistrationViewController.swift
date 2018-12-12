@@ -83,7 +83,7 @@ class RegistrationViewController: UIViewController {
         setUpCardNumberTextField()
         
         setUpTextFieldDelegates()
-        
+        view.clipsToBounds = true
 //        segmentedOuterView.alpha = 0
 //        cardView.alpha = 0
 //        descriptionLabel.alpha = 0
