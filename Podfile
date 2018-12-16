@@ -11,4 +11,5 @@ target 'ForaBank' do
   pod 'FlexiblePageControl'
   pod 'IQKeyboardManagerSwift'
   pod 'Alamofire'
+  pod 'Hero'
 end

@@ -2,6 +2,7 @@ PODS:
   - Alamofire (4.8.0)
   - DeviceKit (1.8.1)
   - FlexiblePageControl (1.0.7)
+  - Hero (1.4.0)
   - iCarousel (1.8.3)
   - IQKeyboardManagerSwift (6.2.0)
 
@@ -9,6 +10,7 @@ DEPENDENCIES:
   - Alamofire
   - DeviceKit
   - FlexiblePageControl
+  - Hero
   - iCarousel
   - IQKeyboardManagerSwift
 
@@ -17,6 +19,7 @@ SPEC REPOS:
     - Alamofire
     - DeviceKit
     - FlexiblePageControl
+    - Hero
     - iCarousel
     - IQKeyboardManagerSwift
 
@@ -24,9 +27,10 @@ SPEC CHECKSUMS:
   Alamofire: 3ec537f71edc9804815215393ae2b1a8ea33a844
   DeviceKit: eb29be542f5473b46b1c719011cf7de3ec5264ca
   FlexiblePageControl: 2ce8446da3d75df6432dbad7b9e19151629dae62
+  Hero: bac92350d7201a1a940003e0767c7b52ce7c99a1
   iCarousel: d782f635afac190c49bb8ee455882284cff8b85f
   IQKeyboardManagerSwift: b07ccf9d8cafe993dcd6cb794eb4ba34611a0c4e
 
-PODFILE CHECKSUM: eae8fc08a97633e0295738cc98e639447faa3889
+PODFILE CHECKSUM: 879cbe56d954f643fdc53ef5e6952ad40dc4856f
 
 COCOAPODS: 1.6.0.beta.1

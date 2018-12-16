@@ -24,7 +24,10 @@ class CardManager {
         var c2 = Card.init(type: CardType.visaPlatinum, paypass: true, title: "Visa Platinum Cashback", number: "5676 4567 8907 9706", validityPeriod: "08/18", cash: "19 500 ₽", blocked: false)
         var c3 = Card.init(type: .mastercard, paypass: false, title: "RIO CARD", number: "5009 4567 8907 9706", validityPeriod: "05/19", cash: "7500,15 ₽", blocked: false)
         var c4 = Card.init(type: .visaDebet, paypass: false, title: "Дебетовая", number: "5676 4567 8907 9706", validityPeriod: "03/21", cash: "7500,15 ₽", blocked: false)
-        return [c1,c2,c3,c4]
+//        var c5 = Card.init(type: .visaDebet, paypass: false, title: "Дебетовая", number: "5676 4567 8907 9706", validityPeriod: "03/21", cash: "7500,15 ₽", blocked: false)
+//        var c6 = Card.init(type: .visaDebet, paypass: false, title: "Дебетовая", number: "5676 4567 8907 9706", validityPeriod: "03/21", cash: "7500,15 ₽", blocked: false)
+//        var c7 = Card.init(type: .visaDebet, paypass: false, title: "Дебетовая", number: "5676 4567 8907 9706", validityPeriod: "03/21", cash: "7500,15 ₽", blocked: false)
+        return [c1,c2,c3,c4]//,c5,c6,c7]
     }()
     
     var hasBlockedCard: Bool = false//true

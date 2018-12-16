@@ -7,11 +7,7 @@
 //
 
 import UIKit
-
-protocol LoginOrSignupViewControllerDelegate: class {
-    func animateShowContainerView()
-    func hideContainerView()
-}
+import Hero
 
 class LoginOrSignupViewController: UIViewController {
     
@@ -21,7 +17,15 @@ class LoginOrSignupViewController: UIViewController {
     @IBOutlet weak var registrationButton: UIButton!
     @IBOutlet weak var signInButton: UIButton!
     
+    var segueId: String? = nil
+    
+    let transitionDuration: TimeInterval = 2
+    
     // MARK: - Lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -30,23 +34,68 @@ class LoginOrSignupViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-//        UIView.animate(withDuration: 250, animations: {
-//            self.backgroundImageView.alpha = 0.1
-//        })
+        if segueId == "SignIn" {
+            backgroundImageView.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.delay(0.5),
+                HeroModifier.translate(CGPoint(x: 50, y: 0)),
+                HeroModifier.opacity(0)
+            ]
+            containerView.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.delay(0.2),
+                HeroModifier.opacity(0)
+            ]
+        }
+        if segueId == "logout" {
+            backgroundImageView.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.delay(0.5),
+                HeroModifier.translate(CGPoint(x: 50, y: 0)),
+                HeroModifier.opacity(0)
+            ]
+            containerView.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.delay(0.2),
+                HeroModifier.opacity(0)
+            ]
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        backgroundImageView.hero.modifiers = nil
+        containerView.hero.modifiers = nil
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
-//        UIView.animate(withDuration: 250, animations: {
-//            self.backgroundImageView.alpha = 0
-//        })
+        if segueId == "SignIn" {
+            backgroundImageView.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.translate(CGPoint(x: 50, y: 0)),
+                HeroModifier.opacity(0)
+            ]
+            containerView.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.delay(0.3),
+                HeroModifier.opacity(0)
+            ]
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        backgroundImageView.hero.modifiers = nil
+        containerView.hero.modifiers = nil
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let vc = segue.destination as? RegistrationViewController {
-            vc.delegate = self
+        segueId = nil
+        if let vc = segue.destination as? SignInViewController {
+            segueId = segue.identifier
+            vc.segueId = segueId
+            vc.backSegueId = segueId
         }
     }
     
@@ -57,18 +106,5 @@ class LoginOrSignupViewController: UIViewController {
         signInButton.layer.cornerRadius = signInButton.frame.height / 2
         
         registrationButton.layer.cornerRadius = registrationButton.frame.height / 2
-    }
-}
-
-// MARK: - LoginOrSignupViewControllerDelegate
-extension LoginOrSignupViewController: LoginOrSignupViewControllerDelegate {
-    func hideContainerView() {
-//        containerView.alpha = 0
-    }
-    
-    func animateShowContainerView() {
-//        UIView.animate(withDuration: 0.25, delay: 0.25, options: [], animations: {
-//            self.containerView.alpha = 1
-//        })
     }
 }

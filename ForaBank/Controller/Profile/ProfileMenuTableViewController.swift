@@ -17,12 +17,16 @@ class ProfileMenuTableViewController: UITableViewController {
     
     @IBAction func quitButtonClicked(_ sender: Any) {
 //        parent?.performSegue(withIdentifier: "RegistrationViewController", sender: nil)
-        let rootVC:LoginOrSignupViewController = self.storyboard?.instantiateViewController(withIdentifier: "LoginOrSignupViewController") as! LoginOrSignupViewController
+        let rootVC = self.storyboard?.instantiateViewController(withIdentifier: "LoginOrSignupViewController") as! LoginOrSignupViewController
         NetworkManager.shared().logOut { [unowned self] (_) in
             if let t = self.navigationController?.tabBarController as? TabBarController {
                 t.setNumberOfTabsAvailable()
             }
         }
+        if let pvc = parent as? ProfileViewController {
+            pvc.segueId = "logout"
+        }
+        rootVC.segueId = "logout"
         navigationController?.setViewControllers([rootVC], animated: true)
     }
     

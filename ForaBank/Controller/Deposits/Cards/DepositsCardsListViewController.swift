@@ -10,14 +10,17 @@ import UIKit
 
 class DepositsCardsListViewController: UIViewController {
     
+    //чтобы перекладывать карты
     lazy var panGesture: UIPanGestureRecognizer = {
         let gesture = UIPanGestureRecognizer(target: self, action: #selector(dragUnselectedCardView(_:)))
         return gesture
     }()
+    //чтобы выбирать карту
     lazy var longPressGesture: UILongPressGestureRecognizer = {
         let gesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressCardView(_:)))
         return gesture
     }()
+    //
     var lastCardViewCenter: CGPoint = CGPoint.zero
     var selectedCardView: DetailedCardView? = nil
     
@@ -106,17 +109,15 @@ class DepositsCardsListViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        //let screenSize: CGRect = UIScreen.main.bounds
         //UIScrollView
         self.view.addSubview(scrollView)
-        // constrain the scroll view
+        // constraints the scroll view
         var horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|[scrollView]|", options: [], metrics: nil, views: ["scrollView":scrollView])
         var verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|[scrollView]|", options: [], metrics: nil, views: ["scrollView":scrollView])
         view.addConstraints(horizontalConstraints)
         view.addConstraints(verticalConstraints)
         
         //contentView
-//        contentView.con
         scrollView.addSubview(contentView)
         scrollView.addConstraint(NSLayoutConstraint(item: contentView,
                                               attribute: .width,
@@ -130,15 +131,12 @@ class DepositsCardsListViewController: UIViewController {
         //pickerButton
         optionPickerButton.addTarget(self, action: #selector(optionPickerButtonClicked(_:)), for: .touchUpInside)
         contentView.addSubview(optionPickerButton)
-        //reasonPickerButton.addTarget(self, action: #selector(reasonPickerButtonClicked(_:)), for: .touchUpInside)
         
         //addCardButton
         contentView.addSubview(addCardButton)
-        // constrain addCardButton
+        // constraints addCardButton
         horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[addCardButton]-20-|", options: [], metrics: nil, views: ["addCardButton":addCardButton])
-//        verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[addCardButton(45)]-20-|", options: [], metrics: nil, views: ["addCardButton":addCardButton])
         contentView.addConstraints(horizontalConstraints)
-//        contentView.addConstraints(verticalConstraints)
         addCardButtonBottomConstraint = NSLayoutConstraint(item: addCardButton,
                                                              attribute: .bottom,
                                                              relatedBy: .equal,
@@ -156,11 +154,9 @@ class DepositsCardsListViewController: UIViewController {
                                                      constant: 45))
         //allActionButton
         contentView.addSubview(allActionButton)
-        // constrain allActionButton
+        // constraints allActionButton
         horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[allActionButton]-20-|", options: [], metrics: nil, views: ["allActionButton":allActionButton])
-//        verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[allActionButton(45)]-20-|", options: [], metrics: nil, views: ["allActionButton":allActionButton])
         contentView.addConstraints(horizontalConstraints)
-//        contentView.addConstraints(verticalConstraints)
         allActionButtonBottomConstraint = NSLayoutConstraint(item: allActionButton,
                                                            attribute: .bottom,
                                                            relatedBy: .equal,
@@ -179,7 +175,7 @@ class DepositsCardsListViewController: UIViewController {
         
         //sendMoneyButton
         contentView.addSubview(sendMoneyButton)
-        // constrain sendMoneyButton
+        // constraints sendMoneyButton
         contentView.addConstraint(NSLayoutConstraint(item: sendMoneyButton,
                                                      attribute: .centerX,
                                                      relatedBy: .equal,
@@ -199,7 +195,7 @@ class DepositsCardsListViewController: UIViewController {
 
         //addMoneyButton
         contentView.addSubview(addMoneyButton)
-        // constrain addMoneyButton
+        // constraints addMoneyButton
         horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:[addMoneyButton(45)]-20-[sendMoneyButton]", options: [], metrics: nil, views: ["addMoneyButton":addMoneyButton,"sendMoneyButton":sendMoneyButton])
         contentView.addConstraints(horizontalConstraints)
         verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[addMoneyButton(45)]-15-[allActionButton]", options: [], metrics: nil, views: ["addMoneyButton":addMoneyButton, "allActionButton":allActionButton])
@@ -208,17 +204,15 @@ class DepositsCardsListViewController: UIViewController {
         //blockCardButton
         blockCardButton.addTarget(self, action: #selector(blockCardButtonClicked(_:)), for: .touchUpInside)
         contentView.addSubview(blockCardButton)
-        // constrain blockCardButton
+        // constraints blockCardButton
         horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:[sendMoneyButton]-20-[blockCardButton(45)]", options: [], metrics: nil, views: ["blockCardButton":blockCardButton,"sendMoneyButton":sendMoneyButton])
         contentView.addConstraints(horizontalConstraints)
         verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[blockCardButton(45)]-15-[allActionButton]", options: [], metrics: nil, views: ["blockCardButton":blockCardButton, "allActionButton":allActionButton])
         contentView.addConstraints(verticalConstraints)
         
-        // constrain sortPickerButton
+        // constraints sortPickerButton
         horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[sortPickerButton]-20-|", options: [], metrics: nil, views: ["sortPickerButton":optionPickerButton])
-//        verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-40-[sortPickerButton(35)]", options: [], metrics: nil, views: ["sortPickerButton":sortPickerButton])
         contentView.addConstraints(horizontalConstraints)
-//        contentView.addConstraints(verticalConstraints)
         sortPickerButtonTopConstraint = NSLayoutConstraint(item: optionPickerButton,
                                                            attribute: .top,
                                                            relatedBy: .equal,
@@ -255,6 +249,7 @@ class DepositsCardsListViewController: UIViewController {
         cardViewHeight = CGFloat(cardWidth)*160/280
         let cardsCount = CGFloat(cards.count)
 //        cardsStackView.spacing = 40-cardHeight
+        
         cardsStackHeight = cardsCount*(cardViewHeight!)+(cardsCount-1)*(50-cardViewHeight!)
 
         contentViewHeightConstraint = NSLayoutConstraint(item: contentView,
