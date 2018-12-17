@@ -20,6 +20,11 @@ class DepositsCardsListViewController: UIViewController {
         let gesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressCardView(_:)))
         return gesture
     }()
+    //чтобы отменить выбор карты
+    lazy var tapOutsidePressGesture: UITapGestureRecognizer = {
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(tapOutsideCardView(_:)))
+        return gesture
+    }()
     //
     var lastCardViewCenter: CGPoint = CGPoint.zero
     var selectedCardView: DetailedCardView? = nil
@@ -32,13 +37,14 @@ class DepositsCardsListViewController: UIViewController {
     var allActionButtonTopConstraint: NSLayoutConstraint? = nil
     var addCardButtonBottomConstraint: NSLayoutConstraint? = nil
     var addCardButtonTopConstraint: NSLayoutConstraint? = nil
-    var contentViewConstraints: [NSLayoutConstraint] = [NSLayoutConstraint]()
     
     var cardViewHeight: CGFloat? = nil
     var cardsStackHeight: CGFloat? = nil
+    let _numberOfVisibleCards = 4
     
     var cards: [Card] = [Card]()
     var cardViews : [DetailedCardView] = [DetailedCardView]()
+    
     let scrollView: UIScrollView = {
         let v = UIScrollView()
         v.alwaysBounceVertical = true
@@ -107,207 +113,58 @@ class DepositsCardsListViewController: UIViewController {
         return b
     }()
 
+    //MARK: - lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        //UIScrollView
-        self.view.addSubview(scrollView)
-        // constraints the scroll view
-        var horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|[scrollView]|", options: [], metrics: nil, views: ["scrollView":scrollView])
-        var verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|[scrollView]|", options: [], metrics: nil, views: ["scrollView":scrollView])
-        view.addConstraints(horizontalConstraints)
-        view.addConstraints(verticalConstraints)
-        
-        //contentView
-        scrollView.addSubview(contentView)
-        scrollView.addConstraint(NSLayoutConstraint(item: contentView,
-                                              attribute: .width,
-                                              relatedBy: .equal,
-                                              toItem: scrollView,
-                                              attribute: .width,
-                                              multiplier: 1,
-                                              constant: 0))
-       
-        
-        //pickerButton
-        optionPickerButton.addTarget(self, action: #selector(optionPickerButtonClicked(_:)), for: .touchUpInside)
-        contentView.addSubview(optionPickerButton)
-        
-        //addCardButton
-        contentView.addSubview(addCardButton)
-        // constraints addCardButton
-        horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[addCardButton]-20-|", options: [], metrics: nil, views: ["addCardButton":addCardButton])
-        contentView.addConstraints(horizontalConstraints)
-        addCardButtonBottomConstraint = NSLayoutConstraint(item: addCardButton,
-                                                             attribute: .bottom,
-                                                             relatedBy: .equal,
-                                                             toItem: contentView,
-                                                             attribute: .bottom,
-                                                             multiplier: 1,
-                                                             constant: -20)
-        contentView.addConstraint(addCardButtonBottomConstraint!)
-        contentView.addConstraint(NSLayoutConstraint(item: addCardButton,
-                                                     attribute: .height,
-                                                     relatedBy: .equal,
-                                                     toItem: nil,
-                                                     attribute: .notAnAttribute,
-                                                     multiplier: 1,
-                                                     constant: 45))
-        //allActionButton
-        contentView.addSubview(allActionButton)
-        // constraints allActionButton
-        horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[allActionButton]-20-|", options: [], metrics: nil, views: ["allActionButton":allActionButton])
-        contentView.addConstraints(horizontalConstraints)
-        allActionButtonBottomConstraint = NSLayoutConstraint(item: allActionButton,
-                                                           attribute: .bottom,
-                                                           relatedBy: .equal,
-                                                           toItem: contentView,
-                                                           attribute: .bottom,
-                                                           multiplier: 1,
-                                                           constant: 20)
-        contentView.addConstraint(allActionButtonBottomConstraint!)
-        contentView.addConstraint(NSLayoutConstraint(item: allActionButton,
-                                                     attribute: .height,
-                                                     relatedBy: .equal,
-                                                     toItem: nil,
-                                                     attribute: .notAnAttribute,
-                                                     multiplier: 1,
-                                                     constant: 45))
-        
-        //sendMoneyButton
-        contentView.addSubview(sendMoneyButton)
-        // constraints sendMoneyButton
-        contentView.addConstraint(NSLayoutConstraint(item: sendMoneyButton,
-                                                     attribute: .centerX,
-                                                     relatedBy: .equal,
-                                                     toItem: contentView,
-                                                     attribute: .centerX,
-                                                     multiplier: 1,
-                                                     constant: 0))
-        contentView.addConstraint(NSLayoutConstraint(item: sendMoneyButton,
-                                                     attribute: .width,
-                                                     relatedBy: .equal,
-                                                     toItem: nil,
-                                                     attribute: .notAnAttribute,
-                                                     multiplier: 1,
-                                                     constant: 45))
-        verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[sendMoneyButton(45)]-15-[allActionButton]", options: [], metrics: nil, views: ["sendMoneyButton":sendMoneyButton, "allActionButton":allActionButton])
-        contentView.addConstraints(verticalConstraints)
-
-        //addMoneyButton
-        contentView.addSubview(addMoneyButton)
-        // constraints addMoneyButton
-        horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:[addMoneyButton(45)]-20-[sendMoneyButton]", options: [], metrics: nil, views: ["addMoneyButton":addMoneyButton,"sendMoneyButton":sendMoneyButton])
-        contentView.addConstraints(horizontalConstraints)
-        verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[addMoneyButton(45)]-15-[allActionButton]", options: [], metrics: nil, views: ["addMoneyButton":addMoneyButton, "allActionButton":allActionButton])
-        contentView.addConstraints(verticalConstraints)
-
-        //blockCardButton
-        blockCardButton.addTarget(self, action: #selector(blockCardButtonClicked(_:)), for: .touchUpInside)
-        contentView.addSubview(blockCardButton)
-        // constraints blockCardButton
-        horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:[sendMoneyButton]-20-[blockCardButton(45)]", options: [], metrics: nil, views: ["blockCardButton":blockCardButton,"sendMoneyButton":sendMoneyButton])
-        contentView.addConstraints(horizontalConstraints)
-        verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[blockCardButton(45)]-15-[allActionButton]", options: [], metrics: nil, views: ["blockCardButton":blockCardButton, "allActionButton":allActionButton])
-        contentView.addConstraints(verticalConstraints)
-        
-        // constraints sortPickerButton
-        horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[sortPickerButton]-20-|", options: [], metrics: nil, views: ["sortPickerButton":optionPickerButton])
-        contentView.addConstraints(horizontalConstraints)
-        sortPickerButtonTopConstraint = NSLayoutConstraint(item: optionPickerButton,
-                                                           attribute: .top,
-                                                           relatedBy: .equal,
-                                                           toItem: contentView,
-                                                           attribute: .top,
-                                                           multiplier: 1,
-                                                           constant: 40)
-        contentView.addConstraint(sortPickerButtonTopConstraint!)
-        contentView.addConstraint(NSLayoutConstraint(item: optionPickerButton,
-                                                     attribute: .height,
-                                                     relatedBy: .equal,
-                                                     toItem: nil,
-                                                     attribute: .notAnAttribute,
-                                                     multiplier: 1,
-                                                     constant: 35))
+        addScrollView()
+        addButtons()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if cardViews.count != 0 {
-            if CardManager.shared().hasBlockedCard {
-                selectedCardView?.blockCard()
-                animateCardViewsToDefaultState()
+        if contentViewHeightConstraint == nil {
+            contentViewHeightConstraint = NSLayoutConstraint(item: contentView,
+                                                             attribute: .height,
+                                                             relatedBy: .equal,
+                                                             toItem: scrollView,
+                                                             attribute: .height,
+                                                             multiplier: 1,
+                                                             constant: 0)
+            scrollView.addConstraint(contentViewHeightConstraint!)
+        }
+        NetworkManager.shared().getCardList { [unowned self] (success, cards) in
+            if success {
+                self.cards = cards ?? []
+                if self.cardViews.count == 0 {
+//                    self.removeCardViews()
+                    self.addCardViews()
+                } else {
+                    self.updateCardViews()
+                }
             }
-            return
         }
-        
-        if CardManager.shared().hasBlockedCard {
-            cards = CardManager.shared().cards.reversed()
-        } else {
-            cards = CardManager.shared().cards
-        }
-        let cardWidth = UIScreen.main.bounds.width - 40
-        cardViewHeight = CGFloat(cardWidth)*160/280
-        let cardsCount = CGFloat(cards.count)
-//        cardsStackView.spacing = 40-cardHeight
-        
-        cardsStackHeight = cardsCount*(cardViewHeight!)+(cardsCount-1)*(50-cardViewHeight!)
-
-        contentViewHeightConstraint = NSLayoutConstraint(item: contentView,
-                                                         attribute: .height,
-                                                         relatedBy: .equal,
-                                                         toItem: nil,
-                                                         attribute: .notAnAttribute,
-                                                         multiplier: 1,
-                                                         constant: cardsStackHeight!+180)
-        scrollView.addConstraint(contentViewHeightConstraint!)
-
-        //CardViews
-        for (i, c) in cards.enumerated() {
-            let cardView = DetailedCardView(withCard: c)
-            
-            cardView.translatesAutoresizingMaskIntoConstraints = false
-
-            contentView.addSubview(cardView)
-            let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[cardView]-20-|", options: [], metrics: nil, views: ["cardView":cardView])
-            contentView.addConstraints(horizontalConstraints)
-            let cardViewTopConstraint = NSLayoutConstraint(item: cardView,
-                                                           attribute: .top,
-                                                           relatedBy: .equal,
-                                                           toItem: optionPickerButton,
-                                                           attribute: .bottom,
-                                                           multiplier: 1,
-                                                           constant: 20+CGFloat(i)*50.0)
-            cardViewsTopConstraints.append(cardViewTopConstraint)
-            contentView.addConstraint(cardViewTopConstraint)
-            contentView.addConstraint(NSLayoutConstraint(item: cardView,
-                                                         attribute: .height,
-                                                         relatedBy: .equal,
-                                                         toItem: nil,
-                                                         attribute: .height,
-                                                         multiplier: 1,
-                                                         constant: cardViewHeight!))
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(cardViewClicked(_:)))
-            cardView.addGestureRecognizer(tapGesture)
-            cardViews.append(cardView)
-        }
-//        panGesture = UIPanGestureRecognizer(target: self, action: #selector(dragUnselectedCardView(_:)))
-        selectedCardView = cardViews.last
-        selectedCardView!.isUserInteractionEnabled = true
-        selectedCardView!.addGestureRecognizer(panGesture)
-        contentViewConstraints = contentView.constraints
-//        longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressCardView(_:)))
-        
-        selectedCardView!.addGestureRecognizer(longPressGesture)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         scrollView.contentSize = CGSize(width: contentView.frame.width, height: contentView.frame.height)
-        lastCardViewCenter = cardViews.last!.center
-
     }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        lastCardViewCenter = cardViews.last?.center ?? CGPoint.zero
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "DepositsCardListOnholdBlock" {
+            if let destinationVC = segue.destination as? DepositsCardsListOnholdBlockViewController {
+                destinationVC.card = self.cards.last
+            }
+        }
+    }
+    
 
-    // MARK: - Methods
+    // MARK: - Actions
     @objc func allActionButtonClicked(_ sender: UIButton!) {
         performSegue(withIdentifier: "DepositsCardsDetailsViewController", sender: nil)
     }
@@ -316,9 +173,14 @@ class DepositsCardsListViewController: UIViewController {
         performSegue(withIdentifier: "DepositsCardsDetailsViewController", sender: nil)
     }
     
+    @objc func tapOutsideCardView(_ sender:UITapGestureRecognizer){
+        animateCardViewsToDefaultState()
+    }
+    
     @objc func longPressCardView(_ sender:UILongPressGestureRecognizer){
         if sender.state == .began {
             self.selectedCardView?.removeGestureRecognizer(self.longPressGesture)
+            self.scrollView.addGestureRecognizer(tapOutsidePressGesture)
             sendMoneyButton.alpha = 0
             blockCardButton.alpha = 0
             addMoneyButton.alpha = 0
@@ -328,6 +190,7 @@ class DepositsCardsListViewController: UIViewController {
                            options: .layoutSubviews,
                            animations: {
                             self.addCardButton.isHidden = true
+                            self.optionPickerButton.isHidden = true
                             self.sendMoneyButton.isHidden = false
                             self.addMoneyButton.isHidden = false
                             self.blockCardButton.isHidden = false
@@ -391,9 +254,9 @@ class DepositsCardsListViewController: UIViewController {
         let newBottomY = newCenterY + sender.view!.frame.size.height/2
         let newTopY = newCenterY - sender.view!.frame.size.height/2
         let setY = (newBottomY < addCardButton.frame.origin.y && newTopY > optionPickerButton.frame.origin.y+optionPickerButton.frame.size.height) ? newCenterY : sender.view!.center.y
-        sender.view?.center = CGPoint(x: sender.view!.center.x, y: setY)
+        sender.view!.center = CGPoint(x: sender.view!.center.x, y: setY)
         sender.setTranslation(CGPoint.zero, in: self.view)
-        
+//        sender.view!.alpha = (newTopY - optionPickerButton.frame.origin.y+optionPickerButton.frame.size.height) / (self.lastCardViewCenter.y - sender.view!.frame.height/2)
         if sender.state == .ended {
             if sender.view!.center.y > self.lastCardViewCenter.y {
                 UIView.animate(withDuration: 0.25,
@@ -404,7 +267,9 @@ class DepositsCardsListViewController: UIViewController {
                                 //self.contentView.layoutIfNeeded()
                                 
                 },
-                               completion: nil)
+                               completion: { (_) in
+                                sender.view?.alpha = 1
+                })
             } else {
                 sendFrontCardViewToBack()
             }
@@ -425,90 +290,8 @@ class DepositsCardsListViewController: UIViewController {
         }
     }
     
-    func sendFrontCardViewToBack() {
-        let tempCard = cards.last
-        let tempCardView = cardViews.last
-        let tempCardViewConstraint = cardViewsTopConstraints.last
-
-        cards.removeLast(1)
-        cards.insert(tempCard!, at: 0)
-        cardViews.removeLast(1)
-        cardViews.insert(tempCardView!, at: 0)
-        cardViewsTopConstraints.removeLast(1)
-        cardViewsTopConstraints.insert(tempCardViewConstraint!, at: 0)
-
-        UIView.animate(withDuration: 0.25,
-                       delay: 0,
-                       options: .curveEaseIn,
-                       animations: {
-                        for i in 0..<self.cardViewsTopConstraints.count {
-                            if i == 0 {
-                                self.cardViewsTopConstraints[i].constant -= 50*CGFloat(self.cardViewsTopConstraints.count-1)
-                            } else {
-                                self.cardViewsTopConstraints[i].constant += 50
-                            }
-                        }
-                        self.contentView.layoutIfNeeded()
-                    },
-                       completion:  { (f: Bool) in
-                        self.contentView.sendSubviewToBack(self.selectedCardView!)
-                        self.selectedCardView?.removeGestureRecognizer(self.panGesture)
-                        self.selectedCardView?.removeGestureRecognizer(self.longPressGesture)
-                        self.selectedCardView = self.cardViews.last
-                        self.selectedCardView?.addGestureRecognizer(self.panGesture)
-                        self.selectedCardView?.addGestureRecognizer(self.longPressGesture)
-        })
-    }
-    
-    func animateCardViewsToDefaultState() {
-        addCardButton.alpha = 0
-        UIView.animate(withDuration: 0.25,
-                       delay: 0,
-                       options: .curveEaseIn,
-                       animations: {
-                        self.addCardButton.isHidden = false
-                        self.sendMoneyButton.isHidden = true
-                        self.addMoneyButton.isHidden = true
-                        self.blockCardButton.isHidden = true
-                        self.allActionButton.isHidden = true
-                        self.sendMoneyButton.alpha = 0
-                        self.blockCardButton.alpha = 0
-                        self.addMoneyButton.alpha = 0
-                        self.addCardButton.alpha = 1
-                        self.contentViewHeightConstraint?.constant = self.cardsStackHeight!+180
-                        self.sortPickerButtonTopConstraint?.constant = 40
-                        self.contentView.removeConstraint(self.selectedCardViewCenterYConstraint!)
-                        
-                        self.contentView.addConstraint(self.cardViewsTopConstraints.last!)
-                        for i in 0..<self.cardViewsTopConstraints.count {
-                            if i != self.cardViewsTopConstraints.count-1 {
-                                self.cardViewsTopConstraints[i].constant = 20+CGFloat(i)*50.0
-                            }
-                        }
-                        self.contentView.removeConstraint(self.allActionButtonTopConstraint!)
-                        self.contentView.addConstraint(self.allActionButtonBottomConstraint!)
-                        self.contentView.removeConstraint(self.addCardButtonTopConstraint!)
-                        self.contentView.addConstraint(self.addCardButtonBottomConstraint!)
-                        self.scrollView.layoutIfNeeded()
-                        
-        },
-                       completion: {(f:Bool) in
-                        self.selectedCardView?.addGestureRecognizer(self.longPressGesture)
-                        self.panGesture.removeTarget(self, action: #selector(self.dragSelectedCardView(_:)))
-                        self.panGesture.addTarget(self, action: #selector(self.dragUnselectedCardView(_:)))
-        })
-    }
-    
     @objc func blockCardButtonClicked(_ sender: UIButton!) {
         performSegue(withIdentifier: "DepositsCardListOnholdBlock", sender: nil)
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "DepositsCardListOnholdBlock" {
-            if let destinationVC = segue.destination as? DepositsCardsListOnholdBlockViewController {
-                destinationVC.card = self.cards.last
-            }
-        }
     }
     
     @objc func optionPickerButtonClicked(_ sender: UIButton!) {
@@ -532,5 +315,302 @@ extension DepositsCardsListViewController: OptionPickerDelegate {
         if let option = option {
             optionPickerButton.setTitle("Сортировать \(option)", for: [])
         }
+    }
+}
+
+private extension DepositsCardsListViewController {
+    func addScrollView() {
+        //UIScrollView
+        self.view.addSubview(scrollView)
+        // constraints the scroll view
+        let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|[scrollView]|", options: [], metrics: nil, views: ["scrollView":scrollView])
+        let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|[scrollView]|", options: [], metrics: nil, views: ["scrollView":scrollView])
+        view.addConstraints(horizontalConstraints)
+        view.addConstraints(verticalConstraints)
+        
+        //contentView
+        scrollView.addSubview(contentView)
+        scrollView.addConstraint(NSLayoutConstraint(item: contentView,
+                                                    attribute: .width,
+                                                    relatedBy: .equal,
+                                                    toItem: scrollView,
+                                                    attribute: .width,
+                                                    multiplier: 1,
+                                                    constant: 0))
+    }
+    func addButtons() {
+        //pickerButton
+        optionPickerButton.addTarget(self, action: #selector(optionPickerButtonClicked(_:)), for: .touchUpInside)
+        contentView.addSubview(optionPickerButton)
+        
+        //addCardButton
+        contentView.addSubview(addCardButton)
+        // constraints addCardButton
+        var horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[addCardButton]-20-|", options: [], metrics: nil, views: ["addCardButton":addCardButton])
+        contentView.addConstraints(horizontalConstraints)
+        addCardButtonBottomConstraint = NSLayoutConstraint(item: addCardButton,
+                                                           attribute: .bottom,
+                                                           relatedBy: .equal,
+                                                           toItem: contentView,
+                                                           attribute: .bottom,
+                                                           multiplier: 1,
+                                                           constant: -20)
+        contentView.addConstraint(addCardButtonBottomConstraint!)
+        contentView.addConstraint(NSLayoutConstraint(item: addCardButton,
+                                                     attribute: .height,
+                                                     relatedBy: .equal,
+                                                     toItem: nil,
+                                                     attribute: .notAnAttribute,
+                                                     multiplier: 1,
+                                                     constant: 45))
+        //allActionButton
+        contentView.addSubview(allActionButton)
+        // constraints allActionButton
+        horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[allActionButton]-20-|", options: [], metrics: nil, views: ["allActionButton":allActionButton])
+        contentView.addConstraints(horizontalConstraints)
+        allActionButtonBottomConstraint = NSLayoutConstraint(item: allActionButton,
+                                                             attribute: .bottom,
+                                                             relatedBy: .equal,
+                                                             toItem: contentView,
+                                                             attribute: .bottom,
+                                                             multiplier: 1,
+                                                             constant: 20)
+        contentView.addConstraint(allActionButtonBottomConstraint!)
+        contentView.addConstraint(NSLayoutConstraint(item: allActionButton,
+                                                     attribute: .height,
+                                                     relatedBy: .equal,
+                                                     toItem: nil,
+                                                     attribute: .notAnAttribute,
+                                                     multiplier: 1,
+                                                     constant: 45))
+        
+        //sendMoneyButton
+        contentView.addSubview(sendMoneyButton)
+        // constraints sendMoneyButton
+        contentView.addConstraint(NSLayoutConstraint(item: sendMoneyButton,
+                                                     attribute: .centerX,
+                                                     relatedBy: .equal,
+                                                     toItem: contentView,
+                                                     attribute: .centerX,
+                                                     multiplier: 1,
+                                                     constant: 0))
+        contentView.addConstraint(NSLayoutConstraint(item: sendMoneyButton,
+                                                     attribute: .width,
+                                                     relatedBy: .equal,
+                                                     toItem: nil,
+                                                     attribute: .notAnAttribute,
+                                                     multiplier: 1,
+                                                     constant: 45))
+        var verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[sendMoneyButton(45)]-15-[allActionButton]", options: [], metrics: nil, views: ["sendMoneyButton":sendMoneyButton, "allActionButton":allActionButton])
+        contentView.addConstraints(verticalConstraints)
+        
+        //addMoneyButton
+        contentView.addSubview(addMoneyButton)
+        // constraints addMoneyButton
+        horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:[addMoneyButton(45)]-20-[sendMoneyButton]", options: [], metrics: nil, views: ["addMoneyButton":addMoneyButton,"sendMoneyButton":sendMoneyButton])
+        contentView.addConstraints(horizontalConstraints)
+        verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[addMoneyButton(45)]-15-[allActionButton]", options: [], metrics: nil, views: ["addMoneyButton":addMoneyButton, "allActionButton":allActionButton])
+        contentView.addConstraints(verticalConstraints)
+        
+        //blockCardButton
+        blockCardButton.addTarget(self, action: #selector(blockCardButtonClicked(_:)), for: .touchUpInside)
+        contentView.addSubview(blockCardButton)
+        // constraints blockCardButton
+        horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:[sendMoneyButton]-20-[blockCardButton(45)]", options: [], metrics: nil, views: ["blockCardButton":blockCardButton,"sendMoneyButton":sendMoneyButton])
+        contentView.addConstraints(horizontalConstraints)
+        verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[blockCardButton(45)]-15-[allActionButton]", options: [], metrics: nil, views: ["blockCardButton":blockCardButton, "allActionButton":allActionButton])
+        contentView.addConstraints(verticalConstraints)
+        
+        // constraints sortPickerButton
+        horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[sortPickerButton]-20-|", options: [], metrics: nil, views: ["sortPickerButton":optionPickerButton])
+        contentView.addConstraints(horizontalConstraints)
+        sortPickerButtonTopConstraint = NSLayoutConstraint(item: optionPickerButton,
+                                                           attribute: .top,
+                                                           relatedBy: .equal,
+                                                           toItem: contentView,
+                                                           attribute: .top,
+                                                           multiplier: 1,
+                                                           constant: 40)
+        contentView.addConstraint(sortPickerButtonTopConstraint!)
+        contentView.addConstraint(NSLayoutConstraint(item: optionPickerButton,
+                                                     attribute: .height,
+                                                     relatedBy: .equal,
+                                                     toItem: nil,
+                                                     attribute: .notAnAttribute,
+                                                     multiplier: 1,
+                                                     constant: 35))
+    }
+    
+    func addCardViews() {
+        if cards.count == 0 {
+            return
+        }
+        
+        let cardWidth = UIScreen.main.bounds.width - 40
+        cardViewHeight = CGFloat(cardWidth)*160/280
+        let visibleCardsCount = cards.count > _numberOfVisibleCards ? _numberOfVisibleCards : cards.count //4 карты видно хорошо, остальные едва заметны
+        let unvisibleCardsCount = cards.count > _numberOfVisibleCards ? cards.count-_numberOfVisibleCards : 0
+        
+        cardsStackHeight = CGFloat(visibleCardsCount)*(cardViewHeight!) + (CGFloat(visibleCardsCount)-1)*(50-cardViewHeight!) + CGFloat(unvisibleCardsCount>0 ? 5 : 0)
+        
+        if contentViewHeightConstraint != nil {
+            scrollView.removeConstraint(contentViewHeightConstraint!)
+        }
+        contentViewHeightConstraint = NSLayoutConstraint(item: contentView,
+                                                         attribute: .height,
+                                                         relatedBy: .equal,
+                                                         toItem: nil,
+                                                         attribute: .notAnAttribute,
+                                                         multiplier: 1,
+                                                         constant: cardsStackHeight!+180)
+        scrollView.addConstraint(contentViewHeightConstraint!)
+        
+        //CardViews
+        cardViews = []
+        
+        for (i, c) in cards.enumerated() {
+            let cardView = DetailedCardView(withCard: c)
+            cardView.layer.shadowColor = UIColor.black.cgColor
+            cardView.layer.shadowOpacity = 0.2
+            cardView.layer.shadowOffset = CGSize(width: 1, height: -1)
+            cardView.layer.shadowRadius = 4
+            //            cardView.layer.shouldRasterize = true
+            cardView.translatesAutoresizingMaskIntoConstraints = false
+            
+            contentView.addSubview(cardView)
+            let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[cardView]-20-|", options: [], metrics: nil, views: ["cardView":cardView])
+            contentView.addConstraints(horizontalConstraints)
+            var topInset: CGFloat = 20
+            if i >= unvisibleCardsCount {
+                topInset = 20+CGFloat(i-unvisibleCardsCount)*50.0 + CGFloat(unvisibleCardsCount>0 ? 5 : 0)
+            }
+            //20+CGFloat(i)*50.0
+            let cardViewTopConstraint = NSLayoutConstraint(item: cardView,
+                                                           attribute: .top,
+                                                           relatedBy: .equal,
+                                                           toItem: optionPickerButton,
+                                                           attribute: .bottom,
+                                                           multiplier: 1,
+                                                           constant: topInset)
+            cardViewsTopConstraints.append(cardViewTopConstraint)
+            contentView.addConstraint(cardViewTopConstraint)
+            contentView.addConstraint(NSLayoutConstraint(item: cardView,
+                                                         attribute: .height,
+                                                         relatedBy: .equal,
+                                                         toItem: nil,
+                                                         attribute: .height,
+                                                         multiplier: 1,
+                                                         constant: cardViewHeight!))
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(cardViewClicked(_:)))
+            cardView.addGestureRecognizer(tapGesture)
+            cardViews.append(cardView)
+        }
+        //        panGesture = UIPanGestureRecognizer(target: self, action: #selector(dragUnselectedCardView(_:)))
+        selectedCardView = cardViews.last
+        selectedCardView!.isUserInteractionEnabled = true
+        selectedCardView!.addGestureRecognizer(panGesture)
+        //        contentViewConstraints = contentView.constraints
+        //        longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressCardView(_:)))
+        
+        selectedCardView!.addGestureRecognizer(longPressGesture)
+    }
+    
+//    func removeCardViews() {
+//        for v in cardViews {
+//            v.removeFromSuperview()
+//        }
+//    }
+    func updateCardViews() {
+        for (i, v) in cardViews.enumerated() {
+            v.update(withCard: cards[i])
+        }
+    }
+    
+    func sendFrontCardViewToBack() {
+        let tempCard = cards.last
+        let tempCardView = cardViews.last
+        let tempCardViewConstraint = cardViewsTopConstraints.last
+        
+        cards.removeLast(1)
+        cards.insert(tempCard!, at: 0)
+        cardViews.removeLast(1)
+        cardViews.insert(tempCardView!, at: 0)
+        cardViewsTopConstraints.removeLast(1)
+        cardViewsTopConstraints.insert(tempCardViewConstraint!, at: 0)
+        
+        UIView.animate(withDuration: 0.25,
+                       delay: 0,
+                       options: .curveEaseIn,
+                       animations: {
+                        //                        let visibleCardsCount = self.cards.count > self._numberOfVisibleCards ? self._numberOfVisibleCards : self.cards.count //4 карты видно хорошо, остальные едва заметны
+                        let unvisibleCardsCount = self.cards.count > self._numberOfVisibleCards ? self.cards.count-self._numberOfVisibleCards : 0
+                        for i in 0..<self.cardViewsTopConstraints.count {
+                            if i < unvisibleCardsCount {
+                                self.cardViewsTopConstraints[i].constant = 20
+                                //                                self.cardViewsTopConstraints[i].constant -= 50*CGFloat(visibleCardsCount-1) - CGFloat(unvisibleCardsCount>0 ? 5 : 0)
+                                //25+CGFloat(i-unvisibleCardsCount-1)*50.0
+                            } else {
+                                self.cardViewsTopConstraints[i].constant = 25+CGFloat(i-unvisibleCardsCount)*50.0
+                                //25+CGFloat(i-unvisibleCardsCount-1)*50.0
+                            }
+                        }
+                        self.contentView.layoutIfNeeded()
+        },
+                       completion:  { (f: Bool) in
+                        self.selectedCardView?.alpha = 1
+                        self.contentView.sendSubviewToBack(self.selectedCardView!)
+                        self.selectedCardView?.removeGestureRecognizer(self.panGesture)
+                        self.selectedCardView?.removeGestureRecognizer(self.longPressGesture)
+                        self.selectedCardView = self.cardViews.last
+                        self.selectedCardView?.addGestureRecognizer(self.panGesture)
+                        self.selectedCardView?.addGestureRecognizer(self.longPressGesture)
+        })
+    }
+    
+    func animateCardViewsToDefaultState() {
+        addCardButton.alpha = 0
+        UIView.animate(withDuration: 0.25,
+                       delay: 0,
+                       options: .curveEaseIn,
+                       animations: {
+                        self.addCardButton.isHidden = false
+                        self.optionPickerButton.isHidden = false
+                        self.sendMoneyButton.isHidden = true
+                        self.addMoneyButton.isHidden = true
+                        self.blockCardButton.isHidden = true
+                        self.allActionButton.isHidden = true
+                        self.sendMoneyButton.alpha = 0
+                        self.blockCardButton.alpha = 0
+                        self.addMoneyButton.alpha = 0
+                        self.addCardButton.alpha = 1
+                        self.contentViewHeightConstraint?.constant = self.cardsStackHeight!+180
+                        self.sortPickerButtonTopConstraint?.constant = 40
+                        self.contentView.removeConstraint(self.selectedCardViewCenterYConstraint!)
+                        
+                        self.contentView.addConstraint(self.cardViewsTopConstraints.last!)
+                        //                        let visibleCardsCount = self.cards.count > self._numberOfVisibleCards ? self._numberOfVisibleCards : self.cards.count //4 карты видно хорошо, остальные едва заметны
+                        let unvisibleCardsCount = self.cards.count > self._numberOfVisibleCards ? self.cards.count-self._numberOfVisibleCards : 0
+                        for i in 0..<self.cardViewsTopConstraints.count {
+                            if i != self.cardViewsTopConstraints.count-1 {
+                                var topInset: CGFloat = 20
+                                if i >= unvisibleCardsCount {
+                                    topInset = 25+CGFloat(i-unvisibleCardsCount)*50.0
+                                }
+                                self.cardViewsTopConstraints[i].constant = topInset//20+CGFloat(i)*50.0
+                            }
+                        }
+                        self.contentView.removeConstraint(self.allActionButtonTopConstraint!)
+                        self.contentView.addConstraint(self.allActionButtonBottomConstraint!)
+                        self.contentView.removeConstraint(self.addCardButtonTopConstraint!)
+                        self.contentView.addConstraint(self.addCardButtonBottomConstraint!)
+                        self.scrollView.layoutIfNeeded()
+                        
+        },
+                       completion: {(f:Bool) in
+                        self.selectedCardView?.addGestureRecognizer(self.longPressGesture)
+                        self.scrollView.removeGestureRecognizer(self.tapOutsidePressGesture)
+                        self.panGesture.removeTarget(self, action: #selector(self.dragSelectedCardView(_:)))
+                        self.panGesture.addTarget(self, action: #selector(self.dragUnselectedCardView(_:)))
+        })
     }
 }

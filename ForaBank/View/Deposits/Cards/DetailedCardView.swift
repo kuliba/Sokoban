@@ -153,6 +153,12 @@ class DetailedCardView: UIView {
                                               constant: 99))
     }
     
+    func update(withCard card: Card) {
+        self.card = card
+        self.subviews.forEach({ $0.removeFromSuperview() })
+        addSubviews()
+    }
+    
     func blockCard() {
         print(card?.blocked as Any)
         if card!.blocked {

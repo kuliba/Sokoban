@@ -215,9 +215,11 @@ class DepositsCardsListOnholdBlockViewController: UIViewController {
     
     @objc func blockButtonClicked(_ sender: UIButton!) {
         //navigationController?.popToRootViewController(animated: true)
-        CardManager.shared().blockCard(withNumber: card!.number)
+//        CardManager.shared().blockCard(withNumber: card!.number)
         //navigationController?.dismiss(animated: true, completion: nil)
-        dismiss(animated: true, completion: nil)
+        NetworkManager.shared().blockCard(withNumber: card?.number ?? "") { [unowned self] (success) in
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
     @objc func optionPickerButtonClicked(_ sender: UIButton!) {

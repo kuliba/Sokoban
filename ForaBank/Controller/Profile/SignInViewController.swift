@@ -30,18 +30,13 @@ class SignInViewController: UIViewController {
     }
     
     @IBAction func signInButtonClicked() {
-        NetworkManager.shared().csrf { [unowned self] (success) in
+        NetworkManager.shared().login(login: self.loginTextField.text ?? "",
+                                      password: self.passwordTextField.text ?? "",
+                                      completionHandler: {[unowned self] (success) in
             if success {
-                NetworkManager.shared().loginDo(login: self.loginTextField.text ?? "",
-                                                password: self.passwordTextField.text ?? "",
-                                                completionHandler: {[unowned self] (success) in
-                                                    if success {
-                                                        self.performSegue(withIdentifier: "smsVerification", sender: self)
-                                                    }
-                })
+                self.performSegue(withIdentifier: "smsVerification", sender: self)
             }
-        }
-        
+        })
     }
     
     // MARK: - Lifecycle
