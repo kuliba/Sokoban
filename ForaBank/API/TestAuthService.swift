@@ -20,8 +20,8 @@ class TestAuthService: AuthServiceProtocol {
         completionHandler(true, nil)
     }
     
-    func loginDo(headers: HTTPHeaders, login: String, password: String, completionHandler: @escaping (Bool) -> Void) {
-        completionHandler(true)
+    func loginDo(headers: HTTPHeaders, login: String, password: String, completionHandler: @escaping (Bool, String?) -> Void) {
+        completionHandler(true, nil)
     }
     
     func checkVerificationCode(headers: HTTPHeaders, code: String, completionHandler: @escaping (Bool) -> Void) {

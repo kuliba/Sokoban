@@ -167,3 +167,149 @@ protocol CustomTransitionOriginator {
 protocol CustomTransitionDestination {
     var toAnimatedSubviews: [String : UIView] { get }
 }
+
+struct MultiRange: Sequence {
+    let ranges: [Range<Int>]
+    
+    init(_ ranges: Range<Int>...) {
+        self.ranges = ranges
+    }
+    
+    func makeIterator() -> MultiRangeIterator {
+        return MultiRangeIterator(self)
+    }
+}
+
+struct MultiRangeIterator: IteratorProtocol {
+    let multiRange: MultiRange
+    var index = IndexPath(item: 0, section: 0)
+    
+    init(_ multiRange: MultiRange) {
+        self.multiRange = multiRange
+    }
+    
+    mutating func next() -> Int? {
+        if index.section < multiRange.ranges.count {
+            let r = multiRange.ranges[index.section]
+            if index.item < r.count {
+                let nextInt = r.lowerBound + index.item
+                index.item += 1
+                return nextInt
+            }
+            else {
+                index.section +=  1
+                index.item = 0
+                return next()
+            }
+        } else {
+            return nil
+        }
+    }
+}
+
+func decodeToInt<T>(fromContainer: KeyedDecodingContainer<T>, key: KeyedDecodingContainer<T>.Key) -> Int? {
+    if let stringProperty = try? fromContainer.decodeIfPresent(String.self, forKey: key) {
+        if let s = stringProperty {
+            return Int(s)
+        } else {
+            return nil
+        }
+    } else if let intProperty = try? fromContainer.decodeIfPresent(Int.self, forKey: key) {
+        return intProperty
+    } else if let doubleProperty = try? fromContainer.decodeIfPresent(Double.self, forKey: key) {
+        if let d = doubleProperty {
+            return Int(d)
+        } else {
+            return nil
+        }
+    } else if let intProperty = try? fromContainer.decodeIfPresent(Int64.self, forKey: key) {
+        if let i = intProperty {
+            return Int(i)
+        } else {
+            return nil
+        }
+    } else {
+        print("cant parse value for key \(key)")
+        return nil
+    }
+}
+
+func decodeToInt64<T>(fromContainer: KeyedDecodingContainer<T>, key: KeyedDecodingContainer<T>.Key) -> Int64? {
+    if let stringProperty = try? fromContainer.decodeIfPresent(String.self, forKey: key) {
+        if let s = stringProperty {
+            return Int64(s)
+        } else {
+            return nil
+        }
+    } else if let intProperty = try? fromContainer.decodeIfPresent(Int.self, forKey: key) {
+        if let i = intProperty {
+            return Int64(i)
+        } else {
+            return nil
+        }
+    } else if let doubleProperty = try? fromContainer.decodeIfPresent(Double.self, forKey: key) {
+        if let d = doubleProperty {
+            return Int64(d)
+        } else {
+            return nil
+        }
+    } else if let intProperty = try? fromContainer.decodeIfPresent(Int64.self, forKey: key) {
+        return intProperty
+    } else {
+        print("cant parse value for key \(key)")
+        return nil
+    }
+}
+
+func decodeToDouble<T>(fromContainer: KeyedDecodingContainer<T>, key: KeyedDecodingContainer<T>.Key) -> Double? {
+    if let stringProperty = try? fromContainer.decodeIfPresent(String.self, forKey: key) {
+        if let s = stringProperty {
+            return Double(s)
+        } else {
+            return nil
+        }
+    } else if let intProperty = try? fromContainer.decodeIfPresent(Int.self, forKey: key) {
+        if let i = intProperty {
+            return Double(i)
+        } else {
+            return nil
+        }
+    } else if let doubleProperty = try? fromContainer.decodeIfPresent(Double.self, forKey: key) {
+        return doubleProperty
+    } else if let intProperty = try? fromContainer.decodeIfPresent(Int64.self, forKey: key) {
+        if let i = intProperty {
+            return Double(i)
+        } else {
+            return nil
+        }
+    } else {
+        print("cant parse value for key \(key)")
+        return nil
+    }
+}
+func decodeToString<T>(fromContainer: KeyedDecodingContainer<T>, key: KeyedDecodingContainer<T>.Key) -> String? {
+    if let stringProperty = try? fromContainer.decodeIfPresent(String.self, forKey: key) {
+        return stringProperty
+    } else if let intProperty = try? fromContainer.decodeIfPresent(Int.self, forKey: key) {
+        if let i = intProperty {
+            return "\(i)"
+        } else {
+            return nil
+        }
+    } else if let doubleProperty = try? fromContainer.decodeIfPresent(Double.self, forKey: key) {
+        if let d = doubleProperty {
+            return "\(d)"
+        } else {
+            return nil
+        }
+    } else if let intProperty = try? fromContainer.decodeIfPresent(Int64.self, forKey: key) {
+        if let i = intProperty {
+            return "\(i)"
+        } else {
+            return nil
+        }
+    } else {
+        print("cant parse value for key \(key)")
+        return nil
+    }
+}

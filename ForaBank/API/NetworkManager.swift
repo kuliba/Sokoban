@@ -12,7 +12,7 @@ import Alamofire
 protocol AuthServiceProtocol {
     func isSignedIn(completionHandler: @escaping (_ success:Bool) -> Void)
     func csrf(headers: HTTPHeaders, completionHandler: @escaping (_ success:Bool, _ headers: HTTPHeaders?) -> Void)
-    func loginDo(headers: HTTPHeaders, login: String, password: String, completionHandler: @escaping (_ success:Bool) -> Void)
+    func loginDo(headers: HTTPHeaders, login: String, password: String, completionHandler: @escaping (_ success:Bool,_ errorMessage: String?) -> Void)
     func checkVerificationCode(headers: HTTPHeaders, code: String, completionHandler: @escaping (_ success:Bool) -> Void)
     func logOut(completionHandler: @escaping (_ success:Bool) -> Void)
 }
@@ -29,8 +29,8 @@ class NetworkManager {
     private static var sharedNetworkManager: NetworkManager = {
         let host = "https://git.briginvest.ru/dbo/api/v2/"
         
-        let authService = TestAuthService()//AuthService(baseURLString: host)
-        let cardService = TestCardService()//AuthService(baseURLString: host)
+        let authService = TestAuthService()//AuthService(baseURLString: host)//
+        let cardService = TestCardService()
         
         let networkManager = NetworkManager(baseURLString: host, authService: authService, cardService: cardService)
         
@@ -39,10 +39,10 @@ class NetworkManager {
         
         return networkManager
     }()
-    let authService: AuthServiceProtocol
-    let cardService: CardServiceProtocol
-    let baseURLString: String
-    var headers: HTTPHeaders = [
+    private let authService: AuthServiceProtocol
+    private let cardService: CardServiceProtocol
+    private let baseURLString: String
+    private var headers: HTTPHeaders = [
         "Accept": "application/json",
         "Content-Type": "application/json"
     ]
@@ -66,21 +66,22 @@ class NetworkManager {
         authService.isSignedIn(completionHandler: completionHandler)
     }
     
-    func login(login: String, password: String, completionHandler: @escaping (_ success:Bool) -> Void) {
+    func login(login: String, password: String, completionHandler: @escaping (_ success:Bool,_ errorMessage: String?) -> Void) {
         authService.csrf(headers: headers) { [unowned self] (success, newHeaders) in
-            if success {//} && newHeaders != nil {
-                self.headers.merge(newHeaders ?? [:], uniquingKeysWith: { (k1, k2) -> String in
+            if success {
+                self.headers.merge(newHeaders ?? [:], uniquingKeysWith: { (_, k2) -> String in
                     return k2
                     })
+//                print("headers \(self.headers)")
                 self.authService.loginDo(headers: self.headers,
                                          login: login,
                                          password: password,
-                                         completionHandler: { (success) in
-                    completionHandler(success)
+                                         completionHandler: { (success, errorMessage) in
+                    completionHandler(success, errorMessage)
                 })
             }
             else {
-                completionHandler(false)
+                completionHandler(false, nil)
             }
         }
     }

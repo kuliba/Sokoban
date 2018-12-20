@@ -50,6 +50,16 @@ class RegistrationViewController: UIViewController {
         view.endEditing(true)
         self.navigationController?.popViewController(animated: true)
     }
+    @IBAction func scanCardButtonClicked(_ sender: Any) {
+        
+        let cardIOVC = CardIOPaymentViewController(paymentDelegate: self)
+//        cardIOVC?.collectCardholderName = true
+        cardIOVC?.modalPresentationStyle = .formSheet
+        cardIOVC?.guideColor = UIColor(red:0.13, green:0.54, blue:0.61, alpha:1.00)
+//        cardIOVC?.disableManualEntryButtons = true
+        cardIOVC?.hideCardIOLogo = true
+        present(cardIOVC!, animated: true, completion: nil)
+    }
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -264,20 +274,29 @@ extension RegistrationViewController: UITextFieldDelegate {
         if textField.tag == 1 {
             previousTextFieldContent = textField.text
             previousSelection = textField.selectedTextRange
+            
         }
         
-        if textField.tag == 2 {
+        if textField.tag == 2 || textField.tag == 3 {
             guard let text = textField.text else { return true }
             let count = text.count + string.count - range.length
+            if textField.tag == 2 && count>=3 {
+                yearTextField.text = string
+                yearTextField.becomeFirstResponder()
+            } else if textField.tag == 3 && count>=3 {
+                cvvTextField.text = string
+                cvvTextField.becomeFirstResponder()
+            }
             return count <= 2
         }
         
-        if textField.tag == 3 {
+        if textField.tag == 4 {
             if textField.text != nil {
                 let newLength = textField.text!.utf16.count + string.utf16.count - range.length
                 
                 if newLength == cvcAllowedLength {
                     setCardToSberbank()
+                    textField.endEditing(true)
                 }
             }
             
@@ -308,5 +327,38 @@ extension RegistrationViewController: UITextFieldDelegate {
         monthTextField.textColor = .white
         yearTextField.textColor = .white
         cvvTextField.textColor = .white
+    }
+}
+
+extension RegistrationViewController: CardIOPaymentViewControllerDelegate {
+    // Close ScanCard Screen
+    public func userDidCancel(_ paymentViewController: CardIOPaymentViewController!) {
+        paymentViewController.dismiss(animated: true, completion: nil)
+    }
+    
+    // Using this delegate method, retrive card information
+    func userDidProvide(_ cardInfo: CardIOCreditCardInfo!, in paymentViewController: CardIOPaymentViewController!) {
+        if let info = cardInfo {
+//            let str = String(format: "Received card info.\n Cardholders Name: %@ \n Number: %@\n expiry: %02lu/%lu\n cvv: %@.", info.cardholderName,info.redactedCardNumber
+//                , info.expiryMonth, info.expiryYear, info.cvv)
+            
+            //            txtCardHolderName.text = info.cardholderName
+            //
+            //            txtNumber.text = info.redactedCardNumber
+            //
+            //            txtExpiry.text = String(format:"%02lu/%lu\n",info.expiryMonth,info.expiryYear)
+            //
+            //            txtCvv.text = info.cvv
+            var useless = 0
+            cardNumberTextField.text = insertCreditCardSpaces(info.cardNumber, preserveCursorPosition: &useless)
+            monthTextField.text = "\(info.expiryMonth)"
+            let year = "\(info.expiryYear)"
+            yearTextField.text = year
+            cvvTextField.text = info.cvv
+            
+//            print(str)
+        }
+        
+        paymentViewController.dismiss(animated: true, completion: nil)
     }
 }

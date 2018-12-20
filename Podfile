@@ -12,4 +12,5 @@ target 'ForaBank' do
   pod 'IQKeyboardManagerSwift'
   pod 'Alamofire'
   pod 'Hero'
+  pod 'CardIO'
 end

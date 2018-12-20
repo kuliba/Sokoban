@@ -1,5 +1,6 @@
 PODS:
   - Alamofire (4.8.0)
+  - CardIO (5.4.1)
   - DeviceKit (1.8.1)
   - FlexiblePageControl (1.0.7)
   - Hero (1.4.0)
@@ -8,6 +9,7 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire
+  - CardIO
   - DeviceKit
   - FlexiblePageControl
   - Hero
@@ -17,6 +19,7 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Alamofire
+    - CardIO
     - DeviceKit
     - FlexiblePageControl
     - Hero
@@ -25,12 +28,13 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   Alamofire: 3ec537f71edc9804815215393ae2b1a8ea33a844
+  CardIO: 56983b39b62f495fc6dae9ad7cf875143df06443
   DeviceKit: eb29be542f5473b46b1c719011cf7de3ec5264ca
   FlexiblePageControl: 2ce8446da3d75df6432dbad7b9e19151629dae62
   Hero: bac92350d7201a1a940003e0767c7b52ce7c99a1
   iCarousel: d782f635afac190c49bb8ee455882284cff8b85f
   IQKeyboardManagerSwift: b07ccf9d8cafe993dcd6cb794eb4ba34611a0c4e
 
-PODFILE CHECKSUM: 879cbe56d954f643fdc53ef5e6952ad40dc4856f
+PODFILE CHECKSUM: 188420eac1c8bdf2543db0a380b53b96ea1d2483
 
 COCOAPODS: 1.6.0.beta.1

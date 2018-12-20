@@ -32,9 +32,13 @@ class SignInViewController: UIViewController {
     @IBAction func signInButtonClicked() {
         NetworkManager.shared().login(login: self.loginTextField.text ?? "",
                                       password: self.passwordTextField.text ?? "",
-                                      completionHandler: {[unowned self] (success) in
+                                      completionHandler: {[unowned self] success, errorMessage in
             if success {
                 self.performSegue(withIdentifier: "smsVerification", sender: self)
+            } else {
+                let alert = UIAlertController(title: "Неудача", message: errorMessage, preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
             }
         })
     }

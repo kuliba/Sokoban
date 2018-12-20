@@ -58,5 +58,9 @@
 		<string>Roboto-Thin.ttf</string>
 		<string>Roboto-ThinItalic.ttf</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Ваше местоположение позволит показать ближайшие банкоматы</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Можно сканировать номер карты, а не заполнять с клавиатуры</string>
 </dict>
 </plist>

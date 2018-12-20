@@ -150,6 +150,10 @@
 		A55B7B8C21AA713600A8A7FE /* ChatMessagesOutgoingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55B7B8B21AA713600A8A7FE /* ChatMessagesOutgoingTableViewCell.swift */; };
 		A55B7B8E21AA8EB600A8A7FE /* ChatMessagesIncomingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55B7B8D21AA8EB600A8A7FE /* ChatMessagesIncomingTableViewCell.swift */; };
 		A55B7B9021AAAAB300A8A7FE /* ChatMessagesTransferRequestTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55B7B8F21AAAAB300A8A7FE /* ChatMessagesTransferRequestTableViewCell.swift */; };
+		A568141F21CBCCB3002C0899 /* BankBranch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A568141E21CBCCB3002C0899 /* BankBranch.swift */; };
+		A568142121CBCD03002C0899 /* BankBranchAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A568142021CBCD03002C0899 /* BankBranchAnnotation.swift */; };
+		A568142421CBCD38002C0899 /* BankBranchViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A568142321CBCD38002C0899 /* BankBranchViews.swift */; };
+		A568142621CBCD48002C0899 /* BankBranchClusterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A568142521CBCD47002C0899 /* BankBranchClusterView.swift */; };
 		A56B59FA21AD623B00CE4798 /* DepositsDepositsSegueAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56B59F921AD623B00CE4798 /* DepositsDepositsSegueAnimator.swift */; };
 		A58760BF21BF8E770022DED5 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58760BE21BF8E770022DED5 /* NetworkManager.swift */; };
 		A58760C121BFB63D0022DED5 /* ProfileNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58760C021BFB63D0022DED5 /* ProfileNavigationController.swift */; };
@@ -318,6 +322,10 @@
 		A55B7B8B21AA713600A8A7FE /* ChatMessagesOutgoingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesOutgoingTableViewCell.swift; sourceTree = "<group>"; };
 		A55B7B8D21AA8EB600A8A7FE /* ChatMessagesIncomingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesIncomingTableViewCell.swift; sourceTree = "<group>"; };
 		A55B7B8F21AAAAB300A8A7FE /* ChatMessagesTransferRequestTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesTransferRequestTableViewCell.swift; sourceTree = "<group>"; };
+		A568141E21CBCCB3002C0899 /* BankBranch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BankBranch.swift; sourceTree = "<group>"; };
+		A568142021CBCD03002C0899 /* BankBranchAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BankBranchAnnotation.swift; sourceTree = "<group>"; };
+		A568142321CBCD38002C0899 /* BankBranchViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BankBranchViews.swift; sourceTree = "<group>"; };
+		A568142521CBCD47002C0899 /* BankBranchClusterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BankBranchClusterView.swift; sourceTree = "<group>"; };
 		A56B59F921AD623B00CE4798 /* DepositsDepositsSegueAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsDepositsSegueAnimator.swift; sourceTree = "<group>"; };
 		A58760BE21BF8E770022DED5 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		A58760C021BFB63D0022DED5 /* ProfileNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileNavigationController.swift; sourceTree = "<group>"; };
@@ -402,7 +410,6 @@
 			children = (
 				A5C5E6DD21A2B41F001D6250 /* PopupPickerViewController2.swift */,
 				A5C5E6D921A2B40A001D6250 /* DepositsCardsListViewController.swift */,
-				A551108A21C7999A00330510 /* AuthService.swift */,
 				A5C5E6D721A2B403001D6250 /* DepositsCardsListOnholdViewController.swift */,
 				A5C5E6D521A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift */,
 				A5C5E6D321A2B3DC001D6250 /* DepositsCardsDetailsViewController.swift */,
@@ -548,6 +555,8 @@
 				A55B7B8721AA698900A8A7FE /* ChatMessage.swift */,
 				0942B86C21625F7800370C71 /* Friend.swift */,
 				A5C5E6DF21A2B443001D6250 /* Card.swift */,
+				A568141E21CBCCB3002C0899 /* BankBranch.swift */,
+				A568142021CBCD03002C0899 /* BankBranchAnnotation.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -559,6 +568,7 @@
 				89C8DF0F2191AE7A00D92B0A /* Deposits */,
 				09203D92216E136300902BD2 /* Feed */,
 				A55B7B8921AA70A600A8A7FE /* Profile */,
+				A568142221CBCD1C002C0899 /* Services */,
 				A5C5E6E721A2B49A001D6250 /* OptionPickerButton.swift */,
 				0930F165215B5CDB00CFB593 /* RoundedEdgeView.swift */,
 				0939B5FA21774EA70029F03D /* DoubleRoundedEdgeView.swift */,
@@ -756,11 +766,21 @@
 			path = Chat;
 			sourceTree = "<group>";
 		};
+		A568142221CBCD1C002C0899 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				A568142321CBCD38002C0899 /* BankBranchViews.swift */,
+				A568142521CBCD47002C0899 /* BankBranchClusterView.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 		A58760BD21BF8E220022DED5 /* API */ = {
 			isa = PBXGroup;
 			children = (
 				A58760BE21BF8E770022DED5 /* NetworkManager.swift */,
 				A551108E21C7BEED00330510 /* TestAuthService.swift */,
+				A551108A21C7999A00330510 /* AuthService.swift */,
 				A551109021C7C0AE00330510 /* TestCardService.swift */,
 			);
 			path = API;
@@ -1028,6 +1048,7 @@
 				0904505D216B774600F3B295 /* FeedOfferCustom1Cell.swift in Sources */,
 				09D3C048215E07DB00998F57 /* ChatMessagesViewController.swift in Sources */,
 				09FC8FED215BB2B200A4694B /* ProfileMenuTableViewController.swift in Sources */,
+				A568142121CBCD03002C0899 /* BankBranchAnnotation.swift in Sources */,
 				0942B86D21625F7800370C71 /* Friend.swift in Sources */,
 				A5C5C03A21B537AB005D6B8F /* BubblesDetailedStatsViewController.swift in Sources */,
 				09045059216B5ADC00F3B295 /* FeedOffersCell.swift in Sources */,
@@ -1038,6 +1059,7 @@
 				09AF7090216F73FD00E7FCFC /* FeedCurrent3Cell.swift in Sources */,
 				096B4F542186E29300C69E52 /* DepositsCardsDetailsManagementViewController.swift in Sources */,
 				89C8DF122191AFA700D92B0A /* DepositsDepositCell.swift in Sources */,
+				A568142621CBCD48002C0899 /* BankBranchClusterView.swift in Sources */,
 				A5C5E6D621A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift in Sources */,
 				09F54A0A218B24DA003CB6D3 /* RegistrationPermissionsViewController.swift in Sources */,
 				096BCB072163518A005BC02B /* PaymentsViewController.swift in Sources */,
@@ -1047,6 +1069,7 @@
 				09AF7092216F73FD00E7FCFC /* FeedCurrent4Cell.swift in Sources */,
 				09203D95216E13A700902BD2 /* FeedOptionCell.swift in Sources */,
 				09F5DCE6218C3E7200390304 /* RegistrationFinishViewController.swift in Sources */,
+				A568142421CBCD38002C0899 /* BankBranchViews.swift in Sources */,
 				09AF708C216F73FD00E7FCFC /* FeedCurrent2Cell.swift in Sources */,
 				09F2410C2170871F007B7D73 /* FeedInfoViewController.swift in Sources */,
 				A528EF4421B16D8A00D189DD /* BubbleStatsView.swift in Sources */,
@@ -1061,6 +1084,7 @@
 				094FFC0F218837580069DDCB /* LoginOrSignupViewController.swift in Sources */,
 				0942B86B21625F4800370C71 /* Service.swift in Sources */,
 				09797559215A49020044C00A /* AppDelegate.swift in Sources */,
+				A568141F21CBCCB3002C0899 /* BankBranch.swift in Sources */,
 				A5C5E6E521A2B492001D6250 /* CardActionRoundedButton.swift in Sources */,
 				09AF707B216F4B5000E7FCFC /* FeedUpcomingCell.swift in Sources */,
 				09E0F148215A69310042FB6A /* CustomTabBarItem.swift in Sources */,
