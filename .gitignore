@@ -79,3 +79,6 @@ fastlane/test_output
 # https://github.com/johnno1962/injectionforxcode
 
 iOSInjectionProject/
+Pods/CardIO/CardIO/libopencv_imgproc.a
+Pods/CardIO/CardIO/libCardIO.a
+Pods/CardIO/CardIO/libopencv_core.a

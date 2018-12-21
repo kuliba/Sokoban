@@ -1,7 +1,7 @@
 PODS:
   - Alamofire (4.8.0)
   - CardIO (5.4.1)
-  - DeviceKit (1.8.1)
+  - DeviceKit (1.11.0)
   - FlexiblePageControl (1.0.7)
   - Hero (1.4.0)
   - iCarousel (1.8.3)
@@ -29,7 +29,7 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   Alamofire: 3ec537f71edc9804815215393ae2b1a8ea33a844
   CardIO: 56983b39b62f495fc6dae9ad7cf875143df06443
-  DeviceKit: eb29be542f5473b46b1c719011cf7de3ec5264ca
+  DeviceKit: a3a86f8dddbe1317a9a243cdf9646858bf135dce
   FlexiblePageControl: 2ce8446da3d75df6432dbad7b9e19151629dae62
   Hero: bac92350d7201a1a940003e0767c7b52ce7c99a1
   iCarousel: d782f635afac190c49bb8ee455882284cff8b85f
