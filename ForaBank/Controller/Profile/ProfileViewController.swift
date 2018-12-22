@@ -14,13 +14,14 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var containerView: RoundedEdgeView!
     @IBOutlet weak var menu: UIView!
     @IBOutlet weak var header: UIView!
+    @IBOutlet weak var nameLabel: UILabel!
     
     var segueId: String? = nil
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+        nameLabel.text = "Александр\nКрюков"
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -14,6 +14,8 @@ class ServicesViewController: UIViewController {
     // MARK: - Properties
     @IBOutlet weak var tableView: CustomTableView!
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var annotationsInfoView: UIView!
+    @IBOutlet weak var annotationsInfoHeight: NSLayoutConstraint!
     var branches = [BankBranch]()
     var annotations = [BankBranchAnnotation]()
     let serviceCellId = "ServicesCell"
@@ -40,7 +42,7 @@ class ServicesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpTableView()
-        
+        self.annotationsInfoHeight.constant = 0
         mapView.isHidden = true
     }
     
@@ -155,13 +157,16 @@ private extension ServicesViewController {
         } else if let searchBar = UINib(nibName: "ServicesSearchCell", bundle: nil)
             .instantiate(withOwner: nil, options: nil)[0] as? ServicesSearchCell {
             searchBar.backgroundColor = nil
-            searchBar.frame.origin.x = 0
-            searchBar.frame.origin.y = 30
-            searchBar.frame.size.width = view.frame.width
+//            searchBar.frame.origin.x = 0
+//            searchBar.frame.origin.y = 30
+//            searchBar.frame.size.width = view.frame.width
             searchBar.textField.backgroundColor = UIColor(red: 0.968522, green: 0.968688, blue: 0.968512, alpha: 1)
             searchBar.textField.alpha = 1
+            searchBar.translatesAutoresizingMaskIntoConstraints = false
             mapView.addSubview(searchBar)
-            
+            mapView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[sb]-0-|", options: [], metrics: nil, views: ["sb" : searchBar]))
+            mapView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-30-[sb(65)]", options: [], metrics: nil, views: ["sb" : searchBar]))
+            searchBar.mapButton.setImage(UIImage(named: "icon_services_to_table"), for: .normal)
             searchBar.mapButton.addTarget(self, action: #selector(hideMap), for: .touchUpInside)
             self.searchBar = searchBar
         }
@@ -170,7 +175,13 @@ private extension ServicesViewController {
         locationManager.delegate = self
 //        locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
+        checkLocationAuthorizationStatus()
+        if annotations.count > 0 {
+            return
+        }
         if let branchesAsset = NSDataAsset(name: "bank_branches") {
+            mapView.removeAnnotations(annotations)
+            annotations = [BankBranchAnnotation]()
             let branchesData = branchesAsset.data
             let decoder = JSONDecoder()
             let dateFormatter = DateFormatter()
@@ -182,8 +193,15 @@ private extension ServicesViewController {
                     if let l = b.latitude,
                         let long = b.longitude {
                         annotations.append(
-                            BankBranchAnnotation(coordinate: CLLocationCoordinate2D(latitude: l, longitude: long),
-                                                 type: b.type))
+                            BankBranchAnnotation(
+                                coordinate: CLLocationCoordinate2D(latitude: l, longitude: long),
+                                type: b.type,
+                                title: b.name,
+                                address: b.address,
+                                schedule: b.schedule,
+                                phone: b.phone
+                            )
+                        )
                     }
                 }
             } else {
@@ -196,7 +214,6 @@ private extension ServicesViewController {
                              forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
 //            mapView.register(BankBranchMarkerView.self, forAnnotationViewWithReuseIdentifier: MKMApviewdef)
         }
-        checkLocationAuthorizationStatus()
     }
     func checkLocationAuthorizationStatus() {
         if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
@@ -206,10 +223,15 @@ private extension ServicesViewController {
             locationManager.requestWhenInUseAuthorization()
         }
     }
+    func centerMapOnLocation(coordinate: CLLocationCoordinate2D) {
+        let coordinateRegion = MKCoordinateRegion(center: coordinate, span: mapView.region.span)
+        mapView.setRegion(coordinateRegion, animated: true)
+    }
     
     @objc func hideMap(sender: UIButton!) {
         tableView.isHidden = false
         mapView.isHidden = true
+        mapView.deselectAnnotation(mapView.selectedAnnotations.first, animated: false)
     }
 }
 
@@ -271,5 +293,35 @@ extension ServicesViewController: MKMapViewDelegate {
 //            MKLaunchOptionsDirectionsModeDriving]
 //        location.mapItem().openInMaps(launchOptions: launchOptions)
 //    }
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+//        print("did select")
+        if let cluster = view.annotation as? MKClusterAnnotation,
+            let aa = cluster.memberAnnotations as? [BankBranchAnnotation],
+            let tableVC = children.first as? AnnotationsTableViewController {
+            tableVC.annotations = aa
+            centerMapOnLocation(coordinate: cluster.coordinate)
+            UIView.animate(withDuration: 0.25, delay: 0, options: .beginFromCurrentState, animations: {
+                self.annotationsInfoHeight.constant = 150
+                self.view.layoutIfNeeded()
+            }, completion: nil)
+        }
+        if let a = view.annotation as? BankBranchAnnotation,
+            let tableVC = children.first as? AnnotationsTableViewController {
+            tableVC.annotations = [a]
+            centerMapOnLocation(coordinate: a.coordinate)
+            UIView.animate(withDuration: 0.25, delay: 0, options: .beginFromCurrentState, animations: {
+                self.annotationsInfoHeight.constant = 150
+                self.view.layoutIfNeeded()
+            }, completion: nil)
+        }
+        
+    }
+    func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
+//        print("deselect")
+        UIView.animate(withDuration: 0.25, delay: 0, options: .beginFromCurrentState, animations: {
+            self.annotationsInfoHeight.constant = 0
+            self.view.layoutIfNeeded()
+        }, completion: nil)
+    }
     
 }

@@ -15,8 +15,9 @@ class RegistrationLoginPasswordViewController: UIViewController {
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var continueButton: ButtonRounded!
+    @IBOutlet weak var pageControl: FlexiblePageControl!
     
-    let pageControl = FlexiblePageControl()
+//    let pageControl = FlexiblePageControl()
     let gradientView = UIView()
     let circleView = UIView()
     
@@ -38,8 +39,10 @@ class RegistrationLoginPasswordViewController: UIViewController {
         super.viewDidLoad()
         
         addGradientLayerView()
-        addCircleView()
-        setPageControl()
+//        addCircleView()
+        if pageControl != nil {
+            setUpPageControl()
+        }
         view.clipsToBounds = true
     }
     
@@ -77,7 +80,7 @@ class RegistrationLoginPasswordViewController: UIViewController {
         view.insertSubview(circleView, at: 1)
     }
     
-    func setPageControl() {
+    func setUpPageControl() {
         pageControl.numberOfPages = 12
         pageControl.pageIndicatorTintColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)
         pageControl.currentPageIndicatorTintColor = UIColor(red: 234/255, green: 68/255, blue: 66/255, alpha: 1)
@@ -91,10 +94,6 @@ class RegistrationLoginPasswordViewController: UIViewController {
         )
         
         pageControl.setConfig(config)
-        
-        pageControl.center.x = view.center.x
-        pageControl.frame.origin.y = 10
-        
-        containerView.addSubview(pageControl)
+        pageControl.setCurrentPage(at: 2)
     }
 }

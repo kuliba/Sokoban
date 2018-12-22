@@ -154,6 +154,8 @@
 		A568142121CBCD03002C0899 /* BankBranchAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A568142021CBCD03002C0899 /* BankBranchAnnotation.swift */; };
 		A568142421CBCD38002C0899 /* BankBranchViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A568142321CBCD38002C0899 /* BankBranchViews.swift */; };
 		A568142621CBCD48002C0899 /* BankBranchClusterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A568142521CBCD47002C0899 /* BankBranchClusterView.swift */; };
+		A568142A21CE6A79002C0899 /* AnnotationsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A568142921CE6A79002C0899 /* AnnotationsTableViewController.swift */; };
+		A568142C21CE6CB0002C0899 /* AnnotationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A568142B21CE6CB0002C0899 /* AnnotationTableViewCell.swift */; };
 		A56B59FA21AD623B00CE4798 /* DepositsDepositsSegueAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56B59F921AD623B00CE4798 /* DepositsDepositsSegueAnimator.swift */; };
 		A58760BF21BF8E770022DED5 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58760BE21BF8E770022DED5 /* NetworkManager.swift */; };
 		A58760C121BFB63D0022DED5 /* ProfileNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58760C021BFB63D0022DED5 /* ProfileNavigationController.swift */; };
@@ -326,6 +328,8 @@
 		A568142021CBCD03002C0899 /* BankBranchAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BankBranchAnnotation.swift; sourceTree = "<group>"; };
 		A568142321CBCD38002C0899 /* BankBranchViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BankBranchViews.swift; sourceTree = "<group>"; };
 		A568142521CBCD47002C0899 /* BankBranchClusterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BankBranchClusterView.swift; sourceTree = "<group>"; };
+		A568142921CE6A79002C0899 /* AnnotationsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationsTableViewController.swift; sourceTree = "<group>"; };
+		A568142B21CE6CB0002C0899 /* AnnotationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationTableViewCell.swift; sourceTree = "<group>"; };
 		A56B59F921AD623B00CE4798 /* DepositsDepositsSegueAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsDepositsSegueAnimator.swift; sourceTree = "<group>"; };
 		A58760BE21BF8E770022DED5 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		A58760C021BFB63D0022DED5 /* ProfileNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileNavigationController.swift; sourceTree = "<group>"; };
@@ -542,7 +546,7 @@
 				09203D99216E150C00902BD2 /* Feed */,
 				09C7C30B2174727A000EE472 /* Deposits */,
 				89C8DF142191BDF500D92B0A /* Payments */,
-				093B862921620806008A5222 /* ServicesViewController.swift */,
+				A568142821CE6A41002C0899 /* Services */,
 				09BE35ED218C629100EA7B24 /* Profile */,
 			);
 			path = Controller;
@@ -771,6 +775,16 @@
 			children = (
 				A568142321CBCD38002C0899 /* BankBranchViews.swift */,
 				A568142521CBCD47002C0899 /* BankBranchClusterView.swift */,
+				A568142B21CE6CB0002C0899 /* AnnotationTableViewCell.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		A568142821CE6A41002C0899 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				093B862921620806008A5222 /* ServicesViewController.swift */,
+				A568142921CE6A79002C0899 /* AnnotationsTableViewController.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -1043,6 +1057,7 @@
 				096B4F58218704AA00C69E52 /* DepositsCardsDetailsStatementViewController.swift in Sources */,
 				A5C5E6DA21A2B40A001D6250 /* DepositsCardsListViewController.swift in Sources */,
 				096B4F4E2183089900C69E52 /* TwoViewController.swift in Sources */,
+				A568142A21CE6A79002C0899 /* AnnotationsTableViewController.swift in Sources */,
 				09AF707E216F676300E7FCFC /* FeedCurrentViewController.swift in Sources */,
 				09F2410121707B3B007B7D73 /* FeedInfo1Cell.swift in Sources */,
 				0904505D216B774600F3B295 /* FeedOfferCustom1Cell.swift in Sources */,
@@ -1055,6 +1070,7 @@
 				09C7C3382175E486000EE472 /* DepositsHistoryCell.swift in Sources */,
 				097A6DCC21884B6D00E6C69E /* ButtonRounded.swift in Sources */,
 				A551109121C7C0AE00330510 /* TestCardService.swift in Sources */,
+				A568142C21CE6CB0002C0899 /* AnnotationTableViewCell.swift in Sources */,
 				A58760C121BFB63D0022DED5 /* ProfileNavigationController.swift in Sources */,
 				09AF7090216F73FD00E7FCFC /* FeedCurrent3Cell.swift in Sources */,
 				096B4F542186E29300C69E52 /* DepositsCardsDetailsManagementViewController.swift in Sources */,

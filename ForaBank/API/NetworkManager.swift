@@ -29,7 +29,7 @@ class NetworkManager {
     private static var sharedNetworkManager: NetworkManager = {
         let host = "https://git.briginvest.ru/dbo/api/v2/"
         
-        let authService = TestAuthService()//AuthService(baseURLString: host)//
+        let authService = AuthService(baseURLString: host)//TestAuthService()//
         let cardService = TestCardService()
         
         let networkManager = NetworkManager(baseURLString: host, authService: authService, cardService: cardService)
@@ -106,4 +106,6 @@ class NetworkManager {
     func blockCard(withNumber num: String, completionHandler: @escaping (Bool) -> Void) {
         cardService.blockCard(withNumber: num, completionHandler: completionHandler)
     }
+    
+    
 }

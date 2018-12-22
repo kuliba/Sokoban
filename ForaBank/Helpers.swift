@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import DeviceKit
+import FlexiblePageControl
 
 extension UIDevice {
     static var hasNotchedDisplay: Bool {
@@ -311,5 +312,15 @@ func decodeToString<T>(fromContainer: KeyedDecodingContainer<T>, key: KeyedDecod
     } else {
         print("cant parse value for key \(key)")
         return nil
+    }
+}
+
+extension FlexiblePageControl.Config {
+    public init(displayCount: Int, dotSize: CGFloat, dotSpace: CGFloat, smallDotSizeRatio: CGFloat, mediumDotSizeRatio: CGFloat) {
+        self.displayCount = displayCount
+        self.dotSize = dotSize
+        self.dotSpace = dotSpace
+        self.smallDotSizeRatio = smallDotSizeRatio
+        self.mediumDotSizeRatio = mediumDotSizeRatio
     }
 }

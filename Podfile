@@ -6,11 +6,11 @@ target 'ForaBank' do
   use_frameworks!
 
   # Pods for ForaBank
-  pod 'iCarousel'
-  pod 'DeviceKit'
-  pod 'FlexiblePageControl'
-  pod 'IQKeyboardManagerSwift'
-  pod 'Alamofire'
-  pod 'Hero'
-  pod 'CardIO'
+  pod 'iCarousel', '1.8.3'
+  pod 'DeviceKit', '1.11.0'
+  pod 'FlexiblePageControl', '1.0.7'
+  pod 'IQKeyboardManagerSwift', '6.2.0'
+  pod 'Alamofire', '4.8.0'
+  pod 'Hero', '1.4.0'
+  pod 'CardIO', '5.4.1'
 end

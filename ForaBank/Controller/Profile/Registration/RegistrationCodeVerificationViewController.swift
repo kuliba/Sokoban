@@ -181,7 +181,7 @@ private extension RegistrationCodeVerificationViewController {
         )
         
         pageControl.setConfig(config)
-        
+        pageControl.setCurrentPage(at: 1)
 //        pageControl.center.x = view.center.x
 //        pageControl.frame.origin.y = 40
 //        containerView.addSubview(pageControl)

@@ -16,6 +16,7 @@ class RegistrationViewController: UIViewController {
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var registrationLabel: UILabel!
     @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var pageControl: FlexiblePageControl!
     @IBOutlet weak var segmentedOuterView: UIView!
     @IBOutlet weak var scanCardButton: UIButton!
     
@@ -38,7 +39,7 @@ class RegistrationViewController: UIViewController {
     var previousTextFieldContent: String?
     var previousSelection: UITextRange?
     
-    let pageControl = FlexiblePageControl()
+//    let pageControl = FlexiblePageControl()
     
     let gradientView = UIView()
     let circleView = UIView()
@@ -66,9 +67,11 @@ class RegistrationViewController: UIViewController {
         super.viewDidLoad()
         
         addGradientLayerView()
-        addCircleView()
+//        addCircleView()
         
-        setUpPageControl()
+        if pageControl != nil {
+            setUpPageControl()
+        }
         setUpSegmentedControl()
         setUpCardNumberTextField()
         
@@ -128,10 +131,7 @@ private extension RegistrationViewController {
         )
         
         pageControl.setConfig(config)
-        
-        pageControl.center.x = view.center.x
-        pageControl.frame.origin.y = 10
-        containerView.addSubview(pageControl)
+        pageControl.setCurrentPage(at: 0)
     }
     
     func setUpCardNumberTextField() {
@@ -296,7 +296,7 @@ extension RegistrationViewController: UITextFieldDelegate {
                 
                 if newLength == cvcAllowedLength {
                     setCardToSberbank()
-                    textField.endEditing(true)
+//                    textField.endEditing(true)
                 }
             }
             
@@ -353,9 +353,10 @@ extension RegistrationViewController: CardIOPaymentViewControllerDelegate {
             cardNumberTextField.text = insertCreditCardSpaces(info.cardNumber, preserveCursorPosition: &useless)
             monthTextField.text = "\(info.expiryMonth)"
             let year = "\(info.expiryYear)"
-            yearTextField.text = year
+            let twoDigits = year.suffix(2)
+            yearTextField.text = String(twoDigits)
             cvvTextField.text = info.cvv
-            
+            setCardToSberbank()
 //            print(str)
         }
         

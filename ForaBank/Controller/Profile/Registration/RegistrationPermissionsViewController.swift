@@ -15,8 +15,9 @@ class RegistrationPermissionsViewController: UIViewController {
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var continueButton: ButtonRounded!
+    @IBOutlet weak var pageControl: FlexiblePageControl!
     
-    let pageControl = FlexiblePageControl()
+//    let pageControl = FlexiblePageControl()
     let gradientView = UIView()
     let circleView = UIView()
     
@@ -39,8 +40,10 @@ class RegistrationPermissionsViewController: UIViewController {
         
         setUpContinueButton()
         addGradientLayerView()
-        addCircleView()
-        setUpPageControl()
+//        addCircleView()
+        if pageControl != nil {
+            setUpPageControl()
+        }
         view.clipsToBounds = true
     }
     
@@ -99,10 +102,7 @@ private extension RegistrationPermissionsViewController {
         )
         
         pageControl.setConfig(config)
-        
-        pageControl.center.x = view.center.x
-        pageControl.frame.origin.y = 10
-        containerView.addSubview(pageControl)
+        pageControl.setCurrentPage(at: 3)
     }
     
     func setUpContinueButton() {

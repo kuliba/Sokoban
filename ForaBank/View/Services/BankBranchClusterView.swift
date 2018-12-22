@@ -17,7 +17,12 @@ class BankBranchClusterView: MKAnnotationView {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
         displayPriority = .defaultHigh
         collisionMode = .circle
-        centerOffset = CGPoint(x: 0.0, y: -10.0)
+//        centerOffset = CGPoint(x: 0.0, y: -10.0)
+//        rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+//        detailCalloutAccessoryView = UIButton(type: .detailDisclosure)
+//        canShowCallout = true
+//        callout
+        canShowCallout = false
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("\(#function) not implemented.")
@@ -28,6 +33,8 @@ private extension BankBranchClusterView {
     func configure(with annotation: MKAnnotation) {
         guard let annotation = annotation as? MKClusterAnnotation else { return }
         //    CONFIGURE
+        
+        canShowCallout = false
         let renderer = UIGraphicsImageRenderer(size: CGSize(width: 30.0, height: 30.0))
         let count = annotation.memberAnnotations.count
         image = renderer.image { _ in

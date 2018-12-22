@@ -30,7 +30,7 @@ struct BankBranch: Decodable {
     let activity: String?
     let address: String?
     let currency: String?
-    let shedule: String?
+    let schedule: String?
     let metro: String?
     let latitude: Double?
     let longitude: Double?
@@ -46,7 +46,7 @@ struct BankBranch: Decodable {
         case activity
         case address
         case currency
-        case shedule
+        case schedule
         case metro
         case latitude
         case longitude
@@ -65,7 +65,7 @@ struct BankBranch: Decodable {
         self.activity = decodeToString(fromContainer: container, key: .activity)
         self.address = decodeToString(fromContainer: container, key: .address)
         self.currency = decodeToString(fromContainer: container, key: .currency)
-        self.shedule = decodeToString(fromContainer: container, key: .shedule)
+        self.schedule = decodeToString(fromContainer: container, key: .schedule)
         self.metro = decodeToString(fromContainer: container, key: .metro)
         self.latitude = decodeToDouble(fromContainer: container, key: .latitude)
         self.longitude = decodeToDouble(fromContainer: container, key: .longitude)

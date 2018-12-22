@@ -13,10 +13,23 @@ import MapKit
 class BankBranchAnnotation: NSObject, MKAnnotation {
     var coordinate: CLLocationCoordinate2D
     var type: String?
-
-    init(coordinate: CLLocationCoordinate2D, type: String?) {
+    var title: String?
+    var address: String?
+    var schedule: String?
+    var phone: String?
+    
+    init(coordinate: CLLocationCoordinate2D,
+         type: String?,
+         title: String?,
+         address: String?,
+         schedule: String?,
+         phone: String?) {
         self.coordinate = coordinate
         self.type = type
+        self.title = title
+        self.address = address
+        self.schedule = schedule
+        self.phone = phone
     }
     
     var imageName: String? {
