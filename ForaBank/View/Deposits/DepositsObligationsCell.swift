@@ -16,4 +16,5 @@ class DepositsObligationsCell: UITableViewCell {
     @IBOutlet weak var subTitleLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var bottomSeparatorView: UIView!
+    @IBOutlet weak var descriptionLabelWidth: NSLayoutConstraint!
 }

@@ -15,36 +15,48 @@ class DepositsObligationsViewController: UIViewController {
     
     let cellId = "DepositsObligationsCell"
     
-    let data_ = [
-        ["deposits_obligations_afk",
-         "АФК-Система, Sistema-19",
-         "Предложений по бумаге нет",
-         "8,83%"
-        ],
-        
-        ["deposits_obligations_gazprom",
-         "Газпром, GAZ-37",
-         "Предложений по бумаге нет",
-         "5,37%"
-        ],
-        
-        ["deposits_obligations_veb",
-         "ВЭБ, VEB-23",
-         "Предложений по бумаге нет",
-         "4,04%"
-        ],
-        
-        ["deposits_obligations_rosnef",
-         "Роснэфть, RosNef-22",
-         "Гипермаркет",
-         "3,84%"
-        ]
-    ]
-    
+//    let data_ = [
+//        ["deposits_obligations_afk",
+//         "АФК-Система, Sistema-19",
+//         "Предложений по бумаге нет",
+//         "8,83%"
+//        ],
+//
+//        ["deposits_obligations_gazprom",
+//         "Газпром, GAZ-37",
+//         "Предложений по бумаге нет",
+//         "5,37%"
+//        ],
+//
+//        ["deposits_obligations_veb",
+//         "ВЭБ, VEB-23",
+//         "Предложений по бумаге нет",
+//         "4,04%"
+//        ],
+//
+//        ["deposits_obligations_rosnef",
+//         "Роснэфть, RosNef-22",
+//         "Гипермаркет",
+//         "3,84%"
+//        ]
+//    ]
+    var bonds = [Bond]() {
+        didSet{
+            tableView.reloadData()
+        }
+    }
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpTableView()
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        NetworkManager.shared().getBonds { (success, bonds, errorMessage) in
+            if success {
+                self.bonds = bonds ?? []
+            }
+        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -59,7 +71,7 @@ class DepositsObligationsViewController: UIViewController {
 extension DepositsObligationsViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data_.count
+        return bonds.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -67,13 +79,13 @@ extension DepositsObligationsViewController: UITableViewDataSource, UITableViewD
             fatalError()
         }
         
-        cell.titleLabel.text = data_[indexPath.row][1]
-        cell.descriptionLabel.text = data_[indexPath.row][3]
-        cell.subTitleLabel.text = data_[indexPath.row][2]
+        cell.titleLabel.text = bonds[indexPath.row].corporate
+        cell.descriptionLabel.text = String(format: "%.2f%%", bonds[indexPath.row].rate)
+        cell.subTitleLabel.text = bonds[indexPath.row].tempInfo
         
-        cell.iconImageView.image = UIImage(named: data_[indexPath.row][0])
+        cell.iconImageView.image = bonds[indexPath.row].corporateLogo
         
-        cell.bottomSeparatorView.isHidden = indexPath.row == data_.endIndex - 1
+        cell.bottomSeparatorView.isHidden = indexPath.row == bonds.endIndex - 1
         
         return cell
     }

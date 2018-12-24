@@ -156,6 +156,9 @@
 		A568142621CBCD48002C0899 /* BankBranchClusterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A568142521CBCD47002C0899 /* BankBranchClusterView.swift */; };
 		A568142A21CE6A79002C0899 /* AnnotationsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A568142921CE6A79002C0899 /* AnnotationsTableViewController.swift */; };
 		A568142C21CE6CB0002C0899 /* AnnotationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A568142B21CE6CB0002C0899 /* AnnotationTableViewCell.swift */; };
+		A568142E21D0B945002C0899 /* TestDepositsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A568142D21D0B945002C0899 /* TestDepositsService.swift */; };
+		A568143021D0B9E3002C0899 /* Bond.swift in Sources */ = {isa = PBXBuildFile; fileRef = A568142F21D0B9E3002C0899 /* Bond.swift */; };
+		A568143421D0CE6C002C0899 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = A568143321D0CE6C002C0899 /* Profile.swift */; };
 		A56B59FA21AD623B00CE4798 /* DepositsDepositsSegueAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56B59F921AD623B00CE4798 /* DepositsDepositsSegueAnimator.swift */; };
 		A58760BF21BF8E770022DED5 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58760BE21BF8E770022DED5 /* NetworkManager.swift */; };
 		A58760C121BFB63D0022DED5 /* ProfileNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58760C021BFB63D0022DED5 /* ProfileNavigationController.swift */; };
@@ -330,6 +333,9 @@
 		A568142521CBCD47002C0899 /* BankBranchClusterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BankBranchClusterView.swift; sourceTree = "<group>"; };
 		A568142921CE6A79002C0899 /* AnnotationsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationsTableViewController.swift; sourceTree = "<group>"; };
 		A568142B21CE6CB0002C0899 /* AnnotationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationTableViewCell.swift; sourceTree = "<group>"; };
+		A568142D21D0B945002C0899 /* TestDepositsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDepositsService.swift; sourceTree = "<group>"; };
+		A568142F21D0B9E3002C0899 /* Bond.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bond.swift; sourceTree = "<group>"; };
+		A568143321D0CE6C002C0899 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		A56B59F921AD623B00CE4798 /* DepositsDepositsSegueAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsDepositsSegueAnimator.swift; sourceTree = "<group>"; };
 		A58760BE21BF8E770022DED5 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		A58760C021BFB63D0022DED5 /* ProfileNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileNavigationController.swift; sourceTree = "<group>"; };
@@ -561,6 +567,8 @@
 				A5C5E6DF21A2B443001D6250 /* Card.swift */,
 				A568141E21CBCCB3002C0899 /* BankBranch.swift */,
 				A568142021CBCD03002C0899 /* BankBranchAnnotation.swift */,
+				A568142F21D0B9E3002C0899 /* Bond.swift */,
+				A568143321D0CE6C002C0899 /* Profile.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -796,6 +804,7 @@
 				A551108E21C7BEED00330510 /* TestAuthService.swift */,
 				A551108A21C7999A00330510 /* AuthService.swift */,
 				A551109021C7C0AE00330510 /* TestCardService.swift */,
+				A568142D21D0B945002C0899 /* TestDepositsService.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -989,6 +998,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				09F2410521707B7B007B7D73 /* FeedInfo2Cell.swift in Sources */,
+				A568143421D0CE6C002C0899 /* Profile.swift in Sources */,
 				095D158721789B9900F5266C /* DepositsCardsViewController.swift in Sources */,
 				09D3C041215CE5D100998F57 /* DialogCell.swift in Sources */,
 				09203D87216CA79C00902BD2 /* FeedViewController.swift in Sources */,
@@ -1008,8 +1018,10 @@
 				09C7C30D21747293000EE472 /* DepositsViewController.swift in Sources */,
 				895768CF2192E768005754D5 /* DepositsStatsViewController.swift in Sources */,
 				0930F168215B653D00CFB593 /* ProfileViewController.swift in Sources */,
+				A568142E21D0B945002C0899 /* TestDepositsService.swift in Sources */,
 				0930F166215B5CDB00CFB593 /* RoundedEdgeView.swift in Sources */,
 				A528EF4221B106CF00D189DD /* BubblesStatsScrollView.swift in Sources */,
+				A568143021D0B9E3002C0899 /* Bond.swift in Sources */,
 				09C7C33D2175FADE000EE472 /* DepositsHistoryHeader.swift in Sources */,
 				A5B473C621B52D4500F2E41F /* BubblesDetailedStatsView.swift in Sources */,
 				09F5DCE8218C4A5200390304 /* RegistrationTouchIDViewController.swift in Sources */,

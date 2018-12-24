@@ -8,6 +8,7 @@
 
 import UIKit
 import Hero
+import Alamofire
 
 class ProfileViewController: UIViewController {
 
@@ -15,13 +16,14 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var menu: UIView!
     @IBOutlet weak var header: UIView!
     @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var userImageView: CircularImageView!
     
     var segueId: String? = nil
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        nameLabel.text = "Александр\nКрюков"
+//        nameLabel.text = "Александр\nКрюков" //image_profile_samplephoto
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -44,6 +46,41 @@ class ProfileViewController: UIViewController {
                 HeroModifier.duration(0.5),
                 HeroModifier.translate(CGPoint(x: -view.frame.width, y: 0))
             ]
+        }
+        NetworkManager.shared().getProfile { [weak self] (success, profile, errorMessage) in
+            if success,
+                let firstName = profile?.firstName,
+                let lastName = profile?.lastName {
+                self?.nameLabel.text = "\(firstName)\n\(lastName)"
+                
+                if let imageUrl = profile?.imageURL {
+                    if let image = UIImage(named: imageUrl){ //load from bundle
+                        self?.userImageView.image = image
+                    } else { //load image from url
+                        //NEED AlamofireImage downloading
+                        self?.userImageView.image = UIImage(named: "image_profile_samplephoto")
+                    }
+                } else { //default image
+                    self?.userImageView.image = UIImage(named: "image_profile_samplephoto")
+                }
+            } else {
+                print("ProfileViewController: \(errorMessage ?? "error without errorMessage")")
+                self?.nameLabel.text = "Упс, что-то не загрузилось"
+                self?.userImageView.image = UIImage(named: "image_profile_samplephoto")
+                if NetworkManager.shared().checkForClosingSession(errorMessage) == true {
+                    let rootVC = self?.storyboard?.instantiateViewController(withIdentifier: "LoginOrSignupViewController") as! LoginOrSignupViewController
+                    NetworkManager.shared().logOut { [weak self] (_) in
+                        if let t = self?.navigationController?.tabBarController as? TabBarController {
+                            t.setNumberOfTabsAvailable()
+                        }
+                    }
+                    if let pvc = self?.parent as? ProfileViewController {
+                        pvc.segueId = "logout"
+                    }
+                    rootVC.segueId = "logout"
+                    self?.navigationController?.setViewControllers([rootVC], animated: true)
+                }
+            }
         }
     }
     

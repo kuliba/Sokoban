@@ -13,7 +13,7 @@ enum CardType: String {
     case visaDebet = "card_visa_debet"
 }
 
-class Card {
+struct Card {
     let type: CardType
     let paypass: Bool
     let title: String
@@ -22,15 +22,15 @@ class Card {
     let cash: String
     var blocked: Bool
     
-    init(type: CardType, paypass: Bool, title: String, number: String, validityPeriod: String, cash: String, blocked: Bool) {
-        self.type = type
-        self.paypass = paypass
-        self.title = title
-        self.number = number
-        self.validityPeriod = validityPeriod
-        self.cash = cash
-        self.blocked = blocked
-    }
+//    init(type: CardType, paypass: Bool, title: String, number: String, validityPeriod: String, cash: String, blocked: Bool) {
+//        self.type = type
+//        self.paypass = paypass
+//        self.title = title
+//        self.number = number
+//        self.validityPeriod = validityPeriod
+//        self.cash = cash
+//        self.blocked = blocked
+//    }
 }
 
 extension Card: CustomStringConvertible {
