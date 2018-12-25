@@ -50,8 +50,7 @@
 		094FFC0E218837580069DDCB /* RegistrationCodeVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094FFC0A218837580069DDCB /* RegistrationCodeVerificationViewController.swift */; };
 		094FFC0F218837580069DDCB /* LoginOrSignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094FFC0B218837580069DDCB /* LoginOrSignupViewController.swift */; };
 		094FFC10218837580069DDCB /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094FFC0C218837580069DDCB /* Helpers.swift */; };
-		095D158721789B9900F5266C /* DepositsCardsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D158621789B9900F5266C /* DepositsCardsViewController.swift */; };
-		096B4F4D2183089900C69E52 /* OneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096B4F4B2183089800C69E52 /* OneViewController.swift */; };
+		096B4F4D2183089900C69E52 /* DepositsCardsDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096B4F4B2183089800C69E52 /* DepositsCardsDetailsViewController.swift */; };
 		096B4F4E2183089900C69E52 /* TwoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096B4F4C2183089900C69E52 /* TwoViewController.swift */; };
 		096B4F502183257300C69E52 /* ThreeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096B4F4F2183257300C69E52 /* ThreeViewController.swift */; };
 		096B4F542186E29300C69E52 /* DepositsCardsDetailsManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096B4F532186E29300C69E52 /* DepositsCardsDetailsManagementViewController.swift */; };
@@ -168,11 +167,8 @@
 		A5B473C821B52E0B00F2E41F /* GroupedBubblesStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B473C721B52E0B00F2E41F /* GroupedBubblesStatsView.swift */; };
 		A5C5C03A21B537AB005D6B8F /* BubblesDetailedStatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5C03921B537AB005D6B8F /* BubblesDetailedStatsViewController.swift */; };
 		A5C5C03C21B66485005D6B8F /* BubbleDetailedStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5C03B21B66485005D6B8F /* BubbleDetailedStatsView.swift */; };
-		A5C5E6D421A2B3DC001D6250 /* DepositsCardsDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6D321A2B3DC001D6250 /* DepositsCardsDetailsViewController.swift */; };
 		A5C5E6D621A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6D521A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift */; };
-		A5C5E6D821A2B403001D6250 /* DepositsCardsListOnholdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6D721A2B403001D6250 /* DepositsCardsListOnholdViewController.swift */; };
 		A5C5E6DA21A2B40A001D6250 /* DepositsCardsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6D921A2B40A001D6250 /* DepositsCardsListViewController.swift */; };
-		A5C5E6DE21A2B41F001D6250 /* PopupPickerViewController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6DD21A2B41F001D6250 /* PopupPickerViewController2.swift */; };
 		A5C5E6E121A2B443001D6250 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6DF21A2B443001D6250 /* Card.swift */; };
 		A5C5E6E521A2B492001D6250 /* CardActionRoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6E321A2B491001D6250 /* CardActionRoundedButton.swift */; };
 		A5C5E6E621A2B492001D6250 /* DetailedCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6E421A2B491001D6250 /* DetailedCardView.swift */; };
@@ -225,8 +221,7 @@
 		094FFC0A218837580069DDCB /* RegistrationCodeVerificationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationCodeVerificationViewController.swift; sourceTree = "<group>"; };
 		094FFC0B218837580069DDCB /* LoginOrSignupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginOrSignupViewController.swift; sourceTree = "<group>"; };
 		094FFC0C218837580069DDCB /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
-		095D158621789B9900F5266C /* DepositsCardsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsCardsViewController.swift; sourceTree = "<group>"; };
-		096B4F4B2183089800C69E52 /* OneViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OneViewController.swift; sourceTree = "<group>"; };
+		096B4F4B2183089800C69E52 /* DepositsCardsDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsCardsDetailsViewController.swift; sourceTree = "<group>"; };
 		096B4F4C2183089900C69E52 /* TwoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwoViewController.swift; sourceTree = "<group>"; };
 		096B4F4F2183257300C69E52 /* ThreeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreeViewController.swift; sourceTree = "<group>"; };
 		096B4F532186E29300C69E52 /* DepositsCardsDetailsManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsCardsDetailsManagementViewController.swift; sourceTree = "<group>"; };
@@ -345,11 +340,8 @@
 		A5B473C721B52E0B00F2E41F /* GroupedBubblesStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupedBubblesStatsView.swift; sourceTree = "<group>"; };
 		A5C5C03921B537AB005D6B8F /* BubblesDetailedStatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubblesDetailedStatsViewController.swift; sourceTree = "<group>"; };
 		A5C5C03B21B66485005D6B8F /* BubbleDetailedStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleDetailedStatsView.swift; sourceTree = "<group>"; };
-		A5C5E6D321A2B3DC001D6250 /* DepositsCardsDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsCardsDetailsViewController.swift; sourceTree = "<group>"; };
 		A5C5E6D521A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsCardsListOnholdBlockViewController.swift; sourceTree = "<group>"; };
-		A5C5E6D721A2B403001D6250 /* DepositsCardsListOnholdViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsCardsListOnholdViewController.swift; sourceTree = "<group>"; };
 		A5C5E6D921A2B40A001D6250 /* DepositsCardsListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsCardsListViewController.swift; sourceTree = "<group>"; };
-		A5C5E6DD21A2B41F001D6250 /* PopupPickerViewController2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupPickerViewController2.swift; sourceTree = "<group>"; };
 		A5C5E6DF21A2B443001D6250 /* Card.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		A5C5E6E321A2B491001D6250 /* CardActionRoundedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardActionRoundedButton.swift; sourceTree = "<group>"; };
 		A5C5E6E421A2B491001D6250 /* DetailedCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailedCardView.swift; sourceTree = "<group>"; };
@@ -418,17 +410,13 @@
 		095D158A21789BB700F5266C /* Cards */ = {
 			isa = PBXGroup;
 			children = (
-				A5C5E6DD21A2B41F001D6250 /* PopupPickerViewController2.swift */,
 				A5C5E6D921A2B40A001D6250 /* DepositsCardsListViewController.swift */,
-				A5C5E6D721A2B403001D6250 /* DepositsCardsListOnholdViewController.swift */,
 				A5C5E6D521A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift */,
-				A5C5E6D321A2B3DC001D6250 /* DepositsCardsDetailsViewController.swift */,
-				095D158621789B9900F5266C /* DepositsCardsViewController.swift */,
 				096B4F532186E29300C69E52 /* DepositsCardsDetailsManagementViewController.swift */,
 				096B4F57218704AA00C69E52 /* DepositsCardsDetailsStatementViewController.swift */,
 				09E2141E21873DCA00D16D21 /* DepositsCardsDetailsStatementDetailsViewController.swift */,
 				096B4F552186F03A00C69E52 /* DepositsCardsDetailsAboutViewController.swift */,
-				096B4F4B2183089800C69E52 /* OneViewController.swift */,
+				096B4F4B2183089800C69E52 /* DepositsCardsDetailsViewController.swift */,
 				096B4F4C2183089900C69E52 /* TwoViewController.swift */,
 				096B4F4F2183257300C69E52 /* ThreeViewController.swift */,
 			);
@@ -539,8 +527,8 @@
 				89C8DF0D2191ADF200D92B0A /* DepositsDepositsViewController.swift */,
 				A56B59F921AD623B00CE4798 /* DepositsDepositsSegueAnimator.swift */,
 				09C7C30E2174888B000EE472 /* DepositsObligationsViewController.swift */,
-				895768CC2192D992005754D5 /* OneOneViewController.swift */,
 				095D158B21789BC100F5266C /* History */,
+				895768CC2192D992005754D5 /* OneOneViewController.swift */,
 			);
 			path = Deposits;
 			sourceTree = "<group>";
@@ -999,7 +987,6 @@
 			files = (
 				09F2410521707B7B007B7D73 /* FeedInfo2Cell.swift in Sources */,
 				A568143421D0CE6C002C0899 /* Profile.swift in Sources */,
-				095D158721789B9900F5266C /* DepositsCardsViewController.swift in Sources */,
 				09D3C041215CE5D100998F57 /* DialogCell.swift in Sources */,
 				09203D87216CA79C00902BD2 /* FeedViewController.swift in Sources */,
 				09C7C30F2174888B000EE472 /* DepositsObligationsViewController.swift in Sources */,
@@ -1050,10 +1037,9 @@
 				0941525B219028000068B6B1 /* SignInViewController.swift in Sources */,
 				09BE35EF218C726800EA7B24 /* GradientView2.swift in Sources */,
 				0939B5F92177266B0029F03D /* DepositsHistoryDetailsViewController.swift in Sources */,
-				A5C5E6D821A2B403001D6250 /* DepositsCardsListOnholdViewController.swift in Sources */,
 				09AF7081216F6B6F00E7FCFC /* FeedCurrent1Cell.swift in Sources */,
 				094FFC0E218837580069DDCB /* RegistrationCodeVerificationViewController.swift in Sources */,
-				096B4F4D2183089900C69E52 /* OneViewController.swift in Sources */,
+				096B4F4D2183089900C69E52 /* DepositsCardsDetailsViewController.swift in Sources */,
 				0930F16A215B6CB800CFB593 /* GradientView.swift in Sources */,
 				0943729221907198003A66CC /* PaymentsDetailsSuccessViewController.swift in Sources */,
 				A58760BF21BF8E770022DED5 /* NetworkManager.swift in Sources */,
@@ -1065,7 +1051,6 @@
 				0930F16C215B704A00CFB593 /* CircularImageView.swift in Sources */,
 				A5C5E6E821A2B49A001D6250 /* OptionPickerButton.swift in Sources */,
 				09AF7093216F73FD00E7FCFC /* FeedCurrent5Cell.swift in Sources */,
-				A5C5E6D421A2B3DC001D6250 /* DepositsCardsDetailsViewController.swift in Sources */,
 				096B4F58218704AA00C69E52 /* DepositsCardsDetailsStatementViewController.swift in Sources */,
 				A5C5E6DA21A2B40A001D6250 /* DepositsCardsListViewController.swift in Sources */,
 				096B4F4E2183089900C69E52 /* TwoViewController.swift in Sources */,
@@ -1103,7 +1088,6 @@
 				A528EF4421B16D8A00D189DD /* BubbleStatsView.swift in Sources */,
 				09AF7078216F4A9600E7FCFC /* FeedUpcomingViewController.swift in Sources */,
 				A55B7B8E21AA8EB600A8A7FE /* ChatMessagesIncomingTableViewCell.swift in Sources */,
-				A5C5E6DE21A2B41F001D6250 /* PopupPickerViewController2.swift in Sources */,
 				A551108F21C7BEED00330510 /* TestAuthService.swift in Sources */,
 				097A6DCE21899C5B00E6C69E /* RegistrationLoginPasswordViewController.swift in Sources */,
 				A56B59FA21AD623B00CE4798 /* DepositsDepositsSegueAnimator.swift in Sources */,

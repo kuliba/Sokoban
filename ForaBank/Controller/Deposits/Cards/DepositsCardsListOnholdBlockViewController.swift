@@ -17,7 +17,8 @@ class DepositsCardsListOnholdBlockViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        print("DepositsCardsListOnholdBlockViewController viewDidLoad")
+
         //кнопка назад
         let backButton = UIButton(type: .system)
         backButton.tintColor = .black

@@ -35,20 +35,23 @@ class CardActionRoundedButton: UIButton {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-//
-//    override open var isHighlighted: Bool {
-//        didSet {
-//            if isHighlighted {
-//                if highlightedBackgroundColor != nil {
-//                    backgroundColor = highlightedBackgroundColor
-//                }
-//                if highlightedTintColor != nil {
-//                 tintColor = highlightedTintColor
-//                }
-//            } else {
-//                if
-//            }
-//
-//        }
-//    }
+    
+    override var isEnabled: Bool {
+        didSet {
+            if self.isEnabled {
+                self.tintColor = defaultTintColor
+            } else {
+                self.tintColor = UIColor.lightGray
+            }
+        }
+    }
+    private var defaultTintColor: UIColor? = nil
+    override var tintColor: UIColor! {
+        didSet {
+            if defaultTintColor == nil {
+                defaultTintColor = tintColor
+            }
+            self.layer.borderColor = tintColor.cgColor
+        }
+    }
 }

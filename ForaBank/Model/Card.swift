@@ -13,24 +13,38 @@ enum CardType: String {
     case visaDebet = "card_visa_debet"
 }
 
-struct Card {
+class Card {
     let type: CardType
     let paypass: Bool
     let title: String
     let number: String
     let validityPeriod: String
-    let cash: String
     var blocked: Bool
     
-//    init(type: CardType, paypass: Bool, title: String, number: String, validityPeriod: String, cash: String, blocked: Bool) {
-//        self.type = type
-//        self.paypass = paypass
-//        self.title = title
-//        self.number = number
-//        self.validityPeriod = validityPeriod
-//        self.cash = cash
-//        self.blocked = blocked
-//    }
+    let startDate: Date
+    let expirationDate: Date
+    let availableBalance: Double
+    let blockedMoney: Double
+    let updatingDate: Date
+    let tariff: String
+    init(type: CardType, paypass: Bool, title: String, number: String, blocked: Bool, startDate: Date, expirationDate: Date, availableBalance: Double, blockedMoney: Double, updatingDate: Date, tariff: String) {
+        self.type = type
+        self.paypass = paypass
+        self.title = title
+        self.number = number
+        self.blocked = blocked
+        self.startDate = startDate
+        self.expirationDate = expirationDate
+        self.availableBalance = availableBalance
+        self.blockedMoney = blockedMoney
+        self.updatingDate = updatingDate
+        self.tariff = tariff
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/yy"
+        validityPeriod = formatter.string(from: expirationDate)
+        
+    }
 }
 
 extension Card: CustomStringConvertible {

@@ -28,6 +28,7 @@ class DepositsCardsListViewController: UIViewController {
     //
     var lastCardViewCenter: CGPoint = CGPoint.zero
     var selectedCardView: DetailedCardView? = nil
+    var selectedCard: Card? = nil
     
     var cardViewsTopConstraints: [NSLayoutConstraint] = [NSLayoutConstraint]()
     var selectedCardViewCenterYConstraint: NSLayoutConstraint? = nil
@@ -106,7 +107,11 @@ class DepositsCardsListViewController: UIViewController {
     let blockCardButton: CardActionRoundedButton = {
         let b = CardActionRoundedButton()
         b.layer.borderColor = UIColor(hexFromString: "EC433D").cgColor
-        b.setImage(UIImage(named: "deposit_cards_list_onhold_block_button"), for: .normal)
+        b.tintColor = .red
+        
+        let templateImage = UIImage(named: "deposits_cards_details_management_block_icon")?
+            .withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
+        b.setImage(templateImage, for: .normal)
         b.setImage(UIImage(named: "deposit_cards_list_onhold_block_button_highlighted"), for: .highlighted)
         b.translatesAutoresizingMaskIntoConstraints = false
         b.isHidden = true
@@ -118,6 +123,7 @@ class DepositsCardsListViewController: UIViewController {
         super.viewDidLoad()
         addScrollView()
         addButtons()
+        print("DepositsCardsListViewController viewDidLoad")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -131,6 +137,10 @@ class DepositsCardsListViewController: UIViewController {
                                                              multiplier: 1,
                                                              constant: 0)
             scrollView.addConstraint(contentViewHeightConstraint!)
+        }
+        if cards.count > 0 {
+            updateCardViews()
+            return
         }
         NetworkManager.shared().getCardList { [unowned self] (success, cards) in
             if success {
@@ -160,17 +170,25 @@ class DepositsCardsListViewController: UIViewController {
             if let destinationVC = segue.destination as? DepositsCardsListOnholdBlockViewController {
                 destinationVC.card = self.cards.last
             }
+        } else if segue.identifier == "DepositsCardsDetailsViewController" {
+            if let destinationVC = segue.destination as? DepositsCardsDetailsViewController {
+                destinationVC.card = selectedCard
+            }
         }
     }
     
 
     // MARK: - Actions
     @objc func allActionButtonClicked(_ sender: UIButton!) {
+        selectedCard = selectedCardView?.card
         performSegue(withIdentifier: "DepositsCardsDetailsViewController", sender: nil)
     }
     
     @objc func cardViewClicked(_ sender: UITapGestureRecognizer) {
-        performSegue(withIdentifier: "DepositsCardsDetailsViewController", sender: nil)
+        if let cardView = sender.view as? DetailedCardView {
+            selectedCard = cardView.card
+            performSegue(withIdentifier: "DepositsCardsDetailsViewController", sender: nil)
+        }
     }
     
     @objc func tapOutsideCardView(_ sender:UITapGestureRecognizer){
@@ -189,6 +207,15 @@ class DepositsCardsListViewController: UIViewController {
                            delay: 0,
                            options: .layoutSubviews,
                            animations: {
+                            if self.selectedCard?.blocked == true {
+                                self.sendMoneyButton.isEnabled = false
+                                self.addMoneyButton.isEnabled = false
+                                self.blockCardButton.isEnabled = false
+                            } else {
+                                self.sendMoneyButton.isEnabled = true
+                                self.addMoneyButton.isEnabled = true
+                                self.blockCardButton.isEnabled = true
+                            }
                             self.addCardButton.isHidden = true
                             self.optionPickerButton.isHidden = true
                             self.sendMoneyButton.isHidden = false
@@ -507,6 +534,7 @@ private extension DepositsCardsListViewController {
         }
         //        panGesture = UIPanGestureRecognizer(target: self, action: #selector(dragUnselectedCardView(_:)))
         selectedCardView = cardViews.last
+        selectedCard = cards.last
         selectedCardView!.isUserInteractionEnabled = true
         selectedCardView!.addGestureRecognizer(panGesture)
         //        contentViewConstraints = contentView.constraints
@@ -562,6 +590,7 @@ private extension DepositsCardsListViewController {
                         self.selectedCardView?.removeGestureRecognizer(self.panGesture)
                         self.selectedCardView?.removeGestureRecognizer(self.longPressGesture)
                         self.selectedCardView = self.cardViews.last
+                        self.selectedCard = self.cards.last
                         self.selectedCardView?.addGestureRecognizer(self.panGesture)
                         self.selectedCardView?.addGestureRecognizer(self.longPressGesture)
         })

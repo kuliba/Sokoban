@@ -433,29 +433,13 @@
                         <viewLayoutGuide key="safeArea" id="snh-2A-sDz"/>
                     </view>
                     <connections>
-                        <segue destination="qlW-MM-xUS" kind="show" identifier="CardListOnholdNavigation" id="HXl-Qd-JaX"/>
                         <segue destination="Xv3-je-rnb" kind="show" identifier="DepositsCardListOnholdBlock" id="d3l-gv-oOm"/>
                         <segue destination="Oxz-tM-k7M" kind="show" identifier="DepositsCardsDetailsViewController" id="YZe-FQ-J5I"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7nx-7B-LT7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-4223" y="49"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="pjF-Pm-vu3">
-            <objects>
-                <navigationController navigationBarHidden="YES" id="qlW-MM-xUS" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="055-Jj-rEP">
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="4e1-7w-8da" kind="relationship" relationship="rootViewController" id="RaM-fd-AP3"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="PW3-13-U5f" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-3368" y="49"/>
+            <point key="canvasLocation" x="-1911" y="50"/>
         </scene>
         <!--Deposits Cards Details Statement View Controller-->
         <scene sceneID="nAA-UQ-j6T">
@@ -775,10 +759,10 @@
             </objects>
             <point key="canvasLocation" x="913" y="1623"/>
         </scene>
-        <!--One View Controller-->
+        <!--Deposits Cards Details View Controller-->
         <scene sceneID="Zgj-qe-Qfl">
             <objects>
-                <viewController storyboardIdentifier="OneViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Oxz-tM-k7M" customClass="OneViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="OneViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Oxz-tM-k7M" customClass="DepositsCardsDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="mgq-cw-vt5"/>
                         <viewControllerLayoutGuide type="bottom" id="5V5-Xp-9tv"/>
@@ -808,7 +792,14 @@
                                                     <action selector="backButtonClicked:" destination="zzR-we-aef" eventType="touchUpInside" id="suD-HQ-yeh"/>
                                                 </connections>
                                             </button>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jcO-au-BP0" customClass="CardView" customModule="ForaBank" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uvc-rh-Yuh" customClass="DetailedCardView" customModule="ForaBank" customModuleProvider="target">
+                                                <rect key="frame" x="16" y="73.5" width="288" height="144.5"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="uvc-rh-Yuh" secondAttribute="height" multiplier="7:4" constant="35" id="vgQ-aL-1mx"/>
+                                                </constraints>
+                                            </view>
+                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jcO-au-BP0" customClass="CardView" customModule="ForaBank" customModuleProvider="target">
                                                 <rect key="frame" x="16" y="76.5" width="288" height="144.5"/>
                                                 <subviews>
                                                     <view alpha="0.25" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oca-7o-Vhf">
@@ -886,9 +877,12 @@
                                             <constraint firstItem="jcO-au-BP0" firstAttribute="leading" secondItem="xxs-bk-PQs" secondAttribute="leading" constant="16" id="4Y7-2d-o3S"/>
                                             <constraint firstItem="no0-sb-ln5" firstAttribute="top" secondItem="xxs-bk-PQs" secondAttribute="top" id="5tP-Wz-QEK"/>
                                             <constraint firstItem="no0-sb-ln5" firstAttribute="leading" secondItem="xxs-bk-PQs" secondAttribute="leading" id="IBS-rS-cxY"/>
+                                            <constraint firstItem="uvc-rh-Yuh" firstAttribute="centerY" secondItem="xxs-bk-PQs" secondAttribute="centerY" id="Kwx-cS-3cC"/>
                                             <constraint firstItem="jcO-au-BP0" firstAttribute="width" secondItem="jcO-au-BP0" secondAttribute="height" multiplier="96:55" constant="35.800000000000011" id="WZp-6P-u8l"/>
                                             <constraint firstAttribute="trailing" secondItem="jcO-au-BP0" secondAttribute="trailing" constant="16" id="XZ2-fn-Q4g"/>
                                             <constraint firstAttribute="trailing" secondItem="no0-sb-ln5" secondAttribute="trailing" id="aVb-4J-Rtf"/>
+                                            <constraint firstItem="uvc-rh-Yuh" firstAttribute="leading" secondItem="xxs-bk-PQs" secondAttribute="leading" constant="16" id="cOv-Xp-gKM"/>
+                                            <constraint firstAttribute="trailing" secondItem="uvc-rh-Yuh" secondAttribute="trailing" constant="16" id="fX8-7U-b6U"/>
                                             <constraint firstAttribute="width" secondItem="xxs-bk-PQs" secondAttribute="height" multiplier="75:53" constant="-91.981132075471692" id="ftH-rG-MMF"/>
                                             <constraint firstItem="qsP-WU-u4O" firstAttribute="top" secondItem="xxs-bk-PQs" secondAttribute="top" constant="30" id="m7F-Tz-aU3"/>
                                             <constraint firstItem="jcO-au-BP0" firstAttribute="centerY" secondItem="xxs-bk-PQs" secondAttribute="centerY" constant="3" id="shr-79-2Qy"/>
@@ -933,6 +927,8 @@
                         <viewLayoutGuide key="safeArea" id="RCH-aZ-Qv0"/>
                     </view>
                     <connections>
+                        <outlet property="backgroundImageView" destination="no0-sb-ln5" id="CZu-4i-m4u"/>
+                        <outlet property="cardView" destination="uvc-rh-Yuh" id="j0d-gc-IXy"/>
                         <outlet property="carousel" destination="GkO-fK-wGF" id="ntT-UU-t0A"/>
                         <outlet property="container" destination="XIO-zo-3E1" id="emd-L7-ZEn"/>
                         <outlet property="contentViewTop" destination="vh3-33-xV6" id="Xht-F0-abW"/>
@@ -942,21 +938,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7Gp-Sp-rSu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-2506" y="865"/>
-        </scene>
-        <!--Popup Picker View Controller2-->
-        <scene sceneID="i7u-zn-dnu">
-            <objects>
-                <viewController storyboardIdentifier="PopupPickerViewController" id="SPb-eU-r6p" customClass="PopupPickerViewController2" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="LVR-7V-d7a">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="0zy-K6-cMR"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="WJo-Sq-MsU" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-4905" y="864"/>
         </scene>
         <!--Deposits Cards List Onhold Block View Controller-->
         <scene sceneID="yPu-Cp-zT0">
@@ -971,26 +952,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NX9-TY-aKO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-4223.188405797102" y="862.5"/>
-        </scene>
-        <!--Deposits Cards List Onhold View Controller-->
-        <scene sceneID="YOC-or-H9B">
-            <objects>
-                <viewController storyboardIdentifier="DepositsCardsListOnholdViewController" id="4e1-7w-8da" customClass="DepositsCardsListOnholdViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="plk-Vh-01l">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="EG8-jd-YYL"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="BgN-Qo-46i"/>
-                    <connections>
-                        <segue destination="Xv3-je-rnb" kind="show" identifier="CardListOnholdBlock" id="X0W-6q-ICg"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dzd-93-wPE" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-3368.115942028986" y="864.50892857142856"/>
+            <point key="canvasLocation" x="-3368" y="864"/>
         </scene>
         <!--Deposits Cards Details Management View Controller-->
         <scene sceneID="yYv-IY-3rh">
@@ -1533,6 +1495,14 @@
                             <outlet property="delegate" destination="571-cD-BJe" id="fI6-uv-OGm"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="avaliableBalanceLabel" destination="FX5-1d-XCB" id="7wg-pI-rog"/>
+                        <outlet property="blockedMoneyLabel" destination="3vC-4B-fhM" id="yly-oa-KcH"/>
+                        <outlet property="expirationDateLabel" destination="kxG-Rp-bbE" id="oCi-lr-3Oy"/>
+                        <outlet property="startDateLabel" destination="hlK-gk-eJ3" id="vre-3J-p91"/>
+                        <outlet property="tariffLabel" destination="h2g-Xq-iD7" id="7eS-JQ-VEO"/>
+                        <outlet property="updatingDateLabel" destination="UtS-4E-gsa" id="8iN-aJ-6Ka"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="J6P-5w-9s5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -2453,13 +2423,13 @@
                                                     <rect key="frame" x="10" y="0.0" width="300" height="35"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Доступно для снятия" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dsy-po-iba">
-                                                            <rect key="frame" x="0.0" y="7.5" width="200" height="20"/>
+                                                            <rect key="frame" x="0.0" y="6.5" width="200" height="22.5"/>
                                                             <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="11.01.2017" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fDJ-OF-T6o">
-                                                            <rect key="frame" x="214.5" y="7.5" width="85.5" height="20"/>
+                                                            <rect key="frame" x="214" y="6.5" width="86" height="22.5"/>
                                                             <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
@@ -2591,7 +2561,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="7%" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kbo-nd-0iR">
-                                                            <rect key="frame" x="273.5" y="0.0" width="26.5" height="35"/>
+                                                            <rect key="frame" x="277.5" y="0.0" width="22.5" height="35"/>
                                                             <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
@@ -2618,13 +2588,13 @@
                                                     <rect key="frame" x="10" y="0.0" width="300" height="50"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Сумма неснижаемого остатка" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fY7-9Y-ubN">
-                                                            <rect key="frame" x="0.0" y="5" width="200" height="40"/>
+                                                            <rect key="frame" x="0.0" y="2.5" width="200" height="45"/>
                                                             <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="30 000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kVb-yO-bZI">
-                                                            <rect key="frame" x="248" y="15" width="52" height="20"/>
+                                                            <rect key="frame" x="247.5" y="14" width="52.5" height="22.5"/>
                                                             <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
@@ -2879,6 +2849,5 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="xAX-aZ-8L4"/>
-        <segue reference="d3l-gv-oOm"/>
     </inferredMetricsTieBreakers>
 </document>

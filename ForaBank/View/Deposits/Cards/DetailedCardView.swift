@@ -21,6 +21,15 @@ class DetailedCardView: UIView {
     let cardBlockedImageView = UIImageView()
     var logoImageViewCosntraint: NSLayoutConstraint? = nil
     
+    var foregroundColor: UIColor! {
+        didSet {
+            titleLabel.textColor = foregroundColor
+            cardCashLabel.textColor = foregroundColor
+            cardNumberLabel.textColor = foregroundColor
+            cardValidityPeriodLabel.textColor = foregroundColor
+        }
+    }
+    
     init(withCard card: Card) {
         self.card = card
         super.init(frame: CGRect.zero)
@@ -32,7 +41,7 @@ class DetailedCardView: UIView {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
     }
     
     func addSubviews() {
@@ -59,10 +68,18 @@ class DetailedCardView: UIView {
         cardBlockedImageView.translatesAutoresizingMaskIntoConstraints = false
         
         if card != nil {
+            let cashFormatter = NumberFormatter()
+            cashFormatter.numberStyle = .currency
+            cashFormatter.usesGroupingSeparator = true
+            cashFormatter.groupingSeparator = ","
+            cashFormatter.locale = Locale(identifier: "ru_RU")
+            let cash = cashFormatter.string(from: NSNumber(value: card!.availableBalance)) ?? ""
+            
             let foregroundColor = (card?.type.rawValue.range(of: "mastercard") != nil) ? UIColor.black : UIColor.white
             titleLabel.attributedText = NSAttributedString(string: card!.title, attributes: [.font:UIFont.systemFont(ofSize: 16), .foregroundColor : foregroundColor])
             //cardView.titleLabel.sizeToFit()
-            cardCashLabel.attributedText = NSAttributedString(string: card!.cash, attributes: [.font:UIFont.systemFont(ofSize: 16), .foregroundColor : foregroundColor])
+            
+            cardCashLabel.attributedText = NSAttributedString(string: cash, attributes: [.font:UIFont.systemFont(ofSize: 16), .foregroundColor : foregroundColor])
             backgroundImageView.image = UIImage(named: card!.type.rawValue)
             cardNumberLabel.attributedText = NSAttributedString(string: card!.number, attributes: [.font:UIFont.systemFont(ofSize: 12), .foregroundColor : foregroundColor])
             cardValidityPeriodLabel.attributedText = NSAttributedString(string: card!.validityPeriod, attributes: [.font:UIFont.systemFont(ofSize: 12), .foregroundColor : foregroundColor])
@@ -157,10 +174,11 @@ class DetailedCardView: UIView {
         self.card = card
         self.subviews.forEach({ $0.removeFromSuperview() })
         addSubviews()
+        blockCard()
     }
     
     func blockCard() {
-        print(card?.blocked as Any)
+//        print(card?.blocked as Any)
         if card!.blocked {
             cardBlockedImageView.image = UIImage(named: "card_blocked")
         }
