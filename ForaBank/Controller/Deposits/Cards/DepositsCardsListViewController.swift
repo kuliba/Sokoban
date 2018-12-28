@@ -142,14 +142,23 @@ class DepositsCardsListViewController: UIViewController {
             updateCardViews()
             return
         }
-        NetworkManager.shared().getCardList { [unowned self] (success, cards) in
+        NetworkManager.shared().getCardList { [weak self] (success, cards) in
             if success {
-                self.cards = cards ?? []
-                if self.cardViews.count == 0 {
+                self?.cards = cards ?? []
+                if self?.cardViews.count == 0 {
 //                    self.removeCardViews()
-                    self.addCardViews()
+                    self?.addCardViews()
                 } else {
-                    self.updateCardViews()
+                    self?.updateCardViews()
+                    if self?.selectedCard?.blocked == true {
+                        self?.sendMoneyButton.isEnabled = false
+                        self?.addMoneyButton.isEnabled = false
+                        self?.blockCardButton.isEnabled = false
+                    } else {
+                        self?.sendMoneyButton.isEnabled = true
+                        self?.addMoneyButton.isEnabled = true
+                        self?.blockCardButton.isEnabled = true
+                    }
                 }
             }
         }
@@ -552,6 +561,7 @@ private extension DepositsCardsListViewController {
         for (i, v) in cardViews.enumerated() {
             v.update(withCard: cards[i])
         }
+        selectedCard = selectedCardView?.card
     }
     
     func sendFrontCardViewToBack() {

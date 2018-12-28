@@ -11,20 +11,35 @@ import Alamofire
 
 protocol AuthServiceProtocol {
     func isSignedIn(completionHandler: @escaping (_ success:Bool) -> Void)
-    func csrf(headers: HTTPHeaders, completionHandler: @escaping (_ success:Bool, _ headers: HTTPHeaders?) -> Void)
-    func loginDo(headers: HTTPHeaders, login: String, password: String, completionHandler: @escaping (_ success:Bool,_ errorMessage: String?) -> Void)
-    func checkVerificationCode(headers: HTTPHeaders, code: String, completionHandler: @escaping (_ success:Bool) -> Void)
+    func csrf(headers: HTTPHeaders,
+              completionHandler: @escaping (_ success:Bool, _ headers: HTTPHeaders?) -> Void)
+    func loginDo(headers: HTTPHeaders,
+                 login: String,
+                 password: String,
+                 completionHandler: @escaping (_ success:Bool,_ errorMessage: String?) -> Void)
+    func checkVerificationCode(headers: HTTPHeaders,
+                               code: String,
+                               completionHandler: @escaping (_ success:Bool) -> Void)
     func logOut(completionHandler: @escaping (_ success:Bool) -> Void)
-    func getProfile(headers: HTTPHeaders, completionHandler: @escaping (_ success:Bool, _ profile: Profile?,_ errorMessage: String?) -> Void)
+    func getProfile(headers: HTTPHeaders,
+                    completionHandler: @escaping (_ success:Bool, _ profile: Profile?,_ errorMessage: String?) -> Void)
 }
 
 protocol CardServiceProtocol {
-    func getCardList(headers: HTTPHeaders, completionHandler: @escaping (_ success:Bool, _ cards: [Card]?) -> Void)
-    func blockCard(withNumber num: String, completionHandler: @escaping (_ success:Bool) -> Void)
+    func getCardList(headers: HTTPHeaders,
+                     completionHandler: @escaping (_ success:Bool, _ cards: [Card]?) -> Void)
+    func blockCard(withNumber num: String,
+                   completionHandler: @escaping (_ success:Bool) -> Void)
+    func getTransactionsStatement(forCardNumber: String,
+                                  fromDate: Date,
+                                  toDate: Date,
+                                  headers: HTTPHeaders,
+                                  completionHandler: @escaping (_ success:Bool, _ datedTransactions: [DatedTransactions]?) -> Void)
 }
 
 protocol DepositsServiceProtocol {
-    func getBonds(headers: HTTPHeaders, completionHandler: @escaping (_ success:Bool, _ obligations: [Bond]?,_ errorMessage: String?) -> Void)
+    func getBonds(headers: HTTPHeaders,
+                  completionHandler: @escaping (_ success:Bool, _ obligations: [Bond]?,_ errorMessage: String?) -> Void)
 }
 
 class NetworkManager {
@@ -34,7 +49,7 @@ class NetworkManager {
     private static var sharedNetworkManager: NetworkManager = {
         let host = "https://git.briginvest.ru/dbo/api/v2/"
         
-        let authService = AuthService(baseURLString: host)//TestAuthService()//
+        let authService = TestAuthService()//AuthService(baseURLString: host)//
         let cardService = TestCardService()
         let depositsService = TestDepositsService()
 
@@ -77,7 +92,9 @@ class NetworkManager {
         authService.isSignedIn(completionHandler: completionHandler)
     }
     
-    func login(login: String, password: String, completionHandler: @escaping (_ success:Bool,_ errorMessage: String?) -> Void) {
+    func login(login: String,
+               password: String,
+               completionHandler: @escaping (_ success:Bool,_ errorMessage: String?) -> Void) {
         authService.csrf(headers: headers) { [unowned self] (success, newHeaders) in
             if success {
                 self.headers.merge(newHeaders ?? [:], uniquingKeysWith: { (_, k2) -> String in
@@ -97,7 +114,8 @@ class NetworkManager {
         }
     }
     
-    func checkVerificationCode(code: String, completionHandler: @escaping (_ success:Bool) -> Void) {
+    func checkVerificationCode(code: String,
+                               completionHandler: @escaping (_ success:Bool) -> Void) {
         authService.checkVerificationCode(headers: self.headers, code: code, completionHandler: completionHandler)
     }
     
@@ -124,8 +142,20 @@ class NetworkManager {
         cardService.getCardList(headers: headers, completionHandler: completionHandler)
     }
     
-    func blockCard(withNumber num: String, completionHandler: @escaping (Bool) -> Void) {
+    func blockCard(withNumber num: String,
+                   completionHandler: @escaping (Bool) -> Void) {
         cardService.blockCard(withNumber: num, completionHandler: completionHandler)
+    }
+    
+    func getTransactionsStatement(forCardNumber number: String,
+                                  fromDate: Date,
+                                  toDate: Date,
+                                  completionHandler: @escaping (_ success:Bool, _ datedTransactions: [DatedTransactions]?) -> Void) {
+        cardService.getTransactionsStatement(forCardNumber: number,
+                                             fromDate: fromDate,
+                                             toDate: toDate,
+                                             headers: headers,
+                                             completionHandler: completionHandler)
     }
     
     //MARK: - deposits service

@@ -20,7 +20,6 @@ class SignInViewController: UIViewController {
     
     var segueId: String? = nil
     var backSegueId: String? = nil
-//    var toNextController: Bool = false
     
     // MARK: - Actions
     @IBAction func backButtonClicked() {

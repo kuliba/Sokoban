@@ -22,6 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         setNavigationBarAppearance()
         setTextFieldAppearance()
         IQKeyboardManager.shared.enable = true
+//        IQKeyboardManager.shared.layoutIfNeededOnUpdate = true
         return true
     }
 

@@ -8,6 +8,7 @@
 
 import UIKit
 import FlexiblePageControl
+import Hero
 
 class RegistrationLoginPasswordViewController: UIViewController {
     
@@ -16,22 +17,19 @@ class RegistrationLoginPasswordViewController: UIViewController {
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var continueButton: ButtonRounded!
     @IBOutlet weak var pageControl: FlexiblePageControl!
+    @IBOutlet weak var centralView: UIView!
     
+    var segueId: String? = nil
+    var backSegueId: String? = nil
 //    let pageControl = FlexiblePageControl()
     let gradientView = UIView()
     let circleView = UIView()
     
     // MARK: - Actions
     @IBAction func backButtonCLicked(_ sender: Any) {
+        segueId = backSegueId
         view.endEditing(true)
-//        UIView.animate(
-//            withDuration: 0.35,
-//            animations: {
-//                self.gradientView.alpha = 0
-//        }, completion: { _ in
-//            self.dismiss(animated: false)
-            self.navigationController?.popViewController(animated: true)
-//        })
+        self.navigationController?.popViewController(animated: true)
     }
     
     // MARK: - Lifecycle
@@ -46,14 +44,79 @@ class RegistrationLoginPasswordViewController: UIViewController {
         view.clipsToBounds = true
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-//        UIView.animate(withDuration: 0.25) {
-//            self.gradientView.alpha = 1
-//        }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if segueId == "loginPassword" {
+//            pageControl.hero.id = "page"
+            pageControl.hero.modifiers = [
+                HeroModifier.beginWith([HeroModifier.opacity(1)]),
+                HeroModifier.duration(0.001),
+                HeroModifier.delay(1),
+                HeroModifier.opacity(0),
+//                HeroModifier.useNoSnapshot,
+//                HeroModifier.useGlobalCoordinateSpace
+            ]
+//            UIView.animate(withDuration: 1, delay: 0, options: [.layoutSubviews], animations: {
+//                self.pageControl.animateDuration = 1
+//                self.pageControl.setCurrentPage(at: 2)
+//            }, completion: nil)
+//            UIView.transition(with: pageControl, duration: 1, options: [.allowAnimatedContent, .beginFromCurrentState], animations: {
+//                self.pageControl.animateDuration = 1
+//                self.pageControl.setCurrentPage(at: 2)
+//            }, completion: nil)
+            containerView.hero.id = "authContent-smsContent"
+            view.hero.id = "authView-smsView"
+            centralView?.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.translate(CGPoint(x: centralView.frame.origin.x + view.frame.width, y: 0))
+            ]
+        }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        pageControl.hero.id = nil
+        pageControl.hero.modifiers = nil
+        containerView.hero.modifiers = nil
+        containerView.hero.id = nil
+        view.hero.modifiers = nil
+        view.hero.id = nil
+        centralView?.hero.modifiers = nil
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if segueId == "loginPassword" {
+            containerView.hero.id = "authContent-smsContent"
+            view.hero.id = "authView-smsView"
+            centralView?.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.translate(CGPoint(x: centralView.frame.origin.x + view.frame.width, y: 0))
+            ]
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        containerView.hero.modifiers = nil
+        containerView.hero.id = nil
+        view.hero.modifiers = nil
+        view.hero.id = nil
+        centralView?.hero.modifiers = nil
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        segueId = nil
+        if let vc = segue.destination as? RegistrationLoginPasswordViewController {
+            segueId = "loginPassword"
+            vc.segueId = segueId
+            vc.backSegueId = segueId
+        }
+    }
+}
+
+//MARK: - Private methods
+private extension RegistrationLoginPasswordViewController {
     // MARK: - Methods
     func addGradientLayerView() {
         gradientView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
@@ -63,7 +126,7 @@ class RegistrationLoginPasswordViewController: UIViewController {
         gradientLayer.endPoint = CGPoint(x: 1, y: 1)
         gradientLayer.colors = [UIColor(red: 241/255, green: 176/255, blue: 116/255, alpha: 1).cgColor, UIColor(red: 237/255, green: 73/255, blue: 73/255, alpha: 1).cgColor]
         gradientView.layer.addSublayer(gradientLayer)
-//        gradientView.alpha = 0
+        //        gradientView.alpha = 0
         view.insertSubview(gradientView, at: 0)
     }
     
@@ -94,6 +157,7 @@ class RegistrationLoginPasswordViewController: UIViewController {
         )
         
         pageControl.setConfig(config)
+        pageControl.animateDuration = 0
         pageControl.setCurrentPage(at: 2)
     }
 }

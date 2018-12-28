@@ -8,13 +8,22 @@
 
 import UIKit
 
-class DepositsCardsDetailsStatementViewController: UIViewController {
+class DepositsCardsDetailsStatementViewController: UIViewController, TabCardDetailViewController {
     
     // MARK: - Properties
     @IBOutlet weak var tableView: CustomTableView!
     
     let cellId = "DepositsHistoryCell"
-    
+    var displayedPeriod: (Date, Date) = (Calendar.current.date(byAdding: .year, value: -5, to: Date())!, Date())
+    var datedTransactions = [DatedTransactions]() {
+        didSet{
+            self.tableView.reloadData()
+        }
+    }
+    var card: Card? = nil
+    func set(card: Card?) {
+        self.card = card
+    }
     let data_ = [
         DepositHistoryDate(date: "Вчера, 5 сентября", amountTotal: "+560,15 ₽", transactions: [
             DepositHistoryTransaction(imageName: "deposit_history_transaction_capitalization", title: "Капитализация средств", subtitle: "Внутрибанковские операции", value: "5560,15 ₽", subvalue: ""),
@@ -53,6 +62,20 @@ class DepositsCardsDetailsStatementViewController: UIViewController {
         setUpTableView()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let cardNumber = card?.number {
+            NetworkManager.shared().getTransactionsStatement(forCardNumber: cardNumber,
+                                                             fromDate: displayedPeriod.0,
+                                                             toDate: displayedPeriod.1) { [weak self] (success, datedTransactions) in
+                if let datedTransactions = datedTransactions,
+                    success == true {
+                    self?.datedTransactions = datedTransactions
+                }
+            }
+        }
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         if let selectedRow = tableView.indexPathForSelectedRow {
@@ -70,16 +93,69 @@ extension DepositsCardsDetailsStatementViewController: UITableViewDataSource, UI
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
+        if card != nil {
+            return datedTransactions.count
+        }
         return data_.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if card != nil {
+            return datedTransactions[section].transactions.count
+        }
         return data_[section].transactions.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? DepositsHistoryCell else {
-            fatalError()
+            return UITableViewCell()
+        }
+        if card != nil {
+            cell.imageView?.image = nil
+            cell.titleLabel.text = nil
+            cell.subTitleLabel.text = nil
+            cell.descriptionLabel.text = nil
+            cell.subdescriptionLabel.text = nil
+            if let image = datedTransactions[indexPath.section].transactions[indexPath.row].counterpartImageURL {
+                cell.imageView?.image = UIImage(named: image)
+            }
+            if let title = datedTransactions[indexPath.section].transactions[indexPath.row].counterpartName {
+                cell.titleLabel.text = title
+            }
+            if let subtitle = datedTransactions[indexPath.section].transactions[indexPath.row].details {
+                cell.subTitleLabel.text = subtitle
+            }
+            if let amount = datedTransactions[indexPath.section].transactions[indexPath.row].amount,
+                let locale = datedTransactions[indexPath.section].transactions[indexPath.row].currency {
+//                cell.descriptionLabel.text = String.init(format: "%.2d", amount)
+                let f = NumberFormatter()
+                f.numberStyle = .currency
+                f.locale = Locale(identifier: locale)
+                f.usesGroupingSeparator = true
+                f.currencyGroupingSeparator = " "
+                if let amountString = f.string(from: NSNumber(value: amount)),
+                    amountString.count > 0{
+                    let splited = amountString.split(separator: ",")
+                    let attributedStr = NSMutableAttributedString.init(string: (amount>0 ? "+":"") + amountString)
+                    attributedStr.addAttributes([NSAttributedString.Key.font : UIFont.init(name: "Roboto-Regular", size: 13) ?? UIFont.systemFont(ofSize: 13)],
+                        range:NSRange(location: 0, length: splited.first!.count))
+                    attributedStr.addAttributes([NSAttributedString.Key.font : UIFont.init(name: "Roboto-Light", size: 13) ?? UIFont.systemFont(ofSize: 13)],
+                                                range:NSRange(location: splited.first!.count+1, length: splited.last!.count))
+                    cell.descriptionLabel.attributedText = attributedStr
+                }
+                if amount>0 {
+                    cell.descriptionLabel.textColor = UIColor(red: 4/255, green: 160/255, blue: 133/255, alpha: 1)
+                } else {
+                    cell.descriptionLabel.textColor = UIColor.darkText
+                }
+            }
+            if let bonuses = datedTransactions[indexPath.section].transactions[indexPath.row].bonuses,
+                bonuses>0{
+                cell.subdescriptionLabel.text = "+\(bonuses) бонусов"
+            }
+            
+            cell.bottomSeparatorView.isHidden = indexPath.row == datedTransactions[indexPath.section].transactions.endIndex - 1
+            return cell
         }
         
         cell.imageView?.image = UIImage(named: data_[indexPath.section].transactions[indexPath.row].imageName)
@@ -101,6 +177,46 @@ extension DepositsCardsDetailsStatementViewController: UITableViewDataSource, UI
             let headerView = UIView(frame: headerCell.frame)
             headerView.addSubview(headerCell)
             headerView.backgroundColor = .clear
+            if card != nil {
+                headerCell.titleLabel.text = nil
+                headerCell.subTitleLabel.text = nil
+                if let date = datedTransactions[section].dateTo {
+                    let f = DateFormatter()
+                    f.doesRelativeDateFormatting = true
+                    f.locale = Locale(identifier: "ru_RU")
+                    f.dateStyle = .full
+                    let relativeDate = f.string(from: date)
+                    let ff = DateFormatter()
+                    ff.locale = Locale(identifier: "ru_RU")
+                    ff.dateFormat = "dd MMMM"
+                    let nonrelativeDate = ff.string(from: date)
+//                    if relativeDate.rangeOfCharacter(from: CharacterSet.decimalDigits) != nil {
+                    if relativeDate.count > 8 {
+                        headerCell.titleLabel.text = nonrelativeDate
+                    } else {
+                        headerCell.titleLabel.text = "\(relativeDate), \(nonrelativeDate)"
+                    }
+                }
+                if let amount = datedTransactions[section].changeOfBalanse,
+                    let locale = datedTransactions[section].currency {
+                    let f = NumberFormatter()
+                    f.numberStyle = .currency
+                    f.locale = Locale(identifier: locale)
+                    f.usesGroupingSeparator = true
+                    f.currencyGroupingSeparator = " "
+                    if let amountString = f.string(from: NSNumber(value: amount)),
+                        amountString.count > 0{
+                        headerCell.subTitleLabel.text = (amount>0 ? "+":"") + amountString
+                    }
+                    if amount>0 {
+                        headerCell.subTitleLabel.textColor = UIColor(red: 4/255, green: 160/255, blue: 133/255, alpha: 1)
+                    } else {
+                        headerCell.subTitleLabel.textColor = UIColor.darkText
+                    }
+                }
+                return headerView
+            }
+            
             headerCell.titleLabel.text = data_[section].date
             headerCell.subTitleLabel.text = data_[section].amountTotal
             return headerView

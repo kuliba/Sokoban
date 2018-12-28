@@ -44,7 +44,7 @@ extension UITextField {
     }
     
     open override func becomeFirstResponder() -> Bool {
-        layer.customBorderColor = .white
+        layer.customBorderColor = .red
         layer.cornerRadius = 5.0
         layer.masksToBounds = true
         layer.borderWidth = 1
@@ -77,9 +77,11 @@ extension UISegmentedControl {
         
         let segmentGrayColor = UIColor(red: 0.889415, green: 0.889436, blue:0.889424, alpha: 1.0 )
         
-        setBackgroundImage(imageWithColor(color: backgroundColor!), for: .normal, barMetrics: .default)
+        setBackgroundImage(imageWithColor(color: UIColor.clear), for: .normal, barMetrics: .default)
         setBackgroundImage(imageWithColor(color: tintColor!), for: .selected, barMetrics: .default)
         setDividerImage(imageWithColor(color: segmentGrayColor), forLeftSegmentState: .normal, rightSegmentState: .normal, barMetrics: .default)
+        setDividerImage(imageWithColor(color: tintColor!), forLeftSegmentState: .selected, rightSegmentState: .selected, barMetrics: .default)
+        setDividerImage(imageWithColor(color: tintColor!), forLeftSegmentState: .normal, rightSegmentState: .selected, barMetrics: .default)
         let segAttributes: NSDictionary = [
             NSAttributedString.Key.foregroundColor: UIColor(red: 86/255, green: 86/255, blue: 95/255, alpha: 1),
             NSAttributedString.Key.font: UIFont(name: "Roboto-Regular", size: 14)!
@@ -88,14 +90,17 @@ extension UISegmentedControl {
         let segAttributesExtra: NSDictionary = [
             NSAttributedString.Key.foregroundColor: UIColor.white,
             NSAttributedString.Key.font: UIFont(name: "Roboto-Regular", size: 14)!
-            
         ]
         setTitleTextAttributes(segAttributesExtra as? [NSAttributedString.Key: Any], for: .selected)
         selectedSegmentIndex = -1
+        self.layer.backgroundColor = UIColor.clear.cgColor
         self.layer.borderWidth = 1.0
-        self.layer.cornerRadius = 5.0
-        self.layer.borderColor = segmentGrayColor.cgColor
+        self.layer.cornerRadius = 21.0
+        self.layer.borderColor = UIColor.clear.cgColor//segmentGrayColor.cgColor
         self.layer.masksToBounds = true
+//        let viewForGrayBorder = UIView(frame: bounds)
+//        viewForGrayBorder.backgroundColor = tintColor
+//        self.insertSubview(viewForGrayBorder, at: 0)
     }
     
     // create a 1x1 image with this color

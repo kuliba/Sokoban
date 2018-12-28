@@ -2653,7 +2653,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wnp-iy-lxK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2825" y="754"/>
+            <point key="canvasLocation" x="2826" y="821"/>
         </scene>
         <!--Deposits Stats Details View Controller-->
         <scene sceneID="dIG-RQ-Jw5">
@@ -2848,6 +2848,6 @@
         <image name="visalogo" width="41" height="18"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="xAX-aZ-8L4"/>
+        <segue reference="HSU-U3-jID"/>
     </inferredMetricsTieBreakers>
 </document>

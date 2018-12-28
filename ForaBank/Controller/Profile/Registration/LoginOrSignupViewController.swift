@@ -34,7 +34,7 @@ class LoginOrSignupViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if segueId == "SignIn" {
+        if segueId == "SignIn" || segueId == "Registration" {
             backgroundImageView.hero.modifiers = [
                 HeroModifier.duration(0.5),
                 HeroModifier.delay(0.5),
@@ -70,7 +70,7 @@ class LoginOrSignupViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if segueId == "SignIn" {
+        if segueId == "SignIn" || segueId == "Registration" {
             backgroundImageView.hero.modifiers = [
                 HeroModifier.duration(0.5),
                 HeroModifier.translate(CGPoint(x: 50, y: 0)),
@@ -93,7 +93,12 @@ class LoginOrSignupViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         segueId = nil
         if let vc = segue.destination as? SignInViewController {
-            segueId = segue.identifier
+            segueId = "SignIn"
+            vc.segueId = segueId
+            vc.backSegueId = segueId
+        }
+        if let vc = segue.destination as? RegistrationViewController {
+            segueId = "Registration"
             vc.segueId = segueId
             vc.backSegueId = segueId
         }

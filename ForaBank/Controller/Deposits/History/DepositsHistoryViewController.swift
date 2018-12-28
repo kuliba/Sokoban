@@ -130,6 +130,9 @@ extension DepositsHistoryViewController: UITableViewDataSource, UITableViewDeleg
         headerCell.subTitleLabel.text = data_[section].amountTotal
         return headerView
     }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 65
+    }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 35
@@ -156,10 +159,10 @@ private extension DepositsHistoryViewController {
         tableView.delegate = self
     }
     
-    func setAutomaticRowHeight() {
-        tableView.estimatedRowHeight = 50
-        tableView.rowHeight = UITableView.automaticDimension
-    }
+//    func setAutomaticRowHeight() {
+//        tableView.estimatedRowHeight = 50
+//        tableView.rowHeight = UITableView.automaticDimension
+//    }
     
     func registerNibCell() {
         let nibTemplateCell = UINib(nibName: cellId, bundle: nil)

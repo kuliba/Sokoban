@@ -158,6 +158,7 @@
 		A568142E21D0B945002C0899 /* TestDepositsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A568142D21D0B945002C0899 /* TestDepositsService.swift */; };
 		A568143021D0B9E3002C0899 /* Bond.swift in Sources */ = {isa = PBXBuildFile; fileRef = A568142F21D0B9E3002C0899 /* Bond.swift */; };
 		A568143421D0CE6C002C0899 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = A568143321D0CE6C002C0899 /* Profile.swift */; };
+		A568143821D35FEB002C0899 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A568143721D35FEB002C0899 /* Transaction.swift */; };
 		A56B59FA21AD623B00CE4798 /* DepositsDepositsSegueAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56B59F921AD623B00CE4798 /* DepositsDepositsSegueAnimator.swift */; };
 		A58760BF21BF8E770022DED5 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58760BE21BF8E770022DED5 /* NetworkManager.swift */; };
 		A58760C121BFB63D0022DED5 /* ProfileNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58760C021BFB63D0022DED5 /* ProfileNavigationController.swift */; };
@@ -331,6 +332,7 @@
 		A568142D21D0B945002C0899 /* TestDepositsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDepositsService.swift; sourceTree = "<group>"; };
 		A568142F21D0B9E3002C0899 /* Bond.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bond.swift; sourceTree = "<group>"; };
 		A568143321D0CE6C002C0899 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
+		A568143721D35FEB002C0899 /* Transaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transaction.swift; sourceTree = "<group>"; };
 		A56B59F921AD623B00CE4798 /* DepositsDepositsSegueAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsDepositsSegueAnimator.swift; sourceTree = "<group>"; };
 		A58760BE21BF8E770022DED5 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		A58760C021BFB63D0022DED5 /* ProfileNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileNavigationController.swift; sourceTree = "<group>"; };
@@ -412,11 +414,11 @@
 			children = (
 				A5C5E6D921A2B40A001D6250 /* DepositsCardsListViewController.swift */,
 				A5C5E6D521A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift */,
+				096B4F4B2183089800C69E52 /* DepositsCardsDetailsViewController.swift */,
 				096B4F532186E29300C69E52 /* DepositsCardsDetailsManagementViewController.swift */,
 				096B4F57218704AA00C69E52 /* DepositsCardsDetailsStatementViewController.swift */,
-				09E2141E21873DCA00D16D21 /* DepositsCardsDetailsStatementDetailsViewController.swift */,
 				096B4F552186F03A00C69E52 /* DepositsCardsDetailsAboutViewController.swift */,
-				096B4F4B2183089800C69E52 /* DepositsCardsDetailsViewController.swift */,
+				09E2141E21873DCA00D16D21 /* DepositsCardsDetailsStatementDetailsViewController.swift */,
 				096B4F4C2183089900C69E52 /* TwoViewController.swift */,
 				096B4F4F2183257300C69E52 /* ThreeViewController.swift */,
 			);
@@ -553,6 +555,7 @@
 				A55B7B8721AA698900A8A7FE /* ChatMessage.swift */,
 				0942B86C21625F7800370C71 /* Friend.swift */,
 				A5C5E6DF21A2B443001D6250 /* Card.swift */,
+				A568143721D35FEB002C0899 /* Transaction.swift */,
 				A568141E21CBCCB3002C0899 /* BankBranch.swift */,
 				A568142021CBCD03002C0899 /* BankBranchAnnotation.swift */,
 				A568142F21D0B9E3002C0899 /* Bond.swift */,
@@ -1011,6 +1014,7 @@
 				A568143021D0B9E3002C0899 /* Bond.swift in Sources */,
 				09C7C33D2175FADE000EE472 /* DepositsHistoryHeader.swift in Sources */,
 				A5B473C621B52D4500F2E41F /* BubblesDetailedStatsView.swift in Sources */,
+				A568143821D35FEB002C0899 /* Transaction.swift in Sources */,
 				09F5DCE8218C4A5200390304 /* RegistrationTouchIDViewController.swift in Sources */,
 				09C7C3352175CC47000EE472 /* DepositsHistoryViewController.swift in Sources */,
 				09E0F146215A68DC0042FB6A /* CustomTabBar.swift in Sources */,

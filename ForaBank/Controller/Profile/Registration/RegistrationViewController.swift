@@ -9,7 +9,8 @@
 import UIKit
 import DeviceKit
 import FlexiblePageControl
-
+import Hero
+import IQKeyboardManagerSwift
 class RegistrationViewController: UIViewController {
     
     // MARK: - Properties
@@ -35,19 +36,22 @@ class RegistrationViewController: UIViewController {
     
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var continueButton: UIButton!
+    @IBOutlet weak var centralView: UIView!
     
     var previousTextFieldContent: String?
     var previousSelection: UITextRange?
     
-//    let pageControl = FlexiblePageControl()
+    var segueId: String? = nil
+    var backSegueId: String? = nil
     
     let gradientView = UIView()
     let circleView = UIView()
     
     let cvcAllowedLength = 3
-    
+    let segmentedControlBorderLayer = CALayer()
     // MARK: - Actions
     @IBAction func backButtonCLicked(_ sender: Any) {
+        segueId = backSegueId
         view.endEditing(true)
         self.navigationController?.popViewController(animated: true)
     }
@@ -83,11 +87,92 @@ class RegistrationViewController: UIViewController {
         super.viewDidLayoutSubviews()
         
         setCardShadow()
+        segmentedControlBorderLayer.frame = segmentedOuterView.bounds
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+//        if let nav = navigationController as? ProfileNavigationController {
+//            nav.pageControl.isHidden = false
+//            nav.pageControl.setCurrentPage(at: 0)
+//        }
+        if segueId == "Registration" {
+            containerView.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.delay(0.2),
+                HeroModifier.translate(CGPoint(x: 0, y: view.frame.height))
+            ]
+            view.hero.modifiers = [
+                HeroModifier.beginWith([HeroModifier.opacity(1)]),
+                HeroModifier.duration(0.5),
+                HeroModifier.delay(0.2),
+                HeroModifier.opacity(0)
+            ]
+        }
+        if segueId == "smsVerification" {
+            containerView.hero.id = "authContent-smsContent"
+            view.hero.id = "authView-smsView"
+            view.hero.modifiers = [
+                HeroModifier.duration(0.5)
+            ]
+            centralView.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.translate(CGPoint(x: centralView.frame.origin.x - view.frame.width, y: 0))
+            ]
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        _ = cardNumberTextField.becomeFirstResponder()
+//        _ = cardNumberTextField.becomeFirstResponder()
+        containerView.hero.modifiers = nil
+        containerView.hero.id = nil
+        view.hero.modifiers = nil
+        view.hero.id = nil
+        centralView.hero.modifiers = nil
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if segueId == "Registration" {
+            containerView.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.translate(CGPoint(x: 0, y: view.frame.height))
+            ]
+            view.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.opacity(0)
+            ]
+        }
+        if segueId == "smsVerification" {
+            containerView.hero.id = "authContent-smsContent"
+            view.hero.id = "authView-smsView"
+            view.hero.modifiers = [
+                HeroModifier.duration(0.5)
+            ]
+            centralView.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.translate(CGPoint(x: centralView.frame.origin.x - view.frame.width, y: 0))
+            ]
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        containerView.hero.modifiers = nil
+        containerView.hero.id = nil
+        view.hero.modifiers = nil
+        view.hero.id = nil
+        centralView.hero.modifiers = nil
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        view.endEditing(true)
+//        IQKeyboardManager.shared.reloadLayoutIfNeeded()
+        segueId = nil
+        if let vc = segue.destination as? RegistrationCodeVerificationViewController {
+            segueId = "smsVerification"
+            vc.segueId = segueId
+            vc.backSegueId = segueId
+        }
     }
 }
 
@@ -145,21 +230,25 @@ private extension RegistrationViewController {
     }
     
     func setUpSegmentedControl() {
-        segmentedControl.setTitleTextAttributes([
-            NSAttributedString.Key.foregroundColor: UIColor(red: 86/255, green: 86/255, blue: 95/255, alpha: 1),
-            NSAttributedString.Key.font: UIFont(name: "Roboto-Bold", size: 16) ?? UIFont.systemFont(ofSize: 16)
-            ], for: UIControl.State.normal)
+//        segmentedControl.setTitleTextAttributes([
+//            NSAttributedString.Key.foregroundColor: UIColor(red: 86/255, green: 86/255, blue: 95/255, alpha: 1),
+//            NSAttributedString.Key.font: UIFont(name: "Roboto-Bold", size: 16) ?? UIFont.systemFont(ofSize: 16)
+//            ], for: UIControl.State.normal)
         
         segmentedControl.backgroundColor = .white
         segmentedControl.tintColor = UIColor(red: 234/255, green: 68/255, blue: 66/255, alpha: 1)
         
-        segmentedOuterView.layer.cornerRadius = segmentedOuterView.bounds.height / 2
-        segmentedOuterView.layer.borderColor = UIColor(red: 0.889415, green: 0.889436, blue:0.889424, alpha: 1.0 ).cgColor
-        segmentedOuterView.layer.borderWidth = 1
-        segmentedOuterView.layer.masksToBounds = true
+        segmentedControlBorderLayer.frame = segmentedOuterView.bounds
+        segmentedControlBorderLayer.backgroundColor = UIColor.clear.cgColor
+        segmentedControlBorderLayer.cornerRadius = 21
+        segmentedControlBorderLayer.borderColor = UIColor(red: 0.889415, green: 0.889436, blue:0.889424, alpha: 1.0 ).cgColor
+        segmentedControlBorderLayer.borderWidth = 1
+        segmentedControlBorderLayer.masksToBounds = true
+        segmentedOuterView.layer.insertSublayer(segmentedControlBorderLayer, at: 0)
+        
         segmentedControl.setSegmentStyle()
         segmentedControl.selectedSegmentIndex = 0
-        segmentedControl.isUserInteractionEnabled = false
+//        segmentedControl.isUserInteractionEnabled = false
     }
     
     func setCardShadow() {
@@ -327,6 +416,7 @@ extension RegistrationViewController: UITextFieldDelegate {
         monthTextField.textColor = .white
         yearTextField.textColor = .white
         cvvTextField.textColor = .white
+        continueButton.isHidden = false
     }
 }
 
