@@ -63,8 +63,8 @@ class SignInViewController: UIViewController {
             ]
         }
         if segueId == "smsVerification" {
-            contentView.hero.id = "authContent-smsContent"
-            view.hero.id = "authView-smsView"
+            contentView.hero.id = "content"
+            view.hero.id = "view"
             view.hero.modifiers = [
                 HeroModifier.duration(0.5)
             ]
@@ -100,8 +100,8 @@ class SignInViewController: UIViewController {
             ]
         }
         if segueId == "smsVerification" {
-            contentView.hero.id = "authContent-smsContent"
-            view.hero.id = "authView-smsView"
+            contentView.hero.id = "content"
+            view.hero.id = "view"
             view.hero.modifiers = [
                 HeroModifier.duration(0.5)
             ]

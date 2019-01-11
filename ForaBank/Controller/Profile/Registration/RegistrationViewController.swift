@@ -38,6 +38,11 @@ class RegistrationViewController: UIViewController {
     @IBOutlet weak var continueButton: UIButton!
     @IBOutlet weak var centralView: UIView!
     
+    @IBOutlet weak var depositView: UIView!
+    @IBOutlet weak var contractView: UIView!
+    
+    var previousSegment = 0
+    
     var previousTextFieldContent: String?
     var previousSelection: UITextRange?
     
@@ -65,6 +70,57 @@ class RegistrationViewController: UIViewController {
         cardIOVC?.hideCardIOLogo = true
         present(cardIOVC!, animated: true, completion: nil)
     }
+    @IBAction func segmentedControlValueChanged(_ sender: Any) {
+        let direction = segmentedControl.selectedSegmentIndex - previousSegment
+        var previousView: UIView? = nil
+        var nextView: UIView? = nil
+        switch previousSegment {
+        case 0:
+            previousView = cardView
+            UIView.animate(withDuration: 0.5) {
+                self.descriptionLabel.alpha = 0
+            }
+        case 1:
+            previousView = depositView
+        case 2:
+            previousView = contractView
+        default:
+            break
+        }
+        switch segmentedControl.selectedSegmentIndex {
+        case 0:
+            nextView = cardView
+            UIView.animate(withDuration: 0.5) {
+                self.descriptionLabel.alpha = 1
+            }
+        case 1:
+            nextView = depositView
+        case 2:
+            nextView = contractView
+        default:
+            break
+        }
+        if direction > 0 {
+            nextView?.frame.origin.x = view.frame.width
+            nextView?.isHidden = false
+            UIView.animate(withDuration: 0.5, animations: {
+                nextView?.frame.origin.x = 0
+                previousView?.frame.origin.x = -self.view.frame.width
+            }) { (_) in
+                previousView?.isHidden = true
+            }
+        } else {
+            nextView?.frame.origin.x = -view.frame.width
+            nextView?.isHidden = false
+            UIView.animate(withDuration: 0.5, animations: {
+                nextView?.frame.origin.x = 0
+                previousView?.frame.origin.x = self.view.frame.width
+            }) { (_) in
+                previousView?.isHidden = true
+            }
+        }
+        previousSegment = segmentedControl.selectedSegmentIndex
+    }
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -91,11 +147,10 @@ class RegistrationViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-//        if let nav = navigationController as? ProfileNavigationController {
-//            nav.pageControl.isHidden = false
-//            nav.pageControl.setCurrentPage(at: 0)
-//        }
         if segueId == "Registration" {
+            if let nav = navigationController as? ProfileNavigationController {
+                nav.pageControl.setCurrentPage(at: 0)
+            }
             containerView.hero.modifiers = [
                 HeroModifier.duration(0.5),
                 HeroModifier.delay(0.2),
@@ -109,8 +164,13 @@ class RegistrationViewController: UIViewController {
             ]
         }
         if segueId == "smsVerification" {
-            containerView.hero.id = "authContent-smsContent"
-            view.hero.id = "authView-smsView"
+            if let nav = navigationController as? ProfileNavigationController {
+                UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut, animations: {
+                    nav.pageControl.setCurrentPage(at: 0)
+                }, completion: nil)
+            }
+            containerView.hero.id = "content"
+            view.hero.id = "view"
             view.hero.modifiers = [
                 HeroModifier.duration(0.5)
             ]
@@ -123,6 +183,10 @@ class RegistrationViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        if let nav = navigationController as? ProfileNavigationController {
+            nav.pageControl.isHidden = false
+            pageControl.isHidden = true
+        }
 //        _ = cardNumberTextField.becomeFirstResponder()
         containerView.hero.modifiers = nil
         containerView.hero.id = nil
@@ -133,6 +197,10 @@ class RegistrationViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if segueId == "Registration" {
+            if let nav = navigationController as? ProfileNavigationController {
+                pageControl.isHidden = false
+                nav.pageControl.isHidden = true
+            }
             containerView.hero.modifiers = [
                 HeroModifier.duration(0.5),
                 HeroModifier.translate(CGPoint(x: 0, y: view.frame.height))
@@ -143,8 +211,8 @@ class RegistrationViewController: UIViewController {
             ]
         }
         if segueId == "smsVerification" {
-            containerView.hero.id = "authContent-smsContent"
-            view.hero.id = "authView-smsView"
+            containerView.hero.id = "content"
+            view.hero.id = "view"
             view.hero.modifiers = [
                 HeroModifier.duration(0.5)
             ]
@@ -203,15 +271,15 @@ private extension RegistrationViewController {
     }
     
     func setUpPageControl() {
-        pageControl.numberOfPages = 12
+        pageControl.numberOfPages = 4
         pageControl.pageIndicatorTintColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)
         pageControl.currentPageIndicatorTintColor = UIColor(red: 234/255, green: 68/255, blue: 66/255, alpha: 1)
         
         let config = FlexiblePageControl.Config(
-            displayCount: 6,
+            displayCount: 4,
             dotSize: 7,
             dotSpace: 6,
-            smallDotSizeRatio: 0.5,
+            smallDotSizeRatio: 0.2,
             mediumDotSizeRatio: 0.5
         )
         

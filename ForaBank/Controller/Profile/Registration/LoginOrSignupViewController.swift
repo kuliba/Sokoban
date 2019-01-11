@@ -18,6 +18,7 @@ class LoginOrSignupViewController: UIViewController {
     @IBOutlet weak var signInButton: UIButton!
     
     var segueId: String? = nil
+    var animator: UIViewPropertyAnimator? = nil
     
     let transitionDuration: TimeInterval = 2
     
@@ -36,9 +37,9 @@ class LoginOrSignupViewController: UIViewController {
         super.viewWillAppear(animated)
         if segueId == "SignIn" || segueId == "Registration" {
             backgroundImageView.hero.modifiers = [
-                HeroModifier.duration(0.5),
-                HeroModifier.delay(0.5),
-                HeroModifier.translate(CGPoint(x: 50, y: 0)),
+                HeroModifier.duration(0.6),
+                HeroModifier.delay(0.2),
+                HeroModifier.translate(CGPoint(x: 20, y: 0)),
                 HeroModifier.opacity(0)
             ]
             containerView.hero.modifiers = [
@@ -49,9 +50,9 @@ class LoginOrSignupViewController: UIViewController {
         }
         if segueId == "logout" {
             backgroundImageView.hero.modifiers = [
-                HeroModifier.duration(0.5),
-                HeroModifier.delay(0.5),
-                HeroModifier.translate(CGPoint(x: 50, y: 0)),
+                HeroModifier.duration(0.6),
+                HeroModifier.delay(0.2),
+                HeroModifier.translate(CGPoint(x: 20, y: 0)),
                 HeroModifier.opacity(0)
             ]
             containerView.hero.modifiers = [
@@ -60,6 +61,20 @@ class LoginOrSignupViewController: UIViewController {
                 HeroModifier.opacity(0)
             ]
         }
+//        backgroundImageView.bounds.origin.x = 0
+//        backgroundImageView.alpha = 0
+//        self.backgroundImageView.transform = CGAffineTransform(translationX: 20, y: 0)
+//        animator = UIViewPropertyAnimator(duration: 1.5, curve: .linear, animations: {
+////            self.backgroundImageView.bounds.origin.x = -20
+//            self.backgroundImageView.transform = CGAffineTransform.identity
+//            self.backgroundImageView.alpha = 0.1
+////            self.view.layoutIfNeeded()
+//        })
+////        animator.complet
+//        animator?.addCompletion({ (pos) in
+//            print("kek")
+//        })
+//        animator?.startAnimation()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -73,19 +88,29 @@ class LoginOrSignupViewController: UIViewController {
         if segueId == "SignIn" || segueId == "Registration" {
             backgroundImageView.hero.modifiers = [
                 HeroModifier.duration(0.5),
-                HeroModifier.translate(CGPoint(x: 50, y: 0)),
+                HeroModifier.translate(CGPoint(x: 20, y: 0)),
                 HeroModifier.opacity(0)
             ]
             containerView.hero.modifiers = [
                 HeroModifier.duration(0.5),
-                HeroModifier.delay(0.3),
+//                HeroModifier.delay(0.3),
                 HeroModifier.opacity(0)
             ]
         }
+//        animator?.stopAnimation(true)
+//        animator = UIViewPropertyAnimator(duration: 0.5, curve: .linear, animations: {
+//            self.backgroundImageView.transform = CGAffineTransform.identity
+//            self.backgroundImageView.alpha = 0
+//        })
+//        animator?.addCompletion({ (pos) in
+//            print("lil")
+//        })
+//        animator?.startAnimation()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+//        backgroundImageView.alpha = 0
         backgroundImageView.hero.modifiers = nil
         containerView.hero.modifiers = nil
     }

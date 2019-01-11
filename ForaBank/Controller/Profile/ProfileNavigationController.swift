@@ -32,15 +32,16 @@ class ProfileNavigationController: UINavigationController {
         }
         
         pageControl.isHidden = true
-        pageControl.numberOfPages = 12
+//        pageControl.alpha = 0
+        pageControl.numberOfPages = 4
         pageControl.pageIndicatorTintColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)
         pageControl.currentPageIndicatorTintColor = UIColor(red: 234/255, green: 68/255, blue: 66/255, alpha: 1)
         pageControl.translatesAutoresizingMaskIntoConstraints = false
         let config = FlexiblePageControl.Config(
-            displayCount: 6,
+            displayCount: 4,
             dotSize: 7,
             dotSpace: 6,
-            smallDotSizeRatio: 0.5,
+            smallDotSizeRatio: 0.2,
             mediumDotSizeRatio: 0.5
         )
 //        pageControl.backgroundColor = .black
@@ -50,7 +51,7 @@ class ProfileNavigationController: UINavigationController {
         view.addSubview(pageControl)
         var topInset: CGFloat = 0
         if Device().isOneOf(Constants.iphone5Devices) {
-            topInset = 87
+            topInset = 77
         } else if Device().isOneOf(Constants.xDevices) {
             topInset = 101
         } else {

@@ -8,6 +8,7 @@
 
 import UIKit
 import FlexiblePageControl
+import Hero
 
 class RegistrationPermissionsViewController: UIViewController {
     
@@ -16,23 +17,27 @@ class RegistrationPermissionsViewController: UIViewController {
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var continueButton: ButtonRounded!
     @IBOutlet weak var pageControl: FlexiblePageControl!
+    @IBOutlet weak var centralView: UIView!
+    @IBOutlet weak var header: UIView!
     
+    var segueId: String? = nil
+    var backSegueId: String? = nil
 //    let pageControl = FlexiblePageControl()
     let gradientView = UIView()
     let circleView = UIView()
     
     // MARK: - Actions
     @IBAction func backButtonCLicked(_ sender: Any) {
+        segueId = backSegueId
         view.endEditing(true)
-//        UIView.animate(
-//            withDuration: 0.35,
-//            animations: {
-//                self.gradientView.alpha = 0
-//        },
-//            completion: { _ in
-//                self.dismiss(animated: false)
-                self.navigationController?.popViewController(animated: true)
-//        })
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    @IBAction func touchIdSwitch(_ sender: Any) {
+        if let s = sender as? UISwitch,
+            s.isOn == true {
+            performSegue(withIdentifier: "touchID", sender: nil)
+        }
     }
     
     override func viewDidLoad() {
@@ -47,16 +52,135 @@ class RegistrationPermissionsViewController: UIViewController {
         view.clipsToBounds = true
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let nav = navigationController as? ProfileNavigationController {
+            UIView.animate(withDuration: 0.5, delay: 0, options: .beginFromCurrentState, animations: {
+                nav.pageControl.setCurrentPage(at: 3)
+            }, completion: nil)
+        }
+        if segueId == "permissions" {
+            containerView.hero.id = "content"
+            view.hero.id = "view"
+            centralView?.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.translate(CGPoint(x: centralView.frame.origin.x + view.frame.width, y: 0))
+            ]
+        }
+        if segueId == "touchID" {
+            if let nav = navigationController as? ProfileNavigationController {
+                nav.pageControl.isHidden = true
+                pageControl.isHidden = false
+            }
+            containerView.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.delay(0.2),
+                HeroModifier.translate(CGPoint(x: 0, y: view.frame.height))
+            ]
+            view.hero.modifiers = [
+                HeroModifier.beginWith([HeroModifier.opacity(1)]),
+                HeroModifier.duration(0.5),
+                HeroModifier.delay(0.2),
+                HeroModifier.opacity(0)
+            ]
+            header?.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.opacity(0)
+            ]
+        }
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-//        UIView.animate(
-//            withDuration: 0.25,
-//            animations: {
-//                self.gradientView.alpha = 1
-//        },
-//            completion: { _ in
-//        })
+        if let nav = navigationController as? ProfileNavigationController {
+            nav.pageControl.isHidden = false
+            pageControl.isHidden = true
+        }
+        containerView.hero.modifiers = nil
+        containerView.hero.id = nil
+        view.hero.modifiers = nil
+        view.hero.id = nil
+        centralView?.hero.modifiers = nil
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if segueId == "permissions" {
+            containerView.hero.id = "content"
+            view.hero.id = "view"
+            centralView?.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.translate(CGPoint(x: centralView.frame.origin.x + view.frame.width, y: 0))
+            ]
+        }
+        if segueId == "finish" {
+            if let nav = navigationController as? ProfileNavigationController {
+                nav.pageControl.isHidden = true
+                pageControl.isHidden = false
+            }
+            containerView.hero.modifiers = [
+                HeroModifier.beginWith([
+                    HeroModifier.opacity(1),
+                    HeroModifier.zPosition(2)
+                    ]),
+                HeroModifier.duration(0.5),
+                HeroModifier.translate(CGPoint(x: 0, y: view.frame.height)),
+            ]
+            gradientView.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.opacity(0)
+            ]
+            header?.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.opacity(0)
+            ]
+        }
+        if segueId == "touchID" {
+            if let nav = navigationController as? ProfileNavigationController {
+                nav.pageControl.isHidden = true
+                pageControl.isHidden = false
+            }
+            containerView.hero.modifiers = [
+                HeroModifier.beginWith([
+                    HeroModifier.opacity(1),
+                    HeroModifier.zPosition(2)
+                    ]),
+                HeroModifier.duration(0.5),
+                HeroModifier.translate(CGPoint(x: 0, y: view.frame.height)),
+            ]
+            gradientView.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.opacity(0)
+            ]
+            header?.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.opacity(0)
+            ]
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        pageControl.isHidden = true
+        containerView.hero.modifiers = nil
+        containerView.hero.id = nil
+        view.hero.modifiers = nil
+        view.hero.id = nil
+        centralView?.hero.modifiers = nil
+        gradientView.hero.modifiers = nil
+        header?.hero.modifiers = nil
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        segueId = nil
+        if let vc = segue.destination as? RegistrationFinishViewController {
+            segueId = "finish"
+            vc.segueId = segueId
+        }
+        if let vc = segue.destination as? RegistrationTouchIDViewController {
+            segueId = "touchID"
+            vc.segueId = segueId
+        }
     }
 }
 
@@ -89,15 +213,15 @@ private extension RegistrationPermissionsViewController {
     }
     
     func setUpPageControl() {
-        pageControl.numberOfPages = 12
+        pageControl.numberOfPages = 4
         pageControl.pageIndicatorTintColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)
         pageControl.currentPageIndicatorTintColor = UIColor(red: 234/255, green: 68/255, blue: 66/255, alpha: 1)
         
         let config = FlexiblePageControl.Config(
-            displayCount: 6,
+            displayCount: 4,
             dotSize: 7,
             dotSpace: 6,
-            smallDotSizeRatio: 0.5,
+            smallDotSizeRatio: 0.2,
             mediumDotSizeRatio: 0.5
         )
         

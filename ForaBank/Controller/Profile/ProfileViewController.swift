@@ -47,6 +47,27 @@ class ProfileViewController: UIViewController {
                 HeroModifier.translate(CGPoint(x: -view.frame.width, y: 0))
             ]
         }
+        if segueId == "Registered" {
+            containerView.hero.modifiers = [
+                HeroModifier.beginWith([
+                    HeroModifier.opacity(1),
+                    HeroModifier.zPosition(2)
+                    ]),
+                HeroModifier.duration(0.5),
+                HeroModifier.forceNonFade,
+                HeroModifier.opacity(1),
+                HeroModifier.translate(CGPoint(x: 0, y: view.frame.height))
+            ]
+            menu.hero.modifiers = [
+                HeroModifier.beginWith([
+                    HeroModifier.opacity(1),
+                    HeroModifier.zPosition(3)
+                    ]),
+                HeroModifier.duration(0.5),
+                HeroModifier.delay(0.2),
+                HeroModifier.translate(CGPoint(x: -view.frame.width, y: 0))
+            ]
+        }
         NetworkManager.shared().getProfile { [weak self] (success, profile, errorMessage) in
             if success,
                 let firstName = profile?.firstName,

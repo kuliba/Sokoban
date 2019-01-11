@@ -46,37 +46,31 @@ class RegistrationLoginPasswordViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if let nav = navigationController as? ProfileNavigationController {
+            UIView.animate(withDuration: 0.5, delay: 0, options: .beginFromCurrentState, animations: {
+                nav.pageControl.setCurrentPage(at: 2)
+            }, completion: nil)
+        }
         if segueId == "loginPassword" {
-//            pageControl.hero.id = "page"
-            pageControl.hero.modifiers = [
-                HeroModifier.beginWith([HeroModifier.opacity(1)]),
-                HeroModifier.duration(0.001),
-                HeroModifier.delay(1),
-                HeroModifier.opacity(0),
-//                HeroModifier.useNoSnapshot,
-//                HeroModifier.useGlobalCoordinateSpace
-            ]
-//            UIView.animate(withDuration: 1, delay: 0, options: [.layoutSubviews], animations: {
-//                self.pageControl.animateDuration = 1
-//                self.pageControl.setCurrentPage(at: 2)
-//            }, completion: nil)
-//            UIView.transition(with: pageControl, duration: 1, options: [.allowAnimatedContent, .beginFromCurrentState], animations: {
-//                self.pageControl.animateDuration = 1
-//                self.pageControl.setCurrentPage(at: 2)
-//            }, completion: nil)
-            containerView.hero.id = "authContent-smsContent"
-            view.hero.id = "authView-smsView"
+            containerView.hero.id = "content"
+            view.hero.id = "view"
             centralView?.hero.modifiers = [
                 HeroModifier.duration(0.5),
                 HeroModifier.translate(CGPoint(x: centralView.frame.origin.x + view.frame.width, y: 0))
+            ]
+        }
+        if segueId == "permissions" {
+            containerView.hero.id = "content"
+            view.hero.id = "view"
+            centralView?.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.translate(CGPoint(x: centralView.frame.origin.x - view.frame.width, y: 0))
             ]
         }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        pageControl.hero.id = nil
-        pageControl.hero.modifiers = nil
         containerView.hero.modifiers = nil
         containerView.hero.id = nil
         view.hero.modifiers = nil
@@ -87,11 +81,19 @@ class RegistrationLoginPasswordViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if segueId == "loginPassword" {
-            containerView.hero.id = "authContent-smsContent"
-            view.hero.id = "authView-smsView"
+            containerView.hero.id = "content"
+            view.hero.id = "view"
             centralView?.hero.modifiers = [
                 HeroModifier.duration(0.5),
                 HeroModifier.translate(CGPoint(x: centralView.frame.origin.x + view.frame.width, y: 0))
+            ]
+        }
+        if segueId == "permissions" {
+            containerView.hero.id = "content"
+            view.hero.id = "view"
+            centralView?.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.translate(CGPoint(x: centralView.frame.origin.x - view.frame.width, y: 0))
             ]
         }
     }
@@ -107,8 +109,8 @@ class RegistrationLoginPasswordViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         segueId = nil
-        if let vc = segue.destination as? RegistrationLoginPasswordViewController {
-            segueId = "loginPassword"
+        if let vc = segue.destination as? RegistrationPermissionsViewController {
+            segueId = "permissions"
             vc.segueId = segueId
             vc.backSegueId = segueId
         }
@@ -144,15 +146,15 @@ private extension RegistrationLoginPasswordViewController {
     }
     
     func setUpPageControl() {
-        pageControl.numberOfPages = 12
+        pageControl.numberOfPages = 4
         pageControl.pageIndicatorTintColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)
         pageControl.currentPageIndicatorTintColor = UIColor(red: 234/255, green: 68/255, blue: 66/255, alpha: 1)
         
         let config = FlexiblePageControl.Config(
-            displayCount: 6,
+            displayCount: 4,
             dotSize: 7,
             dotSpace: 6,
-            smallDotSizeRatio: 0.5,
+            smallDotSizeRatio: 0.2,
             mediumDotSizeRatio: 0.5
         )
         

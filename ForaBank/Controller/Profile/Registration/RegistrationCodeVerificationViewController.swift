@@ -65,22 +65,22 @@ class RegistrationCodeVerificationViewController: UIViewController, UITextFieldD
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if let nav = navigationController as? ProfileNavigationController {
+            UIView.animate(withDuration: 0.5, delay: 0, options: .beginFromCurrentState, animations: {
+                nav.pageControl.setCurrentPage(at: 1)
+            }, completion: nil)
+        }
         if segueId == "smsVerification" {
-            containerView.hero.id = "authContent-smsContent"
-            view.hero.id = "authView-smsView"
+            containerView.hero.id = "content"
+            view.hero.id = "view"
             centralView?.hero.modifiers = [
                 HeroModifier.duration(0.5),
                 HeroModifier.translate(CGPoint(x: centralView.frame.origin.x + view.frame.width, y: 0))
             ]
         }
         if segueId == "loginPassword"  {
-//            if let nav = navigationController as? ProfileNavigationController {
-////                nav.pageControl.isHidden = false
-//                nav.pageControl.setCurrentPage(at: 1)
-//            }
-//            pageControl.isHidden = false
-            containerView.hero.id = "authContent-smsContent"
-            view.hero.id = "authView-smsView"
+            containerView.hero.id = "content"
+            view.hero.id = "view"
             centralView?.hero.modifiers = [
                 HeroModifier.duration(0.5),
                 HeroModifier.translate(CGPoint(x: centralView.frame.origin.x - view.frame.width, y: 0))
@@ -118,8 +118,8 @@ class RegistrationCodeVerificationViewController: UIViewController, UITextFieldD
             ]
         }
         if segueId == "smsVerification"  {
-            containerView.hero.id = "authContent-smsContent"
-            view.hero.id = "authView-smsView"
+            containerView.hero.id = "content"
+            view.hero.id = "view"
             centralView?.hero.modifiers = [
                 HeroModifier.duration(0.5),
                 HeroModifier.translate(CGPoint(x: centralView.frame.origin.x + view.frame.width, y: 0)),
@@ -127,32 +127,8 @@ class RegistrationCodeVerificationViewController: UIViewController, UITextFieldD
             ]
         }
         if segueId == "loginPassword"  {
-//            pageControl.hero.id = "page"
-//            pageControl.setCurrentPage(at: 2)
-//            pageControl.hero.modifiers = [
-////                HeroModifier.beginWith([
-////                    HeroModifier.opacity(1)
-////                    ]),
-//                HeroModifier.duration(0.5),
-////                HeroModifier.delay(0.5),
-////                HeroModifier.opacity(1),
-//                HeroModifier.useNoSnapshot,
-//                HeroModifier.useGlobalCoordinateSpace,
-////                HeroModifier.zPosition(5),
-//                HeroModifier.forceNonFade
-//            ]
-//            pageControl.isHidden = true
-//            UIView.transition(with: pageControl, duration: 0.5, options: [], animations: {
-//                self.pageControl.animateDuration = 0.5
-//                self.pageControl.setCurrentPage(at: 2)
-//            }, completion: nil)
-//            UIView.animate(withDuration: 0.5, delay: 0, options: [.allowAnimatedContent], animations: {
-//                self.pageControl.animateDuration = 0.5
-//                self.pageControl.setCurrentPage(at: 2)
-//            }, completion: nil)
-
-            containerView.hero.id = "authContent-smsContent"
-            view.hero.id = "authView-smsView"
+            containerView.hero.id = "content"
+            view.hero.id = "view"
             centralView?.hero.modifiers = [
                 HeroModifier.duration(0.5),
                 HeroModifier.translate(CGPoint(x: centralView.frame.origin.x - view.frame.width, y: 0))
@@ -162,8 +138,6 @@ class RegistrationCodeVerificationViewController: UIViewController, UITextFieldD
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        pageControl.hero.id = nil
-        pageControl.hero.modifiers = nil
         containerView.hero.modifiers = nil
         containerView.hero.id = nil
         view.hero.modifiers = nil
@@ -211,15 +185,15 @@ private extension RegistrationCodeVerificationViewController {
     }
     
     func setUpPageControl() {
-        pageControl.numberOfPages = 12
+        pageControl.numberOfPages = 4
         pageControl.pageIndicatorTintColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)
         pageControl.currentPageIndicatorTintColor = UIColor(red: 234/255, green: 68/255, blue: 66/255, alpha: 1)
         
         let config = FlexiblePageControl.Config(
-            displayCount: 6,
+            displayCount: 4,
             dotSize: 7,
             dotSpace: 6,
-            smallDotSizeRatio: 0.5,
+            smallDotSizeRatio: 0.2,
             mediumDotSizeRatio: 0.5
         )
         
