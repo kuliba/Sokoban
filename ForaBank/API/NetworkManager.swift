@@ -42,6 +42,21 @@ protocol DepositsServiceProtocol {
                   completionHandler: @escaping (_ success:Bool, _ obligations: [Bond]?,_ errorMessage: String?) -> Void)
 }
 
+protocol RegServiceProtocol {
+    func checkClient(headers: HTTPHeaders,
+                     cardNumber: String,
+                     login: String,
+                     password: String,
+                     phone: String,
+                     verificationCode: Int,
+                     completionHandler: @escaping (_ success:Bool,_ errorMessage: String?) -> Void)
+    func doRegistration(headers: HTTPHeaders,
+                        completionHandler: @escaping (_ success:Bool,_ errorMessage: String?) -> Void)
+    func verifyCode(headers: HTTPHeaders,
+                    verificationCode: Int,
+                    completionHandler: @escaping (_ success:Bool,_ errorMessage: String?) -> Void)
+}
+
 class NetworkManager {
     
     // MARK: - Properties
@@ -51,9 +66,10 @@ class NetworkManager {
         
         let authService = AuthService(baseURLString: host)//TestAuthService()//
         let cardService = TestCardService()
+        let regService = RegService(baseURLString: host)
         let depositsService = TestDepositsService()
 
-        let networkManager = NetworkManager(baseURLString: host, authService: authService, cardService: cardService, depositsService: depositsService)
+        let networkManager = NetworkManager(baseURLString: host, authService: authService, regService: regService, cardService: cardService, depositsService: depositsService)
         
         // Configuration
         
@@ -61,6 +77,7 @@ class NetworkManager {
         return networkManager
     }()
     private let authService: AuthServiceProtocol
+    private let regService: RegServiceProtocol
     private let cardService: CardServiceProtocol
     private let depositsService: DepositsServiceProtocol
     
@@ -74,9 +91,10 @@ class NetworkManager {
     
     // Initialization
     
-    private init(baseURLString: String, authService: AuthServiceProtocol, cardService: CardServiceProtocol, depositsService: DepositsServiceProtocol) {
+    private init(baseURLString: String, authService: AuthServiceProtocol, regService: RegServiceProtocol, cardService: CardServiceProtocol, depositsService: DepositsServiceProtocol) {
         self.baseURLString = baseURLString
         self.authService = authService
+        self.regService = regService
         self.cardService = cardService
         self.depositsService = depositsService
     }
@@ -133,6 +151,58 @@ class NetworkManager {
                 completionHandler(success, profile, errorMessage)
             } else {
                 completionHandler(false, profile, errorMessage)
+            }
+        }
+    }
+    
+    //MARK: - registration service
+    func checkClient(cardNumber: String,
+                     login: String,
+                     password: String,
+                     phone: String,
+                     verificationCode: Int,
+                     completionHandler: @escaping (_ success:Bool,_ errorMessage: String?) -> Void) {
+        authService.csrf(headers: headers) { [unowned self] (success, newHeaders) in
+            if success {
+                self.headers.merge(newHeaders ?? [:], uniquingKeysWith: { (_, k2) -> String in
+                    return k2
+                })
+                //                print("headers \(self.headers)")
+                self.regService.checkClient(headers: self.headers, cardNumber: cardNumber, login: login, password: password, phone: phone, verificationCode: verificationCode, completionHandler: completionHandler)
+            }
+            else {
+                completionHandler(false, nil)
+            }
+        }
+    }
+    
+    func doRegistration(completionHandler: @escaping (_ success:Bool,_ errorMessage: String?) -> Void) {
+        authService.csrf(headers: headers) { [unowned self] (success, newHeaders) in
+            if success {
+                self.headers.merge(newHeaders ?? [:], uniquingKeysWith: { (_, k2) -> String in
+                    return k2
+                })
+                //                print("headers \(self.headers)")
+                self.regService.doRegistration(headers: self.headers, completionHandler: completionHandler)
+            }
+            else {
+                completionHandler(false, nil)
+            }
+        }
+    }
+    
+    func verifyCode(verificationCode: Int,
+                    completionHandler: @escaping (_ success:Bool,_ errorMessage: String?) -> Void) {
+        authService.csrf(headers: headers) { [unowned self] (success, newHeaders) in
+            if success {
+                self.headers.merge(newHeaders ?? [:], uniquingKeysWith: { (_, k2) -> String in
+                    return k2
+                })
+                //                print("headers \(self.headers)")
+                self.regService.verifyCode(headers: self.headers, verificationCode: verificationCode, completionHandler: completionHandler)
+            }
+            else {
+                completionHandler(false, nil)
             }
         }
     }

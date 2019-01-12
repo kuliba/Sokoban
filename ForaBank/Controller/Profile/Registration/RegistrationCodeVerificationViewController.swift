@@ -33,7 +33,7 @@ class RegistrationCodeVerificationViewController: UIViewController, UITextFieldD
         segueId = backSegueId
         self.navigationController?.popViewController(animated: true)
     }
-    @IBAction func continueButtonClicked(_ sender: Any) {
+    @IBAction func authContinue(_ sender: Any) {
         view.endEditing(true)
 //        print("continueButtonClicked")
         NetworkManager.shared().checkVerificationCode(code: self.codeNumberTextField.text ?? "") { [unowned self] (success) in
@@ -49,6 +49,22 @@ class RegistrationCodeVerificationViewController: UIViewController, UITextFieldD
         }
     }
     
+    @IBAction func regContinue(_ sender: Any) {
+        guard let str = self.codeNumberTextField.text,
+            let code = Int(str) else {
+            return
+        }
+        
+        NetworkManager.shared().verifyCode(verificationCode: code) { [unowned self] (success, errorMessage) in
+            if success {
+                self.performSegue(withIdentifier: "regPermissions", sender: nil)
+            } else {
+                let alert = UIAlertController(title: "Неудача", message: "Неверный код", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
+        }
+    }
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,11 +81,21 @@ class RegistrationCodeVerificationViewController: UIViewController, UITextFieldD
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if let nav = navigationController as? ProfileNavigationController {
+        if let nav = navigationController as? ProfileNavigationController,
+            pageControl != nil {
+            pageControl.isHidden = true
             UIView.animate(withDuration: 0.5, delay: 0, options: .beginFromCurrentState, animations: {
-                nav.pageControl.setCurrentPage(at: 1)
+                nav.pageControl.setCurrentPage(at: 2)
             }, completion: nil)
         }
+//        if let nav = navigationController as? ProfileNavigationController,
+//            pageControl != nil {
+////            nav.pageControl.isHidden = false
+//            pageControl.isHidden = true
+//            UIView.animate(withDuration: 0.5, delay: 0, options: .beginFromCurrentState, animations: {
+//                nav.pageControl.setCurrentPage(at: 2)
+//            }, completion: nil)
+//        }
         if segueId == "smsVerification" {
             containerView.hero.id = "content"
             view.hero.id = "view"
@@ -78,7 +104,7 @@ class RegistrationCodeVerificationViewController: UIViewController, UITextFieldD
                 HeroModifier.translate(CGPoint(x: centralView.frame.origin.x + view.frame.width, y: 0))
             ]
         }
-        if segueId == "loginPassword"  {
+        if segueId == "permissions"  {
             containerView.hero.id = "content"
             view.hero.id = "view"
             centralView?.hero.modifiers = [
@@ -90,6 +116,11 @@ class RegistrationCodeVerificationViewController: UIViewController, UITextFieldD
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        if let nav = navigationController as? ProfileNavigationController,
+            pageControl != nil {
+            nav.pageControl.isHidden = true
+            pageControl.isHidden = false
+        }
         containerView.hero.modifiers = nil
         containerView.hero.id = nil
         view.hero.modifiers = nil
@@ -118,6 +149,11 @@ class RegistrationCodeVerificationViewController: UIViewController, UITextFieldD
             ]
         }
         if segueId == "smsVerification"  {
+            if let nav = navigationController as? ProfileNavigationController,
+                pageControl != nil {
+                nav.pageControl.isHidden = true
+                pageControl.isHidden = true
+            }
             containerView.hero.id = "content"
             view.hero.id = "view"
             centralView?.hero.modifiers = [
@@ -126,7 +162,12 @@ class RegistrationCodeVerificationViewController: UIViewController, UITextFieldD
 //                HeroModifier.zPosition(0)
             ]
         }
-        if segueId == "loginPassword"  {
+        if segueId == "permissions"  {
+            if let nav = navigationController as? ProfileNavigationController,
+                pageControl != nil {
+                nav.pageControl.isHidden = false
+                pageControl.isHidden = true
+            }
             containerView.hero.id = "content"
             view.hero.id = "view"
             centralView?.hero.modifiers = [
@@ -148,9 +189,10 @@ class RegistrationCodeVerificationViewController: UIViewController, UITextFieldD
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        view.endEditing(true)
         segueId = nil
-        if let vc = segue.destination as? RegistrationLoginPasswordViewController {
-            segueId = "loginPassword"
+        if let vc = segue.destination as? RegistrationPermissionsViewController {
+            segueId = "permissions"
             vc.segueId = segueId
             vc.backSegueId = segueId
         }
@@ -199,7 +241,7 @@ private extension RegistrationCodeVerificationViewController {
         
         pageControl.setConfig(config)
         pageControl.animateDuration = 0
-        pageControl.setCurrentPage(at: 1)
+        pageControl.setCurrentPage(at: 2)
 //        pageControl.center.x = view.center.x
 //        pageControl.frame.origin.y = 40
 //        containerView.addSubview(pageControl)

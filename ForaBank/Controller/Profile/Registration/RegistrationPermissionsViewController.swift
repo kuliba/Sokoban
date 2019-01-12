@@ -40,6 +40,24 @@ class RegistrationPermissionsViewController: UIViewController {
         }
     }
     
+    @IBAction func `continue`(_ sender: Any) {
+        NetworkManager.shared().doRegistration(completionHandler: {[unowned self] success, errorMessage in
+            if success {
+                let rootVC:ProfileViewController = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
+                if let t = self.tabBarController as? TabBarController {
+                    t.setNumberOfTabsAvailable()
+                }
+                self.segueId = "dismiss"
+                rootVC.segueId = "Registered"
+                self.navigationController?.setViewControllers([rootVC], animated: true)
+            } else {
+                let alert = UIAlertController(title: "Неудача", message: errorMessage?.description, preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
+        })
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -54,12 +72,16 @@ class RegistrationPermissionsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if let nav = navigationController as? ProfileNavigationController {
-            UIView.animate(withDuration: 0.5, delay: 0, options: .beginFromCurrentState, animations: {
-                nav.pageControl.setCurrentPage(at: 3)
-            }, completion: nil)
-        }
+        
         if segueId == "permissions" {
+            if let nav = navigationController as? ProfileNavigationController,
+                pageControl != nil {
+                nav.pageControl.isHidden = false
+                pageControl.isHidden = true
+                UIView.animate(withDuration: 0.5, delay: 0, options: .beginFromCurrentState, animations: {
+                    nav.pageControl.setCurrentPage(at: 3)
+                }, completion: nil)
+            }
             containerView.hero.id = "content"
             view.hero.id = "view"
             centralView?.hero.modifiers = [
@@ -92,9 +114,10 @@ class RegistrationPermissionsViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if let nav = navigationController as? ProfileNavigationController {
-            nav.pageControl.isHidden = false
-            pageControl.isHidden = true
+        if let nav = navigationController as? ProfileNavigationController,
+            pageControl != nil {
+            nav.pageControl.isHidden = true
+            pageControl.isHidden = false
         }
         containerView.hero.modifiers = nil
         containerView.hero.id = nil
@@ -106,6 +129,11 @@ class RegistrationPermissionsViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if segueId == "permissions" {
+            if let nav = navigationController as? ProfileNavigationController,
+                pageControl != nil {
+                nav.pageControl.isHidden = false
+                pageControl.isHidden = true
+            }
             containerView.hero.id = "content"
             view.hero.id = "view"
             centralView?.hero.modifiers = [

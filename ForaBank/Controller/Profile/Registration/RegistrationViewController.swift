@@ -54,6 +54,8 @@ class RegistrationViewController: UIViewController {
     
     let cvcAllowedLength = 3
     let segmentedControlBorderLayer = CALayer()
+    
+    var checkedCardNumber: String? = nil
     // MARK: - Actions
     @IBAction func backButtonCLicked(_ sender: Any) {
         segueId = backSegueId
@@ -122,6 +124,17 @@ class RegistrationViewController: UIViewController {
         previousSegment = segmentedControl.selectedSegmentIndex
     }
     
+    @IBAction func `continue`(_ sender: Any) {
+        guard let cardNumber = cardNumberTextField.text?.removeWhitespace() else {
+            let alert = UIAlertController(title: "Неудача", message: "Номер карты неправильно введен", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            return
+        }
+        checkedCardNumber = cardNumber
+        performSegue(withIdentifier: "loginPassword", sender: nil)
+    }
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -148,7 +161,10 @@ class RegistrationViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         if segueId == "Registration" {
-            if let nav = navigationController as? ProfileNavigationController {
+            if let nav = navigationController as? ProfileNavigationController,
+                pageControl != nil  {
+                nav.pageControl.isHidden = true
+                pageControl.isHidden = false
                 nav.pageControl.setCurrentPage(at: 0)
             }
             containerView.hero.modifiers = [
@@ -163,8 +179,10 @@ class RegistrationViewController: UIViewController {
                 HeroModifier.opacity(0)
             ]
         }
-        if segueId == "smsVerification" {
-            if let nav = navigationController as? ProfileNavigationController {
+        if segueId == "loginPassword" {
+            if let nav = navigationController as? ProfileNavigationController,
+                pageControl != nil  {
+                pageControl.isHidden = true
                 UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut, animations: {
                     nav.pageControl.setCurrentPage(at: 0)
                 }, completion: nil)
@@ -183,9 +201,10 @@ class RegistrationViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if let nav = navigationController as? ProfileNavigationController {
-            nav.pageControl.isHidden = false
-            pageControl.isHidden = true
+        if let nav = navigationController as? ProfileNavigationController,
+            pageControl != nil {
+            nav.pageControl.isHidden = true
+            pageControl.isHidden = false
         }
 //        _ = cardNumberTextField.becomeFirstResponder()
         containerView.hero.modifiers = nil
@@ -198,8 +217,8 @@ class RegistrationViewController: UIViewController {
         super.viewWillDisappear(animated)
         if segueId == "Registration" {
             if let nav = navigationController as? ProfileNavigationController {
-                pageControl.isHidden = false
                 nav.pageControl.isHidden = true
+                pageControl.isHidden = false
             }
             containerView.hero.modifiers = [
                 HeroModifier.duration(0.5),
@@ -210,7 +229,10 @@ class RegistrationViewController: UIViewController {
                 HeroModifier.opacity(0)
             ]
         }
-        if segueId == "smsVerification" {
+        if segueId == "loginPassword" {
+            if pageControl != nil {
+                pageControl.isHidden = true
+            }
             containerView.hero.id = "content"
             view.hero.id = "view"
             view.hero.modifiers = [
@@ -224,6 +246,10 @@ class RegistrationViewController: UIViewController {
     }
     
     override func viewDidDisappear(_ animated: Bool) {
+        if let nav = navigationController as? ProfileNavigationController {
+            nav.pageControl.isHidden = true
+            pageControl.isHidden = false
+        }
         super.viewDidDisappear(animated)
         containerView.hero.modifiers = nil
         containerView.hero.id = nil
@@ -236,10 +262,11 @@ class RegistrationViewController: UIViewController {
         view.endEditing(true)
 //        IQKeyboardManager.shared.reloadLayoutIfNeeded()
         segueId = nil
-        if let vc = segue.destination as? RegistrationCodeVerificationViewController {
-            segueId = "smsVerification"
+        if let vc = segue.destination as? RegistrationLoginPasswordViewController {
+            segueId = "loginPassword"
             vc.segueId = segueId
             vc.backSegueId = segueId
+            vc.cardNumber = checkedCardNumber
         }
     }
 }

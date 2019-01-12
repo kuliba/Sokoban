@@ -125,7 +125,7 @@ class AuthService: AuthServiceProtocol {
             "login": login as AnyObject,
             "password": password as AnyObject,
             "token": headers["X-XSRF-TOKEN"] as AnyObject,
-            "verificationCode": code as AnyObject
+            "verificationCode": Int(code) as AnyObject
         ]
         Alamofire.request(url, method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))

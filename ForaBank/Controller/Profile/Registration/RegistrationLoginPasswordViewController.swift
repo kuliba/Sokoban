@@ -17,7 +17,14 @@ class RegistrationLoginPasswordViewController: UIViewController {
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var continueButton: ButtonRounded!
     @IBOutlet weak var pageControl: FlexiblePageControl!
-    @IBOutlet weak var centralView: UIView!
+    @IBOutlet weak var centralView: UIScrollView!
+    @IBOutlet weak var phoneTextField: UITextField!
+    @IBOutlet weak var loginTextField: UITextField!
+    @IBOutlet weak var passwordTextField: UITextField!
+    @IBOutlet weak var confirmPasswordTextField: UITextField!
+    @IBOutlet weak var header: UIView!
+    
+    var cardNumber: String? = nil
     
     var segueId: String? = nil
     var backSegueId: String? = nil
@@ -32,6 +39,48 @@ class RegistrationLoginPasswordViewController: UIViewController {
         self.navigationController?.popViewController(animated: true)
     }
     
+    @IBAction func `continue`(_ sender: Any) {
+        if self.phoneTextField.text == ""{
+            let alert = UIAlertController(title: "Неудача", message: "Введите номер телефона", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            
+            return
+        }
+        guard let phone = self.phoneTextField.text?.removeWhitespace().replace(string: "+", replacement: "") else {
+            return
+        }
+        
+        if self.loginTextField.text == ""{
+            let alert = UIAlertController(title: "Неудача", message: "Введите логин", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            
+            return
+        }
+        
+        if self.passwordTextField.text != self.confirmPasswordTextField.text && self.passwordTextField.text != ""  {
+            let alert = UIAlertController(title: "Неудача", message: "Пароли не совпадают", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            
+            return
+        }
+        
+        if cardNumber == nil {
+            cardNumber = "4256901050031063"
+        }
+        
+        NetworkManager.shared().checkClient(cardNumber: cardNumber!, login: self.loginTextField.text ?? "", password: self.passwordTextField.text ?? "", phone: phone, verificationCode: 0, completionHandler: {[unowned self] success, errorMessage in
+            if success {
+                self.performSegue(withIdentifier: "regSmsVerification", sender: nil)
+            } else {
+                let alert = UIAlertController(title: "Неудача", message: errorMessage, preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
+        })
+    }
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,9 +95,16 @@ class RegistrationLoginPasswordViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if let nav = navigationController as? ProfileNavigationController {
+        if let nav = navigationController as? ProfileNavigationController,
+            pageControl != nil {
+            if centralView.contentOffset.y == 0 {
+                nav.pageControl.isHidden = false
+                pageControl.isHidden = true
+            } else {
+                nav.pageControl.isHidden = true
+            }
             UIView.animate(withDuration: 0.5, delay: 0, options: .beginFromCurrentState, animations: {
-                nav.pageControl.setCurrentPage(at: 2)
+                nav.pageControl.setCurrentPage(at: 1)
             }, completion: nil)
         }
         if segueId == "loginPassword" {
@@ -56,61 +112,103 @@ class RegistrationLoginPasswordViewController: UIViewController {
             view.hero.id = "view"
             centralView?.hero.modifiers = [
                 HeroModifier.duration(0.5),
-                HeroModifier.translate(CGPoint(x: centralView.frame.origin.x + view.frame.width, y: 0))
+                HeroModifier.translate(CGPoint(x: centralView.frame.origin.x + view.frame.width, y: 0)),
+                HeroModifier.beginWith([HeroModifier.opacity(1)]),
+                HeroModifier.opacity(0)
             ]
+//            header.hero.modifiers = [
+//                HeroModifier.useLayerRenderSnapshot,
+//                HeroModifier.zPosition(2)
+//            ]
         }
-        if segueId == "permissions" {
+        if segueId == "smsVerification" {
             containerView.hero.id = "content"
             view.hero.id = "view"
             centralView?.hero.modifiers = [
                 HeroModifier.duration(0.5),
-                HeroModifier.translate(CGPoint(x: centralView.frame.origin.x - view.frame.width, y: 0))
+                HeroModifier.translate(CGPoint(x: centralView.frame.origin.x - view.frame.width, y: 0)),
+                HeroModifier.beginWith([HeroModifier.opacity(1)]),
+                HeroModifier.opacity(0)
             ]
+//            header.hero.modifiers = [
+//                HeroModifier.useLayerRenderSnapshot,
+//                HeroModifier.zPosition(2)
+//            ]
         }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        if let nav = navigationController as? ProfileNavigationController,
+            pageControl != nil {
+            nav.pageControl.isHidden = true
+            pageControl.isHidden = false
+        }
         containerView.hero.modifiers = nil
         containerView.hero.id = nil
         view.hero.modifiers = nil
         view.hero.id = nil
         centralView?.hero.modifiers = nil
+//        header.hero.modifiers = nil
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        if let nav = navigationController as? ProfileNavigationController,
+            pageControl != nil {
+            if centralView.contentOffset.y == 0 {
+                nav.pageControl.isHidden = false
+            } else {
+                nav.pageControl.isHidden = true
+            }
+            pageControl.isHidden = true
+        }
         if segueId == "loginPassword" {
             containerView.hero.id = "content"
             view.hero.id = "view"
             centralView?.hero.modifiers = [
                 HeroModifier.duration(0.5),
-                HeroModifier.translate(CGPoint(x: centralView.frame.origin.x + view.frame.width, y: 0))
+                HeroModifier.translate(CGPoint(x: centralView.frame.origin.x + view.frame.width, y: 0)),
+                HeroModifier.opacity(0)
             ]
+//            header.hero.modifiers = [
+//                HeroModifier.useLayerRenderSnapshot,
+//                HeroModifier.zPosition(2)
+//            ]
         }
-        if segueId == "permissions" {
+        if segueId == "smsVerification" {
             containerView.hero.id = "content"
             view.hero.id = "view"
             centralView?.hero.modifiers = [
                 HeroModifier.duration(0.5),
-                HeroModifier.translate(CGPoint(x: centralView.frame.origin.x - view.frame.width, y: 0))
+                HeroModifier.translate(CGPoint(x: centralView.frame.origin.x - view.frame.width, y: 0)),
+                HeroModifier.opacity(0)
             ]
+//            header.hero.modifiers = [
+//                HeroModifier.useLayerRenderSnapshot,
+//                HeroModifier.zPosition(2)
+//            ]
         }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        if pageControl != nil {
+            pageControl.isHidden = false
+        }
         containerView.hero.modifiers = nil
         containerView.hero.id = nil
         view.hero.modifiers = nil
         view.hero.id = nil
         centralView?.hero.modifiers = nil
+//        header.hero.modifiers = nil
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        view.endEditing(true)
         segueId = nil
-        if let vc = segue.destination as? RegistrationPermissionsViewController {
-            segueId = "permissions"
+        if let vc = segue.destination as? RegistrationCodeVerificationViewController {
+            segueId = "smsVerification"
             vc.segueId = segueId
             vc.backSegueId = segueId
         }
@@ -160,6 +258,6 @@ private extension RegistrationLoginPasswordViewController {
         
         pageControl.setConfig(config)
         pageControl.animateDuration = 0
-        pageControl.setCurrentPage(at: 2)
+        pageControl.setCurrentPage(at: 1)
     }
 }
