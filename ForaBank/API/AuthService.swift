@@ -85,6 +85,7 @@ class AuthService: AuthServiceProtocol {
             "token": headers["X-XSRF-TOKEN"] as AnyObject,
             "verificationCode": 0 as AnyObject
         ]
+        
         print("login.do parameters \(parameters))")
         Alamofire.request(url, method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
@@ -127,6 +128,7 @@ class AuthService: AuthServiceProtocol {
             "token": headers["X-XSRF-TOKEN"] as AnyObject,
             "verificationCode": Int(code) as AnyObject
         ]
+        print("verify/checkVerificationCode parameters \(parameters))")
         Alamofire.request(url, method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])

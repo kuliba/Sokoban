@@ -64,9 +64,9 @@ class NetworkManager {
     private static var sharedNetworkManager: NetworkManager = {
         let host = "https://git.briginvest.ru/dbo/api/v2/"
         
-        let authService = AuthService(baseURLString: host)//TestAuthService()//
+        let authService = TestAuthService()//AuthService(baseURLString: host)//
         let cardService = TestCardService()
-        let regService = RegService(baseURLString: host)//TestRegService()//
+        let regService = TestRegService()//RegService(baseURLString: host)
         let depositsService = TestDepositsService()
 
         let networkManager = NetworkManager(baseURLString: host, authService: authService, regService: regService, cardService: cardService, depositsService: depositsService)

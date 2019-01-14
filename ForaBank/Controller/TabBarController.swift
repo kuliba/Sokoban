@@ -26,11 +26,15 @@ class TabBarController: UITabBarController {
         NetworkManager.shared().isSignedIn { [unowned self] (flag)  in
             if !flag && self.viewControllers?.count == 5 {
                 self.viewControllers?.remove(at: 1)
+                self.viewControllers?.remove(at: 1)
             }
-            else if self.viewControllers?.count == 4 {
+            else if self.viewControllers?.count == 3 {
                 let depositsStoryboard: UIStoryboard = UIStoryboard(name: "Deposits", bundle: nil)
                 let depositsRootVC = depositsStoryboard.instantiateViewController(withIdentifier: "depositsRoot") as! DepositsViewController
                 self.viewControllers?.insert(depositsRootVC, at: 1)
+                let paymentStoryboard: UIStoryboard = UIStoryboard(name: "Payment", bundle: nil)
+                let paymentRootVC = paymentStoryboard.instantiateViewController(withIdentifier: "paymentRoot") as! PaymentsViewController
+                self.viewControllers?.insert(paymentRootVC, at: 2)
             }
         }
     }
