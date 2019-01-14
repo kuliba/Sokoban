@@ -11,12 +11,6 @@ import Alamofire
 
 class TestRegService: RegServiceProtocol {
     
-    private let baseURLString: String
-    
-    init(baseURLString: String) {
-        self.baseURLString = baseURLString
-    }
-    
     func checkClient(headers: HTTPHeaders,
                      cardNumber: String,
                      login: String,

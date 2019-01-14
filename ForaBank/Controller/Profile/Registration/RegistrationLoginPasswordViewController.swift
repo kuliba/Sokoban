@@ -23,6 +23,9 @@ class RegistrationLoginPasswordViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var confirmPasswordTextField: UITextField!
     @IBOutlet weak var header: UIView!
+    @IBOutlet weak var agreementCheckbox: UIButton!
+    
+    var headerSnapshot: UIView? = nil
     
     var cardNumber: String? = nil
     
@@ -47,7 +50,11 @@ class RegistrationLoginPasswordViewController: UIViewController {
             
             return
         }
-        guard let phone = self.phoneTextField.text?.removeWhitespace().replace(string: "+", replacement: "") else {
+        guard let phone = self.phoneTextField.text?.removeWhitespace()
+            .replace(string: "+", replacement: "")
+            .replace(string: "(", replacement: "")
+            .replace(string: ")", replacement: "")
+            .replace(string: "-", replacement: "")else {
             return
         }
         
@@ -81,6 +88,19 @@ class RegistrationLoginPasswordViewController: UIViewController {
             }
         })
     }
+    
+    @IBAction func acceptAgreement(_ sender: Any) {
+        if agreementCheckbox.isSelected {
+            continueButton.isEnabled = false
+            continueButton.backgroundColor = .lightGray
+            agreementCheckbox.isSelected = false
+        } else {
+            continueButton.isEnabled = true
+            continueButton.backgroundColor = UIColor(red: 0.918, green: 0.267, blue: 0.259, alpha: 1)
+            agreementCheckbox.isSelected = true
+        }
+    }
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -91,6 +111,15 @@ class RegistrationLoginPasswordViewController: UIViewController {
             setUpPageControl()
         }
         view.clipsToBounds = true
+        
+        if let head = header as? MaskedNavigationBar {
+            head.gradientLayer.startPoint = CGPoint(x: 0, y: 1)
+            head.gradientLayer.endPoint = CGPoint(x: 1, y: 1)
+            head.gradientLayer.colors = [UIColor(red: 241/255, green: 176/255, blue: 116/255, alpha: 1).cgColor, UIColor(red: 237/255, green: 73/255, blue: 73/255, alpha: 1).cgColor]
+        }
+        
+        phoneTextField.delegate = self
+        continueButton.backgroundColor = .lightGray
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -116,10 +145,7 @@ class RegistrationLoginPasswordViewController: UIViewController {
                 HeroModifier.beginWith([HeroModifier.opacity(1)]),
                 HeroModifier.opacity(0)
             ]
-//            header.hero.modifiers = [
-//                HeroModifier.useLayerRenderSnapshot,
-//                HeroModifier.zPosition(2)
-//            ]
+            header.hero.id = "head"
         }
         if segueId == "smsVerification" {
             containerView.hero.id = "content"
@@ -130,10 +156,7 @@ class RegistrationLoginPasswordViewController: UIViewController {
                 HeroModifier.beginWith([HeroModifier.opacity(1)]),
                 HeroModifier.opacity(0)
             ]
-//            header.hero.modifiers = [
-//                HeroModifier.useLayerRenderSnapshot,
-//                HeroModifier.zPosition(2)
-//            ]
+            header.hero.id = "head"
         }
     }
     
@@ -149,13 +172,16 @@ class RegistrationLoginPasswordViewController: UIViewController {
         view.hero.modifiers = nil
         view.hero.id = nil
         centralView?.hero.modifiers = nil
-//        header.hero.modifiers = nil
+        header.hero.modifiers = nil
+        header?.hero.id = nil
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        
         if let nav = navigationController as? ProfileNavigationController,
             pageControl != nil {
+            print("log vc \(nav.pageControl.isHidden)")
             if centralView.contentOffset.y == 0 {
                 nav.pageControl.isHidden = false
             } else {
@@ -171,10 +197,7 @@ class RegistrationLoginPasswordViewController: UIViewController {
                 HeroModifier.translate(CGPoint(x: centralView.frame.origin.x + view.frame.width, y: 0)),
                 HeroModifier.opacity(0)
             ]
-//            header.hero.modifiers = [
-//                HeroModifier.useLayerRenderSnapshot,
-//                HeroModifier.zPosition(2)
-//            ]
+            header.hero.id = "head"
         }
         if segueId == "smsVerification" {
             containerView.hero.id = "content"
@@ -184,10 +207,7 @@ class RegistrationLoginPasswordViewController: UIViewController {
                 HeroModifier.translate(CGPoint(x: centralView.frame.origin.x - view.frame.width, y: 0)),
                 HeroModifier.opacity(0)
             ]
-//            header.hero.modifiers = [
-//                HeroModifier.useLayerRenderSnapshot,
-//                HeroModifier.zPosition(2)
-//            ]
+            header.hero.id = "head"
         }
     }
     
@@ -201,7 +221,8 @@ class RegistrationLoginPasswordViewController: UIViewController {
         view.hero.modifiers = nil
         view.hero.id = nil
         centralView?.hero.modifiers = nil
-//        header.hero.modifiers = nil
+        header?.hero.modifiers = nil
+        header?.hero.id = nil
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -211,6 +232,7 @@ class RegistrationLoginPasswordViewController: UIViewController {
             segueId = "smsVerification"
             vc.segueId = segueId
             vc.backSegueId = segueId
+            vc.phone = phoneTextField.text
         }
     }
 }
@@ -260,4 +282,49 @@ private extension RegistrationLoginPasswordViewController {
         pageControl.animateDuration = 0
         pageControl.setCurrentPage(at: 1)
     }
+}
+
+
+extension RegistrationLoginPasswordViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if textField == phoneTextField,
+            let text = textField.text,
+            let textRange = Range(range, in: text) {
+            
+            let updatedText = text.replacingCharacters(in: textRange,
+                                                       with: string)
+            let cleanPhoneNumber = updatedText.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
+            let set = CharacterSet(charactersIn: "+()- ").union(CharacterSet.decimalDigits)
+            if (string.rangeOfCharacter(from: set.inverted) != nil) {
+                return false
+            }
+            let mask = "+X (XXX) XXX-XXXX"
+            if string.count + range.location > mask.count {
+                return false
+            }
+            
+            var result = ""
+            var index = cleanPhoneNumber.startIndex
+            for ch in mask {
+                if index == cleanPhoneNumber.endIndex {
+                    break
+                }
+                if ch == "X" {
+                    result.append(cleanPhoneNumber[index])
+                    index = cleanPhoneNumber.index(after: index)
+                } else if ch == "+" || ch == "(" || ch == ")" || ch == "-" || ch == " " {
+                    result.append(ch)
+                } else {
+//                    return false
+                }
+            }
+            if index != cleanPhoneNumber.endIndex {
+                return false
+            }
+            phoneTextField.text = result
+            return false
+        }
+        return true
+    }
+    
 }

@@ -40,6 +40,7 @@ class RegistrationViewController: UIViewController {
     
     @IBOutlet weak var depositView: UIView!
     @IBOutlet weak var contractView: UIView!
+    @IBOutlet weak var header: UIView!
     
     var previousSegment = 0
     
@@ -150,6 +151,12 @@ class RegistrationViewController: UIViewController {
         
         setUpTextFieldDelegates()
         view.clipsToBounds = true
+        
+        if let head = header as? MaskedNavigationBar {
+            head.gradientLayer.startPoint = CGPoint(x: 0, y: 1)
+            head.gradientLayer.endPoint = CGPoint(x: 1, y: 1)
+            head.gradientLayer.colors = [UIColor(red: 237/255, green: 73/255, blue: 73/255, alpha: 1).cgColor, UIColor(red: 241/255, green: 176/255, blue: 116/255, alpha: 1).cgColor]
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -182,7 +189,15 @@ class RegistrationViewController: UIViewController {
         if segueId == "loginPassword" {
             if let nav = navigationController as? ProfileNavigationController,
                 pageControl != nil  {
-                pageControl.isHidden = true
+                if nav.pageControl.isHidden {
+                    pageControl.isHidden = false
+                    pageControl.hero.modifiers = [
+                        HeroModifier.duration(0.5),
+                        HeroModifier.translate(CGPoint(x: centralView.frame.origin.x - view.frame.width, y: 0))
+                    ]
+                } else {
+                    pageControl.isHidden = true
+                }
                 UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut, animations: {
                     nav.pageControl.setCurrentPage(at: 0)
                 }, completion: nil)
@@ -196,6 +211,12 @@ class RegistrationViewController: UIViewController {
                 HeroModifier.duration(0.5),
                 HeroModifier.translate(CGPoint(x: centralView.frame.origin.x - view.frame.width, y: 0))
             ]
+            header.hero.id = "head"
+//            header.hero.modifiers = [
+//                HeroModifier.duration(0.5),
+//                HeroModifier.useNormalSnapshot,
+//                HeroModifier.zPosition(3)
+//            ]
         }
     }
     
@@ -205,6 +226,7 @@ class RegistrationViewController: UIViewController {
             pageControl != nil {
             nav.pageControl.isHidden = true
             pageControl.isHidden = false
+            pageControl.hero.modifiers = nil
         }
 //        _ = cardNumberTextField.becomeFirstResponder()
         containerView.hero.modifiers = nil
@@ -212,6 +234,8 @@ class RegistrationViewController: UIViewController {
         view.hero.modifiers = nil
         view.hero.id = nil
         centralView.hero.modifiers = nil
+        header?.hero.modifiers = nil
+        header?.hero.id = nil
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -242,6 +266,12 @@ class RegistrationViewController: UIViewController {
                 HeroModifier.duration(0.5),
                 HeroModifier.translate(CGPoint(x: centralView.frame.origin.x - view.frame.width, y: 0))
             ]
+            header.hero.id = "head"
+//            header.hero.modifiers = [
+//                HeroModifier.duration(0.5),
+//                HeroModifier.useNormalSnapshot,
+//                HeroModifier.zPosition(3)
+//            ]
         }
     }
     
@@ -256,6 +286,8 @@ class RegistrationViewController: UIViewController {
         view.hero.modifiers = nil
         view.hero.id = nil
         centralView.hero.modifiers = nil
+        header?.hero.modifiers = nil
+        header?.hero.id = nil
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

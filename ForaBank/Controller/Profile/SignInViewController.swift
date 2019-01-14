@@ -123,6 +123,7 @@ class SignInViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        view.endEditing(true)
         segueId = nil
         if let vc = segue.destination as? RegistrationCodeVerificationViewController {
             segueId = segue.identifier

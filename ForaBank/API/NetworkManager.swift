@@ -66,7 +66,7 @@ class NetworkManager {
         
         let authService = AuthService(baseURLString: host)//TestAuthService()//
         let cardService = TestCardService()
-        let regService = RegService(baseURLString: host)
+        let regService = RegService(baseURLString: host)//TestRegService()//
         let depositsService = TestDepositsService()
 
         let networkManager = NetworkManager(baseURLString: host, authService: authService, regService: regService, cardService: cardService, depositsService: depositsService)

@@ -139,6 +139,7 @@
 		A551108B21C7999A00330510 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A551108A21C7999A00330510 /* AuthService.swift */; };
 		A551108F21C7BEED00330510 /* TestAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A551108E21C7BEED00330510 /* TestAuthService.swift */; };
 		A551109121C7C0AE00330510 /* TestCardService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A551109021C7C0AE00330510 /* TestCardService.swift */; };
+		A55663A221EC6B3300E48C40 /* MaskedNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55663A121EC6B3300E48C40 /* MaskedNavigationBar.swift */; };
 		A55B7B5721A5866F00A8A7FE /* UIImage+GIF.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55B7B5621A5866F00A8A7FE /* UIImage+GIF.swift */; };
 		A55B7B7A21A6B4F400A8A7FE /* feed_current_food.mov in Resources */ = {isa = PBXBuildFile; fileRef = A55B7B7921A6B4F400A8A7FE /* feed_current_food.mov */; };
 		A55B7B7C21A6B4FB00A8A7FE /* 1.mov in Resources */ = {isa = PBXBuildFile; fileRef = A55B7B7B21A6B4FB00A8A7FE /* 1.mov */; };
@@ -315,6 +316,7 @@
 		A551108A21C7999A00330510 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		A551108E21C7BEED00330510 /* TestAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAuthService.swift; sourceTree = "<group>"; };
 		A551109021C7C0AE00330510 /* TestCardService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCardService.swift; sourceTree = "<group>"; };
+		A55663A121EC6B3300E48C40 /* MaskedNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaskedNavigationBar.swift; sourceTree = "<group>"; };
 		A55B7B5621A5866F00A8A7FE /* UIImage+GIF.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+GIF.swift"; sourceTree = "<group>"; };
 		A55B7B7921A6B4F400A8A7FE /* feed_current_food.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = feed_current_food.mov; sourceTree = "<group>"; };
 		A55B7B7B21A6B4FB00A8A7FE /* 1.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = 1.mov; sourceTree = "<group>"; };
@@ -578,6 +580,7 @@
 				A568142221CBCD1C002C0899 /* Services */,
 				A5C5E6E721A2B49A001D6250 /* OptionPickerButton.swift */,
 				0930F165215B5CDB00CFB593 /* RoundedEdgeView.swift */,
+				A55663A121EC6B3300E48C40 /* MaskedNavigationBar.swift */,
 				0939B5FA21774EA70029F03D /* DoubleRoundedEdgeView.swift */,
 				09E0F145215A68DC0042FB6A /* CustomTabBar.swift */,
 				09E0F147215A69310042FB6A /* CustomTabBarItem.swift */,
@@ -1084,6 +1087,7 @@
 				A551109121C7C0AE00330510 /* TestCardService.swift in Sources */,
 				A568142C21CE6CB0002C0899 /* AnnotationTableViewCell.swift in Sources */,
 				A58760C121BFB63D0022DED5 /* ProfileNavigationController.swift in Sources */,
+				A55663A221EC6B3300E48C40 /* MaskedNavigationBar.swift in Sources */,
 				09AF7090216F73FD00E7FCFC /* FeedCurrent3Cell.swift in Sources */,
 				096B4F542186E29300C69E52 /* DepositsCardsDetailsManagementViewController.swift in Sources */,
 				89C8DF122191AFA700D92B0A /* DepositsDepositCell.swift in Sources */,

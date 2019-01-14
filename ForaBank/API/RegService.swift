@@ -128,7 +128,7 @@ class RegService: RegServiceProtocol {
             "password": password as AnyObject,
             "phone": phone as AnyObject,
             "token": headers["X-XSRF-TOKEN"] as AnyObject,
-            "verificationCode": 0 as AnyObject
+            "verificationCode": verificationCode as AnyObject
         ]
         print("registration/verifyCode parameters \(parameters))")
         

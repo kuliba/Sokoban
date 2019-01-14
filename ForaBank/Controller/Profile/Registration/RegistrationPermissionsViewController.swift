@@ -43,13 +43,13 @@ class RegistrationPermissionsViewController: UIViewController {
     @IBAction func `continue`(_ sender: Any) {
         NetworkManager.shared().doRegistration(completionHandler: {[unowned self] success, errorMessage in
             if success {
-                let rootVC:ProfileViewController = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
-                if let t = self.tabBarController as? TabBarController {
-                    t.setNumberOfTabsAvailable()
-                }
-                self.segueId = "dismiss"
-                rootVC.segueId = "Registered"
-                self.navigationController?.setViewControllers([rootVC], animated: true)
+//                let rootVC:ProfileViewController = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
+//                if let t = self.tabBarController as? TabBarController {
+//                    t.setNumberOfTabsAvailable()
+//                }
+//                self.segueId = "dismiss"
+//                rootVC.segueId = "Registered"
+//                self.navigationController?.setViewControllers([rootVC], animated: true)
             } else {
                 let alert = UIAlertController(title: "Неудача", message: errorMessage?.description, preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
