@@ -49,14 +49,6 @@
                             <constraint firstItem="6i6-O9-AuI" firstAttribute="top" secondItem="QyL-PV-zdM" secondAttribute="top" constant="25" id="fgH-uL-I21"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="QyL-PV-zdM"/>
-                        <userDefinedRuntimeAttributes>
-                            <userDefinedRuntimeAttribute type="color" keyPath="color1">
-                                <color key="value" red="0.92156862750000001" green="0.27450980390000002" blue="0.27058823529999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </userDefinedRuntimeAttribute>
-                            <userDefinedRuntimeAttribute type="color" keyPath="color2">
-                                <color key="value" red="0.94509803920000002" green="0.67843137249999996" blue="0.44705882349999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </userDefinedRuntimeAttribute>
-                        </userDefinedRuntimeAttributes>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="tabbar_icon_deposits" id="8zp-wW-i5v" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
                         <inset key="imageInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="-10"/>
@@ -429,12 +421,15 @@
                     <view key="view" contentMode="scaleToFill" id="2Cr-6Y-gsT">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="snh-2A-sDz"/>
                     </view>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="YES"/>
+                    </userDefinedRuntimeAttributes>
                     <connections>
                         <segue destination="Xv3-je-rnb" kind="show" identifier="DepositsCardListOnholdBlock" id="d3l-gv-oOm"/>
-                        <segue destination="Oxz-tM-k7M" kind="show" identifier="DepositsCardsDetailsViewController" id="YZe-FQ-J5I"/>
+                        <segue destination="Oxz-tM-k7M" kind="presentation" identifier="DepositsCardsDetailsViewController" id="YZe-FQ-J5I"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7nx-7B-LT7" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -926,6 +921,9 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="RCH-aZ-Qv0"/>
                     </view>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="YES"/>
+                    </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="backgroundImageView" destination="no0-sb-ln5" id="CZu-4i-m4u"/>
                         <outlet property="cardView" destination="uvc-rh-Yuh" id="j0d-gc-IXy"/>

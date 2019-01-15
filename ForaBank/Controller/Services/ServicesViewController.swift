@@ -16,11 +16,16 @@ class ServicesViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var annotationsInfoView: UIView!
     @IBOutlet weak var annotationsInfoHeight: NSLayoutConstraint!
+    @IBOutlet weak var zoomOutButton: OnMapButton!
+    @IBOutlet weak var zoomInButton: OnMapButton!
+    @IBOutlet weak var focusButton: OnMapButton!
+    
     var branches = [BankBranch]()
     var annotations = [BankBranchAnnotation]()
     let serviceCellId = "ServicesCell"
     let locationManager = CLLocationManager()
     var searchBar: ServicesSearchCell?
+    var needFocus: Bool = true
     
     let data_ = [
         [
@@ -56,6 +61,19 @@ class ServicesViewController: UIViewController {
         if let selectedRow = tableView.indexPathForSelectedRow {
             tableView.deselectRow(at: selectedRow, animated: false)
         }
+    }
+    
+    @IBAction func zoomOut(_ sender: Any) {
+        zoomMap(byFactor: 2)
+    }
+    
+    @IBAction func zoomIn(_ sender: Any) {
+        zoomMap(byFactor: 0.5)
+    }
+    
+    @IBAction func focusOnMe(_ sender: Any) {
+        needFocus = true
+        locationManager.requestLocation()
     }
 }
 
@@ -147,11 +165,14 @@ private extension ServicesViewController {
 }
 
 // MARK: - Map methods
-private extension ServicesViewController {
+extension ServicesViewController {
     
     @objc func showMap(sender: UIButton!) {
         tableView.isHidden = true
         mapView.isHidden = false
+        zoomOutButton.isHidden = false
+        zoomInButton.isHidden = false
+//        focusButton.isHidden = false
         print("SHOW MAP \(mapView.subviews)")
         if searchBar != nil {
         } else if let searchBar = UINib(nibName: "ServicesSearchCell", bundle: nil)
@@ -160,14 +181,39 @@ private extension ServicesViewController {
 //            searchBar.frame.origin.x = 0
 //            searchBar.frame.origin.y = 30
 //            searchBar.frame.size.width = view.frame.width
-            searchBar.textField.backgroundColor = UIColor(red: 0.968522, green: 0.968688, blue: 0.968512, alpha: 1)
+//            searchBar.textField.backgroundColor = UIColor(red: 0.968522, green: 0.968688, blue: 0.968512, alpha: 1)
+            searchBar.textField.backgroundColor = .white
             searchBar.textField.alpha = 1
+            searchBar.textField.layer.cornerRadius = 3
+            
+            searchBar.textField.layer.shadowColor = UIColor.black.cgColor
+            searchBar.textField.layer.shadowOffset = CGSize(width: 0, height: 3.0)
+            searchBar.textField.layer.shadowOpacity = 0.12
+            searchBar.textField.layer.shadowRadius = 6
             searchBar.translatesAutoresizingMaskIntoConstraints = false
             mapView.addSubview(searchBar)
             mapView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[sb]-0-|", options: [], metrics: nil, views: ["sb" : searchBar]))
             mapView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-30-[sb(65)]", options: [], metrics: nil, views: ["sb" : searchBar]))
             searchBar.mapButton.setImage(UIImage(named: "icon_services_to_table"), for: .normal)
             searchBar.mapButton.addTarget(self, action: #selector(hideMap), for: .touchUpInside)
+            searchBar.mapButton.backgroundColor = .white
+            searchBar.mapButton.layer.cornerRadius = 5
+            
+            searchBar.mapButton.layer.shadowColor = UIColor.black.cgColor
+            searchBar.mapButton.layer.shadowOffset = CGSize(width: 0, height: 3.0)
+            searchBar.mapButton.layer.shadowOpacity = 0.12
+            searchBar.mapButton.layer.shadowRadius = 6
+            
+//            let rect = CGRect(x: 0.0, y: 0.0, width: 1.0, height: 1.0)
+//            UIGraphicsBeginImageContext(rect.size)
+//            let context = UIGraphicsGetCurrentContext()
+//            
+//            context?.setFillColor(UIColor(red: 0, green: 0, blue: 0, alpha: 0.12).cgColor)
+//            context?.fill(rect)
+//            
+//            let image = UIGraphicsGetImageFromCurrentImageContext()
+//            UIGraphicsEndImageContext()
+//            searchBar.mapButton.setBackgroundImage(image, for: .highlighted)
             self.searchBar = searchBar
         }
         
@@ -217,6 +263,7 @@ private extension ServicesViewController {
     }
     func checkLocationAuthorizationStatus() {
         if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
+            focusButton.isHidden = false
             locationManager.requestLocation()
             mapView.showsUserLocation = true
         } else {
@@ -232,6 +279,18 @@ private extension ServicesViewController {
         tableView.isHidden = false
         mapView.isHidden = true
         mapView.deselectAnnotation(mapView.selectedAnnotations.first, animated: false)
+        zoomOutButton.isHidden = true
+        zoomInButton.isHidden = true
+        focusButton.isHidden = true
+    }
+    
+    func zoomMap(byFactor delta: Double) {
+        var region: MKCoordinateRegion = self.mapView.region
+        var span: MKCoordinateSpan = mapView.region.span
+        span.latitudeDelta *= delta
+        span.longitudeDelta *= delta
+        region.span = span
+        mapView.setRegion(region, animated: true)
     }
 }
 
@@ -239,18 +298,23 @@ private extension ServicesViewController {
 extension ServicesViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if status == .authorizedWhenInUse {
+            focusButton.isHidden = false
             locationManager.requestLocation()
         }
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
 //        print("locationManager didUpdateLocations: \(locations)")
-        if let location = locations.first {
+        if let location = locations.first,
+            needFocus == true {
 //            print("locations.first \(locations.first)")
 //            let span = MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
 //            let region = MKCoordinateRegion(center: location.coordinate, span: span)
-            let coordinateRegion = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
+            let delta = (mapView.region.span.latitudeDelta > 0.01) ? 0.01 : mapView.region.span.latitudeDelta
+//            let coordinateRegion = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
+            let coordinateRegion = MKCoordinateRegion(center: location.coordinate, span: MKCoordinateSpan(latitudeDelta: delta, longitudeDelta: delta))
             mapView.setRegion(coordinateRegion, animated: true)
+            needFocus = false
         }
 //        let location = locations.first!
 //        let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, 500, 500)

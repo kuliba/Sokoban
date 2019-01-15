@@ -72,6 +72,31 @@ extension CALayer {
     }
 }
 
+class CustomTextField: UITextField {
+    var selectedBorderColor: UIColor = .red
+    var defaultBorderColor: UIColor = .clear
+    open override var canBecomeFirstResponder: Bool {
+        return true
+    }
+    
+    open override func becomeFirstResponder() -> Bool {
+        layer.customBorderColor = selectedBorderColor
+        layer.cornerRadius = 5.0
+        layer.masksToBounds = true
+        layer.borderWidth = 1
+        super.becomeFirstResponder()
+        
+        return true
+    }
+    
+    open override func resignFirstResponder() -> Bool {
+        layer.customBorderColor = defaultBorderColor
+        super.resignFirstResponder()
+        
+        return true
+    }
+}
+
 extension UISegmentedControl {
     func setSegmentStyle() {
         

@@ -20,23 +20,22 @@ class RegistrationCodeVerificationViewController: UIViewController{
     @IBOutlet weak var pageControl: FlexiblePageControl!
     @IBOutlet weak var centralView: UIView!
     @IBOutlet weak var header: UIView!
-    @IBOutlet weak var messageLabel: UILabel!
     
     var segueId: String? = nil
     var backSegueId: String? = nil
 
     let gradientView = UIView()
     let circleView = UIView()
-    var message: String? = nil
-    var phone: String? = nil {
-        didSet {
-            if let newValue = phone {
-                let fromIndex = newValue.index(newValue.endIndex, offsetBy: -8)
-                let toIndex = newValue.index(newValue.endIndex, offsetBy: -2)
-                message = "Введите код, который мы прислали на номер \(newValue.replacingCharacters(in: fromIndex..<toIndex, with: "*****"))"
-            }
-        }
-    }
+//    var message: String? = nil
+    var phone: String? = nil //{
+//        didSet {
+//            if let newValue = phone {
+//                let fromIndex = newValue.index(newValue.endIndex, offsetBy: -8)
+//                let toIndex = newValue.index(newValue.endIndex, offsetBy: -2)
+//                message = "Введите код, который мы прислали на номер \(newValue.replacingCharacters(in: fromIndex..<toIndex, with: "*****"))"
+//            }
+//        }
+//    }
     
     // MARK: - Actions
     @IBAction func backButtonCLicked(_ sender: Any) {
@@ -77,6 +76,14 @@ class RegistrationCodeVerificationViewController: UIViewController{
             }
         }
     }
+    
+    @IBAction func firstAuth(_ sender: Any) {
+        NetworkManager.shared().checkVerificationCode(code: self.codeNumberTextField.text ?? "") { [unowned self] (success) in
+            if success {
+                self.performSegue(withIdentifier: "finish", sender: nil)
+            }
+        }
+    }
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -95,7 +102,7 @@ class RegistrationCodeVerificationViewController: UIViewController{
             head.gradientLayer.endPoint = CGPoint(x: 1, y: 1)
             head.gradientLayer.colors = [UIColor(red: 237/255, green: 73/255, blue: 73/255, alpha: 1).cgColor, UIColor(red: 241/255, green: 176/255, blue: 116/255, alpha: 1).cgColor]
         }
-        messageLabel?.text = message
+//        messageLabel?.text = message
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -124,7 +131,7 @@ class RegistrationCodeVerificationViewController: UIViewController{
             ]
             header.hero.id = "head"
         }
-        if segueId == "permissions"  {
+        if segueId == "permissions" || segueId == "auth" {
             containerView.hero.id = "content"
             view.hero.id = "view"
             centralView?.hero.modifiers = [
@@ -153,6 +160,29 @@ class RegistrationCodeVerificationViewController: UIViewController{
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if segueId == "dismiss" {
+            containerView.hero.modifiers = [
+                HeroModifier.beginWith([
+                    HeroModifier.opacity(1),
+                    HeroModifier.zPosition(2)
+                    ]),
+                HeroModifier.duration(0.5),
+                HeroModifier.translate(CGPoint(x: 0, y: view.frame.height)),
+            ]
+            gradientView.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.opacity(0)
+            ]
+            header?.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.opacity(0)
+            ]
+        }
+        if segueId == "finish" {
+            if let nav = navigationController as? ProfileNavigationController,
+                pageControl != nil {
+                nav.pageControl.isHidden = true
+                pageControl.isHidden = false
+            }
             containerView.hero.modifiers = [
                 HeroModifier.beginWith([
                     HeroModifier.opacity(1),
@@ -221,6 +251,10 @@ class RegistrationCodeVerificationViewController: UIViewController{
             vc.segueId = segueId
             vc.backSegueId = segueId
         }
+        if let vc = segue.destination as? RegistrationFinishViewController {
+            segueId = "finish"
+            vc.segueId = segueId
+        }
     }
 }
 
@@ -279,7 +313,8 @@ extension RegistrationCodeVerificationViewController: UITextFieldDelegate  {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let text = textField.text else { return true }
         let count = text.count + string.count - range.length
-        continueButton.isHidden = count < 3
+        continueButton.isEnabled = count >= 3
+        continueButton.alpha = (count >= 3) ? 1 : 0.25
         return true
     }
 }

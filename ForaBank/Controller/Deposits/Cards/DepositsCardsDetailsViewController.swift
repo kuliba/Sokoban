@@ -9,6 +9,7 @@
 import UIKit
 import iCarousel
 import DeviceKit
+import Hero
 
 protocol TabCardDetailViewController {
     func set(card:Card?)
@@ -45,6 +46,9 @@ class DepositsCardsDetailsViewController: UIViewController {
     var selectedTabColor: UIColor = .white
     var tabColor: UIColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
 
+    var segueId: String? = nil
+    var backSegueId: String? = nil
+    
     @IBAction func backButtonClicked(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
@@ -88,8 +92,45 @@ class DepositsCardsDetailsViewController: UIViewController {
         carousel.dataSource = self
         carousel.type = .wheel
         carousel.bounces = false
+        
+        hero.isEnabled = true
+        hero.modalAnimationType = .none
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if segueId == "DepositsCardsDetailsViewController" {
+//            view.hero.id = "view"
+//            view.hero.modifiers = [
+//                HeroModifier.duration(2),
+//                HeroModifier.opacity(0),
+//                HeroModifier.fade
+//            ]
+//            cardView.hero.id = "card"
+//            cardView.hero.modifiers = [
+//                HeroModifier.duration(2),
+//                HeroModifier.zPosition(2)
+//            ]
+//            header.hero.id = "background"
+//            header.hero.modifiers = [
+//                HeroModifier.duration(2),
+//                HeroModifier.zPosition(0),
+//                HeroModifier.opacity(0)
+//            ]
+//            container.hero.id = "content"
+//            container.hero.modifiers = [
+//                HeroModifier.duration(2),
+//                HeroModifier.zPosition(1)
+//            ]
+        }
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        cardView.hero.id = nil
+        header.hero.id = nil
+        container.hero.id = nil
+        view.hero.id = nil
+    }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "TransitionToSecondViewController" {
             //let secondViewController = segue.destination as! TwoViewController

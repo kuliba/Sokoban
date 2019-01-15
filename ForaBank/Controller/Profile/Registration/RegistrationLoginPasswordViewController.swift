@@ -10,6 +10,50 @@ import UIKit
 import FlexiblePageControl
 import Hero
 
+enum PasswordStrength: Int {
+    case None
+    case Weak
+    case Moderate
+    case Strong
+    static func checkStrength(password: String) -> PasswordStrength {
+        var len: Int = password.count
+        var strength: Int = 0
+        switch len {
+        case 0:
+            return .None
+        case 1...4:
+            strength += 1
+        case 5...8:
+            strength += 2
+        default:
+            strength += 3
+        }
+        // Upper case, Lower case, Number & Symbols
+        let patterns = ["^(?=.*[A-Z]).*$", "^(?=.*[a-z]).*$", "^(?=.*[0-9]).*$", "^(?=.*[!@#%&-_=:;\"'<>,`~\\*\\?\\+\\[\\]\\(\\)\\{\\}\\^\\$\\|\\\\\\.\\/]).*$"]
+        
+        for pattern in patterns {
+            let set = CharacterSet(charactersIn: pattern)
+            if let r = password.rangeOfCharacter(from: set, options: .regularExpression, range: Range(uncheckedBounds: (lower: password.startIndex, upper: password.endIndex))),
+                r.isEmpty == false {
+                strength += 1
+            }
+            //            if (password.rangeOfString(pattern, options: .RegularExpressionSearch) != nil) {
+            //                strength++
+            //            }
+        }
+        switch strength {
+        case 0:
+            return .None
+        case 1...3:
+            return .Weak
+        case 4...6:
+            return .Moderate
+        default:
+            return .Strong
+        }
+    }
+}
+
 class RegistrationLoginPasswordViewController: UIViewController {
     
     // MARK: - Properties
@@ -20,10 +64,12 @@ class RegistrationLoginPasswordViewController: UIViewController {
     @IBOutlet weak var centralView: UIScrollView!
     @IBOutlet weak var phoneTextField: UITextField!
     @IBOutlet weak var loginTextField: UITextField!
-    @IBOutlet weak var passwordTextField: UITextField!
+    @IBOutlet weak var passwordTextField: CustomTextField!
     @IBOutlet weak var confirmPasswordTextField: UITextField!
     @IBOutlet weak var header: UIView!
     @IBOutlet weak var agreementCheckbox: UIButton!
+    @IBOutlet weak var agreementLabel: UILabel!
+    @IBOutlet weak var inputPasswordLabel: UILabel!
     
     var headerSnapshot: UIView? = nil
     
@@ -92,12 +138,64 @@ class RegistrationLoginPasswordViewController: UIViewController {
     @IBAction func acceptAgreement(_ sender: Any) {
         if agreementCheckbox.isSelected {
             continueButton.isEnabled = false
-            continueButton.backgroundColor = .lightGray
+            continueButton.alpha = 0.25
             agreementCheckbox.isSelected = false
         } else {
             continueButton.isEnabled = true
-            continueButton.backgroundColor = UIColor(red: 0.918, green: 0.267, blue: 0.259, alpha: 1)
+            continueButton.alpha = 1
             agreementCheckbox.isSelected = true
+        }
+    }
+    
+    @IBAction func showPassword(_ sender: UIButton) {
+        if passwordTextField.isSecureTextEntry == true {
+            passwordTextField.isSecureTextEntry = false
+            sender.isSelected = true
+        } else {
+            passwordTextField.isSecureTextEntry = true
+            sender.isSelected = false
+        }
+    }
+    @IBAction func showPassword2(_ sender: UIButton) {
+        if confirmPasswordTextField.isSecureTextEntry == true {
+            confirmPasswordTextField.isSecureTextEntry = false
+            sender.isSelected = true
+        } else {
+            confirmPasswordTextField.isSecureTextEntry = true
+            sender.isSelected = false
+        }
+    }
+    @IBAction func passwordChanged(_ sender: Any) {
+        if let textField = sender as? UITextField {
+            var currentBorderColor: UIColor = .red
+            var defaultBorderColor: UIColor = .red
+            switch PasswordStrength.checkStrength(password: textField.text ?? "") {
+            case .None:
+                inputPasswordLabel.text = "Введите пароль"
+                inputPasswordLabel.textColor = UIColor(red: 0.61, green: 0.61, blue: 0.61, alpha: 1)
+                currentBorderColor = inputPasswordLabel.textColor
+                defaultBorderColor = .clear
+            case .Weak:
+                inputPasswordLabel.text = "Ненадежный"
+                inputPasswordLabel.textColor = UIColor(red: 0.92, green: 0.27, blue: 0.26, alpha: 1)
+                currentBorderColor = inputPasswordLabel.textColor
+                defaultBorderColor = inputPasswordLabel.textColor
+            case .Moderate:
+                inputPasswordLabel.text = "Средний"
+                inputPasswordLabel.textColor = UIColor(red: 0.95, green: 0.68, blue: 0.45, alpha: 1)
+                currentBorderColor = inputPasswordLabel.textColor
+                defaultBorderColor = inputPasswordLabel.textColor
+            case .Strong:
+                inputPasswordLabel.text = "Надежный"
+                inputPasswordLabel.textColor = UIColor(red: 0.13, green: 0.76, blue: 0.51, alpha: 1)
+                currentBorderColor = inputPasswordLabel.textColor
+                defaultBorderColor = inputPasswordLabel.textColor
+            default:
+                break
+            }
+            passwordTextField.defaultBorderColor = defaultBorderColor
+            passwordTextField.selectedBorderColor = currentBorderColor
+            passwordTextField.layer.borderColor = currentBorderColor.cgColor
         }
     }
     
@@ -119,7 +217,11 @@ class RegistrationLoginPasswordViewController: UIViewController {
         }
         
         phoneTextField.delegate = self
-        continueButton.backgroundColor = .lightGray
+        
+//        agreementLabel.textColor = UIColor(red: 0.18, green: 0.18, blue: 0.18, alpha: 1)
+//        let str = NSMutableAttributedString(string: "Я прочитал ", attributes: [NSAttributedString.Key.font : UIFont(name: "Roboto-Light", size: 13)!])
+//        str.append((NSAttributedString(string: "условия банка", attributes: [NSAttributedString.Key.font : UIFont(name: "Roboto-Light", size: 13)!])))
+//        agreementLabel.attributedText = str
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -328,3 +430,4 @@ extension RegistrationLoginPasswordViewController: UITextFieldDelegate {
     }
     
 }
+

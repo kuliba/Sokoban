@@ -21,8 +21,8 @@ class TestRegService: RegServiceProtocol {
         completionHandler(true, nil)
     }
     
-    func doRegistration(headers: HTTPHeaders, completionHandler: @escaping (Bool, String?) -> Void) {
-        completionHandler(true, nil)
+    func doRegistration(headers: HTTPHeaders, completionHandler: @escaping (Bool, String?, String?, String?) -> Void) {
+        completionHandler(true, nil, nil, nil)
     }
     
     func verifyCode(headers: HTTPHeaders, verificationCode: Int, completionHandler: @escaping (Bool, String?) -> Void) {

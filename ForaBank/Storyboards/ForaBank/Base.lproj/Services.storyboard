@@ -44,10 +44,52 @@
                                             <segue destination="5fg-Yd-9yB" kind="embed" id="bp6-bI-149"/>
                                         </connections>
                                     </containerView>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lPA-SH-z9I" customClass="OnMapButton" customModule="ForaBank" customModuleProvider="target">
+                                        <rect key="frame" x="265" y="263" width="35" height="35"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="35" id="jV7-8E-Gt8"/>
+                                            <constraint firstAttribute="height" constant="35" id="tVg-0Q-20m"/>
+                                        </constraints>
+                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" image="map_zoom_minus"/>
+                                        <connections>
+                                            <action selector="zoomOut:" destination="qIQ-98-ugo" eventType="touchUpInside" id="liO-cQ-PSe"/>
+                                        </connections>
+                                    </button>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hgr-Fr-3Ah" customClass="OnMapButton" customModule="ForaBank" customModuleProvider="target">
+                                        <rect key="frame" x="265" y="221" width="35" height="35"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="35" id="Z35-Wz-MdJ"/>
+                                            <constraint firstAttribute="width" constant="35" id="acs-HW-Aqo"/>
+                                        </constraints>
+                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" image="map_zoom_plus"/>
+                                        <connections>
+                                            <action selector="zoomIn:" destination="qIQ-98-ugo" eventType="touchUpInside" id="DLa-KZ-Fvm"/>
+                                        </connections>
+                                    </button>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3xC-h5-F9E" customClass="OnMapButton" customModule="ForaBank" customModuleProvider="target">
+                                        <rect key="frame" x="265" y="166" width="35" height="35"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="35" id="8pv-Dr-mHv"/>
+                                            <constraint firstAttribute="width" constant="35" id="Jg9-vA-F4j"/>
+                                        </constraints>
+                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" image="map_locate_on_me"/>
+                                        <connections>
+                                            <action selector="focusOnMe:" destination="qIQ-98-ugo" eventType="touchUpInside" id="mCc-xb-Szv"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstItem="wgf-Im-hTM" firstAttribute="top" secondItem="lPA-SH-z9I" secondAttribute="bottom" priority="750" constant="25" id="2wH-Eq-7gu"/>
                                     <constraint firstItem="r2X-DS-9gL" firstAttribute="top" secondItem="5VF-sr-6Ly" secondAttribute="top" id="71M-8I-5Zd"/>
+                                    <constraint firstItem="Hgr-Fr-3Ah" firstAttribute="trailing" secondItem="lPA-SH-z9I" secondAttribute="trailing" id="BEk-Tg-PHk"/>
+                                    <constraint firstItem="3xC-h5-F9E" firstAttribute="trailing" secondItem="lPA-SH-z9I" secondAttribute="trailing" id="DPL-Su-vzw"/>
                                     <constraint firstItem="r2X-DS-9gL" firstAttribute="trailing" secondItem="5VF-sr-6Ly" secondAttribute="trailing" id="EkF-xi-Z1G"/>
                                     <constraint firstItem="k7i-Nb-NW9" firstAttribute="leading" secondItem="5VF-sr-6Ly" secondAttribute="leading" id="HZL-qm-aBQ"/>
                                     <constraint firstAttribute="trailing" secondItem="k7i-Nb-NW9" secondAttribute="trailing" id="Iga-df-Jhl"/>
@@ -57,7 +99,10 @@
                                     <constraint firstItem="r2X-DS-9gL" firstAttribute="leading" secondItem="5VF-sr-6Ly" secondAttribute="leading" id="dag-M4-qDX"/>
                                     <constraint firstItem="r2X-DS-9gL" firstAttribute="bottom" secondItem="5VF-sr-6Ly" secondAttribute="bottom" id="dpi-y3-MFT"/>
                                     <constraint firstAttribute="bottom" secondItem="wgf-Im-hTM" secondAttribute="bottom" id="i68-ow-vok"/>
+                                    <constraint firstAttribute="trailing" secondItem="lPA-SH-z9I" secondAttribute="trailing" constant="20" id="qXm-ot-d1P"/>
+                                    <constraint firstItem="lPA-SH-z9I" firstAttribute="top" secondItem="Hgr-Fr-3Ah" secondAttribute="bottom" constant="7" id="rKH-Hz-tEN"/>
                                     <constraint firstItem="k7i-Nb-NW9" firstAttribute="top" secondItem="5VF-sr-6Ly" secondAttribute="top" id="vsi-Iw-OcE"/>
+                                    <constraint firstItem="Hgr-Fr-3Ah" firstAttribute="top" secondItem="3xC-h5-F9E" secondAttribute="bottom" constant="20" id="xsK-1n-iv1"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Bm-Sd-95u">
@@ -84,6 +129,7 @@
                             <constraint firstItem="5VF-sr-6Ly" firstAttribute="top" secondItem="0Bm-Sd-95u" secondAttribute="bottom" constant="-5" id="0ie-Nl-Okz"/>
                             <constraint firstItem="5VF-sr-6Ly" firstAttribute="trailing" secondItem="0Bm-Sd-95u" secondAttribute="trailing" id="7ER-ah-0At"/>
                             <constraint firstItem="dmT-Tl-tC0" firstAttribute="trailing" secondItem="5VF-sr-6Ly" secondAttribute="trailing" id="Bi7-cp-bEa"/>
+                            <constraint firstItem="dmT-Tl-tC0" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="lPA-SH-z9I" secondAttribute="bottom" constant="25" id="Erm-nI-Ful"/>
                             <constraint firstItem="dmT-Tl-tC0" firstAttribute="trailing" secondItem="0Bm-Sd-95u" secondAttribute="trailing" id="deP-pu-vB1"/>
                             <constraint firstItem="5VF-sr-6Ly" firstAttribute="bottom" secondItem="IHm-Rs-3hp" secondAttribute="bottom" id="fq0-dS-tCX"/>
                             <constraint firstItem="5VF-sr-6Ly" firstAttribute="leading" secondItem="dmT-Tl-tC0" secondAttribute="leading" id="nlc-ND-k6m"/>
@@ -111,8 +157,11 @@
                     <connections>
                         <outlet property="annotationsInfoHeight" destination="nUW-Iw-BUI" id="cQc-fI-Xge"/>
                         <outlet property="annotationsInfoView" destination="wgf-Im-hTM" id="via-KI-68U"/>
+                        <outlet property="focusButton" destination="3xC-h5-F9E" id="KRG-w7-Eof"/>
                         <outlet property="mapView" destination="r2X-DS-9gL" id="mvD-Za-KId"/>
                         <outlet property="tableView" destination="k7i-Nb-NW9" id="SL8-uU-8Ss"/>
+                        <outlet property="zoomInButton" destination="Hgr-Fr-3Ah" id="3Yk-Ab-i23"/>
+                        <outlet property="zoomOutButton" destination="lPA-SH-z9I" id="9Qo-O5-T8c"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oDv-if-KuX" sceneMemberID="firstResponder"/>
@@ -215,6 +264,9 @@
         </scene>
     </scenes>
     <resources>
+        <image name="map_locate_on_me" width="16" height="16"/>
+        <image name="map_zoom_minus" width="16" height="2"/>
+        <image name="map_zoom_plus" width="16" height="16"/>
         <image name="tabbar_icon_services" width="25" height="22"/>
     </resources>
 </document>

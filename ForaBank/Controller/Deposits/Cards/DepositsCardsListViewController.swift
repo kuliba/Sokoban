@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Hero
 
 class DepositsCardsListViewController: UIViewController {
     
@@ -45,6 +46,9 @@ class DepositsCardsListViewController: UIViewController {
     
     var cards: [Card] = [Card]()
     var cardViews : [DetailedCardView] = [DetailedCardView]()
+    
+    var segueId: String? = nil
+    var backSegueId: String? = nil
     
     let scrollView: UIScrollView = {
         let v = UIScrollView()
@@ -123,7 +127,9 @@ class DepositsCardsListViewController: UIViewController {
         super.viewDidLoad()
         addScrollView()
         addButtons()
-        print("DepositsCardsListViewController viewDidLoad")
+//        print("DepositsCardsListViewController viewDidLoad")
+        hero.isEnabled = true
+        hero.modalAnimationType = .none
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -137,6 +143,9 @@ class DepositsCardsListViewController: UIViewController {
                                                              multiplier: 1,
                                                              constant: 0)
             scrollView.addConstraint(contentViewHeightConstraint!)
+        }
+        if segueId == "DepositsCardsDetailsViewController" {
+            cardViews.last?.hero.id = "card"
         }
         if cards.count > 0 {
             updateCardViews()
@@ -167,6 +176,29 @@ class DepositsCardsListViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         scrollView.contentSize = CGSize(width: contentView.frame.width, height: contentView.frame.height)
+        cardViews.last?.hero.id = nil
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if segueId == "DepositsCardsDetailsViewController" {
+            cardViews.last?.hero.id = "card"
+            view.hero.id = "content"
+            view.hero.modifiers = [
+                HeroModifier.duration(2),
+                HeroModifier.zPosition(1)
+            ]
+            cardViews.last?.hero.modifiers = [
+                HeroModifier.duration(2),
+                HeroModifier.zPosition(2)
+            ]
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        cardViews.last?.hero.id = nil
+        view.hero.id = nil
     }
     
     override func viewDidLayoutSubviews() {
@@ -175,14 +207,19 @@ class DepositsCardsListViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        segueId = nil
         if segue.identifier == "DepositsCardListOnholdBlock" {
             if let destinationVC = segue.destination as? DepositsCardsListOnholdBlockViewController {
                 destinationVC.card = self.cards.last
             }
-        } else if segue.identifier == "DepositsCardsDetailsViewController" {
-            if let destinationVC = segue.destination as? DepositsCardsDetailsViewController {
-                destinationVC.card = selectedCard
-            }
+        } else if let vc = segue.destination as? DepositsCardsDetailsViewController,
+            let parent = parent as? DepositsViewController {
+            vc.card = selectedCard
+            segueId = segue.identifier
+            vc.segueId = segueId
+            vc.backSegueId = segueId
+            parent.segueId = segueId
+            parent.backSegueId = segueId
         }
     }
     

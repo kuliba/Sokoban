@@ -9,6 +9,7 @@
 import UIKit
 import DeviceKit
 import iCarousel
+import Hero
 
 class DepositsViewController: UIViewController {
 
@@ -43,6 +44,9 @@ class DepositsViewController: UIViewController {
     
     var items = ["Карты", "Счета", "Облигации", "Ячейки", "История", "Статистика"]
     
+    var segueId: String? = nil
+    var backSegueId: String? = nil
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         currentViewController = storyboard?.instantiateViewController(withIdentifier: "deposits0")
@@ -67,11 +71,37 @@ class DepositsViewController: UIViewController {
         containerView.addGestureRecognizer(leftSwipeRecognizer)
         containerView.addGestureRecognizer(rightSwipeRecognizer)
         
+        hero.isEnabled = true
+        hero.modalAnimationType = .none
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         carousel.frame.size.height = Device().isOneOf(xDevices) ? 120 : 90
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if segueId == "DepositsCardsDetailsViewController" {
+//            gradientView.hero.id = "background"
+            view.hero.id = "view"
+//            gradientView.hero.modifiers = [
+//                HeroModifier.duration(2),
+//                HeroModifier.zPosition(0)
+//            ]
+//            view.hero.modifiers = [
+//                HeroModifier.duration(2),
+//                HeroModifier.opacity(0),
+//                HeroModifier.fade
+//            ]
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        gradientView.hero.id = nil
+        view.hero.id = nil
+        view.hero.modifiers = nil
     }
 //    override func viewDidAppear(_ animated: Bool) {
 //        super.viewDidAppear(animated)

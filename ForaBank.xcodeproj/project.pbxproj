@@ -140,6 +140,7 @@
 		A551108F21C7BEED00330510 /* TestAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A551108E21C7BEED00330510 /* TestAuthService.swift */; };
 		A551109121C7C0AE00330510 /* TestCardService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A551109021C7C0AE00330510 /* TestCardService.swift */; };
 		A55663A221EC6B3300E48C40 /* MaskedNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55663A121EC6B3300E48C40 /* MaskedNavigationBar.swift */; };
+		A55663A421EDB22600E48C40 /* OnMapButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55663A321EDB22600E48C40 /* OnMapButton.swift */; };
 		A55B7B5721A5866F00A8A7FE /* UIImage+GIF.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55B7B5621A5866F00A8A7FE /* UIImage+GIF.swift */; };
 		A55B7B7A21A6B4F400A8A7FE /* feed_current_food.mov in Resources */ = {isa = PBXBuildFile; fileRef = A55B7B7921A6B4F400A8A7FE /* feed_current_food.mov */; };
 		A55B7B7C21A6B4FB00A8A7FE /* 1.mov in Resources */ = {isa = PBXBuildFile; fileRef = A55B7B7B21A6B4FB00A8A7FE /* 1.mov */; };
@@ -317,6 +318,7 @@
 		A551108E21C7BEED00330510 /* TestAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAuthService.swift; sourceTree = "<group>"; };
 		A551109021C7C0AE00330510 /* TestCardService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCardService.swift; sourceTree = "<group>"; };
 		A55663A121EC6B3300E48C40 /* MaskedNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaskedNavigationBar.swift; sourceTree = "<group>"; };
+		A55663A321EDB22600E48C40 /* OnMapButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnMapButton.swift; sourceTree = "<group>"; };
 		A55B7B5621A5866F00A8A7FE /* UIImage+GIF.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+GIF.swift"; sourceTree = "<group>"; };
 		A55B7B7921A6B4F400A8A7FE /* feed_current_food.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = feed_current_food.mov; sourceTree = "<group>"; };
 		A55B7B7B21A6B4FB00A8A7FE /* 1.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = 1.mov; sourceTree = "<group>"; };
@@ -579,6 +581,7 @@
 				A55B7B8921AA70A600A8A7FE /* Profile */,
 				A568142221CBCD1C002C0899 /* Services */,
 				A5C5E6E721A2B49A001D6250 /* OptionPickerButton.swift */,
+				A55663A321EDB22600E48C40 /* OnMapButton.swift */,
 				0930F165215B5CDB00CFB593 /* RoundedEdgeView.swift */,
 				A55663A121EC6B3300E48C40 /* MaskedNavigationBar.swift */,
 				0939B5FA21774EA70029F03D /* DoubleRoundedEdgeView.swift */,
@@ -1045,6 +1048,7 @@
 				094FFC10218837580069DDCB /* Helpers.swift in Sources */,
 				096BCB0E21637E27005BC02B /* PaymentCell.swift in Sources */,
 				096BCB0A216361AA005BC02B /* PaymentTemplateCell.swift in Sources */,
+				A55663A421EDB22600E48C40 /* OnMapButton.swift in Sources */,
 				89C8DF0E2191ADF200D92B0A /* DepositsDepositsViewController.swift in Sources */,
 				09E2141F21873DCA00D16D21 /* DepositsCardsDetailsStatementDetailsViewController.swift in Sources */,
 				A5C5C03C21B66485005D6B8F /* BubbleDetailedStatsView.swift in Sources */,

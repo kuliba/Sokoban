@@ -41,7 +41,7 @@ class RegistrationPermissionsViewController: UIViewController {
     }
     
     @IBAction func `continue`(_ sender: Any) {
-        NetworkManager.shared().doRegistration(completionHandler: {[unowned self] success, errorMessage in
+        NetworkManager.shared().doRegistration(completionHandler: {[unowned self] success, errorMessage, l, p in
             if success {
 //                let rootVC:ProfileViewController = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
 //                if let t = self.tabBarController as? TabBarController {
@@ -50,6 +50,18 @@ class RegistrationPermissionsViewController: UIViewController {
 //                self.segueId = "dismiss"
 //                rootVC.segueId = "Registered"
 //                self.navigationController?.setViewControllers([rootVC], animated: true)
+                NetworkManager.shared().login(login: l ?? "", password: p ?? "", completionHandler: { (success, error) in
+                    if success {
+                        self.performSegue(withIdentifier: "authSms", sender: nil)
+                    } else {
+                        let alert = UIAlertController(title: "Неудачная авторизация", message: "", preferredStyle: UIAlertController.Style.alert)
+                        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                        self.present(alert, animated: true, completion: nil)
+                        let rootVC = self.storyboard?.instantiateViewController(withIdentifier: "LoginOrSignupViewController") as! LoginOrSignupViewController
+                        
+                        self.navigationController?.setViewControllers([rootVC], animated: true)
+                    }
+                })
             } else {
                 let alert = UIAlertController(title: "Неудача", message: errorMessage?.description, preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
@@ -141,26 +153,37 @@ class RegistrationPermissionsViewController: UIViewController {
                 HeroModifier.translate(CGPoint(x: centralView.frame.origin.x + view.frame.width, y: 0))
             ]
         }
-        if segueId == "finish" {
-            if let nav = navigationController as? ProfileNavigationController {
+        if segueId == "auth" {
+//            if let nav = navigationController as? ProfileNavigationController {
+//                nav.pageControl.isHidden = true
+//                pageControl.isHidden = false
+//            }
+//            containerView.hero.modifiers = [
+//                HeroModifier.beginWith([
+//                    HeroModifier.opacity(1),
+//                    HeroModifier.zPosition(2)
+//                    ]),
+//                HeroModifier.duration(0.5),
+//                HeroModifier.translate(CGPoint(x: 0, y: view.frame.height)),
+//            ]
+//            gradientView.hero.modifiers = [
+//                HeroModifier.duration(0.5),
+//                HeroModifier.opacity(0)
+//            ]
+//            header?.hero.modifiers = [
+//                HeroModifier.duration(0.5),
+//                HeroModifier.opacity(0)
+//            ]
+            if let nav = navigationController as? ProfileNavigationController,
+                pageControl != nil {
                 nav.pageControl.isHidden = true
                 pageControl.isHidden = false
             }
-            containerView.hero.modifiers = [
-                HeroModifier.beginWith([
-                    HeroModifier.opacity(1),
-                    HeroModifier.zPosition(2)
-                    ]),
+            containerView.hero.id = "content"
+            view.hero.id = "view"
+            centralView?.hero.modifiers = [
                 HeroModifier.duration(0.5),
-                HeroModifier.translate(CGPoint(x: 0, y: view.frame.height)),
-            ]
-            gradientView.hero.modifiers = [
-                HeroModifier.duration(0.5),
-                HeroModifier.opacity(0)
-            ]
-            header?.hero.modifiers = [
-                HeroModifier.duration(0.5),
-                HeroModifier.opacity(0)
+                HeroModifier.translate(CGPoint(x: centralView.frame.origin.x + view.frame.width, y: 0))
             ]
         }
         if segueId == "touchID" {
@@ -201,8 +224,8 @@ class RegistrationPermissionsViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         segueId = nil
-        if let vc = segue.destination as? RegistrationFinishViewController {
-            segueId = "finish"
+        if let vc = segue.destination as? RegistrationCodeVerificationViewController {
+            segueId = "auth"
             vc.segueId = segueId
         }
         if let vc = segue.destination as? RegistrationTouchIDViewController {

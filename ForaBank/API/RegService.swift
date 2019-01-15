@@ -74,7 +74,7 @@ class RegService: RegServiceProtocol {
     }
     
     func doRegistration(headers: HTTPHeaders,
-                        completionHandler: @escaping (Bool, String?) -> Void) {
+                        completionHandler: @escaping (Bool, String?, String?, String?) -> Void) {
         let url = baseURLString + "registration/doRegistration"
         print(url)
         let parameters: [String: AnyObject] = [
@@ -96,7 +96,7 @@ class RegService: RegServiceProtocol {
                     let errorMessage = json["errorMessage"] as? String {
                     print("error1")
                     print("\(errorMessage) \(self)")
-                    completionHandler(false, errorMessage)
+                    completionHandler(false, errorMessage, nil, nil)
                     
                     return
                 }
@@ -105,11 +105,11 @@ class RegService: RegServiceProtocol {
                 case .success:
                     print("registration/doRegistration result: \(String(describing: response.result.value))")
                     print(response.result.error.debugDescription)
-                    completionHandler(true, nil)
+                    completionHandler(true, nil, self.login, self.password)
                 case .failure(let error):
                     print("error")
                     print("\(error) \(self)")
-                    completionHandler(false, nil)
+                    completionHandler(false, nil, nil, nil)
                 }
         }
     }

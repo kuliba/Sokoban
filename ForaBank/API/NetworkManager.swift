@@ -50,11 +50,11 @@ protocol RegServiceProtocol {
                      phone: String,
                      verificationCode: Int,
                      completionHandler: @escaping (_ success:Bool,_ errorMessage: String?) -> Void)
-    func doRegistration(headers: HTTPHeaders,
-                        completionHandler: @escaping (_ success:Bool,_ errorMessage: String?) -> Void)
     func verifyCode(headers: HTTPHeaders,
                     verificationCode: Int,
                     completionHandler: @escaping (_ success:Bool,_ errorMessage: String?) -> Void)
+    func doRegistration(headers: HTTPHeaders,
+                        completionHandler: @escaping (_ success:Bool,_ errorMessage: String?, _ login: String?,_ password: String?) -> Void)
 }
 
 class NetworkManager {
@@ -64,9 +64,9 @@ class NetworkManager {
     private static var sharedNetworkManager: NetworkManager = {
         let host = "https://git.briginvest.ru/dbo/api/v2/"
         
-        let authService = AuthService(baseURLString: host)//TestAuthService()//
+        let authService = TestAuthService()//AuthService(baseURLString: host)//
         let cardService = TestCardService()
-        let regService = RegService(baseURLString: host)//TestRegService()//
+        let regService = TestRegService()//RegService(baseURLString: host)
         let depositsService = TestDepositsService()
 
         let networkManager = NetworkManager(baseURLString: host, authService: authService, regService: regService, cardService: cardService, depositsService: depositsService)
@@ -176,7 +176,7 @@ class NetworkManager {
         }
     }
     
-    func doRegistration(completionHandler: @escaping (_ success:Bool,_ errorMessage: String?) -> Void) {
+    func doRegistration(completionHandler: @escaping (_ success:Bool,_ errorMessage: String?, _ login: String?,_ password: String?) -> Void) {
         authService.csrf(headers: headers) { [unowned self] (success, newHeaders) in
             if success {
                 self.headers.merge(newHeaders ?? [:], uniquingKeysWith: { (_, k2) -> String in
@@ -186,7 +186,7 @@ class NetworkManager {
                 self.regService.doRegistration(headers: self.headers, completionHandler: completionHandler)
             }
             else {
-                completionHandler(false, nil)
+                completionHandler(false, nil, nil, nil)
             }
         }
     }
