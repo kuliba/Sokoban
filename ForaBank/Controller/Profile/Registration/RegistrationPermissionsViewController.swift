@@ -183,7 +183,7 @@ class RegistrationPermissionsViewController: UIViewController {
             view.hero.id = "view"
             centralView?.hero.modifiers = [
                 HeroModifier.duration(0.5),
-                HeroModifier.translate(CGPoint(x: centralView.frame.origin.x + view.frame.width, y: 0))
+                HeroModifier.translate(CGPoint(x: centralView.frame.origin.x - view.frame.width, y: 0))
             ]
         }
         if segueId == "touchID" {

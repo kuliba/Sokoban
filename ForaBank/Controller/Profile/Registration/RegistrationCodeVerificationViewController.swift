@@ -20,6 +20,7 @@ class RegistrationCodeVerificationViewController: UIViewController{
     @IBOutlet weak var pageControl: FlexiblePageControl!
     @IBOutlet weak var centralView: UIView!
     @IBOutlet weak var header: UIView!
+    @IBOutlet weak var activityIndicator: ActivityIndicatorView?
     
     var segueId: String? = nil
     var backSegueId: String? = nil
@@ -46,15 +47,29 @@ class RegistrationCodeVerificationViewController: UIViewController{
     @IBAction func authContinue(_ sender: Any) {
         view.endEditing(true)
 //        print("continueButtonClicked")
-        NetworkManager.shared().checkVerificationCode(code: self.codeNumberTextField.text ?? "") { [unowned self] (success) in
+        activityIndicator?.startAnimation()
+        continueButton.isHidden = true
+        NetworkManager.shared().checkVerificationCode(code: self.codeNumberTextField.text ?? "") { [weak self] (success) in
+            self?.continueButton.isHidden = false
+            self?.activityIndicator?.stopAnimating()
             if success {
-                let rootVC = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
-                if let t = self.tabBarController as? TabBarController {
+                let rootVC = self?.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
+                if let t = self?.tabBarController as? TabBarController {
                     t.setNumberOfTabsAvailable()
                 }
-                self.segueId = "dismiss"
+                self?.segueId = "dismiss"
                 rootVC.segueId = "SignedIn"
-                self.navigationController?.setViewControllers([rootVC], animated: true)
+                self?.navigationController?.setViewControllers([rootVC], animated: true)
+            } else {
+                let alert = UIAlertController(title: "Неудача", message: "Неверный код", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                alert.addAction(UIAlertAction(title: "Отменить", style: UIAlertAction.Style.default, handler: {(action) in
+                    let rootVC = self?.storyboard?.instantiateViewController(withIdentifier: "LoginOrSignupViewController") as! LoginOrSignupViewController
+                    self?.segueId = "dismiss"
+                    rootVC.segueId = "logout"
+                    self?.navigationController?.setViewControllers([rootVC], animated: true)
+                }))
+                self?.present(alert, animated: true, completion: nil)
             }
         }
     }
@@ -65,22 +80,39 @@ class RegistrationCodeVerificationViewController: UIViewController{
                 
             return
         }
-        
-        NetworkManager.shared().verifyCode(verificationCode: code) { [unowned self] (success, errorMessage) in
+        activityIndicator?.startAnimation()
+        continueButton.isHidden = true
+        NetworkManager.shared().verifyCode(verificationCode: code) { [weak self] (success, errorMessage) in
+            self?.continueButton.isHidden = false
+            self?.activityIndicator?.stopAnimating()
             if success {
-                self.performSegue(withIdentifier: "regPermissions", sender: nil)
+                self?.performSegue(withIdentifier: "regPermissions", sender: nil)
             } else {
                 let alert = UIAlertController(title: "Неудача", message: "Неверный код", preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
+                self?.present(alert, animated: true, completion: nil)
             }
         }
     }
     
     @IBAction func firstAuth(_ sender: Any) {
-        NetworkManager.shared().checkVerificationCode(code: self.codeNumberTextField.text ?? "") { [unowned self] (success) in
+        activityIndicator?.startAnimation()
+        continueButton.isHidden = true
+        NetworkManager.shared().checkVerificationCode(code: self.codeNumberTextField.text ?? "") { [weak self] (success) in
+            self?.continueButton.isHidden = false
+            self?.activityIndicator?.stopAnimating()
             if success {
-                self.performSegue(withIdentifier: "finish", sender: nil)
+                self?.performSegue(withIdentifier: "finish", sender: nil)
+            } else {
+                let alert = UIAlertController(title: "Неудача", message: "Неверный код", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                alert.addAction(UIAlertAction(title: "Отменить", style: UIAlertAction.Style.default, handler: {(action) in
+                    let rootVC = self?.storyboard?.instantiateViewController(withIdentifier: "LoginOrSignupViewController") as! LoginOrSignupViewController
+                    self?.segueId = "dismiss"
+                    rootVC.segueId = "logout"
+                    self?.navigationController?.setViewControllers([rootVC], animated: true)
+                }))
+                self?.present(alert, animated: true, completion: nil)
             }
         }
     }
@@ -122,7 +154,7 @@ class RegistrationCodeVerificationViewController: UIViewController{
                 nav.pageControl.setCurrentPage(at: 2)
             }, completion: nil)
         }
-        if segueId == "smsVerification" {
+        if segueId == "smsVerification" || segueId == "auth" {
             containerView.hero.id = "content"
             view.hero.id = "view"
             centralView?.hero.modifiers = [
@@ -131,7 +163,7 @@ class RegistrationCodeVerificationViewController: UIViewController{
             ]
             header.hero.id = "head"
         }
-        if segueId == "permissions" || segueId == "auth" {
+        if segueId == "permissions" {
             containerView.hero.id = "content"
             view.hero.id = "view"
             centralView?.hero.modifiers = [
@@ -311,6 +343,10 @@ extension RegistrationCodeVerificationViewController: UITextFieldDelegate  {
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let set = CharacterSet.decimalDigits
+        if (string.rangeOfCharacter(from: set.inverted) != nil) {
+            return false
+        }
         guard let text = textField.text else { return true }
         let count = text.count + string.count - range.length
         continueButton.isEnabled = count >= 3

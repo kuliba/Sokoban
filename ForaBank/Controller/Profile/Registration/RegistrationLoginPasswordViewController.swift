@@ -70,6 +70,7 @@ class RegistrationLoginPasswordViewController: UIViewController {
     @IBOutlet weak var agreementCheckbox: UIButton!
     @IBOutlet weak var agreementLabel: UILabel!
     @IBOutlet weak var inputPasswordLabel: UILabel!
+    @IBOutlet weak var activityIndicatorView: ActivityIndicatorView!
     
     var headerSnapshot: UIView? = nil
     
@@ -123,14 +124,18 @@ class RegistrationLoginPasswordViewController: UIViewController {
         if cardNumber == nil {
             cardNumber = "4256901050031063"
         }
-        
-        NetworkManager.shared().checkClient(cardNumber: cardNumber!, login: self.loginTextField.text ?? "", password: self.passwordTextField.text ?? "", phone: phone, verificationCode: 0, completionHandler: {[unowned self] success, errorMessage in
+        activityIndicatorView.startAnimation()
+        continueButton.isHidden = true
+        NetworkManager.shared().checkClient(cardNumber: cardNumber!, login: self.loginTextField.text ?? "", password: self.passwordTextField.text ?? "", phone: phone, verificationCode: 0, completionHandler: {[weak self] success, errorMessage in
+
+            self?.continueButton.isHidden = false
+            self?.activityIndicatorView.stopAnimating()
             if success {
-                self.performSegue(withIdentifier: "regSmsVerification", sender: nil)
+                self?.performSegue(withIdentifier: "regSmsVerification", sender: nil)
             } else {
                 let alert = UIAlertController(title: "Неудача", message: errorMessage, preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
+                self?.present(alert, animated: true, completion: nil)
             }
         })
     }
@@ -190,14 +195,40 @@ class RegistrationLoginPasswordViewController: UIViewController {
                 inputPasswordLabel.textColor = UIColor(red: 0.13, green: 0.76, blue: 0.51, alpha: 1)
                 currentBorderColor = inputPasswordLabel.textColor
                 defaultBorderColor = inputPasswordLabel.textColor
-            default:
-                break
             }
             passwordTextField.defaultBorderColor = defaultBorderColor
             passwordTextField.selectedBorderColor = currentBorderColor
             passwordTextField.layer.borderColor = currentBorderColor.cgColor
         }
     }
+    
+    @IBAction func phoneNumberChanged(_ sender: UITextField) {
+        let updatedText = sender.text ?? ""
+        let cleanPhoneNumber = updatedText.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
+        let mask = "+X (XXX) XXX-XXXX"
+//        if string.count + range.location > mask.count {
+//            return false
+//        }
+        
+        var result = ""
+        var index = cleanPhoneNumber.startIndex
+        for ch in mask {
+            if index == cleanPhoneNumber.endIndex {
+                break
+            }
+            if ch == "X" {
+                result.append(cleanPhoneNumber[index])
+                index = cleanPhoneNumber.index(after: index)
+            } else if ch == "+" || ch == "(" || ch == ")" || ch == "-" || ch == " " {
+                result.append(ch)
+            } else {
+                //                    return false
+            }
+        }
+        phoneTextField.text = result
+//        return false
+    }
+    
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -393,38 +424,38 @@ extension RegistrationLoginPasswordViewController: UITextFieldDelegate {
             let text = textField.text,
             let textRange = Range(range, in: text) {
             
-            let updatedText = text.replacingCharacters(in: textRange,
-                                                       with: string)
-            let cleanPhoneNumber = updatedText.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
+//            let updatedText = text.replacingCharacters(in: textRange,
+//                                                       with: string)
+//            let cleanPhoneNumber = updatedText.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
             let set = CharacterSet(charactersIn: "+()- ").union(CharacterSet.decimalDigits)
             if (string.rangeOfCharacter(from: set.inverted) != nil) {
                 return false
             }
-            let mask = "+X (XXX) XXX-XXXX"
-            if string.count + range.location > mask.count {
-                return false
-            }
-            
-            var result = ""
-            var index = cleanPhoneNumber.startIndex
-            for ch in mask {
-                if index == cleanPhoneNumber.endIndex {
-                    break
-                }
-                if ch == "X" {
-                    result.append(cleanPhoneNumber[index])
-                    index = cleanPhoneNumber.index(after: index)
-                } else if ch == "+" || ch == "(" || ch == ")" || ch == "-" || ch == " " {
-                    result.append(ch)
-                } else {
-//                    return false
-                }
-            }
-            if index != cleanPhoneNumber.endIndex {
-                return false
-            }
-            phoneTextField.text = result
-            return false
+//            let mask = "+X (XXX) XXX-XXXX"
+//            if string.count + range.location > mask.count {
+//                return false
+//            }
+//
+//            var result = ""
+//            var index = cleanPhoneNumber.startIndex
+//            for ch in mask {
+//                if index == cleanPhoneNumber.endIndex {
+//                    break
+//                }
+//                if ch == "X" {
+//                    result.append(cleanPhoneNumber[index])
+//                    index = cleanPhoneNumber.index(after: index)
+//                } else if ch == "+" || ch == "(" || ch == ")" || ch == "-" || ch == " " {
+//                    result.append(ch)
+//                } else {
+////                    return false
+//                }
+//            }
+//            if index != cleanPhoneNumber.endIndex {
+//                return false
+//            }
+//            phoneTextField.text = result
+//            return false
         }
         return true
     }

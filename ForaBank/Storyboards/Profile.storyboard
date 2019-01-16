@@ -724,6 +724,9 @@
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="14"/>
                                                         <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                                        <connections>
+                                                            <action selector="cardDatasChanged:" destination="hLn-po-byv" eventType="editingChanged" id="TA8-rP-jvu"/>
+                                                        </connections>
                                                     </textField>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Срок действия" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fR8-Re-MZo">
                                                         <rect key="frame" x="22" y="92" width="163" height="21"/>
@@ -744,6 +747,9 @@
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="14"/>
                                                         <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                                        <connections>
+                                                            <action selector="cardDatasChanged:" destination="hLn-po-byv" eventType="editingChanged" id="iR0-LP-ojC"/>
+                                                        </connections>
                                                     </textField>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="/" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jl0-gE-PXX">
                                                         <rect key="frame" x="70" y="116" width="9" height="40"/>
@@ -760,6 +766,9 @@
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="14"/>
                                                         <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                                        <connections>
+                                                            <action selector="cardDatasChanged:" destination="hLn-po-byv" eventType="editingChanged" id="pjO-UL-KHn"/>
+                                                        </connections>
                                                     </textField>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CVV" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EKK-7a-jdL">
                                                         <rect key="frame" x="182" y="92" width="62" height="21"/>
@@ -776,13 +785,17 @@
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="14"/>
                                                         <textInputTraits key="textInputTraits" keyboardType="numberPad" secureTextEntry="YES" textContentType="password"/>
+                                                        <connections>
+                                                            <action selector="cardDatasChanged:" destination="hLn-po-byv" eventType="editingChanged" id="oaC-au-glB"/>
+                                                        </connections>
                                                     </textField>
-                                                    <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4HJ-LT-CVa">
+                                                    <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4HJ-LT-CVa">
                                                         <rect key="frame" x="208" y="49" width="30" height="30"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="30" id="F1B-6g-duH"/>
                                                             <constraint firstAttribute="width" constant="30" id="Tps-CM-cV6"/>
                                                         </constraints>
+                                                        <color key="tintColor" red="0.70980392156862748" green="0.70980392156862748" blue="0.70980392156862748" alpha="1" colorSpace="calibratedRGB"/>
                                                         <state key="normal" image="card_scan"/>
                                                         <connections>
                                                             <action selector="scanCardButtonClicked:" destination="hLn-po-byv" eventType="touchUpInside" id="Knk-pK-h8G"/>
@@ -979,15 +992,24 @@
                                                     <action selector="continue:" destination="hLn-po-byv" eventType="touchUpInside" id="lql-M1-GMR"/>
                                                 </connections>
                                             </button>
+                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7i5-Ud-Ery" customClass="ActivityIndicatorView" customModule="ForaBank" customModuleProvider="target">
+                                                <rect key="frame" x="106.5" y="272" width="53" height="53"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="7i5-Ud-Ery" secondAttribute="height" multiplier="1:1" id="PNf-Bt-3K7"/>
+                                                </constraints>
+                                            </view>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstItem="R7i-Jr-tsQ" firstAttribute="top" secondItem="e0X-gi-bC5" secondAttribute="bottom" constant="26" id="03J-FY-GQA"/>
                                             <constraint firstAttribute="trailing" secondItem="dit-hn-mNv" secondAttribute="trailing" id="7dE-e2-Ur9"/>
                                             <constraint firstItem="e0X-gi-bC5" firstAttribute="leading" secondItem="MHM-Oz-P9E" secondAttribute="leading" constant="1" id="B2B-10-V43"/>
+                                            <constraint firstItem="7i5-Ud-Ery" firstAttribute="height" secondItem="s4A-L0-BMl" secondAttribute="height" id="FJ3-pJ-5X3"/>
                                             <constraint firstItem="e0X-gi-bC5" firstAttribute="top" secondItem="MHM-Oz-P9E" secondAttribute="top" constant="1" id="Mcb-nA-Zp6"/>
                                             <constraint firstItem="dit-hn-mNv" firstAttribute="leading" secondItem="MHM-Oz-P9E" secondAttribute="leading" id="QHj-lX-lpW"/>
                                             <constraint firstItem="Gam-oD-JzJ" firstAttribute="top" secondItem="dit-hn-mNv" secondAttribute="bottom" constant="8" id="Qvl-52-Tx4"/>
+                                            <constraint firstItem="7i5-Ud-Ery" firstAttribute="centerX" secondItem="s4A-L0-BMl" secondAttribute="centerX" id="SAA-Xw-GHw"/>
                                             <constraint firstItem="R7i-Jr-tsQ" firstAttribute="leading" secondItem="MHM-Oz-P9E" secondAttribute="leading" id="UaP-u1-Mbi"/>
                                             <constraint firstItem="dit-hn-mNv" firstAttribute="top" secondItem="e0X-gi-bC5" secondAttribute="bottom" constant="26" id="Z3V-3C-rAh"/>
                                             <constraint firstAttribute="trailing" secondItem="s4A-L0-BMl" secondAttribute="trailing" id="cBY-vE-FhM"/>
@@ -998,6 +1020,7 @@
                                             <constraint firstItem="s4A-L0-BMl" firstAttribute="leading" secondItem="MHM-Oz-P9E" secondAttribute="leading" id="mMM-wa-OZY"/>
                                             <constraint firstAttribute="trailing" secondItem="Gam-oD-JzJ" secondAttribute="trailing" id="rh0-aW-0Vk"/>
                                             <constraint firstItem="3TA-oL-Pvb" firstAttribute="top" secondItem="e0X-gi-bC5" secondAttribute="bottom" constant="26" id="rwx-wx-wyl"/>
+                                            <constraint firstItem="7i5-Ud-Ery" firstAttribute="top" secondItem="s4A-L0-BMl" secondAttribute="top" id="sdh-vQ-yJI"/>
                                             <constraint firstAttribute="trailing" secondItem="R7i-Jr-tsQ" secondAttribute="trailing" id="uT2-jH-B6e"/>
                                             <constraint firstItem="3TA-oL-Pvb" firstAttribute="leading" secondItem="MHM-Oz-P9E" secondAttribute="leading" id="wfN-lr-jrt"/>
                                         </constraints>
@@ -1065,6 +1088,7 @@
                         <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="NO"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
+                        <outlet property="activityIndicator" destination="7i5-Ud-Ery" id="z3P-ay-E1C"/>
                         <outlet property="backButton" destination="uxD-Mi-h2r" id="s4D-Vt-Sbj"/>
                         <outlet property="cardNumberLabelView" destination="DJ6-bH-cpS" id="fYq-rt-R6n"/>
                         <outlet property="cardNumberTextField" destination="fen-bH-9nx" id="28P-D8-dKr"/>
@@ -1149,19 +1173,32 @@
                                                     <action selector="regContinue:" destination="l0I-L2-AWq" eventType="touchUpInside" id="zVI-xu-LcI"/>
                                                 </connections>
                                             </button>
+                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h8d-zc-mjM" customClass="ActivityIndicatorView" customModule="ForaBank" customModuleProvider="target">
+                                                <rect key="frame" x="125.5" y="130" width="53" height="53"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="tintColor" red="0.91764705879999997" green="0.2666666667" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="h8d-zc-mjM" secondAttribute="height" multiplier="1:1" id="Vev-oq-qCm"/>
+                                                </constraints>
+                                            </view>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="bottom" secondItem="f7h-Sd-6c8" secondAttribute="bottom" id="9xS-DA-O9x"/>
                                             <constraint firstAttribute="trailing" secondItem="f7h-Sd-6c8" secondAttribute="trailing" constant="20" id="Dqe-zh-bjh"/>
+                                            <constraint firstItem="h8d-zc-mjM" firstAttribute="width" secondItem="h8d-zc-mjM" secondAttribute="height" multiplier="1:1" id="GyN-du-b3L"/>
                                             <constraint firstAttribute="trailing" secondItem="IdI-Zr-XU9" secondAttribute="trailing" id="HTN-2e-nJh"/>
                                             <constraint firstAttribute="height" constant="183" id="JuC-Uw-Nl3"/>
+                                            <constraint firstItem="h8d-zc-mjM" firstAttribute="centerX" secondItem="f7h-Sd-6c8" secondAttribute="centerX" id="Peq-vI-3RD"/>
+                                            <constraint firstItem="h8d-zc-mjM" firstAttribute="height" secondItem="f7h-Sd-6c8" secondAttribute="height" id="QMf-ve-Ffn"/>
                                             <constraint firstItem="eIc-vu-Aoa" firstAttribute="top" secondItem="IdI-Zr-XU9" secondAttribute="bottom" constant="11" id="T9d-iH-A7e"/>
                                             <constraint firstItem="f7h-Sd-6c8" firstAttribute="top" secondItem="eIc-vu-Aoa" secondAttribute="bottom" constant="24" id="TYG-N0-r51"/>
                                             <constraint firstItem="IdI-Zr-XU9" firstAttribute="leading" secondItem="e3e-3y-EcT" secondAttribute="leading" id="Z2r-Hy-8pO"/>
                                             <constraint firstItem="f7h-Sd-6c8" firstAttribute="leading" secondItem="e3e-3y-EcT" secondAttribute="leading" constant="20" id="bt6-bM-Wqu"/>
+                                            <constraint firstItem="h8d-zc-mjM" firstAttribute="top" secondItem="f7h-Sd-6c8" secondAttribute="top" id="c5c-2l-4Wi"/>
                                             <constraint firstAttribute="bottom" secondItem="eIc-vu-Aoa" secondAttribute="bottom" constant="77" id="nTz-np-Lw0"/>
                                             <constraint firstItem="IdI-Zr-XU9" firstAttribute="top" secondItem="e3e-3y-EcT" secondAttribute="top" id="oOu-sS-ihb"/>
+                                            <constraint firstItem="h8d-zc-mjM" firstAttribute="width" secondItem="h8d-zc-mjM" secondAttribute="height" multiplier="1:1" id="tI9-zN-Tp7"/>
                                             <constraint firstItem="eIc-vu-Aoa" firstAttribute="centerX" secondItem="IdI-Zr-XU9" secondAttribute="centerX" id="yBZ-yz-Toi"/>
                                         </constraints>
                                     </view>
@@ -1227,6 +1264,7 @@
                         <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="NO"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
+                        <outlet property="activityIndicator" destination="h8d-zc-mjM" id="2g6-lh-z3U"/>
                         <outlet property="backButton" destination="7J8-x7-1K2" id="hgr-3h-HN5"/>
                         <outlet property="centralView" destination="e3e-3y-EcT" id="Rxc-36-nfK"/>
                         <outlet property="codeNumberTextField" destination="eIc-vu-Aoa" id="KCF-6P-vvj"/>
@@ -1295,6 +1333,9 @@
                                                                 <nil key="textColor"/>
                                                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="14"/>
                                                                 <textInputTraits key="textInputTraits" keyboardType="phonePad" textContentType="tel"/>
+                                                                <connections>
+                                                                    <action selector="phoneNumberChanged:" destination="qDb-5Z-fyW" eventType="editingChanged" id="rEO-d2-klv"/>
+                                                                </connections>
                                                             </textField>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Придумайте логин" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VZI-Ft-tJb">
                                                                 <rect key="frame" x="20" y="144" width="264" height="25"/>
@@ -1330,7 +1371,7 @@
                                                                 </constraints>
                                                                 <nil key="textColor"/>
                                                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="14"/>
-                                                                <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
+                                                                <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="new-password"/>
                                                                 <connections>
                                                                     <action selector="passwordChanged:" destination="qDb-5Z-fyW" eventType="editingChanged" id="OuC-KR-joN"/>
                                                                 </connections>
@@ -1351,13 +1392,13 @@
                                                                 </constraints>
                                                                 <nil key="textColor"/>
                                                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="14"/>
-                                                                <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
+                                                                <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="new-password"/>
                                                             </textField>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vod-fC-8aU">
-                                                                <rect key="frame" x="56.5" y="387" width="191.5" height="38"/>
+                                                                <rect key="frame" x="58" y="387" width="188.5" height="38"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Я прочитал условия банка" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GkB-hu-H0y">
-                                                                        <rect key="frame" x="30" y="4" width="161.5" height="30"/>
+                                                                        <rect key="frame" x="30" y="4" width="158.5" height="30"/>
                                                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="13"/>
                                                                         <color key="textColor" red="0.60784313725490191" green="0.60784313725490191" blue="0.60784313725490191" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                                         <nil key="highlightedColor"/>
@@ -1426,6 +1467,14 @@
                                                                     <action selector="showPassword2:" destination="qDb-5Z-fyW" eventType="touchUpInside" id="6q0-xM-M2S"/>
                                                                 </connections>
                                                             </button>
+                                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4n4-zT-OP5" customClass="ActivityIndicatorView" customModule="ForaBank" customModuleProvider="target">
+                                                                <rect key="frame" x="125.5" y="433" width="53" height="53"/>
+                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <color key="tintColor" red="0.91764705882352937" green="0.26666666666666666" blue="0.25882352941176467" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="width" secondItem="4n4-zT-OP5" secondAttribute="height" multiplier="1:1" id="AEx-wT-AHh"/>
+                                                                </constraints>
+                                                            </view>
                                                         </subviews>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
@@ -1441,6 +1490,7 @@
                                                             <constraint firstItem="OKf-Dl-81n" firstAttribute="leading" secondItem="dw3-ot-I8d" secondAttribute="leading" id="ClG-FN-yHL"/>
                                                             <constraint firstAttribute="trailing" secondItem="2G5-PA-H8C" secondAttribute="trailing" constant="20" id="DIG-oC-0lT"/>
                                                             <constraint firstItem="Brc-Yy-DGf" firstAttribute="leading" secondItem="dw3-ot-I8d" secondAttribute="leading" constant="20" id="Ipe-hr-ith"/>
+                                                            <constraint firstItem="4n4-zT-OP5" firstAttribute="top" secondItem="a3A-fo-T2u" secondAttribute="top" id="JAC-D4-uda"/>
                                                             <constraint firstAttribute="trailing" secondItem="2ef-dQ-i76" secondAttribute="trailing" constant="20" id="KeG-0m-4ag"/>
                                                             <constraint firstAttribute="bottom" secondItem="a3A-fo-T2u" secondAttribute="bottom" id="NGG-By-3bC"/>
                                                             <constraint firstItem="a3A-fo-T2u" firstAttribute="leading" secondItem="dw3-ot-I8d" secondAttribute="leading" constant="20" id="UEI-NQ-7Mr"/>
@@ -1450,6 +1500,7 @@
                                                             <constraint firstItem="EFC-8o-ztb" firstAttribute="leading" secondItem="dw3-ot-I8d" secondAttribute="leading" constant="20" id="XWh-vC-nP9"/>
                                                             <constraint firstItem="UJg-a1-0AK" firstAttribute="leading" secondItem="dw3-ot-I8d" secondAttribute="leading" constant="20" id="Y44-ub-Gyo"/>
                                                             <constraint firstItem="rjL-CG-thh" firstAttribute="leading" secondItem="dw3-ot-I8d" secondAttribute="leading" constant="20" id="Yqp-fM-qpV"/>
+                                                            <constraint firstItem="4n4-zT-OP5" firstAttribute="height" secondItem="a3A-fo-T2u" secondAttribute="height" id="Z1a-dv-ruv"/>
                                                             <constraint firstItem="UJg-a1-0AK" firstAttribute="top" secondItem="OKf-Dl-81n" secondAttribute="bottom" constant="8" id="ZxG-UL-q2B"/>
                                                             <constraint firstAttribute="trailing" secondItem="UJg-a1-0AK" secondAttribute="trailing" constant="20" id="aDE-4t-Xwa"/>
                                                             <constraint firstItem="2G5-PA-H8C" firstAttribute="top" secondItem="2ef-dQ-i76" secondAttribute="bottom" constant="8" id="azA-hz-eVA"/>
@@ -1458,6 +1509,7 @@
                                                             <constraint firstAttribute="trailing" secondItem="rjL-CG-thh" secondAttribute="trailing" constant="20" id="dXf-uT-ixT"/>
                                                             <constraint firstItem="a3A-fo-T2u" firstAttribute="top" secondItem="vod-fC-8aU" secondAttribute="bottom" constant="8" id="dl8-vC-ZSo"/>
                                                             <constraint firstItem="UGR-bK-kXD" firstAttribute="leading" secondItem="dw3-ot-I8d" secondAttribute="leading" constant="20" id="fKE-Ld-JZ0"/>
+                                                            <constraint firstItem="4n4-zT-OP5" firstAttribute="width" secondItem="4n4-zT-OP5" secondAttribute="height" multiplier="1:1" id="fOZ-S5-FJZ"/>
                                                             <constraint firstItem="2ef-dQ-i76" firstAttribute="leading" secondItem="dw3-ot-I8d" secondAttribute="leading" constant="20" id="fxx-QC-SkN"/>
                                                             <constraint firstAttribute="trailing" secondItem="OKf-Dl-81n" secondAttribute="trailing" id="nl3-tl-Vhk"/>
                                                             <constraint firstItem="OKf-Dl-81n" firstAttribute="top" secondItem="dw3-ot-I8d" secondAttribute="top" id="pDc-GK-vsP"/>
@@ -1466,6 +1518,7 @@
                                                             <constraint firstItem="VZI-Ft-tJb" firstAttribute="leading" secondItem="dw3-ot-I8d" secondAttribute="leading" constant="20" id="rfX-EO-TEd"/>
                                                             <constraint firstAttribute="trailing" secondItem="a3A-fo-T2u" secondAttribute="trailing" constant="20" id="svf-r8-CIe"/>
                                                             <constraint firstItem="UGR-bK-kXD" firstAttribute="top" secondItem="EFC-8o-ztb" secondAttribute="bottom" constant="8" id="x4x-rF-hDv"/>
+                                                            <constraint firstItem="4n4-zT-OP5" firstAttribute="centerX" secondItem="a3A-fo-T2u" secondAttribute="centerX" id="zWs-h7-J60"/>
                                                         </constraints>
                                                     </view>
                                                 </subviews>
@@ -1550,6 +1603,7 @@
                         <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="NO"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
+                        <outlet property="activityIndicatorView" destination="4n4-zT-OP5" id="B4Z-A4-c5p"/>
                         <outlet property="agreementCheckbox" destination="DmF-r0-sjg" id="CBh-hc-4IR"/>
                         <outlet property="agreementLabel" destination="GkB-hu-H0y" id="XzG-rg-EaO"/>
                         <outlet property="backButton" destination="g2M-Mv-gWp" id="3KT-67-oc2"/>
@@ -2293,20 +2347,34 @@
                                                     <action selector="authContinue:" destination="80b-lH-MgJ" eventType="touchUpInside" id="5LY-mg-TML"/>
                                                 </connections>
                                             </button>
+                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FMG-hi-2J9" customClass="ActivityIndicatorView" customModule="ForaBank" customModuleProvider="target">
+                                                <rect key="frame" x="125.5" y="130" width="53" height="53"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="tintColor" red="0.91764705879999997" green="0.2666666667" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="FMG-hi-2J9" secondAttribute="height" multiplier="1:1" id="Nu7-bf-2SX"/>
+                                                </constraints>
+                                            </view>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="bottom" secondItem="H2F-SM-hZF" secondAttribute="bottom" constant="77" id="2o5-cH-WvK"/>
                                             <constraint firstItem="H2F-SM-hZF" firstAttribute="centerX" secondItem="NuM-uY-dTG" secondAttribute="centerX" id="AcE-Hz-RpH"/>
+                                            <constraint firstItem="FMG-hi-2J9" firstAttribute="width" secondItem="FMG-hi-2J9" secondAttribute="height" multiplier="1:1" id="BDU-p3-ddP"/>
+                                            <constraint firstItem="FMG-hi-2J9" firstAttribute="centerX" secondItem="fwS-qe-9Rz" secondAttribute="centerX" id="Dp6-Dz-p3M"/>
                                             <constraint firstAttribute="height" constant="183" id="DuQ-CX-s7V"/>
                                             <constraint firstAttribute="trailing" secondItem="NuM-uY-dTG" secondAttribute="trailing" id="Nyo-S2-fhH"/>
                                             <constraint firstItem="NuM-uY-dTG" firstAttribute="top" secondItem="xOZ-0w-rXD" secondAttribute="top" id="TDH-bd-eAR"/>
+                                            <constraint firstItem="FMG-hi-2J9" firstAttribute="height" secondItem="fwS-qe-9Rz" secondAttribute="height" id="UT6-Kb-4Dz"/>
                                             <constraint firstAttribute="bottom" secondItem="fwS-qe-9Rz" secondAttribute="bottom" id="Xqe-wt-ewm"/>
                                             <constraint firstItem="fwS-qe-9Rz" firstAttribute="leading" secondItem="xOZ-0w-rXD" secondAttribute="leading" constant="20" id="fMd-22-cBU"/>
+                                            <constraint firstItem="FMG-hi-2J9" firstAttribute="top" secondItem="fwS-qe-9Rz" secondAttribute="top" id="ie7-Qn-Wf8"/>
                                             <constraint firstItem="fwS-qe-9Rz" firstAttribute="top" secondItem="H2F-SM-hZF" secondAttribute="bottom" constant="24" id="isn-9D-hKb"/>
                                             <constraint firstAttribute="trailing" secondItem="fwS-qe-9Rz" secondAttribute="trailing" constant="20" id="jg5-GQ-YEh"/>
                                             <constraint firstItem="H2F-SM-hZF" firstAttribute="top" secondItem="NuM-uY-dTG" secondAttribute="bottom" constant="11" id="qvb-3z-Sf8"/>
                                             <constraint firstItem="NuM-uY-dTG" firstAttribute="leading" secondItem="xOZ-0w-rXD" secondAttribute="leading" id="rxF-es-WNi"/>
+                                            <constraint firstItem="FMG-hi-2J9" firstAttribute="width" secondItem="FMG-hi-2J9" secondAttribute="height" multiplier="1:1" id="uZF-47-Cl5"/>
+                                            <constraint firstItem="FMG-hi-2J9" firstAttribute="width" secondItem="FMG-hi-2J9" secondAttribute="height" multiplier="1:1" id="xeg-CA-19w"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="YES"/>
@@ -2373,6 +2441,7 @@
                         <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="NO"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
+                        <outlet property="activityIndicator" destination="FMG-hi-2J9" id="LND-29-BNv"/>
                         <outlet property="backButton" destination="t0x-jw-aLY" id="AGz-6u-W4v"/>
                         <outlet property="centralView" destination="xOZ-0w-rXD" id="Tpa-ZQ-8aH"/>
                         <outlet property="codeNumberTextField" destination="H2F-SM-hZF" id="jZi-S2-HKh"/>
@@ -2432,6 +2501,14 @@
                                                     <action selector="firstAuth:" destination="fCe-pT-ttn" eventType="touchUpInside" id="Sxc-Lk-5Z1"/>
                                                 </connections>
                                             </button>
+                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qmv-xl-Qk0" customClass="ActivityIndicatorView" customModule="ForaBank" customModuleProvider="target">
+                                                <rect key="frame" x="125.5" y="130" width="53" height="53"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="tintColor" red="0.91764705879999997" green="0.2666666667" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="Qmv-xl-Qk0" secondAttribute="height" multiplier="1:1" id="GfZ-Ah-mHU"/>
+                                                </constraints>
+                                            </view>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
@@ -2439,9 +2516,14 @@
                                             <constraint firstItem="M7G-lK-R2J" firstAttribute="top" secondItem="FE4-jU-6Ph" secondAttribute="bottom" constant="24" id="6T9-an-JL3"/>
                                             <constraint firstAttribute="bottom" secondItem="M7G-lK-R2J" secondAttribute="bottom" id="GnI-bQ-MyX"/>
                                             <constraint firstAttribute="height" constant="183" id="NrB-Kk-Fhw"/>
+                                            <constraint firstItem="Qmv-xl-Qk0" firstAttribute="top" secondItem="M7G-lK-R2J" secondAttribute="top" id="YcQ-5u-0a1"/>
+                                            <constraint firstItem="Qmv-xl-Qk0" firstAttribute="height" secondItem="M7G-lK-R2J" secondAttribute="height" id="dj3-zI-SBD"/>
+                                            <constraint firstItem="Qmv-xl-Qk0" firstAttribute="width" secondItem="Qmv-xl-Qk0" secondAttribute="height" multiplier="1:1" id="fth-ID-uwC"/>
                                             <constraint firstAttribute="trailing" secondItem="M7G-lK-R2J" secondAttribute="trailing" constant="20" id="k0m-2m-WV9"/>
                                             <constraint firstAttribute="trailing" secondItem="QlC-54-cRt" secondAttribute="trailing" id="l1n-bD-geT"/>
                                             <constraint firstItem="FE4-jU-6Ph" firstAttribute="top" secondItem="QlC-54-cRt" secondAttribute="bottom" constant="11" id="lEN-A8-lbE"/>
+                                            <constraint firstItem="Qmv-xl-Qk0" firstAttribute="centerX" secondItem="M7G-lK-R2J" secondAttribute="centerX" id="oOt-oa-VLZ"/>
+                                            <constraint firstItem="Qmv-xl-Qk0" firstAttribute="width" secondItem="Qmv-xl-Qk0" secondAttribute="height" multiplier="1:1" id="oTd-EL-BXd"/>
                                             <constraint firstItem="M7G-lK-R2J" firstAttribute="leading" secondItem="JCq-6C-uWt" secondAttribute="leading" constant="20" id="pDe-fF-hEP"/>
                                             <constraint firstItem="QlC-54-cRt" firstAttribute="leading" secondItem="JCq-6C-uWt" secondAttribute="leading" id="pPG-QP-Q8A"/>
                                             <constraint firstItem="FE4-jU-6Ph" firstAttribute="centerX" secondItem="QlC-54-cRt" secondAttribute="centerX" id="xOa-dy-dQb"/>
@@ -2512,6 +2594,7 @@
                         <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="NO"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
+                        <outlet property="activityIndicator" destination="Qmv-xl-Qk0" id="dyb-H2-5ZJ"/>
                         <outlet property="backButton" destination="Lfh-Yv-6VE" id="Ioy-ip-Czy"/>
                         <outlet property="centralView" destination="JCq-6C-uWt" id="Eff-kF-1pU"/>
                         <outlet property="codeNumberTextField" destination="FE4-jU-6Ph" id="sgQ-Rm-jh9"/>

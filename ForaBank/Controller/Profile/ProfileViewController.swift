@@ -86,21 +86,21 @@ class ProfileViewController: UIViewController {
                 }
             } else {
                 print("ProfileViewController: \(errorMessage ?? "error without errorMessage")")
-                self?.nameLabel.text = "Александр\nКрюков"//"Упс, что-то не загрузилось"
+                self?.nameLabel.text = "Упс, что-то не загрузилось"//"Александр\nКрюков"//
                 self?.userImageView.image = UIImage(named: "image_profile_samplephoto")
-//                if NetworkManager.shared().checkForClosingSession(errorMessage) == true {
-//                    let rootVC = self?.storyboard?.instantiateViewController(withIdentifier: "LoginOrSignupViewController") as! LoginOrSignupViewController
-//                    NetworkManager.shared().logOut { [weak self] (_) in
-//                        if let t = self?.navigationController?.tabBarController as? TabBarController {
-//                            t.setNumberOfTabsAvailable()
-//                        }
-//                    }
-//                    if let pvc = self?.parent as? ProfileViewController {
-//                        pvc.segueId = "logout"
-//                    }
-//                    rootVC.segueId = "logout"
-//                    self?.navigationController?.setViewControllers([rootVC], animated: true)
-//                }
+                if NetworkManager.shared().checkForClosingSession(errorMessage) == true {
+                    let rootVC = self?.storyboard?.instantiateViewController(withIdentifier: "LoginOrSignupViewController") as! LoginOrSignupViewController
+                    NetworkManager.shared().logOut { [weak self] (_) in
+                        if let t = self?.navigationController?.tabBarController as? TabBarController {
+                            t.setNumberOfTabsAvailable()
+                        }
+                    }
+                    if let pvc = self?.parent as? ProfileViewController {
+                        pvc.segueId = "logout"
+                    }
+                    rootVC.segueId = "logout"
+                    self?.navigationController?.setViewControllers([rootVC], animated: true)
+                }
             }
         }
     }
