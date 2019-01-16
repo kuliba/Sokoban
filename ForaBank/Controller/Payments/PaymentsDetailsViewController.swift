@@ -18,19 +18,20 @@ class PaymentsDetailsViewController: UIViewController {
     @IBOutlet weak var pickerLabel: UILabel!
     @IBOutlet weak var sourceButton: UIButton!
     @IBOutlet weak var destinationButton: UIButton!
+    @IBOutlet weak var pickerButton: UIButton!
     
     var remittanceSourceView: RemittanceOptionView!
     var remittanceDestinationView: RemittanceOptionView!
-
+    var selectedViewType: Bool = false //false - source; true - destination
     // MARK: - Actions
     @IBAction func backButtonClicked(_ sender: Any) {
         dismiss(animated: true)
     }
     
-    @IBAction func pickerButtonClicked(_ sender: Any) {
+    @IBAction func pickerButtonClicked(_ sender: UIButton) {
         if let vc = UIStoryboard(name: "Payment", bundle: nil)
             .instantiateViewController(withIdentifier: "ppvc") as? OptionPickerViewController {
-            
+            sender.isEnabled = false
             // Pass picker frame to determine picker popup coordinates
             vc.pickerFrame = picker.convert(pickerLabel.frame, to: view)
             
@@ -39,10 +40,10 @@ class PaymentsDetailsViewController: UIViewController {
             present(vc, animated: true, completion: nil)
         }
     }
-    @IBAction func pickerSourceButtonClicked(_ sender: Any) {
+    @IBAction func pickerSourceButtonClicked(_ sender: UIButton) {
         if let vc = UIStoryboard(name: "Payment", bundle: nil)
             .instantiateViewController(withIdentifier: "opvc") as? RemittancePickerViewController {
-            
+            sender.isEnabled = false
             // Pass picker frame to determine picker popup coordinates
             var r = sourceButton.convert(sourceButton.frame, to: view)
             r.origin.x += 15
@@ -51,13 +52,14 @@ class PaymentsDetailsViewController: UIViewController {
             
             vc.pickerOptions = [.card, .safeDeposit]
             vc.delegate = self
+            selectedViewType = false
             present(vc, animated: true, completion: nil)
         }
     }
-    @IBAction func pickerDestinationButtonClicked(_ sender: Any) {
+    @IBAction func pickerDestinationButtonClicked(_ sender: UIButton) {
         if let vc = UIStoryboard(name: "Payment", bundle: nil)
             .instantiateViewController(withIdentifier: "opvc") as? RemittancePickerViewController {
-            
+            sender.isEnabled = false
             // Pass picker frame to determine picker popup coordinates
             var r = destinationButton.convert(destinationButton.bounds, to: view)
             r.origin.x += 15
@@ -66,6 +68,7 @@ class PaymentsDetailsViewController: UIViewController {
             
             vc.pickerOptions = [.safeDeposit, .card, .friend]
             vc.delegate = self
+            selectedViewType = true
             present(vc, animated: true, completion: nil)
         }
     }
@@ -176,6 +179,7 @@ extension PaymentsDetailsViewController: OptionPickerDelegate {
         if let option = option {
             pickerLabel.text = option
         }
+        pickerButton.isEnabled = true
     }
 }
 
@@ -201,6 +205,20 @@ extension PaymentsDetailsViewController: RemittancePickerDelegate {
     }
     
     func didSelectOptionView(option: RemittanceOptionView?) {
-        
+        if selectedViewType {
+            let frame = remittanceDestinationView.frame
+            remittanceDestinationView.removeFromSuperview()
+            remittanceDestinationView = option
+            remittanceDestinationView.frame = frame
+            destinationButton.addSubview(remittanceDestinationView)
+            destinationButton.isEnabled = true
+        } else {
+            let frame = remittanceSourceView.frame
+            remittanceSourceView.removeFromSuperview()
+            remittanceSourceView = option
+            remittanceSourceView.frame = frame
+            sourceButton.addSubview(remittanceSourceView)
+            sourceButton.isEnabled = true
+        }
     }
 }

@@ -61,6 +61,7 @@ class RemittancePickerViewController: UIViewController {
         
         view.addSubview(dismissLayerButton)
         view.addSubview(pickerPopupView)
+        optionViews = [RemittanceOptionView]()
         addPickerOptions()
     }
 }
@@ -86,7 +87,9 @@ private extension RemittancePickerViewController {
             let v = RemittanceOptionView(withType: o)
             delegate?.setUpOption(withView: v, atIndex: i)
             v.translatesAutoresizingMaskIntoConstraints = false
-            
+            v.tag = i
+            v.isUserInteractionEnabled = false
+            optionViews.append(v)
             b.addSubview(v)
             b.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-5-[v]-5-|", options: [], metrics: nil, views: ["v":v]))
             b.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[v]|", options: [], metrics: nil, views: ["v":v]))

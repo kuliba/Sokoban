@@ -132,6 +132,8 @@
 		89C8DF122191AFA700D92B0A /* DepositsDepositCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C8DF102191AFA600D92B0A /* DepositsDepositCell.swift */; };
 		89C8DF132191AFA700D92B0A /* DepositsDepositCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89C8DF112191AFA700D92B0A /* DepositsDepositCell.xib */; };
 		A5004D3121EF37DC0098E510 /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5004D3021EF37DC0098E510 /* ActivityIndicatorView.swift */; };
+		A5004D3321EF56CF0098E510 /* CardBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5004D3221EF56CF0098E510 /* CardBank.swift */; };
+		A5004D3521EF56DD0098E510 /* CardBrand.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5004D3421EF56DD0098E510 /* CardBrand.swift */; };
 		A51AF85021EA093800FB3B68 /* RegService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A51AF84F21EA093800FB3B68 /* RegService.swift */; };
 		A51AF85221EA09E600FB3B68 /* TestRegService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A51AF85121EA09E600FB3B68 /* TestRegService.swift */; };
 		A528EF4021B00C9300D189DD /* MonthCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A528EF3F21B00C9300D189DD /* MonthCollectionViewCell.swift */; };
@@ -311,6 +313,8 @@
 		89C8DF102191AFA600D92B0A /* DepositsDepositCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsDepositCell.swift; sourceTree = "<group>"; };
 		89C8DF112191AFA700D92B0A /* DepositsDepositCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DepositsDepositCell.xib; sourceTree = "<group>"; };
 		A5004D3021EF37DC0098E510 /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
+		A5004D3221EF56CF0098E510 /* CardBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardBank.swift; sourceTree = "<group>"; };
+		A5004D3421EF56DD0098E510 /* CardBrand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardBrand.swift; sourceTree = "<group>"; };
 		A51AF84F21EA093800FB3B68 /* RegService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegService.swift; sourceTree = "<group>"; };
 		A51AF85121EA09E600FB3B68 /* TestRegService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestRegService.swift; sourceTree = "<group>"; };
 		A528EF3F21B00C9300D189DD /* MonthCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -565,6 +569,8 @@
 				A55B7B8721AA698900A8A7FE /* ChatMessage.swift */,
 				0942B86C21625F7800370C71 /* Friend.swift */,
 				A5C5E6DF21A2B443001D6250 /* Card.swift */,
+				A5004D3221EF56CF0098E510 /* CardBank.swift */,
+				A5004D3421EF56DD0098E510 /* CardBrand.swift */,
 				A568143721D35FEB002C0899 /* Transaction.swift */,
 				A568141E21CBCCB3002C0899 /* BankBranch.swift */,
 				A568142021CBCD03002C0899 /* BankBranchAnnotation.swift */,
@@ -1057,6 +1063,7 @@
 				A5C5C03C21B66485005D6B8F /* BubbleDetailedStatsView.swift in Sources */,
 				A55B7B9021AAAAB300A8A7FE /* ChatMessagesTransferRequestTableViewCell.swift in Sources */,
 				A55B7B5721A5866F00A8A7FE /* UIImage+GIF.swift in Sources */,
+				A5004D3321EF56CF0098E510 /* CardBank.swift in Sources */,
 				09C7C31221749151000EE472 /* DepositsObligationsCell.swift in Sources */,
 				096B4F502183257300C69E52 /* ThreeViewController.swift in Sources */,
 				0941525B219028000068B6B1 /* SignInViewController.swift in Sources */,
@@ -1084,6 +1091,7 @@
 				09AF707E216F676300E7FCFC /* FeedCurrentViewController.swift in Sources */,
 				09F2410121707B3B007B7D73 /* FeedInfo1Cell.swift in Sources */,
 				0904505D216B774600F3B295 /* FeedOfferCustom1Cell.swift in Sources */,
+				A5004D3521EF56DD0098E510 /* CardBrand.swift in Sources */,
 				09D3C048215E07DB00998F57 /* ChatMessagesViewController.swift in Sources */,
 				09FC8FED215BB2B200A4694B /* ProfileMenuTableViewController.swift in Sources */,
 				A568142121CBCD03002C0899 /* BankBranchAnnotation.swift in Sources */,
