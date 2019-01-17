@@ -1435,7 +1435,7 @@
                                                                             <constraint firstAttribute="height" constant="22" id="J6R-e2-iIE"/>
                                                                         </constraints>
                                                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                        <state key="normal" backgroundImage="unselected_checkbox"/>
+                                                                        <state key="normal" backgroundImage="reg_unselected_checkbox"/>
                                                                         <state key="selected" image="chat_message_confirm" backgroundImage="unagry"/>
                                                                         <connections>
                                                                             <action selector="acceptAgreement:" destination="qDb-5Z-fyW" eventType="touchUpInside" id="eCE-NU-c2i"/>
@@ -2655,13 +2655,13 @@
         <image name="icon_profile_signout" width="17" height="16"/>
         <image name="lock" width="16" height="17"/>
         <image name="ok" width="229" height="198"/>
+        <image name="reg_unselected_checkbox" width="22" height="22"/>
         <image name="ru-vtb24" width="600" height="165"/>
         <image name="tabbar_icon_4" width="16" height="16"/>
         <image name="tabbar_icon_profile" width="25" height="23"/>
         <image name="touch" width="20" height="20"/>
         <image name="touchid" width="93" height="93"/>
         <image name="unagry" width="22" height="22"/>
-        <image name="unselected_checkbox" width="22" height="22"/>
         <image name="visa-colored" width="22.319999694824219" height="14.399999618530273"/>
     </resources>
 </document>
