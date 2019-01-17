@@ -142,7 +142,7 @@ extension UISegmentedControl {
 }
 
 extension UIColor {
-    convenience init(hexFromString:String, alpha:CGFloat = 1.0) {
+    convenience init?(hexFromString:String, alpha:CGFloat = 1.0) {
         var cString:String = hexFromString.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
         var rgbValue:UInt32 = 10066329 //color #999999 if string has wrong format
         
@@ -152,6 +152,8 @@ extension UIColor {
         
         if ((cString.count) == 6) {
             Scanner(string: cString).scanHexInt32(&rgbValue)
+        } else {
+            return nil
         }
         
         self.init(

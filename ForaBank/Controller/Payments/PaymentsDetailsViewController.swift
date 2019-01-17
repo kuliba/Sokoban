@@ -210,6 +210,7 @@ extension PaymentsDetailsViewController: RemittancePickerDelegate {
             remittanceDestinationView.removeFromSuperview()
             remittanceDestinationView = option
             remittanceDestinationView.frame = frame
+            remittanceDestinationView.translatesAutoresizingMaskIntoConstraints = true
             destinationButton.addSubview(remittanceDestinationView)
             destinationButton.isEnabled = true
         } else {
@@ -217,6 +218,7 @@ extension PaymentsDetailsViewController: RemittancePickerDelegate {
             remittanceSourceView.removeFromSuperview()
             remittanceSourceView = option
             remittanceSourceView.frame = frame
+            remittanceSourceView.translatesAutoresizingMaskIntoConstraints = true
             sourceButton.addSubview(remittanceSourceView)
             sourceButton.isEnabled = true
         }

@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum CardBrand: RawRepresentable {
+enum CardBrand: RawRepresentable, CaseIterable {
     case visa
     case masterCard
     case americanExpress

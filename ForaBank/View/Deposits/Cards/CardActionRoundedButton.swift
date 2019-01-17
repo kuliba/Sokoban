@@ -29,7 +29,7 @@ class CardActionRoundedButton: UIButton {
         self.layer.cornerRadius = 22.5
         self.backgroundColor = .clear
         self.layer.borderWidth = 0.5
-        self.layer.borderColor = UIColor(hexFromString: "D3D3D3").cgColor
+        self.layer.borderColor = UIColor(hexFromString: "D3D3D3")!.cgColor
     }
     
     required init?(coder aDecoder: NSCoder) {

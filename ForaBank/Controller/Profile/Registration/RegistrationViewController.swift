@@ -22,7 +22,7 @@ class RegistrationViewController: UIViewController {
     @IBOutlet weak var scanCardButton: UIButton!
     
     @IBOutlet weak var segmentedControl: UISegmentedControl!
-    @IBOutlet weak var cardView: UIView!
+    @IBOutlet weak var cardView: CardView!
     @IBOutlet weak var cardNumberLabelView: UILabel!
     @IBOutlet weak var dateLabelView: UILabel!
     @IBOutlet weak var cvvLabelView: UILabel!
@@ -43,6 +43,10 @@ class RegistrationViewController: UIViewController {
     @IBOutlet weak var header: UIView!
     @IBOutlet weak var activityIndicator: ActivityIndicatorView!
     
+    @IBOutlet weak var brandLogo: UIImageView!
+    @IBOutlet weak var bankLogo: UIImageView!
+    @IBOutlet weak var bankLogoWidth: NSLayoutConstraint!
+    
     var previousSegment = 0
     
     var previousTextFieldContent: String?
@@ -59,6 +63,8 @@ class RegistrationViewController: UIViewController {
     
     var checkedCardNumber: String? = nil
     var needAnimateCard:Bool = false
+    
+    var banks: [CardBank]? = nil
     // MARK: - Actions
     @IBAction func backButtonCLicked(_ sender: Any) {
         segueId = backSegueId
@@ -152,9 +158,20 @@ class RegistrationViewController: UIViewController {
             monthTextField.text?.count ?? 0 != 0,
         yearTextField.text?.count ?? 0 != 0,
             cvvTextField.text?.count ?? 0 == 3 {
-            setCardToSberbank()
+            if textField.tag == 4 {
+                UIView.transition(with: cardView, duration: 0.5, options: .transitionFlipFromLeft, animations: {
+                    self.identifyBank()
+                })
+            } else {
+                identifyBank()
+            }
         } else {
+            cardNumberLabelView.isHidden = false
+            bankLogo.isHidden = true
+            brandLogo.isHidden = true
+            
             self.cardView.backgroundColor = .white
+            self.cardView.gradientLayer.opacity = 0
             
             self.cardNumberLabelView.textColor = UIColor(hexFromString: "#9B9B9B")
             self.dateLabelView.textColor = UIColor(hexFromString: "#9B9B9B")
@@ -197,6 +214,21 @@ class RegistrationViewController: UIViewController {
             head.gradientLayer.endPoint = CGPoint(x: 1, y: 1)
             head.gradientLayer.colors = [UIColor(red: 237/255, green: 73/255, blue: 73/255, alpha: 1).cgColor, UIColor(red: 241/255, green: 176/255, blue: 116/255, alpha: 1).cgColor]
         }
+        
+        if let banksAsset = NSDataAsset(name: "banks") {
+            let banksData = banksAsset.data
+            let decoder = JSONDecoder()
+            
+            if let banks = try? decoder.decode(CardBanks.self, from: banksData) {
+                self.banks = banks.banks
+//                for b in banks.banks {
+//                    print(b)
+                    
+//                }
+            } else {
+                print("banks decoding failed")
+            }
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -207,8 +239,19 @@ class RegistrationViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        if needAnimateCard {
-            setCardToSberbank()
+        if cardNumberTextField.text?.count ?? 0 != 0,
+            monthTextField.text?.count ?? 0 != 0,
+            yearTextField.text?.count ?? 0 != 0,
+            cvvTextField.text?.count ?? 0 == 3 {
+            if needAnimateCard {
+                UIView.transition(with: cardView, duration: 0.5, options: .transitionFlipFromLeft, animations: {
+                    self.identifyBank()
+                }) { (_) in
+                    self.needAnimateCard = false
+                }
+            } else {
+                identifyBank()
+            }
         }
         if segueId == "Registration" {
             if let nav = navigationController as? ProfileNavigationController,
@@ -557,46 +600,75 @@ extension RegistrationViewController: UITextFieldDelegate {
         return true
     }
     
-    func setCardToSberbank() {
-        if self.cardView.backgroundColor != .white {
-            return //already set
+    func identifyBank() {
+        
+        guard let cardNumber = cardNumberTextField.text?.removeWhitespace() else {
+            return
         }
-        UIView.transition(with: cardView, duration: 0.5, options: .transitionFlipFromLeft, animations: {
-//            print(self.cardView.backgroundColor)
-//            print(self.cardNumberLabelView.textColor)
-//            print(self.dateLabelView.textColor)
-//            print(self.cvvLabelView.textColor)
-//            print(self.scanCardButton.tintColor)
-//            print(self.cardNumberTextField.tintColor)
-//            print(self.monthTextField.tintColor)
-//            print(self.yearTextField.tintColor)
-//            print(self.cvvTextField.tintColor)
-//            print(self.cardNumberTextField.textColor)
-//            print(self.monthTextField.textColor)
-//            print(self.yearTextField.textColor)
-//            print(self.cvvTextField.textColor)
-            self.cardView.backgroundColor = UIColor(red: 44/255, green: 202/255, blue: 170/255, alpha: 1)
-            
-            self.cardNumberLabelView.textColor = .white
-            self.dateLabelView.textColor = .white
-            self.cvvLabelView.textColor = .white
-            
-//            self.scanCardButton.setImage(self.scanCardButton.image(for: [])?.withRenderingMode(.alwaysTemplate), for: [])
-            self.scanCardButton.tintColor = .white
-            
-            self.cardNumberTextField.tintColor = .white
-            self.monthTextField.tintColor = .white
-            self.yearTextField.tintColor = .white
-            self.cvvTextField.tintColor = .white
-            
-            self.cardNumberTextField.textColor = .white
-            self.monthTextField.textColor = .white
-            self.yearTextField.textColor = .white
-            self.cvvTextField.textColor = .white
-            self.continueButton.isHidden = false
-        }) { (_) in
-            self.needAnimateCard = false
+        
+        brandLogo.isHidden = true
+        CardBrand.allCases.forEach { (brand) in
+            if cardNumber.range(of: brand.rawValue.0, options: .regularExpression, range: nil, locale: nil) != nil {
+                brandLogo.image = UIImage(named: brand.rawValue.1)
+                brandLogo.isHidden = false
+            }
         }
+        var identifiedBank: CardBank? = nil
+        for b in banks ?? [] {
+            for p in b.prefixes ?? [] {
+                if cardNumber.starts(with: p) {
+                    identifiedBank = b
+                }
+            }
+        }
+        cardNumberLabelView.isHidden = false
+        bankLogo.isHidden = true
+        self.cardView.backgroundColor = .white
+        self.cardView.gradientLayer.opacity = 0
+        var textColor: UIColor = UIColor(hexFromString: "#9B9B9B")!
+        var scanButtonColor: UIColor = UIColor(hexFromString: "#B5B5B5")!
+        var tintColor: UIColor = .black
+        if let bank = identifiedBank {
+            if let c1 = UIColor(hexFromString: bank.backgroundColors?[0] ?? ""),
+                let c2 = UIColor(hexFromString: bank.backgroundColors?[1] ?? ""){
+                self.cardView.color1 = c1
+                self.cardView.color1 = c2
+                self.cardView.gradientLayer.opacity = 1
+            }
+            if let bc = UIColor(hexFromString: bank.backgroundColor ?? "") {
+                self.cardView.backgroundColor = bc
+            }
+            
+            if let bankImage = UIImage(named: bank.alias ?? "") {
+                bankLogo.image = bankImage
+                print(bankImage.size)
+                let maxHeight: CGFloat = (bankImage.size.width/bankImage.size.height > 2.4) ? 20 : 30
+                bankLogoWidth.constant = bankImage.size.width * maxHeight / bankImage.size.height
+                cardNumberLabelView.isHidden = true
+                bankLogo.isHidden = false
+            }
+            if let tc = UIColor(hexFromString: bank.textColor ?? "") {
+                textColor = tc
+                tintColor = tc
+                scanButtonColor = tc
+            }
+        }
+        self.cardNumberLabelView.textColor = textColor
+        self.dateLabelView.textColor = textColor
+        self.cvvLabelView.textColor = textColor
+        
+        self.scanCardButton.tintColor = scanButtonColor
+        
+        self.cardNumberTextField.tintColor = tintColor
+        self.monthTextField.tintColor = tintColor
+        self.yearTextField.tintColor = tintColor
+        self.cvvTextField.tintColor = tintColor
+        
+        self.cardNumberTextField.textColor = tintColor
+        self.monthTextField.textColor = tintColor
+        self.yearTextField.textColor = tintColor
+        self.cvvTextField.textColor = tintColor
+        self.continueButton.isHidden = false
     }
 }
 

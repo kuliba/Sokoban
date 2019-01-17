@@ -110,7 +110,7 @@ class DepositsCardsListViewController: UIViewController {
     
     let blockCardButton: CardActionRoundedButton = {
         let b = CardActionRoundedButton()
-        b.layer.borderColor = UIColor(hexFromString: "EC433D").cgColor
+        b.layer.borderColor = UIColor(hexFromString: "EC433D")!.cgColor
         b.tintColor = .red
         
         let templateImage = UIImage(named: "deposits_cards_details_management_block_icon")?

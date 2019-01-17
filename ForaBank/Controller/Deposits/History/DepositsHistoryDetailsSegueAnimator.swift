@@ -79,8 +79,8 @@ extension DepositsHistoryDetailsSegueAnimator {
         gradientLayer.startPoint = CGPoint(x: 0, y: 1)
         gradientLayer.endPoint = CGPoint(x: 1, y: 1)
         gradientLayer.colors = [
-            UIColor(hexFromString: "ED4F48").cgColor,
-            UIColor(hexFromString: "9F3057").cgColor
+            UIColor(hexFromString: "ED4F48")!.cgColor,
+            UIColor(hexFromString: "9F3057")!.cgColor
         ]
         fromVCsnapshot.layer.opacity = 0
         toVCsnapshot.layer.opacity = 0
@@ -204,8 +204,8 @@ extension DepositsHistoryDetailsSegueAnimator {
         gradientLayer.startPoint = CGPoint(x: 0, y: 1)
         gradientLayer.endPoint = CGPoint(x: 1, y: 1)
         gradientLayer.colors = [
-            UIColor(hexFromString: "ED4F48").cgColor,
-            UIColor(hexFromString: "9F3057").cgColor
+            UIColor(hexFromString: "ED4F48")!.cgColor,
+            UIColor(hexFromString: "9F3057")!.cgColor
         ]
         fromVCsnapshot.layer.opacity = 0
         toVCsnapshot.layer.opacity = 0

@@ -53,7 +53,7 @@ class ChatMessagesTransferRequestTableViewCell: UITableViewCell {
         b.layer.cornerRadius = 22.5
         b.backgroundColor = .clear
         b.layer.borderWidth = 0.5
-        b.layer.borderColor = UIColor(hexFromString: "D3D3D3").cgColor
+        b.layer.borderColor = UIColor(hexFromString: "D3D3D3")!.cgColor
         b.tintColor = .black
         b.setAttributedTitle(NSAttributedString(string: "Отправить", attributes: [.font:UIFont.systemFont(ofSize: 16)]), for: .normal)
         b.translatesAutoresizingMaskIntoConstraints = false
