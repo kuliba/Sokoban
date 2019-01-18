@@ -9,6 +9,7 @@
 import UIKit
 import iCarousel
 import DeviceKit
+import Hero
 
 class FeedViewController: UIViewController {
     
@@ -71,6 +72,7 @@ class FeedViewController: UIViewController {
         
         containerView.addGestureRecognizer(leftSwipeRecognizer)
         containerView.addGestureRecognizer(rightSwipeRecognizer)
+        hero.isEnabled = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -87,7 +89,46 @@ class FeedViewController: UIViewController {
                 self.carousel.scrollToItem(at: 0, animated: false)
             }
             self.showComponent(index: 2)
+        }
+        containerView.hero.modifiers = [
+            HeroModifier.duration(0.5),
+            HeroModifier.delay(0.2),
+            HeroModifier.translate(CGPoint(x: 0, y: view.frame.height))
+        ]
+        view.hero.modifiers = [
+            HeroModifier.beginWith([HeroModifier.opacity(1)]),
+            HeroModifier.duration(0.5),
+//            HeroModifier.delay(0.2),
+            HeroModifier.opacity(0)
+        ]
+        containerView.hero.id = "c"
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        containerView.hero.modifiers = nil
+        containerView.hero.id = nil
+        view.hero.modifiers = nil
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        containerView.hero.modifiers = [
+            HeroModifier.duration(0.5),
+            HeroModifier.translate(CGPoint(x: 0, y: view.frame.height))
+        ]
+        view.hero.modifiers = [
+            HeroModifier.duration(0.5),
+            HeroModifier.opacity(0)
+        ]
+        containerView.hero.id = "c"
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        containerView.hero.modifiers = nil
+        containerView.hero.id = nil
+        view.hero.modifiers = nil
     }
     
     override func viewDidLayoutSubviews() {

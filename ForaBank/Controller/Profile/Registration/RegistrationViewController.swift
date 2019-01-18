@@ -239,6 +239,16 @@ class RegistrationViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if !animated { return }
+//        Hero.shared.state = HeroTransitionState.animating
+        print("Reg viewWillAppear")
+        print(Hero.shared.isTransitioning)
+        print(Hero.shared.isPresenting)
+        if Hero.shared.isPresenting == false {
+            print("cancel")
+            Hero.shared.finish()
+        }
         if cardNumberTextField.text?.count ?? 0 != 0,
             monthTextField.text?.count ?? 0 != 0,
             yearTextField.text?.count ?? 0 != 0,
@@ -308,6 +318,8 @@ class RegistrationViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        print("Reg viewDidAppear")
         if let nav = navigationController as? ProfileNavigationController,
             pageControl != nil {
             nav.pageControl.isHidden = true
@@ -325,6 +337,10 @@ class RegistrationViewController: UIViewController {
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        if !animated { return }
+        print("Reg viewWillDisappear")
+        print(Hero.shared.isTransitioning)
+        print(Hero.shared.isPresenting)
         if segueId == "Registration" {
             if let nav = navigationController as? ProfileNavigationController {
                 nav.pageControl.isHidden = true
@@ -362,6 +378,10 @@ class RegistrationViewController: UIViewController {
     }
     
     override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        print("Reg viewDidDisappear")
+        
         if let nav = navigationController as? ProfileNavigationController {
             nav.pageControl.isHidden = true
             pageControl.isHidden = false

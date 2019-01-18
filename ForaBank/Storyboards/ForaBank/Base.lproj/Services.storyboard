@@ -109,7 +109,7 @@
                                 <rect key="frame" x="0.0" y="20" width="320" height="30"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Услуги и сервисы" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="05D-Hx-0wR">
-                                        <rect key="frame" x="93.5" y="11" width="133.5" height="19"/>
+                                        <rect key="frame" x="93.5" y="8.5" width="133.5" height="21.5"/>
                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -154,9 +154,13 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Платежи и переводы" id="N1c-5J-gpe"/>
                     <size key="freeformSize" width="320" height="568"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="YES"/>
+                    </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="annotationsInfoHeight" destination="nUW-Iw-BUI" id="cQc-fI-Xge"/>
                         <outlet property="annotationsInfoView" destination="wgf-Im-hTM" id="via-KI-68U"/>
+                        <outlet property="containerView" destination="5VF-sr-6Ly" id="WRb-dH-y9V"/>
                         <outlet property="focusButton" destination="3xC-h5-F9E" id="KRG-w7-Eof"/>
                         <outlet property="mapView" destination="r2X-DS-9gL" id="mvD-Za-KId"/>
                         <outlet property="tableView" destination="k7i-Nb-NW9" id="SL8-uU-8Ss"/>

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Hero
 
 class DepositsCardsDetailsManagementViewController: UITableViewController {
     
@@ -22,11 +23,29 @@ class DepositsCardsDetailsManagementViewController: UITableViewController {
         
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        hero.isEnabled = true
+        hero.modalAnimationType = .none
     }
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let scrollUserInfo = ["tableView": tableView]
         NotificationCenter.default.post(name: NSNotification.Name("TableViewScrolled"), object: nil, userInfo: scrollUserInfo as [AnyHashable: Any])
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.hero.modifiers = [
+            HeroModifier.beginWith([HeroModifier.opacity(1),
+                                    HeroModifier.zPosition(5)]),
+            HeroModifier.duration(0.5),
+            HeroModifier.delay(0.5),
+            HeroModifier.opacity(0)
+        ]
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        tableView.hero.modifiers = nil
     }
     
     // MARK: - Table view data source

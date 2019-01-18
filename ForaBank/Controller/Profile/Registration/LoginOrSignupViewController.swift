@@ -29,20 +29,14 @@ class LoginOrSignupViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        print("viewDidLayoutSubviews")
+//        print("viewDidLayoutSubviews")
         setButtonsAppearance()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        backgroundImageView.isHidden = false
-        if segueId == "SignIn" || segueId == "Registration" {
-//            backgroundImageView.hero.modifiers = [
-//                HeroModifier.duration(0.6),
-//                HeroModifier.delay(0.2),
-//                HeroModifier.translate(CGPoint(x: 20, y: 0)),
-//                HeroModifier.opacity(0)
-//            ]
+        print("Start viewWillAppear")
+        if segueId == "SignIn" || segueId == "Registration" || segueId == nil {
             containerView.hero.modifiers = [
                 HeroModifier.duration(0.5),
                 HeroModifier.delay(0.2),
@@ -50,101 +44,78 @@ class LoginOrSignupViewController: UIViewController {
             ]
         }
         if segueId == "logout" {
-//            backgroundImageView.hero.modifiers = [
-//                HeroModifier.duration(0.6),
-//                HeroModifier.delay(0.2),
-//                HeroModifier.translate(CGPoint(x: 20, y: 0)),
-//                HeroModifier.opacity(0)
-//            ]
             containerView.hero.modifiers = [
                 HeroModifier.duration(0.5),
                 HeroModifier.delay(0.2),
                 HeroModifier.opacity(0)
             ]
         }
-        backgroundImageView.bounds.origin.x = 0
+//        print(animator)
         backgroundImageView.alpha = 0
         self.backgroundImageView.transform = CGAffineTransform(translationX: 20, y: 0)
-        animator = UIViewPropertyAnimator(duration: 2, curve: .linear, animations: {
-//            self.backgroundImageView.bounds.origin.x = -20
-            self.backgroundImageView.transform = CGAffineTransform.identity
-            self.backgroundImageView.alpha = 0.1
-//            self.view.layoutIfNeeded()
-        })
-//        animator = UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 2, delay: 0, options: .beginFromCurrentState, animations: {
+//        animator = UIViewPropertyAnimator(duration: 2, curve: .linear, animations: {
+//            print("block")
+//            print(self.backgroundImageView.transform)
+//            print(self.backgroundImageView.bounds)
+//            print(self.backgroundImageView.frame)
+//            print(self.backgroundImageView.alpha)
 //            self.backgroundImageView.transform = CGAffineTransform.identity
 //            self.backgroundImageView.alpha = 0.1
-//        }, completion: { (pos) in
-//            self.backgroundImageView.transform = CGAffineTransform.identity
-//            print("kek")
+////            self.view.layoutIfNeeded()
 //        })
-//        animator?.addCompletion({ (pos) in
-//            print("kek")
-//        })
-        animator?.startAnimation()
+//        animator?.startAnimation()
+//        print(animator)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        backgroundImageView.hero.modifiers = nil
         containerView.hero.modifiers = nil
+//        backgroundImageView.alpha = 0
+//        self.backgroundImageView.transform = CGAffineTransform(translationX: 20, y: 0)
+        UIView.animate(withDuration: 2, delay: 0, options: .beginFromCurrentState, animations: {
+            self.backgroundImageView.transform = CGAffineTransform.identity
+            self.backgroundImageView.alpha = 0.1
+        }, completion: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 //        animator?.pauseAnimation()
-        let position = backgroundImageView.layer.position
-        let alpha = backgroundImageView.alpha
-        backgroundImageView.center = position
-        backgroundImageView.alpha = alpha
-        animator?.pauseAnimation()
-        animator?.stopAnimation(true)
-//        backgroundImageView.isHidden = true
-        if segueId == "SignIn" || segueId == "Registration" {
-//            backgroundImageView.hero.modifiers = [
-//                HeroModifier.duration(0.5),
-//                HeroModifier.translate(CGPoint(x: 20, y: 0)),
-//                HeroModifier.opacity(0)
-//            ]
+//        let position = backgroundImageView.layer.position
+//        let alpha = backgroundImageView.alpha
+//        backgroundImageView.center = position
+//        backgroundImageView.alpha = alpha
+//
+//        animator?.stopAnimation(true)
+//        animator?.finishAnimation(at: UIViewAnimatingPosition.current)
+        if segueId == "SignIn" || segueId == "Registration" || segueId == nil {
             containerView.hero.modifiers = [
                 HeroModifier.duration(0.5),
-//                HeroModifier.delay(0.3),
                 HeroModifier.opacity(0)
             ]
-//            backgroundImageView.hero.modifiers = [
-//                HeroModifier.duration(0.5),
-//                HeroModifier.opacity(0),
-//                HeroModifier.be
-//            ]
         }
         
-        animator = UIViewPropertyAnimator(duration: 0.5, curve: .linear, animations: {
-            self.backgroundImageView.transform = CGAffineTransform.identity
-            self.backgroundImageView.alpha = 0
-        })
-//        animator = UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.5, delay: 0, options: .beginFromCurrentState, animations: {
+//        animator = UIViewPropertyAnimator(duration: 0.5, curve: .linear, animations: {
+//            print("huek")
+//            print(self.backgroundImageView.transform)
+//            print(self.backgroundImageView.bounds)
+//            print(self.backgroundImageView.frame)
+//            print(self.backgroundImageView.alpha)
 //            self.backgroundImageView.transform = CGAffineTransform.identity
 //            self.backgroundImageView.alpha = 0
-//        }, completion: { (pos) in
-//            print("lil")
 //        })
-//        animator?.addCompletion({ (pos) in
-//            print("lil")
-//        })
-        animator?.startAnimation()
+//        animator?.startAnimation()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-//        backgroundImageView.alpha = 0
-        backgroundImageView.hero.modifiers = nil
         containerView.hero.modifiers = nil
     }
     
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        print("viewWillLayoutSubviews")
-    }
+//    override func viewWillLayoutSubviews() {
+//        super.viewWillLayoutSubviews()
+//        print("viewWillLayoutSubviews")
+//    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         segueId = nil

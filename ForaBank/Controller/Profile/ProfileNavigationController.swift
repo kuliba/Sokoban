@@ -17,7 +17,7 @@ class ProfileNavigationController: UINavigationController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("viewDidLoad")
+        print("ProfileNavigationController viewDidLoad")
         hero.navigationAnimationType = .none
         
         NetworkManager.shared().isSignedIn { [unowned self] (flag) in
@@ -78,5 +78,31 @@ class ProfileNavigationController: UINavigationController {
     override func pushViewController(_ viewController: UIViewController, animated: Bool) {
         super.pushViewController(viewController, animated: animated)
         self.view.bringSubviewToFront(pageControl)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        print("Pro viewWillAppear")
+        print(Hero.shared.isTransitioning)
+        print(Hero.shared.isPresenting)
+        if Hero.shared.isPresenting == false {
+            print("cancel")
+            Hero.shared.finish()
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        print("Pro viewDidAppear")
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        print("Pro viewWillDisappear")
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        print("Pro viewDidDisappear")
     }
 }

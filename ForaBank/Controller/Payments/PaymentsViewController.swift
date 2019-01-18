@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Hero
 
 protocol Payment {
     var iconName: String { get }
@@ -35,6 +36,7 @@ class PaymentsViewController: UIViewController {
     
     // MARK: - Properties
     @IBOutlet weak var tableView: CustomTableView!
+    @IBOutlet weak var containerView: RoundedEdgeView!
     
     let templateCellId = "PaymentTemplateCell"
     let paymentCellId = "PaymentCell"
@@ -83,12 +85,48 @@ class PaymentsViewController: UIViewController {
 //            print("viewWillAppear \(flag)")
             self.isSignedUp = flag
         }
+        containerView.hero.modifiers = [
+            HeroModifier.duration(0.5),
+            HeroModifier.delay(0.2),
+            HeroModifier.translate(CGPoint(x: 0, y: view.frame.height))
+        ]
+        view.hero.modifiers = [
+            HeroModifier.beginWith([HeroModifier.opacity(1)]),
+            HeroModifier.duration(0.5),
+            //            HeroModifier.delay(0.2),
+            HeroModifier.opacity(0)
+        ]
+        containerView.hero.id = "c"
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        containerView.hero.modifiers = nil
+        containerView.hero.id = nil
+        view.hero.modifiers = nil
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        containerView.hero.modifiers = [
+            HeroModifier.duration(0.5),
+            HeroModifier.translate(CGPoint(x: 0, y: view.frame.height))
+        ]
+        view.hero.modifiers = [
+            HeroModifier.duration(0.5),
+            HeroModifier.opacity(0)
+        ]
+        containerView.hero.id = "c"
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         if let selectedRow = tableView.indexPathForSelectedRow {
             tableView.deselectRow(at: selectedRow, animated: false)
         }
+        containerView.hero.modifiers = nil
+        containerView.hero.id = nil
+        view.hero.modifiers = nil
     }
 }
 

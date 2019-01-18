@@ -7,15 +7,20 @@
 //
 
 import UIKit
+import Hero
 
 class TabBarController: UITabBarController {
-    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         //setSelectedIndexToLast()
         setNumberOfTabsAvailable()
         selectedIndex = 0
+        hero.isEnabled = true
+        hero.tabBarAnimationType = .none
+//        delegate = self
+//        self.tran
+//        Hero.shared.state = HeroTransitionState.animating
     }
     
     @IBAction func unwindSegue(segue:UIStoryboardSegue) { }
@@ -38,6 +43,47 @@ class TabBarController: UITabBarController {
             }
         }
     }
+//    override func select
+}
+
+extension TabBarController: UITabBarControllerDelegate {
+//    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+//        print(self.selectedViewController)
+//        if let fromVC = selectedViewController as? ProfileNavigationController {
+//
+//        }
+//        print(viewController)
+//        if let toVC = viewController as? ProfileNavigationController {
+//
+//        }
+//        return true
+//    }
+    
+//    public func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+//        guard tabBarController.selectedViewController !== viewController else {
+//            return false
+//        }
+//        if Hero.shared.isTransitioning {
+//            Hero.shared.cancel(animate: false)
+//        }
+//        return true
+//    }
+//
+//    public func tabBarController(_ tabBarController: UITabBarController, interactionControllerFor animationController: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+//        return interactiveTransitioning
+//    }
+//
+//    public func tabBarController(_ tabBarController: UITabBarController, animationControllerForTransitionFrom fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+//        guard !Hero.shared.isTransitioning else { return nil }
+//        Hero.shared.state = .notified
+//        let fromVCIndex = tabBarController.children.index(of: fromVC)!
+//        let toVCIndex = tabBarController.children.index(of: toVC)!
+//        Hero.shared.isPresenting = toVCIndex > fromVCIndex
+//        Hero.shared.fromViewController = fromViewController ?? fromVC
+//        Hero.shared.toViewController = toViewController ?? toVC
+//        Hero.shared.inTabBarController = true
+//        return self
+//    }
 }
 
 // MARK: - Private methods

@@ -29,6 +29,7 @@ class DepositsCardsListViewController: UIViewController {
     //
     var lastCardViewCenter: CGPoint = CGPoint.zero
     var selectedCardView: DetailedCardView? = nil
+//    var clickedCardView: DetailedCardView? = nil
     var selectedCard: Card? = nil
     
     var cardViewsTopConstraints: [NSLayoutConstraint] = [NSLayoutConstraint]()
@@ -182,23 +183,133 @@ class DepositsCardsListViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if segueId == "DepositsCardsDetailsViewController" {
-            cardViews.last?.hero.id = "card"
-            view.hero.id = "content"
             view.hero.modifiers = [
-                HeroModifier.duration(2),
-                HeroModifier.zPosition(1)
+                HeroModifier.beginWith([
+                    HeroModifier.opacity(1),
+                    HeroModifier.zPosition(4)
+                    ]),
+                HeroModifier.duration(0.5),
+                HeroModifier.opacity(0)
             ]
-            cardViews.last?.hero.modifiers = [
-                HeroModifier.duration(2),
-                HeroModifier.zPosition(2)
+            selectedCardView?.hero.id = "card"
+            selectedCardView?.hero.modifiers = [
+                HeroModifier.beginWith([
+                    HeroModifier.opacity(1),
+                    HeroModifier.zPosition(11)
+                    ]),
+                HeroModifier.duration(1),
+                HeroModifier.opacity(1),
+                HeroModifier.zPosition(11),
+//                HeroModifier.useNormalSnapshot
+            ]
+            selectedCardView?.backgroundImageView.hero.id = "backgroundImageView"
+//            selectedCardView?.backgroundImageView.hero.id = "card"
+            selectedCardView?.backgroundImageView.hero.modifiers = [
+                HeroModifier.beginWith([
+                    HeroModifier.opacity(1),
+                    HeroModifier.zPosition(8)
+                    ]),
+                HeroModifier.duration(1),
+                HeroModifier.opacity(0),
+                HeroModifier.zPosition(8)
+            ]
+            selectedCardView?.logoImageView.hero.id = "logoImageView"
+            selectedCardView?.logoImageView.hero.modifiers = [
+                    HeroModifier.beginWith([
+                        HeroModifier.opacity(0),
+                        HeroModifier.zPosition(8)
+                        ]),
+                    HeroModifier.duration(1),
+                    HeroModifier.opacity(0),
+                    HeroModifier.useNormalSnapshot
+            ]
+            selectedCardView?.paypassLogoImageView.hero.id = "paypassLogoImageView"
+            selectedCardView?.paypassLogoImageView.hero.modifiers = [
+                HeroModifier.beginWith([
+                    HeroModifier.opacity(0),
+                    HeroModifier.zPosition(8)
+                    ]),
+                HeroModifier.duration(1),
+                HeroModifier.opacity(0),
+                HeroModifier.useNormalSnapshot
+            ]
+            selectedCardView?.titleLabel.hero.id = "titleLabel"
+            selectedCardView?.titleLabel.hero.modifiers = [
+                HeroModifier.beginWith([
+                    HeroModifier.opacity(0),
+                    HeroModifier.zPosition(8)
+                    ]),
+                HeroModifier.duration(1),
+                HeroModifier.opacity(0),
+                HeroModifier.useNormalSnapshot
+            ]
+            selectedCardView?.cardNumberLabel.hero.id = "cardNumberLabel"
+            selectedCardView?.cardNumberLabel.hero.modifiers = [
+                HeroModifier.beginWith([
+                    HeroModifier.opacity(0),
+                    HeroModifier.zPosition(8)
+                    ]),
+                HeroModifier.duration(1),
+                HeroModifier.opacity(0),
+                HeroModifier.zPosition(8),
+                HeroModifier.useNormalSnapshot
+            ]
+            selectedCardView?.cardValidityPeriodLabel.hero.id = "cardValidityPeriodLabel"
+            selectedCardView?.cardValidityPeriodLabel.hero.modifiers = [
+                HeroModifier.beginWith([
+                    HeroModifier.opacity(0),
+                    HeroModifier.zPosition(8)
+                    ]),
+                HeroModifier.duration(1),
+                HeroModifier.opacity(0),
+                HeroModifier.useNormalSnapshot
+            ]
+            selectedCardView?.cardCashLabel.hero.id = "cardCashLabel"
+            selectedCardView?.cardCashLabel.hero.modifiers = [
+                HeroModifier.beginWith([
+                    HeroModifier.opacity(0),
+                    HeroModifier.zPosition(8)
+                    ]),
+                HeroModifier.duration(1),
+                HeroModifier.opacity(0),
+                HeroModifier.useNormalSnapshot,
+                HeroModifier.zPosition(8)
+            ]
+            
+            selectedCardView?.cardBlockedImageView.hero.id = "cardBlockedImageView"
+            selectedCardView?.cardBlockedImageView.hero.modifiers = [
+                HeroModifier.beginWith([
+                    HeroModifier.opacity(0),
+                    HeroModifier.zPosition(8)
+                    ]),
+                HeroModifier.duration(1),
+                HeroModifier.opacity(0),
+                HeroModifier.useNormalSnapshot
             ]
         }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        cardViews.last?.hero.id = nil
-        view.hero.id = nil
+        selectedCardView?.hero.id = nil
+        selectedCardView?.hero.modifiers = nil
+        view.hero.modifiers = nil
+        selectedCardView?.backgroundImageView.hero.id = nil
+        selectedCardView?.backgroundImageView.hero.modifiers = nil
+        selectedCardView?.logoImageView.hero.id = nil
+        selectedCardView?.logoImageView.hero.modifiers = nil
+        selectedCardView?.paypassLogoImageView.hero.id = nil
+        selectedCardView?.paypassLogoImageView.hero.modifiers = nil
+        selectedCardView?.titleLabel.hero.id = nil
+        selectedCardView?.titleLabel.hero.modifiers = nil
+        selectedCardView?.cardNumberLabel.hero.id = nil
+        selectedCardView?.cardNumberLabel.hero.modifiers = nil
+        selectedCardView?.cardValidityPeriodLabel.hero.id = nil
+        selectedCardView?.cardValidityPeriodLabel.hero.modifiers = nil
+        selectedCardView?.cardCashLabel.hero.id = nil
+        selectedCardView?.cardCashLabel.hero.modifiers = nil
+        selectedCardView?.cardBlockedImageView.hero.id = nil
+        selectedCardView?.cardBlockedImageView.hero.modifiers = nil
     }
     
     override func viewDidLayoutSubviews() {
@@ -233,6 +344,7 @@ class DepositsCardsListViewController: UIViewController {
     @objc func cardViewClicked(_ sender: UITapGestureRecognizer) {
         if let cardView = sender.view as? DetailedCardView {
             selectedCard = cardView.card
+            selectedCardView = cardView
             performSegue(withIdentifier: "DepositsCardsDetailsViewController", sender: nil)
         }
     }

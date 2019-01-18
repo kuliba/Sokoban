@@ -8,6 +8,7 @@
 
 import UIKit
 import MapKit
+import Hero
 
 class ServicesViewController: UIViewController {
     
@@ -19,6 +20,7 @@ class ServicesViewController: UIViewController {
     @IBOutlet weak var zoomOutButton: OnMapButton!
     @IBOutlet weak var zoomInButton: OnMapButton!
     @IBOutlet weak var focusButton: OnMapButton!
+    @IBOutlet weak var containerView: RoundedEdgeView!
     
     var branches = [BankBranch]()
     var annotations = [BankBranchAnnotation]()
@@ -49,11 +51,43 @@ class ServicesViewController: UIViewController {
         setUpTableView()
         self.annotationsInfoHeight.constant = 0
         mapView.isHidden = true
+        hero.isEnabled = true
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        containerView.hero.modifiers = [
+            HeroModifier.duration(0.5),
+            HeroModifier.delay(0.2),
+            HeroModifier.translate(CGPoint(x: 0, y: view.frame.height))
+        ]
+        view.hero.modifiers = [
+            HeroModifier.beginWith([HeroModifier.opacity(1)]),
+            HeroModifier.duration(0.5),
+            //            HeroModifier.delay(0.2),
+            HeroModifier.opacity(0)
+        ]
+        containerView.hero.id = "c"
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        containerView.hero.modifiers = nil
+        containerView.hero.id = nil
+        view.hero.modifiers = nil
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         view.endEditing(true)
+        containerView.hero.modifiers = [
+            HeroModifier.duration(0.5),
+            HeroModifier.translate(CGPoint(x: 0, y: view.frame.height))
+        ]
+        view.hero.modifiers = [
+            HeroModifier.duration(0.5),
+            HeroModifier.opacity(0)
+        ]
+        containerView.hero.id = "c"
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -61,6 +95,9 @@ class ServicesViewController: UIViewController {
         if let selectedRow = tableView.indexPathForSelectedRow {
             tableView.deselectRow(at: selectedRow, animated: false)
         }
+        containerView.hero.modifiers = nil
+        containerView.hero.id = nil
+        view.hero.modifiers = nil
     }
     
     @IBAction func zoomOut(_ sender: Any) {

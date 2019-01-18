@@ -38,7 +38,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="YOA-tq-CAv" firstAttribute="top" secondItem="DE7-uu-jrD" secondAttribute="top" id="Dzd-xK-Oui"/>
                             <constraint firstItem="QyL-PV-zdM" firstAttribute="trailing" secondItem="6i6-O9-AuI" secondAttribute="trailing" id="HJJ-hl-5nc"/>
@@ -421,7 +421,7 @@
                     <view key="view" contentMode="scaleToFill" id="2Cr-6Y-gsT">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="snh-2A-sDz"/>
                     </view>
                     <userDefinedRuntimeAttributes>
@@ -887,7 +887,7 @@
                                     </view>
                                     <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XIO-zo-3E1" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="261" width="320" height="307"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </containerView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GkO-fK-wGF" customClass="iCarousel">
                                         <rect key="frame" x="0.0" y="211" width="320" height="80"/>
@@ -959,8 +959,9 @@
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="static" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="50" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="XeI-RU-e7t">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <inset key="separatorInset" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
+                        <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <sections>
                             <tableViewSection id="RrX-GO-GNW">
                                 <cells>
@@ -995,6 +996,7 @@
                                                 <constraint firstAttribute="trailing" secondItem="Ete-WJ-IOX" secondAttribute="trailing" id="zZK-JA-AuZ"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="50" id="OSw-6Q-Swp">
                                         <rect key="frame" x="0.0" y="50" width="320" height="50"/>
@@ -1034,6 +1036,7 @@
                                                 <constraint firstItem="c3X-ce-kO3" firstAttribute="top" secondItem="5eY-oN-qeK" secondAttribute="top" constant="-4" id="z9e-fH-eYq"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="50" id="tQT-1C-WfR">
                                         <rect key="frame" x="0.0" y="100" width="320" height="50"/>
@@ -1073,6 +1076,7 @@
                                                 <constraint firstAttribute="bottom" secondItem="Mdy-ph-Chr" secondAttribute="bottom" constant="-2.5" id="rE5-De-Uex"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="50" id="YyK-l6-64n">
                                         <rect key="frame" x="0.0" y="150" width="320" height="50"/>
@@ -1112,6 +1116,7 @@
                                                 <constraint firstAttribute="trailing" secondItem="sfM-HM-IA4" secondAttribute="trailing" id="yN7-xL-Qos"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="50" id="c0y-Th-adW">
                                         <rect key="frame" x="0.0" y="200" width="320" height="50"/>
@@ -1151,6 +1156,7 @@
                                                 <constraint firstItem="d76-v1-A61" firstAttribute="top" secondItem="haA-be-pzq" secondAttribute="top" constant="-4" id="tKl-3w-5Wk"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="50" id="pNX-TH-61E">
                                         <rect key="frame" x="0.0" y="250" width="320" height="50"/>
@@ -1190,6 +1196,7 @@
                                                 <constraint firstItem="EnM-ui-kIT" firstAttribute="top" secondItem="7zZ-vb-399" secondAttribute="top" id="twr-sK-RIy"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="50" id="NLk-4N-9kg">
                                         <rect key="frame" x="0.0" y="300" width="320" height="50"/>
@@ -1229,6 +1236,7 @@
                                                 <constraint firstAttribute="bottom" secondItem="JHl-io-eEb" secondAttribute="bottom" constant="-2.5" id="wvf-wT-wfD"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="50" id="2OJ-0h-U6z">
                                         <rect key="frame" x="0.0" y="350" width="320" height="50"/>
@@ -1261,6 +1269,7 @@
                                                 <constraint firstItem="XN0-w4-62q" firstAttribute="centerY" secondItem="an6-E6-yyr" secondAttribute="centerY" id="xKe-zD-quT"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -1270,6 +1279,9 @@
                             <outlet property="delegate" destination="oHR-xs-SU6" id="7Oi-US-ceW"/>
                         </connections>
                     </tableView>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="YES"/>
+                    </userDefinedRuntimeAttributes>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bar-5X-qkZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

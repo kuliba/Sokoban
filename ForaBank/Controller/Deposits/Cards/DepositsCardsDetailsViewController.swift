@@ -100,36 +100,34 @@ class DepositsCardsDetailsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if segueId == "DepositsCardsDetailsViewController" {
-//            view.hero.id = "view"
-//            view.hero.modifiers = [
-//                HeroModifier.duration(2),
-//                HeroModifier.opacity(0),
-//                HeroModifier.fade
-//            ]
-//            cardView.hero.id = "card"
-//            cardView.hero.modifiers = [
-//                HeroModifier.duration(2),
-//                HeroModifier.zPosition(2)
-//            ]
-//            header.hero.id = "background"
-//            header.hero.modifiers = [
-//                HeroModifier.duration(2),
-//                HeroModifier.zPosition(0),
-//                HeroModifier.opacity(0)
-//            ]
-//            container.hero.id = "content"
-//            container.hero.modifiers = [
-//                HeroModifier.duration(2),
-//                HeroModifier.zPosition(1)
-//            ]
+            cardView.hero.id = "card"
+            cardView.hero.modifiers = [
+                HeroModifier.beginWith([
+                    HeroModifier.opacity(1),
+                    HeroModifier.zPosition(11)
+                    ]),
+                HeroModifier.duration(1),
+                HeroModifier.opacity(0),
+                HeroModifier.forceNonFade,
+                HeroModifier.zPosition(11),
+                HeroModifier.useNormalSnapshot
+            ]
+            container.hero.modifiers = [
+                HeroModifier.beginWith([
+                    HeroModifier.opacity(1),
+                    HeroModifier.zPosition(2)
+                    ]),
+                HeroModifier.duration(1),
+                HeroModifier.forceNonFade,
+                HeroModifier.opacity(1)
+            ]
         }
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         cardView.hero.id = nil
-        header.hero.id = nil
-        container.hero.id = nil
-        view.hero.id = nil
+        cardView.hero.modifiers = nil
+        container.hero.modifiers = nil
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "TransitionToSecondViewController" {
