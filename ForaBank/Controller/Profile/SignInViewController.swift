@@ -50,6 +50,7 @@ class SignInViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if segueId == "SignIn" {
+            contentView.hero.id = "content"
             contentView.hero.modifiers = [
                 HeroModifier.duration(0.5),
                 HeroModifier.delay(0.2),
@@ -90,6 +91,7 @@ class SignInViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if segueId == "SignIn" {
+            contentView.hero.id = "content"
             contentView.hero.modifiers = [
                 HeroModifier.duration(0.5),
                 HeroModifier.translate(CGPoint(x: 0, y: view.frame.height))

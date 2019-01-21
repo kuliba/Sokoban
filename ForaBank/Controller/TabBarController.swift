@@ -18,9 +18,7 @@ class TabBarController: UITabBarController {
         selectedIndex = 0
         hero.isEnabled = true
         hero.tabBarAnimationType = .none
-//        delegate = self
-//        self.tran
-//        Hero.shared.state = HeroTransitionState.animating
+        delegate = self
     }
     
     @IBAction func unwindSegue(segue:UIStoryboardSegue) { }
@@ -43,23 +41,20 @@ class TabBarController: UITabBarController {
             }
         }
     }
-//    override func select
+}
+
+// MARK: - Private methods
+private extension TabBarController {
+    
+    func setSelectedIndexToLast() {
+        guard let tabs = tabBar.items else { return }
+        selectedIndex = tabs.endIndex - 1
+    }
 }
 
 extension TabBarController: UITabBarControllerDelegate {
-//    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
-//        print(self.selectedViewController)
-//        if let fromVC = selectedViewController as? ProfileNavigationController {
-//
-//        }
-//        print(viewController)
-//        if let toVC = viewController as? ProfileNavigationController {
-//
-//        }
-//        return true
-//    }
-    
-//    public func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+        return Hero.shared.tabBarController(tabBarController, shouldSelect: viewController)
 //        guard tabBarController.selectedViewController !== viewController else {
 //            return false
 //        }
@@ -67,33 +62,13 @@ extension TabBarController: UITabBarControllerDelegate {
 //            Hero.shared.cancel(animate: false)
 //        }
 //        return true
-//    }
-//
-//    public func tabBarController(_ tabBarController: UITabBarController, interactionControllerFor animationController: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-//        return interactiveTransitioning
-//    }
-//
-//    public func tabBarController(_ tabBarController: UITabBarController, animationControllerForTransitionFrom fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-//        guard !Hero.shared.isTransitioning else { return nil }
-//        Hero.shared.state = .notified
-//        let fromVCIndex = tabBarController.children.index(of: fromVC)!
-//        let toVCIndex = tabBarController.children.index(of: toVC)!
-//        Hero.shared.isPresenting = toVCIndex > fromVCIndex
-//        Hero.shared.fromViewController = fromViewController ?? fromVC
-//        Hero.shared.toViewController = toViewController ?? toVC
-//        Hero.shared.inTabBarController = true
-//        return self
-//    }
-}
-
-// MARK: - Private methods
-private extension TabBarController {
-
-    func setSelectedIndexToLast() {
-        guard let tabs = tabBar.items else { return }
-        selectedIndex = tabs.endIndex - 1
+    }
+    
+    public func tabBarController(_ tabBarController: UITabBarController, animationControllerForTransitionFrom fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return Hero.shared.tabBarController(tabBarController, animationControllerForTransitionFrom: fromVC, to: toVC)
     }
 }
+
 
 extension TabBarController: CustomTransitionOriginator, CustomTransitionDestination {
     var fromAnimatedSubviews: [String : UIView] {

@@ -15,6 +15,7 @@ class FeedViewController: UIViewController {
     
     // MARK: - Properties
     @IBOutlet var carousel: iCarousel!
+    @IBOutlet weak var roundedView: RoundedEdgeView!
     @IBOutlet weak var containerView: UIView!
     
     lazy var leftSwipeRecognizer: UISwipeGestureRecognizer = {
@@ -90,25 +91,47 @@ class FeedViewController: UIViewController {
             }
             self.showComponent(index: 2)
         }
+//        Hero.shared.viewOrderingStrategy = .sourceViewOnTop
         containerView.hero.modifiers = [
-            HeroModifier.duration(0.5),
+            HeroModifier.duration(0.3),
             HeroModifier.delay(0.2),
-            HeroModifier.translate(CGPoint(x: 0, y: view.frame.height))
+            HeroModifier.translate(CGPoint(x: 0, y: view.frame.height)),
+            HeroModifier.useNormalSnapshot
         ]
         view.hero.modifiers = [
             HeroModifier.beginWith([HeroModifier.opacity(1)]),
             HeroModifier.duration(0.5),
-//            HeroModifier.delay(0.2),
+            //            HeroModifier.delay(0.2),
             HeroModifier.opacity(0)
         ]
-        containerView.hero.id = "c"
+//        containerView.hero.id = "c"
+//        containerView.hero.modifiers = [
+//            HeroModifier.beginWith([
+//                HeroModifier.translate(CGPoint(x: 0, y: 0)),
+//                HeroModifier.opacity(1),
+//                ]),
+//            HeroModifier.translate(CGPoint(x: 0, y: 30)),
+//            HeroModifier.opacity(0),
+//            HeroModifier.duration(0.3),
+//            HeroModifier.delay(0.4),
+//            HeroModifier.useNormalSnapshot,
+////            HeroModifier.fade,
+////            HeroModifier.zPosition(2),
+////            HeroModifier.useGlobalCoordinateSpace,
+//        ]
+        view.hero.id = "view"
+        containerView.hero.id = "content"
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+//        Hero.shared.viewOrderingStrategy = .auto
+//        roundedView.hero.modifiers = nil
+//        roundedView.hero.id = nil
+        view.hero.modifiers = nil
+        view.hero.id = nil
         containerView.hero.modifiers = nil
         containerView.hero.id = nil
-        view.hero.modifiers = nil
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -121,7 +144,8 @@ class FeedViewController: UIViewController {
             HeroModifier.duration(0.5),
             HeroModifier.opacity(0)
         ]
-        containerView.hero.id = "c"
+        view.hero.id = "view"
+        containerView.hero.id = "content"
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -129,6 +153,7 @@ class FeedViewController: UIViewController {
         containerView.hero.modifiers = nil
         containerView.hero.id = nil
         view.hero.modifiers = nil
+        view.hero.id = nil
     }
     
     override func viewDidLayoutSubviews() {
@@ -335,7 +360,8 @@ private extension FeedViewController {
         
         // TODO: Set the ending state of your constraints here
         
-        UIView.animate(withDuration: 0.25, animations: {
+//        UIView.animate(withDuration: 0.25, animations: {
+        UIView.animate(withDuration: 0.25, delay: 0, options: .beginFromCurrentState, animations: {
             oldViewController.view.alpha = 0
             oldViewController.view.bounds.origin.y -= 10
             // only need to call layoutIfNeeded here

@@ -83,7 +83,7 @@ class DepositsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         containerView.hero.modifiers = [
-            HeroModifier.duration(0.5),
+            HeroModifier.duration(0.3),
             HeroModifier.delay(0.2),
             HeroModifier.translate(CGPoint(x: 0, y: view.frame.height))
         ]
@@ -93,7 +93,7 @@ class DepositsViewController: UIViewController {
             //            HeroModifier.delay(0.2),
             HeroModifier.opacity(0)
         ]
-        containerView.hero.id = "c"
+        containerView.hero.id = "content"
     }
     
     
@@ -143,7 +143,7 @@ class DepositsViewController: UIViewController {
                 HeroModifier.duration(0.5),
                 HeroModifier.opacity(0)
             ]
-            containerView.hero.id = "c"
+            containerView.hero.id = "content"
         }
     }
     

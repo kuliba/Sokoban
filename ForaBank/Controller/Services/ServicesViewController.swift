@@ -57,7 +57,7 @@ class ServicesViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         containerView.hero.modifiers = [
-            HeroModifier.duration(0.5),
+            HeroModifier.duration(0.3),
             HeroModifier.delay(0.2),
             HeroModifier.translate(CGPoint(x: 0, y: view.frame.height))
         ]
@@ -67,13 +67,15 @@ class ServicesViewController: UIViewController {
             //            HeroModifier.delay(0.2),
             HeroModifier.opacity(0)
         ]
-        containerView.hero.id = "c"
+        view.hero.id = "view"
+        containerView.hero.id = "content"
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         containerView.hero.modifiers = nil
         containerView.hero.id = nil
         view.hero.modifiers = nil
+        view.hero.id = nil
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -87,7 +89,8 @@ class ServicesViewController: UIViewController {
             HeroModifier.duration(0.5),
             HeroModifier.opacity(0)
         ]
-        containerView.hero.id = "c"
+        view.hero.id = "view"
+        containerView.hero.id = "content"
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -98,6 +101,7 @@ class ServicesViewController: UIViewController {
         containerView.hero.modifiers = nil
         containerView.hero.id = nil
         view.hero.modifiers = nil
+        view.hero.id = nil
     }
     
     @IBAction func zoomOut(_ sender: Any) {

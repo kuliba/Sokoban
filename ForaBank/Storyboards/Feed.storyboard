@@ -21,6 +21,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ebB-aS-s1i" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="69" width="414" height="827"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nVE-ow-WwT" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="69" width="414" height="827"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -40,7 +44,11 @@
                             <constraint firstItem="x2x-JX-oHP" firstAttribute="trailing" secondItem="nVE-ow-WwT" secondAttribute="trailing" id="MgS-6f-fC0"/>
                             <constraint firstItem="nVE-ow-WwT" firstAttribute="leading" secondItem="x2x-JX-oHP" secondAttribute="leading" id="NLe-Qn-Log"/>
                             <constraint firstItem="j7l-MZ-sN0" firstAttribute="top" secondItem="rSK-hS-fQW" secondAttribute="top" id="PJy-Rx-3Pu"/>
+                            <constraint firstItem="ebB-aS-s1i" firstAttribute="leading" secondItem="x2x-JX-oHP" secondAttribute="leading" id="YKc-EP-3Tr"/>
+                            <constraint firstItem="x2x-JX-oHP" firstAttribute="trailing" secondItem="ebB-aS-s1i" secondAttribute="trailing" id="ab0-hM-Pgv"/>
+                            <constraint firstItem="ebB-aS-s1i" firstAttribute="top" secondItem="x2x-JX-oHP" secondAttribute="top" constant="25" id="gXt-AQ-ZP5"/>
                             <constraint firstAttribute="bottom" secondItem="nVE-ow-WwT" secondAttribute="bottom" id="hKQ-Zh-Mws"/>
+                            <constraint firstAttribute="bottom" secondItem="ebB-aS-s1i" secondAttribute="bottom" id="qrO-0f-Onf"/>
                             <constraint firstItem="nVE-ow-WwT" firstAttribute="top" secondItem="x2x-JX-oHP" secondAttribute="top" constant="25" id="wNg-yh-YfM"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="x2x-JX-oHP"/>
@@ -63,6 +71,7 @@
                     <connections>
                         <outlet property="carousel" destination="j7l-MZ-sN0" id="ucm-hs-79T"/>
                         <outlet property="containerView" destination="nVE-ow-WwT" id="ZZx-fq-QMh"/>
+                        <outlet property="roundedView" destination="ebB-aS-s1i" id="7ky-hi-As0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fqV-OO-KQQ" sceneMemberID="firstResponder"/>

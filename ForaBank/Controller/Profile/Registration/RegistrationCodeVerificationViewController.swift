@@ -192,6 +192,7 @@ class RegistrationCodeVerificationViewController: UIViewController{
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if segueId == "dismiss" {
+            containerView.hero.id = "content"
             containerView.hero.modifiers = [
                 HeroModifier.beginWith([
                     HeroModifier.opacity(1),
@@ -215,6 +216,7 @@ class RegistrationCodeVerificationViewController: UIViewController{
                 nav.pageControl.isHidden = true
                 pageControl.isHidden = false
             }
+            containerView.hero.id = "content"
             containerView.hero.modifiers = [
                 HeroModifier.beginWith([
                     HeroModifier.opacity(1),

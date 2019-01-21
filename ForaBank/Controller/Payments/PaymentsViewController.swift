@@ -86,7 +86,7 @@ class PaymentsViewController: UIViewController {
             self.isSignedUp = flag
         }
         containerView.hero.modifiers = [
-            HeroModifier.duration(0.5),
+            HeroModifier.duration(0.3),
             HeroModifier.delay(0.2),
             HeroModifier.translate(CGPoint(x: 0, y: view.frame.height))
         ]
@@ -96,7 +96,7 @@ class PaymentsViewController: UIViewController {
             //            HeroModifier.delay(0.2),
             HeroModifier.opacity(0)
         ]
-        containerView.hero.id = "c"
+        containerView.hero.id = "content"
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -116,7 +116,7 @@ class PaymentsViewController: UIViewController {
             HeroModifier.duration(0.5),
             HeroModifier.opacity(0)
         ]
-        containerView.hero.id = "c"
+        containerView.hero.id = "content"
     }
     
     override func viewDidDisappear(_ animated: Bool) {
