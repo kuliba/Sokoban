@@ -82,18 +82,48 @@ class DepositsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        containerView.hero.modifiers = [
-            HeroModifier.duration(0.3),
-            HeroModifier.delay(0.2),
-            HeroModifier.translate(CGPoint(x: 0, y: view.frame.height))
-        ]
-        view.hero.modifiers = [
-            HeroModifier.beginWith([HeroModifier.opacity(1)]),
-            HeroModifier.duration(0.5),
-            //            HeroModifier.delay(0.2),
-            HeroModifier.opacity(0)
-        ]
-        containerView.hero.id = "content"
+        if segueId == "DepositsCardsDetailsViewController" {
+            gradientView.hero.modifiers = [
+                HeroModifier.beginWith([
+                    HeroModifier.opacity(1),
+                    HeroModifier.zPosition(1)
+                    ]),
+                HeroModifier.duration(0.25),
+                HeroModifier.opacity(0),
+            ]
+            carousel.hero.modifiers = [
+                HeroModifier.beginWith([
+                    HeroModifier.opacity(1),
+                    HeroModifier.zPosition(1)
+                    ]),
+                HeroModifier.duration(0.25),
+                HeroModifier.opacity(0)
+            ]
+            containerView.hero.modifiers = [
+                HeroModifier.beginWith([
+                    HeroModifier.opacity(1),
+                    HeroModifier.zPosition(3)
+                    ]),
+                HeroModifier.duration(0.5),
+                HeroModifier.translate(CGPoint(x: 0, y: containerView.frame.height)),
+                HeroModifier.forceNonFade,
+                HeroModifier.zPosition(0)
+            ]
+            
+        } else {
+            containerView.hero.modifiers = [
+                HeroModifier.duration(0.3),
+                HeroModifier.delay(0.2),
+                HeroModifier.translate(CGPoint(x: 0, y: view.frame.height))
+            ]
+            view.hero.modifiers = [
+                HeroModifier.beginWith([HeroModifier.opacity(1)]),
+                HeroModifier.duration(0.5),
+                //            HeroModifier.delay(0.2),
+                HeroModifier.opacity(0)
+            ]
+            containerView.hero.id = "content"
+        }
     }
     
     
@@ -112,7 +142,7 @@ class DepositsViewController: UIViewController {
                     HeroModifier.opacity(1),
                     HeroModifier.zPosition(1)
                     ]),
-                HeroModifier.duration(0.5),
+                HeroModifier.duration(0.25),
                 HeroModifier.opacity(0),
             ]
             carousel.hero.modifiers = [
@@ -120,7 +150,7 @@ class DepositsViewController: UIViewController {
                     HeroModifier.opacity(1),
                     HeroModifier.zPosition(1)
                     ]),
-                HeroModifier.duration(0.5),
+                HeroModifier.duration(0.25),
                 HeroModifier.opacity(0)
             ]
             containerView.hero.modifiers = [
@@ -128,7 +158,7 @@ class DepositsViewController: UIViewController {
                     HeroModifier.opacity(1),
                     HeroModifier.zPosition(3)
                     ]),
-                HeroModifier.duration(1),
+                HeroModifier.duration(0.5),
                 HeroModifier.translate(x: 0, y: containerView.frame.height, z: 1),
                 HeroModifier.forceNonFade,
                 HeroModifier.zPosition(0)

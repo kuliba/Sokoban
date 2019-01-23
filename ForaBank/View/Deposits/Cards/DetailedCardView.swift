@@ -79,6 +79,7 @@ class DetailedCardView: UIView {
             titleLabel.attributedText = NSAttributedString(string: card!.title, attributes: [.font:UIFont.systemFont(ofSize: 16), .foregroundColor : foregroundColor])
             //cardView.titleLabel.sizeToFit()
             
+            cardCashLabel.adjustsFontSizeToFitWidth = true
             cardCashLabel.attributedText = NSAttributedString(string: cash, attributes: [.font:UIFont.systemFont(ofSize: 16), .foregroundColor : foregroundColor])
             backgroundImageView.image = UIImage(named: card!.type.rawValue)
             cardNumberLabel.attributedText = NSAttributedString(string: card!.number, attributes: [.font:UIFont.systemFont(ofSize: 12), .foregroundColor : foregroundColor])

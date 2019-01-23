@@ -37,7 +37,7 @@ class DepositsCardsDetailsManagementViewController: UITableViewController {
         tableView.hero.modifiers = [
             HeroModifier.beginWith([HeroModifier.opacity(1),
                                     HeroModifier.zPosition(5)]),
-            HeroModifier.duration(0.5),
+            HeroModifier.duration(0.3),
             HeroModifier.delay(0.5),
             HeroModifier.opacity(0)
         ]
@@ -48,6 +48,21 @@ class DepositsCardsDetailsManagementViewController: UITableViewController {
         tableView.hero.modifiers = nil
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        tableView.hero.modifiers = [
+            HeroModifier.beginWith([HeroModifier.opacity(1),
+                                    HeroModifier.zPosition(5)]),
+            HeroModifier.duration(0.3),
+            HeroModifier.opacity(0)
+        ]
+    }
+    
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        tableView.hero.modifiers = nil
+    }
     // MARK: - Table view data source
     
     //    override func numberOfSections(in tableView: UITableView) -> Int {

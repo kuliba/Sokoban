@@ -106,7 +106,7 @@ class DepositsCardsDetailsViewController: UIViewController {
                     HeroModifier.opacity(1),
                     HeroModifier.zPosition(11)
                     ]),
-                HeroModifier.duration(1),
+                HeroModifier.duration(0.5),
                 HeroModifier.opacity(0),
                 HeroModifier.forceNonFade,
                 HeroModifier.zPosition(11),
@@ -117,20 +117,58 @@ class DepositsCardsDetailsViewController: UIViewController {
                     HeroModifier.opacity(1),
                     HeroModifier.zPosition(2)
                     ]),
-                HeroModifier.duration(1),
+                HeroModifier.duration(0.5),
                 HeroModifier.forceNonFade,
                 HeroModifier.opacity(1)
             ]
         }
     }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         cardView.hero.id = nil
         cardView.hero.modifiers = nil
         container.hero.modifiers = nil
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if segueId == "DepositsCardsDetailsViewController" {
+            cardView.hero.id = "card"
+            cardView.hero.modifiers = [
+                HeroModifier.beginWith([
+                    HeroModifier.opacity(1),
+                    HeroModifier.zPosition(11)
+                    ]),
+                HeroModifier.duration(0.5),
+                HeroModifier.opacity(1),
+                HeroModifier.forceNonFade,
+                HeroModifier.zPosition(11),
+                HeroModifier.useNormalSnapshot
+            ]
+            container.hero.modifiers = [
+                HeroModifier.beginWith([
+                    HeroModifier.opacity(1),
+                    HeroModifier.zPosition(2)
+                    ]),
+                HeroModifier.duration(0.5),
+                HeroModifier.forceNonFade,
+                HeroModifier.opacity(0)
+            ]
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        cardView.hero.id = nil
+        cardView.hero.modifiers = nil
+        container.hero.modifiers = nil
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
         if segue.identifier == "TransitionToSecondViewController" {
+            segueId = nil
             //let secondViewController = segue.destination as! TwoViewController
             // Pass data to secondViewController before the transition
         }

@@ -784,7 +784,6 @@
                                                 <state key="normal" image="button_back"/>
                                                 <connections>
                                                     <action selector="backButtonClicked:" destination="Oxz-tM-k7M" eventType="touchUpInside" id="Z7a-rf-dUJ"/>
-                                                    <action selector="backButtonClicked:" destination="zzR-we-aef" eventType="touchUpInside" id="suD-HQ-yeh"/>
                                                 </connections>
                                             </button>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uvc-rh-Yuh" customClass="DetailedCardView" customModule="ForaBank" customModuleProvider="target">
@@ -809,7 +808,7 @@
                                                         </constraints>
                                                     </imageView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="03/21" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ICQ-Fx-nyi">
-                                                        <rect key="frame" x="25" y="103.5" width="35" height="18"/>
+                                                        <rect key="frame" x="25" y="103.5" width="33.5" height="18"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="18" id="iDe-Jr-pQ1"/>
                                                         </constraints>
