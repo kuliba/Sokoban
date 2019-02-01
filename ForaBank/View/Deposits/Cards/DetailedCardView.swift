@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DetailedCardView: UIView {
+class DetailedCardView: CardView {
     var card: Card? = nil
 
     let backgroundImageView = UIImageView()
@@ -66,6 +66,10 @@ class DetailedCardView: UIView {
         cardCashLabel.translatesAutoresizingMaskIntoConstraints = false
         paypassLogoImageView.translatesAutoresizingMaskIntoConstraints = false
         cardBlockedImageView.translatesAutoresizingMaskIntoConstraints = false
+        self.backgroundColor = .white
+        self.layer.cornerRadius = 10
+        self.layer.borderWidth = 0.5
+        self.layer.borderColor = UIColor.black.cgColor
         
         if card != nil {
             let cashFormatter = NumberFormatter()
@@ -73,28 +77,36 @@ class DetailedCardView: UIView {
             cashFormatter.usesGroupingSeparator = true
             cashFormatter.groupingSeparator = ","
             cashFormatter.locale = Locale(identifier: "ru_RU")
-            let cash = cashFormatter.string(from: NSNumber(value: card!.availableBalance)) ?? ""
-            
-            let foregroundColor = (card?.type.rawValue.range(of: "mastercard") != nil) ? UIColor.black : UIColor.white
-            titleLabel.attributedText = NSAttributedString(string: card!.title, attributes: [.font:UIFont.systemFont(ofSize: 16), .foregroundColor : foregroundColor])
+            var cash = ""
+            if let availableBalance = card!.availableBalance {
+                cash = cashFormatter.string(from: NSNumber(value: availableBalance)) ?? ""
+            }
+            let foregroundColor = UIColor.black//UIColor.white
+//            if card?.type?.rawValue.range(of: "mastercard", options: .caseInsensitive) != nil {
+//                foregroundColor = UIColor.black
+//            }
+            titleLabel.attributedText = NSAttributedString(string: card?.title ?? "", attributes: [.font:UIFont.systemFont(ofSize: 16), .foregroundColor : foregroundColor])
             //cardView.titleLabel.sizeToFit()
             
             cardCashLabel.adjustsFontSizeToFitWidth = true
             cardCashLabel.attributedText = NSAttributedString(string: cash, attributes: [.font:UIFont.systemFont(ofSize: 16), .foregroundColor : foregroundColor])
-            backgroundImageView.image = UIImage(named: card!.type.rawValue)
-            cardNumberLabel.attributedText = NSAttributedString(string: card!.number, attributes: [.font:UIFont.systemFont(ofSize: 12), .foregroundColor : foregroundColor])
-            cardValidityPeriodLabel.attributedText = NSAttributedString(string: card!.validityPeriod, attributes: [.font:UIFont.systemFont(ofSize: 12), .foregroundColor : foregroundColor])
-            if card?.type.rawValue.range(of: "visa") != nil {
+//            backgroundImageView.image = UIImage(named: card!.type?.rawValue)
+            color2 = UIColor(red: 0.96, green: 0.45, blue: 0.13, alpha: 1)
+            color1 = UIColor(red: 0.89, green: 0.77, blue: 0.35, alpha: 1)
+            
+            cardNumberLabel.attributedText = NSAttributedString(string: card!.maskedNumber ?? "", attributes: [.font:UIFont.systemFont(ofSize: 12), .foregroundColor : foregroundColor])
+            cardValidityPeriodLabel.attributedText = NSAttributedString(string: card!.validityPeriod ?? "", attributes: [.font:UIFont.systemFont(ofSize: 12), .foregroundColor : foregroundColor])
+            if card?.type?.rawValue.range(of: "visa", options: .caseInsensitive) != nil {
                 logoImageView.image = UIImage(named: "card_visa_logo")
             }
-            else if card!.type.rawValue.range(of: "mastercard") != nil {
+            else if card!.type?.rawValue.range(of: "mastercard", options: .caseInsensitive) != nil {
                 logoImageView.image = UIImage(named: "card_mastercard_logo")
             }
             
-            if card!.paypass {
+            if card!.paypass == true {
                 paypassLogoImageView.image = UIImage(named: "card_paypass_logo")
             }
-            if card!.blocked {
+            if card!.blocked == true {
                 cardBlockedImageView.image = UIImage(named: "card_blocked")
             }
         }
@@ -120,10 +132,10 @@ class DetailedCardView: UIView {
         
         horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:[paypassLogoImageView(13)]-7-[logoImageView]-20-|", options: [], metrics: nil, views: ["logoImageView":logoImageView, "paypassLogoImageView":paypassLogoImageView])
         var logoWidth = 0.0
-        if card?.type.rawValue.range(of: "visa") != nil {
+        if card?.type?.rawValue.range(of: "visa", options: .caseInsensitive) != nil {
             logoWidth = 41
         }
-        else if card?.type.rawValue.range(of: "mastercard") != nil {
+        else if card?.type?.rawValue.range(of: "mastercard", options: .caseInsensitive) != nil {
             logoWidth = 29
         }
         
@@ -180,7 +192,7 @@ class DetailedCardView: UIView {
     
     func blockCard() {
 //        print(card?.blocked as Any)
-        if card!.blocked {
+        if card!.blocked == true {
             cardBlockedImageView.image = UIImage(named: "card_blocked")
         }
     }

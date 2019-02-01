@@ -9,16 +9,15 @@
 import Foundation
 
 struct BankBranches: Decodable {
-    let branches: [BankBranch]
+    var branches: [BankBranch]
     
     init(from decoder: Decoder) throws {
         var container = try decoder.unkeyedContainer()
-        var branches = [BankBranch]()
+        branches = [BankBranch]()
         while !container.isAtEnd {
             let branch = try! container.decode(BankBranch.self)
             branches.append(branch)
         }
-        self.branches = branches
     }
 }
 

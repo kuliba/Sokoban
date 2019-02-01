@@ -151,15 +151,17 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="slC-hX-WKf">
-                                <rect key="frame" x="0.0" y="30" width="320" height="538"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <inset key="scrollIndicatorInsets" minX="0.0" minY="30" maxX="0.0" maxY="0.0"/>
+                                <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="slC-hX-WKf" firstAttribute="trailing" secondItem="Um5-Kr-kyX" secondAttribute="trailing" id="3vg-Kr-jEO"/>
                             <constraint firstItem="slC-hX-WKf" firstAttribute="leading" secondItem="Um5-Kr-kyX" secondAttribute="leading" id="6Ki-PS-noI"/>
-                            <constraint firstItem="slC-hX-WKf" firstAttribute="top" secondItem="wsg-22-ki8" secondAttribute="top" constant="30" id="kAH-e1-d7y"/>
+                            <constraint firstItem="slC-hX-WKf" firstAttribute="top" secondItem="wsg-22-ki8" secondAttribute="top" id="kAH-e1-d7y"/>
                             <constraint firstItem="slC-hX-WKf" firstAttribute="bottom" secondItem="Um5-Kr-kyX" secondAttribute="bottom" id="sNL-4V-yMm"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Um5-Kr-kyX"/>

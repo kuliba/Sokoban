@@ -17,4 +17,5 @@ class DepositsHistoryCell: UITableViewCell {
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var subdescriptionLabel: UILabel!
     @IBOutlet weak var bottomSeparatorView: UIView!
+    @IBOutlet weak var commentLabel: UILabel!
 }

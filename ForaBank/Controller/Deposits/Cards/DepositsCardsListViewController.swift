@@ -638,6 +638,20 @@ private extension DepositsCardsListViewController {
                                                     attribute: .width,
                                                     multiplier: 1,
                                                     constant: 0))
+        scrollView.addConstraint(NSLayoutConstraint(item: contentView,
+                                                    attribute: .left,
+                                                    relatedBy: .equal,
+                                                    toItem: scrollView,
+                                                    attribute: .left,
+                                                    multiplier: 1,
+                                                    constant: 0))
+        scrollView.addConstraint(NSLayoutConstraint(item: contentView,
+                                                    attribute: .top,
+                                                    relatedBy: .equal,
+                                                    toItem: scrollView,
+                                                    attribute: .top,
+                                                    multiplier: 1,
+                                                    constant: 0))
     }
     func addButtons() {
         //pickerButton

@@ -58,7 +58,7 @@ class DepositsCardsDetailsViewController: UIViewController {
         if let card = card {
             cardView.update(withCard: card)
             cardView.backgroundImageView.alpha = 0
-            backgroundImageView.image = UIImage(named: card.type.rawValue)
+            backgroundImageView.image = UIImage(named: card.type?.rawValue ?? "")
             cardView.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.25)
             if card.type == .mastercard {
                 let blackView = UIView()

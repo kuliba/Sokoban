@@ -27,10 +27,10 @@ class AuthService: AuthServiceProtocol {
     }
     
     func csrf(headers: HTTPHeaders, completionHandler: @escaping (_ success:Bool, _ headers: HTTPHeaders?) -> Void) {
-        if isSigned == true {
-            completionHandler(true, nil)
-            return
-        }
+//        if isSigned == true {
+//            completionHandler(true, nil)
+//            return
+//        }
         let url = baseURLString + "csrf"
         Alamofire.request(url, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))

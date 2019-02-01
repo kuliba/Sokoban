@@ -57,6 +57,11 @@ protocol RegServiceProtocol {
                         completionHandler: @escaping (_ success:Bool,_ errorMessage: String?, _ login: String?,_ password: String?) -> Void)
 }
 
+protocol StatementServiceProtocol {
+    func getSortedFullStatement(headers: HTTPHeaders,
+                  completionHandler: @escaping (_ success:Bool, _ obligations: [DatedTransactionsStatement]?,_ errorMessage: String?) -> Void)
+}
+
 class NetworkManager {
     
     // MARK: - Properties
@@ -65,11 +70,12 @@ class NetworkManager {
         let host = "https://git.briginvest.ru/dbo/api/v2/"
         
         let authService = AuthService(baseURLString: host)//TestAuthService()//
-        let cardService = TestCardService()
+        let cardService = CardService(baseURLString: host)//TestCardService()//
         let regService = RegService(baseURLString: host)//TestRegService()//
         let depositsService = TestDepositsService()
-
-        let networkManager = NetworkManager(baseURLString: host, authService: authService, regService: regService, cardService: cardService, depositsService: depositsService)
+        let statementService = StatementService(baseURLString: host)//TestStatementService()
+        
+        let networkManager = NetworkManager(host, authService, regService, cardService, depositsService, statementService)
         
         // Configuration
         
@@ -80,23 +86,25 @@ class NetworkManager {
     private let regService: RegServiceProtocol
     private let cardService: CardServiceProtocol
     private let depositsService: DepositsServiceProtocol
-    
+    private let statementService: StatementServiceProtocol
+
     private let baseURLString: String
     private var headers: HTTPHeaders = [
         "Accept": "application/json",
         "Content-Type": "application/json",
-//        "X-XSRF-TOKEN": "d086b935-aff7-464c-8aab-66c2a97af4b6",
-//        "JSESSIONID": "C684BE51C59DDCD56939421542F4C4D3"
+        "X-XSRF-TOKEN": "40e3a7ef-2a2d-48f4-9d1d-f024429aac3a",
+        "JSESSIONID": "983F3FBC20F69C7A1A89B4DEAE690175"
     ]
     
     // Initialization
     
-    private init(baseURLString: String, authService: AuthServiceProtocol, regService: RegServiceProtocol, cardService: CardServiceProtocol, depositsService: DepositsServiceProtocol) {
+    private init(_ baseURLString: String,_ authService: AuthServiceProtocol,_ regService: RegServiceProtocol,_ cardService: CardServiceProtocol,_ depositsService: DepositsServiceProtocol,_ statementService: StatementServiceProtocol) {
         self.baseURLString = baseURLString
         self.authService = authService
         self.regService = regService
         self.cardService = cardService
         self.depositsService = depositsService
+        self.statementService = statementService
     }
     
     // MARK: - Accessors
@@ -221,11 +229,27 @@ class NetworkManager {
                                   fromDate: Date,
                                   toDate: Date,
                                   completionHandler: @escaping (_ success:Bool, _ datedTransactions: [DatedTransactions]?) -> Void) {
-        cardService.getTransactionsStatement(forCardNumber: number,
-                                             fromDate: fromDate,
-                                             toDate: toDate,
-                                             headers: headers,
-                                             completionHandler: completionHandler)
+        TestCardService().getTransactionsStatement(forCardNumber: number,
+                                                 fromDate: fromDate,
+                                                 toDate: toDate,
+                                                 headers: headers,
+                                                 completionHandler: completionHandler)
+//        cardService.getTransactionsStatement(forCardNumber: number,
+//                                             fromDate: fromDate,
+//                                             toDate: toDate,
+//                                             headers: headers,
+//                                             completionHandler: completionHandler)
+    }
+    
+    //MARK: - Statement service
+    func getSortedFullStatement(completionHandler: @escaping (Bool, [DatedTransactionsStatement]?, String?) -> Void) {
+        statementService.getSortedFullStatement(headers: headers) { [unowned self] (success, fullStatement, errorMessage) in
+            if self.checkForClosingSession(errorMessage) == false {
+                completionHandler(success, fullStatement, errorMessage)
+            } else {
+                completionHandler(false, fullStatement, errorMessage)
+            }
+        }
     }
     
     //MARK: - deposits service

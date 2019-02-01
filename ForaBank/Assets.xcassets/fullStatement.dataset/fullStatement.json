@@ -1,0 +1,294 @@
+{
+  "result": "OK",
+  "errorMessage": null,
+  "data": [
+    {
+      "operationDate": 1548363600000,
+      "operationType": "DEBIT",
+      "accountID": 10003040391,
+      "accountNumber": "30232810611000000021",
+      "amount": 180.0000,
+      "comment": "Списание со счета банк. карты, YM.INTERNET, 21607579, MOSKVA.",
+      "documentID": 10127406815
+    },
+    {
+      "operationDate": 1548190800000,
+      "operationType": "DEBIT",
+      "accountID": 10003040391,
+      "accountNumber": "30232810611000000021",
+      "amount": 100.0000,
+      "comment": "Списание со счета банк. карты, YANDEX.MONEY, 078367, MOSCOW.",
+      "documentID": 10127151169
+    },
+    {
+      "operationDate": 1548190800000,
+      "operationType": "DEBIT",
+      "accountID": 10002723051,
+      "accountNumber": "40817810100005020155",
+      "amount": 500.0000,
+      "comment": "Перевод денежных средств со счета на счет 40817810100005020155, получатель Житков Иван Михайлович",
+      "documentID": 10127229169
+    },
+    {
+      "operationDate": 1548018000000,
+      "operationType": "DEBIT",
+      "accountID": 10003040391,
+      "accountNumber": "30232810611000000021",
+      "amount": 64.0000,
+      "comment": "Списание со счета банк. карты, YM.INTERNET, 21607579, MOSKVA.",
+      "documentID": 10126737146
+    },
+    {
+      "operationDate": 1548018000000,
+      "operationType": "DEBIT",
+      "accountID": 10003040391,
+      "accountNumber": "30232810611000000021",
+      "amount": 64.0000,
+      "comment": "Списание со счета банк. карты, YM.INTERNET, 21607579, MOSKVA.",
+      "documentID": 10126737147
+    },
+    {
+      "operationDate": 1548018000000,
+      "operationType": "DEBIT",
+      "accountID": 10003040391,
+      "accountNumber": "30232810611000000021",
+      "amount": 500.0000,
+      "comment": "Списание со счета банк. карты, YM.INTERNET, 21607579, MOSKVA.",
+      "documentID": 10126737148
+    },
+    {
+      "operationDate": 1548018000000,
+      "operationType": "DEBIT",
+      "accountID": 10003040391,
+      "accountNumber": "30232810611000000021",
+      "amount": 10000.0000,
+      "comment": "Списание со счета банк. карты, CARD2CARD YAN, 25925508.",
+      "documentID": 10126807019
+    },
+    {
+      "operationDate": 1547672400000,
+      "operationType": "DEBIT",
+      "accountID": 10003040391,
+      "accountNumber": "30232810611000000021",
+      "amount": 13000.0000,
+      "comment": "Списание со счета банк. карты, CARD2CARD YAN, 25925508.",
+      "documentID": 10126460955
+    },
+    {
+      "operationDate": 1547672400000,
+      "operationType": "CREDIT",
+      "accountID": 10000126247,
+      "accountNumber": "60305810500000002202",
+      "amount": 10738.9400,
+      "comment": "Перечисление зарплаты\r\n",
+      "documentID": 10126527831
+    },
+    {
+      "operationDate": 1547499600000,
+      "operationType": "CREDIT",
+      "accountID": 10000126247,
+      "accountNumber": "60305810500000002202",
+      "amount": 13572.0000,
+      "comment": "Перечисление зарплаты\r\n",
+      "documentID": 10126249003
+    },
+    {
+      "operationDate": 1547413200000,
+      "operationType": "DEBIT",
+      "accountID": 10003040391,
+      "accountNumber": "30232810611000000021",
+      "amount": 15000.0000,
+      "comment": "Списание со счета банк. карты, CARD2CARD YAN, 25925508.",
+      "documentID": 10125937208
+    },
+    {
+      "operationDate": 1547413200000,
+      "operationType": "DEBIT",
+      "accountID": 10003040391,
+      "accountNumber": "30232810611000000021",
+      "amount": 5000.0000,
+      "comment": "Списание со счета банк. карты, CARD2CARD YAN, 25925508.",
+      "documentID": 10125937209
+    },
+    {
+      "operationDate": 1547413200000,
+      "operationType": "CREDIT",
+      "accountID": 10000136483,
+      "accountNumber": "30232810600000000003",
+      "amount": 5000.0000,
+      "comment": "Пополнение счета банк. карты, DO DIRIZHABL, 00214803, Moscow.",
+      "documentID": 10125973870
+    },
+    {
+      "operationDate": 1547413200000,
+      "operationType": "CREDIT",
+      "accountID": 10000136483,
+      "accountNumber": "30232810600000000003",
+      "amount": 15000.0000,
+      "comment": "Пополнение счета банк. карты, DO DIRIZHABL, 00214803, Moscow.",
+      "documentID": 10125973871
+    },
+    {
+      "operationDate": 1547413200000,
+      "operationType": "DEBIT",
+      "accountID": 10003040391,
+      "accountNumber": "30232810611000000021",
+      "amount": 5000.0000,
+      "comment": "Списание со счета банк. карты, CARD2CARD YAN, 25925508.",
+      "documentID": 10126008078
+    },
+    {
+      "operationDate": 1547067600000,
+      "operationType": "CREDIT",
+      "accountID": 10002974125,
+      "accountNumber": "40817810500005608313",
+      "amount": 5000.0000,
+      "comment": "Перевод денежных средств со счета на счет 40817810300005026454, получатель Крюков Александр Вячеславович",
+      "documentID": 10125738781
+    },
+    {
+      "operationDate": 1546981200000,
+      "operationType": "DEBIT",
+      "accountID": 10003040391,
+      "accountNumber": "30232810611000000021",
+      "amount": 443.4900,
+      "comment": "Списание со счета банк. карты, PYATEROCHKA, 295238, MOSCOW.",
+      "documentID": 10125274680
+    },
+    {
+      "operationDate": 1546981200000,
+      "operationType": "DEBIT",
+      "accountID": 10003040391,
+      "accountNumber": "30232810611000000021",
+      "amount": 1677.1000,
+      "comment": "Списание со счета банк. карты, 3159-PYATEROC, 364063, MOSCOW.",
+      "documentID": 10125274681
+    },
+    {
+      "operationDate": 1546981200000,
+      "operationType": "DEBIT",
+      "accountID": 10003040391,
+      "accountNumber": "30232810611000000021",
+      "amount": 170.0000,
+      "comment": "Списание со счета банк. карты, 3159-PYATEROC, 364063, MOSCOW.",
+      "documentID": 10125274682
+    },
+    {
+      "operationDate": 1546981200000,
+      "operationType": "DEBIT",
+      "accountID": 10003040391,
+      "accountNumber": "30232810611000000021",
+      "amount": 1598.9900,
+      "comment": "Списание со счета банк. карты, METRO STORE 1, PS026618, MOSCOW.",
+      "documentID": 10125274683
+    },
+    {
+      "operationDate": 1546981200000,
+      "operationType": "DEBIT",
+      "accountID": 10003040391,
+      "accountNumber": "30232810611000000021",
+      "amount": 2397.2900,
+      "comment": "Списание со счета банк. карты, METRO STORE 1, PS026618, MOSCOW.",
+      "documentID": 10125274684
+    },
+    {
+      "operationDate": 1546981200000,
+      "operationType": "DEBIT",
+      "accountID": 10003040391,
+      "accountNumber": "30232810611000000021",
+      "amount": 200.0000,
+      "comment": "Списание со счета банк. карты, PYATEROCHKA 2, 513743, RAMENSKOE.",
+      "documentID": 10125352475
+    },
+    {
+      "operationDate": 1546981200000,
+      "operationType": "DEBIT",
+      "accountID": 10003040391,
+      "accountNumber": "30232810611000000021",
+      "amount": 225.0000,
+      "comment": "Списание со счета банк. карты, IP KULISH A., 10858585, RAMENSKOE.",
+      "documentID": 10125352476
+    },
+    {
+      "operationDate": 1546981200000,
+      "operationType": "DEBIT",
+      "accountID": 10003040391,
+      "accountNumber": "30232810611000000021",
+      "amount": 80.0000,
+      "comment": "Списание со счета банк. карты, APTEKA DEZHUR, 11433833, MOSCOW.",
+      "documentID": 10125352477
+    },
+    {
+      "operationDate": 1546981200000,
+      "operationType": "DEBIT",
+      "accountID": 10003040391,
+      "accountNumber": "30232810611000000021",
+      "amount": 170.0000,
+      "comment": "Списание со счета банк. карты, VIKTORIA, 585824, MOSKVA.",
+      "documentID": 10125352478
+    },
+    {
+      "operationDate": 1546981200000,
+      "operationType": "DEBIT",
+      "accountID": 10003040391,
+      "accountNumber": "30232810611000000021",
+      "amount": 310.0000,
+      "comment": "Списание со счета банк. карты, APTEKA DEZHUR, 11433833, MOSCOW.",
+      "documentID": 10125352479
+    },
+    {
+      "operationDate": 1546635600000,
+      "operationType": "DEBIT",
+      "accountID": 10003040391,
+      "accountNumber": "30232810611000000021",
+      "amount": 684.2000,
+      "comment": "Списание со счета банк. карты, MAGNOLIYA48, 21923297, MOSKVA.",
+      "documentID": 10124573387
+    },
+    {
+      "operationDate": 1546635600000,
+      "operationType": "DEBIT",
+      "accountID": 10003040391,
+      "accountNumber": "30232810611000000021",
+      "amount": 2696.4000,
+      "comment": "Списание со счета банк. карты, MAGNIT MM DEK, 20803946, RAMENSKOE.",
+      "documentID": 10124573388
+    },
+    {
+      "operationDate": 1546635600000,
+      "operationType": "DEBIT",
+      "accountID": 10003040382,
+      "accountNumber": "30233810911000000018",
+      "amount": 5000.0000,
+      "comment": "Списание со счета банк. карты, MOSCOW-PROFSO, 111003, Moscow.",
+      "documentID": 10124579525
+    },
+    {
+      "operationDate": 1546635600000,
+      "operationType": "DEBIT",
+      "accountID": 10003040382,
+      "accountNumber": "30233810911000000018",
+      "amount": 15000.0000,
+      "comment": "Списание со счета банк. карты, MOSCOW-PROFSO, 111003, Moscow.",
+      "documentID": 10124579526
+    },
+    {
+      "operationDate": 1546635600000,
+      "operationType": "DEBIT",
+      "accountID": 10003040391,
+      "accountNumber": "30232810611000000021",
+      "amount": 199.0000,
+      "comment": "Списание со счета банк. карты, GOOGLE*YANDEX, 00000007, G.CO HELPPAY#.",
+      "documentID": 10124742352
+    },
+    {
+      "operationDate": 1546635600000,
+      "operationType": "DEBIT",
+      "accountID": 10003040391,
+      "accountNumber": "30232810611000000021",
+      "amount": 293.0000,
+      "comment": "Списание со счета банк. карты, MCDONALDS 290, 26025645, RAMENSKOE.",
+      "documentID": 10124860634
+    }
+  ]
+}

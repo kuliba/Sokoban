@@ -17,23 +17,23 @@ class TestAuthService: AuthServiceProtocol {
         completionHandler(isSigned)
     }
     
-    func csrf(headers: HTTPHeaders, completionHandler: @escaping (Bool, HTTPHeaders?) -> Void) {
-        completionHandler(true, nil)
-    }
-    /*
+//    func csrf(headers: HTTPHeaders, completionHandler: @escaping (Bool, HTTPHeaders?) -> Void) {
+//        completionHandler(true, nil)
+//    }
+    
     func csrf(headers: HTTPHeaders, completionHandler: @escaping (_ success:Bool, _ headers: HTTPHeaders?) -> Void) {
         if isSigned == true {
             completionHandler(true, nil)
             return
         }
         let url = "https://git.briginvest.ru/dbo/api/v2/csrf"
-        let c1 = HTTPCookie.init(properties: [HTTPCookiePropertyKey.value : "C684BE51C59DDCD56939421542F4C4D3",
+        let c1 = HTTPCookie.init(properties: [HTTPCookiePropertyKey.value : headers["JSESSIONID"] ?? "",
                                               HTTPCookiePropertyKey.name: "JSESSIONID",
                                               HTTPCookiePropertyKey.domain : "git.briginvest.ru",
                                               HTTPCookiePropertyKey.secure : false,
                                               HTTPCookiePropertyKey.path : "/"])
         let c2 = HTTPCookie.init(properties: [HTTPCookiePropertyKey.name : "XSRF-TOKEN",
-                                              HTTPCookiePropertyKey.value : "d086b935-aff7-464c-8aab-66c2a97af4b6",
+                                              HTTPCookiePropertyKey.value : headers["X-XSRF-TOKEN"] ?? "",
                                               HTTPCookiePropertyKey.domain : "git.briginvest.ru",
                                               HTTPCookiePropertyKey.secure : false,
                                               HTTPCookiePropertyKey.path : "/"])
@@ -78,7 +78,7 @@ class TestAuthService: AuthServiceProtocol {
                     completionHandler(false, nil)
                 }
         }
-    }*/
+    }
     
     func loginDo(headers: HTTPHeaders, login: String, password: String, completionHandler: @escaping (Bool, String?) -> Void) {
         completionHandler(true, nil)

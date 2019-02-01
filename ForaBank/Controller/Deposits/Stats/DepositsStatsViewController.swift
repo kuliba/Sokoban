@@ -249,7 +249,7 @@ private extension DepositsStatsViewController {
                 }
             }
         }
-        print("normalizedData_ \(normalizedData_)")
+//        print("normalizedData_ \(normalizedData_)")
         //        [(key: "Мобильная связь", value: 1.0), (key: "Межбанковские переводы", value: 1.1976584441147593), (key: "Коммунальные услуги", value: 1.306808807019915), (key: "Одежда и обувь", value: 1.5454839930812088), (key: "Еда, продукты питания", value: 1.8506437338200095), (key: "Снято наличными", value: 2.0)]
         
     }

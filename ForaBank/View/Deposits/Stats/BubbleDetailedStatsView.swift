@@ -12,7 +12,7 @@ class BubbleDetailedStatsView: UIView {
 
     var image: UIImage! {
         didSet {
-            print(image.size)
+//            print(image.size)
             imageView.image = image
             imageWidthConstraint?.constant = image.size.width
             imageHeightConstraint?.constant = image.size.height
