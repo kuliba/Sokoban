@@ -42,7 +42,7 @@ class DepositsViewController: UIViewController {
     let xDevices = Constants.xDevices
     weak var currentViewController: UIViewController?
     
-    var items = ["Карты", "Счета", "Облигации", "Ячейки", "История", "Статистика"]
+    var items = ["Карты", "Счета", "История", "Статистика"]
     
     var segueId: String? = nil
     var backSegueId: String? = nil
