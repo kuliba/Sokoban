@@ -8,6 +8,7 @@
 
 import Foundation
 import Alamofire
+import UIKit
 
 protocol AuthServiceProtocol {
     func isSignedIn(completionHandler: @escaping (_ success:Bool) -> Void)
@@ -35,6 +36,11 @@ protocol CardServiceProtocol {
                                   toDate: Date,
                                   headers: HTTPHeaders,
                                   completionHandler: @escaping (_ success:Bool, _ datedTransactions: [DatedTransactions]?) -> Void)
+}
+
+protocol DeposServiceProtocol {
+    func getDepos(headers: HTTPHeaders,
+                  completionHandler: @escaping (_ success:Bool, _ obligations: [Depos]?) -> Void)
 }
 
 protocol DepositsServiceProtocol {
@@ -73,9 +79,10 @@ class NetworkManager {
         let cardService = CardService(baseURLString: host)//TestCardService()//
         let regService = RegService(baseURLString: host)//TestRegService()//
         let depositsService = TestDepositsService(baseURLString: host)
+        let deposService = DeposService(baseURLString: host)
         let statementService = StatementService(baseURLString: host)//TestStatementService()
         
-        let networkManager = NetworkManager(host, authService, regService, cardService, depositsService, statementService)
+        let networkManager = NetworkManager(host, authService, regService, cardService, depositsService, deposService, statementService)
         
         // Configuration
         
@@ -86,6 +93,7 @@ class NetworkManager {
     private let regService: RegServiceProtocol
     private let cardService: CardServiceProtocol
     private let depositsService: DepositsServiceProtocol
+    private let deposService: DeposServiceProtocol
     private let statementService: StatementServiceProtocol
 
     private let baseURLString: String
@@ -98,12 +106,13 @@ class NetworkManager {
     
     // Initialization
     
-    private init(_ baseURLString: String,_ authService: AuthServiceProtocol,_ regService: RegServiceProtocol,_ cardService: CardServiceProtocol,_ depositsService: DepositsServiceProtocol,_ statementService: StatementServiceProtocol) {
+    private init(_ baseURLString: String,_ authService: AuthServiceProtocol,_ regService: RegServiceProtocol,_ cardService: CardServiceProtocol,_ depositsService: DepositsServiceProtocol,_ DeposService: DeposServiceProtocol,_ statementService: StatementServiceProtocol) {
         self.baseURLString = baseURLString
         self.authService = authService
         self.regService = regService
         self.cardService = cardService
         self.depositsService = depositsService
+        self.deposService = DeposService
         self.statementService = statementService
     }
     
@@ -256,7 +265,10 @@ class NetworkManager {
     func getBonds(completionHandler: @escaping (_ success:Bool, _ obligations: [Bond]?) -> Void) {
          depositsService.getBonds(headers: headers, completionHandler: completionHandler)
     }
-    
+    //MARK: - deposits service
+    func getDepos(completionHandler: @escaping (_ success:Bool, _ obligations: [Depos]?) -> Void) {
+        deposService.getDepos(headers: headers, completionHandler: completionHandler)
+    }
     //MARK: - check errorMessage for closing session
     func checkForClosingSession(_ errorMessage: String?) -> Bool {
         if let errorMessage = errorMessage,

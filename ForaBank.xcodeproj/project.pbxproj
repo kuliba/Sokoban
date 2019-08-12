@@ -139,6 +139,7 @@
 		96BEAE4F22FABBAD0029C63D /* FlexiblePageControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE4E22FABBAD0029C63D /* FlexiblePageControl.framework */; };
 		96BEAE5122FABBB20029C63D /* Hero.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE5022FABBB20029C63D /* Hero.framework */; };
 		96BEAE5322FABBB60029C63D /* IQKeyboardManagerSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE5222FABBB60029C63D /* IQKeyboardManagerSwift.framework */; };
+		96EC41812301A6890087BFB0 /* Deposit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EC41802301A6890087BFB0 /* Deposit.swift */; };
 		A5004D3121EF37DC0098E510 /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5004D3021EF37DC0098E510 /* ActivityIndicatorView.swift */; };
 		A5004D3321EF56CF0098E510 /* CardBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5004D3221EF56CF0098E510 /* CardBank.swift */; };
 		A5004D3521EF56DD0098E510 /* CardBrand.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5004D3421EF56DD0098E510 /* CardBrand.swift */; };
@@ -334,6 +335,7 @@
 		96BEAE4E22FABBAD0029C63D /* FlexiblePageControl.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FlexiblePageControl.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		96BEAE5022FABBB20029C63D /* Hero.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Hero.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		96BEAE5222FABBB60029C63D /* IQKeyboardManagerSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = IQKeyboardManagerSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		96EC41802301A6890087BFB0 /* Deposit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deposit.swift; sourceTree = "<group>"; };
 		A5004D3021EF37DC0098E510 /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		A5004D3221EF56CF0098E510 /* CardBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardBank.swift; sourceTree = "<group>"; };
 		A5004D3421EF56DD0098E510 /* CardBrand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardBrand.swift; sourceTree = "<group>"; };
@@ -864,6 +866,7 @@
 				A57CF1B92204360900E855A5 /* TestStatementService.swift */,
 				A57CF1B7220435F200E855A5 /* StatementService.swift */,
 				A568142D21D0B945002C0899 /* TestDepositsService.swift */,
+				96EC41802301A6890087BFB0 /* Deposit.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -1100,6 +1103,7 @@
 				09F240FA216F8335007B7D73 /* FeedCurrent6Cell.swift in Sources */,
 				A5C5E6E121A2B443001D6250 /* Card.swift in Sources */,
 				094FFC10218837580069DDCB /* Helpers.swift in Sources */,
+				96EC41812301A6890087BFB0 /* Deposit.swift in Sources */,
 				096BCB0E21637E27005BC02B /* PaymentCell.swift in Sources */,
 				096BCB0A216361AA005BC02B /* PaymentTemplateCell.swift in Sources */,
 				A55663A421EDB22600E48C40 /* OnMapButton.swift in Sources */,

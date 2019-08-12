@@ -18,85 +18,23 @@ class DepositsDepositsViewController: UIViewController {
     
     let cellId = "DepositsDepositCell"
     
-    
-    
-    private let baseURLString: String = "https://git.briginvest.ru/dbo/api/v2/"
-    private var datadep = [Depos]()
-    private var datedTransactions = [DatedTransactions]()
-    
-    
-
-    func getBonds(headers: HTTPHeaders, completionHandler: @escaping (Bool, [Depos    ]?) -> Void) {
-        datadep = [Depos]()
-        let url = baseURLString + "rest/getDepositList"
-        Alamofire.request(url, method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: headers)
-            .validate(statusCode: MultiRange(200..<300, 401..<402))
-            .validate(contentType: ["application/json"])
-            .responseJSON { [unowned self] response in
-                
-                if let json = response.result.value as? Dictionary<String, Any> ,
-                    let errorMessage = json["errorMessage"] as? String {
-                    print("\(errorMessage) \(self)")
-                    completionHandler(false, self.datadep)
-                    return
-                }
-                
-                switch response.result {
-                case .success:
-                    if let json = response.result.value as? Dictionary<String, Any>,
-                        let data = json["data"] as? Array<Any> {
-                        for cardData in data {
-                            if let cardData = cardData as? Dictionary<String, Any>,
-                                let original = cardData["original"] as? Dictionary<String, Any> {
-                                let customName = cardData["customName"] as? String
-                                let title = original["ownerAgentBrief"] as? String
-                                let balance = original["balance"] as? String
-                                let accountID = original["number"] as? String
-                                let number = original["number"] as? String
-                                let availableBalance = original["balance"] as? Double
-                                let branch = original["branch"] as? String
-                                let id = original["cardID"] as? String
-                                var expirationDate: Date? = nil
-                                if let validThru = original["validThru"] as? TimeInterval {
-                                    expirationDate = Date(timeIntervalSince1970: (validThru/1000))
-                                }
-                                let datadep = Depos( paypass: nil,
-                                                 title: title,
-                                                 balance:balance,
-                                                 accountID: accountID,
-                                                 customName: customName,
-                                                 number: number,
-                                                 startDate: nil,
-                                                 expirationDate: expirationDate,
-                                                 availableBalance: availableBalance,
-                                                 blockedMoney: nil,
-                                                 updatingDate: nil,
-                                                 tariff: nil,
-                                                 id: id,
-                                                 branch: branch)
-                                self.datadep.append(datadep)
-                            }
-                        }
-                        completionHandler(true, self.datadep)
-                    } else {
-                        print("rest/getDepositList cant parse json \(String(describing: response.result.value))")
-                        completionHandler(false, self.datadep)
-                    }
-                    
-                case .failure(let error):
-                    print("rest/getDepositList \(error) \(self)")
-                    completionHandler(false, self.datadep)
-                }
+    var datadeps = [Depos]() {
+        didSet{
+            tableView.reloadData()
         }
     }
-    
-    
-    
-  
-    // MARK: - Lifecycle
+        // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpTableView()
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        NetworkManager.shared().getDepos { (success, datadeps) in
+            if success {
+                self.datadeps = datadeps ?? []
+            }
+        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -105,20 +43,13 @@ class DepositsDepositsViewController: UIViewController {
             tableView.deselectRow(at: selectedRow, animated: false)
         }
     }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "OneOneViewController" {
-            let toViewController = segue.destination as UIViewController
-            toViewController.transitioningDelegate = transitionAnimator
-        }
-    }
 }
 
 // MARK: - UITableView DataSource and Delegate
 extension DepositsDepositsViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return datadep.count
+        return datadeps.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -126,10 +57,10 @@ extension DepositsDepositsViewController: UITableViewDataSource, UITableViewDele
             fatalError()
         }
         
-        cell.titleLabel.text = datadep[0].title
-        cell.subTitleLabel.text = datadep[0].accountID
-        cell.amountLabel.text = datadep[2].balance
-        cell.bottomSeparatorView.isHidden = indexPath.row == datadep.endIndex - 1
+        cell.titleLabel.text = datadeps[indexPath.row].depositProductName
+        cell.subTitleLabel.text = datadeps[indexPath.row].accountNumber!
+        cell.amountLabel.text = String(datadeps[indexPath.row].balanceCUR!)
+        cell.bottomSeparatorView.isHidden = indexPath.row == datadeps.endIndex - 1
         
         return cell
     }
