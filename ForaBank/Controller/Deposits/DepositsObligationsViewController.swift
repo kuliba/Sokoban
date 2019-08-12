@@ -52,7 +52,7 @@ class DepositsObligationsViewController: UIViewController {
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        NetworkManager.shared().getBonds { (success, bonds, errorMessage) in
+        NetworkManager.shared().getBonds { (success, bonds) in
             if success {
                 self.bonds = bonds ?? []
             }
@@ -79,13 +79,12 @@ extension DepositsObligationsViewController: UITableViewDataSource, UITableViewD
             fatalError()
         }
         
-        cell.titleLabel.text = bonds[indexPath.row].corporate
-        cell.descriptionLabel.text = String(format: "%.2f%%", bonds[indexPath.row].rate)
-        cell.subTitleLabel.text = bonds[indexPath.row].tempInfo
+        cell.titleLabel.text = bonds[indexPath.row].depositProductName
+        cell.subTitleLabel.text = bonds[indexPath.row].accountNumber!
+        cell.descriptionLabel.text = String(bonds[indexPath.row].balanceCUR!)
+        cell.currently.text = bonds[indexPath.row].currencyCode
         
-        cell.iconImageView.image = bonds[indexPath.row].corporateLogo
-        
-        cell.bottomSeparatorView.isHidden = indexPath.row == bonds.endIndex - 1
+
         
         return cell
     }
@@ -97,7 +96,7 @@ extension DepositsObligationsViewController: UITableViewDataSource, UITableViewD
             let doneButton = UIButton(type: .system)
             doneButton.frame = CGRect(x: footerView.frame.minX, y: footerView.frame.minY + 15, width: footerView.frame.width, height: 45)
             
-            doneButton.setTitle("Купить облигации", for: .normal)
+            doneButton.setTitle("Открыть вклад", for: .normal)
             
             doneButton.titleLabel?.font = UIFont(name: "Roboto-Regular", size: 16)
             

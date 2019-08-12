@@ -39,7 +39,7 @@ protocol CardServiceProtocol {
 
 protocol DepositsServiceProtocol {
     func getBonds(headers: HTTPHeaders,
-                  completionHandler: @escaping (_ success:Bool, _ obligations: [Bond]?,_ errorMessage: String?) -> Void)
+                  completionHandler: @escaping (_ success:Bool, _ obligations: [Bond]?) -> Void)
 }
 
 protocol RegServiceProtocol {
@@ -72,7 +72,7 @@ class NetworkManager {
         let authService = AuthService(baseURLString: host)//TestAuthService()//
         let cardService = CardService(baseURLString: host)//TestCardService()//
         let regService = RegService(baseURLString: host)//TestRegService()//
-        let depositsService = TestDepositsService()
+        let depositsService = TestDepositsService(baseURLString: host)
         let statementService = StatementService(baseURLString: host)//TestStatementService()
         
         let networkManager = NetworkManager(host, authService, regService, cardService, depositsService, statementService)
@@ -253,12 +253,8 @@ class NetworkManager {
     }
     
     //MARK: - deposits service
-    func getBonds(completionHandler: @escaping (_ success:Bool, _ obligations: [Bond]?,_ errorMessage: String?) -> Void) {
-        depositsService.getBonds(headers: headers) { [unowned self] (success, bonds, errorMessage) in
-            if self.checkForClosingSession(errorMessage) == false {
-                completionHandler(success, bonds, errorMessage)
-            }
-        }
+    func getBonds(completionHandler: @escaping (_ success:Bool, _ obligations: [Bond]?) -> Void) {
+         depositsService.getBonds(headers: headers, completionHandler: completionHandler)
     }
     
     //MARK: - check errorMessage for closing session

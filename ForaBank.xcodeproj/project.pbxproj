@@ -131,6 +131,14 @@
 		89C8DF0E2191ADF200D92B0A /* DepositsDepositsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C8DF0D2191ADF200D92B0A /* DepositsDepositsViewController.swift */; };
 		89C8DF122191AFA700D92B0A /* DepositsDepositCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C8DF102191AFA600D92B0A /* DepositsDepositCell.swift */; };
 		89C8DF132191AFA700D92B0A /* DepositsDepositCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89C8DF112191AFA700D92B0A /* DepositsDepositCell.xib */; };
+		960AD38822FC1826005399D6 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 960AD38722FC1826005399D6 /* Default-568h@2x.png */; };
+		9610CB8E22FD6F0C00FE7C84 /* Depos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9610CB8D22FD6F0C00FE7C84 /* Depos.swift */; };
+		96BEAE4922FABBA00029C63D /* iCarousel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE4822FABBA00029C63D /* iCarousel.framework */; };
+		96BEAE4B22FABBA40029C63D /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE4A22FABBA40029C63D /* Alamofire.framework */; };
+		96BEAE4D22FABBA80029C63D /* DeviceKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE4C22FABBA80029C63D /* DeviceKit.framework */; };
+		96BEAE4F22FABBAD0029C63D /* FlexiblePageControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE4E22FABBAD0029C63D /* FlexiblePageControl.framework */; };
+		96BEAE5122FABBB20029C63D /* Hero.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE5022FABBB20029C63D /* Hero.framework */; };
+		96BEAE5322FABBB60029C63D /* IQKeyboardManagerSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE5222FABBB60029C63D /* IQKeyboardManagerSwift.framework */; };
 		A5004D3121EF37DC0098E510 /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5004D3021EF37DC0098E510 /* ActivityIndicatorView.swift */; };
 		A5004D3321EF56CF0098E510 /* CardBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5004D3221EF56CF0098E510 /* CardBank.swift */; };
 		A5004D3521EF56DD0098E510 /* CardBrand.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5004D3421EF56DD0098E510 /* CardBrand.swift */; };
@@ -317,6 +325,15 @@
 		89C8DF0D2191ADF200D92B0A /* DepositsDepositsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsDepositsViewController.swift; sourceTree = "<group>"; };
 		89C8DF102191AFA600D92B0A /* DepositsDepositCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsDepositCell.swift; sourceTree = "<group>"; };
 		89C8DF112191AFA700D92B0A /* DepositsDepositCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DepositsDepositCell.xib; sourceTree = "<group>"; };
+		960AD38722FC1826005399D6 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		9610CB8D22FD6F0C00FE7C84 /* Depos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Depos.swift; sourceTree = "<group>"; };
+		96BEAE4022FAB9170029C63D /* iCarousel */ = {isa = PBXFileReference; lastKnownFileType = folder; name = iCarousel; path = Pods/iCarousel; sourceTree = "<group>"; };
+		96BEAE4822FABBA00029C63D /* iCarousel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = iCarousel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		96BEAE4A22FABBA40029C63D /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		96BEAE4C22FABBA80029C63D /* DeviceKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DeviceKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		96BEAE4E22FABBAD0029C63D /* FlexiblePageControl.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FlexiblePageControl.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		96BEAE5022FABBB20029C63D /* Hero.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Hero.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		96BEAE5222FABBB60029C63D /* IQKeyboardManagerSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = IQKeyboardManagerSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A5004D3021EF37DC0098E510 /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		A5004D3221EF56CF0098E510 /* CardBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardBank.swift; sourceTree = "<group>"; };
 		A5004D3421EF56DD0098E510 /* CardBrand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardBrand.swift; sourceTree = "<group>"; };
@@ -382,6 +399,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				96BEAE5322FABBB60029C63D /* IQKeyboardManagerSwift.framework in Frameworks */,
+				96BEAE5122FABBB20029C63D /* Hero.framework in Frameworks */,
+				96BEAE4F22FABBAD0029C63D /* FlexiblePageControl.framework in Frameworks */,
+				96BEAE4D22FABBA80029C63D /* DeviceKit.framework in Frameworks */,
+				96BEAE4B22FABBA40029C63D /* Alamofire.framework in Frameworks */,
+				96BEAE4922FABBA00029C63D /* iCarousel.framework in Frameworks */,
 				B8323065D0D76292CEB00626 /* Pods_ForaBank.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -462,6 +485,7 @@
 		0979754C215A49020044C00A = {
 			isa = PBXGroup;
 			children = (
+				960AD38722FC1826005399D6 /* Default-568h@2x.png */,
 				09797557215A49020044C00A /* ForaBank */,
 				09797556215A49020044C00A /* Products */,
 				17646B619EE7583F4162F550 /* Pods */,
@@ -584,6 +608,7 @@
 				A5004D3221EF56CF0098E510 /* CardBank.swift */,
 				A5004D3421EF56DD0098E510 /* CardBrand.swift */,
 				A568143721D35FEB002C0899 /* Transaction.swift */,
+				9610CB8D22FD6F0C00FE7C84 /* Depos.swift */,
 				A568141E21CBCCB3002C0899 /* BankBranch.swift */,
 				A568142021CBCD03002C0899 /* BankBranchAnnotation.swift */,
 				A568142F21D0B9E3002C0899 /* Bond.swift */,
@@ -701,6 +726,13 @@
 		1FA8DC4AA196A274D239644F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				96BEAE5222FABBB60029C63D /* IQKeyboardManagerSwift.framework */,
+				96BEAE5022FABBB20029C63D /* Hero.framework */,
+				96BEAE4E22FABBAD0029C63D /* FlexiblePageControl.framework */,
+				96BEAE4C22FABBA80029C63D /* DeviceKit.framework */,
+				96BEAE4A22FABBA40029C63D /* Alamofire.framework */,
+				96BEAE4822FABBA00029C63D /* iCarousel.framework */,
+				96BEAE4022FAB9170029C63D /* iCarousel */,
 				D8EB261ED46D5F939F8B2E27 /* Pods_ForaBank.framework */,
 			);
 			name = Frameworks;
@@ -920,6 +952,7 @@
 				09AF708E216F73FD00E7FCFC /* FeedCurrent2Cell.xib in Resources */,
 				09203D96216E13A700902BD2 /* FeedOptionCell.xib in Resources */,
 				A55B7B7A21A6B4F400A8A7FE /* feed_current_food.mov in Resources */,
+				960AD38822FC1826005399D6 /* Default-568h@2x.png in Resources */,
 				09F240FB216F8335007B7D73 /* FeedCurrent6Cell.xib in Resources */,
 				09C7C3172174A362000EE472 /* DepositsSearchCell.xib in Resources */,
 				09AF708F216F73FD00E7FCFC /* FeedCurrent5Cell.xib in Resources */,
@@ -1027,6 +1060,7 @@
 			files = (
 				09F2410521707B7B007B7D73 /* FeedInfo2Cell.swift in Sources */,
 				A568143421D0CE6C002C0899 /* Profile.swift in Sources */,
+				9610CB8E22FD6F0C00FE7C84 /* Depos.swift in Sources */,
 				09D3C041215CE5D100998F57 /* DialogCell.swift in Sources */,
 				09203D87216CA79C00902BD2 /* FeedViewController.swift in Sources */,
 				09C7C30F2174888B000EE472 /* DepositsObligationsViewController.swift in Sources */,

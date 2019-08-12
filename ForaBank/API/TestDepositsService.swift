@@ -8,31 +8,85 @@
 
 import Foundation
 import Alamofire
+import UIKit
 
 class TestDepositsService: DepositsServiceProtocol {
-    
-    private var bonds: [Bond] = {
-        var b1 = Bond.init(corporateLogo: UIImage(named: "deposits_obligations_afk"),
-                           corporate: "АФК-Система, Sistema-19",
-                           rate: 8.83,
-                           tempInfo: "Предложений по бумаге нет")
-        var b2 = Bond.init(corporateLogo: UIImage(named: "deposits_obligations_gazprom"),
-                           corporate: "Газпром, GAZ-37",
-                           rate: 5.37,
-                           tempInfo: "Предложений по бумаге нет")
-        var b3 = Bond.init(corporateLogo: UIImage(named: "deposits_obligations_veb"),
-                           corporate: "ВЭБ, VEB-23",
-                           rate: 4.04,
-                           tempInfo: "Предложений по бумаге нет")
-        var b4 = Bond.init(corporateLogo: UIImage(named: "deposits_obligations_rosnef"),
-                           corporate: "Роснэфть, RosNef-22",
-                           rate: 3.84,
-                           tempInfo: "Гипермаркет")
 
-        return [b1, b2, b3, b4]
-    }()
     
-    func getBonds(headers: HTTPHeaders, completionHandler: @escaping (Bool, [Bond]?, String?) -> Void) {
-        completionHandler(true, bonds, nil)
+    private let baseURLString: String
+    private var bonds = [Bond]()
+    private var datedTransactions = [DatedTransactions]()
+    
+    init(baseURLString: String) {
+        self.baseURLString = baseURLString
     }
+    
+    func getBonds(headers: HTTPHeaders, completionHandler: @escaping (Bool, [Bond	]?) -> Void) {
+        bonds = [Bond]()
+        let url = baseURLString + "rest/getDepositList"
+        Alamofire.request(url, method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: headers)
+            .validate(statusCode: MultiRange(200..<300, 401..<402))
+            .validate(contentType: ["application/json"])
+            .responseJSON { [unowned self] response in
+                
+                if let json = response.result.value as? Dictionary<String, Any> ,
+                    let errorMessage = json["errorMessage"] as? String {
+                    print("\(errorMessage) \(self)")
+                    completionHandler(false, self.bonds)
+                    return
+                }
+                
+                switch response.result {
+                case .success:
+                    if let json = response.result.value as? Dictionary<String, Any>,
+                        let data = json["data"] as? Array<Any> {
+                        for cardData in data {
+                            if let cardData = cardData as? Dictionary<String, Any>,
+                                let original = cardData["original"] as? Dictionary<String, Any> {
+                            
+                                let depositProductName = original["depositProductName"] as? String
+                                var accountList:Array<Any> = original["accountList"] as! Array
+                                let accountData = accountList[0] as? Dictionary<String , Any>
+                                let balanceCUR = accountData!["balanceCUR"] as? Double
+                                let accountNumber =  accountData!["accountNumber"] as? String
+                                let currencyCode =  accountData!["currencyCode"] as? String
+                                let ownerAgentBrief = original["ownerAgentBrief"] as? String
+                                let number = original["number"] as? String
+                                let bond = Bond( depositProductName:depositProductName,
+                                                 balanceCUR: balanceCUR,
+                                                 currencyCode:currencyCode,
+                                                 accountNumber: accountNumber
+                                               )
+                                self.bonds.append(bond)
+                                
+                            }
+                        }
+                        completionHandler(true, self.bonds)
+                    } else {
+                        print("rest/getDepositList cant parse json \(String(describing: response.result.value))")
+                        completionHandler(false, self.bonds)
+                    }
+                    
+                case .failure(let error):
+                    print("rest/getDepositList \(error) \(self)")
+                    completionHandler(false, self.bonds)
+                }
+            
+    }
+    
+    func blockCard(withNumber num: String, completionHandler: @escaping (Bool) -> Void) {
+        //        for i in 0..<cards.count {
+        //            if cards[i].number == num {
+        //                cards[i].blocked = true
+        //            }
+        //        }
+        completionHandler(false)
+    }
+    
+    func getTransactionsStatement(forCardNumber: String, fromDate: Date, toDate: Date, headers: HTTPHeaders, completionHandler: @escaping (Bool, [DatedTransactions]?) -> Void) {
+        completionHandler(false, datedTransactions)
+    }
+    
+    
+}
 }

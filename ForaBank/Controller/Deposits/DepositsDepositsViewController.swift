@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class DepositsDepositsViewController: UIViewController {
     
@@ -17,30 +18,81 @@ class DepositsDepositsViewController: UIViewController {
     
     let cellId = "DepositsDepositCell"
     
-    let data_ = [
-        [
-            "Зарплатный счет",
-            "5505",
-            "39 500 P"
-        ], [
-            "Моя сберочка",
-            "4404",
-            "55 560 P"
-        ], [
-            "Сейф",
-            "3303",
-            "23 543 P"
-        ], [
-            "Вклад Комфортный",
-            "2202",
-            "119 556 P"
-        ], [
-            "Бонусный счет",
-            "1106",
-            "5 500 P"
-        ]
-    ]
     
+    
+    private let baseURLString: String = "https://git.briginvest.ru/dbo/api/v2/"
+    private var datadep = [Depos]()
+    private var datedTransactions = [DatedTransactions]()
+    
+    
+
+    func getBonds(headers: HTTPHeaders, completionHandler: @escaping (Bool, [Depos    ]?) -> Void) {
+        datadep = [Depos]()
+        let url = baseURLString + "rest/getDepositList"
+        Alamofire.request(url, method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: headers)
+            .validate(statusCode: MultiRange(200..<300, 401..<402))
+            .validate(contentType: ["application/json"])
+            .responseJSON { [unowned self] response in
+                
+                if let json = response.result.value as? Dictionary<String, Any> ,
+                    let errorMessage = json["errorMessage"] as? String {
+                    print("\(errorMessage) \(self)")
+                    completionHandler(false, self.datadep)
+                    return
+                }
+                
+                switch response.result {
+                case .success:
+                    if let json = response.result.value as? Dictionary<String, Any>,
+                        let data = json["data"] as? Array<Any> {
+                        for cardData in data {
+                            if let cardData = cardData as? Dictionary<String, Any>,
+                                let original = cardData["original"] as? Dictionary<String, Any> {
+                                let customName = cardData["customName"] as? String
+                                let title = original["ownerAgentBrief"] as? String
+                                let balance = original["balance"] as? String
+                                let accountID = original["number"] as? String
+                                let number = original["number"] as? String
+                                let availableBalance = original["balance"] as? Double
+                                let branch = original["branch"] as? String
+                                let id = original["cardID"] as? String
+                                var expirationDate: Date? = nil
+                                if let validThru = original["validThru"] as? TimeInterval {
+                                    expirationDate = Date(timeIntervalSince1970: (validThru/1000))
+                                }
+                                let datadep = Depos( paypass: nil,
+                                                 title: title,
+                                                 balance:balance,
+                                                 accountID: accountID,
+                                                 customName: customName,
+                                                 number: number,
+                                                 startDate: nil,
+                                                 expirationDate: expirationDate,
+                                                 availableBalance: availableBalance,
+                                                 blockedMoney: nil,
+                                                 updatingDate: nil,
+                                                 tariff: nil,
+                                                 id: id,
+                                                 branch: branch)
+                                self.datadep.append(datadep)
+                            }
+                        }
+                        completionHandler(true, self.datadep)
+                    } else {
+                        print("rest/getDepositList cant parse json \(String(describing: response.result.value))")
+                        completionHandler(false, self.datadep)
+                    }
+                    
+                case .failure(let error):
+                    print("rest/getDepositList \(error) \(self)")
+                    completionHandler(false, self.datadep)
+                }
+        }
+    }
+    
+    
+    
+  
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,7 +118,7 @@ class DepositsDepositsViewController: UIViewController {
 extension DepositsDepositsViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data_.count
+        return datadep.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -74,10 +126,10 @@ extension DepositsDepositsViewController: UITableViewDataSource, UITableViewDele
             fatalError()
         }
         
-        cell.titleLabel.text = data_[indexPath.row][0]
-        cell.subTitleLabel.text = data_[indexPath.row][1]
-        cell.amountLabel.text = data_[indexPath.row][2]
-        cell.bottomSeparatorView.isHidden = indexPath.row == data_.endIndex - 1
+        cell.titleLabel.text = datadep[0].title
+        cell.subTitleLabel.text = datadep[0].accountID
+        cell.amountLabel.text = datadep[2].balance
+        cell.bottomSeparatorView.isHidden = indexPath.row == datadep.endIndex - 1
         
         return cell
     }

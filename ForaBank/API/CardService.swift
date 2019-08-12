@@ -169,6 +169,7 @@ class CardService: CardServiceProtocol {
                                     }
                                 }
                                 let title = original["name"] as? String
+                                _ = original["account"] as? String
                                 let number = original["number"] as? String
                                 let maskedNumber = original["maskedNumber"] as? String
                                 var blocked: Bool? = nil
@@ -186,11 +187,10 @@ class CardService: CardServiceProtocol {
                                 if let validThru = original["validThru"] as? TimeInterval {
                                     expirationDate = Date(timeIntervalSince1970: (validThru/1000))
                                 }
-                                var card = Card(type: type,
+                                let card = Card(type: type,
                                                 paypass: nil,
                                                 title: title,
-                                                customName: customName,
-                                                number: number,
+                                                customName: customName, number: number,
                                                 blocked: blocked,
                                                 startDate: nil,
                                                 expirationDate: expirationDate,
