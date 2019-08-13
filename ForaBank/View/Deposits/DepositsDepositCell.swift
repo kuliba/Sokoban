@@ -14,5 +14,6 @@ class DepositsDepositCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subTitleLabel: UILabel!
     @IBOutlet weak var bottomSeparatorView: UIView!
+    @IBOutlet weak var currently: UILabel!
     @IBOutlet weak var amountLabel: UILabel!
 }

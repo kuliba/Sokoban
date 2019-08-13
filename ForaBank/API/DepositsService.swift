@@ -48,15 +48,15 @@ class TestDepositsService: DepositsServiceProtocol {
                                 let depositProductName = original["depositProductName"] as? String
                                 var accountList:Array<Any> = original["accountList"] as! Array
                                 let accountData = accountList[0] as? Dictionary<String , Any>
-                                let balanceCUR = accountData!["balanceCUR"] as? Double
+                                let balance = accountData!["balance"] as? Double
                                 let accountNumber =  accountData!["accountNumber"] as? String
                                 let currencyCode =  accountData!["currencyCode"] as? String
                                 let ownerAgentBrief = original["ownerAgentBrief"] as? String
                                 let number = original["number"] as? String
                                 let bond = Bond( depositProductName:depositProductName,
-                                                 balanceCUR: balanceCUR,
-                                                 currencyCode:currencyCode,
+                                                 currencyCode:currencyCode, balance:balance,
                                                  accountNumber: accountNumber
+                                                 
                                                )
                                 self.bonds.append(bond)
                                 

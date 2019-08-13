@@ -59,7 +59,8 @@ extension DepositsDepositsViewController: UITableViewDataSource, UITableViewDele
         
         cell.titleLabel.text = datadeps[indexPath.row].depositProductName
         cell.subTitleLabel.text = datadeps[indexPath.row].accountNumber!
-        cell.amountLabel.text = String(datadeps[indexPath.row].balanceCUR!)
+        cell.amountLabel.text = String(datadeps[indexPath.row].balance!)
+        cell.currently.text = datadeps[indexPath.row].currencyCode
         cell.bottomSeparatorView.isHidden = indexPath.row == datadeps.endIndex - 1
         
         return cell
