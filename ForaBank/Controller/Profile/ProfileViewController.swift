@@ -1,10 +1,10 @@
-//
-//  ProfileViewController.swift
-//  ForaBank
-//
-//  Created by Ilya Masalov (xmasalov@gmail.com) on 26/09/2018.
-//  Copyright © 2018 BraveRobin. All rights reserved.
-//
+/*
+ * Copyright (C) 2017-2019 Brig Invest ltd. All rights reserved.
+ * CONFIDENTIAL
+ *
+ * Авторское право (C) 2017-2019 OОО "Бриг Инвест". Все права защищены.
+ * КОНФИДЕНЦИАЛЬНО
+ */
 
 import UIKit
 import Hero

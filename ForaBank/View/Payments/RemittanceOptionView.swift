@@ -1,8 +1,8 @@
 //
-//  TransactionOptionView.swift
+//  CardActionRoundedButton.swift
 //  ForaBank
 //
-//  Created by Sergey on 02/12/2018.
+//  Created by Sergey on 14/11/2018.
 //  Copyright © 2018 BraveRobin. All rights reserved.
 //
 
