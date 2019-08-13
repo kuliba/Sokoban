@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="qdQ-aJ-GbA">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="qdQ-aJ-GbA">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -2173,8 +2174,11 @@
                                                 <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="Kyw-Ge-jOD">
+                                            <textField opaque="NO" tag="1" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="Kyw-Ge-jOD">
                                                 <rect key="frame" x="0.0" y="92" width="280" height="40"/>
+                                                <accessibility key="accessibilityConfiguration">
+                                                    <accessibilityTraits key="traits" selected="YES"/>
+                                                </accessibility>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="VrE-rc-qFZ"/>
                                                 </constraints>
@@ -2641,7 +2645,7 @@
         <image name="chat_message_confirm" width="13" height="11"/>
         <image name="face" width="19" height="19"/>
         <image name="fora logo" width="32" height="32"/>
-        <image name="fora logo 2" width="215.25" height="29.75"/>
+        <image name="fora logo 2" width="430.5" height="59.5"/>
         <image name="group choose" width="16" height="15"/>
         <image name="hidden" width="50" height="42"/>
         <image name="hide_password" width="25" height="18"/>
@@ -2662,6 +2666,6 @@
         <image name="touch" width="20" height="20"/>
         <image name="touchid" width="93" height="93"/>
         <image name="unagry" width="22" height="22"/>
-        <image name="visa-colored" width="22.319999694824219" height="14.399999618530273"/>
+        <image name="visa-colored" width="93" height="60"/>
     </resources>
 </document>
