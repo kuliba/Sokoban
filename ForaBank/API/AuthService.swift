@@ -86,7 +86,7 @@ class AuthService: AuthServiceProtocol {
             "verificationCode": 0 as AnyObject
         ]
         
-        print("login.do parameters \(parameters))")
+        //print("login.do parameters \(parameters))")
         Alamofire.request(url, method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])

@@ -8,6 +8,7 @@
 
 import UIKit
 import Alamofire
+import NVActivityIndicatorView
 
 class DepositsDepositsViewController: UIViewController {
     
@@ -23,11 +24,44 @@ class DepositsDepositsViewController: UIViewController {
             tableView.reloadData()
         }
     }
-        // MARK: - Lifecycle
+    
+    
+    fileprivate func startAnimation () {
+        let loading = NVActivityIndicatorView(frame: .zero, type: .ballPulse, color: .red, padding: 0)
+        loading.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(loading)
+        NSLayoutConstraint.activate([
+            loading.widthAnchor.constraint(equalToConstant: 40),
+            loading.heightAnchor.constraint(equalToConstant: 40),
+            loading.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            loading.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            
+            ])
+        
+        loading.startAnimating()
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 6) {
+            loading.stopAnimating()
+        }
+    }
+
+ 
+    
+    //MARK: - lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        startAnimation()
         setUpTableView()
+        
+        
+        
     }
+    
+    
+
+ 
+    
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         NetworkManager.shared().getDepos { (success, datadeps) in
@@ -43,6 +77,8 @@ class DepositsDepositsViewController: UIViewController {
             tableView.deselectRow(at: selectedRow, animated: false)
         }
     }
+    
+    
 }
 
 // MARK: - UITableView DataSource and Delegate
@@ -57,11 +93,15 @@ extension DepositsDepositsViewController: UITableViewDataSource, UITableViewDele
             fatalError()
         }
         
+        
+        
         cell.titleLabel.text = datadeps[indexPath.row].depositProductName
         cell.subTitleLabel.text = datadeps[indexPath.row].accountNumber!
         cell.amountLabel.text = String(datadeps[indexPath.row].balance!)
         cell.currently.text = datadeps[indexPath.row].currencyCode
         cell.bottomSeparatorView.isHidden = indexPath.row == datadeps.endIndex - 1
+        
+        
         
         return cell
     }
