@@ -133,6 +133,7 @@
 		89C8DF132191AFA700D92B0A /* DepositsDepositCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89C8DF112191AFA700D92B0A /* DepositsDepositCell.xib */; };
 		960AD38822FC1826005399D6 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 960AD38722FC1826005399D6 /* Default-568h@2x.png */; };
 		9610CB8E22FD6F0C00FE7C84 /* Depos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9610CB8D22FD6F0C00FE7C84 /* Depos.swift */; };
+		9616C3B52302B0A30033766D /* Loans.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9616C3B42302B0A30033766D /* Loans.swift */; };
 		96BEAE4922FABBA00029C63D /* iCarousel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE4822FABBA00029C63D /* iCarousel.framework */; };
 		96BEAE4B22FABBA40029C63D /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE4A22FABBA40029C63D /* Alamofire.framework */; };
 		96BEAE4D22FABBA80029C63D /* DeviceKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE4C22FABBA80029C63D /* DeviceKit.framework */; };
@@ -328,6 +329,7 @@
 		89C8DF112191AFA700D92B0A /* DepositsDepositCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DepositsDepositCell.xib; sourceTree = "<group>"; };
 		960AD38722FC1826005399D6 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		9610CB8D22FD6F0C00FE7C84 /* Depos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Depos.swift; sourceTree = "<group>"; };
+		9616C3B42302B0A30033766D /* Loans.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loans.swift; sourceTree = "<group>"; };
 		96BEAE4022FAB9170029C63D /* iCarousel */ = {isa = PBXFileReference; lastKnownFileType = folder; name = iCarousel; path = Pods/iCarousel; sourceTree = "<group>"; };
 		96BEAE4822FABBA00029C63D /* iCarousel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = iCarousel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		96BEAE4A22FABBA40029C63D /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -755,6 +757,7 @@
 				09C7C3372175E486000EE472 /* DepositsHistoryCell.xib */,
 				09C7C33B2175FADD000EE472 /* DepositsHistoryHeader.swift */,
 				09C7C33A2175FADD000EE472 /* DepositsHistoryHeader.xib */,
+				9616C3B42302B0A30033766D /* Loans.swift */,
 			);
 			path = Deposits;
 			sourceTree = "<group>";
@@ -1072,6 +1075,7 @@
 				09D3C03A215CBCAB00998F57 /* ChatDialogsViewController.swift in Sources */,
 				09F2410921707B86007B7D73 /* FeedInfo3Cell.swift in Sources */,
 				89C8DF0C21918DDC00D92B0A /* OptionPickerViewController.swift in Sources */,
+				9616C3B52302B0A30033766D /* Loans.swift in Sources */,
 				0939B5FB21774EA70029F03D /* DoubleRoundedEdgeView.swift in Sources */,
 				A55B7B8621A7E86200A8A7FE /* DepositsHistoryDetailsSegueAnimator.swift in Sources */,
 				094FFC0D218837580069DDCB /* RegistrationViewController.swift in Sources */,
