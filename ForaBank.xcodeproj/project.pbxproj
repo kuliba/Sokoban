@@ -139,7 +139,7 @@
 		969899642303F2E20066C55B /* LoansModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969899632303F2E20066C55B /* LoansModel.swift */; };
 		969899662303F3380066C55B /* LoansCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969899652303F3380066C55B /* LoansCell.swift */; };
 		969899682303F4060066C55B /* LoansService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969899672303F4060066C55B /* LoansService.swift */; };
-		9698996A2303FD190066C55B /* Loans.xib in Resources */ = {isa = PBXBuildFile; fileRef = 969899692303FD190066C55B /* Loans.xib */; };
+		9698996A2303FD190066C55B /* LoansCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 969899692303FD190066C55B /* LoansCell.xib */; };
 		96BEAE4922FABBA00029C63D /* iCarousel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE4822FABBA00029C63D /* iCarousel.framework */; };
 		96BEAE4B22FABBA40029C63D /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE4A22FABBA40029C63D /* Alamofire.framework */; };
 		96BEAE4D22FABBA80029C63D /* DeviceKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE4C22FABBA80029C63D /* DeviceKit.framework */; };
@@ -341,7 +341,7 @@
 		969899632303F2E20066C55B /* LoansModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoansModel.swift; sourceTree = "<group>"; };
 		969899652303F3380066C55B /* LoansCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoansCell.swift; sourceTree = "<group>"; };
 		969899672303F4060066C55B /* LoansService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoansService.swift; sourceTree = "<group>"; };
-		969899692303FD190066C55B /* Loans.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Loans.xib; sourceTree = "<group>"; };
+		969899692303FD190066C55B /* LoansCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoansCell.xib; sourceTree = "<group>"; };
 		96BEAE4022FAB9170029C63D /* iCarousel */ = {isa = PBXFileReference; lastKnownFileType = folder; name = iCarousel; path = Pods/iCarousel; sourceTree = "<group>"; };
 		96BEAE4822FABBA00029C63D /* iCarousel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = iCarousel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		96BEAE4A22FABBA40029C63D /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -772,7 +772,7 @@
 				09C7C33B2175FADD000EE472 /* DepositsHistoryHeader.swift */,
 				09C7C33A2175FADD000EE472 /* DepositsHistoryHeader.xib */,
 				969899652303F3380066C55B /* LoansCell.swift */,
-				969899692303FD190066C55B /* Loans.xib */,
+				969899692303FD190066C55B /* LoansCell.xib */,
 			);
 			path = Deposits;
 			sourceTree = "<group>";
@@ -983,7 +983,7 @@
 				09E0F135215A61EB0042FB6A /* Feed.storyboard in Resources */,
 				096BCB0F21637E27005BC02B /* PaymentCell.xib in Resources */,
 				09E0F13D215A65310042FB6A /* Deposits.storyboard in Resources */,
-				9698996A2303FD190066C55B /* Loans.xib in Resources */,
+				9698996A2303FD190066C55B /* LoansCell.xib in Resources */,
 				09AF707C216F4B5000E7FCFC /* FeedUpcomingCell.xib in Resources */,
 				093B863221620EE8008A5222 /* ServicesCell.xib in Resources */,
 				09F2410A21707B86007B7D73 /* FeedInfo3Cell.xib in Resources */,

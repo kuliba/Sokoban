@@ -79,13 +79,15 @@ extension LoansViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? LoansCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? DepositsObligationsCell else {
             fatalError()
         }
         
-        cell.titleLabel.text = loans[indexPath.row].currencyCode
-        cell.subTitleLabel.text = loans[indexPath.row].currencyCode
+        cell.titleLabel.text = loans[indexPath.row].number
         cell.currently.text = loans[indexPath.row].currencyCode
+        cell.descriptionLabel.text = String(loans[indexPath.row].userAnnual!)
+        cell.subTitleLabel.text = String(loans[indexPath.row].principalDebt!)
+
     
         
         
@@ -146,7 +148,7 @@ private extension LoansViewController {
     }
     
     func setAutomaticRowHeight() {
-        tableView.estimatedRowHeight = 50
+        tableView.estimatedRowHeight = 64.5
         tableView.rowHeight = UITableView.automaticDimension
     }
     

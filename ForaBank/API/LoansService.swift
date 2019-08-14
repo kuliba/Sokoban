@@ -48,8 +48,19 @@
                                 if let cardData = cardData as? Dictionary<String, Any>,
                                     let original = cardData["original"] as? Dictionary<String, Any> {
                                     let currencyCode = original["currencyCode"] as? String
+                                    let Amount = original["Amount"] as? Int?
+                                    if(Amount != nil) {
+                                        print(Amount! as Any) // развернутое значение
+                                    } else {
+                                        print("0") // nil
+                                    }
+                                    let branchBrief = original["branchBrief"] as? String
+                                    let number = original["number"] as? String
+                                      let principalDebt = original["principalDebt"] as? Double
+                                    let userAnnual = original["userAnnual"] as? Double
                                     let loan = Loan(
-                                        currencyCode:currencyCode
+                                        Amount:Amount!,
+                                        currencyCode:currencyCode, principalDebt:principalDebt, userAnnual:userAnnual, branchBrief:branchBrief, number:number
                                                         )
                                     self.loans.append(loan)
                                 }
