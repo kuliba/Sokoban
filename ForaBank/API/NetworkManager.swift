@@ -42,6 +42,10 @@ protocol DeposServiceProtocol {
     func getDepos(headers: HTTPHeaders,
                   completionHandler: @escaping (_ success:Bool, _ obligations: [Depos]?) -> Void)
 }
+protocol LoansServiceProtocol {
+    func getLoans(headers: HTTPHeaders,
+                  completionHandler: @escaping (_ success:Bool, _ obligations: [Loan]?) -> Void)
+}
 
 protocol DepositsServiceProtocol {
     func getBonds(headers: HTTPHeaders,
@@ -80,9 +84,10 @@ class NetworkManager {
         let regService = RegService(baseURLString: host)//TestRegService()//
         let depositsService = TestDepositsService(baseURLString: host)
         let deposService = DeposService(baseURLString: host)
+        let loansService = LoansService(baseURLString: host)
         let statementService = StatementService(baseURLString: host)//TestStatementService()
         
-        let networkManager = NetworkManager(host, authService, regService, cardService, depositsService, deposService, statementService)
+        let networkManager = NetworkManager(host, authService, regService, cardService, depositsService, deposService, loansService, statementService)
         
         // Configuration
         
@@ -94,6 +99,7 @@ class NetworkManager {
     private let cardService: CardServiceProtocol
     private let depositsService: DepositsServiceProtocol
     private let deposService: DeposServiceProtocol
+    private let loansService: LoansServiceProtocol
     private let statementService: StatementServiceProtocol
 
     private let baseURLString: String
@@ -106,11 +112,12 @@ class NetworkManager {
     
     // Initialization
     
-    private init(_ baseURLString: String,_ authService: AuthServiceProtocol,_ regService: RegServiceProtocol,_ cardService: CardServiceProtocol,_ depositsService: DepositsServiceProtocol,_ DeposService: DeposServiceProtocol,_ statementService: StatementServiceProtocol) {
+    private init(_ baseURLString: String,_ authService: AuthServiceProtocol,_ regService: RegServiceProtocol,_ cardService: CardServiceProtocol,_ depositsService: DepositsServiceProtocol,_ DeposService: DeposServiceProtocol,_ loansService: LoansServiceProtocol ,_ statementService: StatementServiceProtocol) {
         self.baseURLString = baseURLString
         self.authService = authService
         self.regService = regService
         self.cardService = cardService
+        self.loansService = loansService
         self.depositsService = depositsService
         self.deposService = DeposService
         self.statementService = statementService
@@ -264,6 +271,9 @@ class NetworkManager {
     //MARK: - deposits service
     func getBonds(completionHandler: @escaping (_ success:Bool, _ obligations: [Bond]?) -> Void) {
          depositsService.getBonds(headers: headers, completionHandler: completionHandler)
+    }
+    func getLoans(completionHandler: @escaping (_ success:Bool, _ obligations: [Loan]?) -> Void) {
+        loansService.getLoans(headers: headers, completionHandler: completionHandler)
     }
     //MARK: - deposits service
     func getDepos(completionHandler: @escaping (_ success:Bool, _ obligations: [Depos]?) -> Void) {

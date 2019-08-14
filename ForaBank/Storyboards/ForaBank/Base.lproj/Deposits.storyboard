@@ -96,20 +96,30 @@
             </objects>
             <point key="canvasLocation" x="-866" y="50"/>
         </scene>
-        <!--View Controller-->
+        <!--Loans View Controller-->
         <scene sceneID="vDq-M7-Y0Q">
             <objects>
-                <viewController storyboardIdentifier="deposits3" id="3vm-B4-e1J" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="deposits3" id="3vm-B4-e1J" userLabel="Loans View Controller" customClass="LoansViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="0zP-gG-4ID">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="JRB-kD-qmb">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="579"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="onZ-MM-62c"/>
                     </view>
+                    <connections>
+                        <outlet property="tableView" destination="JRB-kD-qmb" id="FXC-nR-wIj"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2C8-D2-Wx4" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2" y="50"/>
+            <point key="canvasLocation" x="-3.75" y="49.647887323943664"/>
         </scene>
         <!--Deposits Deposits View Controller-->
         <scene sceneID="CHq-xi-EoF">
