@@ -13,5 +13,4 @@ target 'ForaBank' do
   pod 'Alamofire', '4.8.0'
   pod 'Hero', '1.4.0'
   pod 'CardIO', '5.4.1'
-  pod 'NVActivityIndicatorView'
 end

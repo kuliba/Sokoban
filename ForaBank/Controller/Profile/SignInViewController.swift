@@ -45,6 +45,7 @@ class SignInViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        loginTextField.becomeFirstResponder()
     }
     
     override func viewWillAppear(_ animated: Bool) {
