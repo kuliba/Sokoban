@@ -55,12 +55,13 @@
                                         print("0") // nil
                                     }
                                     let branchBrief = original["branchBrief"] as? String
+                                    let DateValue = original["DateValue"] as? Date
                                     let number = original["number"] as? String
                                       let principalDebt = original["principalDebt"] as? Double
                                     let userAnnual = original["userAnnual"] as? Double
                                     let loan = Loan(
                                         Amount:Amount!,
-                                        currencyCode:currencyCode, principalDebt:principalDebt, userAnnual:userAnnual, branchBrief:branchBrief, number:number
+                                        currencyCode:currencyCode, principalDebt:principalDebt, userAnnual:userAnnual, branchBrief:branchBrief, number:number, DateValue:DateValue
                                                         )
                                     self.loans.append(loan)
                                 }

@@ -14,11 +14,13 @@ class OneOneViewController: UIViewController {
 
     // MARK: - Properties
     @IBOutlet weak var header: UIView!
+    @IBOutlet weak var nameAccountLabel: UILabel!
+    @IBOutlet weak var amountAccount: UILabel!
     @IBOutlet weak var container: RoundedEdgeView!
     @IBOutlet var carousel: iCarousel!
     @IBOutlet weak var contentViewTop: NSLayoutConstraint!
     var previousIndex = -1
-    
+    var datadep: Depos?
     weak var currentViewController: UIViewController?
     var previousOffset: CGFloat = 0
     var items = ["Управление", "Выписка", "О счете"]
@@ -55,14 +57,11 @@ class OneOneViewController: UIViewController {
         carousel.dataSource = self
         carousel.type = .wheel
         carousel.bounces = false
+        
+        nameAccountLabel.text = "\((datadep?.depositProductName)!)"
+        amountAccount.text = "\((datadep?.balance)!)"
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "TransitionToSecondViewController" {
-            //let secondViewController = segue.destination as! TwoViewController
-            // Pass data to secondViewController before the transition
-        }
-    }
 }
 
 private extension OneOneViewController {

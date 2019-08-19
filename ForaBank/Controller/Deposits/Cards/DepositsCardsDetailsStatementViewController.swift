@@ -26,7 +26,7 @@ class DepositsCardsDetailsStatementViewController: UIViewController, TabCardDeta
     }
     let data_ = [
         DepositHistoryDate(date: "Вчера, 5 сентября", amountTotal: "+560,15 ₽", transactions: [
-            DepositHistoryTransaction(imageName: "deposit_history_transaction_capitalization", title: "Капитализация средств", subtitle: "Внутрибанковские операции", value: "5560,15 ₽", subvalue: ""),
+            DepositHistoryTransaction(imageName: "deposit_history_transaction_capitalization", title: "", subtitle: "", value: "5560,15 ₽", subvalue: ""),
             DepositHistoryTransaction(imageName: "deposit_history_transaction_perevod", title: "Перевод между счетами", subtitle: "Внутрибанковские операции", value: "+10 000,00 ₽", subvalue: ""),
             DepositHistoryTransaction(imageName: "deposit_history_transaction_metro", title: "METRO Store 1019", subtitle: "Гипермаркет", value: "-14 567,07 ₽", subvalue: "+1200 бонусов"),
             DepositHistoryTransaction(imageName: "deposit_history_transaction_sidorova", title: "Инна Сидорова", subtitle: "За тренировки", value: "-5000,00 ₽", subvalue: "")

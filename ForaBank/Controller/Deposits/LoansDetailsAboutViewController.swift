@@ -8,9 +8,7 @@
 
 import UIKit
 
-class DepositsCardsDetailsAboutViewController: UITableViewController, TabCardDetailViewController {
-
-    
+class LoansAboutViewController:  UITableViewController ,TabLoansViewController {
     
     @IBOutlet weak var startDateLabel: UILabel!
     @IBOutlet weak var expirationDateLabel: UILabel!
@@ -19,10 +17,10 @@ class DepositsCardsDetailsAboutViewController: UITableViewController, TabCardDet
     @IBOutlet weak var updatingDateLabel: UILabel!
     @IBOutlet weak var tariffLabel: UILabel!
     
-    var card: Card? = nil
+    var loan: Loan? = nil
 
-    func set(card: Card?) {
-        self.card = card
+    func set(loan: Loan?) {
+        self.loan = loan
         if startDateLabel != nil {
             updateTable()
         }
@@ -51,34 +49,14 @@ class DepositsCardsDetailsAboutViewController: UITableViewController, TabCardDet
     func updateTable() {
         let f = DateFormatter()
         f.dateFormat = "dd.MM.yyyy"
-        if let startDate = card?.startDate {
+        if let startDate = loan?.DateValue {
             startDateLabel.text = f.string(from: startDate)
         }
-        if let expirationDate = card?.expirationDate {
-            expirationDateLabel.text = f.string(from: expirationDate)
-        }
-        let f2 = NumberFormatter()
-        f2.numberStyle = .currency
-        f2.locale = Locale(identifier: "ru_RU")
-        f2.usesGroupingSeparator = true
-        f2.currencyGroupingSeparator = " "
-        if let availableBalance = card?.availableBalance {
-            avaliableBalanceLabel.text = f2.string(from: NSNumber(value: availableBalance))
-        }
-        if let blockedMoney = card?.blockedMoney {
-            blockedMoneyLabel.text = f2.string(from: NSNumber(value: blockedMoney))
-        }
+    
         f.dateStyle = .short
         f.locale = Locale(identifier: "ru_RU")
         f.doesRelativeDateFormatting = true
-        let f3 = DateFormatter()
-        f3.dateFormat = "HH:mm"
-        if let updatingDate = card?.updatingDate {
-            updatingDateLabel.text = "\(f.string(from: updatingDate)), \(f3.string(from: updatingDate))"
-        }
-        if let tariff = card?.tariff {
-            tariffLabel.text = "\"\(tariff)\""
-        }
+     
     }
     // MARK: - Table view data source
     

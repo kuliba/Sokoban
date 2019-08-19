@@ -39,16 +39,32 @@ class DepositsDepositsViewController: UIViewController {
             }
         }
     }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let destination = segue.destination as? OneOneViewController {
+            destination.datadep = datadeps[(tableView.indexPathForSelectedRow?.row)!]
+        }
+        
+    }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        if let selectedRow = tableView.indexPathForSelectedRow {
-            tableView.deselectRow(at: selectedRow, animated: false)
+        if tableView.indexPathForSelectedRow != nil {
+            //tableView.deselectRow(at: selectedRow, animated: false)
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "OneOneViewController", sender: Any?.self)
+        
     }
     
     
 }
+
+ 
+    
+    
+
 
 // MARK: - UITableView DataSource and Delegate
 extension DepositsDepositsViewController: UITableViewDataSource, UITableViewDelegate {
@@ -95,10 +111,9 @@ extension DepositsDepositsViewController: UITableViewDataSource, UITableViewDele
         return nil
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "OneOneViewController", sender: nil)
-    }
     
+  
+ 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 95
     }
