@@ -55,7 +55,7 @@
                                         print("0") // nil
                                     }
                                     let branchBrief = original["branchBrief"] as? String
-                                    let DateValue = original["DateValue"] as? Date
+                                    var DateValue: Date? = nil
                                     let number = original["number"] as? String
                                       let principalDebt = original["principalDebt"] as? Double
                                     let userAnnual = original["userAnnual"] as? Double

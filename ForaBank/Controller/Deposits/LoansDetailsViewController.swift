@@ -10,8 +10,8 @@ import UIKit
 import iCarousel
 import DeviceKit
 
-protocol TabLoansViewController {
-    func set(loan:Loan?)
+protocol TabLoansDetailViewController {
+    func set(loan :Loan?)
 }
 
 
@@ -19,13 +19,13 @@ class LoansDetailsViewController: UIViewController {
    
     // MARK: - Properties
     @IBOutlet weak var header: UIView!
-    @IBOutlet weak var container: RoundedEdgeView!
+    @IBOutlet weak var container: UIView!
     @IBOutlet weak var carousel: iCarousel!
     @IBOutlet weak var product: UILabel!
     @IBOutlet weak var principalname: UILabel!
     @IBOutlet weak var contentViewTop: NSLayoutConstraint!
     var previousIndex = -1
-    var loans: Loan?
+    var loan: Loan? = nil
     weak var currentViewController: UIViewController?
     var previousOffset: CGFloat = 0
     var items = ["Управление","История" ,"О счете"]
@@ -46,15 +46,15 @@ class LoansDetailsViewController: UIViewController {
     }
     
     
-
-    
-    
     override func viewDidLoad() {
-        currentViewController = storyboard?.instantiateViewController(withIdentifier: "feedfeed0")
+        currentViewController = storyboard?.instantiateViewController(withIdentifier: "feed1feed0")
         currentViewController!.view.translatesAutoresizingMaskIntoConstraints = false
         addChild(currentViewController!)
         addSubview(self.currentViewController!.view, toView: self.container)
-        
+        currentViewController!.view.translatesAutoresizingMaskIntoConstraints = false
+        if let c = currentViewController as? TabLoansDetailViewController {
+            c.set(loan: loan)
+        }
         labels = [UILabel?].init(repeating: nil, count: items.count)
      
         super.viewDidLoad()
@@ -67,27 +67,14 @@ class LoansDetailsViewController: UIViewController {
         carousel.bounces = false
         
         
-        product.text = "\((loans?.number)!)"
-        principalname.text = "\((loans?.principalDebt)!)"
+        product.text = "\((loan?.number)!)"
+        principalname.text = "\((loan?.principalDebt)!)"
         
     }
     
    
    
 }
-
-
-struct eventStruct {
-    let title: String!
-    let date: String!
-    let location: String!
-    let description: String!
-    
-    
-}
-
-
-
 
 private extension LoansDetailsViewController {
     
@@ -143,9 +130,12 @@ private extension LoansDetailsViewController {
     
     func showComponent(index: Int) {
         NotificationCenter.default.removeObserver(self)
-        let newViewController = storyboard?.instantiateViewController(withIdentifier: "feedfeed\(index)")
+        let newViewController = storyboard?.instantiateViewController(withIdentifier: "feed1feed\(index)")
         newViewController!.view.translatesAutoresizingMaskIntoConstraints = false
-        cycleFromViewController(oldViewController: currentViewController!, toViewController: newViewController!)
+        if let c = newViewController as? TabLoansDetailViewController {
+            c.set(loan: loan)
+        }
+        cycleFromViewController(oldViewController: self.currentViewController!, toViewController: newViewController!)
         currentViewController = newViewController
     }
     

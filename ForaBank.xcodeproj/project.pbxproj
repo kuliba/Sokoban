@@ -131,6 +131,7 @@
 		89C8DF0E2191ADF200D92B0A /* DepositsDepositsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C8DF0D2191ADF200D92B0A /* DepositsDepositsViewController.swift */; };
 		89C8DF122191AFA700D92B0A /* DepositsDepositCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C8DF102191AFA600D92B0A /* DepositsDepositCell.swift */; };
 		89C8DF132191AFA700D92B0A /* DepositsDepositCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89C8DF112191AFA700D92B0A /* DepositsDepositCell.xib */; };
+		96072C882313FF13001CFCBD /* TouchIDAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96072C872313FF13001CFCBD /* TouchIDAuthentication.swift */; };
 		960AD38822FC1826005399D6 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 960AD38722FC1826005399D6 /* Default-568h@2x.png */; };
 		9610CB8E22FD6F0C00FE7C84 /* Accounts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9610CB8D22FD6F0C00FE7C84 /* Accounts.swift */; };
 		9616C3B52302B0A30033766D /* Loans.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9616C3B42302B0A30033766D /* Loans.swift */; };
@@ -337,6 +338,7 @@
 		89C8DF0D2191ADF200D92B0A /* DepositsDepositsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsDepositsViewController.swift; sourceTree = "<group>"; };
 		89C8DF102191AFA600D92B0A /* DepositsDepositCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsDepositCell.swift; sourceTree = "<group>"; };
 		89C8DF112191AFA700D92B0A /* DepositsDepositCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DepositsDepositCell.xib; sourceTree = "<group>"; };
+		96072C872313FF13001CFCBD /* TouchIDAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchIDAuthentication.swift; sourceTree = "<group>"; };
 		960AD38722FC1826005399D6 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		9610CB8D22FD6F0C00FE7C84 /* Accounts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Accounts.swift; sourceTree = "<group>"; };
 		9616C3B42302B0A30033766D /* Loans.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loans.swift; sourceTree = "<group>"; };
@@ -571,9 +573,10 @@
 				094FFC09218837580069DDCB /* RegistrationViewController.swift */,
 				097A6DCD21899C5B00E6C69E /* RegistrationLoginPasswordViewController.swift */,
 				094FFC0A218837580069DDCB /* RegistrationCodeVerificationViewController.swift */,
-				09F54A09218B24DA003CB6D3 /* RegistrationPermissionsViewController.swift */,
 				09F5DCE5218C3E7200390304 /* RegistrationFinishViewController.swift */,
+				09F54A09218B24DA003CB6D3 /* RegistrationPermissionsViewController.swift */,
 				09F5DCE7218C4A5200390304 /* RegistrationTouchIDViewController.swift */,
+				96072C872313FF13001CFCBD /* TouchIDAuthentication.swift */,
 			);
 			path = Registration;
 			sourceTree = "<group>";
@@ -1072,6 +1075,7 @@
 				"${BUILT_PRODUCTS_DIR}/FlexiblePageControl/FlexiblePageControl.framework",
 				"${BUILT_PRODUCTS_DIR}/Hero/Hero.framework",
 				"${BUILT_PRODUCTS_DIR}/IQKeyboardManagerSwift/IQKeyboardManagerSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/NVActivityIndicatorView/NVActivityIndicatorView.framework",
 				"${BUILT_PRODUCTS_DIR}/iCarousel/iCarousel.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -1081,6 +1085,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FlexiblePageControl.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Hero.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManagerSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NVActivityIndicatorView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/iCarousel.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1212,6 +1217,7 @@
 				09AF7092216F73FD00E7FCFC /* FeedCurrent4Cell.swift in Sources */,
 				A51AF85021EA093800FB3B68 /* RegService.swift in Sources */,
 				09203D95216E13A700902BD2 /* FeedOptionCell.swift in Sources */,
+				96072C882313FF13001CFCBD /* TouchIDAuthentication.swift in Sources */,
 				09F5DCE6218C3E7200390304 /* RegistrationFinishViewController.swift in Sources */,
 				A568142421CBCD38002C0899 /* BankBranchViews.swift in Sources */,
 				09AF708C216F73FD00E7FCFC /* FeedCurrent2Cell.swift in Sources */,

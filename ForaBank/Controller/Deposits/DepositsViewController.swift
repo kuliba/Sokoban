@@ -2,7 +2,7 @@
  * Copyright (C) 2017-2019 Brig Invest ltd. All rights reserved.
  * CONFIDENTIAL
  *
- * Авторское право (C) 2017-2019 OОО "Бриг Инвест". Все права защищены.
+ * Авторское право (C) 2017-2019 OОО "Бриг Инвест". Все права защищен.
  * КОНФИДЕНЦИАЛЬНО
  */
 
@@ -214,6 +214,7 @@ extension DepositsViewController: iCarouselDataSource, iCarouselDelegate {
         }
         label.text = "\(items[index])"
         labels[index] = label
+        
         return label
     }
     
@@ -279,6 +280,7 @@ extension DepositsViewController: iCarouselDataSource, iCarouselDelegate {
                        animations: {
             self.gradientView.gradientLayer.colors = [self.gradients[index][0].cgColor,
                                                       self.gradients[index][1].cgColor]
+        
         }, completion: nil)
     }
     

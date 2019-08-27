@@ -9,6 +9,8 @@
 import UIKit
 import FlexiblePageControl
 import Hero
+import LocalAuthentication
+
 
 class RegistrationPermissionsViewController: UIViewController {
     
@@ -25,6 +27,8 @@ class RegistrationPermissionsViewController: UIViewController {
 //    let pageControl = FlexiblePageControl()
     let gradientView = UIView()
     let circleView = UIView()
+    let touchMe = BiometricIDAuth()
+        let context = LAContext()
     
     // MARK: - Actions
     @IBAction func backButtonCLicked(_ sender: Any) {
@@ -70,6 +74,24 @@ class RegistrationPermissionsViewController: UIViewController {
         })
     }
     
+    func biometricType() -> BiometricType {
+        let _ = context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
+        switch context.biometryType {
+        case .none:
+            return .none
+        case .touchID:
+            return .touchID
+        case .faceID:
+            return .faceID
+        }
+    }
+    
+    func canEvaluatePolicy() -> Bool {
+        return context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
+    }
+    
+    @IBOutlet weak var touchIdDevice: UIView!
+    @IBOutlet weak var faceIdDevice: UIView!
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -80,6 +102,15 @@ class RegistrationPermissionsViewController: UIViewController {
             setUpPageControl()
         }
         view.clipsToBounds = true
+        
+        
+        switch touchMe.biometricType() {
+        case .faceID:
+            touchIdDevice.isHidden = true
+        default:
+            faceIdDevice.isHidden = true
+
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

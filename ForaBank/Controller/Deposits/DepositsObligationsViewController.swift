@@ -7,6 +7,8 @@
  */
 
 import UIKit
+import FlexiblePageControl
+import Hero
 
 class DepositsObligationsViewController: UIViewController {
 
@@ -15,7 +17,9 @@ class DepositsObligationsViewController: UIViewController {
     
     let cellId = "DepositsObligationsCell"
     
-//    let data_ = [
+    @IBOutlet weak var activityIndicator: ActivityIndicatorView!
+    
+    //    let data_ = [
 //        ["deposits_obligations_afk",
 //         "АФК-Система, Sistema-19",
 //         "Предложений по бумаге нет",
@@ -40,16 +44,38 @@ class DepositsObligationsViewController: UIViewController {
 //         "3,84%"
 //        ]
 //    ]
+ 
     var bonds = [Bond]() {
         didSet{
             tableView.reloadData()
+            activityIndicator.stopAnimating()
         }
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if (bonds == nil) {
+           activityIndicator.startAnimation()
+            
+        }
+    
+        
+    }
+
+    
+    
+   
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        activityIndicator.startAnimation()
         setUpTableView()
+        
     }
+    
+
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         NetworkManager.shared().getBonds { (success, bonds) in
@@ -69,10 +95,12 @@ class DepositsObligationsViewController: UIViewController {
 
 // MARK: - UITableView DataSource and Delegate
 extension DepositsObligationsViewController: UITableViewDataSource, UITableViewDelegate {
-
+    
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return bonds.count
     }
+    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? DepositsObligationsCell else {

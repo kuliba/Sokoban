@@ -17,6 +17,9 @@ class AuthService: AuthServiceProtocol {
     private var login: String? = nil
     private var password: String? = nil
     private var profile: Profile? = nil
+    private var myContext: Bool = false
+
+    
     
     init(baseURLString: String) {
         self.baseURLString = baseURLString
@@ -111,6 +114,14 @@ class AuthService: AuthServiceProtocol {
                     print("\(error) \(self)")
                     completionHandler(false, "login result validation failure")
                 }
+        }
+    }
+    
+    
+    func checkTouchId(headers: HTTPHeaders, code: String, completionHandler: @escaping (_ success:Bool) -> Void) {
+        if myContext == true {
+            completionHandler(myContext)
+            return
         }
     }
     

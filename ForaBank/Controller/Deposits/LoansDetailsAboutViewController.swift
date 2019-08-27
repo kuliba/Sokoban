@@ -8,10 +8,11 @@
 
 import UIKit
 
-class LoansAboutViewController:  UITableViewController ,TabLoansViewController {
+class LoansAboutViewController:  UITableViewController ,TabLoansDetailViewController {
     
     @IBOutlet weak var startDateLabel: UILabel!
     @IBOutlet weak var expirationDateLabel: UILabel!
+    @IBOutlet weak var startDateLABEL: UILabel!
     @IBOutlet weak var avaliableBalanceLabel: UILabel!
     @IBOutlet weak var blockedMoneyLabel: UILabel!
     @IBOutlet weak var updatingDateLabel: UILabel!
@@ -19,20 +20,19 @@ class LoansAboutViewController:  UITableViewController ,TabLoansViewController {
     
     var loan: Loan? = nil
 
+
     func set(loan: Loan?) {
         self.loan = loan
-        if startDateLabel != nil {
+        if startDateLABEL != nil {
             updateTable()
         }
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         tableView.tableFooterView = UIView()
-        
         tableView.contentInset.top = 35
         tableView.contentInset.bottom = 10
-        
+  
         // Uncomment the following line to pre10
         //         serve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -49,10 +49,11 @@ class LoansAboutViewController:  UITableViewController ,TabLoansViewController {
     func updateTable() {
         let f = DateFormatter()
         f.dateFormat = "dd.MM.yyyy"
-        if let startDate = loan?.DateValue {
-            startDateLabel.text = f.string(from: startDate)
+   
+        if let DateValue = loan?.DateValue {
+            startDateLABEL.text = f.string(from: DateValue)
         }
-    
+        
         f.dateStyle = .short
         f.locale = Locale(identifier: "ru_RU")
         f.doesRelativeDateFormatting = true
