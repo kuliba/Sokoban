@@ -134,8 +134,6 @@
 		96072C882313FF13001CFCBD /* TouchIDAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96072C872313FF13001CFCBD /* TouchIDAuthentication.swift */; };
 		960AD38822FC1826005399D6 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 960AD38722FC1826005399D6 /* Default-568h@2x.png */; };
 		9610CB8E22FD6F0C00FE7C84 /* Accounts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9610CB8D22FD6F0C00FE7C84 /* Accounts.swift */; };
-		9616C3B52302B0A30033766D /* Loans.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9616C3B42302B0A30033766D /* Loans.swift */; };
-		9610CB8E22FD6F0C00FE7C84 /* Depos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9610CB8D22FD6F0C00FE7C84 /* Depos.swift */; };
 		9698995E2303076F0066C55B /* LoansViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9698995D2303076F0066C55B /* LoansViewController.swift */; };
 		969899642303F2E20066C55B /* LoansModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969899632303F2E20066C55B /* LoansModel.swift */; };
 		969899662303F3380066C55B /* LoansCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969899652303F3380066C55B /* LoansCell.swift */; };
@@ -341,8 +339,6 @@
 		96072C872313FF13001CFCBD /* TouchIDAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchIDAuthentication.swift; sourceTree = "<group>"; };
 		960AD38722FC1826005399D6 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		9610CB8D22FD6F0C00FE7C84 /* Accounts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Accounts.swift; sourceTree = "<group>"; };
-		9616C3B42302B0A30033766D /* Loans.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loans.swift; sourceTree = "<group>"; };
-		9610CB8D22FD6F0C00FE7C84 /* Depos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Depos.swift; sourceTree = "<group>"; };
 		9698995D2303076F0066C55B /* LoansViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoansViewController.swift; sourceTree = "<group>"; };
 		969899632303F2E20066C55B /* LoansModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoansModel.swift; sourceTree = "<group>"; };
 		969899652303F3380066C55B /* LoansCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoansCell.swift; sourceTree = "<group>"; };
@@ -898,11 +894,9 @@
 				A57CF1B52202DE1800E855A5 /* CardService.swift */,
 				A57CF1B92204360900E855A5 /* TestStatementService.swift */,
 				A57CF1B7220435F200E855A5 /* StatementService.swift */,
+				969899672303F4060066C55B /* LoansService.swift */,
 				A568142D21D0B945002C0899 /* DepositsService.swift */,
 				96EC41802301A6890087BFB0 /* AccountsService.swift */,
-				A568142D21D0B945002C0899 /* TestDepositsService.swift */,
-				96EC41802301A6890087BFB0 /* Deposit.swift */,
-				969899672303F4060066C55B /* LoansService.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -1107,6 +1101,7 @@
 				09203D87216CA79C00902BD2 /* FeedViewController.swift in Sources */,
 				09C7C30F2174888B000EE472 /* DepositsObligationsViewController.swift in Sources */,
 				A5C5E6E621A2B492001D6250 /* DetailedCardView.swift in Sources */,
+				96D0F1CA23069B250064CECA /* LoansSegueAnimator.swift in Sources */,
 				895768CD2192D992005754D5 /* OneOneViewController.swift in Sources */,
 				09D3C03A215CBCAB00998F57 /* ChatDialogsViewController.swift in Sources */,
 				09F2410921707B86007B7D73 /* FeedInfo3Cell.swift in Sources */,
@@ -1143,8 +1138,8 @@
 				A5C5E6E121A2B443001D6250 /* Card.swift in Sources */,
 				094FFC10218837580069DDCB /* Helpers.swift in Sources */,
 				96EC41812301A6890087BFB0 /* AccountsService.swift in Sources */,
-				96EC41812301A6890087BFB0 /* Deposit.swift in Sources */,
 				969899662303F3380066C55B /* LoansCell.swift in Sources */,
+				96EC41812301A6890087BFB0 /* AccountsService.swift in Sources */,
 				096BCB0E21637E27005BC02B /* PaymentCell.swift in Sources */,
 				096BCB0A216361AA005BC02B /* PaymentTemplateCell.swift in Sources */,
 				A55663A421EDB22600E48C40 /* OnMapButton.swift in Sources */,

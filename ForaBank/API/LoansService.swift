@@ -57,7 +57,8 @@
                                     let branchBrief = original["branchBrief"] as? String
                                     var DateValue: Date? = nil
                                     let number = original["number"] as? String
-                                      let principalDebt = original["principalDebt"] as? Double
+                                    let principalDebt = original["principalDebt"] as? Double
+                                    if principalDebt == 0 { continue }
                                     let userAnnual = original["userAnnual"] as? Double
                                     let loan = Loan(
                                         Amount:Amount!,

@@ -67,7 +67,7 @@ class DepositsCardsDetailsViewController: UIViewController {
                 backgroundImageView.addSubview(blackView)
                 backgroundImageView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[b]-0-|", options: [], metrics: nil, views: ["b":blackView]))
                 backgroundImageView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[b]-0-|", options: [], metrics: nil, views: ["b":blackView]))
-//                cardView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.35)
+            
 //                selectedTabColor = .black
 //                tabColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.7)
                 cardView.foregroundColor = .white

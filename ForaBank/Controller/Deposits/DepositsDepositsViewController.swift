@@ -8,28 +8,46 @@
 
 import UIKit
 import Alamofire
+import FlexiblePageControl
+import Hero
 
 class DepositsDepositsViewController: UIViewController {
     
     // MARK: - Properties
     @IBOutlet weak var tableView: CustomTableView!
     
+    @IBOutlet weak var activityIndicatorView: ActivityIndicatorView!
     let transitionAnimator = DepositsDepositsSegueAnimator()
-    
+   
     let cellId = "DepositsDepositCell"
+   
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        activityIndicatorView.startAnimation()
+        setUpTableView()
+    }
     
     var datadeps = [Depos]() {
         didSet{
             tableView.reloadData()
+            activityIndicatorView.stopAnimating()
         }
     }
     
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if (datadeps == nil) {
+            activityIndicatorView.startAnimation()
+            
+        }
+    }
     
     //MARK: - lifecycle
-    override func viewDidLoad() {
-        super.viewDidLoad()
-       setUpTableView()
-    }
+
      
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -87,8 +105,8 @@ extension DepositsDepositsViewController: UITableViewDataSource, UITableViewDele
         cell.bottomSeparatorView.isHidden = indexPath.row == datadeps.endIndex - 1
         
         
-        
         return cell
+       
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {

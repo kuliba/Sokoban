@@ -21,6 +21,15 @@ class DetailedCardView: CardView {
     let cardBlockedImageView = UIImageView()
     var logoImageViewCosntraint: NSLayoutConstraint? = nil
     
+    
+    enum CardBackGround: String {
+        case mastercard = "mastercard_gold"
+        case visaGold = "visa_gold"
+        case visaPlatinum = "visa_platinum"
+        case visaDebet = "visa_classic"
+        case visaStandart = "visa_standart"
+    }
+    
     var foregroundColor: UIColor! {
         didSet {
             titleLabel.textColor = foregroundColor
@@ -66,10 +75,8 @@ class DetailedCardView: CardView {
         cardCashLabel.translatesAutoresizingMaskIntoConstraints = false
         paypassLogoImageView.translatesAutoresizingMaskIntoConstraints = false
         cardBlockedImageView.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundColor = .white
-        self.layer.cornerRadius = 10
-        self.layer.borderWidth = 0.5
-        self.layer.borderColor = UIColor.black.cgColor
+    
+ 
         
         if card != nil {
             let cashFormatter = NumberFormatter()
@@ -81,7 +88,7 @@ class DetailedCardView: CardView {
             if let availableBalance = card!.availableBalance {
                 cash = cashFormatter.string(from: NSNumber(value: availableBalance)) ?? ""
             }
-            let foregroundColor = UIColor.black//UIColor.white
+            let foregroundColor = UIColor.white//UIColor.white
 //            if card?.type?.rawValue.range(of: "mastercard", options: .caseInsensitive) != nil {
 //                foregroundColor = UIColor.black
 //            }
@@ -90,7 +97,7 @@ class DetailedCardView: CardView {
             
             cardCashLabel.adjustsFontSizeToFitWidth = true
             cardCashLabel.attributedText = NSAttributedString(string: cash, attributes: [.font:UIFont.systemFont(ofSize: 16), .foregroundColor : foregroundColor])
-//            backgroundImageView.image = UIImage(named: card!.type?.rawValue)
+            backgroundImageView.image = UIImage(named: "card_visa_gold")
             color2 = UIColor(red: 0.96, green: 0.45, blue: 0.13, alpha: 1)
             color1 = UIColor(red: 0.89, green: 0.77, blue: 0.35, alpha: 1)
             

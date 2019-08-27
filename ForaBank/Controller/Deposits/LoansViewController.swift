@@ -11,54 +11,60 @@ import Foundation
 
 import UIKit
 
+
+
 class LoansViewController: UIViewController {
     
+    var product: String?
+    let transitionAnimator = LoansSegueAnimator()
     // MARK: - Properties
-    @IBOutlet weak var tableView: CustomTableView!
+    @IBOutlet weak var tableView: CustomTableView! //tblProductApple
+   
+    @IBOutlet weak var activityInd: ActivityIndicatorView!
     
     let cellId = "DepositsObligationsCell"
     
-    //    let data_ = [
-    //        ["deposits_obligations_afk",
-    //         "АФК-Система, Sistema-19",
-    //         "Предложений по бумаге нет",
-    //         "8,83%"
-    //        ],
-    //
-    //        ["deposits_obligations_gazprom",
-    //         "Газпром, GAZ-37",
-    //         "Предложений по бумаге нет",
-    //         "5,37%"
-    //        ],
-    //
-    //        ["deposits_obligations_veb",
-    //         "ВЭБ, VEB-23",
-    //         "Предложений по бумаге нет",
-    //         "4,04%"
-    //        ],
-    //
-    //        ["deposits_obligations_rosnef",
-    //         "Роснэфть, RosNef-22",
-    //         "Гипермаркет",
-    //         "3,84%"
-    //        ]
-    //    ]
-    var loans = [Loan]() {
+   
+    var loan = [Loan]() {
         didSet{
             tableView.reloadData()
+            activityInd.stopAnimating()
         }
     }
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        activityInd.startAnimation()
         setUpTableView()
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
         
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if (loan == nil) {
+            activityInd.startAnimation()
+            
+        }
+        
+        
+    }
+
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let destination = segue.destination as? LoansDetailsViewController {
+            destination.loan = loan[(tableView.indexPathForSelectedRow?.row)!]
+        }
+        
+    }
+    
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         NetworkManager.shared().getLoans { (success, loans) in
             if success {
-                self.loans = loans ?? []
+                self.loan = loans ?? []
             }
         }
     }
@@ -66,16 +72,31 @@ class LoansViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         if let selectedRow = tableView.indexPathForSelectedRow {
-            tableView.deselectRow(at: selectedRow, animated: false)
+         //tableView.deselectRow(at: selectedRow, animated: false)
+            performSegue(withIdentifier:  "LoansDetailsViewController", sender: nil)
+        
         }
+        
+       
     }
+    
+    
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "LoansDetailsViewController", sender: nil)
+    
+    }
+
+    
 }
+
+
 
 // MARK: - UITableView DataSource and Delegate
 extension LoansViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return loans.count
+        return loan.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -83,59 +104,49 @@ extension LoansViewController: UITableViewDataSource, UITableViewDelegate {
             fatalError()
         }
         
-        cell.titleLabel.text = loans[indexPath.row].number
-        cell.currently.text = loans[indexPath.row].currencyCode
-        cell.descriptionLabel.text = String(loans[indexPath.row].userAnnual!)
-        cell.subTitleLabel.text = String(loans[indexPath.row].principalDebt!)
+        cell.titleLabel.text = loan[indexPath.row].number
+        cell.currently.text = loan[indexPath.row].currencyCode
+        cell.subTitleLabel.text = String(loan[indexPath.row].principalDebt!)
+          cell.descriptionLabel.text = String(loan[indexPath.row].userAnnual!)
+        cell.bottomSeparatorView.isHidden = indexPath.row == loan.endIndex - 1
 
     
-        
-        
         
         return cell
     }
     
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if section == 0 {
-            
-            let footerView = UIView(frame: CGRect(x: tableView.frame.minX + 20, y: 0, width: tableView.frame.width - 40, height: 95))
-            let doneButton = UIButton(type: .system)
-            doneButton.frame = CGRect(x: footerView.frame.minX, y: footerView.frame.minY + 15, width: footerView.frame.width, height: 45)
-            
-            doneButton.setTitle("Открыть вклад", for: .normal)
-            
-            doneButton.titleLabel?.font = UIFont(name: "Roboto-Regular", size: 16)
-            
-            doneButton.setTitleColor(.black, for: [])
-            
-            
-            doneButton.layer.borderWidth = 0.5
-            doneButton.layer.borderColor = UIColor(red: 211/255, green: 211/255, blue: 211/255, alpha: 1).cgColor
-            
-            doneButton.layer.cornerRadius = doneButton.frame.height / 2
-            
-            
-            footerView.addSubview(doneButton)
-            return footerView
-        }
-        
-        return nil
-    }
     
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 95
+    
+ 
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let addToDepositAction = UITableViewRowAction(style: .normal, title: "Пополнить счет") { [weak self] action, indexPath in
+            self?.presentPaymentsDetailsViewController()
+        }
+        addToDepositAction.backgroundColor = UIColor(red: 26/255, green: 188/255, blue: 156/255, alpha: 1)
+        return [addToDepositAction]
     }
+
+    
+ 
 }
 
 // MARK: - Private methods
 private extension LoansViewController {
+    func presentPaymentsDetailsViewController() {
+        if let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentsDetailsViewController") as? PaymentsDetailsViewController {
+            present(vc, animated: true, completion: nil)
+        }
+    }
+}
+
+// MARK: - Table View Set Up Private methods
+private extension LoansViewController {
     
     func setUpTableView() {
         setTableViewDelegateAndDataSource()
-        setTableViewContentInsets()
-        setAutomaticRowHeight()
-        registerNibCell()
-        setSearchView()
+        setTableViewEstimatedAutomaticRowHeight()
+        setTableViewContentInset()
+        registerTableViewNibCell()
     }
     
     func setTableViewDelegateAndDataSource() {
@@ -143,27 +154,31 @@ private extension LoansViewController {
         tableView.delegate = self
     }
     
-    func setTableViewContentInsets() {
-        tableView.contentInset.top = 15
-    }
-    
-    func setAutomaticRowHeight() {
-        tableView.estimatedRowHeight = 64.5
+    func setTableViewEstimatedAutomaticRowHeight() {
+        tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
     }
     
-    func registerNibCell() {
+    func setTableViewContentInset() {
+        tableView.contentInset.top = 15
+    }
+    
+    func registerTableViewNibCell() {
         let nibTemplateCell = UINib(nibName: cellId, bundle: nil)
         tableView.register(nibTemplateCell, forCellReuseIdentifier: cellId)
     }
+}
+
+extension LoansViewController: CustomTransitionOriginator, CustomTransitionDestination {
+    var fromAnimatedSubviews: [String : UIView] {
+        var views = [String : UIView]()
+        views["tableView"] = tableView
+        return views
+    }
     
-    func setSearchView() {
-        guard let searchCell = UINib(nibName: "DepositsSearchCell", bundle: nil)
-            .instantiate(withOwner: nil, options: nil)[0] as? UIView else {
-                return
-        }
-        let searchView = UIView(frame: searchCell.frame)
-        searchView.addSubview(searchCell)
-        tableView.tableHeaderView = searchView
+    var toAnimatedSubviews: [String : UIView] {
+        var views = [String : UIView]()
+        views["tableView"] = tableView
+        return views
     }
 }

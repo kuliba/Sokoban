@@ -84,11 +84,18 @@ class DepositsObligationsViewController: UIViewController {
             }
         }
     }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let destination = segue.destination as? DepositObligationDetailsViewController {
+            destination.bonds = bonds[(tableView.indexPathForSelectedRow?.row)!]
+        }
+        
+    }
+
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         if let selectedRow = tableView.indexPathForSelectedRow {
-            tableView.deselectRow(at: selectedRow, animated: false)
+           // tableView.deselectRow(at: selectedRow, animated: false)
         }
     }
 }
@@ -143,11 +150,24 @@ extension DepositsObligationsViewController: UITableViewDataSource, UITableViewD
         
         return nil
     }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "DepositObligationDetailsViewController", sender: nil)
+    }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
             return 95
     }
 }
+
+// MARK: - Private methods
+private extension DepositsObligationsViewController {
+    func presentPaymentsDetailsViewController() {
+        if let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentsDetailsViewController") as? PaymentsDetailsViewController {
+            present(vc, animated: true, completion: nil)
+        }
+    }
+}
+
 
 // MARK: - Private methods
 private extension DepositsObligationsViewController {
@@ -157,7 +177,6 @@ private extension DepositsObligationsViewController {
         setTableViewContentInsets()
         setAutomaticRowHeight()
         registerNibCell()
-        setSearchView()
     }
     
     func setTableViewDelegateAndDataSource() {
@@ -189,3 +208,4 @@ private extension DepositsObligationsViewController {
         tableView.tableHeaderView = searchView
     }
 }
+

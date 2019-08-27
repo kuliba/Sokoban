@@ -131,6 +131,7 @@ class DepositsCardsListViewController: UIViewController {
 //        print("DepositsCardsListViewController viewDidLoad")
         hero.isEnabled = true
         hero.modalAnimationType = .none
+        saveData()
     }
     
    
@@ -840,6 +841,11 @@ private extension DepositsCardsListViewController {
 //            v.removeFromSuperview()
 //        }
 //    }
+    func saveData() {
+        UserDefaults.standard.set(cards, forKey:  "item")
+        UserDefaults.standard.synchronize()
+    }
+    
     func updateCardViews() {
         for (i, v) in cardViews.enumerated() {
             v.update(withCard: cards[i])

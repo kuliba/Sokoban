@@ -119,6 +119,7 @@ class RegistrationCodeVerificationViewController: UIViewController{
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        codeNumberTextField.becomeFirstResponder()
         
         addGradientLayerView()
 //        addCircleView()
