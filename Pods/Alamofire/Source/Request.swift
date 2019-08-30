@@ -188,8 +188,11 @@ open class Request {
         guard let data = "\(user):\(password)".data(using: .utf8) else { return nil }
 
         let credential = data.base64EncodedString(options: [])
-
+        
+        
+        
         return (key: "Authorization", value: "Basic \(credential)")
+      
     }
 
     // MARK: State

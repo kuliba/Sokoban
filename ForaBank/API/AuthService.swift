@@ -8,7 +8,7 @@
 
 import Foundation
 import Alamofire
-
+import RMMapper
 class AuthService: AuthServiceProtocol {
     
     private let baseURLString: String
@@ -19,15 +19,19 @@ class AuthService: AuthServiceProtocol {
     private var profile: Profile? = nil
     private var myContext: Bool = false
 
-    
+
     
     init(baseURLString: String) {
         self.baseURLString = baseURLString
     }
     
+
     func isSignedIn(completionHandler: @escaping (_ success:Bool) -> Void) {
         completionHandler(isSigned)
+
     }
+    
+   
     
     func csrf(headers: HTTPHeaders, completionHandler: @escaping (_ success:Bool, _ headers: HTTPHeaders?) -> Void) {
 //        if isSigned == true {
@@ -63,6 +67,7 @@ class AuthService: AuthServiceProtocol {
                         newHeaders[headerName] = token
                         print("csrf newHeaders \(newHeaders)")
                         completionHandler(true, newHeaders)
+                        UserDefaults.standard.set(token, forKey: "token")
                     } else {
                         print("csrf cant parse json \(String(describing: response.result.value))")
                         completionHandler(false, nil)
@@ -71,6 +76,7 @@ class AuthService: AuthServiceProtocol {
                     print("\(error) \(self)")
                     completionHandler(false, nil)
                 }
+               
         }
     }
     
@@ -88,6 +94,9 @@ class AuthService: AuthServiceProtocol {
             "token": headers["X-XSRF-TOKEN"] as AnyObject,
             "verificationCode": 0 as AnyObject
         ]
+        
+           
+      
         
         //print("login.do parameters \(parameters))")
         Alamofire.request(url, method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)

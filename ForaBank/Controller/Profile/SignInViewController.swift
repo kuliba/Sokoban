@@ -8,6 +8,7 @@
 
 import UIKit
 import Hero
+import RMMapper
 
 class SignInViewController: UIViewController {
 
@@ -20,6 +21,7 @@ class SignInViewController: UIViewController {
     
     var segueId: String? = nil
     var backSegueId: String? = nil
+    
     
     // MARK: - Actions
     @IBAction func backButtonClicked() {
@@ -34,18 +36,23 @@ class SignInViewController: UIViewController {
                                       completionHandler: {[unowned self] success, errorMessage in
             if success {
                 self.performSegue(withIdentifier: "smsVerification", sender: self)
+                
             } else {
                 let alert = UIAlertController(title: "Неудача", message: errorMessage, preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
-            }
-        })
+                                        };
+                                   
+                                        
+        }) 
     }
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         loginTextField.becomeFirstResponder()
+      
+      
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -1,24 +1,32 @@
 PODS:
   - Alamofire (4.8.0)
+  - AppLocker (2.0):
+    - Valet
   - CardIO (5.4.1)
   - DeviceKit (1.11.0)
   - FlexiblePageControl (1.0.7)
   - Hero (1.4.0)
   - iCarousel (1.8.3)
   - IQKeyboardManagerSwift (6.2.0)
+  - KeychainAccess (3.2.0)
   - NVActivityIndicatorView (4.7.0):
     - NVActivityIndicatorView/Presenter (= 4.7.0)
   - NVActivityIndicatorView/Presenter (4.7.0)
+  - RMMapper (1.1.5)
+  - Valet (3.2.6)
 
 DEPENDENCIES:
   - Alamofire (= 4.8.0)
+  - AppLocker
   - CardIO (= 5.4.1)
   - DeviceKit (= 1.11.0)
   - FlexiblePageControl (= 1.0.7)
   - Hero (= 1.4.0)
   - iCarousel (= 1.8.3)
   - IQKeyboardManagerSwift (= 6.2.0)
+  - KeychainAccess
   - NVActivityIndicatorView
+  - RMMapper
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -30,17 +38,26 @@ SPEC REPOS:
     - iCarousel
     - IQKeyboardManagerSwift
     - NVActivityIndicatorView
+  trunk:
+    - AppLocker
+    - KeychainAccess
+    - RMMapper
+    - Valet
 
 SPEC CHECKSUMS:
   Alamofire: 3ec537f71edc9804815215393ae2b1a8ea33a844
+  AppLocker: ad734b8027d26ae5cbb4a70eed2bed30159c3b71
   CardIO: 56983b39b62f495fc6dae9ad7cf875143df06443
   DeviceKit: a3a86f8dddbe1317a9a243cdf9646858bf135dce
   FlexiblePageControl: 2ce8446da3d75df6432dbad7b9e19151629dae62
   Hero: bac92350d7201a1a940003e0767c7b52ce7c99a1
   iCarousel: d782f635afac190c49bb8ee455882284cff8b85f
   IQKeyboardManagerSwift: b07ccf9d8cafe993dcd6cb794eb4ba34611a0c4e
+  KeychainAccess: 3b1bf8a77eb4c6ea1ce9404c292e48f948954c6b
   NVActivityIndicatorView: b19ddab2576f805cbe0fb2306cba3476e09a1dea
+  RMMapper: 21122d753c736d975f6c61e674afce8db73579af
+  Valet: dcc4ff74f0d010be665239ab89c7a4a5cd39ee33
 
-PODFILE CHECKSUM: 981784efdabca796018ced92f55875cb10b5dd01
+PODFILE CHECKSUM: 8b30d205de4fb1a4b32e5e0b09ca3a7738329edb
 
-COCOAPODS: 1.8.0.beta.1
+COCOAPODS: 1.8.0.beta.2

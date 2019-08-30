@@ -10,9 +10,10 @@ import UIKit
 import FlexiblePageControl
 import Hero
 import LocalAuthentication
+import AppLocker
 
 
-class RegistrationPermissionsViewController: UIViewController {
+class RegistrationPermissionsViewController: UIViewController, CAAnimationDelegate {
     
     // MARK: - Properties
     @IBOutlet weak var backButton: UIButton!
@@ -21,7 +22,6 @@ class RegistrationPermissionsViewController: UIViewController {
     @IBOutlet weak var pageControl: FlexiblePageControl!
     @IBOutlet weak var centralView: UIView!
     @IBOutlet weak var header: UIView!
-    
     var segueId: String? = nil
     var backSegueId: String? = nil
 //    let pageControl = FlexiblePageControl()
@@ -43,6 +43,13 @@ class RegistrationPermissionsViewController: UIViewController {
             performSegue(withIdentifier: "touchID", sender: nil)
         }
     }
+    @IBAction func pinCodeApp(_ sender: Any) {
+        if let s = sender as? UISwitch,
+            s.isOn == true {
+           AppLocker.present(with: .create)
+        }
+    }
+  
     
     @IBAction func `continue`(_ sender: Any) {
         NetworkManager.shared().doRegistration(completionHandler: {[unowned self] success, errorMessage, l, p in

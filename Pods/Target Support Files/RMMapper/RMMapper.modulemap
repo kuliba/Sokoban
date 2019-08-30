@@ -1,0 +1,6 @@
+framework module RMMapper {
+  umbrella header "RMMapper-umbrella.h"
+
+  export *
+  module * { export * }
+}

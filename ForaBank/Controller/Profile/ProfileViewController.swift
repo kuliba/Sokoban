@@ -131,9 +131,10 @@ class ProfileViewController: UIViewController {
         view.hero.modifiers = nil
     }
     
+  
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         print("prepare")
-        if segue.identifier == "ChatDialogsViewController" {
+        if segue.identifier == "SettingsViewController" {
             segueId = nil
         }
     }

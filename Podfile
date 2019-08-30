@@ -6,6 +6,8 @@ target 'ForaBank' do
   use_frameworks!
 
   # Pods for ForaBank
+  pod 'RMMapper'
+  pod 'KeychainAccess'
   pod 'iCarousel', '1.8.3'
   pod 'DeviceKit', '1.11.0'
   pod 'FlexiblePageControl', '1.0.7'
@@ -14,5 +16,4 @@ target 'ForaBank' do
   pod 'Hero', '1.4.0'
   pod 'CardIO', '5.4.1'
   pod 'NVActivityIndicatorView'
-  pod 'PlaygroundSupport'
 end

@@ -23,6 +23,8 @@ class FeedOptionsViewController: UIViewController {
     
     let options = [
         [
+            FeedOption(name: "Смена пин-кода", iconName: "icon_profile_settings", section: "Авторизация"),
+        ],[
             FeedOption(name: "Счета", iconName: "feed_option_accounts", section: "Текущее"),
             FeedOption(name: "Вклады", iconName: "feed_option_holdings", section: "Текущее"),
             FeedOption(name: "Карты", iconName: "feed_option_cards", section: "Текущее"),

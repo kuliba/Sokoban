@@ -22,9 +22,12 @@ class LoginOrSignupViewController: UIViewController {
     
     let transitionDuration: TimeInterval = 2
     
+
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+     
     }
     
     override func viewDidLayoutSubviews() {

@@ -118,6 +118,7 @@
                         <outlet property="userImageView" destination="wNj-lv-r7T" id="abH-pQ-gaY"/>
                         <segue destination="hQB-Xh-8wq" kind="show" identifier="RegistrationViewController" id="f6q-wc-VZq"/>
                         <segue destination="ACT-bv-DBU" kind="show" identifier="ChatDialogsViewController" id="gKw-TJ-jyO"/>
+                        <segue destination="JKq-JP-xt2" kind="show" identifier="FeedOptionsViewController" id="0eA-i4-16e"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VIL-9P-5mH" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -145,6 +146,9 @@
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Настройки" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qt1-ii-6yX">
                                                     <rect key="frame" x="26" y="-4" width="254" height="56"/>
+                                                    <accessibility key="accessibilityConfiguration">
+                                                        <accessibilityTraits key="traits" button="YES"/>
+                                                    </accessibility>
                                                     <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -157,6 +161,13 @@
                                                         <constraint firstAttribute="height" constant="18" id="zq5-BX-WbE"/>
                                                     </constraints>
                                                 </imageView>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dEL-6k-UTh">
+                                                    <rect key="frame" x="0.0" y="0.0" width="280" height="49.5"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <connections>
+                                                        <action selector="settingsButtonClicked:" destination="zJn-z6-iUY" eventType="touchUpInside" id="SHA-e6-7Jr"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="qt1-ii-6yX" firstAttribute="top" secondItem="FAW-Sg-tlU" secondAttribute="top" constant="-4" id="F56-le-hQ3"/>
@@ -1813,6 +1824,9 @@
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="47" id="Cog-WM-cHK"/>
                                                                 </constraints>
+                                                                <connections>
+                                                                    <action selector="pinCodeApp:" destination="Ftx-Ta-bTi" eventType="valueChanged" id="DQH-Yy-7Cs"/>
+                                                                </connections>
                                                             </switch>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="6-значный код" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lZh-ie-Mrj">
                                                                 <rect key="frame" x="38" y="20" width="161" height="21"/>
@@ -2648,6 +2662,86 @@
             </objects>
             <point key="canvasLocation" x="6086" y="2378"/>
         </scene>
+        <!--Settings View Controller Scene-->
+        <scene sceneID="Nbj-wb-MyC">
+            <objects>
+                <viewController hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="NU5-y4-Fnl" userLabel="Settings View Controller Scene" customClass="FeedOptionsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="zFx-hh-tta" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LRD-AH-OQl" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="1" width="320" height="567"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <accessibility key="accessibilityConfiguration" label="asf"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="0.77384895090000005" green="0.36048567300000001" blue="0.38817185160000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="LRD-AH-OQl" secondAttribute="bottom" id="GSO-Lt-9IU"/>
+                            <constraint firstItem="LRD-AH-OQl" firstAttribute="leading" secondItem="ajS-uT-1ui" secondAttribute="leading" id="IyI-lb-Qqg"/>
+                            <constraint firstItem="LRD-AH-OQl" firstAttribute="trailing" secondItem="ajS-uT-1ui" secondAttribute="trailing" id="Q5n-i2-K8o"/>
+                            <constraint firstItem="LRD-AH-OQl" firstAttribute="top" secondItem="ajS-uT-1ui" secondAttribute="top" constant="-19" id="R1o-1f-czL"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="ajS-uT-1ui"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="color" keyPath="color1">
+                                <color key="value" red="0.91764705879999997" green="0.27058823529999998" blue="0.2666666667" alpha="1" colorSpace="calibratedRGB"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="color" keyPath="color2">
+                                <color key="value" red="0.94509803920000002" green="0.67843137249999996" blue="0.44705882349999998" alpha="1" colorSpace="calibratedRGB"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <toolbarItems/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9as-jI-1Ap" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3585" y="517.6056338028169"/>
+        </scene>
+        <!--Feed Options View Controller-->
+        <scene sceneID="13g-qD-a5o">
+            <objects>
+                <viewController storyboardIdentifier="FeedOptionsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="JKq-JP-xt2" customClass="FeedOptionsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="rx1-Ff-9wp" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" allowsSelection="NO" rowHeight="60" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="oCD-eX-yo7" customClass="CustomTableView" customModule="ForaBank" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="30" width="320" height="538"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="sectionIndexTrackingBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.77384895090000005" green="0.36048567300000001" blue="0.38817185160000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <constraints>
+                            <constraint firstItem="oCD-eX-yo7" firstAttribute="trailing" secondItem="dat-cf-Tqq" secondAttribute="trailing" id="EOR-ym-c2N"/>
+                            <constraint firstItem="dat-cf-Tqq" firstAttribute="bottom" secondItem="oCD-eX-yo7" secondAttribute="bottom" id="JKu-sx-Hjv"/>
+                            <constraint firstItem="oCD-eX-yo7" firstAttribute="top" secondItem="dat-cf-Tqq" secondAttribute="top" constant="10" id="VJU-ES-Gnn"/>
+                            <constraint firstItem="oCD-eX-yo7" firstAttribute="leading" secondItem="dat-cf-Tqq" secondAttribute="leading" id="Xg0-jd-M4i"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="dat-cf-Tqq"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="color" keyPath="color1">
+                                <color key="value" red="0.71372549019999998" green="0.13725490200000001" blue="0.13725490200000001" alpha="1" colorSpace="calibratedRGB"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="color" keyPath="color2">
+                                <color key="value" red="0.95298033950000005" green="0.37958133220000001" blue="0.35467350479999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <toolbarItems/>
+                    <connections>
+                        <outlet property="tableView" destination="oCD-eX-yo7" id="HMR-UT-V7a"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Kev-Gh-asv" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4421" y="518"/>
+        </scene>
     </scenes>
     <resources>
         <image name="C_Users_kryukov_AppData_Local_Pa" width="320" height="568"/>
@@ -2681,6 +2775,6 @@
         <image name="visa-colored" width="93" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="7Mu-2k-iZk"/>
+        <segue reference="5qd-X6-ri2"/>
     </inferredMetricsTieBreakers>
 </document>
