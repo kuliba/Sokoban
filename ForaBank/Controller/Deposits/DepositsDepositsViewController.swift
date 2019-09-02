@@ -112,7 +112,7 @@ extension DepositsDepositsViewController: UITableViewDataSource, UITableViewDele
             let footerView = UIView(frame: CGRect(x: tableView.frame.minX + 20, y: 0, width: tableView.frame.width - 40, height: 95))
             let addDepositButton = UIButton(frame: CGRect(x: footerView.frame.minX, y: footerView.frame.minY + 15, width: footerView.frame.width, height: 45))
             
-            addDepositButton.setTitle("Добавить счет", for: .normal)
+            addDepositButton.setTitle("Открыть счет", for: .normal)
             addDepositButton.titleLabel?.font = UIFont(name: "Roboto-Regular", size: 16)
             addDepositButton.setTitleColor(.black, for: [])
             
