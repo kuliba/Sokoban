@@ -68,7 +68,7 @@ struct BankBranch: Decodable {
         self.metro = decodeToString(fromContainer: container, key: .metro)
         self.latitude = decodeToDouble(fromContainer: container, key: .latitude)
         self.longitude = decodeToDouble(fromContainer: container, key: .longitude)
-        if let date = try? container.decodeIfPresent(Date.self, forKey: .changeAt) {
+        if let date = ((try? container.decodeIfPresent(Date.self, forKey: .changeAt)) as Date??) {
             self.changeAt = date
         } else {
             self.changeAt = nil

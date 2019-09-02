@@ -241,21 +241,21 @@ struct MultiRangeIterator: IteratorProtocol {
 }
 
 func decodeToInt<T>(fromContainer: KeyedDecodingContainer<T>, key: KeyedDecodingContainer<T>.Key) -> Int? {
-    if let stringProperty = try? fromContainer.decodeIfPresent(String.self, forKey: key) {
+    if let stringProperty = ((try? fromContainer.decodeIfPresent(String.self, forKey: key)) as String??) {
         if let s = stringProperty {
             return Int(s)
         } else {
             return nil
         }
-    } else if let intProperty = try? fromContainer.decodeIfPresent(Int.self, forKey: key) {
+    } else if let intProperty = ((try? fromContainer.decodeIfPresent(Int.self, forKey: key)) as Int??) {
         return intProperty
-    } else if let doubleProperty = try? fromContainer.decodeIfPresent(Double.self, forKey: key) {
+    } else if let doubleProperty = ((try? fromContainer.decodeIfPresent(Double.self, forKey: key)) as Double??) {
         if let d = doubleProperty {
             return Int(d)
         } else {
             return nil
         }
-    } else if let intProperty = try? fromContainer.decodeIfPresent(Int64.self, forKey: key) {
+    } else if let intProperty = ((try? fromContainer.decodeIfPresent(Int64.self, forKey: key)) as Int64??) {
         if let i = intProperty {
             return Int(i)
         } else {
@@ -268,25 +268,25 @@ func decodeToInt<T>(fromContainer: KeyedDecodingContainer<T>, key: KeyedDecoding
 }
 
 func decodeToInt64<T>(fromContainer: KeyedDecodingContainer<T>, key: KeyedDecodingContainer<T>.Key) -> Int64? {
-    if let stringProperty = try? fromContainer.decodeIfPresent(String.self, forKey: key) {
+    if let stringProperty = ((try? fromContainer.decodeIfPresent(String.self, forKey: key)) as String??) {
         if let s = stringProperty {
             return Int64(s)
         } else {
             return nil
         }
-    } else if let intProperty = try? fromContainer.decodeIfPresent(Int.self, forKey: key) {
+    } else if let intProperty = ((try? fromContainer.decodeIfPresent(Int.self, forKey: key)) as Int??) {
         if let i = intProperty {
             return Int64(i)
         } else {
             return nil
         }
-    } else if let doubleProperty = try? fromContainer.decodeIfPresent(Double.self, forKey: key) {
+    } else if let doubleProperty = ((try? fromContainer.decodeIfPresent(Double.self, forKey: key)) as Double??) {
         if let d = doubleProperty {
             return Int64(d)
         } else {
             return nil
         }
-    } else if let intProperty = try? fromContainer.decodeIfPresent(Int64.self, forKey: key) {
+    } else if let intProperty = ((try? fromContainer.decodeIfPresent(Int64.self, forKey: key)) as Int64??) {
         return intProperty
     } else {
         print("cant parse value for key \(key)")
@@ -295,21 +295,21 @@ func decodeToInt64<T>(fromContainer: KeyedDecodingContainer<T>, key: KeyedDecodi
 }
 
 func decodeToDouble<T>(fromContainer: KeyedDecodingContainer<T>, key: KeyedDecodingContainer<T>.Key) -> Double? {
-    if let stringProperty = try? fromContainer.decodeIfPresent(String.self, forKey: key) {
+    if let stringProperty = ((try? fromContainer.decodeIfPresent(String.self, forKey: key)) as String??) {
         if let s = stringProperty {
             return Double(s)
         } else {
             return nil
         }
-    } else if let intProperty = try? fromContainer.decodeIfPresent(Int.self, forKey: key) {
+    } else if let intProperty = ((try? fromContainer.decodeIfPresent(Int.self, forKey: key)) as Int??) {
         if let i = intProperty {
             return Double(i)
         } else {
             return nil
         }
-    } else if let doubleProperty = try? fromContainer.decodeIfPresent(Double.self, forKey: key) {
+    } else if let doubleProperty = ((try? fromContainer.decodeIfPresent(Double.self, forKey: key)) as Double??) {
         return doubleProperty
-    } else if let intProperty = try? fromContainer.decodeIfPresent(Int64.self, forKey: key) {
+    } else if let intProperty = ((try? fromContainer.decodeIfPresent(Int64.self, forKey: key)) as Int64??) {
         if let i = intProperty {
             return Double(i)
         } else {
@@ -321,21 +321,21 @@ func decodeToDouble<T>(fromContainer: KeyedDecodingContainer<T>, key: KeyedDecod
     }
 }
 func decodeToString<T>(fromContainer: KeyedDecodingContainer<T>, key: KeyedDecodingContainer<T>.Key) -> String? {
-    if let stringProperty = try? fromContainer.decodeIfPresent(String.self, forKey: key) {
+    if let stringProperty = ((try? fromContainer.decodeIfPresent(String.self, forKey: key)) as String??) {
         return stringProperty
-    } else if let intProperty = try? fromContainer.decodeIfPresent(Int.self, forKey: key) {
+    } else if let intProperty = ((try? fromContainer.decodeIfPresent(Int.self, forKey: key)) as Int??) {
         if let i = intProperty {
             return "\(i)"
         } else {
             return nil
         }
-    } else if let doubleProperty = try? fromContainer.decodeIfPresent(Double.self, forKey: key) {
+    } else if let doubleProperty = ((try? fromContainer.decodeIfPresent(Double.self, forKey: key)) as Double??) {
         if let d = doubleProperty {
             return "\(d)"
         } else {
             return nil
         }
-    } else if let intProperty = try? fromContainer.decodeIfPresent(Int64.self, forKey: key) {
+    } else if let intProperty = ((try? fromContainer.decodeIfPresent(Int64.self, forKey: key)) as Int64??) {
         if let i = intProperty {
             return "\(i)"
         } else {
@@ -344,16 +344,6 @@ func decodeToString<T>(fromContainer: KeyedDecodingContainer<T>, key: KeyedDecod
     } else {
         print("cant parse value for key \(key)")
         return nil
-    }
-}
-
-extension FlexiblePageControl.Config {
-    public init(displayCount: Int, dotSize: CGFloat, dotSpace: CGFloat, smallDotSizeRatio: CGFloat, mediumDotSizeRatio: CGFloat) {
-        self.displayCount = displayCount
-        self.dotSize = dotSize
-        self.dotSpace = dotSpace
-        self.smallDotSizeRatio = smallDotSizeRatio
-        self.mediumDotSizeRatio = mediumDotSizeRatio
     }
 }
 
