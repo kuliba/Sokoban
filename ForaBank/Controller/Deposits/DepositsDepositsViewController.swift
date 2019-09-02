@@ -73,10 +73,8 @@ class DepositsDepositsViewController: UIViewController {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "OneOneViewController", sender: Any?.self)
-        
-    }
-    
-    
+
+    }    
 }
 
  
@@ -129,8 +127,7 @@ extension DepositsDepositsViewController: UITableViewDataSource, UITableViewDele
         return nil
     }
     
-    
-  
+
  
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 95

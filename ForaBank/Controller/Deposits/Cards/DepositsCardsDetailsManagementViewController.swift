@@ -104,7 +104,12 @@ class DepositsCardsDetailsManagementViewController: UITableViewController {
      }
      }
      */
-    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+       let alertVC =  UIAlertController(title: "Функционал недоступен", message: "Функционал временно недоступен", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Понятно", style: .cancel, handler: nil)
+        alertVC.addAction(okAction)
+        show(alertVC, sender: self)
+    }
     /*
      // Override to support rearranging the table view.
      override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
