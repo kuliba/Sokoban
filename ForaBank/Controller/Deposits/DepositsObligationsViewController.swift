@@ -115,7 +115,7 @@ extension DepositsObligationsViewController: UITableViewDataSource, UITableViewD
         }
         
         cell.titleLabel.text = bonds[indexPath.row].depositProductName
-        cell.subTitleLabel.text = bonds[indexPath.row].accountNumber!
+        cell.subTitleLabel.text = bonds[indexPath.row].accountNumber!.separate(every: 4, with: "-")
         cell.descriptionLabel.text = String(bonds[indexPath.row].balance!)
         cell.currently.text = bonds[indexPath.row].currencyCode
         
