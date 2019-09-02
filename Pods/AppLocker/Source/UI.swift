@@ -23,7 +23,7 @@ extension Roundable where Self: UIView {
         guard self.accessibilityHint == kRoundKey else {return}
         layer.cornerRadius = frame.height/2
         layer.borderWidth = 1
-        layer.borderColor = UIColor.lightGray.cgColor
+        layer.borderColor = UIColor.white.cgColor
     }
 }
 

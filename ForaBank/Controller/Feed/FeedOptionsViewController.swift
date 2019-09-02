@@ -75,6 +75,7 @@ extension FeedOptionsViewController: UITableViewDelegate, UITableViewDataSource 
         
         cell.titleLabel.text = options[indexPath.section][indexPath.row].name
         cell.iconImageView.image = UIImage(named: options[indexPath.section][indexPath.row].iconName)
+
        
         return cell
     }

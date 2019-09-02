@@ -17,7 +17,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>5.0</string>
 	<key>CFBundleVersion</key>
-	<string>5</string>
+	<string>6</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -27,10 +27,10 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Можно сканировать номер карты, а не заполнять с клавиатуры</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Ваше местоположение позволит показать ближайшие банкоматы</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Доступ к камере позволит использовать FaceId</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Ваше местоположение позволит показать ближайшие банкоматы</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Roboto-Black.ttf</string>

@@ -1699,7 +1699,7 @@
                                                     <constraint firstAttribute="height" constant="53" id="v5a-TT-CUc"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="18"/>
-                                                <state key="normal" title="Настроить позже">
+                                                <state key="normal" title="Продолжить">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
                                                 <connections>
@@ -1869,7 +1869,7 @@
                                                                     <constraint firstAttribute="height" constant="25" id="ZKZ-Wc-faA"/>
                                                                 </constraints>
                                                             </imageView>
-                                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="AT3-pM-qBW">
+                                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AT3-pM-qBW">
                                                                 <rect key="frame" x="207" y="15" width="49" height="31"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="47" id="VTz-o6-Rbj"/>
@@ -2775,6 +2775,7 @@
         <image name="visa-colored" width="93" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="DRT-QI-Gaj"/>
         <segue reference="5qd-X6-ri2"/>
     </inferredMetricsTieBreakers>
 </document>

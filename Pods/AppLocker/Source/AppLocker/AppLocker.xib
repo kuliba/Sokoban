@@ -4,7 +4,6 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -320,7 +319,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fr2-Oi-Yn7">
-                                <rect key="frame" x="75" y="334" width="34" height="34"/>
+                                <rect key="frame" x="75" y="333.5" width="34" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="touchid"/>
                             </button>
@@ -416,7 +415,7 @@
                 <outlet property="messageLabel" destination="BiA-iv-5oK" id="fdo-bX-80h"/>
                 <outlet property="photoImageView" destination="hVx-18-l1J" id="gSk-Zu-Xoe"/>
                 <outlet property="submessageLabel" destination="9Yc-zm-CFr" id="7n3-e4-K6m"/>
-                <outlet property="toichIdButton" destination="fr2-Oi-Yn7" id="RiC-t3-fhU"/>
+                <outlet property="toichIdButton" destination="fr2-Oi-Yn7" id="P4O-AA-apX"/>
                 <outletCollection property="pinIndicators" destination="y48-OI-bV6" collectionClass="NSMutableArray" id="1AY-fZ-6tm"/>
                 <outletCollection property="pinIndicators" destination="EvL-fK-aNd" collectionClass="NSMutableArray" id="BFG-Uv-9tX"/>
                 <outletCollection property="pinIndicators" destination="ty0-rX-vyo" collectionClass="NSMutableArray" id="evP-lU-FiQ"/>
