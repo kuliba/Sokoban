@@ -69,6 +69,7 @@ class DepositsCardsListViewController: UIViewController {
         ab.setAttributedTitle(NSAttributedString(string: "Добавить карту", attributes: [.font:UIFont.systemFont(ofSize: 15)]), for: .normal)
         ab.tintColor = .black
         ab.translatesAutoresizingMaskIntoConstraints = false
+        ab.isEnabled = false
         return ab
     }()
 
