@@ -48,7 +48,7 @@ public class AppLocker: UIViewController {
   @IBOutlet weak var submessageLabel: UILabel!
   @IBOutlet var pinIndicators: [Indicator]!
   
-    @IBOutlet weak var toichIdButton: UIButton!
+    @IBOutlet weak var touchIdButton: UIButton!
     @IBOutlet weak var cancelButton: UIButton!
   
   // MARK: - Pincode
@@ -71,7 +71,7 @@ public class AppLocker: UIViewController {
       switch mode {
       case .create:
         submessageLabel.text = "Создайте код" // Your submessage for create mode
-        toichIdButton.isHidden = true
+        touchIdButton.isHidden = true
       case .change:
         submessageLabel.text = "Введите код" // Your submessage for change mode
       case .deactive:
@@ -79,7 +79,7 @@ public class AppLocker: UIViewController {
       case .validate:
         submessageLabel.text = "Введите код" // Your submessage for validate mode
         cancelButton.isHidden = true
-        toichIdButton.isHidden = false
+        touchIdButton.isHidden = false
         isFirstCreationStep = false
       }
     }

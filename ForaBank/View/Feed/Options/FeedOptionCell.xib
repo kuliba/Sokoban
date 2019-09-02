@@ -30,6 +30,9 @@
                     </imageView>
                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="payments_services_phone-billing" translatesAutoresizingMaskIntoConstraints="NO" id="6hz-fb-JhD">
                         <rect key="frame" x="20" y="18" width="15" height="15"/>
+                        <accessibility key="accessibilityConfiguration">
+                            <accessibilityTraits key="traits" button="YES" image="YES"/>
+                        </accessibility>
                         <constraints>
                             <constraint firstAttribute="width" constant="15" id="9Pc-7g-qBR"/>
                             <constraint firstAttribute="height" constant="15" id="Rcc-Lk-yQC"/>
@@ -52,8 +55,11 @@
                             <constraint firstAttribute="height" constant="0.5" id="dOV-s4-Isr"/>
                         </constraints>
                     </view>
-                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sgq-Rn-jsG">
+                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="sgq-Rn-jsG">
                         <rect key="frame" x="251" y="9" width="51" height="31"/>
+                        <accessibility key="accessibilityConfiguration">
+                            <bool key="isElement" value="NO"/>
+                        </accessibility>
                     </switch>
                 </subviews>
                 <constraints>

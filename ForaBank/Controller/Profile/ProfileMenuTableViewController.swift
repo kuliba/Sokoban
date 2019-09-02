@@ -15,7 +15,7 @@ class ProfileMenuTableViewController: UITableViewController {
         parent?.performSegue(withIdentifier: "ChatDialogsViewController", sender: nil)
     }
     @IBAction func settingsButtonClicked(_ sender: Any) {
-        parent?.performSegue(withIdentifier: "FeedOptionsViewController", sender: nil)
+        parent?.performSegue(withIdentifier: "SettingsViewController", sender: nil)
     }
     
     @IBAction func quitButtonClicked(_ sender: Any) {

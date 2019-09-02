@@ -12,6 +12,7 @@ import Hero
 class DepositsCardsListViewController: UIViewController {
     
     //чтобы перекладывать карты
+    @IBOutlet weak var activityIndicator: ActivityIndicatorView!
     lazy var panGesture: UIPanGestureRecognizer = {
         let gesture = UIPanGestureRecognizer(target: self, action: #selector(dragUnselectedCardView(_:)))
         return gesture
@@ -45,11 +46,20 @@ class DepositsCardsListViewController: UIViewController {
     var cardsStackHeight: CGFloat? = nil
     let _numberOfVisibleCards = 4
     
-    var cards: [Card] = [Card]()
+    var cards: [Card] = [Card]() {
+        didSet{
+            
+            activityIndicator.stopAnimating()
+        }
+    }
+    
     var cardViews : [DetailedCardView] = [DetailedCardView]()
     
     var segueId: String? = nil
     var backSegueId: String? = nil
+    
+    
+    
     
     let scrollView: UIScrollView = {
         let v = UIScrollView()
@@ -283,6 +293,11 @@ class DepositsCardsListViewController: UIViewController {
                 HeroModifier.useNormalSnapshot,
                 HeroModifier.zPosition(11)
             ]
+        }
+        
+        if (cards == nil) {
+            activityIndicator.startAnimation()
+            
         }
         
     }

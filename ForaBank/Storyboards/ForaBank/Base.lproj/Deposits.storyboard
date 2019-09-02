@@ -34,6 +34,17 @@
                                 <rect key="frame" x="0.0" y="45" width="320" height="523"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </containerView>
+                            <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3aL-P3-Ud8" customClass="ActivityIndicatorView" customModule="ForaBank" customModuleProvider="target">
+                                <rect key="frame" x="133" y="257" width="54" height="54"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" red="0.91764705879999997" green="0.2666666667" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="3aL-P3-Ud8" secondAttribute="height" multiplier="1:1" id="4MH-t5-1jA"/>
+                                    <constraint firstAttribute="height" constant="54" id="KZb-nm-4En"/>
+                                    <constraint firstAttribute="width" constant="54" id="XYb-FJ-XTk"/>
+                                </constraints>
+                                <viewLayoutGuide key="safeArea" id="auC-xU-lcD"/>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YOA-tq-CAv" customClass="iCarousel">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="90"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -135,7 +146,7 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oBV-7H-V9C" customClass="ActivityIndicatorView" customModule="ForaBank" customModuleProvider="target">
                                         <rect key="frame" x="152.5" y="249.5" width="55" height="54"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <color key="tintColor" red="0.73745142490000004" green="0.01407752703" blue="0.25042895469999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="tintColor" red="0.95298033950000005" green="0.37958133220000001" blue="0.35467350479999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="oBV-7H-V9C" secondAttribute="height" multiplier="55:54" id="1jx-Ci-efT"/>
                                             <constraint firstAttribute="width" constant="54" id="SKj-NH-eO3"/>
@@ -188,7 +199,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WgY-27-p95" customClass="ActivityIndicatorView" customModule="ForaBank" customModuleProvider="target">
                                 <rect key="frame" x="133" y="279.5" width="54" height="9"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <color key="tintColor" red="0.78645449879999996" green="0.23440414670000001" blue="0.30577135090000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="tintColor" red="0.95298033950000005" green="0.37958133220000001" blue="0.35467350479999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="WgY-27-p95" secondAttribute="height" multiplier="160:27" id="XF6-iR-wht"/>
                                     <constraint firstAttribute="width" constant="54" id="cU5-uR-CKu"/>
@@ -497,6 +508,19 @@
                     <view key="view" contentMode="scaleToFill" id="2Cr-6Y-gsT">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="huB-Vb-TkR" customClass="ActivityIndicatorView" customModule="ForaBank" customModuleProvider="target">
+                                <rect key="frame" x="132" y="257" width="55" height="54"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" red="0.95298033950000005" green="0.37958133220000001" blue="0.35467350479999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="54" id="6bY-Yr-rJl"/>
+                                    <constraint firstAttribute="width" constant="54" id="AZU-iZ-MQM"/>
+                                    <constraint firstAttribute="width" secondItem="huB-Vb-TkR" secondAttribute="height" multiplier="55:54" id="P5i-HP-x9X"/>
+                                </constraints>
+                                <viewLayoutGuide key="safeArea" id="Tco-aZ-X8J"/>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="snh-2A-sDz"/>
                     </view>
@@ -504,6 +528,7 @@
                         <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="YES"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
+                        <outlet property="activityIndicator" destination="huB-Vb-TkR" id="EE1-qn-K44"/>
                         <segue destination="Xv3-je-rnb" kind="show" identifier="DepositsCardListOnholdBlock" id="d3l-gv-oOm"/>
                         <segue destination="Oxz-tM-k7M" kind="presentation" identifier="DepositsCardsDetailsViewController" id="YZe-FQ-J5I"/>
                     </connections>
@@ -3338,6 +3363,6 @@
         <image name="visalogo" width="41" height="18"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="xAX-aZ-8L4"/>
+        <segue reference="HSU-U3-jID"/>
     </inferredMetricsTieBreakers>
 </document>
