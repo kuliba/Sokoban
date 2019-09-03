@@ -116,6 +116,7 @@ extension DepositsCardsDetailsStatementViewController: UITableViewDataSource, UI
             cell.subTitleLabel.text = nil
             cell.descriptionLabel.text = nil
             cell.subdescriptionLabel.text = nil
+            cell.commentLabel.text = nil
             if let image = datedTransactions[indexPath.section].transactions[indexPath.row].counterpartImageURL {
                 cell.imageView?.image = UIImage(named: image)
             }

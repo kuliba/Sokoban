@@ -22,7 +22,7 @@ class LoansDetailsViewController: UIViewController {
     @IBOutlet weak var container: UIView!
     @IBOutlet weak var carousel: iCarousel!
     @IBOutlet weak var product: UILabel!
-    @IBOutlet weak var principalname: UILabel!
+    @IBOutlet weak var principalDebt: UILabel!
     @IBOutlet weak var contentViewTop: NSLayoutConstraint!
     var previousIndex = -1
     var loan: Loan? = nil
@@ -68,8 +68,8 @@ class LoansDetailsViewController: UIViewController {
         
         
         product.text = "\((loan?.number)!)"
-        principalname.text = "\((loan?.principalDebt)!)"
-        
+        principalDebt.text = "\((loan?.principalDebt)!) \((loan?.currencyCode)!)"
+
     }
     
    

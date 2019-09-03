@@ -59,7 +59,7 @@ class OneOneViewController: UIViewController {
         carousel.bounces = false
         
         nameAccountLabel.text = "\((datadep?.depositProductName)!)"
-        amountAccount.text = "\((datadep?.balance)!)"
+        amountAccount.text = "\((datadep?.balance)!) \((datadep?.currencyCode)!)"
     }
     
 }

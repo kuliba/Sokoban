@@ -17,6 +17,7 @@ class LoansAboutViewController:  UITableViewController ,TabLoansDetailViewContro
     @IBOutlet weak var blockedMoneyLabel: UILabel!
     @IBOutlet weak var updatingDateLabel: UILabel!
     @IBOutlet weak var tariffLabel: UILabel!
+    @IBOutlet weak var userAnnual: UILabel!
     
     var loan: Loan? = nil
 
@@ -58,6 +59,7 @@ class LoansAboutViewController:  UITableViewController ,TabLoansDetailViewContro
         f.locale = Locale(identifier: "ru_RU")
         f.doesRelativeDateFormatting = true
      
+        userAnnual.text = "\((loan?.userAnnual)!) \((loan?.currencyCode)!)"
     }
     // MARK: - Table view data source
     

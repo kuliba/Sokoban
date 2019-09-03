@@ -18,6 +18,7 @@ class DepositsCardsDetailsAboutViewController: UITableViewController, TabCardDet
     @IBOutlet weak var blockedMoneyLabel: UILabel!
     @IBOutlet weak var updatingDateLabel: UILabel!
     @IBOutlet weak var tariffLabel: UILabel!
+    @IBOutlet weak var minimalRest: UILabel!
     
     var card: Card? = nil
 
@@ -41,7 +42,8 @@ class DepositsCardsDetailsAboutViewController: UITableViewController, TabCardDet
         
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
-        
+        avaliableBalanceLabel.text = "1000 USD"
+       // minimalRest.text = "1000 USD"
     }
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let scrollUserInfo = ["tableView": tableView]
@@ -76,9 +78,11 @@ class DepositsCardsDetailsAboutViewController: UITableViewController, TabCardDet
         if let updatingDate = card?.updatingDate {
             updatingDateLabel.text = "\(f.string(from: updatingDate)), \(f3.string(from: updatingDate))"
         }
-        if let tariff = card?.tariff {
-            tariffLabel.text = "\"\(tariff)\""
+        if let product = card?.product {
+            tariffLabel.text = "\(product)   "
         }
+        
+
     }
     // MARK: - Table view data source
     
