@@ -183,6 +183,7 @@ class CardService: CardServiceProtocol {
                                 let availableBalance = original["balance"] as? Double
                                 let branch = original["branch"] as? String
                                 let id = original["cardID"] as? String
+                                let product = (original["product"] as? String) ?? ""
                                 var expirationDate: Date? = nil
                                 if let validThru = original["validThru"] as? TimeInterval {
                                     expirationDate = Date(timeIntervalSince1970: (validThru/1000))
@@ -200,7 +201,8 @@ class CardService: CardServiceProtocol {
                                                 tariff: nil,
                                                 id: id,
                                                 branch: branch,
-                                                maskedNumber: maskedNumber)
+                                                maskedNumber: maskedNumber,
+                                                product: product)
                                 self.cards.append(card)
                             }
                         }

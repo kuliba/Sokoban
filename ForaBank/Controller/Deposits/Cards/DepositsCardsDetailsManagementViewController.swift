@@ -105,6 +105,12 @@ class DepositsCardsDetailsManagementViewController: UITableViewController {
      }
      */
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.item == 1 {
+            if let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentsDetailsViewController") as? PaymentsDetailsViewController {
+                present(vc, animated: true, completion: nil)
+            }
+            return
+        }
        let alertVC =  UIAlertController(title: "Функционал недоступен", message: "Функционал временно недоступен", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Понятно", style: .cancel, handler: nil)
         alertVC.addAction(okAction)

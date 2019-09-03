@@ -26,7 +26,7 @@ class Card {
     let maskedNumber: String?
     let validityPeriod: String?
     var blocked: Bool?
-    
+    let product: String
     let startDate: Date?
     let expirationDate: Date?
     let availableBalance: Double?
@@ -35,7 +35,7 @@ class Card {
     let tariff: String?
     let id: String?
     let branch: String?
-    init(type: CardType? = nil, paypass: Bool? = nil, title: String? = nil, customName: String? = nil, number: String? = nil, blocked: Bool? = nil, startDate: Date? = nil, expirationDate: Date? = nil, availableBalance: Double? = nil, blockedMoney: Double? = nil, updatingDate: Date? = nil, tariff: String? = nil, id: String? = nil, branch: String? = nil, miniStatement: String? = nil, maskedNumber: String? = nil) {
+    init(type: CardType? = nil, paypass: Bool? = nil, title: String? = nil, customName: String? = nil, number: String? = nil, blocked: Bool? = nil, startDate: Date? = nil, expirationDate: Date? = nil, availableBalance: Double? = nil, blockedMoney: Double? = nil, updatingDate: Date? = nil, tariff: String? = nil, id: String? = nil, branch: String? = nil, miniStatement: String? = nil, maskedNumber: String? = nil, product: String = "") {
         self.miniStatement = miniStatement
         self.type = type
         self.paypass = paypass
@@ -51,7 +51,8 @@ class Card {
         self.tariff = tariff
         self.id = id
         self.branch = branch
-        
+        self.product = product
+
         var mskd = ""
         if let number = number,
             maskedNumber == nil {

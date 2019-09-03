@@ -2293,7 +2293,7 @@
                         <outlet property="container" destination="4bf-lm-6TS" id="mLS-T1-Jgz"/>
                         <outlet property="contentViewTop" destination="k5h-n4-PTN" id="2M3-eb-gD8"/>
                         <outlet property="header" destination="KUs-ra-pcL" id="hns-PH-Uhv"/>
-                        <outlet property="principalname" destination="M1s-eU-CHk" id="sEE-Pd-1T8"/>
+                        <outlet property="principalDebt" destination="M1s-eU-CHk" id="uI3-xQ-mrU"/>
                         <outlet property="product" destination="e1X-Om-hmH" id="2lr-Rh-Pbg"/>
                     </connections>
                 </viewController>
@@ -2586,7 +2586,7 @@
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" restorationIdentifier="DateValue" text="1" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U2i-2D-ifU">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" restorationIdentifier="DateValue" text="12.4.2019" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U2i-2D-ifU">
                                                             <rect key="frame" x="150" y="0.0" width="150" height="35"/>
                                                             <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
                                                             <nil key="textColor"/>
@@ -2619,7 +2619,7 @@
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="11.01.2018" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yqh-6h-arj">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12.4.2020" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yqh-6h-arj">
                                                             <rect key="frame" x="150" y="0.0" width="150" height="35"/>
                                                             <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
                                                             <nil key="textColor"/>
@@ -2636,41 +2636,8 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="BNd-iC-V7J">
-                                        <rect key="frame" x="0.0" y="105" width="320" height="35"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="BNd-iC-V7J" id="ed8-ZF-hVf">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="35"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="1Lr-QB-Uy1">
-                                                    <rect key="frame" x="10" y="0.0" width="300" height="35"/>
-                                                    <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Срок вклада" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oY8-cN-RaI">
-                                                            <rect key="frame" x="0.0" y="0.0" width="150" height="35"/>
-                                                            <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
-                                                            <nil key="textColor"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="18 месяцев" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lkI-Ik-BEr">
-                                                            <rect key="frame" x="150" y="0.0" width="150" height="35"/>
-                                                            <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
-                                                            <nil key="textColor"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                    </subviews>
-                                                </stackView>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstAttribute="bottom" secondItem="1Lr-QB-Uy1" secondAttribute="bottom" id="0zg-4Z-s1e"/>
-                                                <constraint firstItem="1Lr-QB-Uy1" firstAttribute="leading" secondItem="ed8-ZF-hVf" secondAttribute="leading" constant="10" id="T63-4n-vy6"/>
-                                                <constraint firstItem="1Lr-QB-Uy1" firstAttribute="top" secondItem="ed8-ZF-hVf" secondAttribute="top" id="cWi-P8-hoM"/>
-                                                <constraint firstAttribute="trailing" secondItem="1Lr-QB-Uy1" secondAttribute="trailing" constant="10" id="xUF-y8-Iqa"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="Upu-bP-A41">
-                                        <rect key="frame" x="0.0" y="140" width="320" height="35"/>
+                                        <rect key="frame" x="0.0" y="105" width="320" height="35"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Upu-bP-A41" id="p2X-TZ-FwC">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="35"/>
@@ -2703,7 +2670,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="50" id="JWu-jQ-wuZ">
-                                        <rect key="frame" x="0.0" y="175" width="320" height="50"/>
+                                        <rect key="frame" x="0.0" y="140" width="320" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="JWu-jQ-wuZ" id="p2t-wH-Urg">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
@@ -2744,6 +2711,8 @@
                         </connections>
                     </tableView>
                     <connections>
+                        <outlet property="avaliableBalanceLabel" destination="fDJ-OF-T6o" id="gDn-ZP-MdK"/>
+                        <outlet property="minimalRest" destination="kVb-yO-bZI" id="vvs-CO-NBg"/>
                         <outlet property="startDateLabel" destination="U2i-2D-ifU" id="eAp-tt-BD0"/>
                     </connections>
                 </tableViewController>
@@ -3270,8 +3239,8 @@
                                                 <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" spacing="-100" translatesAutoresizingMaskIntoConstraints="NO" id="e2Z-JD-e2w">
                                                     <rect key="frame" x="10" y="0.0" width="300" height="50"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Сумма неснижаемого остатка" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Ew-aR-iqh">
-                                                            <rect key="frame" x="0.0" y="2.5" width="200" height="45"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Минимальный платёж" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Ew-aR-iqh">
+                                                            <rect key="frame" x="0.0" y="14" width="200" height="22.5"/>
                                                             <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
@@ -3303,6 +3272,7 @@
                     </tableView>
                     <connections>
                         <outlet property="startDateLABEL" destination="j88-er-m6c" id="Dv0-aC-mBL"/>
+                        <outlet property="userAnnual" destination="as1-nw-VV4" id="gmn-vb-7Ik"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dLt-vu-TZw" userLabel="First Responder" sceneMemberID="firstResponder"/>

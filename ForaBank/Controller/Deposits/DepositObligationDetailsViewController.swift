@@ -64,8 +64,8 @@ class DepositObligationDetailsViewController: UIViewController {
         
         
         depositName.text = "\((bonds?.depositProductName)!)"
-        depositAmount.text = "\((bonds?.balance)!)"
-        
+        depositAmount.text = "\((bonds?.balance)!) \((bonds?.currencyCode)!)"
+
     }
     
    
