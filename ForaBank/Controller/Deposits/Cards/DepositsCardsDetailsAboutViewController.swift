@@ -21,6 +21,7 @@ class DepositsCardsDetailsAboutViewController: UITableViewController, TabCardDet
     @IBOutlet weak var minimalRest: UILabel!
     
     var card: Card? = nil
+    var depos: Depos? = nil
 
     func set(card: Card?) {
         self.card = card
@@ -28,6 +29,7 @@ class DepositsCardsDetailsAboutViewController: UITableViewController, TabCardDet
             updateTable()
         }
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -51,6 +53,8 @@ class DepositsCardsDetailsAboutViewController: UITableViewController, TabCardDet
     }
     
     func updateTable() {
+        
+        if (card != nil) {
         let f = DateFormatter()
         f.dateFormat = "dd.MM.yyyy"
         if let startDate = card?.startDate {
@@ -81,7 +85,9 @@ class DepositsCardsDetailsAboutViewController: UITableViewController, TabCardDet
         if let product = card?.product {
             tariffLabel.text = "\(product)   "
         }
-        
+        } else if (depos != nil) {
+            
+        }
 
     }
     // MARK: - Table view data source

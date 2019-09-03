@@ -156,7 +156,7 @@ extension DepositsHistoryViewController: UITableViewDataSource, UITableViewDeleg
                 cell.descriptionLabel.textColor = UIColor.darkText
             }
         }
-        cell.commentLabel.text = sortedTransactionsStatement[indexPath.section].transactions[indexPath.row].comment
+        cell.commentLabel.text = nil//sortedTransactionsStatement[indexPath.section].transactions[indexPath.row].comment
         
         
 //        cell.bottomSeparatorView.isHidden = indexPath.row == data_[indexPath.section].transactions.endIndex - 1
