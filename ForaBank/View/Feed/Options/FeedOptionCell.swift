@@ -8,9 +8,13 @@
 
 import UIKit
 
+
 class FeedOptionCell: UITableViewCell {
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var iconImageView: UIImageView!    
-    @IBOutlet weak var buttonSwitcher: UISwitch!
+
+    @IBOutlet weak var changePinCode: UISwitch!
+  
+
 }

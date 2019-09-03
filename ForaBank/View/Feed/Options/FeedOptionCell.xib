@@ -55,11 +55,14 @@
                             <constraint firstAttribute="height" constant="0.5" id="dOV-s4-Isr"/>
                         </constraints>
                     </view>
-                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="sgq-Rn-jsG">
+                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="sgq-Rn-jsG">
                         <rect key="frame" x="251" y="9" width="51" height="31"/>
                         <accessibility key="accessibilityConfiguration">
                             <bool key="isElement" value="NO"/>
                         </accessibility>
+                        <connections>
+                            <action selector="changePinCode:" destination="LwO-8t-Pfa" eventType="valueChanged" id="HJn-82-PCW"/>
+                        </connections>
                     </switch>
                 </subviews>
                 <constraints>
@@ -86,7 +89,7 @@
             <viewLayoutGuide key="safeArea" id="SSe-t4-uua"/>
             <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
             <connections>
-                <outlet property="buttonSwitcher" destination="sgq-Rn-jsG" id="PBe-E3-R0W"/>
+                <outlet property="changePinCode" destination="sgq-Rn-jsG" id="5vE-Wv-p07"/>
                 <outlet property="iconImageView" destination="6hz-fb-JhD" id="0VM-qS-KJl"/>
                 <outlet property="titleLabel" destination="ALz-gk-mvh" id="fgi-W1-EhJ"/>
             </connections>

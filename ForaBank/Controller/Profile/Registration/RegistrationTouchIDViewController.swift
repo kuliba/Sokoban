@@ -48,7 +48,7 @@ class RegistrationTouchIDViewController: UIViewController {
                 let alertView = UIAlertController(title: "Error",
                                                   message: message,
                                                   preferredStyle: .alert)
-                let okAction = UIAlertAction(title: "Darn!", style: .default)
+                let okAction = UIAlertAction(title: "Повторите попытку!", style: .default)
                 alertView.addAction(okAction)
                 self?.present(alertView, animated: true)
                 

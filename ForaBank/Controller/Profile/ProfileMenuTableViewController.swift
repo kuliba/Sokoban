@@ -7,9 +7,11 @@
  */
 
 import UIKit
+import AppLocker
 
 class ProfileMenuTableViewController: UITableViewController {
     
+    let kPincode = "pincode"
     // MARK: - Actions
     @IBAction func messagesButtonClicked(_ sender: Any) {
         parent?.performSegue(withIdentifier: "ChatDialogsViewController", sender: nil)
@@ -17,6 +19,7 @@ class ProfileMenuTableViewController: UITableViewController {
     @IBAction func settingsButtonClicked(_ sender: Any) {
         parent?.performSegue(withIdentifier: "SettingsViewController", sender: nil)
     }
+ 
     
     @IBAction func quitButtonClicked(_ sender: Any) {
 //        parent?.performSegue(withIdentifier: "RegistrationViewController", sender: nil)
@@ -24,6 +27,7 @@ class ProfileMenuTableViewController: UITableViewController {
         NetworkManager.shared().logOut { [unowned self] (_) in
             if let t = self.navigationController?.tabBarController as? TabBarController {
                 t.setNumberOfTabsAvailable()
+                
             }
         }
         if let pvc = parent as? ProfileViewController {

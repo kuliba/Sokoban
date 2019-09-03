@@ -24,17 +24,20 @@ class SettingsViewController: UIViewController
     @IBOutlet weak var tableView: CustomTableView!
     @IBOutlet weak var containerView: RoundedEdgeView!
 
-    
     @IBAction func backButtonClicked(_ sender: Any) {
         view.endEditing(true)
         segueId = backSegueId
         navigationController?.popViewController(animated: true)    }
     
+    
     let cellId = "FeedOptionCell"
 
     
     let options = [
-         [
+        [
+            FeedOption(name: "Смена пин кода", iconName: "group choose", section: "Пользовательские настройки"),
+            
+        ],[
                 FeedOption(name: "Счета", iconName: "feed_option_accounts", section: "Текущее"),
                 FeedOption(name: "Вклады", iconName: "feed_option_holdings", section: "Текущее"),
                 FeedOption(name: "Карты", iconName: "feed_option_cards", section: "Текущее"),

@@ -65,6 +65,7 @@ class RegistrationViewController: UIViewController {
     var needAnimateCard:Bool = false
     
     var banks: [CardBank]? = nil
+    
     // MARK: - Actions
     @IBAction func backButtonCLicked(_ sender: Any) {
         segueId = backSegueId
@@ -158,7 +159,7 @@ class RegistrationViewController: UIViewController {
             monthTextField.text?.count ?? 0 != 0,
         yearTextField.text?.count ?? 0 != 0,
             cvvTextField.text?.count ?? 0 == 3 {
-            if textField.tag == 4 {
+            if textField.tag == 1 {
                 UIView.transition(with: cardView, duration: 0.5, options: .transitionFlipFromLeft, animations: {
                     self.identifyBank()
                 })
@@ -189,14 +190,14 @@ class RegistrationViewController: UIViewController {
             self.monthTextField.textColor = .black
             self.yearTextField.textColor = .black
             self.cvvTextField.textColor = .black
-            self.continueButton.isHidden = true
+            self.continueButton.isHidden = false
         }
     }
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        dateLabelView.isHidden = true
         addGradientLayerView()
 //        addCircleView()
         
@@ -233,7 +234,7 @@ class RegistrationViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
+            dateLabelView.isHidden = true
         setCardShadow()
         segmentedControlBorderLayer.frame = segmentedOuterView.bounds
     }
