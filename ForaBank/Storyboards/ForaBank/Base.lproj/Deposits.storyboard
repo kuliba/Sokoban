@@ -220,7 +220,7 @@
                     <connections>
                         <outlet property="activityIndicatorView" destination="WgY-27-p95" id="Rfh-W5-JAB"/>
                         <outlet property="tableView" destination="obJ-xK-VeT" id="AOM-J0-zLa"/>
-                        <segue destination="dKH-6f-sJB" kind="show" identifier="OneOneViewController" id="2Og-vK-8if"/>
+                        <segue destination="dKH-6f-sJB" kind="show" identifier="ProductDetailsViewController" id="2Og-vK-8if"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iI0-1N-Nbh" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2050,10 +2050,10 @@
             </objects>
             <point key="canvasLocation" x="-586" y="4045"/>
         </scene>
-        <!--One One View Controller-->
+        <!--Product Details View Controller-->
         <scene sceneID="UyC-Lb-fTu">
             <objects>
-                <viewController storyboardIdentifier="OneOneViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="dKH-6f-sJB" customClass="OneOneViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ProductDetailsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="dKH-6f-sJB" customClass="ProductDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="7Rh-j3-Qgm"/>
                         <viewControllerLayoutGuide type="bottom" id="gEa-kc-AVO"/>

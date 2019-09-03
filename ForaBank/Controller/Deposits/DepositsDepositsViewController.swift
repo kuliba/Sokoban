@@ -58,7 +58,7 @@ class DepositsDepositsViewController: UIViewController {
         }
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let destination = segue.destination as? OneOneViewController {
+        if let destination = segue.destination as? ProductDetailsViewController {
             destination.datadep = datadeps[(tableView.indexPathForSelectedRow?.row)!]
         }
         
@@ -72,7 +72,7 @@ class DepositsDepositsViewController: UIViewController {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "OneOneViewController", sender: Any?.self)
+        performSegue(withIdentifier: "ProductDetailsViewController", sender: Any?.self)
 
     }    
 }

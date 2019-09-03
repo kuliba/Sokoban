@@ -31,9 +31,9 @@ class DepositsDepositsSegueAnimator: NSObject, UIViewControllerAnimatedTransitio
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        if transitionContext.viewController(forKey: .to) is OneOneViewController {
+        if transitionContext.viewController(forKey: .to) is ProductDetailsViewController {
             animateSegueToDetailsViewController(using: transitionContext)
-        } else if transitionContext.viewController(forKey: .from) is OneOneViewController {
+        } else if transitionContext.viewController(forKey: .from) is ProductDetailsViewController {
             animateUnwindSegue(using: transitionContext)
         } else {
             print("DepositsDepositsSegueAnimator unprovided transition")

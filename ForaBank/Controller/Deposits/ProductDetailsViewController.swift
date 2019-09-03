@@ -10,7 +10,7 @@ import UIKit
 import iCarousel
 import DeviceKit
 
-class OneOneViewController: UIViewController {
+class ProductDetailsViewController: UIViewController {
 
     // MARK: - Properties
     @IBOutlet weak var header: UIView!
@@ -64,7 +64,7 @@ class OneOneViewController: UIViewController {
     
 }
 
-private extension OneOneViewController {
+private extension ProductDetailsViewController {
     
     @objc func handleScroll(_ notification: Notification?) {
         guard let tableScrollView = notification?.userInfo?["tableView"] as? UIScrollView else {
@@ -157,7 +157,7 @@ private extension OneOneViewController {
     }
 }
 
-extension OneOneViewController: iCarouselDataSource, iCarouselDelegate {
+extension ProductDetailsViewController: iCarouselDataSource, iCarouselDelegate {
     
     func numberOfItems(in carousel: iCarousel) -> Int {
         return items.count
@@ -261,7 +261,7 @@ extension OneOneViewController: iCarouselDataSource, iCarouselDelegate {
     }
 }
 
-extension OneOneViewController: CustomTransitionOriginator, CustomTransitionDestination {
+extension ProductDetailsViewController: CustomTransitionOriginator, CustomTransitionDestination {
     var fromAnimatedSubviews: [String : UIView] {
 //        print("OneOneViewController fromAnimatedSubviews")
         var views = [String : UIView]()
