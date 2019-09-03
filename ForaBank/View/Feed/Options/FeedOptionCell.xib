@@ -61,7 +61,7 @@
                             <bool key="isElement" value="NO"/>
                         </accessibility>
                         <connections>
-                            <action selector="changePinCode:" destination="LwO-8t-Pfa" eventType="valueChanged" id="HJn-82-PCW"/>
+                            <action selector="changePinCode:" destination="LwO-8t-Pfa" eventType="valueChanged" id="NDl-iK-4hU"/>
                         </connections>
                     </switch>
                 </subviews>
@@ -89,7 +89,7 @@
             <viewLayoutGuide key="safeArea" id="SSe-t4-uua"/>
             <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
             <connections>
-                <outlet property="changePinCode" destination="sgq-Rn-jsG" id="5vE-Wv-p07"/>
+                <outlet property="changePinCode" destination="sgq-Rn-jsG" id="WOA-bx-U20"/>
                 <outlet property="iconImageView" destination="6hz-fb-JhD" id="0VM-qS-KJl"/>
                 <outlet property="titleLabel" destination="ALz-gk-mvh" id="fgi-W1-EhJ"/>
             </connections>

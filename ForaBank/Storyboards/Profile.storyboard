@@ -1828,7 +1828,7 @@
                                                                     <action selector="pinCodeApp:" destination="Ftx-Ta-bTi" eventType="valueChanged" id="DQH-Yy-7Cs"/>
                                                                 </connections>
                                                             </switch>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="6-значный код" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lZh-ie-Mrj">
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4-значный код" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lZh-ie-Mrj">
                                                                 <rect key="frame" x="38" y="20" width="161" height="21"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="21" id="r2P-3K-E8n"/>
@@ -2712,7 +2712,7 @@
                                 <rect key="frame" x="0.0" y="43" width="320" height="544"/>
                                 <subviews>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" allowsSelection="NO" rowHeight="60" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="oCD-eX-yo7" customClass="CustomTableView" customModule="ForaBank" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="8" width="320" height="598"/>
+                                        <rect key="frame" x="0.0" y="19" width="320" height="598"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -2722,9 +2722,9 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="oCD-eX-yo7" firstAttribute="leading" secondItem="Uc0-F2-RhH" secondAttribute="leading" id="0G7-SZ-SHn"/>
-                                    <constraint firstItem="oCD-eX-yo7" firstAttribute="top" secondItem="Uc0-F2-RhH" secondAttribute="top" constant="8" id="Aqi-Hk-Voh"/>
+                                    <constraint firstItem="oCD-eX-yo7" firstAttribute="top" secondItem="Uc0-F2-RhH" secondAttribute="top" constant="19" id="Aqi-Hk-Voh"/>
                                     <constraint firstAttribute="trailing" secondItem="oCD-eX-yo7" secondAttribute="trailing" id="uJb-sf-Dug"/>
-                                    <constraint firstAttribute="bottom" secondItem="oCD-eX-yo7" secondAttribute="bottom" constant="-62" id="wHg-iT-aQ9"/>
+                                    <constraint firstAttribute="bottom" secondItem="oCD-eX-yo7" secondAttribute="bottom" constant="-73" id="wHg-iT-aQ9"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="17y-rv-zi4">
@@ -2925,7 +2925,6 @@ AABUAAAAAAAAAAAAAAAAAAAT6w
         <image name="visa-colored" width="93" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="DRT-QI-Gaj"/>
         <segue reference="5qd-X6-ri2"/>
     </inferredMetricsTieBreakers>
 </document>
