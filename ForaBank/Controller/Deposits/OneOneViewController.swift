@@ -119,6 +119,7 @@ private extension OneOneViewController {
         NotificationCenter.default.removeObserver(self)
         let newViewController = storyboard?.instantiateViewController(withIdentifier: "feedfeed\(index)")
         newViewController!.view.translatesAutoresizingMaskIntoConstraints = false
+        
         cycleFromViewController(oldViewController: currentViewController!, toViewController: newViewController!)
         currentViewController = newViewController
     }
