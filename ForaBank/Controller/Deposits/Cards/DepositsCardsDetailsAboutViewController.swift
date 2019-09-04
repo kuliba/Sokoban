@@ -88,7 +88,6 @@ class DepositsCardsDetailsAboutViewController: UITableViewController, TabCardDet
         } else if (account != nil) {
             
         }
-
     }
     // MARK: - Table view data source
     

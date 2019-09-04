@@ -8,6 +8,8 @@
 
 import Foundation
 
+// Numbers masks
+
 func maskedString(string: String, mask: Array<Int>) -> String {
     var temp = string.map { String($0) }
     let parts = mask.map { (item) -> [String] in
@@ -28,4 +30,19 @@ func maskedAccount(with string: String) -> String {
 func maskedCard(with string: String) -> String {
     let mask = [4, 4, 4, 4]
     return maskedString(string: string, mask: mask)
+}
+
+//Money
+
+func maskSum(sum: Double) -> String {
+    let currencyFormatter = NumberFormatter()
+    currencyFormatter.usesGroupingSeparator = true
+    currencyFormatter.numberStyle = .currency
+    currencyFormatter.locale = Locale(identifier: "ru_RU")
+    currencyFormatter.currencySymbol = ""
+
+    if let formattedSum = currencyFormatter.string(from: NSNumber(value: sum)) {
+        return formattedSum
+    }
+    return String(sum)
 }

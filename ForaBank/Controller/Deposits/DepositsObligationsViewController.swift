@@ -116,10 +116,8 @@ extension DepositsObligationsViewController: UITableViewDataSource, UITableViewD
 
         cell.titleLabel.text = bonds[indexPath.row].depositProductName
         cell.subTitleLabel.text = maskedCard(with: bonds[indexPath.row].accountNumber!)
-        cell.descriptionLabel.text = String(bonds[indexPath.row].balance!)
+        cell.descriptionLabel.text = maskSum(sum: bonds[indexPath.row].balance!)
         cell.currently.text = bonds[indexPath.row].currencyCode
-
-
 
         return cell
     }
