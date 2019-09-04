@@ -9,7 +9,7 @@
 import UIKit
 import DeviceKit
 
-class DepositsDepositsSegueAnimator: NSObject, UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate {
+class AccountsSegueAnimator: NSObject, UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate {
     
     let iphone5Devices = Constants.iphone5Devices
     let xDevices = Constants.xDevices
@@ -36,21 +36,21 @@ class DepositsDepositsSegueAnimator: NSObject, UIViewControllerAnimatedTransitio
         } else if transitionContext.viewController(forKey: .from) is ProductDetailsViewController {
             animateUnwindSegue(using: transitionContext)
         } else {
-            print("DepositsDepositsSegueAnimator unprovided transition")
+            print("AccountsSegueAnimator unprovided transition")
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         }
     }
     
 }
 
-//extension DepositsDepositsSegueAnimator: CAAnimationDelegate {
+//extension AccountsSegueAnimator: CAAnimationDelegate {
 //    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
 //        //context?.completeTransition(true)
 //    }
 //}
 
 // MARK: - Private methods
-extension DepositsDepositsSegueAnimator {
+extension AccountsSegueAnimator {
     
     func animateSegueToDetailsViewController(using transitionContext: UIViewControllerContextTransitioning) {
         
@@ -58,7 +58,7 @@ extension DepositsDepositsSegueAnimator {
             let fromVC = transitionContext.viewController(forKey: .from) as? UIViewController & CustomTransitionOriginator,
             let toVC = transitionContext.viewController(forKey: .to) as? UIViewController & CustomTransitionDestination
             else {
-                print("DepositsDepositsSegueAnimator animateSegueToDetailsViewController guard return")
+                print("AccountsSegueAnimator animateSegueToDetailsViewController guard return")
                 transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
                 return
         }
@@ -195,7 +195,7 @@ extension DepositsDepositsSegueAnimator {
             let fromVC = transitionContext.viewController(forKey: .from) as? UIViewController & CustomTransitionOriginator,
             let toVC = transitionContext.viewController(forKey: .to) as? UIViewController & CustomTransitionDestination
             else {
-                print("DepositsDepositsSegueAnimator animateUnwindSegue guard return")
+                print("AccountsSegueAnimator animateUnwindSegue guard return")
                 transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
                 return
         }

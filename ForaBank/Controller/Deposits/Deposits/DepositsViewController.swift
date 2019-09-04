@@ -10,7 +10,7 @@ import UIKit
 import FlexiblePageControl
 import Hero
 
-class DepositsObligationsViewController: UIViewController {
+class DepositsViewController: UIViewController {
 
     // MARK: - Properties
     @IBOutlet weak var tableView: CustomTableView!
@@ -45,7 +45,7 @@ class DepositsObligationsViewController: UIViewController {
 //        ]
 //    ]
 
-    var bonds = [Bond]() {
+    var deposits = [Deposit]() {
         didSet {
             tableView.reloadData()
             activityIndicator.stopAnimating()
@@ -55,7 +55,7 @@ class DepositsObligationsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if (bonds == nil) {
+        if (deposits == nil) {
             activityIndicator.startAnimation()
 
         }
@@ -78,15 +78,15 @@ class DepositsObligationsViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        NetworkManager.shared().getBonds { (success, bonds) in
+        NetworkManager.shared().getBonds { (success, deposits) in
             if success {
-                self.bonds = bonds ?? []
+                self.deposits = deposits ?? []
             }
         }
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let destination = segue.destination as? DepositObligationDetailsViewController {
-            destination.bonds = bonds[(tableView.indexPathForSelectedRow?.row)!]
+        if let destination = segue.destination as? DepositDetailsViewController {
+            destination.deposits = deposits[(tableView.indexPathForSelectedRow?.row)!]
         }
 
     }
@@ -101,11 +101,11 @@ class DepositsObligationsViewController: UIViewController {
 }
 
 // MARK: - UITableView DataSource and Delegate
-extension DepositsObligationsViewController: UITableViewDataSource, UITableViewDelegate {
+extension DepositsViewController: UITableViewDataSource, UITableViewDelegate {
 
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return bonds.count
+        return deposits.count
     }
 
 
@@ -114,10 +114,10 @@ extension DepositsObligationsViewController: UITableViewDataSource, UITableViewD
             fatalError()
         }
 
-        cell.titleLabel.text = bonds[indexPath.row].depositProductName
-        cell.subTitleLabel.text = maskedCard(with: bonds[indexPath.row].accountNumber!)
-        cell.descriptionLabel.text = String(bonds[indexPath.row].balance!)
-        cell.currently.text = bonds[indexPath.row].currencyCode
+        cell.titleLabel.text = deposits[indexPath.row].depositProductName
+        cell.subTitleLabel.text = maskedCard(with: deposits[indexPath.row].accountNumber!)
+        cell.descriptionLabel.text = String(deposits[indexPath.row].balance!)
+        cell.currently.text = deposits[indexPath.row].currencyCode
 
 
 
@@ -151,7 +151,7 @@ extension DepositsObligationsViewController: UITableViewDataSource, UITableViewD
         return nil
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "DepositObligationDetailsViewController", sender: nil)
+        performSegue(withIdentifier: "DepositDetailsViewController", sender: nil)
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -160,7 +160,7 @@ extension DepositsObligationsViewController: UITableViewDataSource, UITableViewD
 }
 
 // MARK: - Private methods
-private extension DepositsObligationsViewController {
+private extension DepositsViewController {
     func presentPaymentsDetailsViewController() {
         if let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentsDetailsViewController") as? PaymentsDetailsViewController {
             present(vc, animated: true, completion: nil)
@@ -170,7 +170,7 @@ private extension DepositsObligationsViewController {
 
 
 // MARK: - Private methods
-private extension DepositsObligationsViewController {
+private extension DepositsViewController {
 
     func setUpTableView() {
         setTableViewDelegateAndDataSource()

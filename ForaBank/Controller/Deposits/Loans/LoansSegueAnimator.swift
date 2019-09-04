@@ -43,7 +43,7 @@ class LoansSegueAnimator: NSObject, UIViewControllerAnimatedTransitioning, UIVie
     
 }
 
-//extension DepositsDepositsSegueAnimator: CAAnimationDelegate {
+//extension AccountsSegueAnimator: CAAnimationDelegate {
 //    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
 //        //context?.completeTransition(true)
 //    }

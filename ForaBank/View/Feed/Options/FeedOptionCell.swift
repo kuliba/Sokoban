@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import AppLocker
 
 class FeedOptionCell: UITableViewCell {
 
@@ -18,7 +17,7 @@ class FeedOptionCell: UITableViewCell {
     @IBAction func changePinCode(_ sender: Any) {
         if let s = sender as? UISwitch,
             s.isOn == true {
-            AppLocker.present(with: .create)
+      
         }
     }
 }

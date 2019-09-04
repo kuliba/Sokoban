@@ -11,7 +11,7 @@ import iCarousel
 import DeviceKit
 
 
-class DepositObligationDetailsViewController: UIViewController {
+class DepositDetailsViewController: UIViewController {
    
     // MARK: - Properties
     @IBOutlet weak var header: UIView!
@@ -21,7 +21,7 @@ class DepositObligationDetailsViewController: UIViewController {
     @IBOutlet weak var depositAmount: UILabel!
     @IBOutlet weak var contentViewTop: NSLayoutConstraint!
     var previousIndex = -1
-    var bonds: Bond?
+    var deposits: Deposit?
     weak var currentViewController: UIViewController?
     var previousOffset: CGFloat = 0
     var items = ["Управление","История" ,"О счете"]
@@ -63,8 +63,8 @@ class DepositObligationDetailsViewController: UIViewController {
         carousel.bounces = false
         
         
-        depositName.text = "\((bonds?.depositProductName)!)"
-        depositAmount.text = "\((bonds?.balance)!) \((bonds?.currencyCode)!)"
+        depositName.text = "\((deposits?.depositProductName)!)"
+        depositAmount.text = "\((deposits?.balance)!) \((deposits?.currencyCode)!)"
 
     }
     
@@ -77,7 +77,7 @@ class DepositObligationDetailsViewController: UIViewController {
 
 
 
-private extension DepositObligationDetailsViewController {
+private extension DepositDetailsViewController {
     
 
     @objc func handleScroll(_ notification: Notification?) {
@@ -170,7 +170,7 @@ private extension DepositObligationDetailsViewController {
     }
 }
 
-extension DepositObligationDetailsViewController: iCarouselDataSource, iCarouselDelegate {
+extension DepositDetailsViewController: iCarouselDataSource, iCarouselDelegate {
     
     func numberOfItems(in carousel: iCarousel) -> Int {
         return items.count
@@ -274,7 +274,7 @@ extension DepositObligationDetailsViewController: iCarouselDataSource, iCarousel
     }
 }
 
-extension DepositObligationDetailsViewController: CustomTransitionOriginator, CustomTransitionDestination {
+extension DepositDetailsViewController: CustomTransitionOriginator, CustomTransitionDestination {
     var fromAnimatedSubviews: [String : UIView] {
 //        print("OneOneViewController fromAnimatedSubviews")
         var views = [String : UIView]()

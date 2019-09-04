@@ -525,7 +525,7 @@ class DepositsCardsListViewController: UIViewController {
                 destinationVC.card = self.cards.last
             }
         } else if let vc = segue.destination as? CardDetailsViewController,
-            let parent = parent as? DepositsViewController {
+            let parent = parent as? CarouselViewController {
             vc.card = selectedCard
             segueId = segue.identifier
             vc.segueId = segueId

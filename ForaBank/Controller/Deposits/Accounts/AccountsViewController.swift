@@ -11,13 +11,13 @@ import Alamofire
 import FlexiblePageControl
 import Hero
 
-class DepositsDepositsViewController: UIViewController {
+class AccountsViewController: UIViewController {
 
     // MARK: - Properties
     @IBOutlet weak var tableView: CustomTableView!
 
     @IBOutlet weak var activityIndicatorView: ActivityIndicatorView!
-    let transitionAnimator = DepositsDepositsSegueAnimator()
+    let transitionAnimator = AccountsSegueAnimator()
 
     let cellId = "DepositsDepositCell"
 
@@ -83,7 +83,7 @@ class DepositsDepositsViewController: UIViewController {
 
 
 // MARK: - UITableView DataSource and Delegate
-extension DepositsDepositsViewController: UITableViewDataSource, UITableViewDelegate {
+extension AccountsViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return accounts.count
@@ -151,7 +151,7 @@ extension DepositsDepositsViewController: UITableViewDataSource, UITableViewDele
 }
 
 // MARK: - Private methods
-private extension DepositsDepositsViewController {
+private extension AccountsViewController {
     func presentPaymentsDetailsViewController() {
         if let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentsDetailsViewController") as? PaymentsDetailsViewController {
             present(vc, animated: true, completion: nil)
@@ -160,7 +160,7 @@ private extension DepositsDepositsViewController {
 }
 
 // MARK: - Table View Set Up Private methods
-private extension DepositsDepositsViewController {
+private extension AccountsViewController {
 
     func setUpTableView() {
         setTableViewDelegateAndDataSource()
@@ -189,7 +189,7 @@ private extension DepositsDepositsViewController {
     }
 }
 
-extension DepositsDepositsViewController: CustomTransitionOriginator, CustomTransitionDestination {
+extension AccountsViewController: CustomTransitionOriginator, CustomTransitionDestination {
     var fromAnimatedSubviews: [String: UIView] {
         var views = [String: UIView]()
         views["tableView"] = tableView

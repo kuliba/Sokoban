@@ -49,7 +49,7 @@ protocol LoansServiceProtocol {
 
 protocol DepositsServiceProtocol {
     func getBonds(headers: HTTPHeaders,
-                  completionHandler: @escaping (_ success:Bool, _ obligations: [Bond]?) -> Void)
+                  completionHandler: @escaping (_ success:Bool, _ obligations: [Deposit]?) -> Void)
 }
 
 protocol RegServiceProtocol {
@@ -269,7 +269,7 @@ class NetworkManager {
     }
     
     //MARK: - deposits service
-    func getBonds(completionHandler: @escaping (_ success:Bool, _ obligations: [Bond]?) -> Void) {
+    func getBonds(completionHandler: @escaping (_ success:Bool, _ obligations: [Deposit]?) -> Void) {
          depositsService.getBonds(headers: headers, completionHandler: completionHandler)
     }
     func getLoans(completionHandler: @escaping (_ success:Bool, _ obligations: [Loan]?) -> Void) {

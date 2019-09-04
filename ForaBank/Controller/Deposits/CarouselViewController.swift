@@ -11,7 +11,7 @@ import DeviceKit
 import iCarousel
 import Hero
 
-class DepositsViewController: UIViewController {
+class CarouselViewController: UIViewController {
 
     // MARK: - Properties
     @IBOutlet var carousel: iCarousel!
@@ -192,7 +192,7 @@ class DepositsViewController: UIViewController {
 //    }
 }
 
-extension DepositsViewController: iCarouselDataSource, iCarouselDelegate {
+extension CarouselViewController: iCarouselDataSource, iCarouselDelegate {
     
     func numberOfItems(in carousel: iCarousel) -> Int {
         return items.count
@@ -319,7 +319,7 @@ extension DepositsViewController: iCarouselDataSource, iCarouselDelegate {
     }
 }
 
-private extension DepositsViewController {
+private extension CarouselViewController {
     
     func addSubview(_ subView:UIView, toView parentView:UIView) {
         parentView.addSubview(subView)
@@ -409,7 +409,7 @@ private extension DepositsViewController {
     }
 }
 
-extension DepositsViewController: CustomTransitionOriginator, CustomTransitionDestination {
+extension CarouselViewController: CustomTransitionOriginator, CustomTransitionDestination {
     var fromAnimatedSubviews: [String : UIView] {
         var views = [String : UIView]()
         

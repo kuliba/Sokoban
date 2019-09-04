@@ -18,10 +18,10 @@
         </array>
     </customFonts>
     <scenes>
-        <!--Deposits View Controller-->
+        <!--Carousel View Controller-->
         <scene sceneID="jnb-tn-H9V">
             <objects>
-                <viewController storyboardIdentifier="depositsRoot" id="Zlb-hj-4wP" customClass="DepositsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="depositsRoot" id="Zlb-hj-4wP" customClass="CarouselViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="724-JE-xJK"/>
                         <viewControllerLayoutGuide type="bottom" id="SvR-3c-ruB"/>
@@ -79,10 +79,10 @@
             </objects>
             <point key="canvasLocation" x="-866" y="-761"/>
         </scene>
-        <!--Deposits Obligations View Controller-->
+        <!--Carousel View Controller-->
         <scene sceneID="Uc7-N4-90s">
             <objects>
-                <viewController storyboardIdentifier="deposits2" id="Iag-Bi-Zjh" customClass="DepositsObligationsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="deposits2" id="Iag-Bi-Zjh" customClass="CarouselViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4Gt-nR-VR4">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -117,7 +117,7 @@
                     <connections>
                         <outlet property="activityIndicator" destination="PNB-cP-yMy" id="7S9-S6-0yq"/>
                         <outlet property="tableView" destination="e5f-r9-leh" id="Nip-ZX-II3"/>
-                        <segue destination="yDh-99-FRd" kind="show" identifier="DepositObligationDetailsViewController" id="SNL-Xw-v9j"/>
+                        <segue destination="yDh-99-FRd" kind="show" identifier="DepositDetailsViewController" id="SNL-Xw-v9j"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Kvf-XX-bSI" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -183,10 +183,10 @@
             </objects>
             <point key="canvasLocation" x="-3.75" y="49.647887323943664"/>
         </scene>
-        <!--Deposits Deposits View Controller-->
+        <!--Accounts View Controller-->
         <scene sceneID="CHq-xi-EoF">
             <objects>
-                <viewController storyboardIdentifier="deposits1" id="6dq-J5-Emt" customClass="DepositsDepositsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="deposits1" id="6dq-J5-Emt" customClass="AccountsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="HWW-p7-npH">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2939,10 +2939,10 @@
             </objects>
             <point key="canvasLocation" x="1870" y="811"/>
         </scene>
-        <!--Deposit Obligation Details View Controller-->
+        <!--Deposit Details View Controller-->
         <scene sceneID="04i-4d-ToT">
             <objects>
-                <viewController storyboardIdentifier="DepositObligationDetailsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="yDh-99-FRd" customClass="DepositObligationDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DepositDetailsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="yDh-99-FRd" customClass="DepositDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="0EX-Jv-XHL"/>
                         <viewControllerLayoutGuide type="bottom" id="CZz-i1-54n"/>
@@ -2993,7 +2993,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pj7-Cm-Soe">
-                                                        <rect key="frame" x="57" y="90" width="174" height="45"/>
+                                                        <rect key="frame" x="57" y="95" width="174" height="40"/>
                                                         <string key="text">Вклад «Комфортный»
 до 11.01.2018</string>
                                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="17"/>
