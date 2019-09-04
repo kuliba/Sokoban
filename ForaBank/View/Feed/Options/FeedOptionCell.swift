@@ -17,10 +17,6 @@ class FeedOptionCell: UITableViewCell {
     @IBAction func changePinCode(_ sender: Any) {
         if let s = sender as? UISwitch,
             s.isOn == true {
-<<<<<<< HEAD
-      
-=======
->>>>>>> origin/Refactoring
         }
     }
 }

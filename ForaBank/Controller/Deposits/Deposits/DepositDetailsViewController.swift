@@ -12,7 +12,7 @@ import DeviceKit
 
 
 class DepositDetailsViewController: UIViewController {
-   
+
     // MARK: - Properties
     @IBOutlet weak var header: UIView!
     @IBOutlet weak var container: RoundedEdgeView!
@@ -21,7 +21,7 @@ class DepositDetailsViewController: UIViewController {
     @IBOutlet weak var depositAmount: UILabel!
     @IBOutlet weak var contentViewTop: NSLayoutConstraint!
     var previousIndex = -1
-    var deposits: Deposit?
+    var deposit: Deposit?
     weak var currentViewController: UIViewController?
     var previousOffset: CGFloat = 0
     var items = ["Управление", "История", "О счете"]
@@ -63,9 +63,9 @@ class DepositDetailsViewController: UIViewController {
         carousel.bounces = false
 
 
-        depositName.text = "\((bonds?.depositProductName)!)"
-        let maskedBalance = maskSum(sum: (bonds?.balance)!)
-        depositAmount.text = "\(maskedBalance) \((bonds?.currencyCode)!)"
+        depositName.text = "\((deposit?.depositProductName)!)"
+        let maskedBalance = maskSum(sum: (deposit?.balance)!)
+        depositAmount.text = "\(maskedBalance) \((deposit?.currencyCode)!)"
 
     }
 
@@ -79,7 +79,7 @@ class DepositDetailsViewController: UIViewController {
 
 
 private extension DepositDetailsViewController {
-    
+
 
     @objc func handleScroll(_ notification: Notification?) {
         guard let tableScrollView = notification?.userInfo?["tableView"] as? UIScrollView else {
@@ -172,7 +172,7 @@ private extension DepositDetailsViewController {
 }
 
 extension DepositDetailsViewController: iCarouselDataSource, iCarouselDelegate {
-    
+
     func numberOfItems(in carousel: iCarousel) -> Int {
         return items.count
     }
@@ -276,7 +276,7 @@ extension DepositDetailsViewController: iCarouselDataSource, iCarouselDelegate {
 }
 
 extension DepositDetailsViewController: CustomTransitionOriginator, CustomTransitionDestination {
-    var fromAnimatedSubviews: [String : UIView] {
+    var fromAnimatedSubviews: [String: UIView] {
 //        print("OneOneViewController fromAnimatedSubviews")
         var views = [String: UIView]()
         let tableSnapshot = view.snapshotView(afterScreenUpdates: true)!

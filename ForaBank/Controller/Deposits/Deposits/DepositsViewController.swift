@@ -57,10 +57,7 @@ class DepositsViewController: UIViewController {
 
         if (deposits == nil) {
             activityIndicator.startAnimation()
-
         }
-
-
     }
 
 
@@ -86,7 +83,7 @@ class DepositsViewController: UIViewController {
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let destination = segue.destination as? DepositDetailsViewController {
-            destination.deposits = deposits[(tableView.indexPathForSelectedRow?.row)!]
+            destination.deposit = deposits[(tableView.indexPathForSelectedRow?.row)!]
         }
 
     }
@@ -114,17 +111,10 @@ extension DepositsViewController: UITableViewDataSource, UITableViewDelegate {
             fatalError()
         }
 
-<<<<<<< HEAD:ForaBank/Controller/Deposits/Deposits/DepositsViewController.swift
         cell.titleLabel.text = deposits[indexPath.row].depositProductName
         cell.subTitleLabel.text = maskedCard(with: deposits[indexPath.row].accountNumber!)
-        cell.descriptionLabel.text = String(deposits[indexPath.row].balance!)
+        cell.descriptionLabel.text = maskSum(sum: deposits[indexPath.row].balance!)
         cell.currently.text = deposits[indexPath.row].currencyCode
-=======
-        cell.titleLabel.text = bonds[indexPath.row].depositProductName
-        cell.subTitleLabel.text = maskedCard(with: bonds[indexPath.row].accountNumber!)
-        cell.descriptionLabel.text = maskSum(sum: bonds[indexPath.row].balance!)
-        cell.currently.text = bonds[indexPath.row].currencyCode
->>>>>>> origin/Refactoring:ForaBank/Controller/Deposits/DepositsObligationsViewController.swift
 
         return cell
     }
