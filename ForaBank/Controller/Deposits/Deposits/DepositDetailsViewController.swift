@@ -64,13 +64,8 @@ class DepositDetailsViewController: UIViewController {
 
 
         depositName.text = "\((deposit?.depositProductName)!)"
-        let maskedBalance = maskSum(sum: (deposit?.balance)!)
-        depositAmount.text = "\(maskedBalance) \((deposit?.currencyCode)!)"
-
+        depositAmount.text = "\(maskSum(sum: (deposit?.balance)!)) \((deposit?.currencyCode)!)"
     }
-
-
-
 }
 
 
