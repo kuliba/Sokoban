@@ -12,140 +12,140 @@ import FlexiblePageControl
 import Hero
 
 class DepositsDepositsViewController: UIViewController {
-    
+
     // MARK: - Properties
     @IBOutlet weak var tableView: CustomTableView!
-    
+
     @IBOutlet weak var activityIndicatorView: ActivityIndicatorView!
     let transitionAnimator = DepositsDepositsSegueAnimator()
-   
+
     let cellId = "DepositsDepositCell"
-   
-    
-    
+
+
+
     override func viewDidLoad() {
         super.viewDidLoad()
         activityIndicatorView.startAnimation()
         setUpTableView()
     }
-    
-    var datadeps = [Depos]() {
-        didSet{
+
+    var accounts = [Account]() {
+        didSet {
             tableView.reloadData()
             activityIndicatorView.stopAnimating()
         }
     }
-    
+
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        if (datadeps == nil) {
+
+        if (accounts == nil) {
             activityIndicatorView.startAnimation()
-            
+
         }
     }
-    
+
     //MARK: - lifecycle
 
-     
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        NetworkManager.shared().getDepos { (success, datadeps) in
+        NetworkManager.shared().getDepos { (success, accounts) in
             if success {
-                self.datadeps = datadeps ?? []
+                self.accounts = accounts ?? []
             }
         }
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let destination = segue.destination as? ProductDetailsViewController {
-            destination.datadep = datadeps[(tableView.indexPathForSelectedRow?.row)!]
+            destination.account = accounts[(tableView.indexPathForSelectedRow?.row)!]
         }
-        
+
     }
-    
+
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         if tableView.indexPathForSelectedRow != nil {
             //tableView.deselectRow(at: selectedRow, animated: false)
         }
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "ProductDetailsViewController", sender: Any?.self)
 
-    }    
+    }
 }
 
- 
-    
-    
+
+
+
 
 
 // MARK: - UITableView DataSource and Delegate
 extension DepositsDepositsViewController: UITableViewDataSource, UITableViewDelegate {
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return datadeps.count
+        return accounts.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? DepositsDepositCell else {
             fatalError()
         }
-        
-        
-        
-        cell.titleLabel.text = datadeps[indexPath.row].depositProductName
-        cell.subTitleLabel.text = maskedAccount(with: datadeps[indexPath.row].accountNumber!)
-        cell.amountLabel.text = String(datadeps[indexPath.row].balance!)
-        cell.currently.text = datadeps[indexPath.row].currencyCode
-        cell.bottomSeparatorView.isHidden = indexPath.row == datadeps.endIndex - 1
-        
-        
+
+
+
+        cell.titleLabel.text = accounts[indexPath.row].productName
+        cell.subTitleLabel.text = maskedAccount(with: accounts[indexPath.row].accountNumber)
+        cell.amountLabel.text = String(accounts[indexPath.row].balance)
+        cell.currently.text = accounts[indexPath.row].currencyCode
+        cell.bottomSeparatorView.isHidden = indexPath.row == accounts.endIndex - 1
+
+
         return cell
-       
+
     }
-    
+
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         if section == 0 {
             let footerView = UIView(frame: CGRect(x: tableView.frame.minX + 20, y: 0, width: tableView.frame.width - 40, height: 95))
             let addDepositButton = UIButton(frame: CGRect(x: footerView.frame.minX, y: footerView.frame.minY + 15, width: footerView.frame.width, height: 45))
-            
+
             addDepositButton.setTitle("Открыть счет", for: .normal)
             addDepositButton.titleLabel?.font = UIFont(name: "Roboto-Regular", size: 16)
             addDepositButton.setTitleColor(.black, for: [])
-            
+
             addDepositButton.layer.borderWidth = 0.5
-            addDepositButton.layer.borderColor = UIColor(red: 211/255, green: 211/255, blue: 211/255, alpha: 1).cgColor
+            addDepositButton.layer.borderColor = UIColor(red: 211 / 255, green: 211 / 255, blue: 211 / 255, alpha: 1).cgColor
             addDepositButton.layer.cornerRadius = addDepositButton.frame.height / 2
-            
+
             footerView.addSubview(addDepositButton)
             return footerView
         }
-        
+
         return nil
     }
-    
 
- 
+
+
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 95
     }
-    
+
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let addToDepositAction = UITableViewRowAction(style: .normal, title: "Пополнить счет") { [weak self] action, indexPath in
             self?.presentPaymentsDetailsViewController()
         }
-        addToDepositAction.backgroundColor = UIColor(red: 26/255, green: 188/255, blue: 156/255, alpha: 1)
+        addToDepositAction.backgroundColor = UIColor(red: 26 / 255, green: 188 / 255, blue: 156 / 255, alpha: 1)
         return [addToDepositAction]
     }
-    
+
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let sendAction = UIContextualAction(style: .normal, title: "Отправить") { [weak self] (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
             self?.presentPaymentsDetailsViewController()
         }
-        sendAction.backgroundColor = UIColor(red: 234/255, green: 68/255, blue: 6/255, alpha: 1)
+        sendAction.backgroundColor = UIColor(red: 234 / 255, green: 68 / 255, blue: 6 / 255, alpha: 1)
         return UISwipeActionsConfiguration(actions: [sendAction])
     }
 }
@@ -161,28 +161,28 @@ private extension DepositsDepositsViewController {
 
 // MARK: - Table View Set Up Private methods
 private extension DepositsDepositsViewController {
-    
+
     func setUpTableView() {
         setTableViewDelegateAndDataSource()
         setTableViewEstimatedAutomaticRowHeight()
         setTableViewContentInset()
         registerTableViewNibCell()
     }
-    
+
     func setTableViewDelegateAndDataSource() {
         tableView.dataSource = self
         tableView.delegate = self
     }
-    
+
     func setTableViewEstimatedAutomaticRowHeight() {
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
     }
-    
+
     func setTableViewContentInset() {
         tableView.contentInset.top = 15
     }
-    
+
     func registerTableViewNibCell() {
         let nibTemplateCell = UINib(nibName: cellId, bundle: nil)
         tableView.register(nibTemplateCell, forCellReuseIdentifier: cellId)
@@ -190,14 +190,14 @@ private extension DepositsDepositsViewController {
 }
 
 extension DepositsDepositsViewController: CustomTransitionOriginator, CustomTransitionDestination {
-    var fromAnimatedSubviews: [String : UIView] {
-        var views = [String : UIView]()
+    var fromAnimatedSubviews: [String: UIView] {
+        var views = [String: UIView]()
         views["tableView"] = tableView
         return views
     }
-    
-    var toAnimatedSubviews: [String : UIView] {
-        var views = [String : UIView]()
+
+    var toAnimatedSubviews: [String: UIView] {
+        var views = [String: UIView]()
         views["tableView"] = tableView
         return views
     }
