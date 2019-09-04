@@ -21,7 +21,7 @@ class DepositsCardsDetailsAboutViewController: UITableViewController, TabCardDet
     @IBOutlet weak var minimalRest: UILabel!
     
     var card: Card? = nil
-    var depos: Depos? = nil
+    var account: Account? = nil
 
     func set(card: Card?) {
         self.card = card
@@ -85,7 +85,7 @@ class DepositsCardsDetailsAboutViewController: UITableViewController, TabCardDet
         if let product = card?.product {
             tariffLabel.text = "\(product)   "
         }
-        } else if (depos != nil) {
+        } else if (account != nil) {
             
         }
 

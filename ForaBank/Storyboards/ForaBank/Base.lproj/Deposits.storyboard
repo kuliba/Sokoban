@@ -858,7 +858,7 @@
         <!--Card Details View Controller-->
         <scene sceneID="Zgj-qe-Qfl">
             <objects>
-                <viewController storyboardIdentifier="OneViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Oxz-tM-k7M" customClass="CardDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CardDetailsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Oxz-tM-k7M" customClass="CardDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="mgq-cw-vt5"/>
                         <viewControllerLayoutGuide type="bottom" id="5V5-Xp-9tv"/>

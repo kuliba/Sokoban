@@ -11,6 +11,6 @@
 #endif
 
 
-FOUNDATION_EXPORT double AppLockerVersionNumber;
-FOUNDATION_EXPORT const unsigned char AppLockerVersionString[];
+FOUNDATION_EXPORT double MapperVersionNumber;
+FOUNDATION_EXPORT const unsigned char MapperVersionString[];
 
