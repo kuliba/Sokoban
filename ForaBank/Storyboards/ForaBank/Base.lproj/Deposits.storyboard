@@ -79,10 +79,10 @@
             </objects>
             <point key="canvasLocation" x="-866" y="-761"/>
         </scene>
-        <!--Carousel View Controller-->
+        <!--Deposits View Controller-->
         <scene sceneID="Uc7-N4-90s">
             <objects>
-                <viewController storyboardIdentifier="deposits2" id="Iag-Bi-Zjh" customClass="CarouselViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="deposits2" id="Iag-Bi-Zjh" customClass="DepositsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4Gt-nR-VR4">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2993,7 +2993,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pj7-Cm-Soe">
-                                                        <rect key="frame" x="57" y="95" width="174" height="40"/>
+                                                        <rect key="frame" x="57" y="90" width="174" height="45"/>
                                                         <string key="text">Вклад «Комфортный»
 до 11.01.2018</string>
                                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="17"/>
