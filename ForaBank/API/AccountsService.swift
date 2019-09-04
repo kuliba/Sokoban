@@ -67,7 +67,7 @@ class DeposService: DeposServiceProtocol {
                                 let depositProductID = original["depositProductID"] as? Int
                                 let account = Account.from(NSDictionary(dictionary: original))
 
-                                guard let nonNilAccount = account, account?.productId != "10000000088" else { continue }
+                                guard let nonNilAccount = account, account?.productId != 10000000088 else { continue }
 
                                 self.accounts.append(nonNilAccount)
                             }

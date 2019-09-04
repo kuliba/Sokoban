@@ -9,11 +9,11 @@
 import Mapper
 
 class Account: Mappable {
-    let productName: String
-    let productId: String
-    let currencyCode: String
-    let balance: Double
-    let accountNumber: String
+    var productName: String
+    var productId: Int
+    var currencyCode: String
+    var balance: Double
+    var accountNumber: String
 
     var ownerAgentBrief: String?
     var customName: String?

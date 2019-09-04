@@ -59,7 +59,8 @@ class ProductDetailsViewController: UIViewController {
         carousel.bounces = false
 
         nameAccountLabel.text = "\((account?.productName)!)"
-        amountAccount.text = "\((account?.balance)!) \((account?.currencyCode)!)"
+        let maskedBalance = maskSum(sum: (account?.balance)!)
+        amountAccount.text = "\(maskedBalance) \((account?.currencyCode)!)"
     }
 
 }

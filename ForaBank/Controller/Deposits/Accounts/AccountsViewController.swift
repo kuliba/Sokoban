@@ -98,7 +98,7 @@ extension AccountsViewController: UITableViewDataSource, UITableViewDelegate {
 
         cell.titleLabel.text = accounts[indexPath.row].productName
         cell.subTitleLabel.text = maskedAccount(with: accounts[indexPath.row].accountNumber)
-        cell.amountLabel.text = String(accounts[indexPath.row].balance)
+        cell.amountLabel.text = maskSum(sum: accounts[indexPath.row].balance)
         cell.currently.text = accounts[indexPath.row].currencyCode
         cell.bottomSeparatorView.isHidden = indexPath.row == accounts.endIndex - 1
 
