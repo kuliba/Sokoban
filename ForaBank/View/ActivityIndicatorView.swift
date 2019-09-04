@@ -33,7 +33,7 @@ class ActivityIndicatorView: UIView {
     func setUpAnimation() {
         let layer: CAShapeLayer = CAShapeLayer()
         let path: UIBezierPath = UIBezierPath()
-        let lineWidth: CGFloat = 10
+        let lineWidth: CGFloat = 5
         path.addArc(withCenter: CGPoint(x: self.frame.size.width / 2, y: self.frame.size.height / 2),
                     radius: self.frame.size.width / 2 - lineWidth / 2,
                     startAngle: -(.pi / 2),

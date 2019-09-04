@@ -130,7 +130,7 @@ private extension LoansDetailsViewController {
     
     func showComponent(index: Int) {
         NotificationCenter.default.removeObserver(self)
-        let newViewController = storyboard?.instantiateViewController(withIdentifier: "feed1feed\(index)")
+        let newViewController = storyboard?.instantiateViewController(withIdentifier: "feedfeed\(index)")
         newViewController!.view.translatesAutoresizingMaskIntoConstraints = false
         if let c = newViewController as? TabLoansDetailViewController {
             c.set(loan: loan)
