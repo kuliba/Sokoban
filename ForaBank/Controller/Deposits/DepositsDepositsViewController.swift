@@ -58,7 +58,7 @@ class DepositsDepositsViewController: UIViewController {
         }
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let destination = segue.destination as? OneOneViewController {
+        if let destination = segue.destination as? ProductDetailsViewController {
             destination.datadep = datadeps[(tableView.indexPathForSelectedRow?.row)!]
         }
         
@@ -72,7 +72,7 @@ class DepositsDepositsViewController: UIViewController {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "OneOneViewController", sender: Any?.self)
+        performSegue(withIdentifier: "ProductDetailsViewController", sender: Any?.self)
 
     }    
 }
@@ -97,7 +97,7 @@ extension DepositsDepositsViewController: UITableViewDataSource, UITableViewDele
         
         
         cell.titleLabel.text = datadeps[indexPath.row].depositProductName
-        cell.subTitleLabel.text = datadeps[indexPath.row].accountNumber!.separate(every: 4, with: "-")
+        cell.subTitleLabel.text = maskedAccount(with: datadeps[indexPath.row].accountNumber!)
         cell.amountLabel.text = String(datadeps[indexPath.row].balance!)
         cell.currently.text = datadeps[indexPath.row].currencyCode
         cell.bottomSeparatorView.isHidden = indexPath.row == datadeps.endIndex - 1

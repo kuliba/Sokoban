@@ -220,7 +220,7 @@
                     <connections>
                         <outlet property="activityIndicatorView" destination="WgY-27-p95" id="Rfh-W5-JAB"/>
                         <outlet property="tableView" destination="obJ-xK-VeT" id="AOM-J0-zLa"/>
-                        <segue destination="dKH-6f-sJB" kind="show" identifier="OneOneViewController" id="2Og-vK-8if"/>
+                        <segue destination="dKH-6f-sJB" kind="show" identifier="ProductDetailsViewController" id="2Og-vK-8if"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iI0-1N-Nbh" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -530,7 +530,7 @@
                     <connections>
                         <outlet property="activityIndicator" destination="huB-Vb-TkR" id="EE1-qn-K44"/>
                         <segue destination="Xv3-je-rnb" kind="show" identifier="DepositsCardListOnholdBlock" id="d3l-gv-oOm"/>
-                        <segue destination="Oxz-tM-k7M" kind="presentation" identifier="DepositsCardsDetailsViewController" id="YZe-FQ-J5I"/>
+                        <segue destination="Oxz-tM-k7M" kind="presentation" identifier="CardDetailsViewController" id="YZe-FQ-J5I"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7nx-7B-LT7" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -855,10 +855,10 @@
             </objects>
             <point key="canvasLocation" x="913" y="1623"/>
         </scene>
-        <!--Deposits Cards Details View Controller-->
+        <!--Card Details View Controller-->
         <scene sceneID="Zgj-qe-Qfl">
             <objects>
-                <viewController storyboardIdentifier="OneViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Oxz-tM-k7M" customClass="DepositsCardsDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="OneViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Oxz-tM-k7M" customClass="CardDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="mgq-cw-vt5"/>
                         <viewControllerLayoutGuide type="bottom" id="5V5-Xp-9tv"/>
@@ -2050,10 +2050,10 @@
             </objects>
             <point key="canvasLocation" x="-586" y="4045"/>
         </scene>
-        <!--One One View Controller-->
+        <!--Product Details View Controller-->
         <scene sceneID="UyC-Lb-fTu">
             <objects>
-                <viewController storyboardIdentifier="OneOneViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="dKH-6f-sJB" customClass="OneOneViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ProductDetailsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="dKH-6f-sJB" customClass="ProductDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="7Rh-j3-Qgm"/>
                         <viewControllerLayoutGuide type="bottom" id="gEa-kc-AVO"/>

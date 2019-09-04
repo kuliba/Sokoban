@@ -14,11 +14,11 @@ class DepositsObligationsViewController: UIViewController {
 
     // MARK: - Properties
     @IBOutlet weak var tableView: CustomTableView!
-    
+
     let cellId = "DepositsObligationsCell"
-    
+
     @IBOutlet weak var activityIndicator: ActivityIndicatorView!
-    
+
     //    let data_ = [
 //        ["deposits_obligations_afk",
 //         "АФК-Система, Sistema-19",
@@ -44,38 +44,38 @@ class DepositsObligationsViewController: UIViewController {
 //         "3,84%"
 //        ]
 //    ]
- 
+
     var bonds = [Bond]() {
-        didSet{
+        didSet {
             tableView.reloadData()
             activityIndicator.stopAnimating()
         }
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         if (bonds == nil) {
-           activityIndicator.startAnimation()
-            
+            activityIndicator.startAnimation()
+
         }
-    
-        
+
+
     }
 
-    
-    
-   
+
+
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         activityIndicator.startAnimation()
         setUpTableView()
-        
-    }
-    
 
-    
+    }
+
+
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         NetworkManager.shared().getBonds { (success, bonds) in
@@ -88,74 +88,74 @@ class DepositsObligationsViewController: UIViewController {
         if let destination = segue.destination as? DepositObligationDetailsViewController {
             destination.bonds = bonds[(tableView.indexPathForSelectedRow?.row)!]
         }
-        
+
     }
 
-    
+
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         if let selectedRow = tableView.indexPathForSelectedRow {
-           // tableView.deselectRow(at: selectedRow, animated: false)
+            // tableView.deselectRow(at: selectedRow, animated: false)
         }
     }
 }
 
 // MARK: - UITableView DataSource and Delegate
 extension DepositsObligationsViewController: UITableViewDataSource, UITableViewDelegate {
-    
-    
+
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return bonds.count
     }
-    
-    
+
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? DepositsObligationsCell else {
             fatalError()
         }
-        
+
         cell.titleLabel.text = bonds[indexPath.row].depositProductName
-        cell.subTitleLabel.text = bonds[indexPath.row].accountNumber!.separate(every: 4, with: "-")
+        cell.subTitleLabel.text = maskedCard(with: bonds[indexPath.row].accountNumber!)
         cell.descriptionLabel.text = String(bonds[indexPath.row].balance!)
         cell.currently.text = bonds[indexPath.row].currencyCode
-        
 
-        
+
+
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         if section == 0 {
-            
+
             let footerView = UIView(frame: CGRect(x: tableView.frame.minX + 20, y: 0, width: tableView.frame.width - 40, height: 95))
             let doneButton = UIButton(type: .system)
             doneButton.frame = CGRect(x: footerView.frame.minX, y: footerView.frame.minY + 15, width: footerView.frame.width, height: 45)
-            
+
             doneButton.setTitle("Открыть вклад", for: .normal)
-            
+
             doneButton.titleLabel?.font = UIFont(name: "Roboto-Regular", size: 16)
-            
+
             doneButton.setTitleColor(.black, for: [])
-            
-            
+
+
             doneButton.layer.borderWidth = 0.5
-            doneButton.layer.borderColor = UIColor(red: 211/255, green: 211/255, blue: 211/255, alpha: 1).cgColor
-            
+            doneButton.layer.borderColor = UIColor(red: 211 / 255, green: 211 / 255, blue: 211 / 255, alpha: 1).cgColor
+
             doneButton.layer.cornerRadius = doneButton.frame.height / 2
-            
-            
+
+
             footerView.addSubview(doneButton)
             return footerView
         }
-        
+
         return nil
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "DepositObligationDetailsViewController", sender: nil)
     }
-    
+
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-            return 95
+        return 95
     }
 }
 
@@ -171,33 +171,33 @@ private extension DepositsObligationsViewController {
 
 // MARK: - Private methods
 private extension DepositsObligationsViewController {
-    
+
     func setUpTableView() {
         setTableViewDelegateAndDataSource()
         setTableViewContentInsets()
         setAutomaticRowHeight()
         registerNibCell()
     }
-    
+
     func setTableViewDelegateAndDataSource() {
         tableView.dataSource = self
         tableView.delegate = self
     }
-    
+
     func setTableViewContentInsets() {
         tableView.contentInset.top = 15
     }
-    
+
     func setAutomaticRowHeight() {
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
     }
-    
+
     func registerNibCell() {
         let nibTemplateCell = UINib(nibName: cellId, bundle: nil)
         tableView.register(nibTemplateCell, forCellReuseIdentifier: cellId)
     }
-    
+
     func setSearchView() {
         guard let searchCell = UINib(nibName: "DepositsSearchCell", bundle: nil)
             .instantiate(withOwner: nil, options: nil)[0] as? UIView else {
