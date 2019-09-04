@@ -82,7 +82,7 @@ class DepositsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if segueId == "DepositsCardsDetailsViewController" {
+        if segueId == "CardDetailsViewController" {
             gradientView.hero.modifiers = [
                 HeroModifier.beginWith([
                     HeroModifier.opacity(1),
@@ -136,7 +136,7 @@ class DepositsViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if segueId == "DepositsCardsDetailsViewController" {
+        if segueId == "CardDetailsViewController" {
             gradientView.hero.modifiers = [
                 HeroModifier.beginWith([
                     HeroModifier.opacity(1),

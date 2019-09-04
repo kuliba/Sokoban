@@ -15,7 +15,7 @@ protocol TabCardDetailViewController {
     func set(card:Card?)
 }
 
-class DepositsCardsDetailsViewController: UIViewController {
+class CardDetailsViewController: UIViewController {
     
     // MARK: - Properties
     @IBOutlet weak var header: UIView!
@@ -99,7 +99,7 @@ class DepositsCardsDetailsViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if segueId == "DepositsCardsDetailsViewController" {
+        if segueId == "CardDetailsViewController" {
             cardView.hero.id = "card"
             cardView.hero.modifiers = [
                 HeroModifier.beginWith([
@@ -133,7 +133,7 @@ class DepositsCardsDetailsViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if segueId == "DepositsCardsDetailsViewController" {
+        if segueId == "CardDetailsViewController" {
             cardView.hero.id = "card"
             cardView.hero.modifiers = [
                 HeroModifier.beginWith([
@@ -170,7 +170,7 @@ class DepositsCardsDetailsViewController: UIViewController {
 
 }
 
-private extension DepositsCardsDetailsViewController {
+private extension CardDetailsViewController {
     
     @objc func handleScroll(_ notification: Notification?) {
         guard let tableScrollView = notification?.userInfo?["tableView"] as? UIScrollView else {
@@ -267,7 +267,7 @@ private extension DepositsCardsDetailsViewController {
     }
 }
 
-extension DepositsCardsDetailsViewController: iCarouselDataSource, iCarouselDelegate {
+extension CardDetailsViewController: iCarouselDataSource, iCarouselDelegate {
     
     func numberOfItems(in carousel: iCarousel) -> Int {
         return items.count
