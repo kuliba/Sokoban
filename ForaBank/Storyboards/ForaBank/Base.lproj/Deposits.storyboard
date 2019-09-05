@@ -102,11 +102,19 @@
                                     <constraint firstAttribute="height" constant="54" id="gsb-hW-B5n"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="У вас нет вкладов!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IIi-wM-X0V">
+                                <rect key="frame" x="86.5" y="273" width="147" height="22.5"/>
+                                <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="IIi-wM-X0V" firstAttribute="centerY" secondItem="4Gt-nR-VR4" secondAttribute="centerY" id="7E7-UO-BRr"/>
                             <constraint firstItem="PNB-cP-yMy" firstAttribute="centerX" secondItem="4Gt-nR-VR4" secondAttribute="centerX" id="8H1-b6-Pbk"/>
                             <constraint firstItem="e5f-r9-leh" firstAttribute="top" secondItem="4Gt-nR-VR4" secondAttribute="top" constant="15" id="9ln-wm-lt4"/>
+                            <constraint firstItem="IIi-wM-X0V" firstAttribute="centerX" secondItem="4Gt-nR-VR4" secondAttribute="centerX" id="X86-1u-ncH"/>
                             <constraint firstItem="e5f-r9-leh" firstAttribute="trailing" secondItem="eSt-No-T2j" secondAttribute="trailing" id="Xj2-q3-AIi"/>
                             <constraint firstItem="e5f-r9-leh" firstAttribute="bottom" secondItem="eSt-No-T2j" secondAttribute="bottom" id="cY3-lv-bqY"/>
                             <constraint firstItem="PNB-cP-yMy" firstAttribute="centerY" secondItem="4Gt-nR-VR4" secondAttribute="centerY" id="iiY-48-RVP"/>
@@ -115,6 +123,7 @@
                         <viewLayoutGuide key="safeArea" id="eSt-No-T2j"/>
                     </view>
                     <connections>
+                        <outlet property="LabelNoProduct" destination="IIi-wM-X0V" id="ipt-t7-u8m"/>
                         <outlet property="activityIndicator" destination="PNB-cP-yMy" id="7S9-S6-0yq"/>
                         <outlet property="tableView" destination="e5f-r9-leh" id="Nip-ZX-II3"/>
                         <segue destination="yDh-99-FRd" kind="show" identifier="DepositDetailsViewController" id="SNL-Xw-v9j"/>
@@ -122,7 +131,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Kvf-XX-bSI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-866" y="50"/>
+            <point key="canvasLocation" x="-866.25" y="49.647887323943664"/>
         </scene>
         <!--Loans View Controller-->
         <scene sceneID="vDq-M7-Y0Q">
@@ -164,16 +173,25 @@
                                     <constraint firstItem="oBV-7H-V9C" firstAttribute="centerX" secondItem="tem-C1-DMz" secondAttribute="centerX" id="zwf-PN-KYK"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="У вас нет кредитов!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ahW-WM-HPo">
+                                <rect key="frame" x="83" y="272.5" width="154" height="23"/>
+                                <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="bottomMargin" secondItem="tem-C1-DMz" secondAttribute="bottom" id="4bc-W3-vfM" userLabel="Table View.trailing = Safe Area.trailing"/>
+                            <constraint firstItem="ahW-WM-HPo" firstAttribute="centerX" secondItem="E6a-tu-3Ev" secondAttribute="centerX" id="9JJ-7n-K8t"/>
                             <constraint firstItem="tem-C1-DMz" firstAttribute="centerX" secondItem="E6a-tu-3Ev" secondAttribute="centerX" id="EJj-2E-Fbv" userLabel="Table View.top = top + 15"/>
                             <constraint firstItem="tem-C1-DMz" firstAttribute="top" secondItem="E6a-tu-3Ev" secondAttribute="topMargin" constant="-5" id="R5z-UT-vYT" userLabel="Table View.bottom = Safe Area.bottom"/>
+                            <constraint firstItem="ahW-WM-HPo" firstAttribute="centerY" secondItem="E6a-tu-3Ev" secondAttribute="centerY" id="sGf-uq-4G7"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="grh-ne-Hil"/>
                     </view>
                     <connections>
+                        <outlet property="LabelNoProduct" destination="ahW-WM-HPo" id="9Xx-bW-m4k"/>
                         <outlet property="activityInd" destination="oBV-7H-V9C" id="qQ9-ic-rhX"/>
                         <outlet property="tableView" destination="LYF-if-ZeX" id="7Vi-XC-J3N"/>
                         <segue destination="xqK-z0-WSt" kind="show" identifier="LoansDetailsViewController" id="WDv-4r-zSf"/>
@@ -205,11 +223,19 @@
                                     <constraint firstAttribute="width" constant="54" id="cU5-uR-CKu"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="У вас нет счетов!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K0E-Eq-eku">
+                                <rect key="frame" x="93" y="273" width="134.5" height="22.5"/>
+                                <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="WgY-27-p95" firstAttribute="centerX" secondItem="HWW-p7-npH" secondAttribute="centerX" id="Hd5-LJ-HdN"/>
+                            <constraint firstItem="K0E-Eq-eku" firstAttribute="centerY" secondItem="HWW-p7-npH" secondAttribute="centerY" id="Ned-mD-Ztm"/>
                             <constraint firstItem="obJ-xK-VeT" firstAttribute="top" secondItem="HWW-p7-npH" secondAttribute="top" constant="15" id="W84-jH-S7J"/>
+                            <constraint firstItem="K0E-Eq-eku" firstAttribute="centerX" secondItem="HWW-p7-npH" secondAttribute="centerX" id="fw9-Xe-peu"/>
                             <constraint firstItem="obJ-xK-VeT" firstAttribute="bottom" secondItem="Uxk-IV-4Vq" secondAttribute="bottom" id="gX1-Bd-I4I"/>
                             <constraint firstItem="WgY-27-p95" firstAttribute="centerY" secondItem="HWW-p7-npH" secondAttribute="centerY" id="q0o-Wg-seo"/>
                             <constraint firstItem="obJ-xK-VeT" firstAttribute="leading" secondItem="Uxk-IV-4Vq" secondAttribute="leading" id="yuT-jY-fQn"/>
@@ -218,6 +244,7 @@
                         <viewLayoutGuide key="safeArea" id="Uxk-IV-4Vq"/>
                     </view>
                     <connections>
+                        <outlet property="LabelNoProduct" destination="K0E-Eq-eku" id="oL9-UN-bvv"/>
                         <outlet property="activityIndicatorView" destination="WgY-27-p95" id="Rfh-W5-JAB"/>
                         <outlet property="tableView" destination="obJ-xK-VeT" id="AOM-J0-zLa"/>
                         <segue destination="dKH-6f-sJB" kind="show" identifier="ProductDetailsViewController" id="2Og-vK-8if"/>

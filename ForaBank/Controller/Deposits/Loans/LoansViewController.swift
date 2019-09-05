@@ -24,18 +24,26 @@ class LoansViewController: UIViewController {
     
     let cellId = "DepositsObligationsCell"
     
-   
+    @IBOutlet weak var LabelNoProduct: UILabel!
+    
     var loan = [Loan]() {
         didSet{
             tableView.reloadData()
             activityInd.stopAnimating()
+            hiddenAccount()
+            
         }
     }
-    // MARK: - Lifecycle
+    func hiddenAccount(){
+        if loan.count == (0) {
+            LabelNoProduct.isHidden = false
+        }
+    }    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         activityInd.startAnimation()
         setUpTableView()
+        LabelNoProduct.isHidden = true
         self.tableView.delegate = self
         self.tableView.dataSource = self
         
