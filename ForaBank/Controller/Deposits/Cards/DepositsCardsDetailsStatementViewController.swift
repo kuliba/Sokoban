@@ -166,7 +166,8 @@ extension DepositsCardsDetailsStatementViewController: UITableViewDataSource, UI
         
         cell.descriptionLabel.text = data_[indexPath.section].transactions[indexPath.row].value
         cell.subdescriptionLabel.text = data_[indexPath.section].transactions[indexPath.row].subvalue
-        
+        cell.commentLabel.text = nil
+
         cell.bottomSeparatorView.isHidden = indexPath.row == data_[indexPath.section].transactions.endIndex - 1
         
         return cell

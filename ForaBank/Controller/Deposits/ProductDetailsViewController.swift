@@ -42,7 +42,9 @@ class ProductDetailsViewController: UIViewController {
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
-        currentViewController = storyboard?.instantiateViewController(withIdentifier: "feedfeed0")
+        let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductManagementViewController") as? ProductManagementViewController
+        managementVC?.actionsType = "account"
+        currentViewController = managementVC
         currentViewController!.view.translatesAutoresizingMaskIntoConstraints = false
         addChild(currentViewController!)
         addSubview(self.currentViewController!.view, toView: self.container)
@@ -59,8 +61,7 @@ class ProductDetailsViewController: UIViewController {
         carousel.bounces = false
 
         nameAccountLabel.text = "\((account?.productName)!)"
-        let maskedBalance = maskSum(sum: (account?.balance)!)
-        amountAccount.text = "\(maskedBalance) \((account?.currencyCode)!)"
+        amountAccount.text = "\(maskSum(sum: (account?.balance)!)) \((account?.currencyCode)!)"
     }
 
 }
@@ -118,11 +119,24 @@ private extension ProductDetailsViewController {
 
     func showComponent(index: Int) {
         NotificationCenter.default.removeObserver(self)
-        let newViewController = storyboard?.instantiateViewController(withIdentifier: "feedfeed\(index)")
-        newViewController!.view.translatesAutoresizingMaskIntoConstraints = false
 
-        cycleFromViewController(oldViewController: currentViewController!, toViewController: newViewController!)
-        currentViewController = newViewController
+        let newViewController: UIViewController?
+
+        if index == 0 {
+            let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductManagementViewController") as? ProductManagementViewController
+            managementVC?.actionsType = "account"
+            newViewController = managementVC
+        }
+        else {
+            newViewController = storyboard?.instantiateViewController(withIdentifier: "feedfeed\(index)")
+        }
+
+        guard let nonNilNewVC = newViewController else {
+            return
+        }
+        nonNilNewVC.view.translatesAutoresizingMaskIntoConstraints = false
+        cycleFromViewController(oldViewController: currentViewController!, toViewController: nonNilNewVC)
+        currentViewController = nonNilNewVC
     }
 
     func cycleFromViewController(oldViewController: UIViewController, toViewController newViewController: UIViewController) {

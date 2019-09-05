@@ -71,6 +71,7 @@
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="TwF-D9-DUm" secondAttribute="trailing" id="7go-yr-RcW"/>
+                    <constraint firstItem="TwF-D9-DUm" firstAttribute="leading" secondItem="fET-uS-1sc" secondAttribute="trailing" constant="9" id="8mX-1l-iGc"/>
                     <constraint firstItem="TwF-D9-DUm" firstAttribute="leading" secondItem="EG9-cF-eMb" secondAttribute="trailing" constant="23" id="8oP-jc-tof"/>
                     <constraint firstItem="EG9-cF-eMb" firstAttribute="top" secondItem="6mN-Io-30C" secondAttribute="topMargin" id="92f-rJ-xcE"/>
                     <constraint firstItem="Dwy-au-eSF" firstAttribute="leading" secondItem="6mN-Io-30C" secondAttribute="leadingMargin" constant="-10" id="E61-Su-IpK"/>
@@ -81,7 +82,7 @@
                     <constraint firstAttribute="trailing" secondItem="bIP-8e-93z" secondAttribute="trailing" constant="20" id="TvJ-c5-KvK"/>
                     <constraint firstItem="bIP-8e-93z" firstAttribute="top" secondItem="TwF-D9-DUm" secondAttribute="bottom" constant="12" id="ULB-Yh-JeY"/>
                     <constraint firstItem="bIP-8e-93z" firstAttribute="top" secondItem="fET-uS-1sc" secondAttribute="bottom" constant="16" id="W2i-cg-FwC"/>
-                    <constraint firstItem="TwF-D9-DUm" firstAttribute="leading" secondItem="fET-uS-1sc" secondAttribute="trailing" id="WHo-lO-6Xi"/>
+                    <constraint firstItem="TwF-D9-DUm" firstAttribute="leading" secondItem="fET-uS-1sc" secondAttribute="trailing" constant="8" symbolic="YES" id="WHo-lO-6Xi"/>
                     <constraint firstAttribute="trailing" secondItem="fET-uS-1sc" secondAttribute="trailing" constant="48" id="WKr-cq-Rii"/>
                     <constraint firstItem="bIP-8e-93z" firstAttribute="leading" secondItem="6mN-Io-30C" secondAttribute="leading" constant="20" id="Ws9-M4-o6K"/>
                     <constraint firstItem="TwF-D9-DUm" firstAttribute="top" secondItem="6mN-Io-30C" secondAttribute="topMargin" constant="3" id="Xkf-Tz-hBL"/>
