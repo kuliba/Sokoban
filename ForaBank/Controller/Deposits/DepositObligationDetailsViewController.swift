@@ -10,22 +10,18 @@ import UIKit
 import iCarousel
 import DeviceKit
 
-protocol TabLoansDetailViewController {
-    func set(loan :Loan?)
-}
 
-
-class LoansDetailsViewController: UIViewController {
+class DepositObligationDetailsViewController: UIViewController {
    
     // MARK: - Properties
     @IBOutlet weak var header: UIView!
-    @IBOutlet weak var container: UIView!
+    @IBOutlet weak var container: RoundedEdgeView!
     @IBOutlet weak var carousel: iCarousel!
-    @IBOutlet weak var product: UILabel!
-    @IBOutlet weak var principalDebt: UILabel!
+    @IBOutlet weak var depositName: UILabel!
+    @IBOutlet weak var depositAmount: UILabel!
     @IBOutlet weak var contentViewTop: NSLayoutConstraint!
     var previousIndex = -1
-    var loan: Loan? = nil
+    var bonds: Bond?
     weak var currentViewController: UIViewController?
     var previousOffset: CGFloat = 0
     var items = ["Управление","История" ,"О счете"]
@@ -46,15 +42,15 @@ class LoansDetailsViewController: UIViewController {
     }
     
     
+
+    
+    
     override func viewDidLoad() {
         currentViewController = storyboard?.instantiateViewController(withIdentifier: "feedfeed0")
         currentViewController!.view.translatesAutoresizingMaskIntoConstraints = false
         addChild(currentViewController!)
         addSubview(self.currentViewController!.view, toView: self.container)
-        currentViewController!.view.translatesAutoresizingMaskIntoConstraints = false
-        if let c = currentViewController as? TabLoansDetailViewController {
-            c.set(loan: loan)
-        }
+        
         labels = [UILabel?].init(repeating: nil, count: items.count)
      
         super.viewDidLoad()
@@ -67,8 +63,8 @@ class LoansDetailsViewController: UIViewController {
         carousel.bounces = false
         
         
-        product.text = "\((loan?.number)!)"
-        principalDebt.text = "\((loan?.principalDebt)!) \((loan?.currencyCode)!)"
+        depositName.text = "\((bonds?.depositProductName)!)"
+        depositAmount.text = "\((bonds?.balance)!) \((bonds?.currencyCode)!)"
 
     }
     
@@ -76,7 +72,12 @@ class LoansDetailsViewController: UIViewController {
    
 }
 
-private extension LoansDetailsViewController {
+
+
+
+
+
+private extension DepositObligationDetailsViewController {
     
 
     @objc func handleScroll(_ notification: Notification?) {
@@ -132,10 +133,7 @@ private extension LoansDetailsViewController {
         NotificationCenter.default.removeObserver(self)
         let newViewController = storyboard?.instantiateViewController(withIdentifier: "feedfeed\(index)")
         newViewController!.view.translatesAutoresizingMaskIntoConstraints = false
-        if let c = newViewController as? TabLoansDetailViewController {
-            c.set(loan: loan)
-        }
-        cycleFromViewController(oldViewController: self.currentViewController!, toViewController: newViewController!)
+        cycleFromViewController(oldViewController: currentViewController!, toViewController: newViewController!)
         currentViewController = newViewController
     }
     
@@ -172,7 +170,7 @@ private extension LoansDetailsViewController {
     }
 }
 
-extension LoansDetailsViewController: iCarouselDataSource, iCarouselDelegate {
+extension DepositObligationDetailsViewController: iCarouselDataSource, iCarouselDelegate {
     
     func numberOfItems(in carousel: iCarousel) -> Int {
         return items.count
@@ -276,7 +274,7 @@ extension LoansDetailsViewController: iCarouselDataSource, iCarouselDelegate {
     }
 }
 
-extension LoansDetailsViewController: CustomTransitionOriginator, CustomTransitionDestination {
+extension DepositObligationDetailsViewController: CustomTransitionOriginator, CustomTransitionDestination {
     var fromAnimatedSubviews: [String : UIView] {
 //        print("OneOneViewController fromAnimatedSubviews")
         var views = [String : UIView]()
