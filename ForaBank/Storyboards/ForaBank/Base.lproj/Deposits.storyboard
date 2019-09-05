@@ -2329,7 +2329,8 @@
         <!--Product Management View Controller-->
         <scene sceneID="hdR-nb-nTH">
             <objects>
-                <tableViewController storyboardIdentifier="feedfeed0" useStoryboardIdentifierAsRestorationIdentifier="YES" id="QR1-gD-4GH" customClass="ProductManagementViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oJN-qm-lCF" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tableViewController storyboardIdentifier="ProductManagementViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="QR1-gD-4GH" customClass="ProductManagementViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="static" style="plain" separatorStyle="default" rowHeight="50" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="D8P-6h-8Rr">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2546,7 +2547,6 @@
                         </connections>
                     </tableView>
                 </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="oJN-qm-lCF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1431" y="3851"/>
         </scene>

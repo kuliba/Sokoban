@@ -12,10 +12,13 @@ import SwiftyPlistManager
 
 class ProductManagementViewController: UITableViewController {
 
-    let actions = SwiftyPlistManager.shared.fetchValue(for: "card", fromPlistWithName: "productsData") as? Array < Dictionary<String, String> > ?? []
+    var actions: Array<Dictionary<String, String>> = []
+    var actionsType = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        actions = SwiftyPlistManager.shared.fetchValue(for: actionsType, fromPlistWithName: "productsData") as? Array < Dictionary<String, String> > ?? []
 
         tableView.tableFooterView = UIView()
         tableView.contentInset.top = 35

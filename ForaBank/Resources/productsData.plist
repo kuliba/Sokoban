@@ -9,32 +9,44 @@
 			<string>depositIcon</string>
 			<key>text</key>
 			<string>Пополнить карту</string>
+			<key>action</key>
+			<string></string>
 		</dict>
 		<dict>
+			<key>action</key>
+			<string></string>
 			<key>text</key>
 			<string>Платёж или перевод</string>
 			<key>image</key>
 			<string>paymentIcon</string>
 		</dict>
 		<dict>
+			<key>action</key>
+			<string></string>
 			<key>text</key>
 			<string>Управление лимитами</string>
 			<key>image</key>
 			<string>limitIcon</string>
 		</dict>
 		<dict>
+			<key>action</key>
+			<string></string>
 			<key>text</key>
 			<string>Поделиться реквизитами</string>
 			<key>image</key>
 			<string>shareIcon</string>
 		</dict>
 		<dict>
+			<key>action</key>
+			<string></string>
 			<key>text</key>
 			<string>Сменить PIN-код</string>
 			<key>image</key>
 			<string>changePinIcon</string>
 		</dict>
 		<dict>
+			<key>action</key>
+			<string></string>
 			<key>text</key>
 			<string>Заблокировать карту</string>
 			<key>image</key>
@@ -42,14 +54,55 @@
 		</dict>
 	</array>
 	<key>account</key>
-	<dict>
-		<key>New item</key>
+	<array>
 		<dict>
 			<key>image</key>
 			<string>depositIcon</string>
 			<key>text</key>
-			<string>Пополнить карту</string>
+			<string>Пополнить счёт</string>
+			<key>action</key>
+			<string></string>
 		</dict>
-	</dict>
+		<dict>
+			<key>action</key>
+			<string></string>
+			<key>text</key>
+			<string>Платёж или перевод</string>
+			<key>image</key>
+			<string>paymentIcon</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string></string>
+			<key>text</key>
+			<string>Поделиться реквизитами</string>
+			<key>image</key>
+			<string>shareIcon</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string></string>
+			<key>text</key>
+			<string>Привязать карту</string>
+			<key>image</key>
+			<string>addCardIcon</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string></string>
+			<key>text</key>
+			<string>Продлить срок действия</string>
+			<key>image</key>
+			<string>clockIcon</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string></string>
+			<key>text</key>
+			<string>Заблокировать счёт</string>
+			<key>image</key>
+			<string>redLockIcon</string>
+		</dict>
+	</array>
 </dict>
 </plist>

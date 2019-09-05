@@ -617,12 +617,12 @@
 		09E0F131215A617A0042FB6A /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				09E0F12F215A5B9D0042FB6A /* TabBarController.swift */,
-				09203D99216E150C00902BD2 /* Feed */,
 				09C7C30B2174727A000EE472 /* Deposits */,
+				09203D99216E150C00902BD2 /* Feed */,
 				89C8DF142191BDF500D92B0A /* Payments */,
-				A568142821CE6A41002C0899 /* Services */,
 				09BE35ED218C629100EA7B24 /* Profile */,
+				A568142821CE6A41002C0899 /* Services */,
+				09E0F12F215A5B9D0042FB6A /* TabBarController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
