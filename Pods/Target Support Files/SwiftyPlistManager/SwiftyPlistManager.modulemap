@@ -1,0 +1,6 @@
+framework module SwiftyPlistManager {
+  umbrella header "SwiftyPlistManager-umbrella.h"
+
+  export *
+  module * { export * }
+}

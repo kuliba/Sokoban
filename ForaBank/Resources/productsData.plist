@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>card</key>
+	<array>
+		<dict>
+			<key>image</key>
+			<string>depositIcon</string>
+			<key>text</key>
+			<string>Пополнить карту</string>
+		</dict>
+		<dict>
+			<key>text</key>
+			<string>Платёж или перевод</string>
+			<key>image</key>
+			<string>paymentIcon</string>
+		</dict>
+		<dict>
+			<key>text</key>
+			<string>Управление лимитами</string>
+			<key>image</key>
+			<string>limitIcon</string>
+		</dict>
+		<dict>
+			<key>text</key>
+			<string>Поделиться реквизитами</string>
+			<key>image</key>
+			<string>shareIcon</string>
+		</dict>
+		<dict>
+			<key>text</key>
+			<string>Сменить PIN-код</string>
+			<key>image</key>
+			<string>changePinIcon</string>
+		</dict>
+		<dict>
+			<key>text</key>
+			<string>Заблокировать карту</string>
+			<key>image</key>
+			<string>redLockIcon</string>
+		</dict>
+	</array>
+	<key>account</key>
+	<dict>
+		<key>New item</key>
+		<dict>
+			<key>image</key>
+			<string>depositIcon</string>
+			<key>text</key>
+			<string>Пополнить карту</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

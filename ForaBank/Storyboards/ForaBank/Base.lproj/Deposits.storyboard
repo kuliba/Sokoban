@@ -1052,10 +1052,10 @@
             </objects>
             <point key="canvasLocation" x="-3368" y="864"/>
         </scene>
-        <!--Deposits Cards Details Management View Controller-->
+        <!--Product Management View Controller-->
         <scene sceneID="yYv-IY-3rh">
             <objects>
-                <tableViewController storyboardIdentifier="feed0" useStoryboardIdentifierAsRestorationIdentifier="YES" id="oHR-xs-SU6" customClass="DepositsCardsDetailsManagementViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="feed0" useStoryboardIdentifierAsRestorationIdentifier="YES" id="oHR-xs-SU6" customClass="ProductManagementViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="static" style="plain" separatorStyle="default" rowHeight="50" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="XeI-RU-e7t">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2326,10 +2326,10 @@
             </objects>
             <point key="canvasLocation" x="-4" y="915"/>
         </scene>
-        <!--Deposits Cards Details Management View Controller-->
+        <!--Product Management View Controller-->
         <scene sceneID="hdR-nb-nTH">
             <objects>
-                <tableViewController storyboardIdentifier="feedfeed0" useStoryboardIdentifierAsRestorationIdentifier="YES" id="QR1-gD-4GH" customClass="DepositsCardsDetailsManagementViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="feedfeed0" useStoryboardIdentifierAsRestorationIdentifier="YES" id="QR1-gD-4GH" customClass="ProductManagementViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="static" style="plain" separatorStyle="default" rowHeight="50" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="D8P-6h-8Rr">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2352,7 +2352,7 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="deposits_cards_details_management_fill_icon" translatesAutoresizingMaskIntoConstraints="NO" id="jGy-3M-S5J">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="depositIcon" translatesAutoresizingMaskIntoConstraints="NO" id="jGy-3M-S5J">
                                                     <rect key="frame" x="20" y="16" width="18" height="18"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
@@ -2385,7 +2385,7 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="deposits_cards_details_management_payment_icon" translatesAutoresizingMaskIntoConstraints="NO" id="4Vh-bV-nqG">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="paymentIcon" translatesAutoresizingMaskIntoConstraints="NO" id="4Vh-bV-nqG">
                                                     <rect key="frame" x="20" y="16" width="18" height="18"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
@@ -2418,7 +2418,7 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="deposits_cards_details_share_icon" translatesAutoresizingMaskIntoConstraints="NO" id="2vN-YD-1tu">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="shareIcon" translatesAutoresizingMaskIntoConstraints="NO" id="2vN-YD-1tu">
                                                     <rect key="frame" x="20" y="16" width="18" height="18"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
@@ -2451,7 +2451,7 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="add_card" translatesAutoresizingMaskIntoConstraints="NO" id="t1d-5U-pZZ">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="addCardIcon" translatesAutoresizingMaskIntoConstraints="NO" id="t1d-5U-pZZ">
                                                     <rect key="frame" x="20" y="16" width="18" height="18"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
@@ -2484,7 +2484,7 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="prolong" translatesAutoresizingMaskIntoConstraints="NO" id="8t8-qe-9Pp">
+                                                <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="clockIcon" translatesAutoresizingMaskIntoConstraints="NO" id="8t8-qe-9Pp">
                                                     <rect key="frame" x="20" y="16" width="18" height="18"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
@@ -2517,7 +2517,7 @@
                                                     <color key="textColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="deposits_cards_details_management_block_icon" translatesAutoresizingMaskIntoConstraints="NO" id="CN9-PE-EH0">
+                                                <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="redLockIcon" translatesAutoresizingMaskIntoConstraints="NO" id="CN9-PE-EH0">
                                                     <rect key="frame" x="20" y="16" width="18" height="18"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
@@ -3307,9 +3307,11 @@
     </scenes>
     <resources>
         <image name="Screenshot 2018-10-17 at 12.24.12" width="698" height="1624"/>
-        <image name="add_card" width="23" height="17"/>
+        <image name="addCardIcon" width="23" height="17"/>
         <image name="button_back" width="8" height="14"/>
+        <image name="clockIcon" width="21" height="19"/>
         <image name="deposit" width="61" height="50"/>
+        <image name="depositIcon" width="13" height="15"/>
         <image name="deposits_cards_details_management_block_icon" width="16" height="18"/>
         <image name="deposits_cards_details_management_changepin_icon" width="16" height="15"/>
         <image name="deposits_cards_details_management_fill_icon" width="13" height="15"/>
@@ -3328,7 +3330,9 @@
         <image name="food" width="71" height="73"/>
         <image name="forabank_visaclassic_290x185" width="280" height="159"/>
         <image name="metro_logo" width="200" height="36"/>
-        <image name="prolong" width="21" height="19"/>
+        <image name="paymentIcon" width="19" height="16"/>
+        <image name="redLockIcon" width="16" height="18"/>
+        <image name="shareIcon" width="20" height="18"/>
         <image name="tabbar_icon_deposits" width="25" height="22"/>
         <image name="visalogo" width="41" height="18"/>
     </resources>
