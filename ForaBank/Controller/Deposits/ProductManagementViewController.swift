@@ -8,7 +8,6 @@
 
 import UIKit
 import Hero
-import SwiftyPlistManager
 
 class ProductManagementViewController: UITableViewController {
 
@@ -18,7 +17,7 @@ class ProductManagementViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        actions = SwiftyPlistManager.shared.fetchValue(for: actionsType, fromPlistWithName: "productsData") as? Array < Dictionary<String, String> > ?? []
+        actions = arrayWith(key: actionsType, fromPlist: "productsData")
 
         tableView.tableFooterView = UIView()
         tableView.contentInset.top = 35

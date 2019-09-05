@@ -14,7 +14,6 @@ PODS:
     - NVActivityIndicatorView/Presenter (= 4.7.0)
   - NVActivityIndicatorView/Presenter (4.7.0)
   - RMMapper (1.1.5)
-  - SwiftyPlistManager (1.0.2)
 
 DEPENDENCIES:
   - Alamofire (= 4.8.0)
@@ -28,7 +27,6 @@ DEPENDENCIES:
   - ModelMapper
   - NVActivityIndicatorView
   - RMMapper
-  - SwiftyPlistManager
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -43,7 +41,6 @@ SPEC REPOS:
     - ModelMapper
     - NVActivityIndicatorView
     - RMMapper
-    - SwiftyPlistManager
 
 SPEC CHECKSUMS:
   Alamofire: 3ec537f71edc9804815215393ae2b1a8ea33a844
@@ -57,8 +54,7 @@ SPEC CHECKSUMS:
   ModelMapper: a8dbf2a2003bf626627b9fe7c9a22b3405a30404
   NVActivityIndicatorView: b19ddab2576f805cbe0fb2306cba3476e09a1dea
   RMMapper: 21122d753c736d975f6c61e674afce8db73579af
-  SwiftyPlistManager: 5895924cccb7fe28deccbe14890e8aed78ae78ae
 
-PODFILE CHECKSUM: b621d9c2db7ef9794e87789af0c58adbcb0f4ca1
+PODFILE CHECKSUM: e8e8e2e603e49cc0f574e31f5640f80916920bc8
 
 COCOAPODS: 1.7.4

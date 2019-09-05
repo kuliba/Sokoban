@@ -47,7 +47,9 @@ class LoansDetailsViewController: UIViewController {
 
 
     override func viewDidLoad() {
-        currentViewController = storyboard?.instantiateViewController(withIdentifier: "feed1feed0")
+        let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductManagementViewController") as? ProductManagementViewController
+        managementVC?.actionsType = "loan"
+        currentViewController = managementVC
         currentViewController!.view.translatesAutoresizingMaskIntoConstraints = false
         addChild(currentViewController!)
         addSubview(self.currentViewController!.view, toView: self.container)
@@ -130,13 +132,28 @@ private extension LoansDetailsViewController {
 
     func showComponent(index: Int) {
         NotificationCenter.default.removeObserver(self)
-        let newViewController = storyboard?.instantiateViewController(withIdentifier: "feedfeed\(index)")
-        newViewController!.view.translatesAutoresizingMaskIntoConstraints = false
+
+        let newViewController: UIViewController?
+
+        if index == 0 {
+            let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductManagementViewController") as? ProductManagementViewController
+            managementVC?.actionsType = "account"
+            newViewController = managementVC
+        }
+        else {
+            newViewController = storyboard?.instantiateViewController(withIdentifier: "feedfeed\(index)")
+        }
+
         if let c = newViewController as? TabLoansDetailViewController {
             c.set(loan: loan)
         }
-        cycleFromViewController(oldViewController: self.currentViewController!, toViewController: newViewController!)
-        currentViewController = newViewController
+
+        guard let nonNilNewVC = newViewController else {
+            return
+        }
+        nonNilNewVC.view.translatesAutoresizingMaskIntoConstraints = false
+        cycleFromViewController(oldViewController: currentViewController!, toViewController: nonNilNewVC)
+        currentViewController = nonNilNewVC
     }
 
     func cycleFromViewController(oldViewController: UIViewController, toViewController newViewController: UIViewController) {

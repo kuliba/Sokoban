@@ -28,7 +28,7 @@ extension UIView {
             return .zero
         }
     }
-    
+
     var compatibleSafeAreaLayoutGuide: UILayoutGuide {
         if #available(iOS 11.0, *) {
             return safeAreaLayoutGuide
@@ -42,21 +42,21 @@ extension UITextField {
     open override var canBecomeFirstResponder: Bool {
         return true
     }
-    
+
     open override func becomeFirstResponder() -> Bool {
         layer.customBorderColor = .red
         layer.cornerRadius = 5.0
         layer.masksToBounds = true
         layer.borderWidth = 1
         super.becomeFirstResponder()
-        
+
         return true
     }
-    
+
     open override func resignFirstResponder() -> Bool {
         layer.customBorderColor = .clear
         super.resignFirstResponder()
-        
+
         return true
     }
 }
@@ -78,37 +78,37 @@ class CustomTextField: UITextField {
     open override var canBecomeFirstResponder: Bool {
         return true
     }
-    
+
     open override func becomeFirstResponder() -> Bool {
         layer.customBorderColor = selectedBorderColor
         layer.cornerRadius = 5.0
         layer.masksToBounds = true
         layer.borderWidth = 1
         super.becomeFirstResponder()
-        
+
         return true
     }
-    
+
     open override func resignFirstResponder() -> Bool {
         layer.customBorderColor = defaultBorderColor
         super.resignFirstResponder()
-        
+
         return true
     }
 }
 
 extension UISegmentedControl {
     func setSegmentStyle() {
-        
-        let segmentGrayColor = UIColor(red: 0.889415, green: 0.889436, blue:0.889424, alpha: 1.0 )
-        
+
+        let segmentGrayColor = UIColor(red: 0.889415, green: 0.889436, blue: 0.889424, alpha: 1.0)
+
         setBackgroundImage(imageWithColor(color: UIColor.clear), for: .normal, barMetrics: .default)
         setBackgroundImage(imageWithColor(color: tintColor!), for: .selected, barMetrics: .default)
         setDividerImage(imageWithColor(color: segmentGrayColor), forLeftSegmentState: .normal, rightSegmentState: .normal, barMetrics: .default)
         setDividerImage(imageWithColor(color: tintColor!), forLeftSegmentState: .selected, rightSegmentState: .selected, barMetrics: .default)
         setDividerImage(imageWithColor(color: tintColor!), forLeftSegmentState: .normal, rightSegmentState: .selected, barMetrics: .default)
         let segAttributes: NSDictionary = [
-            NSAttributedString.Key.foregroundColor: UIColor(red: 86/255, green: 86/255, blue: 95/255, alpha: 1),
+            NSAttributedString.Key.foregroundColor: UIColor(red: 86 / 255, green: 86 / 255, blue: 95 / 255, alpha: 1),
             NSAttributedString.Key.font: UIFont(name: "Roboto-Regular", size: 14)!
         ]
         setTitleTextAttributes(segAttributes as? [NSAttributedString.Key: Any], for: [])
@@ -127,35 +127,35 @@ extension UISegmentedControl {
 //        viewForGrayBorder.backgroundColor = tintColor
 //        self.insertSubview(viewForGrayBorder, at: 0)
     }
-    
+
     // create a 1x1 image with this color
     private func imageWithColor(color: UIColor) -> UIImage {
-        let rect = CGRect(x: 0.0, y: 0.0, width:  1.0, height: 1.0)
+        let rect = CGRect(x: 0.0, y: 0.0, width: 1.0, height: 1.0)
         UIGraphicsBeginImageContext(rect.size)
         let context = UIGraphicsGetCurrentContext()
-        context!.setFillColor(color.cgColor);
-        context!.fill(rect);
-        let image = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
+        context!.setFillColor(color.cgColor)
+        context!.fill(rect)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
         return image!
     }
 }
 
 extension UIColor {
-    convenience init?(hexFromString:String, alpha:CGFloat = 1.0) {
-        var cString:String = hexFromString.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
-        var rgbValue:UInt32 = 10066329 //color #999999 if string has wrong format
-        
+    convenience init?(hexFromString: String, alpha: CGFloat = 1.0) {
+        var cString: String = hexFromString.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+        var rgbValue: UInt32 = 10066329 //color #999999 if string has wrong format
+
         if (cString.hasPrefix("#")) {
             cString.remove(at: cString.startIndex)
         }
-        
+
         if ((cString.count) == 6) {
             Scanner(string: cString).scanHexInt32(&rgbValue)
         } else {
             return nil
         }
-        
+
         self.init(
             red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
             green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
@@ -166,22 +166,22 @@ extension UIColor {
 }
 
 enum Constants {
-    
+
     static let iphone5Devices: [Device] = [.iPhone5, .iPhone5c, .iPhone5s, .iPhoneSE,
-                                           .simulator(.iPhone5), .simulator(.iPhone5c), .simulator(.iPhone5s), .simulator(.iPhoneSE)]
-    
+                                               .simulator(.iPhone5), .simulator(.iPhone5c), .simulator(.iPhone5s), .simulator(.iPhoneSE)]
+
     static let xDevices: [Device] = [
-        .iPhoneX,
-        .iPhoneX,
-        .iPhoneXr,
-        .iPhoneXs,
-        .iPhoneXsMax,
-        
-        .simulator(.iPhoneX),
-        .simulator(.iPhoneX),
-        .simulator(.iPhoneXr),
-        .simulator(.iPhoneXs),
-        .simulator(.iPhoneXsMax)
+            .iPhoneX,
+            .iPhoneX,
+            .iPhoneXr,
+            .iPhoneXs,
+            .iPhoneXsMax,
+
+            .simulator(.iPhoneX),
+            .simulator(.iPhoneX),
+            .simulator(.iPhoneXr),
+            .simulator(.iPhoneXs),
+            .simulator(.iPhoneXsMax)
     ]
 }
 
@@ -194,20 +194,20 @@ enum Direction {
 }
 
 protocol CustomTransitionOriginator {
-    var fromAnimatedSubviews: [String : UIView] { get }
+    var fromAnimatedSubviews: [String: UIView] { get }
 }
 
 protocol CustomTransitionDestination {
-    var toAnimatedSubviews: [String : UIView] { get }
+    var toAnimatedSubviews: [String: UIView] { get }
 }
 
 struct MultiRange: Sequence {
     let ranges: [Range<Int>]
-    
+
     init(_ ranges: Range<Int>...) {
         self.ranges = ranges
     }
-    
+
     func makeIterator() -> MultiRangeIterator {
         return MultiRangeIterator(self)
     }
@@ -216,11 +216,11 @@ struct MultiRange: Sequence {
 struct MultiRangeIterator: IteratorProtocol {
     let multiRange: MultiRange
     var index = IndexPath(item: 0, section: 0)
-    
+
     init(_ multiRange: MultiRange) {
         self.multiRange = multiRange
     }
-    
+
     mutating func next() -> Int? {
         if index.section < multiRange.ranges.count {
             let r = multiRange.ranges[index.section]
@@ -230,7 +230,7 @@ struct MultiRangeIterator: IteratorProtocol {
                 return nextInt
             }
             else {
-                index.section +=  1
+                index.section += 1
                 index.item = 0
                 return next()
             }
@@ -348,11 +348,21 @@ func decodeToString<T>(fromContainer: KeyedDecodingContainer<T>, key: KeyedDecod
 }
 
 extension String {
-    func replace(string:String, replacement:String) -> String {
+    func replace(string: String, replacement: String) -> String {
         return self.replacingOccurrences(of: string, with: replacement, options: NSString.CompareOptions.literal, range: nil)
     }
-    
+
     func removeWhitespace() -> String {
         return self.replace(string: " ", replacement: "")
     }
+}
+
+// Plist
+
+func arrayWith(key: String, fromPlist name: String) -> Array<Dictionary<String, String>> {
+    var nsDictionary: Dictionary<String, Any>?
+    if let path = Bundle.main.path(forResource: name, ofType: "plist") {
+        nsDictionary = NSDictionary(contentsOfFile: path)! as? Dictionary<String, Any> ?? NSDictionary() as! Dictionary<String, Any>
+    }
+    return nsDictionary?[key] as? Array<Dictionary<String, String>> ?? []
 }
