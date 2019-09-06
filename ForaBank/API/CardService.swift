@@ -10,15 +10,15 @@ import Foundation
 import Alamofire
 
 class CardService: CardServiceProtocol {
-    
+
     private let baseURLString: String
     private var cards = [Card]()
     private var datedTransactions = [DatedTransactions]()
-    
+
     init(baseURLString: String) {
         self.baseURLString = baseURLString
     }
-    
+
     func getCardList(headers: HTTPHeaders, completionHandler: @escaping (Bool, [Card]?) -> Void) {
         cards = [Card]()
         /*
@@ -137,20 +137,20 @@ class CardService: CardServiceProtocol {
             print("rest/getCardList cant parse json \(data)")
             completionHandler(false, self.cards)
         }*/
-        
+
         let url = baseURLString + "rest/getCardList"
         Alamofire.request(url, method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])
             .responseJSON { [unowned self] response in
-                
-                if let json = response.result.value as? Dictionary<String, Any> ,
+
+                if let json = response.result.value as? Dictionary<String, Any>,
                     let errorMessage = json["errorMessage"] as? String {
                     print("\(errorMessage) \(self)")
                     completionHandler(false, self.cards)
                     return
                 }
-                
+
                 switch response.result {
                 case .success:
                     if let json = response.result.value as? Dictionary<String, Any>,
@@ -159,7 +159,7 @@ class CardService: CardServiceProtocol {
                             if let cardData = cardData as? Dictionary<String, Any>,
                                 let original = cardData["original"] as? Dictionary<String, Any> {
                                 let customName = cardData["customName"] as? String
-                                
+
                                 var type: CardType? = nil
                                 if let product = original["product"] as? String {
                                     if product.range(of: "mastercard", options: .caseInsensitive) != nil {
@@ -184,10 +184,8 @@ class CardService: CardServiceProtocol {
                                 let branch = original["branch"] as? String
                                 let id = original["cardID"] as? String
                                 let product = (original["product"] as? String) ?? ""
-                                var expirationDate: Date? = nil
-                                if let validThru = original["validThru"] as? TimeInterval {
-                                    expirationDate = Date(timeIntervalSince1970: (validThru/1000))
-                                }
+                                var expirationDate: String? = dayMonthYear(milisecond: original["validThru"] as! Double)
+
                                 let card = Card(type: type,
                                                 paypass: nil,
                                                 title: title,
@@ -211,14 +209,14 @@ class CardService: CardServiceProtocol {
                         print("rest/getCardList cant parse json \(String(describing: response.result.value))")
                         completionHandler(false, self.cards)
                     }
-                    
+
                 case .failure(let error):
                     print("rest/getCardList \(error) \(self)")
                     completionHandler(false, self.cards)
                 }
         }
     }
-    
+
     func blockCard(withNumber num: String, completionHandler: @escaping (Bool) -> Void) {
 //        for i in 0..<cards.count {
 //            if cards[i].number == num {
@@ -227,11 +225,11 @@ class CardService: CardServiceProtocol {
 //        }
         completionHandler(false)
     }
-    
+
     func getTransactionsStatement(forCardNumber: String, fromDate: Date, toDate: Date, headers: HTTPHeaders, completionHandler: @escaping (Bool, [DatedTransactions]?) -> Void) {
         completionHandler(false, datedTransactions)
     }
-    
-    
-    
+
+
+
 }

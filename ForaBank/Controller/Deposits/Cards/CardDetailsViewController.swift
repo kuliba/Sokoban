@@ -228,17 +228,17 @@ private extension CardDetailsViewController {
 
         let newViewController: UIViewController?
 
-        if index == 0 {
+        switch index {
+        case 0:
             let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductManagementViewController") as? ProductManagementViewController
-            managementVC?.actionsType = "account"
+            managementVC?.actionsType = "card"
             newViewController = managementVC
-        }
-        else {
+        case 2:
+            let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductAboutViewController") as? ProductAboutViewController
+            managementVC?.items = card?.getProductAbout()
+            newViewController = managementVC
+        default:
             newViewController = storyboard?.instantiateViewController(withIdentifier: "feed\(index)")
-        }
-
-        if let c = newViewController as? TabCardDetailViewController {
-            c.set(card: card)
         }
 
         guard let nonNilNewVC = newViewController else {

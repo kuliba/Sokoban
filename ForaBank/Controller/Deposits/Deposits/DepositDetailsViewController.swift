@@ -132,12 +132,16 @@ private extension DepositDetailsViewController {
 
         let newViewController: UIViewController?
 
-        if index == 0 {
+        switch index {
+        case 0:
             let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductManagementViewController") as? ProductManagementViewController
             managementVC?.actionsType = "deposit"
             newViewController = managementVC
-        }
-        else {
+        case 2:
+            let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductAboutViewController") as? ProductAboutViewController
+            managementVC?.items = deposit?.getProductAbout()
+            newViewController = managementVC
+        default:
             newViewController = storyboard?.instantiateViewController(withIdentifier: "feedfeed\(index)")
         }
 
