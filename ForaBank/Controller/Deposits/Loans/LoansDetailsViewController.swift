@@ -10,7 +10,7 @@ import UIKit
 import iCarousel
 import DeviceKit
 
-protocol TabLoansDetailViewController {
+protocol ITabLoansDetailViewController {
     func set(loan: Loan?)
 }
 
@@ -54,7 +54,7 @@ class LoansDetailsViewController: UIViewController {
         addChild(currentViewController!)
         addSubview(self.currentViewController!.view, toView: self.container)
         currentViewController!.view.translatesAutoresizingMaskIntoConstraints = false
-        if let c = currentViewController as? TabLoansDetailViewController {
+        if let c = currentViewController as? ITabLoansDetailViewController {
             c.set(loan: loan)
         }
         labels = [UILabel?].init(repeating: nil, count: items.count)
@@ -135,16 +135,20 @@ private extension LoansDetailsViewController {
 
         let newViewController: UIViewController?
 
-        if index == 0 {
+        switch index {
+        case 0:
             let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductManagementViewController") as? ProductManagementViewController
             managementVC?.actionsType = "account"
             newViewController = managementVC
-        }
-        else {
+        case 2:
+            let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductAboutViewController") as? ProductAboutViewController
+            managementVC?.items = loan?.getProductAbout()
+            newViewController = managementVC
+        default:
             newViewController = storyboard?.instantiateViewController(withIdentifier: "feedfeed\(index)")
         }
 
-        if let c = newViewController as? TabLoansDetailViewController {
+        if let c = newViewController as? ITabLoansDetailViewController {
             c.set(loan: loan)
         }
 
