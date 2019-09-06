@@ -136,7 +136,7 @@
 		960AD38822FC1826005399D6 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 960AD38722FC1826005399D6 /* Default-568h@2x.png */; };
 		9610CB8E22FD6F0C00FE7C84 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9610CB8D22FD6F0C00FE7C84 /* Account.swift */; };
 		9698995E2303076F0066C55B /* LoansViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9698995D2303076F0066C55B /* LoansViewController.swift */; };
-		969899642303F2E20066C55B /* LoansModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969899632303F2E20066C55B /* LoansModel.swift */; };
+		969899642303F2E20066C55B /* Loan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969899632303F2E20066C55B /* Loan.swift */; };
 		969899662303F3380066C55B /* LoansCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969899652303F3380066C55B /* LoansCell.swift */; };
 		969899682303F4060066C55B /* LoansService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969899672303F4060066C55B /* LoansService.swift */; };
 		9698996A2303FD190066C55B /* LoansCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 969899692303FD190066C55B /* LoansCell.xib */; };
@@ -210,7 +210,10 @@
 		BD38198E232104430004728C /* productsData.plist in Resources */ = {isa = PBXBuildFile; fileRef = BD38198D232104430004728C /* productsData.plist */; };
 		BD7CC1A1232125D000872D06 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = BD7CC1A0232125D000872D06 /* Localizable.strings */; };
 		BD94E09F231EA6E50006456E /* MasksFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD94E09E231EA6E50006456E /* MasksFormatting.swift */; };
-		BDE4D07323215F750070BC3D /* productsAbout.plist in Resources */ = {isa = PBXBuildFile; fileRef = BDE4D07223215F750070BC3D /* productsAbout.plist */; };
+		BDE4D080232248420070BC3D /* ProductAboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE4D07F232248420070BC3D /* ProductAboutViewController.swift */; };
+		BDE4D08323224E570070BC3D /* AboutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE4D08223224E570070BC3D /* AboutItem.swift */; };
+		BDE4D085232254430070BC3D /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE4D084232254430070BC3D /* Date.swift */; };
+		BDE4D08723226B4C0070BC3D /* IAboutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE4D08623226B4C0070BC3D /* IAboutItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -346,7 +349,7 @@
 		960AD38722FC1826005399D6 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		9610CB8D22FD6F0C00FE7C84 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		9698995D2303076F0066C55B /* LoansViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoansViewController.swift; sourceTree = "<group>"; };
-		969899632303F2E20066C55B /* LoansModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoansModel.swift; sourceTree = "<group>"; };
+		969899632303F2E20066C55B /* Loan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loan.swift; sourceTree = "<group>"; };
 		969899652303F3380066C55B /* LoansCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoansCell.swift; sourceTree = "<group>"; };
 		969899672303F4060066C55B /* LoansService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoansService.swift; sourceTree = "<group>"; };
 		969899692303FD190066C55B /* LoansCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoansCell.xib; sourceTree = "<group>"; };
@@ -422,7 +425,10 @@
 		BD38198D232104430004728C /* productsData.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = productsData.plist; sourceTree = "<group>"; };
 		BD7CC1A0232125D000872D06 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		BD94E09E231EA6E50006456E /* MasksFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasksFormatting.swift; sourceTree = "<group>"; };
-		BDE4D07223215F750070BC3D /* productsAbout.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = productsAbout.plist; sourceTree = "<group>"; };
+		BDE4D07F232248420070BC3D /* ProductAboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductAboutViewController.swift; sourceTree = "<group>"; };
+		BDE4D08223224E570070BC3D /* AboutItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutItem.swift; sourceTree = "<group>"; };
+		BDE4D084232254430070BC3D /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		BDE4D08623226B4C0070BC3D /* IAboutItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAboutItem.swift; sourceTree = "<group>"; };
 		D8EB261ED46D5F939F8B2E27 /* Pods_ForaBank.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ForaBank.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -609,6 +615,7 @@
 				96F0DCED231FE58E005ABEED /* Deposits */,
 				095D158B21789BC100F5266C /* History */,
 				96F0DCEC231FE36B005ABEED /* Loans */,
+				BDE4D07F232248420070BC3D /* ProductAboutViewController.swift */,
 				895768CC2192D992005754D5 /* ProductDetailsViewController.swift */,
 				096B4F532186E29300C69E52 /* ProductManagementViewController.swift */,
 				A528EF3D21B00C0500D189DD /* Stats */,
@@ -632,6 +639,7 @@
 		09E0F132215A61850042FB6A /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				BDE4D08123224E430070BC3D /* PresentationModels */,
 				0942B86A21625F4800370C71 /* Service.swift */,
 				A57CF1BD22043DDE00E855A5 /* BriginvestResponse.swift */,
 				A57CF1BB2204364E00E855A5 /* TransactionStatement.swift */,
@@ -646,7 +654,7 @@
 				A568142021CBCD03002C0899 /* BankBranchAnnotation.swift */,
 				A568142F21D0B9E3002C0899 /* Deposit.swift */,
 				A568143321D0CE6C002C0899 /* Profile.swift */,
-				969899632303F2E20066C55B /* LoansModel.swift */,
+				969899632303F2E20066C55B /* Loan.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -949,7 +957,6 @@
 				A55B7B7821A6B4A200A8A7FE /* animation */,
 				BD38198D232104430004728C /* productsData.plist */,
 				BD7CC1A0232125D000872D06 /* Localizable.strings */,
-				BDE4D07223215F750070BC3D /* productsAbout.plist */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -960,8 +967,18 @@
 				A55B7B5621A5866F00A8A7FE /* UIImage+GIF.swift */,
 				094FFC0C218837580069DDCB /* Helpers.swift */,
 				BD94E09E231EA6E50006456E /* MasksFormatting.swift */,
+				BDE4D084232254430070BC3D /* Date.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		BDE4D08123224E430070BC3D /* PresentationModels */ = {
+			isa = PBXGroup;
+			children = (
+				BDE4D08223224E570070BC3D /* AboutItem.swift */,
+				BDE4D08623226B4C0070BC3D /* IAboutItem.swift */,
+			);
+			path = PresentationModels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1051,7 +1068,6 @@
 				09AF707C216F4B5000E7FCFC /* FeedUpcomingCell.xib in Resources */,
 				093B863221620EE8008A5222 /* ServicesCell.xib in Resources */,
 				09F2410A21707B86007B7D73 /* FeedInfo3Cell.xib in Resources */,
-				BDE4D07323215F750070BC3D /* productsAbout.plist in Resources */,
 				A55B7B8021A6B51E00A8A7FE /* 10.mov in Resources */,
 				09E0F13F215A65AE0042FB6A /* Payment.storyboard in Resources */,
 				09E0F142215A65D40042FB6A /* Services.storyboard in Resources */,
@@ -1188,6 +1204,7 @@
 				96094AF42319441600A80412 /* SettingsViewController.swift in Sources */,
 				09C7C33D2175FADE000EE472 /* DepositsHistoryHeader.swift in Sources */,
 				A5B473C621B52D4500F2E41F /* BubblesDetailedStatsView.swift in Sources */,
+				BDE4D08723226B4C0070BC3D /* IAboutItem.swift in Sources */,
 				A568143821D35FEB002C0899 /* Transaction.swift in Sources */,
 				09F5DCE8218C4A5200390304 /* RegistrationTouchIDViewController.swift in Sources */,
 				09C7C3352175CC47000EE472 /* DepositsHistoryViewController.swift in Sources */,
@@ -1256,6 +1273,7 @@
 				09045059216B5ADC00F3B295 /* FeedOffersCell.swift in Sources */,
 				09C7C3382175E486000EE472 /* DepositsHistoryCell.swift in Sources */,
 				097A6DCC21884B6D00E6C69E /* ButtonRounded.swift in Sources */,
+				BDE4D080232248420070BC3D /* ProductAboutViewController.swift in Sources */,
 				A551109121C7C0AE00330510 /* TestCardService.swift in Sources */,
 				A568142C21CE6CB0002C0899 /* AnnotationTableViewCell.swift in Sources */,
 				A58760C121BFB63D0022DED5 /* ProfileNavigationController.swift in Sources */,
@@ -1278,6 +1296,7 @@
 				09AF7092216F73FD00E7FCFC /* FeedCurrent4Cell.swift in Sources */,
 				A51AF85021EA093800FB3B68 /* RegService.swift in Sources */,
 				09203D95216E13A700902BD2 /* FeedOptionCell.swift in Sources */,
+				BDE4D085232254430070BC3D /* Date.swift in Sources */,
 				96072C882313FF13001CFCBD /* TouchIDAuthentication.swift in Sources */,
 				09F5DCE6218C3E7200390304 /* RegistrationFinishViewController.swift in Sources */,
 				A568142421CBCD38002C0899 /* BankBranchViews.swift in Sources */,
@@ -1285,11 +1304,12 @@
 				09F2410C2170871F007B7D73 /* FeedInfoViewController.swift in Sources */,
 				A528EF4421B16D8A00D189DD /* BubbleStatsView.swift in Sources */,
 				09AF7078216F4A9600E7FCFC /* FeedUpcomingViewController.swift in Sources */,
-				969899642303F2E20066C55B /* LoansModel.swift in Sources */,
+				969899642303F2E20066C55B /* Loan.swift in Sources */,
 				A55B7B8E21AA8EB600A8A7FE /* ChatMessagesIncomingTableViewCell.swift in Sources */,
 				A551108F21C7BEED00330510 /* TestAuthService.swift in Sources */,
 				097A6DCE21899C5B00E6C69E /* RegistrationLoginPasswordViewController.swift in Sources */,
 				A56B59FA21AD623B00CE4798 /* AccountsSegueAnimator.swift in Sources */,
+				BDE4D08323224E570070BC3D /* AboutItem.swift in Sources */,
 				09BE35F1218C729C00EA7B24 /* ButtonRoundedBordered.swift in Sources */,
 				A55B7B8C21AA713600A8A7FE /* ChatMessagesOutgoingTableViewCell.swift in Sources */,
 				094FFC0F218837580069DDCB /* LoginOrSignupViewController.swift in Sources */,

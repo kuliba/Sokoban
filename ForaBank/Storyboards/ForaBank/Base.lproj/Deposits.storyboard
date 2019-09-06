@@ -2087,196 +2087,21 @@
             </objects>
             <point key="canvasLocation" x="-4" y="915"/>
         </scene>
-        <!--Deposits Cards Details About View Controller-->
+        <!--Product About View Controller-->
         <scene sceneID="47A-0p-AMk">
             <objects>
-                <tableViewController storyboardIdentifier="feedfeed2" useStoryboardIdentifierAsRestorationIdentifier="YES" id="aQO-4q-pmf" customClass="DepositsCardsDetailsAboutViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="ProductAboutViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="aQO-4q-pmf" customClass="ProductAboutViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="static" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="35" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="cdv-Wd-Ga4">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <inset key="separatorInset" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
-                        <sections>
-                            <tableViewSection id="8p1-pD-Mhf">
-                                <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="iXC-YG-fPN">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="35"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="iXC-YG-fPN" id="dwD-Rt-mhH">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="35"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" spacing="-100" baselineRelativeArrangement="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Gv-Qu-C7c">
-                                                    <rect key="frame" x="10" y="0.0" width="300" height="35"/>
-                                                    <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Доступно для снятия" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dsy-po-iba">
-                                                            <rect key="frame" x="0.0" y="6.5" width="200" height="22.5"/>
-                                                            <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
-                                                            <nil key="textColor"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10 000.00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fDJ-OF-T6o">
-                                                            <rect key="frame" x="222.5" y="6.5" width="77.5" height="22.5"/>
-                                                            <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
-                                                            <nil key="textColor"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                    </subviews>
-                                                </stackView>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="8Gv-Qu-C7c" firstAttribute="leading" secondItem="dwD-Rt-mhH" secondAttribute="leading" constant="10" id="7fe-yj-xVa"/>
-                                                <constraint firstItem="8Gv-Qu-C7c" firstAttribute="top" secondItem="dwD-Rt-mhH" secondAttribute="top" id="ZpF-iy-a5b"/>
-                                                <constraint firstAttribute="bottom" secondItem="8Gv-Qu-C7c" secondAttribute="bottom" id="gyJ-61-nYO"/>
-                                                <constraint firstAttribute="trailing" secondItem="8Gv-Qu-C7c" secondAttribute="trailing" constant="10" id="obL-24-JL0"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="AOD-9N-uLR">
-                                        <rect key="frame" x="0.0" y="35" width="320" height="35"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="AOD-9N-uLR" id="uqg-jf-EVu">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="35"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="jOr-X8-gh4">
-                                                    <rect key="frame" x="10" y="0.0" width="300" height="35"/>
-                                                    <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Дата открытия" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2En-7H-E9a">
-                                                            <rect key="frame" x="0.0" y="0.0" width="150" height="35"/>
-                                                            <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
-                                                            <nil key="textColor"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" restorationIdentifier="DateValue" text="12.4.2019" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U2i-2D-ifU">
-                                                            <rect key="frame" x="150" y="0.0" width="150" height="35"/>
-                                                            <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
-                                                            <nil key="textColor"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                    </subviews>
-                                                </stackView>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="jOr-X8-gh4" firstAttribute="leading" secondItem="uqg-jf-EVu" secondAttribute="leading" constant="10" id="9U6-Zf-Qqg"/>
-                                                <constraint firstAttribute="bottom" secondItem="jOr-X8-gh4" secondAttribute="bottom" id="Oos-f0-Kxw"/>
-                                                <constraint firstItem="jOr-X8-gh4" firstAttribute="top" secondItem="uqg-jf-EVu" secondAttribute="top" id="coN-E0-cDY"/>
-                                                <constraint firstAttribute="trailing" secondItem="jOr-X8-gh4" secondAttribute="trailing" constant="10" id="vX3-2A-aP0"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="N4r-Ei-S66">
-                                        <rect key="frame" x="0.0" y="70" width="320" height="35"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="N4r-Ei-S66" id="vX6-6A-0iw">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="35"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="nIu-nW-yyg">
-                                                    <rect key="frame" x="10" y="0.0" width="300" height="35"/>
-                                                    <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Дата окончания" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rWz-TM-cnU">
-                                                            <rect key="frame" x="0.0" y="0.0" width="150" height="35"/>
-                                                            <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
-                                                            <nil key="textColor"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12.4.2020" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yqh-6h-arj">
-                                                            <rect key="frame" x="150" y="0.0" width="150" height="35"/>
-                                                            <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
-                                                            <nil key="textColor"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                    </subviews>
-                                                </stackView>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="nIu-nW-yyg" secondAttribute="trailing" constant="10" id="Jie-NF-ffF"/>
-                                                <constraint firstItem="nIu-nW-yyg" firstAttribute="leading" secondItem="vX6-6A-0iw" secondAttribute="leading" constant="10" id="cTw-BH-XRA"/>
-                                                <constraint firstAttribute="bottom" secondItem="nIu-nW-yyg" secondAttribute="bottom" id="mtB-Lf-50y"/>
-                                                <constraint firstItem="nIu-nW-yyg" firstAttribute="top" secondItem="vX6-6A-0iw" secondAttribute="top" id="pBp-G2-qgz"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="Upu-bP-A41">
-                                        <rect key="frame" x="0.0" y="105" width="320" height="35"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Upu-bP-A41" id="p2X-TZ-FwC">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="35"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" spacing="-100" translatesAutoresizingMaskIntoConstraints="NO" id="9sk-Nk-NZj">
-                                                    <rect key="frame" x="10" y="0.0" width="300" height="35"/>
-                                                    <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Процентная ставка" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E8O-bp-stA">
-                                                            <rect key="frame" x="0.0" y="0.0" width="200" height="35"/>
-                                                            <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
-                                                            <nil key="textColor"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="7%" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kbo-nd-0iR">
-                                                            <rect key="frame" x="278" y="0.0" width="22" height="35"/>
-                                                            <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
-                                                            <nil key="textColor"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                    </subviews>
-                                                </stackView>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="9sk-Nk-NZj" firstAttribute="leading" secondItem="p2X-TZ-FwC" secondAttribute="leading" constant="10" id="F28-Jc-ndt"/>
-                                                <constraint firstItem="9sk-Nk-NZj" firstAttribute="top" secondItem="p2X-TZ-FwC" secondAttribute="top" id="OUP-fD-vxA"/>
-                                                <constraint firstAttribute="bottom" secondItem="9sk-Nk-NZj" secondAttribute="bottom" id="cur-DV-nsG"/>
-                                                <constraint firstAttribute="trailing" secondItem="9sk-Nk-NZj" secondAttribute="trailing" constant="10" id="djY-qw-6OQ"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="50" id="JWu-jQ-wuZ">
-                                        <rect key="frame" x="0.0" y="140" width="320" height="50"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="JWu-jQ-wuZ" id="p2t-wH-Urg">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" spacing="-100" translatesAutoresizingMaskIntoConstraints="NO" id="Nrw-t5-6YA">
-                                                    <rect key="frame" x="10" y="0.0" width="300" height="50"/>
-                                                    <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Сумма неснижаемого остатка" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fY7-9Y-ubN">
-                                                            <rect key="frame" x="0.0" y="2.5" width="200" height="45"/>
-                                                            <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
-                                                            <nil key="textColor"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="30 000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kVb-yO-bZI">
-                                                            <rect key="frame" x="246.5" y="14" width="53.5" height="22.5"/>
-                                                            <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
-                                                            <nil key="textColor"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                    </subviews>
-                                                </stackView>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstAttribute="bottom" secondItem="Nrw-t5-6YA" secondAttribute="bottom" id="98R-HO-teB"/>
-                                                <constraint firstItem="Nrw-t5-6YA" firstAttribute="leading" secondItem="p2t-wH-Urg" secondAttribute="leading" constant="10" id="dEz-Yz-KDx"/>
-                                                <constraint firstItem="Nrw-t5-6YA" firstAttribute="top" secondItem="p2t-wH-Urg" secondAttribute="top" id="jTG-vr-CvC"/>
-                                                <constraint firstAttribute="trailing" secondItem="Nrw-t5-6YA" secondAttribute="trailing" constant="10" id="r53-tR-UoT"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                </cells>
-                            </tableViewSection>
-                        </sections>
+                        <sections/>
                         <connections>
                             <outlet property="dataSource" destination="aQO-4q-pmf" id="AXh-T6-MBR"/>
                             <outlet property="delegate" destination="aQO-4q-pmf" id="NpN-v9-gAw"/>
                         </connections>
                     </tableView>
-                    <connections>
-                        <outlet property="avaliableBalanceLabel" destination="fDJ-OF-T6o" id="gDn-ZP-MdK"/>
-                        <outlet property="minimalRest" destination="kVb-yO-bZI" id="vvs-CO-NBg"/>
-                        <outlet property="startDateLabel" destination="U2i-2D-ifU" id="eAp-tt-BD0"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JUb-VN-sKj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
