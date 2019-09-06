@@ -9,26 +9,29 @@
 import UIKit
 import iCarousel
 import DeviceKit
-import Hero
 
-protocol TabCardDetailViewController {
-    func set(card: Card?)
+protocol TabLoansDetailViewController {
+    func set(loan :Loan?)
 }
 
-class CardDetailsViewController: UIViewController {
 
+class LoansDetailsViewController: UIViewController {
+   
     // MARK: - Properties
     @IBOutlet weak var header: UIView!
     @IBOutlet weak var container: UIView!
-    @IBOutlet var carousel: iCarousel!
+    @IBOutlet weak var carousel: iCarousel!
+    @IBOutlet weak var product: UILabel!
+    @IBOutlet weak var principalDebt: UILabel!
     @IBOutlet weak var contentViewTop: NSLayoutConstraint!
-    @IBOutlet weak var cardView: DetailedCardView!
-    @IBOutlet weak var backgroundImageView: UIImageView!
-
     var previousIndex = -1
-
-    var card: Card? = nil
-
+    var loan: Loan? = nil
+    weak var currentViewController: UIViewController?
+    var previousOffset: CGFloat = 0
+    var items = ["Управление","История" ,"О счете"]
+    var labels = [UILabel?]()
+    var lastScrollViewOffset: CGFloat = 0
+    
     var offset: CGFloat = {
         if Device().isOneOf(Constants.xDevices) {
             return 100 // models: x
@@ -36,229 +39,114 @@ class CardDetailsViewController: UIViewController {
             return 75 // models 7 7+ se
         }
     }()
-
-    weak var currentViewController: UIViewController?
-    var previousOffset: CGFloat = 0
-    var items = ["Управление", "Выписка", "О карте"]
-    var labels = [UILabel?]()
-    var lastScrollViewOffset: CGFloat = 0
-
-    var selectedTabColor: UIColor = .white
-    var tabColor: UIColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
-
-    var segueId: String? = nil
-    var backSegueId: String? = nil
-
+    
+    // MARK: - Actions
     @IBAction func backButtonClicked(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true)
     }
-
-    // MARK: - Lifecycle
+    
+    
     override func viewDidLoad() {
-        if let card = card {
-            cardView.update(withCard: card)
-            cardView.backgroundImageView.alpha = 0
-            backgroundImageView.image = UIImage(named: card.type?.rawValue ?? "")
-            cardView.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.25)
-            if card.type == .mastercard {
-                let blackView = UIView()
-                blackView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.45)
-                blackView.translatesAutoresizingMaskIntoConstraints = false
-                backgroundImageView.addSubview(blackView)
-                backgroundImageView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[b]-0-|", options: [], metrics: nil, views: ["b": blackView]))
-                backgroundImageView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[b]-0-|", options: [], metrics: nil, views: ["b": blackView]))
-
-//                selectedTabColor = .black
-//                tabColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.7)
-                cardView.foregroundColor = .white
-            }
-            cardView.layer.cornerRadius = 10
-        }
-        let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductManagementViewController") as? ProductManagementViewController
-        managementVC?.actionsType = "card"
-        currentViewController = managementVC
+        currentViewController = storyboard?.instantiateViewController(withIdentifier: "feedfeed0")
         currentViewController!.view.translatesAutoresizingMaskIntoConstraints = false
         addChild(currentViewController!)
-        if let c = currentViewController as? TabCardDetailViewController {
-            c.set(card: card)
-        }
         addSubview(self.currentViewController!.view, toView: self.container)
-
+        currentViewController!.view.translatesAutoresizingMaskIntoConstraints = false
+        if let c = currentViewController as? TabLoansDetailViewController {
+            c.set(loan: loan)
+        }
         labels = [UILabel?].init(repeating: nil, count: items.count)
-
+     
         super.viewDidLoad()
-
+        
         NotificationCenter.default.addObserver(self, selector: #selector(handleScroll(_:)), name: NSNotification.Name("TableViewScrolled"), object: nil)
-
+        
         carousel.delegate = self
         carousel.dataSource = self
         carousel.type = .wheel
         carousel.bounces = false
+        
+        
+        product.text = "\((loan?.number)!)"
+        principalDebt.text = "\((loan?.principalDebt)!) \((loan?.currencyCode)!)"
 
-        hero.isEnabled = true
-        hero.modalAnimationType = .none
     }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if segueId == "CardDetailsViewController" {
-            cardView.hero.id = "card"
-            cardView.hero.modifiers = [
-                HeroModifier.beginWith([
-                    HeroModifier.opacity(1),
-                    HeroModifier.zPosition(11)
-                ]),
-                HeroModifier.duration(0.5),
-                HeroModifier.opacity(0),
-                HeroModifier.forceNonFade,
-                HeroModifier.zPosition(11),
-                HeroModifier.useNormalSnapshot
-            ]
-            container.hero.modifiers = [
-                HeroModifier.beginWith([
-                    HeroModifier.opacity(1),
-                    HeroModifier.zPosition(2)
-                ]),
-                HeroModifier.duration(0.5),
-                HeroModifier.forceNonFade,
-                HeroModifier.opacity(1)
-            ]
-        }
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        cardView.hero.id = nil
-        cardView.hero.modifiers = nil
-        container.hero.modifiers = nil
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        if segueId == "CardDetailsViewController" {
-            cardView.hero.id = "card"
-            cardView.hero.modifiers = [
-                HeroModifier.beginWith([
-                    HeroModifier.opacity(1),
-                    HeroModifier.zPosition(11)
-                ]),
-                HeroModifier.duration(0.5),
-                HeroModifier.opacity(1),
-                HeroModifier.forceNonFade,
-                HeroModifier.zPosition(11),
-                HeroModifier.useNormalSnapshot
-            ]
-            container.hero.modifiers = [
-                HeroModifier.beginWith([
-                    HeroModifier.opacity(1),
-                    HeroModifier.zPosition(2)
-                ]),
-                HeroModifier.duration(0.5),
-                HeroModifier.forceNonFade,
-                HeroModifier.opacity(0)
-            ]
-        }
-    }
-
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        cardView.hero.id = nil
-        cardView.hero.modifiers = nil
-        container.hero.modifiers = nil
-    }
-
-
-
-
+    
+   
+   
 }
 
-private extension CardDetailsViewController {
+private extension LoansDetailsViewController {
+    
 
     @objc func handleScroll(_ notification: Notification?) {
         guard let tableScrollView = notification?.userInfo?["tableView"] as? UIScrollView else {
             return
         }
         var currentOffset = tableScrollView.contentOffset.y
-
+        
         let distanceFromBottom = tableScrollView.contentSize.height - currentOffset
         if previousOffset < currentOffset && distanceFromBottom > tableScrollView.frame.size.height {
             if currentOffset > header.frame.height - offset {
                 currentOffset = header.frame.height - offset
             }
-            UIView.animate(withDuration: 0.1, delay: 0, options: .beginFromCurrentState, animations: {
+//            UIView.animate(withDuration: 0.1, delay: 0, options: .beginFromCurrentState, animations: {
                 self.contentViewTop.constant += self.previousOffset - currentOffset
                 self.previousOffset = currentOffset
-                self.view.layoutIfNeeded()
-            }, completion: nil)
-
-
+//                self.view.layoutIfNeeded()
+//            }, completion: nil)
+            
+            
         } else {
             if previousOffset > currentOffset {
                 if currentOffset < 0 {
                     currentOffset = 0
                 }
-                UIView.animate(withDuration: 0.1, delay: 0, options: .beginFromCurrentState, animations: {
+//                UIView.animate(withDuration: 0.1, delay: 0, options: .beginFromCurrentState, animations: {
                     self.contentViewTop.constant += self.previousOffset - currentOffset
                     self.previousOffset = currentOffset
-                    self.view.layoutIfNeeded()
-                }, completion: nil)
+//                    self.view.layoutIfNeeded()
+//                }, completion: nil)
             }
         }
         container.setNeedsDisplay()
     }
-
-    func addSubview(_ subView: UIView, toView parentView: UIView) {
+    
+    func addSubview(_ subView:UIView, toView parentView:UIView) {
         parentView.addSubview(subView)
-
+        
         var viewBindingsDict = [String: AnyObject]()
         viewBindingsDict["subView"] = subView
         parentView.addConstraints(
             NSLayoutConstraint.constraints(withVisualFormat: "H:|[subView]|",
                                            options: [], metrics: nil, views: viewBindingsDict
-            ))
-
+        ))
+        
         parentView.addConstraints(
             NSLayoutConstraint.constraints(withVisualFormat: "V:|[subView]|",
                                            options: [], metrics: nil, views: viewBindingsDict
-            ))
+        ))
     }
-
+    
     func showComponent(index: Int) {
         NotificationCenter.default.removeObserver(self)
-
-        let newViewController: UIViewController?
-
-        if index == 0 {
-            let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductManagementViewController") as? ProductManagementViewController
-            managementVC?.actionsType = "account"
-            newViewController = managementVC
+        let newViewController = storyboard?.instantiateViewController(withIdentifier: "feedfeed\(index)")
+        newViewController!.view.translatesAutoresizingMaskIntoConstraints = false
+        if let c = newViewController as? TabLoansDetailViewController {
+            c.set(loan: loan)
         }
-        else {
-            newViewController = storyboard?.instantiateViewController(withIdentifier: "feed\(index)")
-        }
-
-        if let c = newViewController as? TabCardDetailViewController {
-            c.set(card: card)
-        }
-
-        guard let nonNilNewVC = newViewController else {
-            return
-        }
-        nonNilNewVC.view.translatesAutoresizingMaskIntoConstraints = false
-        cycleFromViewController(oldViewController: currentViewController!, toViewController: nonNilNewVC)
-        currentViewController = nonNilNewVC
+        cycleFromViewController(oldViewController: self.currentViewController!, toViewController: newViewController!)
+        currentViewController = newViewController
     }
-
+    
     func cycleFromViewController(oldViewController: UIViewController, toViewController newViewController: UIViewController) {
         oldViewController.willMove(toParent: nil)
-        self.addChild(newViewController)
-        self.addSubview(newViewController.view, toView: self.container!)
+        addChild(newViewController)
+        addSubview(newViewController.view, toView: container!)
         // TODO: Set the starting state of your constraints here
         newViewController.view.alpha = 0
         newViewController.view.bounds.origin.y -= 10
-
         newViewController.view.layoutIfNeeded()
-
         // TODO: Set the ending state of your constraints here
         UIView.animate(withDuration: 0.5, delay: 0, options: .beginFromCurrentState, animations: {
             self.contentViewTop.constant = 0
@@ -284,16 +172,16 @@ private extension CardDetailsViewController {
     }
 }
 
-extension CardDetailsViewController: iCarouselDataSource, iCarouselDelegate {
-
+extension LoansDetailsViewController: iCarouselDataSource, iCarouselDelegate {
+    
     func numberOfItems(in carousel: iCarousel) -> Int {
         return items.count
     }
-
+    
     func carousel(_ carousel: iCarousel, viewForItemAt index: Int, reusing view: UIView?) -> UIView {
         var label: UILabel
         var itemView: UIImageView
-
+        
         //reuse view if available, otherwise create a new view
         if let view = view as? UIImageView {
             itemView = view
@@ -305,17 +193,17 @@ extension CardDetailsViewController: iCarouselDataSource, iCarouselDelegate {
             //recycled and used with other index values later
             itemView = UIImageView(frame: CGRect(x: 0, y: 0, width: 120, height: 40))
             itemView.backgroundColor = .clear
-
+            
             label = UILabel(frame: itemView.bounds)
-
+            
             label.backgroundColor = .clear
             label.textAlignment = .center
-            label.textColor = tabColor
+            label.textColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
             label.font = UIFont(name: "Roboto-Light", size: 16)
             label.tag = 1
             itemView.addSubview(label)
         }
-
+        
         // set item label
         // remember to always set any properties of your carousel item
         // views outside of the `if (view == nil) {...}` check otherwise
@@ -325,13 +213,13 @@ extension CardDetailsViewController: iCarouselDataSource, iCarouselDelegate {
         labels[index] = label
         return itemView
     }
-
+    
     func carousel(_ carousel: iCarousel, valueFor option: iCarouselOption, withDefault value: CGFloat) -> CGFloat {
-
-        if (option == .wrap) {
+        
+        if option == .wrap {
             return 0.0
         }
-
+        
         if option == .arc {
             if Device().isOneOf(Constants.iphone5Devices) {
                 return CGFloat(Double.pi) / 2.5 // 2.75 - if not authorized
@@ -341,7 +229,7 @@ extension CardDetailsViewController: iCarouselDataSource, iCarouselDelegate {
                 return CGFloat(Double.pi) / 3.25 // 3.5 - if not authorized
             }
         }
-
+        
         if option == .radius {
             if Device().isOneOf(Constants.iphone5Devices) {
                 return 800
@@ -353,37 +241,88 @@ extension CardDetailsViewController: iCarouselDataSource, iCarouselDelegate {
         }
         return value
     }
-
+    
     func numberOfPlaceholders(in carousel: iCarousel) -> Int {
         return 6
     }
-
+    
     func carousel(_ carousel: iCarousel, placeholderViewAt index: Int, reusing view: UIView?) -> UIView {
         return UIView()
     }
-
+    
     func carousel(_ carousel: iCarousel, didSelectItemAt index: Int) {
-        labels[previousIndex]?.textColor = tabColor
+        labels[previousIndex]?.textColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
         labels[previousIndex]?.font = UIFont(name: "Roboto-Light", size: 16)
-
-        labels[index]?.textColor = selectedTabColor
+        
+        labels[index]?.textColor = .white
         labels[index]?.font = UIFont(name: "Roboto-Regular", size: 16)
         previousIndex = index
         showComponent(index: index)
     }
-
+    
     func carouselDidEndScrollingAnimation(_ carousel: iCarousel) {
-        if previousIndex < 0 || previousIndex == carousel.currentItemIndex {
+        if previousIndex<0 || previousIndex == carousel.currentItemIndex{
             previousIndex = carousel.currentItemIndex
-            labels[carousel.currentItemIndex]?.textColor = selectedTabColor
+            labels[carousel.currentItemIndex]?.textColor = .white
             labels[carousel.currentItemIndex]?.font = UIFont(name: "Roboto-Regular", size: 16)
             return
         }
-        labels[previousIndex]?.textColor = tabColor
+        labels[previousIndex]?.textColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
         labels[previousIndex]?.font = UIFont(name: "Roboto-Light", size: 16)
-        labels[carousel.currentItemIndex]?.textColor = selectedTabColor
+        labels[carousel.currentItemIndex]?.textColor = .white
         labels[carousel.currentItemIndex]?.font = UIFont(name: "Roboto-Regular", size: 16)
         previousIndex = carousel.currentItemIndex
         showComponent(index: carousel.currentItemIndex)
+    }
+}
+
+extension LoansDetailsViewController: CustomTransitionOriginator, CustomTransitionDestination {
+    var fromAnimatedSubviews: [String : UIView] {
+//        print("OneOneViewController fromAnimatedSubviews")
+        var views = [String : UIView]()
+        let tableSnapshot = view.snapshotView(afterScreenUpdates: true)!
+        let rectMask = CAShapeLayer()
+        tableSnapshot.layer.mask = rectMask
+
+        let rectPath = CGPath(rect: CGRect(x: 0, y: container.frame.origin.y+33, width: tableSnapshot.frame.width, height: container.frame.height), transform: nil)
+        rectMask.path = rectPath
+        views["tableView"] = tableSnapshot
+        
+        let containerSnapshot = container.snapshotView(afterScreenUpdates: true)!
+        containerSnapshot.frame = view.convert(container.frame , from: view)
+        views["container"] = containerSnapshot
+        
+        guard let c = currentViewController as? CustomTransitionOriginator else {
+//            print("OneOneViewController guard return")
+            return views
+        }
+        views.merge(c.fromAnimatedSubviews, uniquingKeysWith: { (first, _) in first })
+//        print("OneOneViewController views merged")
+        return views
+    }
+    
+    var toAnimatedSubviews: [String : UIView] {
+//        print("OneOneViewController toAnimatedSubviews")
+        var views = [String : UIView]()
+//        views["header"] = header
+        let tableSnapshot = view.snapshotView(afterScreenUpdates: true)!
+        let rectMask = CAShapeLayer()
+        tableSnapshot.layer.mask = rectMask
+
+        let rectPath = CGPath(rect: CGRect(x: 0, y: container.frame.origin.y+33, width: tableSnapshot.frame.width, height: container.frame.height), transform: nil)
+        rectMask.path = rectPath
+        views["tableView"] = tableSnapshot
+        
+        let containerSnapshot = container.snapshotView(afterScreenUpdates: true)!
+        containerSnapshot.frame = view.convert(container.frame , from: view)
+        views["container"] = containerSnapshot
+        
+        guard let c = currentViewController as? CustomTransitionDestination else {
+//            print("OneOneViewController guard return")
+            return views
+        }
+        views.merge(c.toAnimatedSubviews, uniquingKeysWith: { (first, _) in first })
+//        print("OneOneViewController views merged")
+        return views
     }
 }

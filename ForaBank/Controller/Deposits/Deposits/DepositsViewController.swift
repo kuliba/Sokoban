@@ -44,11 +44,19 @@ class DepositsViewController: UIViewController {
 //         "3,84%"
 //        ]
 //    ]
-
+    @IBOutlet weak var LabelNoProduct: UILabel!
+    
     var deposits = [Deposit]() {
         didSet {
             tableView.reloadData()
             activityIndicator.stopAnimating()
+            hiddenAccount()
+            
+        }
+    }
+    func hiddenAccount(){
+        if deposits.count == (0) {
+            LabelNoProduct.isHidden = false
         }
     }
 
@@ -68,6 +76,7 @@ class DepositsViewController: UIViewController {
         super.viewDidLoad()
         activityIndicator.startAnimation()
         setUpTableView()
+        LabelNoProduct.isHidden = true
 
     }
 

@@ -16,6 +16,7 @@ class AccountsViewController: UIViewController {
     // MARK: - Properties
     @IBOutlet weak var tableView: CustomTableView!
 
+    @IBOutlet weak var LabelNoProduct: UILabel!
     @IBOutlet weak var activityIndicatorView: ActivityIndicatorView!
     let transitionAnimator = AccountsSegueAnimator()
 
@@ -27,22 +28,30 @@ class AccountsViewController: UIViewController {
         super.viewDidLoad()
         activityIndicatorView.startAnimation()
         setUpTableView()
+        LabelNoProduct.isHidden = true
+
     }
 
     var accounts = [Account]() {
         didSet {
             tableView.reloadData()
             activityIndicatorView.stopAnimating()
+            hiddenAccount()
+            
         }
     }
-
+    func hiddenAccount(){
+        if accounts.count == (0) {
+            LabelNoProduct.isHidden = false
+        }
+    }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
         if (accounts == nil) {
             activityIndicatorView.startAnimation()
-
+                LabelNoProduct.isHidden = false
         }
     }
 
@@ -63,6 +72,8 @@ class AccountsViewController: UIViewController {
         }
 
     }
+
+  
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
