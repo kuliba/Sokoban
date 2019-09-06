@@ -210,6 +210,7 @@
 		BD38198E232104430004728C /* productsData.plist in Resources */ = {isa = PBXBuildFile; fileRef = BD38198D232104430004728C /* productsData.plist */; };
 		BD7CC1A1232125D000872D06 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = BD7CC1A0232125D000872D06 /* Localizable.strings */; };
 		BD94E09F231EA6E50006456E /* MasksFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD94E09E231EA6E50006456E /* MasksFormatting.swift */; };
+		BDE4D07323215F750070BC3D /* productsAbout.plist in Resources */ = {isa = PBXBuildFile; fileRef = BDE4D07223215F750070BC3D /* productsAbout.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -421,6 +422,7 @@
 		BD38198D232104430004728C /* productsData.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = productsData.plist; sourceTree = "<group>"; };
 		BD7CC1A0232125D000872D06 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		BD94E09E231EA6E50006456E /* MasksFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasksFormatting.swift; sourceTree = "<group>"; };
+		BDE4D07223215F750070BC3D /* productsAbout.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = productsAbout.plist; sourceTree = "<group>"; };
 		D8EB261ED46D5F939F8B2E27 /* Pods_ForaBank.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ForaBank.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -947,6 +949,7 @@
 				A55B7B7821A6B4A200A8A7FE /* animation */,
 				BD38198D232104430004728C /* productsData.plist */,
 				BD7CC1A0232125D000872D06 /* Localizable.strings */,
+				BDE4D07223215F750070BC3D /* productsAbout.plist */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -1048,6 +1051,7 @@
 				09AF707C216F4B5000E7FCFC /* FeedUpcomingCell.xib in Resources */,
 				093B863221620EE8008A5222 /* ServicesCell.xib in Resources */,
 				09F2410A21707B86007B7D73 /* FeedInfo3Cell.xib in Resources */,
+				BDE4D07323215F750070BC3D /* productsAbout.plist in Resources */,
 				A55B7B8021A6B51E00A8A7FE /* 10.mov in Resources */,
 				09E0F13F215A65AE0042FB6A /* Payment.storyboard in Resources */,
 				09E0F142215A65D40042FB6A /* Services.storyboard in Resources */,
