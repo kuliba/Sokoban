@@ -17,4 +17,7 @@ target 'ForaBank' do
   pod 'CardIO', '5.4.1'
   pod 'NVActivityIndicatorView'
   pod 'ModelMapper'
+  pod 'ReSwift'
+  pod 'ReSwiftThunk'
+  pod 'TOPasscodeViewController'
 end

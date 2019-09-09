@@ -120,14 +120,18 @@ private extension ProductDetailsViewController {
     func showComponent(index: Int) {
         NotificationCenter.default.removeObserver(self)
 
-        let newViewController: UIViewController?
+        var newViewController: UIViewController?
 
-        if index == 0 {
+        switch index {
+        case 0:
             let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductManagementViewController") as? ProductManagementViewController
             managementVC?.actionsType = "account"
             newViewController = managementVC
-        }
-        else {
+        case 2:
+            let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductAboutViewController") as? ProductAboutViewController
+            managementVC?.items = account?.getProductAbout()
+            newViewController = managementVC
+        default:
             newViewController = storyboard?.instantiateViewController(withIdentifier: "feedfeed\(index)")
         }
 

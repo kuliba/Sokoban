@@ -13,7 +13,11 @@ PODS:
   - NVActivityIndicatorView (4.7.0):
     - NVActivityIndicatorView/Presenter (= 4.7.0)
   - NVActivityIndicatorView/Presenter (4.7.0)
+  - ReSwift (4.1.1)
+  - ReSwiftThunk (1.1.0):
+    - ReSwift (~> 4.0)
   - RMMapper (1.1.5)
+  - TOPasscodeViewController (0.0.2)
 
 DEPENDENCIES:
   - Alamofire (= 4.8.0)
@@ -26,7 +30,10 @@ DEPENDENCIES:
   - KeychainAccess
   - ModelMapper
   - NVActivityIndicatorView
+  - ReSwift
+  - ReSwiftThunk
   - RMMapper
+  - TOPasscodeViewController
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -40,7 +47,10 @@ SPEC REPOS:
     - KeychainAccess
     - ModelMapper
     - NVActivityIndicatorView
+    - ReSwift
+    - ReSwiftThunk
     - RMMapper
+    - TOPasscodeViewController
 
 SPEC CHECKSUMS:
   Alamofire: 3ec537f71edc9804815215393ae2b1a8ea33a844
@@ -53,8 +63,11 @@ SPEC CHECKSUMS:
   KeychainAccess: 3b1bf8a77eb4c6ea1ce9404c292e48f948954c6b
   ModelMapper: a8dbf2a2003bf626627b9fe7c9a22b3405a30404
   NVActivityIndicatorView: b19ddab2576f805cbe0fb2306cba3476e09a1dea
+  ReSwift: d925be0033558f55bd73d92869961230dfe19d52
+  ReSwiftThunk: 727c1549dbd2949472e1c72bec44b1008d7c4f92
   RMMapper: 21122d753c736d975f6c61e674afce8db73579af
+  TOPasscodeViewController: 03b5df3762a7be1511102093c644a42275bddf24
 
-PODFILE CHECKSUM: e8e8e2e603e49cc0f574e31f5640f80916920bc8
+PODFILE CHECKSUM: 038b9178031a242588305e5863371a1388da60fa
 
 COCOAPODS: 1.7.4

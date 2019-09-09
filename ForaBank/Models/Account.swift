@@ -33,4 +33,8 @@ class Account: Mappable {
         try accountNumber = map.from("accountNumber")
         try currencyCode = map.from("currencyCode")
     }
+
+    func getProductAbout() -> Array<AboutItem> {
+        return [AboutItem(title: "Доступно для снятия", value: "\(balance) \(currencyCode)")]
+    }
 }
