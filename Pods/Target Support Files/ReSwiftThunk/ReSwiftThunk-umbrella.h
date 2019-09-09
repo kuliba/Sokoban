@@ -10,8 +10,8 @@
 #endif
 #endif
 
-#import "Valet.h"
+#import "ReSwift_Thunk.h"
 
-FOUNDATION_EXPORT double ValetVersionNumber;
-FOUNDATION_EXPORT const unsigned char ValetVersionString[];
+FOUNDATION_EXPORT double ReSwiftThunkVersionNumber;
+FOUNDATION_EXPORT const unsigned char ReSwiftThunkVersionString[];
 
