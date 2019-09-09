@@ -7,7 +7,6 @@
  */
 
 import UIKit
-import AppLocker
 
 class ProfileMenuTableViewController: UITableViewController {
     

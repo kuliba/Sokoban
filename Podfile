@@ -16,4 +16,5 @@ target 'ForaBank' do
   pod 'Hero', '1.4.0'
   pod 'CardIO', '5.4.1'
   pod 'NVActivityIndicatorView'
+  pod 'ModelMapper'
 end

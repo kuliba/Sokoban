@@ -9,7 +9,6 @@
 import UIKit
 import IQKeyboardManagerSwift
 import RMMapper
-import AppLocker
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -26,7 +25,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         setTextFieldAppearance()
         IQKeyboardManager.shared.enable = true
 //        IQKeyboardManager.shared.layoutIfNeededOnUpdate = true
-        
        
         return true
     }
@@ -49,7 +47,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         if  UserDefaults.standard.value(forKey: "pincode") != nil{
-        AppLocker.present(with: .validate)
             
         }
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.

@@ -40,7 +40,7 @@ protocol CardServiceProtocol {
 
 protocol DeposServiceProtocol {
     func getDepos(headers: HTTPHeaders,
-                  completionHandler: @escaping (_ success:Bool, _ obligations: [Depos]?) -> Void)
+                  completionHandler: @escaping (_ success:Bool, _ obligations: [Account]?) -> Void)
 }
 protocol LoansServiceProtocol {
     func getLoans(headers: HTTPHeaders,
@@ -49,7 +49,7 @@ protocol LoansServiceProtocol {
 
 protocol DepositsServiceProtocol {
     func getBonds(headers: HTTPHeaders,
-                  completionHandler: @escaping (_ success:Bool, _ obligations: [Bond]?) -> Void)
+                  completionHandler: @escaping (_ success:Bool, _ obligations: [Deposit]?) -> Void)
 }
 
 protocol RegServiceProtocol {
@@ -269,14 +269,14 @@ class NetworkManager {
     }
     
     //MARK: - deposits service
-    func getBonds(completionHandler: @escaping (_ success:Bool, _ obligations: [Bond]?) -> Void) {
+    func getBonds(completionHandler: @escaping (_ success:Bool, _ obligations: [Deposit]?) -> Void) {
          depositsService.getBonds(headers: headers, completionHandler: completionHandler)
     }
     func getLoans(completionHandler: @escaping (_ success:Bool, _ obligations: [Loan]?) -> Void) {
         loansService.getLoans(headers: headers, completionHandler: completionHandler)
     }
     //MARK: - deposits service
-    func getDepos(completionHandler: @escaping (_ success:Bool, _ obligations: [Depos]?) -> Void) {
+    func getDepos(completionHandler: @escaping (_ success:Bool, _ obligations: [Account]?) -> Void) {
         deposService.getDepos(headers: headers, completionHandler: completionHandler)
     }
     //MARK: - check errorMessage for closing session

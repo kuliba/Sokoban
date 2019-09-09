@@ -33,7 +33,7 @@ class TabBarController: UITabBarController {
             }
             else if self.viewControllers?.count == 3 {
                 let depositsStoryboard: UIStoryboard = UIStoryboard(name: "Deposits", bundle: nil)
-                let depositsRootVC = depositsStoryboard.instantiateViewController(withIdentifier: "depositsRoot") as! DepositsViewController
+                let depositsRootVC = depositsStoryboard.instantiateViewController(withIdentifier: "depositsRoot") as! CarouselViewController
                 self.viewControllers?.insert(depositsRootVC, at: 1)
                 let paymentStoryboard: UIStoryboard = UIStoryboard(name: "Payment", bundle: nil)
                 let paymentRootVC = paymentStoryboard.instantiateViewController(withIdentifier: "paymentRoot") as! PaymentsViewController

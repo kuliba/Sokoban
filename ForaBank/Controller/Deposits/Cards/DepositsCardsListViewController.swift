@@ -159,7 +159,7 @@ class DepositsCardsListViewController: UIViewController {
                                                              constant: 0)
             scrollView.addConstraint(contentViewHeightConstraint!)
         }
-        if segueId == "DepositsCardsDetailsViewController" {
+        if segueId == "CardDetailsViewController" {
             view.hero.modifiers = [
                 HeroModifier.beginWith([
                     HeroModifier.opacity(1),
@@ -357,7 +357,7 @@ class DepositsCardsListViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if segueId == "DepositsCardsDetailsViewController" {
+        if segueId == "CardDetailsViewController" {
             view.hero.modifiers = [
                 HeroModifier.beginWith([
                     HeroModifier.opacity(1),
@@ -524,8 +524,8 @@ class DepositsCardsListViewController: UIViewController {
             if let destinationVC = segue.destination as? DepositsCardsListOnholdBlockViewController {
                 destinationVC.card = self.cards.last
             }
-        } else if let vc = segue.destination as? DepositsCardsDetailsViewController,
-            let parent = parent as? DepositsViewController {
+        } else if let vc = segue.destination as? CardDetailsViewController,
+            let parent = parent as? CarouselViewController {
             vc.card = selectedCard
             segueId = segue.identifier
             vc.segueId = segueId
@@ -539,14 +539,14 @@ class DepositsCardsListViewController: UIViewController {
     // MARK: - Actions
     @objc func allActionButtonClicked(_ sender: UIButton!) {
         selectedCard = selectedCardView?.card
-        performSegue(withIdentifier: "DepositsCardsDetailsViewController", sender: nil)
+        performSegue(withIdentifier: "CardDetailsViewController", sender: nil)
     }
     
     @objc func cardViewClicked(_ sender: UITapGestureRecognizer) {
         if let cardView = sender.view as? DetailedCardView {
             selectedCard = cardView.card
             selectedCardView = cardView
-            performSegue(withIdentifier: "DepositsCardsDetailsViewController", sender: nil)
+            performSegue(withIdentifier: "CardDetailsViewController", sender: nil)
         }
     }
     
