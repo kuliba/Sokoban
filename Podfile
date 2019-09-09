@@ -18,5 +18,6 @@ target 'ForaBank' do
   pod 'NVActivityIndicatorView'
   pod 'ModelMapper'
   pod 'ReSwift'
+  pod 'ReSwiftThunk'
   pod 'TOPasscodeViewController'
 end
