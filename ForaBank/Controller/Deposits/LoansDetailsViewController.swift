@@ -47,7 +47,7 @@ class LoansDetailsViewController: UIViewController {
     
     
     override func viewDidLoad() {
-        currentViewController = storyboard?.instantiateViewController(withIdentifier: "feed1feed0")
+        currentViewController = storyboard?.instantiateViewController(withIdentifier: "feedfeed0")
         currentViewController!.view.translatesAutoresizingMaskIntoConstraints = false
         addChild(currentViewController!)
         addSubview(self.currentViewController!.view, toView: self.container)

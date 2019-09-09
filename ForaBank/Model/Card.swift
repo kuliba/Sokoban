@@ -24,18 +24,18 @@ class Card {
     let customName: String?
     let number: String?
     let maskedNumber: String?
-    let validityPeriod: String?
+    var validityPeriod: String?
     var blocked: Bool?
     let product: String
-    let startDate: Date?
-    let expirationDate: Date?
+    let startDate: String?
+    let expirationDate: String?
     let availableBalance: Double?
     let blockedMoney: Double?
     let updatingDate: Date?
     let tariff: String?
     let id: String?
     let branch: String?
-    init(type: CardType? = nil, paypass: Bool? = nil, title: String? = nil, customName: String? = nil, number: String? = nil, blocked: Bool? = nil, startDate: Date? = nil, expirationDate: Date? = nil, availableBalance: Double? = nil, blockedMoney: Double? = nil, updatingDate: Date? = nil, tariff: String? = nil, id: String? = nil, branch: String? = nil, miniStatement: String? = nil, maskedNumber: String? = nil, product: String = "") {
+    init(type: CardType? = nil, paypass: Bool? = nil, title: String? = nil, customName: String? = nil, number: String? = nil, blocked: Bool? = nil, startDate: String? = nil, expirationDate: String? = nil, availableBalance: Double? = nil, blockedMoney: Double? = nil, updatingDate: Date? = nil, tariff: String? = nil, id: String? = nil, branch: String? = nil, miniStatement: String? = nil, maskedNumber: String? = nil, product: String = "") {
         self.miniStatement = miniStatement
         self.type = type
         self.paypass = paypass
@@ -46,7 +46,7 @@ class Card {
         self.startDate = startDate
         self.expirationDate = expirationDate
         self.availableBalance = availableBalance
-        self.blockedMoney = blockedMoney
+        self.blockedMoney = blockedMoney ?? 0
         self.updatingDate = updatingDate
         self.tariff = tariff
         self.id = id
@@ -64,14 +64,17 @@ class Card {
         } else {
             self.maskedNumber = maskedNumber
         }
-        
-        if let expirationDate = expirationDate {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "MM/yy"
-            validityPeriod = formatter.string(from: expirationDate)
-        } else {
-            self.validityPeriod = nil
+    }
+
+    func getProductAbout() -> Array<AboutItem> {
+        guard let end = expirationDate, let tar = title else {
+            return []
         }
+        let blStr = String(describing: blockedMoney!)
+        return [AboutItem(title: "Окончание действия карты", value: end),
+                AboutItem(title: "Доступный остаток", value: "\(availableBalance!)"),
+                AboutItem(title: "Заблокированные средства", value: blStr),
+                AboutItem(title: "Тариф", value: tar)]
     }
 }
 

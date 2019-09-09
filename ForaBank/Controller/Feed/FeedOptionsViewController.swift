@@ -7,7 +7,6 @@
  */
 
 import UIKit
-import AppLocker
 
 struct FeedOption {
     let name: String

@@ -10,7 +10,6 @@ import UIKit
 import FlexiblePageControl
 import Hero
 import LocalAuthentication
-import AppLocker
 
 
 class RegistrationPermissionsViewController: UIViewController, CAAnimationDelegate {
@@ -46,7 +45,6 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
     @IBAction func pinCodeApp(_ sender: Any) {
         if let s = sender as? UISwitch,
             s.isOn == true {
-           AppLocker.present(with: .create)
         }
     }
   
