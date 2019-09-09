@@ -11,6 +11,6 @@
 #endif
 
 
-FOUNDATION_EXPORT double AppLockerVersionNumber;
-FOUNDATION_EXPORT const unsigned char AppLockerVersionString[];
+FOUNDATION_EXPORT double ReSwiftVersionNumber;
+FOUNDATION_EXPORT const unsigned char ReSwiftVersionString[];
 
