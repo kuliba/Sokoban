@@ -8,13 +8,13 @@
 
 import UIKit
 
-struct DepositHistoryDate {
+struct DepositHistoryDate: Codable {
     let date: String
     let amountTotal: String
     let transactions: [DepositHistoryTransaction]
 }
 
-struct DepositHistoryTransaction {
+struct DepositHistoryTransaction: Codable {
     let imageName: String
     let title: String
     let subtitle: String
@@ -30,6 +30,8 @@ class DepositsHistoryViewController: UIViewController {
     let transitionAnimator = DepositsHistoryDetailsSegueAnimator()
     
     let cellId = "DepositsHistoryCell"
+    
+    let decoder = JSONDecoder()
     
     let data_ = [
         DepositHistoryDate(date: "Вчера, 5 сентября", amountTotal: "+560,15 ₽", transactions: [

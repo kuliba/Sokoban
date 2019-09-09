@@ -33,11 +33,11 @@ class CarouselViewController: UIViewController {
     let gradientView = GradientView()
     let gradients = [
         [UIColor(hexFromString: "F1AE73")!, UIColor(hexFromString: "EB4340")!],
-        [UIColor(hexFromString: "EC4645")!, UIColor(hexFromString: "9B305C")!],
-        [UIColor(hexFromString: "ED5D4B")!, UIColor(hexFromString: "B03456")!],
-        [UIColor(hexFromString: "ED4F48")!, UIColor(hexFromString: "9F3057")!],
-        [UIColor(hexFromString: "ED4F48")!, UIColor(hexFromString: "9F3057")!],
-        [UIColor(hexFromString: "C8394C")!, UIColor(hexFromString: "1B0E2F")!]
+       [UIColor(hexFromString: "F1AE73")!, UIColor(hexFromString: "EB4340")!],
+        [UIColor(hexFromString: "F1AE73")!, UIColor(hexFromString: "EB4340")!],
+        [UIColor(hexFromString: "F1AE73")!, UIColor(hexFromString: "EB4340")!],
+        [UIColor(hexFromString: "F1AE73")!, UIColor(hexFromString: "EB4340")!],
+        [UIColor(hexFromString: "F1AE73")!, UIColor(hexFromString: "EB4340")!]
     ]
     let xDevices = Constants.xDevices
     weak var currentViewController: UIViewController?
