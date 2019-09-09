@@ -36,7 +36,7 @@ DEPENDENCIES:
   - TOPasscodeViewController
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - Alamofire
     - CardIO
     - DeviceKit
@@ -70,4 +70,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 038b9178031a242588305e5863371a1388da60fa
 
-COCOAPODS: 1.7.4
+COCOAPODS: 1.8.0.beta.2
