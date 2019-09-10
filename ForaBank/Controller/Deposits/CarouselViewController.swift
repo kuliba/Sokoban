@@ -44,6 +44,7 @@ class CarouselViewController: UIViewController {
     
     var items = ["Карты", "Счета" , "Вклады", "Кредиты" , "История" , "Статистика"]
     
+    
     var segueId: String? = nil
     var backSegueId: String? = nil
     

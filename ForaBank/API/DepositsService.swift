@@ -15,7 +15,6 @@ class TestDepositsService: DepositsServiceProtocol {
 
 
     private let baseURLString: String
-    private var deposits = [Deposit]()
     private var datedTransactions = [DatedTransactions]()
 
     init(baseURLString: String) {
@@ -23,7 +22,7 @@ class TestDepositsService: DepositsServiceProtocol {
     }
 
     func getBonds(headers: HTTPHeaders, completionHandler: @escaping (Bool, [Deposit]?) -> Void) {
-        deposits = [Deposit]()
+        var deposits = [Deposit]()
         let url = baseURLString + "rest/getDepositList"
         Alamofire.request(url, method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
@@ -33,13 +32,13 @@ class TestDepositsService: DepositsServiceProtocol {
                 if let json = response.result.value as? Dictionary<String, Any>,
                     let errorMessage = json["errorMessage"] as? String {
                     print("\(errorMessage) \(self)")
-                    completionHandler(false, self.deposits)
+                    completionHandler(false, deposits)
                     return
                 }
 
                 switch response.result {
                 case .success:
-                    if let json = response.result.value as? Dictionary<String, Any>,
+                        if let json = response.result.value as? Dictionary<String, Any>,
                         let data = json["data"] as? Array<Any> {
                         for cardData in data {
                             if let cardData = cardData as? Dictionary<String, Any>,
@@ -63,19 +62,19 @@ class TestDepositsService: DepositsServiceProtocol {
                                                       accountNumber: accountNumber
 
                                 )
-                                self.deposits.append(deposit)
+                                deposits.append(deposit)
 
                             }
                         }
-                        completionHandler(true, self.deposits)
+                        completionHandler(true, deposits)
                     } else {
                         print("rest/getDepositList cant parse json \(String(describing: response.result.value))")
-                        completionHandler(false, self.deposits)
+                        completionHandler(false, deposits)
                     }
 
                 case .failure(let error):
                     print("rest/getDepositList \(error) \(self)")
-                    completionHandler(false, self.deposits)
+                    completionHandler(false, deposits)
                 }
 
         }

@@ -12,7 +12,6 @@ import Alamofire
 class CardService: CardServiceProtocol {
 
     private let baseURLString: String
-    private var cards = [Card]()
     private var datedTransactions = [DatedTransactions]()
 
     init(baseURLString: String) {
@@ -20,7 +19,7 @@ class CardService: CardServiceProtocol {
     }
 
     func getCardList(headers: HTTPHeaders, completionHandler: @escaping (Bool, [Card]?) -> Void) {
-        cards = [Card]()
+        var cards = [Card]()
         /*
         var expirationDate: Date? = nil
         let validThru = 1577739600000/1000
@@ -147,7 +146,7 @@ class CardService: CardServiceProtocol {
                 if let json = response.result.value as? Dictionary<String, Any>,
                     let errorMessage = json["errorMessage"] as? String {
                     print("\(errorMessage) \(self)")
-                    completionHandler(false, self.cards)
+                    completionHandler(false, cards)
                     return
                 }
 
@@ -201,18 +200,18 @@ class CardService: CardServiceProtocol {
                                                 branch: branch,
                                                 maskedNumber: maskedNumber,
                                                 product: product)
-                                self.cards.append(card)
+                                cards.append(card)
                             }
                         }
-                        completionHandler(true, self.cards)
+                        completionHandler(true, cards)
                     } else {
                         print("rest/getCardList cant parse json \(String(describing: response.result.value))")
-                        completionHandler(false, self.cards)
+                        completionHandler(false, cards)
                     }
 
                 case .failure(let error):
                     print("rest/getCardList \(error) \(self)")
-                    completionHandler(false, self.cards)
+                    completionHandler(false, cards)
                 }
         }
     }

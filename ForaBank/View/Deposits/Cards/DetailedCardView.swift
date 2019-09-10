@@ -20,6 +20,8 @@ class DetailedCardView: CardView {
     let cardCashLabel = UILabel()
     let cardBlockedImageView = UIImageView()
     var logoImageViewCosntraint: NSLayoutConstraint? = nil
+    var expirationDate = UILabel()
+    
     
     
     enum CardBackGround: String {
@@ -97,11 +99,32 @@ class DetailedCardView: CardView {
             
             cardCashLabel.adjustsFontSizeToFitWidth = true
             cardCashLabel.attributedText = NSAttributedString(string: cash, attributes: [.font:UIFont.systemFont(ofSize: 16), .foregroundColor : foregroundColor])
-            backgroundImageView.image = UIImage(named: "card_visa_gold")
+            
+            if card?.number?.prefix(6) == "465626" {
+                backgroundImageView.image = UIImage(named: "card_visa_gold")
+            }
+            if card?.number?.prefix(6) == "457825" {
+                backgroundImageView.image = UIImage(named: "card_visa_platinum")
+            }
+            if card?.number?.prefix(6) == "425690" {
+                backgroundImageView.image = UIImage(named: "card_visa_debet")
+            }
+            if card?.number?.prefix(6) == "557986" {
+                backgroundImageView.image = UIImage(named: "card_visa_standart")
+            }
+            if card?.number?.prefix(6) == "536466" {
+                backgroundImageView.image = UIImage(named: "card_visa_virtual")
+            }
+            if card?.number?.prefix(6) == "470336" {
+                backgroundImageView.image = UIImage(named: "card_visa_infinity")
+            }
+            
+            
             color2 = UIColor(red: 0.96, green: 0.45, blue: 0.13, alpha: 1)
             color1 = UIColor(red: 0.89, green: 0.77, blue: 0.35, alpha: 1)
             
             cardNumberLabel.attributedText = NSAttributedString(string: card!.maskedNumber ?? "", attributes: [.font:UIFont.systemFont(ofSize: 12), .foregroundColor : foregroundColor])
+            expirationDate.text = card?.expirationDate
             cardValidityPeriodLabel.attributedText = NSAttributedString(string: card!.validityPeriod ?? "", attributes: [.font:UIFont.systemFont(ofSize: 12), .foregroundColor : foregroundColor])
             if card?.type?.rawValue.range(of: "visa", options: .caseInsensitive) != nil {
                 logoImageView.image = UIImage(named: "card_visa_logo")

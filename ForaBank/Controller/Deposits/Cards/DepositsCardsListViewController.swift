@@ -237,6 +237,17 @@ class DepositsCardsListViewController: UIViewController {
                 HeroModifier.useNormalSnapshot,
                 HeroModifier.zPosition(11)
             ]
+            selectedCardView?.expirationDate.hero.id = "expirationDate"
+            selectedCardView?.expirationDate.hero.modifiers = [
+                HeroModifier.beginWith([
+                    HeroModifier.opacity(1),
+                    HeroModifier.zPosition(11)
+                    ]),
+                HeroModifier.duration(0.5),
+                HeroModifier.opacity(0),
+                HeroModifier.useNormalSnapshot,
+                HeroModifier.zPosition(11)
+            ]
             selectedCardView?.titleLabel.hero.id = "titleLabel"
             selectedCardView?.titleLabel.hero.modifiers = [
                 HeroModifier.beginWith([
