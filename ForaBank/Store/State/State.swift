@@ -8,14 +8,13 @@
 
 import Foundation
 import ReSwift
-//import RequestKit
 
-//struct State: StateType, HasNavigationState {
-//    var passcodeState: Any
-//    var navigationState: NavigationState
+struct State: StateType {
+    var isScreenLocked = false
+    var passcodeSignUpState: PasscodeSignUpState
 //    var authenticationState: AuthenticationState
 //    var repositories: Response<[Repository]>?
 //    var bookmarks: [Bookmark]
-//}
-//
+}
+
 //typealias Bookmark = (route: [RouteElementIdentifier], routeSpecificData: Any?)

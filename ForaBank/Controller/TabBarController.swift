@@ -8,8 +8,15 @@
 
 import UIKit
 import Hero
+import ReSwift
+import TOPasscodeViewController
 
-class TabBarController: UITabBarController {
+class TabBarController: UITabBarController, StoreSubscriber, TOPasscodeViewControllerDelegate {
+
+    @IBAction func unwindSegue(segue: UIStoryboardSegue) { }
+
+    let passCodeVC = PasscodeSignUpViewController()
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,13 +27,33 @@ class TabBarController: UITabBarController {
         hero.tabBarAnimationType = .none
         delegate = self
     }
-    
-    @IBAction func unwindSegue(segue:UIStoryboardSegue) { }
-    
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.modalPresentationStyle = .overCurrentContext
+
+        store.subscribe(self) { state in
+            state.select { $0 }
+        }
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        store.unsubscribe(self)
+    }
+
+
+    func newState(state: State) {
+        print(state)
+        if state.passcodeSignUpState.isStarted == true {
+            present(passCodeVC, animated: true, completion: nil)
+        }
+    }
+
     // MARK: - public methods
     func setNumberOfTabsAvailable() {
         // if !signedIn (!authorized)
-        NetworkManager.shared().isSignedIn { [unowned self] (flag)  in
+        NetworkManager.shared().isSignedIn { [unowned self] (flag) in
             if !flag && self.viewControllers?.count == 5 {
                 self.viewControllers?.remove(at: 1)
                 self.viewControllers?.remove(at: 1)
@@ -45,7 +72,7 @@ class TabBarController: UITabBarController {
 
 // MARK: - Private methods
 private extension TabBarController {
-    
+
     func setSelectedIndexToLast() {
         guard let tabs = tabBar.items else { return }
         selectedIndex = tabs.endIndex - 1
@@ -63,7 +90,7 @@ extension TabBarController: UITabBarControllerDelegate {
 //        }
 //        return true
     }
-    
+
     public func tabBarController(_ tabBarController: UITabBarController, animationControllerForTransitionFrom fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return Hero.shared.tabBarController(tabBarController, animationControllerForTransitionFrom: fromVC, to: toVC)
     }
@@ -71,17 +98,17 @@ extension TabBarController: UITabBarControllerDelegate {
 
 
 extension TabBarController: CustomTransitionOriginator, CustomTransitionDestination {
-    var fromAnimatedSubviews: [String : UIView] {
-        var views = [String : UIView]()
+    var fromAnimatedSubviews: [String: UIView] {
+        var views = [String: UIView]()
         guard let c = selectedViewController as? CustomTransitionOriginator else {
             return views
         }
         views.merge(c.fromAnimatedSubviews, uniquingKeysWith: { (first, _) in first })
         return views
     }
-    
-    var toAnimatedSubviews: [String : UIView] {
-        var views = [String : UIView]()
+
+    var toAnimatedSubviews: [String: UIView] {
+        var views = [String: UIView]()
         guard let c = selectedViewController as? CustomTransitionDestination else {
             return views
         }
