@@ -217,6 +217,7 @@
 		BDB6B0112326A9C10006A534 /* PasscodeSignUpActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6B0102326A9C10006A534 /* PasscodeSignUpActions.swift */; };
 		BDB6B0132326A9E00006A534 /* PasscodeSingUpReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6B0122326A9E00006A534 /* PasscodeSingUpReducer.swift */; };
 		BDB6B0162326AAA60006A534 /* PasscodeSignUpState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6B0152326AAA60006A534 /* PasscodeSignUpState.swift */; };
+		BDB6B0192327F22A0006A534 /* SecurityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6B0182327F22A0006A534 /* SecurityService.swift */; };
 		BDE4D080232248420070BC3D /* ProductAboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE4D07F232248420070BC3D /* ProductAboutViewController.swift */; };
 		BDE4D08323224E570070BC3D /* AboutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE4D08223224E570070BC3D /* AboutItem.swift */; };
 		BDE4D085232254430070BC3D /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE4D084232254430070BC3D /* Date.swift */; };
@@ -439,6 +440,7 @@
 		BDB6B0102326A9C10006A534 /* PasscodeSignUpActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignUpActions.swift; sourceTree = "<group>"; };
 		BDB6B0122326A9E00006A534 /* PasscodeSingUpReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSingUpReducer.swift; sourceTree = "<group>"; };
 		BDB6B0152326AAA60006A534 /* PasscodeSignUpState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignUpState.swift; sourceTree = "<group>"; };
+		BDB6B0182327F22A0006A534 /* SecurityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityService.swift; sourceTree = "<group>"; };
 		BDE4D07F232248420070BC3D /* ProductAboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductAboutViewController.swift; sourceTree = "<group>"; };
 		BDE4D08223224E570070BC3D /* AboutItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutItem.swift; sourceTree = "<group>"; };
 		BDE4D084232254430070BC3D /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
@@ -553,6 +555,7 @@
 		09797557215A49020044C00A /* ForaBank */ = {
 			isa = PBXGroup;
 			children = (
+				BDB6B0172327F20F0006A534 /* Services */,
 				A58760BD21BF8E220022DED5 /* API */,
 				09797558215A49020044C00A /* AppDelegate.swift */,
 				0979755F215A49040044C00A /* Assets.xcassets */,
@@ -1049,6 +1052,14 @@
 			path = Passcode;
 			sourceTree = "<group>";
 		};
+		BDB6B0172327F20F0006A534 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				BDB6B0182327F22A0006A534 /* SecurityService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 		BDE4D08123224E430070BC3D /* PresentationModels */ = {
 			isa = PBXGroup;
 			children = (
@@ -1216,6 +1227,7 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ForaBank/Pods-ForaBank-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/DeviceKit/DeviceKit.framework",
 				"${BUILT_PRODUCTS_DIR}/FlexiblePageControl/FlexiblePageControl.framework",
 				"${BUILT_PRODUCTS_DIR}/Hero/Hero.framework",
@@ -1232,6 +1244,7 @@
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CryptoSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DeviceKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FlexiblePageControl.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Hero.framework",
@@ -1300,6 +1313,7 @@
 				0979D95021903DF700034BC0 /* PaymentsDetailsViewController.swift in Sources */,
 				093B8634216224C3008A5222 /* ServicesHeader.swift in Sources */,
 				A5B473C121B3BBCD00F2E41F /* RemittancePickerViewController.swift in Sources */,
+				BDB6B0192327F22A0006A534 /* SecurityService.swift in Sources */,
 				A551108B21C7999A00330510 /* AuthService.swift in Sources */,
 				09045056216B51B400F3B295 /* FeedOffersViewController.swift in Sources */,
 				09E0F130215A5B9D0042FB6A /* TabBarController.swift in Sources */,
