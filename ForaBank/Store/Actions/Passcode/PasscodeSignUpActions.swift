@@ -11,6 +11,7 @@ import ReSwift
 import ReSwiftThunk
 
 let startPasscodeSingUp = Thunk<State> { dispatch, getStat in
+    dispatch(CleanSignUpProcess())
     dispatch(UpdatePasscodeSingUpProcess(isFinished: false, isStarted: true))
 }
 
@@ -38,4 +39,7 @@ struct UpdatePasscodeSingUpProcess: Action {
 }
 
 struct AddCounter: Action {
+}
+
+struct CleanSignUpProcess: Action {
 }

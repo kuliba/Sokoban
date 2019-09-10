@@ -10,23 +10,25 @@ import Foundation
 import ReSwift
 
 func passcodeSignUpReducer(state: PasscodeSignUpState?, action: Action) -> PasscodeSignUpState {
-    var state = state ?? initialPasscodeSignUpState()
+    var newState = state ?? initialPasscodeSignUpState()
 
     switch action {
     case _ as ReSwiftInit:
         break
+    case _ as CleanSignUpProcess:
+        newState = initialPasscodeSignUpState()
     case let action as SetFirstPasscode:
-        state.passcodeFirst = action.firstPasscode
+        newState.passcodeFirst = action.firstPasscode
     case let action as UpdatePasscodeSingUpProcess:
-        state.isStarted = action.isStarted
-        state.isFinished = action.isFinished
+        newState.isStarted = action.isStarted
+        newState.isFinished = action.isFinished
     case _ as AddCounter:
-        state.counter = state.counter + 1
+        newState.counter = state?.counter ?? 0 + 1
     default:
         break
     }
 
-    return state
+    return newState
 }
 
 func initialPasscodeSignUpState() -> PasscodeSignUpState {

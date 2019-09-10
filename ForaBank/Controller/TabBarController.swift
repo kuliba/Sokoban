@@ -11,11 +11,9 @@ import Hero
 import ReSwift
 import TOPasscodeViewController
 
-class TabBarController: UITabBarController, StoreSubscriber, TOPasscodeViewControllerDelegate {
+class TabBarController: UITabBarController{//, StoreSubscriber {
 
     @IBAction func unwindSegue(segue: UIStoryboardSegue) { }
-
-    let passCodeVC = PasscodeSignUpViewController()
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -26,28 +24,6 @@ class TabBarController: UITabBarController, StoreSubscriber, TOPasscodeViewContr
         hero.isEnabled = true
         hero.tabBarAnimationType = .none
         delegate = self
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        self.modalPresentationStyle = .overCurrentContext
-
-        store.subscribe(self) { state in
-            state.select { $0 }
-        }
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        store.unsubscribe(self)
-    }
-
-
-    func newState(state: State) {
-        print(state)
-        if state.passcodeSignUpState.isStarted == true {
-            present(passCodeVC, animated: true, completion: nil)
-        }
     }
 
     // MARK: - public methods

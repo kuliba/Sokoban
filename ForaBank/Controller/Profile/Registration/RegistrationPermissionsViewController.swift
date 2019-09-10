@@ -10,10 +10,12 @@ import UIKit
 import FlexiblePageControl
 import Hero
 import LocalAuthentication
+import ReSwift
+import TOPasscodeViewController
 
 
-class RegistrationPermissionsViewController: UIViewController, CAAnimationDelegate {
-    
+class RegistrationPermissionsViewController: UIViewController, CAAnimationDelegate, StoreSubscriber {
+
     // MARK: - Properties
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var containerView: UIView!
@@ -21,21 +23,16 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
     @IBOutlet weak var pageControl: FlexiblePageControl!
     @IBOutlet weak var centralView: UIView!
     @IBOutlet weak var header: UIView!
-    var segueId: String? = nil
-    var backSegueId: String? = nil
-//    let pageControl = FlexiblePageControl()
-    let gradientView = UIView()
-    let circleView = UIView()
-    let touchMe = BiometricIDAuth()
-        let context = LAContext()
-    
+    @IBOutlet weak var touchIdDevice: UIView!
+    @IBOutlet weak var faceIdDevice: UIView!
+
     // MARK: - Actions
     @IBAction func backButtonCLicked(_ sender: Any) {
         segueId = backSegueId
         view.endEditing(true)
         self.navigationController?.popViewController(animated: true)
     }
-    
+
     @IBAction func touchIdSwitch(_ sender: Any) {
         if let s = sender as? UISwitch,
             s.isOn == true {
@@ -45,12 +42,13 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
     @IBAction func pinCodeApp(_ sender: Any) {
         if let s = sender as? UISwitch,
             s.isOn == true {
+            store.dispatch(startPasscodeSingUp)
         }
     }
-  
-    
+
+
     @IBAction func `continue`(_ sender: Any) {
-        NetworkManager.shared().doRegistration(completionHandler: {[unowned self] success, errorMessage, l, p in
+        NetworkManager.shared().doRegistration(completionHandler: { [unowned self] success, errorMessage, l, p in
             if success {
 //                let rootVC:ProfileViewController = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
 //                if let t = self.tabBarController as? TabBarController {
@@ -67,7 +65,7 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
                         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
                         self.present(alert, animated: true, completion: nil)
                         let rootVC = self.storyboard?.instantiateViewController(withIdentifier: "LoginOrSignupViewController") as! LoginOrSignupViewController
-                        
+
                         self.navigationController?.setViewControllers([rootVC], animated: true)
                     }
                 })
@@ -78,7 +76,15 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
             }
         })
     }
-    
+
+    var segueId: String? = nil
+    var backSegueId: String? = nil
+    //    let pageControl = FlexiblePageControl()
+    let gradientView = UIView()
+    let circleView = UIView()
+    let touchMe = BiometricIDAuth()
+    let context = LAContext()
+
     func biometricType() -> BiometricType {
         let _ = context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
         switch context.biometryType {
@@ -90,16 +96,15 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
             return .faceID
         }
     }
-    
+
     func canEvaluatePolicy() -> Bool {
         return context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
     }
-    
-    @IBOutlet weak var touchIdDevice: UIView!
-    @IBOutlet weak var faceIdDevice: UIView!
+
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         setUpContinueButton()
         addGradientLayerView()
 //        addCircleView()
@@ -107,8 +112,8 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
             setUpPageControl()
         }
         view.clipsToBounds = true
-        
-        
+
+
         switch touchMe.biometricType() {
         case .faceID:
             touchIdDevice.isHidden = true
@@ -117,10 +122,10 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
 
         }
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         if segueId == "permissions" {
             if let nav = navigationController as? ProfileNavigationController,
                 pageControl != nil {
@@ -160,9 +165,14 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
             ]
         }
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+
+        store.subscribe(self) { state in
+            state.select { $0 }
+        }
+
         if let nav = navigationController as? ProfileNavigationController,
             pageControl != nil {
             nav.pageControl.isHidden = true
@@ -174,9 +184,10 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
         view.hero.id = nil
         centralView?.hero.modifiers = nil
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+
         if segueId == "permissions" {
             if let nav = navigationController as? ProfileNavigationController,
                 pageControl != nil {
@@ -233,7 +244,7 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
                 HeroModifier.beginWith([
                     HeroModifier.opacity(1),
                     HeroModifier.zPosition(2)
-                    ]),
+                ]),
                 HeroModifier.duration(0.5),
                 HeroModifier.translate(CGPoint(x: 0, y: view.frame.height)),
             ]
@@ -247,9 +258,11 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
             ]
         }
     }
-    
+
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        store.unsubscribe(self)
+
         pageControl.isHidden = true
         containerView.hero.modifiers = nil
         containerView.hero.id = nil
@@ -259,7 +272,13 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
         gradientView.hero.modifiers = nil
         header?.hero.modifiers = nil
     }
-    
+
+    func newState(state: State) {
+        if state.passcodeSignUpState.isStarted == true {
+            present(PasscodeSignUpViewController(), animated: true, completion: nil)
+        }
+    }
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         segueId = nil
         if let vc = segue.destination as? RegistrationCodeVerificationViewController {
@@ -275,19 +294,19 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
 
 // MARK: - Private methods
 private extension RegistrationPermissionsViewController {
-    
+
     func addGradientLayerView() {
         gradientView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame.size = gradientView.frame.size
         gradientLayer.startPoint = CGPoint(x: 0, y: 1)
         gradientLayer.endPoint = CGPoint(x: 1, y: 1)
-        gradientLayer.colors = [UIColor(red: 241/255, green: 176/255, blue: 116/255, alpha: 1).cgColor, UIColor(red: 237/255, green: 73/255, blue: 73/255, alpha: 1).cgColor]
+        gradientLayer.colors = [UIColor(red: 241 / 255, green: 176 / 255, blue: 116 / 255, alpha: 1).cgColor, UIColor(red: 237 / 255, green: 73 / 255, blue: 73 / 255, alpha: 1).cgColor]
         gradientView.layer.addSublayer(gradientLayer)
 //        gradientView.alpha = 0
         view.insertSubview(gradientView, at: 0)
     }
-    
+
     func addCircleView() {
         circleView.frame = CGRect(x: 0, y: 0, width: view.frame.width * 5, height: view.frame.width * 5)
         circleView.center = view.center
@@ -300,12 +319,12 @@ private extension RegistrationPermissionsViewController {
         circleView.clipsToBounds = true
         view.insertSubview(circleView, at: 1)
     }
-    
+
     func setUpPageControl() {
         pageControl.numberOfPages = 4
-        pageControl.pageIndicatorTintColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)
-        pageControl.currentPageIndicatorTintColor = UIColor(red: 234/255, green: 68/255, blue: 66/255, alpha: 1)
-        
+        pageControl.pageIndicatorTintColor = UIColor(red: 220 / 255, green: 220 / 255, blue: 220 / 255, alpha: 1)
+        pageControl.currentPageIndicatorTintColor = UIColor(red: 234 / 255, green: 68 / 255, blue: 66 / 255, alpha: 1)
+
         let config = FlexiblePageControl.Config(
             displayCount: 4,
             dotSize: 7,
@@ -313,11 +332,11 @@ private extension RegistrationPermissionsViewController {
             smallDotSizeRatio: 0.2,
             mediumDotSizeRatio: 0.5
         )
-        
+
         pageControl.setConfig(config)
         pageControl.setCurrentPage(at: 3)
     }
-    
+
     func setUpContinueButton() {
         continueButton.backgroundColor = .clear
         continueButton.setTitleColor(.black, for: [])

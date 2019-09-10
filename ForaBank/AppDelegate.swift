@@ -32,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         setTextFieldAppearance()
         IQKeyboardManager.shared.enable = true
 //        IQKeyboardManager.shared.layoutIfNeededOnUpdate = true
-        store.dispatch(startPasscodeSingUp)
+
         return true
     }
 

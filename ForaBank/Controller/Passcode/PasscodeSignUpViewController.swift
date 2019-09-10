@@ -42,8 +42,9 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
 
 
     func newState(state: PasscodeSignUpState) {
-        if state.isFinished == true {
+        guard state.isFinished != true else {
             dismiss(animated: true, completion: nil)
+            return
         }
         guard state.counter < 1 else {
             passcodeVC.passcodeView.resetPasscode(animated: true, playImpact: false)
