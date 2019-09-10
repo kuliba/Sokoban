@@ -15,7 +15,7 @@ func passcodeSignUpReducer(state: PasscodeSignUpState?, action: Action) -> Passc
     switch action {
     case _ as ReSwiftInit:
         break
-    case _ as CleanSignUpProcess:
+    case _ as ClearSignUpProcess:
         newState = initialPasscodeSignUpState()
     case let action as SetFirstPasscode:
         newState.passcodeFirst = action.firstPasscode
