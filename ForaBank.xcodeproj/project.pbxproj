@@ -222,6 +222,7 @@
 		BDE4D08323224E570070BC3D /* AboutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE4D08223224E570070BC3D /* AboutItem.swift */; };
 		BDE4D085232254430070BC3D /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE4D084232254430070BC3D /* Date.swift */; };
 		BDE4D08723226B4C0070BC3D /* IAboutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE4D08623226B4C0070BC3D /* IAboutItem.swift */; };
+		BDF4F9462329105D007C448F /* Security.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF4F9452329105D007C448F /* Security.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -445,6 +446,7 @@
 		BDE4D08223224E570070BC3D /* AboutItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutItem.swift; sourceTree = "<group>"; };
 		BDE4D084232254430070BC3D /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		BDE4D08623226B4C0070BC3D /* IAboutItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAboutItem.swift; sourceTree = "<group>"; };
+		BDF4F9452329105D007C448F /* Security.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Security.swift; sourceTree = "<group>"; };
 		D8EB261ED46D5F939F8B2E27 /* Pods_ForaBank.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ForaBank.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -1004,6 +1006,7 @@
 				094FFC0C218837580069DDCB /* Helpers.swift */,
 				BD94E09E231EA6E50006456E /* MasksFormatting.swift */,
 				BDE4D084232254430070BC3D /* Date.swift */,
+				BDF4F9452329105D007C448F /* Security.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1293,6 +1296,7 @@
 				093B862A21620806008A5222 /* ServicesViewController.swift in Sources */,
 				09C7C30D21747293000EE472 /* CarouselViewController.swift in Sources */,
 				895768CF2192E768005754D5 /* DepositsStatsViewController.swift in Sources */,
+				BDF4F9462329105D007C448F /* Security.swift in Sources */,
 				0930F168215B653D00CFB593 /* ProfileViewController.swift in Sources */,
 				A568142E21D0B945002C0899 /* DepositsService.swift in Sources */,
 				BDB6B00E23269FED0006A534 /* PasscodeSignUpViewController.swift in Sources */,

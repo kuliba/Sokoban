@@ -10,6 +10,7 @@ import UIKit
 import IQKeyboardManagerSwift
 import ReSwift
 import ReSwiftThunk
+import CryptoSwift
 
 func appReducer(action: Action, state: State?) -> State {
     return State(isScreenLocked: false, passcodeSignUpState: passcodeSignUpReducer(state: state?.passcodeSignUpState, action: action))
