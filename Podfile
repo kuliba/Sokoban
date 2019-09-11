@@ -20,4 +20,5 @@ target 'ForaBank' do
   pod 'ReSwift'
   pod 'ReSwiftThunk'
   pod 'TOPasscodeViewController'
+  pod 'CryptoSwift'
 end
