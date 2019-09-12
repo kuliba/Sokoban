@@ -17,13 +17,17 @@ func passcodeSignUpReducer(state: PasscodeSignUpState?, action: Action) -> Passc
         break
     case _ as ClearSignUpProcess:
         newState = initialPasscodeSignUpState()
+        break
     case let action as SetFirstPasscode:
         newState.passcodeFirst = action.firstPasscode
+        break
     case let action as UpdatePasscodeSingUpProcess:
         newState.isStarted = action.isStarted
         newState.isFinished = action.isFinished
+        break
     case _ as AddCounter:
         newState.counter = state?.counter ?? 0 + 1
+        break
     default:
         break
     }

@@ -10,8 +10,40 @@ import Foundation
 import CryptoSwift
 import KeychainAccess
 
+func randomString(length: Int) -> String {
+    let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    return String((0..<length).map { _ in letters.randomElement() ?? "a" })
+}
+
+//Passcode
+
+func encrypt(passcode: String) -> String? {
+    let key = aesKey32Dumb(with: passcode)
+    let iv = aesInitializationVector16Dump()
+    return try! passcode.aesEncrypt(withKey: key, iv: iv)
+}
+
+func decryptPasscode(withPossiblePasscode possiblePasscode: String) -> String? {
+    let key = aesKey32Dumb(with: possiblePasscode)
+    let iv = aesInitializationVector16Dump()
+    let encryptedPasscode = keychainCredentialsPasscode()
+
+    return try! encryptedPasscode?.aesDecrypt(withKey: key, iv: iv)
+}
 
 //Keychain
+
+func keychainCredentialsLogin() -> String? {
+    return Keychain(service: "com.fora.credentials")["login"]
+}
+
+func keychainCredentialsPwd() -> String? {
+    return Keychain(service: "com.fora.credentials")["pwd"]
+}
+
+func keychainCredentialsPasscode() -> String? {
+    return Keychain(service: "com.fora.credentials")["passcode"]
+}
 
 func saveLoginToKeychain(passcode: String) {
     let keychain = Keychain(service: "com.fora.credentials")
@@ -29,11 +61,6 @@ func savePasscodeToKeychain(passcode: String) {
 }
 
 //Crypto
-
-func randomString(length: Int) -> String {
-    let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-    return String((0..<length).map { _ in letters.randomElement() ?? "a" })
-}
 
 func aesKey32Addition(with string: String) -> String {
     return randomString(length: 32 - string.count)
@@ -67,6 +94,6 @@ extension String {
     func aesDecrypt(withKey key: String, iv: String) throws -> String? {
         guard let data = Data(base64Encoded: self) else { return nil }
         let decrypted = try AES(key: key, iv: iv, padding: .pkcs7).decrypt([UInt8](data))
-        return String(bytes: decrypted, encoding: .utf8) ?? self
+        return String(bytes: decrypted, encoding: .utf8)
     }
 }

@@ -32,10 +32,7 @@ func enterCode(code: String) -> Thunk<State> {
 
 func createPasscode(passcode: String) -> Thunk<State> {
     return Thunk<State> { dispatch, getState in
-        let key = aesKey32Dumb(with: passcode)
-        let iv = aesInitializationVector16Dump()
-
-        if let encryptedPasscode = try! passcode.aesEncrypt(withKey: key, iv: iv) {
+        if let encryptedPasscode = encrypt(passcode: passcode) {
             savePasscodeToKeychain(passcode: encryptedPasscode)
         }
     }

@@ -11,7 +11,7 @@ import Hero
 import ReSwift
 import TOPasscodeViewController
 
-class TabBarController: UITabBarController{//, StoreSubscriber {
+class TabBarController: UITabBarController, StoreSubscriber {
 
     @IBAction func unwindSegue(segue: UIStoryboardSegue) { }
 
@@ -24,6 +24,25 @@ class TabBarController: UITabBarController{//, StoreSubscriber {
         hero.isEnabled = true
         hero.tabBarAnimationType = .none
         delegate = self
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        store.subscribe(self) { state in
+            state.select { $0.passcodeSignInState }
+        }
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        store.unsubscribe(self)
+    }
+
+    func newState(state: PasscodeSignInState) {
+        if state.isShown == true {
+            present(PasscodeSignInViewController(), animated: true, completion: nil)
+        }
     }
 
     // MARK: - public methods

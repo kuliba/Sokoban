@@ -86,7 +86,7 @@ class ProfileViewController: UIViewController {
                 }
             } else {
                 print("ProfileViewController: \(errorMessage ?? "error without errorMessage")")
-                self?.nameLabel.text = "Упс, что-то не загрузилось"//"Александр\nКрюков"//
+                self?.nameLabel.text = "Упс, что-то не загрузилось"
                 self?.userImageView.image = UIImage(named: "image_profile_samplephoto")
                 if NetworkManager.shared().checkForClosingSession(errorMessage) == true {
                     let rootVC = self?.storyboard?.instantiateViewController(withIdentifier: "LoginOrSignupViewController") as! LoginOrSignupViewController

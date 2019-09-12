@@ -10,10 +10,9 @@ import Foundation
 import ReSwift
 
 struct State: StateType {
-    var isScreenLocked = false
     var passcodeSignUpState: PasscodeSignUpState
-//    var authenticationState: AuthenticationState
-//    var repositories: Response<[Repository]>?
+    var authenticationState: AuthenticationState
+    let passcodeSignInState:PasscodeSignInState
 //    var bookmarks: [Bookmark]
 }
 
