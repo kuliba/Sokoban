@@ -1114,7 +1114,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 1000;
 				LastUpgradeCheck = 1000;
-				ORGANIZATIONNAME = BraveRobin;
+				ORGANIZATIONNAME = "(C) 2017-2019 OОО \"Бриг Инвест\"";
 				TargetAttributes = {
 					09797554215A49020044C00A = {
 						CreatedOnToolsVersion = 10.0;
