@@ -33,6 +33,11 @@ func signInWith(passcode: String) -> Thunk<State> {
     }
 }
 
+let signInWithBiometric = Thunk<State> { dispatch, getState in
+    dispatch(UpdatePasscodeSingInProcess(isShown: false))
+    dispatch(ClearSignInProcess())
+}
+
 struct UpdatePasscodeSingInProcess: Action {
     var isShown: Bool
 }

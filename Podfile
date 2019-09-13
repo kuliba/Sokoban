@@ -21,4 +21,5 @@ target 'ForaBank' do
   pod 'ReSwiftThunk'
   pod 'TOPasscodeViewController'
   pod 'CryptoSwift'
+  pod 'BiometricAuthentication'
 end

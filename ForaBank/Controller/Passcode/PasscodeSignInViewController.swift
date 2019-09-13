@@ -9,6 +9,7 @@
 import UIKit
 import TOPasscodeViewController
 import ReSwift
+import BiometricAuthentication
 
 class PasscodeSignInViewController: UIViewController, StoreSubscriber {
 
@@ -18,6 +19,15 @@ class PasscodeSignInViewController: UIViewController, StoreSubscriber {
         super.viewDidLoad()
 
         passcodeVC.delegate = self
+        passcodeVC.automaticallyPromptForBiometricValidation = true
+        passcodeVC.allowBiometricValidation = true
+        if BioMetricAuthenticator.shared.touchIDAvailable() {
+            passcodeVC.biometryType = .touchID
+        } else if BioMetricAuthenticator.shared.faceIDAvailable() {
+            passcodeVC.biometryType = .faceID
+        } else {
+            passcodeVC.allowBiometricValidation = false
+        }
 
         passcodeVC.willMove(toParent: self)
         self.view.addSubview(passcodeVC.view)
@@ -30,7 +40,7 @@ class PasscodeSignInViewController: UIViewController, StoreSubscriber {
         super.viewDidAppear(animated)
         self.modalPresentationStyle = .overCurrentContext
         store.subscribe(self) {
-           return $0.select { $0.passcodeSignInState }
+            return $0.select { $0.passcodeSignInState }
         }
     }
 
@@ -63,5 +73,16 @@ extension PasscodeSignInViewController: TOPasscodeViewControllerDelegate {
 
     func didTapCancel(in passcodeViewController: TOPasscodeViewController) {
         //store.dispatch(setPasscode)
+    }
+
+    func didPerformBiometricValidationRequest(in passcodeViewController: TOPasscodeViewController) {
+        BioMetricAuthenticator.authenticateWithBioMetrics(reason: "Вход в приложение") { (result) in
+            switch result {
+            case .success(_):
+                store.dispatch(signInWithBiometric)
+            case .failure(let error):
+                print("Authentication Failed")
+            }
+        }
     }
 }

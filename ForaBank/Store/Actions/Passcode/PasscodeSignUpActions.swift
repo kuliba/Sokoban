@@ -34,8 +34,9 @@ func enterCode(code: String) -> Thunk<State> {
 
 func createPasscode(passcode: String) -> Thunk<State> {
     return Thunk<State> { dispatch, getState in
+        savePasscodeToKeychain(passcode: passcode)
         if let encryptedPasscode = encrypt(passcode: passcode) {
-            savePasscodeToKeychain(passcode: encryptedPasscode)
+            saveEncryptedPasscodeToKeychain(passcode: encryptedPasscode)
         }
     }
 }

@@ -2925,6 +2925,7 @@ AABUAAAAAAAAAAAAAAAAAAAT6w
         <image name="visa-colored" width="93" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="DRT-QI-Gaj"/>
         <segue reference="5qd-X6-ri2"/>
     </inferredMetricsTieBreakers>
 </document>

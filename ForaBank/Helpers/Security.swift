@@ -41,6 +41,10 @@ func keychainCredentialsPwd() -> String? {
     return Keychain(service: "com.fora.credentials")["pwd"]
 }
 
+func keychainCredentialsEncryptedPasscode() -> String? {
+    return Keychain(service: "com.fora.credentials")["encryptedPasscode"]
+}
+
 func keychainCredentialsPasscode() -> String? {
     return Keychain(service: "com.fora.credentials")["passcode"]
 }
@@ -53,6 +57,11 @@ func saveLoginToKeychain(passcode: String) {
 func savePwdToKeychain(passcode: String) {
     let keychain = Keychain(service: "com.fora.credentials")
     keychain["pwd"] = passcode
+}
+
+func saveEncryptedPasscodeToKeychain(passcode: String) {
+    let keychain = Keychain(service: "com.fora.credentials")
+    keychain["encryptedPasscode"] = passcode
 }
 
 func savePasscodeToKeychain(passcode: String) {
