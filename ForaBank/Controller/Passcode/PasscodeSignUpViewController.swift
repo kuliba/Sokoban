@@ -17,6 +17,8 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        passcodeVC.passcodeView.titleLabel.adjustsFontSizeToFitWidth = true
+        passcodeVC.passcodeView.titleLabel.text = "Создайте код:"
         passcodeVC.delegate = self
 
         passcodeVC.willMove(toParent: self)
@@ -50,7 +52,10 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
             passcodeVC.passcodeView.resetPasscode(animated: true, playImpact: false)
             return
         }
-        passcodeVC.passcodeView.resetPasscode(animated: false, playImpact: false)
+        if let firstPasscode = state.passcodeFirst, firstPasscode.count > 0, state.counter == 0 {
+            passcodeVC.passcodeView.titleLabel.text = "Повторите код:"
+            passcodeVC.passcodeView.resetPasscode(animated: false, playImpact: false)
+        }
     }
 
     /*

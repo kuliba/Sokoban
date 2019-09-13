@@ -10,10 +10,6 @@ import Foundation
 import ReSwift
 import ReSwiftThunk
 
-let startPasscodeSingIn = Thunk<State> { dispatch, getState in
-    dispatch(UpdatePasscodeSingInProcess(isShown: true))
-}
-
 let manageWrongPwd = Thunk<State> { dispatch, getState in
     guard let fails = getState()?.passcodeSignInState.failCounter, fails < 2 else {
         dispatch(UpdatePasscodeSingInProcess(isShown: false))
@@ -24,7 +20,7 @@ let manageWrongPwd = Thunk<State> { dispatch, getState in
 
 func signInWith(passcode: String) -> Thunk<State> {
     return Thunk<State> { dispatch, getState in
-        guard passcode == decryptPasscode(withPossiblePasscode: passcode) else {
+        guard passcode == keychainCredentialsPasscode() else {
             dispatch(manageWrongPwd)
             return
         }

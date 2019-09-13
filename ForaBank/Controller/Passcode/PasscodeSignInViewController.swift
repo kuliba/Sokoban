@@ -18,9 +18,12 @@ class PasscodeSignInViewController: UIViewController, StoreSubscriber {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        passcodeVC.passcodeView.titleLabel.adjustsFontSizeToFitWidth = true
+        passcodeVC.passcodeView.titleLabel.text = "Введите код:"
         passcodeVC.delegate = self
         passcodeVC.automaticallyPromptForBiometricValidation = true
         passcodeVC.allowBiometricValidation = true
+        
         if BioMetricAuthenticator.shared.touchIDAvailable() {
             passcodeVC.biometryType = .touchID
         } else if BioMetricAuthenticator.shared.faceIDAvailable() {
@@ -55,6 +58,7 @@ class PasscodeSignInViewController: UIViewController, StoreSubscriber {
             return
         }
         if state.failCounter >= 1 {
+            passcodeVC.passcodeView.titleLabel.text = "Осталось \(3 - state.failCounter) попыток"
             passcodeVC.passcodeView.resetPasscode(animated: true, playImpact: false)
         }
     }
@@ -80,7 +84,7 @@ extension PasscodeSignInViewController: TOPasscodeViewControllerDelegate {
             switch result {
             case .success(_):
                 store.dispatch(signInWithBiometric)
-            case .failure(let error):
+            case .failure(_):
                 print("Authentication Failed")
             }
         }

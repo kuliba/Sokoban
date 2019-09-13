@@ -26,7 +26,7 @@ func passcodeSignUpReducer(state: PasscodeSignUpState?, action: Action) -> Passc
         newState.isFinished = action.isFinished
         break
     case _ as AddCounter:
-        newState.counter = state?.counter ?? 0 + 1
+        newState.counter = (state?.counter ?? 0) + 1
         break
     default:
         break
