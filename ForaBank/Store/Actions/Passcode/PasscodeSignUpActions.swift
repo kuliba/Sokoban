@@ -10,7 +10,7 @@ import Foundation
 import ReSwift
 import ReSwiftThunk
 
-let startPasscodeSingUp = Thunk<State> { dispatch, getStat in
+let startPasscodeSingUp = Thunk<State> { dispatch, getState in
     dispatch(UpdatePasscodeSingUpProcess(isFinished: false, isStarted: true))
 }
 
@@ -19,11 +19,13 @@ func enterCode(code: String) -> Thunk<State> {
         if let first = getState()?.passcodeSignUpState.passcodeFirst {
             guard first == code else {
                 dispatch(AddCounter())
-                return }
+                return
+            }
 
             dispatch(createPasscode(passcode: code))
             dispatch(UpdatePasscodeSingUpProcess(isFinished: true, isStarted: false))
             dispatch(ClearSignUpProcess())
+            return
         }
 
         dispatch(SetFirstPasscode(firstPasscode: code))
