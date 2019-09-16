@@ -14,26 +14,18 @@ let checkAuthCredentials = Thunk<State> { dispatch, getStat in
     guard let passcode = keychainCredentialsPasscode() else {
         return
     }
-    // let login = keychainCredentialsLogin(), let pwd = keychainCredentialsPwd()
     dispatch(UpdatePasscodeSingInProcess(isShown: true))
 }
-//
-//func enterCode(code: String) -> Thunk<State> {
-//    return Thunk<State> { dispatch, getState in
-//        if let first = getState()?.passcodeSignUpState.passcodeFirst {
-//            guard first == code else {
-//                dispatch(AddCounter())
-//                return }
-//
-//            dispatch(createPasscode(passcode: code))
-//            dispatch(UpdatePasscodeSingUpProcess(isFinished: true, isStarted: false))
-//            dispatch(ClearSignUpProcess())
-//        }
-//
-//        dispatch(SetFirstPasscode(firstPasscode: code))
-//    }
-//}
-//
+
+func createCredentials(login: String, pwd: String) -> Thunk<State> {
+    return Thunk<State> { dispatch, getState in
+        guard let passcode = keychainCredentialsPasscode(), let encryptedUserData = encrypt(userData: UserData(login: login, pwd: pwd), withPasscode: passcode) else {
+            return
+        }
+        saveUserDataToKeychain(userData: encryptedUserData)
+    }
+}
+
 //func createPasscode(passcode: String) -> Thunk<State> {
 //    return Thunk<State> { dispatch, getState in
 //        let key = aesKey32Dumb(with: passcode)

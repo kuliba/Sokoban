@@ -212,7 +212,6 @@
 		BD7CC1A1232125D000872D06 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = BD7CC1A0232125D000872D06 /* Localizable.strings */; };
 		BD94E09F231EA6E50006456E /* MasksFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD94E09E231EA6E50006456E /* MasksFormatting.swift */; };
 		BDB6AFF423268C850006A534 /* PasscodeSignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6AFF323268C850006A534 /* PasscodeSignInViewController.swift */; };
-		BDB6AFF7232694050006A534 /* PasscodeActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6AFF6232694050006A534 /* PasscodeActions.swift */; };
 		BDB6B00E23269FED0006A534 /* PasscodeSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6B00D23269FED0006A534 /* PasscodeSignUpViewController.swift */; };
 		BDB6B0112326A9C10006A534 /* PasscodeSignUpActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6B0102326A9C10006A534 /* PasscodeSignUpActions.swift */; };
 		BDB6B0132326A9E00006A534 /* PasscodeSingUpReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6B0122326A9E00006A534 /* PasscodeSingUpReducer.swift */; };
@@ -440,7 +439,6 @@
 		BD7CC1A0232125D000872D06 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		BD94E09E231EA6E50006456E /* MasksFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasksFormatting.swift; sourceTree = "<group>"; };
 		BDB6AFF323268C850006A534 /* PasscodeSignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignInViewController.swift; sourceTree = "<group>"; };
-		BDB6AFF6232694050006A534 /* PasscodeActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeActions.swift; sourceTree = "<group>"; };
 		BDB6B00D23269FED0006A534 /* PasscodeSignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignUpViewController.swift; sourceTree = "<group>"; };
 		BDB6B0102326A9C10006A534 /* PasscodeSignUpActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignUpActions.swift; sourceTree = "<group>"; };
 		BDB6B0122326A9E00006A534 /* PasscodeSingUpReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSingUpReducer.swift; sourceTree = "<group>"; };
@@ -565,7 +563,6 @@
 		09797557215A49020044C00A /* ForaBank */ = {
 			isa = PBXGroup;
 			children = (
-				A58760BD21BF8E220022DED5 /* API */,
 				09797558215A49020044C00A /* AppDelegate.swift */,
 				0979755F215A49040044C00A /* Assets.xcassets */,
 				09E0F131215A617A0042FB6A /* Controller */,
@@ -1051,7 +1048,6 @@
 		BDB6B00F2326A9A10006A534 /* Passcode */ = {
 			isa = PBXGroup;
 			children = (
-				BDB6AFF6232694050006A534 /* PasscodeActions.swift */,
 				BDB6B0102326A9C10006A534 /* PasscodeSignUpActions.swift */,
 				BD182E3E232A402100DB231F /* PasscodeSingInActions.swift */,
 			);
@@ -1070,6 +1066,7 @@
 		BDB6B0172327F20F0006A534 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				A58760BD21BF8E220022DED5 /* API */,
 				BDB6B01A2327FC700006A534 /* SecurityService.swift */,
 			);
 			path = Services;
@@ -1408,7 +1405,6 @@
 				89C8DF122191AFA700D92B0A /* DepositsDepositCell.swift in Sources */,
 				A568142621CBCD48002C0899 /* BankBranchClusterView.swift in Sources */,
 				A5C5E6D621A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift in Sources */,
-				BDB6AFF7232694050006A534 /* PasscodeActions.swift in Sources */,
 				BDF4F94A23293A6B007C448F /* AuthenticationActions.swift in Sources */,
 				BDB6B0162326AAA60006A534 /* PasscodeSignUpState.swift in Sources */,
 				A57CF1B62202DE1800E855A5 /* CardService.swift in Sources */,

@@ -10,12 +10,39 @@ import Foundation
 import CryptoSwift
 import KeychainAccess
 
+typealias UserData = (login: String, pwd: String)
+
 func randomString(length: Int) -> String {
     let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
     return String((0..<length).map { _ in letters.randomElement() ?? "a" })
 }
 
-//Passcode
+//Passcode - crypto
+
+func encrypt(userData: UserData, withPasscode passcode: String) -> String? {
+    guard passcode.count > 0 else {
+        return nil
+    }
+    let userData = "\(userData.login)+\(userData.pwd)"
+    let key = aesKey32Dumb(with: passcode)
+    let iv = aesInitializationVector16Dump()
+    return try! userData.aesEncrypt(withKey: key, iv: iv)
+}
+
+func decryptUserData(userData: String, withPossiblePasscode possiblePasscode: String) -> UserData? {
+    let key = aesKey32Dumb(with: possiblePasscode)
+    let iv = aesInitializationVector16Dump()
+    let encryptedUserData = keychainCredentialsUserData()
+    let decryptedUserData = try! encryptedUserData?.aesDecrypt(withKey: key, iv: iv)
+
+    let userDataStrings = decryptedUserData?.components(separatedBy: "+")
+    guard let login = userDataStrings?[0], let pwd = userDataStrings?[1] else {
+        return nil
+    }
+    return UserData(login: login, pwd: pwd)
+}
+
+//Passcode - crypto
 
 func encrypt(passcode: String) -> String? {
     let key = aesKey32Dumb(with: passcode)
@@ -41,6 +68,10 @@ func keychainCredentialsPwd() -> String? {
     return Keychain(service: "com.fora.credentials")["pwd"]
 }
 
+func keychainCredentialsUserData() -> String? {
+    return Keychain(service: "com.fora.credentials")["userData"]
+}
+
 func keychainCredentialsEncryptedPasscode() -> String? {
     return Keychain(service: "com.fora.credentials")["encryptedPasscode"]
 }
@@ -49,14 +80,19 @@ func keychainCredentialsPasscode() -> String? {
     return Keychain(service: "com.fora.credentials")["passcode"]
 }
 
-func saveLoginToKeychain(passcode: String) {
+func saveLoginToKeychain(login: String) {
     let keychain = Keychain(service: "com.fora.credentials")
-    keychain["login"] = passcode
+    keychain["login"] = login
 }
 
-func savePwdToKeychain(passcode: String) {
+func savePwdToKeychain(pwd: String) {
     let keychain = Keychain(service: "com.fora.credentials")
-    keychain["pwd"] = passcode
+    keychain["pwd"] = pwd
+}
+
+func saveUserDataToKeychain(userData: String) {
+    let keychain = Keychain(service: "com.fora.credentials")
+    keychain["userData"] = userData
 }
 
 func saveEncryptedPasscodeToKeychain(passcode: String) {

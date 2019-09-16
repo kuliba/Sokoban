@@ -18,20 +18,46 @@ let manageWrongPwd = Thunk<State> { dispatch, getState in
     dispatch(AddSignInCounter())
 }
 
-func signInWith(passcode: String) -> Thunk<State> {
+func startSignInWith(passcode: String) -> Thunk<State> {
     return Thunk<State> { dispatch, getState in
         guard passcode == keychainCredentialsPasscode() else {
             dispatch(manageWrongPwd)
             return
         }
-        dispatch(UpdatePasscodeSingInProcess(isShown: false))
-        dispatch(ClearSignInProcess())
+        dispatch(signIn(passcode: passcode))
     }
 }
 
-let signInWithBiometric = Thunk<State> { dispatch, getState in
-    dispatch(UpdatePasscodeSingInProcess(isShown: false))
-    dispatch(ClearSignInProcess())
+let startSignInWithBiometric = Thunk<State> { dispatch, getState in
+    dispatch(signIn(passcode: nil))
+}
+
+
+func signIn(passcode: String?) -> Thunk<State> {
+    return Thunk<State> { dispatch, getState in
+
+        guard let encryptedUserData = keychainCredentialsUserData() else {
+            return
+        }
+
+        var userData: UserData?
+        if let passcode = passcode {
+            userData = decryptUserData(userData: encryptedUserData, withPossiblePasscode: passcode)
+        } else if let passcode = keychainCredentialsPasscode() {
+            userData = decryptUserData(userData: encryptedUserData, withPossiblePasscode: passcode)
+        }
+        guard let nonNilUserData = userData else {
+            return
+        }
+        NetworkManager.shared().login(login: nonNilUserData.login,
+                                      password: nonNilUserData.pwd,
+                                      completionHandler: { success, errorMessage in
+                                          if success {
+                                              dispatch(UpdatePasscodeSingInProcess(isShown: false))
+                                              dispatch(ClearSignInProcess())
+                                          }
+                                      })
+    }
 }
 
 struct UpdatePasscodeSingInProcess: Action {

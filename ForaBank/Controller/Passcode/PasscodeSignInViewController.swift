@@ -67,7 +67,7 @@ class PasscodeSignInViewController: UIViewController, StoreSubscriber {
 extension PasscodeSignInViewController: TOPasscodeViewControllerDelegate {
 
     func passcodeViewController(_ passcodeViewController: TOPasscodeViewController, isCorrectCode code: String) -> Bool {
-        store.dispatch(signInWith(passcode: code))
+        store.dispatch(startSignInWith(passcode: code))
         return true
     }
 
@@ -83,7 +83,7 @@ extension PasscodeSignInViewController: TOPasscodeViewControllerDelegate {
         BioMetricAuthenticator.authenticateWithBioMetrics(reason: "Вход в приложение") { (result) in
             switch result {
             case .success(_):
-                store.dispatch(signInWithBiometric)
+                store.dispatch(startSignInWithBiometric)
             case .failure(_):
                 print("Authentication Failed")
             }

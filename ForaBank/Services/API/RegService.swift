@@ -40,7 +40,7 @@ class RegService: RegServiceProtocol {
             "token": headers["X-XSRF-TOKEN"] as AnyObject,
             "verificationCode": 0 as AnyObject
         ]
-        print("registration/checkClient parameters \(parameters))")
+        //print("registration/checkClient parameters \(parameters))")
         
         Alamofire.request(url, method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
@@ -57,8 +57,8 @@ class RegService: RegServiceProtocol {
                 }
                 switch response.result {
                 case .success:
-                    print("registration/checkClient result: \(String(describing: response.result.value))")
-                    print(response.result.error.debugDescription)
+                    //print("registration/checkClient result: \(String(describing: response.result.value))")
+                    //print(response.result.error.debugDescription)
                     self.cardNumber = cardNumber
                     self.login = login
                     self.password = password
