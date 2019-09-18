@@ -46,11 +46,15 @@ class TabBarController: UITabBarController, StoreSubscriber {
             present(passcodeVC, animated: true, completion: nil)
         } else if state.isShown == false {
             setSelectedIndexToLast()
-            let profileSB = UIStoryboard(name: "Profile", bundle: nil)
-            let profileVC: ProfileViewController = profileSB.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
-            profileVC.segueId = "Registered"
-            setNumberOfTabsAvailable()
-            viewControllers?.last?.navigationController?.setViewControllers([profileVC], animated: true)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                if ((self.viewControllers?.last) != nil) {
+                    let profileSB = UIStoryboard(name: "Profile", bundle: nil)
+                    let profileVC: ProfileViewController = profileSB.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
+                    profileVC.segueId = "SignedIn"
+                    self.setNumberOfTabsAvailable()
+                    self.viewControllers?.last?.navigationController?.setViewControllers([profileVC], animated: true)
+                }
+            }
         }
     }
 

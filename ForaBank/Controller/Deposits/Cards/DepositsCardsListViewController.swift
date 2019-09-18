@@ -139,7 +139,6 @@ class DepositsCardsListViewController: UIViewController {
         super.viewDidLoad()
         addScrollView()
         addButtons()
-//        print("DepositsCardsListViewController viewDidLoad")
         hero.isEnabled = true
         hero.modalAnimationType = .none
         saveData()

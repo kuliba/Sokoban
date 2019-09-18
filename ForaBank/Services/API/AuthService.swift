@@ -10,9 +10,9 @@ import Foundation
 import Alamofire
 import RMMapper
 class AuthService: AuthServiceProtocol {
-    
+
     private let baseURLString: String
-    
+
     private var isSigned: Bool = false
     private var login: String? = nil
     private var password: String? = nil
@@ -20,20 +20,20 @@ class AuthService: AuthServiceProtocol {
     private var myContext: Bool = false
 
 
-    
+
     init(baseURLString: String) {
         self.baseURLString = baseURLString
     }
-    
 
-    func isSignedIn(completionHandler: @escaping (_ success:Bool) -> Void) {
+
+    func isSignedIn(completionHandler: @escaping (_ success: Bool) -> Void) {
         completionHandler(isSigned)
 
     }
-    
-   
-    
-    func csrf(headers: HTTPHeaders, completionHandler: @escaping (_ success:Bool, _ headers: HTTPHeaders?) -> Void) {
+
+
+
+    func csrf(headers: HTTPHeaders, completionHandler: @escaping (_ success: Bool, _ headers: HTTPHeaders?) -> Void) {
 //        if isSigned == true {
 //            completionHandler(true, nil)
 //            return
@@ -42,19 +42,19 @@ class AuthService: AuthServiceProtocol {
         Alamofire.request(url, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .responseJSON { [unowned self] response in
-                
+
 //                print("csrf result: \(response.result)")  // response serialization result
-                if let json = response.result.value as? Dictionary<String, Any> ,
+                if let json = response.result.value as? Dictionary<String, Any>,
                     let errorMessage = json["errorMessage"] as? String {
                     print("\(errorMessage) \(self)")
                     completionHandler(false, nil)
                     return
                 }
-                
+
                 switch response.result {
                 case .success:
 //                        print("JSON: \(json)") // serialized json response
-                    var newHeaders: [String : String] = [:]
+                    var newHeaders: [String: String] = [:]
                     for c in Alamofire.SessionManager.default.session.configuration.httpCookieStorage?.cookies ?? [] {
                         if c.name == "JSESSIONID" {
                             newHeaders[c.name] = c.value
@@ -76,11 +76,11 @@ class AuthService: AuthServiceProtocol {
                     print("\(error) \(self)")
                     completionHandler(false, nil)
                 }
-               
+
         }
     }
-    
-    func loginDo(headers: HTTPHeaders, login: String, password: String, completionHandler: @escaping (_ success:Bool,_ errorMessage: String?) -> Void) {
+
+    func loginDo(headers: HTTPHeaders, login: String, password: String, completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void) {
         if isSigned == true {
             completionHandler(isSigned, nil)
             return
@@ -94,20 +94,20 @@ class AuthService: AuthServiceProtocol {
             "token": headers["X-XSRF-TOKEN"] as AnyObject,
             "verificationCode": 0 as AnyObject
         ]
-        
-           
-      
-        
+
+
+
+
         //print("login.do parameters \(parameters))")
         Alamofire.request(url, method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])
             .responseJSON { [unowned self] response in
-                
+
                 print("login.do result: \(response.result)") // response serialization result
 //                print("JSON: \(String(describing: response.value))") // serialized json response
 //                print("JSON: \(String(describing: response.request?.httpBody))") // serialized json response
-                if let json = response.result.value as? Dictionary<String, Any> ,
+                if let json = response.result.value as? Dictionary<String, Any>,
                     let errorMessage = json["errorMessage"] as? String {
                     print("\(errorMessage) \(self)")
                     completionHandler(false, errorMessage)
@@ -125,16 +125,8 @@ class AuthService: AuthServiceProtocol {
                 }
         }
     }
-    
-    
-    func checkTouchId(headers: HTTPHeaders, code: String, completionHandler: @escaping (_ success:Bool) -> Void) {
-        if myContext == true {
-            completionHandler(myContext)
-            return
-        }
-    }
-    
-    func checkVerificationCode(headers: HTTPHeaders, code: String, completionHandler: @escaping (_ success:Bool) -> Void) {
+
+    func checkVerificationCode(headers: HTTPHeaders, code: String, completionHandler: @escaping (_ success: Bool) -> Void) {
         if isSigned == true {
             completionHandler(isSigned)
             return
@@ -153,16 +145,16 @@ class AuthService: AuthServiceProtocol {
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])
             .responseJSON { [unowned self] response in
-                
+
 //                print("verify/checkVerificationCode result: \(response.result)") // response serialization result
 //                print("JSON: \(String(describing: response.result.value))") // serialized json response
-                if let json = response.result.value as? Dictionary<String, Any> ,
+                if let json = response.result.value as? Dictionary<String, Any>,
                     let errorMessage = json["errorMessage"] as? String {
                     print("\(errorMessage) \(self)")
                     completionHandler(false)
                     return
                 }
-                
+
                 switch response.result {
                 case .success:
                     print("verify/checkVerificationCode result: \(String(describing: response.result.value))")
@@ -176,32 +168,32 @@ class AuthService: AuthServiceProtocol {
                 }
         }
     }
-    
-    func logOut(completionHandler: @escaping (_ success:Bool) -> Void) {
+
+    func logOut(completionHandler: @escaping (_ success: Bool) -> Void) {
         isSigned = false
         profile = nil
         completionHandler(true)
     }
-    
-    func getProfile(headers: HTTPHeaders, completionHandler: @escaping (_ success: Bool, Profile?,_ errorMessage: String?) -> Void) {
+
+    func getProfile(headers: HTTPHeaders, completionHandler: @escaping (_ success: Bool, Profile?, _ errorMessage: String?) -> Void) {
         if profile != nil {
             completionHandler(true, profile, nil)
             return
         }
-        
+
         let url = baseURLString + "rest/getPerson"
         Alamofire.request(url, method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<406))
             .responseJSON { [unowned self] response in
-                
+
                 //                print("csrf result: \(response.result)")  // response serialization result
-                if let json = response.result.value as? Dictionary<String, Any> ,
+                if let json = response.result.value as? Dictionary<String, Any>,
                     let errorMessage = json["errorMessage"] as? String {
                     print("\(errorMessage) \(self)")
                     completionHandler(false, nil, errorMessage)
                     return
                 }
-                
+
                 switch response.result {
                 case .success:
                     //                    print("JSON: \(json)") // serialized json response
@@ -210,7 +202,7 @@ class AuthService: AuthServiceProtocol {
                         let firstName = data["firstname"] as? String,
                         let lastName = data["lastname"] as? String {
                         var imageURL: String? = nil
-                        if let users = data["users"] as? Array<Dictionary<String,Any>>,
+                        if let users = data["users"] as? Array<Dictionary<String, Any>>,
                             let imageUrl = users[0]["userPic"] as? String {
                             imageURL = imageUrl
                         }

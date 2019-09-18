@@ -53,13 +53,6 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
             self?.continueButton.isHidden = false
             self?.activityIndicator?.stopAnimating()
             if success {
-                let rootVC = self?.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
-                if let t = self?.tabBarController as? TabBarController {
-                    t.setNumberOfTabsAvailable()
-                }
-                self?.segueId = "dismiss"
-                rootVC.segueId = "SignedIn"
-                self?.navigationController?.setViewControllers([rootVC], animated: true)
                 store.dispatch(finishVerification)
             } else {
                 let alert = UIAlertController(title: "Неудача", message: "Неверный код", preferredStyle: UIAlertController.Style.alert)
@@ -120,7 +113,6 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
 
     func newState(state: VerificationCodeState) {
         guard state.isShown == true else {
-            dismiss(animated: true, completion: nil)
             return
         }
         backButton.isHidden = true
@@ -146,6 +138,10 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
             head.gradientLayer.colors = [UIColor(red: 237 / 255, green: 73 / 255, blue: 73 / 255, alpha: 1).cgColor, UIColor(red: 241 / 255, green: 176 / 255, blue: 116 / 255, alpha: 1).cgColor]
         }
 //        messageLabel?.text = message
+
+        store.subscribe(self) {
+            return $0.select { $0.verificationCodeState }
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -202,6 +198,8 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        store.unsubscribe(self)
+
         if segueId == "dismiss" {
             containerView.hero.id = "content"
             containerView.hero.modifiers = [
