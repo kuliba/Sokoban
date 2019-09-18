@@ -16,7 +16,7 @@ enum PasswordStrength: Int {
     case Moderate
     case Strong
     static func checkStrength(password: String) -> PasswordStrength {
-        var len: Int = password.count
+        let len: Int = password.count
         var strength: Int = 0
         switch len {
         case 0:

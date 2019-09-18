@@ -12,8 +12,8 @@ import ReSwift
 struct State: StateType {
     var passcodeSignUpState: PasscodeSignUpState
     var authenticationState: AuthenticationState
-    let passcodeSignInState:PasscodeSignInState
-//    var bookmarks: [Bookmark]
+    let passcodeSignInState: PasscodeSignInState
+    let verificationCodeState: VerificationCodeState
 }
 
 //typealias Bookmark = (route: [RouteElementIdentifier], routeSpecificData: Any?)

@@ -23,7 +23,6 @@ class ProfileViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-//        nameLabel.text = "Александр\nКрюков" //image_profile_samplephoto
     }
     
     override func viewWillAppear(_ animated: Bool) {

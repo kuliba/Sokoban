@@ -10,7 +10,7 @@ import Foundation
 import ReSwift
 import ReSwiftThunk
 
-let manageWrongPwd = Thunk<State> { dispatch, getState in
+let manageWrongPasscode = Thunk<State> { dispatch, getState in
     guard let fails = getState()?.passcodeSignInState.failCounter, fails < 2 else {
         dispatch(UpdatePasscodeSingInProcess(isShown: false))
         return
@@ -21,7 +21,7 @@ let manageWrongPwd = Thunk<State> { dispatch, getState in
 func startSignInWith(passcode: String) -> Thunk<State> {
     return Thunk<State> { dispatch, getState in
         guard passcode == keychainCredentialsPasscode() else {
-            dispatch(manageWrongPwd)
+            dispatch(manageWrongPasscode)
             return
         }
         dispatch(signIn(passcode: passcode))
@@ -35,7 +35,6 @@ let startSignInWithBiometric = Thunk<State> { dispatch, getState in
 
 func signIn(passcode: String?) -> Thunk<State> {
     return Thunk<State> { dispatch, getState in
-
         guard let encryptedUserData = keychainCredentialsUserData() else {
             return
         }
@@ -53,8 +52,7 @@ func signIn(passcode: String?) -> Thunk<State> {
                                       password: nonNilUserData.pwd,
                                       completionHandler: { success, errorMessage in
                                           if success {
-                                              dispatch(UpdatePasscodeSingInProcess(isShown: false))
-                                              dispatch(ClearSignInProcess())
+                                            dispatch(startVerification)
                                           }
                                       })
     }
@@ -67,5 +65,5 @@ struct UpdatePasscodeSingInProcess: Action {
 struct AddSignInCounter: Action {
 }
 
-struct ClearSignInProcess: Action {
+struct ClearPasscodeSignInProcess: Action {
 }

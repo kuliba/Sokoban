@@ -41,7 +41,16 @@ class TabBarController: UITabBarController, StoreSubscriber {
 
     func newState(state: PasscodeSignInState) {
         if state.isShown == true {
-            present(PasscodeSignInViewController(), animated: true, completion: nil)
+            let passcodeVC = PasscodeSignInViewController()
+            passcodeVC.modalPresentationStyle = .overFullScreen
+            present(passcodeVC, animated: true, completion: nil)
+        } else if state.isShown == false {
+            setSelectedIndexToLast()
+            let profileSB = UIStoryboard(name: "Profile", bundle: nil)
+            let profileVC: ProfileViewController = profileSB.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
+            profileVC.segueId = "Registered"
+            setNumberOfTabsAvailable()
+            viewControllers?.last?.navigationController?.setViewControllers([profileVC], animated: true)
         }
     }
 

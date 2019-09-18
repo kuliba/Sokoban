@@ -13,6 +13,8 @@ import BiometricAuthentication
 
 class PasscodeSignInViewController: UIViewController, StoreSubscriber {
 
+    typealias SignInState = (passcodeState: PasscodeSignInState, verificationState: VerificationCodeState)
+
     let passcodeVC = TOPasscodeViewController(style: .opaqueLight, passcodeType: .sixDigits)
 
     override func viewDidLoad() {
@@ -23,7 +25,7 @@ class PasscodeSignInViewController: UIViewController, StoreSubscriber {
         passcodeVC.delegate = self
         passcodeVC.automaticallyPromptForBiometricValidation = true
         passcodeVC.allowBiometricValidation = true
-        
+
         if BioMetricAuthenticator.shared.touchIDAvailable() {
             passcodeVC.biometryType = .touchID
         } else if BioMetricAuthenticator.shared.faceIDAvailable() {
@@ -43,7 +45,7 @@ class PasscodeSignInViewController: UIViewController, StoreSubscriber {
         super.viewDidAppear(animated)
         self.modalPresentationStyle = .overCurrentContext
         store.subscribe(self) {
-            return $0.select { $0.passcodeSignInState }
+            return $0.select { SignInState(passcodeState: $0.passcodeSignInState, verificationState: $0.verificationCodeState) }
         }
     }
 
@@ -52,14 +54,22 @@ class PasscodeSignInViewController: UIViewController, StoreSubscriber {
         store.unsubscribe(self)
     }
 
-    func newState(state: PasscodeSignInState) {
-        guard state.isShown == true else {
+    func newState(state: SignInState) {
+        guard state.passcodeState.isShown == true else {
             dismiss(animated: true, completion: nil)
             return
         }
-        if state.failCounter >= 1 {
-            passcodeVC.passcodeView.titleLabel.text = "Осталось \(3 - state.failCounter) попыток"
+        if state.passcodeState.failCounter >= 1 {
+            passcodeVC.passcodeView.titleLabel.text = "Осталось \(3 - state.passcodeState.failCounter) попыток"
             passcodeVC.passcodeView.resetPasscode(animated: true, playImpact: false)
+        }
+
+        if state.verificationState.isShown == true {
+            let paymentStoryboard = UIStoryboard(name: "Profile", bundle: nil)
+            let verifyVC = paymentStoryboard.instantiateViewController(withIdentifier: "smsVerification")
+            verifyVC.modalTransitionStyle = .crossDissolve
+
+            present(verifyVC, animated: true, completion: nil)
         }
     }
 }

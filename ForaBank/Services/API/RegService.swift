@@ -103,7 +103,6 @@ class RegService: RegServiceProtocol {
                 
                 switch response.result {
                 case .success:
-                    print("registration/doRegistration result: \(String(describing: response.result.value))")
                     print(response.result.error.debugDescription)
                     completionHandler(true, nil, self.login, self.password)
                 case .failure(let error):
