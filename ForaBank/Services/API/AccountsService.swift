@@ -17,7 +17,6 @@ class DeposService: DeposServiceProtocol {
 
 
     private let baseURLString: String
-    private var accounts = [Account]()
     private var datedTransactions = [DatedTransactions]()
 
     init(baseURLString: String) {
@@ -26,7 +25,7 @@ class DeposService: DeposServiceProtocol {
 
 
     func getDepos(headers: HTTPHeaders, completionHandler: @escaping (Bool, [Account]?) -> Void) {
-        accounts = [Account]()
+        var accounts = [Account]()
         let url = baseURLString + "rest/getDepositList"
         Alamofire.request(url, method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
@@ -36,7 +35,7 @@ class DeposService: DeposServiceProtocol {
                 if let json = response.result.value as? Dictionary<String, Any>,
                     let errorMessage = json["errorMessage"] as? String {
                     print("\(errorMessage) \(self)")
-                    completionHandler(false, self.accounts)
+                    completionHandler(false, accounts)
                     return
                 }
 
@@ -69,18 +68,18 @@ class DeposService: DeposServiceProtocol {
 
                                 guard let nonNilAccount = account, account?.productId == 10000000088 else { continue }
 
-                                self.accounts.append(nonNilAccount)
+                                accounts.append(nonNilAccount)
                             }
                         }
-                        completionHandler(true, self.accounts)
+                        completionHandler(true, accounts)
                     } else {
                         print("rest/getDepositList cant parse json \(String(describing: response.result.value))")
-                        completionHandler(false, self.accounts)
+                        completionHandler(false, accounts)
                     }
 
                 case .failure(let error):
                     print("rest/getDepositList \(error) \(self)")
-                    completionHandler(false, self.accounts)
+                    completionHandler(false, accounts)
                 }
         }
         func blockCard(withNumber num: String, completionHandler: @escaping (Bool) -> Void) {

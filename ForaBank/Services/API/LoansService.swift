@@ -17,7 +17,6 @@ class LoansService: LoansServiceProtocol {
 
 
     private let baseURLString: String
-    private var loans = [Loan]()
     private var datedTransactions = [DatedTransactions]()
 
     init(baseURLString: String) {
@@ -26,7 +25,7 @@ class LoansService: LoansServiceProtocol {
 
 
     func getLoans(headers: HTTPHeaders, completionHandler: @escaping (Bool, [Loan]?) -> Void) {
-        loans = [Loan]()
+        var loans = [Loan]()
         let url = baseURLString + "rest/getLoanList"
         Alamofire.request(url, method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
@@ -36,7 +35,7 @@ class LoansService: LoansServiceProtocol {
                 if let json = response.result.value as? Dictionary<String, Any>,
                     let errorMessage = json["errorMessage"] as? String {
                     print("\(errorMessage) \(self)")
-                    completionHandler(false, self.loans)
+                    completionHandler(false, loans)
                     return
                 }
 
@@ -65,18 +64,18 @@ class LoansService: LoansServiceProtocol {
                                     Amount: Amount!,
                                     currencyCode: currencyCode, principalDebt: principalDebt, userAnnual: userAnnual, branchBrief: branchBrief, number: number, DateValue: dateValue
                                 )
-                                self.loans.append(loan)
+                                loans.append(loan)
                             }
                         }
-                        completionHandler(true, self.loans)
+                        completionHandler(true, loans)
                     } else {
                         print("rest/getLoanList cant parse json \(String(describing: response.result.value))")
-                        completionHandler(false, self.loans)
+                        completionHandler(false, loans)
                     }
 
                 case .failure(let error):
                     print("rest/getLoanList \(error) \(self)")
-                    completionHandler(false, self.loans)
+                    completionHandler(false, loans)
                 }
         }
         func blockCard(withNumber num: String, completionHandler: @escaping (Bool) -> Void) {

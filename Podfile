@@ -6,7 +6,7 @@ target 'ForaBank' do
   use_frameworks!
 
   # Pods for ForaBank
-  pod 'RMMapper'
+  pod 'RMMapper'  
   pod 'KeychainAccess'
   pod 'iCarousel', '1.8.3'
   pod 'DeviceKit', '1.11.0'

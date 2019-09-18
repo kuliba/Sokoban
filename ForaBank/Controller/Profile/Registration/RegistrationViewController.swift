@@ -31,10 +31,6 @@ class RegistrationViewController: UIViewController {
     @IBOutlet weak var cardNumberTextField: UITextField!
     @IBOutlet weak var scanButton: UIButton!
 
-    @IBOutlet weak var monthTextField: UITextField!
-    @IBOutlet weak var yearTextField: UITextField!
-    @IBOutlet weak var cvvTextField: UITextField!
-
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var continueButton: UIButton!
     @IBOutlet weak var centralView: UIView!
@@ -149,17 +145,13 @@ class RegistrationViewController: UIViewController {
     @IBAction func cardDatasChanged(_ textField: UITextField) {
         if textField.tag == 2 || textField.tag == 3,
             (textField.text?.count ?? 0) >= 2 {
-            if textField.tag == 2 {
-                yearTextField.becomeFirstResponder()
-            } else {
-                cvvTextField.becomeFirstResponder()
-            }
         }
 
-        if cardNumberTextField.text?.count ?? 0 != 0,
-            monthTextField.text?.count ?? 0 != 0,
-            yearTextField.text?.count ?? 0 != 0,
-            cvvTextField.text?.count ?? 0 == 3 {
+        guard let cardNumber = cardNumberTextField.text?.count, cardNumber <= 7 else {
+            return
+        }
+        
+        if cardNumberTextField.text?.count ?? 0 == 7 {
             if textField.tag == 1 {
                 UIView.transition(with: cardView, duration: 0.5, options: .transitionFlipFromLeft, animations: {
                     self.identifyBank()
@@ -183,14 +175,8 @@ class RegistrationViewController: UIViewController {
             self.scanCardButton.tintColor = UIColor(hexFromString: "#B5B5B5")
 
             self.cardNumberTextField.tintColor = .black
-            self.monthTextField.tintColor = .black
-            self.yearTextField.tintColor = .black
-            self.cvvTextField.tintColor = .black
-
             self.cardNumberTextField.textColor = .black
-            self.monthTextField.textColor = .black
-            self.yearTextField.textColor = .black
-            self.cvvTextField.textColor = .black
+            
             self.continueButton.isHidden = false
         }
     }
@@ -243,10 +229,7 @@ class RegistrationViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if !animated { return }
-        if cardNumberTextField.text?.count ?? 0 != 0,
-            monthTextField.text?.count ?? 0 != 0,
-            yearTextField.text?.count ?? 0 != 0,
-            cvvTextField.text?.count ?? 0 == 3 {
+        if cardNumberTextField.text?.count ?? 0 == 75 {
             if needAnimateCard {
                 UIView.transition(with: cardView, duration: 0.5, options: .transitionFlipFromLeft, animations: {
                     self.identifyBank()
@@ -571,7 +554,7 @@ private extension RegistrationViewController {
     }
 
     func setUpTextFieldDelegates() {
-        for texfield in [cardNumberTextField, monthTextField, yearTextField, cvvTextField] {
+        for texfield in [cardNumberTextField] {
             texfield?.delegate = self
         }
     }
@@ -668,14 +651,8 @@ extension RegistrationViewController: UITextFieldDelegate {
         self.scanCardButton.tintColor = scanButtonColor
 
         self.cardNumberTextField.tintColor = tintColor
-        self.monthTextField.tintColor = tintColor
-        self.yearTextField.tintColor = tintColor
-        self.cvvTextField.tintColor = tintColor
-
         self.cardNumberTextField.textColor = tintColor
-        self.monthTextField.textColor = tintColor
-        self.yearTextField.textColor = tintColor
-        self.cvvTextField.textColor = tintColor
+        
         self.continueButton.isHidden = false
     }
 }
@@ -701,13 +678,7 @@ extension RegistrationViewController: CardIOPaymentViewControllerDelegate {
             //            txtCvv.text = info.cvv
             var useless = 0
             cardNumberTextField.text = insertCreditCardSpaces(info.cardNumber, preserveCursorPosition: &useless)
-            monthTextField.text = "\(info.expiryMonth)"
-            let year = "\(info.expiryYear)"
-            let twoDigits = year.suffix(2)
-            yearTextField.text = String(twoDigits)
-            cvvTextField.text = info.cvv
-//            setCardToSberbank()
-//            print(str)
+
             needAnimateCard = true
         }
 
