@@ -212,6 +212,7 @@
 		BD5170A92332135E001EAFC0 /* VerificationCodeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170A82332135E001EAFC0 /* VerificationCodeState.swift */; };
 		BD5170AB2332250C001EAFC0 /* VerificationCodeReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170AA2332250C001EAFC0 /* VerificationCodeReducer.swift */; };
 		BD5170AD233229F4001EAFC0 /* VerificationCodeActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170AC233229F4001EAFC0 /* VerificationCodeActions.swift */; };
+		BD5170B323336C83001EAFC0 /* PaymentRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170B223336C83001EAFC0 /* PaymentRequests.swift */; };
 		BD7CC1A1232125D000872D06 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = BD7CC1A0232125D000872D06 /* Localizable.strings */; };
 		BD94E09F231EA6E50006456E /* MasksFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD94E09E231EA6E50006456E /* MasksFormatting.swift */; };
 		BDB6AFF423268C850006A534 /* PasscodeSignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6AFF323268C850006A534 /* PasscodeSignInViewController.swift */; };
@@ -288,7 +289,7 @@
 		096BCB0D21637E27005BC02B /* PaymentCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentCell.xib; sourceTree = "<group>"; };
 		09797555215A49020044C00A /* ForaBank.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ForaBank.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		09797558215A49020044C00A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		0979755F215A49040044C00A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		0979755F215A49040044C00A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../Assets.xcassets; sourceTree = "<group>"; };
 		09797562215A49040044C00A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		09797564215A49040044C00A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0979D94F21903DF700034BC0 /* PaymentsDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsDetailsViewController.swift; sourceTree = "<group>"; };
@@ -442,6 +443,7 @@
 		BD5170A82332135E001EAFC0 /* VerificationCodeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeState.swift; sourceTree = "<group>"; };
 		BD5170AA2332250C001EAFC0 /* VerificationCodeReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeReducer.swift; sourceTree = "<group>"; };
 		BD5170AC233229F4001EAFC0 /* VerificationCodeActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeActions.swift; sourceTree = "<group>"; };
+		BD5170B223336C83001EAFC0 /* PaymentRequests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentRequests.swift; sourceTree = "<group>"; };
 		BD7CC1A0232125D000872D06 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		BD94E09E231EA6E50006456E /* MasksFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasksFormatting.swift; sourceTree = "<group>"; };
 		BDB6AFF323268C850006A534 /* PasscodeSignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignInViewController.swift; sourceTree = "<group>"; };
@@ -570,16 +572,12 @@
 			isa = PBXGroup;
 			children = (
 				09797558215A49020044C00A /* AppDelegate.swift */,
-				0979755F215A49040044C00A /* Assets.xcassets */,
 				09E0F131215A617A0042FB6A /* Controller */,
 				0930F16D215B788100CFB593 /* Fonts */,
 				09203D91216E0D7600902BD2 /* ForaBank-Bridging-Header.h */,
 				BD73EB63231EA61C00CB3E58 /* Helpers */,
 				09797564215A49040044C00A /* Info.plist */,
-				09E0F132215A61850042FB6A /* Models */,
-				BD38198C232103EC0004728C /* Resources */,
 				BDB6B0172327F20F0006A534 /* Services */,
-				BD1379FC23263BC000326088 /* Store */,
 				BD1379FC23263BC000326088 /* Store */,
 				09E0F132215A61850042FB6A /* Models */,
 				BD38198C232103EC0004728C /* Resources */,
@@ -971,6 +969,7 @@
 				969899672303F4060066C55B /* LoansService.swift */,
 				A568142D21D0B945002C0899 /* DepositsService.swift */,
 				96EC41802301A6890087BFB0 /* AccountsService.swift */,
+				BD5170B223336C83001EAFC0 /* PaymentRequests.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -1008,6 +1007,7 @@
 		BD38198C232103EC0004728C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				0979755F215A49040044C00A /* Assets.xcassets */,
 				A55B7B7821A6B4A200A8A7FE /* animation */,
 				960AD38722FC1826005399D6 /* Default-568h@2x.png */,
 				BD7CC1A0232125D000872D06 /* Localizable.strings */,
@@ -1312,6 +1312,7 @@
 				BDB6B0112326A9C10006A534 /* PasscodeSignUpActions.swift in Sources */,
 				89C8DF0C21918DDC00D92B0A /* OptionPickerViewController.swift in Sources */,
 				0939B5FB21774EA70029F03D /* DoubleRoundedEdgeView.swift in Sources */,
+				BD5170B323336C83001EAFC0 /* PaymentRequests.swift in Sources */,
 				A55B7B8621A7E86200A8A7FE /* DepositsHistoryDetailsSegueAnimator.swift in Sources */,
 				094FFC0D218837580069DDCB /* RegistrationViewController.swift in Sources */,
 				A528EF4021B00C9300D189DD /* MonthCollectionViewCell.swift in Sources */,

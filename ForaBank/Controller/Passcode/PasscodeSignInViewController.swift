@@ -31,6 +31,7 @@ class PasscodeSignInViewController: UIViewController, StoreSubscriber {
         } else if BioMetricAuthenticator.shared.faceIDAvailable() {
             passcodeVC.biometryType = .faceID
         } else {
+            passcodeVC.leftAccessoryButton = UIButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
             passcodeVC.allowBiometricValidation = false
         }
 
