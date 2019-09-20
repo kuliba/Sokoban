@@ -87,7 +87,7 @@ extension PasscodeSignInViewController: TOPasscodeViewControllerDelegate {
     }
 
     func didTapCancel(in passcodeViewController: TOPasscodeViewController) {
-        //store.dispatch(setPasscode)
+        dismiss(animated: true, completion: nil)
     }
 
     func didPerformBiometricValidationRequest(in passcodeViewController: TOPasscodeViewController) {

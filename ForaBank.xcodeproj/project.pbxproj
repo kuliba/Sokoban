@@ -233,6 +233,7 @@
 		BDF4F94E23293D1E007C448F /* AuthenticationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF4F94D23293D1E007C448F /* AuthenticationState.swift */; };
 		BDFE5D982334C3300027A716 /* IProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE5D972334C3300027A716 /* IProduct.swift */; };
 		BDFE5D9A2334E7ED0027A716 /* LoansSegueAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE5D992334E7ED0027A716 /* LoansSegueAnimator.swift */; };
+		BDFE5D9C233511EB0027A716 /* URLs.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE5D9B233511EB0027A716 /* URLs.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -467,6 +468,7 @@
 		BDF4F94D23293D1E007C448F /* AuthenticationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationState.swift; sourceTree = "<group>"; };
 		BDFE5D972334C3300027A716 /* IProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IProduct.swift; sourceTree = "<group>"; };
 		BDFE5D992334E7ED0027A716 /* LoansSegueAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoansSegueAnimator.swift; sourceTree = "<group>"; };
+		BDFE5D9B233511EB0027A716 /* URLs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLs.swift; sourceTree = "<group>"; };
 		D8EB261ED46D5F939F8B2E27 /* Pods_ForaBank.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ForaBank.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -962,19 +964,19 @@
 		A58760BD21BF8E220022DED5 /* API */ = {
 			isa = PBXGroup;
 			children = (
-				A58760BE21BF8E770022DED5 /* NetworkManager.swift */,
-				A51AF85121EA09E600FB3B68 /* TestRegService.swift */,
-				A51AF84F21EA093800FB3B68 /* RegService.swift */,
-				A551108E21C7BEED00330510 /* TestAuthService.swift */,
-				A551108A21C7999A00330510 /* AuthService.swift */,
-				A551109021C7C0AE00330510 /* TestCardService.swift */,
-				A57CF1B52202DE1800E855A5 /* CardService.swift */,
-				A57CF1B92204360900E855A5 /* TestStatementService.swift */,
-				A57CF1B7220435F200E855A5 /* StatementService.swift */,
-				969899672303F4060066C55B /* LoansService.swift */,
-				A568142D21D0B945002C0899 /* DepositsService.swift */,
 				96EC41802301A6890087BFB0 /* AccountsService.swift */,
+				A551108A21C7999A00330510 /* AuthService.swift */,
+				A57CF1B52202DE1800E855A5 /* CardService.swift */,
+				A568142D21D0B945002C0899 /* DepositsService.swift */,
+				969899672303F4060066C55B /* LoansService.swift */,
+				A58760BE21BF8E770022DED5 /* NetworkManager.swift */,
 				BD5170B223336C83001EAFC0 /* PaymentRequests.swift */,
+				A51AF84F21EA093800FB3B68 /* RegService.swift */,
+				A57CF1B7220435F200E855A5 /* StatementService.swift */,
+				A551108E21C7BEED00330510 /* TestAuthService.swift */,
+				A551109021C7C0AE00330510 /* TestCardService.swift */,
+				A51AF85121EA09E600FB3B68 /* TestRegService.swift */,
+				A57CF1B92204360900E855A5 /* TestStatementService.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -1013,11 +1015,12 @@
 			isa = PBXGroup;
 			children = (
 				09797564215A49040044C00A /* Info.plist */,
-				0979755F215A49040044C00A /* Assets.xcassets */,
-				A55B7B7821A6B4A200A8A7FE /* animation */,
+				BD38198D232104430004728C /* productsData.plist */,
 				960AD38722FC1826005399D6 /* Default-568h@2x.png */,
 				BD7CC1A0232125D000872D06 /* Localizable.strings */,
-				BD38198D232104430004728C /* productsData.plist */,
+				0979755F215A49040044C00A /* Assets.xcassets */,
+				A55B7B7821A6B4A200A8A7FE /* animation */,
+				BDFE5D9B233511EB0027A716 /* URLs.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -1392,6 +1395,7 @@
 				09AF7081216F6B6F00E7FCFC /* FeedCurrent1Cell.swift in Sources */,
 				094FFC0E218837580069DDCB /* RegistrationCodeVerificationViewController.swift in Sources */,
 				BD182E3F232A402100DB231F /* PasscodeSingInActions.swift in Sources */,
+				BDFE5D9C233511EB0027A716 /* URLs.swift in Sources */,
 				BDF4F94E23293D1E007C448F /* AuthenticationState.swift in Sources */,
 				096B4F4D2183089900C69E52 /* CardDetailsViewController.swift in Sources */,
 				0930F16A215B6CB800CFB593 /* GradientView.swift in Sources */,
