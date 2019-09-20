@@ -13,4 +13,5 @@ protocol IProduct {
     var id: Double { get }
     var balance: Double { get }
     var number: String { get }
+    var maskedNumber: String { get }
 }

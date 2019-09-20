@@ -190,7 +190,6 @@ class NetworkManager {
                 self.headers.merge(newHeaders ?? [:], uniquingKeysWith: { (_, k2) -> String in
                     return k2
                 })
-                //                print("headers \(self.headers)")
                 self.regService.checkClient(headers: self.headers, cardNumber: cardNumber, login: login, password: password, phone: phone, verificationCode: verificationCode, completionHandler: completionHandler)
             }
             else {

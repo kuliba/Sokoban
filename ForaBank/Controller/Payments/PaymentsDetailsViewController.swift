@@ -13,7 +13,7 @@ class PaymentsDetailsViewController: UIViewController {
     // MARK: - Properties
     @IBOutlet weak var picker: UIView!
     @IBOutlet weak var pickerImageView: UIImageView!
-    @IBOutlet weak var comissionTextField: UITextField!
+    @IBOutlet weak var sumTextField: UITextField!
     @IBOutlet weak var containterView: RoundedEdgeView!
     @IBOutlet weak var pickerLabel: UILabel!
     @IBOutlet weak var sourceButton: UIButton!
@@ -21,6 +21,13 @@ class PaymentsDetailsViewController: UIViewController {
     @IBOutlet weak var pickerButton: UIButton!
 
     // MARK: - Actions
+    @IBAction func sendButtonClicked(_ sender: Any) {
+        activityIndicator.startAnimating()
+        prepareCard2Card(from: sourcePaymentOption?.number ?? "", to: selectedDestinationPaymentOption?.number ?? "", amount: Double(sumTextField.text!) as! Double) { (success, token) in
+
+        }
+    }
+
     @IBAction func backButtonClicked(_ sender: Any) {
         dismiss(animated: true)
     }
@@ -60,12 +67,14 @@ class PaymentsDetailsViewController: UIViewController {
     var selectedViewType: Bool = false //false - source; true - destination
     var activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
     var destinationPaymentOptions: [PaymentOption]? {
-        didSet{
+        didSet {
             self.destinationPaymentOptions?.removeAll(where: { (option) -> Bool in
                 option.id == sourcePaymentOption?.id
             })
+            selectedDestinationPaymentOption = destinationPaymentOptions?.first
         }
     }
+    var selectedDestinationPaymentOption: PaymentOption?
     var sourcePaymentOption: PaymentOption?
 
     // MARK: - Lifecycle
@@ -183,6 +192,7 @@ extension PaymentsDetailsViewController: OptionPickerDelegate {
 
 extension PaymentsDetailsViewController: RemittancePickerDelegate {
     func didSelectOptionView(option: RemittanceOptionView?) {
+        selectedDestinationPaymentOptions = option
         if selectedViewType {
             let frame = remittanceDestinationView.frame
             remittanceDestinationView.removeFromSuperview()

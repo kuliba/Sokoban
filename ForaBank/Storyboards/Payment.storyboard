@@ -293,6 +293,7 @@
                                                     <color key="titleColor" red="0.87647289037704468" green="0.40053808689117432" blue="0.35289543867111206" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 </state>
                                                 <connections>
+                                                    <action selector="sendButtonClicked:" destination="afX-Am-FVA" eventType="touchUpInside" id="hyQ-M6-Y39"/>
                                                     <segue destination="Xda-th-p6I" kind="show" id="cfn-RW-uPw"/>
                                                 </connections>
                                             </button>
@@ -363,7 +364,6 @@
                     <navigationItem key="navigationItem" title="Платежи и переводы" id="58H-bR-aNV"/>
                     <size key="freeformSize" width="320" height="568"/>
                     <connections>
-                        <outlet property="comissionTextField" destination="2cO-cF-Vnw" id="JQ0-1U-dDQ"/>
                         <outlet property="containterView" destination="7jF-kB-QvE" id="4oP-n4-FsA"/>
                         <outlet property="destinationButton" destination="H8U-2F-B3R" id="Orq-Jl-MY1"/>
                         <outlet property="picker" destination="cOr-dw-QEx" id="E3P-CW-lAq"/>
@@ -371,6 +371,7 @@
                         <outlet property="pickerImageView" destination="IBa-Pg-g1h" id="lJr-Yw-yik"/>
                         <outlet property="pickerLabel" destination="XCt-5D-j6q" id="a3E-CI-EBb"/>
                         <outlet property="sourceButton" destination="fJE-s0-yRr" id="8ef-k5-mSN"/>
+                        <outlet property="sumTextField" destination="2cO-cF-Vnw" id="FFJ-Vb-Cd2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UFN-wo-miF" sceneMemberID="firstResponder"/>

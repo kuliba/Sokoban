@@ -20,7 +20,7 @@ func allPaymentOptions(completionHandler: @escaping (Bool, [PaymentOption]?) -> 
         NetworkManager.shared().getCardList { (success, cards) in
             if success, let nonNilCards = cards {
                 let options = nonNilCards.compactMap({ (card) -> PaymentOption? in
-                    return PaymentOption(id: card.id, name: card.name, type: .card, sum: card.balance, number: card.maskedNumber, provider: card.type?.rawValue ?? "")
+                    return PaymentOption(id: card.id, name: card.name, type: .card, sum: card.balance, number: card.number, maskedNumber: card.maskedNumber, provider: card.type?.rawValue ?? "")
                 })
                 paymentOptions.append(contentsOf: options)
             }
@@ -32,7 +32,7 @@ func allPaymentOptions(completionHandler: @escaping (Bool, [PaymentOption]?) -> 
         NetworkManager.shared().getDepos { (success, deposits) in
             if success, let nonNilDeposits = deposits {
                 let options = nonNilDeposits.compactMap({ (deposit) -> PaymentOption? in
-                    return PaymentOption(id: deposit.id, name: deposit.productName, type: .safeDeposit, sum: deposit.balance, number: deposit.accountNumber, provider: deposit.productName)
+                    return PaymentOption(id: deposit.id, name: deposit.productName, type: .safeDeposit, sum: deposit.balance, number: deposit.accountNumber, maskedNumber: deposit.accountNumber, provider: deposit.productName)
                 })
                 paymentOptions.append(contentsOf: options)
             }
@@ -45,8 +45,15 @@ func allPaymentOptions(completionHandler: @escaping (Bool, [PaymentOption]?) -> 
     }
 }
 
-func prepareCard2Card(completionHandler: @escaping (Bool, String?) -> Void) {
-    Alamofire.request(apiBaseURL + "/rest/prepareCard2Card", method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: NetworkManager.shared().headers)
+func prepareCard2Card(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void) {
+
+    let parameters: [String: AnyObject] = [
+        "payeeCardNumber": destinationNumber as AnyObject,
+        "payerCardNumber": sourceNumber as AnyObject,
+        "amount": amount as AnyObject
+    ]
+
+    Alamofire.request(apiBaseURL + "/rest/prepareCard2Card", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: NetworkManager.shared().headers)
         .validate(statusCode: MultiRange(200..<300, 401..<402))
         .validate(contentType: ["application/json"])
         .responseJSON { response in
