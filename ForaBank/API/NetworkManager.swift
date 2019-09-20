@@ -37,10 +37,18 @@ protocol CardServiceProtocol {
                                   headers: HTTPHeaders,
                                   completionHandler: @escaping (_ success:Bool, _ datedTransactions: [DatedTransactions]?) -> Void)
 }
+protocol PaymetsServiceProtocol {
+    func getPaymentsList(headers: HTTPHeaders,
+                     completionHandler: @escaping (_ success:Bool, _ payments: [Operations]?) -> Void)
+}
 
 protocol DeposServiceProtocol {
     func getDepos(headers: HTTPHeaders,
                   completionHandler: @escaping (_ success:Bool, _ obligations: [Account]?) -> Void)
+}
+protocol HistoryServiceProtocol {
+    func getHistoryCard(headers: HTTPHeaders,
+                  completionHandler: @escaping (_ success:Bool, _ obligations: [HistoryCard]?) -> Void)
 }
 protocol LoansServiceProtocol {
     func getLoans(headers: HTTPHeaders,
@@ -81,13 +89,15 @@ class NetworkManager {
         
         let authService = AuthService(baseURLString: host)//TestAuthService()//
         let cardService = CardService(baseURLString: host)//TestCardService()//
+        let paymentServices = PaymentServices(baseURLString: host)
         let regService = RegService(baseURLString: host)//TestRegService()//
         let depositsService = TestDepositsService(baseURLString: host)
         let deposService = DeposService(baseURLString: host)
         let loansService = LoansService(baseURLString: host)
+        let historyService = HistoryService(baseURLString: host)
         let statementService = StatementService(baseURLString: host)//TestStatementService()
         
-        let networkManager = NetworkManager(host, authService, regService, cardService, depositsService, deposService, loansService, statementService)
+        let networkManager = NetworkManager(host, authService, regService, cardService, paymentServices, depositsService, deposService, historyService, loansService, statementService )
         
         // Configuration
         
@@ -97,8 +107,10 @@ class NetworkManager {
     private let authService: AuthServiceProtocol
     private let regService: RegServiceProtocol
     private let cardService: CardServiceProtocol
+    private let paymentServices: PaymetsServiceProtocol
     private let depositsService: DepositsServiceProtocol
     private let deposService: DeposServiceProtocol
+    private let historyService: HistoryServiceProtocol
     private let loansService: LoansServiceProtocol
     private let statementService: StatementServiceProtocol
 
@@ -112,14 +124,16 @@ class NetworkManager {
     
     // Initialization
     
-    private init(_ baseURLString: String,_ authService: AuthServiceProtocol,_ regService: RegServiceProtocol,_ cardService: CardServiceProtocol,_ depositsService: DepositsServiceProtocol,_ DeposService: DeposServiceProtocol,_ loansService: LoansServiceProtocol ,_ statementService: StatementServiceProtocol) {
+    private init(_ baseURLString: String,_ authService: AuthServiceProtocol,_ regService: RegServiceProtocol,_ cardService: CardServiceProtocol,_ paymentsServices: PaymetsServiceProtocol,_ depositsService: DepositsServiceProtocol,_ DeposService: DeposServiceProtocol,_ historyService: HistoryServiceProtocol,_ loansService: LoansServiceProtocol ,_ statementService: StatementServiceProtocol) {
         self.baseURLString = baseURLString
         self.authService = authService
         self.regService = regService
         self.cardService = cardService
+        self.paymentServices = paymentsServices
         self.loansService = loansService
         self.depositsService = depositsService
         self.deposService = DeposService
+        self.historyService =   historyService
         self.statementService = statementService
     }
     
@@ -235,6 +249,10 @@ class NetworkManager {
     func getCardList(completionHandler: @escaping (_ success:Bool, _ cards: [Card]?) -> Void) {
         cardService.getCardList(headers: headers, completionHandler: completionHandler)
     }
+    func getPaymentsList(completionHandler: @escaping (_ success:Bool, _ payments: [Operations]?) -> Void) {
+        paymentServices.getPaymentsList(headers: headers, completionHandler: completionHandler)
+    }
+    
     
     func blockCard(withNumber num: String,
                    completionHandler: @escaping (Bool) -> Void) {
@@ -274,6 +292,9 @@ class NetworkManager {
     }
     func getLoans(completionHandler: @escaping (_ success:Bool, _ obligations: [Loan]?) -> Void) {
         loansService.getLoans(headers: headers, completionHandler: completionHandler)
+    }
+    func getHistoryCard(completionHandler: @escaping (_ success:Bool, _ obligations: [HistoryCard]?) -> Void) {
+        historyService.getHistoryCard(headers: headers, completionHandler: completionHandler)
     }
     //MARK: - deposits service
     func getDepos(completionHandler: @escaping (_ success:Bool, _ obligations: [Account]?) -> Void) {

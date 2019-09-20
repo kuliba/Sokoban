@@ -117,7 +117,7 @@ extension DepositsHistoryViewController: UITableViewDataSource, UITableViewDeleg
         
 //        cell.imageView?.image = UIImage(named: data_[indexPath.section].transactions[indexPath.row].imageName)
 //
-//        cell.titleLabel.text = data_[indexPath.section].transactions[indexPath.row].title
+        cell.titleLabel.text = sortedTransactionsStatement[indexPath.section].transactions[indexPath.row].comment
 //        cell.subTitleLabel.text = data_[indexPath.section].transactions[indexPath.row].subtitle
 //
 //        cell.descriptionLabel.text = data_[indexPath.section].transactions[indexPath.row].value
@@ -131,7 +131,7 @@ extension DepositsHistoryViewController: UITableViewDataSource, UITableViewDeleg
         } else if sortedTransactionsStatement[indexPath.section].transactions[indexPath.row].operationType?.compare("CREDIT", options: .caseInsensitive, range: nil, locale: nil) == ComparisonResult.orderedSame {
             cell.iconImageView.backgroundColor = UIColor(red: 4/255, green: 160/255, blue: 133/255, alpha: 1)
         }
-        cell.titleLabel.isHidden = true
+       
         cell.subTitleLabel.isHidden = true
         cell.subdescriptionLabel.isHidden = true
         cell.commentLabel.isHidden = false

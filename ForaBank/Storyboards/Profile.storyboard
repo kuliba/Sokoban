@@ -2168,6 +2168,21 @@
             </objects>
             <point key="canvasLocation" x="5319.375" y="3136.2676056338028"/>
         </scene>
+        <!--Payments View Controller-->
+        <scene sceneID="GFa-DV-lUe">
+            <objects>
+                <viewController id="gAX-h6-CBb" customClass="PaymentsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="fDn-VJ-SD7" customClass="OperatorsList">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="OAl-Hk-Ww7"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="p39-jH-tIh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1584" y="3492"/>
+        </scene>
         <!--Sign In View Controller-->
         <scene sceneID="oeQ-Nj-eRs">
             <objects>
