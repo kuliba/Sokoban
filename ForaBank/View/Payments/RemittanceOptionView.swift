@@ -16,10 +16,40 @@ enum RemittanceOptionViewType {
 }
 
 struct PaymentOption {
-    var type: RemittanceOptionViewType
+    let id: Double
+    let name: String
+    let type: RemittanceOptionViewType
     let sum: Double
     let number: String
-    let provider: String
+    let provider: String?
+
+    init(id: Double, name: String, type: RemittanceOptionViewType, sum: Double, number: String, provider: String) {
+        self.id = id
+        self.name = name
+        self.sum = sum
+        self.number = number
+        self.type = type
+        self.provider = provider
+    }
+
+    init(product: IProduct) {
+        id = product.id
+        name = product.name
+        sum = product.balance
+        number = product.number
+        provider = nil
+        switch product {
+        case is Card:
+            type = .card
+            break
+        case is Deposit:
+            type = .safeDeposit
+            break
+        default:
+            type = .custom
+            break
+        }
+    }
 }
 
 class RemittanceOptionView: UIView {
@@ -230,12 +260,12 @@ class RemittanceOptionView: UIView {
     }
 
     override init(frame: CGRect) {
-        self.paymentOption = PaymentOption(type: .custom, sum: 0, number: "", provider: "")
+        self.paymentOption = PaymentOption(id: 0, name: "", type: .custom, sum: 0, number: "", provider: "")
         super.init(frame: frame)
     }
 
     required init?(coder aDecoder: NSCoder) {
-        self.paymentOption = PaymentOption(type: .custom, sum: 0, number: "", provider: "")
+        self.paymentOption = PaymentOption(id: 0, name: "", type: .custom, sum: 0, number: "", provider: "")
         super.init(coder: aDecoder)
     }
 
@@ -243,7 +273,7 @@ class RemittanceOptionView: UIView {
         guard let option = paymentOption else {
             return
         }
-        title = option.number
+        title = option.name
         subtitle = option.number
         cash = "\(maskSum(sum: option.sum)) ₽"
         titleImage = UIImage(named: "payments_template_sberbank")

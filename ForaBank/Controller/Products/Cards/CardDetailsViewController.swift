@@ -58,22 +58,22 @@ class CardDetailsViewController: UIViewController {
         if let card = card {
             cardView.update(withCard: card)
             cardView.backgroundImageView.alpha = 0
-            if card.number?.prefix(6) == "465626" {
+            if card.number.prefix(6) == "465626" {
                 backgroundImageView.image = UIImage(named: "card_visa_gold")
             }
-            if card.number?.prefix(6) == "457825" {
+            if card.number.prefix(6) == "457825" {
                 backgroundImageView.image = UIImage(named: "card_visa_platinum")
             }
-            if card.number?.prefix(6) == "425690" {
+            if card.number.prefix(6) == "425690" {
                 backgroundImageView.image = UIImage(named: "card_visa_debet")
             }
-            if card.number?.prefix(6) == "557986" {
+            if card.number.prefix(6) == "557986" {
                 backgroundImageView.image = UIImage(named: "card_visa_standart")
             }
-            if card.number?.prefix(6) == "536466" {
+            if card.number.prefix(6) == "536466" {
                 backgroundImageView.image = UIImage(named: "card_visa_virtual")
             }
-            if card.number?.prefix(6) == "470336" {
+            if card.number.prefix(6) == "470336" {
                 backgroundImageView.image = UIImage(named: "card_visa_infinity")
             }
             cardView.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.25)
@@ -93,6 +93,8 @@ class CardDetailsViewController: UIViewController {
         }
         let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductManagementViewController") as? ProductManagementViewController
         managementVC?.actionsType = "card"
+        managementVC?.product = card
+
         currentViewController = managementVC
         currentViewController!.view.translatesAutoresizingMaskIntoConstraints = false
         addChild(currentViewController!)
@@ -183,10 +185,6 @@ class CardDetailsViewController: UIViewController {
         cardView.hero.modifiers = nil
         container.hero.modifiers = nil
     }
-
-
-
-
 }
 
 private extension CardDetailsViewController {
@@ -249,6 +247,7 @@ private extension CardDetailsViewController {
         case 0:
             let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductManagementViewController") as? ProductManagementViewController
             managementVC?.actionsType = "card"
+            managementVC?.product = card
             newViewController = managementVC
         case 2:
             let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductAboutViewController") as? ProductAboutViewController

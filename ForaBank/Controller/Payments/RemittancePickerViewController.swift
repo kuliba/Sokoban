@@ -114,12 +114,12 @@ private extension RemittancePickerViewController {
             view.friendImage = UIImage(named: "image_friend_4")
             break
         case .safeDeposit:
-            view.title = "Сейф"
-            view.subtitle = "3447"
-            view.cash = "23 534 ₽"
+            view.title = option.name
+            view.subtitle = option.number
+            view.cash = "\(maskSum(sum: option.sum)) ₽"
             break
         case .card:
-            view.title = option.number
+            view.title = option.name
             view.subtitle = option.number
             view.cash = "\(maskSum(sum: option.sum)) ₽"
             view.titleImage = UIImage(named: "payments_template_sberbank")

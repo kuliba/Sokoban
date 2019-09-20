@@ -38,25 +38,9 @@ class PaymentsDetailsViewController: UIViewController {
         }
     }
 
-    @IBAction func pickerSourceButtonClicked(_ sender: UIButton) {
-        if let vc = UIStoryboard(name: "Payment", bundle: nil)
-            .instantiateViewController(withIdentifier: "opvc") as? RemittancePickerViewController, let nonNilPaymentOptions = paymentOptions {
-            sender.isEnabled = false
-            // Pass picker frame to determine picker popup coordinates
-            var r = self.sourceButton.convert(self.sourceButton.frame, to: self.view)
-            r.origin.x += 15
-            r.size.width -= 15
-            vc.pickerFrame = r
-            vc.pickerOptions = nonNilPaymentOptions
-            vc.delegate = self
-            self.selectedViewType = false
-            self.present(vc, animated: true, completion: nil)
-        }
-    }
-
     @IBAction func pickerDestinationButtonClicked(_ sender: UIButton) {
         if let vc = UIStoryboard(name: "Payment", bundle: nil)
-            .instantiateViewController(withIdentifier: "opvc") as? RemittancePickerViewController, let nonNilPaymentOptions = paymentOptions {
+            .instantiateViewController(withIdentifier: "opvc") as? RemittancePickerViewController, let nonNilPaymentOptions = destinationPaymentOptions {
             sender.isEnabled = false
             // Pass picker frame to determine picker popup coordinates
             var r = self.destinationButton.convert(self.destinationButton.bounds, to: self.view)
@@ -75,16 +59,23 @@ class PaymentsDetailsViewController: UIViewController {
     var remittanceDestinationView: RemittanceOptionView!
     var selectedViewType: Bool = false //false - source; true - destination
     var activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
-    var paymentOptions: [PaymentOption]?
+    var destinationPaymentOptions: [PaymentOption]? {
+        didSet{
+            self.destinationPaymentOptions?.removeAll(where: { (option) -> Bool in
+                option.id == sourcePaymentOption?.id
+            })
+        }
+    }
+    var sourcePaymentOption: PaymentOption?
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpLayout()
-        
+
         activityIndicator.startAnimating()
         allPaymentOptions { (success, paymentOptions) in
-            self.paymentOptions = paymentOptions
+            self.destinationPaymentOptions = paymentOptions
             DispatchQueue.main.async {
                 self.setUpRemittanceViews()
                 self.activityIndicator.stopAnimating()
@@ -122,10 +113,10 @@ private extension PaymentsDetailsViewController {
     }
 
     func setUpRemittanceViews() {
-        guard let firstOption = paymentOptions?.first else {
+        guard let sourceOption = sourcePaymentOption, let destinationOption = destinationPaymentOptions?.first else {
             return
         }
-        remittanceSourceView = RemittanceOptionView(withOption: firstOption)
+        remittanceSourceView = RemittanceOptionView(withOption: sourceOption)
         remittanceSourceView.isUserInteractionEnabled = false
 
         sourceButton.addSubview(remittanceSourceView)
@@ -150,7 +141,7 @@ private extension PaymentsDetailsViewController {
                                                       constant: 0))
         sourceButton.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v]|", options: [], metrics: nil, views: ["v": remittanceSourceView]))
 
-        remittanceDestinationView = RemittanceOptionView(withOption: firstOption)
+        remittanceDestinationView = RemittanceOptionView(withOption: destinationOption)
         remittanceDestinationView.isUserInteractionEnabled = false
 
         remittanceDestinationView.titleImage = UIImage(named: "payments_template_sberbank")

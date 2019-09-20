@@ -45,8 +45,6 @@ class TestDepositsService: DepositsServiceProtocol {
                                 let original = cardData["original"] as? Dictionary<String, Any> {
 
                                 let depositProductName = original["depositProductName"] as? String
-
-                                // Kryukov. Stop acc
                                 let depositProductID = original["depositProductID"] as? Int
                                 if depositProductID == 10000000088 { continue }
 

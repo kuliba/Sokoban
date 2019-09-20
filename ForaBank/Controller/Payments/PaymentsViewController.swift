@@ -8,6 +8,7 @@
 
 import UIKit
 import Hero
+import ReSwift
 
 protocol Payment {
     var iconName: String { get }
@@ -32,7 +33,7 @@ struct PaymentService: Payment {
     let name: String
 }
 
-class PaymentsViewController: UIViewController {
+class PaymentsViewController: UIViewController, StoreSubscriber {
     
     // MARK: - Properties
     @IBOutlet weak var tableView: CustomTableView!
@@ -82,7 +83,6 @@ class PaymentsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         NetworkManager.shared().isSignedIn { [unowned self] (flag) in
-//            print("viewWillAppear \(flag)")
             self.isSignedUp = flag
         }
         containerView.hero.modifiers = [
@@ -127,6 +127,10 @@ class PaymentsViewController: UIViewController {
         containerView.hero.modifiers = nil
         containerView.hero.id = nil
         view.hero.modifiers = nil
+    }
+    
+    func newState(state: State) {
+        
     }
 }
 
