@@ -121,8 +121,8 @@ extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
       if let services = section as? [Operations],
             let serviceCell = tableView.dequeueReusableCell(withIdentifier: paymentCellId, for: indexPath) as? PaymentCell {
             
-            serviceCell.titleLabel.text = services[index].name
-            
+            serviceCell.titleLabel.text = payments[indexPath.row].name
+        
             serviceCell.bottomSeparatorView.isHidden = index == services.endIndex - 1
             
             return serviceCell

@@ -38,13 +38,14 @@ class PaymentServices: PaymetsServiceProtocol {
                     if let json = response.result.value as? Dictionary<String, Any>,
                         let data = json["data"] as? Array<Any> {
                         for cardData in data {
-                            if let cardData = cardData as? Dictionary<String, Any>,
-                                let original = cardData["original"] as? Dictionary<String, Any> {
-                                let title = original["name"] as? String
+                            if let cardData = cardData as? Dictionary<String, Any>{
+                                let name = cardData["name"] as? String
+                       
                                 
-                                let payment = Operations(name: title)
+                                let payment = Operations(name: name)
                                payments.append(payment)
                             }
+                            print(payments)
                         }
                         completionHandler(true, payments)
                     } else {
