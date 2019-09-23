@@ -9,9 +9,10 @@
 import UIKit
 import FlexiblePageControl
 import Hero
+import ReSwift
 
-class RegistrationCodeVerificationViewController: UIViewController{
-    
+class RegistrationCodeVerificationViewController: UIViewController, StoreSubscriber {
+
     // MARK: - Properties
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var containerView: UIView!
@@ -21,7 +22,7 @@ class RegistrationCodeVerificationViewController: UIViewController{
     @IBOutlet weak var centralView: UIView!
     @IBOutlet weak var header: UIView!
     @IBOutlet weak var activityIndicator: ActivityIndicatorView?
-    
+
     var segueId: String? = nil
     var backSegueId: String? = nil
 
@@ -37,7 +38,7 @@ class RegistrationCodeVerificationViewController: UIViewController{
 //            }
 //        }
 //    }
-    
+
     // MARK: - Actions
     @IBAction func backButtonCLicked(_ sender: Any) {
         view.endEditing(true)
@@ -46,24 +47,17 @@ class RegistrationCodeVerificationViewController: UIViewController{
     }
     @IBAction func authContinue(_ sender: Any) {
         view.endEditing(true)
-//        print("continueButtonClicked")
         activityIndicator?.startAnimation()
         continueButton.isHidden = true
         NetworkManager.shared().checkVerificationCode(code: self.codeNumberTextField.text ?? "") { [weak self] (success) in
             self?.continueButton.isHidden = false
             self?.activityIndicator?.stopAnimating()
             if success {
-                let rootVC = self?.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
-                if let t = self?.tabBarController as? TabBarController {
-                    t.setNumberOfTabsAvailable()
-                }
-                self?.segueId = "dismiss"
-                rootVC.segueId = "SignedIn"
-                self?.navigationController?.setViewControllers([rootVC], animated: true)
+                store.dispatch(finishVerification)
             } else {
                 let alert = UIAlertController(title: "Неудача", message: "Неверный код", preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-                alert.addAction(UIAlertAction(title: "Отменить", style: UIAlertAction.Style.default, handler: {(action) in
+                alert.addAction(UIAlertAction(title: "Отменить", style: UIAlertAction.Style.default, handler: { (action) in
                     let rootVC = self?.storyboard?.instantiateViewController(withIdentifier: "LoginOrSignupViewController") as! LoginOrSignupViewController
                     self?.segueId = "dismiss"
                     rootVC.segueId = "logout"
@@ -73,12 +67,12 @@ class RegistrationCodeVerificationViewController: UIViewController{
             }
         }
     }
-    
+
     @IBAction func regContinue(_ sender: Any) {
         guard let str = self.codeNumberTextField.text,
             let code = Int(str) else {
-                
-            return
+
+                return
         }
         activityIndicator?.startAnimation()
         continueButton.isHidden = true
@@ -94,7 +88,7 @@ class RegistrationCodeVerificationViewController: UIViewController{
             }
         }
     }
-    
+
     @IBAction func firstAuth(_ sender: Any) {
         activityIndicator?.startAnimation()
         continueButton.isHidden = true
@@ -106,7 +100,7 @@ class RegistrationCodeVerificationViewController: UIViewController{
             } else {
                 let alert = UIAlertController(title: "Неудача", message: "Неверный код", preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-                alert.addAction(UIAlertAction(title: "Отменить", style: UIAlertAction.Style.default, handler: {(action) in
+                alert.addAction(UIAlertAction(title: "Отменить", style: UIAlertAction.Style.default, handler: { (action) in
                     let rootVC = self?.storyboard?.instantiateViewController(withIdentifier: "LoginOrSignupViewController") as! LoginOrSignupViewController
                     self?.segueId = "dismiss"
                     rootVC.segueId = "logout"
@@ -116,28 +110,40 @@ class RegistrationCodeVerificationViewController: UIViewController{
             }
         }
     }
+
+    func newState(state: VerificationCodeState) {
+        guard state.isShown == true else {
+            return
+        }
+        backButton.isHidden = true
+    }
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        codeNumberTextField.becomeFirstResponder()
-        
+        _ = codeNumberTextField.becomeFirstResponder()
+
         addGradientLayerView()
 //        addCircleView()
         if pageControl != nil {
             setUpPageControl()
         }
-        
+
         codeNumberTextField.delegate = self
         view.clipsToBounds = true
-        
+
         if let head = header as? MaskedNavigationBar {
             head.gradientLayer.startPoint = CGPoint(x: 0, y: 1)
             head.gradientLayer.endPoint = CGPoint(x: 1, y: 1)
-            head.gradientLayer.colors = [UIColor(red: 237/255, green: 73/255, blue: 73/255, alpha: 1).cgColor, UIColor(red: 241/255, green: 176/255, blue: 116/255, alpha: 1).cgColor]
+            head.gradientLayer.colors = [UIColor(red: 237 / 255, green: 73 / 255, blue: 73 / 255, alpha: 1).cgColor, UIColor(red: 241 / 255, green: 176 / 255, blue: 116 / 255, alpha: 1).cgColor]
         }
 //        messageLabel?.text = message
+
+        store.subscribe(self) {
+            return $0.select { $0.verificationCodeState }
+        }
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if let nav = navigationController as? ProfileNavigationController,
@@ -173,7 +179,7 @@ class RegistrationCodeVerificationViewController: UIViewController{
             ]
         }
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if let nav = navigationController as? ProfileNavigationController,
@@ -189,16 +195,18 @@ class RegistrationCodeVerificationViewController: UIViewController{
         header?.hero.modifiers = nil
         header?.hero.id = nil
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        store.unsubscribe(self)
+
         if segueId == "dismiss" {
             containerView.hero.id = "content"
             containerView.hero.modifiers = [
                 HeroModifier.beginWith([
                     HeroModifier.opacity(1),
                     HeroModifier.zPosition(2)
-                    ]),
+                ]),
                 HeroModifier.duration(0.5),
                 HeroModifier.translate(CGPoint(x: 0, y: view.frame.height)),
             ]
@@ -222,7 +230,7 @@ class RegistrationCodeVerificationViewController: UIViewController{
                 HeroModifier.beginWith([
                     HeroModifier.opacity(1),
                     HeroModifier.zPosition(2)
-                    ]),
+                ]),
                 HeroModifier.duration(0.5),
                 HeroModifier.translate(CGPoint(x: 0, y: view.frame.height)),
             ]
@@ -235,7 +243,7 @@ class RegistrationCodeVerificationViewController: UIViewController{
                 HeroModifier.opacity(0)
             ]
         }
-        if segueId == "smsVerification"  {
+        if segueId == "smsVerification" {
             if let nav = navigationController as? ProfileNavigationController,
                 pageControl != nil {
                 print("sms vc \(nav.pageControl.isHidden)")
@@ -251,7 +259,7 @@ class RegistrationCodeVerificationViewController: UIViewController{
 //                HeroModifier.zPosition(0)
             ]
         }
-        if segueId == "permissions"  {
+        if segueId == "permissions" {
             if let nav = navigationController as? ProfileNavigationController,
                 pageControl != nil {
                 nav.pageControl.isHidden = false
@@ -265,7 +273,7 @@ class RegistrationCodeVerificationViewController: UIViewController{
             ]
         }
     }
-    
+
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         containerView.hero.modifiers = nil
@@ -277,7 +285,7 @@ class RegistrationCodeVerificationViewController: UIViewController{
         header?.hero.modifiers = nil
         header?.hero.id = nil
     }
-    
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         view.endEditing(true)
         segueId = nil
@@ -294,7 +302,7 @@ class RegistrationCodeVerificationViewController: UIViewController{
 }
 
 // MARK: - Private methods
-extension RegistrationCodeVerificationViewController: UITextFieldDelegate  {
+extension RegistrationCodeVerificationViewController: UITextFieldDelegate {
     func addGradientLayerView() {
         gradientView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         let gradientLayer = CAGradientLayer()
@@ -302,15 +310,15 @@ extension RegistrationCodeVerificationViewController: UITextFieldDelegate  {
         gradientLayer.startPoint = CGPoint(x: 0, y: 1)
         gradientLayer.endPoint = CGPoint(x: 1, y: 1)
         if header is MaskedNavigationBar {
-            gradientLayer.colors = [UIColor(red: 237/255, green: 73/255, blue: 73/255, alpha: 1).cgColor, UIColor(red: 241/255, green: 176/255, blue: 116/255, alpha: 1).cgColor]
+            gradientLayer.colors = [UIColor(red: 237 / 255, green: 73 / 255, blue: 73 / 255, alpha: 1).cgColor, UIColor(red: 241 / 255, green: 176 / 255, blue: 116 / 255, alpha: 1).cgColor]
         } else {
-            gradientLayer.colors = [UIColor(red: 241/255, green: 176/255, blue: 116/255, alpha: 1).cgColor, UIColor(red: 237/255, green: 73/255, blue: 73/255, alpha: 1).cgColor]
+            gradientLayer.colors = [UIColor(red: 241 / 255, green: 176 / 255, blue: 116 / 255, alpha: 1).cgColor, UIColor(red: 237 / 255, green: 73 / 255, blue: 73 / 255, alpha: 1).cgColor]
         }
         gradientView.layer.addSublayer(gradientLayer)
 //        gradientView.alpha = 0
         view.insertSubview(gradientView, at: 0)
     }
-    
+
     func addCircleView() {
         circleView.frame = CGRect(x: 0, y: 0, width: view.frame.width * 5, height: view.frame.width * 5)
         circleView.center = view.center
@@ -323,12 +331,12 @@ extension RegistrationCodeVerificationViewController: UITextFieldDelegate  {
         circleView.clipsToBounds = true
         view.insertSubview(circleView, at: 1)
     }
-    
+
     func setUpPageControl() {
         pageControl.numberOfPages = 4
-        pageControl.pageIndicatorTintColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)
-        pageControl.currentPageIndicatorTintColor = UIColor(red: 234/255, green: 68/255, blue: 66/255, alpha: 1)
-        
+        pageControl.pageIndicatorTintColor = UIColor(red: 220 / 255, green: 220 / 255, blue: 220 / 255, alpha: 1)
+        pageControl.currentPageIndicatorTintColor = UIColor(red: 234 / 255, green: 68 / 255, blue: 66 / 255, alpha: 1)
+
         let config = FlexiblePageControl.Config(
             displayCount: 4,
             dotSize: 7,
@@ -336,7 +344,7 @@ extension RegistrationCodeVerificationViewController: UITextFieldDelegate  {
             smallDotSizeRatio: 0.2,
             mediumDotSizeRatio: 0.5
         )
-        
+
         pageControl.setConfig(config)
         pageControl.animateDuration = 0
         pageControl.setCurrentPage(at: 2)
@@ -344,7 +352,7 @@ extension RegistrationCodeVerificationViewController: UITextFieldDelegate  {
 //        pageControl.frame.origin.y = 40
 //        containerView.addSubview(pageControl)
     }
-    
+
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let set = CharacterSet.decimalDigits
         if (string.rangeOfCharacter(from: set.inverted) != nil) {

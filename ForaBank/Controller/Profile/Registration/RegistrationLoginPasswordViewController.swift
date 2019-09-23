@@ -16,7 +16,7 @@ enum PasswordStrength: Int {
     case Moderate
     case Strong
     static func checkStrength(password: String) -> PasswordStrength {
-        var len: Int = password.count
+        let len: Int = password.count
         var strength: Int = 0
         switch len {
         case 0:
@@ -30,7 +30,7 @@ enum PasswordStrength: Int {
         }
         // Upper case, Lower case, Number & Symbols
         let patterns = ["^(?=.*[A-Z]).*$", "^(?=.*[a-z]).*$", "^(?=.*[0-9]).*$", "^(?=.*[!@#%&-_=:;\"'<>,`~\\*\\?\\+\\[\\]\\(\\)\\{\\}\\^\\$\\|\\\\\\.\\/]).*$"]
-        
+
         for pattern in patterns {
             let set = CharacterSet(charactersIn: pattern)
             if let r = password.rangeOfCharacter(from: set, options: .regularExpression, range: Range(uncheckedBounds: (lower: password.startIndex, upper: password.endIndex))),
@@ -55,7 +55,7 @@ enum PasswordStrength: Int {
 }
 
 class RegistrationLoginPasswordViewController: UIViewController {
-    
+
     // MARK: - Properties
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var containerView: UIView!
@@ -71,30 +71,30 @@ class RegistrationLoginPasswordViewController: UIViewController {
     @IBOutlet weak var agreementLabel: UILabel!
     @IBOutlet weak var inputPasswordLabel: UILabel!
     @IBOutlet weak var activityIndicatorView: ActivityIndicatorView!
-    
+
     var headerSnapshot: UIView? = nil
-    
+
     var cardNumber: String? = nil
-    
+
     var segueId: String? = nil
     var backSegueId: String? = nil
 //    let pageControl = FlexiblePageControl()
     let gradientView = UIView()
     let circleView = UIView()
-    
+
     // MARK: - Actions
     @IBAction func backButtonCLicked(_ sender: Any) {
         segueId = backSegueId
         view.endEditing(true)
         self.navigationController?.popViewController(animated: true)
     }
-    
+
     @IBAction func `continue`(_ sender: Any) {
-        if self.phoneTextField.text == ""{
+        if self.phoneTextField.text == "" {
             let alert = UIAlertController(title: "Неудача", message: "Введите номер телефона", preferredStyle: UIAlertController.Style.alert)
             alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
-            
+
             return
         }
         guard let phone = self.phoneTextField.text?.removeWhitespace()
@@ -102,35 +102,36 @@ class RegistrationLoginPasswordViewController: UIViewController {
             .replace(string: "(", replacement: "")
             .replace(string: ")", replacement: "")
             .replace(string: "-", replacement: "")else {
-            return
+                return
         }
-        
-        if self.loginTextField.text == ""{
+
+        if self.loginTextField.text == "" {
             let alert = UIAlertController(title: "Неудача", message: "Введите логин", preferredStyle: UIAlertController.Style.alert)
             alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
-            
+
             return
         }
-        
-        if self.passwordTextField.text != self.confirmPasswordTextField.text && self.passwordTextField.text != ""  {
+
+        if self.passwordTextField.text != self.confirmPasswordTextField.text && self.passwordTextField.text != "" {
             let alert = UIAlertController(title: "Неудача", message: "Пароли не совпадают", preferredStyle: UIAlertController.Style.alert)
             alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
-            
+
             return
         }
-        
-        if cardNumber == nil {
-            cardNumber = "4256901050031063"
+
+        guard let cardNum = cardNumber, let login = self.loginTextField.text, let pwd = self.passwordTextField.text else {
+            return
         }
         activityIndicatorView.startAnimation()
         continueButton.isHidden = true
-        NetworkManager.shared().checkClient(cardNumber: cardNumber!, login: self.loginTextField.text ?? "", password: self.passwordTextField.text ?? "", phone: phone, verificationCode: 0, completionHandler: {[weak self] success, errorMessage in
+        NetworkManager.shared().checkClient(cardNumber: cardNum, login: login, password: pwd, phone: phone, verificationCode: 0, completionHandler: { [weak self] success, errorMessage in
 
             self?.continueButton.isHidden = false
             self?.activityIndicatorView.stopAnimating()
             if success {
+                store.dispatch(createCredentials(login: login, pwd: pwd))
                 self?.performSegue(withIdentifier: "regSmsVerification", sender: nil)
             } else {
                 let alert = UIAlertController(title: "Неудача", message: errorMessage, preferredStyle: UIAlertController.Style.alert)
@@ -139,7 +140,7 @@ class RegistrationLoginPasswordViewController: UIViewController {
             }
         })
     }
-    
+
     @IBAction func acceptAgreement(_ sender: Any) {
         if agreementCheckbox.isSelected {
             continueButton.isEnabled = false
@@ -151,7 +152,7 @@ class RegistrationLoginPasswordViewController: UIViewController {
             agreementCheckbox.isSelected = true
         }
     }
-    
+
     @IBAction func showPassword(_ sender: UIButton) {
         if passwordTextField.isSecureTextEntry == true {
             passwordTextField.isSecureTextEntry = false
@@ -179,29 +180,29 @@ class RegistrationLoginPasswordViewController: UIViewController {
                 inputPasswordLabel.text = "Введите пароль"
                 inputPasswordLabel.textColor = UIColor(red: 0.61, green: 0.61, blue: 0.61, alpha: 1)
                 currentBorderColor = inputPasswordLabel.textColor
-                defaultBorderColor = .clear
+            defaultBorderColor = .clear
             case .Weak:
                 inputPasswordLabel.text = "Ненадежный"
                 inputPasswordLabel.textColor = UIColor(red: 0.92, green: 0.27, blue: 0.26, alpha: 1)
                 currentBorderColor = inputPasswordLabel.textColor
-                defaultBorderColor = inputPasswordLabel.textColor
+            defaultBorderColor = inputPasswordLabel.textColor
             case .Moderate:
                 inputPasswordLabel.text = "Средний"
                 inputPasswordLabel.textColor = UIColor(red: 0.95, green: 0.68, blue: 0.45, alpha: 1)
                 currentBorderColor = inputPasswordLabel.textColor
-                defaultBorderColor = inputPasswordLabel.textColor
+            defaultBorderColor = inputPasswordLabel.textColor
             case .Strong:
                 inputPasswordLabel.text = "Надежный"
                 inputPasswordLabel.textColor = UIColor(red: 0.13, green: 0.76, blue: 0.51, alpha: 1)
                 currentBorderColor = inputPasswordLabel.textColor
-                defaultBorderColor = inputPasswordLabel.textColor
+            defaultBorderColor = inputPasswordLabel.textColor
             }
             passwordTextField.defaultBorderColor = defaultBorderColor
             passwordTextField.selectedBorderColor = currentBorderColor
             passwordTextField.layer.borderColor = currentBorderColor.cgColor
         }
     }
-    
+
     @IBAction func phoneNumberChanged(_ sender: UITextField) {
         let updatedText = sender.text ?? ""
         let cleanPhoneNumber = updatedText.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
@@ -209,7 +210,7 @@ class RegistrationLoginPasswordViewController: UIViewController {
 //        if string.count + range.location > mask.count {
 //            return false
 //        }
-        
+
         var result = ""
         var index = cleanPhoneNumber.startIndex
         for ch in mask {
@@ -228,33 +229,33 @@ class RegistrationLoginPasswordViewController: UIViewController {
         phoneTextField.text = result
 //        return false
     }
-    
-    
+
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         addGradientLayerView()
 //        addCircleView()
         if pageControl != nil {
             setUpPageControl()
         }
         view.clipsToBounds = true
-        
+
         if let head = header as? MaskedNavigationBar {
             head.gradientLayer.startPoint = CGPoint(x: 0, y: 1)
             head.gradientLayer.endPoint = CGPoint(x: 1, y: 1)
-            head.gradientLayer.colors = [UIColor(red: 241/255, green: 176/255, blue: 116/255, alpha: 1).cgColor, UIColor(red: 237/255, green: 73/255, blue: 73/255, alpha: 1).cgColor]
+            head.gradientLayer.colors = [UIColor(red: 241 / 255, green: 176 / 255, blue: 116 / 255, alpha: 1).cgColor, UIColor(red: 237 / 255, green: 73 / 255, blue: 73 / 255, alpha: 1).cgColor]
         }
-        
+
         phoneTextField.delegate = self
-        
+
 //        agreementLabel.textColor = UIColor(red: 0.18, green: 0.18, blue: 0.18, alpha: 1)
 //        let str = NSMutableAttributedString(string: "Я прочитал ", attributes: [NSAttributedString.Key.font : UIFont(name: "Roboto-Light", size: 13)!])
 //        str.append((NSAttributedString(string: "условия банка", attributes: [NSAttributedString.Key.font : UIFont(name: "Roboto-Light", size: 13)!])))
 //        agreementLabel.attributedText = str
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if let nav = navigationController as? ProfileNavigationController,
@@ -292,7 +293,7 @@ class RegistrationLoginPasswordViewController: UIViewController {
             header.hero.id = "head"
         }
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if let nav = navigationController as? ProfileNavigationController,
@@ -308,13 +309,12 @@ class RegistrationLoginPasswordViewController: UIViewController {
         header.hero.modifiers = nil
         header?.hero.id = nil
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
+
         if let nav = navigationController as? ProfileNavigationController,
             pageControl != nil {
-            print("log vc \(nav.pageControl.isHidden)")
             if centralView.contentOffset.y == 0 {
                 nav.pageControl.isHidden = false
             } else {
@@ -343,7 +343,7 @@ class RegistrationLoginPasswordViewController: UIViewController {
             header.hero.id = "head"
         }
     }
-    
+
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         if pageControl != nil {
@@ -357,7 +357,7 @@ class RegistrationLoginPasswordViewController: UIViewController {
         header?.hero.modifiers = nil
         header?.hero.id = nil
     }
-    
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         view.endEditing(true)
         segueId = nil
@@ -379,12 +379,12 @@ private extension RegistrationLoginPasswordViewController {
         gradientLayer.frame.size = gradientView.frame.size
         gradientLayer.startPoint = CGPoint(x: 0, y: 1)
         gradientLayer.endPoint = CGPoint(x: 1, y: 1)
-        gradientLayer.colors = [UIColor(red: 241/255, green: 176/255, blue: 116/255, alpha: 1).cgColor, UIColor(red: 237/255, green: 73/255, blue: 73/255, alpha: 1).cgColor]
+        gradientLayer.colors = [UIColor(red: 241 / 255, green: 176 / 255, blue: 116 / 255, alpha: 1).cgColor, UIColor(red: 237 / 255, green: 73 / 255, blue: 73 / 255, alpha: 1).cgColor]
         gradientView.layer.addSublayer(gradientLayer)
         //        gradientView.alpha = 0
         view.insertSubview(gradientView, at: 0)
     }
-    
+
     func addCircleView() {
         circleView.frame = CGRect(x: 0, y: 0, width: view.frame.width * 5, height: view.frame.width * 5)
         circleView.center = view.center
@@ -397,12 +397,12 @@ private extension RegistrationLoginPasswordViewController {
         circleView.clipsToBounds = true
         view.insertSubview(circleView, at: 1)
     }
-    
+
     func setUpPageControl() {
         pageControl.numberOfPages = 4
-        pageControl.pageIndicatorTintColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)
-        pageControl.currentPageIndicatorTintColor = UIColor(red: 234/255, green: 68/255, blue: 66/255, alpha: 1)
-        
+        pageControl.pageIndicatorTintColor = UIColor(red: 220 / 255, green: 220 / 255, blue: 220 / 255, alpha: 1)
+        pageControl.currentPageIndicatorTintColor = UIColor(red: 234 / 255, green: 68 / 255, blue: 66 / 255, alpha: 1)
+
         let config = FlexiblePageControl.Config(
             displayCount: 4,
             dotSize: 7,
@@ -410,7 +410,7 @@ private extension RegistrationLoginPasswordViewController {
             smallDotSizeRatio: 0.2,
             mediumDotSizeRatio: 0.5
         )
-        
+
         pageControl.setConfig(config)
         pageControl.animateDuration = 0
         pageControl.setCurrentPage(at: 1)
@@ -423,7 +423,7 @@ extension RegistrationLoginPasswordViewController: UITextFieldDelegate {
         if textField == phoneTextField,
             let text = textField.text,
             let textRange = Range(range, in: text) {
-            
+
 //            let updatedText = text.replacingCharacters(in: textRange,
 //                                                       with: string)
 //            let cleanPhoneNumber = updatedText.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
@@ -459,6 +459,6 @@ extension RegistrationLoginPasswordViewController: UITextFieldDelegate {
         }
         return true
     }
-    
+
 }
 

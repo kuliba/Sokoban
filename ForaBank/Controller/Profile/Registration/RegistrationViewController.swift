@@ -11,6 +11,7 @@ import DeviceKit
 import FlexiblePageControl
 import Hero
 import IQKeyboardManagerSwift
+
 class RegistrationViewController: UIViewController {
 
     // MARK: - Properties
