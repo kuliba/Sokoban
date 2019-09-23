@@ -273,7 +273,7 @@
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Комиссия (3%)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wdJ-3e-zpg">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Комиссия (0%)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wdJ-3e-zpg">
                                                 <rect key="frame" x="14" y="381" width="292" height="21"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="21" id="blS-6h-HTh"/>
@@ -289,7 +289,7 @@
                                                     <constraint firstAttribute="height" constant="53" id="Ug4-55-Xn6"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="18"/>
-                                                <state key="normal" title="Отправить">
+                                                <state key="normal" title="Продолжить">
                                                     <color key="titleColor" red="0.87647289037704468" green="0.40053808689117432" blue="0.35289543867111206" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 </state>
                                                 <connections>
@@ -479,7 +479,7 @@
                                                     <constraint firstAttribute="height" constant="53" id="ywc-w7-KXj"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="18"/>
-                                                <state key="normal" title="Продолжить">
+                                                <state key="normal" title="Отправить">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
                                                 <connections>
@@ -561,7 +561,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u46-KW-caT" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u46-KW-caT" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
                                 <rect key="frame" x="14" y="483" width="292" height="53"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="53" id="97Y-7t-JhH"/>
@@ -574,7 +574,7 @@
                                     <action selector="returnButtonClicked:" destination="EQl-SA-zTp" eventType="touchUpInside" id="ALb-bs-vwW"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yhq-KU-zzm" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yhq-KU-zzm" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
                                 <rect key="frame" x="14" y="422" width="292" height="53"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -585,26 +585,19 @@
                                     <color key="titleColor" red="0.0078361118210000004" green="0.7385174632" blue="0.61187428239999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 </state>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sberbank_logo" translatesAutoresizingMaskIntoConstraints="NO" id="QuN-QJ-FH6">
-                                <rect key="frame" x="96" y="63" width="128" height="128"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="QuN-QJ-FH6" secondAttribute="height" multiplier="1:1" id="1JG-hR-bzW"/>
-                                    <constraint firstAttribute="width" constant="128" id="Adl-jn-Zcw"/>
-                                </constraints>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-9550 ₽" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J5q-LI-SJd">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="-9550 ₽" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J5q-LI-SJd">
                                 <rect key="frame" x="106.5" y="199" width="107" height="42.5"/>
                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="32"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Перевод успешно совершен" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aGd-R4-Z3w">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Перевод успешно совершен" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aGd-R4-Z3w">
                                 <rect key="frame" x="47" y="249.5" width="226.5" height="22.5"/>
                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V48-Wh-DLl">
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="V48-Wh-DLl">
                                 <rect key="frame" x="14" y="287" width="292" height="120"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AxA-g6-n24">
@@ -751,19 +744,14 @@
                         <color key="backgroundColor" red="0.0078431372549019607" green="0.73725490196078436" blue="0.61176470588235299" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="V48-Wh-DLl" secondAttribute="trailing" constant="14" id="0wY-Md-tjh"/>
-                            <constraint firstItem="QuN-QJ-FH6" firstAttribute="centerX" secondItem="Gtw-UZ-fge" secondAttribute="centerX" id="Ith-jm-yos"/>
                             <constraint firstItem="Yhq-KU-zzm" firstAttribute="trailing" secondItem="V48-Wh-DLl" secondAttribute="trailing" id="JGP-oi-XZU"/>
-                            <constraint firstItem="QuN-QJ-FH6" firstAttribute="top" secondItem="Gtw-UZ-fge" secondAttribute="top" constant="43" id="LSz-mg-VVy"/>
                             <constraint firstItem="aGd-R4-Z3w" firstAttribute="top" secondItem="J5q-LI-SJd" secondAttribute="bottom" constant="8" id="LjS-OB-onY"/>
                             <constraint firstItem="u46-KW-caT" firstAttribute="leading" secondItem="Yhq-KU-zzm" secondAttribute="leading" id="O3E-QD-rFe"/>
                             <constraint firstItem="Yhq-KU-zzm" firstAttribute="top" secondItem="V48-Wh-DLl" secondAttribute="bottom" constant="15" id="QSc-ba-BUe"/>
-                            <constraint firstItem="J5q-LI-SJd" firstAttribute="centerX" secondItem="QuN-QJ-FH6" secondAttribute="centerX" id="V3e-9c-m3p"/>
                             <constraint firstItem="u46-KW-caT" firstAttribute="top" secondItem="Yhq-KU-zzm" secondAttribute="bottom" constant="8" id="ZCZ-7K-FIF"/>
-                            <constraint firstItem="J5q-LI-SJd" firstAttribute="top" secondItem="QuN-QJ-FH6" secondAttribute="bottom" constant="8" id="ga2-ga-EJc"/>
                             <constraint firstItem="Yhq-KU-zzm" firstAttribute="leading" secondItem="V48-Wh-DLl" secondAttribute="leading" id="lUS-7s-Mha"/>
                             <constraint firstItem="V48-Wh-DLl" firstAttribute="top" secondItem="aGd-R4-Z3w" secondAttribute="bottom" constant="15" id="rCZ-49-7ND"/>
                             <constraint firstItem="V48-Wh-DLl" firstAttribute="leading" secondItem="Gtw-UZ-fge" secondAttribute="leading" constant="14" id="t8J-LX-gG6"/>
-                            <constraint firstItem="aGd-R4-Z3w" firstAttribute="centerX" secondItem="QuN-QJ-FH6" secondAttribute="centerX" id="vMW-sD-Fh8"/>
                             <constraint firstItem="u46-KW-caT" firstAttribute="trailing" secondItem="Yhq-KU-zzm" secondAttribute="trailing" id="w1v-xB-LeZ"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Gtw-UZ-fge"/>
@@ -781,7 +769,6 @@
     <resources>
         <image name="Group 6 Copy" width="9" height="25"/>
         <image name="button_back" width="8" height="14"/>
-        <image name="sberbank_logo" width="164" height="160"/>
         <image name="tabbar_icon_payment" width="25" height="20"/>
         <image name="vertical_arrows" width="5" height="11"/>
     </resources>
