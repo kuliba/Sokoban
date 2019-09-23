@@ -18,6 +18,10 @@ let manageWrongPasscode = Thunk<State> { dispatch, getState in
     dispatch(AddSignInCounter())
 }
 
+let canceledPasscodeSignIn = Thunk<State> { dispatch, getState in
+    dispatch(UpdatePasscodeSingInProcess(isShown: false))
+}
+
 func startSignInWith(passcode: String) -> Thunk<State> {
     return Thunk<State> { dispatch, getState in
         guard passcode == keychainCredentialsPasscode() else {
@@ -52,7 +56,7 @@ func signIn(passcode: String?) -> Thunk<State> {
                                       password: nonNilUserData.pwd,
                                       completionHandler: { success, errorMessage in
                                           if success {
-                                            dispatch(startVerification)
+                                              dispatch(startVerification)
                                           }
                                       })
     }
