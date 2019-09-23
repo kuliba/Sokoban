@@ -1,6 +1,0 @@
-framework module AppLocker {
-  umbrella header "AppLocker-umbrella.h"
-
-  export *
-  module * { export * }
-}

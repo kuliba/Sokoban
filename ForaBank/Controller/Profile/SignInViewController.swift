@@ -18,43 +18,39 @@ class SignInViewController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var centralView: UIView!
-    
+
     var segueId: String? = nil
     var backSegueId: String? = nil
-    
-    
+
+
     // MARK: - Actions
     @IBAction func backButtonClicked() {
         view.endEditing(true)
         segueId = backSegueId
         navigationController?.popViewController(animated: true)
     }
-    
+
     @IBAction func signInButtonClicked() {
         NetworkManager.shared().login(login: self.loginTextField.text ?? "",
                                       password: self.passwordTextField.text ?? "",
-                                      completionHandler: {[unowned self] success, errorMessage in
-            if success {
-                self.performSegue(withIdentifier: "smsVerification", sender: self)
-                
-            } else {
-                let alert = UIAlertController(title: "Неудача", message: errorMessage, preferredStyle: UIAlertController.Style.alert)
-                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-                                        };
-                                   
-                                        
-        }) 
+                                      completionHandler: { [unowned self] success, errorMessage in
+                                          if success {
+                                              self.performSegue(withIdentifier: "smsVerification", sender: self)
+                                              store.dispatch(createCredentials(login: self.loginTextField.text ?? "", pwd: self.passwordTextField.text ?? ""))
+                                          } else {
+                                              let alert = UIAlertController(title: "Неудача", message: errorMessage, preferredStyle: UIAlertController.Style.alert)
+                                              alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                                              self.present(alert, animated: true, completion: nil)
+                                          }
+                                      })
     }
-    
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        loginTextField.becomeFirstResponder()
-      
-      
+        _ = loginTextField.becomeFirstResponder()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if segueId == "SignIn" {
@@ -86,7 +82,7 @@ class SignInViewController: UIViewController {
             ]
         }
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         contentView.hero.modifiers = nil
@@ -95,7 +91,7 @@ class SignInViewController: UIViewController {
         view.hero.id = nil
         centralView.hero.modifiers = nil
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if segueId == "SignIn" {
@@ -122,7 +118,7 @@ class SignInViewController: UIViewController {
             ]
         }
     }
-    
+
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         contentView.hero.modifiers = nil
@@ -131,7 +127,7 @@ class SignInViewController: UIViewController {
         view.hero.id = nil
         centralView.hero.modifiers = nil
     }
-    
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         view.endEditing(true)
         segueId = nil

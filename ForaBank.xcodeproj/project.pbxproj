@@ -134,11 +134,14 @@
 		96094AF42319441600A80412 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96094AF32319441600A80412 /* SettingsViewController.swift */; };
 		960AD38822FC1826005399D6 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 960AD38722FC1826005399D6 /* Default-568h@2x.png */; };
 		9610CB8E22FD6F0C00FE7C84 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9610CB8D22FD6F0C00FE7C84 /* Account.swift */; };
+		9697E29F2334C29700974505 /* OperatorsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9697E29E2334C29700974505 /* OperatorsList.swift */; };
+		9697E2A32334E30500974505 /* ServicesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9697E2A22334E30500974505 /* ServicesList.swift */; };
 		9698995E2303076F0066C55B /* LoansViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9698995D2303076F0066C55B /* LoansViewController.swift */; };
 		969899642303F2E20066C55B /* Loan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969899632303F2E20066C55B /* Loan.swift */; };
 		969899662303F3380066C55B /* LoansCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969899652303F3380066C55B /* LoansCell.swift */; };
 		969899682303F4060066C55B /* LoansService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969899672303F4060066C55B /* LoansService.swift */; };
 		9698996A2303FD190066C55B /* LoansCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 969899692303FD190066C55B /* LoansCell.xib */; };
+		96AB361923323B2B009FD828 /* CardHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AB361823323B2B009FD828 /* CardHistory.swift */; };
 		96BEAE4922FABBA00029C63D /* iCarousel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE4822FABBA00029C63D /* iCarousel.framework */; };
 		96BEAE4B22FABBA40029C63D /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE4A22FABBA40029C63D /* Alamofire.framework */; };
 		96BEAE4D22FABBA80029C63D /* DeviceKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE4C22FABBA80029C63D /* DeviceKit.framework */; };
@@ -146,7 +149,6 @@
 		96BEAE5122FABBB20029C63D /* Hero.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE5022FABBB20029C63D /* Hero.framework */; };
 		96BEAE5322FABBB60029C63D /* IQKeyboardManagerSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE5222FABBB60029C63D /* IQKeyboardManagerSwift.framework */; };
 		96D0F1C8230694CB0064CECA /* LoansDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D0F1C7230694CA0064CECA /* LoansDetailsViewController.swift */; };
-		96D0F1CA23069B250064CECA /* LoansSegueAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D0F1C923069B250064CECA /* LoansSegueAnimator.swift */; };
 		96D0F1CE230AE4400064CECA /* DepositDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D0F1CD230AE4400064CECA /* DepositDetailsViewController.swift */; };
 		96EC41812301A6890087BFB0 /* AccountsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EC41802301A6890087BFB0 /* AccountsService.swift */; };
 		A5004D3121EF37DC0098E510 /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5004D3021EF37DC0098E510 /* ActivityIndicatorView.swift */; };
@@ -205,14 +207,43 @@
 		A5C5E6E621A2B492001D6250 /* DetailedCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6E421A2B491001D6250 /* DetailedCardView.swift */; };
 		A5C5E6E821A2B49A001D6250 /* OptionPickerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6E721A2B49A001D6250 /* OptionPickerButton.swift */; };
 		B8323065D0D76292CEB00626 /* Pods_ForaBank.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8EB261ED46D5F939F8B2E27 /* Pods_ForaBank.framework */; };
-		BD137A402326472D00326088 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD137A3F2326472D00326088 /* File.swift */; };
+		BD137A402326472D00326088 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD137A3F2326472D00326088 /* State.swift */; };
+		BD182E3D232A3F7000DB231F /* PasscodeSignInReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD182E3C232A3F7000DB231F /* PasscodeSignInReducer.swift */; };
+		BD182E3F232A402100DB231F /* PasscodeSingInActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD182E3E232A402100DB231F /* PasscodeSingInActions.swift */; };
+		BD21B6662338CE14001C5CF7 /* HIstoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD21B6632338CE14001C5CF7 /* HIstoryService.swift */; };
+		BD21B6672338CE14001C5CF7 /* PaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD21B6642338CE14001C5CF7 /* PaymentService.swift */; };
+		BD21B6682338CE14001C5CF7 /* CardStatementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD21B6652338CE14001C5CF7 /* CardStatementService.swift */; };
+		BD21B66A2338E08E001C5CF7 /* RegistrationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD21B6692338E08E001C5CF7 /* RegistrationState.swift */; };
+		BD21B66C2338E0FA001C5CF7 /* RegistrationActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD21B66B2338E0FA001C5CF7 /* RegistrationActions.swift */; };
+		BD21B66E2338E1AF001C5CF7 /* RegistrationReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD21B66D2338E1AF001C5CF7 /* RegistrationReducer.swift */; };
 		BD38198E232104430004728C /* productsData.plist in Resources */ = {isa = PBXBuildFile; fileRef = BD38198D232104430004728C /* productsData.plist */; };
+		BD5170A92332135E001EAFC0 /* VerificationCodeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170A82332135E001EAFC0 /* VerificationCodeState.swift */; };
+		BD5170AB2332250C001EAFC0 /* VerificationCodeReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170AA2332250C001EAFC0 /* VerificationCodeReducer.swift */; };
+		BD5170AD233229F4001EAFC0 /* VerificationCodeActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170AC233229F4001EAFC0 /* VerificationCodeActions.swift */; };
+		BD5170B323336C83001EAFC0 /* PaymentRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170B223336C83001EAFC0 /* PaymentRequests.swift */; };
+		BD6F59782334B74F002F4D4E /* StateActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6F59772334B74F002F4D4E /* StateActions.swift */; };
+		BD6F597A2334BAA4002F4D4E /* StateReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6F59792334BAA4002F4D4E /* StateReducer.swift */; };
 		BD7CC1A1232125D000872D06 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = BD7CC1A0232125D000872D06 /* Localizable.strings */; };
 		BD94E09F231EA6E50006456E /* MasksFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD94E09E231EA6E50006456E /* MasksFormatting.swift */; };
+		BDB6AFF423268C850006A534 /* PasscodeSignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6AFF323268C850006A534 /* PasscodeSignInViewController.swift */; };
+		BDB6B00E23269FED0006A534 /* PasscodeSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6B00D23269FED0006A534 /* PasscodeSignUpViewController.swift */; };
+		BDB6B0112326A9C10006A534 /* PasscodeSignUpActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6B0102326A9C10006A534 /* PasscodeSignUpActions.swift */; };
+		BDB6B0132326A9E00006A534 /* PasscodeSingUpReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6B0122326A9E00006A534 /* PasscodeSingUpReducer.swift */; };
+		BDB6B0162326AAA60006A534 /* PasscodeSignUpState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6B0152326AAA60006A534 /* PasscodeSignUpState.swift */; };
+		BDB6B01B2327FC700006A534 /* SecurityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6B01A2327FC700006A534 /* SecurityService.swift */; };
+		BDB7916D2338C8B10002C7EE /* VerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB7916C2338C8B10002C7EE /* VerificationCodeViewController.swift */; };
 		BDE4D080232248420070BC3D /* ProductAboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE4D07F232248420070BC3D /* ProductAboutViewController.swift */; };
 		BDE4D08323224E570070BC3D /* AboutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE4D08223224E570070BC3D /* AboutItem.swift */; };
 		BDE4D085232254430070BC3D /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE4D084232254430070BC3D /* Date.swift */; };
 		BDE4D08723226B4C0070BC3D /* IAboutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE4D08623226B4C0070BC3D /* IAboutItem.swift */; };
+		BDF4F9462329105D007C448F /* Security.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF4F9452329105D007C448F /* Security.swift */; };
+		BDF4F94823293A5C007C448F /* AuthenticationReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF4F94723293A5C007C448F /* AuthenticationReducer.swift */; };
+		BDF4F94A23293A6B007C448F /* AuthenticationActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF4F94923293A6B007C448F /* AuthenticationActions.swift */; };
+		BDF4F94C23293C49007C448F /* PasscodeSignInState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF4F94B23293C49007C448F /* PasscodeSignInState.swift */; };
+		BDF4F94E23293D1E007C448F /* AuthenticationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF4F94D23293D1E007C448F /* AuthenticationState.swift */; };
+		BDFE5D982334C3300027A716 /* IProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE5D972334C3300027A716 /* IProduct.swift */; };
+		BDFE5D9A2334E7ED0027A716 /* LoansSegueAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE5D992334E7ED0027A716 /* LoansSegueAnimator.swift */; };
+		BDFE5D9C233511EB0027A716 /* URLs.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE5D9B233511EB0027A716 /* URLs.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -272,9 +303,9 @@
 		096BCB0D21637E27005BC02B /* PaymentCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentCell.xib; sourceTree = "<group>"; };
 		09797555215A49020044C00A /* ForaBank.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ForaBank.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		09797558215A49020044C00A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		0979755F215A49040044C00A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		0979755F215A49040044C00A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../Assets.xcassets; sourceTree = "<group>"; };
 		09797562215A49040044C00A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		09797564215A49040044C00A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		09797564215A49040044C00A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
 		0979D94F21903DF700034BC0 /* PaymentsDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsDetailsViewController.swift; sourceTree = "<group>"; };
 		097A6DCB21884B6D00E6C69E /* ButtonRounded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonRounded.swift; sourceTree = "<group>"; };
 		097A6DCD21899C5B00E6C69E /* RegistrationLoginPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationLoginPasswordViewController.swift; sourceTree = "<group>"; };
@@ -346,11 +377,14 @@
 		96094AF32319441600A80412 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		960AD38722FC1826005399D6 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		9610CB8D22FD6F0C00FE7C84 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
+		9697E29E2334C29700974505 /* OperatorsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorsList.swift; sourceTree = "<group>"; };
+		9697E2A22334E30500974505 /* ServicesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesList.swift; sourceTree = "<group>"; };
 		9698995D2303076F0066C55B /* LoansViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoansViewController.swift; sourceTree = "<group>"; };
 		969899632303F2E20066C55B /* Loan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loan.swift; sourceTree = "<group>"; };
 		969899652303F3380066C55B /* LoansCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoansCell.swift; sourceTree = "<group>"; };
 		969899672303F4060066C55B /* LoansService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoansService.swift; sourceTree = "<group>"; };
 		969899692303FD190066C55B /* LoansCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoansCell.xib; sourceTree = "<group>"; };
+		96AB361823323B2B009FD828 /* CardHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardHistory.swift; sourceTree = "<group>"; };
 		96BEAE4022FAB9170029C63D /* iCarousel */ = {isa = PBXFileReference; lastKnownFileType = folder; name = iCarousel; path = Pods/iCarousel; sourceTree = "<group>"; };
 		96BEAE4822FABBA00029C63D /* iCarousel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = iCarousel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		96BEAE4A22FABBA40029C63D /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -359,7 +393,6 @@
 		96BEAE5022FABBB20029C63D /* Hero.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Hero.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		96BEAE5222FABBB60029C63D /* IQKeyboardManagerSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = IQKeyboardManagerSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		96D0F1C7230694CA0064CECA /* LoansDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoansDetailsViewController.swift; sourceTree = "<group>"; };
-		96D0F1C923069B250064CECA /* LoansSegueAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoansSegueAnimator.swift; path = ForaBank/Controller/Deposits/Loans/LoansSegueAnimator.swift; sourceTree = SOURCE_ROOT; };
 		96D0F1CD230AE4400064CECA /* DepositDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositDetailsViewController.swift; sourceTree = "<group>"; };
 		96EC41802301A6890087BFB0 /* AccountsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsService.swift; sourceTree = "<group>"; };
 		A5004D3021EF37DC0098E510 /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
@@ -419,14 +452,43 @@
 		A5C5E6E721A2B49A001D6250 /* OptionPickerButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionPickerButton.swift; sourceTree = "<group>"; };
 		B7304E53553072E2F516AE5B /* Pods-ForaBank.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ForaBank.release.xcconfig"; path = "Target Support Files/Pods-ForaBank/Pods-ForaBank.release.xcconfig"; sourceTree = "<group>"; };
 		B745669DC4B425C3C513CBBC /* Pods-ForaBank.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ForaBank.debug.xcconfig"; path = "Target Support Files/Pods-ForaBank/Pods-ForaBank.debug.xcconfig"; sourceTree = "<group>"; };
-		BD137A3F2326472D00326088 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		BD137A3F2326472D00326088 /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
+		BD182E3C232A3F7000DB231F /* PasscodeSignInReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignInReducer.swift; sourceTree = "<group>"; };
+		BD182E3E232A402100DB231F /* PasscodeSingInActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSingInActions.swift; sourceTree = "<group>"; };
+		BD21B6632338CE14001C5CF7 /* HIstoryService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HIstoryService.swift; sourceTree = "<group>"; };
+		BD21B6642338CE14001C5CF7 /* PaymentService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentService.swift; sourceTree = "<group>"; };
+		BD21B6652338CE14001C5CF7 /* CardStatementService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardStatementService.swift; sourceTree = "<group>"; };
+		BD21B6692338E08E001C5CF7 /* RegistrationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationState.swift; sourceTree = "<group>"; };
+		BD21B66B2338E0FA001C5CF7 /* RegistrationActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationActions.swift; sourceTree = "<group>"; };
+		BD21B66D2338E1AF001C5CF7 /* RegistrationReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationReducer.swift; sourceTree = "<group>"; };
 		BD38198D232104430004728C /* productsData.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = productsData.plist; sourceTree = "<group>"; };
+		BD5170A82332135E001EAFC0 /* VerificationCodeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeState.swift; sourceTree = "<group>"; };
+		BD5170AA2332250C001EAFC0 /* VerificationCodeReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeReducer.swift; sourceTree = "<group>"; };
+		BD5170AC233229F4001EAFC0 /* VerificationCodeActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeActions.swift; sourceTree = "<group>"; };
+		BD5170B223336C83001EAFC0 /* PaymentRequests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentRequests.swift; sourceTree = "<group>"; };
+		BD6F59772334B74F002F4D4E /* StateActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateActions.swift; sourceTree = "<group>"; };
+		BD6F59792334BAA4002F4D4E /* StateReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateReducer.swift; sourceTree = "<group>"; };
 		BD7CC1A0232125D000872D06 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		BD94E09E231EA6E50006456E /* MasksFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasksFormatting.swift; sourceTree = "<group>"; };
+		BDB6AFF323268C850006A534 /* PasscodeSignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignInViewController.swift; sourceTree = "<group>"; };
+		BDB6B00D23269FED0006A534 /* PasscodeSignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignUpViewController.swift; sourceTree = "<group>"; };
+		BDB6B0102326A9C10006A534 /* PasscodeSignUpActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignUpActions.swift; sourceTree = "<group>"; };
+		BDB6B0122326A9E00006A534 /* PasscodeSingUpReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSingUpReducer.swift; sourceTree = "<group>"; };
+		BDB6B0152326AAA60006A534 /* PasscodeSignUpState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignUpState.swift; sourceTree = "<group>"; };
+		BDB6B01A2327FC700006A534 /* SecurityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityService.swift; sourceTree = "<group>"; };
+		BDB7916C2338C8B10002C7EE /* VerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeViewController.swift; sourceTree = "<group>"; };
 		BDE4D07F232248420070BC3D /* ProductAboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductAboutViewController.swift; sourceTree = "<group>"; };
 		BDE4D08223224E570070BC3D /* AboutItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutItem.swift; sourceTree = "<group>"; };
 		BDE4D084232254430070BC3D /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		BDE4D08623226B4C0070BC3D /* IAboutItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAboutItem.swift; sourceTree = "<group>"; };
+		BDF4F9452329105D007C448F /* Security.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Security.swift; sourceTree = "<group>"; };
+		BDF4F94723293A5C007C448F /* AuthenticationReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationReducer.swift; sourceTree = "<group>"; };
+		BDF4F94923293A6B007C448F /* AuthenticationActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationActions.swift; sourceTree = "<group>"; };
+		BDF4F94B23293C49007C448F /* PasscodeSignInState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignInState.swift; sourceTree = "<group>"; };
+		BDF4F94D23293D1E007C448F /* AuthenticationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationState.swift; sourceTree = "<group>"; };
+		BDFE5D972334C3300027A716 /* IProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IProduct.swift; sourceTree = "<group>"; };
+		BDFE5D992334E7ED0027A716 /* LoansSegueAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoansSegueAnimator.swift; sourceTree = "<group>"; };
+		BDFE5D9B233511EB0027A716 /* URLs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLs.swift; sourceTree = "<group>"; };
 		D8EB261ED46D5F939F8B2E27 /* Pods_ForaBank.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ForaBank.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -519,7 +581,6 @@
 		0979754C215A49020044C00A = {
 			isa = PBXGroup;
 			children = (
-				960AD38722FC1826005399D6 /* Default-568h@2x.png */,
 				09797557215A49020044C00A /* ForaBank */,
 				1FA8DC4AA196A274D239644F /* Frameworks */,
 				17646B619EE7583F4162F550 /* Pods */,
@@ -538,19 +599,15 @@
 		09797557215A49020044C00A /* ForaBank */ = {
 			isa = PBXGroup;
 			children = (
-				A58760BD21BF8E220022DED5 /* API */,
-				09797558215A49020044C00A /* AppDelegate.swift */,
-				0979755F215A49040044C00A /* Assets.xcassets */,
+				09203D91216E0D7600902BD2 /* ForaBank-Bridging-Header.h */,
 				09E0F131215A617A0042FB6A /* Controller */,
 				0930F16D215B788100CFB593 /* Fonts */,
-				09203D91216E0D7600902BD2 /* ForaBank-Bridging-Header.h */,
 				BD73EB63231EA61C00CB3E58 /* Helpers */,
-				09797564215A49040044C00A /* Info.plist */,
+				BD6F597B2334BCF9002F4D4E /* Middleware */,
 				09E0F132215A61850042FB6A /* Models */,
 				BD38198C232103EC0004728C /* Resources */,
+				BDB6B0172327F20F0006A534 /* Services */,
 				BD1379FC23263BC000326088 /* Store */,
-				09E0F132215A61850042FB6A /* Model */,
-				BD38198C232103EC0004728C /* Resources */,
 				09E0F149215A6B170042FB6A /* Storyboards */,
 				09E0F133215A618E0042FB6A /* View */,
 			);
@@ -594,44 +651,47 @@
 		09BE35ED218C629100EA7B24 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
-				A58760C021BFB63D0022DED5 /* ProfileNavigationController.swift */,
-				0941525A219028000068B6B1 /* SignInViewController.swift */,
-				0930F167215B653D00CFB593 /* ProfileViewController.swift */,
-				09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */,
-				96094AF32319441600A80412 /* SettingsViewController.swift */,
 				09D3C039215CBCAB00998F57 /* ChatDialogsViewController.swift */,
 				09D3C047215E07DB00998F57 /* ChatMessagesViewController.swift */,
+				09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */,
+				A58760C021BFB63D0022DED5 /* ProfileNavigationController.swift */,
+				0930F167215B653D00CFB593 /* ProfileViewController.swift */,
+				96094AF32319441600A80412 /* SettingsViewController.swift */,
+				0941525A219028000068B6B1 /* SignInViewController.swift */,
 				09BE35EC218C627700EA7B24 /* Registration */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
 		};
-		09C7C30B2174727A000EE472 /* Deposits */ = {
+		09C7C30B2174727A000EE472 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				96F0DCEB231FDFAE005ABEED /* Accounts */,
-				095D158A21789BB700F5266C /* Cards */,
 				09C7C30C21747293000EE472 /* CarouselViewController.swift */,
-				96F0DCED231FE58E005ABEED /* Deposits */,
-				095D158B21789BC100F5266C /* History */,
-				96F0DCEC231FE36B005ABEED /* Loans */,
 				BDE4D07F232248420070BC3D /* ProductAboutViewController.swift */,
 				895768CC2192D992005754D5 /* ProductDetailsViewController.swift */,
 				096B4F532186E29300C69E52 /* ProductManagementViewController.swift */,
+				96F0DCEB231FDFAE005ABEED /* Accounts */,
+				095D158A21789BB700F5266C /* Cards */,
+				96F0DCED231FE58E005ABEED /* Deposits */,
+				095D158B21789BC100F5266C /* History */,
+				96F0DCEC231FE36B005ABEED /* Loans */,
 				A528EF3D21B00C0500D189DD /* Stats */,
 			);
-			path = Deposits;
+			path = Products;
 			sourceTree = "<group>";
 		};
 		09E0F131215A617A0042FB6A /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				09C7C30B2174727A000EE472 /* Deposits */,
+				BDA9EB3B2326862F00D68BEE /* Passcode */,
+				09C7C30B2174727A000EE472 /* Products */,
 				09203D99216E150C00902BD2 /* Feed */,
 				89C8DF142191BDF500D92B0A /* Payments */,
 				09BE35ED218C629100EA7B24 /* Profile */,
 				A568142821CE6A41002C0899 /* Services */,
+				9697E29E2334C29700974505 /* OperatorsList.swift */,
 				09E0F12F215A5B9D0042FB6A /* TabBarController.swift */,
+				BDB7916C2338C8B10002C7EE /* VerificationCodeViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -639,22 +699,24 @@
 		09E0F132215A61850042FB6A /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				BDE4D08123224E430070BC3D /* PresentationModels */,
-				0942B86A21625F4800370C71 /* Service.swift */,
-				A57CF1BD22043DDE00E855A5 /* BriginvestResponse.swift */,
-				A57CF1BB2204364E00E855A5 /* TransactionStatement.swift */,
-				A55B7B8721AA698900A8A7FE /* ChatMessage.swift */,
-				0942B86C21625F7800370C71 /* Friend.swift */,
-				A5C5E6DF21A2B443001D6250 /* Card.swift */,
-				A5004D3221EF56CF0098E510 /* CardBank.swift */,
-				A5004D3421EF56DD0098E510 /* CardBrand.swift */,
-				A568143721D35FEB002C0899 /* Transaction.swift */,
 				9610CB8D22FD6F0C00FE7C84 /* Account.swift */,
 				A568141E21CBCCB3002C0899 /* BankBranch.swift */,
 				A568142021CBCD03002C0899 /* BankBranchAnnotation.swift */,
+				A57CF1BD22043DDE00E855A5 /* BriginvestResponse.swift */,
+				A5C5E6DF21A2B443001D6250 /* Card.swift */,
+				A5004D3221EF56CF0098E510 /* CardBank.swift */,
+				A5004D3421EF56DD0098E510 /* CardBrand.swift */,
+				A55B7B8721AA698900A8A7FE /* ChatMessage.swift */,
 				A568142F21D0B9E3002C0899 /* Deposit.swift */,
-				A568143321D0CE6C002C0899 /* Profile.swift */,
+				0942B86C21625F7800370C71 /* Friend.swift */,
 				969899632303F2E20066C55B /* Loan.swift */,
+				96AB361823323B2B009FD828 /* CardHistory.swift */,
+				9697E2A22334E30500974505 /* ServicesList.swift */,
+				A568143321D0CE6C002C0899 /* Profile.swift */,
+				0942B86A21625F4800370C71 /* Service.swift */,
+				A568143721D35FEB002C0899 /* Transaction.swift */,
+				A57CF1BB2204364E00E855A5 /* TransactionStatement.swift */,
+				BDE4D08123224E430070BC3D /* PresentationModels */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -825,8 +887,8 @@
 		96F0DCEC231FE36B005ABEED /* Loans */ = {
 			isa = PBXGroup;
 			children = (
+				BDFE5D992334E7ED0027A716 /* LoansSegueAnimator.swift */,
 				9698995D2303076F0066C55B /* LoansViewController.swift */,
-				96D0F1C923069B250064CECA /* LoansSegueAnimator.swift */,
 				96D0F1C7230694CA0064CECA /* LoansDetailsViewController.swift */,
 			);
 			path = Loans;
@@ -926,13 +988,17 @@
 		A58760BD21BF8E220022DED5 /* API */ = {
 			isa = PBXGroup;
 			children = (
+				BD21B6652338CE14001C5CF7 /* CardStatementService.swift */,
+				BD21B6632338CE14001C5CF7 /* HIstoryService.swift */,
+				BD21B6642338CE14001C5CF7 /* PaymentService.swift */,
+				A551108A21C7999A00330510 /* AuthService.swift */,
+				A57CF1B52202DE1800E855A5 /* CardService.swift */,
 				A58760BE21BF8E770022DED5 /* NetworkManager.swift */,
-				A51AF85121EA09E600FB3B68 /* TestRegService.swift */,
+				BD5170B223336C83001EAFC0 /* PaymentRequests.swift */,
 				A51AF84F21EA093800FB3B68 /* RegService.swift */,
 				A551108E21C7BEED00330510 /* TestAuthService.swift */,
-				A551108A21C7999A00330510 /* AuthService.swift */,
 				A551109021C7C0AE00330510 /* TestCardService.swift */,
-				A57CF1B52202DE1800E855A5 /* CardService.swift */,
+				A51AF85121EA09E600FB3B68 /* TestRegService.swift */,
 				A57CF1B92204360900E855A5 /* TestStatementService.swift */,
 				A57CF1B7220435F200E855A5 /* StatementService.swift */,
 				969899672303F4060066C55B /* LoansService.swift */,
@@ -953,6 +1019,8 @@
 		BD1379FC23263BC000326088 /* Store */ = {
 			isa = PBXGroup;
 			children = (
+				BDB6AFF5232693E90006A534 /* Actions */,
+				BDB6B00A232697760006A534 /* Reducers */,
 				BD137A3E2326471200326088 /* State */,
 			);
 			path = Store;
@@ -961,7 +1029,12 @@
 		BD137A3E2326471200326088 /* State */ = {
 			isa = PBXGroup;
 			children = (
-				BD137A3F2326472D00326088 /* File.swift */,
+				BDF4F94D23293D1E007C448F /* AuthenticationState.swift */,
+				BDF4F94B23293C49007C448F /* PasscodeSignInState.swift */,
+				BDB6B0152326AAA60006A534 /* PasscodeSignUpState.swift */,
+				BD137A3F2326472D00326088 /* State.swift */,
+				BD5170A82332135E001EAFC0 /* VerificationCodeState.swift */,
+				BD21B6692338E08E001C5CF7 /* RegistrationState.swift */,
 			);
 			path = State;
 			sourceTree = "<group>";
@@ -969,11 +1042,23 @@
 		BD38198C232103EC0004728C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				A55B7B7821A6B4A200A8A7FE /* animation */,
+				09797564215A49040044C00A /* Info.plist */,
 				BD38198D232104430004728C /* productsData.plist */,
+				960AD38722FC1826005399D6 /* Default-568h@2x.png */,
 				BD7CC1A0232125D000872D06 /* Localizable.strings */,
+				0979755F215A49040044C00A /* Assets.xcassets */,
+				A55B7B7821A6B4A200A8A7FE /* animation */,
+				BDFE5D9B233511EB0027A716 /* URLs.swift */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		BD6F597B2334BCF9002F4D4E /* Middleware */ = {
+			isa = PBXGroup;
+			children = (
+				09797558215A49020044C00A /* AppDelegate.swift */,
+			);
+			path = Middleware;
 			sourceTree = "<group>";
 		};
 		BD73EB63231EA61C00CB3E58 /* Helpers */ = {
@@ -983,8 +1068,69 @@
 				094FFC0C218837580069DDCB /* Helpers.swift */,
 				BD94E09E231EA6E50006456E /* MasksFormatting.swift */,
 				BDE4D084232254430070BC3D /* Date.swift */,
+				BDF4F9452329105D007C448F /* Security.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		BDA9EB3B2326862F00D68BEE /* Passcode */ = {
+			isa = PBXGroup;
+			children = (
+				BDB6AFF323268C850006A534 /* PasscodeSignInViewController.swift */,
+				BDB6B00D23269FED0006A534 /* PasscodeSignUpViewController.swift */,
+			);
+			path = Passcode;
+			sourceTree = "<group>";
+		};
+		BDB6AFF5232693E90006A534 /* Actions */ = {
+			isa = PBXGroup;
+			children = (
+				BDB6B00F2326A9A10006A534 /* Passcode */,
+				BDF4F94923293A6B007C448F /* AuthenticationActions.swift */,
+				BD5170AC233229F4001EAFC0 /* VerificationCodeActions.swift */,
+				BD6F59772334B74F002F4D4E /* StateActions.swift */,
+				BD21B66B2338E0FA001C5CF7 /* RegistrationActions.swift */,
+			);
+			path = Actions;
+			sourceTree = "<group>";
+		};
+		BDB6B00A232697760006A534 /* Reducers */ = {
+			isa = PBXGroup;
+			children = (
+				BDB6B0142326A9E60006A534 /* Passcode */,
+				BDF4F94723293A5C007C448F /* AuthenticationReducer.swift */,
+				BD5170AA2332250C001EAFC0 /* VerificationCodeReducer.swift */,
+				BD6F59792334BAA4002F4D4E /* StateReducer.swift */,
+				BD21B66D2338E1AF001C5CF7 /* RegistrationReducer.swift */,
+			);
+			path = Reducers;
+			sourceTree = "<group>";
+		};
+		BDB6B00F2326A9A10006A534 /* Passcode */ = {
+			isa = PBXGroup;
+			children = (
+				BDB6B0102326A9C10006A534 /* PasscodeSignUpActions.swift */,
+				BD182E3E232A402100DB231F /* PasscodeSingInActions.swift */,
+			);
+			path = Passcode;
+			sourceTree = "<group>";
+		};
+		BDB6B0142326A9E60006A534 /* Passcode */ = {
+			isa = PBXGroup;
+			children = (
+				BDB6B0122326A9E00006A534 /* PasscodeSingUpReducer.swift */,
+				BD182E3C232A3F7000DB231F /* PasscodeSignInReducer.swift */,
+			);
+			path = Passcode;
+			sourceTree = "<group>";
+		};
+		BDB6B0172327F20F0006A534 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				A58760BD21BF8E220022DED5 /* API */,
+				BDB6B01A2327FC700006A534 /* SecurityService.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		BDE4D08123224E430070BC3D /* PresentationModels */ = {
@@ -992,6 +1138,7 @@
 			children = (
 				BDE4D08223224E570070BC3D /* AboutItem.swift */,
 				BDE4D08623226B4C0070BC3D /* IAboutItem.swift */,
+				BDFE5D972334C3300027A716 /* IProduct.swift */,
 			);
 			path = PresentationModels;
 			sourceTree = "<group>";
@@ -1026,7 +1173,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 1000;
 				LastUpgradeCheck = 1000;
-				ORGANIZATIONNAME = BraveRobin;
+				ORGANIZATIONNAME = "(C) 2017-2019 OОО \"Бриг Инвест\"";
 				TargetAttributes = {
 					09797554215A49020044C00A = {
 						CreatedOnToolsVersion = 10.0;
@@ -1154,6 +1301,8 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ForaBank/Pods-ForaBank-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/BiometricAuthentication/BiometricAuthentication.framework",
+				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/DeviceKit/DeviceKit.framework",
 				"${BUILT_PRODUCTS_DIR}/FlexiblePageControl/FlexiblePageControl.framework",
 				"${BUILT_PRODUCTS_DIR}/Hero/Hero.framework",
@@ -1170,6 +1319,8 @@
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BiometricAuthentication.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CryptoSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DeviceKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FlexiblePageControl.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Hero.framework",
@@ -1196,47 +1347,60 @@
 			buildActionMask = 2147483647;
 			files = (
 				09F2410521707B7B007B7D73 /* FeedInfo2Cell.swift in Sources */,
+				BD6F59782334B74F002F4D4E /* StateActions.swift in Sources */,
 				A568143421D0CE6C002C0899 /* Profile.swift in Sources */,
 				9610CB8E22FD6F0C00FE7C84 /* Account.swift in Sources */,
 				09D3C041215CE5D100998F57 /* DialogCell.swift in Sources */,
 				09203D87216CA79C00902BD2 /* FeedViewController.swift in Sources */,
-				BD137A402326472D00326088 /* File.swift in Sources */,
+				BD137A402326472D00326088 /* State.swift in Sources */,
 				09C7C30F2174888B000EE472 /* DepositsViewController.swift in Sources */,
 				A5C5E6E621A2B492001D6250 /* DetailedCardView.swift in Sources */,
-				96D0F1CA23069B250064CECA /* LoansSegueAnimator.swift in Sources */,
 				895768CD2192D992005754D5 /* ProductDetailsViewController.swift in Sources */,
 				09D3C03A215CBCAB00998F57 /* ChatDialogsViewController.swift in Sources */,
 				BD94E09F231EA6E50006456E /* MasksFormatting.swift in Sources */,
 				09F2410921707B86007B7D73 /* FeedInfo3Cell.swift in Sources */,
+				BDB6B0112326A9C10006A534 /* PasscodeSignUpActions.swift in Sources */,
 				89C8DF0C21918DDC00D92B0A /* OptionPickerViewController.swift in Sources */,
 				0939B5FB21774EA70029F03D /* DoubleRoundedEdgeView.swift in Sources */,
+				BD5170B323336C83001EAFC0 /* PaymentRequests.swift in Sources */,
 				A55B7B8621A7E86200A8A7FE /* DepositsHistoryDetailsSegueAnimator.swift in Sources */,
 				094FFC0D218837580069DDCB /* RegistrationViewController.swift in Sources */,
+				BD21B66C2338E0FA001C5CF7 /* RegistrationActions.swift in Sources */,
 				A528EF4021B00C9300D189DD /* MonthCollectionViewCell.swift in Sources */,
 				09D3C03D215CD03E00998F57 /* SearchCell.swift in Sources */,
 				093B862A21620806008A5222 /* ServicesViewController.swift in Sources */,
 				09C7C30D21747293000EE472 /* CarouselViewController.swift in Sources */,
 				895768CF2192E768005754D5 /* DepositsStatsViewController.swift in Sources */,
+				BDF4F9462329105D007C448F /* Security.swift in Sources */,
 				0930F168215B653D00CFB593 /* ProfileViewController.swift in Sources */,
 				A568142E21D0B945002C0899 /* DepositsService.swift in Sources */,
+				BDB6B00E23269FED0006A534 /* PasscodeSignUpViewController.swift in Sources */,
 				0930F166215B5CDB00CFB593 /* RoundedEdgeView.swift in Sources */,
+				BDB6AFF423268C850006A534 /* PasscodeSignInViewController.swift in Sources */,
 				A528EF4221B106CF00D189DD /* BubblesStatsScrollView.swift in Sources */,
 				A568143021D0B9E3002C0899 /* Deposit.swift in Sources */,
+				BDFE5D982334C3300027A716 /* IProduct.swift in Sources */,
 				96094AF42319441600A80412 /* SettingsViewController.swift in Sources */,
 				09C7C33D2175FADE000EE472 /* DepositsHistoryHeader.swift in Sources */,
+				BDB6B0132326A9E00006A534 /* PasscodeSingUpReducer.swift in Sources */,
 				A5B473C621B52D4500F2E41F /* BubblesDetailedStatsView.swift in Sources */,
+				BDF4F94C23293C49007C448F /* PasscodeSignInState.swift in Sources */,
 				BDE4D08723226B4C0070BC3D /* IAboutItem.swift in Sources */,
 				A568143821D35FEB002C0899 /* Transaction.swift in Sources */,
 				09F5DCE8218C4A5200390304 /* RegistrationTouchIDViewController.swift in Sources */,
 				09C7C3352175CC47000EE472 /* DepositsHistoryViewController.swift in Sources */,
+				BD21B6672338CE14001C5CF7 /* PaymentService.swift in Sources */,
 				09E0F146215A68DC0042FB6A /* CustomTabBar.swift in Sources */,
 				093B863121620EE8008A5222 /* ServicesCell.swift in Sources */,
 				0979D95021903DF700034BC0 /* PaymentsDetailsViewController.swift in Sources */,
 				093B8634216224C3008A5222 /* ServicesHeader.swift in Sources */,
+				BDF4F94823293A5C007C448F /* AuthenticationReducer.swift in Sources */,
 				A5B473C121B3BBCD00F2E41F /* RemittancePickerViewController.swift in Sources */,
+				BDB6B01B2327FC700006A534 /* SecurityService.swift in Sources */,
 				A551108B21C7999A00330510 /* AuthService.swift in Sources */,
 				09045056216B51B400F3B295 /* FeedOffersViewController.swift in Sources */,
 				09E0F130215A5B9D0042FB6A /* TabBarController.swift in Sources */,
+				BD182E3D232A3F7000DB231F /* PasscodeSignInReducer.swift in Sources */,
 				895768D12192E9F0005754D5 /* DepositsStatsDetailsViewController.swift in Sources */,
 				09F240FA216F8335007B7D73 /* FeedCurrent6Cell.swift in Sources */,
 				A5C5E6E121A2B443001D6250 /* Card.swift in Sources */,
@@ -1255,6 +1419,7 @@
 				A5004D3321EF56CF0098E510 /* CardBank.swift in Sources */,
 				09C7C31221749151000EE472 /* DepositsObligationsCell.swift in Sources */,
 				096B4F502183257300C69E52 /* ThreeViewController.swift in Sources */,
+				BD21B66E2338E1AF001C5CF7 /* RegistrationReducer.swift in Sources */,
 				9698995E2303076F0066C55B /* LoansViewController.swift in Sources */,
 				A57CF1B8220435F200E855A5 /* StatementService.swift in Sources */,
 				0941525B219028000068B6B1 /* SignInViewController.swift in Sources */,
@@ -1262,6 +1427,9 @@
 				0939B5F92177266B0029F03D /* DepositsHistoryDetailsViewController.swift in Sources */,
 				09AF7081216F6B6F00E7FCFC /* FeedCurrent1Cell.swift in Sources */,
 				094FFC0E218837580069DDCB /* RegistrationCodeVerificationViewController.swift in Sources */,
+				BD182E3F232A402100DB231F /* PasscodeSingInActions.swift in Sources */,
+				BDFE5D9C233511EB0027A716 /* URLs.swift in Sources */,
+				BDF4F94E23293D1E007C448F /* AuthenticationState.swift in Sources */,
 				096B4F4D2183089900C69E52 /* CardDetailsViewController.swift in Sources */,
 				0930F16A215B6CB800CFB593 /* GradientView.swift in Sources */,
 				0943729221907198003A66CC /* PaymentsDetailsSuccessViewController.swift in Sources */,
@@ -1273,13 +1441,16 @@
 				A5B473C421B3C0D200F2E41F /* RemittanceOptionView.swift in Sources */,
 				09F0E5CD2179DC3B0016BB6E /* CardView.swift in Sources */,
 				0930F16C215B704A00CFB593 /* CircularImageView.swift in Sources */,
+				BD5170AD233229F4001EAFC0 /* VerificationCodeActions.swift in Sources */,
 				A5C5E6E821A2B49A001D6250 /* OptionPickerButton.swift in Sources */,
 				09AF7093216F73FD00E7FCFC /* FeedCurrent5Cell.swift in Sources */,
 				096B4F58218704AA00C69E52 /* DepositsCardsDetailsStatementViewController.swift in Sources */,
 				A5C5E6DA21A2B40A001D6250 /* DepositsCardsListViewController.swift in Sources */,
 				096B4F4E2183089900C69E52 /* TwoViewController.swift in Sources */,
 				A57CF1BC2204364E00E855A5 /* TransactionStatement.swift in Sources */,
+				9697E2A32334E30500974505 /* ServicesList.swift in Sources */,
 				A568142A21CE6A79002C0899 /* AnnotationsTableViewController.swift in Sources */,
+				BD5170AB2332250C001EAFC0 /* VerificationCodeReducer.swift in Sources */,
 				09AF707E216F676300E7FCFC /* FeedCurrentViewController.swift in Sources */,
 				969899682303F4060066C55B /* LoansService.swift in Sources */,
 				09F2410121707B3B007B7D73 /* FeedInfo1Cell.swift in Sources */,
@@ -1287,16 +1458,20 @@
 				A5004D3521EF56DD0098E510 /* CardBrand.swift in Sources */,
 				09D3C048215E07DB00998F57 /* ChatMessagesViewController.swift in Sources */,
 				09FC8FED215BB2B200A4694B /* ProfileMenuTableViewController.swift in Sources */,
+				9697E29F2334C29700974505 /* OperatorsList.swift in Sources */,
 				A568142121CBCD03002C0899 /* BankBranchAnnotation.swift in Sources */,
 				0942B86D21625F7800370C71 /* Friend.swift in Sources */,
+				96AB361923323B2B009FD828 /* CardHistory.swift in Sources */,
 				A5C5C03A21B537AB005D6B8F /* BubblesDetailedStatsViewController.swift in Sources */,
 				09045059216B5ADC00F3B295 /* FeedOffersCell.swift in Sources */,
 				09C7C3382175E486000EE472 /* DepositsHistoryCell.swift in Sources */,
+				BD21B6682338CE14001C5CF7 /* CardStatementService.swift in Sources */,
 				097A6DCC21884B6D00E6C69E /* ButtonRounded.swift in Sources */,
 				BDE4D080232248420070BC3D /* ProductAboutViewController.swift in Sources */,
 				A551109121C7C0AE00330510 /* TestCardService.swift in Sources */,
 				A568142C21CE6CB0002C0899 /* AnnotationTableViewCell.swift in Sources */,
 				A58760C121BFB63D0022DED5 /* ProfileNavigationController.swift in Sources */,
+				BDB7916D2338C8B10002C7EE /* VerificationCodeViewController.swift in Sources */,
 				A55663A221EC6B3300E48C40 /* MaskedNavigationBar.swift in Sources */,
 				A57CF1BA2204360900E855A5 /* TestStatementService.swift in Sources */,
 				09AF7090216F73FD00E7FCFC /* FeedCurrent3Cell.swift in Sources */,
@@ -1304,14 +1479,20 @@
 				A57CF1BE22043DDE00E855A5 /* BriginvestResponse.swift in Sources */,
 				89C8DF122191AFA700D92B0A /* DepositsDepositCell.swift in Sources */,
 				A568142621CBCD48002C0899 /* BankBranchClusterView.swift in Sources */,
+				BD6F597A2334BAA4002F4D4E /* StateReducer.swift in Sources */,
 				A5C5E6D621A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift in Sources */,
+				BDF4F94A23293A6B007C448F /* AuthenticationActions.swift in Sources */,
+				BDB6B0162326AAA60006A534 /* PasscodeSignUpState.swift in Sources */,
 				A57CF1B62202DE1800E855A5 /* CardService.swift in Sources */,
 				96D0F1C8230694CB0064CECA /* LoansDetailsViewController.swift in Sources */,
 				96D0F1CE230AE4400064CECA /* DepositDetailsViewController.swift in Sources */,
+				BD21B66A2338E08E001C5CF7 /* RegistrationState.swift in Sources */,
 				09F54A0A218B24DA003CB6D3 /* RegistrationPermissionsViewController.swift in Sources */,
 				096BCB072163518A005BC02B /* PaymentsViewController.swift in Sources */,
 				09203D98216E150500902BD2 /* FeedOptionsViewController.swift in Sources */,
+				BD21B6662338CE14001C5CF7 /* HIstoryService.swift in Sources */,
 				09D3C04C215E5AE800998F57 /* CustomTableView.swift in Sources */,
+				BD5170A92332135E001EAFC0 /* VerificationCodeState.swift in Sources */,
 				093B862E21620B1F008A5222 /* ServicesSearchCell.swift in Sources */,
 				09AF7092216F73FD00E7FCFC /* FeedCurrent4Cell.swift in Sources */,
 				A51AF85021EA093800FB3B68 /* RegService.swift in Sources */,
@@ -1328,6 +1509,7 @@
 				A55B7B8E21AA8EB600A8A7FE /* ChatMessagesIncomingTableViewCell.swift in Sources */,
 				A551108F21C7BEED00330510 /* TestAuthService.swift in Sources */,
 				097A6DCE21899C5B00E6C69E /* RegistrationLoginPasswordViewController.swift in Sources */,
+				BDFE5D9A2334E7ED0027A716 /* LoansSegueAnimator.swift in Sources */,
 				A56B59FA21AD623B00CE4798 /* AccountsSegueAnimator.swift in Sources */,
 				BDE4D08323224E570070BC3D /* AboutItem.swift in Sources */,
 				09BE35F1218C729C00EA7B24 /* ButtonRoundedBordered.swift in Sources */,

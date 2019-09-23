@@ -21,6 +21,9 @@ class ProfileMenuTableViewController: UITableViewController {
  
     
     @IBAction func quitButtonClicked(_ sender: Any) {
+        unsafeRemoveUserDataFromKeychain()
+        unsafeRemoveEncryptedPasscodeFromKeychain()
+        unsafeRemovePasscodeFromKeychain()
 //        parent?.performSegue(withIdentifier: "RegistrationViewController", sender: nil)
         let rootVC = self.storyboard?.instantiateViewController(withIdentifier: "LoginOrSignupViewController") as! LoginOrSignupViewController
         NetworkManager.shared().logOut { [unowned self] (_) in

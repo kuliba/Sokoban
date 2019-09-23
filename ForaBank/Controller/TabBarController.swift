@@ -8,8 +8,13 @@
 
 import UIKit
 import Hero
+import ReSwift
+import TOPasscodeViewController
 
-class TabBarController: UITabBarController {
+class TabBarController: UITabBarController, StoreSubscriber {
+
+    @IBAction func unwindSegue(segue: UIStoryboardSegue) { }
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,13 +25,46 @@ class TabBarController: UITabBarController {
         hero.tabBarAnimationType = .none
         delegate = self
     }
-    
-    @IBAction func unwindSegue(segue:UIStoryboardSegue) { }
-    
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        store.subscribe(self) { state in
+            state.select { $0.passcodeSignInState }
+        }
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        store.unsubscribe(self)
+    }
+
+    func newState(state: PasscodeSignInState) {
+        if state.isShown == true {
+            let passcodeVC = PasscodeSignInViewController()
+            passcodeVC.modalPresentationStyle = .overFullScreen
+            present(passcodeVC, animated: true, completion: nil)
+        } else if state.isShown == false {
+            setSelectedIndexToLast()
+            NetworkManager.shared().isSignedIn { (isSignIn) in
+                if isSignIn {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                        if ((self.viewControllers?.last) != nil) {
+                            let profileSB = UIStoryboard(name: "Profile", bundle: nil)
+                            let profileVC: ProfileViewController = profileSB.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
+                            self.setNumberOfTabsAvailable()
+                            self.viewControllers?.last?.navigationController?.setViewControllers([profileVC], animated: true)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     // MARK: - public methods
     func setNumberOfTabsAvailable() {
         // if !signedIn (!authorized)
-        NetworkManager.shared().isSignedIn { [unowned self] (flag)  in
+        NetworkManager.shared().isSignedIn { [unowned self] (flag) in
             if !flag && self.viewControllers?.count == 5 {
                 self.viewControllers?.remove(at: 1)
                 self.viewControllers?.remove(at: 1)
@@ -45,7 +83,7 @@ class TabBarController: UITabBarController {
 
 // MARK: - Private methods
 private extension TabBarController {
-    
+
     func setSelectedIndexToLast() {
         guard let tabs = tabBar.items else { return }
         selectedIndex = tabs.endIndex - 1
@@ -63,7 +101,7 @@ extension TabBarController: UITabBarControllerDelegate {
 //        }
 //        return true
     }
-    
+
     public func tabBarController(_ tabBarController: UITabBarController, animationControllerForTransitionFrom fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return Hero.shared.tabBarController(tabBarController, animationControllerForTransitionFrom: fromVC, to: toVC)
     }
@@ -71,17 +109,17 @@ extension TabBarController: UITabBarControllerDelegate {
 
 
 extension TabBarController: CustomTransitionOriginator, CustomTransitionDestination {
-    var fromAnimatedSubviews: [String : UIView] {
-        var views = [String : UIView]()
+    var fromAnimatedSubviews: [String: UIView] {
+        var views = [String: UIView]()
         guard let c = selectedViewController as? CustomTransitionOriginator else {
             return views
         }
         views.merge(c.fromAnimatedSubviews, uniquingKeysWith: { (first, _) in first })
         return views
     }
-    
-    var toAnimatedSubviews: [String : UIView] {
-        var views = [String : UIView]()
+
+    var toAnimatedSubviews: [String: UIView] {
+        var views = [String: UIView]()
         guard let c = selectedViewController as? CustomTransitionDestination else {
             return views
         }

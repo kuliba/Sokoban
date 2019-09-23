@@ -9,6 +9,7 @@
 import Mapper
 
 class Account: Mappable {
+    var id: Double
     var productName: String
     var productId: Int
     var currencyCode: String
@@ -23,7 +24,6 @@ class Account: Mappable {
     var balanceCUR: Double?
     var accountID: String?
     var availableBalance: Double?
-    var id: String?
     var branch: String?
 
     required init(map: Mapper) throws {
@@ -32,6 +32,7 @@ class Account: Mappable {
         try balance = map.from("balance")
         try accountNumber = map.from("accountNumber")
         try currencyCode = map.from("currencyCode")
+        try id = map.from("depositID")
     }
 
     func getProductAbout() -> Array<AboutItem> {
