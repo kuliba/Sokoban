@@ -20,7 +20,14 @@ class PaymentsViewController: UIViewController {
     let paymentCellId = "PaymentCell"
     
 
-    var payments = [Operations]()
+   
+    var payments = [Operations]() {
+        didSet {
+            tableView.reloadData()
+     
+            
+        }
+    }
     private var isSignedUp: Bool? = nil {
         didSet {
             if isSignedUp != nil {
@@ -37,10 +44,7 @@ class PaymentsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        NetworkManager.shared().isSignedIn { [unowned self] (flag) in
-//            print("viewWillAppear \(flag)")
-            self.isSignedUp = flag
-        }
+     
         NetworkManager.shared().getPaymentsList { (success, payments) in
             if success {
                 self.payments = payments ?? []
@@ -95,19 +99,10 @@ class PaymentsViewController: UIViewController {
 // MARK: - UITableView DataSource and Delegate
 extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        switch isSignedUp {
-        case true:
-            return payments.count
-        case false:
-            return payments.count-1
-        default:
-            return 0
-        }
-    }
+  
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let s = (isSignedUp == true) ? section : section+1
+     
         return payments.count
     }
     
@@ -118,17 +113,16 @@ extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
         let section = payments[s]
         let index = indexPath.row
         
-      if let services = section as? [Operations],
-            let serviceCell = tableView.dequeueReusableCell(withIdentifier: paymentCellId, for: indexPath) as? PaymentCell {
+      guard let serviceCell = tableView.dequeueReusableCell(withIdentifier: paymentCellId, for: indexPath) as? PaymentCell  else {
+        fatalError()
+        
+        }
             
             serviceCell.titleLabel.text = payments[indexPath.row].name
-        
-            serviceCell.bottomSeparatorView.isHidden = index == services.endIndex - 1
+    
             
             return serviceCell
-        } else {
-            return UITableViewCell()
-        }
+        
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
