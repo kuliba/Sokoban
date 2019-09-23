@@ -135,14 +135,12 @@
 		960AD38822FC1826005399D6 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 960AD38722FC1826005399D6 /* Default-568h@2x.png */; };
 		9610CB8E22FD6F0C00FE7C84 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9610CB8D22FD6F0C00FE7C84 /* Account.swift */; };
 		9697E29F2334C29700974505 /* OperatorsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9697E29E2334C29700974505 /* OperatorsList.swift */; };
-		9697E2A12334E22E00974505 /* PaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9697E2A02334E22E00974505 /* PaymentService.swift */; };
 		9697E2A32334E30500974505 /* ServicesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9697E2A22334E30500974505 /* ServicesList.swift */; };
 		9698995E2303076F0066C55B /* LoansViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9698995D2303076F0066C55B /* LoansViewController.swift */; };
 		969899642303F2E20066C55B /* Loan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969899632303F2E20066C55B /* Loan.swift */; };
 		969899662303F3380066C55B /* LoansCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969899652303F3380066C55B /* LoansCell.swift */; };
 		969899682303F4060066C55B /* LoansService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969899672303F4060066C55B /* LoansService.swift */; };
 		9698996A2303FD190066C55B /* LoansCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 969899692303FD190066C55B /* LoansCell.xib */; };
-		96AB361723323AD8009FD828 /* HIstoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AB361623323AD8009FD828 /* HIstoryService.swift */; };
 		96AB361923323B2B009FD828 /* CardHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AB361823323B2B009FD828 /* CardHistory.swift */; };
 		96BEAE4922FABBA00029C63D /* iCarousel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE4822FABBA00029C63D /* iCarousel.framework */; };
 		96BEAE4B22FABBA40029C63D /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE4A22FABBA40029C63D /* Alamofire.framework */; };
@@ -150,7 +148,6 @@
 		96BEAE4F22FABBAD0029C63D /* FlexiblePageControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE4E22FABBAD0029C63D /* FlexiblePageControl.framework */; };
 		96BEAE5122FABBB20029C63D /* Hero.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE5022FABBB20029C63D /* Hero.framework */; };
 		96BEAE5322FABBB60029C63D /* IQKeyboardManagerSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE5222FABBB60029C63D /* IQKeyboardManagerSwift.framework */; };
-		96C38B1123380B4C008A53E1 /* CardStatementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C38B1023380B4C008A53E1 /* CardStatementService.swift */; };
 		96D0F1C8230694CB0064CECA /* LoansDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D0F1C7230694CA0064CECA /* LoansDetailsViewController.swift */; };
 		96D0F1CE230AE4400064CECA /* DepositDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D0F1CD230AE4400064CECA /* DepositDetailsViewController.swift */; };
 		96EC41812301A6890087BFB0 /* AccountsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EC41802301A6890087BFB0 /* AccountsService.swift */; };
@@ -213,6 +210,9 @@
 		BD137A402326472D00326088 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD137A3F2326472D00326088 /* State.swift */; };
 		BD182E3D232A3F7000DB231F /* PasscodeSignInReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD182E3C232A3F7000DB231F /* PasscodeSignInReducer.swift */; };
 		BD182E3F232A402100DB231F /* PasscodeSingInActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD182E3E232A402100DB231F /* PasscodeSingInActions.swift */; };
+		BD21B6662338CE14001C5CF7 /* HIstoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD21B6632338CE14001C5CF7 /* HIstoryService.swift */; };
+		BD21B6672338CE14001C5CF7 /* PaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD21B6642338CE14001C5CF7 /* PaymentService.swift */; };
+		BD21B6682338CE14001C5CF7 /* CardStatementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD21B6652338CE14001C5CF7 /* CardStatementService.swift */; };
 		BD38198E232104430004728C /* productsData.plist in Resources */ = {isa = PBXBuildFile; fileRef = BD38198D232104430004728C /* productsData.plist */; };
 		BD5170A92332135E001EAFC0 /* VerificationCodeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170A82332135E001EAFC0 /* VerificationCodeState.swift */; };
 		BD5170AB2332250C001EAFC0 /* VerificationCodeReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170AA2332250C001EAFC0 /* VerificationCodeReducer.swift */; };
@@ -375,14 +375,12 @@
 		960AD38722FC1826005399D6 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		9610CB8D22FD6F0C00FE7C84 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		9697E29E2334C29700974505 /* OperatorsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorsList.swift; sourceTree = "<group>"; };
-		9697E2A02334E22E00974505 /* PaymentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentService.swift; sourceTree = "<group>"; };
 		9697E2A22334E30500974505 /* ServicesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesList.swift; sourceTree = "<group>"; };
 		9698995D2303076F0066C55B /* LoansViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoansViewController.swift; sourceTree = "<group>"; };
 		969899632303F2E20066C55B /* Loan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loan.swift; sourceTree = "<group>"; };
 		969899652303F3380066C55B /* LoansCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoansCell.swift; sourceTree = "<group>"; };
 		969899672303F4060066C55B /* LoansService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoansService.swift; sourceTree = "<group>"; };
 		969899692303FD190066C55B /* LoansCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoansCell.xib; sourceTree = "<group>"; };
-		96AB361623323AD8009FD828 /* HIstoryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HIstoryService.swift; sourceTree = "<group>"; };
 		96AB361823323B2B009FD828 /* CardHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardHistory.swift; sourceTree = "<group>"; };
 		96BEAE4022FAB9170029C63D /* iCarousel */ = {isa = PBXFileReference; lastKnownFileType = folder; name = iCarousel; path = Pods/iCarousel; sourceTree = "<group>"; };
 		96BEAE4822FABBA00029C63D /* iCarousel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = iCarousel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -391,7 +389,6 @@
 		96BEAE4E22FABBAD0029C63D /* FlexiblePageControl.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FlexiblePageControl.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		96BEAE5022FABBB20029C63D /* Hero.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Hero.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		96BEAE5222FABBB60029C63D /* IQKeyboardManagerSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = IQKeyboardManagerSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		96C38B1023380B4C008A53E1 /* CardStatementService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardStatementService.swift; sourceTree = "<group>"; };
 		96D0F1C7230694CA0064CECA /* LoansDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoansDetailsViewController.swift; sourceTree = "<group>"; };
 		96D0F1CD230AE4400064CECA /* DepositDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositDetailsViewController.swift; sourceTree = "<group>"; };
 		96EC41802301A6890087BFB0 /* AccountsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsService.swift; sourceTree = "<group>"; };
@@ -455,6 +452,9 @@
 		BD137A3F2326472D00326088 /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
 		BD182E3C232A3F7000DB231F /* PasscodeSignInReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignInReducer.swift; sourceTree = "<group>"; };
 		BD182E3E232A402100DB231F /* PasscodeSingInActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSingInActions.swift; sourceTree = "<group>"; };
+		BD21B6632338CE14001C5CF7 /* HIstoryService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HIstoryService.swift; sourceTree = "<group>"; };
+		BD21B6642338CE14001C5CF7 /* PaymentService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentService.swift; sourceTree = "<group>"; };
+		BD21B6652338CE14001C5CF7 /* CardStatementService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardStatementService.swift; sourceTree = "<group>"; };
 		BD38198D232104430004728C /* productsData.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = productsData.plist; sourceTree = "<group>"; };
 		BD5170A82332135E001EAFC0 /* VerificationCodeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeState.swift; sourceTree = "<group>"; };
 		BD5170AA2332250C001EAFC0 /* VerificationCodeReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeReducer.swift; sourceTree = "<group>"; };
@@ -982,15 +982,14 @@
 		A58760BD21BF8E220022DED5 /* API */ = {
 			isa = PBXGroup;
 			children = (
-				96EC41802301A6890087BFB0 /* AccountsService.swift */,
+				BD21B6652338CE14001C5CF7 /* CardStatementService.swift */,
+				BD21B6632338CE14001C5CF7 /* HIstoryService.swift */,
+				BD21B6642338CE14001C5CF7 /* PaymentService.swift */,
 				A551108A21C7999A00330510 /* AuthService.swift */,
 				A57CF1B52202DE1800E855A5 /* CardService.swift */,
-				A568142D21D0B945002C0899 /* DepositsService.swift */,
-				969899672303F4060066C55B /* LoansService.swift */,
 				A58760BE21BF8E770022DED5 /* NetworkManager.swift */,
 				BD5170B223336C83001EAFC0 /* PaymentRequests.swift */,
 				A51AF84F21EA093800FB3B68 /* RegService.swift */,
-				A57CF1B7220435F200E855A5 /* StatementService.swift */,
 				A551108E21C7BEED00330510 /* TestAuthService.swift */,
 				A551109021C7C0AE00330510 /* TestCardService.swift */,
 				A51AF85121EA09E600FB3B68 /* TestRegService.swift */,
@@ -999,9 +998,6 @@
 				969899672303F4060066C55B /* LoansService.swift */,
 				A568142D21D0B945002C0899 /* DepositsService.swift */,
 				96EC41802301A6890087BFB0 /* AccountsService.swift */,
-				96AB361623323AD8009FD828 /* HIstoryService.swift */,
-				9697E2A02334E22E00974505 /* PaymentService.swift */,
-				96C38B1023380B4C008A53E1 /* CardStatementService.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -1383,6 +1379,7 @@
 				A568143821D35FEB002C0899 /* Transaction.swift in Sources */,
 				09F5DCE8218C4A5200390304 /* RegistrationTouchIDViewController.swift in Sources */,
 				09C7C3352175CC47000EE472 /* DepositsHistoryViewController.swift in Sources */,
+				BD21B6672338CE14001C5CF7 /* PaymentService.swift in Sources */,
 				09E0F146215A68DC0042FB6A /* CustomTabBar.swift in Sources */,
 				093B863121620EE8008A5222 /* ServicesCell.swift in Sources */,
 				0979D95021903DF700034BC0 /* PaymentsDetailsViewController.swift in Sources */,
@@ -1393,7 +1390,6 @@
 				A551108B21C7999A00330510 /* AuthService.swift in Sources */,
 				09045056216B51B400F3B295 /* FeedOffersViewController.swift in Sources */,
 				09E0F130215A5B9D0042FB6A /* TabBarController.swift in Sources */,
-				96AB361723323AD8009FD828 /* HIstoryService.swift in Sources */,
 				BD182E3D232A3F7000DB231F /* PasscodeSignInReducer.swift in Sources */,
 				895768D12192E9F0005754D5 /* DepositsStatsDetailsViewController.swift in Sources */,
 				09F240FA216F8335007B7D73 /* FeedCurrent6Cell.swift in Sources */,
@@ -1458,6 +1454,7 @@
 				A5C5C03A21B537AB005D6B8F /* BubblesDetailedStatsViewController.swift in Sources */,
 				09045059216B5ADC00F3B295 /* FeedOffersCell.swift in Sources */,
 				09C7C3382175E486000EE472 /* DepositsHistoryCell.swift in Sources */,
+				BD21B6682338CE14001C5CF7 /* CardStatementService.swift in Sources */,
 				097A6DCC21884B6D00E6C69E /* ButtonRounded.swift in Sources */,
 				BDE4D080232248420070BC3D /* ProductAboutViewController.swift in Sources */,
 				A551109121C7C0AE00330510 /* TestCardService.swift in Sources */,
@@ -1468,7 +1465,6 @@
 				A57CF1BA2204360900E855A5 /* TestStatementService.swift in Sources */,
 				09AF7090216F73FD00E7FCFC /* FeedCurrent3Cell.swift in Sources */,
 				096B4F542186E29300C69E52 /* ProductManagementViewController.swift in Sources */,
-				96C38B1123380B4C008A53E1 /* CardStatementService.swift in Sources */,
 				A57CF1BE22043DDE00E855A5 /* BriginvestResponse.swift in Sources */,
 				89C8DF122191AFA700D92B0A /* DepositsDepositCell.swift in Sources */,
 				A568142621CBCD48002C0899 /* BankBranchClusterView.swift in Sources */,
@@ -1477,12 +1473,12 @@
 				BDF4F94A23293A6B007C448F /* AuthenticationActions.swift in Sources */,
 				BDB6B0162326AAA60006A534 /* PasscodeSignUpState.swift in Sources */,
 				A57CF1B62202DE1800E855A5 /* CardService.swift in Sources */,
-				9697E2A12334E22E00974505 /* PaymentService.swift in Sources */,
 				96D0F1C8230694CB0064CECA /* LoansDetailsViewController.swift in Sources */,
 				96D0F1CE230AE4400064CECA /* DepositDetailsViewController.swift in Sources */,
 				09F54A0A218B24DA003CB6D3 /* RegistrationPermissionsViewController.swift in Sources */,
 				096BCB072163518A005BC02B /* PaymentsViewController.swift in Sources */,
 				09203D98216E150500902BD2 /* FeedOptionsViewController.swift in Sources */,
+				BD21B6662338CE14001C5CF7 /* HIstoryService.swift in Sources */,
 				09D3C04C215E5AE800998F57 /* CustomTableView.swift in Sources */,
 				BD5170A92332135E001EAFC0 /* VerificationCodeState.swift in Sources */,
 				093B862E21620B1F008A5222 /* ServicesSearchCell.swift in Sources */,

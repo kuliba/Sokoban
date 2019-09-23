@@ -96,15 +96,8 @@ class NetworkManager {
         let loansService = LoansService(baseURLString: host)
         let historyService = HistoryService(baseURLString: host)
         let statementService = StatementService(baseURLString: host)//TestStatementService()
-        <<< <<< < HEAD
-
         let networkManager = NetworkManager(host, authService, regService, cardService, paymentServices, depositsService, deposService, historyService, loansService, statementService)
 
-            === === =
-
-        let networkManager = NetworkManager(host, authService, regService, cardService, depositsService, deposService, loansService, statementService)
-
-        >>> >>> > origin / Payment
         // Configuration
 
 
@@ -251,15 +244,11 @@ class NetworkManager {
     func getCardList(completionHandler: @escaping (_ success: Bool, _ cards: [Card]?) -> Void) {
         cardService.getCardList(headers: headers, completionHandler: completionHandler)
     }
-    <<< <<< < HEAD
+
     func getPaymentsList(completionHandler: @escaping (_ success: Bool, _ payments: [Operations]?) -> Void) {
         paymentServices.getPaymentsList(headers: headers, completionHandler: completionHandler)
     }
 
-
-        === === =
-
-    >>> >>> > origin / Payment
     func blockCard(withNumber num: String,
                    completionHandler: @escaping (Bool) -> Void) {
         cardService.blockCard(withNumber: num, completionHandler: completionHandler)
