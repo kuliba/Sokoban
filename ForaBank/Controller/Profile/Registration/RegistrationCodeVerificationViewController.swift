@@ -45,6 +45,7 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
         segueId = backSegueId
         self.navigationController?.popViewController(animated: true)
     }
+
     @IBAction func authContinue(_ sender: Any) {
         view.endEditing(true)
         activityIndicator?.startAnimation()

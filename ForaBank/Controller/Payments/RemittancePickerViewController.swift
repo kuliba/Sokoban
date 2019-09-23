@@ -9,7 +9,7 @@
 import UIKit
 
 protocol RemittancePickerDelegate: class {
-    func didSelectOptionView(option: RemittanceOptionView?)
+    func didSelectOptionView(optionView: RemittanceOptionView?, paymentOption: PaymentOption?)
 }
 
 class RemittancePickerViewController: UIViewController {
@@ -133,7 +133,7 @@ private extension RemittancePickerViewController {
     @objc func dismissLayerClicked(sender: UIButton) {
         // If tag == -1 then it's dismissed withoud any option selected
         if sender.tag != -1 {
-            delegate?.didSelectOptionView(option: optionViews[sender.tag])
+            delegate?.didSelectOptionView(optionView: optionViews[sender.tag], paymentOption: pickerOptions?[sender.tag])
         }
         dismiss(animated: true, completion: nil)
     }

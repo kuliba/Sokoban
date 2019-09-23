@@ -294,7 +294,6 @@
                                                 </state>
                                                 <connections>
                                                     <action selector="sendButtonClicked:" destination="afX-Am-FVA" eventType="touchUpInside" id="hyQ-M6-Y39"/>
-                                                    <segue destination="Xda-th-p6I" kind="show" id="cfn-RW-uPw"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -372,6 +371,7 @@
                         <outlet property="pickerLabel" destination="XCt-5D-j6q" id="a3E-CI-EBb"/>
                         <outlet property="sourceButton" destination="fJE-s0-yRr" id="8ef-k5-mSN"/>
                         <outlet property="sumTextField" destination="2cO-cF-Vnw" id="FFJ-Vb-Cd2"/>
+                        <segue destination="Xda-th-p6I" kind="show" identifier="fromPaymentToPaymentVerification" id="cst-cx-Cgc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UFN-wo-miF" sceneMemberID="firstResponder"/>
@@ -411,7 +411,7 @@
         <!--Платежи и переводы-->
         <scene sceneID="1uN-92-def">
             <objects>
-                <viewController modalTransitionStyle="crossDissolve" id="Xda-th-p6I" sceneMemberID="viewController">
+                <viewController modalTransitionStyle="crossDissolve" id="Xda-th-p6I" customClass="RegistrationCodeVerificationViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Y2y-5v-GPv" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -483,7 +483,8 @@
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
                                                 <connections>
-                                                    <segue destination="EQl-SA-zTp" kind="show" id="UWf-qq-hqG"/>
+                                                    <action selector="authContinue:" destination="Xda-th-p6I" eventType="touchUpInside" id="N8D-ME-Xlh"/>
+                                                    <segue destination="EQl-SA-zTp" kind="show" id="98t-KJ-Uyi"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -542,6 +543,11 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Платежи и переводы" id="7q0-4N-VWk"/>
                     <size key="freeformSize" width="320" height="568"/>
+                    <connections>
+                        <outlet property="codeNumberTextField" destination="C8a-Xm-vI6" id="PNu-K2-gTm"/>
+                        <outlet property="containerView" destination="8pP-cj-CYT" id="70X-h1-ZwF"/>
+                        <outlet property="header" destination="wpl-La-b5G" id="PqY-iD-t60"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gjU-dn-lu1" sceneMemberID="firstResponder"/>
             </objects>

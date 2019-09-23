@@ -23,9 +23,13 @@ class PaymentsDetailsViewController: UIViewController {
     // MARK: - Actions
     @IBAction func sendButtonClicked(_ sender: Any) {
         activityIndicator.startAnimating()
-        prepareCard2Card(from: sourcePaymentOption?.number ?? "", to: selectedDestinationPaymentOption?.number ?? "", amount: Double(sumTextField.text!) as! Double) { (success, token) in
-
+        prepareCard2Card(from: sourcePaymentOption?.number ?? "", to: selectedDestinationPaymentOption?.number ?? "", amount: Double(sumTextField.text!) as? Double ?? 0) { (success, token) in
+            self.activityIndicator.stopAnimating()
+            self.performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
         }
+
+//        prepareCard2Card(from: sourcePaymentOption?.number ?? "", to: "4256901080001025", amount: Double(sumTextField.text!) as? Double ?? 0) { (success, token) in
+//        }
     }
 
     @IBAction func backButtonClicked(_ sender: Any) {
@@ -122,7 +126,7 @@ private extension PaymentsDetailsViewController {
     }
 
     func setUpRemittanceViews() {
-        guard let sourceOption = sourcePaymentOption, let destinationOption = destinationPaymentOptions?.first else {
+        guard let sourceOption = sourcePaymentOption else {
             return
         }
         remittanceSourceView = RemittanceOptionView(withOption: sourceOption)
@@ -150,6 +154,9 @@ private extension PaymentsDetailsViewController {
                                                       constant: 0))
         sourceButton.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v]|", options: [], metrics: nil, views: ["v": remittanceSourceView]))
 
+        guard let destinationOption = destinationPaymentOptions?.first else {
+            return
+        }
         remittanceDestinationView = RemittanceOptionView(withOption: destinationOption)
         remittanceDestinationView.isUserInteractionEnabled = false
 
@@ -191,12 +198,12 @@ extension PaymentsDetailsViewController: OptionPickerDelegate {
 }
 
 extension PaymentsDetailsViewController: RemittancePickerDelegate {
-    func didSelectOptionView(option: RemittanceOptionView?) {
-        selectedDestinationPaymentOptions = option
+    func didSelectOptionView(optionView: RemittanceOptionView?, paymentOption: PaymentOption?) {
+        self.selectedDestinationPaymentOption = paymentOption
         if selectedViewType {
             let frame = remittanceDestinationView.frame
             remittanceDestinationView.removeFromSuperview()
-            remittanceDestinationView = option
+            remittanceDestinationView = optionView
             remittanceDestinationView.frame = frame
             remittanceDestinationView.translatesAutoresizingMaskIntoConstraints = true
             destinationButton.addSubview(remittanceDestinationView)
@@ -204,7 +211,7 @@ extension PaymentsDetailsViewController: RemittancePickerDelegate {
         } else {
             let frame = remittanceSourceView.frame
             remittanceSourceView.removeFromSuperview()
-            remittanceSourceView = option
+            remittanceSourceView = optionView
             remittanceSourceView.frame = frame
             remittanceSourceView.translatesAutoresizingMaskIntoConstraints = true
             sourceButton.addSubview(remittanceSourceView)

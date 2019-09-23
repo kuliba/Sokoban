@@ -222,6 +222,7 @@
 		BDB6B0132326A9E00006A534 /* PasscodeSingUpReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6B0122326A9E00006A534 /* PasscodeSingUpReducer.swift */; };
 		BDB6B0162326AAA60006A534 /* PasscodeSignUpState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6B0152326AAA60006A534 /* PasscodeSignUpState.swift */; };
 		BDB6B01B2327FC700006A534 /* SecurityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6B01A2327FC700006A534 /* SecurityService.swift */; };
+		BDB7916D2338C8B10002C7EE /* VerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB7916C2338C8B10002C7EE /* VerificationCodeViewController.swift */; };
 		BDE4D080232248420070BC3D /* ProductAboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE4D07F232248420070BC3D /* ProductAboutViewController.swift */; };
 		BDE4D08323224E570070BC3D /* AboutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE4D08223224E570070BC3D /* AboutItem.swift */; };
 		BDE4D085232254430070BC3D /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE4D084232254430070BC3D /* Date.swift */; };
@@ -457,6 +458,7 @@
 		BDB6B0122326A9E00006A534 /* PasscodeSingUpReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSingUpReducer.swift; sourceTree = "<group>"; };
 		BDB6B0152326AAA60006A534 /* PasscodeSignUpState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignUpState.swift; sourceTree = "<group>"; };
 		BDB6B01A2327FC700006A534 /* SecurityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityService.swift; sourceTree = "<group>"; };
+		BDB7916C2338C8B10002C7EE /* VerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeViewController.swift; sourceTree = "<group>"; };
 		BDE4D07F232248420070BC3D /* ProductAboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductAboutViewController.swift; sourceTree = "<group>"; };
 		BDE4D08223224E570070BC3D /* AboutItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutItem.swift; sourceTree = "<group>"; };
 		BDE4D084232254430070BC3D /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
@@ -670,6 +672,7 @@
 				09BE35ED218C629100EA7B24 /* Profile */,
 				A568142821CE6A41002C0899 /* Services */,
 				09E0F12F215A5B9D0042FB6A /* TabBarController.swift */,
+				BDB7916C2338C8B10002C7EE /* VerificationCodeViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1434,6 +1437,7 @@
 				A551109121C7C0AE00330510 /* TestCardService.swift in Sources */,
 				A568142C21CE6CB0002C0899 /* AnnotationTableViewCell.swift in Sources */,
 				A58760C121BFB63D0022DED5 /* ProfileNavigationController.swift in Sources */,
+				BDB7916D2338C8B10002C7EE /* VerificationCodeViewController.swift in Sources */,
 				A55663A221EC6B3300E48C40 /* MaskedNavigationBar.swift in Sources */,
 				A57CF1BA2204360900E855A5 /* TestStatementService.swift in Sources */,
 				09AF7090216F73FD00E7FCFC /* FeedCurrent3Cell.swift in Sources */,
