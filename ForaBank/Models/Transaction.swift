@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct DatedTransactions {
+struct DatedTransactions: Codable {
     let changeOfBalanse: Double?
     let currency: String?
     let dateFrom: Date?
@@ -16,7 +16,7 @@ struct DatedTransactions {
     let transactions: [Transaction]
 }
 
-struct Transaction {
+struct Transaction: Codable {
     let date: Date?
     let amount: Double?
     let currency: String?

@@ -1134,19 +1134,16 @@
                         <outlet property="continueButton" destination="s4A-L0-BMl" id="q4E-pV-vda"/>
                         <outlet property="contractView" destination="3TA-oL-Pvb" id="WCN-Af-pzK"/>
                         <outlet property="cvvLabelView" destination="EKK-7a-jdL" id="zd8-k4-T73"/>
-                        <outlet property="cvvTextField" destination="qWW-ok-B6c" id="ptm-Ep-P61"/>
                         <outlet property="dateLabelView" destination="fR8-Re-MZo" id="trq-qQ-4Gf"/>
                         <outlet property="depositView" destination="R7i-Jr-tsQ" id="sho-oI-jHg"/>
                         <outlet property="descriptionLabel" destination="Gam-oD-JzJ" id="h3h-r2-13H"/>
                         <outlet property="header" destination="rWh-P7-M6K" id="GBk-RR-nl4"/>
-                        <outlet property="monthTextField" destination="uwZ-65-irR" id="9dL-Yt-1Ni"/>
                         <outlet property="pageControl" destination="Jh0-8e-Zbo" id="3yx-tq-8nR"/>
                         <outlet property="registrationLabel" destination="ilL-kb-6kQ" id="gwC-sJ-4f0"/>
                         <outlet property="scanButton" destination="4HJ-LT-CVa" id="3f1-et-YUs"/>
                         <outlet property="scanCardButton" destination="4HJ-LT-CVa" id="CX5-EV-VJV"/>
                         <outlet property="segmentedControl" destination="ed2-qd-jSh" id="eEu-4E-ESZ"/>
                         <outlet property="segmentedOuterView" destination="e0X-gi-bC5" id="sKt-wd-OgA"/>
-                        <outlet property="yearTextField" destination="s57-Jh-ZjJ" id="qbN-VD-T24"/>
                         <segue destination="qDb-5Z-fyW" kind="show" identifier="loginPassword" id="pBG-Bd-gaw"/>
                     </connections>
                 </viewController>
@@ -2168,6 +2165,21 @@
             </objects>
             <point key="canvasLocation" x="5319.375" y="3136.2676056338028"/>
         </scene>
+        <!--Payments View Controller-->
+        <scene sceneID="GFa-DV-lUe">
+            <objects>
+                <viewController id="gAX-h6-CBb" customClass="PaymentsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="fDn-VJ-SD7" customClass="OperatorsList">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="OAl-Hk-Ww7"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="p39-jH-tIh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1584" y="3492"/>
+        </scene>
         <!--Sign In View Controller-->
         <scene sceneID="oeQ-Nj-eRs">
             <objects>
@@ -2925,6 +2937,6 @@ AABUAAAAAAAAAAAAAAAAAAAT6w
         <image name="visa-colored" width="93" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="5qd-X6-ri2"/>
+        <segue reference="7Mu-2k-iZk"/>
     </inferredMetricsTieBreakers>
 </document>

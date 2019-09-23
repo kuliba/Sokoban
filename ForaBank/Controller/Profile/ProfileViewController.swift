@@ -23,7 +23,6 @@ class ProfileViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-//        nameLabel.text = "Александр\nКрюков" //image_profile_samplephoto
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -86,7 +85,7 @@ class ProfileViewController: UIViewController {
                 }
             } else {
                 print("ProfileViewController: \(errorMessage ?? "error without errorMessage")")
-                self?.nameLabel.text = "Упс, что-то не загрузилось"//"Александр\nКрюков"//
+                self?.nameLabel.text = "Упс, что-то не загрузилось"
                 self?.userImageView.image = UIImage(named: "image_profile_samplephoto")
                 if NetworkManager.shared().checkForClosingSession(errorMessage) == true {
                     let rootVC = self?.storyboard?.instantiateViewController(withIdentifier: "LoginOrSignupViewController") as! LoginOrSignupViewController

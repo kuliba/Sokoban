@@ -57,7 +57,7 @@ struct DatedTransactionsStatement {
 //                    print(t.operationDate as Any)
 //                }
 //            }
-            return datedTransactions
+                return datedTransactions
         } else {
             return nil
         }

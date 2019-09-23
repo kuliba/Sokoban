@@ -900,8 +900,8 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xxs-bk-PQs">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="291"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="forabank_visaclassic_290x185" translatesAutoresizingMaskIntoConstraints="NO" id="no0-sb-ln5">
-                                                <rect key="frame" x="0.0" y="0.0" width="320" height="301"/>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="forabank_visaclassic_290x185" translatesAutoresizingMaskIntoConstraints="NO" id="no0-sb-ln5">
+                                                <rect key="frame" x="0.0" y="1" width="320" height="301"/>
                                             </imageView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qsP-WU-u4O">
                                                 <rect key="frame" x="0.0" y="30" width="50" height="50"/>

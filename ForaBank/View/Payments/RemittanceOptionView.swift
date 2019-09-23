@@ -15,10 +15,50 @@ enum RemittanceOptionViewType {
     case custom
 }
 
+struct PaymentOption {
+    let id: Double
+    let name: String
+    let type: RemittanceOptionViewType
+    let sum: Double
+    let number: String
+    let maskedNumber: String
+    let provider: String?
+
+    init(id: Double, name: String, type: RemittanceOptionViewType, sum: Double, number: String, maskedNumber: String, provider: String) {
+        self.id = id
+        self.name = name
+        self.sum = sum
+        self.number = number
+        self.maskedNumber = maskedNumber
+        self.type = type
+        self.provider = provider
+    }
+
+    init(product: IProduct) {
+        id = product.id
+        name = product.name
+        sum = product.balance
+        number = product.number
+        maskedNumber = product.maskedNumber
+        provider = nil
+        switch product {
+        case is Card:
+            type = .card
+            break
+        case is Deposit:
+            type = .safeDeposit
+            break
+        default:
+            type = .custom
+            break
+        }
+    }
+}
+
 class RemittanceOptionView: UIView {
-    
-    public private(set) var type: RemittanceOptionViewType
-    
+
+    public private(set) var paymentOption: PaymentOption?
+
     var friendName: String? {
         didSet {
             titleLabel.text = friendName
@@ -55,7 +95,7 @@ class RemittanceOptionView: UIView {
             subtitleImageView.image = subtitleImage
         }
     }
-    
+
     private let titleLabel: UILabel = {
         let l = UILabel()
         l.textColor = .black
@@ -84,21 +124,22 @@ class RemittanceOptionView: UIView {
         i.translatesAutoresizingMaskIntoConstraints = false
         return i
     }()
-    
+
     private var subtitleWidthConstraint: NSLayoutConstraint?
 
-    init(withType type: RemittanceOptionViewType) {
-        self.type = type
+    init(withOption option: PaymentOption) {
         super.init(frame: CGRect.zero)
-        
-        switch type {
-        case .friend:
+        self.paymentOption = option
+
+        setUpLayout()
+        switch paymentOption?.type {
+        case .friend?:
             titleImageView.layer.masksToBounds = false
             titleImageView.layer.cornerRadius = 15
             titleImageView.clipsToBounds = true
             addSubview(titleImageView)
             addSubview(titleLabel)
-            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-5-[i(30)]-5-[t]-5-|", options: [], metrics: nil, views: ["i":titleImageView, "t":titleLabel]))
+            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-5-[i(30)]-5-[t]-5-|", options: [], metrics: nil, views: ["i": titleImageView, "t": titleLabel]))
             addConstraint(NSLayoutConstraint(item: titleImageView,
                                              attribute: .height,
                                              relatedBy: .equal,
@@ -113,17 +154,17 @@ class RemittanceOptionView: UIView {
                                              attribute: .centerY,
                                              multiplier: 1,
                                              constant: 0))
-            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-5-[t]-5-|", options: [], metrics: nil, views: ["t":titleLabel]))
+            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-5-[t]-5-|", options: [], metrics: nil, views: ["t": titleLabel]))
             break
-        case .safeDeposit:
+        case .safeDeposit?:
             subtitleLabel.textColor = .lightGray
             subtitleLabel.font = UIFont.systemFont(ofSize: 12)
             cashLabel.textAlignment = .right
             addSubview(subtitleLabel)
             addSubview(titleLabel)
             addSubview(cashLabel)
-            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-5-[t]", options: [], metrics: nil, views: ["t":titleLabel]))
-            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-5-[st]", options: [], metrics: nil, views: ["st":subtitleLabel]))
+            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-5-[t]", options: [], metrics: nil, views: ["t": titleLabel]))
+            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-5-[st]", options: [], metrics: nil, views: ["st": subtitleLabel]))
             addConstraint(NSLayoutConstraint(item: titleLabel,
                                              attribute: .right,
                                              relatedBy: .equal,
@@ -138,9 +179,9 @@ class RemittanceOptionView: UIView {
                                              attribute: .centerX,
                                              multiplier: 1,
                                              constant: 0))
-            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[t]-0-[st]-0-|", options: [], metrics: nil, views: ["t":titleLabel, "st":subtitleLabel]))
-            
-            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[c]-5-|", options: [], metrics: nil, views: ["c":cashLabel]))
+            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[t]-0-[st]-0-|", options: [], metrics: nil, views: ["t": titleLabel, "st": subtitleLabel]))
+
+            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[c]-5-|", options: [], metrics: nil, views: ["c": cashLabel]))
             addConstraint(NSLayoutConstraint(item: cashLabel,
                                              attribute: .left,
                                              relatedBy: .equal,
@@ -148,9 +189,9 @@ class RemittanceOptionView: UIView {
                                              attribute: .centerX,
                                              multiplier: 1,
                                              constant: 0))
-            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-5-[c]-5-|", options: [], metrics: nil, views: ["c":cashLabel]))
+            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-5-[c]-5-|", options: [], metrics: nil, views: ["c": cashLabel]))
             break
-        case .card:
+        case .card?:
             subtitleLabel.textColor = .lightGray
             subtitleLabel.font = UIFont.systemFont(ofSize: 12)
             cashLabel.textAlignment = .right
@@ -159,8 +200,8 @@ class RemittanceOptionView: UIView {
             addSubview(cashLabel)
             addSubview(titleImageView)
             addSubview(subtitleImageView)
-            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-5-[i(12)]-5-[t]", options: [], metrics: nil, views: ["t":titleLabel, "i":titleImageView]))
-            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-5-[st]-5-[i(35)]", options: [], metrics: nil, views: ["st":subtitleLabel, "i":subtitleImageView]))
+            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-5-[i(12)]-5-[t]", options: [], metrics: nil, views: ["t": titleLabel, "i": titleImageView]))
+            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-5-[st]-5-[i(35)]", options: [], metrics: nil, views: ["st": subtitleLabel, "i": subtitleImageView]))
             addConstraint(NSLayoutConstraint(item: titleLabel,
                                              attribute: .right,
                                              relatedBy: .equal,
@@ -204,9 +245,9 @@ class RemittanceOptionView: UIView {
                                              attribute: .centerY,
                                              multiplier: 1,
                                              constant: 0))
-            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[t]-0-[st]-0-|", options: [], metrics: nil, views: ["t":titleLabel, "st":subtitleLabel]))
-            
-            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[c]-5-|", options: [], metrics: nil, views: ["c":cashLabel]))
+            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[t]-0-[st]-0-|", options: [], metrics: nil, views: ["t": titleLabel, "st": subtitleLabel]))
+
+            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[c]-5-|", options: [], metrics: nil, views: ["c": cashLabel]))
             addConstraint(NSLayoutConstraint(item: cashLabel,
                                              attribute: .left,
                                              relatedBy: .equal,
@@ -214,23 +255,35 @@ class RemittanceOptionView: UIView {
                                              attribute: .centerX,
                                              multiplier: 1,
                                              constant: 0))
-            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-5-[c]-5-|", options: [], metrics: nil, views: ["c":cashLabel]))
+            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-5-[c]-5-|", options: [], metrics: nil, views: ["c": cashLabel]))
             break
         default:
             break
         }
     }
-    
+
     override init(frame: CGRect) {
-        self.type = .custom
+        self.paymentOption = PaymentOption(id: 0, name: "", type: .custom, sum: 0, number: "", maskedNumber: "", provider: "")
         super.init(frame: frame)
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
-        self.type = .custom
+        self.paymentOption = PaymentOption(id: 0, name: "", type: .custom, sum: 0, number: "", maskedNumber: "", provider: "")
         super.init(coder: aDecoder)
     }
-    
+
+    func setUpLayout() {
+        guard let option = paymentOption else {
+            return
+        }
+        title = option.name
+        subtitle = option.number
+        cash = "\(maskSum(sum: option.sum)) ₽"
+        titleImage = UIImage(named: "payments_template_sberbank")
+        subtitleImage = UIImage(named: "visalogo")
+        translatesAutoresizingMaskIntoConstraints = false
+    }
+
     /*
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.

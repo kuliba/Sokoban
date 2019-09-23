@@ -6,8 +6,6 @@
  * КОНФИДЕНЦИАЛЬНО
  */
 
-//it's class(not struct) because Card objects pass between controllers with state changes
-//specific case: the card is blocked in the DepositsCardsListOnholdBlockViewController and on returning to the previous DepositsCardsListViewController its display should change
 class Deposit {
 
     let depositProductName: String?
