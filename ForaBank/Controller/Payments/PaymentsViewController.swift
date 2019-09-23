@@ -9,28 +9,6 @@
 import UIKit
 import Hero
 
-protocol Payment {
-    var iconName: String { get }
-    var name: String { get }
-}
-
-struct PaymentTemplate: Payment {
-    let iconName: String
-    let name: String
-    
-    let subtitle: String
-    let description: String
-}
-
-struct PaymentTransfer: Payment {
-    let iconName: String
-    let name: String
-}
-
-struct PaymentService: Payment {
-    let iconName: String
-    let name: String
-}
 
 class PaymentsViewController: UIViewController {
     
@@ -41,30 +19,15 @@ class PaymentsViewController: UIViewController {
     let templateCellId = "PaymentTemplateCell"
     let paymentCellId = "PaymentCell"
     
-    let data_: [[Payment]] = [
-        [
-            PaymentTemplate(iconName: "payments_template_alfabank", name: "Моя альфа", subtitle: "Последний: 1 июня", description: "50 ₽"),
-            PaymentTemplate(iconName: "payments_template_beeline", name: "Мобилка мск", subtitle: "Последний: 2 июля", description: "500 ₽"),
-            PaymentTemplate(iconName: "payments_template_sberbank", name: "Катюхин сбер", subtitle: "Последний: 3 августа", description: "5000 ₽")
-        ], [
-            PaymentTransfer(iconName: "payments_transfer_between-accounts", name: "Между своими счетами"),
-            PaymentTransfer(iconName: "payments_transfer_to-bank-client", name: "Клиенту банка"),
-            PaymentTransfer(iconName: "payments_transfer_to-another-bank", name: "В другой банк на счет или карту"),
-            PaymentTransfer(iconName: "payments_transfer_money-request", name: "Запросить деньги на счет"),
-            PaymentTransfer(iconName: "payments_transfer_to-online-wallet", name: "На электронный кошелек"),
-            PaymentTransfer(iconName: "payments_transfer_charity", name: "Благотворительность")
-        ], [
-            PaymentService(iconName: "payments_services_phone-billing", name: "Мобильная связь"),
-            PaymentService(iconName: "payments_services_fines-taxes-government-services", name: "Штрафы, налоги и государственные услуги"),
-            PaymentService(iconName: "payments_services_utilities", name: "Коммунальные услуги ЖКХ"),
-            PaymentService(iconName: "payments_services_internet_tv_phone", name: "Интернет, телевидение, телефон"),
-            PaymentService(iconName: "payments_services_social-networks-gaming", name: "Социальные сети, онлайн игры"),
-            PaymentService(iconName: "payments_services_security-systems", name: "Охранные системы"),
-            PaymentService(iconName: "payments_services_transportation-cards", name: "Транспортные карты"),
-            PaymentService(iconName: "payments_services_network-marketing", name: "Сетевой маркетинг"),
-            PaymentService(iconName: "payments_services_other", name: "Прочее")
-        ]
-    ]
+
+   
+    var payments = [Operations]() {
+        didSet {
+            tableView.reloadData()
+     
+            
+        }
+    }
     private var isSignedUp: Bool? = nil {
         didSet {
             if isSignedUp != nil {
@@ -81,10 +44,13 @@ class PaymentsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        NetworkManager.shared().isSignedIn { [unowned self] (flag) in
-//            print("viewWillAppear \(flag)")
-            self.isSignedUp = flag
+     
+        NetworkManager.shared().getPaymentsList { (success, payments) in
+            if success {
+                self.payments = payments ?? []
+            }
         }
+        
         containerView.hero.modifiers = [
             HeroModifier.duration(0.3),
             HeroModifier.delay(0.2),
@@ -133,60 +99,30 @@ class PaymentsViewController: UIViewController {
 // MARK: - UITableView DataSource and Delegate
 extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        switch isSignedUp {
-        case true:
-            return data_.count
-        case false:
-            return data_.count-1
-        default:
-            return 0
-        }
-    }
+  
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let s = (isSignedUp == true) ? section : section+1
-        return data_[s].count
+     
+        return payments.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let s = (isSignedUp == true) ? indexPath.section : indexPath.section+1
         
-        let section = data_[s]
+        let section = payments[s]
         let index = indexPath.row
         
-        if let templates = section as? [PaymentTemplate],
-            let templateCell = tableView.dequeueReusableCell(withIdentifier: templateCellId, for: indexPath) as? PaymentTemplateCell {
-            templateCell.titleLabel.text = templates[index].name
-            templateCell.subTitleLabel.text = templates[index].subtitle
-            templateCell.descriptionLabel.text = templates[index].description
-            templateCell.iconImageView.image = UIImage(named: templates[index].iconName)
+      guard let serviceCell = tableView.dequeueReusableCell(withIdentifier: paymentCellId, for: indexPath) as? PaymentCell  else {
+        fatalError()
+        
+        }
             
-            templateCell.bottomSeparatorView.isHidden = index == templates.endIndex - 1
-            
-            return templateCell
-        } else if let transfers = section as? [PaymentTransfer],
-            let transferCell = tableView.dequeueReusableCell(withIdentifier: paymentCellId, for: indexPath) as? PaymentCell {
-            
-            transferCell.iconImageView.image = UIImage(named: transfers[index].iconName)
-            transferCell.titleLabel.text = transfers[index].name
-            
-            transferCell.bottomSeparatorView.isHidden = index == transfers.endIndex - 1
-            
-            return transferCell
-        } else if let services = section as? [PaymentService],
-            let serviceCell = tableView.dequeueReusableCell(withIdentifier: paymentCellId, for: indexPath) as? PaymentCell {
-            
-            serviceCell.iconImageView.image = UIImage(named: services[index].iconName)
-            serviceCell.titleLabel.text = services[index].name
-            
-            serviceCell.bottomSeparatorView.isHidden = index == services.endIndex - 1
+            serviceCell.titleLabel.text = payments[indexPath.row].name
+    
             
             return serviceCell
-        } else {
-            return UITableViewCell()
-        }
+        
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

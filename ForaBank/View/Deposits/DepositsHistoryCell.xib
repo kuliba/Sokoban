@@ -28,7 +28,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+500,07 ₽" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="7" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0Tm-TA-Lxy">
-                        <rect key="frame" x="241" y="14" width="59" height="21"/>
+                        <rect key="frame" x="241" y="14" width="59" height="40"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="97" id="QKU-s8-8jo"/>
                         </constraints>
@@ -55,26 +55,17 @@
                             <constraint firstAttribute="height" constant="0.5" id="J3m-CQ-JIk"/>
                         </constraints>
                     </view>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Мобилка мск у" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pev-HD-hHd">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" layoutMarginsFollowReadableWidth="YES" text="М" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pev-HD-hHd">
                         <rect key="frame" x="60" y="-2" width="173" height="21"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="21" id="cYr-vU-C5H"/>
-                        </constraints>
-                        <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="13"/>
-                        <nil key="textColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Перевод денежных средств со счета на счет 40817810100005020155, получатель Житков Иван Михайлович" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="7" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gur-MZ-0Hi">
-                        <rect key="frame" x="60" y="15" width="171" height="36"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="36" id="8dw-5v-YGv"/>
+                            <constraint firstAttribute="height" constant="40" id="cYr-vU-C5H"/>
                         </constraints>
                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="13"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="500 ₽" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gXi-ml-eqe">
-                        <rect key="frame" x="241" y="33" width="59" height="17"/>
+                        <rect key="frame" x="241" y="52" width="59" height="17"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="97" id="hQE-fV-b5a"/>
                         </constraints>
@@ -94,6 +85,15 @@
                         </constraints>
                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="13"/>
                         <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Перевод денежных средств со счета на счет 40817810100005020155, получатель Житков Иван Михайлович" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="7" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gur-MZ-0Hi">
+                        <rect key="frame" x="60" y="14" width="171" height="36"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="36" id="8dw-5v-YGv"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="13"/>
+                        <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>

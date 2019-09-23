@@ -33,37 +33,7 @@ class DepositsHistoryViewController: UIViewController {
     
     let decoder = JSONDecoder()
     
-    let data_ = [
-        DepositHistoryDate(date: "Вчера, 5 сентября", amountTotal: "+560,15 ₽", transactions: [
-            DepositHistoryTransaction(imageName: "deposit_history_transaction_capitalization", title: "Капитализация средств", subtitle: "Внутрибанковские операции", value: "5560,15 ₽", subvalue: ""),
-            DepositHistoryTransaction(imageName: "deposit_history_transaction_perevod", title: "Перевод между счетами", subtitle: "Внутрибанковские операции", value: "+10 000,00 ₽", subvalue: ""),
-            DepositHistoryTransaction(imageName: "deposit_history_transaction_metro", title: "METRO Store 1019", subtitle: "Гипермаркет", value: "-14 567,07 ₽", subvalue: "+1200 бонусов"),
-            DepositHistoryTransaction(imageName: "deposit_history_transaction_sidorova", title: "Инна Сидорова", subtitle: "За тренировки", value: "-5000,00 ₽", subvalue: "")
-        ]),
-
-        DepositHistoryDate(date: "4 сентября", amountTotal: "-6567,07 ₽", transactions: [
-            DepositHistoryTransaction(imageName: "deposit_history_transaction_perekrestok", title: "PEREKRESTOK 24", subtitle: "Гипермаркет", value: "-2000,00 ₽", subvalue: "+65 бонусов"),
-            DepositHistoryTransaction(imageName: "deposit_history_transaction_azbuka", title: "Азбука Вкуса", subtitle: "Супермаркет", value: "-2100,00 ₽", subvalue: "+65 бонусов"),
-            DepositHistoryTransaction(imageName: "deposit_history_transaction_gerasimchuk", title: "Павел Герсимчук", subtitle: "За посиделки, которые…", value: "+507,70 ₽", subvalue: ""),
-            DepositHistoryTransaction(imageName: "deposit_history_transaction_vnesenie", title: "Внесение средств", subtitle: "Банкоматы и обменны…", value: "+5000,00 ₽", subvalue: ""),
-            DepositHistoryTransaction(imageName: "deposit_history_transaction_snyatie", title: "Снятие средств", subtitle: "Банкоматы и обменны…", value: "-500,00 ₽", subvalue: ""),
-            DepositHistoryTransaction(imageName: "deposit_history_transaction_perekrestok", title: "PEREKRESTOK", subtitle: "Гипермаркет", value: "-2100,00 ₽", subvalue: "+65 бонусов"),
-            DepositHistoryTransaction(imageName: "deposit_history_transaction_dyadushkakho", title: "Dyadushka KO", subtitle: "Гипермаркет", value: "-250,00 ₽", subvalue: "+65 бонусов")
-            ]),
-        
-        DepositHistoryDate(date: "3 сентября", amountTotal: "+560,15 ₽", transactions: [
-            DepositHistoryTransaction(imageName: "deposit_history_transaction_metro", title: "METRO Store 1019", subtitle: "Гипермаркет", value: "-14 567,07 ₽", subvalue: "+1200 бонусов"),
-            DepositHistoryTransaction(imageName: "deposit_history_transaction_perekrestok", title: "PEREKRESTOK 24", subtitle: "Гипермаркет", value: "-2000,00 ₽", subvalue: "+65 бонусов")
-            ]),
-        
-        DepositHistoryDate(date: "2 сентября", amountTotal: "-6567,07 ₽", transactions: [
-            DepositHistoryTransaction(imageName: "deposit_history_transaction_pyaterochka", title: "Pyatorochka Pechatniki", subtitle: "Продуктовый магазин", value: "1050,50 ₽", subvalue: "+10 бонусов"),
-            DepositHistoryTransaction(imageName: "deposit_history_transaction_azbuka", title: "Азбука Вкуса", subtitle: "Супермаркет", value: "-2100,00 ₽", subvalue: "+65 бонусов"),
-            DepositHistoryTransaction(imageName: "deposit_history_transaction_metro", title: "METRO Store 1019", subtitle: "Гипермаркет", value: "-507,70 ₽", subvalue: "+15 бонусов"),
-            DepositHistoryTransaction(imageName: "deposit_history_transaction_perekrestok", title: "PEREKRESTOK 24", subtitle: "Гипермаркет", value: "-2100,00 ₽", subvalue: "+65 бонусов"),
-            DepositHistoryTransaction(imageName: "deposit_history_transaction_dyadushkakho", title: "Dyadushka KHO", subtitle: "Гипермаркет", value: "-250,00 ₽", subvalue: "+65 бонусов")
-            ])
-    ]
+ 
     var sortedTransactionsStatement = [DatedTransactionsStatement]() {
         didSet{
             self.tableView.reloadData()
@@ -117,7 +87,7 @@ extension DepositsHistoryViewController: UITableViewDataSource, UITableViewDeleg
         
 //        cell.imageView?.image = UIImage(named: data_[indexPath.section].transactions[indexPath.row].imageName)
 //
-//        cell.titleLabel.text = data_[indexPath.section].transactions[indexPath.row].title
+        cell.titleLabel.text = sortedTransactionsStatement[indexPath.section].transactions[indexPath.row].comment
 //        cell.subTitleLabel.text = data_[indexPath.section].transactions[indexPath.row].subtitle
 //
 //        cell.descriptionLabel.text = data_[indexPath.section].transactions[indexPath.row].value
@@ -131,7 +101,7 @@ extension DepositsHistoryViewController: UITableViewDataSource, UITableViewDeleg
         } else if sortedTransactionsStatement[indexPath.section].transactions[indexPath.row].operationType?.compare("CREDIT", options: .caseInsensitive, range: nil, locale: nil) == ComparisonResult.orderedSame {
             cell.iconImageView.backgroundColor = UIColor(red: 4/255, green: 160/255, blue: 133/255, alpha: 1)
         }
-        cell.titleLabel.isHidden = true
+       
         cell.subTitleLabel.isHidden = true
         cell.subdescriptionLabel.isHidden = true
         cell.commentLabel.isHidden = false
