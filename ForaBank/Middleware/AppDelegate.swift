@@ -13,7 +13,7 @@ import ReSwiftThunk
 import CryptoSwift
 
 func appReducer(action: Action, state: State?) -> State {
-    return State(passcodeSignUpState: passcodeSignUpReducer(state: state?.passcodeSignUpState, action: action), authenticationState: authenticationReducer(state: state?.authenticationState, action: action), passcodeSignInState: passcodeSignInReducer(state: state?.passcodeSignInState, action: action), verificationCodeState: verificationCodeReducer(state: state?.verificationCodeState, action: action))
+    return State(passcodeSignUpState: passcodeSignUpReducer(state: state?.passcodeSignUpState, action: action), authenticationState: authenticationReducer(state: state?.authenticationState, action: action), passcodeSignInState: passcodeSignInReducer(state: state?.passcodeSignInState, action: action), verificationCodeState: verificationCodeReducer(state: state?.verificationCodeState, action: action), paymentSource: nil)
 }
 let thunkMiddleware: Middleware<State> = createThunksMiddleware()
 var store = Store<State>(reducer: appReducer, state: nil, middleware: [thunkMiddleware])

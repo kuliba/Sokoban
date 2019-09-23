@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="OPN-w7-Pxo">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="OPN-w7-Pxo">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -154,9 +155,6 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="292" height="40.5"/>
                                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <state key="normal" title="Button"/>
-                                                                <connections>
-                                                                    <action selector="pickerSourceButtonClicked:" destination="afX-Am-FVA" eventType="touchUpInside" id="zbm-z5-5CD"/>
-                                                                </connections>
                                                             </button>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cvx-yL-qtA">
                                                                 <rect key="frame" x="0.0" y="59.5" width="292" height="1"/>
@@ -275,7 +273,7 @@
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Комиссия (3%)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wdJ-3e-zpg">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Комиссия (0%)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wdJ-3e-zpg">
                                                 <rect key="frame" x="14" y="381" width="292" height="21"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="21" id="blS-6h-HTh"/>
@@ -291,11 +289,11 @@
                                                     <constraint firstAttribute="height" constant="53" id="Ug4-55-Xn6"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="18"/>
-                                                <state key="normal" title="Отправить">
+                                                <state key="normal" title="Продолжить">
                                                     <color key="titleColor" red="0.87647289037704468" green="0.40053808689117432" blue="0.35289543867111206" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 </state>
                                                 <connections>
-                                                    <segue destination="Xda-th-p6I" kind="show" id="cfn-RW-uPw"/>
+                                                    <action selector="sendButtonClicked:" destination="afX-Am-FVA" eventType="touchUpInside" id="hyQ-M6-Y39"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -365,7 +363,6 @@
                     <navigationItem key="navigationItem" title="Платежи и переводы" id="58H-bR-aNV"/>
                     <size key="freeformSize" width="320" height="568"/>
                     <connections>
-                        <outlet property="comissionTextField" destination="2cO-cF-Vnw" id="JQ0-1U-dDQ"/>
                         <outlet property="containterView" destination="7jF-kB-QvE" id="4oP-n4-FsA"/>
                         <outlet property="destinationButton" destination="H8U-2F-B3R" id="Orq-Jl-MY1"/>
                         <outlet property="picker" destination="cOr-dw-QEx" id="E3P-CW-lAq"/>
@@ -373,6 +370,8 @@
                         <outlet property="pickerImageView" destination="IBa-Pg-g1h" id="lJr-Yw-yik"/>
                         <outlet property="pickerLabel" destination="XCt-5D-j6q" id="a3E-CI-EBb"/>
                         <outlet property="sourceButton" destination="fJE-s0-yRr" id="8ef-k5-mSN"/>
+                        <outlet property="sumTextField" destination="2cO-cF-Vnw" id="FFJ-Vb-Cd2"/>
+                        <segue destination="Xda-th-p6I" kind="show" identifier="fromPaymentToPaymentVerification" id="cst-cx-Cgc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UFN-wo-miF" sceneMemberID="firstResponder"/>
@@ -412,7 +411,7 @@
         <!--Платежи и переводы-->
         <scene sceneID="1uN-92-def">
             <objects>
-                <viewController modalTransitionStyle="crossDissolve" id="Xda-th-p6I" sceneMemberID="viewController">
+                <viewController modalTransitionStyle="crossDissolve" id="Xda-th-p6I" customClass="RegistrationCodeVerificationViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Y2y-5v-GPv" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -464,7 +463,7 @@
                                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" keyboardType="numberPad" textContentType="one-time-code"/>
                                             </textField>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Введите код, который мы прислали на номер +7 916 *****42" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C6a-Br-7FF">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Введите код, который мы прислали на номер телефона" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C6a-Br-7FF">
                                                 <rect key="frame" x="0.0" y="0.0" width="292" height="55"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="55" id="AUP-Vn-POF"/>
@@ -480,11 +479,12 @@
                                                     <constraint firstAttribute="height" constant="53" id="ywc-w7-KXj"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="18"/>
-                                                <state key="normal" title="Продолжить">
+                                                <state key="normal" title="Отправить">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
                                                 <connections>
-                                                    <segue destination="EQl-SA-zTp" kind="show" id="UWf-qq-hqG"/>
+                                                    <action selector="authContinue:" destination="Xda-th-p6I" eventType="touchUpInside" id="N8D-ME-Xlh"/>
+                                                    <segue destination="EQl-SA-zTp" kind="show" id="98t-KJ-Uyi"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -543,6 +543,11 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Платежи и переводы" id="7q0-4N-VWk"/>
                     <size key="freeformSize" width="320" height="568"/>
+                    <connections>
+                        <outlet property="codeNumberTextField" destination="C8a-Xm-vI6" id="PNu-K2-gTm"/>
+                        <outlet property="containerView" destination="8pP-cj-CYT" id="70X-h1-ZwF"/>
+                        <outlet property="header" destination="wpl-La-b5G" id="PqY-iD-t60"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gjU-dn-lu1" sceneMemberID="firstResponder"/>
             </objects>
@@ -556,7 +561,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u46-KW-caT" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u46-KW-caT" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
                                 <rect key="frame" x="14" y="483" width="292" height="53"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="53" id="97Y-7t-JhH"/>
@@ -569,7 +574,7 @@
                                     <action selector="returnButtonClicked:" destination="EQl-SA-zTp" eventType="touchUpInside" id="ALb-bs-vwW"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yhq-KU-zzm" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yhq-KU-zzm" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
                                 <rect key="frame" x="14" y="422" width="292" height="53"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -580,26 +585,19 @@
                                     <color key="titleColor" red="0.0078361118210000004" green="0.7385174632" blue="0.61187428239999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 </state>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sberbank_logo" translatesAutoresizingMaskIntoConstraints="NO" id="QuN-QJ-FH6">
-                                <rect key="frame" x="96" y="63" width="128" height="128"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="QuN-QJ-FH6" secondAttribute="height" multiplier="1:1" id="1JG-hR-bzW"/>
-                                    <constraint firstAttribute="width" constant="128" id="Adl-jn-Zcw"/>
-                                </constraints>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-9550 ₽" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J5q-LI-SJd">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="-9550 ₽" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J5q-LI-SJd">
                                 <rect key="frame" x="106.5" y="199" width="107" height="42.5"/>
                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="32"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Перевод успешно совершен" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aGd-R4-Z3w">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Перевод успешно совершен" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aGd-R4-Z3w">
                                 <rect key="frame" x="47" y="249.5" width="226.5" height="22.5"/>
                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V48-Wh-DLl">
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="V48-Wh-DLl">
                                 <rect key="frame" x="14" y="287" width="292" height="120"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AxA-g6-n24">
@@ -746,19 +744,14 @@
                         <color key="backgroundColor" red="0.0078431372549019607" green="0.73725490196078436" blue="0.61176470588235299" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="V48-Wh-DLl" secondAttribute="trailing" constant="14" id="0wY-Md-tjh"/>
-                            <constraint firstItem="QuN-QJ-FH6" firstAttribute="centerX" secondItem="Gtw-UZ-fge" secondAttribute="centerX" id="Ith-jm-yos"/>
                             <constraint firstItem="Yhq-KU-zzm" firstAttribute="trailing" secondItem="V48-Wh-DLl" secondAttribute="trailing" id="JGP-oi-XZU"/>
-                            <constraint firstItem="QuN-QJ-FH6" firstAttribute="top" secondItem="Gtw-UZ-fge" secondAttribute="top" constant="43" id="LSz-mg-VVy"/>
                             <constraint firstItem="aGd-R4-Z3w" firstAttribute="top" secondItem="J5q-LI-SJd" secondAttribute="bottom" constant="8" id="LjS-OB-onY"/>
                             <constraint firstItem="u46-KW-caT" firstAttribute="leading" secondItem="Yhq-KU-zzm" secondAttribute="leading" id="O3E-QD-rFe"/>
                             <constraint firstItem="Yhq-KU-zzm" firstAttribute="top" secondItem="V48-Wh-DLl" secondAttribute="bottom" constant="15" id="QSc-ba-BUe"/>
-                            <constraint firstItem="J5q-LI-SJd" firstAttribute="centerX" secondItem="QuN-QJ-FH6" secondAttribute="centerX" id="V3e-9c-m3p"/>
                             <constraint firstItem="u46-KW-caT" firstAttribute="top" secondItem="Yhq-KU-zzm" secondAttribute="bottom" constant="8" id="ZCZ-7K-FIF"/>
-                            <constraint firstItem="J5q-LI-SJd" firstAttribute="top" secondItem="QuN-QJ-FH6" secondAttribute="bottom" constant="8" id="ga2-ga-EJc"/>
                             <constraint firstItem="Yhq-KU-zzm" firstAttribute="leading" secondItem="V48-Wh-DLl" secondAttribute="leading" id="lUS-7s-Mha"/>
                             <constraint firstItem="V48-Wh-DLl" firstAttribute="top" secondItem="aGd-R4-Z3w" secondAttribute="bottom" constant="15" id="rCZ-49-7ND"/>
                             <constraint firstItem="V48-Wh-DLl" firstAttribute="leading" secondItem="Gtw-UZ-fge" secondAttribute="leading" constant="14" id="t8J-LX-gG6"/>
-                            <constraint firstItem="aGd-R4-Z3w" firstAttribute="centerX" secondItem="QuN-QJ-FH6" secondAttribute="centerX" id="vMW-sD-Fh8"/>
                             <constraint firstItem="u46-KW-caT" firstAttribute="trailing" secondItem="Yhq-KU-zzm" secondAttribute="trailing" id="w1v-xB-LeZ"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Gtw-UZ-fge"/>
@@ -776,7 +769,6 @@
     <resources>
         <image name="Group 6 Copy" width="9" height="25"/>
         <image name="button_back" width="8" height="14"/>
-        <image name="sberbank_logo" width="164" height="160"/>
         <image name="tabbar_icon_payment" width="25" height="20"/>
         <image name="vertical_arrows" width="5" height="11"/>
     </resources>

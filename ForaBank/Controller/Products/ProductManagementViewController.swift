@@ -13,6 +13,7 @@ class ProductManagementViewController: UITableViewController {
 
     var actions: Array<Dictionary<String, String>> = []
     var actionsType = ""
+    var product: IProduct?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -110,8 +111,12 @@ class ProductManagementViewController: UITableViewController {
      */
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.item == 1 {
-            if let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentsDetailsViewController") as? PaymentsDetailsViewController {
-                present(vc, animated: true, completion: nil)
+            if let paymentVC = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentsDetailsViewController") as? PaymentsDetailsViewController {
+                let paymentOption = PaymentOption(product: self.product!)
+                paymentVC.sourcePaymentOption = paymentOption
+                present(paymentVC, animated: true) {
+                    store.dispatch(startPayment(withOption: paymentOption))
+                }
             }
             return
         }

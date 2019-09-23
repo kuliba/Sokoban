@@ -8,9 +8,10 @@
 
 import UIKit
 import Hero
+import ReSwift
 
 
-class PaymentsViewController: UIViewController {
+class PaymentsViewController: UIViewController, StoreSubscriber {
     
     // MARK: - Properties
     @IBOutlet weak var tableView: CustomTableView!
@@ -93,6 +94,10 @@ class PaymentsViewController: UIViewController {
         containerView.hero.modifiers = nil
         containerView.hero.id = nil
         view.hero.modifiers = nil
+    }
+    
+    func newState(state: State) {
+        
     }
 }
 

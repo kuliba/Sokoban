@@ -42,8 +42,6 @@ class AuthService: AuthServiceProtocol {
         Alamofire.request(url, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .responseJSON { [unowned self] response in
-
-//                print("csrf result: \(response.result)")  // response serialization result
                 if let json = response.result.value as? Dictionary<String, Any>,
                     let errorMessage = json["errorMessage"] as? String {
                     print("\(errorMessage) \(self)")
@@ -53,7 +51,6 @@ class AuthService: AuthServiceProtocol {
 
                 switch response.result {
                 case .success:
-//                        print("JSON: \(json)") // serialized json response
                     var newHeaders: [String: String] = [:]
                     for c in Alamofire.SessionManager.default.session.configuration.httpCookieStorage?.cookies ?? [] {
                         if c.name == "JSESSIONID" {
@@ -95,10 +92,6 @@ class AuthService: AuthServiceProtocol {
             "verificationCode": 0 as AnyObject
         ]
 
-
-
-
-        //print("login.do parameters \(parameters))")
         Alamofire.request(url, method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])

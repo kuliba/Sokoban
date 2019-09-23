@@ -38,15 +38,13 @@ class TestDepositsService: DepositsServiceProtocol {
 
                 switch response.result {
                 case .success:
-                        if let json = response.result.value as? Dictionary<String, Any>,
+                    if let json = response.result.value as? Dictionary<String, Any>,
                         let data = json["data"] as? Array<Any> {
                         for cardData in data {
                             if let cardData = cardData as? Dictionary<String, Any>,
                                 let original = cardData["original"] as? Dictionary<String, Any> {
 
                                 let depositProductName = original["depositProductName"] as? String
-
-                                // Kryukov. Stop acc
                                 let depositProductID = original["depositProductID"] as? Int
                                 if depositProductID == 10000000088 { continue }
 
@@ -59,9 +57,7 @@ class TestDepositsService: DepositsServiceProtocol {
                                 let number = original["number"] as? String
                                 let deposit = Deposit(depositProductName: depositProductName,
                                                       currencyCode: currencyCode, balance: balance,
-                                                      accountNumber: accountNumber
-
-                                )
+                                                      accountNumber: accountNumber)
                                 deposits.append(deposit)
 
                             }

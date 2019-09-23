@@ -157,49 +157,18 @@ class CardService: CardServiceProtocol {
                         for cardData in data {
                             if let cardData = cardData as? Dictionary<String, Any>,
                                 let original = cardData["original"] as? Dictionary<String, Any> {
-                                let customName = cardData["customName"] as? String
+                                //                                let customName = cardData["customName"] as? String
+                                //                                let title = original["name"] as? String
+                                //                                _ = original["account"] as? String
+                                //                                let number = original["number"] as? String
+                                //                                let maskedNumber = original["maskedNumber"] as? String
+//                                let availableBalance = original["balance"] as? Double
+//                                let branch = original["branch"] as? String
+//                                let id = original["cardID"] as? String
+//                                let product = (original["product"] as? String) ?? ""
+//                                var expirationDate: String? = dayMonthYear(milisecond: original["validThru"] as! Double)
 
-                                var type: CardType? = nil
-                                if let product = original["product"] as? String {
-                                    if product.range(of: "mastercard", options: .caseInsensitive) != nil {
-                                        type = CardType.mastercard
-                                    } else if product.range(of: "visa", options: .caseInsensitive) != nil {
-                                        type = CardType.visaDebet
-                                    }
-                                }
-                                let title = original["name"] as? String
-                                _ = original["account"] as? String
-                                let number = original["number"] as? String
-                                let maskedNumber = original["maskedNumber"] as? String
-                                var blocked: Bool? = nil
-                                if let status = original["status"] as? String {
-                                    if status.range(of: "Действует", options: .caseInsensitive) != nil {
-                                        blocked = false
-                                    } else {
-                                        blocked = true
-                                    }
-                                }
-                                let availableBalance = original["balance"] as? Double
-                                let branch = original["branch"] as? String
-                                let id = original["cardID"] as? String
-                                let product = (original["product"] as? String) ?? ""
-                                var expirationDate: String? = dayMonthYear(milisecond: original["validThru"] as! Double)
-
-                                let card = Card(type: type,
-                                                paypass: nil,
-                                                title: title,
-                                                customName: customName, number: number,
-                                                blocked: blocked,
-                                                startDate: nil,
-                                                expirationDate: expirationDate,
-                                                availableBalance: availableBalance,
-                                                blockedMoney: nil,
-                                                updatingDate: nil,
-                                                tariff: nil,
-                                                id: id,
-                                                branch: branch,
-                                                maskedNumber: maskedNumber,
-                                                product: product)
+                                guard let card = Card.from(NSDictionary(dictionary: original)) else { return }
                                 cards.append(card)
                             }
                         }
