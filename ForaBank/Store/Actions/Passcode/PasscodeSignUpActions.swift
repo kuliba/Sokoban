@@ -9,8 +9,12 @@
 import Foundation
 import ReSwift
 import ReSwiftThunk
+import KeychainAccess
 
 let startPasscodeSingUp = Thunk<State> { dispatch, getState in
+    unsafeRemovePasscodeFromKeychain()
+    unsafeRemoveEncryptedPasscodeFromKeychain()
+    unsafeRemoveUserDataFromKeychain()
     dispatch(UpdatePasscodeSingUpProcess(isFinished: false, isStarted: true))
 }
 

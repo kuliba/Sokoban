@@ -32,8 +32,7 @@ func encrypt(userData: UserData, withPasscode passcode: String) -> String? {
 func decryptUserData(userData: String, withPossiblePasscode possiblePasscode: String) -> UserData? {
     let key = aesKey32Dumb(with: possiblePasscode)
     let iv = aesInitializationVector16Dump()
-    let encryptedUserData = keychainCredentialsUserData()
-    let decryptedUserData = try! encryptedUserData?.aesDecrypt(withKey: key, iv: iv)
+    let decryptedUserData = try! userData.aesDecrypt(withKey: key, iv: iv)
 
     let userDataStrings = decryptedUserData?.components(separatedBy: "+")
     guard let login = userDataStrings?[0], let pwd = userDataStrings?[1] else {
@@ -103,6 +102,21 @@ func saveEncryptedPasscodeToKeychain(passcode: String) {
 func savePasscodeToKeychain(passcode: String) {
     let keychain = Keychain(service: "com.fora.credentials")
     keychain["passcode"] = passcode
+}
+
+func unsafeRemoveEncryptedPasscodeFromKeychain() {
+    let keychain = Keychain(service: "com.fora.credentials")
+    try! keychain.remove("encryptedPasscode")
+}
+
+func unsafeRemovePasscodeFromKeychain() {
+    let keychain = Keychain(service: "com.fora.credentials")
+    try! keychain.remove("passcode")
+}
+
+func unsafeRemoveUserDataFromKeychain() {
+    let keychain = Keychain(service: "com.fora.credentials")
+    try! keychain.remove("userData")
 }
 
 //Crypto
