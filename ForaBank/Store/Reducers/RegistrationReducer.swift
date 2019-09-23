@@ -19,6 +19,9 @@ func registrationReducer(state: RegistrationState?, action: Action) -> Registrat
         newState.login = action.login
         newState.pwd = action.pwd
         break
+    case let action as SetPasscode:
+        newState.passcode = action.passcode
+        break
     default:
         break
     }
