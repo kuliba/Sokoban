@@ -15,6 +15,8 @@ struct State: StateType {
     let passcodeSignInState: PasscodeSignInState
     let verificationCodeState: VerificationCodeState
     var paymentSource: PaymentOption?
+    var registrationState: RegistrationState
+    
 }
 
 //typealias Bookmark = (route: [RouteElementIdentifier], routeSpecificData: Any?)

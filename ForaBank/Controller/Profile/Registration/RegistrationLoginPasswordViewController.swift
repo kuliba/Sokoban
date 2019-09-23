@@ -131,7 +131,7 @@ class RegistrationLoginPasswordViewController: UIViewController {
             self?.continueButton.isHidden = false
             self?.activityIndicatorView.stopAnimating()
             if success {
-                store.dispatch(createCredentials(login: login, pwd: pwd))
+                store.dispatch(createdLoginPwd(login: login, pwd: pwd))
                 self?.performSegue(withIdentifier: "regSmsVerification", sender: nil)
             } else {
                 let alert = UIAlertController(title: "Неудача", message: errorMessage, preferredStyle: UIAlertController.Style.alert)

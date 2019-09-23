@@ -36,7 +36,7 @@ class SignInViewController: UIViewController {
                                       completionHandler: { [unowned self] success, errorMessage in
                                           if success {
                                               self.performSegue(withIdentifier: "smsVerification", sender: self)
-
+                                              store.dispatch(createCredentials(login: self.loginTextField.text ?? "", pwd: self.passwordTextField.text ?? ""))
                                           } else {
                                               let alert = UIAlertController(title: "Неудача", message: errorMessage, preferredStyle: UIAlertController.Style.alert)
                                               alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))

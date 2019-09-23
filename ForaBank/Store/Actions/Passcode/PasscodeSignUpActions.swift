@@ -42,6 +42,8 @@ func createPasscode(passcode: String) -> Thunk<State> {
         if let encryptedPasscode = encrypt(passcode: passcode) {
             saveEncryptedPasscodeToKeychain(passcode: encryptedPasscode)
         }
+        dispatch(createdPasscode(passcode: passcode))
+        dispatch(finishRegistration)
     }
 }
 
