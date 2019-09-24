@@ -55,6 +55,7 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
             self?.activityIndicator?.stopAnimating()
             if success {
                 store.dispatch(finishVerification)
+                store.dispatch(startSignInWithBiometric)
             } else {
                 let alert = UIAlertController(title: "Неудача", message: "Неверный код", preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))

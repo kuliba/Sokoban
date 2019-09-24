@@ -13,7 +13,7 @@
 		0904505D216B774600F3B295 /* FeedOfferCustom1Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0904505B216B774600F3B295 /* FeedOfferCustom1Cell.swift */; };
 		0904505E216B774600F3B295 /* FeedOfferCustom1Cell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0904505C216B774600F3B295 /* FeedOfferCustom1Cell.xib */; };
 		09203D87216CA79C00902BD2 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09203D86216CA79C00902BD2 /* FeedViewController.swift */; };
-		09203D8B216CC19900902BD2 /* TabBar.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 09203D8A216CC19900902BD2 /* TabBar.storyboard */; };
+		09203D8B216CC19900902BD2 /* AuthorizedZone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 09203D8A216CC19900902BD2 /* AuthorizedZone.storyboard */; };
 		09203D95216E13A700902BD2 /* FeedOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09203D93216E13A700902BD2 /* FeedOptionCell.swift */; };
 		09203D96216E13A700902BD2 /* FeedOptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09203D94216E13A700902BD2 /* FeedOptionCell.xib */; };
 		09203D98216E150500902BD2 /* FeedOptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09203D97216E150500902BD2 /* FeedOptionsViewController.swift */; };
@@ -216,11 +216,15 @@
 		BD21B66A2338E08E001C5CF7 /* RegistrationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD21B6692338E08E001C5CF7 /* RegistrationState.swift */; };
 		BD21B66C2338E0FA001C5CF7 /* RegistrationActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD21B66B2338E0FA001C5CF7 /* RegistrationActions.swift */; };
 		BD21B66E2338E1AF001C5CF7 /* RegistrationReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD21B66D2338E1AF001C5CF7 /* RegistrationReducer.swift */; };
+		BD21B670233915FD001C5CF7 /* Registration.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD21B66F233915FD001C5CF7 /* Registration.storyboard */; };
+		BD21B67223391C63001C5CF7 /* UnauthorizedZone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD21B67123391C63001C5CF7 /* UnauthorizedZone.storyboard */; };
+		BD21B67423391DE3001C5CF7 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD21B67323391DE3001C5CF7 /* Router.swift */; };
 		BD38198E232104430004728C /* productsData.plist in Resources */ = {isa = PBXBuildFile; fileRef = BD38198D232104430004728C /* productsData.plist */; };
 		BD5170A92332135E001EAFC0 /* VerificationCodeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170A82332135E001EAFC0 /* VerificationCodeState.swift */; };
 		BD5170AB2332250C001EAFC0 /* VerificationCodeReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170AA2332250C001EAFC0 /* VerificationCodeReducer.swift */; };
 		BD5170AD233229F4001EAFC0 /* VerificationCodeActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170AC233229F4001EAFC0 /* VerificationCodeActions.swift */; };
 		BD5170B323336C83001EAFC0 /* PaymentRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170B223336C83001EAFC0 /* PaymentRequests.swift */; };
+		BD6D5674233A0B9000B7CF4B /* UnauthorizedZoneTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6D5673233A0B9000B7CF4B /* UnauthorizedZoneTabBarController.swift */; };
 		BD6F59782334B74F002F4D4E /* StateActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6F59772334B74F002F4D4E /* StateActions.swift */; };
 		BD6F597A2334BAA4002F4D4E /* StateReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6F59792334BAA4002F4D4E /* StateReducer.swift */; };
 		BD7CC1A1232125D000872D06 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = BD7CC1A0232125D000872D06 /* Localizable.strings */; };
@@ -253,7 +257,7 @@
 		0904505B216B774600F3B295 /* FeedOfferCustom1Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedOfferCustom1Cell.swift; sourceTree = "<group>"; };
 		0904505C216B774600F3B295 /* FeedOfferCustom1Cell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FeedOfferCustom1Cell.xib; sourceTree = "<group>"; };
 		09203D86216CA79C00902BD2 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
-		09203D8A216CC19900902BD2 /* TabBar.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = TabBar.storyboard; path = Base.lproj/TabBar.storyboard; sourceTree = "<group>"; };
+		09203D8A216CC19900902BD2 /* AuthorizedZone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = AuthorizedZone.storyboard; path = Base.lproj/AuthorizedZone.storyboard; sourceTree = "<group>"; };
 		09203D91216E0D7600902BD2 /* ForaBank-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ForaBank-Bridging-Header.h"; sourceTree = "<group>"; };
 		09203D93216E13A700902BD2 /* FeedOptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedOptionCell.swift; sourceTree = "<group>"; };
 		09203D94216E13A700902BD2 /* FeedOptionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FeedOptionCell.xib; sourceTree = "<group>"; };
@@ -461,11 +465,15 @@
 		BD21B6692338E08E001C5CF7 /* RegistrationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationState.swift; sourceTree = "<group>"; };
 		BD21B66B2338E0FA001C5CF7 /* RegistrationActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationActions.swift; sourceTree = "<group>"; };
 		BD21B66D2338E1AF001C5CF7 /* RegistrationReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationReducer.swift; sourceTree = "<group>"; };
+		BD21B66F233915FD001C5CF7 /* Registration.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Registration.storyboard; sourceTree = "<group>"; };
+		BD21B67123391C63001C5CF7 /* UnauthorizedZone.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = UnauthorizedZone.storyboard; sourceTree = "<group>"; };
+		BD21B67323391DE3001C5CF7 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		BD38198D232104430004728C /* productsData.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = productsData.plist; sourceTree = "<group>"; };
 		BD5170A82332135E001EAFC0 /* VerificationCodeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeState.swift; sourceTree = "<group>"; };
 		BD5170AA2332250C001EAFC0 /* VerificationCodeReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeReducer.swift; sourceTree = "<group>"; };
 		BD5170AC233229F4001EAFC0 /* VerificationCodeActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeActions.swift; sourceTree = "<group>"; };
 		BD5170B223336C83001EAFC0 /* PaymentRequests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentRequests.swift; sourceTree = "<group>"; };
+		BD6D5673233A0B9000B7CF4B /* UnauthorizedZoneTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnauthorizedZoneTabBarController.swift; sourceTree = "<group>"; };
 		BD6F59772334B74F002F4D4E /* StateActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateActions.swift; sourceTree = "<group>"; };
 		BD6F59792334BAA4002F4D4E /* StateReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateReducer.swift; sourceTree = "<group>"; };
 		BD7CC1A0232125D000872D06 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
@@ -683,15 +691,15 @@
 		09E0F131215A617A0042FB6A /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				BDA9EB3B2326862F00D68BEE /* Passcode */,
-				09C7C30B2174727A000EE472 /* Products */,
+				9697E29E2334C29700974505 /* OperatorsList.swift */,
+				BDB7916C2338C8B10002C7EE /* VerificationCodeViewController.swift */,
 				09203D99216E150C00902BD2 /* Feed */,
+				BDA9EB3B2326862F00D68BEE /* Passcode */,
 				89C8DF142191BDF500D92B0A /* Payments */,
+				09C7C30B2174727A000EE472 /* Products */,
 				09BE35ED218C629100EA7B24 /* Profile */,
 				A568142821CE6A41002C0899 /* Services */,
-				9697E29E2334C29700974505 /* OperatorsList.swift */,
-				09E0F12F215A5B9D0042FB6A /* TabBarController.swift */,
-				BDB7916C2338C8B10002C7EE /* VerificationCodeViewController.swift */,
+				BD6D5672233A0B2C00B7CF4B /* Zones */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -770,8 +778,10 @@
 				09797561215A49040044C00A /* LaunchScreen.storyboard */,
 				09E0F13E215A65AE0042FB6A /* Payment.storyboard */,
 				09E0F143215A65F10042FB6A /* Profile.storyboard */,
+				BD21B66F233915FD001C5CF7 /* Registration.storyboard */,
 				09E0F140215A65D40042FB6A /* Services.storyboard */,
-				09203D8A216CC19900902BD2 /* TabBar.storyboard */,
+				09203D8A216CC19900902BD2 /* AuthorizedZone.storyboard */,
+				BD21B67123391C63001C5CF7 /* UnauthorizedZone.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -1053,10 +1063,20 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		BD6D5672233A0B2C00B7CF4B /* Zones */ = {
+			isa = PBXGroup;
+			children = (
+				09E0F12F215A5B9D0042FB6A /* TabBarController.swift */,
+				BD6D5673233A0B9000B7CF4B /* UnauthorizedZoneTabBarController.swift */,
+			);
+			path = Zones;
+			sourceTree = "<group>";
+		};
 		BD6F597B2334BCF9002F4D4E /* Middleware */ = {
 			isa = PBXGroup;
 			children = (
 				09797558215A49020044C00A /* AppDelegate.swift */,
+				BD21B67323391DE3001C5CF7 /* Router.swift */,
 			);
 			path = Middleware;
 			sourceTree = "<group>";
@@ -1212,6 +1232,7 @@
 			files = (
 				0904505A216B5ADC00F3B295 /* FeedOffersCell.xib in Resources */,
 				09D3C042215CE5D100998F57 /* DialogCell.xib in Resources */,
+				BD21B67223391C63001C5CF7 /* UnauthorizedZone.storyboard in Resources */,
 				09797563215A49040044C00A /* LaunchScreen.storyboard in Resources */,
 				09C7C31321749151000EE472 /* DepositsObligationsCell.xib in Resources */,
 				A55B7B8421A6C09300A8A7FE /* feed_current_outlay.mov in Resources */,
@@ -1227,6 +1248,7 @@
 				096BCB0F21637E27005BC02B /* PaymentCell.xib in Resources */,
 				09E0F13D215A65310042FB6A /* Deposits.storyboard in Resources */,
 				9698996A2303FD190066C55B /* LoansCell.xib in Resources */,
+				BD21B670233915FD001C5CF7 /* Registration.storyboard in Resources */,
 				09AF707C216F4B5000E7FCFC /* FeedUpcomingCell.xib in Resources */,
 				093B863221620EE8008A5222 /* ServicesCell.xib in Resources */,
 				09F2410A21707B86007B7D73 /* FeedInfo3Cell.xib in Resources */,
@@ -1249,7 +1271,7 @@
 				0930F17C215B78B000CFB593 /* Roboto-Bold.ttf in Resources */,
 				0930F17E215B78B000CFB593 /* Roboto-Italic.ttf in Resources */,
 				09F2410621707B7B007B7D73 /* FeedInfo2Cell.xib in Resources */,
-				09203D8B216CC19900902BD2 /* TabBar.storyboard in Resources */,
+				09203D8B216CC19900902BD2 /* AuthorizedZone.storyboard in Resources */,
 				093B8636216224CC008A5222 /* ServicesHeader.xib in Resources */,
 				0930F17D215B78B000CFB593 /* Roboto-BoldItalic.ttf in Resources */,
 				0930F17A215B78B000CFB593 /* Roboto-Black.ttf in Resources */,
@@ -1422,6 +1444,7 @@
 				BD21B66E2338E1AF001C5CF7 /* RegistrationReducer.swift in Sources */,
 				9698995E2303076F0066C55B /* LoansViewController.swift in Sources */,
 				A57CF1B8220435F200E855A5 /* StatementService.swift in Sources */,
+				BD21B67423391DE3001C5CF7 /* Router.swift in Sources */,
 				0941525B219028000068B6B1 /* SignInViewController.swift in Sources */,
 				09BE35EF218C726800EA7B24 /* GradientView2.swift in Sources */,
 				0939B5F92177266B0029F03D /* DepositsHistoryDetailsViewController.swift in Sources */,
@@ -1500,6 +1523,7 @@
 				BDE4D085232254430070BC3D /* Date.swift in Sources */,
 				96072C882313FF13001CFCBD /* TouchIDAuthentication.swift in Sources */,
 				09F5DCE6218C3E7200390304 /* RegistrationFinishViewController.swift in Sources */,
+				BD6D5674233A0B9000B7CF4B /* UnauthorizedZoneTabBarController.swift in Sources */,
 				A568142421CBCD38002C0899 /* BankBranchViews.swift in Sources */,
 				09AF708C216F73FD00E7FCFC /* FeedCurrent2Cell.swift in Sources */,
 				09F2410C2170871F007B7D73 /* FeedInfoViewController.swift in Sources */,
