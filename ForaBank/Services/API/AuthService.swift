@@ -10,7 +10,7 @@ import Foundation
 import Alamofire
 import RMMapper
 class AuthService: AuthServiceProtocol {
-  
+
 
     private let baseURLString: String
 
@@ -33,13 +33,13 @@ class AuthService: AuthServiceProtocol {
     }
 
 
-    func makeCard2Card(headers: HTTPHeaders, code: String,completionHandler: @escaping (Bool) -> Void) {
-              let parameters: [String: AnyObject] = [
-                  "appId": "AND" as AnyObject,
-                  "fingerprint": false as AnyObject,
-                  "token": headers["X-XSRF-TOKEN"] as AnyObject,
-                  "verificationCode": Int(code) as AnyObject
-              ]
+    func makeCard2Card(headers: HTTPHeaders, code: String, completionHandler: @escaping (Bool) -> Void) {
+        let parameters: [String: AnyObject] = [
+            "appId": "AND" as AnyObject,
+            "fingerprint": false as AnyObject,
+            "token": headers["X-XSRF-TOKEN"] as AnyObject,
+            "verificationCode": Int(code) as AnyObject
+        ]
         Alamofire.request(apiBaseURL + "/rest/makeCard2Card", method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: NetworkManager.shared().headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])
@@ -171,11 +171,11 @@ class AuthService: AuthServiceProtocol {
 
 //                print("verify/checkVerificationCode result: \(response.result)") // response serialization result
 //                print("JSON: \(String(describing: response.result.value))") // serialized json response
-                if let json = response.result.value as? Dictionary<String, Any>,
-                    let errorMessage = json["errorMessage"] as? String {
-                    print("\(errorMessage) \(self)")
-                    completionHandler(false)
-                    return
+                guard let json = response.result.value as? Dictionary<String, Any>,
+                    let result = json["result"] as? String, result == "OK" else {
+                        print("\(String(describing: response.result.value as? Dictionary<String, Any>)) \(self)")
+                        completionHandler(false)
+                        return
                 }
 
                 switch response.result {
