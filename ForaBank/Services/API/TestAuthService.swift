@@ -10,6 +10,10 @@ import Foundation
 import Alamofire
 
 class TestAuthService: AuthServiceProtocol {
+    func makeCard2Card(headers: HTTPHeaders, code: String, completionHandler: @escaping (Bool) -> Void) {
+        
+    }
+    
     var isSigned: Bool = false
     private var profile: Profile? = nil
     

@@ -288,7 +288,7 @@
         <!--Deposits History Details View Controller-->
         <scene sceneID="C98-ev-cmG">
             <objects>
-                <viewController id="zzR-we-aef" customClass="DepositsHistoryDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="zzR-we-aef" customClass="DepositsHistoryDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8rJ-8l-U8X" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="874"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -298,7 +298,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jjG-es-334">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="874"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="894"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mto-lD-iYb">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="874"/>
@@ -529,7 +529,7 @@
         <!--Deposits Cards List View Controller-->
         <scene sceneID="IPX-FN-eW7">
             <objects>
-                <viewController storyboardIdentifier="deposits0" id="VIS-28-LnS" customClass="DepositsCardsListViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="deposits0" modalPresentationStyle="fullScreen" id="VIS-28-LnS" customClass="DepositsCardsListViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2Cr-6Y-gsT">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -565,7 +565,7 @@
         <!--Deposits Cards Details Statement View Controller-->
         <scene sceneID="nAA-UQ-j6T">
             <objects>
-                <viewController storyboardIdentifier="feed1" useStoryboardIdentifierAsRestorationIdentifier="YES" id="KxZ-uG-ucE" customClass="DepositsCardsDetailsStatementViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="feed1" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="KxZ-uG-ucE" customClass="DepositsCardsDetailsStatementViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="TLU-pc-wDg">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -883,7 +883,7 @@
         <!--Card Details View Controller-->
         <scene sceneID="Zgj-qe-Qfl">
             <objects>
-                <viewController storyboardIdentifier="CardDetailsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Oxz-tM-k7M" customClass="CardDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CardDetailsViewController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Oxz-tM-k7M" customClass="CardDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="mgq-cw-vt5"/>
                         <viewControllerLayoutGuide type="bottom" id="5V5-Xp-9tv"/>
@@ -1065,7 +1065,7 @@
         <!--Deposits Cards List Onhold Block View Controller-->
         <scene sceneID="yPu-Cp-zT0">
             <objects>
-                <viewController id="Xv3-je-rnb" customClass="DepositsCardsListOnholdBlockViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="Xv3-je-rnb" customClass="DepositsCardsListOnholdBlockViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5ZP-xB-AaV">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="548"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1080,7 +1080,7 @@
         <!--Product Management View Controller-->
         <scene sceneID="yYv-IY-3rh">
             <objects>
-                <tableViewController storyboardIdentifier="ProductManagementViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="oHR-xs-SU6" customClass="ProductManagementViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="ProductManagementViewController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="oHR-xs-SU6" customClass="ProductManagementViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="static" style="plain" separatorStyle="default" rowHeight="50" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="XeI-RU-e7t">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1335,7 +1335,7 @@
         <!--Deposits Cards Details Statement Details View Controller-->
         <scene sceneID="nAh-kC-cgw">
             <objects>
-                <viewController id="EqD-Vl-vHc" customClass="DepositsCardsDetailsStatementDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="EqD-Vl-vHc" customClass="DepositsCardsDetailsStatementDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Ocv-CW-a0J"/>
                         <viewControllerLayoutGuide type="bottom" id="Dzo-kh-QVB"/>
@@ -1839,7 +1839,7 @@
         <!--Product Details View Controller-->
         <scene sceneID="UyC-Lb-fTu">
             <objects>
-                <viewController storyboardIdentifier="ProductDetailsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="dKH-6f-sJB" customClass="ProductDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ProductDetailsViewController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="dKH-6f-sJB" customClass="ProductDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="7Rh-j3-Qgm"/>
                         <viewControllerLayoutGuide type="bottom" id="gEa-kc-AVO"/>
@@ -1977,7 +1977,7 @@
         <!--Loans Details View Controller-->
         <scene sceneID="hUE-IL-H7B">
             <objects>
-                <viewController storyboardIdentifier="LoansDetailsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="xqK-z0-WSt" customClass="LoansDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoansDetailsViewController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="xqK-z0-WSt" customClass="LoansDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="ODr-92-her"/>
                         <viewControllerLayoutGuide type="bottom" id="O8e-4E-mzG"/>
@@ -2329,7 +2329,7 @@
         <!--Deposit Details View Controller-->
         <scene sceneID="04i-4d-ToT">
             <objects>
-                <viewController storyboardIdentifier="DepositDetailsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="yDh-99-FRd" customClass="DepositDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DepositDetailsViewController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="yDh-99-FRd" customClass="DepositDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="0EX-Jv-XHL"/>
                         <viewControllerLayoutGuide type="bottom" id="CZz-i1-54n"/>
@@ -2485,6 +2485,6 @@
         <image name="visalogo" width="41" height="18"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="qYG-hb-7VQ"/>
+        <segue reference="HSU-U3-jID"/>
     </inferredMetricsTieBreakers>
 </document>
