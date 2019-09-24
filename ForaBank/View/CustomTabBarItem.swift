@@ -19,7 +19,7 @@ class CustomTabBarItem: UITabBarItem {
 
 // MARK: - Private methods
 private extension CustomTabBarItem {
-    
+
     func setRenderingMode() {
         selectedImage = selectedImage?.withRenderingMode(.alwaysOriginal)
         image = image?.withRenderingMode(.alwaysTemplate)

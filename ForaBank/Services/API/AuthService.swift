@@ -11,6 +11,7 @@ import Alamofire
 import RMMapper
 class AuthService: AuthServiceProtocol {
 
+
     private let baseURLString: String
 
     private var isSigned: Bool = false
@@ -32,12 +33,41 @@ class AuthService: AuthServiceProtocol {
     }
 
 
+    func makeCard2Card(headers: HTTPHeaders, code: String, completionHandler: @escaping (Bool) -> Void) {
+        let parameters: [String: AnyObject] = [
+            "appId": "AND" as AnyObject,
+            "fingerprint": false as AnyObject,
+            "token": headers["X-XSRF-TOKEN"] as AnyObject,
+            "verificationCode": Int(code) as AnyObject
+        ]
+        Alamofire.request(apiBaseURL + "/rest/makeCard2Card", method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: NetworkManager.shared().headers)
+            .validate(statusCode: MultiRange(200..<300, 401..<402))
+            .validate(contentType: ["application/json"])
+            .responseJSON { response in
 
+                if let json = response.result.value as? Dictionary<String, Any>,
+                    let errorMessage = json["errorMessage"] as? String {
+                    print("\(errorMessage)")
+                    completionHandler(false)
+                    return
+                }
+
+                switch response.result {
+                case .success:
+                    if let json = response.result.value as? Dictionary<String, Any>, let result = json["result"] as? String {
+                        completionHandler(true)
+                    } else {
+                        print("rest/makeCard2Card cant parse json \(String(describing: response.result.value))")
+                        completionHandler(false)
+                    }
+
+                case .failure(let error):
+                    print("rest/makeCard2Card \(error)")
+                    completionHandler(false)
+                }
+        }
+    }
     func csrf(headers: HTTPHeaders, completionHandler: @escaping (_ success: Bool, _ headers: HTTPHeaders?) -> Void) {
-//        if isSigned == true {
-//            completionHandler(true, nil)
-//            return
-//        }
         let url = baseURLString + "csrf"
         Alamofire.request(url, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
@@ -78,10 +108,6 @@ class AuthService: AuthServiceProtocol {
     }
 
     func loginDo(headers: HTTPHeaders, login: String, password: String, completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void) {
-        if isSigned == true {
-            completionHandler(isSigned, nil)
-            return
-        }
         let url = baseURLString + "login.do"
         let parameters: [String: AnyObject] = [
             "appId": "AND" as AnyObject,
@@ -120,10 +146,6 @@ class AuthService: AuthServiceProtocol {
     }
 
     func checkVerificationCode(headers: HTTPHeaders, code: String, completionHandler: @escaping (_ success: Bool) -> Void) {
-        if isSigned == true {
-            completionHandler(isSigned)
-            return
-        }
         let url = baseURLString + "verify/checkVerificationCode"
         let parameters: [String: AnyObject] = [
             "appId": "AND" as AnyObject,
@@ -141,11 +163,11 @@ class AuthService: AuthServiceProtocol {
 
 //                print("verify/checkVerificationCode result: \(response.result)") // response serialization result
 //                print("JSON: \(String(describing: response.result.value))") // serialized json response
-                if let json = response.result.value as? Dictionary<String, Any>,
-                    let errorMessage = json["errorMessage"] as? String {
-                    print("\(errorMessage) \(self)")
-                    completionHandler(false)
-                    return
+                guard let json = response.result.value as? Dictionary<String, Any>,
+                    let result = json["result"] as? String, result == "OK" else {
+                        print("\(String(describing: response.result.value as? Dictionary<String, Any>)) \(self)")
+                        completionHandler(false)
+                        return
                 }
 
                 switch response.result {

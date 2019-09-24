@@ -10,6 +10,7 @@ import UIKit
 
 class VerificationCodeViewController: UIViewController {
 
+    @IBOutlet weak var checkCodePayments: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
 

@@ -45,19 +45,7 @@ class TabBarController: UITabBarController, StoreSubscriber {
             passcodeVC.modalPresentationStyle = .overFullScreen
             present(passcodeVC, animated: true, completion: nil)
         } else if state.isShown == false {
-            setSelectedIndexToLast()
-            NetworkManager.shared().isSignedIn { (isSignIn) in
-                if isSignIn {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                        if ((self.viewControllers?.last) != nil) {
-                            let profileSB = UIStoryboard(name: "Profile", bundle: nil)
-                            let profileVC: ProfileViewController = profileSB.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
-                            self.setNumberOfTabsAvailable()
-                            self.viewControllers?.last?.navigationController?.setViewControllers([profileVC], animated: true)
-                        }
-                    }
-                }
-            }
+            
         }
     }
 
