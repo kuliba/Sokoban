@@ -66,7 +66,7 @@ class PasscodeSignInViewController: UIViewController, StoreSubscriber {
         }
 
         if state.verificationState.isShown == true {
-            let paymentStoryboard = UIStoryboard(name: "Profile", bundle: nil)
+            let paymentStoryboard = UIStoryboard(name: "Registration", bundle: nil)
             let verifyVC = paymentStoryboard.instantiateViewController(withIdentifier: "smsVerification")
             verifyVC.modalTransitionStyle = .crossDissolve
 

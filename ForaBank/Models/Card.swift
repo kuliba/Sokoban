@@ -38,13 +38,15 @@ class Card: Mappable, IProduct {
     var branch: String?
 
     func getProductAbout() -> Array<AboutItem> {
-        guard let end = expirationDate else {
-            return []
-        }
-        let blStr = String(describing: blockedMoney!)
-        return [AboutItem(title: "Окончание действия карты", value: end),
+//        guard let end = expirationDate else {
+//            return []
+//            AboutItem(title: "Окончание действия карты", value: end),
+//        }
+        //let blStr = String(describing: blockedMoney!)
+//        AboutItem(title: "Заблокированные средства", value: blStr),
+        return [
                 AboutItem(title: "Доступный остаток", value: "\(balance)"),
-                AboutItem(title: "Заблокированные средства", value: blStr),
+                
                 AboutItem(title: "Тариф", value: name)]
     }
 

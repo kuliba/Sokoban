@@ -21,22 +21,7 @@ class ProfileMenuTableViewController: UITableViewController {
  
     
     @IBAction func quitButtonClicked(_ sender: Any) {
-        unsafeRemoveUserDataFromKeychain()
-        unsafeRemoveEncryptedPasscodeFromKeychain()
-        unsafeRemovePasscodeFromKeychain()
-//        parent?.performSegue(withIdentifier: "RegistrationViewController", sender: nil)
-        let rootVC = self.storyboard?.instantiateViewController(withIdentifier: "LoginOrSignupViewController") as! LoginOrSignupViewController
-        NetworkManager.shared().logOut { [unowned self] (_) in
-            if let t = self.navigationController?.tabBarController as? TabBarController {
-                t.setNumberOfTabsAvailable()
-                
-            }
-        }
-        if let pvc = parent as? ProfileViewController {
-            pvc.segueId = "logout"
-        }
-        rootVC.segueId = "logout"
-        navigationController?.setViewControllers([rootVC], animated: true)
+        store.dispatch(doLogout)
     }
     
     // MARK: - Lifecycle

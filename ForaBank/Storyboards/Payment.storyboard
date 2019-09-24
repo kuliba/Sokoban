@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="OPN-w7-Pxo">
-    <device id="retina4_0" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="OPN-w7-Pxo">
+    <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,13 +16,13 @@
         <!--Платежи и переводы-->
         <scene sceneID="2lK-ok-2qs">
             <objects>
-                <viewController storyboardIdentifier="paymentRoot" id="OPN-w7-Pxo" customClass="PaymentsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="paymentRoot" modalPresentationStyle="fullScreen" id="OPN-w7-Pxo" customClass="PaymentsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="YRK-kd-i2t" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ooe-uE-Oeb">
-                                <rect key="frame" x="0.0" y="20" width="320" height="30"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="30"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Платежи и переводы" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8dV-nZ-mMl">
                                         <rect key="frame" x="80" y="8.5" width="160" height="21.5"/>
@@ -41,10 +39,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Yz-SV-jwE" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="45" width="320" height="523"/>
+                                <rect key="frame" x="0.0" y="25" width="320" height="543"/>
                                 <subviews>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" sectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="dNT-nK-TXt" customClass="CustomTableView" customModule="ForaBank" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="523"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="543"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -103,13 +101,13 @@
         <!--Платежи и переводы-->
         <scene sceneID="mUk-Xs-fOz">
             <objects>
-                <viewController storyboardIdentifier="PaymentsDetailsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="afX-Am-FVA" customClass="PaymentsDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PaymentsDetailsViewController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="afX-Am-FVA" customClass="PaymentsDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="6mz-Qx-ghH" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fwS-pj-Lv8">
-                                <rect key="frame" x="0.0" y="20" width="320" height="30"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="30"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Перевод" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4du-DO-k3Q">
                                         <rect key="frame" x="127" y="8" width="66" height="22"/>
@@ -140,10 +138,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7jF-kB-QvE" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="45" width="320" height="523"/>
+                                <rect key="frame" x="0.0" y="25" width="320" height="543"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B3J-EX-QK6">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="523"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="543"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X2I-VJ-MYg" customClass="DoubleRoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="320" height="220"/>
@@ -411,13 +409,13 @@
         <!--Платежи и переводы-->
         <scene sceneID="1uN-92-def">
             <objects>
-                <viewController modalTransitionStyle="crossDissolve" id="Xda-th-p6I" customClass="RegistrationCodeVerificationViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalTransitionStyle="crossDissolve" modalPresentationStyle="fullScreen" id="Xda-th-p6I" customClass="RegistrationCodeVerificationViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Y2y-5v-GPv" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wpl-La-b5G">
-                                <rect key="frame" x="0.0" y="20" width="320" height="30"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="30"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Pc-W3-1i2">
                                         <rect key="frame" x="14" y="0.0" width="30" height="30"/>
@@ -448,10 +446,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8pP-cj-CYT" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="45" width="320" height="523"/>
+                                <rect key="frame" x="0.0" y="25" width="320" height="543"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eDa-n2-lst">
-                                        <rect key="frame" x="14" y="170" width="292" height="183"/>
+                                        <rect key="frame" x="14" y="180" width="292" height="183"/>
                                         <subviews>
                                             <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="C8a-Xm-vI6">
                                                 <rect key="frame" x="115" y="66" width="62" height="40"/>
@@ -459,7 +457,6 @@
                                                     <constraint firstAttribute="height" constant="40" id="Clh-0V-kc7"/>
                                                     <constraint firstAttribute="width" constant="62" id="Mau-yE-NZB"/>
                                                 </constraints>
-                                                <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" keyboardType="numberPad" textContentType="one-time-code"/>
                                             </textField>
@@ -483,7 +480,7 @@
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
                                                 <connections>
-                                                    <action selector="authContinue:" destination="Xda-th-p6I" eventType="touchUpInside" id="N8D-ME-Xlh"/>
+                                                    <action selector="checkPaymentCode:" destination="Xda-th-p6I" eventType="touchUpInside" id="G58-eU-EaO"/>
                                                     <segue destination="EQl-SA-zTp" kind="show" id="98t-KJ-Uyi"/>
                                                 </connections>
                                             </button>
@@ -551,12 +548,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gjU-dn-lu1" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3729" y="1037"/>
+            <point key="canvasLocation" x="3724" y="1038"/>
         </scene>
         <!--Payments Details Success View Controller-->
         <scene sceneID="Qmn-ro-rR4">
             <objects>
-                <viewController id="EQl-SA-zTp" customClass="PaymentsDetailsSuccessViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PaymentsFinishScreen" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="EQl-SA-zTp" customClass="PaymentsDetailsSuccessViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="CJI-YM-4Dg">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

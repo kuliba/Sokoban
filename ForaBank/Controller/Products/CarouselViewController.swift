@@ -16,7 +16,7 @@ class CarouselViewController: UIViewController {
     // MARK: - Properties
     @IBOutlet var carousel: iCarousel!
     @IBOutlet weak var containerView: RoundedEdgeView!
-    
+
     lazy var leftSwipeRecognizer: UISwipeGestureRecognizer = {
         let recognizer = UISwipeGestureRecognizer(target: self, action: #selector(swipeAction(_:)))
         recognizer.direction = .left
@@ -48,8 +48,12 @@ class CarouselViewController: UIViewController {
     var segueId: String? = nil
     var backSegueId: String? = nil
     
+    
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
+        
+     
         currentViewController = storyboard?.instantiateViewController(withIdentifier: "deposits0")
         currentViewController!.view.translatesAutoresizingMaskIntoConstraints = false
         addChild(currentViewController!)
