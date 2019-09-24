@@ -68,10 +68,6 @@ class AuthService: AuthServiceProtocol {
         }
     }
     func csrf(headers: HTTPHeaders, completionHandler: @escaping (_ success: Bool, _ headers: HTTPHeaders?) -> Void) {
-//        if isSigned == true {
-//            completionHandler(true, nil)
-//            return
-//        }
         let url = baseURLString + "csrf"
         Alamofire.request(url, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
@@ -112,10 +108,6 @@ class AuthService: AuthServiceProtocol {
     }
 
     func loginDo(headers: HTTPHeaders, login: String, password: String, completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void) {
-        if isSigned == true {
-            completionHandler(isSigned, nil)
-            return
-        }
         let url = baseURLString + "login.do"
         let parameters: [String: AnyObject] = [
             "appId": "AND" as AnyObject,

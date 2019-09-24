@@ -18,8 +18,6 @@ class UnauthorizedZoneTabBarController: UITabBarController, StoreSubscriber {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        //setSelectedIndexToLast()
-//        setNumberOfTabsAvailable()
         selectedIndex = 0
         hero.isEnabled = true
         hero.tabBarAnimationType = .none
@@ -51,34 +49,6 @@ class UnauthorizedZoneTabBarController: UITabBarController, StoreSubscriber {
                 }
             }
         }
-    }
-
-    // MARK: - public methods
-    func setNumberOfTabsAvailable() {
-        // if !signedIn (!authorized)
-        NetworkManager.shared().isSignedIn { [unowned self] (flag) in
-            if !flag && self.viewControllers?.count == 5 {
-                self.viewControllers?.remove(at: 1)
-                self.viewControllers?.remove(at: 1)
-            }
-            else if self.viewControllers?.count == 3 {
-                let depositsStoryboard: UIStoryboard = UIStoryboard(name: "Deposits", bundle: nil)
-                let depositsRootVC = depositsStoryboard.instantiateViewController(withIdentifier: "depositsRoot") as! CarouselViewController
-                self.viewControllers?.insert(depositsRootVC, at: 1)
-                let paymentStoryboard: UIStoryboard = UIStoryboard(name: "Payment", bundle: nil)
-                let paymentRootVC = paymentStoryboard.instantiateViewController(withIdentifier: "paymentRoot") as! PaymentsViewController
-                self.viewControllers?.insert(paymentRootVC, at: 2)
-            }
-        }
-    }
-}
-
-// MARK: - Private methods
-private extension TabBarController {
-
-    func setSelectedIndexToLast() {
-        guard let tabs = tabBar.items else { return }
-        selectedIndex = tabs.endIndex - 1
     }
 }
 

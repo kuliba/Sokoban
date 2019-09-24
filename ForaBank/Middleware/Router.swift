@@ -10,8 +10,8 @@ import Foundation
 
 func setupUnauthorizedZone() {
     let mainStoryboard: UIStoryboard = UIStoryboard(name: "UnauthorizedZone", bundle: nil)
-    let viewController = mainStoryboard.instantiateViewController(withIdentifier: String(describing: TabBarController.self)
-    ) as! TabBarController
+    let viewController = mainStoryboard.instantiateViewController(withIdentifier: String(describing: UnauthorizedZoneTabBarController.self)
+    ) as! UnauthorizedZoneTabBarController
     UIApplication.shared.keyWindow?.rootViewController = viewController
 }
 

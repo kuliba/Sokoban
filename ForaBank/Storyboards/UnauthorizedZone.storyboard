@@ -10,7 +10,7 @@
         <!--Unauthorized Zone Tab Bar Controller-->
         <scene sceneID="Ywb-Qq-rPV">
             <objects>
-                <tabBarController storyboardIdentifier="TabBar" id="D78-cN-6Wh" customClass="UnauthorizedZoneTabBarController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="UnauthorizedZoneTabBarController" id="D78-cN-6Wh" customClass="UnauthorizedZoneTabBarController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" translucent="NO" id="AYB-TX-F46" customClass="CustomTabBar" customModule="ForaBank" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="975" width="768" height="49"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>

@@ -21,6 +21,11 @@ let userDidSignIn = Thunk<State> { dispatch, getStat in
     setupAuthorizedZone()
 }
 
+let doLogout = Thunk<State> { dispatch, getStat in
+    setupUnauthorizedZone()
+    NetworkManager.shared().logOut(completionHandler: nil)
+}
+
 func createCredentials(login: String, pwd: String) -> Thunk<State> {
     return Thunk<State> { dispatch, getState in
         guard let passcode = keychainCredentialsPasscode(), let encryptedUserData = encrypt(userData: UserData(login: login, pwd: pwd), withPasscode: passcode) else {
