@@ -80,12 +80,12 @@ class PaymentsDetailsViewController: UIViewController {
     }
     var selectedDestinationPaymentOption: PaymentOption?
     var sourcePaymentOption: PaymentOption?
+        
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpLayout()
-
         activityIndicator.startAnimating()
         allPaymentOptions { (success, paymentOptions) in
             self.destinationPaymentOptions = paymentOptions

@@ -111,6 +111,28 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
             }
         }
     }
+    
+    @IBAction func checkPaymentCode(_ sender: Any) {
+        activityIndicator?.startAnimation()
+        continueButton.isHidden = true
+        NetworkManager.shared().makeCard2Card(code: self.codeNumberTextField.text ?? "") { [weak self] (success) in
+            self?.continueButton.isHidden = false
+            self?.activityIndicator?.stopAnimating()
+            if success {
+                self?.performSegue(withIdentifier: "finish", sender: nil)
+            } else {
+                let alert = UIAlertController(title: "Неудача", message: "Неверный код", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                alert.addAction(UIAlertAction(title: "Отменить", style: UIAlertAction.Style.default, handler: { (action) in
+                    let rootVC = self?.storyboard?.instantiateViewController(withIdentifier: "PaymentsFinishScreen") as! LoginOrSignupViewController
+                    self?.segueId = "dismiss"
+                    rootVC.segueId = "logout"
+                    self?.navigationController?.setViewControllers([rootVC], animated: true)
+                }))
+                self?.present(alert, animated: true, completion: nil)
+            }
+        }
+    }
 
     func newState(state: VerificationCodeState) {
         guard state.isShown == true else {
@@ -361,8 +383,8 @@ extension RegistrationCodeVerificationViewController: UITextFieldDelegate {
         }
         guard let text = textField.text else { return true }
         let count = text.count + string.count - range.length
-        continueButton.isEnabled = count >= 3
-        continueButton.alpha = (count >= 3) ? 1 : 0.25
+        continueButton?.isEnabled = count >= 3
+        continueButton?.alpha = (count >= 3) ? 1 : 0.25
         return true
     }
 }

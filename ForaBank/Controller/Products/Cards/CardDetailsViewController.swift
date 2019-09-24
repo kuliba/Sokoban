@@ -52,9 +52,14 @@ class CardDetailsViewController: UIViewController {
     @IBAction func backButtonClicked(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
+    
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
+        let vc = UIViewController()
+        vc.modalPresentationStyle = .overFullScreen
+        self.present(vc, animated: true, completion: nil)
+        
         if let card = card {
             cardView.update(withCard: card)
             cardView.backgroundImageView.alpha = 0

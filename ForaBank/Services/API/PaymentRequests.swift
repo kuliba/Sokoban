@@ -81,7 +81,13 @@ func prepareCard2Card(from sourceNumber: String, to destinationNumber: String, a
     }
 }
 
-func makeCard2Card(completionHandler: @escaping (Bool) -> Void) {
+func makeCard2Card(headers: HTTPHeaders, code: String,completionHandler: @escaping (Bool) -> Void) {
+          let parameters: [String: AnyObject] = [
+              "appId": "AND" as AnyObject,
+              "fingerprint": false as AnyObject,
+              "token": headers["X-XSRF-TOKEN"] as AnyObject,
+              "verificationCode": Int(code) as AnyObject
+          ]
     Alamofire.request(apiBaseURL + "/rest/makeCard2Card", method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: NetworkManager.shared().headers)
         .validate(statusCode: MultiRange(200..<300, 401..<402))
         .validate(contentType: ["application/json"])
