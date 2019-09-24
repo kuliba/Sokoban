@@ -120,10 +120,6 @@ class AuthService: AuthServiceProtocol {
     }
 
     func checkVerificationCode(headers: HTTPHeaders, code: String, completionHandler: @escaping (_ success: Bool) -> Void) {
-        if isSigned == true {
-            completionHandler(isSigned)
-            return
-        }
         let url = baseURLString + "verify/checkVerificationCode"
         let parameters: [String: AnyObject] = [
             "appId": "AND" as AnyObject,

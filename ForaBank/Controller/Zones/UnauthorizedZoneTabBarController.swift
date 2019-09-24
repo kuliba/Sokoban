@@ -47,9 +47,7 @@ class UnauthorizedZoneTabBarController: UITabBarController, StoreSubscriber {
         } else if state.isShown == false {
             NetworkManager.shared().isSignedIn { (isSignIn) in
                 if isSignIn {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                        setupAuthorizedZone()
-                    }
+                    store.dispatch(userDidSignIn)
                 }
             }
         }

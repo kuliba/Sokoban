@@ -10,19 +10,13 @@ import UIKit
 import Hero
 
 class RegistrationFinishViewController: UIViewController {
-    
+
     var segueId: String? = nil
-    
+
     @IBAction func completeButtonClicked(_ sender: Any) {
-        let rootVC:ProfileViewController = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
-        if let t = self.tabBarController as? TabBarController {
-            t.setNumberOfTabsAvailable()
-        }
-        self.segueId = "dismiss"
-        rootVC.segueId = "Registered"
-        self.navigationController?.setViewControllers([rootVC], animated: true)
+        store.dispatch(userDidSignIn)
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if segueId == "dismiss" {
@@ -32,11 +26,11 @@ class RegistrationFinishViewController: UIViewController {
             ]
         }
     }
-    
+
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         view.hero.modifiers = nil
         view.hero.id = nil
     }
-    
+
 }

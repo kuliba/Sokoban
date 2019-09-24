@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="VAm-Zg-ZUt">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="G2i-s7-mnv">
     <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -16,6 +16,24 @@
         </array>
     </customFonts>
     <scenes>
+        <!--Profile Navigation Controller-->
+        <scene sceneID="SCX-ZS-CfS">
+            <objects>
+                <navigationController navigationBarHidden="YES" id="G2i-s7-mnv" customClass="ProfileNavigationController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="LEC-8J-u4m">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="YES"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <segue destination="VAm-Zg-ZUt" kind="relationship" relationship="rootViewController" id="uXO-iP-cJf"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9FK-n8-Dsl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1078" y="2378"/>
+        </scene>
         <!--Login Or Signup View Controller-->
         <scene sceneID="Gzv-Hy-TeB">
             <objects>
@@ -97,7 +115,7 @@
                                             <color key="titleColor" red="0.91764705879999997" green="0.2666666667" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
                                         <connections>
-                                            <segue destination="308-e2-JcT" kind="show" id="dOM-4r-gfr"/>
+                                            <segue destination="308-e2-JcT" kind="show" id="0vN-dO-mLZ"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -148,6 +166,7 @@
                     <tabBarItem key="tabBarItem" title="" image="tabbar_icon_profile" id="ANF-Zo-JDd" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
                         <inset key="imageInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="-10"/>
                     </tabBarItem>
+                    <navigationItem key="navigationItem" id="aEs-I5-Q6B"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="NO"/>
@@ -168,11 +187,11 @@
             <objects>
                 <viewController modalTransitionStyle="flipHorizontal" id="308-e2-JcT" customClass="RegistrationViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Qlg-S7-bsB">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xyJ-Kf-sFq" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="29" width="414" height="687"/>
+                                <rect key="frame" x="0.0" y="29" width="414" height="658"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XLM-iE-Iae" customClass="FlexiblePageControl" customModule="FlexiblePageControl">
                                         <rect key="frame" x="172" y="28" width="70" height="10"/>
@@ -183,7 +202,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GHX-YX-jgg">
-                                        <rect key="frame" x="27" y="64" width="360" height="623"/>
+                                        <rect key="frame" x="27" y="64" width="360" height="594"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wup-aq-s6e">
                                                 <rect key="frame" x="1" y="1" width="358" height="44"/>
@@ -607,6 +626,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="EHT-Qg-GwM"/>
                     </view>
+                    <navigationItem key="navigationItem" id="pFJ-Po-hoq"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="NO"/>
                     </userDefinedRuntimeAttributes>
@@ -650,7 +670,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="prt-h4-3x1" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="29" width="414" height="707"/>
+                                <rect key="frame" x="0.0" y="29" width="414" height="658"/>
                                 <subviews>
                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IgS-z8-LFg" customClass="FlexiblePageControl" customModule="FlexiblePageControl">
                                         <rect key="frame" x="172" y="28" width="70" height="10"/>
@@ -661,7 +681,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wgT-ud-smE">
-                                        <rect key="frame" x="8" y="262" width="398" height="183"/>
+                                        <rect key="frame" x="8" y="237.66666666666669" width="398" height="183"/>
                                         <subviews>
                                             <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="b4u-GM-GMe">
                                                 <rect key="frame" x="154" y="66" width="90" height="40"/>
@@ -782,6 +802,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="KdK-Zb-w1J"/>
                     </view>
+                    <navigationItem key="navigationItem" id="ill-r3-eSU"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="NO"/>
                     </userDefinedRuntimeAttributes>
@@ -806,14 +827,14 @@
             <objects>
                 <viewController modalTransitionStyle="flipHorizontal" id="X68-pN-5sM" customClass="RegistrationLoginPasswordViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9G9-Kf-zOc">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b7v-Gh-40W" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="29" width="414" height="687"/>
+                                <rect key="frame" x="0.0" y="29" width="414" height="658"/>
                                 <subviews>
                                     <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rLe-8j-f7S">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="687"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="658"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3d8-Rp-1UM">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="524"/>
@@ -1117,6 +1138,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="p2o-ok-HEI"/>
                     </view>
+                    <navigationItem key="navigationItem" id="gGH-Iv-WCs"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="NO"/>
                     </userDefinedRuntimeAttributes>
@@ -1147,11 +1169,11 @@
             <objects>
                 <viewController storyboardIdentifier="finish" modalPresentationStyle="overCurrentContext" id="3S2-Ql-HD5" customClass="RegistrationPermissionsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1Af-si-LYs">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WVv-9f-Tdt" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="29" width="414" height="687"/>
+                                <rect key="frame" x="0.0" y="29" width="414" height="658"/>
                                 <subviews>
                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BRp-UY-6fh" customClass="FlexiblePageControl" customModule="FlexiblePageControl">
                                         <rect key="frame" x="172" y="28" width="70" height="10"/>
@@ -1465,6 +1487,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="v0N-gw-NFP"/>
                     </view>
+                    <navigationItem key="navigationItem" id="e05-bi-7jc"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="NO"/>
                     </userDefinedRuntimeAttributes>
@@ -1490,21 +1513,21 @@
             <objects>
                 <viewController id="fAi-Mj-Me8" customClass="RegistrationFinishViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="EH5-pL-r6u" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n2p-me-D0Q">
-                                <rect key="frame" x="0.0" y="195" width="414" height="317"/>
+                                <rect key="frame" x="0.0" y="180.66666666666663" width="414" height="317"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ok" translatesAutoresizingMaskIntoConstraints="NO" id="0BP-fV-jwF">
-                                        <rect key="frame" x="79" y="-59" width="256" height="228"/>
+                                        <rect key="frame" x="79" y="-58.999999999999986" width="256" height="228"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="228" id="DMn-fc-4M7"/>
                                             <constraint firstAttribute="width" constant="256" id="Grz-rV-YDF"/>
                                         </constraints>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Теперь вы можете  использовать приложение" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O1Q-hL-pHW">
-                                        <rect key="frame" x="32" y="185" width="350" height="71"/>
+                                        <rect key="frame" x="32" y="185.00000000000003" width="350" height="70.999999999999972"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="71" id="yP8-pD-Mmu"/>
                                         </constraints>
@@ -1513,7 +1536,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Поздравляем!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Es7-S1-Nbl">
-                                        <rect key="frame" x="107" y="158" width="200" height="21"/>
+                                        <rect key="frame" x="107" y="158.00000000000003" width="200" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="21" id="3sU-oT-Iwd"/>
                                             <constraint firstAttribute="width" constant="200" id="mY4-Tu-oK7"/>
@@ -1572,6 +1595,7 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
+                    <navigationItem key="navigationItem" id="AN4-Ny-tag"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="NO"/>
                     </userDefinedRuntimeAttributes>
@@ -1585,11 +1609,11 @@
             <objects>
                 <viewController id="j4D-xD-SzH" customClass="RegistrationTouchIDViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="jrW-GE-wF4" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EBs-dU-miI" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="591" width="414" height="125"/>
+                                <rect key="frame" x="0.0" y="611" width="414" height="125"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8rM-Pk-ccU" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="125"/>
@@ -1613,7 +1637,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="56A-AH-ZRI">
-                                <rect key="frame" x="197.66666666666666" y="287" width="18.666666666666657" height="22"/>
+                                <rect key="frame" x="197.66666666666666" y="297" width="18.666666666666657" height="22"/>
                                 <state key="normal" image="FaceIcon">
                                     <color key="titleColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 </state>
@@ -1641,6 +1665,7 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
+                    <navigationItem key="navigationItem" id="10S-J3-ksg"/>
                     <connections>
                         <outlet property="touchIDButton" destination="56A-AH-ZRI" id="6Ux-hV-b9l"/>
                         <segue destination="3S2-Ql-HD5" kind="show" identifier="finish" id="pC6-h6-eDd"/>
@@ -1817,6 +1842,7 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
+                    <navigationItem key="navigationItem" id="X6O-ec-UCB"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="NO"/>
                     </userDefinedRuntimeAttributes>
@@ -1839,14 +1865,14 @@
             <objects>
                 <viewController storyboardIdentifier="smsVerification" modalPresentationStyle="overCurrentContext" id="z67-jk-msy" customClass="RegistrationCodeVerificationViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="kIj-D9-BBp">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="E1t-Tl-Llt" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="29" width="414" height="687"/>
+                                <rect key="frame" x="0.0" y="29" width="414" height="658"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g5U-6P-v5r">
-                                        <rect key="frame" x="8" y="252" width="398" height="183"/>
+                                        <rect key="frame" x="8" y="237.66666666666669" width="398" height="183"/>
                                         <subviews>
                                             <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="tbH-1y-acu">
                                                 <rect key="frame" x="154" y="66" width="90" height="40"/>
@@ -1970,6 +1996,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="qHd-Wm-TeH"/>
                     </view>
+                    <navigationItem key="navigationItem" id="86g-u9-vL4"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="NO"/>
                     </userDefinedRuntimeAttributes>
@@ -1992,14 +2019,14 @@
             <objects>
                 <viewController storyboardIdentifier="smsVerification2" modalPresentationStyle="overCurrentContext" id="1eR-cn-Ek6" customClass="RegistrationCodeVerificationViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="U5t-4h-EgA">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KRj-mg-c4v" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="29" width="414" height="687"/>
+                                <rect key="frame" x="0.0" y="29" width="414" height="658"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MTP-fz-tG7">
-                                        <rect key="frame" x="8" y="252" width="398" height="183"/>
+                                        <rect key="frame" x="8" y="237.66666666666669" width="398" height="183"/>
                                         <subviews>
                                             <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="lh9-tP-pbp">
                                                 <rect key="frame" x="154" y="66" width="90" height="40"/>
@@ -2122,6 +2149,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="aDW-8c-A6b"/>
                     </view>
+                    <navigationItem key="navigationItem" id="8pV-cI-k5Z"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="NO"/>
                     </userDefinedRuntimeAttributes>
