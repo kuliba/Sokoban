@@ -39,10 +39,10 @@ class PaymentServices: PaymetsServiceProtocol {
                         let data = json["data"] as? Array<Any> {
                         for cardData in data {
                             if let cardData = cardData as? Dictionary<String, Any>{
-                                let name = cardData["name"] as? String
-                       
+                              
                                 
-                                let payment = Operations(name: name)
+                             
+                                    guard let payment = Operations.from(NSDictionary(dictionary: cardData)) else { return }
                                payments.append(payment)
                             }
                             print(payments)
