@@ -245,6 +245,11 @@
 		BDF4F94A23293A6B007C448F /* AuthenticationActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF4F94923293A6B007C448F /* AuthenticationActions.swift */; };
 		BDF4F94C23293C49007C448F /* PasscodeSignInState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF4F94B23293C49007C448F /* PasscodeSignInState.swift */; };
 		BDF4F94E23293D1E007C448F /* AuthenticationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF4F94D23293D1E007C448F /* AuthenticationState.swift */; };
+		BDFE1AC2233B906D00C49A5B /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE1AC1233B906D00C49A5B /* App.swift */; };
+		BDFE1AC4233B92FB00C49A5B /* ProductState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE1AC3233B92FA00C49A5B /* ProductState.swift */; };
+		BDFE1AC6233B952B00C49A5B /* ProductActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE1AC5233B952B00C49A5B /* ProductActions.swift */; };
+		BDFE1AC8233B95B900C49A5B /* ProductReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE1AC7233B95B900C49A5B /* ProductReducer.swift */; };
+		BDFE1ACA233BAE9B00C49A5B /* PaymentOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE1AC9233BAE9B00C49A5B /* PaymentOption.swift */; };
 		BDFE5D982334C3300027A716 /* IProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE5D972334C3300027A716 /* IProduct.swift */; };
 		BDFE5D9A2334E7ED0027A716 /* LoansSegueAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE5D992334E7ED0027A716 /* LoansSegueAnimator.swift */; };
 		BDFE5D9C233511EB0027A716 /* URLs.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE5D9B233511EB0027A716 /* URLs.swift */; };
@@ -494,6 +499,11 @@
 		BDF4F94923293A6B007C448F /* AuthenticationActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationActions.swift; sourceTree = "<group>"; };
 		BDF4F94B23293C49007C448F /* PasscodeSignInState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignInState.swift; sourceTree = "<group>"; };
 		BDF4F94D23293D1E007C448F /* AuthenticationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationState.swift; sourceTree = "<group>"; };
+		BDFE1AC1233B906D00C49A5B /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
+		BDFE1AC3233B92FA00C49A5B /* ProductState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductState.swift; sourceTree = "<group>"; };
+		BDFE1AC5233B952B00C49A5B /* ProductActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductActions.swift; sourceTree = "<group>"; };
+		BDFE1AC7233B95B900C49A5B /* ProductReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductReducer.swift; sourceTree = "<group>"; };
+		BDFE1AC9233BAE9B00C49A5B /* PaymentOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentOption.swift; sourceTree = "<group>"; };
 		BDFE5D972334C3300027A716 /* IProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IProduct.swift; sourceTree = "<group>"; };
 		BDFE5D992334E7ED0027A716 /* LoansSegueAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoansSegueAnimator.swift; sourceTree = "<group>"; };
 		BDFE5D9B233511EB0027A716 /* URLs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLs.swift; sourceTree = "<group>"; };
@@ -1042,9 +1052,10 @@
 				BDF4F94D23293D1E007C448F /* AuthenticationState.swift */,
 				BDF4F94B23293C49007C448F /* PasscodeSignInState.swift */,
 				BDB6B0152326AAA60006A534 /* PasscodeSignUpState.swift */,
+				BDFE1AC3233B92FA00C49A5B /* ProductState.swift */,
+				BD21B6692338E08E001C5CF7 /* RegistrationState.swift */,
 				BD137A3F2326472D00326088 /* State.swift */,
 				BD5170A82332135E001EAFC0 /* VerificationCodeState.swift */,
-				BD21B6692338E08E001C5CF7 /* RegistrationState.swift */,
 			);
 			path = State;
 			sourceTree = "<group>";
@@ -1084,11 +1095,12 @@
 		BD73EB63231EA61C00CB3E58 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				A55B7B5621A5866F00A8A7FE /* UIImage+GIF.swift */,
+				BDFE1AC1233B906D00C49A5B /* App.swift */,
+				BDE4D084232254430070BC3D /* Date.swift */,
 				094FFC0C218837580069DDCB /* Helpers.swift */,
 				BD94E09E231EA6E50006456E /* MasksFormatting.swift */,
-				BDE4D084232254430070BC3D /* Date.swift */,
 				BDF4F9452329105D007C448F /* Security.swift */,
+				A55B7B5621A5866F00A8A7FE /* UIImage+GIF.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1110,6 +1122,7 @@
 				BD5170AC233229F4001EAFC0 /* VerificationCodeActions.swift */,
 				BD6F59772334B74F002F4D4E /* StateActions.swift */,
 				BD21B66B2338E0FA001C5CF7 /* RegistrationActions.swift */,
+				BDFE1AC5233B952B00C49A5B /* ProductActions.swift */,
 			);
 			path = Actions;
 			sourceTree = "<group>";
@@ -1122,6 +1135,7 @@
 				BD5170AA2332250C001EAFC0 /* VerificationCodeReducer.swift */,
 				BD6F59792334BAA4002F4D4E /* StateReducer.swift */,
 				BD21B66D2338E1AF001C5CF7 /* RegistrationReducer.swift */,
+				BDFE1AC7233B95B900C49A5B /* ProductReducer.swift */,
 			);
 			path = Reducers;
 			sourceTree = "<group>";
@@ -1159,6 +1173,7 @@
 				BDE4D08223224E570070BC3D /* AboutItem.swift */,
 				BDE4D08623226B4C0070BC3D /* IAboutItem.swift */,
 				BDFE5D972334C3300027A716 /* IProduct.swift */,
+				BDFE1AC9233BAE9B00C49A5B /* PaymentOption.swift */,
 			);
 			path = PresentationModels;
 			sourceTree = "<group>";
@@ -1383,6 +1398,7 @@
 				09F2410921707B86007B7D73 /* FeedInfo3Cell.swift in Sources */,
 				BDB6B0112326A9C10006A534 /* PasscodeSignUpActions.swift in Sources */,
 				89C8DF0C21918DDC00D92B0A /* OptionPickerViewController.swift in Sources */,
+				BDFE1AC2233B906D00C49A5B /* App.swift in Sources */,
 				0939B5FB21774EA70029F03D /* DoubleRoundedEdgeView.swift in Sources */,
 				BD5170B323336C83001EAFC0 /* PaymentRequests.swift in Sources */,
 				A55B7B8621A7E86200A8A7FE /* DepositsHistoryDetailsSegueAnimator.swift in Sources */,
@@ -1401,6 +1417,7 @@
 				BDB6AFF423268C850006A534 /* PasscodeSignInViewController.swift in Sources */,
 				A528EF4221B106CF00D189DD /* BubblesStatsScrollView.swift in Sources */,
 				A568143021D0B9E3002C0899 /* Deposit.swift in Sources */,
+				BDFE1AC8233B95B900C49A5B /* ProductReducer.swift in Sources */,
 				BDFE5D982334C3300027A716 /* IProduct.swift in Sources */,
 				96094AF42319441600A80412 /* SettingsViewController.swift in Sources */,
 				09C7C33D2175FADE000EE472 /* DepositsHistoryHeader.swift in Sources */,
@@ -1408,6 +1425,7 @@
 				A5B473C621B52D4500F2E41F /* BubblesDetailedStatsView.swift in Sources */,
 				BDF4F94C23293C49007C448F /* PasscodeSignInState.swift in Sources */,
 				BDE4D08723226B4C0070BC3D /* IAboutItem.swift in Sources */,
+				BDFE1ACA233BAE9B00C49A5B /* PaymentOption.swift in Sources */,
 				A568143821D35FEB002C0899 /* Transaction.swift in Sources */,
 				09F5DCE8218C4A5200390304 /* RegistrationTouchIDViewController.swift in Sources */,
 				09C7C3352175CC47000EE472 /* DepositsHistoryViewController.swift in Sources */,
@@ -1472,6 +1490,7 @@
 				096B4F4E2183089900C69E52 /* TwoViewController.swift in Sources */,
 				A57CF1BC2204364E00E855A5 /* TransactionStatement.swift in Sources */,
 				9697E2A32334E30500974505 /* ServicesList.swift in Sources */,
+				BDFE1AC6233B952B00C49A5B /* ProductActions.swift in Sources */,
 				A568142A21CE6A79002C0899 /* AnnotationsTableViewController.swift in Sources */,
 				BD5170AB2332250C001EAFC0 /* VerificationCodeReducer.swift in Sources */,
 				09AF707E216F676300E7FCFC /* FeedCurrentViewController.swift in Sources */,
@@ -1530,6 +1549,7 @@
 				A528EF4421B16D8A00D189DD /* BubbleStatsView.swift in Sources */,
 				09AF7078216F4A9600E7FCFC /* FeedUpcomingViewController.swift in Sources */,
 				969899642303F2E20066C55B /* Loan.swift in Sources */,
+				BDFE1AC4233B92FB00C49A5B /* ProductState.swift in Sources */,
 				A55B7B8E21AA8EB600A8A7FE /* ChatMessagesIncomingTableViewCell.swift in Sources */,
 				A551108F21C7BEED00330510 /* TestAuthService.swift in Sources */,
 				097A6DCE21899C5B00E6C69E /* RegistrationLoginPasswordViewController.swift in Sources */,

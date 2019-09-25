@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -20,22 +18,22 @@
         <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="DepositsDepositCell" rowHeight="70" id="04G-BD-UVp" customClass="DepositsDepositCell" customModule="ForaBank" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="320" height="70"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="04G-BD-UVp" id="6mN-Io-30C" customClass="ARSCNView" colorLabel="IBBuiltInLabel-Gray">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="69.5"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="04G-BD-UVp" id="6mN-Io-30C" colorLabel="IBBuiltInLabel-Gray">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="70"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="500 ₽" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fET-uS-1sc">
-                        <rect key="frame" x="227" y="21" width="44" height="21"/>
+                        <rect key="frame" x="228" y="21" width="44" height="21"/>
                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bIP-8e-93z">
-                        <rect key="frame" x="20" y="67" width="280" height="2"/>
+                        <rect key="frame" x="19" y="67" width="282" height="2"/>
                         <color key="backgroundColor" red="0.82745098039999998" green="0.82745098039999998" blue="0.82745098039999998" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Последний: 25 сентября у" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hbu-Ip-pxu">
-                        <rect key="frame" x="49" y="37" width="155" height="17"/>
+                        <rect key="frame" x="48" y="37" width="155" height="17"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="17" id="cmF-jG-YoJ"/>
                         </constraints>
@@ -44,7 +42,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2AT-mk-iab">
-                        <rect key="frame" x="273" y="21" width="43" height="21"/>
+                        <rect key="frame" x="274" y="21" width="43" height="21"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="Bbc-z6-xCm"/>
                             <constraint firstAttribute="width" constant="43" id="cPy-yZ-Fj2"/>
@@ -54,7 +52,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="feed_current_account_logo" translatesAutoresizingMaskIntoConstraints="NO" id="Y5e-eo-PcG">
-                        <rect key="frame" x="10" y="14" width="25" height="35"/>
+                        <rect key="frame" x="9" y="14" width="25" height="35"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="25" id="F39-zR-7cK"/>
                         </constraints>

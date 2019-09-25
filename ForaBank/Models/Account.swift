@@ -8,17 +8,33 @@
 
 import Mapper
 
-class Account: Mappable {
+class Account: Mappable, IProduct {
+    var name: String {
+        get {
+            productName
+        }
+    }
+
+    var maskedNumber: String {
+        get {
+            return number
+        }
+    }
+
     var id: Double
     var productName: String
     var productId: Int
     var currencyCode: String
     var balance: Double
     var accountNumber: String
+    var number: String {
+        get {
+            accountNumber
+        }
+    }
 
     var ownerAgentBrief: String?
     var customName: String?
-    var number: String?
     var blocked: Bool?
     var depositorBrief: String?
     var balanceCUR: Double?

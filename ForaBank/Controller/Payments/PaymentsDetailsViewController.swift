@@ -7,10 +7,12 @@
  */
 
 import UIKit
+import ReSwift
 
-class PaymentsDetailsViewController: UIViewController {
+class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
 
     // MARK: - Properties
+
     @IBOutlet weak var picker: UIView!
     @IBOutlet weak var pickerImageView: UIImageView!
     @IBOutlet weak var sumTextField: UITextField!
@@ -21,6 +23,7 @@ class PaymentsDetailsViewController: UIViewController {
     @IBOutlet weak var pickerButton: UIButton!
 
     // MARK: - Actions
+
     @IBAction func sendButtonClicked(_ sender: Any) {
         activityIndicator.startAnimating()
         prepareCard2Card(from: sourcePaymentOption?.number ?? "", to: selectedDestinationPaymentOption?.number ?? "", amount: Double(sumTextField.text!) as? Double ?? 0) { (success, token) in
@@ -80,9 +83,10 @@ class PaymentsDetailsViewController: UIViewController {
     }
     var selectedDestinationPaymentOption: PaymentOption?
     var sourcePaymentOption: PaymentOption?
-        
+
 
     // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpLayout()
@@ -96,9 +100,27 @@ class PaymentsDetailsViewController: UIViewController {
         }
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        store.subscribe(self) { state in
+            state.select { $0.productsState }
+        }
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        store.unsubscribe(self)
+    }
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         addGradientView() // TODO: Replace with GradientView view
+    }
+
+    func newState(state: ProductState) {
+        sourcePaymentOption = state.paymentSource
+        setUpRemittanceViews()
     }
 
     private func setUpLayout() {

@@ -12,12 +12,19 @@ func setupUnauthorizedZone() {
     let mainStoryboard: UIStoryboard = UIStoryboard(name: "UnauthorizedZone", bundle: nil)
     let viewController = mainStoryboard.instantiateViewController(withIdentifier: String(describing: UnauthorizedZoneTabBarController.self)
     ) as! UnauthorizedZoneTabBarController
-    UIApplication.shared.keyWindow?.rootViewController = viewController
+    setRootVC(newRootVC: viewController)
 }
 
 func setupAuthorizedZone() {
     let mainStoryboard: UIStoryboard = UIStoryboard(name: "AuthorizedZone", bundle: nil)
     let viewController = mainStoryboard.instantiateViewController(withIdentifier: String(describing: TabBarController.self)
     ) as! TabBarController
-    UIApplication.shared.keyWindow?.rootViewController = viewController
+    setRootVC(newRootVC: viewController)
+}
+
+func showPaymentViewController() {
+    guard let paymentVC = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentsDetailsViewController") as? PaymentsDetailsViewController else {
+        return
+    }
+    topMostVC()?.present(paymentVC, animated: true)
 }
