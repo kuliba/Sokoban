@@ -8,23 +8,46 @@
 
 import Foundation
 
-struct PaymentOption {
+struct PaymentOption: IPickerItem {
+
+    var title: String {
+        get {
+            return name
+        }
+    }
+
+    var subTitle: String {
+        get {
+            return maskedNumber
+        }
+    }
+
+    var value: Double {
+        get {
+            return sum
+        }
+    }
+
+    var itemType: PickerItemType
+
+
     let id: Double
     let name: String
-    let type: RemittanceOptionViewType
+    var type: RemittanceOptionViewType
     let sum: Double
     let number: String
     let maskedNumber: String
     let provider: String?
 
-    init(id: Double, name: String, type: RemittanceOptionViewType, sum: Double, number: String, maskedNumber: String, provider: String) {
+    init(id: Double, name: String, type: PickerItemType, sum: Double, number: String, maskedNumber: String, provider: String) {
         self.id = id
         self.name = name
         self.sum = sum
         self.number = number
         self.maskedNumber = maskedNumber
-        self.type = type
+        self.type = .custom
         self.provider = provider
+        self.itemType = type
     }
 
     init(product: IProduct) {
@@ -34,15 +57,13 @@ struct PaymentOption {
         number = product.number
         maskedNumber = product.maskedNumber
         provider = nil
+        type = .custom
         switch product {
-        case is Card:
-            type = .card
-            break
-        case is Deposit:
-            type = .safeDeposit
+        case is Card, is Deposit, is Account:
+            itemType = .paymentOption
             break
         default:
-            type = .custom
+            itemType = .plain
             break
         }
     }

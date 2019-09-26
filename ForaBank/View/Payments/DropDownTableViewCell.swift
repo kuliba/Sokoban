@@ -10,6 +10,13 @@ import UIKit
 
 class DropDownTableViewCell: UITableViewCell {
 
+    @IBOutlet weak var companyImageView: UIImageView!
+    @IBOutlet weak var providerImageView: UIImageView!
+
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var sumLabel: UILabel!
+    @IBOutlet weak var numberLabel: UILabel!
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -20,5 +27,10 @@ class DropDownTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-    
+
+    internal func setupLayout(withPickerItem pickerItem: IPickerItem) {
+        titleLabel.text = pickerItem.title
+        numberLabel.text = pickerItem.subTitle
+        sumLabel.text = String(pickerItem.value)
+    }
 }

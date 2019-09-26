@@ -10,10 +10,17 @@ import Foundation
 import ReSwift
 import ReSwiftThunk
 
+func startPayment(sourceOption: PaymentOption?, destionationOption: PaymentOption?) -> Thunk<State> {
+    return Thunk<State> { dispatch, getState in
+        showPaymentViewController()
+        dispatch(SetPaymentOptions(sourceOption: sourceOption, destinationOption: destionationOption))
+    }
+}
+
 func startPayment(withOption option: PaymentOption) -> Thunk<State> {
     return Thunk<State> { dispatch, getState in
         showPaymentViewController()
-        dispatch(SetPaymentOptions(paymentOption: option))
+        dispatch(SetPaymentOption(paymentOption: option))
     }
 }
 
@@ -35,8 +42,13 @@ func deselectedProduct() -> Thunk<State> {
     }
 }
 
-struct SetPaymentOptions: Action {
+struct SetPaymentOption: Action {
     let paymentOption: PaymentOption
+}
+
+struct SetPaymentOptions: Action {
+    let sourceOption: PaymentOption?
+    let destinationOption: PaymentOption?
 }
 
 struct ClearPaymentProcess: Action {

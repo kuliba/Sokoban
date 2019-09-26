@@ -26,10 +26,10 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
 
     @IBAction func sendButtonClicked(_ sender: Any) {
         activityIndicator.startAnimating()
-        prepareCard2Card(from: sourcePaymentOption?.number ?? "", to: selectedDestinationPaymentOption?.number ?? "", amount: Double(sumTextField.text!) as? Double ?? 0) { (success, token) in
-            self.activityIndicator.stopAnimating()
-            self.performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
-        }
+//        prepareCard2Card(from: sourcePaymentOption?.number ?? "", to: selectedDestinationPaymentOption?.number ?? "", amount: Double(sumTextField.text!) as? Double ?? 0) { (success, token) in
+//            self.activityIndicator.stopAnimating()
+//            self.performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
+//        }
 
 //        prepareCard2Card(from: sourcePaymentOption?.number ?? "", to: "4256901080001025", amount: Double(sumTextField.text!) as? Double ?? 0) { (success, token) in
 //        }
@@ -53,37 +53,45 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
     }
 
     @IBAction func pickerDestinationButtonClicked(_ sender: UIButton) {
-        if let vc = UIStoryboard(name: "Payment", bundle: nil)
-            .instantiateViewController(withIdentifier: "opvc") as? RemittancePickerViewController, let nonNilPaymentOptions = destinationPaymentOptions {
-            sender.isEnabled = false
-            // Pass picker frame to determine picker popup coordinates
-            var r = self.destinationButton.convert(self.destinationButton.bounds, to: self.view)
-            r.origin.x += 15
-            r.size.width -= 15
-            vc.pickerFrame = r
-            vc.pickerOptions = nonNilPaymentOptions
-            vc.delegate = self
-            self.selectedViewType = true
-            self.present(vc, animated: true, completion: nil)
-        }
-
+        showPickerViewOverView(view: sender)
     }
 
     var remittanceSourceView: RemittanceOptionView!
     var remittanceDestinationView: RemittanceOptionView!
     var selectedViewType: Bool = false //false - source; true - destination
     var activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
+
     var destinationPaymentOptions: [PaymentOption]? {
         didSet {
-            self.destinationPaymentOptions?.removeAll(where: { (option) -> Bool in
-                option.id == sourcePaymentOption?.id
-            })
-            selectedDestinationPaymentOption = destinationPaymentOptions?.first
+            guard selectedDestinationPaymentOption == nil else {
+                self.sourcePaymentOptions?.removeAll(where: { (option) -> Bool in
+                    option.id == selectedDestinationPaymentOption?.id
+                })
+                pickedDestinationPaymentOption = selectedDestinationPaymentOption
+                destinationButton.isUserInteractionEnabled = false
+                return
+            }
+            pickedDestinationPaymentOption = destinationPaymentOptions?.first
         }
     }
     var selectedDestinationPaymentOption: PaymentOption?
-    var sourcePaymentOption: PaymentOption?
+    var pickedDestinationPaymentOption: PaymentOption?
 
+    var sourcePaymentOptions: [PaymentOption]? {
+        didSet {
+            guard selectedSourcePaymentOption == nil else {
+                self.destinationPaymentOptions?.removeAll(where: { (option) -> Bool in
+                    option.id == selectedSourcePaymentOption?.id
+                })
+                pickedSourcePaymentOption = selectedSourcePaymentOption
+                sourceButton.isUserInteractionEnabled = false
+                return
+            }
+            pickedSourcePaymentOption = sourcePaymentOptions?.first
+        }
+    }
+    var selectedSourcePaymentOption: PaymentOption?
+    var pickedSourcePaymentOption: PaymentOption?
 
     // MARK: - Lifecycle
 
@@ -93,8 +101,9 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
         activityIndicator.startAnimating()
         allPaymentOptions { (success, paymentOptions) in
             self.destinationPaymentOptions = paymentOptions
+            self.sourcePaymentOptions = paymentOptions
             DispatchQueue.main.async {
-                self.setUpRemittanceViews()
+                //self.setUpRemittanceViews()
                 self.activityIndicator.stopAnimating()
             }
         }
@@ -118,20 +127,37 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
         addGradientView() // TODO: Replace with GradientView view
     }
 
-    func newState(state: ProductState) {
-        sourcePaymentOption = state.paymentSource
-        setUpRemittanceViews()
+    internal func newState(state: ProductState) {
+        selectedSourcePaymentOption = state.sourceOption
+        selectedDestinationPaymentOption = state.destinationOption
+//        setUpRemittanceViews()
     }
 
     private func setUpLayout() {
         activityIndicator.center = view.center
         view.addSubview(activityIndicator)
         setUpPicker()
-        setUpRemittanceViews()
+//        setUpRemittanceViews()
+    }
+
+    private func showPickerViewOverView(view: UIView) {
+        guard let pickerVC = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "opvc") as? RemittancePickerViewController, let nonNilPaymentOptions = destinationPaymentOptions else {
+            return
+        }
+
+        var frame = view.convert(view.bounds, to: self.view)
+        frame.origin.x += 15
+        frame.size.width -= 15
+        pickerVC.pickerFrame = frame
+        pickerVC.pickerOptions = nonNilPaymentOptions
+        pickerVC.delegate = self
+        self.selectedViewType = true
+        self.present(pickerVC, animated: true, completion: nil)
     }
 }
 
 // - MARK: Private methods
+
 private extension PaymentsDetailsViewController {
     func setUpPicker() {
         picker.layer.cornerRadius = 3
@@ -147,66 +173,67 @@ private extension PaymentsDetailsViewController {
         containterView.insertSubview(containerGradientView, at: 0)
     }
 
-    func setUpRemittanceViews() {
-        guard let sourceOption = sourcePaymentOption else {
-            return
-        }
-        remittanceSourceView = RemittanceOptionView(withOption: sourceOption)
-        remittanceSourceView.isUserInteractionEnabled = false
-
-        sourceButton.addSubview(remittanceSourceView)
-
-        let arrowsImageView = UIImageView(image: UIImage(named: "vertical_arrows"))
-        arrowsImageView.translatesAutoresizingMaskIntoConstraints = false
-        sourceButton.addSubview(arrowsImageView)
-        sourceButton.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-5-[i(5)]-5-[v]-0-|", options: [], metrics: nil, views: ["i": arrowsImageView, "v": remittanceSourceView]))
-        sourceButton.addConstraint(NSLayoutConstraint(item: arrowsImageView,
-                                                      attribute: .height,
-                                                      relatedBy: .equal,
-                                                      toItem: nil,
-                                                      attribute: .notAnAttribute,
-                                                      multiplier: 1,
-                                                      constant: 10))
-        sourceButton.addConstraint(NSLayoutConstraint(item: arrowsImageView,
-                                                      attribute: .centerY,
-                                                      relatedBy: .equal,
-                                                      toItem: sourceButton,
-                                                      attribute: .centerY,
-                                                      multiplier: 1,
-                                                      constant: 0))
-        sourceButton.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v]|", options: [], metrics: nil, views: ["v": remittanceSourceView]))
-
-        guard let destinationOption = destinationPaymentOptions?.first else {
-            return
-        }
-        remittanceDestinationView = RemittanceOptionView(withOption: destinationOption)
-        remittanceDestinationView.isUserInteractionEnabled = false
-
-        remittanceDestinationView.titleImage = UIImage(named: "payments_template_sberbank")
-        remittanceDestinationView.subtitleImage = UIImage(named: "visalogo")
-        remittanceDestinationView.translatesAutoresizingMaskIntoConstraints = false
-        destinationButton.addSubview(remittanceDestinationView)
-
-        let arrowsImageView2 = UIImageView(image: UIImage(named: "vertical_arrows"))
-        arrowsImageView2.translatesAutoresizingMaskIntoConstraints = false
-        destinationButton.addSubview(arrowsImageView2)
-        destinationButton.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-5-[i(5)]-5-[v]-0-|", options: [], metrics: nil, views: ["i": arrowsImageView2, "v": remittanceDestinationView]))
-        destinationButton.addConstraint(NSLayoutConstraint(item: arrowsImageView2,
-                                                           attribute: .height,
-                                                           relatedBy: .equal,
-                                                           toItem: nil,
-                                                           attribute: .notAnAttribute,
-                                                           multiplier: 1,
-                                                           constant: 10))
-        destinationButton.addConstraint(NSLayoutConstraint(item: arrowsImageView2,
-                                                           attribute: .centerY,
-                                                           relatedBy: .equal,
-                                                           toItem: destinationButton,
-                                                           attribute: .centerY,
-                                                           multiplier: 1,
-                                                           constant: 0))
-        destinationButton.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v]|", options: [], metrics: nil, views: ["v": remittanceDestinationView]))
-    }
+//    func setUpRemittanceViews() {
+//        guard let sourceOption = pickedSourcePaymentOption else {
+//            return
+//        }
+//        remittanceSourceView = RemittanceOptionView(withOption: sourceOption)
+//        remittanceSourceView.isUserInteractionEnabled = false
+//
+//        sourceButton.addSubview(remittanceSourceView)
+//
+//        let arrowsImageView = UIImageView(image: UIImage(named: "vertical_arrows"))
+//        arrowsImageView.translatesAutoresizingMaskIntoConstraints = false
+//        sourceButton.addSubview(arrowsImageView)
+//        sourceButton.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-5-[i(5)]-5-[v]-0-|", options: [], metrics: nil, views: ["i": arrowsImageView, "v": remittanceSourceView]))
+//        sourceButton.addConstraint(NSLayoutConstraint(item: arrowsImageView,
+//                                                      attribute: .height,
+//                                                      relatedBy: .equal,
+//                                                      toItem: nil,
+//                                                      attribute: .notAnAttribute,
+//                                                      multiplier: 1,
+//                                                      constant: 10))
+//        sourceButton.addConstraint(NSLayoutConstraint(item: arrowsImageView,
+//                                                      attribute: .centerY,
+//                                                      relatedBy: .equal,
+//                                                      toItem: sourceButton,
+//                                                      attribute: .centerY,
+//                                                      multiplier: 1,
+//                                                      constant: 0))
+//        sourceButton.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v]|", options: [], metrics: nil, views: ["v": remittanceSourceView]))
+//        sourceButton.backgroundColor = UIColor(named: "blue")
+//
+//        guard let destinationOption = pickedDestinationPaymentOption else {
+//            return
+//        }
+//        remittanceDestinationView = RemittanceOptionView(withOption: destinationOption)
+//        remittanceDestinationView.isUserInteractionEnabled = false
+//
+//        remittanceDestinationView.titleImage = UIImage(named: "payments_template_sberbank")
+//        remittanceDestinationView.subtitleImage = UIImage(named: "visalogo")
+//        remittanceDestinationView.translatesAutoresizingMaskIntoConstraints = false
+//        destinationButton.addSubview(remittanceDestinationView)
+//
+//        let arrowsImageView2 = UIImageView(image: UIImage(named: "vertical_arrows"))
+//        arrowsImageView2.translatesAutoresizingMaskIntoConstraints = false
+//        destinationButton.addSubview(arrowsImageView2)
+//        destinationButton.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-5-[i(5)]-5-[v]-0-|", options: [], metrics: nil, views: ["i": arrowsImageView2, "v": remittanceDestinationView]))
+//        destinationButton.addConstraint(NSLayoutConstraint(item: arrowsImageView2,
+//                                                           attribute: .height,
+//                                                           relatedBy: .equal,
+//                                                           toItem: nil,
+//                                                           attribute: .notAnAttribute,
+//                                                           multiplier: 1,
+//                                                           constant: 10))
+//        destinationButton.addConstraint(NSLayoutConstraint(item: arrowsImageView2,
+//                                                           attribute: .centerY,
+//                                                           relatedBy: .equal,
+//                                                           toItem: destinationButton,
+//                                                           attribute: .centerY,
+//                                                           multiplier: 1,
+//                                                           constant: 0))
+//        destinationButton.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v]|", options: [], metrics: nil, views: ["v": remittanceDestinationView]))
+//    }
 }
 
 extension PaymentsDetailsViewController: OptionPickerDelegate {

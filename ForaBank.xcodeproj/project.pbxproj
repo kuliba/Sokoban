@@ -252,6 +252,9 @@
 		BDFE1ACA233BAE9B00C49A5B /* PaymentOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE1AC9233BAE9B00C49A5B /* PaymentOption.swift */; };
 		BDFE1B09233CA6FE00C49A5B /* DropDownTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE1B07233CA6FE00C49A5B /* DropDownTableViewCell.swift */; };
 		BDFE1B0A233CA6FE00C49A5B /* DropDownTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDFE1B08233CA6FE00C49A5B /* DropDownTableViewCell.xib */; };
+		BDFE1B0D233CE7BD00C49A5B /* PickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE1B0B233CE7BD00C49A5B /* PickerViewController.swift */; };
+		BDFE1B0E233CE7BD00C49A5B /* PickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDFE1B0C233CE7BD00C49A5B /* PickerViewController.xib */; };
+		BDFE1B10233CEC3100C49A5B /* IPickerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE1B0F233CEC3100C49A5B /* IPickerItem.swift */; };
 		BDFE5D982334C3300027A716 /* IProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE5D972334C3300027A716 /* IProduct.swift */; };
 		BDFE5D9A2334E7ED0027A716 /* LoansSegueAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE5D992334E7ED0027A716 /* LoansSegueAnimator.swift */; };
 		BDFE5D9C233511EB0027A716 /* URLs.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE5D9B233511EB0027A716 /* URLs.swift */; };
@@ -508,6 +511,9 @@
 		BDFE1AC9233BAE9B00C49A5B /* PaymentOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentOption.swift; sourceTree = "<group>"; };
 		BDFE1B07233CA6FE00C49A5B /* DropDownTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownTableViewCell.swift; sourceTree = "<group>"; };
 		BDFE1B08233CA6FE00C49A5B /* DropDownTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DropDownTableViewCell.xib; sourceTree = "<group>"; };
+		BDFE1B0B233CE7BD00C49A5B /* PickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerViewController.swift; sourceTree = "<group>"; };
+		BDFE1B0C233CE7BD00C49A5B /* PickerViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PickerViewController.xib; sourceTree = "<group>"; };
+		BDFE1B0F233CEC3100C49A5B /* IPickerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPickerItem.swift; sourceTree = "<group>"; };
 		BDFE5D972334C3300027A716 /* IProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IProduct.swift; sourceTree = "<group>"; };
 		BDFE5D992334E7ED0027A716 /* LoansSegueAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoansSegueAnimator.swift; sourceTree = "<group>"; };
 		BDFE5D9B233511EB0027A716 /* URLs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLs.swift; sourceTree = "<group>"; };
@@ -895,6 +901,8 @@
 				0943729121907198003A66CC /* PaymentsDetailsSuccessViewController.swift */,
 				89C8DF0B21918DDC00D92B0A /* OptionPickerViewController.swift */,
 				A5B473C021B3BBCD00F2E41F /* RemittancePickerViewController.swift */,
+				BDFE1B0B233CE7BD00C49A5B /* PickerViewController.swift */,
+				BDFE1B0C233CE7BD00C49A5B /* PickerViewController.xib */,
 			);
 			path = Payments;
 			sourceTree = "<group>";
@@ -1180,6 +1188,7 @@
 				BDE4D08623226B4C0070BC3D /* IAboutItem.swift */,
 				BDFE5D972334C3300027A716 /* IProduct.swift */,
 				BDFE1AC9233BAE9B00C49A5B /* PaymentOption.swift */,
+				BDFE1B0F233CEC3100C49A5B /* IPickerItem.swift */,
 			);
 			path = PresentationModels;
 			sourceTree = "<group>";
@@ -1294,6 +1303,7 @@
 				0930F17E215B78B000CFB593 /* Roboto-Italic.ttf in Resources */,
 				09F2410621707B7B007B7D73 /* FeedInfo2Cell.xib in Resources */,
 				09203D8B216CC19900902BD2 /* AuthorizedZone.storyboard in Resources */,
+				BDFE1B0E233CE7BD00C49A5B /* PickerViewController.xib in Resources */,
 				093B8636216224CC008A5222 /* ServicesHeader.xib in Resources */,
 				0930F17D215B78B000CFB593 /* Roboto-BoldItalic.ttf in Resources */,
 				0930F17A215B78B000CFB593 /* Roboto-Black.ttf in Resources */,
@@ -1485,6 +1495,7 @@
 				A58760BF21BF8E770022DED5 /* NetworkManager.swift in Sources */,
 				A5B473C821B52E0B00F2E41F /* GroupedBubblesStatsView.swift in Sources */,
 				A5004D3121EF37DC0098E510 /* ActivityIndicatorView.swift in Sources */,
+				BDFE1B0D233CE7BD00C49A5B /* PickerViewController.swift in Sources */,
 				09C7C3162174A362000EE472 /* DepositsSearchCell.swift in Sources */,
 				A55B7B8821AA698900A8A7FE /* ChatMessage.swift in Sources */,
 				A5B473C421B3C0D200F2E41F /* RemittanceOptionView.swift in Sources */,
@@ -1535,6 +1546,7 @@
 				BDB6B0162326AAA60006A534 /* PasscodeSignUpState.swift in Sources */,
 				A57CF1B62202DE1800E855A5 /* CardService.swift in Sources */,
 				96D0F1C8230694CB0064CECA /* LoansDetailsViewController.swift in Sources */,
+				BDFE1B10233CEC3100C49A5B /* IPickerItem.swift in Sources */,
 				96D0F1CE230AE4400064CECA /* DepositDetailsViewController.swift in Sources */,
 				BD21B66A2338E08E001C5CF7 /* RegistrationState.swift in Sources */,
 				09F54A0A218B24DA003CB6D3 /* RegistrationPermissionsViewController.swift in Sources */,
