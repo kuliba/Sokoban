@@ -250,6 +250,8 @@
 		BDFE1AC6233B952B00C49A5B /* ProductActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE1AC5233B952B00C49A5B /* ProductActions.swift */; };
 		BDFE1AC8233B95B900C49A5B /* ProductReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE1AC7233B95B900C49A5B /* ProductReducer.swift */; };
 		BDFE1ACA233BAE9B00C49A5B /* PaymentOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE1AC9233BAE9B00C49A5B /* PaymentOption.swift */; };
+		BDFE1B09233CA6FE00C49A5B /* DropDownTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE1B07233CA6FE00C49A5B /* DropDownTableViewCell.swift */; };
+		BDFE1B0A233CA6FE00C49A5B /* DropDownTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDFE1B08233CA6FE00C49A5B /* DropDownTableViewCell.xib */; };
 		BDFE5D982334C3300027A716 /* IProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE5D972334C3300027A716 /* IProduct.swift */; };
 		BDFE5D9A2334E7ED0027A716 /* LoansSegueAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE5D992334E7ED0027A716 /* LoansSegueAnimator.swift */; };
 		BDFE5D9C233511EB0027A716 /* URLs.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE5D9B233511EB0027A716 /* URLs.swift */; };
@@ -504,6 +506,8 @@
 		BDFE1AC5233B952B00C49A5B /* ProductActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductActions.swift; sourceTree = "<group>"; };
 		BDFE1AC7233B95B900C49A5B /* ProductReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductReducer.swift; sourceTree = "<group>"; };
 		BDFE1AC9233BAE9B00C49A5B /* PaymentOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentOption.swift; sourceTree = "<group>"; };
+		BDFE1B07233CA6FE00C49A5B /* DropDownTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownTableViewCell.swift; sourceTree = "<group>"; };
+		BDFE1B08233CA6FE00C49A5B /* DropDownTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DropDownTableViewCell.xib; sourceTree = "<group>"; };
 		BDFE5D972334C3300027A716 /* IProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IProduct.swift; sourceTree = "<group>"; };
 		BDFE5D992334E7ED0027A716 /* LoansSegueAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoansSegueAnimator.swift; sourceTree = "<group>"; };
 		BDFE5D9B233511EB0027A716 /* URLs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLs.swift; sourceTree = "<group>"; };
@@ -1032,6 +1036,8 @@
 			isa = PBXGroup;
 			children = (
 				A5B473C321B3C0D200F2E41F /* RemittanceOptionView.swift */,
+				BDFE1B07233CA6FE00C49A5B /* DropDownTableViewCell.swift */,
+				BDFE1B08233CA6FE00C49A5B /* DropDownTableViewCell.xib */,
 			);
 			path = Payments;
 			sourceTree = "<group>";
@@ -1283,6 +1289,7 @@
 				09C7C33C2175FADE000EE472 /* DepositsHistoryHeader.xib in Resources */,
 				0930F17F215B78B000CFB593 /* Roboto-Light.ttf in Resources */,
 				BD7CC1A1232125D000872D06 /* Localizable.strings in Resources */,
+				BDFE1B0A233CA6FE00C49A5B /* DropDownTableViewCell.xib in Resources */,
 				0930F17C215B78B000CFB593 /* Roboto-Bold.ttf in Resources */,
 				0930F17E215B78B000CFB593 /* Roboto-Italic.ttf in Resources */,
 				09F2410621707B7B007B7D73 /* FeedInfo2Cell.xib in Resources */,
@@ -1429,6 +1436,7 @@
 				A568143821D35FEB002C0899 /* Transaction.swift in Sources */,
 				09F5DCE8218C4A5200390304 /* RegistrationTouchIDViewController.swift in Sources */,
 				09C7C3352175CC47000EE472 /* DepositsHistoryViewController.swift in Sources */,
+				BDFE1B09233CA6FE00C49A5B /* DropDownTableViewCell.swift in Sources */,
 				BD21B6672338CE14001C5CF7 /* PaymentService.swift in Sources */,
 				09E0F146215A68DC0042FB6A /* CustomTabBar.swift in Sources */,
 				093B863121620EE8008A5222 /* ServicesCell.swift in Sources */,
