@@ -24,4 +24,14 @@ struct Transaction: Codable {
     let counterpartImageURL: String?
     let details: String?
     let bonuses: Int?
+
+
+
+    func getDetailTransaction() -> Array<AboutTransaction> {
+       guard let amount = amount else {
+               return []
+           }
+           return [AboutTransaction(title: "Ежемесячный платёж", value: String(amount))]
+       }
+
 }

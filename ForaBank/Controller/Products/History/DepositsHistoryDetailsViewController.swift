@@ -10,20 +10,39 @@ import UIKit
 
 class DepositsHistoryDetailsViewController: UIViewController {
 
+    @IBOutlet weak var purposeOfPayment: UILabel!
+    @IBOutlet weak var nameTransaction: UILabel!
+    @IBOutlet weak var recipient: UILabel!
+    @IBOutlet weak var datetransaction: UILabel!
+    @IBOutlet weak var amountPaT: UILabel!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var infoView: UIView!
     @IBOutlet weak var topView: UIView!
-    
+    var historyArray: String = "12"
     let transitionAnimator = DepositsHistoryDetailsSegueAnimator()
     lazy var panRecognizer =  UIPanGestureRecognizer()
     var defaultTopViewOffset: CGFloat = 0
-    
-    
+    var product: DatedTransactions?
+    var sortedTransactionsStatement: DatedTransactionsStatement?
+     var transaction: TransactionStatement?
     override func viewDidLoad() {
         super.viewDidLoad()
 //        print(scrollView.gestureRecognizers)
         scrollView.delegate = self
+        purposeOfPayment.text = "\((transaction?.comment)!)"
+       // recipient.text = "\((transaction?.comment)!)"
+        nameTransaction.text = "\((transaction?.comment)!)"
+        datetransaction.text = "\((transaction?.operationDate)!)"
+        amountPaT.text = "\((transaction?.amount)!)" + "\("₽")"
+        if var data = transaction?.operationType {
+            if data == "CREDIT"{
+                amountPaT.text = "\("+")" + "\((transaction?.amount)!)" + "\("₽")"
+            } else {
+                amountPaT.text = "\("-")" + "\((transaction?.amount)!)" + "\("₽")"
+            }
+        }
     }
+    
     
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

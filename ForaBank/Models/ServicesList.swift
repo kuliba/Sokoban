@@ -22,12 +22,20 @@ struct Operations: Mappable {
     }}
 
 struct  Operators: Mappable{
-    var nameList: String?
+    var nameList: nameList?
     
      init(map: Mapper) throws {
         try nameList = map.from("nameList")
       }
 }
+struct nameList: Mappable {
+    var value : String?
+    init(map: Mapper) throws {
+        try value = map.from("value")
+    }
+}
+
+
 
 
 

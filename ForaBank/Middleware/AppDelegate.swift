@@ -11,6 +11,7 @@ import IQKeyboardManagerSwift
 import ReSwift
 import ReSwiftThunk
 import CryptoSwift
+import UserNotifications
 
 func appReducer(action: Action, state: State?) -> State {
     return State(passcodeSignUpState: passcodeSignUpReducer(state: state?.passcodeSignUpState, action: action), authenticationState: authenticationReducer(state: state?.authenticationState, action: action), passcodeSignInState: passcodeSignInReducer(state: state?.passcodeSignInState, action: action), verificationCodeState: verificationCodeReducer(state: state?.verificationCodeState, action: action), paymentSource: nil, registrationState: registrationReducer(state: state?.registrationState, action: action))
@@ -34,8 +35,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         IQKeyboardManager.shared.enable = true
 //        IQKeyboardManager.shared.layoutIfNeededOnUpdate = true
         store.dispatch(checkAuthCredentials)
+        registerForPushNotifications()
         return true
+        
+        
     }
+ 
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -63,6 +68,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    }
+    func registerForPushNotifications() {
+      UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) {
+        (granted, error) in
+        print("Permission granted: \(granted)")
+      }
+    }
+    func getNotificationSettings() {
+      UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+        print("Notification settings: \(settings)")
+        guard settings.authorizationStatus == .authorized else { return }
+        UIApplication.shared.registerForRemoteNotifications()
+      }
     }
 }
 
