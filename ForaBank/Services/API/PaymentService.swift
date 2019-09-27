@@ -41,8 +41,8 @@ class PaymentServices: PaymetsServiceProtocol {
                         for cardData in data {
                             if let cardData = cardData as? Dictionary<String, Any>,
                                 let operators = cardData["operators"] as? Array<Any>,
-                                let nameList = nameList["value"] as? String,
-                                let value = nameList["value"] as? Dictionary<String, Any>
+                                let nameList = operators as? Dictionary<String, Any>,
+                                let value = nameList["value"] as? Array<Any>
                             {
                               
                                 
