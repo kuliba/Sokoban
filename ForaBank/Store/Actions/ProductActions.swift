@@ -17,19 +17,6 @@ func startPayment(sourceOption: PaymentOption?, destionationOption: PaymentOptio
     }
 }
 
-func startPayment(withOption option: PaymentOption) -> Thunk<State> {
-    return Thunk<State> { dispatch, getState in
-        showPaymentViewController()
-        dispatch(SetPaymentOption(paymentOption: option))
-    }
-}
-
-func finishPayment() -> Thunk<State> {
-    return Thunk<State> { dispatch, getState in
-        dispatch(ClearPaymentProcess())
-    }
-}
-
 func selectedProduct(product: IProduct) -> Thunk<State> {
     return Thunk<State> { dispatch, getState in
         dispatch(SelectProduct(product: product))
@@ -42,16 +29,9 @@ func deselectedProduct() -> Thunk<State> {
     }
 }
 
-struct SetPaymentOption: Action {
-    let paymentOption: PaymentOption
-}
-
 struct SetPaymentOptions: Action {
     let sourceOption: PaymentOption?
     let destinationOption: PaymentOption?
-}
-
-struct ClearPaymentProcess: Action {
 }
 
 struct SelectProduct: Action {

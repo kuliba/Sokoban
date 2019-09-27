@@ -154,7 +154,7 @@ extension AccountsViewController: UITableViewDataSource, UITableViewDelegate {
         let account = accounts[indexPath.item]
 
         let sendAction = UIContextualAction(style: .normal, title: "Отправить") { (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
-            store.dispatch(startPayment(withOption: PaymentOption(product: account)))
+            store.dispatch(startPayment(sourceOption: PaymentOption(product: account), destionationOption: nil))
         }
         sendAction.backgroundColor = UIColor(red: 234 / 255, green: 68 / 255, blue: 6 / 255, alpha: 1)
         return UISwipeActionsConfiguration(actions: [sendAction])

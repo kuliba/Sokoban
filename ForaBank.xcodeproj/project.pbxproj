@@ -255,6 +255,8 @@
 		BDFE1B0D233CE7BD00C49A5B /* PickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE1B0B233CE7BD00C49A5B /* PickerViewController.swift */; };
 		BDFE1B0E233CE7BD00C49A5B /* PickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDFE1B0C233CE7BD00C49A5B /* PickerViewController.xib */; };
 		BDFE1B10233CEC3100C49A5B /* IPickerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE1B0F233CEC3100C49A5B /* IPickerItem.swift */; };
+		BDFE1B13233D083E00C49A5B /* PickerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE1B11233D083E00C49A5B /* PickerTableViewCell.swift */; };
+		BDFE1B14233D083E00C49A5B /* PickerTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDFE1B12233D083E00C49A5B /* PickerTableViewCell.xib */; };
 		BDFE5D982334C3300027A716 /* IProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE5D972334C3300027A716 /* IProduct.swift */; };
 		BDFE5D9A2334E7ED0027A716 /* LoansSegueAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE5D992334E7ED0027A716 /* LoansSegueAnimator.swift */; };
 		BDFE5D9C233511EB0027A716 /* URLs.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFE5D9B233511EB0027A716 /* URLs.swift */; };
@@ -514,6 +516,8 @@
 		BDFE1B0B233CE7BD00C49A5B /* PickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerViewController.swift; sourceTree = "<group>"; };
 		BDFE1B0C233CE7BD00C49A5B /* PickerViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PickerViewController.xib; sourceTree = "<group>"; };
 		BDFE1B0F233CEC3100C49A5B /* IPickerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPickerItem.swift; sourceTree = "<group>"; };
+		BDFE1B11233D083E00C49A5B /* PickerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerTableViewCell.swift; sourceTree = "<group>"; };
+		BDFE1B12233D083E00C49A5B /* PickerTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PickerTableViewCell.xib; sourceTree = "<group>"; };
 		BDFE5D972334C3300027A716 /* IProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IProduct.swift; sourceTree = "<group>"; };
 		BDFE5D992334E7ED0027A716 /* LoansSegueAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoansSegueAnimator.swift; sourceTree = "<group>"; };
 		BDFE5D9B233511EB0027A716 /* URLs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLs.swift; sourceTree = "<group>"; };
@@ -1044,8 +1048,7 @@
 			isa = PBXGroup;
 			children = (
 				A5B473C321B3C0D200F2E41F /* RemittanceOptionView.swift */,
-				BDFE1B07233CA6FE00C49A5B /* DropDownTableViewCell.swift */,
-				BDFE1B08233CA6FE00C49A5B /* DropDownTableViewCell.xib */,
+				BDFE1B15233D085400C49A5B /* Cells */,
 			);
 			path = Payments;
 			sourceTree = "<group>";
@@ -1193,6 +1196,17 @@
 			path = PresentationModels;
 			sourceTree = "<group>";
 		};
+		BDFE1B15233D085400C49A5B /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				BDFE1B07233CA6FE00C49A5B /* DropDownTableViewCell.swift */,
+				BDFE1B08233CA6FE00C49A5B /* DropDownTableViewCell.xib */,
+				BDFE1B11233D083E00C49A5B /* PickerTableViewCell.swift */,
+				BDFE1B12233D083E00C49A5B /* PickerTableViewCell.xib */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1285,6 +1299,7 @@
 				A55B7B8021A6B51E00A8A7FE /* 10.mov in Resources */,
 				09E0F13F215A65AE0042FB6A /* Payment.storyboard in Resources */,
 				09E0F142215A65D40042FB6A /* Services.storyboard in Resources */,
+				BDFE1B14233D083E00C49A5B /* PickerTableViewCell.xib in Resources */,
 				09E0F144215A65F10042FB6A /* Profile.storyboard in Resources */,
 				09AF7082216F6B6F00E7FCFC /* FeedCurrent1Cell.xib in Resources */,
 				09797560215A49040044C00A /* Assets.xcassets in Resources */,
@@ -1468,6 +1483,7 @@
 				96EC41812301A6890087BFB0 /* AccountsService.swift in Sources */,
 				096BCB0E21637E27005BC02B /* PaymentCell.swift in Sources */,
 				096BCB0A216361AA005BC02B /* PaymentTemplateCell.swift in Sources */,
+				BDFE1B13233D083E00C49A5B /* PickerTableViewCell.swift in Sources */,
 				A55663A421EDB22600E48C40 /* OnMapButton.swift in Sources */,
 				89C8DF0E2191ADF200D92B0A /* AccountsViewController.swift in Sources */,
 				09E2141F21873DCA00D16D21 /* DepositsCardsDetailsStatementDetailsViewController.swift in Sources */,

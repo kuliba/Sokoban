@@ -17,6 +17,9 @@ class DropDownTableViewCell: UITableViewCell {
     @IBOutlet weak var sumLabel: UILabel!
     @IBOutlet weak var numberLabel: UILabel!
 
+    @IBOutlet weak var leadingToArrowConstraint: NSLayoutConstraint!
+    @IBOutlet weak var leadingToSuperviewConstraint: NSLayoutConstraint!
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -24,11 +27,12 @@ class DropDownTableViewCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
 
-    internal func setupLayout(withPickerItem pickerItem: IPickerItem) {
+    internal func setupLayout(withPickerItem pickerItem: IPickerItem, isDroppable: Bool) {
+        leadingToArrowConstraint.isActive = isDroppable
+        leadingToSuperviewConstraint.isActive = !isDroppable
+
         titleLabel.text = pickerItem.title
         numberLabel.text = pickerItem.subTitle
         sumLabel.text = String(pickerItem.value)

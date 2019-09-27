@@ -15,15 +15,9 @@ func productReducer(state: ProductState?, action: Action) -> ProductState {
     switch action {
     case _ as ReSwiftInit:
         break
-    case let action as SetPaymentOption:
-        newState.paymentSource = action.paymentOption
-        break
     case let action as SetPaymentOptions:
         newState.sourceOption = action.sourceOption
         newState.destinationOption = action.destinationOption
-        break
-    case _ as ClearPaymentProcess:
-        newState.paymentSource = nil
         break
     case let action as SelectProduct:
         newState.selectedProduct = action.product
@@ -39,5 +33,5 @@ func productReducer(state: ProductState?, action: Action) -> ProductState {
 }
 
 func initialProductState() -> ProductState {
-    return ProductState(paymentSource: nil, selectedProduct: nil)
+    return ProductState(sourceOption: nil, destinationOption: nil, selectedProduct: nil)
 }

@@ -10,6 +10,8 @@ import UIKit
 
 class PickerViewController: UIViewController {
 
+    @IBOutlet weak var contentView: UIView!
+
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var addButton: UIButton!
 
@@ -18,8 +20,16 @@ class PickerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        tableView.register(UINib(nibName: String(describing: DropDownTableViewCell.self), bundle: nil), forCellReuseIdentifier: String(describing: DropDownTableViewCell.self))
+        modalPresentationStyle = .overCurrentContext
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:))))
+        contentView.layer.cornerRadius = 5.0
     }
 
+    @objc func handleTap(_ sender: UITapGestureRecognizer) {
+        dismiss(animated: true, completion: nil)
+    }
 }
 
 extension PickerViewController: UITableViewDelegate, UITableViewDataSource {
@@ -39,13 +49,11 @@ extension PickerViewController: UITableViewDelegate, UITableViewDataSource {
         switch pickerItem.itemType {
         case .paymentOption:
             let ddCell = tableView.dequeueReusableCell(withIdentifier: String(describing: DropDownTableViewCell.self), for: indexPath) as? DropDownTableViewCell
-            ddCell?.setupLayout(withPickerItem: pickerItem)
+            ddCell?.setupLayout(withPickerItem: pickerItem, isDroppable: false)
             cell = ddCell
             break
         case .plain:
             cell = UITableViewCell(style: .default, reuseIdentifier: "defaultCell")
-            break
-        default:
             break
         }
 
