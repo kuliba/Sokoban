@@ -149,9 +149,6 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
                 self.performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
             }
         }
-
-        //        prepareCard2Card(from: sourcePaymentOption?.number ?? "", to: "4256901080001025", amount: Double(sumTextField.text!) as? Double ?? 0) { (success, token) in
-        //        }
     }
 }
 

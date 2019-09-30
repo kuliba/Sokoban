@@ -385,7 +385,7 @@
                                         <inset key="imageEdgeInsets" minX="9" minY="8" maxX="8" maxY="3"/>
                                         <state key="normal" image="button_back"/>
                                         <connections>
-                                            <action selector="backButtonCLicked:" destination="Xda-th-p6I" eventType="touchUpInside" id="rSq-CN-9a9"/>
+                                            <action selector="backButtonCLicked:" destination="Xda-th-p6I" eventType="touchUpInside" id="I05-pU-DWc"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Перевод" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Li-FN-g8p">

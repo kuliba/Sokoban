@@ -40,11 +40,15 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
 //    }
     var backSegueId: String? = nil
     // MARK: - Actions
-  @IBAction func backButtonCLicked(_ sender: Any) {
-           segueId = backSegueId
-           view.endEditing(true)
-           self.navigationController?.popViewController(animated: true)
-       }
+    @IBAction func backButtonCLicked(_ sender: Any) {
+        view.endEditing(true)
+        segueId = backSegueId
+        self.navigationController?.popViewController(animated: true)
+        if navigationController == nil {
+            dismiss(animated: true, completion: nil)
+        }
+    }
+
     @IBAction func authContinue(_ sender: Any) {
         view.endEditing(true)
         activityIndicator?.startAnimation()
@@ -110,7 +114,7 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
             }
         }
     }
-    
+
     @IBAction func checkPaymentCode(_ sender: Any) {
         activityIndicator?.startAnimation()
         continueButton.isHidden = true
@@ -118,7 +122,7 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
             self?.continueButton.isHidden = false
             self?.activityIndicator?.stopAnimating()
             if success {
-                self?.performSegue(withIdentifier: "finish", sender: nil)
+//                self?.performSegue(withIdentifier: "finish", sender: nil)
             } else {
                 let alert = UIAlertController(title: "Неудача", message: "Неверный код", preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))

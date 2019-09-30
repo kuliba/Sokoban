@@ -22,8 +22,8 @@ protocol AuthServiceProtocol {
                                code: String,
                                completionHandler: @escaping (_ success: Bool) -> Void)
     func makeCard2Card(headers: HTTPHeaders,
-                                 code: String,
-                                 completionHandler: @escaping (_ success: Bool) -> Void)
+                       code: String,
+                       completionHandler: @escaping (_ success: Bool) -> Void)
     func logOut(completionHandler: @escaping (_ success: Bool) -> Void)
     func getProfile(headers: HTTPHeaders,
                     completionHandler: @escaping (_ success: Bool, _ profile: Profile?, _ errorMessage: String?) -> Void)
@@ -182,8 +182,8 @@ class NetworkManager {
         authService.checkVerificationCode(headers: self.headers, code: code, completionHandler: completionHandler)
     }
     func makeCard2Card(code: String,
-                               completionHandler: @escaping (_ success: Bool) -> Void) {
-        authService.checkVerificationCode(headers: self.headers, code: code, completionHandler: completionHandler)
+                       completionHandler: @escaping (_ success: Bool) -> Void) {
+        self.authService.makeCard2Card(headers: self.headers, code: code, completionHandler: completionHandler)
     }
 
     func logOut(completionHandler: ((_ success: Bool) -> Void)?) {
