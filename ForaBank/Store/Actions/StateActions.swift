@@ -7,24 +7,3 @@
 //
 
 import Foundation
-import ReSwift
-import ReSwiftThunk
-
-func startPayment(withOption option: PaymentOption) -> Thunk<State> {
-    return Thunk<State> { dispatch, getState in
-        dispatch(SetPaymentOptions(paymentOption: option))
-    }
-}
-
-func finishPayment() -> Thunk<State> {
-    return Thunk<State> { dispatch, getState in
-        dispatch(ClearPaymentProcess())
-    }
-}
-
-struct SetPaymentOptions: Action {
-    let paymentOption: PaymentOption
-}
-
-struct ClearPaymentProcess: Action {
-}

@@ -14,7 +14,7 @@ import CryptoSwift
 import UserNotifications
 
 func appReducer(action: Action, state: State?) -> State {
-    return State(passcodeSignUpState: passcodeSignUpReducer(state: state?.passcodeSignUpState, action: action), authenticationState: authenticationReducer(state: state?.authenticationState, action: action), passcodeSignInState: passcodeSignInReducer(state: state?.passcodeSignInState, action: action), verificationCodeState: verificationCodeReducer(state: state?.verificationCodeState, action: action), paymentSource: nil, registrationState: registrationReducer(state: state?.registrationState, action: action))
+    return State(passcodeSignUpState: passcodeSignUpReducer(state: state?.passcodeSignUpState, action: action), authenticationState: authenticationReducer(state: state?.authenticationState, action: action), passcodeSignInState: passcodeSignInReducer(state: state?.passcodeSignInState, action: action), verificationCodeState: verificationCodeReducer(state: state?.verificationCodeState, action: action), productsState: productReducer(state: state?.productsState, action: action), registrationState: registrationReducer(state: state?.registrationState, action: action))
 }
 let thunkMiddleware: Middleware<State> = createThunksMiddleware()
 var store = Store<State>(reducer: appReducer, state: nil, middleware: [thunkMiddleware])
@@ -105,8 +105,8 @@ private extension AppDelegate {
         ]
     }
 
-    
-    
+
+
     func setTextFieldAppearance() {
         UITextField.appearance().tintColor = .black
         UITextField.appearance().backgroundColor = UIColor(red: 0.889415, green: 0.889436, blue: 0.889424, alpha: 0.25)//UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1)//
