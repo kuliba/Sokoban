@@ -80,6 +80,8 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
         }
     }
 
+    var destinationNum: String?
+    
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
@@ -141,13 +143,22 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
 
     func makeC2C(toNumber: String?) {
         activityIndicator.startAnimating()
-
+        destinationNum = toNumber
         let toNum = ((toNumber != nil) ? toNumber : selectedDestinationPaymentOption?.number) ?? ""
         prepareCard2Card(from: selectedSourcePaymentOption?.number ?? "", to: toNum, amount: Double(sumTextField.text!) ?? 0) { (success, token) in
             self.activityIndicator.stopAnimating()
             if success {
                 self.performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
             }
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "fromPaymentToPaymentVerification", let vc = segue.destination as? RegistrationCodeVerificationViewController {
+            vc.operationSum = sumTextField.text
+            vc.sourceOption = selectedSourcePaymentOption
+            vc.destinationOption = selectedDestinationPaymentOption
+            vc.destinationNum = destinationNum
         }
     }
 }

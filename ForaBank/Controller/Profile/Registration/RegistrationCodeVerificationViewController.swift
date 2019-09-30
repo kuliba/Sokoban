@@ -24,8 +24,13 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
     @IBOutlet weak var activityIndicator: ActivityIndicatorView?
 
     var segueId: String? = nil
-   
 
+    var operationSum: String?
+    var sourceOption: PaymentOption?
+    var destinationOption: PaymentOption?
+    var destinationNum: String?
+    
+    
     let gradientView = UIView()
     let circleView = UIView()
 //    var message: String? = nil
@@ -323,6 +328,13 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
         if let vc = segue.destination as? RegistrationFinishViewController {
             segueId = "finish"
             vc.segueId = segueId
+        }
+        if segue.identifier == "toSuccess", let vc = segue.destination as? PaymentsDetailsSuccessViewController {
+
+            vc.sourceOption = sourceOption
+            vc.destinationOption = destinationOption
+            vc.operationSum = operationSum
+            vc.destinationNum = destinationNum
         }
     }
 }

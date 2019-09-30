@@ -441,7 +441,7 @@
                                                 </state>
                                                 <connections>
                                                     <action selector="checkPaymentCode:" destination="Xda-th-p6I" eventType="touchUpInside" id="G58-eU-EaO"/>
-                                                    <segue destination="EQl-SA-zTp" kind="show" id="98t-KJ-Uyi"/>
+                                                    <segue destination="EQl-SA-zTp" kind="show" identifier="toSuccess" id="98t-KJ-Uyi"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -721,7 +721,14 @@
                     </view>
                     <connections>
                         <outlet property="arrowImageView" destination="z1F-U5-vxV" id="r77-P8-GpG"/>
+                        <outlet property="cardNameLabel" destination="zCe-vv-AbS" id="3ey-xP-lEY"/>
+                        <outlet property="cardNumberLabel" destination="4OF-Cs-qgj" id="yte-Le-8MA"/>
+                        <outlet property="cardSumLabel" destination="mo9-jw-MBZ" id="rBm-fz-TWs"/>
+                        <outlet property="destinationName" destination="4QB-W5-hyx" id="WOt-T1-8A4"/>
+                        <outlet property="destinationNumber" destination="fKh-7P-s5m" id="T2S-Mp-4Xq"/>
+                        <outlet property="destinationSum" destination="f9u-Wd-4S8" id="hfh-o8-CKg"/>
                         <outlet property="returnButton" destination="u46-KW-caT" id="trd-I1-isf"/>
+                        <outlet property="sumLabel" destination="J5q-LI-SJd" id="aa2-GC-nQC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CCl-bu-7dK" userLabel="First Responder" sceneMemberID="firstResponder"/>
