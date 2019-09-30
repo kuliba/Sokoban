@@ -503,6 +503,7 @@
                     <connections>
                         <outlet property="codeNumberTextField" destination="C8a-Xm-vI6" id="PNu-K2-gTm"/>
                         <outlet property="containerView" destination="8pP-cj-CYT" id="70X-h1-ZwF"/>
+                        <outlet property="continueButton" destination="zFG-Bn-eR0" id="gWB-8o-ujM"/>
                         <outlet property="header" destination="wpl-La-b5G" id="PqY-iD-t60"/>
                     </connections>
                 </viewController>

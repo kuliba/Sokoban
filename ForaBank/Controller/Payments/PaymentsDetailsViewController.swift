@@ -24,14 +24,7 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
     // MARK: - Actions
 
     @IBAction func sendButtonClicked(_ sender: Any) {
-        activityIndicator.startAnimating()
-//        prepareCard2Card(from: sourcePaymentOption?.number ?? "", to: selectedDestinationPaymentOption?.number ?? "", amount: Double(sumTextField.text!) as? Double ?? 0) { (success, token) in
-//            self.activityIndicator.stopAnimating()
-//            self.performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
-//        }
-
-//        prepareCard2Card(from: sourcePaymentOption?.number ?? "", to: "4256901080001025", amount: Double(sumTextField.text!) as? Double ?? 0) { (success, token) in
-//        }
+        makeC2C(toNumber: nil)
     }
 
     @IBAction func backButtonClicked(_ sender: Any) {
@@ -146,6 +139,20 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
 //        setUpRemittanceViews()
     }
 
+    func makeC2C(toNumber: String?) {
+        activityIndicator.startAnimating()
+
+        let toNum = ((toNumber != nil) ? toNumber : selectedDestinationPaymentOption?.number) ?? ""
+        prepareCard2Card(from: selectedSourcePaymentOption?.number ?? "", to: toNum, amount: Double(sumTextField.text!) ?? 0) { (success, token) in
+            self.activityIndicator.stopAnimating()
+            if success {
+                self.performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
+            }
+        }
+
+        //        prepareCard2Card(from: sourcePaymentOption?.number ?? "", to: "4256901080001025", amount: Double(sumTextField.text!) as? Double ?? 0) { (success, token) in
+        //        }
+    }
 }
 
 // - MARK: Private methods
@@ -192,7 +199,6 @@ extension PaymentsDetailsViewController: RemittancePickerDelegate {
             remittanceSourceView = optionView
             remittanceSourceView.frame = frame
             remittanceSourceView.translatesAutoresizingMaskIntoConstraints = true
-
         }
     }
 }
@@ -232,6 +238,7 @@ extension PaymentsDetailsViewController: UITableViewDelegate, UITableViewDataSou
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let vc = PickerViewController(nibName: String(describing: PickerViewController.self), bundle: nil)
         vc.modalPresentationStyle = .overCurrentContext
+
         switch indexPath.item {
         case 0:
             guard let nonNilOptions = sourcePaymentOptions else {
@@ -248,7 +255,14 @@ extension PaymentsDetailsViewController: UITableViewDelegate, UITableViewDataSou
         default:
             break
         }
-        topMostVC()?.present(vc, animated: true, completion: nil)
 
+        vc.callBack = { (number) in
+            self.makeC2C(toNumber: number)
+        }
+        topMostVC()?.present(vc, animated: true, completion: nil)
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 60
     }
 }

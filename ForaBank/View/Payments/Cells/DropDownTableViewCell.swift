@@ -12,6 +12,7 @@ class DropDownTableViewCell: UITableViewCell {
 
     @IBOutlet weak var companyImageView: UIImageView!
     @IBOutlet weak var providerImageView: UIImageView!
+    @IBOutlet weak var arrowsImageView: UIImageView!
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var sumLabel: UILabel!
@@ -32,9 +33,12 @@ class DropDownTableViewCell: UITableViewCell {
     internal func setupLayout(withPickerItem pickerItem: IPickerItem, isDroppable: Bool) {
         leadingToArrowConstraint.isActive = isDroppable
         leadingToSuperviewConstraint.isActive = !isDroppable
+        arrowsImageView.isHidden = !isDroppable
 
         titleLabel.text = pickerItem.title
         numberLabel.text = pickerItem.subTitle
         sumLabel.text = String(pickerItem.value)
+
+        updateConstraints()
     }
 }
