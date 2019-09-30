@@ -24,7 +24,7 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
     @IBOutlet weak var activityIndicator: ActivityIndicatorView?
 
     var segueId: String? = nil
-    var backSegueId: String? = nil
+   
 
     let gradientView = UIView()
     let circleView = UIView()
@@ -38,14 +38,13 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
 //            }
 //        }
 //    }
-
+    var backSegueId: String? = nil
     // MARK: - Actions
-    @IBAction func backButtonCLicked(_ sender: Any) {
-        view.endEditing(true)
-        segueId = backSegueId
-        self.navigationController?.popViewController(animated: true)
-    }
-
+  @IBAction func backButtonCLicked(_ sender: Any) {
+           segueId = backSegueId
+           view.endEditing(true)
+           self.navigationController?.popViewController(animated: true)
+       }
     @IBAction func authContinue(_ sender: Any) {
         view.endEditing(true)
         activityIndicator?.startAnimation()

@@ -139,7 +139,6 @@
 		96144B3F233DFF2300B9F314 /* LoanPaymentScheduleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96144B3E233DFF2300B9F314 /* LoanPaymentScheduleController.swift */; };
 		96144B41233E1E6B00B9F314 /* LoanPaymentSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96144B40233E1E6B00B9F314 /* LoanPaymentSchedule.swift */; };
 		96144B43233E21BB00B9F314 /* LoanSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96144B42233E21BB00B9F314 /* LoanSchedule.swift */; };
-		968ED4B02341EEA7005CDCD1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 968ED4AF2341EEA7005CDCD1 /* Main.storyboard */; };
 		9697E29F2334C29700974505 /* OperatorsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9697E29E2334C29700974505 /* OperatorsList.swift */; };
 		9697E2A32334E30500974505 /* ServicesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9697E2A22334E30500974505 /* ServicesList.swift */; };
 		9698995E2303076F0066C55B /* LoansViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9698995D2303076F0066C55B /* LoansViewController.swift */; };
@@ -407,7 +406,6 @@
 		96144B3E233DFF2300B9F314 /* LoanPaymentScheduleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanPaymentScheduleController.swift; sourceTree = "<group>"; };
 		96144B40233E1E6B00B9F314 /* LoanPaymentSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanPaymentSchedule.swift; sourceTree = "<group>"; };
 		96144B42233E21BB00B9F314 /* LoanSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanSchedule.swift; sourceTree = "<group>"; };
-		968ED4AF2341EEA7005CDCD1 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		9697E29E2334C29700974505 /* OperatorsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorsList.swift; sourceTree = "<group>"; };
 		9697E2A22334E30500974505 /* ServicesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesList.swift; sourceTree = "<group>"; };
 		9698995D2303076F0066C55B /* LoansViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoansViewController.swift; sourceTree = "<group>"; };
@@ -818,7 +816,6 @@
 		09E0F149215A6B170042FB6A /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
-				968ED4AF2341EEA7005CDCD1 /* Main.storyboard */,
 				09E0F13B215A65310042FB6A /* Deposits.storyboard */,
 				09E0F134215A61EB0042FB6A /* Feed.storyboard */,
 				09797561215A49040044C00A /* LaunchScreen.storyboard */,
@@ -1356,7 +1353,6 @@
 				0930F184215B78B000CFB593 /* Roboto-Thin.ttf in Resources */,
 				A55B7B8221A6B59A00A8A7FE /* 18.mov in Resources */,
 				A55B7B7C21A6B4FB00A8A7FE /* 1.mov in Resources */,
-				968ED4B02341EEA7005CDCD1 /* Main.storyboard in Resources */,
 				0904505E216B774600F3B295 /* FeedOfferCustom1Cell.xib in Resources */,
 				0930F17B215B78B000CFB593 /* Roboto-BlackItalic.ttf in Resources */,
 				BD38198E232104430004728C /* productsData.plist in Resources */,

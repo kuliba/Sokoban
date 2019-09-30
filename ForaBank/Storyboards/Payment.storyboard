@@ -385,7 +385,7 @@
                                         <inset key="imageEdgeInsets" minX="9" minY="8" maxX="8" maxY="3"/>
                                         <state key="normal" image="button_back"/>
                                         <connections>
-                                            <action selector="backButtonClicked:" destination="afX-Am-FVA" eventType="touchUpInside" id="g6G-Et-tfa"/>
+                                            <action selector="backButtonCLicked:" destination="Xda-th-p6I" eventType="touchUpInside" id="rSq-CN-9a9"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Перевод" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Li-FN-g8p">
@@ -520,7 +520,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u46-KW-caT" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="14" y="482" width="292" height="53"/>
+                                <rect key="frame" x="14" y="475" width="292" height="55"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="55" id="CqQ-Me-4X6"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="18"/>
                                 <state key="normal" title="Вернуться к счетам">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -540,8 +543,8 @@
                                     <color key="titleColor" red="0.0078361118210000004" green="0.7385174632" blue="0.61187428239999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 </state>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-9550 ₽" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J5q-LI-SJd">
-                                <rect key="frame" x="106.5" y="199" width="107" height="42.5"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" misplaced="YES" text="-9550 ₽" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J5q-LI-SJd">
+                                <rect key="frame" x="107" y="199" width="136" height="43"/>
                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="32"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -698,20 +701,20 @@
                         </subviews>
                         <color key="backgroundColor" red="0.0078431372549019607" green="0.73725490196078436" blue="0.61176470588235299" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
-                            <constraint firstItem="u46-KW-caT" firstAttribute="top" secondItem="Yhq-KU-zzm" secondAttribute="bottom" constant="8" id="0dm-p3-5GK"/>
                             <constraint firstAttribute="trailing" secondItem="V48-Wh-DLl" secondAttribute="trailing" constant="14" id="0wY-Md-tjh"/>
                             <constraint firstItem="aGd-R4-Z3w" firstAttribute="leading" secondItem="Gtw-UZ-fge" secondAttribute="leading" constant="34" id="1vX-oN-Ty4"/>
                             <constraint firstItem="Yhq-KU-zzm" firstAttribute="trailing" secondItem="V48-Wh-DLl" secondAttribute="trailing" id="D7b-eg-Iu6"/>
+                            <constraint firstItem="u46-KW-caT" firstAttribute="top" secondItem="Yhq-KU-zzm" secondAttribute="bottom" constant="1" id="DFQ-rf-khm"/>
                             <constraint firstItem="Yhq-KU-zzm" firstAttribute="top" secondItem="V48-Wh-DLl" secondAttribute="bottom" constant="15" id="EHE-kT-yxG"/>
                             <constraint firstItem="V48-Wh-DLl" firstAttribute="top" secondItem="aGd-R4-Z3w" secondAttribute="bottom" constant="14" id="Ee0-Jf-41t"/>
                             <constraint firstItem="aGd-R4-Z3w" firstAttribute="top" secondItem="J5q-LI-SJd" secondAttribute="bottom" constant="8" id="L1C-2q-gY7"/>
                             <constraint firstItem="J5q-LI-SJd" firstAttribute="top" secondItem="Gtw-UZ-fge" secondAttribute="top" constant="199" id="L9B-zt-865"/>
-                            <constraint firstItem="u46-KW-caT" firstAttribute="trailing" secondItem="Yhq-KU-zzm" secondAttribute="trailing" id="SlU-9h-S4i"/>
+                            <constraint firstItem="u46-KW-caT" firstAttribute="leading" secondItem="Yhq-KU-zzm" secondAttribute="leading" id="PLR-t0-0b7"/>
+                            <constraint firstItem="Gtw-UZ-fge" firstAttribute="bottom" secondItem="u46-KW-caT" secondAttribute="bottom" constant="38" id="PbB-1B-jwR"/>
                             <constraint firstItem="Gtw-UZ-fge" firstAttribute="trailing" secondItem="aGd-R4-Z3w" secondAttribute="trailing" constant="29" id="Z2M-Ef-jnX"/>
-                            <constraint firstItem="Gtw-UZ-fge" firstAttribute="bottom" secondItem="u46-KW-caT" secondAttribute="bottom" constant="33" id="ZkP-NP-taa"/>
                             <constraint firstItem="Yhq-KU-zzm" firstAttribute="leading" secondItem="V48-Wh-DLl" secondAttribute="leading" id="a38-os-2Hd"/>
                             <constraint firstItem="J5q-LI-SJd" firstAttribute="centerX" secondItem="V48-Wh-DLl" secondAttribute="centerX" id="aUA-i0-Hkt"/>
-                            <constraint firstItem="u46-KW-caT" firstAttribute="leading" secondItem="Yhq-KU-zzm" secondAttribute="leading" id="fg0-pb-hh4"/>
+                            <constraint firstItem="u46-KW-caT" firstAttribute="trailing" secondItem="Yhq-KU-zzm" secondAttribute="trailing" id="kB5-jn-kO1"/>
                             <constraint firstItem="V48-Wh-DLl" firstAttribute="leading" secondItem="Gtw-UZ-fge" secondAttribute="leading" constant="14" id="t8J-LX-gG6"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Gtw-UZ-fge"/>
