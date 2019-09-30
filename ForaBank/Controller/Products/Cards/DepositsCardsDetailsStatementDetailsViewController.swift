@@ -32,6 +32,17 @@ class DepositsCardsDetailsStatementDetailsViewController: UIViewController {
     var product: DatedTransactions?
     var sortedTransactionsStatement: DatedTransactionsStatement?
      var transaction: TransactionStatement?
+    
+
+      // MARK: - Actions
+      @IBAction func backButtonCLicked(_ sender: Any) {
+          view.endEditing(true)
+          self.navigationController?.popViewController(animated: true)
+          if navigationController == nil {
+              dismiss(animated: true, completion: nil)
+          }
+      }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 //        print(scrollView.gestureRecognizers)

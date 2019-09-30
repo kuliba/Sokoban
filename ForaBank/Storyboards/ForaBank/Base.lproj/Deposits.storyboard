@@ -1393,12 +1393,10 @@
                                                         </constraints>
                                                         <state key="normal" image="button_back"/>
                                                         <connections>
-                                                            <action selector="backButtonClicked:" destination="zzR-we-aef" eventType="touchUpInside" id="K8g-2I-ztA"/>
-                                                            <action selector="backButtonClicked:" destination="Oxz-tM-k7M" eventType="touchUpInside" id="SEl-Um-Aak"/>
-                                                            <action selector="backButtonClicked:" destination="EqD-Vl-vHc" eventType="touchUpInside" id="mSr-ny-drL"/>
+                                                            <action selector="backButtonCLicked:" destination="EqD-Vl-vHc" eventType="touchUpInside" id="uWu-A6-Olo"/>
                                                         </connections>
                                                     </button>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="METRO Stroe 2019" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KDn-mC-Wnc">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="METRO Stroe 2019" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KDn-mC-Wnc">
                                                         <rect key="frame" x="8" y="88" width="305" height="50"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="50" id="JdK-1E-N8f"/>
@@ -1409,7 +1407,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="5 сентября, 16:57" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l7R-7V-m4c">
-                                                        <rect key="frame" x="90" y="146" width="140" height="21"/>
+                                                        <rect key="frame" x="90.5" y="145" width="140" height="21"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="21" id="deF-f1-5O1"/>
                                                         </constraints>
@@ -1418,7 +1416,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-14 567 ₽ " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="50Q-xO-FuE">
-                                                        <rect key="frame" x="78" y="176" width="164" height="31"/>
+                                                        <rect key="frame" x="78.5" y="175" width="164" height="32"/>
                                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="36"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
