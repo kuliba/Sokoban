@@ -44,6 +44,9 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
         view.endEditing(true)
         segueId = backSegueId
         self.navigationController?.popViewController(animated: true)
+        if navigationController == nil {
+            dismiss(animated: true, completion: nil)
+        }
     }
 
     @IBAction func authContinue(_ sender: Any) {
@@ -111,7 +114,7 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
             }
         }
     }
-    
+
     @IBAction func checkPaymentCode(_ sender: Any) {
         activityIndicator?.startAnimation()
         continueButton.isHidden = true
