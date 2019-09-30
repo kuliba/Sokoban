@@ -558,11 +558,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u46-KW-caT" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="14" y="483" width="292" height="53"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="53" id="97Y-7t-JhH"/>
-                                </constraints>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u46-KW-caT" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
+                                <rect key="frame" x="14" y="482" width="292" height="53"/>
                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="18"/>
                                 <state key="normal" title="Вернуться к счетам">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -571,31 +568,31 @@
                                     <action selector="returnButtonClicked:" destination="EQl-SA-zTp" eventType="touchUpInside" id="ALb-bs-vwW"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yhq-KU-zzm" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="14" y="422" width="292" height="53"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yhq-KU-zzm" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
+                                <rect key="frame" x="14" y="421" width="292" height="53"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="53" id="cIl-oG-IXY"/>
+                                    <constraint firstAttribute="height" constant="53" id="JTL-6t-Phb"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="18"/>
                                 <state key="normal" title="Создать шаблон">
                                     <color key="titleColor" red="0.0078361118210000004" green="0.7385174632" blue="0.61187428239999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 </state>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="-9550 ₽" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J5q-LI-SJd">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-9550 ₽" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J5q-LI-SJd">
                                 <rect key="frame" x="106.5" y="199" width="107" height="42.5"/>
                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="32"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Перевод успешно совершен" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aGd-R4-Z3w">
-                                <rect key="frame" x="47" y="249.5" width="226.5" height="22.5"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Перевод успешно совершен" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aGd-R4-Z3w">
+                                <rect key="frame" x="34" y="249.5" width="257" height="22.5"/>
                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="V48-Wh-DLl">
-                                <rect key="frame" x="14" y="287" width="292" height="120"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V48-Wh-DLl">
+                                <rect key="frame" x="14" y="286" width="292" height="120"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AxA-g6-n24">
                                         <rect key="frame" x="0.0" y="0.0" width="292" height="1"/>
@@ -637,12 +634,12 @@
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstItem="Fan-oo-ago" firstAttribute="top" secondItem="TR5-8W-74E" secondAttribute="top" id="4kl-49-KGT"/>
+                                                    <constraint firstItem="mo9-jw-MBZ" firstAttribute="top" secondItem="Fan-oo-ago" secondAttribute="top" id="9Pl-LC-roe"/>
                                                     <constraint firstItem="Fan-oo-ago" firstAttribute="leading" secondItem="TR5-8W-74E" secondAttribute="leading" id="A8N-2e-ItZ"/>
-                                                    <constraint firstItem="mo9-jw-MBZ" firstAttribute="leading" secondItem="Fan-oo-ago" secondAttribute="trailing" id="FbM-Pz-u1B"/>
-                                                    <constraint firstAttribute="bottom" secondItem="mo9-jw-MBZ" secondAttribute="bottom" id="KsG-Ga-Eg0"/>
+                                                    <constraint firstItem="mo9-jw-MBZ" firstAttribute="bottom" secondItem="Fan-oo-ago" secondAttribute="bottom" id="Asp-VL-Gw1"/>
+                                                    <constraint firstAttribute="trailing" secondItem="mo9-jw-MBZ" secondAttribute="trailing" id="Cwh-ZO-cIi"/>
+                                                    <constraint firstItem="mo9-jw-MBZ" firstAttribute="leading" secondItem="Fan-oo-ago" secondAttribute="trailing" id="M8g-ik-9pe"/>
                                                     <constraint firstAttribute="bottom" secondItem="Fan-oo-ago" secondAttribute="bottom" id="fPd-V3-QrH"/>
-                                                    <constraint firstAttribute="trailing" secondItem="mo9-jw-MBZ" secondAttribute="trailing" id="tNK-k2-Lmt"/>
-                                                    <constraint firstItem="mo9-jw-MBZ" firstAttribute="top" secondItem="TR5-8W-74E" secondAttribute="top" id="wfd-fb-dMU"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NkJ-KL-xL2">
@@ -740,16 +737,21 @@
                         </subviews>
                         <color key="backgroundColor" red="0.0078431372549019607" green="0.73725490196078436" blue="0.61176470588235299" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
+                            <constraint firstItem="u46-KW-caT" firstAttribute="top" secondItem="Yhq-KU-zzm" secondAttribute="bottom" constant="8" id="0dm-p3-5GK"/>
                             <constraint firstAttribute="trailing" secondItem="V48-Wh-DLl" secondAttribute="trailing" constant="14" id="0wY-Md-tjh"/>
-                            <constraint firstItem="Yhq-KU-zzm" firstAttribute="trailing" secondItem="V48-Wh-DLl" secondAttribute="trailing" id="JGP-oi-XZU"/>
-                            <constraint firstItem="aGd-R4-Z3w" firstAttribute="top" secondItem="J5q-LI-SJd" secondAttribute="bottom" constant="8" id="LjS-OB-onY"/>
-                            <constraint firstItem="u46-KW-caT" firstAttribute="leading" secondItem="Yhq-KU-zzm" secondAttribute="leading" id="O3E-QD-rFe"/>
-                            <constraint firstItem="Yhq-KU-zzm" firstAttribute="top" secondItem="V48-Wh-DLl" secondAttribute="bottom" constant="15" id="QSc-ba-BUe"/>
-                            <constraint firstItem="u46-KW-caT" firstAttribute="top" secondItem="Yhq-KU-zzm" secondAttribute="bottom" constant="8" id="ZCZ-7K-FIF"/>
-                            <constraint firstItem="Yhq-KU-zzm" firstAttribute="leading" secondItem="V48-Wh-DLl" secondAttribute="leading" id="lUS-7s-Mha"/>
-                            <constraint firstItem="V48-Wh-DLl" firstAttribute="top" secondItem="aGd-R4-Z3w" secondAttribute="bottom" constant="15" id="rCZ-49-7ND"/>
+                            <constraint firstItem="aGd-R4-Z3w" firstAttribute="leading" secondItem="Gtw-UZ-fge" secondAttribute="leading" constant="34" id="1vX-oN-Ty4"/>
+                            <constraint firstItem="Yhq-KU-zzm" firstAttribute="trailing" secondItem="V48-Wh-DLl" secondAttribute="trailing" id="D7b-eg-Iu6"/>
+                            <constraint firstItem="Yhq-KU-zzm" firstAttribute="top" secondItem="V48-Wh-DLl" secondAttribute="bottom" constant="15" id="EHE-kT-yxG"/>
+                            <constraint firstItem="V48-Wh-DLl" firstAttribute="top" secondItem="aGd-R4-Z3w" secondAttribute="bottom" constant="14" id="Ee0-Jf-41t"/>
+                            <constraint firstItem="aGd-R4-Z3w" firstAttribute="top" secondItem="J5q-LI-SJd" secondAttribute="bottom" constant="8" id="L1C-2q-gY7"/>
+                            <constraint firstItem="J5q-LI-SJd" firstAttribute="top" secondItem="Gtw-UZ-fge" secondAttribute="top" constant="199" id="L9B-zt-865"/>
+                            <constraint firstItem="u46-KW-caT" firstAttribute="trailing" secondItem="Yhq-KU-zzm" secondAttribute="trailing" id="SlU-9h-S4i"/>
+                            <constraint firstItem="Gtw-UZ-fge" firstAttribute="trailing" secondItem="aGd-R4-Z3w" secondAttribute="trailing" constant="29" id="Z2M-Ef-jnX"/>
+                            <constraint firstItem="Gtw-UZ-fge" firstAttribute="bottom" secondItem="u46-KW-caT" secondAttribute="bottom" constant="33" id="ZkP-NP-taa"/>
+                            <constraint firstItem="Yhq-KU-zzm" firstAttribute="leading" secondItem="V48-Wh-DLl" secondAttribute="leading" id="a38-os-2Hd"/>
+                            <constraint firstItem="J5q-LI-SJd" firstAttribute="centerX" secondItem="V48-Wh-DLl" secondAttribute="centerX" id="aUA-i0-Hkt"/>
+                            <constraint firstItem="u46-KW-caT" firstAttribute="leading" secondItem="Yhq-KU-zzm" secondAttribute="leading" id="fg0-pb-hh4"/>
                             <constraint firstItem="V48-Wh-DLl" firstAttribute="leading" secondItem="Gtw-UZ-fge" secondAttribute="leading" constant="14" id="t8J-LX-gG6"/>
-                            <constraint firstItem="u46-KW-caT" firstAttribute="trailing" secondItem="Yhq-KU-zzm" secondAttribute="trailing" id="w1v-xB-LeZ"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Gtw-UZ-fge"/>
                     </view>
