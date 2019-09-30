@@ -1509,6 +1509,7 @@
                     <connections>
                         <outlet property="amountPaT" destination="50Q-xO-FuE" id="mWP-cV-mMU"/>
                         <outlet property="datetransaction" destination="l7R-7V-m4c" id="0KP-wc-rfj"/>
+                        <outlet property="infoView" destination="dkN-cg-Cjp" id="Wg6-Zc-nQp"/>
                         <outlet property="nameTransaction" destination="KDn-mC-Wnc" id="G3S-km-i90"/>
                     </connections>
                 </viewController>
