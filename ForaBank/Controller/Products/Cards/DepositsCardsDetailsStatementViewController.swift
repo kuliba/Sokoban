@@ -31,41 +31,40 @@ class DepositsCardsDetailsStatementViewController: UIViewController, TabCardDeta
         self.card = card
     }
  
+  let decoder = JSONDecoder()
+  var selectIndex: Int? = nil
+  var selectedSection: Int? = nil
     
     // MARK: - Lifecycle
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setUpTableView()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if let cardNumber = card?.number {
-            NetworkManager.shared().getTransactionsStatement(forCardNumber: cardNumber,
-                                                             fromDate: displayedPeriod.0,
-                                                             toDate: displayedPeriod.1) { [weak self] (success, datedTransactions) in
-                if let datedTransactions = datedTransactions,
-                    success == true {
-                    self?.datedTransactions = datedTransactions
+       override func viewDidLoad() {
+            super.viewDidLoad()
+            setUpTableView()
+            NetworkManager.shared().getSortedFullStatement { [weak self] (success, fullStatement, error) in
+                print("DepositsHistoryViewController getSortedFullStatement \(success)")
+                if success {
+                    self?.sortedTransactionsStatement = fullStatement ?? [DatedTransactionsStatement]()
                 }
             }
         }
-        NetworkManager.shared().getSortedFullStatement { [weak self] (success, fullStatement, error) in
-            print("DepositsHistoryViewController getSortedFullStatement \(success)")
-            if success {
-                self?.sortedTransactionsStatement = fullStatement ?? [DatedTransactionsStatement]()
-                }
+        
+        override func viewDidDisappear(_ animated: Bool) {
+            super.viewDidDisappear(animated)
+            if let selectedRow = tableView.indexPathForSelectedRow {
+                //tableView.deselectRow(at: selectedRow, animated: false)
+                
+            }
+        }
+        
+        override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    //        print("prepare for segue \(segue.identifier ?? "nil")")
+            if let destination = segue.destination as? DepositsCardsDetailsStatementDetailsViewController {
+                destination.transaction = sortedTransactionsStatement[selectedSection!].transactions[selectIndex!]
+                   }
         }
 
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        if let selectedRow = tableView.indexPathForSelectedRow {
-            tableView.deselectRow(at: selectedRow, animated: false)
-        }
-    }
-}
+
 
 // MARK: - UITableView DataSource and Delegate
 extension DepositsCardsDetailsStatementViewController: UITableViewDataSource, UITableViewDelegate {
@@ -204,9 +203,13 @@ extension DepositsCardsDetailsStatementViewController: UITableViewDataSource, UI
     //        return 95
     //    }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "testtest", sender: nil)
-    }
+     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+          selectIndex = indexPath.item
+          selectedSection = indexPath.section
+          performSegue(withIdentifier: "testtest", sender: self)
+          
+          
+      }
 }
 
 // MARK: - Private methods
