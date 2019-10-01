@@ -32,7 +32,8 @@ class DepositsHistoryViewController: UIViewController {
     let cellId = "DepositsHistoryCell"
     
     let decoder = JSONDecoder()
-    
+    var selectIndex: Int? = nil
+    var selectedSection: Int? = nil
  
     var sortedTransactionsStatement = [DatedTransactionsStatement]() {
         didSet{
@@ -55,17 +56,18 @@ class DepositsHistoryViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         if let selectedRow = tableView.indexPathForSelectedRow {
-            tableView.deselectRow(at: selectedRow, animated: false)
+            //tableView.deselectRow(at: selectedRow, animated: false)
+            
         }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 //        print("prepare for segue \(segue.identifier ?? "nil")")
-        if segue.identifier == "DepositsHistoryDetailsViewController" {
-            let toViewController = segue.destination as UIViewController
-            toViewController.transitioningDelegate = transitionAnimator
-        }
+        if let destination = segue.destination as? DepositsHistoryDetailsViewController {
+            destination.transaction = sortedTransactionsStatement[selectedSection!].transactions[selectIndex!]
+               }
     }
+
 }
 
 // MARK: - UITableView DataSource and Delegate
@@ -137,8 +139,14 @@ extension DepositsHistoryViewController: UITableViewDataSource, UITableViewDeleg
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "DepositsHistoryDetailsViewController", sender: nil)
+        selectIndex = indexPath.item
+        selectedSection = indexPath.section
+        performSegue(withIdentifier: "DepositsHistoryDetailsViewController", sender: self)
+        
+        
     }
+ 
+
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerCell = UINib(nibName: "DepositsHistoryHeader", bundle: nil)
@@ -197,7 +205,7 @@ private extension DepositsHistoryViewController {
     
     func setUpTableView() {
         setTableViewDelegateAndDataSource()
-        setTableViewContentInsets()
+            setTableViewContentInsets()
         // setAutomaticRowHeight()
         registerNibCell()
         setSearchView()

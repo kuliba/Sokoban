@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Roboto-Light.ttf">
+            <string>Roboto-Light</string>
+        </array>
+        <array key="Roboto-Regular.ttf">
+            <string>Roboto-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="DropDownTableViewCell" id="KGk-i7-Jjw" customClass="DropDownTableViewCell" customModule="ForaBank" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="vertical_arrows" translatesAutoresizingMaskIntoConstraints="NO" id="Q5m-Ub-GX4">
+                        <rect key="frame" x="9" y="24.5" width="7" height="11"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="7" id="AYF-pz-yOB"/>
+                        </constraints>
+                    </imageView>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ert-Of-XSE">
+                        <rect key="frame" x="16" y="0.0" width="304" height="60"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="0.000 000 000 ₽" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1f0-Dc-GJU">
+                                <rect key="frame" x="154" y="18" width="130" height="24"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="24" id="Ov9-TD-gyv"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="18"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Моя карта" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TpE-Br-n9m">
+                                <rect key="frame" x="35" y="0.0" width="77.5" height="42.5"/>
+                                <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="252" text="0000 **** **** 0000" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5aT-bL-pHE">
+                                <rect key="frame" x="11" y="42.5" width="114.5" height="17.5"/>
+                                <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="13"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tabbar_icon_feed" translatesAutoresizingMaskIntoConstraints="NO" id="i3t-mH-j89">
+                                <rect key="frame" x="11" y="15" width="13" height="13"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="i3t-mH-j89" secondAttribute="height" multiplier="1:1" id="PLh-u1-Hb4"/>
+                                    <constraint firstAttribute="width" constant="13" id="vKr-gf-EOI"/>
+                                </constraints>
+                            </imageView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="card_visa_logo" translatesAutoresizingMaskIntoConstraints="NO" id="gpp-XC-BMl">
+                                <rect key="frame" x="133.5" y="42.5" width="45" height="15"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="15" id="X5T-Pl-tP1"/>
+                                    <constraint firstAttribute="width" secondItem="gpp-XC-BMl" secondAttribute="height" multiplier="3:1" id="gAp-Mf-GE7"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="5aT-bL-pHE" firstAttribute="leading" secondItem="Ert-Of-XSE" secondAttribute="leading" constant="11" id="B64-ai-30j"/>
+                            <constraint firstItem="1f0-Dc-GJU" firstAttribute="centerY" secondItem="Ert-Of-XSE" secondAttribute="centerY" id="DnU-cc-RDt"/>
+                            <constraint firstItem="gpp-XC-BMl" firstAttribute="top" secondItem="5aT-bL-pHE" secondAttribute="top" id="Lcc-Ix-967"/>
+                            <constraint firstAttribute="trailing" secondItem="1f0-Dc-GJU" secondAttribute="trailing" constant="20" symbolic="YES" id="ONT-bx-gy1"/>
+                            <constraint firstItem="gpp-XC-BMl" firstAttribute="leading" secondItem="5aT-bL-pHE" secondAttribute="trailing" constant="8" symbolic="YES" id="RsZ-Zr-ddu"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="gpp-XC-BMl" secondAttribute="trailing" constant="20" symbolic="YES" id="UtI-06-BGC"/>
+                            <constraint firstItem="5aT-bL-pHE" firstAttribute="top" secondItem="TpE-Br-n9m" secondAttribute="bottom" id="dB2-kC-Nty"/>
+                            <constraint firstAttribute="bottom" secondItem="5aT-bL-pHE" secondAttribute="bottom" id="iQn-pd-UH6"/>
+                            <constraint firstItem="i3t-mH-j89" firstAttribute="leading" secondItem="Ert-Of-XSE" secondAttribute="leading" constant="11" id="j6z-Vb-MkM"/>
+                            <constraint firstItem="i3t-mH-j89" firstAttribute="centerY" secondItem="TpE-Br-n9m" secondAttribute="centerY" id="jeS-bH-He4"/>
+                            <constraint firstItem="TpE-Br-n9m" firstAttribute="leading" secondItem="i3t-mH-j89" secondAttribute="trailing" constant="11" id="mI2-nd-1C5"/>
+                            <constraint firstItem="TpE-Br-n9m" firstAttribute="top" secondItem="Ert-Of-XSE" secondAttribute="top" id="miK-k8-oxu"/>
+                            <constraint firstItem="1f0-Dc-GJU" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="TpE-Br-n9m" secondAttribute="trailing" id="wm5-bm-r73"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="Ert-Of-XSE" firstAttribute="leading" secondItem="Q5m-Ub-GX4" secondAttribute="trailing" id="76P-6t-1WN"/>
+                    <constraint firstItem="Ert-Of-XSE" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="8dQ-VN-9WU"/>
+                    <constraint firstAttribute="bottom" secondItem="Ert-Of-XSE" secondAttribute="bottom" id="LnJ-Mh-CQZ"/>
+                    <constraint firstItem="Ert-Of-XSE" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="SjU-xR-wRB"/>
+                    <constraint firstAttribute="trailing" secondItem="Ert-Of-XSE" secondAttribute="trailing" id="VEg-op-9oc"/>
+                    <constraint firstItem="Q5m-Ub-GX4" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="9" id="oSy-bR-Dmf"/>
+                    <constraint firstItem="Q5m-Ub-GX4" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="qE0-cA-Mro"/>
+                </constraints>
+                <variation key="default">
+                    <mask key="constraints">
+                        <exclude reference="SjU-xR-wRB"/>
+                    </mask>
+                </variation>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="arrowsImageView" destination="Q5m-Ub-GX4" id="KiP-68-7Vf"/>
+                <outlet property="companyImageView" destination="i3t-mH-j89" id="Z23-hf-mSG"/>
+                <outlet property="leadingToArrowConstraint" destination="76P-6t-1WN" id="ELk-oP-RlS"/>
+                <outlet property="leadingToSuperviewConstraint" destination="SjU-xR-wRB" id="rFG-Sw-NtK"/>
+                <outlet property="numberLabel" destination="5aT-bL-pHE" id="IdC-er-MYi"/>
+                <outlet property="providerImageView" destination="gpp-XC-BMl" id="Bg6-jq-YaC"/>
+                <outlet property="sumLabel" destination="1f0-Dc-GJU" id="ZGv-ZM-Cmg"/>
+                <outlet property="titleLabel" destination="TpE-Br-n9m" id="cUa-zo-hDU"/>
+            </connections>
+            <point key="canvasLocation" x="131.8840579710145" y="140.625"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="card_visa_logo" width="41" height="18"/>
+        <image name="tabbar_icon_feed" width="25" height="25"/>
+        <image name="vertical_arrows" width="5" height="11"/>
+    </resources>
+</document>

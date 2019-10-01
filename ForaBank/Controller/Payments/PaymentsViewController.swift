@@ -113,7 +113,7 @@ extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let s = (isSignedUp == true) ? indexPath.section : indexPath.section+1
+        let s = (isSignedUp == true) ? indexPath.section : indexPath.section + 1
         
         let section = payments[s]
         let index = indexPath.row
@@ -123,7 +123,7 @@ extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
         
         }
             
-            serviceCell.titleLabel.text = payments[indexPath.row].name
+        serviceCell.titleLabel.text = payments[indexPath.row].operators?.nameList?.value
     
             
             return serviceCell

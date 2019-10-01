@@ -45,16 +45,16 @@ class DepositsViewController: UIViewController {
 //        ]
 //    ]
     @IBOutlet weak var LabelNoProduct: UILabel!
-    
+
     var deposits = [Deposit]() {
         didSet {
             tableView.reloadData()
             activityIndicator.stopAnimating()
             hiddenAccount()
-            
+
         }
     }
-    func hiddenAccount(){
+    func hiddenAccount() {
         if deposits.count == (0) {
             LabelNoProduct.isHidden = false
         }
@@ -72,6 +72,7 @@ class DepositsViewController: UIViewController {
 
 
     // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
         activityIndicator.startAnimation()
@@ -79,8 +80,6 @@ class DepositsViewController: UIViewController {
         LabelNoProduct.isHidden = true
 
     }
-
-
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -90,13 +89,13 @@ class DepositsViewController: UIViewController {
             }
         }
     }
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let destination = segue.destination as? DepositDetailsViewController {
             destination.deposit = deposits[(tableView.indexPathForSelectedRow?.row)!]
         }
 
     }
-
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
@@ -106,14 +105,13 @@ class DepositsViewController: UIViewController {
     }
 }
 
-// MARK: - UITableView DataSource and Delegate
-extension DepositsViewController: UITableViewDataSource, UITableViewDelegate {
+// MARK: - TableView DataSource Delegate
 
+extension DepositsViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return deposits.count
     }
-
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? DepositsObligationsCell else {
@@ -154,6 +152,7 @@ extension DepositsViewController: UITableViewDataSource, UITableViewDelegate {
 
         return nil
     }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "DepositDetailsViewController", sender: nil)
     }

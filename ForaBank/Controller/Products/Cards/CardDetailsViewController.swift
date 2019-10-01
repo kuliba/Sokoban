@@ -24,7 +24,7 @@ class CardDetailsViewController: UIViewController {
     @IBOutlet weak var contentViewTop: NSLayoutConstraint!
     @IBOutlet weak var cardView: DetailedCardView!
     @IBOutlet weak var backgroundImageView: UIImageView!
-
+   var cards: [Card] = [Card]()
     var previousIndex = -1
 
     var card: Card? = nil
@@ -39,7 +39,7 @@ class CardDetailsViewController: UIViewController {
 
     weak var currentViewController: UIViewController?
     var previousOffset: CGFloat = 0
-    var items = ["Управление", "Выписка", "О карте"]
+    var items = ["Управление", "Выписка", "О карте", "График платежей"]
     var labels = [UILabel?]()
     var lastScrollViewOffset: CGFloat = 0
 
@@ -257,6 +257,9 @@ private extension CardDetailsViewController {
         case 2:
             let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductAboutViewController") as? ProductAboutViewController
             managementVC?.items = card?.getProductAbout()
+            newViewController = managementVC
+        case 3:
+            let managementVC = storyboard?.instantiateViewController(withIdentifier: "TableExpansionViewController") as? TableExpansionViewController
             newViewController = managementVC
         default:
             newViewController = storyboard?.instantiateViewController(withIdentifier: "feed\(index)")
