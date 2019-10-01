@@ -47,9 +47,10 @@ class ExpandingTableViewCell: UITableViewCell {
         self.titleLabel.text = content.title
         self.subtitleLabel.text = content.expanded ? content.subtitle : ""
         self.amountPerMonth.text = content.amountPerMonth
-        self.percentPM.text = content.expanded ? content.percentPM : ""
-         self.loanPerMonth.text = content.expanded ? content.loanPerMonth : ""
-         self.percentString.text = content.expanded ? content.percentString : ""
+        self.percentPM.text = content.expanded ? content.percentPM : " "
+        self.loanPerMonth.text = content.expanded ? content.loanPerMonth : " "
+        self.percentString.text = content.expanded ? content.percentString : " "
+
 
     }
 }
