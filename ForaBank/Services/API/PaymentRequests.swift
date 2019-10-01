@@ -20,7 +20,7 @@ func allPaymentOptions(completionHandler: @escaping (Bool, [PaymentOption]?) -> 
         NetworkManager.shared().getCardList { (success, cards) in
             if success, let nonNilCards = cards {
                 let options = nonNilCards.compactMap({ (card) -> PaymentOption? in
-                    return PaymentOption(id: card.id, name: card.name, type: .card, sum: card.balance, number: card.number, maskedNumber: card.maskedNumber, provider: card.type?.rawValue ?? "")
+                    return PaymentOption(id: card.id, name: card.name, type: .paymentOption, sum: card.balance, number: card.number, maskedNumber: card.maskedNumber, provider: card.type?.rawValue ?? "")
                 })
                 paymentOptions.append(contentsOf: options)
             }
@@ -32,7 +32,7 @@ func allPaymentOptions(completionHandler: @escaping (Bool, [PaymentOption]?) -> 
         NetworkManager.shared().getDepos { (success, deposits) in
             if success, let nonNilDeposits = deposits {
                 let options = nonNilDeposits.compactMap({ (deposit) -> PaymentOption? in
-                    return PaymentOption(id: deposit.id, name: deposit.productName, type: .safeDeposit, sum: deposit.balance, number: deposit.accountNumber, maskedNumber: deposit.accountNumber, provider: deposit.productName)
+                    return PaymentOption(id: deposit.id, name: deposit.productName, type: .paymentOption, sum: deposit.balance, number: deposit.accountNumber, maskedNumber: deposit.accountNumber, provider: deposit.productName)
                 })
                 paymentOptions.append(contentsOf: options)
             }

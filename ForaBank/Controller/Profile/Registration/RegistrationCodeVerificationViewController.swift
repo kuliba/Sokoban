@@ -24,8 +24,13 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
     @IBOutlet weak var activityIndicator: ActivityIndicatorView?
 
     var segueId: String? = nil
-    var backSegueId: String? = nil
 
+    var operationSum: String?
+    var sourceOption: PaymentOption?
+    var destinationOption: PaymentOption?
+    var destinationNum: String?
+    
+    
     let gradientView = UIView()
     let circleView = UIView()
 //    var message: String? = nil
@@ -38,12 +43,15 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
 //            }
 //        }
 //    }
-
+    var backSegueId: String? = nil
     // MARK: - Actions
     @IBAction func backButtonCLicked(_ sender: Any) {
         view.endEditing(true)
         segueId = backSegueId
         self.navigationController?.popViewController(animated: true)
+        if navigationController == nil {
+            dismiss(animated: true, completion: nil)
+        }
     }
 
     @IBAction func authContinue(_ sender: Any) {
@@ -111,7 +119,7 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
             }
         }
     }
-    
+
     @IBAction func checkPaymentCode(_ sender: Any) {
         activityIndicator?.startAnimation()
         continueButton.isHidden = true
@@ -119,7 +127,7 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
             self?.continueButton.isHidden = false
             self?.activityIndicator?.stopAnimating()
             if success {
-                self?.performSegue(withIdentifier: "finish", sender: nil)
+//                self?.performSegue(withIdentifier: "finish", sender: nil)
             } else {
                 let alert = UIAlertController(title: "Неудача", message: "Неверный код", preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
@@ -320,6 +328,13 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
         if let vc = segue.destination as? RegistrationFinishViewController {
             segueId = "finish"
             vc.segueId = segueId
+        }
+        if segue.identifier == "toSuccess", let vc = segue.destination as? PaymentsDetailsSuccessViewController {
+
+            vc.sourceOption = sourceOption
+            vc.destinationOption = destinationOption
+            vc.operationSum = operationSum
+            vc.destinationNum = destinationNum
         }
     }
 }

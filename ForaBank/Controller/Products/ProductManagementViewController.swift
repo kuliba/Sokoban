@@ -64,11 +64,11 @@ class ProductManagementViewController: UITableViewController {
         ]
     }
 
-
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         tableView.hero.modifiers = nil
     }
+
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -111,13 +111,11 @@ class ProductManagementViewController: UITableViewController {
      */
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.item == 1 {
-            if let paymentVC = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentsDetailsViewController") as? PaymentsDetailsViewController {
-                let paymentOption = PaymentOption(product: self.product!)
-                paymentVC.sourcePaymentOption = paymentOption
-                present(paymentVC, animated: true) {
-                    store.dispatch(startPayment(withOption: paymentOption))
-                }
+            guard let product = self.product else {
+                return
             }
+            let paymentOption = PaymentOption(product: product)
+            store.dispatch(startPayment(sourceOption: paymentOption, destionationOption: nil))
             return
         }
         let alertVC = UIAlertController(title: "Функционал недоступен", message: "Функционал временно недоступен", preferredStyle: .alert)

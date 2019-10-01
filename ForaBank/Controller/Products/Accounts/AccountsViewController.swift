@@ -37,10 +37,10 @@ class AccountsViewController: UIViewController {
             tableView.reloadData()
             activityIndicatorView.stopAnimating()
             hiddenAccount()
-            
+
         }
     }
-    func hiddenAccount(){
+    func hiddenAccount() {
         if accounts.count == (0) {
             LabelNoProduct.isHidden = false
         }
@@ -51,7 +51,7 @@ class AccountsViewController: UIViewController {
 
         if (accounts == nil) {
             activityIndicatorView.startAnimation()
-                LabelNoProduct.isHidden = false
+            LabelNoProduct.isHidden = false
         }
     }
 
@@ -73,7 +73,7 @@ class AccountsViewController: UIViewController {
 
     }
 
-  
+
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
@@ -105,17 +105,13 @@ extension AccountsViewController: UITableViewDataSource, UITableViewDelegate {
             fatalError()
         }
 
-
-
         cell.titleLabel.text = accounts[indexPath.row].productName
         cell.subTitleLabel.text = maskedAccount(with: accounts[indexPath.row].accountNumber)
         cell.amountLabel.text = maskSum(sum: accounts[indexPath.row].balance)
         cell.currently.text = accounts[indexPath.row].currencyCode
         cell.bottomSeparatorView.isHidden = indexPath.row == accounts.endIndex - 1
 
-
         return cell
-
     }
 
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
@@ -145,16 +141,20 @@ extension AccountsViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let account = accounts[indexPath.item]
+
         let addToDepositAction = UITableViewRowAction(style: .normal, title: "Пополнить счет") { [weak self] action, indexPath in
-            self?.presentPaymentsDetailsViewController()
+            store.dispatch(startPayment(sourceOption: nil, destionationOption: PaymentOption(product: account)))
         }
         addToDepositAction.backgroundColor = UIColor(red: 26 / 255, green: 188 / 255, blue: 156 / 255, alpha: 1)
         return [addToDepositAction]
     }
 
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let sendAction = UIContextualAction(style: .normal, title: "Отправить") { [weak self] (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
-            self?.presentPaymentsDetailsViewController()
+        let account = accounts[indexPath.item]
+
+        let sendAction = UIContextualAction(style: .normal, title: "Отправить") { (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
+            store.dispatch(startPayment(sourceOption: PaymentOption(product: account), destionationOption: nil))
         }
         sendAction.backgroundColor = UIColor(red: 234 / 255, green: 68 / 255, blue: 6 / 255, alpha: 1)
         return UISwipeActionsConfiguration(actions: [sendAction])
@@ -162,6 +162,7 @@ extension AccountsViewController: UITableViewDataSource, UITableViewDelegate {
 }
 
 // MARK: - Private methods
+
 private extension AccountsViewController {
     func presentPaymentsDetailsViewController() {
         if let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentsDetailsViewController") as? PaymentsDetailsViewController {
@@ -171,6 +172,7 @@ private extension AccountsViewController {
 }
 
 // MARK: - Table View Set Up Private methods
+
 private extension AccountsViewController {
 
     func setUpTableView() {

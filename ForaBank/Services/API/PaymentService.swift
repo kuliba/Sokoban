@@ -11,6 +11,7 @@ import Alamofire
 
 class PaymentServices: PaymetsServiceProtocol {
     
+    
     private let baseURLString: String
     private var datedTransactions = [DatedTransactions]()
     
@@ -38,11 +39,15 @@ class PaymentServices: PaymetsServiceProtocol {
                     if let json = response.result.value as? Dictionary<String, Any>,
                         let data = json["data"] as? Array<Any> {
                         for cardData in data {
-                            if let cardData = cardData as? Dictionary<String, Any>{
-                                let name = cardData["name"] as? String
-                       
+                            if let cardData = cardData as? Dictionary<String, Any>,
+                                let operators = cardData["operators"] as? Array<Any>,
+                                let nameList = operators as? Dictionary<String, Any>,
+                                let value = nameList["value"] as? Array<Any>
+                            {
+                              
                                 
-                                let payment = Operations(name: name)
+                             
+                                    guard let payment = Operations.from(NSDictionary(dictionary: cardData)) else { return }
                                payments.append(payment)
                             }
                             print(payments)

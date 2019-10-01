@@ -12,3 +12,7 @@ protocol IAboutItem {
     var title: String { get }
     var value: String { get }
 }
+protocol ILoanSchedule {
+    var title: String { get }
+    var value: String { get }
+}

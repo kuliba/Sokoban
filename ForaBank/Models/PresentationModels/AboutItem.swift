@@ -17,3 +17,14 @@ class AboutItem: IAboutItem {
         self.value = value
     }
 }
+
+class LaonSchedules: ILoanSchedule {
+    var title: String
+    var value: String
+    
+
+    init(title: String, value: String) {
+        self.value = value
+        self.title = title
+    }
+}

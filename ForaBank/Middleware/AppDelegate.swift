@@ -11,15 +11,16 @@ import IQKeyboardManagerSwift
 import ReSwift
 import ReSwiftThunk
 import CryptoSwift
+import UserNotifications
 
 func appReducer(action: Action, state: State?) -> State {
-    return State(passcodeSignUpState: passcodeSignUpReducer(state: state?.passcodeSignUpState, action: action), authenticationState: authenticationReducer(state: state?.authenticationState, action: action), passcodeSignInState: passcodeSignInReducer(state: state?.passcodeSignInState, action: action), verificationCodeState: verificationCodeReducer(state: state?.verificationCodeState, action: action), paymentSource: nil, registrationState: registrationReducer(state: state?.registrationState, action: action))
+    return State(passcodeSignUpState: passcodeSignUpReducer(state: state?.passcodeSignUpState, action: action), authenticationState: authenticationReducer(state: state?.authenticationState, action: action), passcodeSignInState: passcodeSignInReducer(state: state?.passcodeSignInState, action: action), verificationCodeState: verificationCodeReducer(state: state?.verificationCodeState, action: action), productsState: productReducer(state: state?.productsState, action: action), registrationState: registrationReducer(state: state?.registrationState, action: action))
 }
 let thunkMiddleware: Middleware<State> = createThunksMiddleware()
 var store = Store<State>(reducer: appReducer, state: nil, middleware: [thunkMiddleware])
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+    class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // MARK: - Properties
     var window: UIWindow?
@@ -34,8 +35,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         IQKeyboardManager.shared.enable = true
 //        IQKeyboardManager.shared.layoutIfNeededOnUpdate = true
         store.dispatch(checkAuthCredentials)
+        registerForPushNotifications()
         return true
+        
+        
     }
+ 
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -64,6 +69,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
+    func registerForPushNotifications() {
+      UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) {
+        (granted, error) in
+        print("Permission granted: \(granted)")
+      }
+    }
+    func getNotificationSettings() {
+      UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+        print("Notification settings: \(settings)")
+        guard settings.authorizationStatus == .authorized else { return }
+        UIApplication.shared.registerForRemoteNotifications()
+      }
+    }
 }
 
 // MARK: - Private methods
@@ -87,8 +105,8 @@ private extension AppDelegate {
         ]
     }
 
-    
-    
+
+
     func setTextFieldAppearance() {
         UITextField.appearance().tintColor = .black
         UITextField.appearance().backgroundColor = UIColor(red: 0.889415, green: 0.889436, blue: 0.889424, alpha: 0.25)//UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1)//

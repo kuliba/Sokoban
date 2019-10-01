@@ -75,6 +75,8 @@ class PasscodeSignInViewController: UIViewController, StoreSubscriber {
     }
 }
 
+//MARK: - TOPasscodeViewControllerDelegate
+
 extension PasscodeSignInViewController: TOPasscodeViewControllerDelegate {
 
     func passcodeViewController(_ passcodeViewController: TOPasscodeViewController, isCorrectCode code: String) -> Bool {
