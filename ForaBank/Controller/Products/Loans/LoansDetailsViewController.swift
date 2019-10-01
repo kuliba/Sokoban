@@ -146,9 +146,8 @@ private extension LoansDetailsViewController {
             let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductAboutViewController") as? ProductAboutViewController
             managementVC?.items = loan?.getProductAbout()
             newViewController = managementVC
-            case 3:
-                     let managementVC = storyboard?.instantiateViewController(withIdentifier: "LoanPaymentScheduleController") as? LoanPaymentScheduleController
-                     managementVC.self
+             case 3:
+                     let managementVC = storyboard?.instantiateViewController(withIdentifier: "TableExpansionViewController") as? TableExpansionViewController
                      newViewController = managementVC
         default:
             newViewController = storyboard?.instantiateViewController(withIdentifier: "feedfeed\(index)")

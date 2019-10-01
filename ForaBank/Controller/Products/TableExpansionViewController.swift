@@ -24,7 +24,7 @@ class TableExpansionViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.tableFooterView = UIView() // Removes empty cell separators
-        tableView.estimatedRowHeight = 100
+        tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
         
         
@@ -87,6 +87,7 @@ class TableExpansionViewController: UIViewController {
 
 extension TableExpansionViewController : UITableViewDataSource, UITableViewDelegate {
 
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return datasource.count
     }
