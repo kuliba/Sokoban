@@ -19,10 +19,10 @@ class Loan {
     let Amount: Int?
     let accountID: String?
     let availableBalance: Double?
-    let id: String?
+    let loanID: Int!
     let currencyCode: String?
     let branch: String?
-    init(Amount: Int? = nil, currencyCode: String? = nil, principalDebt: Double? = nil, userAnnual: Double? = nil, branchBrief: String? = nil, ownerAgentBrief: String? = nil, accountNumber: String? = nil, accountID: String? = nil, customName: String? = nil, accountList: String? = nil, number: String? = nil, blocked: Bool? = nil, DateValue: String? = nil, expirationDate: Date? = nil, availableBalance: Double? = nil, blockedMoney: Double? = nil, updatingDate: Date? = nil, tariff: String? = nil, id: String? = nil, branch: String? = nil, maskedNumber: String? = nil) {
+    init(Amount: Int? = nil, currencyCode: String? = nil, principalDebt: Double? = nil, userAnnual: Double? = nil, branchBrief: String? = nil, ownerAgentBrief: String? = nil, accountNumber: String? = nil, accountID: String? = nil, customName: String? = nil, accountList: String? = nil, number: String? = nil, blocked: Bool? = nil, DateValue: String? = nil, expirationDate: Date? = nil, availableBalance: Double? = nil, blockedMoney: Double? = nil, updatingDate: Date? = nil, tariff: String? = nil, loanID: Int! = nil, branch: String? = nil, maskedNumber: String? = nil) {
         self.dateValue = DateValue
 
         self.userAnnual = userAnnual
@@ -37,7 +37,7 @@ class Loan {
         self.number = number
         self.blocked = blocked
         self.availableBalance = availableBalance
-        self.id = id
+        self.loanID = loanID
         self.branch = branch
 
     }
