@@ -14,7 +14,12 @@ class PagerView: UIView {
     @IBOutlet weak var contentView: UIView!
 
     @IBOutlet weak var pagerView: FSPagerView!
-    @IBOutlet weak var pageControl: FSPageControl!
+    @IBOutlet weak var pageControl: FSPageControl! {
+        didSet {
+            self.pageControl.numberOfPages = 3//self.imageNames.count
+            self.pageControl.contentInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
+        }
+    }
 
     // MARK: - Live Cycle
 
@@ -35,12 +40,8 @@ class PagerView: UIView {
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
         self.pagerView.register(UINib(nibName: String(describing: TextFieldPagerViewCell.self), bundle: nil), forCellWithReuseIdentifier: String(describing: TextFieldPagerViewCell.self))
+        self.pagerView.register(UINib(nibName: String(describing: MenuPagerViewCell.self), bundle: nil), forCellWithReuseIdentifier: String(describing: MenuPagerViewCell.self))
         self.pagerView.itemSize = FSPagerView.automaticSize
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
-            self.pageControl.numberOfPages = 3//self.imageNames.count
-            self.pageControl.contentInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
-        }
 
     }
 }
@@ -54,7 +55,13 @@ extension PagerView: FSPagerViewDelegate, FSPagerViewDataSource {
     }
 
     public func pagerView(_ pagerView: FSPagerView, cellForItemAt index: Int) -> FSPagerViewCell {
-        let cell = pagerView.dequeueReusableCell(withReuseIdentifier: String(describing: TextFieldPagerViewCell.self), at: index)
+        var cell = pagerView.dequeueReusableCell(withReuseIdentifier: String(describing: TextFieldPagerViewCell.self), at: index)
+
+        if index == 2 {
+            let mCell = pagerView.dequeueReusableCell(withReuseIdentifier: String(describing: MenuPagerViewCell.self), at: index) as? MenuPagerViewCell
+            mCell?.titleLabel.text = "Выбрать из контактов"
+            cell = mCell ?? FSPagerViewCell()
+        }
         return cell
     }
 

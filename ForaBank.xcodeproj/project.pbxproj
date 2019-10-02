@@ -231,6 +231,8 @@
 		BD35E82723439A3B0016BA0D /* PagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD35E82623439A3B0016BA0D /* PagerView.swift */; };
 		BD35E82B23439AF60016BA0D /* PagerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD35E82A23439AF60016BA0D /* PagerView.xib */; };
 		BD38198E232104430004728C /* productsData.plist in Resources */ = {isa = PBXBuildFile; fileRef = BD38198D232104430004728C /* productsData.plist */; };
+		BD49E6522344D30D0031561F /* MenuPagerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD49E6502344D30D0031561F /* MenuPagerViewCell.swift */; };
+		BD49E6532344D30D0031561F /* MenuPagerViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD49E6512344D30D0031561F /* MenuPagerViewCell.xib */; };
 		BD5170A92332135E001EAFC0 /* VerificationCodeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170A82332135E001EAFC0 /* VerificationCodeState.swift */; };
 		BD5170AB2332250C001EAFC0 /* VerificationCodeReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170AA2332250C001EAFC0 /* VerificationCodeReducer.swift */; };
 		BD5170AD233229F4001EAFC0 /* VerificationCodeActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170AC233229F4001EAFC0 /* VerificationCodeActions.swift */; };
@@ -502,6 +504,8 @@
 		BD35E82623439A3B0016BA0D /* PagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerView.swift; sourceTree = "<group>"; };
 		BD35E82A23439AF60016BA0D /* PagerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PagerView.xib; sourceTree = "<group>"; };
 		BD38198D232104430004728C /* productsData.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = productsData.plist; sourceTree = "<group>"; };
+		BD49E6502344D30D0031561F /* MenuPagerViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuPagerViewCell.swift; sourceTree = "<group>"; };
+		BD49E6512344D30D0031561F /* MenuPagerViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MenuPagerViewCell.xib; sourceTree = "<group>"; };
 		BD5170A82332135E001EAFC0 /* VerificationCodeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeState.swift; sourceTree = "<group>"; };
 		BD5170AA2332250C001EAFC0 /* VerificationCodeReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeReducer.swift; sourceTree = "<group>"; };
 		BD5170AC233229F4001EAFC0 /* VerificationCodeActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeActions.swift; sourceTree = "<group>"; };
@@ -1072,10 +1076,11 @@
 		A5B473C221B3C09800F2E41F /* Payments */ = {
 			isa = PBXGroup;
 			children = (
-				A5B473C321B3C0D200F2E41F /* RemittanceOptionView.swift */,
-				BDFE1B15233D085400C49A5B /* Cells */,
 				BD35E82623439A3B0016BA0D /* PagerView.swift */,
+				A5B473C321B3C0D200F2E41F /* RemittanceOptionView.swift */,
 				BD35E82A23439AF60016BA0D /* PagerView.xib */,
+				BDFE1B15233D085400C49A5B /* Cells */,
+				BD49E64F2344D20E0031561F /* PagerCells */,
 			);
 			path = Payments;
 			sourceTree = "<group>";
@@ -1116,6 +1121,17 @@
 				BDFE5D9B233511EB0027A716 /* URLs.swift */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		BD49E64F2344D20E0031561F /* PagerCells */ = {
+			isa = PBXGroup;
+			children = (
+				BD35E82223438DC40016BA0D /* TextFieldPagerViewCell.swift */,
+				BD35E82323438DC40016BA0D /* TextFieldPagerViewCell.xib */,
+				BD49E6502344D30D0031561F /* MenuPagerViewCell.swift */,
+				BD49E6512344D30D0031561F /* MenuPagerViewCell.xib */,
+			);
+			path = PagerCells;
 			sourceTree = "<group>";
 		};
 		BD6D5672233A0B2C00B7CF4B /* Zones */ = {
@@ -1230,8 +1246,6 @@
 			children = (
 				BDFE1B07233CA6FE00C49A5B /* DropDownTableViewCell.swift */,
 				BDFE1B08233CA6FE00C49A5B /* DropDownTableViewCell.xib */,
-				BD35E82223438DC40016BA0D /* TextFieldPagerViewCell.swift */,
-				BD35E82323438DC40016BA0D /* TextFieldPagerViewCell.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -1348,6 +1362,7 @@
 				09F2410621707B7B007B7D73 /* FeedInfo2Cell.xib in Resources */,
 				09203D8B216CC19900902BD2 /* AuthorizedZone.storyboard in Resources */,
 				BD35E82B23439AF60016BA0D /* PagerView.xib in Resources */,
+				BD49E6532344D30D0031561F /* MenuPagerViewCell.xib in Resources */,
 				BDFE1B0E233CE7BD00C49A5B /* PickerViewController.xib in Resources */,
 				093B8636216224CC008A5222 /* ServicesHeader.xib in Resources */,
 				0930F17D215B78B000CFB593 /* Roboto-BoldItalic.ttf in Resources */,
@@ -1556,6 +1571,7 @@
 				0930F16C215B704A00CFB593 /* CircularImageView.swift in Sources */,
 				BD5170AD233229F4001EAFC0 /* VerificationCodeActions.swift in Sources */,
 				A5C5E6E821A2B49A001D6250 /* OptionPickerButton.swift in Sources */,
+				BD49E6522344D30D0031561F /* MenuPagerViewCell.swift in Sources */,
 				09AF7093216F73FD00E7FCFC /* FeedCurrent5Cell.swift in Sources */,
 				096B4F58218704AA00C69E52 /* DepositsCardsDetailsStatementViewController.swift in Sources */,
 				A5C5E6DA21A2B40A001D6250 /* DepositsCardsListViewController.swift in Sources */,

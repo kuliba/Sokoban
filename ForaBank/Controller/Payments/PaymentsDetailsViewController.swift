@@ -14,7 +14,6 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
     // MARK: - Properties
     @IBOutlet weak var sourcePagerView: PagerView!
     
-    @IBOutlet weak var optionsTable: UITableView!
     @IBOutlet weak var picker: UIView!
     @IBOutlet weak var pickerImageView: UIImageView!
     @IBOutlet weak var sumTextField: UITextField!
