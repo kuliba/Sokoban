@@ -783,40 +783,27 @@
 		09E0F133215A618E0042FB6A /* View */ = {
 			isa = PBXGroup;
 			children = (
-				A5B473C221B3C09800F2E41F /* Payments */,
-				89C8DF0F2191AE7A00D92B0A /* Deposits */,
-				09203D92216E136300902BD2 /* Feed */,
-				A55B7B8921AA70A600A8A7FE /* Profile */,
-				A568142221CBCD1C002C0899 /* Services */,
-				A5C5E6E721A2B49A001D6250 /* OptionPickerButton.swift */,
 				A5004D3021EF37DC0098E510 /* ActivityIndicatorView.swift */,
-				A55663A321EDB22600E48C40 /* OnMapButton.swift */,
-				0930F165215B5CDB00CFB593 /* RoundedEdgeView.swift */,
-				A55663A121EC6B3300E48C40 /* MaskedNavigationBar.swift */,
-				0939B5FA21774EA70029F03D /* DoubleRoundedEdgeView.swift */,
+				097A6DCB21884B6D00E6C69E /* ButtonRounded.swift */,
+				09BE35F0218C729C00EA7B24 /* ButtonRoundedBordered.swift */,
+				09F0E5CC2179DC3B0016BB6E /* CardView.swift */,
+				0930F16B215B704A00CFB593 /* CircularImageView.swift */,
 				09E0F145215A68DC0042FB6A /* CustomTabBar.swift */,
 				09E0F147215A69310042FB6A /* CustomTabBarItem.swift */,
-				0930F169215B6CB800CFB593 /* GradientView.swift */,
-				0930F16B215B704A00CFB593 /* CircularImageView.swift */,
-				09D3C03F215CE5D100998F57 /* DialogCell.swift */,
-				09D3C040215CE5D100998F57 /* DialogCell.xib */,
-				09D3C03B215CD03E00998F57 /* SearchCell.swift */,
-				09D3C03C215CD03E00998F57 /* SearchCell.xib */,
 				09D3C04B215E5AE800998F57 /* CustomTableView.swift */,
-				093B862D21620B1F008A5222 /* ServicesSearchCell.swift */,
-				093B862B216209B0008A5222 /* ServicesSearchCell.xib */,
-				093B862F21620EE8008A5222 /* ServicesCell.swift */,
-				093B863021620EE8008A5222 /* ServicesCell.xib */,
-				093B8633216224C3008A5222 /* ServicesHeader.swift */,
-				093B8635216224CC008A5222 /* ServicesHeader.xib */,
-				096BCB08216361AA005BC02B /* PaymentTemplateCell.swift */,
-				096BCB09216361AA005BC02B /* PaymentTemplateCell.xib */,
-				096BCB0C21637E27005BC02B /* PaymentCell.swift */,
-				096BCB0D21637E27005BC02B /* PaymentCell.xib */,
-				09F0E5CC2179DC3B0016BB6E /* CardView.swift */,
-				097A6DCB21884B6D00E6C69E /* ButtonRounded.swift */,
+				0939B5FA21774EA70029F03D /* DoubleRoundedEdgeView.swift */,
+				0930F169215B6CB800CFB593 /* GradientView.swift */,
 				09BE35EE218C726800EA7B24 /* GradientView2.swift */,
-				09BE35F0218C729C00EA7B24 /* ButtonRoundedBordered.swift */,
+				A55663A121EC6B3300E48C40 /* MaskedNavigationBar.swift */,
+				A55663A321EDB22600E48C40 /* OnMapButton.swift */,
+				A5C5E6E721A2B49A001D6250 /* OptionPickerButton.swift */,
+				0930F165215B5CDB00CFB593 /* RoundedEdgeView.swift */,
+				BD49E6542344F6910031561F /* Cells */,
+				89C8DF0F2191AE7A00D92B0A /* Deposits */,
+				09203D92216E136300902BD2 /* Feed */,
+				A5B473C221B3C09800F2E41F /* Payments */,
+				A55B7B8921AA70A600A8A7FE /* Profile */,
+				A568142221CBCD1C002C0899 /* Services */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1132,6 +1119,27 @@
 				BD49E6512344D30D0031561F /* MenuPagerViewCell.xib */,
 			);
 			path = PagerCells;
+			sourceTree = "<group>";
+		};
+		BD49E6542344F6910031561F /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				09D3C03F215CE5D100998F57 /* DialogCell.swift */,
+				09D3C040215CE5D100998F57 /* DialogCell.xib */,
+				09D3C03B215CD03E00998F57 /* SearchCell.swift */,
+				09D3C03C215CD03E00998F57 /* SearchCell.xib */,
+				093B862D21620B1F008A5222 /* ServicesSearchCell.swift */,
+				093B862B216209B0008A5222 /* ServicesSearchCell.xib */,
+				093B862F21620EE8008A5222 /* ServicesCell.swift */,
+				093B863021620EE8008A5222 /* ServicesCell.xib */,
+				093B8633216224C3008A5222 /* ServicesHeader.swift */,
+				093B8635216224CC008A5222 /* ServicesHeader.xib */,
+				096BCB08216361AA005BC02B /* PaymentTemplateCell.swift */,
+				096BCB09216361AA005BC02B /* PaymentTemplateCell.xib */,
+				096BCB0C21637E27005BC02B /* PaymentCell.swift */,
+				096BCB0D21637E27005BC02B /* PaymentCell.xib */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		BD6D5672233A0B2C00B7CF4B /* Zones */ = {
