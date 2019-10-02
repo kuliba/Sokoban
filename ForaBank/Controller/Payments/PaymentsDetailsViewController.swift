@@ -12,7 +12,8 @@ import ReSwift
 class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
 
     // MARK: - Properties
-
+    @IBOutlet weak var sourcePagerView: PagerView!
+    
     @IBOutlet weak var optionsTable: UITableView!
     @IBOutlet weak var picker: UIView!
     @IBOutlet weak var pickerImageView: UIImageView!
@@ -92,7 +93,7 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
             self.destinationPaymentOptions = paymentOptions
             self.sourcePaymentOptions = paymentOptions
             DispatchQueue.main.async {
-                self.optionsTable.reloadData()
+                //self.optionsTable.reloadData()
                 self.activityIndicator.stopAnimating()
             }
         }
@@ -128,12 +129,12 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
             selectedDestinationPaymentOption = defaultDestinationPaymentOption
         }
 
-        optionsTable.reloadData()
+        //optionsTable.reloadData()
 //        setUpRemittanceViews()
     }
 
     private func setUpLayout() {
-        optionsTable.register(UINib(nibName: String(describing: DropDownTableViewCell.self), bundle: nil), forCellReuseIdentifier: String(describing: DropDownTableViewCell.self))
+        //optionsTable.register(UINib(nibName: String(describing: DropDownTableViewCell.self), bundle: nil), forCellReuseIdentifier: String(describing: DropDownTableViewCell.self))
 
         activityIndicator.center = view.center
         view.addSubview(activityIndicator)

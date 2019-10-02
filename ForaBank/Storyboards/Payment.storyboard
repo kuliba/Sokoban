@@ -110,7 +110,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="30"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Перевод" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4du-DO-k3Q">
-                                        <rect key="frame" x="127" y="8" width="66" height="22"/>
+                                        <rect key="frame" x="127" y="8.5" width="66" height="21.5"/>
                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -146,22 +146,48 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X2I-VJ-MYg" customClass="DoubleRoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="320" height="220"/>
                                                 <subviews>
-                                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="iav-NR-6E0">
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LTJ-Hn-8tn">
                                                         <rect key="frame" x="15" y="50" width="290" height="120"/>
+                                                        <subviews>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f9s-h8-3Nc" customClass="PagerView" customModule="ForaBank" customModuleProvider="target">
+                                                                <rect key="frame" x="0.0" y="0.0" width="290" height="59.5"/>
+                                                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                            </view>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0a3-3Z-548">
+                                                                <rect key="frame" x="25" y="59.5" width="240" height="1"/>
+                                                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="1" id="3Bf-ow-5dE"/>
+                                                                </constraints>
+                                                            </view>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g1p-TJ-nON" customClass="PagerView" customModule="ForaBank" customModuleProvider="target">
+                                                                <rect key="frame" x="0.0" y="60.5" width="290" height="59.5"/>
+                                                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                            </view>
+                                                        </subviews>
                                                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                                        <connections>
-                                                            <outlet property="dataSource" destination="afX-Am-FVA" id="naO-7E-G2X"/>
-                                                            <outlet property="delegate" destination="afX-Am-FVA" id="3Gf-We-HNz"/>
-                                                        </connections>
-                                                    </tableView>
+                                                        <constraints>
+                                                            <constraint firstAttribute="trailing" secondItem="g1p-TJ-nON" secondAttribute="trailing" id="BRO-Rw-vCl"/>
+                                                            <constraint firstItem="f9s-h8-3Nc" firstAttribute="leading" secondItem="LTJ-Hn-8tn" secondAttribute="leading" id="G19-ka-piS"/>
+                                                            <constraint firstAttribute="trailing" secondItem="0a3-3Z-548" secondAttribute="trailing" constant="25" id="TRm-kh-kC6"/>
+                                                            <constraint firstAttribute="bottom" secondItem="g1p-TJ-nON" secondAttribute="bottom" id="W5S-63-76w"/>
+                                                            <constraint firstAttribute="trailing" secondItem="f9s-h8-3Nc" secondAttribute="trailing" id="b2A-4O-qpD"/>
+                                                            <constraint firstItem="0a3-3Z-548" firstAttribute="centerY" secondItem="LTJ-Hn-8tn" secondAttribute="centerY" id="eTy-ot-m73"/>
+                                                            <constraint firstItem="g1p-TJ-nON" firstAttribute="leading" secondItem="LTJ-Hn-8tn" secondAttribute="leading" id="ide-Nl-gpq"/>
+                                                            <constraint firstItem="f9s-h8-3Nc" firstAttribute="top" secondItem="LTJ-Hn-8tn" secondAttribute="top" id="q5x-MF-E25"/>
+                                                            <constraint firstItem="0a3-3Z-548" firstAttribute="leading" secondItem="LTJ-Hn-8tn" secondAttribute="leading" constant="25" id="sH6-TC-nsy"/>
+                                                            <constraint firstItem="g1p-TJ-nON" firstAttribute="top" secondItem="0a3-3Z-548" secondAttribute="bottom" id="vUh-jB-m91"/>
+                                                            <constraint firstItem="0a3-3Z-548" firstAttribute="top" secondItem="f9s-h8-3Nc" secondAttribute="bottom" id="xnJ-VM-p6E"/>
+                                                        </constraints>
+                                                    </view>
                                                 </subviews>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstItem="iav-NR-6E0" firstAttribute="leading" secondItem="X2I-VJ-MYg" secondAttribute="leading" constant="15" id="01A-jP-xUX"/>
                                                     <constraint firstAttribute="height" constant="220" id="1LI-mb-kTr"/>
-                                                    <constraint firstItem="iav-NR-6E0" firstAttribute="top" secondItem="X2I-VJ-MYg" secondAttribute="top" constant="50" id="MtZ-jY-IZn"/>
-                                                    <constraint firstAttribute="bottom" secondItem="iav-NR-6E0" secondAttribute="bottom" constant="50" id="Oe1-Al-gq4"/>
-                                                    <constraint firstAttribute="trailing" secondItem="iav-NR-6E0" secondAttribute="trailing" constant="15" id="PKd-95-zog"/>
+                                                    <constraint firstItem="LTJ-Hn-8tn" firstAttribute="top" secondItem="X2I-VJ-MYg" secondAttribute="top" constant="50" id="3cG-RJ-yvi"/>
+                                                    <constraint firstAttribute="trailing" secondItem="LTJ-Hn-8tn" secondAttribute="trailing" constant="15" id="Ahj-xC-oil"/>
+                                                    <constraint firstAttribute="bottom" secondItem="LTJ-Hn-8tn" secondAttribute="bottom" constant="50" id="LFS-uI-ejm"/>
+                                                    <constraint firstItem="LTJ-Hn-8tn" firstAttribute="leading" secondItem="X2I-VJ-MYg" secondAttribute="leading" constant="15" id="mEV-a1-0fh"/>
                                                 </constraints>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Назначение платежа" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="acb-0g-hZM">
@@ -323,18 +349,18 @@
                     <size key="freeformSize" width="320" height="568"/>
                     <connections>
                         <outlet property="containterView" destination="7jF-kB-QvE" id="4oP-n4-FsA"/>
-                        <outlet property="optionsTable" destination="iav-NR-6E0" id="M53-1X-Sbc"/>
                         <outlet property="picker" destination="cOr-dw-QEx" id="E3P-CW-lAq"/>
                         <outlet property="pickerButton" destination="kfC-FM-FXM" id="PUa-To-1Iv"/>
                         <outlet property="pickerImageView" destination="IBa-Pg-g1h" id="lJr-Yw-yik"/>
                         <outlet property="pickerLabel" destination="XCt-5D-j6q" id="a3E-CI-EBb"/>
+                        <outlet property="sourcePagerView" destination="f9s-h8-3Nc" id="TXt-Cw-Lgd"/>
                         <outlet property="sumTextField" destination="2cO-cF-Vnw" id="FFJ-Vb-Cd2"/>
                         <segue destination="Xda-th-p6I" kind="show" identifier="fromPaymentToPaymentVerification" id="cst-cx-Cgc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UFN-wo-miF" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2925" y="1037.323943661972"/>
+            <point key="canvasLocation" x="2981" y="1038"/>
         </scene>
         <!--Option Picker View Controller-->
         <scene sceneID="buM-zJ-7Md">
@@ -509,7 +535,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gjU-dn-lu1" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3724" y="1038"/>
+            <point key="canvasLocation" x="3728" y="1038"/>
         </scene>
         <!--Payments Details Success View Controller-->
         <scene sceneID="Qmn-ro-rR4">

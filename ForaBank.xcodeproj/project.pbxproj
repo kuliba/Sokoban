@@ -226,6 +226,10 @@
 		BD21B670233915FD001C5CF7 /* Registration.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD21B66F233915FD001C5CF7 /* Registration.storyboard */; };
 		BD21B67223391C63001C5CF7 /* UnauthorizedZone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD21B67123391C63001C5CF7 /* UnauthorizedZone.storyboard */; };
 		BD21B67423391DE3001C5CF7 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD21B67323391DE3001C5CF7 /* Router.swift */; };
+		BD35E82423438DC40016BA0D /* TextFieldPagerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD35E82223438DC40016BA0D /* TextFieldPagerViewCell.swift */; };
+		BD35E82523438DC40016BA0D /* TextFieldPagerViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD35E82323438DC40016BA0D /* TextFieldPagerViewCell.xib */; };
+		BD35E82723439A3B0016BA0D /* PagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD35E82623439A3B0016BA0D /* PagerView.swift */; };
+		BD35E82B23439AF60016BA0D /* PagerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD35E82A23439AF60016BA0D /* PagerView.xib */; };
 		BD38198E232104430004728C /* productsData.plist in Resources */ = {isa = PBXBuildFile; fileRef = BD38198D232104430004728C /* productsData.plist */; };
 		BD5170A92332135E001EAFC0 /* VerificationCodeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170A82332135E001EAFC0 /* VerificationCodeState.swift */; };
 		BD5170AB2332250C001EAFC0 /* VerificationCodeReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170AA2332250C001EAFC0 /* VerificationCodeReducer.swift */; };
@@ -493,6 +497,10 @@
 		BD21B66F233915FD001C5CF7 /* Registration.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Registration.storyboard; sourceTree = "<group>"; };
 		BD21B67123391C63001C5CF7 /* UnauthorizedZone.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = UnauthorizedZone.storyboard; sourceTree = "<group>"; };
 		BD21B67323391DE3001C5CF7 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		BD35E82223438DC40016BA0D /* TextFieldPagerViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldPagerViewCell.swift; sourceTree = "<group>"; };
+		BD35E82323438DC40016BA0D /* TextFieldPagerViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TextFieldPagerViewCell.xib; sourceTree = "<group>"; };
+		BD35E82623439A3B0016BA0D /* PagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerView.swift; sourceTree = "<group>"; };
+		BD35E82A23439AF60016BA0D /* PagerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PagerView.xib; sourceTree = "<group>"; };
 		BD38198D232104430004728C /* productsData.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = productsData.plist; sourceTree = "<group>"; };
 		BD5170A82332135E001EAFC0 /* VerificationCodeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeState.swift; sourceTree = "<group>"; };
 		BD5170AA2332250C001EAFC0 /* VerificationCodeReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeReducer.swift; sourceTree = "<group>"; };
@@ -1066,6 +1074,8 @@
 			children = (
 				A5B473C321B3C0D200F2E41F /* RemittanceOptionView.swift */,
 				BDFE1B15233D085400C49A5B /* Cells */,
+				BD35E82623439A3B0016BA0D /* PagerView.swift */,
+				BD35E82A23439AF60016BA0D /* PagerView.xib */,
 			);
 			path = Payments;
 			sourceTree = "<group>";
@@ -1220,6 +1230,8 @@
 			children = (
 				BDFE1B07233CA6FE00C49A5B /* DropDownTableViewCell.swift */,
 				BDFE1B08233CA6FE00C49A5B /* DropDownTableViewCell.xib */,
+				BD35E82223438DC40016BA0D /* TextFieldPagerViewCell.swift */,
+				BD35E82323438DC40016BA0D /* TextFieldPagerViewCell.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -1325,6 +1337,7 @@
 				0930F182215B78B000CFB593 /* Roboto-MediumItalic.ttf in Resources */,
 				0930F181215B78B000CFB593 /* Roboto-Medium.ttf in Resources */,
 				0930F180215B78B000CFB593 /* Roboto-LightItalic.ttf in Resources */,
+				BD35E82523438DC40016BA0D /* TextFieldPagerViewCell.xib in Resources */,
 				0930F183215B78B000CFB593 /* Roboto-Regular.ttf in Resources */,
 				09C7C33C2175FADE000EE472 /* DepositsHistoryHeader.xib in Resources */,
 				0930F17F215B78B000CFB593 /* Roboto-Light.ttf in Resources */,
@@ -1334,6 +1347,7 @@
 				0930F17E215B78B000CFB593 /* Roboto-Italic.ttf in Resources */,
 				09F2410621707B7B007B7D73 /* FeedInfo2Cell.xib in Resources */,
 				09203D8B216CC19900902BD2 /* AuthorizedZone.storyboard in Resources */,
+				BD35E82B23439AF60016BA0D /* PagerView.xib in Resources */,
 				BDFE1B0E233CE7BD00C49A5B /* PickerViewController.xib in Resources */,
 				093B8636216224CC008A5222 /* ServicesHeader.xib in Resources */,
 				0930F17D215B78B000CFB593 /* Roboto-BoldItalic.ttf in Resources */,
@@ -1511,6 +1525,7 @@
 				09E2141F21873DCA00D16D21 /* DepositsCardsDetailsStatementDetailsViewController.swift in Sources */,
 				A5C5C03C21B66485005D6B8F /* BubbleDetailedStatsView.swift in Sources */,
 				A55B7B9021AAAAB300A8A7FE /* ChatMessagesTransferRequestTableViewCell.swift in Sources */,
+				BD35E82423438DC40016BA0D /* TextFieldPagerViewCell.swift in Sources */,
 				A55B7B5721A5866F00A8A7FE /* UIImage+GIF.swift in Sources */,
 				A5004D3321EF56CF0098E510 /* CardBank.swift in Sources */,
 				09C7C31221749151000EE472 /* DepositsObligationsCell.swift in Sources */,
@@ -1625,6 +1640,7 @@
 				A51AF85221EA09E600FB3B68 /* TestRegService.swift in Sources */,
 				A5C5E6E521A2B492001D6250 /* CardActionRoundedButton.swift in Sources */,
 				09AF707B216F4B5000E7FCFC /* FeedUpcomingCell.swift in Sources */,
+				BD35E82723439A3B0016BA0D /* PagerView.swift in Sources */,
 				09E0F148215A69310042FB6A /* CustomTabBarItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
