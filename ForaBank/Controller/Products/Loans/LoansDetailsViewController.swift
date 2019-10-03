@@ -12,7 +12,7 @@ import DeviceKit
 
 protocol ITabLoansDetailViewController {
     func set(loan: Loan?)
-    func set(loanSchedule: LoanScheduleModel?)
+    func set(loanSchedule: LaonSchedules?)
 }
 
 
@@ -27,7 +27,7 @@ class LoansDetailsViewController: UIViewController {
     @IBOutlet weak var contentViewTop: NSLayoutConstraint!
     var previousIndex = -1
     var loan: Loan? = nil
-    var loanPayment: LoanScheduleModel? = nil
+    var loanPayment: LaonSchedules? = nil
     weak var currentViewController: UIViewController?
     var previousOffset: CGFloat = 0
     var items = ["Управление", "История", "О счете", "График платежей"]

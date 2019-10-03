@@ -18,9 +18,20 @@ protocol AuthServiceProtocol {
                  login: String,
                  password: String,
                  completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void)
+    func prepareResetPassword(headers: HTTPHeaders,
+    login: String,
+    completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void)
+    func newPasswordReset(headers: HTTPHeaders,
+      password: String,
+      completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void)
+     
+    
     func checkVerificationCode(headers: HTTPHeaders,
                                code: String,
                                completionHandler: @escaping (_ success: Bool) -> Void)
+    func checkCodeResetPassword(headers: HTTPHeaders,
+    code: String,
+    completionHandler: @escaping (_ success: Bool) -> Void)
     func makeCard2Card(headers: HTTPHeaders,
                        code: String,
                        completionHandler: @escaping (_ success: Bool) -> Void)
@@ -176,10 +187,50 @@ class NetworkManager {
             }
         }
     }
+    func prepareResetPassword(login: String,
+               completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void) {
+        authService.csrf(headers: headers) { [unowned self] (success, newHeaders) in
+            if success {
+                self.headers.merge(newHeaders ?? [:], uniquingKeysWith: { (_, k2) -> String in
+                    return k2
+                })
+                self.authService.prepareResetPassword(headers: self.headers,
+                                                      login: login,
+                                         completionHandler: { (success, errorMessage) in
+                                             completionHandler(success, errorMessage)
+                                         })
+            }
+            else {
+                completionHandler(false, nil)
+            }
+        }
+    }
+    func newPasswordReset(password: String,
+                  completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void) {
+           authService.csrf(headers: headers) { [unowned self] (success, newHeaders) in
+               if success {
+                   self.headers.merge(newHeaders ?? [:], uniquingKeysWith: { (_, k2) -> String in
+                       return k2
+                   })
+                   self.authService.newPasswordReset(headers: self.headers,
+                                                         password: password,
+                                            completionHandler: { (success, errorMessage) in
+                                                completionHandler(success, errorMessage)
+                                            })
+               }
+               else {
+                   completionHandler(false, nil)
+               }
+           }
+       }
 
     func checkVerificationCode(code: String,
                                completionHandler: @escaping (_ success: Bool) -> Void) {
         authService.checkVerificationCode(headers: self.headers, code: code, completionHandler: completionHandler)
+    }
+    func checkCodeResetPassword(code: String,
+                               completionHandler: @escaping (_ success: Bool) -> Void) {
+        authService.checkCodeResetPassword(headers: self.headers, code: code, completionHandler: completionHandler)
     }
     func makeCard2Card(code: String,
                        completionHandler: @escaping (_ success: Bool) -> Void) {

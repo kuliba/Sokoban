@@ -10,6 +10,17 @@ import Foundation
 import Alamofire
 
 class TestAuthService: AuthServiceProtocol {
+    func newPasswordReset(headers: HTTPHeaders, password: String, completionHandler: @escaping (Bool, String?) -> Void) {
+        
+    }
+    
+    func checkCodeResetPassword(headers: HTTPHeaders, code: String, completionHandler: @escaping (Bool) -> Void) {
+    
+    }
+    
+    func prepareResetPassword(headers: HTTPHeaders, login: String, completionHandler: @escaping (Bool, String?) -> Void) {
+    }
+    
     func makeCard2Card(headers: HTTPHeaders, code: String, completionHandler: @escaping (Bool) -> Void) {
         
     }

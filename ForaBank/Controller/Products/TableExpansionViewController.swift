@@ -13,37 +13,24 @@ class TableExpansionViewController: UIViewController {
     @IBOutlet var tableView: UITableView!
     var datasource = [ExpandingTableViewCellContent]()
 
+  
     var items = [LaonSchedules]()
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-     
-    }
-    var loan = [Loan]() {
-        didSet {
-            tableView.reloadData()
-        }
-    }
-    var loanPayment = [LaonSchedules]() {
-           didSet {
-               tableView.reloadData()
-        
-               
-           }
-       }
-    override func viewDidAppear(_ animated: Bool) {
-              super.viewDidAppear(animated)
-              NetworkManager.shared().getLoans { (success, loans) in
-                  if success {
-                      self.loan = loans ?? []
-                  }
-              }
-            NetworkManager.shared().getLoansPayment { (success, loanPayment) in
-                         if success {
-                             self.loanPayment = loanPayment ?? []
+  
+ 
+
+        func viewDidAppear(_ animated: Bool) {
+                  super.viewDidAppear(animated)
+            NetworkManager.shared().getLoansPayment { (success, items) in
+                             if success {
+                                 self.items = items ?? []
+                             }
                          }
-                     }
-          }
+              }
+    }
+
  
     override func viewDidLoad() {
         super.viewDidLoad()

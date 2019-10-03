@@ -10,7 +10,7 @@ import UIKit
 import Hero
 import RMMapper
 
-class SignInViewController: UIViewController {
+class PrepareResetPassword: UIViewController {
 
     @IBOutlet weak var loginTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
@@ -29,25 +29,34 @@ class SignInViewController: UIViewController {
         segueId = backSegueId
         navigationController?.popViewController(animated: true)
     }
-     @IBAction  func tappedButton(sender: UIButton!) {
-        performSegue(withIdentifier: "smsResetPassword", sender: nil)
-    }
+   
 
-    @IBAction func signInButtonClicked() {
-        NetworkManager.shared().login(login: self.loginTextField.text ?? "",
-                                      password: self.passwordTextField.text ?? "",
-                                      completionHandler: { [unowned self] success, errorMessage in
-                                          if success {
-                                              self.performSegue(withIdentifier: "smsVerification", sender: self)
-                                              store.dispatch(createCredentials(login: self.loginTextField.text ?? "", pwd: self.passwordTextField.text ?? ""))
-                                          } else {
-                                              let alert = UIAlertController(title: "Неудача", message: errorMessage, preferredStyle: UIAlertController.Style.alert)
-                                              alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-                                              self.present(alert, animated: true, completion: nil)
-                                          }
-                                      })
-    }
-  
+    @IBAction func preparePasswordReset() {
+         NetworkManager.shared().prepareResetPassword(login: self.loginTextField.text ?? "",
+                                       completionHandler: { [unowned self] success, errorMessage in
+                                           if success {
+                                               self.performSegue(withIdentifier: "smsCheckCode", sender: self)
+                                                                                } else {
+                                               let alert = UIAlertController(title: "Неудача", message: errorMessage, preferredStyle: UIAlertController.Style.alert)
+                                               alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                                               self.present(alert, animated: true, completion: nil)
+                                           }
+                                       })
+     }
+    
+    @IBAction func newPasswordReset() {
+        NetworkManager.shared().newPasswordReset(password: self.loginTextField.text ?? "",
+                                       completionHandler: { [unowned self] success, errorMessage in
+                                           if success {
+                                               self.performSegue(withIdentifier: "finishResetPassword", sender: self)
+                                                                                } else {
+                                               let alert = UIAlertController(title: "Неудача", message: errorMessage, preferredStyle: UIAlertController.Style.alert)
+                                               alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                                               self.present(alert, animated: true, completion: nil)
+                                           }
+                                       })
+     }
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
