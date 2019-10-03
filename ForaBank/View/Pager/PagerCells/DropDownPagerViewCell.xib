@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="DropDownPagerViewCell" customModule="ForaBank" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="290" height="60"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="290" height="60"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J7S-vH-HVJ">
+                        <rect key="frame" x="0.0" y="0.0" width="290" height="60"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rei-RJ-g6S" customClass="PaymentOptionView" customModule="ForaBank" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="290" height="60"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="Rei-RJ-g6S" firstAttribute="top" secondItem="J7S-vH-HVJ" secondAttribute="top" id="Gvu-td-wAb"/>
+                            <constraint firstItem="Rei-RJ-g6S" firstAttribute="leading" secondItem="J7S-vH-HVJ" secondAttribute="leading" id="INa-gH-bwb"/>
+                            <constraint firstAttribute="bottom" secondItem="Rei-RJ-g6S" secondAttribute="bottom" id="Sxd-IK-M4W"/>
+                            <constraint firstAttribute="trailing" secondItem="Rei-RJ-g6S" secondAttribute="trailing" id="uuV-gA-aLc"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="J7S-vH-HVJ" secondAttribute="trailing" id="4aZ-XK-x9a"/>
+                <constraint firstAttribute="bottom" secondItem="J7S-vH-HVJ" secondAttribute="bottom" id="KXs-tc-p0Y"/>
+                <constraint firstItem="J7S-vH-HVJ" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="aHT-AJ-ZWT"/>
+                <constraint firstItem="J7S-vH-HVJ" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="tfy-ny-M49"/>
+            </constraints>
+            <size key="customSize" width="290" height="60"/>
+            <point key="canvasLocation" x="305.79710144927537" y="143.30357142857142"/>
+        </collectionViewCell>
+    </objects>
+</document>

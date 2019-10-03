@@ -20,6 +20,9 @@ class PagerView: UIView {
             self.pageControl.contentInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
         }
     }
+    
+    var configurations = [ICellConfigurator]()
+    
 
     // MARK: - Live Cycle
 
@@ -44,6 +47,11 @@ class PagerView: UIView {
         self.pagerView.itemSize = FSPagerView.automaticSize
 
     }
+    
+    func setConfig(config : [ICellConfigurator]) {
+        configurations = config
+        pagerView.reloadData()
+    }
 }
 
 extension PagerView: FSPagerViewDelegate, FSPagerViewDataSource {
@@ -51,18 +59,24 @@ extension PagerView: FSPagerViewDelegate, FSPagerViewDataSource {
     // MARK:- FSPagerView DataSource
 
     public func numberOfItems(in pagerView: FSPagerView) -> Int {
-        return 3 //self.numberOfItems
+        return configurations.count
     }
 
     public func pagerView(_ pagerView: FSPagerView, cellForItemAt index: Int) -> FSPagerViewCell {
-        var cell = pagerView.dequeueReusableCell(withReuseIdentifier: String(describing: TextFieldPagerViewCell.self), at: index)
+        let config = configurations[index]
 
-        if index == 2 {
-            let mCell = pagerView.dequeueReusableCell(withReuseIdentifier: String(describing: MenuPagerViewCell.self), at: index) as? MenuPagerViewCell
-            mCell?.titleLabel.text = "Выбрать из контактов"
-            cell = mCell ?? FSPagerViewCell()
-        }
+        let cell = pagerView.dequeueReusableCell(withReuseIdentifier: type(of: config).reuseId, at: index)
+        config.configure(cell: cell)
+
         return cell
+//        var cell = pagerView.dequeueReusableCell(withReuseIdentifier: String(describing: TextFieldPagerViewCell.self), at: index)
+//
+//        if index == 2 {
+//            let mCell = pagerView.dequeueReusableCell(withReuseIdentifier: String(describing: MenuPagerViewCell.self), at: index) as? MenuPagerViewCell
+//            mCell?.titleLabel.text = "Выбрать из контактов"
+//            cell = mCell ?? FSPagerViewCell()
+//        }
+//        return cell
     }
 
     // MARK:- FSPagerView Delegate
