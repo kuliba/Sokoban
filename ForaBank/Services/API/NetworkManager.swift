@@ -50,8 +50,8 @@ protocol DeposServiceProtocol {
                   completionHandler: @escaping (_ success: Bool, _ obligations: [Account]?) -> Void)
 }
 protocol LoanPaymentScheduleProtocol {
-    func getLoanPayment(headers: HTTPHeaders,
-                  completionHandler: @escaping (_ success: Bool, _ obligations: [LoanScheduleModel]?) -> Void)
+    func getLoansPayment(headers: HTTPHeaders,
+                  completionHandler: @escaping (_ success: Bool, _ obligations: [LaonSchedules]?) -> Void)
 }
 protocol HistoryServiceProtocol {
     func getHistoryCard(headers: HTTPHeaders,
@@ -297,8 +297,8 @@ class NetworkManager {
     func getLoans(completionHandler: @escaping (_ success: Bool, _ obligations: [Loan]?) -> Void) {
         loansService.getLoans(headers: headers, completionHandler: completionHandler)
     }
-    func getLoansPayment(completionHandler: @escaping (_ success: Bool, _ obligations: [LoanScheduleModel]?) -> Void) {
-        loanPaymentSchedule.getLoanPayment(headers: headers, completionHandler: completionHandler)
+    func getLoansPayment(completionHandler: @escaping (_ success: Bool, _ obligations: [LaonSchedules]?) -> Void) {
+        loanPaymentSchedule.getLoansPayment(headers: headers, completionHandler: completionHandler)
     }
     func getHistoryCard(completionHandler: @escaping (_ success: Bool, _ obligations: [HistoryCard]?) -> Void) {
         historyService.getHistoryCard(headers: headers, completionHandler: completionHandler)

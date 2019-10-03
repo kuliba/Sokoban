@@ -1687,7 +1687,7 @@
                                 <rect key="frame" x="0.0" y="29" width="414" height="707"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kqf-3l-iTE">
-                                        <rect key="frame" x="20" y="218.66666666666663" width="374" height="270"/>
+                                        <rect key="frame" x="20" y="167" width="374" height="270"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Введите логин и пароль" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HE2-54-8YZ">
                                                 <rect key="frame" x="0.0" y="0.0" width="374" height="55"/>
@@ -1699,7 +1699,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Логин" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bh2-K0-iBS">
-                                                <rect key="frame" x="0.0" y="63.000000000000028" width="374" height="21"/>
+                                                <rect key="frame" x="0.0" y="63" width="374" height="21"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="21" id="Zk1-OH-LIy"/>
                                                 </constraints>
@@ -1708,7 +1708,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <textField opaque="NO" tag="1" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="BqZ-DB-KzG">
-                                                <rect key="frame" x="0.0" y="92.000000000000028" width="374" height="40"/>
+                                                <rect key="frame" x="0.0" y="92" width="374" height="40"/>
                                                 <accessibility key="accessibilityConfiguration">
                                                     <accessibilityTraits key="traits" selected="YES"/>
                                                 </accessibility>
@@ -1719,7 +1719,7 @@
                                                 <textInputTraits key="textInputTraits" textContentType="username"/>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Пароль" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mBT-AI-sJj">
-                                                <rect key="frame" x="0.0" y="140.00000000000003" width="374" height="21"/>
+                                                <rect key="frame" x="0.0" y="140" width="374" height="21"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="21" id="jDh-Zn-4mz"/>
                                                 </constraints>
@@ -1728,7 +1728,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="ceP-G6-shI">
-                                                <rect key="frame" x="0.0" y="169.00000000000003" width="374" height="40"/>
+                                                <rect key="frame" x="0.0" y="169" width="374" height="40"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="9E5-fc-LYH"/>
                                                 </constraints>
@@ -1736,7 +1736,7 @@
                                                 <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
                                             </textField>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jVs-xI-4Ik" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="217.00000000000003" width="374" height="52.999999999999972"/>
+                                                <rect key="frame" x="0.0" y="217" width="374" height="53"/>
                                                 <color key="backgroundColor" red="0.91764705879999997" green="0.2666666667" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="53" id="QkM-14-IjC"/>
@@ -1781,8 +1781,8 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="kqf-3l-iTE" secondAttribute="trailing" constant="20" id="dh0-gj-Wxs"/>
-                                    <constraint firstItem="kqf-3l-iTE" firstAttribute="centerY" secondItem="UIE-72-Pur" secondAttribute="centerY" id="gJE-Xp-yUq"/>
                                     <constraint firstItem="kqf-3l-iTE" firstAttribute="leading" secondItem="UIE-72-Pur" secondAttribute="leading" constant="20" id="lk5-uR-Svo"/>
+                                    <constraint firstAttribute="bottom" secondItem="kqf-3l-iTE" secondAttribute="bottom" constant="270" id="ykX-Fs-B9S"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="elB-7z-XSm">
@@ -1872,7 +1872,7 @@
                                 <rect key="frame" x="0.0" y="29" width="414" height="658"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g5U-6P-v5r">
-                                        <rect key="frame" x="8" y="237.66666666666669" width="398" height="183"/>
+                                        <rect key="frame" x="8" y="130" width="398" height="183"/>
                                         <subviews>
                                             <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="tbH-1y-acu">
                                                 <rect key="frame" x="154" y="66" width="90" height="40"/>
@@ -1888,7 +1888,7 @@
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="55" id="gUs-6m-BRS"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
+                                                <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -1944,7 +1944,7 @@
                                 <constraints>
                                     <constraint firstItem="g5U-6P-v5r" firstAttribute="leading" secondItem="E1t-Tl-Llt" secondAttribute="leading" constant="8" id="KPS-x0-72S"/>
                                     <constraint firstAttribute="trailing" secondItem="g5U-6P-v5r" secondAttribute="trailing" constant="8" id="RGh-wD-7pb"/>
-                                    <constraint firstItem="g5U-6P-v5r" firstAttribute="centerY" secondItem="E1t-Tl-Llt" secondAttribute="centerY" id="b6L-GX-Ctc"/>
+                                    <constraint firstItem="g5U-6P-v5r" firstAttribute="centerY" secondItem="E1t-Tl-Llt" secondAttribute="centerY" constant="-107.5" id="b6L-GX-Ctc"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kg1-BL-aW1">

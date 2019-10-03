@@ -38,18 +38,7 @@ class LoanScheduleModel: Mappable {
         self.principalDebt = principalDebt
       }
     
-    func getLoanSchedule() -> Array<LaonSchedules> {
-        return [LaonSchedules(title: "Доступно для снятия", value: "\(String(describing: totalAmount))")]
-      }
-    func getProductAbout() -> Array<LaonSchedules> {
-        guard let dateV = dateValue, let userAnn = userAnnual, let num = number, let principalD = principalDebt else {
-            return []
-        }
-        return [LaonSchedules(title: "Дата взятия кредита", value: dateV),
-                LaonSchedules(title: "Ежемесячный платёж", value: String(userAnn)),
-                LaonSchedules(title: "Номер", value: num),
-                LaonSchedules(title: "Основной долг", value: String(principalD))]
-    }
+ 
         
 
 }

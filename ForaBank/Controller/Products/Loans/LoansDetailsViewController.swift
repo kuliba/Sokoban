@@ -147,13 +147,9 @@ private extension LoansDetailsViewController {
             managementVC?.items = loan?.getProductAbout()
             newViewController = managementVC
         case 3:
-            let managementVC = storyboard?.instantiateViewController(withIdentifier: "TableExpansionViewController") as? TableExpansionViewController
-            managementVC?.items = (loanPayment?.getProductAbout())!
-            newViewController = managementVC
-        case 4:
-            let managementVC = storyboard?.instantiateViewController(withIdentifier: "TableExpansionViewController") as? TableExpansionViewController
-            managementVC?.items = (loanPayment?.getLoanSchedule())!
-            newViewController = managementVC
+                 let managementVC = storyboard?.instantiateViewController(withIdentifier: "TableExpansionViewController") as? TableExpansionViewController
+                 managementVC?.items = (loan?.getLoansSchedule())!
+                 newViewController = managementVC
         default:
             newViewController = storyboard?.instantiateViewController(withIdentifier: "feedfeed\(index)")
         }
