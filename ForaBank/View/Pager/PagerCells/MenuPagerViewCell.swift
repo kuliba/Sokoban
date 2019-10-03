@@ -9,7 +9,8 @@
 import UIKit
 import FSPagerView
 
-class MenuPagerViewCell: FSPagerViewCell {
+class MenuPagerViewCell: FSPagerViewCell, IConfigurableCell {
+
     @IBOutlet weak var titleLabel: UILabel!
 
     override func awakeFromNib() {
@@ -17,4 +18,11 @@ class MenuPagerViewCell: FSPagerViewCell {
         // Initialization code
     }
 
+    func configure(provider: ICellProvider) {
+        guard provider != nil else {
+            titleLabel.text = "Выбрать из контактов"
+            return
+        }
+        //        messageLabel.text = message
+    }
 }
