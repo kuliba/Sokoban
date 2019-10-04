@@ -74,6 +74,12 @@ class CardDetailsViewController: UIViewController {
             }
             if card.number.prefix(6) == "557986" {
                 backgroundImageView.image = UIImage(named: "card_visa_standart")
+                cardView.titleLabel.textColor = .black
+                cardView.cardCashLabel.textColor = .black
+                cardView.cardNumberLabel.textColor = .black
+                cardView.cardValidityPeriodLabel.textColor = .black
+                
+            
             }
             if card.number.prefix(6) == "536466" {
                 backgroundImageView.image = UIImage(named: "card_visa_virtual")

@@ -111,13 +111,22 @@ class DetailedCardView: CardView {
             }
             else if card?.number.prefix(6) == "557986" {
                 backgroundImageView.image = UIImage(named: "card_visa_standart")
+                
+                titleLabel.textColor = .black
+                cardCashLabel.textColor = .black
+                cardNumberLabel.textColor = .black
+                cardValidityPeriodLabel.textColor = .black
+                
+            
             }
              else if card?.number.prefix(6) == "536466" {
                 backgroundImageView.image = UIImage(named: "card_visa_virtual")
             }
             else if card?.number.prefix(6) == "470336" {
                 backgroundImageView.image = UIImage(named: "card_visa_infinity")
-            } else{
+              
+            }
+            else{
                  backgroundImageView.image = UIImage(named: "card_visa_debet")
             }
 
@@ -126,6 +135,15 @@ class DetailedCardView: CardView {
             color1 = UIColor(red: 0.89, green: 0.77, blue: 0.35, alpha: 1)
 
             cardNumberLabel.attributedText = NSAttributedString(string: card?.maskedNumber ?? "", attributes: [.font: UIFont.systemFont(ofSize: 12), .foregroundColor: foregroundColor])
+            if card?.number.prefix(6) == "557986" {
+                backgroundImageView.image = UIImage(named: "card_visa_standart")
+                
+                titleLabel.textColor = .black
+                cardCashLabel.textColor = .black
+                cardNumberLabel.textColor = .black
+                cardValidityPeriodLabel.textColor = .black
+            
+            }
             expirationDate.text = card?.expirationDate
             cardValidityPeriodLabel.attributedText = NSAttributedString(string: card?.validityPeriod ?? "", attributes: [.font: UIFont.systemFont(ofSize: 12), .foregroundColor: foregroundColor])
             if card?.type?.rawValue.range(of: "visa", options: .caseInsensitive) != nil {
@@ -151,6 +169,10 @@ class DetailedCardView: CardView {
                         }
                         if card?.number.prefix(6) == "557986" {
                             backgroundImageView.image = UIImage(named: "card_visa_standart")
+                            titleLabel.textColor = .black
+                            cardCashLabel.textColor = .black
+                            cardNumberLabel.textColor = .black
+                            cardValidityPeriodLabel.textColor = .black
                         }
                         if card?.number.prefix(6) == "536466" {
                             backgroundImageView.image = UIImage(named: "card_visa_virtual")
