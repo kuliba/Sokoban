@@ -216,6 +216,8 @@
 		B8323065D0D76292CEB00626 /* Pods_ForaBank.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8EB261ED46D5F939F8B2E27 /* Pods_ForaBank.framework */; };
 		BD0A1B61234607230079320D /* CardNumberCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD0A1B60234607230079320D /* CardNumberCellProvider.swift */; };
 		BD137A402326472D00326088 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD137A3F2326472D00326088 /* State.swift */; };
+		BD17F0AC23474FE300CBF400 /* PaymentOptionDropDownCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD17F0AA23474FE300CBF400 /* PaymentOptionDropDownCell.swift */; };
+		BD17F0AD23474FE300CBF400 /* PaymentOptionDropDownCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD17F0AB23474FE300CBF400 /* PaymentOptionDropDownCell.xib */; };
 		BD182E3D232A3F7000DB231F /* PasscodeSignInReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD182E3C232A3F7000DB231F /* PasscodeSignInReducer.swift */; };
 		BD182E3F232A402100DB231F /* PasscodeSingInActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD182E3E232A402100DB231F /* PasscodeSingInActions.swift */; };
 		BD21B6662338CE14001C5CF7 /* HIstoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD21B6632338CE14001C5CF7 /* HIstoryService.swift */; };
@@ -497,6 +499,8 @@
 		B745669DC4B425C3C513CBBC /* Pods-ForaBank.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ForaBank.debug.xcconfig"; path = "Target Support Files/Pods-ForaBank/Pods-ForaBank.debug.xcconfig"; sourceTree = "<group>"; };
 		BD0A1B60234607230079320D /* CardNumberCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardNumberCellProvider.swift; sourceTree = "<group>"; };
 		BD137A3F2326472D00326088 /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
+		BD17F0AA23474FE300CBF400 /* PaymentOptionDropDownCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentOptionDropDownCell.swift; sourceTree = "<group>"; };
+		BD17F0AB23474FE300CBF400 /* PaymentOptionDropDownCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentOptionDropDownCell.xib; sourceTree = "<group>"; };
 		BD182E3C232A3F7000DB231F /* PasscodeSignInReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignInReducer.swift; sourceTree = "<group>"; };
 		BD182E3E232A402100DB231F /* PasscodeSingInActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSingInActions.swift; sourceTree = "<group>"; };
 		BD21B6632338CE14001C5CF7 /* HIstoryService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HIstoryService.swift; sourceTree = "<group>"; };
@@ -815,6 +819,7 @@
 				0930F165215B5CDB00CFB593 /* RoundedEdgeView.swift */,
 				BD49E6542344F6910031561F /* Cells */,
 				89C8DF0F2191AE7A00D92B0A /* Deposits */,
+				BDABE68B23474B0100CA0754 /* DropDown */,
 				09203D92216E136300902BD2 /* Feed */,
 				BD49E6552344F7360031561F /* Pager */,
 				A5B473C221B3C09800F2E41F /* Payments */,
@@ -1222,6 +1227,15 @@
 			path = Passcode;
 			sourceTree = "<group>";
 		};
+		BDABE68B23474B0100CA0754 /* DropDown */ = {
+			isa = PBXGroup;
+			children = (
+				BD17F0AA23474FE300CBF400 /* PaymentOptionDropDownCell.swift */,
+				BD17F0AB23474FE300CBF400 /* PaymentOptionDropDownCell.xib */,
+			);
+			path = DropDown;
+			sourceTree = "<group>";
+		};
 		BDB6AFF5232693E90006A534 /* Actions */ = {
 			isa = PBXGroup;
 			children = (
@@ -1400,6 +1414,7 @@
 				0930F181215B78B000CFB593 /* Roboto-Medium.ttf in Resources */,
 				0930F180215B78B000CFB593 /* Roboto-LightItalic.ttf in Resources */,
 				BD35E82523438DC40016BA0D /* TextFieldPagerViewCell.xib in Resources */,
+				BD17F0AD23474FE300CBF400 /* PaymentOptionDropDownCell.xib in Resources */,
 				0930F183215B78B000CFB593 /* Roboto-Regular.ttf in Resources */,
 				09C7C33C2175FADE000EE472 /* DepositsHistoryHeader.xib in Resources */,
 				0930F17F215B78B000CFB593 /* Roboto-Light.ttf in Resources */,
@@ -1468,6 +1483,7 @@
 				"${BUILT_PRODUCTS_DIR}/BiometricAuthentication/BiometricAuthentication.framework",
 				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/DeviceKit/DeviceKit.framework",
+				"${BUILT_PRODUCTS_DIR}/DropDown/DropDown.framework",
 				"${BUILT_PRODUCTS_DIR}/FSPagerView/FSPagerView.framework",
 				"${BUILT_PRODUCTS_DIR}/FlexiblePageControl/FlexiblePageControl.framework",
 				"${BUILT_PRODUCTS_DIR}/Hero/Hero.framework",
@@ -1487,6 +1503,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BiometricAuthentication.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CryptoSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DeviceKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DropDown.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FSPagerView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FlexiblePageControl.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Hero.framework",
@@ -1682,6 +1699,7 @@
 				09D3C04C215E5AE800998F57 /* CustomTableView.swift in Sources */,
 				BD5170A92332135E001EAFC0 /* VerificationCodeState.swift in Sources */,
 				093B862E21620B1F008A5222 /* ServicesSearchCell.swift in Sources */,
+				BD17F0AC23474FE300CBF400 /* PaymentOptionDropDownCell.swift in Sources */,
 				09AF7092216F73FD00E7FCFC /* FeedCurrent4Cell.swift in Sources */,
 				A51AF85021EA093800FB3B68 /* RegService.swift in Sources */,
 				09203D95216E13A700902BD2 /* FeedOptionCell.swift in Sources */,

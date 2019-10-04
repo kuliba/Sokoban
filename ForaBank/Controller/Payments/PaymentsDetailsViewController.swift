@@ -10,6 +10,7 @@ import UIKit
 import ReSwift
 
 typealias CardNumberPagerItem = PagerViewCellHandler<TextFieldPagerViewCell, CardNumberCellProvider>
+typealias PaymentOptionsPagerItem = PagerViewCellHandler<DropDownPagerViewCell, CardNumberCellProvider>
 
 class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
 
@@ -51,7 +52,8 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
     var selectedViewType: Bool = false //false - source; true - destination
     var activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
     private let sourceConfigurations: [ICellConfigurator] = [
-        CardNumberPagerItem(provider: CardNumberCellProvider())
+        CardNumberPagerItem(provider: CardNumberCellProvider()),
+        PaymentOptionsPagerItem(provider: CardNumberCellProvider())
     ]
 
 //    var selectedDestinationPaymentOption: PaymentOption?

@@ -16,13 +16,12 @@ class PagerView: UIView {
     @IBOutlet weak var pagerView: FSPagerView!
     @IBOutlet weak var pageControl: FSPageControl! {
         didSet {
-            self.pageControl.numberOfPages = 3//self.imageNames.count
             self.pageControl.contentInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
         }
     }
-    
+
     var configurations = [ICellConfigurator]()
-    
+
 
     // MARK: - Live Cycle
 
@@ -44,12 +43,15 @@ class PagerView: UIView {
 
         self.pagerView.register(UINib(nibName: String(describing: TextFieldPagerViewCell.self), bundle: nil), forCellWithReuseIdentifier: String(describing: TextFieldPagerViewCell.self))
         self.pagerView.register(UINib(nibName: String(describing: MenuPagerViewCell.self), bundle: nil), forCellWithReuseIdentifier: String(describing: MenuPagerViewCell.self))
+        self.pagerView.register(UINib(nibName: String(describing: DropDownPagerViewCell.self), bundle: nil), forCellWithReuseIdentifier: String(describing: DropDownPagerViewCell.self))
+
         self.pagerView.itemSize = FSPagerView.automaticSize
 
     }
-    
-    func setConfig(config : [ICellConfigurator]) {
+
+    func setConfig(config: [ICellConfigurator]) {
         configurations = config
+        pageControl.numberOfPages = configurations.count
         pagerView.reloadData()
     }
 }

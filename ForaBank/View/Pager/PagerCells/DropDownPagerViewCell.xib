@@ -41,6 +41,9 @@
                 <constraint firstItem="J7S-vH-HVJ" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="tfy-ny-M49"/>
             </constraints>
             <size key="customSize" width="290" height="60"/>
+            <connections>
+                <outlet property="paymentOptionView" destination="Rei-RJ-g6S" id="xtE-sz-9R1"/>
+            </connections>
             <point key="canvasLocation" x="305.79710144927537" y="143.30357142857142"/>
         </collectionViewCell>
     </objects>

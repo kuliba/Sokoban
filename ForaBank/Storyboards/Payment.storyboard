@@ -25,7 +25,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="30"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Платежи и переводы" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8dV-nZ-mMl">
-                                        <rect key="frame" x="80.5" y="11" width="159" height="19"/>
+                                        <rect key="frame" x="80" y="8.5" width="160" height="21.5"/>
                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -147,25 +147,25 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="320" height="220"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LTJ-Hn-8tn">
-                                                        <rect key="frame" x="15" y="34" width="290" height="152"/>
+                                                        <rect key="frame" x="15" y="24" width="290" height="172"/>
                                                         <subviews>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f9s-h8-3Nc" customClass="PagerView" customModule="ForaBank" customModuleProvider="target">
-                                                                <rect key="frame" x="0.0" y="0.0" width="290" height="59.5"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="290" height="70"/>
                                                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                             </view>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0a3-3Z-548">
-                                                                <rect key="frame" x="5" y="75.5" width="280" height="1"/>
+                                                                <rect key="frame" x="5" y="85.5" width="280" height="1"/>
                                                                 <color key="backgroundColor" red="0.82745098039215681" green="0.82745098039215681" blue="0.82745098039215681" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="1" id="3Bf-ow-5dE"/>
                                                                 </constraints>
                                                             </view>
-                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g1p-TJ-nON" customClass="PagerView" customModule="ForaBank" customModuleProvider="target">
-                                                                <rect key="frame" x="0.0" y="92.5" width="290" height="59.5"/>
+                                                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="g1p-TJ-nON" customClass="PagerView" customModule="ForaBank" customModuleProvider="target">
+                                                                <rect key="frame" x="0.0" y="92.5" width="290" height="70"/>
                                                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                             </view>
                                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Group 6 Copy" translatesAutoresizingMaskIntoConstraints="NO" id="5kd-s3-qxW">
-                                                                <rect key="frame" x="240" y="61" width="30" height="30"/>
+                                                                <rect key="frame" x="240" y="71" width="30" height="30"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="30" id="bjM-8s-NPV"/>
                                                                 </constraints>
@@ -193,9 +193,9 @@
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="220" id="1LI-mb-kTr"/>
-                                                    <constraint firstItem="LTJ-Hn-8tn" firstAttribute="top" secondItem="X2I-VJ-MYg" secondAttribute="top" constant="34" id="3cG-RJ-yvi"/>
+                                                    <constraint firstItem="LTJ-Hn-8tn" firstAttribute="top" secondItem="X2I-VJ-MYg" secondAttribute="top" constant="24" id="3cG-RJ-yvi"/>
                                                     <constraint firstAttribute="trailing" secondItem="LTJ-Hn-8tn" secondAttribute="trailing" constant="15" id="Ahj-xC-oil"/>
-                                                    <constraint firstAttribute="bottom" secondItem="LTJ-Hn-8tn" secondAttribute="bottom" constant="34" id="LFS-uI-ejm"/>
+                                                    <constraint firstAttribute="bottom" secondItem="LTJ-Hn-8tn" secondAttribute="bottom" constant="24" id="LFS-uI-ejm"/>
                                                     <constraint firstItem="LTJ-Hn-8tn" firstAttribute="leading" secondItem="X2I-VJ-MYg" secondAttribute="leading" constant="15" id="mEV-a1-0fh"/>
                                                 </constraints>
                                             </view>
@@ -424,7 +424,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Перевод" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Li-FN-g8p">
-                                        <rect key="frame" x="127.5" y="11" width="65.5" height="19"/>
+                                        <rect key="frame" x="127.5" y="8.5" width="65.5" height="21.5"/>
                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -578,13 +578,13 @@
                                     <color key="titleColor" red="0.0078361118210000004" green="0.7385174632" blue="0.61187428239999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 </state>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" ambiguous="YES" misplaced="YES" text="-9550 ₽" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J5q-LI-SJd">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" misplaced="YES" text="-9550 ₽" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J5q-LI-SJd">
                                 <rect key="frame" x="107" y="199" width="136" height="43"/>
                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="32"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Перевод успешно совершен" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aGd-R4-Z3w">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Перевод успешно совершен" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aGd-R4-Z3w">
                                 <rect key="frame" x="34" y="249.5" width="257" height="22.5"/>
                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
