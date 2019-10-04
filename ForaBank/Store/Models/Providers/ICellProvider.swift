@@ -15,5 +15,5 @@ protocol IPresentationModel {
 protocol ICellProvider {
     var isLoading: Bool { get }
     var currentValue: IPresentationModel? { get }
-    func getData(completion: (_ data: [IPresentationModel]) -> ())
+    func getData(completion: @escaping (_ data: [IPresentationModel]) -> ())
 }

@@ -21,6 +21,11 @@ class DropDownPagerViewCell: FSPagerViewCell, IConfigurableCell {
     }
 
     let dropDown = DropDown()
+    var paymentOptions = [PaymentOption]() {
+        didSet {
+            dropDown.dataSource = Array(repeating: "", count: paymentOptions.count)
+        }
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -33,11 +38,9 @@ class DropDownPagerViewCell: FSPagerViewCell, IConfigurableCell {
     }
 
     private func commonInit() {
-        dropDown.customCellConfiguration = { (index: Index, item: String, cell: DropDownCell) -> Void in
-            guard let cell = cell as? PaymentOptionDropDownCell else { return }
-
-            // Setup your custom UI components
-            cell.paymentOptionView.optionNameLabel.text = "Test"
+        dropDown.customCellConfiguration = { [weak self] (index: Index, item: String, cell: DropDownCell) -> Void in
+            guard let cell = cell as? PaymentOptionDropDownCell, let paymentOption = self?.paymentOptions[index] else { return }
+            cell.paymentOptionView.setupLayout(withPickerItem: paymentOption, isDroppable: false)
         }
         dropDown.cellNib = UINib(nibName: String(describing: PaymentOptionDropDownCell.self), bundle: nil)
         dropDown.cellConfiguration = nil
@@ -50,19 +53,10 @@ class DropDownPagerViewCell: FSPagerViewCell, IConfigurableCell {
 
         appearance.cellHeight = 60
         appearance.selectionBackgroundColor = UIColor(red: 0.6494, green: 0.8155, blue: 1.0, alpha: 0.2)
-        //        appearance.separatorColor = UIColor(white: 0.7, alpha: 0.8)
         appearance.shadowColor = UIColor(white: 0.6, alpha: 1)
         appearance.shadowOpacity = 0.9
         appearance.shadowRadius = 25
         appearance.animationduration = 0.25
-
-        dropDown.dataSource = [
-            "iPhone SE | Black | 64G",
-            "Samsung S7",
-            "Huawei P8 Lite Smartphone 4G",
-            "Asus Zenfone Max 4G",
-            "Apple Watwh | Sport Edition"
-        ]
     }
 
     override func awakeFromNib() {
@@ -70,18 +64,21 @@ class DropDownPagerViewCell: FSPagerViewCell, IConfigurableCell {
     }
 
     func configure(provider: ICellProvider) {
-        guard provider != nil else {
-//            titleLabel.text = "Выбрать из контактов"
+        guard let paymentOptionProvider = provider as? PaymentOptionCellProvider else {
             return
         }
-        //        messageLabel.text = message
-//        commonInit()
+
+        paymentOptionProvider.getData { [weak self] (data) in
+            guard let paymentOptions = data as? [PaymentOption] else {
+                return
+            }
+            self?.paymentOptions = paymentOptions
+        }
     }
 
 
     @objc
     fileprivate func paymentOptionViewTapped() {
-        print("dafafd")
         dropDown.show()
     }
 }

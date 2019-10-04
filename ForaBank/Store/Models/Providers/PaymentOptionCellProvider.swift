@@ -10,19 +10,14 @@ import Foundation
 
 class PaymentOptionCellProvider: ICellProvider {
     var currentValue: IPresentationModel?
-    
-    func getData(completion: ([IPresentationModel]) -> ()) {
-        
-    }
-    
     var isLoading: Bool = false
-    
 
-    func getAllPaymentOptions() {
+    func getData(completion: @escaping ([IPresentationModel]) -> ()) {
         allPaymentOptions { (success, paymentOptions) in
-            return paymentOptions
+            guard success, let options = paymentOptions as? [PaymentOption] else {
+                return
+            }
+            completion(options)
         }
     }
-    
-    
 }

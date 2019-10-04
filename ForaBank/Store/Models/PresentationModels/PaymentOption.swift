@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct PaymentOption: IPickerItem {
+struct PaymentOption: IPickerItem, IPresentationModel {
 
     var title: String {
         get {
