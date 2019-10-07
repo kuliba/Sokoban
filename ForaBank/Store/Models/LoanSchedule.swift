@@ -16,7 +16,11 @@ class LoanScheduleModel: Mappable {
     var actionType: String?
     var totalAmount: Double?
     var paymentAmount: Double?
-
+    var dateValue: String?
+    var userAnnual: Double?
+    var number: String?
+    var principalDebt: Double?
+    var loanID: Int?
 
     required init(map: Mapper) throws {
         try actionTypeCode = map.from("actionTypeCode")
@@ -24,11 +28,17 @@ class LoanScheduleModel: Mappable {
         try actionType = map.from("actionType")
         try totalAmount = map.from("totalAmount")
         try paymentAmount = map.from("paymentAmount")
+        try principalDebt = map.from("principalDebt")
+        try number = map.from("number")
+        try userAnnual = map.from("userAnnual")
+        try loanID = map.from("loanId")
     }
-    
-    func getLoanSchedule() -> Array<LaonSchedules> {
-        return [LaonSchedules(title: "Доступно для снятия", value: "\(String(describing: actionTypeBrief)) \(String(describing: totalAmount))")]
+    init( principalDebt: Double? = nil, userAnnual: Double? = nil, number: String? = nil, DateValue: String? = nil) {
+        self.userAnnual = userAnnual
+        self.principalDebt = principalDebt
       }
+    
+ 
         
 
 }

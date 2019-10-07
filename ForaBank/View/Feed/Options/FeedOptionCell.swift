@@ -18,5 +18,8 @@ class FeedOptionCell: UITableViewCell {
         if let s = sender as? UISwitch,
             s.isOn == true {
         }
+     
     }
+    
+    
 }

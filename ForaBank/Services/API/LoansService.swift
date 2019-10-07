@@ -60,9 +60,10 @@ class LoansService: LoansServiceProtocol {
                                 let principalDebt = original["principalDebt"] as? Double
                                 if principalDebt == 0 { continue }
                                 let userAnnual = original["userAnnual"] as? Double
+                                 let loanID = original["loanID"] as? Int
                                 let loan = Loan(
                                     Amount: Amount!,
-                                    currencyCode: currencyCode, principalDebt: principalDebt, userAnnual: userAnnual, branchBrief: branchBrief, number: number, DateValue: dateValue
+                                    currencyCode: currencyCode, principalDebt: principalDebt, userAnnual: userAnnual, branchBrief: branchBrief, number: number, DateValue: dateValue, loanID: loanID!
                                 )
                                 loans.append(loan)
                             }

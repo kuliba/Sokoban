@@ -139,6 +139,8 @@
 		96144B3F233DFF2300B9F314 /* LoanPaymentScheduleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96144B3E233DFF2300B9F314 /* LoanPaymentScheduleController.swift */; };
 		96144B41233E1E6B00B9F314 /* LoanPaymentSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96144B40233E1E6B00B9F314 /* LoanPaymentSchedule.swift */; };
 		96144B43233E21BB00B9F314 /* LoanSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96144B42233E21BB00B9F314 /* LoanSchedule.swift */; };
+		9622CFBE234B225B0005701E /* changePasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9622CFBD234B225B0005701E /* changePasswordController.swift */; };
+		9630327E2346260000C211D8 /* prepareResetPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9630327D2346260000C211D8 /* prepareResetPassword.swift */; };
 		9697E29F2334C29700974505 /* OperatorsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9697E29E2334C29700974505 /* OperatorsList.swift */; };
 		9697E2A32334E30500974505 /* ServicesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9697E2A22334E30500974505 /* ServicesList.swift */; };
 		9698995E2303076F0066C55B /* LoansViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9698995D2303076F0066C55B /* LoansViewController.swift */; };
@@ -420,6 +422,8 @@
 		96144B3E233DFF2300B9F314 /* LoanPaymentScheduleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanPaymentScheduleController.swift; sourceTree = "<group>"; };
 		96144B40233E1E6B00B9F314 /* LoanPaymentSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanPaymentSchedule.swift; sourceTree = "<group>"; };
 		96144B42233E21BB00B9F314 /* LoanSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanSchedule.swift; sourceTree = "<group>"; };
+		9622CFBD234B225B0005701E /* changePasswordController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = changePasswordController.swift; sourceTree = "<group>"; };
+		9630327D2346260000C211D8 /* prepareResetPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = prepareResetPassword.swift; sourceTree = "<group>"; };
 		9697E29E2334C29700974505 /* OperatorsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorsList.swift; sourceTree = "<group>"; };
 		9697E2A22334E30500974505 /* ServicesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesList.swift; sourceTree = "<group>"; };
 		9698995D2303076F0066C55B /* LoansViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoansViewController.swift; sourceTree = "<group>"; };
@@ -725,6 +729,8 @@
 		09BE35ED218C629100EA7B24 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				9622CFBC234B22440005701E /* changePassword */,
+				9630327C234625DA00C211D8 /* resetPassword */,
 				09D3C039215CBCAB00998F57 /* ChatDialogsViewController.swift */,
 				09D3C047215E07DB00998F57 /* ChatMessagesViewController.swift */,
 				09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */,
@@ -944,6 +950,22 @@
 				BDFE1B0C233CE7BD00C49A5B /* PickerViewController.xib */,
 			);
 			path = Payments;
+			sourceTree = "<group>";
+		};
+		9622CFBC234B22440005701E /* changePassword */ = {
+			isa = PBXGroup;
+			children = (
+				9622CFBD234B225B0005701E /* changePasswordController.swift */,
+			);
+			path = changePassword;
+			sourceTree = "<group>";
+		};
+		9630327C234625DA00C211D8 /* resetPassword */ = {
+			isa = PBXGroup;
+			children = (
+				9630327D2346260000C211D8 /* prepareResetPassword.swift */,
+			);
+			path = resetPassword;
 			sourceTree = "<group>";
 		};
 		96F0DCEB231FDFAE005ABEED /* Accounts */ = {
@@ -1639,6 +1661,7 @@
 				09C7C3162174A362000EE472 /* DepositsSearchCell.swift in Sources */,
 				A55B7B8821AA698900A8A7FE /* ChatMessage.swift in Sources */,
 				A5B473C421B3C0D200F2E41F /* RemittanceOptionView.swift in Sources */,
+				9630327E2346260000C211D8 /* prepareResetPassword.swift in Sources */,
 				09F0E5CD2179DC3B0016BB6E /* CardView.swift in Sources */,
 				0930F16C215B704A00CFB593 /* CircularImageView.swift in Sources */,
 				BD5170AD233229F4001EAFC0 /* VerificationCodeActions.swift in Sources */,
@@ -1652,6 +1675,7 @@
 				96144B3C233BAD3F00B9F314 /* IAboutTransaction.swift in Sources */,
 				9697E2A32334E30500974505 /* ServicesList.swift in Sources */,
 				BDFE1AC6233B952B00C49A5B /* ProductActions.swift in Sources */,
+				9622CFBE234B225B0005701E /* changePasswordController.swift in Sources */,
 				A568142A21CE6A79002C0899 /* AnnotationsTableViewController.swift in Sources */,
 				BD5170AB2332250C001EAFC0 /* VerificationCodeReducer.swift in Sources */,
 				09AF707E216F676300E7FCFC /* FeedCurrentViewController.swift in Sources */,

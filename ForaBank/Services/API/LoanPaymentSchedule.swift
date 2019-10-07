@@ -13,23 +13,25 @@ import UIKit
 
 
 class LoanPaymentSchedule: LoanPaymentScheduleProtocol {
- 
     
 
-
+    var loan = "10001475158"
 
     private let baseURLString: String
-    private var datedTransactions = [DatedTransactions]()
 
     init(baseURLString: String) {
         self.baseURLString = baseURLString
     }
 
 
-    func getLoanPayment(headers: HTTPHeaders, completionHandler: @escaping (Bool, [LoanScheduleModel]?) -> Void) {
-        var loanPaymentSchedule = [LoanScheduleModel]()
+      func getLoansPayment(headers: HTTPHeaders, completionHandler: @escaping (Bool, [LaonSchedules]?) -> Void) {
+        var loanPaymentSchedule = [LaonSchedules]()
         let url = baseURLString + "rest/getLoanPaymentSchedule"
-        Alamofire.request(url, method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: headers)
+        let parameters: [String: AnyObject] = [
+               "id": loan as AnyObject
+           ]
+
+        Alamofire.request(url, method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])
             .responseJSON { [unowned self] response in
@@ -66,7 +68,7 @@ class LoanPaymentSchedule: LoanPaymentScheduleProtocol {
 
                                 let depositProductName = original["depositProductName"] as? String
                                 let depositProductID = original["depositProductID"] as? Int
-                                let loanPayment = LoanScheduleModel.from(NSDictionary(dictionary: original))
+                                let loanPayment = LaonSchedules.from(NSDictionary(dictionary: original))
                             }
                         }
                         completionHandler(true, loanPaymentSchedule)
@@ -80,19 +82,5 @@ class LoanPaymentSchedule: LoanPaymentScheduleProtocol {
                     completionHandler(false, loanPaymentSchedule)
                 }
         }
-        func blockCard(withNumber num: String, completionHandler: @escaping (Bool) -> Void) {
-            //        for i in 0..<cards.count {
-            //            if cards[i].number == num {
-            //                cards[i].blocked = true
-            //            }
-            //        }
-            completionHandler(false)
-        }
-
-        func getTransactionsStatement(forCardNumber: String, fromDate: Date, toDate: Date, headers: HTTPHeaders, completionHandler: @escaping (Bool, [DatedTransactions]?) -> Void) {
-            completionHandler(false, datedTransactions)
-        }
-
-
     }
 }

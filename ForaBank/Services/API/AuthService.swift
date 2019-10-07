@@ -144,6 +144,78 @@ class AuthService: AuthServiceProtocol {
                 }
         }
     }
+     func prepareResetPassword(headers: HTTPHeaders, login: String, completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void) {
+            let url = baseURLString + "prepareResetPassword"
+            let parameters: [String: AnyObject] = [
+                "appId": "AND" as AnyObject,
+                "fingerprint": false as AnyObject,
+                "login": login as AnyObject,
+                "password": "Srting" as AnyObject,
+                "token": headers["X-XSRF-TOKEN"] as AnyObject,
+                "verificationCode": 0 as AnyObject
+            ]
+
+            Alamofire.request(url, method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+                .validate(statusCode: MultiRange(200..<300, 401..<402))
+                .validate(contentType: ["application/json"])
+                .responseJSON { [unowned self] response in
+
+                    print("login.do result: \(response.result)") // response serialization result
+    //                print("JSON: \(String(describing: response.value))") // serialized json response
+    //                print("JSON: \(String(describing: response.request?.httpBody))") // serialized json response
+                    if let json = response.result.value as? Dictionary<String, Any>,
+                        let errorMessage = json["errorMessage"] as? String {
+                        print("\(errorMessage) \(self)")
+                        completionHandler(false, errorMessage)
+                        return
+                    }
+                    switch response.result {
+                    case .success:
+                        print("prepareResetPassword result: \(String(describing: response.result.value))")
+                        self.login = login
+                        completionHandler(true, nil)
+                    case .failure(let error):
+                        print("\(error) \(self)")
+                        completionHandler(false, "prepareResetPassword result validation failure")
+                    }
+            }
+        }
+    func newPasswordReset(headers: HTTPHeaders, password: String, completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void) {
+            let url = baseURLString + "resetPassword"
+            let parameters: [String: AnyObject] = [
+                "appId": "AND" as AnyObject,
+                "fingerprint": false as AnyObject,
+                "login": "String" as AnyObject,
+                "password": password as AnyObject,
+                "token": headers["X-XSRF-TOKEN"] as AnyObject,
+                "verificationCode": 0 as AnyObject
+            ]
+
+            Alamofire.request(url, method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+                .validate(statusCode: MultiRange(200..<300, 401..<402))
+                .validate(contentType: ["application/json"])
+                .responseJSON { [unowned self] response in
+
+                    print("login.do result: \(response.result)") // response serialization result
+    //                print("JSON: \(String(describing: response.value))") // serialized json response
+    //                print("JSON: \(String(describing: response.request?.httpBody))") // serialized json response
+                    if let json = response.result.value as? Dictionary<String, Any>,
+                        let errorMessage = json["errorMessage"] as? String {
+                        print("\(errorMessage) \(self)")
+                        completionHandler(false, errorMessage)
+                        return
+                    }
+                    switch response.result {
+                    case .success:
+                        print("prepareResetPassword result: \(String(describing: response.result.value))")
+                        self.password = password
+                        completionHandler(true, nil)
+                    case .failure(let error):
+                        print("\(error) \(self)")
+                        completionHandler(false, "prepareResetPassword result validation failure")
+                    }
+            }
+        }
 
     func checkVerificationCode(headers: HTTPHeaders, code: String, completionHandler: @escaping (_ success: Bool) -> Void) {
         let url = baseURLString + "verify/checkVerificationCode"
@@ -183,6 +255,44 @@ class AuthService: AuthServiceProtocol {
                 }
         }
     }
+     func checkCodeResetPassword(headers: HTTPHeaders, code: String, completionHandler: @escaping (_ success: Bool) -> Void) {
+            let url = baseURLString + "resetPassword"
+            let parameters: [String: AnyObject] = [
+                "appId": "AND" as AnyObject,
+                "fingerprint": false as AnyObject,
+                "login": login as AnyObject,
+                "password": password as AnyObject,
+                "token": headers["X-XSRF-TOKEN"] as AnyObject,
+                "verificationCode": Int(code) as AnyObject
+            ]
+            print("verify/checkVerificationCode parameters \(parameters))")
+            Alamofire.request(url, method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+                .validate(statusCode: MultiRange(200..<300, 401..<402))
+                .validate(contentType: ["application/json"])
+                .responseJSON { [unowned self] response in
+
+    //                print("verify/checkVerificationCode result: \(response.result)") // response serialization result
+    //                print("JSON: \(String(describing: response.result.value))") // serialized json response
+                    guard let json = response.result.value as? Dictionary<String, Any>,
+                        let result = json["result"] as? String, result == "OK" else {
+                            print("\(String(describing: response.result.value as? Dictionary<String, Any>)) \(self)")
+                            completionHandler(false)
+                            return
+                    }
+
+                    switch response.result {
+                    case .success:
+                        print("verify/checkVerificationCode result: \(String(describing: response.result.value))")
+                        self.isSigned = true
+                        self.login = nil
+                        self.password = nil
+                        completionHandler(true)
+                    case .failure(let error):
+                        print("\(error) \(self)")
+                        completionHandler(false)
+                    }
+            }
+        }
 
     func logOut(completionHandler: @escaping (_ success: Bool) -> Void) {
         isSigned = false

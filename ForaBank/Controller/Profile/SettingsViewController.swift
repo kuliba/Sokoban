@@ -30,35 +30,38 @@ class SettingsViewController: UIViewController
 
 
     let cellId = "FeedOptionCell"
+    
+    
 
 
     let options = [
         [
-            FeedOption(name: "Смена пин кода", iconName: "group choose", section: "Пользовательские настройки"),
+            FeedOption(name: "Смена пароля кода", iconName: "group choose", section: "Пользовательские настройки", button: true),
+            FeedOption(name: "Смена пин кода", iconName: "group choose", section: "Пользовательские настройки", button: false),
 
         ], [
-            FeedOption(name: "Счета", iconName: "feed_option_accounts", section: "Текущее"),
-            FeedOption(name: "Вклады", iconName: "feed_option_holdings", section: "Текущее"),
-            FeedOption(name: "Карты", iconName: "feed_option_cards", section: "Текущее"),
-            FeedOption(name: "Акции, облигации", iconName: "feed_option_stockbonds", section: "Текущее"),
-            FeedOption(name: "Ячейки", iconName: "feed_option_cells", section: "Текущее")
+            FeedOption(name: "Счета", iconName: "feed_option_accounts", section: "Текущее", button: false),
+            FeedOption(name: "Вклады", iconName: "feed_option_holdings", section: "Текущее", button: false),
+            FeedOption(name: "Карты", iconName: "feed_option_cards", section: "Текущее", button: false),
+            FeedOption(name: "Акции, облигации", iconName: "feed_option_stockbonds", section: "Текущее", button: false),
+            FeedOption(name: "Ячейки", iconName: "feed_option_cells", section: "Текущее", button: false)
         ], [
-            FeedOption(name: "Платежи и переводы", iconName: "feed_option_paymentstransactions", section: "Предстоящее"),
-            FeedOption(name: "Кредиты", iconName: "feed_option_credits", section: "Предстоящее"),
-            FeedOption(name: "Услуги и сервисы", iconName: "feed_option_services", section: "Предстоящее")
+            FeedOption(name: "Платежи и переводы", iconName: "feed_option_paymentstransactions", section: "Предстоящее", button: false),
+            FeedOption(name: "Кредиты", iconName: "feed_option_credits", section: "Предстоящее", button: false),
+            FeedOption(name: "Услуги и сервисы", iconName: "feed_option_services", section: "Предстоящее", button: false)
         ], [
-            FeedOption(name: "Такси", iconName: "feed_option_taxi", section: "Предложения"),
-            FeedOption(name: "Билеты в кино", iconName: "feed_option_cinema", section: "Предложения"),
-            FeedOption(name: "Акции в магазинах", iconName: "feed_option_sales", section: "Предложения"),
-            FeedOption(name: "Бронирование гостиниц", iconName: "feed_option_hotelbooking", section: "Предложения"),
-            FeedOption(name: "Ж/Д и авиабилеты", iconName: "feed_option_trainsavia", section: "Предложения"),
-            FeedOption(name: "Страховка", iconName: "feed_option_insurance", section: "Предложения")
+            FeedOption(name: "Такси", iconName: "feed_option_taxi", section: "Предложения", button: false),
+            FeedOption(name: "Билеты в кино", iconName: "feed_option_cinema", section: "Предложения", button: false),
+            FeedOption(name: "Акции в магазинах", iconName: "feed_option_sales", section: "Предложения", button: false),
+            FeedOption(name: "Бронирование гостиниц", iconName: "feed_option_hotelbooking", section: "Предложения", button: false),
+            FeedOption(name: "Ж/Д и авиабилеты", iconName: "feed_option_trainsavia", section: "Предложения", button: false),
+            FeedOption(name: "Страховка", iconName: "feed_option_insurance", section: "Предложения", button: false)
         ], [
-            FeedOption(name: "Новости банка", iconName: "feed_option_banknews", section: "Инфо"),
-            FeedOption(name: "Изменение граф. работы", iconName: "feed_option_schedulechange", section: "Инфо"),
-            FeedOption(name: "Рекомендации", iconName: "feed_option_recomendations", section: "Инфо"),
-            FeedOption(name: "Курс валют", iconName: "feed_option_exchangerate", section: "Инфо"),
-            FeedOption(name: "Новое в приложении", iconName: "feed_option_updates", section: "Инфо")
+            FeedOption(name: "Новости банка", iconName: "feed_option_banknews", section: "Инфо", button: false),
+            FeedOption(name: "Изменение граф. работы", iconName: "feed_option_schedulechange", section: "Инфо", button: false),
+            FeedOption(name: "Рекомендации", iconName: "feed_option_recomendations", section: "Инфо", button: false),
+            FeedOption(name: "Курс валют", iconName: "feed_option_exchangerate", section: "Инфо", button: false),
+            FeedOption(name: "Новое в приложении", iconName: "feed_option_updates", section: "Инфо", button: false)
         ]
     ]
 
@@ -91,6 +94,9 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
 
         return cell
     }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+          performSegue(withIdentifier: "showChangePassword", sender: tableView.cellForRow(at: indexPath))
+      }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerCell = UINib(nibName: "ServicesHeader", bundle: nil)
