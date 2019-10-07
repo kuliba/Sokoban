@@ -29,8 +29,8 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
     var sourceOption: PaymentOption?
     var destinationOption: PaymentOption?
     var destinationNum: String?
-    
-    
+
+
     let gradientView = UIView()
     let circleView = UIView()
 //    var message: String? = nil
@@ -76,30 +76,30 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
             }
         }
     }
-    
+
     @IBAction func resetPasswordCheckCode(_ sender: Any) {
-           view.endEditing(true)
-           activityIndicator?.startAnimation()
-           continueButton.isHidden = true
-           NetworkManager.shared().checkCodeResetPassword(code: self.codeNumberTextField.text ?? "") { [weak self] (success) in
-               self?.continueButton.isHidden = false
-               self?.activityIndicator?.stopAnimating()
+        view.endEditing(true)
+        activityIndicator?.startAnimation()
+        continueButton.isHidden = true
+        NetworkManager.shared().checkCodeResetPassword(code: self.codeNumberTextField.text ?? "") { [weak self] (success) in
+            self?.continueButton.isHidden = false
+            self?.activityIndicator?.stopAnimating()
             if success {
                 self?.performSegue(withIdentifier: "newPasswordReset", sender: self)
-                                            
-               } else {
-                   let alert = UIAlertController(title: "Неудача", message: "Неверный код", preferredStyle: UIAlertController.Style.alert)
-                   alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-                   alert.addAction(UIAlertAction(title: "Отменить", style: UIAlertAction.Style.default, handler: { (action) in
-                       let rootVC = self?.storyboard?.instantiateViewController(withIdentifier: "LoginOrSignupViewController") as! LoginOrSignupViewController
-                       self?.segueId = "dismiss"
-                       rootVC.segueId = "logout"
-                       self?.navigationController?.setViewControllers([rootVC], animated: true)
-                   }))
-                   self?.present(alert, animated: true, completion: nil)
-               }
-           }
-       }
+
+            } else {
+                let alert = UIAlertController(title: "Неудача", message: "Неверный код", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                alert.addAction(UIAlertAction(title: "Отменить", style: UIAlertAction.Style.default, handler: { (action) in
+                    let rootVC = self?.storyboard?.instantiateViewController(withIdentifier: "LoginOrSignupViewController") as! LoginOrSignupViewController
+                    self?.segueId = "dismiss"
+                    rootVC.segueId = "logout"
+                    self?.navigationController?.setViewControllers([rootVC], animated: true)
+                }))
+                self?.present(alert, animated: true, completion: nil)
+            }
+        }
+    }
 
     @IBAction func regContinue(_ sender: Any) {
         guard let str = self.codeNumberTextField.text,
@@ -352,13 +352,6 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
         if let vc = segue.destination as? RegistrationFinishViewController {
             segueId = "finish"
             vc.segueId = segueId
-        }
-        if segue.identifier == "toSuccess", let vc = segue.destination as? PaymentsDetailsSuccessViewController {
-
-            vc.sourceOption = sourceOption
-            vc.destinationOption = destinationOption
-            vc.operationSum = operationSum
-            vc.destinationNum = destinationNum
         }
     }
 }
