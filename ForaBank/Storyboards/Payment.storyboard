@@ -282,7 +282,7 @@
                                         </constraints>
                                     </view>
                                 </subviews>
-                                <color key="backgroundColor" red="0.94897240400000005" green="0.67658257479999995" blue="0.44718337060000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="backgroundColor" red="0.93805062770000003" green="0.25358119610000002" blue="0.2107679546" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="B3J-EX-QK6" secondAttribute="bottom" id="0sd-sd-8Ie"/>
                                     <constraint firstItem="B3J-EX-QK6" firstAttribute="top" secondItem="7jF-kB-QvE" secondAttribute="top" id="9QX-Kk-Hj8"/>
@@ -412,10 +412,10 @@
                                         <rect key="frame" x="14" y="180" width="292" height="183"/>
                                         <subviews>
                                             <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="C8a-Xm-vI6">
-                                                <rect key="frame" x="115" y="66" width="62" height="40"/>
+                                                <rect key="frame" x="97.5" y="66" width="97" height="40"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="Clh-0V-kc7"/>
-                                                    <constraint firstAttribute="width" constant="62" id="Mau-yE-NZB"/>
+                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="97" id="cVS-xt-8el"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" keyboardType="numberPad" textContentType="one-time-code"/>
@@ -457,6 +457,7 @@
                                             <constraint firstAttribute="bottom" secondItem="C8a-Xm-vI6" secondAttribute="bottom" constant="77" id="imj-A9-Vv4"/>
                                             <constraint firstItem="C6a-Br-7FF" firstAttribute="top" secondItem="eDa-n2-lst" secondAttribute="top" id="pbi-9G-1Nc"/>
                                             <constraint firstItem="zFG-Bn-eR0" firstAttribute="leading" secondItem="eDa-n2-lst" secondAttribute="leading" constant="20" id="pem-W6-xIA"/>
+                                            <constraint firstItem="C8a-Xm-vI6" firstAttribute="centerX" secondItem="eDa-n2-lst" secondAttribute="centerX" id="xLr-Eu-UtL"/>
                                             <constraint firstItem="C8a-Xm-vI6" firstAttribute="centerX" secondItem="C6a-Br-7FF" secondAttribute="centerX" id="yso-dO-1eI"/>
                                         </constraints>
                                     </view>
@@ -509,7 +510,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gjU-dn-lu1" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3724" y="1038"/>
+            <point key="canvasLocation" x="3723.75" y="1037.323943661972"/>
         </scene>
         <!--Payments Details Success View Controller-->
         <scene sceneID="Qmn-ro-rR4">
@@ -543,13 +544,13 @@
                                     <color key="titleColor" red="0.0078361118210000004" green="0.7385174632" blue="0.61187428239999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 </state>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" ambiguous="YES" misplaced="YES" text="-9550 ₽" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J5q-LI-SJd">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" misplaced="YES" text="-9550 ₽" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J5q-LI-SJd">
                                 <rect key="frame" x="107" y="199" width="136" height="43"/>
                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="32"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Перевод успешно совершен" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aGd-R4-Z3w">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Перевод успешно совершен" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aGd-R4-Z3w">
                                 <rect key="frame" x="34" y="249.5" width="257" height="22.5"/>
                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
