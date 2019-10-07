@@ -190,7 +190,7 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
         if let head = header as? MaskedNavigationBar {
             head.gradientLayer.startPoint = CGPoint(x: 0, y: 1)
             head.gradientLayer.endPoint = CGPoint(x: 1, y: 1)
-            head.gradientLayer.colors = [UIColor(red: 237 / 255, green: 73 / 255, blue: 73 / 255, alpha: 1).cgColor, UIColor(red: 241 / 255, green: 176 / 255, blue: 116 / 255, alpha: 1).cgColor]
+            head.gradientLayer.colors = [UIColor(red: 239 / 255, green: 65 / 255, blue: 54 / 255, alpha: 1).cgColor, UIColor(red: 239 / 255, green: 65 / 255, blue: 54 / 255, alpha: 1).cgColor]
         }
 //        messageLabel?.text = message
 
@@ -372,9 +372,9 @@ extension RegistrationCodeVerificationViewController: UITextFieldDelegate {
         gradientLayer.startPoint = CGPoint(x: 0, y: 1)
         gradientLayer.endPoint = CGPoint(x: 1, y: 1)
         if header is MaskedNavigationBar {
-            gradientLayer.colors = [UIColor(red: 237 / 255, green: 73 / 255, blue: 73 / 255, alpha: 1).cgColor, UIColor(red: 241 / 255, green: 176 / 255, blue: 116 / 255, alpha: 1).cgColor]
+            gradientLayer.colors = [UIColor(red: 239 / 255, green: 64 / 255, blue: 54 / 255, alpha: 1).cgColor, UIColor(red: 239 / 255, green: 64 / 255, blue: 54 / 255, alpha: 1).cgColor]
         } else {
-            gradientLayer.colors = [UIColor(red: 241 / 255, green: 176 / 255, blue: 116 / 255, alpha: 1).cgColor, UIColor(red: 237 / 255, green: 73 / 255, blue: 73 / 255, alpha: 1).cgColor]
+            gradientLayer.colors = [UIColor(red: 239 / 255, green: 64 / 255, blue: 54 / 255, alpha: 1).cgColor, UIColor(red: 239 / 255, green: 64 / 255, blue: 54 / 255, alpha: 1).cgColor]
         }
         gradientView.layer.addSublayer(gradientLayer)
 //        gradientView.alpha = 0

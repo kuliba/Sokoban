@@ -151,10 +151,10 @@
                         <viewLayoutGuide key="safeArea" id="lN0-jn-WOu"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="color" keyPath="color1">
-                                <color key="value" red="0.92941176469999998" green="0.28627450980000002" blue="0.28627450980000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="value" red="0.93725490199999995" green="0.25490196079999999" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </userDefinedRuntimeAttribute>
                             <userDefinedRuntimeAttribute type="color" keyPath="color2">
-                                <color key="value" red="0.92941176469999998" green="0.51372549020000002" blue="0.32549019610000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="value" red="0.93725490199999995" green="0.25490196079999999" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                         <variation key="default">
@@ -1169,11 +1169,11 @@
             <objects>
                 <viewController storyboardIdentifier="finish" modalPresentationStyle="overCurrentContext" id="3S2-Ql-HD5" customClass="RegistrationPermissionsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1Af-si-LYs">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WVv-9f-Tdt" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="29" width="414" height="707"/>
+                                <rect key="frame" x="0.0" y="29" width="414" height="687"/>
                                 <subviews>
                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BRp-UY-6fh" customClass="FlexiblePageControl" customModule="FlexiblePageControl">
                                         <rect key="frame" x="172" y="28" width="70" height="10"/>
@@ -1588,10 +1588,10 @@
                         <viewLayoutGuide key="safeArea" id="OcM-aW-rdH"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="color" keyPath="color1">
-                                <color key="value" red="0.92471486329999997" green="0.26683610679999997" blue="0.2586912811" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="value" red="0.93725490199999995" green="0.20000000000000001" blue="0.25098039220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </userDefinedRuntimeAttribute>
                             <userDefinedRuntimeAttribute type="color" keyPath="color2">
-                                <color key="value" red="0.78645449879999996" green="0.23440414670000001" blue="0.30577135090000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="value" red="0.93725490199999995" green="0.20000000000000001" blue="0.25098039220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
@@ -1658,10 +1658,10 @@
                         <viewLayoutGuide key="safeArea" id="lYh-zu-UJi"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="color" keyPath="color1">
-                                <color key="value" red="0.92471486329999997" green="0.26683610679999997" blue="0.2586912811" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="value" red="0.93725490199999995" green="0.20000000000000001" blue="0.25098039220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </userDefinedRuntimeAttribute>
                             <userDefinedRuntimeAttribute type="color" keyPath="color2">
-                                <color key="value" red="0.78645449879999996" green="0.23440414670000001" blue="0.30577135090000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="value" red="0.93725490199999995" green="0.20000000000000001" blue="0.25098039220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
@@ -1753,7 +1753,7 @@
                                                 <rect key="frame" x="126.66666666666666" y="276" width="121" height="34"/>
                                                 <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
                                                 <state key="normal" title="Забыли пароль?">
-                                                    <color key="titleColor" systemColor="systemPinkColor" red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="titleColor" systemColor="systemPinkColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </state>
                                                 <connections>
                                                     <action selector="tappedButtonWithSender:" destination="N4i-YV-l6L" eventType="touchUpInside" id="CvC-Pr-XkG"/>
@@ -1848,10 +1848,10 @@
                         <viewLayoutGuide key="safeArea" id="qg7-8s-pAf"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="color" keyPath="color1">
-                                <color key="value" red="0.91764705879999997" green="0.27058823529999998" blue="0.2666666667" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="value" red="0.93725490196078431" green="0.25490196078431371" blue="0.21176470588235294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </userDefinedRuntimeAttribute>
                             <userDefinedRuntimeAttribute type="color" keyPath="color2">
-                                <color key="value" red="0.94509803920000002" green="0.67843137249999996" blue="0.44705882349999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="value" red="0.93805062770843506" green="0.25358119606971741" blue="0.2107679545879364" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
@@ -2285,7 +2285,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Восстановление пароля" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e0A-1q-atS">
-                                        <rect key="frame" x="82" y="0.0" width="250" height="26"/>
+                                        <rect key="frame" x="82.666666666666686" y="0.0" width="250" height="26"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="250" id="cd8-wJ-zRH"/>
                                             <constraint firstAttribute="height" constant="26" id="v5U-x4-7ZF"/>
@@ -2339,7 +2339,6 @@
         <!--Prepare Reset Password-->
         <scene sceneID="eDl-xp-g5p">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="gj7-6e-75O" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="loginResetPassword" modalTransitionStyle="crossDissolve" modalPresentationStyle="overCurrentContext" useStoryboardIdentifierAsRestorationIdentifier="YES" id="EKX-dU-kvS" customClass="PrepareResetPassword" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="77g-hh-zfN" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
@@ -2475,10 +2474,10 @@
                         <viewLayoutGuide key="safeArea" id="BYp-d4-MWO"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="color" keyPath="color1">
-                                <color key="value" red="0.91764705879999997" green="0.27058823529999998" blue="0.2666666667" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="value" red="0.93725490199999995" green="0.20000000000000001" blue="0.25098039220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </userDefinedRuntimeAttribute>
                             <userDefinedRuntimeAttribute type="color" keyPath="color2">
-                                <color key="value" red="0.94509803920000002" green="0.67843137249999996" blue="0.44705882349999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="value" red="0.93725490199999995" green="0.20000000000000001" blue="0.25098039220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
@@ -2495,6 +2494,7 @@
                         <outlet property="titleLabel" destination="u6L-Rw-FZ6" id="9Kb-MI-PfQ"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gj7-6e-75O" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2734.7826086956525" y="3866.576086956522"/>
         </scene>
@@ -2635,10 +2635,10 @@
                         <viewLayoutGuide key="safeArea" id="hEx-S2-gP6"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="color" keyPath="color1">
-                                <color key="value" red="0.91764705879999997" green="0.27058823529999998" blue="0.2666666667" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="value" red="0.93725490199999995" green="0.20000000000000001" blue="0.25098039220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </userDefinedRuntimeAttribute>
                             <userDefinedRuntimeAttribute type="color" keyPath="color2">
-                                <color key="value" red="0.94509803920000002" green="0.67843137249999996" blue="0.44705882349999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="value" red="0.93725490199999995" green="0.20000000000000001" blue="0.25098039220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
@@ -2790,6 +2790,7 @@ AABUAAAAAAAAAAAAAAAAAAAT6w
         <image name="visa-colored" width="93" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="Buh-jM-ADK"/>
         <segue reference="pC6-h6-eDd"/>
     </inferredMetricsTieBreakers>
 </document>

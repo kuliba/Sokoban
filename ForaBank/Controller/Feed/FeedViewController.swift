@@ -321,11 +321,11 @@ private extension FeedViewController {
     
     func addGradients() {
         let gradients = [
-            (UIColor(hexFromString: "EA4644")!, UIColor(hexFromString: "F1AD72")!),
-            (UIColor(hexFromString: "F1AD72")!, UIColor(hexFromString: "EA4544")!),
-            (UIColor(hexFromString: "EA4544")!, UIColor(hexFromString: "F1AD72")!),
-            (UIColor(hexFromString: "F1AD72")!, UIColor(hexFromString: "EA4544")!),
-            (UIColor(hexFromString: "EA4544")!, UIColor(hexFromString: "F1AD72")!)
+            (UIColor(hexFromString: "EF4136")!, UIColor(hexFromString: "EF4136")!),
+            (UIColor(hexFromString: "EF4136")!, UIColor(hexFromString: "EF4136")!),
+            (UIColor(hexFromString: "EF4136")!, UIColor(hexFromString: "EF4136")!),
+            (UIColor(hexFromString: "EF4136")!, UIColor(hexFromString: "EF4136")!),
+            (UIColor(hexFromString: "EF4136")!, UIColor(hexFromString: "EF4136")!)
         ]
         
         for gradient in gradients {

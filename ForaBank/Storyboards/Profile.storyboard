@@ -86,7 +86,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" red="0.78431372549019607" green="0.23921568627450979" blue="0.30588235294117649" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.93805062770000003" green="0.25358119610000002" blue="0.2107679546" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="uNT-Bq-Aff" firstAttribute="top" secondItem="tTC-gw-ECh" secondAttribute="top" constant="20" id="210-Be-bLB"/>
                             <constraint firstAttribute="trailing" secondItem="a4U-8d-F0m" secondAttribute="trailing" id="5x0-Ud-qHD"/>
@@ -100,10 +100,10 @@
                         <viewLayoutGuide key="safeArea" id="D26-2M-Ui8"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="color" keyPath="color1">
-                                <color key="value" red="0.7843137255" green="0.23921568630000001" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="value" red="0.93725490199999995" green="0.25490196079999999" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </userDefinedRuntimeAttribute>
                             <userDefinedRuntimeAttribute type="color" keyPath="color2">
-                                <color key="value" red="0.91764705879999997" green="0.2666666667" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="value" red="0.93725490199999995" green="0.25490196079999999" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
@@ -334,10 +334,10 @@
                         <viewLayoutGuide key="safeArea" id="gMx-PE-PnW"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="color" keyPath="color1">
-                                <color key="value" red="0.91764705882352937" green="0.27058823529411763" blue="0.26666666666666666" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="value" red="0.93725490199999995" green="0.25490196079999999" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </userDefinedRuntimeAttribute>
                             <userDefinedRuntimeAttribute type="color" keyPath="color2">
-                                <color key="value" red="0.94509803921568625" green="0.67843137254901964" blue="0.44705882352941173" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="value" red="0.93725490199999995" green="0.25490196079999999" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
@@ -495,10 +495,10 @@
                         <viewLayoutGuide key="safeArea" id="kcZ-hh-b3J"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="color" keyPath="color1">
-                                <color key="value" red="0.91764705879999997" green="0.27058823529999998" blue="0.2666666667" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="value" red="0.93725490199999995" green="0.25490196079999999" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </userDefinedRuntimeAttribute>
                             <userDefinedRuntimeAttribute type="color" keyPath="color2">
-                                <color key="value" red="0.94509803920000002" green="0.67843137249999996" blue="0.44705882349999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="value" red="0.93725490199999995" green="0.25490196079999999" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
@@ -539,10 +539,10 @@
                         <viewLayoutGuide key="safeArea" id="ajS-uT-1ui"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="color" keyPath="color1">
-                                <color key="value" red="0.91764705879999997" green="0.27058823529999998" blue="0.2666666667" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="value" red="0.93725490199999995" green="0.25490196079999999" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </userDefinedRuntimeAttribute>
                             <userDefinedRuntimeAttribute type="color" keyPath="color2">
-                                <color key="value" red="0.94509803920000002" green="0.67843137249999996" blue="0.44705882349999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="value" red="0.93725490199999995" green="0.25490196079999999" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
@@ -646,10 +646,10 @@
                         <viewLayoutGuide key="safeArea" id="Kog-aN-Sqo"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="color" keyPath="color1">
-                                <color key="value" red="0.98129886389999998" green="0.66436788989999995" blue="0.48922701439999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="value" red="0.93725490199999995" green="0.25490196079999999" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </userDefinedRuntimeAttribute>
                             <userDefinedRuntimeAttribute type="color" keyPath="color2">
-                                <color key="value" red="0.78645449879999996" green="0.23440414670000001" blue="0.30577135090000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="value" red="0.93725490199999995" green="0.25490196079999999" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
