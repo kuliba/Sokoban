@@ -167,10 +167,11 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
         guard let sourceOption = sourceProvider.currentValue as? PaymentOption, let distinationOption = destinationProvider.currentValue as? PaymentOption else {
             return
         }
-        prepareCard2Card(from: sourceOption.number, to: distinationOption.number, amount: Double(sumTextField.text!) ?? 0) { (success, token) in
-            self.activityIndicator.stopAnimating()
+        prepareCard2Card(from: sourceOption.number, to: distinationOption.number, amount: Double(sumTextField.text!) ?? 0) { [weak self] (success, token) in
+            store.dispatch(payment(sourceOption: sourceOption, destionationOption: distinationOption, sum: self?.sumTextField.text))
+            self?.activityIndicator.stopAnimating()
             if success {
-                self.performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
+                self?.performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
             }
         }
     }
