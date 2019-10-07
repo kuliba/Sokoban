@@ -12,6 +12,9 @@ protocol IPresentationModel {
 
 }
 
+extension String: IPresentationModel {
+}
+
 protocol ICellProvider {
     var isLoading: Bool { get }
     var currentValue: IPresentationModel? { get set }

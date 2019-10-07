@@ -54,6 +54,7 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
     var activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
 
     private let sourceProvider = PaymentOptionCellProvider()
+    private let destinationProviderNumber = CardNumberCellProvider()
     private let destinationProvider = PaymentOptionCellProvider()
     private var sourceConfigurations: [ICellConfigurator]?
     private var destinationConfigurations: [ICellConfigurator]?
@@ -110,7 +111,8 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
             PaymentOptionsPagerItem(provider: sourceProvider)
         ]
         destinationConfigurations = [
-            PaymentOptionsPagerItem(provider: destinationProvider)
+            PaymentOptionsPagerItem(provider: destinationProvider),
+            CardNumberPagerItem(provider: destinationProviderNumber)
         ]
         if let source = sourceConfigurations, let dest = destinationConfigurations {
             sourcePagerView.setConfig(config: source)

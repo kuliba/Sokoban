@@ -10,25 +10,34 @@ import UIKit
 import FSPagerView
 
 class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell {
-    
+
     @IBOutlet weak var leftButton: UIButton!
     @IBOutlet weak var textField: UITextField!
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        textField.delegate = self
     }
+
+    var maxCharactersLenght = 0
 
     func configure(provider: ICellProvider) {
         guard let cardNumberProvider = provider as? CardNumberCellProvider else {
             return
         }
-        
+
         textField.placeholder = cardNumberProvider.textFieldPlaceholder
         leftButton.imageView?.image = UIImage(named: cardNumberProvider.iconName)
-        
-        textField.addTarget(cardNumberProvider, action: #selector(cardNumberProvider.reformatAsCardNumber), for: .editingChanged)
+        maxCharactersLenght = cardNumberProvider.cardNumberLenght
 
-        //        messageLabel.text = message
+        textField.addTarget(cardNumberProvider, action: #selector(cardNumberProvider.reformatAsCardNumber), for: .editingChanged)
+    }
+}
+
+extension TextFieldPagerViewCell: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let text = textField.text else { return true }
+        let newLength = text.count + string.count - range.length
+        return newLength <= maxCharactersLenght
     }
 }
