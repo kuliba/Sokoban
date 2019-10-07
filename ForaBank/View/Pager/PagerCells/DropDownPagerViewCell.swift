@@ -21,11 +21,13 @@ class DropDownPagerViewCell: FSPagerViewCell, IConfigurableCell {
     }
 
     let dropDown = DropDown()
+
     var paymentOptions = [PaymentOption]() {
         didSet {
             dropDown.dataSource = Array(repeating: "", count: paymentOptions.count)
         }
     }
+    var provider: ICellProvider?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -48,9 +50,17 @@ class DropDownPagerViewCell: FSPagerViewCell, IConfigurableCell {
         dropDown.dismissMode = .onTap
         dropDown.direction = .bottom
         dropDown.anchorView = paymentOptionView
+        dropDown.selectionAction = { [weak self] (index, item) in
+            guard let option = self?.paymentOptions[index] else {
+                return
+            }
+            DispatchQueue.main.async {
+                self?.provider?.currentValue = option
+                self?.paymentOptionView.setupLayout(withPickerItem: option, isDroppable: true)
+            }
+        }
 
         let appearance = DropDown.appearance()
-
         appearance.cellHeight = 60
         appearance.selectionBackgroundColor = UIColor(red: 0.6494, green: 0.8155, blue: 1.0, alpha: 0.2)
         appearance.shadowColor = UIColor(white: 0.6, alpha: 1)
@@ -67,12 +77,20 @@ class DropDownPagerViewCell: FSPagerViewCell, IConfigurableCell {
         guard let paymentOptionProvider = provider as? PaymentOptionCellProvider else {
             return
         }
+        self.provider = paymentOptionProvider
 
         paymentOptionProvider.getData { [weak self] (data) in
             guard let paymentOptions = data as? [PaymentOption] else {
                 return
             }
             self?.paymentOptions = paymentOptions
+            guard let option = paymentOptions.first else {
+                return
+            }
+            DispatchQueue.main.async {
+                self?.provider?.currentValue = option
+                self?.paymentOptionView.setupLayout(withPickerItem: option, isDroppable: true)
+            }
         }
     }
 

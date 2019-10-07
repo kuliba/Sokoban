@@ -150,7 +150,7 @@
                                                         <rect key="frame" x="15" y="24" width="290" height="172"/>
                                                         <subviews>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f9s-h8-3Nc" customClass="PagerView" customModule="ForaBank" customModuleProvider="target">
-                                                                <rect key="frame" x="0.0" y="0.0" width="290" height="70"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="290" height="69.5"/>
                                                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                             </view>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0a3-3Z-548">
@@ -160,8 +160,8 @@
                                                                     <constraint firstAttribute="height" constant="1" id="3Bf-ow-5dE"/>
                                                                 </constraints>
                                                             </view>
-                                                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="g1p-TJ-nON" customClass="PagerView" customModule="ForaBank" customModuleProvider="target">
-                                                                <rect key="frame" x="0.0" y="92.5" width="290" height="70"/>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g1p-TJ-nON" customClass="PagerView" customModule="ForaBank" customModuleProvider="target">
+                                                                <rect key="frame" x="0.0" y="102.5" width="290" height="69.5"/>
                                                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                             </view>
                                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Group 6 Copy" translatesAutoresizingMaskIntoConstraints="NO" id="5kd-s3-qxW">
@@ -358,6 +358,7 @@
                     <size key="freeformSize" width="320" height="568"/>
                     <connections>
                         <outlet property="containterView" destination="7jF-kB-QvE" id="4oP-n4-FsA"/>
+                        <outlet property="destinationPagerView" destination="g1p-TJ-nON" id="siG-NV-DbH"/>
                         <outlet property="picker" destination="cOr-dw-QEx" id="E3P-CW-lAq"/>
                         <outlet property="pickerButton" destination="kfC-FM-FXM" id="PUa-To-1Iv"/>
                         <outlet property="pickerImageView" destination="IBa-Pg-g1h" id="lJr-Yw-yik"/>

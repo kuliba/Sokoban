@@ -16,6 +16,7 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
 
     // MARK: - Properties
     @IBOutlet weak var sourcePagerView: PagerView!
+    @IBOutlet weak var destinationPagerView: PagerView!
 
     @IBOutlet weak var picker: UIView!
     @IBOutlet weak var pickerImageView: UIImageView!
@@ -27,7 +28,7 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
     // MARK: - Actions
 
     @IBAction func sendButtonClicked(_ sender: Any) {
-        //makeC2C(toNumber: nil)
+        makeC2C()
     }
 
     @IBAction func backButtonClicked(_ sender: Any) {
@@ -51,10 +52,11 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
     var remittanceDestinationView: RemittanceOptionView!
     var selectedViewType: Bool = false //false - source; true - destination
     var activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
-    private let sourceConfigurations: [ICellConfigurator] = [
-        CardNumberPagerItem(provider: CardNumberCellProvider()),
-        PaymentOptionsPagerItem(provider: CardNumberCellProvider())
-    ]
+
+    private let sourceProvider = PaymentOptionCellProvider()
+    private let destinationProvider = PaymentOptionCellProvider()
+    private var sourceConfigurations: [ICellConfigurator]?
+    private var destinationConfigurations: [ICellConfigurator]?
 
 //    var selectedDestinationPaymentOption: PaymentOption?
 //    var defaultDestinationPaymentOption: PaymentOption?
@@ -103,7 +105,17 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
 //                self.activityIndicator.stopAnimating()
 //            }
 //        }
-        sourcePagerView.setConfig(config: sourceConfigurations)
+
+        sourceConfigurations = [
+            PaymentOptionsPagerItem(provider: sourceProvider)
+        ]
+        destinationConfigurations = [
+            PaymentOptionsPagerItem(provider: destinationProvider)
+        ]
+        if let source = sourceConfigurations, let dest = destinationConfigurations {
+            sourcePagerView.setConfig(config: source)
+            destinationPagerView.setConfig(config: dest)
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -149,17 +161,19 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
 //        setUpRemittanceViews()
     }
 
-//    func makeC2C(toNumber: String?) {
-//        activityIndicator.startAnimating()
-//        destinationNum = toNumber
-//        let toNum = ((toNumber != nil) ? toNumber : selectedDestinationPaymentOption?.number) ?? ""
-//        prepareCard2Card(from: selectedSourcePaymentOption?.number ?? "", to: toNum, amount: Double(sumTextField.text!) ?? 0) { (success, token) in
-//            self.activityIndicator.stopAnimating()
-//            if success {
-//                self.performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
-//            }
-//        }
-//    }
+    func makeC2C() {
+        activityIndicator.startAnimating()
+
+        guard let sourceOption = sourceProvider.currentValue as? PaymentOption, let distinationOption = destinationProvider.currentValue as? PaymentOption else {
+            return
+        }
+        prepareCard2Card(from: sourceOption.number, to: distinationOption.number, amount: Double(sumTextField.text!) ?? 0) { (success, token) in
+            self.activityIndicator.stopAnimating()
+            if success {
+                self.performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
+            }
+        }
+    }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "fromPaymentToPaymentVerification", let vc = segue.destination as? RegistrationCodeVerificationViewController {
