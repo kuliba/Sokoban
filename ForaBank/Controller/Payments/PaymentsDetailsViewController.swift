@@ -9,11 +9,15 @@
 import UIKit
 import ReSwift
 
+typealias CardNumberPagerItem = PagerViewCellHandler<TextFieldPagerViewCell, CardNumberCellProvider>
+typealias PaymentOptionsPagerItem = PagerViewCellHandler<DropDownPagerViewCell, CardNumberCellProvider>
+
 class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
 
     // MARK: - Properties
+    @IBOutlet weak var sourcePagerView: PagerView!
+    @IBOutlet weak var destinationPagerView: PagerView!
 
-    @IBOutlet weak var optionsTable: UITableView!
     @IBOutlet weak var picker: UIView!
     @IBOutlet weak var pickerImageView: UIImageView!
     @IBOutlet weak var sumTextField: UITextField!
@@ -24,7 +28,7 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
     // MARK: - Actions
 
     @IBAction func sendButtonClicked(_ sender: Any) {
-        makeC2C(toNumber: nil)
+        makeC2C()
     }
 
     @IBAction func backButtonClicked(_ sender: Any) {
@@ -49,53 +53,82 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
     var selectedViewType: Bool = false //false - source; true - destination
     var activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
 
-    var selectedDestinationPaymentOption: PaymentOption?
-    var defaultDestinationPaymentOption: PaymentOption?
-    var selectedSourcePaymentOption: PaymentOption?
-    var defaultSourcePaymentOption: PaymentOption?
+    private let sourceProvider = PaymentOptionCellProvider()
+    private let destinationProvider = PaymentOptionCellProvider()
+    private var sourceConfigurations: [ICellConfigurator]?
+    private var destinationConfigurations: [ICellConfigurator]?
 
-    var sourcePaymentOptions: [PaymentOption]? {
-        didSet {
-            guard defaultSourcePaymentOption != nil else {
-                selectedSourcePaymentOption = sourcePaymentOptions?.first
-                return
-            }
+//    var selectedDestinationPaymentOption: PaymentOption?
+//    var defaultDestinationPaymentOption: PaymentOption?
+//    var selectedSourcePaymentOption: PaymentOption?
+//    var defaultSourcePaymentOption: PaymentOption?
+//
+//    var sourcePaymentOptions: [PaymentOption]? {
+//        didSet {
+//            guard defaultSourcePaymentOption != nil else {
+//                selectedSourcePaymentOption = sourcePaymentOptions?.first
+//                return
+//            }
+//
+//            self.destinationPaymentOptions?.removeAll(where: { (option) -> Bool in
+//                option.id == defaultSourcePaymentOption?.id
+//            })
+//        }
+//    }
+//
+//    var destinationPaymentOptions: [PaymentOption]? {
+//        didSet {
+//            guard defaultDestinationPaymentOption != nil else {
+//                selectedDestinationPaymentOption = destinationPaymentOptions?.first
+//                return
+//            }
+//
+//            self.sourcePaymentOptions?.removeAll(where: { (option) -> Bool in
+//                option.id == defaultDestinationPaymentOption?.id
+//            })
+//        }
+//    }
+//
+//    var destinationNum: String?
 
-            self.destinationPaymentOptions?.removeAll(where: { (option) -> Bool in
-                option.id == defaultSourcePaymentOption?.id
-            })
-        }
-    }
-
-    var destinationPaymentOptions: [PaymentOption]? {
-        didSet {
-            guard defaultDestinationPaymentOption != nil else {
-                selectedDestinationPaymentOption = destinationPaymentOptions?.first
-                return
-            }
-
-            self.sourcePaymentOptions?.removeAll(where: { (option) -> Bool in
-                option.id == defaultDestinationPaymentOption?.id
-            })
-        }
-    }
-
-    var destinationNum: String?
-    
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpLayout()
-        activityIndicator.startAnimating()
-        allPaymentOptions { (success, paymentOptions) in
-            self.destinationPaymentOptions = paymentOptions
-            self.sourcePaymentOptions = paymentOptions
-            DispatchQueue.main.async {
-                self.optionsTable.reloadData()
-                self.activityIndicator.stopAnimating()
-            }
+//        activityIndicator.startAnimating()
+//        allPaymentOptions { (success, paymentOptions) in
+//            self.destinationPaymentOptions = paymentOptions
+//            self.sourcePaymentOptions = paymentOptions
+//            DispatchQueue.main.async {
+//                //self.optionsTable.reloadData()
+//                self.activityIndicator.stopAnimating()
+//            }
+//        }
+
+        sourceConfigurations = [
+            PaymentOptionsPagerItem(provider: sourceProvider)
+        ]
+        destinationConfigurations = [
+            PaymentOptionsPagerItem(provider: destinationProvider)
+        ]
+        if let source = sourceConfigurations, let dest = destinationConfigurations {
+            sourcePagerView.setConfig(config: source)
+            destinationPagerView.setConfig(config: dest)
         }
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        store.subscribe(self) { state in
+            state.select { $0.productsState }
+        }
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        store.unsubscribe(self)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -117,23 +150,23 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
     }
 
     internal func newState(state: ProductState) {
-        defaultSourcePaymentOption = state.sourceOption
-        defaultDestinationPaymentOption = state.destinationOption
+//        defaultSourcePaymentOption = state.sourceOption
+//        defaultDestinationPaymentOption = state.destinationOption
+//
+//        if (defaultSourcePaymentOption != nil) {
+//            selectedSourcePaymentOption = defaultSourcePaymentOption
+//        }
+//
+//        if (defaultDestinationPaymentOption != nil) {
+//            selectedDestinationPaymentOption = defaultDestinationPaymentOption
+//        }
 
-        if (defaultSourcePaymentOption != nil) {
-            selectedSourcePaymentOption = defaultSourcePaymentOption
-        }
-
-        if (defaultDestinationPaymentOption != nil) {
-            selectedDestinationPaymentOption = defaultDestinationPaymentOption
-        }
-
-        optionsTable.reloadData()
+        //optionsTable.reloadData()
 //        setUpRemittanceViews()
     }
 
     private func setUpLayout() {
-        optionsTable.register(UINib(nibName: String(describing: DropDownTableViewCell.self), bundle: nil), forCellReuseIdentifier: String(describing: DropDownTableViewCell.self))
+        //optionsTable.register(UINib(nibName: String(describing: DropDownTableViewCell.self), bundle: nil), forCellReuseIdentifier: String(describing: DropDownTableViewCell.self))
 
         activityIndicator.center = view.center
         view.addSubview(activityIndicator)
@@ -141,24 +174,27 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
 //        setUpRemittanceViews()
     }
 
-    func makeC2C(toNumber: String?) {
+    func makeC2C() {
         activityIndicator.startAnimating()
-        destinationNum = toNumber
-        let toNum = ((toNumber != nil) ? toNumber : selectedDestinationPaymentOption?.number) ?? ""
-        prepareCard2Card(from: selectedSourcePaymentOption?.number ?? "", to: toNum, amount: Double(sumTextField.text!) ?? 0) { (success, token) in
-            self.activityIndicator.stopAnimating()
+
+        guard let sourceOption = sourceProvider.currentValue as? PaymentOption, let distinationOption = destinationProvider.currentValue as? PaymentOption else {
+            return
+        }
+        prepareCard2Card(from: sourceOption.number, to: distinationOption.number, amount: Double(sumTextField.text!) ?? 0) { [weak self] (success, token) in
+            store.dispatch(payment(sourceOption: sourceOption, destionationOption: distinationOption, sum: self?.sumTextField.text))
+            self?.activityIndicator.stopAnimating()
             if success {
-                self.performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
+                self?.performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
             }
         }
     }
-    
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "fromPaymentToPaymentVerification", let vc = segue.destination as? RegistrationCodeVerificationViewController {
             vc.operationSum = sumTextField.text
-            vc.sourceOption = selectedSourcePaymentOption
-            vc.destinationOption = selectedDestinationPaymentOption
-            vc.destinationNum = destinationNum
+//            vc.sourceOption = selectedSourcePaymentOption
+//            vc.destinationOption = selectedDestinationPaymentOption
+//            vc.destinationNum = destinationNum
         }
     }
 }
@@ -175,8 +211,8 @@ private extension PaymentsDetailsViewController {
     func addGradientView() {
         let containerGradientView = GradientView()
         containerGradientView.frame = containterView.frame
-        containerGradientView.color1 = UIColor(red: 242 / 255, green: 173 / 255, blue: 114 / 255, alpha: 1)
-        containerGradientView.color2 = UIColor(red: 236 / 255, green: 69 / 255, blue: 68 / 255, alpha: 1)
+        containerGradientView.color1 = UIColor(red: 239 / 255, green: 65 / 255, blue: 54 / 255, alpha: 1)
+        containerGradientView.color2 = UIColor(red: 239 / 255, green: 65 / 255, blue: 54 / 255, alpha: 1)
         containterView.insertSubview(containerGradientView, at: 0)
     }
 }
@@ -224,16 +260,16 @@ extension PaymentsDetailsViewController: UITableViewDelegate, UITableViewDataSou
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var pickerItem: IPickerItem?
 
-        switch indexPath.item {
-        case 0:
-            pickerItem = selectedSourcePaymentOption
-            break
-        case 1:
-            pickerItem = selectedDestinationPaymentOption
-            break
-        default:
-            break
-        }
+//        switch indexPath.item {
+//        case 0:
+//            pickerItem = selectedSourcePaymentOption
+//            break
+//        case 1:
+//            pickerItem = selectedDestinationPaymentOption
+//            break
+//        default:
+//            break
+//        }
 
         let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: DropDownTableViewCell.self), for: indexPath) as? DropDownTableViewCell
 
@@ -247,27 +283,27 @@ extension PaymentsDetailsViewController: UITableViewDelegate, UITableViewDataSou
         let vc = PickerViewController(nibName: String(describing: PickerViewController.self), bundle: nil)
         vc.modalPresentationStyle = .overCurrentContext
 
-        switch indexPath.item {
-        case 0:
-            guard let nonNilOptions = sourcePaymentOptions else {
-                return
-            }
-            vc.pickerItems = nonNilOptions
-            break
-        case 1:
-            guard let nonNilOptions = destinationPaymentOptions else {
-                return
-            }
-            vc.pickerItems = nonNilOptions
-            break
-        default:
-            break
-        }
+//        switch indexPath.item {
+//        case 0:
+//            guard let nonNilOptions = sourcePaymentOptions else {
+//                return
+//            }
+//            vc.pickerItems = nonNilOptions
+//            break
+//        case 1:
+//            guard let nonNilOptions = destinationPaymentOptions else {
+//                return
+//            }
+//            vc.pickerItems = nonNilOptions
+//            break
+//        default:
+//            break
+//        }
 
-        vc.callBack = { (number) in
-            self.makeC2C(toNumber: number)
-        }
-        topMostVC()?.present(vc, animated: true, completion: nil)
+//        vc.callBack = { (number) in
+//            self.makeC2C(toNumber: number)
+//        }
+        //topMostVC()?.present(vc, animated: true, completion: nil)
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

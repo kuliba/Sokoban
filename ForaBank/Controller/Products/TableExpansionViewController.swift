@@ -12,21 +12,35 @@ class TableExpansionViewController: UIViewController {
 
     @IBOutlet var tableView: UITableView!
     var datasource = [ExpandingTableViewCellContent]()
-    var card: Card? = nil
+
+  
+    var items = [LaonSchedules]()
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-     
+  
+ 
+
+        func viewDidAppear(_ animated: Bool) {
+                  super.viewDidAppear(animated)
+            NetworkManager.shared().getLoansPayment { (success, items) in
+                             if success {
+                                 self.items = items ?? []
+                             }
+                         }
+              }
     }
 
+ 
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.delegate = self
         tableView.tableFooterView = UIView() // Removes empty cell separators
-        tableView.estimatedRowHeight = 100
+        tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
         
+  
         
         datasource = [ExpandingTableViewCellContent(title: "15 октября 2019",
                                                     subtitle: "Сумма кредита",
@@ -87,13 +101,15 @@ class TableExpansionViewController: UIViewController {
 
 extension TableExpansionViewController : UITableViewDataSource, UITableViewDelegate {
 
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return datasource.count
+        return items.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView .dequeueReusableCell(withIdentifier: String(describing: ExpandingTableViewCell.self), for: indexPath) as! ExpandingTableViewCell
         cell.set(content: datasource[indexPath.row])
+        cell.titleLabel.text = items[indexPath.row].actionType
         return cell
     }
 

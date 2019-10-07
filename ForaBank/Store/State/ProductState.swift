@@ -13,4 +13,5 @@ struct ProductState: Action {
     var sourceOption: PaymentOption?
     var destinationOption: PaymentOption?
     var selectedProduct: IProduct?
+    var paymentSum: String?
 }

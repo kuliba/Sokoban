@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina5_5" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Roboto-Light.ttf">
+            <string>Roboto-Light</string>
+        </array>
+        <array key="Roboto-Regular.ttf">
+            <string>Roboto-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PaymentOptionView" customModule="ForaBank" customModuleProvider="target">
+            <connections>
+                <outlet property="arrowsImageView" destination="KwK-PS-Huh" id="PxJ-YN-P4R"/>
+                <outlet property="companyImageView" destination="xUD-Ik-hCZ" id="GjV-XA-nby"/>
+                <outlet property="contentView" destination="iN0-l3-epB" id="Kog-AL-aQT"/>
+                <outlet property="leadingToArrowConstraint" destination="UC1-Tz-UbI" id="7K7-SX-t1C"/>
+                <outlet property="leadingToSuperviewConstraint" destination="Trb-pC-QUu" id="QXZ-AV-SW9"/>
+                <outlet property="optionNameLabel" destination="Yqv-za-OZz" id="6bJ-1K-w66"/>
+                <outlet property="optionNumberLabel" destination="fVx-Rf-pmi" id="aWz-Bu-Dtd"/>
+                <outlet property="optionValueLabel" destination="O5E-jU-nrv" id="MUg-q4-Cjg"/>
+                <outlet property="providerImageView" destination="0Lz-AM-zFF" id="GnJ-4o-XCF"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="290" height="60"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qqr-ci-MQa">
+                    <rect key="frame" x="16" y="0.0" width="274" height="60"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="0.000 000 000 ₽" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O5E-jU-nrv">
+                            <rect key="frame" x="124" y="18" width="130" height="24"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="24" id="ZM3-Tc-lLA"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="18"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Моя карта" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yqv-za-OZz">
+                            <rect key="frame" x="35.000000000000007" y="0.0" width="77.666666666666686" height="42.333333333333336"/>
+                            <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="252" text="0000 **** **** 0000" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fVx-Rf-pmi">
+                            <rect key="frame" x="11.000000000000007" y="42.333333333333336" width="114.66666666666669" height="17.666666666666664"/>
+                            <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="13"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tabbar_icon_feed" translatesAutoresizingMaskIntoConstraints="NO" id="xUD-Ik-hCZ">
+                            <rect key="frame" x="11" y="14.666666666666664" width="13" height="13"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="xUD-Ik-hCZ" secondAttribute="height" multiplier="1:1" id="DRZ-2V-ypU"/>
+                                <constraint firstAttribute="width" constant="13" id="T84-dQ-ccD"/>
+                            </constraints>
+                        </imageView>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="card_visa_logo" translatesAutoresizingMaskIntoConstraints="NO" id="0Lz-AM-zFF">
+                            <rect key="frame" x="133.66666666666666" y="43.666666666666664" width="45" height="15"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="0Lz-AM-zFF" secondAttribute="height" multiplier="3:1" id="2af-BR-MfG"/>
+                                <constraint firstAttribute="height" constant="15" id="Oke-Fc-pD2"/>
+                            </constraints>
+                        </imageView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="0Lz-AM-zFF" firstAttribute="centerY" secondItem="fVx-Rf-pmi" secondAttribute="centerY" id="4ow-1R-R0N"/>
+                        <constraint firstItem="fVx-Rf-pmi" firstAttribute="leading" secondItem="Qqr-ci-MQa" secondAttribute="leading" constant="11" id="5cM-Qa-cD4"/>
+                        <constraint firstItem="fVx-Rf-pmi" firstAttribute="top" secondItem="Yqv-za-OZz" secondAttribute="bottom" id="6W6-G9-sEY"/>
+                        <constraint firstAttribute="trailing" secondItem="O5E-jU-nrv" secondAttribute="trailing" constant="20" symbolic="YES" id="JAL-nP-j0z"/>
+                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="0Lz-AM-zFF" secondAttribute="trailing" constant="20" symbolic="YES" id="S6M-gK-Q0p"/>
+                        <constraint firstItem="O5E-jU-nrv" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Yqv-za-OZz" secondAttribute="trailing" id="Sij-ab-DQ6"/>
+                        <constraint firstItem="xUD-Ik-hCZ" firstAttribute="centerY" secondItem="Yqv-za-OZz" secondAttribute="centerY" id="TE8-AB-Wu3"/>
+                        <constraint firstAttribute="bottom" secondItem="fVx-Rf-pmi" secondAttribute="bottom" id="aEe-YA-kVp"/>
+                        <constraint firstItem="O5E-jU-nrv" firstAttribute="centerY" secondItem="Qqr-ci-MQa" secondAttribute="centerY" id="gdh-dX-0wg"/>
+                        <constraint firstItem="Yqv-za-OZz" firstAttribute="top" secondItem="Qqr-ci-MQa" secondAttribute="top" id="iQz-0P-zwV"/>
+                        <constraint firstItem="Yqv-za-OZz" firstAttribute="leading" secondItem="xUD-Ik-hCZ" secondAttribute="trailing" constant="11" id="jVh-WW-tkB"/>
+                        <constraint firstItem="0Lz-AM-zFF" firstAttribute="leading" secondItem="fVx-Rf-pmi" secondAttribute="trailing" constant="8" symbolic="YES" id="ngJ-2k-jqd"/>
+                        <constraint firstItem="xUD-Ik-hCZ" firstAttribute="leading" secondItem="Qqr-ci-MQa" secondAttribute="leading" constant="11" id="wQ6-3X-seG"/>
+                    </constraints>
+                </view>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="vertical_arrows" translatesAutoresizingMaskIntoConstraints="NO" id="KwK-PS-Huh">
+                    <rect key="frame" x="9" y="24.666666666666668" width="7" height="11.000000000000004"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="7" id="TJN-Sa-N9b"/>
+                    </constraints>
+                </imageView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="KwK-PS-Huh" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="9" id="CsH-Yz-5QW"/>
+                <constraint firstAttribute="trailing" secondItem="Qqr-ci-MQa" secondAttribute="trailing" id="Kfy-nw-qUT"/>
+                <constraint firstAttribute="bottom" secondItem="Qqr-ci-MQa" secondAttribute="bottom" id="LmR-zZ-xUc"/>
+                <constraint firstItem="Qqr-ci-MQa" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Trb-pC-QUu"/>
+                <constraint firstItem="Qqr-ci-MQa" firstAttribute="leading" secondItem="KwK-PS-Huh" secondAttribute="trailing" id="UC1-Tz-UbI"/>
+                <constraint firstItem="KwK-PS-Huh" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="oFS-fw-q4r"/>
+                <constraint firstItem="Qqr-ci-MQa" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="rp2-YX-DwA"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="Trb-pC-QUu"/>
+                </mask>
+            </variation>
+            <point key="canvasLocation" x="42.028985507246382" y="-136.14130434782609"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="card_visa_logo" width="41" height="18"/>
+        <image name="tabbar_icon_feed" width="25" height="25"/>
+        <image name="vertical_arrows" width="5" height="11"/>
+    </resources>
+</document>

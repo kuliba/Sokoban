@@ -19,6 +19,11 @@ func productReducer(state: ProductState?, action: Action) -> ProductState {
         newState.sourceOption = action.sourceOption
         newState.destinationOption = action.destinationOption
         break
+    case let action as SetPayment:
+        newState.sourceOption = action.sourceOption
+        newState.destinationOption = action.destinationOption
+        newState.paymentSum = action.sum
+        break
     case let action as SelectProduct:
         newState.selectedProduct = action.product
         break

@@ -77,7 +77,4 @@ class PaymentServices: PaymetsServiceProtocol {
     func getTransactionsStatement(forCardNumber: String, fromDate: Date, toDate: Date, headers: HTTPHeaders, completionHandler: @escaping (Bool, [DatedTransactions]?) -> Void) {
         completionHandler(false, datedTransactions)
     }
-    
-    
-    
 }

@@ -32,12 +32,12 @@ class CarouselViewController: UIViewController {
     var labels = [UILabel?]()
     let gradientView = GradientView()
     let gradients = [
-        [UIColor(hexFromString: "F1AE73")!, UIColor(hexFromString: "EB4340")!],
-       [UIColor(hexFromString: "F1AE73")!, UIColor(hexFromString: "EB4340")!],
-        [UIColor(hexFromString: "F1AE73")!, UIColor(hexFromString: "EB4340")!],
-        [UIColor(hexFromString: "F1AE73")!, UIColor(hexFromString: "EB4340")!],
-        [UIColor(hexFromString: "F1AE73")!, UIColor(hexFromString: "EB4340")!],
-        [UIColor(hexFromString: "F1AE73")!, UIColor(hexFromString: "EB4340")!]
+        [UIColor(hexFromString: "EF4136")!, UIColor(hexFromString: "EF4136")!],
+       [UIColor(hexFromString: "EF4136")!, UIColor(hexFromString: "EF4136")!],
+        [UIColor(hexFromString: "EF4136")!, UIColor(hexFromString: "EF4136")!],
+        [UIColor(hexFromString: "EF4136")!, UIColor(hexFromString: "EF4136")!],
+        [UIColor(hexFromString: "EF4136")!, UIColor(hexFromString: "EF4136")!],
+        [UIColor(hexFromString: "EF4136")!, UIColor(hexFromString: "EF4136")!]
     ]
     let xDevices = Constants.xDevices
     weak var currentViewController: UIViewController?

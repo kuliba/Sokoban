@@ -74,25 +74,30 @@ class CardDetailsViewController: UIViewController {
             }
             if card.number.prefix(6) == "557986" {
                 backgroundImageView.image = UIImage(named: "card_visa_standart")
+                cardView.titleLabel.textColor = .black
+                cardView.cardCashLabel.textColor = .black
+                cardView.cardNumberLabel.textColor = .black
+                cardView.cardValidityPeriodLabel.textColor = .black
+                
+            
             }
             if card.number.prefix(6) == "536466" {
                 backgroundImageView.image = UIImage(named: "card_visa_virtual")
             }
             if card.number.prefix(6) == "470336" {
                 backgroundImageView.image = UIImage(named: "card_visa_infinity")
-            }
+            } else {
             cardView.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.25)
             if card.type == .mastercard {
                 let blackView = UIView()
-                blackView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.45)
+                backgroundImageView.image = UIImage(named: "card_visa_gold")
                 blackView.translatesAutoresizingMaskIntoConstraints = false
-                backgroundImageView.addSubview(blackView)
-                backgroundImageView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[b]-0-|", options: [], metrics: nil, views: ["b": blackView]))
-                backgroundImageView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[b]-0-|", options: [], metrics: nil, views: ["b": blackView]))
+              backgroundImageView.image = UIImage(named: "card_visa_gold")
 
 //                selectedTabColor = .black
 //                tabColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.7)
                 cardView.foregroundColor = .white
+            }
             }
             cardView.layer.cornerRadius = 10
         }
@@ -258,9 +263,7 @@ private extension CardDetailsViewController {
             let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductAboutViewController") as? ProductAboutViewController
             managementVC?.items = card?.getProductAbout()
             newViewController = managementVC
-        case 3:
-            let managementVC = storyboard?.instantiateViewController(withIdentifier: "TableExpansionViewController") as? TableExpansionViewController
-            newViewController = managementVC
+     
         default:
             newViewController = storyboard?.instantiateViewController(withIdentifier: "feed\(index)")
         }

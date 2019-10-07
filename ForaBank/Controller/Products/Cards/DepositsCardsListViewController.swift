@@ -816,10 +816,10 @@ private extension DepositsCardsListViewController {
         
         for (i, c) in cards.enumerated() {
             let cardView = DetailedCardView(withCard: c)
-            cardView.layer.shadowColor = UIColor.black.cgColor
-            cardView.layer.shadowOpacity = 0.2
+            cardView.layer.shadowColor = UIColor.white.cgColor
+            cardView.layer.shadowOpacity = 1
             cardView.layer.shadowOffset = CGSize(width: 1, height: -1)
-            cardView.layer.shadowRadius = 4
+            cardView.layer.shadowRadius = 1
             //            cardView.layer.shouldRasterize = true
             cardView.translatesAutoresizingMaskIntoConstraints = false
             

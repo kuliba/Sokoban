@@ -45,7 +45,6 @@ class DepositsCardsDetailsStatementDetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        infoView.isHidden = true
 //        print(scrollView.gestureRecognizers)
        // recipient.text = "\((transaction?.comment)!)"
         nameTransaction.text = "\((transaction?.comment) ?? "1")"
