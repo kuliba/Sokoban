@@ -200,7 +200,7 @@ class RegistrationViewController: UIViewController {
         if let head = header as? MaskedNavigationBar {
             head.gradientLayer.startPoint = CGPoint(x: 0, y: 1)
             head.gradientLayer.endPoint = CGPoint(x: 1, y: 1)
-            head.gradientLayer.colors = [UIColor(red: 237 / 255, green: 73 / 255, blue: 73 / 255, alpha: 1).cgColor, UIColor(red: 241 / 255, green: 176 / 255, blue: 116 / 255, alpha: 1).cgColor]
+            head.gradientLayer.colors = [UIColor(red: 239 / 255, green: 65 / 255, blue: 54 / 255, alpha: 1).cgColor, UIColor(red: 239 / 255, green: 65 / 255, blue: 54 / 255, alpha: 1).cgColor]
         }
 
         if let banksAsset = NSDataAsset(name: "banks") {
