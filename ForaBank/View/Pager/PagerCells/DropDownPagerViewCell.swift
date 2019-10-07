@@ -21,6 +21,7 @@ class DropDownPagerViewCell: FSPagerViewCell, IConfigurableCell {
     }
 
     let dropDown = DropDown()
+    let activityIndicator = UIActivityIndicatorView(style: .gray)
 
     var paymentOptions = [PaymentOption]() {
         didSet {
@@ -74,10 +75,19 @@ class DropDownPagerViewCell: FSPagerViewCell, IConfigurableCell {
     }
 
     func configure(provider: ICellProvider) {
+        activityIndicator.center = center
+        addSubview(activityIndicator)
+        bringSubviewToFront(activityIndicator)
+
         guard let paymentOptionProvider = provider as? PaymentOptionCellProvider else {
             return
         }
         self.provider = paymentOptionProvider
+        paymentOptionProvider.loadingCallback = { [weak self] (isLoading) in
+            DispatchQueue.main.async {
+                isLoading ? self?.activityIndicator.startAnimating() : self?.activityIndicator.stopAnimating()
+            }
+        }
 
         paymentOptionProvider.getData { [weak self] (data) in
             guard let paymentOptions = data as? [PaymentOption] else {

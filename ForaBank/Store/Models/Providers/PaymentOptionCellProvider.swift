@@ -10,13 +10,20 @@ import Foundation
 
 class PaymentOptionCellProvider: ICellProvider {
     var currentValue: IPresentationModel?
-    var isLoading: Bool = false
+    var isLoading: Bool = false {
+        didSet {
+            loadingCallback!(isLoading)
+        }
+    }
+    var loadingCallback: ((_ isLoaing: Bool) -> ())?
 
     func getData(completion: @escaping ([IPresentationModel]) -> ()) {
-        allPaymentOptions { (success, paymentOptions) in
+        isLoading = true
+        allPaymentOptions { [weak self] (success, paymentOptions) in
             guard success, let options = paymentOptions as? [PaymentOption] else {
                 return
             }
+            self?.isLoading = false
             completion(options)
         }
     }
