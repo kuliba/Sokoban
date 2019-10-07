@@ -198,8 +198,8 @@ private extension PaymentsDetailsViewController {
     func addGradientView() {
         let containerGradientView = GradientView()
         containerGradientView.frame = containterView.frame
-        containerGradientView.color1 = UIColor(red: 242 / 255, green: 173 / 255, blue: 114 / 255, alpha: 1)
-        containerGradientView.color2 = UIColor(red: 236 / 255, green: 69 / 255, blue: 68 / 255, alpha: 1)
+        containerGradientView.color1 = UIColor(red: 239 / 255, green: 65 / 255, blue: 54 / 255, alpha: 1)
+        containerGradientView.color2 = UIColor(red: 239 / 255, green: 65 / 255, blue: 54 / 255, alpha: 1)
         containterView.insertSubview(containerGradientView, at: 0)
     }
 }
