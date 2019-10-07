@@ -131,6 +131,19 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
         store.unsubscribe(self)
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        store.subscribe(self) { state in
+            state.select { $0.productsState }
+        }
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        store.unsubscribe(self)
+    }
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         addGradientView() // TODO: Replace with GradientView view

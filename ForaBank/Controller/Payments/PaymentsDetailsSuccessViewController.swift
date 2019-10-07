@@ -30,6 +30,14 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
         dismissToRootViewController()
     }
 
+<<<<<<< HEAD
+=======
+    var operationSum: String?
+    var sourceOption: PaymentOption?
+    var destinationOption: PaymentOption?
+    var destinationNum: String?
+
+>>>>>>> origin/WIP
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,8 +48,28 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
         returnButton.backgroundColor = .clear
         returnButton.layer.borderWidth = 1
         returnButton.layer.borderColor = UIColor.white.cgColor
+
+        cardNameLabel.text = sourceOption?.name
+        if let value = destinationOption?.value {
+            cardSumLabel.text = String(describing: value)
+        }
+        cardNumberLabel.text = sourceOption?.maskedNumber
+
+        destinationName.text = destinationOption?.name
+        if let value = destinationOption?.value {
+            destinationSum.text = String(describing: value)
+        }
+
+        if destinationOption == nil {
+            destinationNumber.text = destinationNum
+        } else {
+            destinationNumber.text = destinationOption?.maskedNumber
+        }
+
+        sumLabel.text = "\(operationSum!) ₽"
     }
 
+<<<<<<< HEAD
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
@@ -85,6 +113,8 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
         sumLabel.text = "\(sum) ₽"
     }
 
+=======
+>>>>>>> origin/WIP
     // MARK: - Methods
 
     func dismissToRootViewController() {

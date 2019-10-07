@@ -353,6 +353,13 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
             segueId = "finish"
             vc.segueId = segueId
         }
+        if segue.identifier == "toSuccess", let vc = segue.destination as? PaymentsDetailsSuccessViewController {
+
+            vc.sourceOption = sourceOption
+            vc.destinationOption = destinationOption
+            vc.operationSum = operationSum
+            vc.destinationNum = destinationNum
+        }
     }
 }
 
