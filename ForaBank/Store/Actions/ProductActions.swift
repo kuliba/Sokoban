@@ -17,6 +17,12 @@ func startPayment(sourceOption: PaymentOption?, destionationOption: PaymentOptio
     }
 }
 
+func payment(sourceOption: PaymentOption?, destionationOption: PaymentOption?, sum: String?) -> Thunk<State> {
+    return Thunk<State> { dispatch, getState in
+        dispatch(SetPayment(sourceOption: sourceOption, destinationOption: destionationOption, sum: sum))
+    }
+}
+
 func selectedProduct(product: IProduct) -> Thunk<State> {
     return Thunk<State> { dispatch, getState in
         dispatch(SelectProduct(product: product))
@@ -32,6 +38,12 @@ func deselectedProduct() -> Thunk<State> {
 struct SetPaymentOptions: Action {
     let sourceOption: PaymentOption?
     let destinationOption: PaymentOption?
+}
+
+struct SetPayment: Action {
+    let sourceOption: PaymentOption?
+    let destinationOption: PaymentOption?
+    let sum: String?
 }
 
 struct SelectProduct: Action {

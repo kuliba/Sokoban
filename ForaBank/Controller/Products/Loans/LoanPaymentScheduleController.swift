@@ -12,7 +12,7 @@ import Foundation
 
 class LoanPaymentScheduleController: UITableViewController {
 
-    var items: [LoanScheduleModel]?
+    var items: [LaonSchedules]?
 
 //    func set(card: Card?) {
 //        self.card = card
@@ -72,12 +72,7 @@ class LoanPaymentScheduleController: UITableViewController {
         let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
         let item = items?[indexPath.item]
 
-        cell.textLabel?.text = item?.actionType
-        cell.textLabel?.font = UIFont(name: "Roboto-Light", size: 16.0)
-
-        cell.detailTextLabel?.text = item?.actionTypeBrief
-        cell.detailTextLabel?.font = UIFont(name: "Roboto", size: 18.0)
-        cell.detailTextLabel?.textColor = UIColor(named: "black")
+  
 
         return cell
     }

@@ -7,8 +7,9 @@
  */
 
 import UIKit
+import ReSwift
 
-class PaymentsDetailsSuccessViewController: UIViewController {
+class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
 
     // MARK: - Properties
     @IBOutlet weak var arrowImageView: UIImageView!
@@ -29,11 +30,14 @@ class PaymentsDetailsSuccessViewController: UIViewController {
         dismissToRootViewController()
     }
 
+<<<<<<< HEAD
+=======
     var operationSum: String?
     var sourceOption: PaymentOption?
     var destinationOption: PaymentOption?
     var destinationNum: String?
 
+>>>>>>> origin/WIP
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,7 +69,54 @@ class PaymentsDetailsSuccessViewController: UIViewController {
         sumLabel.text = "\(operationSum!) ₽"
     }
 
+<<<<<<< HEAD
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        store.subscribe(self) { state in
+            state.select { $0.productsState }
+        }
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        store.unsubscribe(self)
+    }
+
+    internal func newState(state: ProductState) {
+        //        defaultSourcePaymentOption = state.sourceOption
+        //        defaultDestinationPaymentOption = state.destinationOption
+        //
+        //        if (defaultSourcePaymentOption != nil) {
+        //            selectedSourcePaymentOption = defaultSourcePaymentOption
+        //        }
+        //
+        //        if (defaultDestinationPaymentOption != nil) {
+        //            selectedDestinationPaymentOption = defaultDestinationPaymentOption
+        //        }
+
+        //optionsTable.reloadData()
+        //        setUpRemittanceViews()
+
+        guard let sourceOption = state.sourceOption, let destinationOption = state.destinationOption, let sum = state.paymentSum else {
+            return
+        }
+
+        cardNameLabel.text = sourceOption.name
+        cardSumLabel.text = String(describing: sourceOption.value)
+        cardNumberLabel.text = sourceOption.maskedNumber
+
+        destinationName.text = destinationOption.name
+        destinationSum.text = String(describing: destinationOption.value)
+        destinationNumber.text = destinationOption.maskedNumber
+
+        sumLabel.text = "\(sum) ₽"
+    }
+
+=======
+>>>>>>> origin/WIP
     // MARK: - Methods
+
     func dismissToRootViewController() {
         if let first = presentingViewController,
             let second = first.presentingViewController,

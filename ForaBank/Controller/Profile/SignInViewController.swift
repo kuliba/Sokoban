@@ -18,7 +18,7 @@ class SignInViewController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var centralView: UIView!
-
+    
     var segueId: String? = nil
     var backSegueId: String? = nil
 
@@ -28,6 +28,9 @@ class SignInViewController: UIViewController {
         view.endEditing(true)
         segueId = backSegueId
         navigationController?.popViewController(animated: true)
+    }
+     @IBAction  func tappedButton(sender: UIButton!) {
+        performSegue(withIdentifier: "smsResetPassword", sender: nil)
     }
 
     @IBAction func signInButtonClicked() {
@@ -44,7 +47,7 @@ class SignInViewController: UIViewController {
                                           }
                                       })
     }
-
+  
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()

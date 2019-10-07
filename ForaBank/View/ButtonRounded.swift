@@ -9,10 +9,11 @@
 import UIKit
 
 class ButtonRounded: UIButton {
-    
+    let gold = UIColor(named: "#ffe700ff")
     override func awakeFromNib() {
         super.awakeFromNib()
         layer.cornerRadius = frame.height / 2
+            
     }
 }
 

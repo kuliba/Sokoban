@@ -22,4 +22,6 @@ target 'ForaBank' do
   pod 'TOPasscodeViewController'
   pod 'CryptoSwift'
   pod 'BiometricAuthentication'
+  pod 'FSPagerView'
+  pod 'DropDown'
 end
