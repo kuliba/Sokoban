@@ -109,7 +109,7 @@ extension TableExpansionViewController : UITableViewDataSource, UITableViewDeleg
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView .dequeueReusableCell(withIdentifier: String(describing: ExpandingTableViewCell.self), for: indexPath) as! ExpandingTableViewCell
         cell.set(content: datasource[indexPath.row])
-        cell.titleLabel.text = items[indexPath.row].actionType
+        cell.titleLabel.text = String(items[indexPath.row].loanID!)
         return cell
     }
 

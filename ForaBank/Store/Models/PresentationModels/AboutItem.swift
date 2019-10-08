@@ -21,35 +21,31 @@ class AboutItem: IAboutItem {
 
 
 
-    class LaonSchedules: Mappable {
-        var actionTypeCode: Double?
-        var actionTypeBrief: String?
-        var actionType: String?
-        var totalAmount: Double?
-        var paymentAmount: Double?
-        var dateValue: String?
-        var userAnnual: Double?
-        var number: String?
-        var principalDebt: Double?
-        var loanID: Int?
 
+
+    class LaonSchedules: Mappable {
+        let actionTypeBrief: String?
+        let userAnnual: Double?
+        let principalDebt: Double?
+        let loanID: String?
+        let collapsed: Bool
         required init(map: Mapper) throws {
-            try actionTypeCode = map.from("actionTypeCode")
-            try actionTypeBrief = map.from("actionTypeBrief")
-            try actionType = map.from("actionType")
-            try totalAmount = map.from("totalAmount")
-            try paymentAmount = map.from("paymentAmount")
             try principalDebt = map.from("principalDebt")
-            try number = map.from("number")
             try userAnnual = map.from("userAnnual")
             try loanID = map.from("loanId")
+            try collapsed = map.from("collapsed")
+            try actionTypeBrief = map.from("actionTypeBrief")
         }
-        init( principalDebt: Double? = nil, userAnnual: Double? = nil, number: String? = nil, DateValue: String? = nil) {
+        init( principalDebt: Double? = nil, userAnnual: Double? = nil,  loanID: String? = nil, collapsed: Bool = false, actionTypeBrief: String? = nil) {
             self.userAnnual = userAnnual
             self.principalDebt = principalDebt
+            self.loanID = loanID
+            self.collapsed = collapsed
+            self.actionTypeBrief = actionTypeBrief
+
+
           }
         
-     
             
 
     
