@@ -126,7 +126,7 @@ extension LoansViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let addToDepositAction = UITableViewRowAction(style: .normal, title: "Пополнить счет") { [weak self] action, indexPath in
-            self?.presentPaymentsDetailsViewController()
+            self?.presentPaymentDetailsViewController()
         }
         addToDepositAction.backgroundColor = UIColor(red: 26 / 255, green: 188 / 255, blue: 156 / 255, alpha: 1)
         return [addToDepositAction]
@@ -138,8 +138,8 @@ extension LoansViewController: UITableViewDataSource, UITableViewDelegate {
 
 // MARK: - Private methods
 private extension LoansViewController {
-    func presentPaymentsDetailsViewController() {
-        if let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentsDetailsViewController") as? PaymentsDetailsViewController {
+    func presentPaymentDetailsViewController() {
+        if let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentDetailsViewController") as? PaymentDetailsViewController {
             present(vc, animated: true, completion: nil)
         }
     }

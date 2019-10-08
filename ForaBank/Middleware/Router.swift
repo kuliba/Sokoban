@@ -23,7 +23,7 @@ func setupAuthorizedZone() {
 }
 
 func showPaymentViewController() {
-    guard let paymentVC = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentsDetailsViewController") as? PaymentsDetailsViewController else {
+    guard let paymentVC = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentDetailsViewController") as? PaymentDetailsViewController else {
         return
     }
     topMostVC()?.present(paymentVC, animated: true)

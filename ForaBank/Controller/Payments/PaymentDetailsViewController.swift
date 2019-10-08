@@ -13,7 +13,7 @@ typealias AccountNumberPagerItem = PagerViewCellHandler<TextFieldPagerViewCell, 
 typealias CardNumberPagerItem = PagerViewCellHandler<TextFieldPagerViewCell, CardNumberCellProvider>
 typealias PaymentOptionsPagerItem = PagerViewCellHandler<DropDownPagerViewCell, CardNumberCellProvider>
 
-class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
+class PaymentDetailsViewController: UIViewController, StoreSubscriber {
 
     // MARK: - Properties
     @IBOutlet weak var sourcePagerView: PagerView!
@@ -129,7 +129,7 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
 
 // - MARK: Private methods
 
-private extension PaymentsDetailsViewController {
+private extension PaymentDetailsViewController {
     func setUpPicker() {
         picker.layer.cornerRadius = 3
         pickerImageView.image = pickerImageView.image?.withRenderingMode(.alwaysTemplate)
@@ -145,7 +145,7 @@ private extension PaymentsDetailsViewController {
     }
 }
 
-extension PaymentsDetailsViewController: OptionPickerDelegate {
+extension PaymentDetailsViewController: OptionPickerDelegate {
     func setSelectedOption(option: String?) {
         // Set current option to selected one if not just dismissed
         if let option = option {
@@ -155,7 +155,7 @@ extension PaymentsDetailsViewController: OptionPickerDelegate {
     }
 }
 
-extension PaymentsDetailsViewController: RemittancePickerDelegate {
+extension PaymentDetailsViewController: RemittancePickerDelegate {
     func didSelectOptionView(optionView: RemittanceOptionView?, paymentOption: PaymentOption?) {
 //        self.selectedDestinationPaymentOption = paymentOption
         if selectedViewType {

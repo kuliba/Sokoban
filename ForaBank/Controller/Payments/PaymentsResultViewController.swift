@@ -9,7 +9,7 @@
 import UIKit
 import ReSwift
 
-class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
+class PaymentsResultViewController: UIViewController, StoreSubscriber {
 
     // MARK: - Properties
     @IBOutlet weak var arrowImageView: UIImageView!

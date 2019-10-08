@@ -164,8 +164,8 @@ extension AccountsViewController: UITableViewDataSource, UITableViewDelegate {
 // MARK: - Private methods
 
 private extension AccountsViewController {
-    func presentPaymentsDetailsViewController() {
-        if let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentsDetailsViewController") as? PaymentsDetailsViewController {
+    func presentPaymentDetailsViewController() {
+        if let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentDetailsViewController") as? PaymentDetailsViewController {
             present(vc, animated: true, completion: nil)
         }
     }
