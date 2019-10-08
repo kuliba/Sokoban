@@ -249,6 +249,7 @@
 		BD6F59782334B74F002F4D4E /* StateActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6F59772334B74F002F4D4E /* StateActions.swift */; };
 		BD6F597A2334BAA4002F4D4E /* StateReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6F59792334BAA4002F4D4E /* StateReducer.swift */; };
 		BD7CC1A1232125D000872D06 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = BD7CC1A0232125D000872D06 /* Localizable.strings */; };
+		BD81069B234CA52B004A43E9 /* AccountNumberCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD81069A234CA52B004A43E9 /* AccountNumberCellProvider.swift */; };
 		BD94E09F231EA6E50006456E /* MasksFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD94E09E231EA6E50006456E /* MasksFormatting.swift */; };
 		BDABE68323463D4A00CA0754 /* DropDownPagerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDABE68123463D4A00CA0754 /* DropDownPagerViewCell.swift */; };
 		BDABE68423463D4A00CA0754 /* DropDownPagerViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDABE68223463D4A00CA0754 /* DropDownPagerViewCell.xib */; };
@@ -536,6 +537,7 @@
 		BD6F59772334B74F002F4D4E /* StateActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateActions.swift; sourceTree = "<group>"; };
 		BD6F59792334BAA4002F4D4E /* StateReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateReducer.swift; sourceTree = "<group>"; };
 		BD7CC1A0232125D000872D06 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		BD81069A234CA52B004A43E9 /* AccountNumberCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountNumberCellProvider.swift; sourceTree = "<group>"; };
 		BD94E09E231EA6E50006456E /* MasksFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasksFormatting.swift; sourceTree = "<group>"; };
 		BDABE68123463D4A00CA0754 /* DropDownPagerViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownPagerViewCell.swift; sourceTree = "<group>"; };
 		BDABE68223463D4A00CA0754 /* DropDownPagerViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DropDownPagerViewCell.xib; sourceTree = "<group>"; };
@@ -798,7 +800,6 @@
 				A568142F21D0B9E3002C0899 /* Deposit.swift */,
 				0942B86C21625F7800370C71 /* Friend.swift */,
 				969899632303F2E20066C55B /* Loan.swift */,
-				96144B42233E21BB00B9F314 /* LoanSchedule.swift */,
 				A568143321D0CE6C002C0899 /* Profile.swift */,
 				0942B86A21625F4800370C71 /* Service.swift */,
 				9697E2A22334E30500974505 /* ServicesList.swift */,
@@ -1088,19 +1089,14 @@
 		A58760BD21BF8E220022DED5 /* API */ = {
 			isa = PBXGroup;
 			children = (
-				96EC41802301A6890087BFB0 /* AccountsService.swift */,
 				A551108A21C7999A00330510 /* AuthService.swift */,
 				A57CF1B52202DE1800E855A5 /* CardService.swift */,
 				BD21B6652338CE14001C5CF7 /* CardStatementService.swift */,
-				A568142D21D0B945002C0899 /* DepositsService.swift */,
 				BD21B6632338CE14001C5CF7 /* HIstoryService.swift */,
-				96144B40233E1E6B00B9F314 /* LoanPaymentSchedule.swift */,
-				969899672303F4060066C55B /* LoansService.swift */,
 				A58760BE21BF8E770022DED5 /* NetworkManager.swift */,
 				BD5170B223336C83001EAFC0 /* PaymentRequests.swift */,
 				BD21B6642338CE14001C5CF7 /* PaymentService.swift */,
 				A51AF84F21EA093800FB3B68 /* RegService.swift */,
-				A57CF1B7220435F200E855A5 /* StatementService.swift */,
 				A551108E21C7BEED00330510 /* TestAuthService.swift */,
 				A551109021C7C0AE00330510 /* TestCardService.swift */,
 				A51AF85121EA09E600FB3B68 /* TestRegService.swift */,
@@ -1117,7 +1113,6 @@
 		A5B473C221B3C09800F2E41F /* Payments */ = {
 			isa = PBXGroup;
 			children = (
-				BDFE1B15233D085400C49A5B /* Cells */,
 				BDABE687234640D000CA0754 /* PaymentOptionView.swift */,
 				BDABE6892346417C00CA0754 /* PaymentOptionView.xib */,
 				A5B473C321B3C0D200F2E41F /* RemittanceOptionView.swift */,
@@ -1213,6 +1208,7 @@
 		BD49E6582345E7790031561F /* Providers */ = {
 			isa = PBXGroup;
 			children = (
+				BD81069A234CA52B004A43E9 /* AccountNumberCellProvider.swift */,
 				BD0A1B60234607230079320D /* CardNumberCellProvider.swift */,
 				BD49E65B2345ED0A0031561F /* ICellProvider.swift */,
 				BD49E6592345E7CC0031561F /* PaymentOptionCellProvider.swift */,
@@ -1586,6 +1582,7 @@
 				BD5170B323336C83001EAFC0 /* PaymentRequests.swift in Sources */,
 				96144B41233E1E6B00B9F314 /* LoanPaymentSchedule.swift in Sources */,
 				A55B7B8621A7E86200A8A7FE /* DepositsHistoryDetailsSegueAnimator.swift in Sources */,
+				BD81069B234CA52B004A43E9 /* AccountNumberCellProvider.swift in Sources */,
 				094FFC0D218837580069DDCB /* RegistrationViewController.swift in Sources */,
 				BD21B66C2338E0FA001C5CF7 /* RegistrationActions.swift in Sources */,
 				A528EF4021B00C9300D189DD /* MonthCollectionViewCell.swift in Sources */,
@@ -1931,8 +1928,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
-				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
@@ -1955,8 +1950,6 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;

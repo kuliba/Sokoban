@@ -8,21 +8,14 @@
 
 import Foundation
 
-class CardNumberCellProvider: ICellProvider {
-    var currentValue: IPresentationModel?
+class CardNumberCellProvider: NSObject, ITextInputCellProvider {
 
     let iconName = "payments_transfer_between-accounts"
-    let textFieldPlaceholder = "Введите номер карты или счёта"
-    let cardNumberLenght = 19
+    let placeholder = "Введите номер карты"
+    let charactersMaxCount = 19
 
+    var currentValue: IPresentationModel?
     var isLoading: Bool = false
-
-    @objc func reformatAsCardNumber(textField: UITextField) {
-        guard let text = textField.text else { return }
-        let formatedText = modifyCreditCardString(creditCardString: text)
-        textField.text = formatedText
-        currentValue = text.removeWhitespace()
-    }
 
     func getData(completion: ([IPresentationModel]) -> ()) {
 

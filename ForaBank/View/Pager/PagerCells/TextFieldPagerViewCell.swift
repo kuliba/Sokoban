@@ -14,30 +14,42 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell {
     @IBOutlet weak var leftButton: UIButton!
     @IBOutlet weak var textField: UITextField!
 
+    var newValueCallback: ((_ newValue: IPresentationModel) -> ())?
+    var charactersMaxCount: Int?
+
     override func awakeFromNib() {
         super.awakeFromNib()
-        textField.delegate = self
     }
 
-    var maxCharactersLenght = 0
-
     func configure(provider: ICellProvider) {
-        guard let cardNumberProvider = provider as? CardNumberCellProvider else {
+        guard let textInputCellProvider = provider as? ITextInputCellProvider else {
             return
         }
 
-        textField.placeholder = cardNumberProvider.textFieldPlaceholder
-        leftButton.imageView?.image = UIImage(named: cardNumberProvider.iconName)
-        maxCharactersLenght = cardNumberProvider.cardNumberLenght
+        charactersMaxCount = textInputCellProvider.charactersMaxCount
+        newValueCallback = { (newValue) in
+            textInputCellProvider.currentValue = newValue
+        }
 
-        textField.addTarget(cardNumberProvider, action: #selector(cardNumberProvider.reformatAsCardNumber), for: .editingChanged)
+        textField.delegate = self
+        textField.placeholder = textInputCellProvider.placeholder
+        textField.addTarget(self, action: #selector(reformatAsCardNumber), for: .editingChanged)
+
+        leftButton.imageView?.image = UIImage(named: textInputCellProvider.iconName)
     }
 }
 
 extension TextFieldPagerViewCell: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        guard let text = textField.text else { return true }
+        guard let text = textField.text, let nonNilCharactersMaxCount = charactersMaxCount else { return true }
         let newLength = text.count + string.count - range.length
-        return newLength <= maxCharactersLenght
+        return newLength <= nonNilCharactersMaxCount
+    }
+
+    @objc func reformatAsCardNumber(textField: UITextField) {
+        guard let text = textField.text else { return }
+        let formatedText = modifyCreditCardString(creditCardString: text)
+        textField.text = formatedText
+        newValueCallback?(text.removeWhitespace())
     }
 }
