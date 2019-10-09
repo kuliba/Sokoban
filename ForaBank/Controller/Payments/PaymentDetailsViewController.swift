@@ -12,6 +12,7 @@ import ReSwift
 typealias AccountNumberPagerItem = PagerViewCellHandler<TextFieldPagerViewCell, AccountNumberCellProvider>
 typealias CardNumberPagerItem = PagerViewCellHandler<TextFieldPagerViewCell, CardNumberCellProvider>
 typealias PaymentOptionsPagerItem = PagerViewCellHandler<DropDownPagerViewCell, CardNumberCellProvider>
+typealias PhoneNumberPagerItem = PagerViewCellHandler<TextFieldPagerViewCell, PhoneNumberCellProvider>
 
 class PaymentDetailsViewController: UIViewController, StoreSubscriber {
 
@@ -58,6 +59,7 @@ class PaymentDetailsViewController: UIViewController, StoreSubscriber {
     private let destinationProvider = PaymentOptionCellProvider()
     private let destinationProviderCardNumber = CardNumberCellProvider()
     private let destinationProviderAccountNumber = AccountNumberCellProvider()
+    private let destinationProviderPhoneNumber = PhoneNumberCellProvider()
     private var sourceConfigurations: [ICellConfigurator]?
     private var destinationConfigurations: [ICellConfigurator]?
 
@@ -73,7 +75,8 @@ class PaymentDetailsViewController: UIViewController, StoreSubscriber {
         destinationConfigurations = [
             PaymentOptionsPagerItem(provider: destinationProvider),
             CardNumberPagerItem(provider: destinationProviderCardNumber),
-            AccountNumberPagerItem(provider: destinationProviderAccountNumber)
+            AccountNumberPagerItem(provider: destinationProviderAccountNumber),
+            PhoneNumberPagerItem(provider: destinationProviderPhoneNumber)
         ]
         if let source = sourceConfigurations, let dest = destinationConfigurations {
             sourcePagerView.setConfig(config: source)

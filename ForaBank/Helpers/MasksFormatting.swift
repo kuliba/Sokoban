@@ -8,23 +8,48 @@
 
 import Foundation
 
+/// String cleaners
+
+func cleanNumberString(string: String) -> String {
+    let cs = CharacterSet(charactersIn: "0123456789")
+    return string.components(separatedBy: cs.inverted).joined()
+}
+
 /// Formating
 
-func modifyCreditCardString(creditCardString : String) -> String {
+func formatedCreditCardString(creditCardString: String) -> String {
     let trimmedString = creditCardString.components(separatedBy: .whitespaces).joined()
 
     let arrOfCharacters = Array(trimmedString)
     var modifiedCreditCardString = ""
 
     if(arrOfCharacters.count > 0) {
-        for i in 0...arrOfCharacters.count-1 {
+        for i in 0...arrOfCharacters.count - 1 {
             modifiedCreditCardString.append(arrOfCharacters[i])
-            if((i+1) % 4 == 0 && i+1 != arrOfCharacters.count){
+            if((i + 1) % 4 == 0 && i + 1 != arrOfCharacters.count) {
                 modifiedCreditCardString.append(" ")
             }
         }
     }
     return modifiedCreditCardString
+}
+
+func formattedPhoneNumber(number: String) -> String {
+    let cleanPhoneNumber = number.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
+    let mask = "+X (XXX) XXX-XXXX"
+
+    var result = ""
+    var index = cleanPhoneNumber.startIndex
+    for ch in mask where index < cleanPhoneNumber.endIndex {
+        
+        if ch == "X" {
+            result.append(cleanPhoneNumber[index])
+            index = cleanPhoneNumber.index(after: index)
+        } else {
+            result.append(ch)
+        }
+    }
+    return result
 }
 
 // Numbers masks

@@ -252,6 +252,7 @@
 		BD81069B234CA52B004A43E9 /* AccountNumberCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD81069A234CA52B004A43E9 /* AccountNumberCellProvider.swift */; };
 		BD81069D234CDD12004A43E9 /* PaymentsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD81069C234CDD12004A43E9 /* PaymentsTableViewController.swift */; };
 		BD81069F234DD048004A43E9 /* PaymentHandlersProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD81069E234DD048004A43E9 /* PaymentHandlersProvider.swift */; };
+		BD8106A1234E1263004A43E9 /* PhoneNumberCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8106A0234E1262004A43E9 /* PhoneNumberCellProvider.swift */; };
 		BD94E09F231EA6E50006456E /* MasksFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD94E09E231EA6E50006456E /* MasksFormatting.swift */; };
 		BDABE68323463D4A00CA0754 /* DropDownPagerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDABE68123463D4A00CA0754 /* DropDownPagerViewCell.swift */; };
 		BDABE68423463D4A00CA0754 /* DropDownPagerViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDABE68223463D4A00CA0754 /* DropDownPagerViewCell.xib */; };
@@ -542,6 +543,7 @@
 		BD81069A234CA52B004A43E9 /* AccountNumberCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountNumberCellProvider.swift; sourceTree = "<group>"; };
 		BD81069C234CDD12004A43E9 /* PaymentsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTableViewController.swift; sourceTree = "<group>"; };
 		BD81069E234DD048004A43E9 /* PaymentHandlersProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentHandlersProvider.swift; sourceTree = "<group>"; };
+		BD8106A0234E1262004A43E9 /* PhoneNumberCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberCellProvider.swift; sourceTree = "<group>"; };
 		BD94E09E231EA6E50006456E /* MasksFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasksFormatting.swift; sourceTree = "<group>"; };
 		BDABE68123463D4A00CA0754 /* DropDownPagerViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownPagerViewCell.swift; sourceTree = "<group>"; };
 		BDABE68223463D4A00CA0754 /* DropDownPagerViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DropDownPagerViewCell.xib; sourceTree = "<group>"; };
@@ -1216,8 +1218,9 @@
 				BD81069A234CA52B004A43E9 /* AccountNumberCellProvider.swift */,
 				BD0A1B60234607230079320D /* CardNumberCellProvider.swift */,
 				BD49E65B2345ED0A0031561F /* ICellProvider.swift */,
-				BD49E6592345E7CC0031561F /* PaymentOptionCellProvider.swift */,
 				BD81069E234DD048004A43E9 /* PaymentHandlersProvider.swift */,
+				BD49E6592345E7CC0031561F /* PaymentOptionCellProvider.swift */,
+				BD8106A0234E1262004A43E9 /* PhoneNumberCellProvider.swift */,
 			);
 			path = Providers;
 			sourceTree = "<group>";
@@ -1753,6 +1756,7 @@
 				A568142421CBCD38002C0899 /* BankBranchViews.swift in Sources */,
 				09AF708C216F73FD00E7FCFC /* FeedCurrent2Cell.swift in Sources */,
 				09F2410C2170871F007B7D73 /* FeedInfoViewController.swift in Sources */,
+				BD8106A1234E1263004A43E9 /* PhoneNumberCellProvider.swift in Sources */,
 				A528EF4421B16D8A00D189DD /* BubbleStatsView.swift in Sources */,
 				96144B43233E21BB00B9F314 /* LoanSchedule.swift in Sources */,
 				09AF7078216F4A9600E7FCFC /* FeedUpcomingViewController.swift in Sources */,

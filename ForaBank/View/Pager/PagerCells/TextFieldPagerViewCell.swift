@@ -16,6 +16,7 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell {
 
     var newValueCallback: ((_ newValue: IPresentationModel) -> ())?
     var charactersMaxCount: Int?
+    var formattingFunc: ((String) -> (String))?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -26,6 +27,7 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell {
             return
         }
 
+        formattingFunc = textInputCellProvider.formatted
         charactersMaxCount = textInputCellProvider.charactersMaxCount
         newValueCallback = { (newValue) in
             textInputCellProvider.currentValue = newValue
@@ -35,7 +37,7 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell {
         textField.placeholder = textInputCellProvider.placeholder
         textField.addTarget(self, action: #selector(reformatAsCardNumber), for: .editingChanged)
 
-        leftButton.imageView?.image = UIImage(named: textInputCellProvider.iconName)
+        leftButton.setImage(UIImage(named: textInputCellProvider.iconName), for: .normal)
     }
 }
 
@@ -47,9 +49,9 @@ extension TextFieldPagerViewCell: UITextFieldDelegate {
     }
 
     @objc func reformatAsCardNumber(textField: UITextField) {
-        guard let text = textField.text else { return }
-        let formatedText = modifyCreditCardString(creditCardString: text)
+        guard let text = textField.text, let nonNilFormattingFunc = formattingFunc else { return }
+        let formatedText = nonNilFormattingFunc(text)
         textField.text = formatedText
-        newValueCallback?(text.removeWhitespace())
+        newValueCallback?(cleanNumberString(string: text))
     }
 }

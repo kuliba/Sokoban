@@ -20,4 +20,8 @@ class AccountNumberCellProvider: NSObject, ITextInputCellProvider {
     func getData(completion: ([IPresentationModel]) -> ()) {
 
     }
+    
+    func formatted(stringToFormat string: String) -> String {
+        return formatedCreditCardString(creditCardString: string)
+    }
 }
