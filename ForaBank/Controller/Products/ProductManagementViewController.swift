@@ -115,7 +115,8 @@ class ProductManagementViewController: UITableViewController {
                 return
             }
             let paymentOption = PaymentOption(product: product)
-            store.dispatch(startPayment(sourceOption: paymentOption, destionationOption: nil))
+            present(PaymentsTableViewController(), animated: true, completion: nil)
+//            store.dispatch(startPayment(sourceOption: paymentOption, destionationOption: nil))
             return
         }
         let alertVC = UIAlertController(title: "Функционал недоступен", message: "Функционал временно недоступен", preferredStyle: .alert)

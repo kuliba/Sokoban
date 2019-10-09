@@ -19,9 +19,7 @@ class AboutItem: IAboutItem {
     }
 }
 
-
-
-    class LaonSchedules: Mappable {
+class LaonSchedules: Mappable {
         var actionTypeCode: Double?
         var actionTypeBrief: String?
         var actionType: String?
@@ -47,13 +45,6 @@ class AboutItem: IAboutItem {
         init( principalDebt: Double? = nil, userAnnual: Double? = nil, number: String? = nil, DateValue: String? = nil) {
             self.userAnnual = userAnnual
             self.principalDebt = principalDebt
-          }
-        
-     
-            
-
-    
-
-
+        }
 }
 

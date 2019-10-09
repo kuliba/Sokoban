@@ -13,9 +13,6 @@ protocol IAboutItem {
     var value: String { get }
 }
 protocol ILoanSchedule {
-
     var actionType: String? { get }
-    
-
-       var loanID: Int? { get }
+    var loanID: Int? { get }
 }

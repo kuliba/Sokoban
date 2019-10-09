@@ -250,6 +250,8 @@
 		BD6F597A2334BAA4002F4D4E /* StateReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6F59792334BAA4002F4D4E /* StateReducer.swift */; };
 		BD7CC1A1232125D000872D06 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = BD7CC1A0232125D000872D06 /* Localizable.strings */; };
 		BD81069B234CA52B004A43E9 /* AccountNumberCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD81069A234CA52B004A43E9 /* AccountNumberCellProvider.swift */; };
+		BD81069D234CDD12004A43E9 /* PaymentsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD81069C234CDD12004A43E9 /* PaymentsTableViewController.swift */; };
+		BD81069F234DD048004A43E9 /* PaymentHandlersProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD81069E234DD048004A43E9 /* PaymentHandlersProvider.swift */; };
 		BD94E09F231EA6E50006456E /* MasksFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD94E09E231EA6E50006456E /* MasksFormatting.swift */; };
 		BDABE68323463D4A00CA0754 /* DropDownPagerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDABE68123463D4A00CA0754 /* DropDownPagerViewCell.swift */; };
 		BDABE68423463D4A00CA0754 /* DropDownPagerViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDABE68223463D4A00CA0754 /* DropDownPagerViewCell.xib */; };
@@ -538,6 +540,8 @@
 		BD6F59792334BAA4002F4D4E /* StateReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateReducer.swift; sourceTree = "<group>"; };
 		BD7CC1A0232125D000872D06 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		BD81069A234CA52B004A43E9 /* AccountNumberCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountNumberCellProvider.swift; sourceTree = "<group>"; };
+		BD81069C234CDD12004A43E9 /* PaymentsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTableViewController.swift; sourceTree = "<group>"; };
+		BD81069E234DD048004A43E9 /* PaymentHandlersProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentHandlersProvider.swift; sourceTree = "<group>"; };
 		BD94E09E231EA6E50006456E /* MasksFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasksFormatting.swift; sourceTree = "<group>"; };
 		BDABE68123463D4A00CA0754 /* DropDownPagerViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownPagerViewCell.swift; sourceTree = "<group>"; };
 		BDABE68223463D4A00CA0754 /* DropDownPagerViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DropDownPagerViewCell.xib; sourceTree = "<group>"; };
@@ -948,12 +952,13 @@
 		89C8DF142191BDF500D92B0A /* Payments */ = {
 			isa = PBXGroup;
 			children = (
-				096BCB062163518A005BC02B /* PaymentsViewController.swift */,
+				89C8DF0B21918DDC00D92B0A /* OptionPickerViewController.swift */,
 				0979D94F21903DF700034BC0 /* PaymentDetailsViewController.swift */,
 				0943729121907198003A66CC /* PaymentsResultViewController.swift */,
-				89C8DF0B21918DDC00D92B0A /* OptionPickerViewController.swift */,
-				A5B473C021B3BBCD00F2E41F /* RemittancePickerViewController.swift */,
+				BD81069C234CDD12004A43E9 /* PaymentsTableViewController.swift */,
+				096BCB062163518A005BC02B /* PaymentsViewController.swift */,
 				BDFE1B0B233CE7BD00C49A5B /* PickerViewController.swift */,
+				A5B473C021B3BBCD00F2E41F /* RemittancePickerViewController.swift */,
 				BDFE1B0C233CE7BD00C49A5B /* PickerViewController.xib */,
 			);
 			path = Payments;
@@ -1212,6 +1217,7 @@
 				BD0A1B60234607230079320D /* CardNumberCellProvider.swift */,
 				BD49E65B2345ED0A0031561F /* ICellProvider.swift */,
 				BD49E6592345E7CC0031561F /* PaymentOptionCellProvider.swift */,
+				BD81069E234DD048004A43E9 /* PaymentHandlersProvider.swift */,
 			);
 			path = Providers;
 			sourceTree = "<group>";
@@ -1565,6 +1571,7 @@
 				BD49E6572344F7F90031561F /* PagerViewCellHandler.swift in Sources */,
 				BD6F59782334B74F002F4D4E /* StateActions.swift in Sources */,
 				A568143421D0CE6C002C0899 /* Profile.swift in Sources */,
+				BD81069D234CDD12004A43E9 /* PaymentsTableViewController.swift in Sources */,
 				9610CB8E22FD6F0C00FE7C84 /* Account.swift in Sources */,
 				09D3C041215CE5D100998F57 /* DialogCell.swift in Sources */,
 				09203D87216CA79C00902BD2 /* FeedViewController.swift in Sources */,
@@ -1690,6 +1697,7 @@
 				A568142A21CE6A79002C0899 /* AnnotationsTableViewController.swift in Sources */,
 				BD5170AB2332250C001EAFC0 /* VerificationCodeReducer.swift in Sources */,
 				09AF707E216F676300E7FCFC /* FeedCurrentViewController.swift in Sources */,
+				BD81069F234DD048004A43E9 /* PaymentHandlersProvider.swift in Sources */,
 				969899682303F4060066C55B /* LoansService.swift in Sources */,
 				BD0A1B61234607230079320D /* CardNumberCellProvider.swift in Sources */,
 				09F2410121707B3B007B7D73 /* FeedInfo1Cell.swift in Sources */,
