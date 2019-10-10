@@ -173,10 +173,12 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/KeychainAccess/KeychainAccess.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/ModelMapper/Mapper.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/NVActivityIndicatorView/NVActivityIndicatorView.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/ObjcExceptionBridging/ObjcExceptionBridging.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/RMMapper/RMMapper.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/ReSwift/ReSwift.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/ReSwiftThunk/ReSwiftThunk.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/TOPasscodeViewController/TOPasscodeViewController.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/XCGLogger/XCGLogger.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/iCarousel/iCarousel.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
@@ -192,10 +194,12 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/KeychainAccess/KeychainAccess.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/ModelMapper/Mapper.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/NVActivityIndicatorView/NVActivityIndicatorView.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/ObjcExceptionBridging/ObjcExceptionBridging.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/RMMapper/RMMapper.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/ReSwift/ReSwift.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/ReSwiftThunk/ReSwiftThunk.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/TOPasscodeViewController/TOPasscodeViewController.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/XCGLogger/XCGLogger.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/iCarousel/iCarousel.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
