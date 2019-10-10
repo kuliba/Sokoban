@@ -51,9 +51,7 @@ class Loan {
                 AboutItem(title: "Номер", value: num),
                 AboutItem(title: "Основной долг", value: String(principalD))]
     }
-    func getLoansSchedule() -> Array<LaonSchedules> {
-        return [LaonSchedules()]
-         }
+ 
 
 }
 

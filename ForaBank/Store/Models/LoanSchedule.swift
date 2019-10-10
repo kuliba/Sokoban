@@ -38,7 +38,7 @@ class LoanScheduleModel: Mappable {
         self.principalDebt = principalDebt
       }
     
- 
+
         
 
 }

@@ -141,6 +141,11 @@
 		96144B43233E21BB00B9F314 /* LoanSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96144B42233E21BB00B9F314 /* LoanSchedule.swift */; };
 		9622CFBE234B225B0005701E /* changePasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9622CFBD234B225B0005701E /* changePasswordController.swift */; };
 		9630327E2346260000C211D8 /* prepareResetPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9630327D2346260000C211D8 /* prepareResetPassword.swift */; };
+		9660EEE6234C7B1100AE0647 /* CollapsibleTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9660EEE1234C7B1000AE0647 /* CollapsibleTableViewHeader.swift */; };
+		9660EEE7234C7B1100AE0647 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9660EEE2234C7B1000AE0647 /* Extensions.swift */; };
+		9660EEE8234C7B1100AE0647 /* CollapsibleTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9660EEE3234C7B1000AE0647 /* CollapsibleTableViewController.swift */; };
+		9660EEE9234C7B1100AE0647 /* CollapsibleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9660EEE4234C7B1100AE0647 /* CollapsibleTableViewCell.swift */; };
+		9660EEEA234C7B1100AE0647 /* ExampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9660EEE5234C7B1100AE0647 /* ExampleData.swift */; };
 		9697E29F2334C29700974505 /* OperatorsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9697E29E2334C29700974505 /* OperatorsList.swift */; };
 		9697E2A32334E30500974505 /* ServicesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9697E2A22334E30500974505 /* ServicesList.swift */; };
 		9698995E2303076F0066C55B /* LoansViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9698995D2303076F0066C55B /* LoansViewController.swift */; };
@@ -430,6 +435,11 @@
 		96144B42233E21BB00B9F314 /* LoanSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanSchedule.swift; sourceTree = "<group>"; };
 		9622CFBD234B225B0005701E /* changePasswordController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = changePasswordController.swift; sourceTree = "<group>"; };
 		9630327D2346260000C211D8 /* prepareResetPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = prepareResetPassword.swift; sourceTree = "<group>"; };
+		9660EEE1234C7B1000AE0647 /* CollapsibleTableViewHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollapsibleTableViewHeader.swift; sourceTree = "<group>"; };
+		9660EEE2234C7B1000AE0647 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		9660EEE3234C7B1000AE0647 /* CollapsibleTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollapsibleTableViewController.swift; sourceTree = "<group>"; };
+		9660EEE4234C7B1100AE0647 /* CollapsibleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollapsibleTableViewCell.swift; sourceTree = "<group>"; };
+		9660EEE5234C7B1100AE0647 /* ExampleData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleData.swift; sourceTree = "<group>"; };
 		9697E29E2334C29700974505 /* OperatorsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorsList.swift; sourceTree = "<group>"; };
 		9697E2A22334E30500974505 /* ServicesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesList.swift; sourceTree = "<group>"; };
 		9698995D2303076F0066C55B /* LoansViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoansViewController.swift; sourceTree = "<group>"; };
@@ -758,6 +768,7 @@
 		09C7C30B2174727A000EE472 /* Products */ = {
 			isa = PBXGroup;
 			children = (
+				9660EEE0234C7AD200AE0647 /* LoansExpandingTable */,
 				96E541142341656300770C06 /* ExpandingTableViewCell.swift */,
 				96E541152341656300770C06 /* TableExpansionViewController.swift */,
 				09C7C30C21747293000EE472 /* CarouselViewController.swift */,
@@ -980,6 +991,18 @@
 				9630327D2346260000C211D8 /* prepareResetPassword.swift */,
 			);
 			path = resetPassword;
+			sourceTree = "<group>";
+		};
+		9660EEE0234C7AD200AE0647 /* LoansExpandingTable */ = {
+			isa = PBXGroup;
+			children = (
+				9660EEE4234C7B1100AE0647 /* CollapsibleTableViewCell.swift */,
+				9660EEE3234C7B1000AE0647 /* CollapsibleTableViewController.swift */,
+				9660EEE1234C7B1000AE0647 /* CollapsibleTableViewHeader.swift */,
+				9660EEE5234C7B1100AE0647 /* ExampleData.swift */,
+				9660EEE2234C7B1000AE0647 /* Extensions.swift */,
+			);
+			path = LoansExpandingTable;
 			sourceTree = "<group>";
 		};
 		96F0DCEB231FDFAE005ABEED /* Accounts */ = {
@@ -1577,6 +1600,7 @@
 				BD81069D234CDD12004A43E9 /* PaymentsTableViewController.swift in Sources */,
 				9610CB8E22FD6F0C00FE7C84 /* Account.swift in Sources */,
 				09D3C041215CE5D100998F57 /* DialogCell.swift in Sources */,
+				9660EEE6234C7B1100AE0647 /* CollapsibleTableViewHeader.swift in Sources */,
 				09203D87216CA79C00902BD2 /* FeedViewController.swift in Sources */,
 				BD137A402326472D00326088 /* State.swift in Sources */,
 				09C7C30F2174888B000EE472 /* DepositsViewController.swift in Sources */,
@@ -1584,8 +1608,10 @@
 				895768CD2192D992005754D5 /* ProductDetailsViewController.swift in Sources */,
 				09D3C03A215CBCAB00998F57 /* ChatDialogsViewController.swift in Sources */,
 				BD94E09F231EA6E50006456E /* MasksFormatting.swift in Sources */,
+				9660EEEA234C7B1100AE0647 /* ExampleData.swift in Sources */,
 				09F2410921707B86007B7D73 /* FeedInfo3Cell.swift in Sources */,
 				BDB6B0112326A9C10006A534 /* PasscodeSignUpActions.swift in Sources */,
+				9660EEE8234C7B1100AE0647 /* CollapsibleTableViewController.swift in Sources */,
 				89C8DF0C21918DDC00D92B0A /* OptionPickerViewController.swift in Sources */,
 				BDFE1AC2233B906D00C49A5B /* App.swift in Sources */,
 				0939B5FB21774EA70029F03D /* DoubleRoundedEdgeView.swift in Sources */,
@@ -1617,6 +1643,7 @@
 				09C7C33D2175FADE000EE472 /* DepositsHistoryHeader.swift in Sources */,
 				BDB6B0132326A9E00006A534 /* PasscodeSingUpReducer.swift in Sources */,
 				A5B473C621B52D4500F2E41F /* BubblesDetailedStatsView.swift in Sources */,
+				9660EEE7234C7B1100AE0647 /* Extensions.swift in Sources */,
 				BDF4F94C23293C49007C448F /* PasscodeSignInState.swift in Sources */,
 				BDE4D08723226B4C0070BC3D /* IAboutItem.swift in Sources */,
 				BDFE1ACA233BAE9B00C49A5B /* PaymentOption.swift in Sources */,
@@ -1650,6 +1677,7 @@
 				096BCB0A216361AA005BC02B /* PaymentTemplateCell.swift in Sources */,
 				BDFE1B13233D083E00C49A5B /* PickerTableViewCell.swift in Sources */,
 				A55663A421EDB22600E48C40 /* OnMapButton.swift in Sources */,
+				9660EEE9234C7B1100AE0647 /* CollapsibleTableViewCell.swift in Sources */,
 				89C8DF0E2191ADF200D92B0A /* AccountsViewController.swift in Sources */,
 				09E2141F21873DCA00D16D21 /* DepositsCardsDetailsStatementDetailsViewController.swift in Sources */,
 				A5C5C03C21B66485005D6B8F /* BubbleDetailedStatsView.swift in Sources */,

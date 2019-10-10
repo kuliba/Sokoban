@@ -22,13 +22,35 @@ class AccountsViewController: UIViewController {
 
     let cellId = "DepositsDepositCell"
 
+    private let refreshControl = UIRefreshControl()
 
+    
+
+      @objc func refresh(_ sender: Any) {
+    
+        
+        NetworkManager.shared().getDepos { (success, accounts) in
+                 if success {
+                     self.accounts = accounts ?? []
+                 }
+             }
+        self.tableView.reloadData()
+        refreshControl.endRefreshing()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         activityIndicatorView.startAnimation()
         setUpTableView()
         LabelNoProduct.isHidden = true
+        
+           refreshControl.attributedTitle = NSAttributedString(string: "Обновление")
+        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+                  self.tableView.addSubview(refreshControl)
+
+                  self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cellId")
+
+        
 
     }
 

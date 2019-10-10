@@ -142,14 +142,14 @@ class NetworkManager {
     ]
 
     // Initialization
-    private init(_ baseURLString: String, _ authService: AuthServiceProtocol, _ regService: RegServiceProtocol, _ cardService: CardServiceProtocol, _ paymentsServices: PaymetsServiceProtocol, _ depositsService: DepositsServiceProtocol, _ DeposService: DeposServiceProtocol, _ LoanPaymentSchedule: LoanPaymentScheduleProtocol, _ historyService: HistoryServiceProtocol, _ loansService: LoansServiceProtocol, _ statementService: StatementServiceProtocol) {
+    private init(_ baseURLString: String, _ authService: AuthServiceProtocol, _ regService: RegServiceProtocol, _ cardService: CardServiceProtocol, _ paymentsServices: PaymetsServiceProtocol, _ depositsService: DepositsServiceProtocol, _ DeposService: DeposServiceProtocol, _ LaonSchedules: LoanPaymentScheduleProtocol, _ historyService: HistoryServiceProtocol, _ loansService: LoansServiceProtocol, _ statementService: StatementServiceProtocol) {
         self.baseURLString = baseURLString
         self.authService = authService
         self.regService = regService
         self.cardService = cardService
         self.paymentServices = paymentsServices
         self.loansService = loansService
-        self.loanPaymentSchedule = LoanPaymentSchedule
+        self.loanPaymentSchedule = LaonSchedules
         self.depositsService = depositsService
         self.deposService = DeposService
         self.historyService = historyService
