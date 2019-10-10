@@ -21,34 +21,64 @@ class AccountsViewController: UIViewController {
     let transitionAnimator = AccountsSegueAnimator()
 
     let cellId = "DepositsDepositCell"
+    var refreshView: RefreshView!
 
-    private let refreshControl = UIRefreshControl()
+     var refreshControl: RefreshView!
 
+ 
     
-
-      @objc func refresh(_ sender: Any) {
     
-        
-        NetworkManager.shared().getDepos { (success, accounts) in
-                 if success {
-                     self.accounts = accounts ?? []
-                 }
-             }
-        self.tableView.reloadData()
-        refreshControl.endRefreshing()
+    var tableViewRefreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.backgroundColor = .clear
+        refreshControl.tintColor = .clear
+        refreshControl.addTarget(self, action: #selector(refreshTableView), for: .valueChanged)
+        return refreshControl
+    }()
+    
+    
+    func prepareUI() {
+        // Adding 'tableViewRefreshControl' to tableView
+        tableView.refreshControl = tableViewRefreshControl
+        // Getting the nib from bundle
+        getRefereshView()
     }
+    
+    @objc func refreshTableView() {
+          refreshView.startAnimation()
+        NetworkManager.shared().getDepos { (success, accounts) in
+            if success {
+                self.accounts = accounts ?? []
+            }
+            
+            self.refreshView.stopAnimation()
+            self.tableViewRefreshControl.endRefreshing()
+        }
+
+        
+      }
+    
+    func getRefereshView() {
+        if let objOfRefreshView = Bundle.main.loadNibNamed("RefreshView", owner: self, options: nil)?.first as? RefreshView {
+            // Initializing the 'refreshView'
+            refreshView = objOfRefreshView
+            // Giving the frame as per 'tableViewRefreshControl'
+            refreshView.frame = tableViewRefreshControl.frame
+            // Adding the 'refreshView' to 'tableViewRefreshControl'
+            tableViewRefreshControl.addSubview(refreshView)
+        }
+    }
+    
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
         activityIndicatorView.startAnimation()
         setUpTableView()
         LabelNoProduct.isHidden = true
-        
-           refreshControl.attributedTitle = NSAttributedString(string: "Обновление")
-        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
-                  self.tableView.addSubview(refreshControl)
-
-                  self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cellId")
+          prepareUI()
+       
+    
 
         
 
