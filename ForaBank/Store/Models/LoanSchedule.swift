@@ -38,9 +38,7 @@ class LoanScheduleModel: Mappable {
         self.principalDebt = principalDebt
       }
     
- func getLoansSchedule() -> Array<LaonSchedules> {
- return [LaonSchedules()]
-  }
+
         
 
 }

@@ -48,17 +48,21 @@ class LoanPaymentSchedule: LoanPaymentScheduleProtocol {
                                       let data = json["data"] as? Array<Any> {
                                       for cardData in data {
                                           if let cardData = cardData as? Dictionary<String, Any>,
-                                           
+                                            var paymentDate  : String? = dayMonthYear(milisecond: (cardData["paymentDate"] as? Double ?? 1.00)),
                                             let actionEntryList = cardData["actionEntryList"] as? Array<Dictionary<String,Any>> {
                                                 for dataAction in actionEntryList {
                                               let userAnnual = dataAction["userAnnual"] as? Double
                                               let principalDebt = dataAction["principalDebt"] as? Double
                                                  let loanID = dataAction["principalDebt"] as? String
                                             let actionTypeBrief = dataAction["actionTypeBrief"] as? String
+                                                    let actionType = dataAction["actionType"] as? String
+                                                    let paymentAmount = dataAction["paymentAmount"] as? Double
+                                                    
+                                                 
                                         
                                         
-
-                                            let items = LaonSchedules(principalDebt: principalDebt, userAnnual: userAnnual, loanID: loanID, actionTypeBrief:actionTypeBrief)
+                                                
+                                                    let items = LaonSchedules(principalDebt: principalDebt, userAnnual: userAnnual, loanID: loanID, actionTypeBrief:actionTypeBrief,paymentDate:paymentDate, items: [Item](),actionType:actionType, paymentAmount: paymentAmount)
                                               dataPayment.append(items)
                                 }
                             }

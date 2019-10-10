@@ -49,12 +49,13 @@ class DepositsCardsDetailsStatementDetailsViewController: UIViewController {
        // recipient.text = "\((transaction?.comment)!)"
         nameTransaction.text = "\((transaction?.comment) ?? "1")"
         datetransaction.text = "\((transaction?.operationDate)!)"
-        amountPaT.text = "\((transaction?.amount) ?? 11)" + "\("₽")"
+        amountPaT.text = "\(maskSum(sum:transaction?.amount ?? 11))" + "\("₽")"
         if var data = transaction?.operationType {
             if data == "CREDIT"{
-                amountPaT.text = "\("+")" + "\((transaction?.amount)!)" + "\("₽")"
+                amountPaT.text = "\("+")" + "\(maskSum(sum:(transaction?.amount)!))" + "\("₽")"
             } else {
-                amountPaT.text = "\("-")" + "\((transaction?.amount)!)" + "\("₽")"
+                view.backgroundColor = .red
+                amountPaT.text = "\("-")" + "\(maskSum(sum:(transaction?.amount)!))" + "\("₽")"
             }
         }
     }

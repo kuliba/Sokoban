@@ -7,50 +7,42 @@
 //
 
 import UIKit
-import Alamofire
 
 //
 // MARK: - View Controller
 //
 class CollapsibleTableViewController: UITableViewController {
     
-    var sections = sectionsData
     
-    
-
-  var loan = "10001475158"
-
-    private let baseURLString: String = "https://git.briginvest.ru/dbo/api/v2/"
-
-
- var items = [LaonSchedules]() {
-        didSet {
-            tableView.reloadData()
-
+    var sectionLoans = [LaonSchedules](){
+          didSet {
+                 tableView.reloadData()
         }
     }
     
 
+
+      override func viewDidAppear(_ animated: Bool) {
+          super.viewDidAppear(animated)
+          NetworkManager.shared().getLoansPayment { (success, sectionLoans) in
+              if success {
+                  self.sectionLoans = sectionLoans ?? []
+              }
+          }
+      }
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-                
+        tableView.contentInset.top = 100
+        tableView.contentOffset.y = 100
         // Auto resizing the height of the cell
+        tableView.contentInset.top = 26
         tableView.estimatedRowHeight = 70
         tableView.rowHeight = UITableView.automaticDimension
         
         self.title = "Apple Products"
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-           super.viewDidAppear(animated)
-           NetworkManager.shared().getLoansPayment { (success, items) in
-               if success {
-                   self.items = items ?? []
-               }
-           }
-       }
     
 }
 
@@ -59,27 +51,29 @@ class CollapsibleTableViewController: UITableViewController {
 //
 extension CollapsibleTableViewController {
 
-    
-    
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return sections.count
+        return sectionLoans.count
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return sections[section].collapsed ? 0 : sections[section].items.count
+        return sectionLoans[section].collapsed ? 0 : 1
     }
     
     // Cell
+    
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: CollapsibleTableViewCell = tableView.dequeueReusableCell(withIdentifier: "cell") as? CollapsibleTableViewCell ??
-            CollapsibleTableViewCell(style: .default, reuseIdentifier: "cell")
-        
-        
-        cell.nameLabel.text = items[indexPath.row].actionTypeBrief
-        cell.detailLabel.text = "1"
-        
-        return cell
-    }
+         let cell: CollapsibleTableViewCell = tableView.dequeueReusableCell(withIdentifier: "cell") as? CollapsibleTableViewCell ??
+             CollapsibleTableViewCell(style: .default, reuseIdentifier: "cell")
+         
+        let item: LaonSchedules = sectionLoans[indexPath.section]
+         
+        cell.nameLabel.text = sectionLoans[indexPath.section].actionType
+        cell.detailLabel.text = String((item.paymentAmount)!)
+        cell.creditPayment.text = String((item.paymentDate)!)
+         
+         return cell
+     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
@@ -89,9 +83,9 @@ extension CollapsibleTableViewController {
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header") as? CollapsibleTableViewHeader ?? CollapsibleTableViewHeader(reuseIdentifier: "header")
         
-        header.titleLabel.text = sections[section].name
+        header.titleLabel.text = sectionLoans[section].paymentDate
         header.arrowLabel.text = ">"
-        header.setCollapsed(items[section].collapsed)
+        header.setCollapsed(sectionLoans[section].collapsed)
         
         header.section = section
         header.delegate = self
@@ -115,10 +109,10 @@ extension CollapsibleTableViewController {
 extension CollapsibleTableViewController: CollapsibleTableViewHeaderDelegate {
     
     func toggleSection(_ header: CollapsibleTableViewHeader, section: Int) {
-        let collapsed = !sections[section].collapsed
+        let collapsed = !sectionLoans[section].collapsed
         
         // Toggle collapse
-        sections[section].collapsed = collapsed
+        sectionLoans[section].collapsed = collapsed
         header.setCollapsed(collapsed)
         
         tableView.reloadSections(NSIndexSet(index: section) as IndexSet, with: .automatic)

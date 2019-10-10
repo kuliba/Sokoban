@@ -26,6 +26,23 @@ class LoansViewController: UIViewController {
     
     @IBOutlet weak var LabelNoProduct: UILabel!
     
+    private let refreshControl = UIRefreshControl()
+
+  
+
+    @objc func refresh(_ sender: Any) {
+        NetworkManager.shared().getLoans { (success, loans) in
+            if success {
+                self.loan = loans ?? []
+            }
+        }
+
+        self.tableView.reloadData()
+        self.refreshControl.isRefreshing
+        refreshControl.endRefreshing()
+        
+        }
+        
     var loan = [Loan]() {
         didSet {
             tableView.reloadData()
@@ -46,8 +63,21 @@ class LoansViewController: UIViewController {
         LabelNoProduct.isHidden = true
         self.tableView.delegate = self
         self.tableView.dataSource = self
+        
+        
+           refreshControl.attributedTitle = NSAttributedString(string: "Обновление")
+        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+                  self.tableView.addSubview(refreshControl)
 
+                  self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cellId")
+
+        
+        
     }
+    
+    
+ 
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
@@ -75,7 +105,9 @@ class LoansViewController: UIViewController {
                 self.loan = loans ?? []
             }
         }
+
     }
+ 
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
@@ -103,6 +135,9 @@ class LoansViewController: UIViewController {
 // MARK: - UITableView DataSource and Delegate
 extension LoansViewController: UITableViewDataSource, UITableViewDelegate {
 
+    
+    
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return loan.count
     }

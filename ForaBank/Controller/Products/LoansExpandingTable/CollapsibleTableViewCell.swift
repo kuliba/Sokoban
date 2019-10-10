@@ -12,6 +12,9 @@ class CollapsibleTableViewCell: UITableViewCell {
     
     let nameLabel = UILabel()
     let detailLabel = UILabel()
+    let creditPayment = UILabel()
+    
+
     
     // MARK: Initalizers
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -39,6 +42,8 @@ class CollapsibleTableViewCell: UITableViewCell {
         detailLabel.numberOfLines = 0
         detailLabel.font = UIFont.systemFont(ofSize: 12)
         detailLabel.textColor = UIColor.lightGray
+
+ 
     }
     
     required init?(coder aDecoder: NSCoder) {
