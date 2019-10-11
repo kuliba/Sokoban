@@ -296,6 +296,8 @@
 		BDB6B0162326AAA60006A534 /* PasscodeSignUpState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6B0152326AAA60006A534 /* PasscodeSignUpState.swift */; };
 		BDB6B01B2327FC700006A534 /* SecurityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6B01A2327FC700006A534 /* SecurityService.swift */; };
 		BDB7916D2338C8B10002C7EE /* VerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB7916C2338C8B10002C7EE /* VerificationCodeViewController.swift */; };
+		BDCCE9092350BB6E0087F5F2 /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCCE9082350BB6E0087F5F2 /* AlertService.swift */; };
+		BDCCE90B2350BB8C0087F5F2 /* IAlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCCE90A2350BB8C0087F5F2 /* IAlertService.swift */; };
 		BDE4D080232248420070BC3D /* ProductAboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE4D07F232248420070BC3D /* ProductAboutViewController.swift */; };
 		BDE4D08323224E570070BC3D /* AboutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE4D08223224E570070BC3D /* AboutItem.swift */; };
 		BDE4D085232254430070BC3D /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE4D084232254430070BC3D /* Date.swift */; };
@@ -618,6 +620,8 @@
 		BDB6B0152326AAA60006A534 /* PasscodeSignUpState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignUpState.swift; sourceTree = "<group>"; };
 		BDB6B01A2327FC700006A534 /* SecurityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityService.swift; sourceTree = "<group>"; };
 		BDB7916C2338C8B10002C7EE /* VerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeViewController.swift; sourceTree = "<group>"; };
+		BDCCE9082350BB6E0087F5F2 /* AlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertService.swift; sourceTree = "<group>"; };
+		BDCCE90A2350BB8C0087F5F2 /* IAlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAlertService.swift; sourceTree = "<group>"; };
 		BDE4D07F232248420070BC3D /* ProductAboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductAboutViewController.swift; sourceTree = "<group>"; };
 		BDE4D08223224E570070BC3D /* AboutItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutItem.swift; sourceTree = "<group>"; };
 		BDE4D084232254430070BC3D /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
@@ -1487,9 +1491,19 @@
 		BDB6B0172327F20F0006A534 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				BDCCE9072350BB490087F5F2 /* AlertService */,
 				BDB6B01A2327FC700006A534 /* SecurityService.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		BDCCE9072350BB490087F5F2 /* AlertService */ = {
+			isa = PBXGroup;
+			children = (
+				BDCCE9082350BB6E0087F5F2 /* AlertService.swift */,
+				BDCCE90A2350BB8C0087F5F2 /* IAlertService.swift */,
+			);
+			path = AlertService;
 			sourceTree = "<group>";
 		};
 		BDE4D08123224E430070BC3D /* PresentationModels */ = {
@@ -1767,6 +1781,7 @@
 				BD8106B5234F27A7004A43E9 /* IRequestModel.swift in Sources */,
 				BDFE1AC2233B906D00C49A5B /* App.swift in Sources */,
 				0939B5FB21774EA70029F03D /* DoubleRoundedEdgeView.swift in Sources */,
+				BDCCE90B2350BB8C0087F5F2 /* IAlertService.swift in Sources */,
 				BD5170B323336C83001EAFC0 /* PaymentRequests.swift in Sources */,
 				96144B41233E1E6B00B9F314 /* LoanPaymentSchedule.swift in Sources */,
 				A55B7B8621A7E86200A8A7FE /* DepositsHistoryDetailsSegueAnimator.swift in Sources */,
@@ -1912,6 +1927,7 @@
 				A568142C21CE6CB0002C0899 /* AnnotationTableViewCell.swift in Sources */,
 				BD4A2342235078110093DCA5 /* ILogger.swift in Sources */,
 				A58760C121BFB63D0022DED5 /* ProfileNavigationController.swift in Sources */,
+				BDCCE9092350BB6E0087F5F2 /* AlertService.swift in Sources */,
 				BD8106BD234F40DA004A43E9 /* API.swift in Sources */,
 				BDB7916D2338C8B10002C7EE /* VerificationCodeViewController.swift in Sources */,
 				A55663A221EC6B3300E48C40 /* MaskedNavigationBar.swift in Sources */,
