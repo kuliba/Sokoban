@@ -55,8 +55,8 @@ class PaymentDetailsViewController: UIViewController, StoreSubscriber {
     var selectedViewType: Bool = false //false - source; true - destination
     var activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
 
-    private let sourceProvider = PaymentOptionCellProvider()
-    private let destinationProvider = PaymentOptionCellProvider()
+    private let sourceProvider = PaymentOptionCellProvider(asSource: true)
+    private let destinationProvider = PaymentOptionCellProvider(asSource: true)
     private let destinationProviderCardNumber = CardNumberCellProvider()
     private let destinationProviderAccountNumber = AccountNumberCellProvider()
     private let destinationProviderPhoneNumber = PhoneNumberCellProvider()
@@ -116,16 +116,24 @@ class PaymentDetailsViewController: UIViewController, StoreSubscriber {
     func makeC2C() {
         activityIndicator.startAnimating()
 
-
-        guard let sourceNumber = sourceConfigurations?[sourcePagerView.currentIndex].stringFromSelection(), let destinationNumber = destinationConfigurations?[destinationPagerView.currentIndex].stringFromSelection(), let amount = Double(sumTextField.text!) else {
+        guard let sourceConfig = sourceConfigurations?[sourcePagerView.currentIndex], let destinationConfig = destinationConfigurations?[destinationPagerView.currentIndex], let amount = Double(sumTextField.text!) else {
             return
         }
-        prepareCard2Card(from: sourceNumber, to: destinationNumber, amount: amount) { [weak self] (success, token) in
+
+        let sourceNumber = sourceConfig.stringFromSelection()
+        let destinationNumber = destinationConfig.stringFromSelection()
+        let completion: (Bool, String?) -> Void = { [weak self] (success, token) in
             //store.dispatch(payment(sourceOption: sourceOption, destionationOption: distinationOption, sum: self?.sumTextField.text))
             self?.activityIndicator.stopAnimating()
             if success {
                 self?.performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
             }
+        }
+
+        if destinationConfig is PhoneNumberPagerItem {
+            prepareCard2Phone(from: sourceNumber, to: destinationNumber, amount: amount, completionHandler: completion)
+        } else {
+            prepareCard2Card(from: sourceNumber, to: destinationNumber, amount: amount, completionHandler: completion)
         }
     }
 }

@@ -24,4 +24,5 @@ target 'ForaBank' do
   pod 'BiometricAuthentication'
   pod 'FSPagerView'
   pod 'DropDown'
+  pod 'XCGLogger'
 end
