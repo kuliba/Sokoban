@@ -21,12 +21,8 @@ class AccountsViewController: UIViewController {
     let transitionAnimator = AccountsSegueAnimator()
 
     let cellId = "DepositsDepositCell"
-    var refreshView: RefreshView!
-
-     var refreshControl: RefreshView!
-
- 
     
+    var refreshView: RefreshView!
     
     var tableViewRefreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
