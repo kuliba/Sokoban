@@ -129,6 +129,11 @@ class PaymentDetailsViewController: UIViewController, StoreSubscriber {
             self?.activityIndicator.stopAnimating()
             if success {
                 self?.performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
+            } else {
+                let alertVC = UIAlertController(title: "Ошибка", message: "При выполнении платежа произошла ошибка, попробуйте ещё раз позже", preferredStyle: .alert)
+                let cancelButton = UIAlertAction(title: "Продолжить", style: .cancel, handler: nil)
+                alertVC.addAction(cancelButton)
+                self?.present(alertVC, animated: true, completion: nil)
             }
         }
 
