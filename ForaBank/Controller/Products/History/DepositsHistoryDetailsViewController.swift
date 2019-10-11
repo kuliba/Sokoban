@@ -25,6 +25,16 @@ class DepositsHistoryDetailsViewController: UIViewController {
     var product: DatedTransactions?
     var sortedTransactionsStatement: DatedTransactionsStatement?
      var transaction: TransactionStatement?
+    
+    
+    let colorSucces = UIColor(red: CGFloat(48)/CGFloat(255),
+    green: CGFloat(198)/CGFloat(255),
+    blue: CGFloat(164)/CGFloat(255),
+    alpha: 1)
+    let colorFail = UIColor(red: CGFloat(239)/CGFloat(255),
+    green: CGFloat(65)/CGFloat(255),
+    blue: CGFloat(54)/CGFloat(255),
+    alpha: 1)
     override func viewDidLoad() {
         super.viewDidLoad()
 //        print(scrollView.gestureRecognizers)
@@ -36,9 +46,11 @@ class DepositsHistoryDetailsViewController: UIViewController {
         amountPaT.text = "\((transaction?.amount)!)" + "\("₽")"
         if var data = transaction?.operationType {
             if data == "CREDIT"{
-                amountPaT.text = "\("+")" + "\((transaction?.amount)!)" + "\("₽")"
+                view.backgroundColor = colorSucces
+                amountPaT.text = "\("+")" + "\(maskSum(sum:(transaction?.amount)!))" + "\("₽")"
             } else {
-                amountPaT.text = "\("-")" + "\((transaction?.amount)!)" + "\("₽")"
+                view.backgroundColor = colorFail
+                amountPaT.text = "\("-")" + "\(maskSum(sum:(transaction?.amount)!))" + "\("₽")"
             }
         }
     }

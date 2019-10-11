@@ -21,7 +21,50 @@ class AccountsViewController: UIViewController {
     let transitionAnimator = AccountsSegueAnimator()
 
     let cellId = "DepositsDepositCell"
+    
+    var refreshView: RefreshView!
+    
+    var tableViewRefreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.backgroundColor = .clear
+        refreshControl.tintColor = .clear
+        refreshControl.addTarget(self, action: #selector(refreshTableView), for: .valueChanged)
+        return refreshControl
+    }()
+    
+    
+    func prepareUI() {
+        // Adding 'tableViewRefreshControl' to tableView
+        tableView.refreshControl = tableViewRefreshControl
+        // Getting the nib from bundle
+        getRefereshView()
+    }
+    
+    @objc func refreshTableView() {
+          refreshView.startAnimation()
+        NetworkManager.shared().getDepos { (success, accounts) in
+            if success {
+                self.accounts = accounts ?? []
+            }
+            
+            self.refreshView.stopAnimation()
+            self.tableViewRefreshControl.endRefreshing()
+        }
 
+        
+      }
+    
+    func getRefereshView() {
+        if let objOfRefreshView = Bundle.main.loadNibNamed("RefreshView", owner: self, options: nil)?.first as? RefreshView {
+            // Initializing the 'refreshView'
+            refreshView = objOfRefreshView
+            // Giving the frame as per 'tableViewRefreshControl'
+            refreshView.frame = tableViewRefreshControl.frame
+            // Adding the 'refreshView' to 'tableViewRefreshControl'
+            tableViewRefreshControl.addSubview(refreshView)
+        }
+    }
+    
 
 
     override func viewDidLoad() {
@@ -29,6 +72,11 @@ class AccountsViewController: UIViewController {
         activityIndicatorView.startAnimation()
         setUpTableView()
         LabelNoProduct.isHidden = true
+          prepareUI()
+       
+    
+
+        
 
     }
 
@@ -164,8 +212,8 @@ extension AccountsViewController: UITableViewDataSource, UITableViewDelegate {
 // MARK: - Private methods
 
 private extension AccountsViewController {
-    func presentPaymentsDetailsViewController() {
-        if let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentsDetailsViewController") as? PaymentsDetailsViewController {
+    func presentPaymentDetailsViewController() {
+        if let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentDetailsViewController") as? PaymentDetailsViewController {
             present(vc, animated: true, completion: nil)
         }
     }

@@ -8,6 +8,14 @@
 
 import Foundation
 
+func isDebug() -> Bool {
+    #if DEBUG
+        return true
+    #else
+        return false
+    #endif
+}
+
 func getRootVC() -> UIViewController? {
     return UIApplication.shared.keyWindow?.rootViewController
 }

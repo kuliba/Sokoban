@@ -23,7 +23,7 @@ class ProductDetailsViewController: UIViewController {
     var account: Account?
     weak var currentViewController: UIViewController?
     var previousOffset: CGFloat = 0
-    var items = ["Управление", "Выписка", "О счете"]
+    var items = ["Управление", "История", "О счете"]
     var labels = [UILabel?]()
     var lastScrollViewOffset: CGFloat = 0
 

@@ -25,12 +25,6 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
 
     var segueId: String? = nil
 
-    var operationSum: String?
-    var sourceOption: PaymentOption?
-    var destinationOption: PaymentOption?
-    var destinationNum: String?
-
-
     let gradientView = UIView()
     let circleView = UIView()
 //    var message: String? = nil

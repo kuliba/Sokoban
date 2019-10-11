@@ -46,6 +46,53 @@ class DepositsViewController: UIViewController {
 //    ]
     @IBOutlet weak var LabelNoProduct: UILabel!
 
+    
+       var refreshView: RefreshView!
+       
+       var tableViewRefreshControl: UIRefreshControl = {
+           let refreshControl = UIRefreshControl()
+           refreshControl.backgroundColor = .clear
+           refreshControl.tintColor = .clear
+           refreshControl.addTarget(self, action: #selector(refreshTableView), for: .valueChanged)
+           return refreshControl
+       }()
+       
+       
+       func prepareUI() {
+           // Adding 'tableViewRefreshControl' to tableView
+           tableView.refreshControl = tableViewRefreshControl
+           // Getting the nib from bundle
+           getRefereshView()
+       }
+       
+       @objc func refreshTableView() {
+             refreshView.startAnimation()
+        
+        NetworkManager.shared().getBonds { (success, deposits) in
+                  if success {
+                      self.deposits = deposits ?? []
+                  }
+            
+               
+               self.refreshView.stopAnimation()
+               self.tableViewRefreshControl.endRefreshing()
+           }
+
+           
+         }
+       
+       func getRefereshView() {
+           if let objOfRefreshView = Bundle.main.loadNibNamed("RefreshView", owner: self, options: nil)?.first as? RefreshView {
+               // Initializing the 'refreshView'
+               refreshView = objOfRefreshView
+               // Giving the frame as per 'tableViewRefreshControl'
+               refreshView.frame = tableViewRefreshControl.frame
+               // Adding the 'refreshView' to 'tableViewRefreshControl'
+               tableViewRefreshControl.addSubview(refreshView)
+           }
+       }
+       
+    
     var deposits = [Deposit]() {
         didSet {
             tableView.reloadData()
@@ -78,6 +125,7 @@ class DepositsViewController: UIViewController {
         activityIndicator.startAnimation()
         setUpTableView()
         LabelNoProduct.isHidden = true
+        prepareUI()
 
     }
 
@@ -164,8 +212,8 @@ extension DepositsViewController: UITableViewDataSource, UITableViewDelegate {
 
 // MARK: - Private methods
 private extension DepositsViewController {
-    func presentPaymentsDetailsViewController() {
-        if let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentsDetailsViewController") as? PaymentsDetailsViewController {
+    func presentPaymentDetailsViewController() {
+        if let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentDetailsViewController") as? PaymentDetailsViewController {
             present(vc, animated: true, completion: nil)
         }
     }

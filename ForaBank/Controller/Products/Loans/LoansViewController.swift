@@ -26,6 +26,51 @@ class LoansViewController: UIViewController {
     
     @IBOutlet weak var LabelNoProduct: UILabel!
     
+  var refreshView: RefreshView!
+     
+     var tableViewRefreshControl: UIRefreshControl = {
+         let refreshControl = UIRefreshControl()
+         refreshControl.backgroundColor = .clear
+         refreshControl.tintColor = .clear
+         refreshControl.addTarget(self, action: #selector(refreshTableView), for: .valueChanged)
+         return refreshControl
+     }()
+     
+     
+     func prepareUI() {
+         // Adding 'tableViewRefreshControl' to tableView
+         tableView.refreshControl = tableViewRefreshControl
+         // Getting the nib from bundle
+         getRefereshView()
+     }
+     
+     @objc func refreshTableView() {
+           refreshView.startAnimation()
+      NetworkManager.shared().getLoans { (success, loans) in
+                 if success {
+                     self.loan = loans ?? []
+                 }
+              
+                
+             
+         self.refreshView.stopAnimation()
+         self.tableViewRefreshControl.endRefreshing()
+         }
+
+         
+       }
+     
+     func getRefereshView() {
+         if let objOfRefreshView = Bundle.main.loadNibNamed("RefreshView", owner: self, options: nil)?.first as? RefreshView {
+             // Initializing the 'refreshView'
+             refreshView = objOfRefreshView
+             // Giving the frame as per 'tableViewRefreshControl'
+             refreshView.frame = tableViewRefreshControl.frame
+             // Adding the 'refreshView' to 'tableViewRefreshControl'
+             tableViewRefreshControl.addSubview(refreshView)
+         }
+     }
+        
     var loan = [Loan]() {
         didSet {
             tableView.reloadData()
@@ -46,8 +91,18 @@ class LoansViewController: UIViewController {
         LabelNoProduct.isHidden = true
         self.tableView.delegate = self
         self.tableView.dataSource = self
+        
+        prepareUI()
+        
+   
 
+        
+        
     }
+    
+    
+ 
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
@@ -75,7 +130,9 @@ class LoansViewController: UIViewController {
                 self.loan = loans ?? []
             }
         }
+
     }
+ 
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
@@ -103,6 +160,9 @@ class LoansViewController: UIViewController {
 // MARK: - UITableView DataSource and Delegate
 extension LoansViewController: UITableViewDataSource, UITableViewDelegate {
 
+    
+    
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return loan.count
     }
@@ -126,7 +186,7 @@ extension LoansViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let addToDepositAction = UITableViewRowAction(style: .normal, title: "Пополнить счет") { [weak self] action, indexPath in
-            self?.presentPaymentsDetailsViewController()
+            self?.presentPaymentDetailsViewController()
         }
         addToDepositAction.backgroundColor = UIColor(red: 26 / 255, green: 188 / 255, blue: 156 / 255, alpha: 1)
         return [addToDepositAction]
@@ -138,8 +198,8 @@ extension LoansViewController: UITableViewDataSource, UITableViewDelegate {
 
 // MARK: - Private methods
 private extension LoansViewController {
-    func presentPaymentsDetailsViewController() {
-        if let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentsDetailsViewController") as? PaymentsDetailsViewController {
+    func presentPaymentDetailsViewController() {
+        if let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentDetailsViewController") as? PaymentDetailsViewController {
             present(vc, animated: true, completion: nil)
         }
     }

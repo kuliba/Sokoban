@@ -115,6 +115,7 @@ class ProductManagementViewController: UITableViewController {
                 return
             }
             let paymentOption = PaymentOption(product: product)
+//            present(PaymentsTableViewController(), animated: true, completion: nil)
             store.dispatch(startPayment(sourceOption: paymentOption, destionationOption: nil))
             return
         }

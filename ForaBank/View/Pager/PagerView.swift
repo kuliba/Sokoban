@@ -19,9 +19,11 @@ class PagerView: UIView {
             self.pageControl.contentInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
         }
     }
-
+   
     var configurations = [ICellConfigurator]()
-
+    var currentIndex: Int {
+        return pagerView.currentIndex
+    }
 
     // MARK: - Live Cycle
 
@@ -71,14 +73,6 @@ extension PagerView: FSPagerViewDelegate, FSPagerViewDataSource {
         config.configure(cell: cell)
 
         return cell
-//        var cell = pagerView.dequeueReusableCell(withReuseIdentifier: String(describing: TextFieldPagerViewCell.self), at: index)
-//
-//        if index == 2 {
-//            let mCell = pagerView.dequeueReusableCell(withReuseIdentifier: String(describing: MenuPagerViewCell.self), at: index) as? MenuPagerViewCell
-//            mCell?.titleLabel.text = "Выбрать из контактов"
-//            cell = mCell ?? FSPagerViewCell()
-//        }
-//        return cell
     }
 
     // MARK:- FSPagerView Delegate

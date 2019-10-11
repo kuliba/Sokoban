@@ -43,7 +43,7 @@ class ChatMessagesViewController: UIViewController {
     
     // MARK: - Actions
     @IBAction func sendMoneyButtonClicked(_ sender: Any) {
-        instantiatePaymentsDetailsViewController()
+        instantiatePaymentDetailsViewController()
     }
     
     // MARK: - Lifecycle
@@ -204,8 +204,8 @@ private extension ChatMessagesViewController {
         navigationItem.leftBarButtonItem = barButton
     }
     
-    func instantiatePaymentsDetailsViewController() {
-        if let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentsDetailsViewController") as? PaymentsDetailsViewController {
+    func instantiatePaymentDetailsViewController() {
+        if let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentDetailsViewController") as? PaymentDetailsViewController {
             present(vc, animated: true)
         }
     }
