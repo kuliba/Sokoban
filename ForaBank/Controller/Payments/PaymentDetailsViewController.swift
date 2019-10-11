@@ -55,8 +55,10 @@ class PaymentDetailsViewController: UIViewController, StoreSubscriber {
     var selectedViewType: Bool = false //false - source; true - destination
     var activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
 
-    private let sourceProvider = PaymentOptionCellProvider(asSource: true)
-    private let destinationProvider = PaymentOptionCellProvider(asSource: true)
+//    private let sourceProvider = PaymentOptionCellProvider(asSource: true)
+//    private let destinationProvider = PaymentOptionCellProvider(asSource: true)
+    private let sourceProvider = PaymentOptionCellProvider()
+    private let destinationProvider = PaymentOptionCellProvider()
     private let destinationProviderCardNumber = CardNumberCellProvider()
     private let destinationProviderAccountNumber = AccountNumberCellProvider()
     private let destinationProviderPhoneNumber = PhoneNumberCellProvider()

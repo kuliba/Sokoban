@@ -81,13 +81,49 @@ func prepareCard2Card(from sourceNumber: String, to destinationNumber: String, a
     }
 }
 
-func makeCard2Card(headers: HTTPHeaders, code: String,completionHandler: @escaping (Bool) -> Void) {
-          let parameters: [String: AnyObject] = [
-              "appId": "AND" as AnyObject,
-              "fingerprint": false as AnyObject,
-              "token": headers["X-XSRF-TOKEN"] as AnyObject,
-              "verificationCode": Int(code) as AnyObject
-          ]
+func prepareCard2Phone(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void) {
+
+    let parameters: [String: AnyObject] = [
+        "payeePhone": destinationNumber as AnyObject,
+        "payerCardNumber": sourceNumber as AnyObject,
+        "amount": amount as AnyObject
+    ]
+
+    Alamofire.request(apiBaseURL + "/rest/prepareCard2Phone", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: NetworkManager.shared().headers)
+        .validate(statusCode: MultiRange(200..<300, 401..<402))
+        .validate(contentType: ["application/json"])
+        .responseJSON { response in
+
+            if let json = response.result.value as? Dictionary<String, Any>,
+                let errorMessage = json["errorMessage"] as? String {
+                print("\(errorMessage)")
+                completionHandler(false, nil)
+                return
+            }
+
+            switch response.result {
+            case .success:
+                if let json = response.result.value as? Dictionary<String, Any>, let token = json["result"] as? String {
+                    completionHandler(true, token)
+                } else {
+                    print("rest/prepareCard2Phone cant parse json \(String(describing: response.result.value))")
+                    completionHandler(false, nil)
+                }
+
+            case .failure(let error):
+                print("rest/prepareCard2Phone \(error)")
+                completionHandler(false, nil)
+            }
+    }
+}
+
+func makeCard2Card(headers: HTTPHeaders, code: String, completionHandler: @escaping (Bool) -> Void) {
+    let parameters: [String: AnyObject] = [
+        "appId": "AND" as AnyObject,
+        "fingerprint": false as AnyObject,
+        "token": headers["X-XSRF-TOKEN"] as AnyObject,
+        "verificationCode": Int(code) as AnyObject
+    ]
     Alamofire.request(apiBaseURL + "/rest/makeCard2Card", method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: NetworkManager.shared().headers)
         .validate(statusCode: MultiRange(200..<300, 401..<402))
         .validate(contentType: ["application/json"])
