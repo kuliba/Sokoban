@@ -18,7 +18,6 @@
 		09203D96216E13A700902BD2 /* FeedOptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09203D94216E13A700902BD2 /* FeedOptionCell.xib */; };
 		09203D98216E150500902BD2 /* FeedOptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09203D97216E150500902BD2 /* FeedOptionsViewController.swift */; };
 		0930F166215B5CDB00CFB593 /* RoundedEdgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0930F165215B5CDB00CFB593 /* RoundedEdgeView.swift */; };
-		0930F168215B653D00CFB593 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0930F167215B653D00CFB593 /* ProfileViewController.swift */; };
 		0930F16A215B6CB800CFB593 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0930F169215B6CB800CFB593 /* GradientView.swift */; };
 		0930F16C215B704A00CFB593 /* CircularImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0930F16B215B704A00CFB593 /* CircularImageView.swift */; };
 		0930F17A215B78B000CFB593 /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0930F174215B78A200CFB593 /* Roboto-Black.ttf */; };
@@ -298,6 +297,7 @@
 		BDB7916D2338C8B10002C7EE /* VerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB7916C2338C8B10002C7EE /* VerificationCodeViewController.swift */; };
 		BDCCE9092350BB6E0087F5F2 /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCCE9082350BB6E0087F5F2 /* AlertService.swift */; };
 		BDCCE90B2350BB8C0087F5F2 /* IAlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCCE90A2350BB8C0087F5F2 /* IAlertService.swift */; };
+		BDCCE90E2350BDB10087F5F2 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCCE90D2350BDB10087F5F2 /* ProfileViewController.swift */; };
 		BDE4D080232248420070BC3D /* ProductAboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE4D07F232248420070BC3D /* ProductAboutViewController.swift */; };
 		BDE4D08323224E570070BC3D /* AboutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE4D08223224E570070BC3D /* AboutItem.swift */; };
 		BDE4D085232254430070BC3D /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE4D084232254430070BC3D /* Date.swift */; };
@@ -337,7 +337,6 @@
 		09203D94216E13A700902BD2 /* FeedOptionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FeedOptionCell.xib; sourceTree = "<group>"; };
 		09203D97216E150500902BD2 /* FeedOptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedOptionsViewController.swift; sourceTree = "<group>"; };
 		0930F165215B5CDB00CFB593 /* RoundedEdgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedEdgeView.swift; sourceTree = "<group>"; };
-		0930F167215B653D00CFB593 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ProfileViewController.swift; path = ForaBank/Controller/Profile/ProfileViewController.swift; sourceTree = SOURCE_ROOT; };
 		0930F169215B6CB800CFB593 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		0930F16B215B704A00CFB593 /* CircularImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularImageView.swift; sourceTree = "<group>"; };
 		0930F16E215B78A100CFB593 /* Roboto-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-LightItalic.ttf"; sourceTree = "<group>"; };
@@ -622,6 +621,7 @@
 		BDB7916C2338C8B10002C7EE /* VerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeViewController.swift; sourceTree = "<group>"; };
 		BDCCE9082350BB6E0087F5F2 /* AlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertService.swift; sourceTree = "<group>"; };
 		BDCCE90A2350BB8C0087F5F2 /* IAlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAlertService.swift; sourceTree = "<group>"; };
+		BDCCE90D2350BDB10087F5F2 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		BDE4D07F232248420070BC3D /* ProductAboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductAboutViewController.swift; sourceTree = "<group>"; };
 		BDE4D08223224E570070BC3D /* AboutItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutItem.swift; sourceTree = "<group>"; };
 		BDE4D084232254430070BC3D /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
@@ -756,17 +756,13 @@
 		09797557215A49020044C00A /* ForaBank */ = {
 			isa = PBXGroup;
 			children = (
+				96144B3D233CE68400B9F314 /* ForaBank.entitlements */,
+				09203D91216E0D7600902BD2 /* ForaBank-Bridging-Header.h */,
 				BD8106AC234F2029004A43E9 /* ApplicationLayer */,
 				BD8106AB234F1FA9004A43E9 /* BusinessLogicLayer */,
-				09E0F131215A617A0042FB6A /* Controller */,
 				0930F16D215B788100CFB593 /* Fonts */,
-				09203D91216E0D7600902BD2 /* ForaBank-Bridging-Header.h */,
-				96144B3D233CE68400B9F314 /* ForaBank.entitlements */,
-				BD73EB63231EA61C00CB3E58 /* Helpers */,
-				BD6F597B2334BCF9002F4D4E /* Middleware */,
+				BDCCE90C2350BC5E0087F5F2 /* PresentationLayer */,
 				BD38198C232103EC0004728C /* Resources */,
-				09E0F149215A6B170042FB6A /* Storyboards */,
-				09E0F133215A618E0042FB6A /* View */,
 			);
 			path = ForaBank;
 			sourceTree = "<group>";
@@ -814,7 +810,7 @@
 				09D3C047215E07DB00998F57 /* ChatMessagesViewController.swift */,
 				09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */,
 				A58760C021BFB63D0022DED5 /* ProfileNavigationController.swift */,
-				0930F167215B653D00CFB593 /* ProfileViewController.swift */,
+				BDCCE90D2350BDB10087F5F2 /* ProfileViewController.swift */,
 				96094AF32319441600A80412 /* SettingsViewController.swift */,
 				0941525A219028000068B6B1 /* SignInViewController.swift */,
 			);
@@ -841,7 +837,7 @@
 			path = Products;
 			sourceTree = "<group>";
 		};
-		09E0F131215A617A0042FB6A /* Controller */ = {
+		09E0F131215A617A0042FB6A /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
 				9697E29E2334C29700974505 /* OperatorsList.swift */,
@@ -855,7 +851,7 @@
 				A568142821CE6A41002C0899 /* Services */,
 				BD6D5672233A0B2C00B7CF4B /* Zones */,
 			);
-			path = Controller;
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 		09E0F132215A61850042FB6A /* Models */ = {
@@ -1380,7 +1376,9 @@
 			isa = PBXGroup;
 			children = (
 				BD21B67323391DE3001C5CF7 /* Router.swift */,
+				BD73EB63231EA61C00CB3E58 /* Helpers */,
 				BD8106AF234F216A004A43E9 /* Logger */,
+				BD6F597B2334BCF9002F4D4E /* Middleware */,
 				BD1379FC23263BC000326088 /* Store */,
 			);
 			path = ApplicationLayer;
@@ -1504,6 +1502,16 @@
 				BDCCE90A2350BB8C0087F5F2 /* IAlertService.swift */,
 			);
 			path = AlertService;
+			sourceTree = "<group>";
+		};
+		BDCCE90C2350BC5E0087F5F2 /* PresentationLayer */ = {
+			isa = PBXGroup;
+			children = (
+				09E0F149215A6B170042FB6A /* Storyboards */,
+				09E0F133215A618E0042FB6A /* View */,
+				09E0F131215A617A0042FB6A /* Controllers */,
+			);
+			path = PresentationLayer;
 			sourceTree = "<group>";
 		};
 		BDE4D08123224E430070BC3D /* PresentationModels */ = {
@@ -1795,7 +1803,6 @@
 				09C7C30D21747293000EE472 /* CarouselViewController.swift in Sources */,
 				895768CF2192E768005754D5 /* DepositsStatsViewController.swift in Sources */,
 				BDF4F9462329105D007C448F /* Security.swift in Sources */,
-				0930F168215B653D00CFB593 /* ProfileViewController.swift in Sources */,
 				A568142E21D0B945002C0899 /* DepositsService.swift in Sources */,
 				BDB6B00E23269FED0006A534 /* PasscodeSignUpViewController.swift in Sources */,
 				0930F166215B5CDB00CFB593 /* RoundedEdgeView.swift in Sources */,
@@ -1986,6 +1993,7 @@
 				A55B7B8C21AA713600A8A7FE /* ChatMessagesOutgoingTableViewCell.swift in Sources */,
 				094FFC0F218837580069DDCB /* LoginOrSignupViewController.swift in Sources */,
 				0942B86B21625F4800370C71 /* Service.swift in Sources */,
+				BDCCE90E2350BDB10087F5F2 /* ProfileViewController.swift in Sources */,
 				09797559215A49020044C00A /* AppDelegate.swift in Sources */,
 				A568141F21CBCCB3002C0899 /* BankBranch.swift in Sources */,
 				A51AF85221EA09E600FB3B68 /* TestRegService.swift in Sources */,
