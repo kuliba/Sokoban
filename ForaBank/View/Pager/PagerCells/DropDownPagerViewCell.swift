@@ -75,9 +75,9 @@ class DropDownPagerViewCell: FSPagerViewCell, IConfigurableCell {
     }
 
     func configure(provider: ICellProvider) {
-        activityIndicator.center = center
-        addSubview(activityIndicator)
-        bringSubviewToFront(activityIndicator)
+        paymentOptionView.addSubview(activityIndicator)
+        paymentOptionView.bringSubviewToFront(activityIndicator)
+        activityIndicator.center = paymentOptionView.center
 
         guard let paymentOptionProvider = provider as? PaymentOptionCellProvider else {
             return

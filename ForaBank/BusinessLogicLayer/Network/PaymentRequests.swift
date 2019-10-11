@@ -59,8 +59,9 @@ func prepareCard2Card(from sourceNumber: String, to destinationNumber: String, a
         .responseJSON { response in
 
             if let json = response.result.value as? Dictionary<String, Any>,
-                let errorMessage = json["errorMessage"] as? String, let result = json["result"] as? String, result == "ERROR" {
-                print("\(errorMessage)")
+                let result = json["result"] as? String,
+                result == "ERROR" {
+                print("errorMessage")
                 completionHandler(false, nil)
                 return
             }
@@ -95,8 +96,9 @@ func prepareCard2Phone(from sourceNumber: String, to destinationNumber: String, 
         .responseJSON { response in
 
             if let json = response.result.value as? Dictionary<String, Any>,
-                let errorMessage = json["errorMessage"] as? String, let result = json["result"] as? String, result == "ERROR" {
-                print("\(errorMessage)")
+                let result = json["result"] as? String,
+                result == "ERROR" {
+                print("errorMessage")
                 completionHandler(false, nil)
                 return
             }
