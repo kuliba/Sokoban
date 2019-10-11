@@ -41,6 +41,53 @@ class DepositsHistoryViewController: UIViewController {
         }
     }
     
+    
+    var refreshView: RefreshView!
+    
+    var tableViewRefreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.backgroundColor = .clear
+        refreshControl.tintColor = .clear
+        refreshControl.addTarget(self, action: #selector(refreshTableView), for: .valueChanged)
+        return refreshControl
+    }()
+    
+    
+    func prepareUI() {
+        // Adding 'tableViewRefreshControl' to tableView
+        tableView.refreshControl = tableViewRefreshControl
+        // Getting the nib from bundle
+        getRefereshView()
+    }
+    
+    @objc func refreshTableView() {
+          refreshView.startAnimation()
+      NetworkManager.shared().getSortedFullStatement { [weak self] (success, fullStatement, error) in
+                   print("DepositsHistoryViewController getSortedFullStatement \(success)")
+                   if success {
+                       self?.sortedTransactionsStatement = fullStatement ?? [DatedTransactionsStatement]()
+                   }
+               
+            
+        self?.refreshView.stopAnimation()
+        self?.tableViewRefreshControl.endRefreshing()
+        }
+
+        
+      }
+    
+    func getRefereshView() {
+        if let objOfRefreshView = Bundle.main.loadNibNamed("RefreshView", owner: self, options: nil)?.first as? RefreshView {
+            // Initializing the 'refreshView'
+            refreshView = objOfRefreshView
+            // Giving the frame as per 'tableViewRefreshControl'
+            refreshView.frame = tableViewRefreshControl.frame
+            // Adding the 'refreshView' to 'tableViewRefreshControl'
+            tableViewRefreshControl.addSubview(refreshView)
+        }
+    }
+    
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,6 +98,7 @@ class DepositsHistoryViewController: UIViewController {
                 self?.sortedTransactionsStatement = fullStatement ?? [DatedTransactionsStatement]()
             }
         }
+        prepareUI()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
