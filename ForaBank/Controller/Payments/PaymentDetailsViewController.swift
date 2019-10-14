@@ -9,12 +9,10 @@
 import UIKit
 import ReSwift
 
-typealias AccountNumberPagerItem = PagerViewCellHandler<TextFieldPagerViewCell, AccountNumberCellProvider>
 typealias CardNumberPagerItem = PagerViewCellHandler<TextFieldPagerViewCell, CardNumberCellProvider>
 typealias PaymentOptionsPagerItem = PagerViewCellHandler<DropDownPagerViewCell, CardNumberCellProvider>
-typealias PhoneNumberPagerItem = PagerViewCellHandler<TextFieldPagerViewCell, PhoneNumberCellProvider>
 
-class PaymentDetailsViewController: UIViewController, StoreSubscriber {
+class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
 
     // MARK: - Properties
     @IBOutlet weak var sourcePagerView: PagerView!
@@ -55,30 +53,64 @@ class PaymentDetailsViewController: UIViewController, StoreSubscriber {
     var selectedViewType: Bool = false //false - source; true - destination
     var activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
 
-//    private let sourceProvider = PaymentOptionCellProvider(asSource: true)
-//    private let destinationProvider = PaymentOptionCellProvider(asSource: true)
     private let sourceProvider = PaymentOptionCellProvider()
     private let destinationProvider = PaymentOptionCellProvider()
-    private let destinationProviderCardNumber = CardNumberCellProvider()
-    private let destinationProviderAccountNumber = AccountNumberCellProvider()
-    private let destinationProviderPhoneNumber = PhoneNumberCellProvider()
     private var sourceConfigurations: [ICellConfigurator]?
     private var destinationConfigurations: [ICellConfigurator]?
+
+//    var selectedDestinationPaymentOption: PaymentOption?
+//    var defaultDestinationPaymentOption: PaymentOption?
+//    var selectedSourcePaymentOption: PaymentOption?
+//    var defaultSourcePaymentOption: PaymentOption?
+//
+//    var sourcePaymentOptions: [PaymentOption]? {
+//        didSet {
+//            guard defaultSourcePaymentOption != nil else {
+//                selectedSourcePaymentOption = sourcePaymentOptions?.first
+//                return
+//            }
+//
+//            self.destinationPaymentOptions?.removeAll(where: { (option) -> Bool in
+//                option.id == defaultSourcePaymentOption?.id
+//            })
+//        }
+//    }
+//
+//    var destinationPaymentOptions: [PaymentOption]? {
+//        didSet {
+//            guard defaultDestinationPaymentOption != nil else {
+//                selectedDestinationPaymentOption = destinationPaymentOptions?.first
+//                return
+//            }
+//
+//            self.sourcePaymentOptions?.removeAll(where: { (option) -> Bool in
+//                option.id == defaultDestinationPaymentOption?.id
+//            })
+//        }
+//    }
+//
+//    var destinationNum: String?
 
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpLayout()
+//        activityIndicator.startAnimating()
+//        allPaymentOptions { (success, paymentOptions) in
+//            self.destinationPaymentOptions = paymentOptions
+//            self.sourcePaymentOptions = paymentOptions
+//            DispatchQueue.main.async {
+//                //self.optionsTable.reloadData()
+//                self.activityIndicator.stopAnimating()
+//            }
+//        }
 
         sourceConfigurations = [
             PaymentOptionsPagerItem(provider: sourceProvider)
         ]
         destinationConfigurations = [
-            PaymentOptionsPagerItem(provider: destinationProvider),
-            CardNumberPagerItem(provider: destinationProviderCardNumber),
-            AccountNumberPagerItem(provider: destinationProviderAccountNumber),
-            PhoneNumberPagerItem(provider: destinationProviderPhoneNumber)
+            PaymentOptionsPagerItem(provider: destinationProvider)
         ]
         if let source = sourceConfigurations, let dest = destinationConfigurations {
             sourcePagerView.setConfig(config: source)
@@ -88,6 +120,7 @@ class PaymentDetailsViewController: UIViewController, StoreSubscriber {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+
         store.subscribe(self) { state in
             state.select { $0.productsState }
         }
@@ -104,11 +137,24 @@ class PaymentDetailsViewController: UIViewController, StoreSubscriber {
     }
 
     internal func newState(state: ProductState) {
+//        defaultSourcePaymentOption = state.sourceOption
+//        defaultDestinationPaymentOption = state.destinationOption
+//
+//        if (defaultSourcePaymentOption != nil) {
+//            selectedSourcePaymentOption = defaultSourcePaymentOption
+//        }
+//
+//        if (defaultDestinationPaymentOption != nil) {
+//            selectedDestinationPaymentOption = defaultDestinationPaymentOption
+//        }
+
         //optionsTable.reloadData()
 //        setUpRemittanceViews()
     }
 
     private func setUpLayout() {
+        //optionsTable.register(UINib(nibName: String(describing: DropDownTableViewCell.self), bundle: nil), forCellReuseIdentifier: String(describing: DropDownTableViewCell.self))
+
         activityIndicator.center = view.center
         view.addSubview(activityIndicator)
         setUpPicker()
@@ -118,36 +164,31 @@ class PaymentDetailsViewController: UIViewController, StoreSubscriber {
     func makeC2C() {
         activityIndicator.startAnimating()
 
-        guard let sourceConfig = sourceConfigurations?[sourcePagerView.currentIndex], let destinationConfig = destinationConfigurations?[destinationPagerView.currentIndex], let amount = Double(sumTextField.text!) else {
+        guard let sourceOption = sourceProvider.currentValue as? PaymentOption, let distinationOption = destinationProvider.currentValue as? PaymentOption else {
             return
         }
-
-        let sourceNumber = sourceConfig.stringFromSelection()
-        let destinationNumber = destinationConfig.stringFromSelection()
-        let completion: (Bool, String?) -> Void = { [weak self] (success, token) in
-            //store.dispatch(payment(sourceOption: sourceOption, destionationOption: distinationOption, sum: self?.sumTextField.text))
+        prepareCard2Card(from: sourceOption.number, to: distinationOption.number, amount: Double(sumTextField.text!) ?? 0) { [weak self] (success, token) in
+            store.dispatch(payment(sourceOption: sourceOption, destionationOption: distinationOption, sum: self?.sumTextField.text))
             self?.activityIndicator.stopAnimating()
             if success {
                 self?.performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
-            } else {
-                let alertVC = UIAlertController(title: "Ошибка", message: "При выполнении платежа произошла ошибка, попробуйте ещё раз позже", preferredStyle: .alert)
-                let cancelButton = UIAlertAction(title: "Продолжить", style: .cancel, handler: nil)
-                alertVC.addAction(cancelButton)
-                self?.present(alertVC, animated: true, completion: nil)
             }
         }
+    }
 
-        if destinationConfig is PhoneNumberPagerItem {
-            prepareCard2Phone(from: sourceNumber, to: destinationNumber, amount: amount, completionHandler: completion)
-        } else {
-            prepareCard2Card(from: sourceNumber, to: destinationNumber, amount: amount, completionHandler: completion)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "fromPaymentToPaymentVerification", let vc = segue.destination as? RegistrationCodeVerificationViewController {
+            vc.operationSum = sumTextField.text
+//            vc.sourceOption = selectedSourcePaymentOption
+//            vc.destinationOption = selectedDestinationPaymentOption
+//            vc.destinationNum = destinationNum
         }
     }
 }
 
 // - MARK: Private methods
 
-private extension PaymentDetailsViewController {
+private extension PaymentsDetailsViewController {
     func setUpPicker() {
         picker.layer.cornerRadius = 3
         pickerImageView.image = pickerImageView.image?.withRenderingMode(.alwaysTemplate)
@@ -157,13 +198,13 @@ private extension PaymentDetailsViewController {
     func addGradientView() {
         let containerGradientView = GradientView()
         containerGradientView.frame = containterView.frame
-        containerGradientView.color1 = UIColor(red: 239 / 255, green: 65 / 255, blue: 54 / 255, alpha: 1)
-        containerGradientView.color2 = UIColor(red: 239 / 255, green: 65 / 255, blue: 54 / 255, alpha: 1)
+        containerGradientView.color1 = UIColor(red: 243 / 255, green: 58 / 255, blue: 52 / 255, alpha: 1)
+        containerGradientView.color2 = UIColor(red: 243 / 255, green: 58 / 255, blue: 52 / 255, alpha: 1)
         containterView.insertSubview(containerGradientView, at: 0)
     }
 }
 
-extension PaymentDetailsViewController: OptionPickerDelegate {
+extension PaymentsDetailsViewController: OptionPickerDelegate {
     func setSelectedOption(option: String?) {
         // Set current option to selected one if not just dismissed
         if let option = option {
@@ -173,7 +214,7 @@ extension PaymentDetailsViewController: OptionPickerDelegate {
     }
 }
 
-extension PaymentDetailsViewController: RemittancePickerDelegate {
+extension PaymentsDetailsViewController: RemittancePickerDelegate {
     func didSelectOptionView(optionView: RemittanceOptionView?, paymentOption: PaymentOption?) {
 //        self.selectedDestinationPaymentOption = paymentOption
         if selectedViewType {
@@ -190,5 +231,69 @@ extension PaymentDetailsViewController: RemittancePickerDelegate {
             remittanceSourceView.frame = frame
             remittanceSourceView.translatesAutoresizingMaskIntoConstraints = true
         }
+    }
+}
+
+extension PaymentsDetailsViewController: UITableViewDelegate, UITableViewDataSource {
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 2
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        var pickerItem: IPickerItem?
+
+//        switch indexPath.item {
+//        case 0:
+//            pickerItem = selectedSourcePaymentOption
+//            break
+//        case 1:
+//            pickerItem = selectedDestinationPaymentOption
+//            break
+//        default:
+//            break
+//        }
+
+        let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: DropDownTableViewCell.self), for: indexPath) as? DropDownTableViewCell
+
+        if let nonNilPickerItem = pickerItem {
+            cell?.setupLayout(withPickerItem: nonNilPickerItem, isDroppable: true)
+        }
+        return cell ?? UITableViewCell()
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vc = PickerViewController(nibName: String(describing: PickerViewController.self), bundle: nil)
+        vc.modalPresentationStyle = .overCurrentContext
+
+//        switch indexPath.item {
+//        case 0:
+//            guard let nonNilOptions = sourcePaymentOptions else {
+//                return
+//            }
+//            vc.pickerItems = nonNilOptions
+//            break
+//        case 1:
+//            guard let nonNilOptions = destinationPaymentOptions else {
+//                return
+//            }
+//            vc.pickerItems = nonNilOptions
+//            break
+//        default:
+//            break
+//        }
+
+//        vc.callBack = { (number) in
+//            self.makeC2C(toNumber: number)
+//        }
+        //topMostVC()?.present(vc, animated: true, completion: nil)
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 60
     }
 }

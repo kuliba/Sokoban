@@ -131,7 +131,7 @@ extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "PaymentDetailsViewController", sender: nil)
+        performSegue(withIdentifier: "PaymentsDetailsViewController", sender: nil)
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

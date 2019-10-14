@@ -205,7 +205,7 @@ private extension ChatMessagesViewController {
     }
     
     func instantiatePaymentDetailsViewController() {
-        if let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentDetailsViewController") as? PaymentDetailsViewController {
+        if let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentDetailsViewController") as? PaymentsDetailsViewController {
             present(vc, animated: true)
         }
     }

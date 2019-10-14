@@ -101,7 +101,7 @@
         <!--Платежи и переводы-->
         <scene sceneID="mUk-Xs-fOz">
             <objects>
-                <viewController storyboardIdentifier="PaymentDetailsViewController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="afX-Am-FVA" customClass="PaymentDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PaymentDetailsViewController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="afX-Am-FVA" customClass="PaymentsDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="6mz-Qx-ghH" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -549,10 +549,10 @@
             </objects>
             <point key="canvasLocation" x="3728" y="1038"/>
         </scene>
-        <!--Payments Result View Controller-->
+        <!--Payments Details Success View Controller-->
         <scene sceneID="Qmn-ro-rR4">
             <objects>
-                <viewController storyboardIdentifier="PaymentsFinishScreen" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="EQl-SA-zTp" customClass="PaymentsResultViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PaymentsFinishScreen" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="EQl-SA-zTp" customClass="PaymentsDetailsSuccessViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="CJI-YM-4Dg">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
