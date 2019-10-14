@@ -22,7 +22,7 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
     @IBOutlet weak var centralView: UIView!
     @IBOutlet weak var header: UIView!
     @IBOutlet weak var activityIndicator: ActivityIndicatorView?
-
+    var operationSum: String?
     var segueId: String? = nil
 
     let gradientView = UIView()

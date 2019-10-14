@@ -141,6 +141,7 @@
 		96144B43233E21BB00B9F314 /* LoanSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96144B42233E21BB00B9F314 /* LoanSchedule.swift */; };
 		9622CFBE234B225B0005701E /* changePasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9622CFBD234B225B0005701E /* changePasswordController.swift */; };
 		9630327E2346260000C211D8 /* prepareResetPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9630327D2346260000C211D8 /* prepareResetPassword.swift */; };
+		96414BC72354C06B00C12EED /* PaymentsDetailsSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96414BC62354C06B00C12EED /* PaymentsDetailsSuccessViewController.swift */; };
 		96514513234F829E00A4713F /* RefreshView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96514511234F829D00A4713F /* RefreshView.swift */; };
 		96514514234F829E00A4713F /* RefreshView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96514512234F829E00A4713F /* RefreshView.xib */; };
 		9651451A234F890300A4713F /* ic_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 96514519234F890300A4713F /* ic_logo.png */; };
@@ -273,7 +274,6 @@
 		BD81069D234CDD12004A43E9 /* PaymentsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD81069C234CDD12004A43E9 /* PaymentsTableViewController.swift */; };
 		BD81069F234DD048004A43E9 /* PaymentHandlersProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD81069E234DD048004A43E9 /* PaymentHandlersProvider.swift */; };
 		BD8106A1234E1263004A43E9 /* PhoneNumberCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8106A0234E1262004A43E9 /* PhoneNumberCellProvider.swift */; };
-		BD8106BB234F3EC4004A43E9 /* BaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8106BA234F3EC4004A43E9 /* BaseRequest.swift */; };
 		BD8106A3234E37E0004A43E9 /* APIRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8106A2234E37E0004A43E9 /* APIRequests.swift */; };
 		BD8106A5234E3AB5004A43E9 /* ProductRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8106A4234E3AB5004A43E9 /* ProductRequests.swift */; };
 		BD8106A8234F1CA1004A43E9 /* INetworkTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8106A7234F1CA1004A43E9 /* INetworkTransport.swift */; };
@@ -462,6 +462,7 @@
 		96144B42233E21BB00B9F314 /* LoanSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanSchedule.swift; sourceTree = "<group>"; };
 		9622CFBD234B225B0005701E /* changePasswordController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = changePasswordController.swift; sourceTree = "<group>"; };
 		9630327D2346260000C211D8 /* prepareResetPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = prepareResetPassword.swift; sourceTree = "<group>"; };
+		96414BC62354C06B00C12EED /* PaymentsDetailsSuccessViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentsDetailsSuccessViewController.swift; sourceTree = "<group>"; };
 		96514511234F829D00A4713F /* RefreshView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RefreshView.swift; sourceTree = "<group>"; };
 		96514512234F829E00A4713F /* RefreshView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RefreshView.xib; sourceTree = "<group>"; };
 		96514519234F890300A4713F /* ic_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_logo.png; sourceTree = "<group>"; };
@@ -596,7 +597,6 @@
 		BD81069C234CDD12004A43E9 /* PaymentsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTableViewController.swift; sourceTree = "<group>"; };
 		BD81069E234DD048004A43E9 /* PaymentHandlersProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentHandlersProvider.swift; sourceTree = "<group>"; };
 		BD8106A0234E1262004A43E9 /* PhoneNumberCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberCellProvider.swift; sourceTree = "<group>"; };
-		BD8106BA234F3EC4004A43E9 /* BaseRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseRequest.swift; sourceTree = "<group>"; };
 		BD8106A2234E37E0004A43E9 /* APIRequests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIRequests.swift; sourceTree = "<group>"; };
 		BD8106A4234E3AB5004A43E9 /* ProductRequests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductRequests.swift; sourceTree = "<group>"; };
 		BD8106A7234F1CA1004A43E9 /* INetworkTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = INetworkTransport.swift; sourceTree = "<group>"; };
@@ -1020,6 +1020,7 @@
 			isa = PBXGroup;
 			children = (
 				89C8DF0B21918DDC00D92B0A /* OptionPickerViewController.swift */,
+				96414BC62354C06B00C12EED /* PaymentsDetailsSuccessViewController.swift */,
 				0979D94F21903DF700034BC0 /* PaymentDetailsViewController.swift */,
 				0943729121907198003A66CC /* PaymentsResultViewController.swift */,
 				BD81069C234CDD12004A43E9 /* PaymentsTableViewController.swift */,
@@ -1870,6 +1871,7 @@
 				09C7C3162174A362000EE472 /* DepositsSearchCell.swift in Sources */,
 				A55B7B8821AA698900A8A7FE /* ChatMessage.swift in Sources */,
 				A5B473C421B3C0D200F2E41F /* RemittanceOptionView.swift in Sources */,
+				96414BC72354C06B00C12EED /* PaymentsDetailsSuccessViewController.swift in Sources */,
 				BD8106A3234E37E0004A43E9 /* APIRequests.swift in Sources */,
 				9630327E2346260000C211D8 /* prepareResetPassword.swift in Sources */,
 				09F0E5CD2179DC3B0016BB6E /* CardView.swift in Sources */,

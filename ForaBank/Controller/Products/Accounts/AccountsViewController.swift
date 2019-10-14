@@ -213,7 +213,7 @@ extension AccountsViewController: UITableViewDataSource, UITableViewDelegate {
 
 private extension AccountsViewController {
     func presentPaymentDetailsViewController() {
-        if let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentDetailsViewController") as? PaymentDetailsViewController {
+        if let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentDetailsViewController") as? PaymentsDetailsSuccessViewController {
             present(vc, animated: true, completion: nil)
         }
     }
