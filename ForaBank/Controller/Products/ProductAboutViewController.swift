@@ -21,11 +21,11 @@ class ProductAboutViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         tableView.tableFooterView = UIView()
 
         tableView.contentInset.top = 35
         tableView.contentInset.bottom = 10
+        tableView.backgroundColor = .white
 
         // Uncomment the following line to pre10
         //         serve selection between presentations
@@ -60,13 +60,17 @@ class ProductAboutViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
         let item = items?[indexPath.item]
-
+        cell.backgroundColor = UIColor.white
+        cell.tintColor = UIColor.white
         cell.textLabel?.text = item?.title
         cell.textLabel?.font = UIFont(name: "Roboto-Light", size: 16.0)
 
         cell.detailTextLabel?.text = item?.value
         cell.detailTextLabel?.font = UIFont(name: "Roboto", size: 18.0)
         cell.detailTextLabel?.textColor = UIColor(named: "black")
+        cell.textLabel?.textColor = UIColor.black
+        cell.detailTextLabel?.textColor = UIColor.black
+
 
         return cell
     }

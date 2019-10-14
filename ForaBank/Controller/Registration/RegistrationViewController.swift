@@ -604,6 +604,7 @@ extension RegistrationViewController: UITextFieldDelegate {
                 brandLogo.isHidden = false
             }
         }
+        
         var identifiedBank: CardBank? = nil
         for b in banks ?? [] {
             for p in b.prefixes ?? [] {

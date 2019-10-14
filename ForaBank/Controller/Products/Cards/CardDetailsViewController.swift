@@ -39,7 +39,7 @@ class CardDetailsViewController: UIViewController {
 
     weak var currentViewController: UIViewController?
     var previousOffset: CGFloat = 0
-    var items = ["Управление", "Выписка", "О карте"]
+    var items = ["Управление", "История", "О карте"]
     var labels = [UILabel?]()
     var lastScrollViewOffset: CGFloat = 0
 

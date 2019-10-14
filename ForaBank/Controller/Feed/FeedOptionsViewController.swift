@@ -26,7 +26,6 @@ class FeedOptionsViewController: UIViewController {
     @IBOutlet weak var tableView: CustomTableView!
     
     
-    
     let cellId = "FeedOptionCell"
     
     let options = [
@@ -62,6 +61,8 @@ class FeedOptionsViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        
         setUpTableView()
        
     }

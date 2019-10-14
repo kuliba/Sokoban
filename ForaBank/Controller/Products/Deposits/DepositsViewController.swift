@@ -14,6 +14,7 @@ class DepositsViewController: UIViewController {
 
     // MARK: - Properties
     @IBOutlet weak var tableView: CustomTableView!
+    var color2: UIColor = .black
 
     let cellId = "DepositsObligationsCell"
 
@@ -126,6 +127,7 @@ class DepositsViewController: UIViewController {
         setUpTableView()
         LabelNoProduct.isHidden = true
         prepareUI()
+        tableView.backgroundColor = .white
 
     }
 

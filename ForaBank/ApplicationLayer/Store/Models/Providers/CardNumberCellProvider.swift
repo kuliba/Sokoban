@@ -12,6 +12,9 @@ class CardNumberCellProvider: NSObject, ITextInputCellProvider {
 
     let iconName = "payments_transfer_between-accounts"
     let placeholder = "Введите номер карты"
+    
+    
+ 
     let charactersMaxCount = 19
 
     var currentValue: IPresentationModel?

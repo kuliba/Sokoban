@@ -700,7 +700,7 @@
                                                     <constraint firstAttribute="height" constant="55" id="7cb-Hw-3G9"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
-                                                <nil key="textColor"/>
+                                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" alpha="0.25" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8C3-Jj-Rk9" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
@@ -858,7 +858,7 @@
                                                                     <constraint firstAttribute="height" constant="55" id="ROd-ga-lub"/>
                                                                 </constraints>
                                                                 <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                                <nil key="textColor"/>
+                                                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ваш номер телефона" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r8p-cU-SH2">
@@ -1199,7 +1199,7 @@
                                                     <constraint firstAttribute="height" constant="45" id="Ocb-po-fiv"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
-                                                <nil key="textColor"/>
+                                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QI7-54-c70" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
@@ -1244,7 +1244,7 @@
                                                                     <constraint firstAttribute="height" constant="21" id="JmK-vQ-9oS"/>
                                                                 </constraints>
                                                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
-                                                                <nil key="textColor"/>
+                                                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AIw-NQ-Y2E">
@@ -1285,7 +1285,7 @@
                                                                     <constraint firstAttribute="height" constant="21" id="Mmi-f3-HUZ"/>
                                                                 </constraints>
                                                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
-                                                                <nil key="textColor"/>
+                                                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TcL-bn-wRX">
@@ -1344,7 +1344,7 @@
                                                                     <constraint firstAttribute="height" constant="21" id="Pcd-82-Toi"/>
                                                                 </constraints>
                                                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
-                                                                <nil key="textColor"/>
+                                                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5pF-4X-ks9">
@@ -1391,7 +1391,7 @@
                                                                     <constraint firstAttribute="height" constant="21" id="5iG-uH-PiY"/>
                                                                 </constraints>
                                                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
-                                                                <nil key="textColor"/>
+                                                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pTB-md-muQ">
@@ -1690,10 +1690,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UIE-72-Pur" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="39" width="414" height="697"/>
+                                <rect key="frame" x="0.0" y="47" width="414" height="689"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kqf-3l-iTE">
-                                        <rect key="frame" x="20" y="33" width="374" height="305"/>
+                                        <rect key="frame" x="20" y="238" width="374" height="305"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Введите логин и пароль" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HE2-54-8YZ">
                                                 <rect key="frame" x="0.0" y="14" width="374" height="55"/>
@@ -1701,7 +1701,7 @@
                                                     <constraint firstAttribute="height" constant="55" id="aSk-Xt-bpk"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                <nil key="textColor"/>
+                                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Логин" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bh2-K0-iBS">
@@ -1771,26 +1771,28 @@
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstItem="BqZ-DB-KzG" firstAttribute="leading" secondItem="HE2-54-8YZ" secondAttribute="leading" id="4tp-ou-dLW"/>
-                                            <constraint firstItem="BqZ-DB-KzG" firstAttribute="trailing" secondItem="mBT-AI-sJj" secondAttribute="trailing" id="CpU-7e-mZ9"/>
-                                            <constraint firstItem="BqZ-DB-KzG" firstAttribute="leading" secondItem="mBT-AI-sJj" secondAttribute="leading" id="Fq6-hd-QcQ"/>
+                                            <constraint firstAttribute="height" constant="305" id="46c-dD-ogV"/>
+                                            <constraint firstAttribute="bottom" secondItem="jVs-xI-4Ik" secondAttribute="bottom" constant="35" id="6vJ-WH-tmW"/>
+                                            <constraint firstAttribute="trailing" secondItem="HE2-54-8YZ" secondAttribute="trailing" id="As2-cR-YWV"/>
+                                            <constraint firstAttribute="trailing" secondItem="jVs-xI-4Ik" secondAttribute="trailing" id="Ddw-S8-mVD"/>
+                                            <constraint firstItem="BqZ-DB-KzG" firstAttribute="leading" secondItem="kqf-3l-iTE" secondAttribute="leading" id="HQ0-Vr-SO1"/>
                                             <constraint firstItem="BqZ-DB-KzG" firstAttribute="top" secondItem="Bh2-K0-iBS" secondAttribute="bottom" constant="8" id="MmY-aW-Tew"/>
-                                            <constraint firstItem="BqZ-DB-KzG" firstAttribute="trailing" secondItem="HE2-54-8YZ" secondAttribute="trailing" id="Mth-Il-Leb"/>
-                                            <constraint firstItem="BqZ-DB-KzG" firstAttribute="leading" secondItem="kqf-3l-iTE" secondAttribute="leading" id="Nxz-1n-lDQ"/>
+                                            <constraint firstAttribute="trailing" secondItem="ceP-G6-shI" secondAttribute="trailing" id="NNW-4n-mdT"/>
+                                            <constraint firstItem="mBT-AI-sJj" firstAttribute="leading" secondItem="kqf-3l-iTE" secondAttribute="leading" id="Qd2-VC-Q9n"/>
                                             <constraint firstItem="uVG-3W-T4m" firstAttribute="top" secondItem="jVs-xI-4Ik" secondAttribute="bottom" constant="6" id="RK5-Yw-Z0I"/>
-                                            <constraint firstItem="BqZ-DB-KzG" firstAttribute="trailing" secondItem="Bh2-K0-iBS" secondAttribute="trailing" id="XPY-ld-zR2"/>
-                                            <constraint firstItem="BqZ-DB-KzG" firstAttribute="centerX" secondItem="uVG-3W-T4m" secondAttribute="centerX" id="Ynd-av-noz"/>
+                                            <constraint firstAttribute="trailing" secondItem="mBT-AI-sJj" secondAttribute="trailing" id="TMF-43-LBf"/>
+                                            <constraint firstAttribute="trailing" secondItem="Bh2-K0-iBS" secondAttribute="trailing" id="Tgc-X4-2Nw"/>
+                                            <constraint firstItem="jVs-xI-4Ik" firstAttribute="leading" secondItem="kqf-3l-iTE" secondAttribute="leading" id="Ub5-nB-aeT"/>
+                                            <constraint firstItem="Bh2-K0-iBS" firstAttribute="leading" secondItem="kqf-3l-iTE" secondAttribute="leading" id="ZE0-3b-qQX"/>
                                             <constraint firstItem="Bh2-K0-iBS" firstAttribute="top" secondItem="HE2-54-8YZ" secondAttribute="bottom" constant="-6" id="cVf-1j-20I"/>
-                                            <constraint firstItem="BqZ-DB-KzG" firstAttribute="centerX" secondItem="kqf-3l-iTE" secondAttribute="centerX" id="cXW-wd-819"/>
-                                            <constraint firstItem="BqZ-DB-KzG" firstAttribute="leading" secondItem="jVs-xI-4Ik" secondAttribute="leading" id="dFV-V9-hAT"/>
-                                            <constraint firstItem="BqZ-DB-KzG" firstAttribute="leading" secondItem="ceP-G6-shI" secondAttribute="leading" id="gcc-CN-1tR"/>
-                                            <constraint firstItem="BqZ-DB-KzG" firstAttribute="trailing" secondItem="jVs-xI-4Ik" secondAttribute="trailing" id="jHu-Ub-XjX"/>
-                                            <constraint firstItem="BqZ-DB-KzG" firstAttribute="leading" secondItem="Bh2-K0-iBS" secondAttribute="leading" id="jP9-04-4F7"/>
+                                            <constraint firstItem="HE2-54-8YZ" firstAttribute="top" secondItem="kqf-3l-iTE" secondAttribute="top" constant="14" id="j70-xC-Gmk"/>
                                             <constraint firstItem="mBT-AI-sJj" firstAttribute="top" secondItem="BqZ-DB-KzG" secondAttribute="bottom" constant="8" id="jTl-lR-XpC"/>
                                             <constraint firstItem="jVs-xI-4Ik" firstAttribute="top" secondItem="ceP-G6-shI" secondAttribute="bottom" constant="8" id="k5Q-Qz-jBH"/>
-                                            <constraint firstItem="BqZ-DB-KzG" firstAttribute="trailing" secondItem="ceP-G6-shI" secondAttribute="trailing" id="m5C-SQ-PQV"/>
                                             <constraint firstItem="ceP-G6-shI" firstAttribute="top" secondItem="mBT-AI-sJj" secondAttribute="bottom" constant="8" id="phe-Ww-M4R"/>
-                                            <constraint firstItem="BqZ-DB-KzG" firstAttribute="top" secondItem="kqf-3l-iTE" secondAttribute="top" constant="92" id="qST-18-oad"/>
+                                            <constraint firstItem="HE2-54-8YZ" firstAttribute="leading" secondItem="kqf-3l-iTE" secondAttribute="leading" id="sfP-f2-Svd"/>
+                                            <constraint firstAttribute="trailing" secondItem="BqZ-DB-KzG" secondAttribute="trailing" id="xdZ-b3-epx"/>
+                                            <constraint firstItem="uVG-3W-T4m" firstAttribute="centerX" secondItem="kqf-3l-iTE" secondAttribute="centerX" id="yMY-sa-EPp"/>
+                                            <constraint firstItem="ceP-G6-shI" firstAttribute="leading" secondItem="kqf-3l-iTE" secondAttribute="leading" id="yeE-Jy-fK4"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="YES"/>
@@ -1799,10 +1801,9 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="kqf-3l-iTE" firstAttribute="leading" secondItem="UIE-72-Pur" secondAttribute="leading" constant="20" id="35l-mt-rgt"/>
-                                    <constraint firstItem="kqf-3l-iTE" firstAttribute="top" secondItem="UIE-72-Pur" secondAttribute="top" constant="33" id="ERE-RG-dDv"/>
-                                    <constraint firstItem="kqf-3l-iTE" firstAttribute="centerX" secondItem="UIE-72-Pur" secondAttribute="centerX" id="Pao-qa-5gl"/>
-                                    <constraint firstAttribute="bottom" secondItem="kqf-3l-iTE" secondAttribute="bottom" constant="359" id="wZd-JI-g02"/>
+                                    <constraint firstAttribute="trailing" secondItem="kqf-3l-iTE" secondAttribute="trailing" constant="20" id="dh0-gj-Wxs"/>
+                                    <constraint firstItem="kqf-3l-iTE" firstAttribute="leading" secondItem="UIE-72-Pur" secondAttribute="leading" constant="20" id="lk5-uR-Svo"/>
+                                    <constraint firstAttribute="bottom" secondItem="kqf-3l-iTE" secondAttribute="bottom" constant="146" id="ykX-Fs-B9S"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="elB-7z-XSm">
@@ -1848,7 +1849,7 @@
                             <constraint firstItem="UIE-72-Pur" firstAttribute="leading" secondItem="qg7-8s-pAf" secondAttribute="leading" id="VNP-Kf-VpK"/>
                             <constraint firstItem="qg7-8s-pAf" firstAttribute="trailing" secondItem="UIE-72-Pur" secondAttribute="trailing" id="aVW-4W-oeH"/>
                             <constraint firstItem="elB-7z-XSm" firstAttribute="leading" secondItem="qg7-8s-pAf" secondAttribute="leading" id="gvv-B1-LyK"/>
-                            <constraint firstItem="UIE-72-Pur" firstAttribute="top" secondItem="elB-7z-XSm" secondAttribute="bottom" id="nqn-Ta-7sV"/>
+                            <constraint firstItem="UIE-72-Pur" firstAttribute="top" secondItem="elB-7z-XSm" secondAttribute="bottom" constant="8" id="nqn-Ta-7sV"/>
                             <constraint firstAttribute="bottom" secondItem="UIE-72-Pur" secondAttribute="bottom" id="twf-iY-lCb"/>
                             <constraint firstItem="elB-7z-XSm" firstAttribute="top" secondItem="qg7-8s-pAf" secondAttribute="top" constant="13" id="xyP-h3-kpT"/>
                         </constraints>
@@ -1910,7 +1911,7 @@
                                                     <constraint firstAttribute="height" constant="55" id="gUs-6m-BRS"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                <nil key="textColor"/>
+                                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" alpha="0.25" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LtY-36-boU" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
@@ -2055,7 +2056,6 @@
                                                     <constraint firstAttribute="width" constant="90" id="8z8-kf-M0Z"/>
                                                     <constraint firstAttribute="height" constant="40" id="qr6-to-cUC"/>
                                                 </constraints>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" keyboardType="numberPad" textContentType="one-time-code"/>
                                             </textField>
@@ -2065,7 +2065,7 @@
                                                     <constraint firstAttribute="height" constant="55" id="Tv1-Km-fFu"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
-                                                <nil key="textColor"/>
+                                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" alpha="0.25" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mye-zM-dSU" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
@@ -2220,7 +2220,7 @@
                                                     <constraint firstAttribute="height" constant="55" id="1ea-S8-q7x"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                <nil key="textColor"/>
+                                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" alpha="0.25" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6pE-bu-2nN" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
@@ -2366,7 +2366,7 @@
                                                     <constraint firstAttribute="height" constant="55" id="dKv-EX-ZzT"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                <nil key="textColor"/>
+                                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Логин" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Hs-Zf-Kpj">
@@ -2529,7 +2529,7 @@
                                                     <constraint firstAttribute="height" constant="55" id="BcQ-0L-2zO"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                <nil key="textColor"/>
+                                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Новый пароль" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0cL-TK-LY8">

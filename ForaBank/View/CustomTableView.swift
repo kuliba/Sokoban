@@ -20,7 +20,10 @@ class CustomTableView: UITableView {
 
 // MARK: - Private methods
 private extension CustomTableView {
-    
+    func backGroundColor() {
+        backgroundColor = .white
+
+    }
     func setContentInset() {
         contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
     }

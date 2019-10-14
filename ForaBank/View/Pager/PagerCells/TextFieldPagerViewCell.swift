@@ -18,6 +18,9 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell {
     var charactersMaxCount: Int?
     var formattingFunc: ((String) -> (String))?
 
+    
+  
+    
     override func awakeFromNib() {
         super.awakeFromNib()
     }
