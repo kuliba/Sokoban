@@ -28,7 +28,7 @@ class NetworkTransport: INetworkTransport {
     }
 
     static let defaultInstance = NetworkTransport()
-    private var logger = Logger()
+//    private var logger = Logger()
     var queue: [RequestDescription] = []
     var suspend = false
 
@@ -42,7 +42,7 @@ class NetworkTransport: INetworkTransport {
     func send(requestModel: IRequestModel, completion: @escaping NetworkTransportCompletion) {
         let lockQueue = DispatchQueue.init(label: "com.anna.ios.LockQueue")
         lockQueue.sync() {
-            logger.write(string: requestModel.debugDescription)
+//            logger.write(string: requestModel.debugDescription)
             if requestModel.urlString.contains("refresh") {
                 startRefrshRequest(requestModel: requestModel, completion: completion)
                 return
@@ -63,7 +63,7 @@ class NetworkTransport: INetworkTransport {
         self.suspend = true
         sessionManager.request(requestModel.urlString, method: requestModel.method, parameters: requestModel.parameters, encoding: JSONEncoding.default, headers: requestModel.headers).validate().responseJSON {[weak self] response in
             guard let `self` = self else { return }
-            self.logger.write(string: response.debugDescription)
+//            self.logger.write(string: response.debugDescription)
             completion(response)
         }
     }
@@ -74,7 +74,7 @@ class NetworkTransport: INetworkTransport {
 
         sessionManager.request(requestModel.urlString, method: requestModel.method, parameters: requestModel.parameters, encoding: JSONEncoding.default, headers: requestModel.headers).validate().responseJSON {[weak self] response in
             guard let `self` = self else { return }
-            self.logger.write(string: response.debugDescription)
+//            self.logger.write(string: response.debugDescription)
             switch response.result {
             case .failure(let error):
 //                if self.proccess(error: error, response: response) {

@@ -277,8 +277,6 @@
 		BD8106A5234E3AB5004A43E9 /* ProductRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8106A4234E3AB5004A43E9 /* ProductRequests.swift */; };
 		BD8106A8234F1CA1004A43E9 /* INetworkTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8106A7234F1CA1004A43E9 /* INetworkTransport.swift */; };
 		BD8106AA234F1CAD004A43E9 /* NetworkTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8106A9234F1CAD004A43E9 /* NetworkTransport.swift */; };
-		BD8106AE234F2164004A43E9 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8106AD234F2164004A43E9 /* Logger.swift */; };
-		BD8106B1234F251D004A43E9 /* ILogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8106B0234F251D004A43E9 /* ILogger.swift */; };
 		BD8106B5234F27A7004A43E9 /* IRequestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8106B4234F27A7004A43E9 /* IRequestModel.swift */; };
 		BD8106B7234F27E0004A43E9 /* RequestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8106B6234F27E0004A43E9 /* RequestModel.swift */; };
 		BD8106BB234F3EC4004A43E9 /* BaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8106BA234F3EC4004A43E9 /* BaseRequest.swift */; };
@@ -599,8 +597,6 @@
 		BD8106A4234E3AB5004A43E9 /* ProductRequests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductRequests.swift; sourceTree = "<group>"; };
 		BD8106A7234F1CA1004A43E9 /* INetworkTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = INetworkTransport.swift; sourceTree = "<group>"; };
 		BD8106A9234F1CAD004A43E9 /* NetworkTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkTransport.swift; sourceTree = "<group>"; };
-		BD8106AD234F2164004A43E9 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
-		BD8106B0234F251D004A43E9 /* ILogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ILogger.swift; sourceTree = "<group>"; };
 		BD8106B4234F27A7004A43E9 /* IRequestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IRequestModel.swift; sourceTree = "<group>"; };
 		BD8106B6234F27E0004A43E9 /* RequestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestModel.swift; sourceTree = "<group>"; };
 		BD8106BA234F3EC4004A43E9 /* BaseRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseRequest.swift; sourceTree = "<group>"; };
@@ -1387,8 +1383,6 @@
 			children = (
 				BD4A2340235078110093DCA5 /* ILogger.swift */,
 				BD4A233F235078100093DCA5 /* Logger.swift */,
-				BD8106AD234F2164004A43E9 /* Logger.swift */,
-				BD8106B0234F251D004A43E9 /* ILogger.swift */,
 			);
 			path = Logger;
 			sourceTree = "<group>";
@@ -1701,12 +1695,10 @@
 				"${BUILT_PRODUCTS_DIR}/KeychainAccess/KeychainAccess.framework",
 				"${BUILT_PRODUCTS_DIR}/ModelMapper/Mapper.framework",
 				"${BUILT_PRODUCTS_DIR}/NVActivityIndicatorView/NVActivityIndicatorView.framework",
-				"${BUILT_PRODUCTS_DIR}/ObjcExceptionBridging/ObjcExceptionBridging.framework",
 				"${BUILT_PRODUCTS_DIR}/RMMapper/RMMapper.framework",
 				"${BUILT_PRODUCTS_DIR}/ReSwift/ReSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/ReSwiftThunk/ReSwiftThunk.framework",
 				"${BUILT_PRODUCTS_DIR}/TOPasscodeViewController/TOPasscodeViewController.framework",
-				"${BUILT_PRODUCTS_DIR}/XCGLogger/XCGLogger.framework",
 				"${BUILT_PRODUCTS_DIR}/iCarousel/iCarousel.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -1723,12 +1715,10 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeychainAccess.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mapper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NVActivityIndicatorView.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjcExceptionBridging.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RMMapper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReSwiftThunk.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TOPasscodeViewController.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/XCGLogger.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/iCarousel.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1793,7 +1783,6 @@
 				BDFE1AC8233B95B900C49A5B /* ProductReducer.swift in Sources */,
 				BDFE5D982334C3300027A716 /* IProduct.swift in Sources */,
 				96094AF42319441600A80412 /* SettingsViewController.swift in Sources */,
-				BD8106AE234F2164004A43E9 /* Logger.swift in Sources */,
 				09C7C33D2175FADE000EE472 /* DepositsHistoryHeader.swift in Sources */,
 				BDB6B0132326A9E00006A534 /* PasscodeSingUpReducer.swift in Sources */,
 				A5B473C621B52D4500F2E41F /* BubblesDetailedStatsView.swift in Sources */,
@@ -1821,7 +1810,6 @@
 				09E0F130215A5B9D0042FB6A /* TabBarController.swift in Sources */,
 				BD182E3D232A3F7000DB231F /* PasscodeSignInReducer.swift in Sources */,
 				895768D12192E9F0005754D5 /* DepositsStatsDetailsViewController.swift in Sources */,
-				BD8106B1234F251D004A43E9 /* ILogger.swift in Sources */,
 				09F240FA216F8335007B7D73 /* FeedCurrent6Cell.swift in Sources */,
 				A5C5E6E121A2B443001D6250 /* Card.swift in Sources */,
 				094FFC10218837580069DDCB /* Helpers.swift in Sources */,
