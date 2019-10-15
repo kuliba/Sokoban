@@ -26,22 +26,50 @@ class LoansViewController: UIViewController {
     
     @IBOutlet weak var LabelNoProduct: UILabel!
     
-    private let refreshControl = UIRefreshControl()
+  var refreshView: RefreshView!
+     
+     var tableViewRefreshControl: UIRefreshControl = {
+         let refreshControl = UIRefreshControl()
+         refreshControl.backgroundColor = .clear
+         refreshControl.tintColor = .clear
+         refreshControl.addTarget(self, action: #selector(refreshTableView), for: .valueChanged)
+         return refreshControl
+     }()
+     
+     
+     func prepareUI() {
+         // Adding 'tableViewRefreshControl' to tableView
+         tableView.refreshControl = tableViewRefreshControl
+         // Getting the nib from bundle
+         getRefereshView()
+     }
+     
+     @objc func refreshTableView() {
+           refreshView.startAnimation()
+      NetworkManager.shared().getLoans { (success, loans) in
+                 if success {
+                     self.loan = loans ?? []
+                 }
+              
+                
+             
+         self.refreshView.stopAnimation()
+         self.tableViewRefreshControl.endRefreshing()
+         }
 
-  
-
-    @objc func refresh(_ sender: Any) {
-        NetworkManager.shared().getLoans { (success, loans) in
-            if success {
-                self.loan = loans ?? []
-            }
-        }
-
-        self.tableView.reloadData()
-        self.refreshControl.isRefreshing
-        refreshControl.endRefreshing()
-        
-        }
+         
+       }
+     
+     func getRefereshView() {
+         if let objOfRefreshView = Bundle.main.loadNibNamed("RefreshView", owner: self, options: nil)?.first as? RefreshView {
+             // Initializing the 'refreshView'
+             refreshView = objOfRefreshView
+             // Giving the frame as per 'tableViewRefreshControl'
+             refreshView.frame = tableViewRefreshControl.frame
+             // Adding the 'refreshView' to 'tableViewRefreshControl'
+             tableViewRefreshControl.addSubview(refreshView)
+         }
+     }
         
     var loan = [Loan]() {
         didSet {
@@ -64,12 +92,9 @@ class LoansViewController: UIViewController {
         self.tableView.delegate = self
         self.tableView.dataSource = self
         
+        prepareUI()
         
-           refreshControl.attributedTitle = NSAttributedString(string: "Обновление")
-        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
-                  self.tableView.addSubview(refreshControl)
-
-                  self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cellId")
+   
 
         
         

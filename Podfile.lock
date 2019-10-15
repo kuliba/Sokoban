@@ -2,11 +2,11 @@ PODS:
   - Alamofire (4.8.0)
   - BiometricAuthentication (3.0)
   - CardIO (5.4.1)
-  - CryptoSwift (1.0.0)
+  - CryptoSwift (1.1.2)
   - DeviceKit (1.11.0)
   - DropDown (2.3.13)
   - FlexiblePageControl (1.0.7)
-  - FSPagerView (0.8.2)
+  - FSPagerView (0.8.3)
   - Hero (1.4.0)
   - iCarousel (1.8.3)
   - IQKeyboardManagerSwift (6.2.0)
@@ -14,21 +14,17 @@ PODS:
   - ModelMapper (10.0.0):
     - ModelMapper/Core (= 10.0.0)
   - ModelMapper/Core (10.0.0)
-  - NVActivityIndicatorView (4.7.0):
-    - NVActivityIndicatorView/Presenter (= 4.7.0)
-  - NVActivityIndicatorView/Presenter (4.7.0)
-  - ObjcExceptionBridging (1.0.1):
-    - ObjcExceptionBridging/ObjcExceptionBridging (= 1.0.1)
-  - ObjcExceptionBridging/ObjcExceptionBridging (1.0.1)
-  - ReSwift (4.1.1)
-  - ReSwiftThunk (1.1.0):
-    - ReSwift (~> 4.0)
+  - NVActivityIndicatorView (4.8.0):
+    - NVActivityIndicatorView/Presenter (= 4.8.0)
+  - NVActivityIndicatorView/Presenter (4.8.0)
+  - ReSwift (5.0.0)
+  - ReSwiftThunk (1.2.0):
+    - ReSwift (~> 5.0)
+    - ReSwiftThunk/Core (= 1.2.0)
+  - ReSwiftThunk/Core (1.2.0):
+    - ReSwift (~> 5.0)
   - RMMapper (1.1.5)
   - TOPasscodeViewController (0.0.2)
-  - XCGLogger (7.0.0):
-    - XCGLogger/Core (= 7.0.0)
-  - XCGLogger/Core (7.0.0):
-    - ObjcExceptionBridging
 
 DEPENDENCIES:
   - Alamofire (= 4.8.0)
@@ -49,10 +45,9 @@ DEPENDENCIES:
   - ReSwiftThunk
   - RMMapper
   - TOPasscodeViewController
-  - XCGLogger
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  trunk:
     - Alamofire
     - BiometricAuthentication
     - CardIO
@@ -71,32 +66,27 @@ SPEC REPOS:
     - ReSwiftThunk
     - RMMapper
     - TOPasscodeViewController
-  trunk:
-    - ObjcExceptionBridging
-    - XCGLogger
 
 SPEC CHECKSUMS:
   Alamofire: 3ec537f71edc9804815215393ae2b1a8ea33a844
   BiometricAuthentication: e39b1a55040d679d5dbc4fa90d76e067c432de7f
   CardIO: 56983b39b62f495fc6dae9ad7cf875143df06443
-  CryptoSwift: d81eeaa59dc5a8d03720fe919a6fd07b51f7439f
+  CryptoSwift: 31dacd1f13427439ddae5b5cbaae4c8dbc43047e
   DeviceKit: a3a86f8dddbe1317a9a243cdf9646858bf135dce
   DropDown: 8a2116376c1981888557f72ec2ffc9a5e0e456ec
   FlexiblePageControl: 2ce8446da3d75df6432dbad7b9e19151629dae62
-  FSPagerView: 816a18842306973cc7cc6df8a5332272f7815c30
+  FSPagerView: 670405b2f18e2a87fa37f20b00de783e562c25a8
   Hero: bac92350d7201a1a940003e0767c7b52ce7c99a1
   iCarousel: d782f635afac190c49bb8ee455882284cff8b85f
   IQKeyboardManagerSwift: b07ccf9d8cafe993dcd6cb794eb4ba34611a0c4e
   KeychainAccess: 3b1bf8a77eb4c6ea1ce9404c292e48f948954c6b
   ModelMapper: a8dbf2a2003bf626627b9fe7c9a22b3405a30404
-  NVActivityIndicatorView: b19ddab2576f805cbe0fb2306cba3476e09a1dea
-  ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
-  ReSwift: d925be0033558f55bd73d92869961230dfe19d52
-  ReSwiftThunk: 727c1549dbd2949472e1c72bec44b1008d7c4f92
+  NVActivityIndicatorView: d24b7ebcf80af5dcd994adb650e2b6c93379270f
+  ReSwift: 628f1a9b3ee52e3b3ca2a644435472fd77afafe1
+  ReSwiftThunk: 23c8ea9092d9dc94b72005f19352dbd37fa42533
   RMMapper: 21122d753c736d975f6c61e674afce8db73579af
   TOPasscodeViewController: 03b5df3762a7be1511102093c644a42275bddf24
-  XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
 
-PODFILE CHECKSUM: f705cc9ffe830390e4bd7b3bb8a31a1ddbbd4ecf
+PODFILE CHECKSUM: 5a73dacfcc97dbb7be999993e26391a346512fee
 
 COCOAPODS: 1.8.3
