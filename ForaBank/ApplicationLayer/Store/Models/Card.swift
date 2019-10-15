@@ -15,7 +15,7 @@ enum CardType: String {
     case visaDebet = "card_visa_debet"
 }
 
-class Card: Mappable, IProduct {
+class Card: Mappable,   IProduct {
     var name: String
     var product: String
     var balance: Double

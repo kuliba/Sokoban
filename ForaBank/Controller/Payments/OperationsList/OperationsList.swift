@@ -11,7 +11,7 @@ import Hero
 import ReSwift
 
 
-class PaymentsViewController: UIViewController, StoreSubscriber {
+class OperationList: UIViewController, StoreSubscriber {
     
     // MARK: - Properties
     @IBOutlet weak var tableView: CustomTableView!
@@ -19,17 +19,11 @@ class PaymentsViewController: UIViewController, StoreSubscriber {
     
     let templateCellId = "PaymentTemplateCell"
     let paymentCellId = "PaymentCell"
-    var selectIndex: Int? = nil
-    var selectedSection: Int? = nil
+    
 
    
-    var payments = [Operations]() {
-        didSet {
-            tableView.reloadData()
-     
-            
-        }
-    }
+    var payments = [Operations]() 
+    
     private var isSignedUp: Bool? = nil {
         didSet {
             if isSignedUp != nil {
@@ -41,7 +35,7 @@ class PaymentsViewController: UIViewController, StoreSubscriber {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpTableView()
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -66,14 +60,6 @@ class PaymentsViewController: UIViewController, StoreSubscriber {
         ]
         containerView.hero.id = "content"
     }
-        
-        override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    //        print("prepare for segue \(segue.identifier ?? "nil")")
-            if let destination = segue.destination as? OperationList {
-                destination.payments =  [payments[(tableView.indexPathForSelectedRow?.row)!]]
-                   }
-        }
-
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -111,97 +97,34 @@ class PaymentsViewController: UIViewController, StoreSubscriber {
 }
 
 // MARK: - UITableView DataSource and Delegate
-extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
-    
-  
-    
+extension OperationList: UITableViewDataSource, UITableViewDelegate{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-     
-        return payments.count
+        payments.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let s = (isSignedUp == true) ? indexPath.section : indexPath.section + 1
-        
-        let section = payments[s]
-        let index = indexPath.row
-        
-      guard let serviceCell = tableView.dequeueReusableCell(withIdentifier: paymentCellId, for: indexPath) as? PaymentCell  else {
-        fatalError()
-        
-        }
             
-        serviceCell.titleLabel.text = payments[indexPath.row].name
-    
+            let section = payments[s]
+            let index = indexPath.row
             
-            return serviceCell
-        
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "OperationsList", sender: nil)
-    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerCell = UINib(nibName: "ServicesHeader", bundle: nil)
-            .instantiate(withOwner: nil, options: nil)[0] as! ServicesHeader
-        
-        let headerView = UIView(frame: headerCell.frame)
-        headerView.addSubview(headerCell)
-        
-        headerCell.titleLabel.text = {
-            let s = (isSignedUp == true) ? section : section+1
-
-            if s == 0 {
-                return "Шаблоны"
-            } else if s == 1 {
-                return "Переводы"
-            } else if s == 2 {
-                return "Оплата услуг"
-            } else {
-                return ""
+          guard let serviceCell = tableView.dequeueReusableCell(withIdentifier: paymentCellId, for: indexPath) as? PaymentCell  else {
+            fatalError()
+            
             }
-        }()
+                
+        serviceCell.titleLabel.text = payments[index].name
         
-        return headerView
+                
+                return serviceCell
     }
     
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if isSignedUp == true && section == 0 {
-            
-            let footerView = UIView(frame: CGRect(x: tableView.frame.minX + 20, y: 0, width: tableView.frame.width - 40, height: 95))
-            let doneButton = UIButton(frame: CGRect(x: footerView.frame.minX, y: footerView.frame.minY + 15, width: footerView.frame.width, height: 45))
-            
-            doneButton.setTitle("Создать шаблон", for: .normal)
-            doneButton.titleLabel?.font = UIFont(name: "Roboto-Regular", size: 16)
-            doneButton.setTitleColor(.black, for: [])
-            doneButton.layer.borderWidth = 0.5
-            doneButton.layer.borderColor = UIColor(red: 211/255, green: 211/255, blue: 211/255, alpha: 1).cgColor
-            doneButton.layer.cornerRadius = doneButton.frame.height / 2
-            
-            footerView.addSubview(doneButton)
-            return footerView
-        }
-        
-        return nil
-    }
     
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if isSignedUp == true && section == 0 {
-            return 95
-        } else {
-            return 0
-        }
-    }
     
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 35
-    }
 }
 
 // MARK: - Private methods
-private extension PaymentsViewController {
+private extension OperationList {
     
     func setUpTableView() {
         setTableViewDelegateAndDataSource()

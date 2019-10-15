@@ -39,19 +39,16 @@ class PaymentServices: PaymetsServiceProtocol {
                     if let json = response.result.value as? Dictionary<String, Any>,
                         let data = json["data"] as? Array<Any> {
                         for cardData in data {
-                            if let cardData = cardData as? Dictionary<String, Any>,
-                                let operators = cardData["operators"] as? Array<Any>,
-                                let nameList = operators as? Dictionary<String, Any>,
-                                let value = nameList["value"] as? Array<Any>
-                            {
-                              
-                                
-                             
-                                    guard let payment = Operations.from(NSDictionary(dictionary: cardData)) else { return }
-                               payments.append(payment)
+                            if let cardData = cardData as? Dictionary<String, Any> {
+                                                                
+                            let name = cardData["name"] as? String
+
+                            let payment = Operations(name:name)
+                            payments.append(payment)
                             }
+                            
                             print(payments)
-                        }
+                            }
                         completionHandler(true, payments)
                     } else {
                         print("rest/getCardList cant parse json \(String(describing: response.result.value))")

@@ -45,7 +45,8 @@
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="543"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="sectionIndexColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="sectionIndexBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="sectionIndexTrackingBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableView>
                                 </subviews>
@@ -91,12 +92,12 @@
                     <connections>
                         <outlet property="containerView" destination="8Yz-SV-jwE" id="OEY-Yc-fSS"/>
                         <outlet property="tableView" destination="dNT-nK-TXt" id="JpD-Kc-twN"/>
-                        <segue destination="afX-Am-FVA" kind="show" identifier="PaymentDetailsViewController" id="bba-lO-9LJ"/>
+                        <segue destination="E2i-9b-iqL" kind="show" identifier="OperationsList" id="p1f-Xt-BJr"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a3Z-UH-zhd" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2223.75" y="1038.3802816901409"/>
+            <point key="canvasLocation" x="2224" y="1043"/>
         </scene>
         <!--Платежи и переводы-->
         <scene sceneID="mUk-Xs-fOz">
@@ -769,8 +770,158 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CCl-bu-7dK" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <view contentMode="scaleToFill" id="HVp-fk-Cje" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PTK-zh-pfc">
+                            <rect key="frame" x="0.0" y="0.0" width="320" height="30"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Платежи и переводы" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D6D-IF-bKx">
+                                    <rect key="frame" x="80" y="8.5" width="160" height="21.5"/>
+                                    <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="bottom" secondItem="D6D-IF-bKx" secondAttribute="bottom" id="WdX-jn-v5M"/>
+                                <constraint firstItem="D6D-IF-bKx" firstAttribute="centerX" secondItem="PTK-zh-pfc" secondAttribute="centerX" id="jbH-cT-GLc"/>
+                                <constraint firstAttribute="height" constant="30" id="ndU-vL-MAs"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tI0-KO-V2f" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="25" width="320" height="543"/>
+                            <subviews>
+                                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" sectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="f5w-l0-4zT" customClass="CustomTableView" customModule="ForaBank" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="543"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="sectionIndexColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="sectionIndexBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="sectionIndexTrackingBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </tableView>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="f5w-l0-4zT" secondAttribute="trailing" id="1Rw-el-9mT"/>
+                                <constraint firstAttribute="bottom" secondItem="f5w-l0-4zT" secondAttribute="bottom" id="BpG-Ci-E9b"/>
+                                <constraint firstItem="f5w-l0-4zT" firstAttribute="top" secondItem="tI0-KO-V2f" secondAttribute="top" id="KzT-JF-5Px"/>
+                                <constraint firstItem="f5w-l0-4zT" firstAttribute="leading" secondItem="tI0-KO-V2f" secondAttribute="leading" id="nUC-6h-zf8"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="PTK-zh-pfc" firstAttribute="top" secondItem="ylJ-UV-sKl" secondAttribute="top" id="9HR-Pm-1Xa"/>
+                        <constraint firstItem="tI0-KO-V2f" firstAttribute="leading" secondItem="ylJ-UV-sKl" secondAttribute="leading" id="Fg2-8k-ezc"/>
+                        <constraint firstItem="tI0-KO-V2f" firstAttribute="bottom" secondItem="HVp-fk-Cje" secondAttribute="bottom" id="Sma-mV-AJb"/>
+                        <constraint firstItem="PTK-zh-pfc" firstAttribute="leading" secondItem="ylJ-UV-sKl" secondAttribute="leading" id="eY1-Dz-2yC"/>
+                        <constraint firstItem="ylJ-UV-sKl" firstAttribute="trailing" secondItem="tI0-KO-V2f" secondAttribute="trailing" id="f3n-Ib-ArY"/>
+                        <constraint firstItem="ylJ-UV-sKl" firstAttribute="trailing" secondItem="PTK-zh-pfc" secondAttribute="trailing" id="kT1-Ys-GYa"/>
+                        <constraint firstItem="tI0-KO-V2f" firstAttribute="trailing" secondItem="PTK-zh-pfc" secondAttribute="trailing" id="knm-sH-EAP"/>
+                        <constraint firstItem="tI0-KO-V2f" firstAttribute="leading" secondItem="PTK-zh-pfc" secondAttribute="leading" id="mip-MI-aEu"/>
+                        <constraint firstItem="tI0-KO-V2f" firstAttribute="top" secondItem="PTK-zh-pfc" secondAttribute="bottom" constant="-5" id="ztf-Ch-Ckd"/>
+                    </constraints>
+                    <viewLayoutGuide key="safeArea" id="ylJ-UV-sKl"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="color" keyPath="color1">
+                            <color key="value" red="0.93725490199999995" green="0.25490196079999999" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="color" keyPath="color2">
+                            <color key="value" red="0.93805062770000003" green="0.25358119610000002" blue="0.2107679546" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
             </objects>
             <point key="canvasLocation" x="4535.625" y="1035.2112676056338"/>
+        </scene>
+        <!--Платежи и переводы-->
+        <scene sceneID="wgA-wS-Cms">
+            <objects>
+                <viewController storyboardIdentifier="opertionsList" modalPresentationStyle="fullScreen" id="E2i-9b-iqL" customClass="OperationList" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="iUF-C4-xjO" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bvn-Sv-zPo">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="30"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Платежи и переводы" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ira-1N-lVZ">
+                                        <rect key="frame" x="80" y="8.5" width="160" height="21.5"/>
+                                        <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="9Je-jW-CMg"/>
+                                    <constraint firstItem="ira-1N-lVZ" firstAttribute="centerX" secondItem="Bvn-Sv-zPo" secondAttribute="centerX" id="Ir7-lB-g4X"/>
+                                    <constraint firstAttribute="bottom" secondItem="ira-1N-lVZ" secondAttribute="bottom" id="Zer-sd-QZY"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1np-Ib-Drf" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="25" width="320" height="543"/>
+                                <subviews>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" sectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="axq-7D-gM3" customClass="CustomTableView" customModule="ForaBank" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="543"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="sectionIndexColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="sectionIndexBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="sectionIndexTrackingBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </tableView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="axq-7D-gM3" secondAttribute="trailing" id="6Dg-cz-PFD"/>
+                                    <constraint firstItem="axq-7D-gM3" firstAttribute="top" secondItem="1np-Ib-Drf" secondAttribute="top" id="JFD-Ap-R8m"/>
+                                    <constraint firstAttribute="bottom" secondItem="axq-7D-gM3" secondAttribute="bottom" id="kjV-EK-gMh"/>
+                                    <constraint firstItem="axq-7D-gM3" firstAttribute="leading" secondItem="1np-Ib-Drf" secondAttribute="leading" id="p1n-8p-tzM"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Bvn-Sv-zPo" firstAttribute="leading" secondItem="OZo-u6-Sa2" secondAttribute="leading" id="0FA-zY-7ad"/>
+                            <constraint firstItem="1np-Ib-Drf" firstAttribute="trailing" secondItem="Bvn-Sv-zPo" secondAttribute="trailing" id="7mQ-Da-QSR"/>
+                            <constraint firstItem="1np-Ib-Drf" firstAttribute="bottom" secondItem="iUF-C4-xjO" secondAttribute="bottom" id="Cg9-Bk-aIL"/>
+                            <constraint firstItem="Bvn-Sv-zPo" firstAttribute="top" secondItem="OZo-u6-Sa2" secondAttribute="top" id="QgK-AA-pzZ"/>
+                            <constraint firstItem="1np-Ib-Drf" firstAttribute="leading" secondItem="OZo-u6-Sa2" secondAttribute="leading" id="SRc-L0-spU"/>
+                            <constraint firstItem="OZo-u6-Sa2" firstAttribute="trailing" secondItem="Bvn-Sv-zPo" secondAttribute="trailing" id="aqQ-11-jti"/>
+                            <constraint firstItem="OZo-u6-Sa2" firstAttribute="trailing" secondItem="1np-Ib-Drf" secondAttribute="trailing" id="nsR-Ha-jEL"/>
+                            <constraint firstItem="1np-Ib-Drf" firstAttribute="top" secondItem="Bvn-Sv-zPo" secondAttribute="bottom" constant="-5" id="qla-T6-4ot"/>
+                            <constraint firstItem="1np-Ib-Drf" firstAttribute="leading" secondItem="Bvn-Sv-zPo" secondAttribute="leading" id="zHe-JB-gJ7"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="OZo-u6-Sa2"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="color" keyPath="color1">
+                                <color key="value" red="0.93725490199999995" green="0.25490196079999999" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="color" keyPath="color2">
+                                <color key="value" red="0.93805062770000003" green="0.25358119610000002" blue="0.2107679546" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="" image="tabbar_icon_payment" id="rej-sk-LH5" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
+                        <inset key="imageInsets" minX="0.0" minY="7" maxX="0.0" maxY="-7"/>
+                        <inset key="largeContentSizeImageInsets" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
+                    </tabBarItem>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" title="Платежи и переводы" id="vPf-Fy-7f7"/>
+                    <size key="freeformSize" width="320" height="568"/>
+                    <connections>
+                        <outlet property="containerView" destination="1np-Ib-Drf" id="4OZ-6q-v2B"/>
+                        <outlet property="tableView" destination="axq-7D-gM3" id="KWi-5C-9Yo"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="NGS-TG-TBo" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2224" y="333"/>
         </scene>
     </scenes>
     <resources>
