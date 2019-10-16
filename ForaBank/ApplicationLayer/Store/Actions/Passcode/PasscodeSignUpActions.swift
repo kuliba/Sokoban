@@ -18,6 +18,23 @@ let startPasscodeSingUp = Thunk<State> { dispatch, getState in
     dispatch(UpdatePasscodeSingUpProcess(isFinished: false, isStarted: true))
 }
 
+let finishPasscodeSingUp = Thunk<State> { dispatch, getState in
+    dispatch(createPasscode)
+    dispatch(ClearSignUpProcess())
+}
+
+let createPasscode = Thunk<State> { dispatch, getState in
+        guard let passcode = getState()?.passcodeSignUpState.passcodeSecond else {
+            return
+        }
+        savePasscodeToKeychain(passcode: passcode)
+        if let encryptedPasscode = encrypt(passcode: passcode) {
+            saveEncryptedPasscodeToKeychain(passcode: encryptedPasscode)
+        }
+        dispatch(createdPasscode(passcode: passcode))
+        dispatch(finishRegistration)
+}
+
 func enterCode(code: String) -> Thunk<State> {
     return Thunk<State> { dispatch, getState in
         if let first = getState()?.passcodeSignUpState.passcodeFirst {
@@ -25,30 +42,20 @@ func enterCode(code: String) -> Thunk<State> {
                 dispatch(AddCounter())
                 return
             }
-
-            dispatch(createPasscode(passcode: code))
+            dispatch(SetSecondPasscode(passcodeSecond: code))
             dispatch(UpdatePasscodeSingUpProcess(isFinished: true, isStarted: false))
-            dispatch(ClearSignUpProcess())
             return
         }
-
-        dispatch(SetFirstPasscode(firstPasscode: code))
-    }
-}
-
-func createPasscode(passcode: String) -> Thunk<State> {
-    return Thunk<State> { dispatch, getState in
-        savePasscodeToKeychain(passcode: passcode)
-        if let encryptedPasscode = encrypt(passcode: passcode) {
-            saveEncryptedPasscodeToKeychain(passcode: encryptedPasscode)
-        }
-        dispatch(createdPasscode(passcode: passcode))
-        dispatch(finishRegistration)
+        dispatch(SetFirstPasscode(passcodeFirst: code))
     }
 }
 
 struct SetFirstPasscode: Action {
-    let firstPasscode: String
+    let passcodeFirst: String
+}
+
+struct SetSecondPasscode: Action {
+    let passcodeSecond: String
 }
 
 struct UpdatePasscodeSingUpProcess: Action {

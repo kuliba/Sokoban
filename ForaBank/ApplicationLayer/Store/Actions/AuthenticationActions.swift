@@ -34,28 +34,3 @@ func createCredentials(login: String, pwd: String) -> Thunk<State> {
         saveUserDataToKeychain(userData: encryptedUserData)
     }
 }
-
-//func createPasscode(passcode: String) -> Thunk<State> {
-//    return Thunk<State> { dispatch, getState in
-//        let key = aesKey32Dumb(with: passcode)
-//        let iv = aesInitializationVector16Dump()
-//
-//        if let encryptedPasscode = try! passcode.aesEncrypt(withKey: key, iv: iv) {
-//            savePasscodeToKeychain(passcode: encryptedPasscode)
-//        }
-//    }
-//}
-//
-//struct SetFirstPasscode: Action {
-//    let firstPasscode: String
-//}
-//
-//struct UpdateAuthProcess: Action {
-//    let canStartAuth: Bool
-//}
-//
-//struct AddCounter: Action {
-//}
-//
-//struct ClearSignUpProcess: Action {
-//}
