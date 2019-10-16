@@ -130,7 +130,6 @@
 		89C8DF122191AFA700D92B0A /* DepositsDepositCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C8DF102191AFA600D92B0A /* DepositsDepositCell.swift */; };
 		89C8DF132191AFA700D92B0A /* DepositsDepositCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89C8DF112191AFA700D92B0A /* DepositsDepositCell.xib */; };
 		96072C882313FF13001CFCBD /* TouchIDAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96072C872313FF13001CFCBD /* TouchIDAuthentication.swift */; };
-		9608AF5523546BF800688827 /* CardDetailsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9608AF5323546BF700688827 /* CardDetailsCell.xib */; };
 		96094AF42319441600A80412 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96094AF32319441600A80412 /* SettingsViewController.swift */; };
 		960AD38822FC1826005399D6 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 960AD38722FC1826005399D6 /* Default-568h@2x.png */; };
 		9610CB8E22FD6F0C00FE7C84 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9610CB8D22FD6F0C00FE7C84 /* Account.swift */; };
@@ -152,6 +151,7 @@
 		9660EEE8234C7B1100AE0647 /* CollapsibleTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9660EEE3234C7B1000AE0647 /* CollapsibleTableViewController.swift */; };
 		9660EEE9234C7B1100AE0647 /* CollapsibleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9660EEE4234C7B1100AE0647 /* CollapsibleTableViewCell.swift */; };
 		9660EEEA234C7B1100AE0647 /* ExampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9660EEE5234C7B1100AE0647 /* ExampleData.swift */; };
+		966515AF235765C5001D54FC /* CardDetailsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 966515AE235765C5001D54FC /* CardDetailsCell.xib */; };
 		96920C32235604C000CCC7EF /* OperationsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96920C31235604C000CCC7EF /* OperationsList.swift */; };
 		9697E29F2334C29700974505 /* OperatorsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9697E29E2334C29700974505 /* OperatorsList.swift */; };
 		9697E2A32334E30500974505 /* ServicesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9697E2A22334E30500974505 /* ServicesList.swift */; };
@@ -452,7 +452,6 @@
 		89C8DF102191AFA600D92B0A /* DepositsDepositCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsDepositCell.swift; sourceTree = "<group>"; };
 		89C8DF112191AFA700D92B0A /* DepositsDepositCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DepositsDepositCell.xib; sourceTree = "<group>"; };
 		96072C872313FF13001CFCBD /* TouchIDAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchIDAuthentication.swift; sourceTree = "<group>"; };
-		9608AF5323546BF700688827 /* CardDetailsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CardDetailsCell.xib; sourceTree = "<group>"; };
 		96094AF32319441600A80412 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		960AD38722FC1826005399D6 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		9610CB8D22FD6F0C00FE7C84 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
@@ -475,6 +474,7 @@
 		9660EEE3234C7B1000AE0647 /* CollapsibleTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollapsibleTableViewController.swift; sourceTree = "<group>"; };
 		9660EEE4234C7B1100AE0647 /* CollapsibleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollapsibleTableViewCell.swift; sourceTree = "<group>"; };
 		9660EEE5234C7B1100AE0647 /* ExampleData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleData.swift; sourceTree = "<group>"; };
+		966515AE235765C5001D54FC /* CardDetailsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CardDetailsCell.xib; sourceTree = "<group>"; };
 		96920C31235604C000CCC7EF /* OperationsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationsList.swift; sourceTree = "<group>"; };
 		9697E29E2334C29700974505 /* OperatorsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorsList.swift; sourceTree = "<group>"; };
 		9697E2A22334E30500974505 /* ServicesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesList.swift; sourceTree = "<group>"; };
@@ -1291,7 +1291,7 @@
 		BD49E6542344F6910031561F /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				9608AF5323546BF700688827 /* CardDetailsCell.xib */,
+				966515AE235765C5001D54FC /* CardDetailsCell.xib */,
 				96514510234F824500A4713F /* refreshControl */,
 				09D3C03F215CE5D100998F57 /* DialogCell.swift */,
 				09D3C040215CE5D100998F57 /* DialogCell.xib */,
@@ -1629,6 +1629,7 @@
 				09203D96216E13A700902BD2 /* FeedOptionCell.xib in Resources */,
 				A55B7B7A21A6B4F400A8A7FE /* feed_current_food.mov in Resources */,
 				960AD38822FC1826005399D6 /* Default-568h@2x.png in Resources */,
+				966515AF235765C5001D54FC /* CardDetailsCell.xib in Resources */,
 				09F240FB216F8335007B7D73 /* FeedCurrent6Cell.xib in Resources */,
 				09C7C3172174A362000EE472 /* DepositsSearchCell.xib in Resources */,
 				09AF708F216F73FD00E7FCFC /* FeedCurrent5Cell.xib in Resources */,
@@ -1640,7 +1641,6 @@
 				09AF707C216F4B5000E7FCFC /* FeedUpcomingCell.xib in Resources */,
 				093B863221620EE8008A5222 /* ServicesCell.xib in Resources */,
 				09F2410A21707B86007B7D73 /* FeedInfo3Cell.xib in Resources */,
-				9608AF5523546BF800688827 /* CardDetailsCell.xib in Resources */,
 				A55B7B8021A6B51E00A8A7FE /* 10.mov in Resources */,
 				09E0F13F215A65AE0042FB6A /* Payment.storyboard in Resources */,
 				09E0F142215A65D40042FB6A /* Services.storyboard in Resources */,
@@ -2172,7 +2172,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
 				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
@@ -2196,7 +2195,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
 				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
