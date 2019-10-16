@@ -21,7 +21,8 @@ class OperationList: UIViewController, StoreSubscriber {
     let paymentCellId = "PaymentCell"
     
 
-   
+    @IBOutlet weak var titleLabel: UILabel!
+    
     var payments = [Operations]() 
     
     private var isSignedUp: Bool? = nil {
@@ -35,17 +36,15 @@ class OperationList: UIViewController, StoreSubscriber {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        tableView.reloadData()
+        titleLabel.text = "\(String(payments[0].code ?? "1"))"
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
      
-        NetworkManager.shared().getPaymentsList { (success, payments) in
-            if success {
-                self.payments = payments ?? []
-            }
-        }
         
         containerView.hero.modifiers = [
             HeroModifier.duration(0.3),
@@ -113,8 +112,8 @@ extension OperationList: UITableViewDataSource, UITableViewDelegate{
             
             }
                 
-        serviceCell.titleLabel.text = payments[index].name
-        
+        serviceCell.titleLabel.text = payments[0].name
+         
                 
                 return serviceCell
     }

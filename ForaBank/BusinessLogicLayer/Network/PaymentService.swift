@@ -40,12 +40,24 @@ class PaymentServices: PaymetsServiceProtocol {
                         let data = json["data"] as? Array<Any> {
                         for cardData in data {
                             if let cardData = cardData as? Dictionary<String, Any> {
-                                                                
-                            let name = cardData["name"] as? String
-
-                            let payment = Operations(name:name)
-                            payments.append(payment)
-                            }
+                                var operators:  Array  = (cardData["operators"] as? Array<Any>)!
+                                let nameList = cardData["nameList"] as? String
+                          
+                                                               
+                                let name = cardData["name"] as? String
+    
+                                let details = cardData["details"] as? Dictionary<String, Any>
+                                var code = details!["code"] as? String?
+                                var value = details!["value"]  as? String
+                                
+                                 
+                                
+                                 var payment = Operations(name:name!, details: [Details](), code:code!, value: value)
+                         payments.append(payment)
+                        
+                                 
+                                      
+                        }
                             
                             print(payments)
                             }
