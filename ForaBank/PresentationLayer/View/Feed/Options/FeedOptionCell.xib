@@ -43,7 +43,7 @@
                             <accessibilityTraits key="traits" button="YES" selected="YES" staticText="YES"/>
                         </accessibility>
                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                        <nil key="textColor"/>
+                        <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zpa-Tk-aEG">
@@ -66,6 +66,7 @@
                         </connections>
                     </switch>
                 </subviews>
+                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
                     <constraint firstItem="ALz-gk-mvh" firstAttribute="centerY" secondItem="wwz-fB-JfF" secondAttribute="centerY" id="0qZ-mj-Mxd"/>
                     <constraint firstItem="sgq-Rn-jsG" firstAttribute="top" secondItem="wwz-fB-JfF" secondAttribute="top" constant="9" id="FHz-Gl-sJd"/>

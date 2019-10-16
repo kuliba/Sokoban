@@ -81,7 +81,7 @@ class RegistrationLoginPasswordViewController: UIViewController {
 //    let pageControl = FlexiblePageControl()
     let gradientView = UIView()
     let circleView = UIView()
-
+   
     // MARK: - Actions
     @IBAction func backButtonCLicked(_ sender: Any) {
         segueId = backSegueId

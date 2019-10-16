@@ -31,7 +31,7 @@
                             <constraint firstAttribute="width" constant="97" id="QKU-s8-8jo"/>
                         </constraints>
                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="13"/>
-                        <nil key="textColor"/>
+                        <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                         <variation key="default">
                             <mask key="constraints">
@@ -59,7 +59,7 @@
                             <constraint firstAttribute="height" constant="40" id="cYr-vU-C5H"/>
                         </constraints>
                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="13"/>
-                        <nil key="textColor"/>
+                        <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="500 ₽" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gXi-ml-eqe">
@@ -91,7 +91,7 @@
                             <constraint firstAttribute="height" constant="36" id="8dw-5v-YGv"/>
                         </constraints>
                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="13"/>
-                        <nil key="textColor"/>
+                        <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
@@ -119,6 +119,7 @@
                     <constraint firstItem="0Tm-TA-Lxy" firstAttribute="leading" secondItem="6rC-4w-9nT" secondAttribute="trailing" constant="8" id="z28-Lb-3cf"/>
                 </constraints>
             </tableViewCellContentView>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <viewLayoutGuide key="safeArea" id="lTV-3n-CD9"/>
             <inset key="separatorInset" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
             <connections>

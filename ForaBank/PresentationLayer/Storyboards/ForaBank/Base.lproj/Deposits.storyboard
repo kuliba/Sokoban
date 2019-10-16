@@ -83,7 +83,9 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="e5f-r9-leh">
                                 <rect key="frame" x="0.0" y="15" width="375" height="652"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="separatorColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="sectionIndexColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="sectionIndexBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PNB-cP-yMy" customClass="ActivityIndicatorView" customModule="ForaBank" customModuleProvider="target">
                                 <rect key="frame" x="160.5" y="306.5" width="54" height="54"/>
@@ -102,7 +104,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="IIi-wM-X0V" firstAttribute="centerY" secondItem="4Gt-nR-VR4" secondAttribute="centerY" id="7E7-UO-BRr"/>
                             <constraint firstItem="PNB-cP-yMy" firstAttribute="centerX" secondItem="75y-Lm-6RJ" secondAttribute="centerX" id="8H1-b6-Pbk"/>
@@ -143,7 +145,9 @@
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="LYF-if-ZeX" secondAttribute="height" multiplier="320:553" id="RUZ-iP-x1D"/>
                                         </constraints>
-                                        <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="separatorColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="sectionIndexColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="sectionIndexBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oBV-7H-V9C" customClass="ActivityIndicatorView" customModule="ForaBank" customModuleProvider="target">
                                         <rect key="frame" x="187" y="309" width="55" height="54"/>
@@ -259,7 +263,9 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="scrollIndicatorInsets" minX="0.0" minY="30" maxX="0.0" maxY="0.0"/>
-                                <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="separatorColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="sectionIndexColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="sectionIndexBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -298,7 +304,7 @@
                                                 <rect key="frame" x="0.0" y="44" width="375" height="156"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-25.00 ₽ " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H3b-Sq-Kmg">
-                                                        <rect key="frame" x="113.5" y="100.5" width="148.5" height="43.5"/>
+                                                        <rect key="frame" x="116" y="95" width="143" height="49"/>
                                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="37"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
@@ -306,7 +312,7 @@
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="center" lineBreakMode="clip" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xVB-aw-sVv">
                                                         <rect key="frame" x="15" y="44" width="341" height="48"/>
                                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="18"/>
-                                                        <color key="textColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="deposits_history_details_temp" translatesAutoresizingMaskIntoConstraints="NO" id="pJY-Oz-3KW">
@@ -344,10 +350,10 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tMF-32-9Lr" customClass="DoubleRoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="220" width="375" height="237"/>
                                                 <subviews>
-                                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sbC-b3-90Z">
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sbC-b3-90Z">
                                                         <rect key="frame" x="20" y="50" width="335" height="167"/>
                                                         <subviews>
-                                                            <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="YSy-FR-YFZ">
+                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="YSy-FR-YFZ">
                                                                 <rect key="frame" x="0.0" y="0.0" width="335" height="210"/>
                                                                 <subviews>
                                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="VzA-xb-jpD">
@@ -431,15 +437,15 @@
                                                 </constraints>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Совершен" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g6e-RB-P7e">
-                                                <rect key="frame" x="146.5" y="174" width="82.5" height="52.5"/>
+                                                <rect key="frame" x="147" y="174" width="81.5" height="52.5"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="52.5" id="Mvn-H2-eop"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="17"/>
-                                                <color key="textColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <containerView opaque="NO" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XVI-ma-cb5">
+                                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XVI-ma-cb5">
                                                 <rect key="frame" x="20" y="496" width="335" height="151"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <connections>
@@ -1021,6 +1027,8 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <inset key="separatorInset" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
+                        <color key="sectionIndexColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="sectionIndexBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <sections>
                             <tableViewSection id="yeb-BM-4BJ">
                                 <cells>
@@ -1036,14 +1044,16 @@
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Начало действия карты" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WZ8-c1-Iem">
                                                             <rect key="frame" x="0.0" y="0.0" width="177.5" height="70"/>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
-                                                            <nil key="textColor"/>
+                                                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="11.01.2017" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hlK-gk-eJ3">
                                                             <rect key="frame" x="177.5" y="0.0" width="177.5" height="70"/>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
-                                                            <nil key="textColor"/>
+                                                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
@@ -1056,6 +1066,7 @@
                                                 <constraint firstItem="OX1-MC-SEM" firstAttribute="top" secondItem="AJI-2L-Mw2" secondAttribute="top" id="vCD-Q1-6fl"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="70" id="ofi-ZV-7lw">
                                         <rect key="frame" x="0.0" y="98" width="375" height="70"/>
@@ -1089,6 +1100,7 @@
                                                 <constraint firstItem="CHl-i4-zXm" firstAttribute="top" secondItem="7ND-og-1vC" secondAttribute="top" id="u7I-d9-bMo"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="70" id="1gS-Za-0St">
                                         <rect key="frame" x="0.0" y="168" width="375" height="70"/>
@@ -1102,14 +1114,16 @@
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Доступный остаток" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B61-ur-Fn9">
                                                             <rect key="frame" x="0.0" y="0.0" width="177.5" height="70"/>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FX5-1d-XCB">
                                                             <rect key="frame" x="177.5" y="0.0" width="177.5" height="70"/>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
-                                                            <nil key="textColor"/>
+                                                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
@@ -1201,19 +1215,22 @@
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Тариф" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3BA-vp-mtE">
                                                             <rect key="frame" x="0.0" y="0.0" width="177.5" height="70"/>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
-                                                            <nil key="textColor"/>
+                                                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="«Классика»" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h2g-Xq-iD7">
                                                             <rect key="frame" x="177.5" y="0.0" width="177.5" height="70"/>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
-                                                            <nil key="textColor"/>
+                                                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
                                                 </stackView>
                                             </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstAttribute="bottom" secondItem="xYW-M7-cyT" secondAttribute="bottom" id="2Qp-GP-iQ3"/>
                                                 <constraint firstItem="xYW-M7-cyT" firstAttribute="top" secondItem="7EL-mb-v7t" secondAttribute="top" id="KhK-sE-ulr"/>
@@ -1720,6 +1737,7 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="wEk-xo-O2w">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="sectionIndexColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="sectionIndexBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
                         </subviews>
@@ -1813,6 +1831,7 @@
                                                     <constraint firstAttribute="height" constant="176" id="E0n-Zg-KXl"/>
                                                     <constraint firstItem="3G4-Rc-PDf" firstAttribute="top" secondItem="j1d-nU-Jlv" secondAttribute="bottom" constant="2" id="HMi-aE-y3K"/>
                                                     <constraint firstItem="j1d-nU-Jlv" firstAttribute="centerX" secondItem="qV5-pG-umt" secondAttribute="centerX" id="Qb7-gr-yNu"/>
+                                                    <constraint firstItem="j1d-nU-Jlv" firstAttribute="centerX" secondItem="qV5-pG-umt" secondAttribute="centerX" id="SRO-is-2jA"/>
                                                     <constraint firstItem="j1d-nU-Jlv" firstAttribute="top" secondItem="qV5-pG-umt" secondAttribute="top" id="axj-ji-skO"/>
                                                     <constraint firstAttribute="bottom" secondItem="FCE-5W-qcj" secondAttribute="bottom" id="oL0-e2-5ly"/>
                                                     <constraint firstItem="3G4-Rc-PDf" firstAttribute="centerX" secondItem="j1d-nU-Jlv" secondAttribute="centerX" id="uwh-mV-YCa"/>
@@ -1948,6 +1967,7 @@
                                                     <constraint firstItem="M1s-eU-CHk" firstAttribute="top" secondItem="e1X-Om-hmH" secondAttribute="bottom" constant="8" id="NZ0-qP-miX"/>
                                                     <constraint firstItem="qQ4-7z-gmN" firstAttribute="top" secondItem="S4I-9y-Jrc" secondAttribute="topMargin" id="NfG-61-CYz"/>
                                                     <constraint firstItem="M1s-eU-CHk" firstAttribute="centerX" secondItem="S4I-9y-Jrc" secondAttribute="centerX" id="VQ1-DW-Xd5"/>
+                                                    <constraint firstItem="qQ4-7z-gmN" firstAttribute="centerX" secondItem="S4I-9y-Jrc" secondAttribute="centerX" id="XIL-XA-WK2"/>
                                                     <constraint firstAttribute="bottom" secondItem="M1s-eU-CHk" secondAttribute="bottom" id="kX4-QE-WtA"/>
                                                     <constraint firstItem="M1s-eU-CHk" firstAttribute="centerX" secondItem="e1X-Om-hmH" secondAttribute="centerX" id="rZM-ct-fGp"/>
                                                 </constraints>
@@ -2018,6 +2038,8 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <inset key="separatorInset" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
+                        <color key="sectionIndexColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="sectionIndexBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <sections/>
                         <connections>
                             <outlet property="dataSource" destination="aQO-4q-pmf" id="AXh-T6-MBR"/>
@@ -2259,15 +2281,6 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="42G-fk-q3o">
                                                 <rect key="frame" x="16" y="80" width="343" height="176"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" restorationIdentifier="product" text="119 556 ₽" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eQE-rB-Hlr" userLabel="principalloan">
-                                                        <rect key="frame" x="113.5" y="143" width="116" height="33"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="33" id="KwQ-iO-ICC"/>
-                                                        </constraints>
-                                                        <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="26"/>
-                                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pj7-Cm-Soe">
                                                         <rect key="frame" x="57" y="90" width="229" height="45"/>
                                                         <string key="text">Вклад «Комфортный»
@@ -2277,20 +2290,32 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="deposit" translatesAutoresizingMaskIntoConstraints="NO" id="ul0-Pm-1uE">
-                                                        <rect key="frame" x="131.5" y="8" width="100" height="80"/>
+                                                        <rect key="frame" x="121.5" y="8" width="100" height="80"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="80" id="WEJ-pN-EKE"/>
                                                             <constraint firstAttribute="width" constant="100" id="jOo-6u-WKC"/>
                                                         </constraints>
                                                     </imageView>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" restorationIdentifier="product" text="119 556 ₽" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eQE-rB-Hlr" userLabel="principalloan">
+                                                        <rect key="frame" x="57" y="143" width="229" height="33"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="33" id="KwQ-iO-ICC"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="26"/>
+                                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
                                                 </subviews>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstItem="ul0-Pm-1uE" firstAttribute="trailing" secondItem="eQE-rB-Hlr" secondAttribute="trailing" constant="2" id="5Cc-fU-9rn"/>
+                                                    <constraint firstItem="ul0-Pm-1uE" firstAttribute="trailing" secondItem="eQE-rB-Hlr" secondAttribute="trailing" constant="-64.5" id="5Cc-fU-9rn"/>
                                                     <constraint firstItem="eQE-rB-Hlr" firstAttribute="top" secondItem="Pj7-Cm-Soe" secondAttribute="bottom" constant="8" id="8ZT-qb-ATS"/>
                                                     <constraint firstItem="Pj7-Cm-Soe" firstAttribute="leading" secondItem="42G-fk-q3o" secondAttribute="leading" constant="57" id="AMQ-v4-blv"/>
+                                                    <constraint firstItem="ul0-Pm-1uE" firstAttribute="centerX" secondItem="42G-fk-q3o" secondAttribute="centerX" id="OXA-Bo-9yK"/>
                                                     <constraint firstItem="ul0-Pm-1uE" firstAttribute="top" secondItem="42G-fk-q3o" secondAttribute="topMargin" id="UjV-cx-r4R"/>
+                                                    <constraint firstItem="eQE-rB-Hlr" firstAttribute="centerX" secondItem="42G-fk-q3o" secondAttribute="centerX" id="ZVV-oM-c5Q"/>
                                                     <constraint firstAttribute="height" constant="176" id="ebS-pe-eDT"/>
+                                                    <constraint firstItem="ul0-Pm-1uE" firstAttribute="centerX" secondItem="42G-fk-q3o" secondAttribute="centerX" id="hfe-Yw-L2l"/>
                                                     <constraint firstItem="eQE-rB-Hlr" firstAttribute="centerX" secondItem="42G-fk-q3o" secondAttribute="centerX" id="p7e-6j-cTO"/>
                                                     <constraint firstAttribute="bottom" secondItem="eQE-rB-Hlr" secondAttribute="bottom" id="q4L-Cd-dGS"/>
                                                     <constraint firstItem="eQE-rB-Hlr" firstAttribute="centerX" secondItem="Pj7-Cm-Soe" secondAttribute="centerX" id="uPV-lb-1dJ"/>
@@ -2351,7 +2376,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="24b-85-VGj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-866" y="915"/>
+            <point key="canvasLocation" x="-866.39999999999998" y="914.392803598201"/>
         </scene>
         <!--Collapsible Table View Controller-->
         <scene sceneID="eYQ-SJ-XzC">
@@ -2380,6 +2405,6 @@
         <image name="visalogo" width="41" height="18"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="HSU-U3-jID"/>
+        <segue reference="xAX-aZ-8L4"/>
     </inferredMetricsTieBreakers>
 </document>

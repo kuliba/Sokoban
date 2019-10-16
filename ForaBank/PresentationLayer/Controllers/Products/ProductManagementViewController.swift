@@ -14,6 +14,7 @@ class ProductManagementViewController: UITableViewController {
     var actions: Array<Dictionary<String, String>> = []
     var actionsType = ""
     var product: IProduct?
+    var color2: UIColor = .black
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,6 +24,8 @@ class ProductManagementViewController: UITableViewController {
         tableView.tableFooterView = UIView()
         tableView.contentInset.top = 35
         tableView.contentInset.bottom = 10
+        tableView.backgroundColor = .white
+        
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -67,6 +70,7 @@ class ProductManagementViewController: UITableViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         tableView.hero.modifiers = nil
+
     }
 
     // MARK: - Table view data source
@@ -81,9 +85,11 @@ class ProductManagementViewController: UITableViewController {
 
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
-
+        let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
+        cell.backgroundColor = UIColor.white
+        cell.tintColor = UIColor.white
         cell.textLabel?.text = actions[indexPath.item]["text"]
+        cell.textLabel?.textColor = UIColor.black
         cell.textLabel?.font = UIFont(name: "Roboto-Light", size: 16.0)
         cell.imageView?.image = UIImage(named: actions[indexPath.item]["image"] ?? "")
 

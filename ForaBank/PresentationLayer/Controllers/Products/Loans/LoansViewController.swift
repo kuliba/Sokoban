@@ -91,7 +91,8 @@ class LoansViewController: UIViewController {
         LabelNoProduct.isHidden = true
         self.tableView.delegate = self
         self.tableView.dataSource = self
-        
+        self.tableView.backgroundColor = .white
+
         prepareUI()
         
    
