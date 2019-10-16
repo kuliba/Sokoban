@@ -123,6 +123,7 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
             self?.continueButton.isHidden = false
             self?.activityIndicator?.stopAnimating()
             if success {
+                store.dispatch(finishPasscodeSingUp)
                 self?.performSegue(withIdentifier: "finish", sender: nil)
             } else {
                 let alert = UIAlertController(title: "Неудача", message: "Неверный код", preferredStyle: UIAlertController.Style.alert)
