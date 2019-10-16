@@ -71,6 +71,7 @@ class PaymentsViewController: UIViewController, StoreSubscriber {
     //        print("prepare for segue \(segue.identifier ?? "nil")")
             if let destination = segue.destination as? OperationList {
                 destination.payments =  [payments[(tableView.indexPathForSelectedRow?.row)!]]
+              
                    }
         }
 
