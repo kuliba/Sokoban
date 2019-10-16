@@ -33,6 +33,7 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell {
             textInputCellProvider.currentValue = newValue
         }
 
+        textField.text = ""
         textField.delegate = self
         textField.placeholder = textInputCellProvider.placeholder
         textField.addTarget(self, action: #selector(reformatAsCardNumber), for: .editingChanged)
