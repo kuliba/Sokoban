@@ -10,14 +10,12 @@ class Operations {
     var value: String?
     var codeOperators: String?
     var nameOperators:String?
-    var nameList: String?
-    init(name: String? = nil, details:[Details], code: String? = nil, value: String? = nil, codeOperators: String? = nil, nameOperators: String? = nil, nameList: String? = nil ) {
+    init(name: String? = nil, details:[Details], code: String? = nil, value: String? = nil, codeOperators: String? = nil, nameOperators: String? = nil ) {
         self.name = name
         self.value = value
         self.code = code
         self.codeOperators = codeOperators
         self.nameOperators = nameOperators
-        self.nameList = nameList
         
         
     }
@@ -31,6 +29,15 @@ struct Details {
         }
 
     }
+struct nameList {
+    var value: String
+    var locale: String
+    init(value: String? = nil, locale: String? = nil) {
+        self.value = value!
+        self.locale = locale ?? "123"
+    }
+    
+}
 
     struct Operators {
     var code: String?

@@ -14,8 +14,8 @@ import ReSwift
 class OperationList: UIViewController, StoreSubscriber {
     
     // MARK: - Properties
-    @IBOutlet weak var tableView: CustomTableView!
     @IBOutlet weak var containerView: RoundedEdgeView!
+    @IBOutlet weak var tableView: CustomTableView!
     
     let templateCellId = "PaymentTemplateCell"
     let paymentCellId = "PaymentCell"
@@ -25,20 +25,13 @@ class OperationList: UIViewController, StoreSubscriber {
     
     var payments = [Operations]() 
     
-    private var isSignedUp: Bool? = nil {
-        didSet {
-            if isSignedUp != nil {
-                self.tableView.reloadData()
-            }
-        }
-    }
+    private var isSignedUp: Bool? = nil
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.reloadData()
-        titleLabel.text = "\(String(payments[0].code ?? "1"))"
-        
+        setUpTableView()
         
     }
     
@@ -96,30 +89,90 @@ class OperationList: UIViewController, StoreSubscriber {
 }
 
 // MARK: - UITableView DataSource and Delegate
-extension OperationList: UITableViewDataSource, UITableViewDelegate{
+extension OperationList: UITableViewDataSource, UITableViewDelegate {
+    
+  
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        payments.count
+     
+        return payments.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let s = (isSignedUp == true) ? indexPath.section : indexPath.section + 1
+  
+        let index = indexPath.row
+        
+      guard let serviceCell = tableView.dequeueReusableCell(withIdentifier: paymentCellId, for: indexPath) as? PaymentCell  else {
+        fatalError()
+        
+        }
             
-            let section = payments[s]
-            let index = indexPath.row
+        serviceCell.titleLabel.text = payments[indexPath.row].nameOperators
+    
             
-          guard let serviceCell = tableView.dequeueReusableCell(withIdentifier: paymentCellId, for: indexPath) as? PaymentCell  else {
-            fatalError()
-            
-            }
-                
-        serviceCell.titleLabel.text = payments[0].name
-         
-                
-                return serviceCell
+            return serviceCell
+        
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "OperationsList", sender: nil)
+    }
     
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerCell = UINib(nibName: "ServicesHeader", bundle: nil)
+            .instantiate(withOwner: nil, options: nil)[0] as! ServicesHeader
+        
+        let headerView = UIView(frame: headerCell.frame)
+        headerView.addSubview(headerCell)
+        
+        headerCell.titleLabel.text = {
+            let s = (isSignedUp == true) ? section : section+1
+
+            if s == 0 {
+                return "Шаблоны"
+            } else if s == 1 {
+                return "Оплата услуг"
+            } else if s == 2 {
+                return "Оплата услуг"
+            } else {
+                return ""
+            }
+        }()
+        
+        return headerView
+    }
     
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        if isSignedUp == true && section == 0 {
+            
+            let footerView = UIView(frame: CGRect(x: tableView.frame.minX + 20, y: 0, width: tableView.frame.width - 40, height: 95))
+            let doneButton = UIButton(frame: CGRect(x: footerView.frame.minX, y: footerView.frame.minY + 15, width: footerView.frame.width, height: 45))
+            
+            doneButton.setTitle("Создать шаблон", for: .normal)
+            doneButton.titleLabel?.font = UIFont(name: "Roboto-Regular", size: 16)
+            doneButton.setTitleColor(.black, for: [])
+            doneButton.layer.borderWidth = 0.5
+            doneButton.layer.borderColor = UIColor(red: 211/255, green: 211/255, blue: 211/255, alpha: 1).cgColor
+            doneButton.layer.cornerRadius = doneButton.frame.height / 2
+            
+            footerView.addSubview(doneButton)
+            return footerView
+        }
+        
+        return nil
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if isSignedUp == true && section == 0 {
+            return 95
+        } else {
+            return 0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 35
+    }
 }
 
 // MARK: - Private methods

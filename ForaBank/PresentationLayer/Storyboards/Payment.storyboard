@@ -92,7 +92,8 @@
                     <connections>
                         <outlet property="containerView" destination="8Yz-SV-jwE" id="OEY-Yc-fSS"/>
                         <outlet property="tableView" destination="dNT-nK-TXt" id="JpD-Kc-twN"/>
-                        <segue destination="E2i-9b-iqL" kind="show" identifier="OperationsList" id="p1f-Xt-BJr"/>
+                        <segue destination="E2i-9b-iqL" kind="show" identifier="OperationsList" id="lOr-aK-UK8"/>
+                        <segue destination="afX-Am-FVA" kind="show" identifier="OperationPayment" id="SRn-Xq-6aQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a3Z-UH-zhd" sceneMemberID="firstResponder"/>
@@ -757,6 +758,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Gtw-UZ-fge"/>
                     </view>
+                    <navigationItem key="navigationItem" id="8RE-YB-ggS"/>
                     <connections>
                         <outlet property="arrowImageView" destination="z1F-U5-vxV" id="r77-P8-GpG"/>
                         <outlet property="cardNameLabel" destination="zCe-vv-AbS" id="3ey-xP-lEY"/>
@@ -841,7 +843,7 @@
         <!--Платежи и переводы-->
         <scene sceneID="wgA-wS-Cms">
             <objects>
-                <viewController storyboardIdentifier="opertionsList" modalPresentationStyle="fullScreen" id="E2i-9b-iqL" customClass="OperationList" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="E2i-9b-iqL" customClass="OperationList" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="iUF-C4-xjO" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -866,14 +868,6 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1np-Ib-Drf" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="25" width="320" height="543"/>
                                 <subviews>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" sectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="axq-7D-gM3" customClass="CustomTableView" customModule="ForaBank" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="543"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <color key="sectionIndexColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <color key="sectionIndexBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <color key="sectionIndexTrackingBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </tableView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="tGX-B6-xq5">
                                         <rect key="frame" x="0.0" y="249" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -881,13 +875,17 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Kga-02-0rp">
+                                        <rect key="frame" x="0.0" y="23" width="320" height="521"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                    </tableView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="axq-7D-gM3" secondAttribute="trailing" id="6Dg-cz-PFD"/>
-                                    <constraint firstItem="axq-7D-gM3" firstAttribute="top" secondItem="1np-Ib-Drf" secondAttribute="top" id="JFD-Ap-R8m"/>
-                                    <constraint firstAttribute="bottom" secondItem="axq-7D-gM3" secondAttribute="bottom" id="kjV-EK-gMh"/>
-                                    <constraint firstItem="axq-7D-gM3" firstAttribute="leading" secondItem="1np-Ib-Drf" secondAttribute="leading" id="p1n-8p-tzM"/>
+                                    <constraint firstAttribute="bottom" secondItem="Kga-02-0rp" secondAttribute="bottom" constant="-1" id="6V7-7n-tL6"/>
+                                    <constraint firstItem="Kga-02-0rp" firstAttribute="centerX" secondItem="1np-Ib-Drf" secondAttribute="centerX" id="T0X-3k-BdJ"/>
+                                    <constraint firstItem="Kga-02-0rp" firstAttribute="leading" secondItem="tGX-B6-xq5" secondAttribute="leading" id="gNu-yy-0gH"/>
+                                    <constraint firstItem="Kga-02-0rp" firstAttribute="top" secondItem="1np-Ib-Drf" secondAttribute="top" constant="23" id="jba-RJ-nwa"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -923,13 +921,13 @@
                     <size key="freeformSize" width="320" height="568"/>
                     <connections>
                         <outlet property="containerView" destination="1np-Ib-Drf" id="4OZ-6q-v2B"/>
-                        <outlet property="tableView" destination="axq-7D-gM3" id="wnC-Lf-fss"/>
+                        <outlet property="tableView" destination="Kga-02-0rp" id="sz3-CG-Laf"/>
                         <outlet property="titleLabel" destination="tGX-B6-xq5" id="0f4-SZ-kfL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NGS-TG-TBo" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2224" y="333"/>
+            <point key="canvasLocation" x="2223.75" y="332.74647887323943"/>
         </scene>
     </scenes>
     <resources>
