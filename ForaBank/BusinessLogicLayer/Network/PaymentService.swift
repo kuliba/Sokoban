@@ -37,26 +37,36 @@ class PaymentServices: PaymetsServiceProtocol {
                 switch response.result {
                 case .success:
                     if let json = response.result.value as? Dictionary<String, Any>,
-                        let data = json["data"] as? Array<Any> {
+                        let data = json["data"] as? Array<Dictionary<String, Any>> {
                         for cardData in data {
                             if let cardData = cardData as? Dictionary<String, Any> {
-                                var operators:  Array  = (cardData["operators"] as? Array<Any>)!
-                                let nameList = cardData["nameList"] as? String
-                          
-                                                               
                                 let name = cardData["name"] as? String
-    
+                                
+                                                        
                                 let details = cardData["details"] as? Dictionary<String, Any>
                                 var code = details!["code"] as? String?
-                                var value = details!["value"]  as? String
                                 
+                                
+                               
+                                
+                                let operators = cardData["operators"] as? Array<Dictionary<String,Any>>
+                                
+                                for operators in operators!{
                                  
+                                let operatorsList = operators as? Dictionary<String , Any>
+                                let nameList = operatorsList?["nameList"] as? Array<Any>
+                                for nameList in nameList!{
+
+                                let value = nameList as? Dictionary<String , Any>
+                                let nameOperators = value?["value"] as? String
+                                let codeOperators = operatorsList?["code"] as? String
                                 
-                                 var payment = Operations(name:name!, details: [Details](), code:code!, value: value)
+                                
+                                var payment = Operations(name:name!, details: [Details](), code:code!, nameOperators: nameOperators)
                          payments.append(payment)
                         
-                                 
-                                      
+                                }
+                                }
                         }
                             
                             print(payments)

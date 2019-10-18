@@ -133,7 +133,7 @@ extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
         
         }
             
-        serviceCell.titleLabel.text = payments[indexPath.row].name
+        serviceCell.titleLabel.text = payments[indexPath.row].nameOperators
     
             
             return serviceCell
@@ -141,7 +141,7 @@ extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "OperationsList", sender: nil)
+        performSegue(withIdentifier: "OperationPayment", sender: nil)
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
