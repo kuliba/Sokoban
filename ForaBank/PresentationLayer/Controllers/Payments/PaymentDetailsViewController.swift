@@ -57,13 +57,8 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
 
 //    private let sourceProvider = PaymentOptionCellProvider(asSource: true)
 //    private let destinationProvider = PaymentOptionCellProvider(asSource: true)
-    private let sourceProvider = PaymentOptionCellProvider()
-    private let destinationProvider = PaymentOptionCellProvider()
-    private let destinationProviderCardNumber = CardNumberCellProvider()
-    private let destinationProviderAccountNumber = AccountNumberCellProvider()
-    private let destinationProviderPhoneNumber = PhoneNumberCellProvider()
-    private var sourceConfigurations: [ICellConfigurator]?
-    private var destinationConfigurations: [ICellConfigurator]?
+    var sourceConfigurations: [ICellConfigurator]?
+    var destinationConfigurations: [ICellConfigurator]?
 
     // MARK: - Lifecycle
 
@@ -71,15 +66,6 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
         super.viewDidLoad()
         setUpLayout()
 
-        sourceConfigurations = [
-            PaymentOptionsPagerItem(provider: sourceProvider)
-        ]
-        destinationConfigurations = [
-            PaymentOptionsPagerItem(provider: destinationProvider),
-            CardNumberPagerItem(provider: destinationProviderCardNumber),
-            AccountNumberPagerItem(provider: destinationProviderAccountNumber),
-            PhoneNumberPagerItem(provider: destinationProviderPhoneNumber)
-        ]
         if let source = sourceConfigurations, let dest = destinationConfigurations {
             sourcePagerView.setConfig(config: source)
             destinationPagerView.setConfig(config: dest)

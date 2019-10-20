@@ -28,3 +28,9 @@ func showPaymentViewController() {
     }
     topMostVC()?.present(paymentVC, animated: true)
 }
+
+func showPaymentsTableViewController() {
+    let paymentsTableVC = PaymentsTableViewController()
+    let navigationVC = UINavigationController(rootViewController: paymentsTableVC)
+    topMostVC()?.present(navigationVC, animated: true)
+}

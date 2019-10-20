@@ -21,62 +21,67 @@ class PaymentsTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 5
+        return 3
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
 
-        cell.imageView?.image = UIImage(named: "deposit_cards_list_onhold_addmoney_button")
-        cell.textLabel?.text = "Сделать платёж"
-        return cell
+        switch indexPath.item {
+        case 0:
+            cell.imageView?.image = UIImage(named: "feed_option_accounts")
+            cell.textLabel?.text = "Между своими счетами"
+            break
+        case 1:
+            cell.imageView?.image = UIImage(named: "payments_transfer_between-accounts")
+            cell.textLabel?.text = "Клиенту банка"
+            break
+        case 2:
+            cell.imageView?.image = UIImage(named: "payments_services_phone-billing")
+            cell.textLabel?.text = "По номеру телефона"
+            break
+        default:
+            break
+        }
+         return cell
     }
 
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        store.dispatch(startPayment(sourceOption: nil, destionationOption: nil))
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+        guard let paymentVC = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentDetailsViewController") as? PaymentsDetailsViewController else {
+            return
+        }
+        
+        let sourceProvider = PaymentOptionCellProvider()
+        let destinationProvider = PaymentOptionCellProvider()
+        let destinationProviderCardNumber = CardNumberCellProvider()
+        let destinationProviderAccountNumber = AccountNumberCellProvider()
+        let destinationProviderPhoneNumber = PhoneNumberCellProvider()
+        
+        paymentVC.sourceConfigurations = [
+            PaymentOptionsPagerItem(provider: sourceProvider)
+        ]
+        
+        switch indexPath.item {
+        case 0:
+            paymentVC.destinationConfigurations = [
+                PaymentOptionsPagerItem(provider: destinationProvider)
+            ]
+            break
+        case 1:
+            paymentVC.destinationConfigurations = [
+                CardNumberPagerItem(provider: destinationProviderCardNumber),
+                AccountNumberPagerItem(provider: destinationProviderAccountNumber),
+            ]
+            break
+        case 2:
+            paymentVC.destinationConfigurations = [
+                PhoneNumberPagerItem(provider: destinationProviderPhoneNumber)
+            ]
+            break
+        default:
+            break
+        }
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
