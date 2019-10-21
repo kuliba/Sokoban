@@ -136,10 +136,12 @@ extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
         guard let serviceCell = tableView.dequeueReusableCell(withIdentifier: paymentCellId, for: indexPath) as? PaymentCell else {
             fatalError()
         }
-
-        serviceCell.titleLabel.text = payments[indexPath.row].nameOperators
-
-        return serviceCell
+            
+        serviceCell.titleLabel?.text = payments[indexPath.row].nameOperators ?? "123"
+    
+            
+            return serviceCell
+        
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

@@ -72,6 +72,7 @@
             <connections>
                 <outlet property="bottomSeparatorView" destination="6sh-to-MrT" id="AZl-Kr-5w1"/>
                 <outlet property="iconImageView" destination="id8-Ez-OTS" id="u8t-n0-cEo"/>
+                <outlet property="titleLabel" destination="Uoo-zZ-NNY" id="TZD-qc-rNe"/>
             </connections>
             <point key="canvasLocation" x="137.59999999999999" y="235.68215892053973"/>
         </tableViewCell>
