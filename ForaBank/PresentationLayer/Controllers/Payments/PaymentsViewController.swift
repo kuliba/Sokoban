@@ -133,7 +133,7 @@ extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
         
         }
             
-        serviceCell.titleLabel.text = payments[indexPath.row].nameOperators
+        serviceCell.titleLabel?.text = payments[indexPath.row].nameOperators ?? "123"
     
             
             return serviceCell
