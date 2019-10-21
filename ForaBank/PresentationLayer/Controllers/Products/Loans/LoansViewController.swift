@@ -200,7 +200,7 @@ extension LoansViewController: UITableViewDataSource, UITableViewDelegate {
 // MARK: - Private methods
 private extension LoansViewController {
     func presentPaymentDetailsViewController() {
-        if let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentDetailsViewController") as? PaymentsDetailsViewController {
+        if let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentDetailsViewController") as? PaymentsDetailsSuccessViewController {
             present(vc, animated: true, completion: nil)
         }
     }
