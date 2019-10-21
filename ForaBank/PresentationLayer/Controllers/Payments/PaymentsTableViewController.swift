@@ -34,7 +34,7 @@ class PaymentsTableViewController: UITableViewController {
             break
         case 1:
             cell.imageView?.image = UIImage(named: "payments_transfer_between-accounts")
-            cell.textLabel?.text = "Клиенту банка"
+            cell.textLabel?.text = "Клиенту Фора-Банка"
             break
         case 2:
             cell.imageView?.image = UIImage(named: "payments_services_phone-billing")
