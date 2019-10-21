@@ -161,23 +161,23 @@ class DetailedCardView: CardView {
                     if card?.number.prefix(6) == "465626" {
                             backgroundImageView.image = UIImage(named: "card_visa_gold")
                         }
-                        if card?.number.prefix(6) == "457825" {
+                        else if card?.number.prefix(6) == "457825" {
                             backgroundImageView.image = UIImage(named: "card_visa_platinum")
                         }
-                        if card?.number.prefix(6) == "425690" {
+                        else if card?.number.prefix(6) == "425690" {
                             backgroundImageView.image = UIImage(named: "card_visa_debet")
                         }
-                        if card?.number.prefix(6) == "557986" {
+                        else if card?.number.prefix(6) == "557986" {
                             backgroundImageView.image = UIImage(named: "card_visa_standart")
                             titleLabel.textColor = .black
                             cardCashLabel.textColor = .black
                             cardNumberLabel.textColor = .black
                             cardValidityPeriodLabel.textColor = .black
                         }
-                        if card?.number.prefix(6) == "536466" {
+                        else if card?.number.prefix(6) == "536466" {
                             backgroundImageView.image = UIImage(named: "card_visa_virtual")
                         }
-                        if card?.number.prefix(6) == "470336" {
+                       else if card?.number.prefix(6) == "470336" {
                             backgroundImageView.image = UIImage(named: "card_visa_infinity")
                         } else {
                             backgroundImageView.image = UIImage(named: "card_visa_debet")

@@ -85,7 +85,7 @@
             </tableViewCellContentView>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <viewLayoutGuide key="safeArea" id="rl1-ca-Uc9"/>
-            <inset key="separatorInset" minX="15" minY="0.0" maxX="0.0" maxY="0.0"/>
+            <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
             <connections>
                 <outlet property="amountLabel" destination="fET-uS-1sc" id="ydR-6E-ylv"/>
                 <outlet property="bottomSeparatorView" destination="bIP-8e-93z" id="iBA-zT-Z3A"/>
