@@ -45,7 +45,7 @@ class TabBarController: UITabBarController, StoreSubscriber {
             passcodeVC.modalPresentationStyle = .overFullScreen
             present(passcodeVC, animated: true, completion: nil)
         } else if state.isShown == false {
-            
+
         }
     }
 
@@ -62,7 +62,7 @@ class TabBarController: UITabBarController, StoreSubscriber {
                 let depositsRootVC = depositsStoryboard.instantiateViewController(withIdentifier: "depositsRoot") as! CarouselViewController
                 self.viewControllers?.insert(depositsRootVC, at: 1)
                 let paymentStoryboard: UIStoryboard = UIStoryboard(name: "Payment", bundle: nil)
-                let paymentRootVC = paymentStoryboard.instantiateViewController(withIdentifier: "paymentRoot") as! PaymentsViewController
+                let paymentRootVC = paymentStoryboard.instantiateViewController(withIdentifier: "PaymentsViewController") as! PaymentsViewController
                 self.viewControllers?.insert(paymentRootVC, at: 2)
             }
         }

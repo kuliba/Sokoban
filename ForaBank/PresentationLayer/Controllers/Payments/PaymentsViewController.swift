@@ -12,22 +12,26 @@ import ReSwift
 
 
 class PaymentsViewController: UIViewController, StoreSubscriber {
-    
+
     // MARK: - Properties
     @IBOutlet weak var tableView: CustomTableView!
     @IBOutlet weak var containerView: RoundedEdgeView!
+    @IBOutlet weak var backButton: UIButton!
     
+    @IBAction func backButtonClicked(_ sender: Any) {
+        dismiss(animated: true)
+    }
+
     let templateCellId = "PaymentTemplateCell"
     let paymentCellId = "PaymentCell"
     var selectIndex: Int? = nil
     var selectedSection: Int? = nil
+    var altTableViewDelegate: UITableViewDelegate?
+    var altTableViewDataSource: UITableViewDataSource?
 
-   
     var payments = [Operations]() {
         didSet {
             tableView.reloadData()
-     
-            
         }
     }
     private var isSignedUp: Bool? = nil {
@@ -37,22 +41,25 @@ class PaymentsViewController: UIViewController, StoreSubscriber {
             }
         }
     }
-    
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpTableView()
+        if navigationController == nil {
+            backButton.isHidden = false
+        }
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-     
+
         NetworkManager.shared().getPaymentsList { (success, payments) in
             if success {
                 self.payments = payments ?? []
             }
         }
-        
+
         containerView.hero.modifiers = [
             HeroModifier.duration(0.3),
             HeroModifier.delay(0.2),
@@ -66,23 +73,22 @@ class PaymentsViewController: UIViewController, StoreSubscriber {
         ]
         containerView.hero.id = "content"
     }
-        
-        override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    //        print("prepare for segue \(segue.identifier ?? "nil")")
-            if let destination = segue.destination as? OperationList {
-                destination.payments =  [payments[(tableView.indexPathForSelectedRow?.row)!]]
-              
-                   }
-        }
 
-    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        //        print("prepare for segue \(segue.identifier ?? "nil")")
+        if let destination = segue.destination as? OperationList {
+            destination.payments = [payments[(tableView.indexPathForSelectedRow?.row)!]]
+        }
+    }
+
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         containerView.hero.modifiers = nil
         containerView.hero.id = nil
         view.hero.modifiers = nil
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         containerView.hero.modifiers = [
@@ -95,7 +101,7 @@ class PaymentsViewController: UIViewController, StoreSubscriber {
         ]
         containerView.hero.id = "content"
     }
-    
+
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         if let selectedRow = tableView.indexPathForSelectedRow {
@@ -105,54 +111,50 @@ class PaymentsViewController: UIViewController, StoreSubscriber {
         containerView.hero.id = nil
         view.hero.modifiers = nil
     }
-    
+
     func newState(state: State) {
-        
+
     }
 }
 
 // MARK: - UITableView DataSource and Delegate
 extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
-    
-  
-    
+
+
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-     
+
         return payments.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
+
         let s = (isSignedUp == true) ? indexPath.section : indexPath.section + 1
-        
         let section = payments[s]
         let index = indexPath.row
-        
-      guard let serviceCell = tableView.dequeueReusableCell(withIdentifier: paymentCellId, for: indexPath) as? PaymentCell  else {
-        fatalError()
-        
+
+        guard let serviceCell = tableView.dequeueReusableCell(withIdentifier: paymentCellId, for: indexPath) as? PaymentCell else {
+            fatalError()
         }
-            
+
         serviceCell.titleLabel.text = payments[indexPath.row].nameOperators
-    
-            
-            return serviceCell
-        
+
+        return serviceCell
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "OperationPayment", sender: nil)
     }
-    
+
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerCell = UINib(nibName: "ServicesHeader", bundle: nil)
             .instantiate(withOwner: nil, options: nil)[0] as! ServicesHeader
-        
+
         let headerView = UIView(frame: headerCell.frame)
         headerView.addSubview(headerCell)
-        
+
         headerCell.titleLabel.text = {
-            let s = (isSignedUp == true) ? section : section+1
+            let s = (isSignedUp == true) ? section : section + 1
 
             if s == 0 {
                 return "Шаблоны"
@@ -164,30 +166,30 @@ extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
                 return ""
             }
         }()
-        
+
         return headerView
     }
-    
+
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         if isSignedUp == true && section == 0 {
-            
+
             let footerView = UIView(frame: CGRect(x: tableView.frame.minX + 20, y: 0, width: tableView.frame.width - 40, height: 95))
             let doneButton = UIButton(frame: CGRect(x: footerView.frame.minX, y: footerView.frame.minY + 15, width: footerView.frame.width, height: 45))
-            
+
             doneButton.setTitle("Создать шаблон", for: .normal)
             doneButton.titleLabel?.font = UIFont(name: "Roboto-Regular", size: 16)
             doneButton.setTitleColor(.black, for: [])
             doneButton.layer.borderWidth = 0.5
-            doneButton.layer.borderColor = UIColor(red: 211/255, green: 211/255, blue: 211/255, alpha: 1).cgColor
+            doneButton.layer.borderColor = UIColor(red: 211 / 255, green: 211 / 255, blue: 211 / 255, alpha: 1).cgColor
             doneButton.layer.cornerRadius = doneButton.frame.height / 2
-            
+
             footerView.addSubview(doneButton)
             return footerView
         }
-        
+
         return nil
     }
-    
+
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if isSignedUp == true && section == 0 {
             return 95
@@ -195,7 +197,7 @@ extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
             return 0
         }
     }
-    
+
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 35
     }
@@ -203,32 +205,38 @@ extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
 
 // MARK: - Private methods
 private extension PaymentsViewController {
-    
+
     func setUpTableView() {
-        setTableViewDelegateAndDataSource()
+
+        if (altTableViewDelegate != nil) && (altTableViewDataSource != nil) {
+            tableView.delegate = altTableViewDelegate
+            tableView.dataSource = altTableViewDataSource
+        } else {
+            setTableViewDelegateAndDataSource()
+        }
         setTableViewContentInsets()
         setAutomaticRowHeight()
         registerNibCell()
     }
-    
+
     func setTableViewContentInsets() {
         tableView.contentInset.top = -10
     }
-    
+
     func setTableViewDelegateAndDataSource() {
         tableView.dataSource = self
         tableView.delegate = self
     }
-    
+
     func setAutomaticRowHeight() {
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
     }
-    
+
     func registerNibCell() {
         let nibTemplateCell = UINib(nibName: templateCellId, bundle: nil)
         tableView.register(nibTemplateCell, forCellReuseIdentifier: templateCellId)
-        
+
         let nibTransferCellIdCell = UINib(nibName: paymentCellId, bundle: nil)
         tableView.register(nibTransferCellIdCell, forCellReuseIdentifier: paymentCellId)
     }

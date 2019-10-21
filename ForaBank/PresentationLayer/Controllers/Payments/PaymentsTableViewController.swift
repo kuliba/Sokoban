@@ -43,45 +43,48 @@ class PaymentsTableViewController: UITableViewController {
         default:
             break
         }
-         return cell
+        return cell
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 //        store.dispatch(startPayment(sourceOption: nil, destionationOption: nil))
 
-        guard let paymentVC = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentDetailsViewController") as? PaymentsDetailsViewController else {
+        guard let paymentDetailsVC = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentDetailsViewController") as? PaymentsDetailsViewController else {
             return
         }
-        
+
         let sourceProvider = PaymentOptionCellProvider()
         let destinationProvider = PaymentOptionCellProvider()
         let destinationProviderCardNumber = CardNumberCellProvider()
         let destinationProviderAccountNumber = AccountNumberCellProvider()
         let destinationProviderPhoneNumber = PhoneNumberCellProvider()
-        
-        paymentVC.sourceConfigurations = [
+
+        paymentDetailsVC.sourceConfigurations = [
             PaymentOptionsPagerItem(provider: sourceProvider)
         ]
-        
+
         switch indexPath.item {
         case 0:
-            paymentVC.destinationConfigurations = [
+            paymentDetailsVC.destinationConfigurations = [
                 PaymentOptionsPagerItem(provider: destinationProvider)
             ]
             break
         case 1:
-            paymentVC.destinationConfigurations = [
+            paymentDetailsVC.destinationConfigurations = [
                 CardNumberPagerItem(provider: destinationProviderCardNumber),
                 AccountNumberPagerItem(provider: destinationProviderAccountNumber),
             ]
             break
         case 2:
-            paymentVC.destinationConfigurations = [
+            paymentDetailsVC.destinationConfigurations = [
                 PhoneNumberPagerItem(provider: destinationProviderPhoneNumber)
             ]
             break
         default:
             break
         }
+
+        let rootVC = tableView.parentContainerViewController()
+        rootVC?.present(paymentDetailsVC, animated: true, completion: nil)
     }
 }

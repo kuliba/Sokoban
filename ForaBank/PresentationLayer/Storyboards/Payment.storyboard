@@ -16,7 +16,7 @@
         <!--Платежи и переводы-->
         <scene sceneID="2lK-ok-2qs">
             <objects>
-                <viewController storyboardIdentifier="paymentRoot" modalPresentationStyle="fullScreen" id="OPN-w7-Pxo" customClass="PaymentsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PaymentsViewController" modalPresentationStyle="fullScreen" id="OPN-w7-Pxo" customClass="PaymentsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="YRK-kd-i2t" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -24,6 +24,17 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ooe-uE-Oeb">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="30"/>
                                 <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oz5-Cv-z4N">
+                                        <rect key="frame" x="14" y="0.0" width="30" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="oz5-Cv-z4N" secondAttribute="height" multiplier="1:1" id="R9a-as-Jpy"/>
+                                        </constraints>
+                                        <inset key="imageEdgeInsets" minX="9" minY="8" maxX="8" maxY="3"/>
+                                        <state key="normal" image="button_back"/>
+                                        <connections>
+                                            <action selector="backButtonClicked:" destination="OPN-w7-Pxo" eventType="touchUpInside" id="8uw-zB-Xj5"/>
+                                        </connections>
+                                    </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Платежи и переводы" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8dV-nZ-mMl">
                                         <rect key="frame" x="80" y="8.5" width="160" height="21.5"/>
                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
@@ -33,7 +44,10 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstItem="oz5-Cv-z4N" firstAttribute="leading" secondItem="ooe-uE-Oeb" secondAttribute="leading" constant="14" id="PKW-yo-cMO"/>
                                     <constraint firstAttribute="bottom" secondItem="8dV-nZ-mMl" secondAttribute="bottom" id="Ppq-GK-5Ne"/>
+                                    <constraint firstItem="oz5-Cv-z4N" firstAttribute="top" secondItem="ooe-uE-Oeb" secondAttribute="top" id="eGR-VR-eRW"/>
+                                    <constraint firstAttribute="bottom" secondItem="oz5-Cv-z4N" secondAttribute="bottom" id="eHJ-SK-Fwm"/>
                                     <constraint firstAttribute="height" constant="30" id="mAc-Nf-4aI"/>
                                     <constraint firstItem="8dV-nZ-mMl" firstAttribute="centerX" secondItem="ooe-uE-Oeb" secondAttribute="centerX" id="owm-Wf-xX0"/>
                                 </constraints>
@@ -90,6 +104,7 @@
                     <navigationItem key="navigationItem" title="Платежи и переводы" id="QDA-v9-Z6f"/>
                     <size key="freeformSize" width="320" height="568"/>
                     <connections>
+                        <outlet property="backButton" destination="oz5-Cv-z4N" id="Yg1-At-kPL"/>
                         <outlet property="containerView" destination="8Yz-SV-jwE" id="OEY-Yc-fSS"/>
                         <outlet property="tableView" destination="dNT-nK-TXt" id="JpD-Kc-twN"/>
                         <segue destination="E2i-9b-iqL" kind="show" identifier="OperationsList" id="lOr-aK-UK8"/>
@@ -781,7 +796,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="320" height="30"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Платежи и переводы" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D6D-IF-bKx">
-                                    <rect key="frame" x="80" y="8.5" width="160" height="21.5"/>
+                                    <rect key="frame" x="80.5" y="11" width="159" height="19"/>
                                     <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
