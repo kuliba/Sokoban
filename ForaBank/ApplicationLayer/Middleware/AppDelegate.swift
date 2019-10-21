@@ -20,14 +20,34 @@ let thunkMiddleware: Middleware<State> = createThunkMiddleware()
 var store = Store<State>(reducer: appReducer, state: nil, middleware: [thunkMiddleware])
 
 @UIApplicationMain
-    class AppDelegate: UIResponder, UIApplicationDelegate {
+    class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
     // MARK: - Properties
     var window: UIWindow?
 
+    
+    
+    func userNotificationCenter(
+      _ center: UNUserNotificationCenter,
+      didReceive response: UNNotificationResponse,
+      withCompletionHandler completionHandler: @escaping () -> Void) {
+      
+      // 1
+      let userInfo = response.notification.request.content.userInfo
+      
+      // 2
+        if let aps = userInfo["aps"] as? [String: AnyObject] {
+        
+      }
+      
+      // 4
+      completionHandler()
+    }
+    
     // MARK: - Lifecycle
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+
 
 
         setNavigationBarAppearance()
@@ -40,7 +60,33 @@ var store = Store<State>(reducer: appReducer, state: nil, middleware: [thunkMidd
         
         
     }
- 
+    
+    func application(
+      _ application: UIApplication,
+      didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
+    ) {
+      let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
+      let token = tokenParts.joined()
+      print("Device Token: \(token)")
+    }
+
+    func application(
+      _ application: UIApplication,
+      didFailToRegisterForRemoteNotificationsWithError error: Error) {
+      print("Failed to register: \(error)")
+    }
+    func application(
+      _ application: UIApplication,
+      didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+      fetchCompletionHandler completionHandler:
+      @escaping (UIBackgroundFetchResult) -> Void
+    ) {
+      guard let aps = userInfo["aps"] as? [String: AnyObject] else {
+        completionHandler(.failed)
+        return
+      }
+    }
+
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -69,12 +115,22 @@ var store = Store<State>(reducer: appReducer, state: nil, middleware: [thunkMidd
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-    func registerForPushNotifications() {
-      UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) {
-        (granted, error) in
-        print("Permission granted: \(granted)")
+    
+    
+    
+  func registerForPushNotifications() {
+    UNUserNotificationCenter.current()
+        .requestAuthorization(options: [.alert, .sound, .badge]) {
+          [weak self] granted, error in
+            
+          print("Permission granted: \(granted)")
+          guard granted else { return }
+          self?.getNotificationSettings()
       }
+    
     }
+    
+    
     func getNotificationSettings() {
       UNUserNotificationCenter.current().getNotificationSettings { (settings) in
         print("Notification settings: \(settings)")
@@ -82,6 +138,9 @@ var store = Store<State>(reducer: appReducer, state: nil, middleware: [thunkMidd
         UIApplication.shared.registerForRemoteNotifications()
       }
     }
+    
+ 
+    
 }
 
 // MARK: - Private methods
