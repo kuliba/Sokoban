@@ -17,7 +17,7 @@ class PaymentsViewController: UIViewController, StoreSubscriber {
     @IBOutlet weak var tableView: CustomTableView!
     @IBOutlet weak var containerView: RoundedEdgeView!
     @IBOutlet weak var backButton: UIButton!
-    
+
     @IBAction func backButtonClicked(_ sender: Any) {
         dismiss(animated: true)
     }
@@ -46,7 +46,9 @@ class PaymentsViewController: UIViewController, StoreSubscriber {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpTableView()
-        if navigationController == nil {
+        if navigationController != nil || tabBarController != nil {
+            backButton.isHidden = true
+        } else {
             backButton.isHidden = false
         }
     }
@@ -136,12 +138,12 @@ extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
         guard let serviceCell = tableView.dequeueReusableCell(withIdentifier: paymentCellId, for: indexPath) as? PaymentCell else {
             fatalError()
         }
-            
+
         serviceCell.titleLabel?.text = payments[indexPath.row].nameOperators ?? "123"
-    
-            
-            return serviceCell
-        
+
+
+        return serviceCell
+
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
