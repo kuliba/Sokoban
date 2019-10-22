@@ -127,7 +127,7 @@ class ProductManagementViewController: UITableViewController {
             guard let product = self.product else {
                 return
             }
-            showShareScreen(textToShare: product.number)
+            showShareScreen(textToShare: "Номер моей карты: \(product.number)")
             return
         }
         let alertVC = UIAlertController(title: "Функционал недоступен", message: "Функционал временно недоступен", preferredStyle: .alert)
