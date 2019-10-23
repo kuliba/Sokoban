@@ -12,7 +12,7 @@ import UIKit
 
 
 
-class DeposService: DeposServiceProtocol {
+class AccountsService: AccountsServiceProtocol {
 
     private let baseURLString: String
     private var datedTransactions = [DatedTransactions]()

@@ -11,7 +11,7 @@ import Foundation
 import Alamofire
 import UIKit
 
-class TestDepositsService: DepositsServiceProtocol {
+class DepositService: DepositsServiceProtocol {
 
 
     private let baseURLString: String
