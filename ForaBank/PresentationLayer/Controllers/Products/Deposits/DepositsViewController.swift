@@ -13,6 +13,14 @@ import Hero
 class DepositsViewController: UIViewController {
 
     // MARK: - Properties
+    @IBOutlet weak var doneButton: UIButton!
+    @IBAction func doneButton(_ sender: Any) {
+         let alertVC = UIAlertController(title: "Функционал недоступен", message: "Функционал временно недоступен", preferredStyle: .alert)
+               let okAction = UIAlertAction(title: "Понятно", style: .cancel, handler: nil)
+               alertVC.addAction(okAction)
+               show(alertVC, sender: self)
+     }
+
     @IBOutlet weak var tableView: CustomTableView!
     var color2: UIColor = .black
 
@@ -181,6 +189,8 @@ extension DepositsViewController: UITableViewDataSource, UITableViewDelegate {
 
             let footerView = UIView(frame: CGRect(x: tableView.frame.minX + 20, y: 0, width: tableView.frame.width - 40, height: 95))
             let doneButton = UIButton(type: .system)
+      
+            
             doneButton.frame = CGRect(x: footerView.frame.minX, y: footerView.frame.minY + 15, width: footerView.frame.width, height: 45)
 
             doneButton.setTitle("Открыть вклад", for: .normal)
@@ -188,13 +198,12 @@ extension DepositsViewController: UITableViewDataSource, UITableViewDelegate {
             doneButton.titleLabel?.font = UIFont(name: "Roboto-Regular", size: 16)
 
             doneButton.setTitleColor(.black, for: [])
-
+     
 
             doneButton.layer.borderWidth = 0.5
             doneButton.layer.borderColor = UIColor(red: 211 / 255, green: 211 / 255, blue: 211 / 255, alpha: 1).cgColor
 
             doneButton.layer.cornerRadius = doneButton.frame.height / 2
-
 
             footerView.addSubview(doneButton)
             return footerView

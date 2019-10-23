@@ -24,7 +24,15 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
     @IBOutlet weak var destinationName: UILabel!
     @IBOutlet weak var destinationNumber: UILabel!
     @IBOutlet weak var destinationSum: UILabel!
-
+    @IBAction func createTemplate(_ sender: Any) {
+        let alertVC = UIAlertController(title: "Функционал недоступен", message: "Функционал временно недоступен", preferredStyle: .alert)
+              let okAction = UIAlertAction(title: "Понятно", style: .cancel, handler: nil)
+              alertVC.addAction(okAction)
+              show(alertVC, sender: self)
+    }
+    
+    @IBOutlet weak var createTemplate: ButtonRounded!
+    
     // MARK: - Actions
     @IBAction func returnButtonClicked(_ sender: Any) {
         dismissToRootViewController()
@@ -40,6 +48,7 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
         returnButton.backgroundColor = .clear
         returnButton.layer.borderWidth = 1
         returnButton.layer.borderColor = UIColor.white.cgColor
+        
     }
 
     override func viewDidAppear(_ animated: Bool) {

@@ -10,6 +10,18 @@ import UIKit
 
 class ProfileMenuTableViewController: UITableViewController {
     
+    @IBOutlet weak var repeatPayment: UIView!
+    
+    @IBAction func createTemplate(_ sender: Any) {
+        let alertVC = UIAlertController(title: "Функционал недоступен", message: "Функционал временно недоступен", preferredStyle: .alert)
+              let okAction = UIAlertAction(title: "Понятно", style: .cancel, handler: nil)
+              alertVC.addAction(okAction)
+              show(alertVC, sender: self)
+    }
+    
+    @IBOutlet weak var categorySort: UIButton!
+    @IBOutlet weak var createTemplate: UIButton!
+    
     let kPincode = "pincode"
     // MARK: - Actions
     @IBAction func messagesButtonClicked(_ sender: Any) {
