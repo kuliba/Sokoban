@@ -14,8 +14,6 @@ import UIKit
 
 class DeposService: DeposServiceProtocol {
 
-
-
     private let baseURLString: String
     private var datedTransactions = [DatedTransactions]()
 

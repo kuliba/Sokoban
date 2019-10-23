@@ -10,15 +10,15 @@ import Foundation
 import Alamofire
 
 class PaymentServices: PaymetsServiceProtocol {
-    
-    
+
+
     private let baseURLString: String
     private var datedTransactions = [DatedTransactions]()
-    
+
     init(baseURLString: String) {
         self.baseURLString = baseURLString
     }
-    
+
     func getPaymentsList(headers: HTTPHeaders, completionHandler: @escaping (Bool, [Operations]?) -> Void) {
         var payments = [Operations]()
         let url = baseURLString + "rest/getOperatorsList"
@@ -26,14 +26,14 @@ class PaymentServices: PaymetsServiceProtocol {
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])
             .responseJSON { [unowned self] response in
-                
+
                 if let json = response.result.value as? Dictionary<String, Any>,
                     let errorMessage = json["errorMessage"] as? String {
                     print("\(errorMessage) \(self)")
                     completionHandler(false, payments)
                     return
                 }
-                
+
                 switch response.result {
                 case .success:
                     if let json = response.result.value as? Dictionary<String, Any>,
@@ -41,49 +41,49 @@ class PaymentServices: PaymetsServiceProtocol {
                         for cardData in data {
                             if let cardData = cardData as? Dictionary<String, Any> {
                                 let name = cardData["name"] as? String
-                                
-                                                        
+
+
                                 let details = cardData["details"] as? Dictionary<String, Any>
                                 var code = details!["code"] as? String?
-                                
-                                
-                               
-                                
-                                let operators = cardData["operators"] as? Array<Dictionary<String,Any>>
-                                
-                                for operators in operators!{
-                                 
-                                let operatorsList = operators as? Dictionary<String , Any>
-                                let nameList = operatorsList?["nameList"] as? Array<Any>
-                                for nameList in nameList!{
 
-                                let value = nameList as? Dictionary<String , Any>
-                                let nameOperators = value?["value"] as? String
-                                let codeOperators = operatorsList?["code"] as? String
-                                
-                                
-                                var payment = Operations(name:name!, details: [Details](), code:code!, nameOperators: nameOperators)
-                         payments.append(payment)
-                        
+
+
+
+                                let operators = cardData["operators"] as? Array<Dictionary<String, Any>>
+
+                                for operators in operators! {
+
+                                    let operatorsList = operators as? Dictionary<String , Any>
+                                    let nameList = operatorsList?["nameList"] as? Array<Any>
+                                    for nameList in nameList! {
+
+                                        let value = nameList as? Dictionary<String , Any>
+                                        let nameOperators = value?["value"] as? String
+                                        let codeOperators = operatorsList?["code"] as? String
+
+
+                                        var payment = Operations(name: name!, details: [Details](), code: code!, nameOperators: nameOperators)
+                                        payments.append(payment)
+
+                                    }
                                 }
-                                }
-                        }
-                            
-                            print(payments)
                             }
+
+                            print(payments)
+                        }
                         completionHandler(true, payments)
                     } else {
                         print("rest/getCardList cant parse json \(String(describing: response.result.value))")
                         completionHandler(false, payments)
                     }
-                    
+
                 case .failure(let error):
                     print("rest/getCardList \(error) \(self)")
                     completionHandler(false, payments)
                 }
         }
     }
-    
+
     func blockCard(withNumber num: String, completionHandler: @escaping (Bool) -> Void) {
         //        for i in 0..<cards.count {
         //            if cards[i].number == num {
@@ -92,7 +92,7 @@ class PaymentServices: PaymetsServiceProtocol {
         //        }
         completionHandler(false)
     }
-    
+
     func getTransactionsStatement(forCardNumber: String, fromDate: Date, toDate: Date, headers: HTTPHeaders, completionHandler: @escaping (Bool, [DatedTransactions]?) -> Void) {
         completionHandler(false, datedTransactions)
     }

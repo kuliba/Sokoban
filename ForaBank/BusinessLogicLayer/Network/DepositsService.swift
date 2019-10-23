@@ -55,7 +55,7 @@ class TestDepositsService: DepositsServiceProtocol {
                                 let currencyCode = accountData!["currencyCode"] as? String
                                 let ownerAgentBrief = original["ownerAgentBrief"] as? String
                                 let number = original["number"] as? String
-                                let deposit = Deposit(depositProductName: depositProductName,   
+                                let deposit = Deposit(depositProductName: depositProductName,
                                                       currencyCode: currencyCode, balance: balance,
                                                       accountNumber: accountNumber)
                                 deposits.append(deposit)
