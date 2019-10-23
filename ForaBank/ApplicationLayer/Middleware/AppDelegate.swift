@@ -27,6 +27,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   static var shared: AppDelegate { return UIApplication.shared.delegate as! AppDelegate }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+   
+           setNavigationBarAppearance()
+                setTextFieldAppearance()
+                IQKeyboardManager.shared.enable = true
+        //        IQKeyboardManager.shared.layoutIfNeededOnUpdate = true
+                store.dispatch(checkAuthCredentials)
     FirebaseApp.configure()
     application.registerForRemoteNotifications()
     requestNotificationAuthorization(application: application)
@@ -92,4 +98,32 @@ extension AppDelegate : MessagingDelegate {
       //TODO: Handle background notification
     }
   }
+}
+// MARK: - Private methods
+private extension AppDelegate {
+
+    func setNavigationBarAppearance() {
+        setNavigationBarTransparent()
+        setNavigationBarFont()
+    }
+
+    func setNavigationBarTransparent() {
+        UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
+        UINavigationBar.appearance().shadowImage = UIImage()
+    }
+
+    func setNavigationBarFont() {
+        let font = UIFont(name: "Roboto-Regular", size: 16) ?? UIFont.systemFont(ofSize: 16)
+        UINavigationBar.appearance().titleTextAttributes = [
+                .font: font,
+                .foregroundColor: UIColor.white
+        ]
+    }
+
+
+
+    func setTextFieldAppearance() {
+        UITextField.appearance().tintColor = .black
+        UITextField.appearance().backgroundColor = UIColor(red: 0.889415, green: 0.889436, blue: 0.889424, alpha: 0.25)//UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1)//
+    }
 }
