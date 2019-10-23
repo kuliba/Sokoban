@@ -1198,26 +1198,42 @@
 		BD20830B236099820010E03C /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				BD20834C23609A670010E03C /* NetworkManager.swift */,
+				BD20837A2360A6410010E03C /* API */,
+				BD20837B2360A6630010E03C /* Requests */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		BD20837A2360A6410010E03C /* API */ = {
+			isa = PBXGroup;
+			children = (
 				BD20834923609A670010E03C /* AccountsService.swift */,
 				BD20835423609A670010E03C /* AuthService.swift */,
 				BD20835823609A680010E03C /* CardService.swift */,
 				BD20835723609A680010E03C /* CardStatementService.swift */,
+				BD2083782360A29C0010E03C /* DepositsService.swift */,
 				BD20834D23609A670010E03C /* HIstoryService.swift */,
 				BD20835923609A680010E03C /* LoanPaymentSchedule.swift */,
 				BD20835123609A670010E03C /* LoansService.swift */,
-				BD20834C23609A670010E03C /* NetworkManager.swift */,
-				BD20835023609A670010E03C /* PaymentRequests.swift */,
-				BD20835B23609A680010E03C /* ProductRequests.swift */,
+				BD20837623609B560010E03C /* PaymentServices.swift */,
 				BD20835E23609A680010E03C /* RegService.swift */,
 				BD20834E23609A670010E03C /* StatementService.swift */,
 				BD20835C23609A680010E03C /* TestAuthService.swift */,
 				BD20835623609A670010E03C /* TestCardService.swift */,
 				BD20835323609A670010E03C /* TestRegService.swift */,
 				BD20834823609A670010E03C /* TestStatementService.swift */,
-				BD20837623609B560010E03C /* PaymentServices.swift */,
-				BD2083782360A29C0010E03C /* DepositsService.swift */,
 			);
-			path = Network;
+			path = API;
+			sourceTree = "<group>";
+		};
+		BD20837B2360A6630010E03C /* Requests */ = {
+			isa = PBXGroup;
+			children = (
+				BD20835023609A670010E03C /* PaymentRequests.swift */,
+				BD20835B23609A680010E03C /* ProductRequests.swift */,
+			);
+			path = Requests;
 			sourceTree = "<group>";
 		};
 		BD38198C232103EC0004728C /* Resources */ = {
