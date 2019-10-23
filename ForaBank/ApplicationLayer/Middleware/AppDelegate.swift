@@ -14,6 +14,7 @@ import CryptoSwift
 import UserNotifications
 import Firebase
 
+
 func appReducer(action: Action, state: State?) -> State {
     return State(passcodeSignUpState: passcodeSignUpReducer(state: state?.passcodeSignUpState, action: action), authenticationState: authenticationReducer(state: state?.authenticationState, action: action), passcodeSignInState: passcodeSignInReducer(state: state?.passcodeSignInState, action: action), verificationCodeState: verificationCodeReducer(state: state?.verificationCodeState, action: action), productsState: productReducer(state: state?.productsState, action: action), registrationState: registrationReducer(state: state?.registrationState, action: action))
 }

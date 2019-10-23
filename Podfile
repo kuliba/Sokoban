@@ -25,8 +25,8 @@ target 'ForaBank' do
   pod 'FSPagerView'
   pod 'DropDown'
   pod 'Firebase/Analytics'
-pod 'Firebase/Messaging'
-pod 'Firebase/Core'
+  pod 'Firebase/Messaging'
+  pod 'Firebase/Core'
 
   #pod 'XCGLogger'
 end

@@ -29,6 +29,9 @@
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad" textContentType="cc-number"/>
+                                <connections>
+                                    <action selector="contactsList:" destination="gTV-IL-0wX" eventType="editingDidEnd" id="nL6-Oo-lm9"/>
+                                </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f5S-dd-w1e">
                                 <rect key="frame" x="8" y="15" width="30" height="30"/>
@@ -36,6 +39,13 @@
                                     <constraint firstAttribute="width" secondItem="f5S-dd-w1e" secondAttribute="height" multiplier="1:1" id="BrI-lT-RUM"/>
                                 </constraints>
                                 <state key="normal" image="payments_transfer_between-accounts"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n8P-hA-omH">
+                                <rect key="frame" x="0.0" y="-3" width="342" height="68"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="contactsList:" destination="gTV-IL-0wX" eventType="touchUpInside" id="Qqb-7g-8hp"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

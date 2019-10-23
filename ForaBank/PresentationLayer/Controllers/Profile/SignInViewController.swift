@@ -10,7 +10,7 @@ import UIKit
 import Hero
 import RMMapper
 
-class SignInViewController: UIViewController {
+class SignInViewController: UIViewController, ContactsPickerDelegate {
 
     @IBOutlet weak var loginTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
@@ -19,10 +19,41 @@ class SignInViewController: UIViewController {
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var centralView: UIView!
     
+
     var segueId: String? = nil
     var backSegueId: String? = nil
 
 
+    @IBAction func contactList(_ sender: Any) {
+        let contactPickerScene = ContactsPicker(delegate: self, multiSelection: true, subtitleCellType: SubtitleCellValue.email)
+           let navigationController = UINavigationController(rootViewController: contactPickerScene)
+           self.present(navigationController, animated: true, completion: nil)
+        
+    }
+    func contactPicker(_: ContactsPicker, didContactFetchFailed error: NSError) {
+        print("Failed with error \(error.description)")
+    }
+    
+    func contactPicker(_: ContactsPicker, didSelectContact contact: Contact) {
+        print("Contact \(contact.displayName) has been selected")
+    }
+    
+    func contactPickerDidCancel(_ picker: ContactsPicker) {
+        picker.dismiss(animated: true, completion: nil)
+        print("User canceled the selection");
+    }
+    
+    func contactPicker(_ picker: ContactsPicker, didSelectMultipleContacts contacts: [Contact]) {
+        defer { picker.dismiss(animated: true, completion: nil) }
+        guard !contacts.isEmpty else { return }
+        print("The following contacts are selected")
+        for contact in contacts {
+            print("\(contact.displayName)")
+        }
+    
+    }
+    
+    
     // MARK: - Actions
     @IBAction func backButtonClicked() {
         view.endEditing(true)

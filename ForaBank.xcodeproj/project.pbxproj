@@ -140,6 +140,16 @@
 		96144B43233E21BB00B9F314 /* LoanSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96144B42233E21BB00B9F314 /* LoanSchedule.swift */; };
 		9622CFBE234B225B0005701E /* changePasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9622CFBD234B225B0005701E /* changePasswordController.swift */; };
 		9630327E2346260000C211D8 /* prepareResetPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9630327D2346260000C211D8 /* prepareResetPassword.swift */; };
+		963B62D02360A91900DD9A3E /* ContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963B62CA2360A91400DD9A3E /* ContactCell.swift */; };
+		963B62D12360A91900DD9A3E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963B62CB2360A91500DD9A3E /* Constants.swift */; };
+		963B62D22360A91900DD9A3E /* ContactsPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963B62CC2360A91500DD9A3E /* ContactsPicker.swift */; };
+		963B62D32360A91900DD9A3E /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963B62CD2360A91500DD9A3E /* Contact.swift */; };
+		963B62D42360A91900DD9A3E /* ExtensionsContactList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963B62CE2360A91800DD9A3E /* ExtensionsContactList.swift */; };
+		963B62D52360A91900DD9A3E /* JFContactCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 963B62CF2360A91900DD9A3E /* JFContactCell.xib */; };
+		963B62DE2360A93A00DD9A3E /* JFContactsPicker-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 963B62D72360A93800DD9A3E /* JFContactsPicker-dummy.m */; };
+		963B62DF2360A93A00DD9A3E /* ResourceBundle-JFContactsPicker-JFContactsPicker-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 963B62D82360A93900DD9A3E /* ResourceBundle-JFContactsPicker-JFContactsPicker-Info.plist */; };
+		963B62E02360A93A00DD9A3E /* JFContactsPicker.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 963B62DB2360A93A00DD9A3E /* JFContactsPicker.xcconfig */; };
+		963B62E12360A93A00DD9A3E /* JFContactsPicker-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 963B62DC2360A93A00DD9A3E /* JFContactsPicker-Info.plist */; };
 		96414BC72354C06B00C12EED /* PaymentsDetailsSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96414BC62354C06B00C12EED /* PaymentsDetailsSuccessViewController.swift */; };
 		96514513234F829E00A4713F /* RefreshView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96514511234F829D00A4713F /* RefreshView.swift */; };
 		96514514234F829E00A4713F /* RefreshView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96514512234F829E00A4713F /* RefreshView.xib */; };
@@ -464,6 +474,19 @@
 		96144B42233E21BB00B9F314 /* LoanSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanSchedule.swift; sourceTree = "<group>"; };
 		9622CFBD234B225B0005701E /* changePasswordController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = changePasswordController.swift; sourceTree = "<group>"; };
 		9630327D2346260000C211D8 /* prepareResetPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = prepareResetPassword.swift; sourceTree = "<group>"; };
+		963B62CA2360A91400DD9A3E /* ContactCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactCell.swift; sourceTree = "<group>"; };
+		963B62CB2360A91500DD9A3E /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		963B62CC2360A91500DD9A3E /* ContactsPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsPicker.swift; sourceTree = "<group>"; };
+		963B62CD2360A91500DD9A3E /* Contact.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
+		963B62CE2360A91800DD9A3E /* ExtensionsContactList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionsContactList.swift; sourceTree = "<group>"; };
+		963B62CF2360A91900DD9A3E /* JFContactCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JFContactCell.xib; sourceTree = "<group>"; };
+		963B62D72360A93800DD9A3E /* JFContactsPicker-dummy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JFContactsPicker-dummy.m"; sourceTree = "<group>"; };
+		963B62D82360A93900DD9A3E /* ResourceBundle-JFContactsPicker-JFContactsPicker-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "ResourceBundle-JFContactsPicker-JFContactsPicker-Info.plist"; sourceTree = "<group>"; };
+		963B62D92360A93900DD9A3E /* JFContactsPicker-prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JFContactsPicker-prefix.pch"; sourceTree = "<group>"; };
+		963B62DA2360A93900DD9A3E /* JFContactsPicker.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = JFContactsPicker.modulemap; sourceTree = "<group>"; };
+		963B62DB2360A93A00DD9A3E /* JFContactsPicker.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = JFContactsPicker.xcconfig; sourceTree = "<group>"; };
+		963B62DC2360A93A00DD9A3E /* JFContactsPicker-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "JFContactsPicker-Info.plist"; sourceTree = "<group>"; };
+		963B62DD2360A93A00DD9A3E /* JFContactsPicker-umbrella.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JFContactsPicker-umbrella.h"; sourceTree = "<group>"; };
 		96414BC62354C06B00C12EED /* PaymentsDetailsSuccessViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentsDetailsSuccessViewController.swift; sourceTree = "<group>"; };
 		96514511234F829D00A4713F /* RefreshView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RefreshView.swift; sourceTree = "<group>"; };
 		96514512234F829E00A4713F /* RefreshView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RefreshView.xib; sourceTree = "<group>"; };
@@ -844,6 +867,7 @@
 		09E0F131215A617A0042FB6A /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				96AF922B2360A85B00C9E746 /* ContactList */,
 				9697E29E2334C29700974505 /* OperatorsList.swift */,
 				BDB7916C2338C8B10002C7EE /* VerificationCodeViewController.swift */,
 				09203D99216E150C00902BD2 /* Feed */,
@@ -1051,6 +1075,20 @@
 			path = resetPassword;
 			sourceTree = "<group>";
 		};
+		963B62D62360A91D00DD9A3E /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				963B62D72360A93800DD9A3E /* JFContactsPicker-dummy.m */,
+				963B62DC2360A93A00DD9A3E /* JFContactsPicker-Info.plist */,
+				963B62D92360A93900DD9A3E /* JFContactsPicker-prefix.pch */,
+				963B62DD2360A93A00DD9A3E /* JFContactsPicker-umbrella.h */,
+				963B62DA2360A93900DD9A3E /* JFContactsPicker.modulemap */,
+				963B62DB2360A93A00DD9A3E /* JFContactsPicker.xcconfig */,
+				963B62D82360A93900DD9A3E /* ResourceBundle-JFContactsPicker-JFContactsPicker-Info.plist */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
 		96514510234F824500A4713F /* refreshControl */ = {
 			isa = PBXGroup;
 			children = (
@@ -1078,6 +1116,20 @@
 				96920C31235604C000CCC7EF /* OperationsList.swift */,
 			);
 			path = OperationsList;
+			sourceTree = "<group>";
+		};
+		96AF922B2360A85B00C9E746 /* ContactList */ = {
+			isa = PBXGroup;
+			children = (
+				963B62D62360A91D00DD9A3E /* Extension */,
+				963B62CB2360A91500DD9A3E /* Constants.swift */,
+				963B62CD2360A91500DD9A3E /* Contact.swift */,
+				963B62CA2360A91400DD9A3E /* ContactCell.swift */,
+				963B62CC2360A91500DD9A3E /* ContactsPicker.swift */,
+				963B62CE2360A91800DD9A3E /* ExtensionsContactList.swift */,
+				963B62CF2360A91900DD9A3E /* JFContactCell.xib */,
+			);
+			path = ContactList;
 			sourceTree = "<group>";
 		};
 		96F0DCEB231FDFAE005ABEED /* Accounts */ = {
@@ -1623,11 +1675,14 @@
 				0904505A216B5ADC00F3B295 /* FeedOffersCell.xib in Resources */,
 				09D3C042215CE5D100998F57 /* DialogCell.xib in Resources */,
 				BD21B67223391C63001C5CF7 /* UnauthorizedZone.storyboard in Resources */,
+				963B62E12360A93A00DD9A3E /* JFContactsPicker-Info.plist in Resources */,
 				09797563215A49040044C00A /* LaunchScreen.storyboard in Resources */,
 				09C7C31321749151000EE472 /* DepositsObligationsCell.xib in Resources */,
 				A55B7B8421A6C09300A8A7FE /* feed_current_outlay.mov in Resources */,
+				963B62E02360A93A00DD9A3E /* JFContactsPicker.xcconfig in Resources */,
 				096BCB0B216361AA005BC02B /* PaymentTemplateCell.xib in Resources */,
 				09AF708E216F73FD00E7FCFC /* FeedCurrent2Cell.xib in Resources */,
+				963B62DF2360A93A00DD9A3E /* ResourceBundle-JFContactsPicker-JFContactsPicker-Info.plist in Resources */,
 				96514514234F829E00A4713F /* RefreshView.xib in Resources */,
 				09203D96216E13A700902BD2 /* FeedOptionCell.xib in Resources */,
 				A55B7B7A21A6B4F400A8A7FE /* feed_current_food.mov in Resources */,
@@ -1639,6 +1694,7 @@
 				09E0F135215A61EB0042FB6A /* Feed.storyboard in Resources */,
 				096BCB0F21637E27005BC02B /* PaymentCell.xib in Resources */,
 				09E0F13D215A65310042FB6A /* Deposits.storyboard in Resources */,
+				963B62D52360A91900DD9A3E /* JFContactCell.xib in Resources */,
 				9698996A2303FD190066C55B /* LoansCell.xib in Resources */,
 				BD21B670233915FD001C5CF7 /* Registration.storyboard in Resources */,
 				09AF707C216F4B5000E7FCFC /* FeedUpcomingCell.xib in Resources */,
@@ -1844,6 +1900,7 @@
 				09F5DCE8218C4A5200390304 /* RegistrationTouchIDViewController.swift in Sources */,
 				09C7C3352175CC47000EE472 /* DepositsHistoryViewController.swift in Sources */,
 				96144B3A233BACF900B9F314 /* AboutTransaction.swift in Sources */,
+				963B62D22360A91900DD9A3E /* ContactsPicker.swift in Sources */,
 				BDFE1B09233CA6FE00C49A5B /* DropDownTableViewCell.swift in Sources */,
 				BD21B6672338CE14001C5CF7 /* PaymentService.swift in Sources */,
 				09E0F146215A68DC0042FB6A /* CustomTabBar.swift in Sources */,
@@ -1891,6 +1948,7 @@
 				09BE35EF218C726800EA7B24 /* GradientView2.swift in Sources */,
 				0939B5F92177266B0029F03D /* DepositsHistoryDetailsViewController.swift in Sources */,
 				09AF7081216F6B6F00E7FCFC /* FeedCurrent1Cell.swift in Sources */,
+				963B62D42360A91900DD9A3E /* ExtensionsContactList.swift in Sources */,
 				BD49E65C2345ED0A0031561F /* ICellProvider.swift in Sources */,
 				094FFC0E218837580069DDCB /* RegistrationCodeVerificationViewController.swift in Sources */,
 				BD182E3F232A402100DB231F /* PasscodeSingInActions.swift in Sources */,
@@ -1898,6 +1956,7 @@
 				BDF4F94E23293D1E007C448F /* AuthenticationState.swift in Sources */,
 				096B4F4D2183089900C69E52 /* CardDetailsViewController.swift in Sources */,
 				0930F16A215B6CB800CFB593 /* GradientView.swift in Sources */,
+				963B62D32360A91900DD9A3E /* Contact.swift in Sources */,
 				0943729221907198003A66CC /* PaymentsResultViewController.swift in Sources */,
 				A58760BF21BF8E770022DED5 /* NetworkManager.swift in Sources */,
 				A5B473C821B52E0B00F2E41F /* GroupedBubblesStatsView.swift in Sources */,
@@ -1923,6 +1982,7 @@
 				96144B3C233BAD3F00B9F314 /* IAboutTransaction.swift in Sources */,
 				9697E2A32334E30500974505 /* ServicesList.swift in Sources */,
 				BDFE1AC6233B952B00C49A5B /* ProductActions.swift in Sources */,
+				963B62D02360A91900DD9A3E /* ContactCell.swift in Sources */,
 				9622CFBE234B225B0005701E /* changePasswordController.swift in Sources */,
 				A568142A21CE6A79002C0899 /* AnnotationsTableViewController.swift in Sources */,
 				BD5170AB2332250C001EAFC0 /* VerificationCodeReducer.swift in Sources */,
@@ -1932,6 +1992,7 @@
 				BD0A1B61234607230079320D /* CardNumberCellProvider.swift in Sources */,
 				09F2410121707B3B007B7D73 /* FeedInfo1Cell.swift in Sources */,
 				0904505D216B774600F3B295 /* FeedOfferCustom1Cell.swift in Sources */,
+				963B62DE2360A93A00DD9A3E /* JFContactsPicker-dummy.m in Sources */,
 				A5004D3521EF56DD0098E510 /* CardBrand.swift in Sources */,
 				09D3C048215E07DB00998F57 /* ChatMessagesViewController.swift in Sources */,
 				09FC8FED215BB2B200A4694B /* ProfileMenuTableViewController.swift in Sources */,
@@ -1997,6 +2058,7 @@
 				BD8106A1234E1263004A43E9 /* PhoneNumberCellProvider.swift in Sources */,
 				A528EF4421B16D8A00D189DD /* BubbleStatsView.swift in Sources */,
 				96144B43233E21BB00B9F314 /* LoanSchedule.swift in Sources */,
+				963B62D12360A91900DD9A3E /* Constants.swift in Sources */,
 				09AF7078216F4A9600E7FCFC /* FeedUpcomingViewController.swift in Sources */,
 				969899642303F2E20066C55B /* Loan.swift in Sources */,
 				BDFE1AC4233B92FB00C49A5B /* ProductState.swift in Sources */,
