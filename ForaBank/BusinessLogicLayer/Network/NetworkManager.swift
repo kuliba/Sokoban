@@ -10,94 +10,6 @@ import Foundation
 import Alamofire
 import UIKit
 
-protocol AuthServiceProtocol {
-    func isSignedIn(completionHandler: @escaping (_ success: Bool) -> Void)
-    func csrf(headers: HTTPHeaders,
-              completionHandler: @escaping (_ success: Bool, _ headers: HTTPHeaders?) -> Void)
-    func loginDo(headers: HTTPHeaders,
-                 login: String,
-                 password: String,
-                 completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void)
-    func prepareResetPassword(headers: HTTPHeaders,
-                              login: String,
-                              completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void)
-    func newPasswordReset(headers: HTTPHeaders,
-                          password: String,
-                          completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void)
-
-
-    func checkVerificationCode(headers: HTTPHeaders,
-                               code: String,
-                               completionHandler: @escaping (_ success: Bool) -> Void)
-    func checkCodeResetPassword(headers: HTTPHeaders,
-                                code: String,
-                                completionHandler: @escaping (_ success: Bool) -> Void)
-    func makeCard2Card(headers: HTTPHeaders,
-                       code: String,
-                       completionHandler: @escaping (_ success: Bool) -> Void)
-    func logOut(completionHandler: @escaping (_ success: Bool) -> Void)
-    func getProfile(headers: HTTPHeaders,
-                    completionHandler: @escaping (_ success: Bool, _ profile: Profile?, _ errorMessage: String?) -> Void)
-}
-
-protocol CardServiceProtocol {
-    func getCardList(headers: HTTPHeaders,
-                     completionHandler: @escaping (_ success: Bool, _ cards: [Card]?) -> Void)
-    func blockCard(withNumber num: String,
-                   completionHandler: @escaping (_ success: Bool) -> Void)
-    func getTransactionsStatement(forCardNumber: String,
-                                  fromDate: Date,
-                                  toDate: Date,
-                                  headers: HTTPHeaders,
-                                  completionHandler: @escaping (_ success: Bool, _ datedTransactions: [DatedTransactions]?) -> Void)
-}
-protocol PaymetsServiceProtocol {
-    func getPaymentsList(headers: HTTPHeaders,
-                         completionHandler: @escaping (_ success: Bool, _ payments: [Operations]?) -> Void)
-}
-
-protocol AccountsServiceProtocol {
-    func getDepos(headers: HTTPHeaders,
-                  completionHandler: @escaping (_ success: Bool, _ obligations: [Account]?) -> Void)
-}
-protocol LoanPaymentScheduleProtocol {
-    func getLoansPayment(headers: HTTPHeaders,
-                         completionHandler: @escaping (_ success: Bool, _ obligations: [LaonSchedules]?) -> Void)
-}
-protocol HistoryServiceProtocol {
-    func getHistoryCard(headers: HTTPHeaders,
-                        completionHandler: @escaping (_ success: Bool, _ obligations: [HistoryCard]?) -> Void)
-}
-protocol LoansServiceProtocol {
-    func getLoans(headers: HTTPHeaders,
-                  completionHandler: @escaping (_ success: Bool, _ obligations: [Loan]?) -> Void)
-}
-
-protocol DepositsServiceProtocol {
-    func getBonds(headers: HTTPHeaders,
-                  completionHandler: @escaping (_ success: Bool, _ obligations: [Deposit]?) -> Void)
-}
-
-protocol RegServiceProtocol {
-    func checkClient(headers: HTTPHeaders,
-                     cardNumber: String,
-                     login: String,
-                     password: String,
-                     phone: String,
-                     verificationCode: Int,
-                     completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void)
-    func verifyCode(headers: HTTPHeaders,
-                    verificationCode: Int,
-                    completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void)
-    func doRegistration(headers: HTTPHeaders,
-                        completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ login: String?, _ password: String?) -> Void)
-}
-
-protocol StatementServiceProtocol {
-    func getSortedFullStatement(headers: HTTPHeaders,
-                                completionHandler: @escaping (_ success: Bool, _ obligations: [DatedTransactionsStatement]?, _ errorMessage: String?) -> Void)
-}
-
 class NetworkManager {
 
     // MARK: - Properties
@@ -105,15 +17,15 @@ class NetworkManager {
     private static var sharedNetworkManager: NetworkManager = {
         let host = "https://git.briginvest.ru/dbo/api/v2/"
 
-        let authService = AuthService(baseURLString: host)//TestAuthService()//
-        let cardService = CardService(baseURLString: host)//TestCardService()//
+        let authService = AuthService(baseURLString: host)
+        let cardService = CardService(baseURLString: host)
         let paymentServices = PaymentServices(baseURLString: host)
-        let regService = RegService(baseURLString: host)//TestRegService()//
+        let regService = RegService(baseURLString: host)
         let depositsService = DepositService(baseURLString: host)
         let accountsService = AccountsService(baseURLString: host)
         let loansService = LoansService(baseURLString: host)
         let historyService = HistoryService(baseURLString: host)
-        let statementService = StatementService(baseURLString: host)//TestStatementService()
+        let statementService = StatementService(baseURLString: host)
         let loanPaymentSchedule = LoanPaymentSchedule(baseURLString: host)
         let networkManager = NetworkManager(host, authService, regService, cardService, paymentServices, depositsService, accountsService, loanPaymentSchedule, historyService, loansService, statementService)
 
@@ -125,7 +37,7 @@ class NetworkManager {
     private let authService: AuthServiceProtocol
     private let regService: RegServiceProtocol
     private let cardService: CardServiceProtocol
-    private let paymentServices: PaymetsServiceProtocol
+    private let paymentServices: IPaymetsApi
     private let depositsService: DepositsServiceProtocol
     private let accountsService: AccountsServiceProtocol
     private let loanPaymentSchedule: LoanPaymentScheduleProtocol
@@ -142,7 +54,7 @@ class NetworkManager {
     ]
 
     // Initialization
-    private init(_ baseURLString: String, _ authService: AuthServiceProtocol, _ regService: RegServiceProtocol, _ cardService: CardServiceProtocol, _ paymentsServices: PaymetsServiceProtocol, _ depositsService: DepositsServiceProtocol, _ accountsService: AccountsServiceProtocol, _ LaonSchedules: LoanPaymentScheduleProtocol, _ historyService: HistoryServiceProtocol, _ loansService: LoansServiceProtocol, _ statementService: StatementServiceProtocol) {
+    private init(_ baseURLString: String, _ authService: AuthServiceProtocol, _ regService: RegServiceProtocol, _ cardService: CardServiceProtocol, _ paymentsServices: IPaymetsApi, _ depositsService: DepositsServiceProtocol, _ accountsService: AccountsServiceProtocol, _ LaonSchedules: LoanPaymentScheduleProtocol, _ historyService: HistoryServiceProtocol, _ loansService: LoansServiceProtocol, _ statementService: StatementServiceProtocol) {
         self.baseURLString = baseURLString
         self.authService = authService
         self.regService = regService
@@ -323,11 +235,11 @@ class NetworkManager {
                                   fromDate: Date,
                                   toDate: Date,
                                   completionHandler: @escaping (_ success: Bool, _ datedTransactions: [DatedTransactions]?) -> Void) {
-        TestCardService().getTransactionsStatement(forCardNumber: number,
-                                                   fromDate: fromDate,
-                                                   toDate: toDate,
-                                                   headers: headers,
-                                                   completionHandler: completionHandler)
+        cardService.getTransactionsStatement(forCardNumber: number,
+                                             fromDate: fromDate,
+                                             toDate: toDate,
+                                             headers: headers,
+                                             completionHandler: completionHandler)
     }
 
     //MARK: - Statement service

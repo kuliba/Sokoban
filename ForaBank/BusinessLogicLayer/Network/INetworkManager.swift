@@ -1,0 +1,99 @@
+//
+//  INetworkManager.swift
+//  ForaBank
+//
+//  Created by Бойко Владимир on 23.10.2019.
+//  Copyright © 2019 (C) 2017-2019 OОО "Бриг Инвест". All rights reserved.
+//
+
+import Foundation
+import Alamofire
+
+protocol AuthServiceProtocol {
+    func isSignedIn(completionHandler: @escaping (_ success: Bool) -> Void)
+    func csrf(headers: HTTPHeaders,
+              completionHandler: @escaping (_ success: Bool, _ headers: HTTPHeaders?) -> Void)
+    func loginDo(headers: HTTPHeaders,
+                 login: String,
+                 password: String,
+                 completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void)
+    func prepareResetPassword(headers: HTTPHeaders,
+                              login: String,
+                              completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void)
+    func newPasswordReset(headers: HTTPHeaders,
+                          password: String,
+                          completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void)
+
+
+    func checkVerificationCode(headers: HTTPHeaders,
+                               code: String,
+                               completionHandler: @escaping (_ success: Bool) -> Void)
+    func checkCodeResetPassword(headers: HTTPHeaders,
+                                code: String,
+                                completionHandler: @escaping (_ success: Bool) -> Void)
+    func makeCard2Card(headers: HTTPHeaders,
+                       code: String,
+                       completionHandler: @escaping (_ success: Bool) -> Void)
+    func logOut(completionHandler: @escaping (_ success: Bool) -> Void)
+    func getProfile(headers: HTTPHeaders,
+                    completionHandler: @escaping (_ success: Bool, _ profile: Profile?, _ errorMessage: String?) -> Void)
+}
+
+protocol CardServiceProtocol {
+    func getCardList(headers: HTTPHeaders,
+                     completionHandler: @escaping (_ success: Bool, _ cards: [Card]?) -> Void)
+    func blockCard(withNumber num: String,
+                   completionHandler: @escaping (_ success: Bool) -> Void)
+    func getTransactionsStatement(forCardNumber: String,
+                                  fromDate: Date,
+                                  toDate: Date,
+                                  headers: HTTPHeaders,
+                                  completionHandler: @escaping (_ success: Bool, _ datedTransactions: [DatedTransactions]?) -> Void)
+}
+
+protocol IPaymetsApi {
+    func getPaymentsList(headers: HTTPHeaders,
+                         completionHandler: @escaping (_ success: Bool, _ payments: [Operations]?) -> Void)
+}
+
+protocol AccountsServiceProtocol {
+    func getDepos(headers: HTTPHeaders,
+                  completionHandler: @escaping (_ success: Bool, _ obligations: [Account]?) -> Void)
+}
+protocol LoanPaymentScheduleProtocol {
+    func getLoansPayment(headers: HTTPHeaders,
+                         completionHandler: @escaping (_ success: Bool, _ obligations: [LaonSchedules]?) -> Void)
+}
+protocol HistoryServiceProtocol {
+    func getHistoryCard(headers: HTTPHeaders,
+                        completionHandler: @escaping (_ success: Bool, _ obligations: [HistoryCard]?) -> Void)
+}
+protocol LoansServiceProtocol {
+    func getLoans(headers: HTTPHeaders,
+                  completionHandler: @escaping (_ success: Bool, _ obligations: [Loan]?) -> Void)
+}
+
+protocol DepositsServiceProtocol {
+    func getBonds(headers: HTTPHeaders,
+                  completionHandler: @escaping (_ success: Bool, _ obligations: [Deposit]?) -> Void)
+}
+
+protocol RegServiceProtocol {
+    func checkClient(headers: HTTPHeaders,
+                     cardNumber: String,
+                     login: String,
+                     password: String,
+                     phone: String,
+                     verificationCode: Int,
+                     completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void)
+    func verifyCode(headers: HTTPHeaders,
+                    verificationCode: Int,
+                    completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void)
+    func doRegistration(headers: HTTPHeaders,
+                        completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ login: String?, _ password: String?) -> Void)
+}
+
+protocol StatementServiceProtocol {
+    func getSortedFullStatement(headers: HTTPHeaders,
+                                completionHandler: @escaping (_ success: Bool, _ obligations: [DatedTransactionsStatement]?, _ errorMessage: String?) -> Void)
+}

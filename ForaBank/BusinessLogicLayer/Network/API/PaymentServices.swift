@@ -9,7 +9,7 @@
 import Foundation
 import Alamofire
 
-class PaymentServices: PaymetsServiceProtocol {
+class PaymentServices: IPaymetsApi {
 
 
     private let baseURLString: String
