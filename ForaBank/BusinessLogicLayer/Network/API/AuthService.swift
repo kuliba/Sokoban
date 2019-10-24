@@ -10,8 +10,6 @@ import Foundation
 import Alamofire
 import RMMapper
 class AuthService: AuthServiceProtocol {
-
-
     private let baseURLString: String
 
     private var isSigned: Bool = false

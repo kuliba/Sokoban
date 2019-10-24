@@ -144,10 +144,6 @@ class NetworkManager {
                                 completionHandler: @escaping (_ success: Bool) -> Void) {
         authService.checkCodeResetPassword(headers: self.headers, code: code, completionHandler: completionHandler)
     }
-    func makeCard2Card(code: String,
-                       completionHandler: @escaping (_ success: Bool) -> Void) {
-        self.paymentServices.makeCard2Card(code: code, completionHandler: completionHandler)
-    }
 
     func logOut(completionHandler: ((_ success: Bool) -> Void)?) {
         authService.logOut { (success) in
@@ -223,7 +219,7 @@ class NetworkManager {
     }
 
     func getPaymentsList(completionHandler: @escaping (_ success: Bool, _ payments: [Operations]?) -> Void) {
-        paymentServices.getPaymentsList(headers: headers, completionHandler: completionHandler)
+        paymentServices.getPaymentsList(completionHandler: completionHandler)
     }
 
     func blockCard(withNumber num: String,
@@ -280,5 +276,26 @@ class NetworkManager {
         } else {
             return false
         }
+    }
+}
+
+//MARK: - Payments
+
+extension NetworkManager: IPaymetsApi {
+    func allPaymentOptions(completionHandler: @escaping (Bool, [PaymentOption]?) -> Void) {
+        paymentServices.allPaymentOptions(completionHandler: completionHandler)
+    }
+
+    func prepareCard2Phone(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void) {
+        paymentServices.prepareCard2Phone(from: sourceNumber, to: destinationNumber, amount: amount, completionHandler: completionHandler)
+    }
+
+    func prepareCard2Card(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void) {
+        paymentServices.prepareCard2Card(from: sourceNumber, to: destinationNumber, amount: amount, completionHandler: completionHandler)
+    }
+
+    func makeCard2Card(code: String,
+                       completionHandler: @escaping (_ success: Bool) -> Void) {
+        paymentServices.makeCard2Card(code: code, completionHandler: completionHandler)
     }
 }

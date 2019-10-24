@@ -19,7 +19,7 @@ class PaymentOptionCellProvider: ICellProvider {
 
     func getData(completion: @escaping ([IPresentationModel]) -> ()) {
         isLoading = true
-        allPaymentOptions { [weak self] (success, paymentOptions) in
+        NetworkManager.shared().allPaymentOptions { [weak self] (success, paymentOptions) in
             guard success, let options = paymentOptions as? [PaymentOption] else {
                 return
             }

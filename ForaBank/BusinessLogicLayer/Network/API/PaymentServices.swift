@@ -19,8 +19,10 @@ class PaymentServices: IPaymetsApi {
     }
 
     func getPaymentsList(completionHandler: @escaping (Bool, [Operations]?) -> Void) {
-        var payments = [Operations]()
         let url = baseURLString + "rest/getOperatorsList"
+        let headers = NetworkManager.shared().headers
+        var payments = [Operations]()
+
         Alamofire.request(url, method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])

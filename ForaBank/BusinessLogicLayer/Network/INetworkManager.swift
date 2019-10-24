@@ -31,9 +31,7 @@ protocol AuthServiceProtocol {
     func checkCodeResetPassword(headers: HTTPHeaders,
                                 code: String,
                                 completionHandler: @escaping (_ success: Bool) -> Void)
-    func makeCard2Card(headers: HTTPHeaders,
-                       code: String,
-                       completionHandler: @escaping (_ success: Bool) -> Void)
+
     func logOut(completionHandler: @escaping (_ success: Bool) -> Void)
     func getProfile(headers: HTTPHeaders,
                     completionHandler: @escaping (_ success: Bool, _ profile: Profile?, _ errorMessage: String?) -> Void)
