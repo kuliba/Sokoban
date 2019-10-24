@@ -16,5 +16,4 @@ struct State: StateType {
     let verificationCodeState: VerificationCodeState
     let productsState: ProductState
     var registrationState: RegistrationState
-
 }

@@ -12,6 +12,7 @@ import Hero
 class WelcomeViewController: UIViewController {
 
     // MARK: - Properties
+
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var containerView: UIView!
 
@@ -21,8 +22,11 @@ class WelcomeViewController: UIViewController {
     var animator: UIViewPropertyAnimator? = nil
 
     // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        
     }
 
     override func viewDidLayoutSubviews() {
@@ -51,6 +55,9 @@ class WelcomeViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        NetworkManager.shared().getProducts { (success, products) in
+            print(products)
+        }
         containerView.hero.modifiers = nil
         UIView.animate(withDuration: 2, delay: 0, options: .beginFromCurrentState, animations: {
             self.backgroundImageView.transform = CGAffineTransform.identity

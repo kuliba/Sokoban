@@ -236,6 +236,8 @@
 		BD2083792360A29C0010E03C /* DepositsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2083782360A29C0010E03C /* DepositsService.swift */; };
 		BD20837D2360AD420010E03C /* INetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD20837C2360AD420010E03C /* INetworkManager.swift */; };
 		BD20837F2361B4990010E03C /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD20837E2361B4990010E03C /* Product.swift */; };
+		BD2083812361E0FF0010E03C /* ProductsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2083802361E0FF0010E03C /* ProductsService.swift */; };
+		BD2083832361E3240010E03C /* IService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2083822361E3240010E03C /* IService.swift */; };
 		BD21B66A2338E08E001C5CF7 /* RegistrationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD21B6692338E08E001C5CF7 /* RegistrationState.swift */; };
 		BD21B66C2338E0FA001C5CF7 /* RegistrationActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD21B66B2338E0FA001C5CF7 /* RegistrationActions.swift */; };
 		BD21B66E2338E1AF001C5CF7 /* RegistrationReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD21B66D2338E1AF001C5CF7 /* RegistrationReducer.swift */; };
@@ -542,6 +544,8 @@
 		BD2083782360A29C0010E03C /* DepositsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsService.swift; sourceTree = "<group>"; };
 		BD20837C2360AD420010E03C /* INetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = INetworkManager.swift; sourceTree = "<group>"; };
 		BD20837E2361B4990010E03C /* Product.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
+		BD2083802361E0FF0010E03C /* ProductsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsService.swift; sourceTree = "<group>"; };
+		BD2083822361E3240010E03C /* IService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IService.swift; sourceTree = "<group>"; };
 		BD21B6692338E08E001C5CF7 /* RegistrationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationState.swift; sourceTree = "<group>"; };
 		BD21B66B2338E0FA001C5CF7 /* RegistrationActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationActions.swift; sourceTree = "<group>"; };
 		BD21B66D2338E1AF001C5CF7 /* RegistrationReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationReducer.swift; sourceTree = "<group>"; };
@@ -1207,9 +1211,11 @@
 				BD20835723609A680010E03C /* CardStatementService.swift */,
 				BD2083782360A29C0010E03C /* DepositsService.swift */,
 				BD20834D23609A670010E03C /* HIstoryService.swift */,
+				BD2083822361E3240010E03C /* IService.swift */,
 				BD20835923609A680010E03C /* LoanPaymentSchedule.swift */,
 				BD20835123609A670010E03C /* LoansService.swift */,
 				BD20837623609B560010E03C /* PaymentServices.swift */,
+				BD2083802361E0FF0010E03C /* ProductsService.swift */,
 				BD20835E23609A680010E03C /* RegService.swift */,
 				BD20834E23609A670010E03C /* StatementService.swift */,
 			);
@@ -1445,9 +1451,9 @@
 		BDCCE90C2350BC5E0087F5F2 /* PresentationLayer */ = {
 			isa = PBXGroup;
 			children = (
+				09E0F131215A617A0042FB6A /* Controllers */,
 				09E0F149215A6B170042FB6A /* Storyboards */,
 				09E0F133215A618E0042FB6A /* View */,
-				09E0F131215A617A0042FB6A /* Controllers */,
 			);
 			path = PresentationLayer;
 			sourceTree = "<group>";
@@ -1712,6 +1718,7 @@
 				BD6F59782334B74F002F4D4E /* StateActions.swift in Sources */,
 				A568143421D0CE6C002C0899 /* Profile.swift in Sources */,
 				BD81069D234CDD12004A43E9 /* PaymentsTableViewController.swift in Sources */,
+				BD2083812361E0FF0010E03C /* ProductsService.swift in Sources */,
 				9610CB8E22FD6F0C00FE7C84 /* Account.swift in Sources */,
 				09D3C041215CE5D100998F57 /* DialogCell.swift in Sources */,
 				9660EEE6234C7B1100AE0647 /* CollapsibleTableViewHeader.swift in Sources */,
@@ -1845,6 +1852,7 @@
 				BDFE1AC6233B952B00C49A5B /* ProductActions.swift in Sources */,
 				9622CFBE234B225B0005701E /* changePasswordController.swift in Sources */,
 				A568142A21CE6A79002C0899 /* AnnotationsTableViewController.swift in Sources */,
+				BD2083832361E3240010E03C /* IService.swift in Sources */,
 				BD5170AB2332250C001EAFC0 /* VerificationCodeReducer.swift in Sources */,
 				09AF707E216F676300E7FCFC /* FeedCurrentViewController.swift in Sources */,
 				BD81069F234DD048004A43E9 /* PaymentHandlersProvider.swift in Sources */,

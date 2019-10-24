@@ -12,7 +12,6 @@ import Alamofire
 class PaymentServices: IPaymetsApi {
 
     private let baseURLString: String
-    private var datedTransactions = [DatedTransactions]()
 
     init(baseURLString: String) {
         self.baseURLString = baseURLString

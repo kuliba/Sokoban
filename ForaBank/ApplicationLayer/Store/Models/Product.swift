@@ -34,25 +34,24 @@ class Product: Mappable, IProduct {
     var currencyCode: String
     var productType: ProductType
     var productName: String
-    var ownerID: Double
+    var ownerID: Int
     var accountNumber: String
     var allowDebit: Bool
     var allowCredit: Bool
-    var cardID: String
+    var cardID: Int
     var name: String
-    var validThru: Double
+    var validThru: Int
     var status: ProductStatus
     var holderName: String
     var product: String
     var branch: String
-    var miniStatement: Bool
 
     required init(map: Mapper) throws {
         try number = map.from("number")
         try numberMasked = map.from("numberMasked")
         try balance = map.from("balance")
         try currencyCode = map.from("currency")
-        try productType = map.from("product_Type")
+        try productType = map.from("productType")
         try productName = map.from("productName")
         try ownerID = map.from("ownerID")
         try accountNumber = map.from("accountNumber")
@@ -65,6 +64,5 @@ class Product: Mappable, IProduct {
         try holderName = map.from("holderName")
         try product = map.from("product")
         try branch = map.from("branch")
-        try miniStatement = map.from("miniStatement")
     }
 }

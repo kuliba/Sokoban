@@ -98,3 +98,9 @@ protocol StatementServiceProtocol {
     func getSortedFullStatement(headers: HTTPHeaders,
                                 completionHandler: @escaping (_ success: Bool, _ obligations: [DatedTransactionsStatement]?, _ errorMessage: String?) -> Void)
 }
+
+//MARK: - Products
+
+protocol IProductsApi {
+    func getProducts(completionHandler: @escaping (_ success: Bool, _ products: [Product]?) -> Void)
+}

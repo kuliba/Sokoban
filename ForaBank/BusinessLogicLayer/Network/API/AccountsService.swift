@@ -80,19 +80,18 @@ class AccountsService: AccountsServiceProtocol {
                     completionHandler(false, accounts)
                 }
         }
-        func blockCard(withNumber num: String, completionHandler: @escaping (Bool) -> Void) {
-            //        for i in 0..<cards.count {
-            //            if cards[i].number == num {
-            //                cards[i].blocked = true
-            //            }
-            //        }
-            completionHandler(false)
-        }
+    }
 
-        func getTransactionsStatement(forCardNumber: String, fromDate: Date, toDate: Date, headers: HTTPHeaders, completionHandler: @escaping (Bool, [DatedTransactions]?) -> Void) {
-            completionHandler(false, datedTransactions)
-        }
+    func blockCard(withNumber num: String, completionHandler: @escaping (Bool) -> Void) {
+        //        for i in 0..<cards.count {
+        //            if cards[i].number == num {
+        //                cards[i].blocked = true
+        //            }
+        //        }
+        completionHandler(false)
+    }
 
-
+    func getTransactionsStatement(forCardNumber: String, fromDate: Date, toDate: Date, headers: HTTPHeaders, completionHandler: @escaping (Bool, [DatedTransactions]?) -> Void) {
+        completionHandler(false, datedTransactions)
     }
 }

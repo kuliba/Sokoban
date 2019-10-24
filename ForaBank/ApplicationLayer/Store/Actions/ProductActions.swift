@@ -10,6 +10,11 @@ import Foundation
 import ReSwift
 import ReSwiftThunk
 
+let fetchProducts = Thunk<State> { dispatch, getState in
+//    NetworkManager.shared().produc
+    
+}
+
 func startPayment(sourceOption: PaymentOption?, destionationOption: PaymentOption?) -> Thunk<State> {
     return Thunk<State> { dispatch, getState in
 //        showPaymentViewController()

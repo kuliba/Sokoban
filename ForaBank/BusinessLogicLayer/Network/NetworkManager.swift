@@ -27,8 +27,9 @@ class NetworkManager {
         let historyService = HistoryService(baseURLString: host)
         let statementService = StatementService(baseURLString: host)
         let loanPaymentSchedule = LoanPaymentSchedule(baseURLString: host)
-        let networkManager = NetworkManager(host, authService, regService, cardService, paymentServices, depositsService, accountsService, loanPaymentSchedule, historyService, loansService, statementService)
+        let productService = ProductsService(baseURLString: host)
 
+        let networkManager = NetworkManager(host, authService, regService, cardService, paymentServices, depositsService, accountsService, loanPaymentSchedule, historyService, loansService, statementService, productService: productService)
         // Configuration
 
 
@@ -38,6 +39,7 @@ class NetworkManager {
     private let regService: RegServiceProtocol
     private let cardService: CardServiceProtocol
     private let paymentServices: IPaymetsApi
+    private let productService: IProductService
     private let depositsService: DepositsServiceProtocol
     private let accountsService: AccountsServiceProtocol
     private let loanPaymentSchedule: LoanPaymentScheduleProtocol
@@ -53,8 +55,8 @@ class NetworkManager {
         "JSESSIONID": "983F3FBC20F69C7A1A89B4DEAE690175"
     ]
 
-    // Initialization
-    private init(_ baseURLString: String, _ authService: AuthServiceProtocol, _ regService: RegServiceProtocol, _ cardService: CardServiceProtocol, _ paymentsServices: IPaymetsApi, _ depositsService: DepositsServiceProtocol, _ accountsService: AccountsServiceProtocol, _ LaonSchedules: LoanPaymentScheduleProtocol, _ historyService: HistoryServiceProtocol, _ loansService: LoansServiceProtocol, _ statementService: StatementServiceProtocol) {
+// Initialization
+    private init(_ baseURLString: String, _ authService: AuthServiceProtocol, _ regService: RegServiceProtocol, _ cardService: CardServiceProtocol, _ paymentsServices: IPaymetsApi, _ depositsService: DepositsServiceProtocol, _ accountsService: AccountsServiceProtocol, _ LaonSchedules: LoanPaymentScheduleProtocol, _ historyService: HistoryServiceProtocol, _ loansService: LoansServiceProtocol, _ statementService: StatementServiceProtocol, productService: IProductService) {
         self.baseURLString = baseURLString
         self.authService = authService
         self.regService = regService
@@ -66,15 +68,16 @@ class NetworkManager {
         self.accountsService = accountsService
         self.historyService = historyService
         self.statementService = statementService
+        self.productService = productService
     }
 
-    // MARK: - Accessors
+// MARK: - Accessors
 
     class func shared() -> NetworkManager {
         return sharedNetworkManager
     }
 
-    //MARK: - auth service
+//MARK: - auth service
     func isSignedIn(completionHandler: @escaping (_ success: Bool) -> Void) {
         authService.isSignedIn(completionHandler: completionHandler)
     }
@@ -163,7 +166,7 @@ class NetworkManager {
         }
     }
 
-    //MARK: - registration service
+//MARK: - registration service
     func checkClient(cardNumber: String,
                      login: String,
                      password: String,
@@ -213,7 +216,7 @@ class NetworkManager {
         }
     }
 
-    //MARK: - card service
+//MARK: - card service
     func getCardList(completionHandler: @escaping (_ success: Bool, _ cards: [Card]?) -> Void) {
         cardService.getCardList(headers: headers, completionHandler: completionHandler)
     }
@@ -238,7 +241,7 @@ class NetworkManager {
                                              completionHandler: completionHandler)
     }
 
-    //MARK: - Statement service
+//MARK: - Statement service
     func getSortedFullStatement(completionHandler: @escaping (Bool, [DatedTransactionsStatement]?, String?) -> Void) {
         statementService.getSortedFullStatement(headers: headers) { [unowned self] (success, fullStatement, errorMessage) in
             if self.checkForClosingSession(errorMessage) == false {
@@ -249,7 +252,7 @@ class NetworkManager {
         }
     }
 
-    //MARK: - deposits service
+//MARK: - deposits service
     func getBonds(completionHandler: @escaping (_ success: Bool, _ obligations: [Deposit]?) -> Void) {
         depositsService.getBonds(headers: headers, completionHandler: completionHandler)
     }
@@ -262,11 +265,11 @@ class NetworkManager {
     func getHistoryCard(completionHandler: @escaping (_ success: Bool, _ obligations: [HistoryCard]?) -> Void) {
         historyService.getHistoryCard(headers: headers, completionHandler: completionHandler)
     }
-    //MARK: - deposits service
+//MARK: - deposits service
     func getDepos(completionHandler: @escaping (_ success: Bool, _ obligations: [Account]?) -> Void) {
         accountsService.getDepos(headers: headers, completionHandler: completionHandler)
     }
-    //MARK: - check errorMessage for closing session
+//MARK: - check errorMessage for closing session
     func checkForClosingSession(_ errorMessage: String?) -> Bool {
         if let errorMessage = errorMessage,
             errorMessage.range(of: "Сессия не авторизована") != nil {
@@ -276,6 +279,14 @@ class NetworkManager {
         } else {
             return false
         }
+    }
+}
+
+//MARK: - Products
+
+extension NetworkManager: IProductsApi {
+    func getProducts(completionHandler: @escaping (Bool, [Product]?) -> Void) {
+        productService.getProducts(completionHandler: completionHandler)
     }
 }
 
