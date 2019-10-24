@@ -146,7 +146,7 @@ class NetworkManager {
     }
     func makeCard2Card(code: String,
                        completionHandler: @escaping (_ success: Bool) -> Void) {
-        self.authService.makeCard2Card(headers: self.headers, code: code, completionHandler: completionHandler)
+        self.paymentServices.makeCard2Card(code: code, completionHandler: completionHandler)
     }
 
     func logOut(completionHandler: ((_ success: Bool) -> Void)?) {

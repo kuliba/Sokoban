@@ -52,8 +52,11 @@ protocol CardServiceProtocol {
 }
 
 protocol IPaymetsApi {
-    func getPaymentsList(headers: HTTPHeaders,
-                         completionHandler: @escaping (_ success: Bool, _ payments: [Operations]?) -> Void)
+    func getPaymentsList(completionHandler: @escaping (_ success: Bool, _ payments: [Operations]?) -> Void)
+    func allPaymentOptions(completionHandler: @escaping (Bool, [PaymentOption]?) -> Void)
+    func prepareCard2Card(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void)
+    func prepareCard2Phone(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void)
+    func makeCard2Card(code: String, completionHandler: @escaping (Bool) -> Void)
 }
 
 protocol AccountsServiceProtocol {
