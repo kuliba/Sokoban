@@ -288,7 +288,8 @@ class AuthService: AuthServiceProtocol {
                     if let json = response.result.value as? Dictionary<String, Any>,
                         let data = json["data"] as? Dictionary<String, Any>,
                         let firstName = data["firstname"] as? String,
-                        let lastName = data["lastname"] as? String {
+                        let lastName = data["lastname"] as? String,
+                        let patronymic = data["patronymic"] as? String {
                         var imageURL: String? = nil
                         if let users = data["users"] as? Array<Dictionary<String, Any>>,
                             let imageUrl = users[0]["userPic"] as? String {
@@ -296,6 +297,7 @@ class AuthService: AuthServiceProtocol {
                         }
                         self.profile = Profile.init(firstName: firstName,
                                                     lastName: lastName,
+                                                    patronymic: patronymic,
                                                     imageURL: imageURL)
 //                        print("rest/getPerson result: \(String(describing: response.result.value))")
                         print("rest/getPerson result: \(firstName), \(lastName), \(imageURL ?? "nil")")

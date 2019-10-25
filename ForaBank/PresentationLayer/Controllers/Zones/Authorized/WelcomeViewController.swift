@@ -86,8 +86,8 @@ class WelcomeViewController: UIViewController, StoreSubscriber {
         let userState = state.userState
         let productsState = state.productsState
 
-        if let firstName = userState.profile?.firstName, firstName != "" {
-            greetingLabel.text = "Добрый день, \(firstName)"
+        if let firstName = userState.profile?.firstName, let patronymic = userState.profile?.patronymic, firstName != "", patronymic != "" {
+            greetingLabel.text = "Добрый день, \(firstName) \(patronymic)!"
         }
         if productsState.isUpToDateProducts == true {
             performSegue(withIdentifier: "formWelcomeToTabBarSegue", sender: nil)
