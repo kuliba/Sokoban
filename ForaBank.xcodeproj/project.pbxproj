@@ -216,6 +216,9 @@
 		A5C5E6E621A2B492001D6250 /* DetailedCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6E421A2B491001D6250 /* DetailedCardView.swift */; };
 		A5C5E6E821A2B49A001D6250 /* OptionPickerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6E721A2B49A001D6250 /* OptionPickerButton.swift */; };
 		B8323065D0D76292CEB00626 /* Pods_ForaBank.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8EB261ED46D5F939F8B2E27 /* Pods_ForaBank.framework */; };
+		BD09A3A2236326BB00938D66 /* UserActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD09A3A1236326BB00938D66 /* UserActions.swift */; };
+		BD09A3A4236328C100938D66 /* UserReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD09A3A3236328C100938D66 /* UserReducer.swift */; };
+		BD09A3A62363290000938D66 /* UserState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD09A3A52363290000938D66 /* UserState.swift */; };
 		BD0A1B61234607230079320D /* CardNumberCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD0A1B60234607230079320D /* CardNumberCellProvider.swift */; };
 		BD137A402326472D00326088 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD137A3F2326472D00326088 /* State.swift */; };
 		BD17F0AC23474FE300CBF400 /* PaymentOptionDropDownCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD17F0AA23474FE300CBF400 /* PaymentOptionDropDownCell.swift */; };
@@ -524,6 +527,9 @@
 		A5C5E6E721A2B49A001D6250 /* OptionPickerButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionPickerButton.swift; sourceTree = "<group>"; };
 		B7304E53553072E2F516AE5B /* Pods-ForaBank.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ForaBank.release.xcconfig"; path = "Target Support Files/Pods-ForaBank/Pods-ForaBank.release.xcconfig"; sourceTree = "<group>"; };
 		B745669DC4B425C3C513CBBC /* Pods-ForaBank.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ForaBank.debug.xcconfig"; path = "Target Support Files/Pods-ForaBank/Pods-ForaBank.debug.xcconfig"; sourceTree = "<group>"; };
+		BD09A3A1236326BB00938D66 /* UserActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserActions.swift; sourceTree = "<group>"; };
+		BD09A3A3236328C100938D66 /* UserReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserReducer.swift; sourceTree = "<group>"; };
+		BD09A3A52363290000938D66 /* UserState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserState.swift; sourceTree = "<group>"; };
 		BD0A1B60234607230079320D /* CardNumberCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardNumberCellProvider.swift; sourceTree = "<group>"; };
 		BD137A3F2326472D00326088 /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
 		BD17F0AA23474FE300CBF400 /* PaymentOptionDropDownCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentOptionDropDownCell.swift; sourceTree = "<group>"; };
@@ -1187,6 +1193,7 @@
 				BDFE1AC3233B92FA00C49A5B /* ProductState.swift */,
 				BD21B6692338E08E001C5CF7 /* RegistrationState.swift */,
 				BD137A3F2326472D00326088 /* State.swift */,
+				BD09A3A52363290000938D66 /* UserState.swift */,
 				BD5170A82332135E001EAFC0 /* VerificationCodeState.swift */,
 			);
 			path = State;
@@ -1381,12 +1388,13 @@
 		BDB6AFF5232693E90006A534 /* Actions */ = {
 			isa = PBXGroup;
 			children = (
-				BDB6B00F2326A9A10006A534 /* Passcode */,
 				BDF4F94923293A6B007C448F /* AuthenticationActions.swift */,
-				BD5170AC233229F4001EAFC0 /* VerificationCodeActions.swift */,
-				BD6F59772334B74F002F4D4E /* StateActions.swift */,
-				BD21B66B2338E0FA001C5CF7 /* RegistrationActions.swift */,
 				BDFE1AC5233B952B00C49A5B /* ProductActions.swift */,
+				BD21B66B2338E0FA001C5CF7 /* RegistrationActions.swift */,
+				BD6F59772334B74F002F4D4E /* StateActions.swift */,
+				BD09A3A1236326BB00938D66 /* UserActions.swift */,
+				BD5170AC233229F4001EAFC0 /* VerificationCodeActions.swift */,
+				BDB6B00F2326A9A10006A534 /* Passcode */,
 			);
 			path = Actions;
 			sourceTree = "<group>";
@@ -1394,12 +1402,13 @@
 		BDB6B00A232697760006A534 /* Reducers */ = {
 			isa = PBXGroup;
 			children = (
-				BDB6B0142326A9E60006A534 /* Passcode */,
 				BDF4F94723293A5C007C448F /* AuthenticationReducer.swift */,
-				BD5170AA2332250C001EAFC0 /* VerificationCodeReducer.swift */,
-				BD6F59792334BAA4002F4D4E /* StateReducer.swift */,
-				BD21B66D2338E1AF001C5CF7 /* RegistrationReducer.swift */,
 				BDFE1AC7233B95B900C49A5B /* ProductReducer.swift */,
+				BD21B66D2338E1AF001C5CF7 /* RegistrationReducer.swift */,
+				BD6F59792334BAA4002F4D4E /* StateReducer.swift */,
+				BD09A3A3236328C100938D66 /* UserReducer.swift */,
+				BD5170AA2332250C001EAFC0 /* VerificationCodeReducer.swift */,
+				BDB6B0142326A9E60006A534 /* Passcode */,
 			);
 			path = Reducers;
 			sourceTree = "<group>";
@@ -1714,6 +1723,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				09F2410521707B7B007B7D73 /* FeedInfo2Cell.swift in Sources */,
+				BD09A3A4236328C100938D66 /* UserReducer.swift in Sources */,
 				BD49E6572344F7F90031561F /* PagerViewCellHandler.swift in Sources */,
 				BD6F59782334B74F002F4D4E /* StateActions.swift in Sources */,
 				A568143421D0CE6C002C0899 /* Profile.swift in Sources */,
@@ -1822,6 +1832,7 @@
 				BD182E3F232A402100DB231F /* PasscodeSingInActions.swift in Sources */,
 				BDFE5D9C233511EB0027A716 /* URLs.swift in Sources */,
 				BDF4F94E23293D1E007C448F /* AuthenticationState.swift in Sources */,
+				BD09A3A2236326BB00938D66 /* UserActions.swift in Sources */,
 				BD20837D2360AD420010E03C /* INetworkManager.swift in Sources */,
 				096B4F4D2183089900C69E52 /* CardDetailsViewController.swift in Sources */,
 				0930F16A215B6CB800CFB593 /* GradientView.swift in Sources */,
@@ -1874,6 +1885,7 @@
 				96920C32235604C000CCC7EF /* OperationsList.swift in Sources */,
 				097A6DCC21884B6D00E6C69E /* ButtonRounded.swift in Sources */,
 				BDE4D080232248420070BC3D /* ProductAboutViewController.swift in Sources */,
+				BD09A3A62363290000938D66 /* UserState.swift in Sources */,
 				A568142C21CE6CB0002C0899 /* AnnotationTableViewCell.swift in Sources */,
 				BD4A2342235078110093DCA5 /* ILogger.swift in Sources */,
 				A58760C121BFB63D0022DED5 /* ProfileNavigationController.swift in Sources */,

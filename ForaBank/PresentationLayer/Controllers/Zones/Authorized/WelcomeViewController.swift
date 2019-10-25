@@ -16,6 +16,7 @@ class WelcomeViewController: UIViewController, StoreSubscriber {
 
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var greetingLabel: UILabel!
 
     let transitionDuration: TimeInterval = 2
 
@@ -56,7 +57,7 @@ class WelcomeViewController: UIViewController, StoreSubscriber {
         super.viewDidAppear(animated)
 
         store.subscribe(self) { state in
-            state.select { $0.productsState }
+            state.select { $0 }
         }
         containerView.hero.modifiers = nil
         UIView.animate(withDuration: 2, delay: 0, options: .beginFromCurrentState, animations: {
@@ -81,8 +82,14 @@ class WelcomeViewController: UIViewController, StoreSubscriber {
         store.unsubscribe(self)
     }
 
-    func newState(state: ProductState) {
-        if state.isUpToDateProducts == true {
+    func newState(state: State) {
+        let userState = state.userState
+        let productsState = state.productsState
+
+        if let firstName = userState.profile?.firstName, firstName != "" {
+            greetingLabel.text = "Добрый день, \(firstName)"
+        }
+        if productsState.isUpToDateProducts == true {
             performSegue(withIdentifier: "formWelcomeToTabBarSegue", sender: nil)
         }
     }

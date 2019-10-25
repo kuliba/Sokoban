@@ -137,8 +137,8 @@
                                             <constraint firstItem="i5g-jY-g0q" firstAttribute="leading" secondItem="OfX-AX-JUa" secondAttribute="trailing" constant="8" id="oi9-CC-y75"/>
                                         </constraints>
                                     </view>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Добрый день, богач" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="VvG-RX-IYb">
-                                        <rect key="frame" x="0.0" y="48" width="336" height="24"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="VvG-RX-IYb">
+                                        <rect key="frame" x="0.0" y="48" width="336" height="0.0"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="18"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -193,6 +193,7 @@
                     <connections>
                         <outlet property="backgroundImageView" destination="SPh-qG-ikr" id="jhw-bg-Jsj"/>
                         <outlet property="containerView" destination="6pL-U0-Exh" id="EdS-5T-sxm"/>
+                        <outlet property="greetingLabel" destination="VvG-RX-IYb" id="GuK-ll-EOy"/>
                         <segue destination="gi5-Bs-nth" kind="modal" identifier="formWelcomeToTabBarSegue" modalTransitionStyle="coverVertical" id="HAq-tY-C0s"/>
                     </connections>
                 </viewController>

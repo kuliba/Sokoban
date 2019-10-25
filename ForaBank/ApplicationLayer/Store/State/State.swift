@@ -10,10 +10,13 @@ import Foundation
 import ReSwift
 
 struct State: StateType {
-    var passcodeSignUpState: PasscodeSignUpState
-    var authenticationState: AuthenticationState
-    let passcodeSignInState: PasscodeSignInState
-    let verificationCodeState: VerificationCodeState
+    let authenticationState: AuthenticationState
+    let userState: UserState
     let productsState: ProductState
-    var registrationState: RegistrationState
+
+    let registrationState: RegistrationState
+    let passcodeSignUpState: PasscodeSignUpState
+    let passcodeSignInState: PasscodeSignInState
+
+    let verificationCodeState: VerificationCodeState
 }
