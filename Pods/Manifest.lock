@@ -103,6 +103,7 @@ PODS:
   - ReSwiftThunk/Core (1.2.0):
     - ReSwift (~> 5.0)
   - RMMapper (1.1.5)
+  - SCLAlertView (0.8)
   - TOPasscodeViewController (0.0.2)
 
 DEPENDENCIES:
@@ -126,6 +127,7 @@ DEPENDENCIES:
   - ReSwift
   - ReSwiftThunk
   - RMMapper
+  - SCLAlertView
   - TOPasscodeViewController
 
 SPEC REPOS:
@@ -161,6 +163,7 @@ SPEC REPOS:
     - ReSwift
     - ReSwiftThunk
     - RMMapper
+    - SCLAlertView
     - TOPasscodeViewController
 
 SPEC CHECKSUMS:
@@ -195,8 +198,9 @@ SPEC CHECKSUMS:
   ReSwift: 628f1a9b3ee52e3b3ca2a644435472fd77afafe1
   ReSwiftThunk: 23c8ea9092d9dc94b72005f19352dbd37fa42533
   RMMapper: 21122d753c736d975f6c61e674afce8db73579af
+  SCLAlertView: 6a77bb2edfc65e04dbe57725546cb4107a506b85
   TOPasscodeViewController: 03b5df3762a7be1511102093c644a42275bddf24
 
-PODFILE CHECKSUM: 499fe53ffe7fa03fa205a929134cc407ff13d40f
+PODFILE CHECKSUM: 91a255a54e13177fff98ac4b944253df5ab07669
 
 COCOAPODS: 1.8.0.beta.2

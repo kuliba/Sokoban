@@ -8,6 +8,8 @@
 
 import UIKit
 import Hero
+import SCLAlertView
+
 
 class ProductManagementViewController: UITableViewController {
 
@@ -126,15 +128,22 @@ class ProductManagementViewController: UITableViewController {
         }
         else if indexPath.item == 5 {
                 
-            let storyboard = UIStoryboard(name: "Deposits", bundle: nil);
-            let vc = storyboard.instantiateViewController(withIdentifier: "changeNameCard")
-            self.present(vc, animated: true, completion: nil);
+            let alert = SCLAlertView()
+            let txt = alert.addTextField("Введите название карты")
+            alert.addButton("Сохранить") {
+                print("Text value: \(txt.text!)")
+            }
+            alert.showEdit("Изменить название карты", subTitle: "Не более 10 символов", colorStyle: 0xF5534C)
         }
+        else {
         let alertVC = UIAlertController(title: "Функционал недоступен", message: "Функционал временно недоступен", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Понятно", style: .cancel, handler: nil)
         alertVC.addAction(okAction)
         show(alertVC, sender: self)
-    }
+        }
+        }
+    
+    
     /*
      // Override to support rearranging the table view.
      override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {

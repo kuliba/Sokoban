@@ -27,6 +27,7 @@ target 'ForaBank' do
   pod 'Firebase/Analytics'
   pod 'Firebase/Messaging'
   pod 'Firebase/Core'
+  pod 'SCLAlertView'
 
   #pod 'XCGLogger'
 end

@@ -57,7 +57,6 @@ class Card: Mappable,   IProduct {
         try balance = map.from("balance")
         try id = map.from("cardID")
         try status = map.from("status")
-        
         var mskd = ""
         if number.count > 0 {
             mskd = String(number.prefix(6))

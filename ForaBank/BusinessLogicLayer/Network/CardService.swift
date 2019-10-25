@@ -157,6 +157,7 @@ class CardService: CardServiceProtocol {
                         for cardData in data {
                             if let cardData = cardData as? Dictionary<String, Any>,
                                 let original = cardData["original"] as? Dictionary<String, Any> {
+                                let customName = cardData["customName"] as? String
                                 //                                let customName = cardData["customName"] as? String
                                 //                                let title = original["name"] as? String
                                 //                                _ = original["account"] as? String
