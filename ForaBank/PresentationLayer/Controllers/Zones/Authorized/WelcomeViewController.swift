@@ -27,6 +27,9 @@ class WelcomeViewController: UIViewController, StoreSubscriber {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) { [weak self] in
+            self?.performSegue(withIdentifier: "formWelcomeToTabBarSegue", sender: nil)
+        }
     }
 
     override func viewDidLayoutSubviews() {
@@ -90,7 +93,6 @@ class WelcomeViewController: UIViewController, StoreSubscriber {
             greetingLabel.text = "Добрый день, \(firstName) \(patronymic)!"
         }
         if productsState.isUpToDateProducts == true {
-            performSegue(withIdentifier: "formWelcomeToTabBarSegue", sender: nil)
         }
     }
 }
