@@ -193,7 +193,7 @@
                     <connections>
                         <outlet property="backgroundImageView" destination="SPh-qG-ikr" id="jhw-bg-Jsj"/>
                         <outlet property="containerView" destination="6pL-U0-Exh" id="EdS-5T-sxm"/>
-                        <segue destination="gi5-Bs-nth" kind="custom" id="HAq-tY-C0s"/>
+                        <segue destination="gi5-Bs-nth" kind="modal" identifier="formWelcomeToTabBarSegue" modalTransitionStyle="coverVertical" id="HAq-tY-C0s"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lek-hg-Rgh" sceneMemberID="firstResponder"/>

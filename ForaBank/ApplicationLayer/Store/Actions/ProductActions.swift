@@ -11,8 +11,19 @@ import ReSwift
 import ReSwiftThunk
 
 let fetchProducts = Thunk<State> { dispatch, getState in
-//    NetworkManager.shared().produc
-    
+    NetworkManager.shared().getProducts { (success, products) in
+        guard let nonNilProducts = products else {
+            return
+        }
+        dispatch(didReviceProducts(products: nonNilProducts))
+    }
+}
+
+func didReviceProducts(products: [Product]) -> Thunk<State> {
+    return Thunk<State> { dispatch, getState in
+        dispatch(SetProducts(products: products))
+        dispatch(SetProductsUpToDate(isUpToDateProducts: true))
+    }
 }
 
 func startPayment(sourceOption: PaymentOption?, destionationOption: PaymentOption?) -> Thunk<State> {
@@ -39,6 +50,14 @@ func deselectedProduct() -> Thunk<State> {
     return Thunk<State> { dispatch, getState in
         dispatch(ClearProductSelection())
     }
+}
+
+struct SetProducts: Action {
+    let products: [Product]
+}
+
+struct SetProductsUpToDate: Action {
+    let isUpToDateProducts: Bool
 }
 
 struct SetPaymentOptions: Action {

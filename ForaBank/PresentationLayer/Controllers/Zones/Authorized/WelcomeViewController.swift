@@ -8,8 +8,9 @@
 
 import UIKit
 import Hero
+import ReSwift
 
-class WelcomeViewController: UIViewController {
+class WelcomeViewController: UIViewController, StoreSubscriber {
 
     // MARK: - Properties
 
@@ -25,8 +26,6 @@ class WelcomeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        
     }
 
     override func viewDidLayoutSubviews() {
@@ -55,8 +54,9 @@ class WelcomeViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        NetworkManager.shared().getProducts { (success, products) in
-            print(products)
+
+        store.subscribe(self) { state in
+            state.select { $0.productsState }
         }
         containerView.hero.modifiers = nil
         UIView.animate(withDuration: 2, delay: 0, options: .beginFromCurrentState, animations: {
@@ -78,6 +78,12 @@ class WelcomeViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         containerView.hero.modifiers = nil
+        store.unsubscribe(self)
     }
 
+    func newState(state: ProductState) {
+        if state.isUpToDateProducts == true {
+            performSegue(withIdentifier: "formWelcomeToTabBarSegue", sender: nil)
+        }
+    }
 }
