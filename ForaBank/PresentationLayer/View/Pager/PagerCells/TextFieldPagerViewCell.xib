@@ -29,9 +29,6 @@
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad" textContentType="cc-number"/>
-                                <connections>
-                                    <action selector="contactsList:" destination="gTV-IL-0wX" eventType="editingDidEnd" id="nL6-Oo-lm9"/>
-                                </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f5S-dd-w1e">
                                 <rect key="frame" x="8" y="15" width="30" height="30"/>
@@ -40,9 +37,18 @@
                                 </constraints>
                                 <state key="normal" image="payments_transfer_between-accounts"/>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n8P-hA-omH">
-                                <rect key="frame" x="0.0" y="-3" width="342" height="68"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AHE-5o-KrN">
+                                <rect key="frame" x="46" y="15" width="254" height="30"/>
+                                <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="18"/>
+                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n8P-hA-omH">
+                                <rect key="frame" x="0.0" y="11" width="46" height="39"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="46" id="Jbf-cN-zHc"/>
+                                    <constraint firstAttribute="height" constant="39" id="m95-WF-bSH"/>
+                                </constraints>
                                 <connections>
                                     <action selector="contactsList:" destination="gTV-IL-0wX" eventType="touchUpInside" id="Qqb-7g-8hp"/>
                                 </connections>
@@ -50,11 +56,19 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="AHE-5o-KrN" firstAttribute="bottom" secondItem="f5S-dd-w1e" secondAttribute="bottom" id="0I1-Qj-ODO"/>
+                            <constraint firstItem="AHE-5o-KrN" firstAttribute="trailing" secondItem="bM1-E1-Pv4" secondAttribute="trailing" id="2if-11-jAi"/>
                             <constraint firstAttribute="bottom" secondItem="f5S-dd-w1e" secondAttribute="bottom" constant="15" id="4dz-eQ-Tdx"/>
+                            <constraint firstItem="bM1-E1-Pv4" firstAttribute="leading" secondItem="n8P-hA-omH" secondAttribute="trailing" id="8Ce-ec-hdg"/>
                             <constraint firstItem="f5S-dd-w1e" firstAttribute="top" secondItem="D8h-Vw-o5e" secondAttribute="top" constant="15" id="8VH-hM-Uv8"/>
+                            <constraint firstItem="n8P-hA-omH" firstAttribute="top" secondItem="D8h-Vw-o5e" secondAttribute="top" constant="11" id="C7J-9h-ief"/>
                             <constraint firstAttribute="bottom" secondItem="bM1-E1-Pv4" secondAttribute="bottom" constant="13" id="EQP-gv-YZ0"/>
                             <constraint firstItem="bM1-E1-Pv4" firstAttribute="leading" secondItem="f5S-dd-w1e" secondAttribute="trailing" constant="8" symbolic="YES" id="KUC-3I-9YS"/>
                             <constraint firstAttribute="trailing" secondItem="bM1-E1-Pv4" secondAttribute="trailing" constant="20" id="Mb6-xq-fUU"/>
+                            <constraint firstItem="AHE-5o-KrN" firstAttribute="leading" secondItem="bM1-E1-Pv4" secondAttribute="leading" id="PEw-RI-NTl"/>
+                            <constraint firstItem="n8P-hA-omH" firstAttribute="centerY" secondItem="f5S-dd-w1e" secondAttribute="centerY" id="Yrd-IS-rhC"/>
+                            <constraint firstItem="n8P-hA-omH" firstAttribute="centerX" secondItem="f5S-dd-w1e" secondAttribute="centerX" id="s0z-55-1xG"/>
+                            <constraint firstItem="AHE-5o-KrN" firstAttribute="top" secondItem="f5S-dd-w1e" secondAttribute="top" id="v8R-Pa-4tO"/>
                             <constraint firstItem="bM1-E1-Pv4" firstAttribute="top" secondItem="D8h-Vw-o5e" secondAttribute="top" constant="13" id="vi2-Je-Fa4"/>
                             <constraint firstItem="f5S-dd-w1e" firstAttribute="leading" secondItem="D8h-Vw-o5e" secondAttribute="leading" constant="8" id="wP9-hh-xJe"/>
                         </constraints>
@@ -75,6 +89,7 @@
             </userDefinedRuntimeAttributes>
             <connections>
                 <outlet property="leftButton" destination="f5S-dd-w1e" id="2eU-GJ-feS"/>
+                <outlet property="nameContact" destination="AHE-5o-KrN" id="k0W-Cg-ZNs"/>
                 <outlet property="textField" destination="bM1-E1-Pv4" id="Fov-lT-VZj"/>
             </connections>
             <point key="canvasLocation" x="62.318840579710148" y="139.28571428571428"/>

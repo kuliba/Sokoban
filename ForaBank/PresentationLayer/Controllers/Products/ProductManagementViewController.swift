@@ -124,6 +124,12 @@ class ProductManagementViewController: UITableViewController {
             store.dispatch(startPayment(sourceOption: paymentOption, destionationOption: nil))
             return
         }
+        else if indexPath.item == 5 {
+                
+            let storyboard = UIStoryboard(name: "Deposits", bundle: nil);
+            let vc = storyboard.instantiateViewController(withIdentifier: "changeNameCard")
+            self.present(vc, animated: true, completion: nil);
+        }
         let alertVC = UIAlertController(title: "Функционал недоступен", message: "Функционал временно недоступен", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Понятно", style: .cancel, handler: nil)
         alertVC.addAction(okAction)

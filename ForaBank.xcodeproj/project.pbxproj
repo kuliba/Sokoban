@@ -139,6 +139,7 @@
 		96144B41233E1E6B00B9F314 /* LoanPaymentSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96144B40233E1E6B00B9F314 /* LoanPaymentSchedule.swift */; };
 		96144B43233E21BB00B9F314 /* LoanSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96144B42233E21BB00B9F314 /* LoanSchedule.swift */; };
 		9622CFBE234B225B0005701E /* changePasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9622CFBD234B225B0005701E /* changePasswordController.swift */; };
+		962655C92361F31A00697E37 /* ViewModalStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 962655C82361F31A00697E37 /* ViewModalStyle.swift */; };
 		9630327E2346260000C211D8 /* prepareResetPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9630327D2346260000C211D8 /* prepareResetPassword.swift */; };
 		963B62D02360A91900DD9A3E /* ContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963B62CA2360A91400DD9A3E /* ContactCell.swift */; };
 		963B62D12360A91900DD9A3E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963B62CB2360A91500DD9A3E /* Constants.swift */; };
@@ -473,6 +474,7 @@
 		96144B40233E1E6B00B9F314 /* LoanPaymentSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanPaymentSchedule.swift; sourceTree = "<group>"; };
 		96144B42233E21BB00B9F314 /* LoanSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanSchedule.swift; sourceTree = "<group>"; };
 		9622CFBD234B225B0005701E /* changePasswordController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = changePasswordController.swift; sourceTree = "<group>"; };
+		962655C82361F31A00697E37 /* ViewModalStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModalStyle.swift; sourceTree = "<group>"; };
 		9630327D2346260000C211D8 /* prepareResetPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = prepareResetPassword.swift; sourceTree = "<group>"; };
 		963B62CA2360A91400DD9A3E /* ContactCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactCell.swift; sourceTree = "<group>"; };
 		963B62CB2360A91500DD9A3E /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -935,6 +937,7 @@
 				A5B473C221B3C09800F2E41F /* Payments */,
 				A55B7B8921AA70A600A8A7FE /* Profile */,
 				A568142221CBCD1C002C0899 /* Services */,
+				962655C82361F31A00697E37 /* ViewModalStyle.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -2013,6 +2016,7 @@
 				A568142C21CE6CB0002C0899 /* AnnotationTableViewCell.swift in Sources */,
 				BD4A2342235078110093DCA5 /* ILogger.swift in Sources */,
 				A58760C121BFB63D0022DED5 /* ProfileNavigationController.swift in Sources */,
+				962655C92361F31A00697E37 /* ViewModalStyle.swift in Sources */,
 				BDCCE9092350BB6E0087F5F2 /* AlertService.swift in Sources */,
 				BD8106BD234F40DA004A43E9 /* API.swift in Sources */,
 				BDB7916D2338C8B10002C7EE /* VerificationCodeViewController.swift in Sources */,

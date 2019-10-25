@@ -18,6 +18,9 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell,ContactsPickerD
     var charactersMaxCount: Int?
     var formattingFunc: ((String) -> (String))?
 
+    @IBOutlet weak var nameContact: UILabel!
+    
+    
     
     @IBAction func contactsList(_ sender: Any) {
         let contactPickerScene = ContactsPicker(delegate: self, multiSelection: true, subtitleCellType: SubtitleCellValue.phoneNumber)
@@ -37,15 +40,24 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell,ContactsPickerD
            print("User canceled the selection");
        }
        
-       func contactPicker(_ picker: ContactsPicker, didSelectMultipleContacts contacts: [Contact]) {
+
+    func contactPicker(_ picker: ContactsPicker, didSelectMultipleContacts contacts: [Contact]) {
            defer { picker.dismiss(animated: true, completion: nil) }
            guard !contacts.isEmpty else { return }
            print("The following contacts are selected")
            for contact in contacts {
-               print("\(contact.displayName)")
-           }
+            print("\(contact.displayName)","\(contact.phoneNumbers)")
        
+        
+        if  contacts != nil {
+            textField.isHidden = true
+            nameContact.isHidden = false
+            nameContact.text = "\(contact.displayName)"
+            
+                    }
+                }
        }
+    
     
     
     override func awakeFromNib() {
@@ -63,7 +75,7 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell,ContactsPickerD
             textInputCellProvider.currentValue = newValue
         }
 
-        textField.text = ""
+        textField.text = "+7"
         textField.delegate = self
         textField.placeholder = textInputCellProvider.placeholder
         textField.addTarget(self, action: #selector(reformatAsCardNumber), for: .editingChanged)
@@ -78,6 +90,7 @@ extension TextFieldPagerViewCell: UITextFieldDelegate {
         let newLength = text.count + string.count - range.length
         return newLength <= nonNilCharactersMaxCount
     }
+   
 
     @objc func reformatAsCardNumber(textField: UITextField) {
         guard let text = textField.text, let nonNilFormattingFunc = formattingFunc else { return }
