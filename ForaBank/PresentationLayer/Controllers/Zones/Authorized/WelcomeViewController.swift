@@ -28,6 +28,7 @@ class WelcomeViewController: UIViewController, StoreSubscriber {
     override func viewDidLoad() {
         super.viewDidLoad()
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) { [weak self] in
+            self?.navigationController?.popToRootViewController(animated: true)
             self?.performSegue(withIdentifier: "formWelcomeToTabBarSegue", sender: nil)
         }
     }
@@ -84,7 +85,7 @@ class WelcomeViewController: UIViewController, StoreSubscriber {
         containerView.hero.modifiers = nil
         store.unsubscribe(self)
     }
-
+    
     func newState(state: State) {
         let userState = state.userState
         let productsState = state.productsState

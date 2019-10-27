@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="fbn-3T-WnZ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="aRB-rj-TmI">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -17,6 +17,7 @@
         <scene sceneID="Sel-Ja-1xH">
             <objects>
                 <tabBarController storyboardIdentifier="TabBarController" id="gi5-Bs-nth" customClass="TabBarController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="hrO-x8-Jiu"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" translucent="NO" id="EMZ-kR-Azz" customClass="CustomTabBar" customModule="ForaBank" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="975" width="768" height="49"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
@@ -36,7 +37,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="U2L-3G-47v" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-457" y="155"/>
+            <point key="canvasLocation" x="480.80000000000001" y="154.27286356821591"/>
         </scene>
         <!--Feed-->
         <scene sceneID="j3p-ui-zmb">
@@ -46,7 +47,7 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gjd-g6-x9p" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="163" y="51"/>
+            <point key="canvasLocation" x="1100.8" y="50.374812593703155"/>
         </scene>
         <!--Deposits-->
         <scene sceneID="BWy-zs-beG">
@@ -56,7 +57,7 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="h9v-5p-TTs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="182" y="102"/>
+            <point key="canvasLocation" x="1120" y="101.64917541229386"/>
         </scene>
         <!--Payment-->
         <scene sceneID="OFI-fd-TVL">
@@ -66,7 +67,7 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rus-ZO-rOs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="183" y="155"/>
+            <point key="canvasLocation" x="1120.8" y="154.72263868065968"/>
         </scene>
         <!--Services-->
         <scene sceneID="4GL-9k-vKc">
@@ -76,7 +77,7 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DVp-jo-wzS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="180" y="210"/>
+            <point key="canvasLocation" x="1119.2" y="209.59520239880061"/>
         </scene>
         <!--Profile-->
         <scene sceneID="wxt-9s-0pJ">
@@ -86,7 +87,7 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="98P-XJ-ECd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="171" y="264"/>
+            <point key="canvasLocation" x="1108.8" y="263.56821589205401"/>
         </scene>
         <!--Welcome View Controller-->
         <scene sceneID="8EP-BC-VoB">
@@ -182,9 +183,6 @@
                             </mask>
                         </variation>
                     </view>
-                    <tabBarItem key="tabBarItem" title="" image="tabbar_icon_profile" id="W65-Oi-coc" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
-                        <inset key="imageInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="-10"/>
-                    </tabBarItem>
                     <navigationItem key="navigationItem" id="7LL-yi-roE"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <userDefinedRuntimeAttributes>
@@ -194,12 +192,32 @@
                         <outlet property="backgroundImageView" destination="SPh-qG-ikr" id="jhw-bg-Jsj"/>
                         <outlet property="containerView" destination="6pL-U0-Exh" id="EdS-5T-sxm"/>
                         <outlet property="greetingLabel" destination="VvG-RX-IYb" id="GuK-ll-EOy"/>
-                        <segue destination="gi5-Bs-nth" kind="modal" identifier="formWelcomeToTabBarSegue" modalTransitionStyle="coverVertical" id="HAq-tY-C0s"/>
+                        <segue destination="gi5-Bs-nth" kind="push" identifier="formWelcomeToTabBarSegue" id="HAq-tY-C0s"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lek-hg-Rgh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1481" y="154"/>
+            <point key="canvasLocation" x="-543.20000000000005" y="153.37331334332833"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="qKJ-XK-w0C">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="aRB-rj-TmI" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="" image="tabbar_icon_profile" id="W65-Oi-coc" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
+                        <inset key="imageInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="-10"/>
+                    </tabBarItem>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Rsc-N7-yFa">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="fbn-3T-WnZ" kind="relationship" relationship="rootViewController" id="YB6-j4-Qej"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vI1-uV-ZMm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1482.4000000000001" y="153.37331334332833"/>
         </scene>
     </scenes>
     <resources>
