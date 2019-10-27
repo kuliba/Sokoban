@@ -127,8 +127,9 @@ class RegService: RegServiceProtocol {
             .responseJSON { [unowned self] response in
 
                 if let json = response.result.value as? Dictionary<String, Any>,
-                    let errorMessage = json["errorMessage"] as? String {
-                    print("\(errorMessage) \(self)")
+                    let result = json["result"] as? String,
+                    result == "ERROR" {
+                    print("errorMessage")
                     completionHandler(false, nil)
                     return
                 }

@@ -207,7 +207,6 @@ class NetworkManager {
                 self.headers.merge(newHeaders ?? [:], uniquingKeysWith: { (_, k2) -> String in
                     return k2
                 })
-                //                print("headers \(self.headers)")
                 self.regService.verifyCode(headers: self.headers, verificationCode: verificationCode, completionHandler: completionHandler)
             }
             else {
