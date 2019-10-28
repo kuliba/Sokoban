@@ -15,7 +15,10 @@ class UnauthorizedZoneTabBarController: UITabBarController, StoreSubscriber {
 
     @IBAction func unwindSegue(segue: UIStoryboardSegue) { }
 
+    var currState: PasscodeSignInState?
+    
     // MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         selectedIndex = 0
@@ -38,16 +41,17 @@ class UnauthorizedZoneTabBarController: UITabBarController, StoreSubscriber {
     }
 
     func newState(state: PasscodeSignInState) {
+        
+        if let nonNilCurrState = currState, ForaBank.isEqual(first: state, to: nonNilCurrState) {
+            return
+        }
+        
+        currState = state
+
         if state.isShown == true {
             let passcodeVC = PasscodeSignInViewController()
             passcodeVC.modalPresentationStyle = .overFullScreen
             present(passcodeVC, animated: true, completion: nil)
-        } else if state.isShown == false {
-            NetworkManager.shared().isSignedIn { (isSignIn) in
-                if isSignIn {
-                    store.dispatch(userDidSignIn)
-                }
-            }
         }
     }
 }
