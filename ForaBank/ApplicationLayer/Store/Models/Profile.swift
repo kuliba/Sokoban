@@ -11,5 +11,6 @@ import Foundation
 struct Profile {
     let firstName: String
     let lastName: String
+    let patronymic: String
     let imageURL: String?
 }

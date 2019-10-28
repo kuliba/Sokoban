@@ -18,12 +18,18 @@ let checkAuthCredentials = Thunk<State> { dispatch, getStat in
 }
 
 let userDidSignIn = Thunk<State> { dispatch, getStat in
+    dispatch(fetchUserData)
+    dispatch(fetchProducts)
     setupAuthorizedZone()
 }
 
 let doLogout = Thunk<State> { dispatch, getStat in
-    setupUnauthorizedZone()
-    NetworkManager.shared().logOut(completionHandler: nil)
+    NetworkManager.shared().logOut { (success) in
+        if success {
+            setupUnauthorizedZone()
+            dispatch(clearPasscodeData)
+        }
+    }
 }
 
 func createCredentials(login: String, pwd: String) -> Thunk<State> {

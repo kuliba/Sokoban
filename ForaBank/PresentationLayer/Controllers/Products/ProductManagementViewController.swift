@@ -27,7 +27,7 @@ class ProductManagementViewController: UITableViewController {
         tableView.contentInset.top = 35
         tableView.contentInset.bottom = 10
         tableView.backgroundColor = .white
-        
+
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -124,6 +124,12 @@ class ProductManagementViewController: UITableViewController {
             }
             let paymentOption = PaymentOption(product: product)
             store.dispatch(startPayment(sourceOption: paymentOption, destionationOption: nil))
+            return
+        } else if indexPath.item == 6 {
+            guard let product = self.product else {
+                return
+            }
+            showShareScreen(textToShare: "Номер моей карты: \(product.number)")
             return
         }
         else if indexPath.item == 5 {
