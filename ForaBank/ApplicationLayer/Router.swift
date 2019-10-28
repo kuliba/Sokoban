@@ -8,6 +8,8 @@
 
 import Foundation
 
+//MARK: - Zones
+
 func setupUnauthorizedZone() {
     let mainStoryboard: UIStoryboard = UIStoryboard(name: "UnauthorizedZone", bundle: nil)
     let viewController = mainStoryboard.instantiateViewController(withIdentifier: String(describing: UnauthorizedZoneTabBarController.self)
@@ -20,6 +22,15 @@ func setupAuthorizedZone() {
     guard let viewController = mainStoryboard.instantiateInitialViewController() else { return }
     setRootVC(newRootVC: viewController)
 }
+
+//MARK: - Sharing
+
+func showShareScreen(textToShare shareText: String) {
+    let activityController = UIActivityViewController(activityItems: [shareText], applicationActivities: nil)
+    topMostVC()?.present(activityController, animated: true, completion: nil)
+}
+
+//MARK: - Payment
 
 func showPaymentViewController() {
     guard let paymentVC = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentDetailsViewController") as? PaymentsDetailsViewController else {
