@@ -72,10 +72,11 @@ class RegistrationViewController: UIViewController {
     @IBAction func scanCardButtonClicked(_ sender: Any) {
         view.endEditing(true)
         let cardIOVC = CardIOPaymentViewController(paymentDelegate: self)
-//        cardIOVC?.collectCardholderName = true
-        cardIOVC?.modalPresentationStyle = .formSheet
+        
+        cardIOVC?.modalPresentationStyle = .fullScreen
+        cardIOVC?.collectCVV = false
+        cardIOVC?.collectExpiry = false
         cardIOVC?.guideColor = UIColor(red: 0.13, green: 0.54, blue: 0.61, alpha: 1.00)
-//        cardIOVC?.disableManualEntryButtons = true
         cardIOVC?.hideCardIOLogo = true
         present(cardIOVC!, animated: true, completion: nil)
     }
@@ -177,7 +178,7 @@ class RegistrationViewController: UIViewController {
             self.cardNumberTextField.tintColor = .black
             self.cardNumberTextField.textColor = .black
             
-            self.continueButton.isHidden = true
+//            self.continueButton.isHidden = true
         }
     }
 

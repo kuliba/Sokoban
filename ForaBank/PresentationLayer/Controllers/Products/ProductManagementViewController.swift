@@ -125,7 +125,7 @@ class ProductManagementViewController: UITableViewController {
             let paymentOption = PaymentOption(product: product)
             store.dispatch(startPayment(sourceOption: paymentOption, destionationOption: nil))
             return
-        } else if indexPath.item == 6 {
+        } else if indexPath.item == 3 {
             guard let product = self.product else {
                 return
             }
@@ -133,7 +133,7 @@ class ProductManagementViewController: UITableViewController {
             return
         }
         else if indexPath.item == 5 {
-                
+
             let alert = SCLAlertView()
             let txt = alert.addTextField("Введите название карты")
             alert.addButton("Сохранить") {
@@ -142,14 +142,14 @@ class ProductManagementViewController: UITableViewController {
             alert.showEdit("Изменить название карты", subTitle: "Не более 10 символов", colorStyle: 0xF5534C)
         }
         else {
-        let alertVC = UIAlertController(title: "Функционал недоступен", message: "Функционал временно недоступен", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Понятно", style: .cancel, handler: nil)
-        alertVC.addAction(okAction)
-        show(alertVC, sender: self)
+            let alertVC = UIAlertController(title: "Функционал недоступен", message: "Функционал временно недоступен", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "Понятно", style: .cancel, handler: nil)
+            alertVC.addAction(okAction)
+            show(alertVC, sender: self)
         }
-        }
-    
-    
+    }
+
+
     /*
      // Override to support rearranging the table view.
      override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
