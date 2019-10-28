@@ -22,6 +22,10 @@ let canceledPasscodeSignIn = Thunk<State> { dispatch, getState in
     dispatch(UpdatePasscodeSingInProcess(isShown: false))
 }
 
+let clearPasscodeData = Thunk<State> { dispatch, getState in
+    removeAllKeychainItems()
+}
+
 func startSignInWith(passcode: String) -> Thunk<State> {
     return Thunk<State> { dispatch, getState in
         guard passcode == keychainCredentialsPasscode() else {

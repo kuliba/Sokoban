@@ -262,6 +262,8 @@
 		BD5170A92332135E001EAFC0 /* VerificationCodeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170A82332135E001EAFC0 /* VerificationCodeState.swift */; };
 		BD5170AB2332250C001EAFC0 /* VerificationCodeReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170AA2332250C001EAFC0 /* VerificationCodeReducer.swift */; };
 		BD5170AD233229F4001EAFC0 /* VerificationCodeActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170AC233229F4001EAFC0 /* VerificationCodeActions.swift */; };
+		BD66E0C42366D511002FFA1A /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD66E0C32366D511002FFA1A /* AppConstants.swift */; };
+		BD66E0C62366DD3F002FFA1A /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD66E0C52366DD3F002FFA1A /* Keychain.swift */; };
 		BD6D5674233A0B9000B7CF4B /* UnauthorizedZoneTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6D5673233A0B9000B7CF4B /* UnauthorizedZoneTabBarController.swift */; };
 		BD6F59782334B74F002F4D4E /* StateActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6F59772334B74F002F4D4E /* StateActions.swift */; };
 		BD6F597A2334BAA4002F4D4E /* StateReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6F59792334BAA4002F4D4E /* StateReducer.swift */; };
@@ -573,6 +575,8 @@
 		BD5170A82332135E001EAFC0 /* VerificationCodeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeState.swift; sourceTree = "<group>"; };
 		BD5170AA2332250C001EAFC0 /* VerificationCodeReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeReducer.swift; sourceTree = "<group>"; };
 		BD5170AC233229F4001EAFC0 /* VerificationCodeActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeActions.swift; sourceTree = "<group>"; };
+		BD66E0C32366D511002FFA1A /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
+		BD66E0C52366DD3F002FFA1A /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		BD6D5673233A0B9000B7CF4B /* UnauthorizedZoneTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnauthorizedZoneTabBarController.swift; sourceTree = "<group>"; };
 		BD6F59772334B74F002F4D4E /* StateActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateActions.swift; sourceTree = "<group>"; };
 		BD6F59792334BAA4002F4D4E /* StateReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateReducer.swift; sourceTree = "<group>"; };
@@ -1330,6 +1334,7 @@
 				BDFE1AC1233B906D00C49A5B /* App.swift */,
 				BDE4D084232254430070BC3D /* Date.swift */,
 				094FFC0C218837580069DDCB /* Helpers.swift */,
+				BD66E0C52366DD3F002FFA1A /* Keychain.swift */,
 				BD94E09E231EA6E50006456E /* MasksFormatting.swift */,
 				BDF4F9452329105D007C448F /* Security.swift */,
 				A55B7B5621A5866F00A8A7FE /* UIImage+GIF.swift */,
@@ -1349,6 +1354,7 @@
 		BD8106AC234F2029004A43E9 /* ApplicationLayer */ = {
 			isa = PBXGroup;
 			children = (
+				BD66E0C32366D511002FFA1A /* AppConstants.swift */,
 				BD21B67323391DE3001C5CF7 /* Router.swift */,
 				BD73EB63231EA61C00CB3E58 /* Helpers */,
 				BD8106AF234F216A004A43E9 /* Logger */,
@@ -1733,6 +1739,7 @@
 				09D3C041215CE5D100998F57 /* DialogCell.swift in Sources */,
 				9660EEE6234C7B1100AE0647 /* CollapsibleTableViewHeader.swift in Sources */,
 				09203D87216CA79C00902BD2 /* FeedViewController.swift in Sources */,
+				BD66E0C42366D511002FFA1A /* AppConstants.swift in Sources */,
 				BD137A402326472D00326088 /* State.swift in Sources */,
 				BD20836423609A680010E03C /* HIstoryService.swift in Sources */,
 				09C7C30F2174888B000EE472 /* DepositsViewController.swift in Sources */,
@@ -1915,6 +1922,7 @@
 				09AF7092216F73FD00E7FCFC /* FeedCurrent4Cell.swift in Sources */,
 				09203D95216E13A700902BD2 /* FeedOptionCell.swift in Sources */,
 				BDE4D085232254430070BC3D /* Date.swift in Sources */,
+				BD66E0C62366DD3F002FFA1A /* Keychain.swift in Sources */,
 				96072C882313FF13001CFCBD /* TouchIDAuthentication.swift in Sources */,
 				09F5DCE6218C3E7200390304 /* RegistrationFinishViewController.swift in Sources */,
 				BD6D5674233A0B9000B7CF4B /* UnauthorizedZoneTabBarController.swift in Sources */,

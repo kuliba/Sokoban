@@ -8,7 +8,6 @@
 
 import Foundation
 import CryptoSwift
-import KeychainAccess
 
 typealias UserData = (login: String, pwd: String)
 
@@ -55,68 +54,6 @@ func decryptPasscode(withPossiblePasscode possiblePasscode: String) -> String? {
     let encryptedPasscode = keychainCredentialsPasscode()
 
     return try! encryptedPasscode?.aesDecrypt(withKey: key, iv: iv)
-}
-
-//Keychain
-
-func keychainCredentialsLogin() -> String? {
-    return Keychain(service: "com.fora.credentials")["login"]
-}
-
-func keychainCredentialsPwd() -> String? {
-    return Keychain(service: "com.fora.credentials")["pwd"]
-}
-
-func keychainCredentialsUserData() -> String? {
-    return Keychain(service: "com.fora.credentials")["userData"]
-}
-
-func keychainCredentialsEncryptedPasscode() -> String? {
-    return Keychain(service: "com.fora.credentials")["encryptedPasscode"]
-}
-
-func keychainCredentialsPasscode() -> String? {
-    return Keychain(service: "com.fora.credentials")["passcode"]
-}
-
-func saveLoginToKeychain(login: String) {
-    let keychain = Keychain(service: "com.fora.credentials")
-    keychain["login"] = login
-}
-
-func savePwdToKeychain(pwd: String) {
-    let keychain = Keychain(service: "com.fora.credentials")
-    keychain["pwd"] = pwd
-}
-
-func saveUserDataToKeychain(userData: String) {
-    let keychain = Keychain(service: "com.fora.credentials")
-    keychain["userData"] = userData
-}
-
-func saveEncryptedPasscodeToKeychain(passcode: String) {
-    let keychain = Keychain(service: "com.fora.credentials")
-    keychain["encryptedPasscode"] = passcode
-}
-
-func savePasscodeToKeychain(passcode: String) {
-    let keychain = Keychain(service: "com.fora.credentials")
-    keychain["passcode"] = passcode
-}
-
-func unsafeRemoveEncryptedPasscodeFromKeychain() {
-    let keychain = Keychain(service: "com.fora.credentials")
-    try! keychain.remove("encryptedPasscode")
-}
-
-func unsafeRemovePasscodeFromKeychain() {
-    let keychain = Keychain(service: "com.fora.credentials")
-    try! keychain.remove("passcode")
-}
-
-func unsafeRemoveUserDataFromKeychain() {
-    let keychain = Keychain(service: "com.fora.credentials")
-    try! keychain.remove("userData")
 }
 
 //Crypto
