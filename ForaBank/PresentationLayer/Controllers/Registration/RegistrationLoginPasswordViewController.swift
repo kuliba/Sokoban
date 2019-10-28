@@ -9,6 +9,7 @@
 import UIKit
 import FlexiblePageControl
 import Hero
+import StoreKit
 
 enum PasswordStrength: Int {
     case None
@@ -76,6 +77,11 @@ class RegistrationLoginPasswordViewController: UIViewController {
 
     var cardNumber: String? = nil
 
+   
+    @IBAction func linkPrivacyPolicy(_ sender: Any) {
+       UIApplication.shared.openURL(URL(string: "https://www.forabank.ru/private/dokumenty/UKBO_03-08-2019.pdf")!)
+        
+    }
     var segueId: String? = nil
     var backSegueId: String? = nil
 //    let pageControl = FlexiblePageControl()
@@ -234,7 +240,7 @@ class RegistrationLoginPasswordViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
+      
         addGradientLayerView()
 //        addCircleView()
         if pageControl != nil {

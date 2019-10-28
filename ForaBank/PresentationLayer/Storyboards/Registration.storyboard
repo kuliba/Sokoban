@@ -870,7 +870,7 @@
                                                                 <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="Dde-44-YvN">
+                                                            <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="+7" borderStyle="roundedRect" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="Dde-44-YvN">
                                                                 <rect key="frame" x="20" y="96" width="358" height="40"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="40" id="kEF-KF-tSz"/>
@@ -939,41 +939,6 @@
                                                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="14"/>
                                                                 <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="new-password"/>
                                                             </textField>
-                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4sJ-Wa-aoc">
-                                                                <rect key="frame" x="103.33333333333333" y="387" width="191.66666666666669" height="38"/>
-                                                                <subviews>
-                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Я прочитал условия банка" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EUw-gR-Iy1">
-                                                                        <rect key="frame" x="30.000000000000014" y="4" width="161.66666666666669" height="30"/>
-                                                                        <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="13"/>
-                                                                        <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                                        <nil key="highlightedColor"/>
-                                                                    </label>
-                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zws-jv-nwU">
-                                                                        <rect key="frame" x="0.0" y="8" width="22" height="22"/>
-                                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                        <constraints>
-                                                                            <constraint firstAttribute="width" constant="22" id="UOj-k2-HCM"/>
-                                                                            <constraint firstAttribute="height" constant="22" id="j38-9V-fST"/>
-                                                                        </constraints>
-                                                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                        <state key="normal" backgroundImage="reg_unselected_checkbox"/>
-                                                                        <state key="selected" image="chat_message_confirm" backgroundImage="unagry"/>
-                                                                        <connections>
-                                                                            <action selector="acceptAgreement:" destination="X68-pN-5sM" eventType="touchUpInside" id="ZfJ-Hq-psB"/>
-                                                                        </connections>
-                                                                    </button>
-                                                                </subviews>
-                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="bottom" secondItem="EUw-gR-Iy1" secondAttribute="bottom" constant="4" id="QcX-2k-8Tg"/>
-                                                                    <constraint firstItem="Zws-jv-nwU" firstAttribute="centerY" secondItem="EUw-gR-Iy1" secondAttribute="centerY" id="VSw-tO-QEm"/>
-                                                                    <constraint firstItem="EUw-gR-Iy1" firstAttribute="leading" secondItem="Zws-jv-nwU" secondAttribute="trailing" constant="8" id="Y3Z-yk-NTg"/>
-                                                                    <constraint firstAttribute="trailing" secondItem="EUw-gR-Iy1" secondAttribute="trailing" id="cJu-d3-Jag"/>
-                                                                    <constraint firstItem="Zws-jv-nwU" firstAttribute="leading" secondItem="4sJ-Wa-aoc" secondAttribute="leading" id="t3r-7n-8eP"/>
-                                                                    <constraint firstAttribute="height" constant="38" id="t94-Lq-BRr"/>
-                                                                    <constraint firstItem="EUw-gR-Iy1" firstAttribute="top" secondItem="4sJ-Wa-aoc" secondAttribute="top" constant="4" id="ywE-ZU-w0j"/>
-                                                                </constraints>
-                                                            </view>
                                                             <button opaque="NO" alpha="0.25" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9rG-jh-w33" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
                                                                 <rect key="frame" x="20" y="433" width="358" height="53"/>
                                                                 <color key="backgroundColor" red="0.91764705879999997" green="0.2666666667" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
@@ -1018,6 +983,49 @@
                                                                 <color key="tintColor" red="0.91764705879999997" green="0.2666666667" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" secondItem="a6w-OV-S3a" secondAttribute="height" multiplier="1:1" id="tBB-4o-uYb"/>
+                                                                </constraints>
+                                                            </view>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4sJ-Wa-aoc">
+                                                                <rect key="frame" x="96.666666666666686" y="387" width="205" height="38"/>
+                                                                <subviews>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Я прочитал" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EUw-gR-Iy1">
+                                                                        <rect key="frame" x="29.999999999999986" y="4" width="67.666666666666671" height="30"/>
+                                                                        <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="13"/>
+                                                                        <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                                        <color key="highlightedColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    </label>
+                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zws-jv-nwU">
+                                                                        <rect key="frame" x="0.0" y="8" width="22" height="22"/>
+                                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="width" constant="22" id="UOj-k2-HCM"/>
+                                                                            <constraint firstAttribute="height" constant="22" id="j38-9V-fST"/>
+                                                                        </constraints>
+                                                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                        <state key="normal" backgroundImage="reg_unselected_checkbox"/>
+                                                                        <state key="selected" image="chat_message_confirm" backgroundImage="unagry"/>
+                                                                        <connections>
+                                                                            <action selector="acceptAgreement:" destination="X68-pN-5sM" eventType="touchUpInside" id="ZfJ-Hq-psB"/>
+                                                                        </connections>
+                                                                    </button>
+                                                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ey0-20-XWT">
+                                                                        <rect key="frame" x="101.99999999999983" y="4" width="105" height="30"/>
+                                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                        <state key="normal" title="Условия банка"/>
+                                                                        <connections>
+                                                                            <action selector="linkPrivacyPolicy:" destination="X68-pN-5sM" eventType="touchUpInside" id="hdx-Px-v0z"/>
+                                                                        </connections>
+                                                                    </button>
+                                                                </subviews>
+                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="bottom" secondItem="EUw-gR-Iy1" secondAttribute="bottom" constant="4" id="QcX-2k-8Tg"/>
+                                                                    <constraint firstItem="Zws-jv-nwU" firstAttribute="centerY" secondItem="EUw-gR-Iy1" secondAttribute="centerY" id="VSw-tO-QEm"/>
+                                                                    <constraint firstItem="EUw-gR-Iy1" firstAttribute="leading" secondItem="Zws-jv-nwU" secondAttribute="trailing" constant="8" id="Y3Z-yk-NTg"/>
+                                                                    <constraint firstAttribute="trailing" secondItem="EUw-gR-Iy1" secondAttribute="trailing" constant="107.33333333333333" id="cJu-d3-Jag"/>
+                                                                    <constraint firstItem="Zws-jv-nwU" firstAttribute="leading" secondItem="4sJ-Wa-aoc" secondAttribute="leading" id="t3r-7n-8eP"/>
+                                                                    <constraint firstAttribute="height" constant="38" id="t94-Lq-BRr"/>
+                                                                    <constraint firstItem="EUw-gR-Iy1" firstAttribute="top" secondItem="4sJ-Wa-aoc" secondAttribute="top" constant="4" id="ywE-ZU-w0j"/>
                                                                 </constraints>
                                                             </view>
                                                         </subviews>
@@ -1168,7 +1176,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xeI-VZ-D3I" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3585" y="2379"/>
+            <point key="canvasLocation" x="3584.057971014493" y="2378.804347826087"/>
         </scene>
         <!--Registration Permissions View Controller-->
         <scene sceneID="n2y-U6-fI0">
@@ -1758,7 +1766,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uVG-3W-T4m">
-                                                <rect key="frame" x="124.66666666666666" y="276" width="125" height="31"/>
+                                                <rect key="frame" x="126.66666666666666" y="276" width="121" height="34"/>
                                                 <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
                                                 <state key="normal" title="Забыли пароль?">
                                                     <color key="titleColor" systemColor="systemPinkColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

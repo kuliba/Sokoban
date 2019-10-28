@@ -177,7 +177,7 @@ class RegistrationViewController: UIViewController {
             self.cardNumberTextField.tintColor = .black
             self.cardNumberTextField.textColor = .black
             
-            self.continueButton.isHidden = false
+            self.continueButton.isHidden = true
         }
     }
 
@@ -476,7 +476,7 @@ private extension RegistrationViewController {
             cardNumberWithoutSpaces = removeNonDigits(string: text, andPreserveCursorPosition: &targetCursorPosition)
         }
 
-        if cardNumberWithoutSpaces.count > 19 {
+        if cardNumberWithoutSpaces.count > 16 {
             textField.text = previousTextFieldContent
             textField.selectedTextRange = previousSelection
             return
@@ -596,6 +596,7 @@ extension RegistrationViewController: UITextFieldDelegate {
         guard let cardNumber = cardNumberTextField.text?.removeWhitespace() else {
             return
         }
+
 
         brandLogo.isHidden = true
         CardBrand.allCases.forEach { (brand) in
