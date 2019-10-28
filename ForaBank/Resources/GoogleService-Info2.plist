@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>399866612200-qd5qik9hl29r06nv0q5ivr2akcrh5co9.apps.googleusercontent.com</string>
+	<string>745879109892-7vo2v8ba8c4jgteqjbmbuh8titjd2pf6.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.399866612200-qd5qik9hl29r06nv0q5ivr2akcrh5co9</string>
+	<string>com.googleusercontent.apps.745879109892-7vo2v8ba8c4jgteqjbmbuh8titjd2pf6</string>
 	<key>API_KEY</key>
-	<string>AIzaSyC3qt3FiDYjRCkq3uV7R3vAp1Lrxg3la5U</string>
+	<string>AIzaSyAGJpH3tqTQWVbbAdotg7lx5lWg5pGZEa4</string>
 	<key>GCM_SENDER_ID</key>
-	<string>399866612200</string>
+	<string>745879109892</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>ru.forabank.sense</string>
 	<key>PROJECT_ID</key>
-	<string>mbc-forabank</string>
+	<string>dbs-new</string>
 	<key>STORAGE_BUCKET</key>
-	<string>mbc-forabank.appspot.com</string>
+	<string>dbs-new.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,8 +29,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:399866612200:ios:66e49af43a687728397c5d</string>
+	<string>1:745879109892:ios:201d2e991eb99ce6</string>
 	<key>DATABASE_URL</key>
-	<string>https://mbc-forabank.firebaseio.com</string>
+	<string>https://dbs-new.firebaseio.com</string>
 </dict>
 </plist>
