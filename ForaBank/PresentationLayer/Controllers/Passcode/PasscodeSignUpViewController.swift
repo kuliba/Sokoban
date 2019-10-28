@@ -12,7 +12,7 @@ import ReSwift
 
 class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
 
-    let passcodeVC = TOPasscodeViewController(style: .opaqueLight, passcodeType: .sixDigits)
+    let passcodeVC = TOPasscodeViewController(style: .opaqueLight, passcodeType: .fourDigits)
 
     override func viewDidLoad() {
         super.viewDidLoad()
