@@ -15,6 +15,16 @@ func productReducer(state: ProductState?, action: Action) -> ProductState {
     switch action {
     case _ as ReSwiftInit:
         break
+
+    case let action as SetProducts:
+        newState.products = action.products
+        break
+    case let action as SetProductsUpToDate:
+        newState.isUpToDateProducts = action.isUpToDateProducts
+        break
+    case let action as SelectProduct:
+        newState.selectedProduct = action.product
+        break
     case let action as SetPaymentOptions:
         newState.sourceOption = action.sourceOption
         newState.destinationOption = action.destinationOption
@@ -24,16 +34,13 @@ func productReducer(state: ProductState?, action: Action) -> ProductState {
         newState.destinationOption = action.destinationOption
         newState.paymentSum = action.sum
         break
-    case let action as SelectProduct:
-        newState.selectedProduct = action.product
-        break
+
     case _ as ClearProductSelection:
         newState.selectedProduct = nil
         break
     default:
         break
     }
-
     return newState
 }
 

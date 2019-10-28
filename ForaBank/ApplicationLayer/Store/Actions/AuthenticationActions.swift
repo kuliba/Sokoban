@@ -18,6 +18,8 @@ let checkAuthCredentials = Thunk<State> { dispatch, getStat in
 }
 
 let userDidSignIn = Thunk<State> { dispatch, getStat in
+    dispatch(fetchUserData)
+    dispatch(fetchProducts)
     setupAuthorizedZone()
 }
 

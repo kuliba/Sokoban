@@ -18,6 +18,11 @@ let finishVerification = Thunk<State> { dispatch, getState in
     dispatch(UpdateVerificationProcess(isShown: false))
     dispatch(UpdatePasscodeSingInProcess(isShown: false))
     dispatch(ClearPasscodeSignInProcess())
+    NetworkManager.shared().isSignedIn { (isSignIn) in
+        if isSignIn {
+            dispatch(userDidSignIn)
+        }
+    }
 }
 
 struct UpdateVerificationProcess: Action {
