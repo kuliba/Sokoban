@@ -19,8 +19,7 @@ func setupUnauthorizedZone() {
 
 func setupAuthorizedZone() {
     let mainStoryboard: UIStoryboard = UIStoryboard(name: "AuthorizedZone", bundle: nil)
-    let viewController = mainStoryboard.instantiateViewController(withIdentifier: String(describing: TabBarController.self)
-    ) as! TabBarController
+    guard let viewController = mainStoryboard.instantiateInitialViewController() else { return }
     setRootVC(newRootVC: viewController)
 }
 

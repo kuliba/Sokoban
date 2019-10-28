@@ -24,5 +24,9 @@ target 'ForaBank' do
   pod 'BiometricAuthentication'
   pod 'FSPagerView'
   pod 'DropDown'
+  pod 'Firebase/Analytics'
+  pod 'Firebase/Messaging'
+  pod 'Firebase/Core'
+
   #pod 'XCGLogger'
 end

@@ -10,6 +10,9 @@ import Foundation
 import ReSwift
 
 struct ProductState: Action {
+    var products: [Product]?
+    var isUpToDateProducts: Bool?
+
     var sourceOption: PaymentOption?
     var destinationOption: PaymentOption?
     var selectedProduct: IProduct?

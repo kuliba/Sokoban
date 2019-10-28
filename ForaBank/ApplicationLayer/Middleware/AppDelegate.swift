@@ -12,79 +12,73 @@ import ReSwift
 import ReSwiftThunk
 import CryptoSwift
 import UserNotifications
+import Firebase
 
 func appReducer(action: Action, state: State?) -> State {
-    return State(passcodeSignUpState: passcodeSignUpReducer(state: state?.passcodeSignUpState, action: action), authenticationState: authenticationReducer(state: state?.authenticationState, action: action), passcodeSignInState: passcodeSignInReducer(state: state?.passcodeSignInState, action: action), verificationCodeState: verificationCodeReducer(state: state?.verificationCodeState, action: action), productsState: productReducer(state: state?.productsState, action: action), registrationState: registrationReducer(state: state?.registrationState, action: action))
+    return State(authenticationState: authenticationReducer(state: state?.authenticationState, action: action),
+                 userState: userReducer(state: state?.userState, action: action),
+                 productsState: productReducer(state: state?.productsState, action: action),
+                 registrationState: registrationReducer(state: state?.registrationState, action: action),
+                 passcodeSignUpState: passcodeSignUpReducer(state: state?.passcodeSignUpState, action: action),
+                 passcodeSignInState: passcodeSignInReducer(state: state?.passcodeSignInState, action: action),
+                 verificationCodeState: verificationCodeReducer(state: state?.verificationCodeState, action: action))
 }
 let thunkMiddleware: Middleware<State> = createThunkMiddleware()
 var store = Store<State>(reducer: appReducer, state: nil, middleware: [thunkMiddleware])
 
 @UIApplicationMain
-    class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    // MARK: - Properties
     var window: UIWindow?
+    static var shared: AppDelegate { return UIApplication.shared.delegate as! AppDelegate }
 
-    // MARK: - Lifecycle
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-
-
+        
         setNavigationBarAppearance()
         setTextFieldAppearance()
         IQKeyboardManager.shared.enable = true
-//        IQKeyboardManager.shared.layoutIfNeededOnUpdate = true
+        //        IQKeyboardManager.shared.layoutIfNeededOnUpdate = true
         store.dispatch(checkAuthCredentials)
-        registerForPushNotifications()
+        
+        FirebaseApp.configure()
+        application.registerForRemoteNotifications()
+        requestNotificationAuthorization(application: application)
+        if let userInfo = launchOptions?[UIApplication.LaunchOptionsKey.remoteNotification] {
+            NSLog("[RemoteNotification] applicationState: \(applicationStateString) didFinishLaunchingWithOptions for iOS9: \(userInfo)")
+            //TODO: Handle background notification
+        }
         return true
-        
-        
-    }
- 
-
-    func applicationWillResignActive(_ application: UIApplication) {
-        // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-        // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
-    }
-
-
-
-    func applicationDidEnterBackground(_ application: UIApplication) {
-        // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-        // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
         store.dispatch(checkAuthCredentials)
     }
-
-    func applicationDidBecomeActive(_ application: UIApplication) {
-        if UserDefaults.standard.value(forKey: "pincode") != nil {
-
+    
+    var applicationStateString: String {
+        if UIApplication.shared.applicationState == .active {
+            return "active"
+        } else if UIApplication.shared.applicationState == .background {
+            return "background"
+        } else {
+            return "inactive"
         }
-        // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     }
 
-    func applicationWillTerminate(_ application: UIApplication) {
-        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    }
-    func registerForPushNotifications() {
-      UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) {
-        (granted, error) in
-        print("Permission granted: \(granted)")
-      }
-    }
-    func getNotificationSettings() {
-      UNUserNotificationCenter.current().getNotificationSettings { (settings) in
-        print("Notification settings: \(settings)")
-        guard settings.authorizationStatus == .authorized else { return }
-        UIApplication.shared.registerForRemoteNotifications()
-      }
+    func requestNotificationAuthorization(application: UIApplication) {
+        if #available(iOS 10.0, *) {
+            UNUserNotificationCenter.current().delegate = self
+            let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+            UNUserNotificationCenter.current().requestAuthorization(options: authOptions, completionHandler: { _, _ in })
+        } else {
+            let settings: UIUserNotificationSettings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+            application.registerUserNotificationSettings(settings)
+        }
     }
 }
 
 // MARK: - Private methods
+
 private extension AppDelegate {
 
     func setNavigationBarAppearance() {
@@ -110,5 +104,40 @@ private extension AppDelegate {
     func setTextFieldAppearance() {
         UITextField.appearance().tintColor = .black
         UITextField.appearance().backgroundColor = UIColor(red: 0.889415, green: 0.889436, blue: 0.889424, alpha: 0.25)//UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1)//
+    }
+}
+
+@available(iOS 10, *)
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    // iOS10+, called when presenting notification in foreground
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        let userInfo = notification.request.content.userInfo
+        NSLog("[UserNotificationCenter] applicationState: \(applicationStateString) willPresentNotification: \(userInfo)")
+        //TODO: Handle foreground notification
+        completionHandler([.alert])
+    }
+
+    // iOS10+, called when received response (default open, dismiss or custom action) for a notification
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        let userInfo = response.notification.request.content.userInfo
+        NSLog("[UserNotificationCenter] applicationState: \(applicationStateString) didReceiveResponse: \(userInfo)")
+        //TODO: Handle background notification
+        completionHandler()
+    }
+}
+
+extension AppDelegate: MessagingDelegate {
+    func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
+        NSLog("[RemoteNotification] didRefreshRegistrationToken: \(fcmToken)")
+    }
+
+    // iOS9, called when presenting notification in foreground
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
+        NSLog("[RemoteNotification] applicationState: \(applicationStateString) didReceiveRemoteNotification for iOS9: \(userInfo)")
+        if UIApplication.shared.applicationState == .active {
+            //TODO: Handle foreground notification
+        } else {
+            //TODO: Handle background notification
+        }
     }
 }
