@@ -12,20 +12,11 @@ import ReSwift
 
 class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
 
-    let passcodeVC = TOPasscodeViewController(style: .opaqueLight, passcodeType: .fourDigits)
+    let passcodeVC = PasscodeViewController(style: .opaqueLight, passcodeType: .fourDigits)
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        passcodeVC.passcodeView.titleLabel.adjustsFontSizeToFitWidth = true
-        passcodeVC.passcodeView.titleLabel.text = "Создайте код:"
-        passcodeVC.delegate = self
-
-        passcodeVC.willMove(toParent: self)
-        self.view.addSubview(passcodeVC.view)
-        self.addChild(passcodeVC)
-        passcodeVC.didMove(toParent: self)
-
+        setupView()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -42,8 +33,26 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
         store.unsubscribe(self)
     }
 
+    func setupView() {
+        passcodeVC.passcodeView.titleLabel.adjustsFontSizeToFitWidth = true
+        passcodeVC.passcodeView.titleLabel.text = "Создайте код:"
+        passcodeVC.cancelButton.titleLabel?.text = "Отмена"
+
+        passcodeVC.delegate = self
+
+        passcodeVC.willMove(toParent: self)
+        self.view.addSubview(passcodeVC.view)
+        self.addChild(passcodeVC)
+        passcodeVC.didMove(toParent: self)
+    }
+
+    func updatePasscoeVC() {
+
+    }
 
     func newState(state: PasscodeSignUpState) {
+        passcodeVC.cancelButton.titleLabel?.text = "Отмена"
+
         guard state.isFinished != true else {
             dismiss(animated: true, completion: nil)
             return
@@ -55,6 +64,7 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
         if let firstPasscode = state.passcodeFirst, firstPasscode.count > 0, state.counter == 0 {
             passcodeVC.passcodeView.titleLabel.text = "Повторите код:"
             passcodeVC.passcodeView.resetPasscode(animated: false, playImpact: false)
+            setupView()
         }
     }
 

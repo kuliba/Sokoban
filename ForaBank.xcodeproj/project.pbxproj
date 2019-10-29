@@ -232,6 +232,7 @@
 		BD09A3A4236328C100938D66 /* UserReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD09A3A3236328C100938D66 /* UserReducer.swift */; };
 		BD09A3A62363290000938D66 /* UserState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD09A3A52363290000938D66 /* UserState.swift */; };
 		BD0A1B61234607230079320D /* CardNumberCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD0A1B60234607230079320D /* CardNumberCellProvider.swift */; };
+		BD122C1A2368283B00FE0F01 /* PasscodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD122C192368283B00FE0F01 /* PasscodeViewController.swift */; };
 		BD137A402326472D00326088 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD137A3F2326472D00326088 /* State.swift */; };
 		BD17F0AC23474FE300CBF400 /* PaymentOptionDropDownCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD17F0AA23474FE300CBF400 /* PaymentOptionDropDownCell.swift */; };
 		BD17F0AD23474FE300CBF400 /* PaymentOptionDropDownCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD17F0AB23474FE300CBF400 /* PaymentOptionDropDownCell.xib */; };
@@ -560,6 +561,7 @@
 		BD09A3A3236328C100938D66 /* UserReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserReducer.swift; sourceTree = "<group>"; };
 		BD09A3A52363290000938D66 /* UserState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserState.swift; sourceTree = "<group>"; };
 		BD0A1B60234607230079320D /* CardNumberCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardNumberCellProvider.swift; sourceTree = "<group>"; };
+		BD122C192368283B00FE0F01 /* PasscodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeViewController.swift; sourceTree = "<group>"; };
 		BD137A3F2326472D00326088 /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
 		BD17F0AA23474FE300CBF400 /* PaymentOptionDropDownCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentOptionDropDownCell.swift; sourceTree = "<group>"; };
 		BD17F0AB23474FE300CBF400 /* PaymentOptionDropDownCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentOptionDropDownCell.xib; sourceTree = "<group>"; };
@@ -1436,6 +1438,7 @@
 			children = (
 				BDB6AFF323268C850006A534 /* PasscodeSignInViewController.swift */,
 				BDB6B00D23269FED0006A534 /* PasscodeSignUpViewController.swift */,
+				BD122C192368283B00FE0F01 /* PasscodeViewController.swift */,
 			);
 			path = Passcode;
 			sourceTree = "<group>";
@@ -1832,6 +1835,7 @@
 				09C7C30D21747293000EE472 /* CarouselViewController.swift in Sources */,
 				BD2083792360A29C0010E03C /* DepositsService.swift in Sources */,
 				895768CF2192E768005754D5 /* DepositsStatsViewController.swift in Sources */,
+				BD122C1A2368283B00FE0F01 /* PasscodeViewController.swift in Sources */,
 				BDF4F9462329105D007C448F /* Security.swift in Sources */,
 				BDB6B00E23269FED0006A534 /* PasscodeSignUpViewController.swift in Sources */,
 				0930F166215B5CDB00CFB593 /* RoundedEdgeView.swift in Sources */,
