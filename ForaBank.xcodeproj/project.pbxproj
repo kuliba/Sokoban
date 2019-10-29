@@ -795,12 +795,12 @@
 			isa = PBXGroup;
 			children = (
 				094FFC0B218837580069DDCB /* LoginOrSignupViewController.swift */,
-				094FFC09218837580069DDCB /* RegistrationViewController.swift */,
-				097A6DCD21899C5B00E6C69E /* RegistrationLoginPasswordViewController.swift */,
 				094FFC0A218837580069DDCB /* RegistrationCodeVerificationViewController.swift */,
 				09F5DCE5218C3E7200390304 /* RegistrationFinishViewController.swift */,
+				097A6DCD21899C5B00E6C69E /* RegistrationLoginPasswordViewController.swift */,
 				09F54A09218B24DA003CB6D3 /* RegistrationPermissionsViewController.swift */,
 				09F5DCE7218C4A5200390304 /* RegistrationTouchIDViewController.swift */,
+				094FFC09218837580069DDCB /* RegistrationViewController.swift */,
 				96072C872313FF13001CFCBD /* TouchIDAuthentication.swift */,
 			);
 			path = Registration;

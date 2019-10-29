@@ -817,12 +817,89 @@
                         <outlet property="continueButton" destination="8C3-Jj-Rk9" id="Xyn-9B-UMQ"/>
                         <outlet property="header" destination="ktT-hS-heP" id="8bA-ut-mZw"/>
                         <outlet property="pageControl" destination="IgS-z8-LFg" id="OAl-xJ-h1J"/>
-                        <segue destination="3S2-Ql-HD5" kind="show" identifier="regPermissions" id="WWo-PR-jVR"/>
+                        <segue destination="54w-zp-ar3" kind="show" identifier="fromRegistrationVerificationToPasscodeSignUp" id="oC9-ci-GR5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gV0-e4-KFu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4421" y="2378"/>
+        </scene>
+        <!--Passcode Sign Up View Controller-->
+        <scene sceneID="bQf-it-dWp">
+            <objects>
+                <viewController id="54w-zp-ar3" customClass="PasscodeSignUpViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="9Aq-Ib-x5e">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YHq-7B-mFj" customClass="MaskedNavigationBar" customModule="ForaBank" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="62"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Регистрация" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aQM-Tr-3Cz">
+                                        <rect key="frame" x="146.66666666666666" y="13" width="120.99999999999997" height="26"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="121" id="WBN-sv-3Kp"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="19"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M9V-Tv-GAO">
+                                        <rect key="frame" x="14" y="13" width="26" height="26"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="26" id="aF3-bN-BWC"/>
+                                            <constraint firstAttribute="height" constant="26" id="adu-Fd-RIW"/>
+                                        </constraints>
+                                        <inset key="imageEdgeInsets" minX="9" minY="8" maxX="8" maxY="3"/>
+                                        <state key="normal" image="button_back"/>
+                                        <connections>
+                                            <action selector="backButtonCLicked:" destination="Qcp-yG-LVI" eventType="touchUpInside" id="zZJ-wr-Cxx"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2uM-tK-2l3">
+                                        <rect key="frame" x="293" y="13" width="107" height="26"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="26" id="61l-2J-l5A"/>
+                                        </constraints>
+                                        <inset key="imageEdgeInsets" minX="9" minY="8" maxX="8" maxY="3"/>
+                                        <state key="normal" title="Продолжить"/>
+                                        <connections>
+                                            <action selector="backButtonCLicked:" destination="Qcp-yG-LVI" eventType="touchUpInside" id="iSc-Xj-dBZ"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="2uM-tK-2l3" secondAttribute="trailing" constant="14" id="0Rd-6F-oAX"/>
+                                    <constraint firstItem="M9V-Tv-GAO" firstAttribute="leading" secondItem="YHq-7B-mFj" secondAttribute="leading" constant="14" id="7ZO-Pg-ZTP"/>
+                                    <constraint firstAttribute="height" constant="62" id="Aag-Ti-OyA"/>
+                                    <constraint firstItem="M9V-Tv-GAO" firstAttribute="centerY" secondItem="aQM-Tr-3Cz" secondAttribute="centerY" id="Ox7-i4-AGS"/>
+                                    <constraint firstAttribute="bottom" secondItem="aQM-Tr-3Cz" secondAttribute="bottom" constant="23" id="dRJ-JL-Whs"/>
+                                    <constraint firstItem="aQM-Tr-3Cz" firstAttribute="centerX" secondItem="YHq-7B-mFj" secondAttribute="centerXWithinMargins" id="ewV-Ap-wPN"/>
+                                    <constraint firstItem="2uM-tK-2l3" firstAttribute="centerY" secondItem="aQM-Tr-3Cz" secondAttribute="centerY" id="rOU-RT-2Xf"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="YHq-7B-mFj" firstAttribute="leading" secondItem="gZh-TJ-YlR" secondAttribute="leading" id="I24-4M-iha"/>
+                            <constraint firstItem="gZh-TJ-YlR" firstAttribute="trailing" secondItem="YHq-7B-mFj" secondAttribute="trailing" id="m4a-zO-fs6"/>
+                            <constraint firstItem="YHq-7B-mFj" firstAttribute="top" secondItem="gZh-TJ-YlR" secondAttribute="top" id="mB5-IC-mYU"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="gZh-TJ-YlR"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="t0V-wL-DKG"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="NO"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <outlet property="header" destination="YHq-7B-mFj" id="E7a-So-dwU"/>
+                        <segue destination="3S2-Ql-HD5" kind="show" identifier="regPermissions" id="kb6-F4-GVf"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="K1H-q0-QwZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5444.9275362318849" y="2377.989130434783"/>
         </scene>
         <!--Registration Login Password View Controller-->
         <scene sceneID="x0w-WC-NMD">
@@ -1470,7 +1547,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="i7u-jX-dFU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5319" y="2378"/>
+            <point key="canvasLocation" x="6504" y="2378"/>
         </scene>
         <!--Registration Finish View Controller-->
         <scene sceneID="Mcj-iH-Mvf">
@@ -1566,7 +1643,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="K2T-se-Rkx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6911" y="2379"/>
+            <point key="canvasLocation" x="8251" y="2380"/>
         </scene>
         <!--Registration TouchID View Controller-->
         <scene sceneID="ytH-Ix-Zxl">
@@ -2146,7 +2223,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JKe-PY-MhY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6086" y="2378"/>
+            <point key="canvasLocation" x="7426" y="2379"/>
         </scene>
         <!--Registration Code Verification View Controller-->
         <scene sceneID="Oag-VR-qWu">
@@ -2759,6 +2836,6 @@ E+MT6xPuE/MT+wAAAAAAAAIBAAAAAAAAAFYAAAAAAAAAAAAAAAAAABP+A
         <image name="visa-colored" width="93" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="WWo-PR-jVR"/>
+        <segue reference="kb6-F4-GVf"/>
     </inferredMetricsTieBreakers>
 </document>

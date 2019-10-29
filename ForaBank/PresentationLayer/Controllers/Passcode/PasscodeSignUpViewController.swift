@@ -9,8 +9,11 @@
 import UIKit
 import TOPasscodeViewController
 import ReSwift
+import Hero
 
 class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
+
+    @IBOutlet weak var header: UIView!
 
     let passcodeVC = TOPasscodeViewController(style: .opaqueLight, passcodeType: .fourDigits)
 
@@ -28,6 +31,20 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
 
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        view.hero.modifiers = [
+            HeroModifier.beginWith([HeroModifier.opacity(1)]),
+            HeroModifier.duration(0.5),
+            HeroModifier.delay(0.2),
+            HeroModifier.opacity(0)
+        ]
+        header?.hero.modifiers = [
+            HeroModifier.duration(0.5),
+            HeroModifier.opacity(0)
+        ]
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.modalPresentationStyle = .overCurrentContext
@@ -41,7 +58,6 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
         super.viewWillDisappear(animated)
         store.unsubscribe(self)
     }
-
 
     func newState(state: PasscodeSignUpState) {
         guard state.isFinished != true else {
