@@ -15,7 +15,7 @@ enum CardType: String {
     case visaDebet = "card_visa_debet"
 }
 
-class Card: Mappable,   IProduct {
+class Card: Mappable, IProduct {
     var name: String
     var product: String
     var balance: Double
@@ -24,6 +24,7 @@ class Card: Mappable,   IProduct {
     var id: Double
     var status: String
     var blocked: Bool
+    var holderName: String
 
     var type: CardType?
     var paypass: Bool?
@@ -45,9 +46,9 @@ class Card: Mappable,   IProduct {
         //let blStr = String(describing: blockedMoney!)
 //        AboutItem(title: "Заблокированные средства", value: blStr),
         return [
-                AboutItem(title: "Доступный остаток", value: "\(balance)"),
-                
-                AboutItem(title: "Тариф", value: name)]
+            AboutItem(title: "Доступный остаток", value: "\(balance)"),
+
+            AboutItem(title: "Тариф", value: name)]
     }
 
     required init(map: Mapper) throws {
@@ -57,6 +58,7 @@ class Card: Mappable,   IProduct {
         try balance = map.from("balance")
         try id = map.from("cardID")
         try status = map.from("status")
+        try holderName = map.from("holderName")
         var mskd = ""
         if number.count > 0 {
             mskd = String(number.prefix(6))
