@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSContactsUsageDescription</key>
-	<string>Разрешите доступ к контактам</string>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>com.forabank.background-scheduler</string>
@@ -34,6 +32,8 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Можно сканировать номер карты, а не заполнять с клавиатуры</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Разрешите доступ к контактам</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Доступ к камере позволит использовать FaceId</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

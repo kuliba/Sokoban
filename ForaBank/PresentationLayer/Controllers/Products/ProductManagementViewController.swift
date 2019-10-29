@@ -17,6 +17,8 @@ class ProductManagementViewController: UITableViewController {
     var actionsType = ""
     var product: IProduct?
     var color2: UIColor = .black
+    
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -137,7 +139,9 @@ class ProductManagementViewController: UITableViewController {
             let alert = SCLAlertView()
             let txt = alert.addTextField("Введите название карты")
             alert.addButton("Сохранить") {
-                print("Text value: \(txt.text!)")
+                let id = self.product?.id
+                NetworkManager.shared().saveCardName(completionHandler: { [unowned self] success, errorMessage, txt, id in})
+                
             }
             alert.showEdit("Изменить название карты", subTitle: "Не более 10 символов", colorStyle: 0xF5534C)
         }

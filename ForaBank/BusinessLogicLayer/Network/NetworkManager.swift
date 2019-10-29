@@ -28,6 +28,7 @@ class NetworkManager {
         let statementService = StatementService(baseURLString: host)
         let loanPaymentSchedule = LoanPaymentSchedule(baseURLString: host)
         let productService = ProductsService(baseURLString: host)
+        
 
         let networkManager = NetworkManager(host, authService, regService, cardService, paymentServices, depositsService, accountsService, loanPaymentSchedule, historyService, loansService, statementService, productService: productService)
         // Configuration
@@ -199,7 +200,19 @@ class NetworkManager {
             }
         }
     }
-
+    func saveCardName(completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ id: Double?, _ name: String?) -> Void) {
+          authService.csrf(headers: headers) { [unowned self] (success, newHeaders) in
+              if success {
+                  self.headers.merge(newHeaders ?? [:], uniquingKeysWith: { (_, k2) -> String in
+                      return k2
+                  })
+                self.regService.saveCardName(headers: self.headers, id: 10000114306,name: "asds", completionHandler: completionHandler)
+              }
+              else {
+                  completionHandler(false, nil, nil, nil)
+              }
+          }
+      }
     func verifyCode(verificationCode: Int,
                     completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void) {
         authService.csrf(headers: headers) { [unowned self] (success, newHeaders) in
@@ -214,6 +227,7 @@ class NetworkManager {
             }
         }
     }
+    
 
 //MARK: - card service
     func getCardList(completionHandler: @escaping (_ success: Bool, _ cards: [Card]?) -> Void) {

@@ -10,7 +10,8 @@ import Foundation
 import Alamofire
 
 class RegService: RegServiceProtocol {
-
+   
+    
 
     private let baseURLString: String
     private var cardNumber: String? = nil
@@ -18,11 +19,51 @@ class RegService: RegServiceProtocol {
     private var password: String? = nil
     private var phone: String? = nil
     private var verificationCode: Int? = nil
+    var id: Double? = nil
+    var name: String? = nil
 
     init(baseURLString: String) {
         self.baseURLString = baseURLString
     }
 
+    
+    func saveCardName(headers: HTTPHeaders,id:Double, name:String, completionHandler: @escaping (Bool, String?, Double?, String?) -> Void) {
+           let url = baseURLString + "rest/saveCardName"
+                 print(url)
+                 let parameters: [String: AnyObject] = [
+                     "id": 10000114306 as AnyObject,
+                     "name": "Золотая карта Золотая, наполняет ароматом чая"  as AnyObject,
+                     "token": headers["X-XSRF-TOKEN"] as AnyObject,
+                     "verificationCode": 0 as AnyObject
+                 ]
+
+                 Alamofire.request(url, method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+                     .validate(statusCode: MultiRange(200..<300, 401..<402))
+                     .validate(contentType: ["application/json"])
+                     .responseJSON { [unowned self] response in
+
+                         if let json = response.result.value as? Dictionary<String, Any>,
+                             let errorMessage = json["errorMessage"] as? String {
+                             print("error1")
+                             print("\(errorMessage) \(self)")
+                            completionHandler(false, errorMessage, self.id, self.name)
+
+                             return
+                         }
+
+                         switch response.result {
+                         case .success:
+                             print(response.result.error.debugDescription)
+                             completionHandler(true, nil, self.id ?? 12, self.name)
+                         case .failure(let error):
+                             print("error")
+                             print("\(error) \(self)")
+                             completionHandler(false, nil, self.id ?? 12, self.name)
+                         }
+                 }
+       }
+    
+    
     func checkClient(headers: HTTPHeaders,
                      cardNumber: String,
                      login: String,
@@ -108,6 +149,8 @@ class RegService: RegServiceProtocol {
                 }
         }
     }
+    
+    
 
     func verifyCode(headers: HTTPHeaders,
                     verificationCode: Int, completionHandler: @escaping (Bool, String?) -> Void) {
@@ -144,4 +187,5 @@ class RegService: RegServiceProtocol {
                 }
         }
     }
+
 }

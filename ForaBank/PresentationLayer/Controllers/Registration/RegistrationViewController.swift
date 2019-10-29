@@ -142,17 +142,16 @@ class RegistrationViewController: UIViewController {
         checkedCardNumber = cardNumber
         performSegue(withIdentifier: "loginPassword", sender: nil)
     }
-
     @IBAction func cardDatasChanged(_ textField: UITextField) {
         if textField.tag == 2 || textField.tag == 3,
             (textField.text?.count ?? 0) >= 2 {
         }
 
-        guard let cardNumber = cardNumberTextField.text?.count, cardNumber <= 7 else {
+        guard let cardNumber = cardNumberTextField.text?.count, cardNumber <= 19 else {
+            self.continueButton.isHidden = false
             return
         }
-        
-        if cardNumberTextField.text?.count ?? 0 == 7 {
+        if cardNumberTextField.text?.count ?? 0 == 19 {
             if textField.tag == 1 {
                 UIView.transition(with: cardView, duration: 0.5, options: .transitionFlipFromLeft, animations: {
                     self.identifyBank()
@@ -178,7 +177,6 @@ class RegistrationViewController: UIViewController {
             self.cardNumberTextField.tintColor = .black
             self.cardNumberTextField.textColor = .black
             
-//            self.continueButton.isHidden = true
         }
     }
 
@@ -188,6 +186,7 @@ class RegistrationViewController: UIViewController {
         dateLabelView.isHidden = true
         addGradientLayerView()
 //        addCircleView()
+        self.continueButton.isHidden = true
 
         if pageControl != nil {
             setUpPageControl()

@@ -10,7 +10,6 @@ import UIKit
 
 class DetailedCardView: CardView {
     var card: Card? = nil
-
     let backgroundImageView = UIImageView()
     let logoImageView = UIImageView()
     let paypassLogoImageView = UIImageView()
@@ -46,6 +45,7 @@ class DetailedCardView: CardView {
         super.init(frame: CGRect.zero)
         addSubviews()
     }
+ 
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubviews()
@@ -94,7 +94,13 @@ class DetailedCardView: CardView {
 //            if card?.type?.rawValue.range(of: "mastercard", options: .caseInsensitive) != nil {
 //                foregroundColor = UIColor.black
 //            }
-            titleLabel.attributedText = NSAttributedString(string: card?.name ?? "", attributes: [.font: UIFont.systemFont(ofSize: 16), .foregroundColor: foregroundColor])
+            guard let name = card?.name else {
+                return
+            }
+            if card?.customName == "" {
+                card?.customName = name
+            }
+            titleLabel.attributedText = NSAttributedString(string: card?.customName ?? "\(name)", attributes: [.font: UIFont.systemFont(ofSize: 16), .foregroundColor: foregroundColor])
             //cardView.titleLabel.sizeToFit()
 
             cardCashLabel.adjustsFontSizeToFitWidth = true

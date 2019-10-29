@@ -125,10 +125,10 @@ class DepositsCardsListViewController: UIViewController {
         b.layer.borderColor = UIColor(hexFromString: "EC433D")!.cgColor
         b.tintColor = .red
         
-        let templateImage = UIImage(named: "lock")?
-            .withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
+        let templateImage = UIImage(named: "deposit_cards_list_onhold_block_button")
+       
         b.setImage(templateImage, for: .normal)
-        b.setImage(UIImage(named: "deposit_cards_list_onhold_block_button_highlighted"), for: .	highlighted)
+        b.setImage(UIImage(named: "deposit_cards_list_onhold_block_button_highlighted"), for: .highlighted)
         b.translatesAutoresizingMaskIntoConstraints = false
         b.isHidden = true
         return b
@@ -142,6 +142,7 @@ class DepositsCardsListViewController: UIViewController {
         hero.isEnabled = true
         hero.modalAnimationType = .none
         saveData()
+    
     }
     
    

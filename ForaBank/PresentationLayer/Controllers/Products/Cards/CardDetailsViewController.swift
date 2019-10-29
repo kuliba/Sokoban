@@ -195,6 +195,8 @@ class CardDetailsViewController: UIViewController {
         cardView.hero.modifiers = nil
         container.hero.modifiers = nil
     }
+    
+    
 }
 
 private extension CardDetailsViewController {

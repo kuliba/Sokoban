@@ -15,6 +15,7 @@ enum CardType: String {
     case visaDebet = "card_visa_debet"
 }
 
+
 class Card: Mappable,   IProduct {
     var name: String
     var product: String
@@ -24,11 +25,11 @@ class Card: Mappable,   IProduct {
     var id: Double
     var status: String
     var blocked: Bool
-
+    var  customName: String?
+    
     var type: CardType?
     var paypass: Bool?
     var miniStatement: String?
-    var customName: String?
     var validityPeriod: String?
     var startDate: String?
     var expirationDate: String?
