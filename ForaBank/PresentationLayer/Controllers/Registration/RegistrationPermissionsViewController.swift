@@ -31,6 +31,9 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
         segueId = backSegueId
         view.endEditing(true)
         self.navigationController?.popViewController(animated: true)
+        if navigationController == nil {
+            dismiss(animated: true, completion: nil)
+        }
     }
 
     @IBAction func touchIdSwitch(_ sender: Any) {

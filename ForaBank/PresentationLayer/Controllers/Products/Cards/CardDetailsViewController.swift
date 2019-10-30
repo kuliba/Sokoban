@@ -50,7 +50,10 @@ class CardDetailsViewController: UIViewController {
     var backSegueId: String? = nil
 
     @IBAction func backButtonClicked(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
+        self.navigationController?.popViewController(animated: true)
+        if navigationController == nil {
+            dismiss(animated: true, completion: nil)
+        }
     }
     
 

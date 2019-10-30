@@ -36,8 +36,12 @@ class ProductDetailsViewController: UIViewController {
     }()
 
     // MARK: - Actions
+    
     @IBAction func backButtonClicked(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
+        self.navigationController?.popViewController(animated: true)
+        if navigationController == nil {
+            dismiss(animated: true, completion: nil)
+        }
     }
 
     // MARK: - Lifecycle

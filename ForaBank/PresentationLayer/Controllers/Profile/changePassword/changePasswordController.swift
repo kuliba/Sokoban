@@ -26,22 +26,26 @@ class changePasswordController: UIViewController
     @IBAction func backButtonClicked(_ sender: Any) {
         view.endEditing(true)
         segueId = backSegueId
-        navigationController?.popViewController(animated: true) }
+        navigationController?.popViewController(animated: true)
+        if navigationController == nil {
+            dismiss(animated: true, completion: nil)
+        }
+    }
 
 
     let cellId = "FeedOptionCell"
-    
-    
 
 
-  
+
+
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpTableView()
-        
-        
-        
+
+
+
     }
 }
 
