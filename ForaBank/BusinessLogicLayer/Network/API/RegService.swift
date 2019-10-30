@@ -31,8 +31,8 @@ class RegService: RegServiceProtocol {
            let url = baseURLString + "rest/saveCardName"
                  print(url)
                  let parameters: [String: AnyObject] = [
-                     "id": 10000114306 as AnyObject,
-                     "name": "Золотая карта Золотая, наполняет ароматом чая"  as AnyObject,
+                     "id": id as AnyObject,
+                     "name": "Моя карточка"  as AnyObject,
                      "token": headers["X-XSRF-TOKEN"] as AnyObject,
                      "verificationCode": 0 as AnyObject
                  ]
