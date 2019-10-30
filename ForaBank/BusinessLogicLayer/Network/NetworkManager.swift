@@ -200,13 +200,10 @@ class NetworkManager {
             }
         }
     }
-    func saveCardName(completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ id: Double?, _ name: String?) -> Void) {
+    func saveCardName(newName: String, id: Double, completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ id: Double?, _ name: String?) -> Void) {
           authService.csrf(headers: headers) { [unowned self] (success, newHeaders) in
               if success {
-                  self.headers.merge(newHeaders ?? [:], uniquingKeysWith: { (_, k2) -> String in
-                      return k2
-                  })
-                self.regService.saveCardName(headers: self.headers, id: 10000114306,name: "asds", completionHandler: completionHandler)
+                self.regService.saveCardName(headers: self.headers, id: id,newName: newName, completionHandler: completionHandler)
               }
               else {
                   completionHandler(false, nil, nil, nil)

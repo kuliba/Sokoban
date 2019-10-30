@@ -19,20 +19,21 @@ class RegService: RegServiceProtocol {
     private var password: String? = nil
     private var phone: String? = nil
     private var verificationCode: Int? = nil
-    var id: Double? = nil
     var name: String? = nil
+    var product: IProduct?
+
 
     init(baseURLString: String) {
         self.baseURLString = baseURLString
     }
 
     
-    func saveCardName(headers: HTTPHeaders,id:Double, name:String, completionHandler: @escaping (Bool, String?, Double?, String?) -> Void) {
+    func saveCardName(headers: HTTPHeaders,id:Double, newName:String, completionHandler: @escaping (Bool, String?, Double?, String?) -> Void) {
            let url = baseURLString + "rest/saveCardName"
                  print(url)
                  let parameters: [String: AnyObject] = [
-                     "id": id as AnyObject,
-                     "name": "Моя карточка"  as AnyObject,
+                    "id": id as AnyObject,
+                    "name": newName as AnyObject,
                      "token": headers["X-XSRF-TOKEN"] as AnyObject,
                      "verificationCode": 0 as AnyObject
                  ]
@@ -46,7 +47,7 @@ class RegService: RegServiceProtocol {
                              let errorMessage = json["errorMessage"] as? String {
                              print("error1")
                              print("\(errorMessage) \(self)")
-                            completionHandler(false, errorMessage, self.id, self.name)
+                            completionHandler(false, errorMessage, id, self.name)
 
                              return
                          }
@@ -54,11 +55,11 @@ class RegService: RegServiceProtocol {
                          switch response.result {
                          case .success:
                              print(response.result.error.debugDescription)
-                             completionHandler(true, nil, self.id ?? 12, self.name)
+                             completionHandler(true, nil, id, self.name)
                          case .failure(let error):
                              print("error")
                              print("\(error) \(self)")
-                             completionHandler(false, nil, self.id ?? 12, self.name)
+                             completionHandler(false, nil, id, self.name)
                          }
                  }
        }

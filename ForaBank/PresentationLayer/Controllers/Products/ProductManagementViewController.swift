@@ -17,8 +17,9 @@ class ProductManagementViewController: UITableViewController {
     var actionsType = ""
     var product: IProduct?
     var color2: UIColor = .black
-
-
+    var card: Card? = nil
+    var newName: String = ""
+    var cards: [Card] = [Card]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -140,17 +141,30 @@ class ProductManagementViewController: UITableViewController {
             let txt = alert.addTextField("Введите название карты")
             alert.addButton("Сохранить") {
                 let id = self.product?.id
-                NetworkManager.shared().saveCardName(completionHandler: { [unowned self] success, errorMessage, txt, id in })
-
+                let newName:String = txt.text ?? "\(self.product?.name)"
+                print(newName)
+                NetworkManager.shared().saveCardName(newName: newName, id:id ?? 123, completionHandler: { [unowned self] success, errorMessage, newName, id in })
+                
+                let VC = self.storyboard?.instantiateViewController(withIdentifier: "CardDetailsViewController") as! DetailedCardView
+                print("registeredEmail: \(newName)")
+                VC.newName = newName
+                self.prepare(for: DetailedCardView, sender: newName)
+                prepare(for: DetailedCardView, sender: newName)
             }
+            
             alert.showEdit("Изменить название карты", subTitle: "Не более 10 символов", colorStyle: 0xF5534C)
+            
         }
         else {
             AlertService.shared.show(title: "Функционал недоступен", message: "Функционал временно недоступен", cancelButtonTitle: "Понятно", okButtonTitle: nil, cancelCompletion: nil, okCompletion: nil)
         }
     }
+    
 
 
+
+  
+    
     /*
      // Override to support rearranging the table view.
      override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {

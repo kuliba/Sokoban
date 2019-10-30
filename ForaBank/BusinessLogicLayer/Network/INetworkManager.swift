@@ -99,7 +99,7 @@ protocol RegServiceProtocol {
 
     func doRegistration(headers: HTTPHeaders,
                         completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ login: String?, _ password: String?) -> Void)
-    func saveCardName(headers: HTTPHeaders,id:Double, name:String,
+    func saveCardName(headers: HTTPHeaders,id:Double, newName:String,
                       completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ id: Double?, _ name: String?) -> Void)
 
 }

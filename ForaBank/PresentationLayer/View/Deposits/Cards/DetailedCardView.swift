@@ -20,9 +20,10 @@ class DetailedCardView: CardView {
     let cardBlockedImageView = UIImageView()
     var logoImageViewCosntraint: NSLayoutConstraint? = nil
     var expirationDate = UILabel()
+    var newName: String = ""
 
-
-
+    
+    
     enum CardBackGround: String {
         case mastercard = "mastercard_gold"
         case visaGold = "visa_gold"
@@ -45,7 +46,6 @@ class DetailedCardView: CardView {
         super.init(frame: CGRect.zero)
         addSubviews()
     }
- 
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubviews()
@@ -100,8 +100,14 @@ class DetailedCardView: CardView {
             if card?.customName == "" {
                 card?.customName = name
             }
+
             titleLabel.attributedText = NSAttributedString(string: card?.customName ?? "\(name)", attributes: [.font: UIFont.systemFont(ofSize: 16), .foregroundColor: foregroundColor])
             //cardView.titleLabel.sizeToFit()
+       
+            
+            
+          
+            
 
             cardCashLabel.adjustsFontSizeToFitWidth = true
             cardCashLabel.attributedText = NSAttributedString(string: cash, attributes: [.font: UIFont.systemFont(ofSize: 16), .foregroundColor: foregroundColor])
