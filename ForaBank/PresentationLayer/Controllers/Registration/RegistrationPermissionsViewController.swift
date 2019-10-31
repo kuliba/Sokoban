@@ -187,6 +187,30 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
+        if segueId == "touchID" {
+            if let nav = navigationController as? ProfileNavigationController {
+                nav.pageControl.isHidden = true
+                pageControl.isHidden = false
+            }
+            containerView.hero.id = "content"
+            containerView.hero.modifiers = [
+                HeroModifier.beginWith([
+                    HeroModifier.opacity(1),
+                    HeroModifier.zPosition(2)
+                ]),
+                HeroModifier.duration(0.5),
+                HeroModifier.translate(CGPoint(x: 0, y: view.frame.height)),
+            ]
+            gradientView.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.opacity(0)
+            ]
+            header?.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.opacity(0)
+            ]
+            return
+        }
         if isMovingFromParent {
             if let nav = navigationController as? ProfileNavigationController,
                 pageControl != nil {
@@ -230,29 +254,6 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
             centralView?.hero.modifiers = [
                 HeroModifier.duration(0.5),
                 HeroModifier.translate(CGPoint(x: centralView.frame.origin.x - view.frame.width, y: 0))
-            ]
-        }
-        if segueId == "touchID" {
-            if let nav = navigationController as? ProfileNavigationController {
-                nav.pageControl.isHidden = true
-                pageControl.isHidden = false
-            }
-            containerView.hero.id = "content"
-            containerView.hero.modifiers = [
-                HeroModifier.beginWith([
-                    HeroModifier.opacity(1),
-                    HeroModifier.zPosition(2)
-                ]),
-                HeroModifier.duration(0.5),
-                HeroModifier.translate(CGPoint(x: 0, y: view.frame.height)),
-            ]
-            gradientView.hero.modifiers = [
-                HeroModifier.duration(0.5),
-                HeroModifier.opacity(0)
-            ]
-            header?.hero.modifiers = [
-                HeroModifier.duration(0.5),
-                HeroModifier.opacity(0)
             ]
         }
     }

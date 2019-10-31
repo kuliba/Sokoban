@@ -60,7 +60,7 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
             }, completion: nil)
         }
         if isMovingToParent {
-            contentView.hero.id = "content"
+            containerView.hero.id = "content"
             view.hero.id = "view"
             contentView?.hero.modifiers = [
                 HeroModifier.duration(0.5),
@@ -68,7 +68,7 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
             ]
         } else {
             header.hero.id = "head"
-            contentView.hero.id = "content"
+            containerView.hero.id = "content"
             view.hero.id = "view"
             contentView?.hero.modifiers = [
                 HeroModifier.duration(0.5),
@@ -80,10 +80,11 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        contentView.hero.modifiers = nil
-        contentView.hero.id = nil
+        containerView.hero.modifiers = nil
+        containerView.hero.id = nil
         view.hero.modifiers = nil
         view.hero.id = nil
+        contentView.hero.modifiers = nil
         header?.hero.modifiers = nil
         header?.hero.id = nil
     }
@@ -93,7 +94,7 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
         store.unsubscribe(self)
 
         if isMovingFromParent {
-            contentView.hero.id = "content"
+            containerView.hero.id = "content"
             view.hero.id = "view"
             header.hero.id = "head"
             contentView?.hero.modifiers = [
@@ -101,7 +102,7 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
                 HeroModifier.translate(CGPoint(x: contentView.frame.origin.x + view.frame.width, y: 0)),
             ]
         } else {
-            contentView.hero.id = "content"
+            containerView.hero.id = "content"
             view.hero.id = "view"
             contentView?.hero.modifiers = [
                 HeroModifier.duration(0.5),
@@ -113,10 +114,11 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
 
-        contentView.hero.modifiers = nil
-        contentView.hero.id = nil
+        containerView.hero.modifiers = nil
+        containerView.hero.id = nil
         view.hero.modifiers = nil
         view.hero.id = nil
+        contentView?.hero.modifiers = nil
         header?.hero.modifiers = nil
         header?.hero.id = nil
     }
