@@ -26,10 +26,11 @@ class Card: Mappable, IProduct {
     var blocked: Bool
     var holderName: String
 
+    var  customName: String?
+    
     var type: CardType?
     var paypass: Bool?
     var miniStatement: String?
-    var customName: String?
     var validityPeriod: String?
     var startDate: String?
     var expirationDate: String?

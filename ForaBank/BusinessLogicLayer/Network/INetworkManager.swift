@@ -49,6 +49,12 @@ protocol CardServiceProtocol {
                                   completionHandler: @escaping (_ success: Bool, _ datedTransactions: [DatedTransactions]?) -> Void)
 }
 
+
+protocol SaveCardNameProtocol {
+    func getSaveCardName(headers: HTTPHeaders,
+                     completionHandler: @escaping (_ success: Bool, _ saveCardName: [Product]?) -> Void)
+}
+
 protocol IPaymetsApi {
     func getPaymentsList(completionHandler: @escaping (_ success: Bool, _ payments: [Operations]?) -> Void)
     func allPaymentOptions(completionHandler: @escaping (Bool, [PaymentOption]?) -> Void)
@@ -90,8 +96,12 @@ protocol RegServiceProtocol {
     func verifyCode(headers: HTTPHeaders,
                     verificationCode: Int,
                     completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void)
+
     func doRegistration(headers: HTTPHeaders,
                         completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ login: String?, _ password: String?) -> Void)
+    func saveCardName(headers: HTTPHeaders,id:Double, newName:String,
+                      completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ id: Double?, _ name: String?) -> Void)
+
 }
 
 protocol StatementServiceProtocol {

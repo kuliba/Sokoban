@@ -37,7 +37,7 @@ class ProductDetailsViewController: UIViewController {
 
     // MARK: - Actions
     @IBAction func backButtonClicked(_ sender: Any) {
-        dismiss(animated: true)
+        navigationController?.popViewController(animated: true)
     }
 
     // MARK: - Lifecycle

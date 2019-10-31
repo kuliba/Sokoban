@@ -105,7 +105,7 @@ open class ContactsPicker: UIViewController, UITableViewDelegate, UITableViewDat
     
     public lazy var searchBar: UISearchBar = {
         let searchBar = UISearchBar(frame: CGRect.zero)
-        searchBar.placeholder = "Search"
+        searchBar.placeholder = "Поиск"
         searchBar.delegate = self
         return searchBar
     }()
@@ -171,11 +171,11 @@ open class ContactsPicker: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func initializeBarButtons() {
-        let cancelButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.cancel, target: self, action: #selector(onTouchCancelButton))
+        let cancelButton = UIBarButtonItem(title: "Отмена", style: UIBarButtonItem.Style.done, target: self, action: #selector(onTouchCancelButton))
         self.navigationItem.leftBarButtonItem = cancelButton
         
         if multiSelectEnabled {
-            let doneButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.done, target: self, action: #selector(onTouchDoneButton))
+            let doneButton = UIBarButtonItem(title: "Готово", style: UIBarButtonItem.Style.done, target: self, action: #selector(onTouchDoneButton))
             self.navigationItem.rightBarButtonItem = doneButton
             
         }

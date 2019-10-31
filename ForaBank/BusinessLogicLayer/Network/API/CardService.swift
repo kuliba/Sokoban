@@ -41,7 +41,7 @@ class CardService: CardServiceProtocol {
                         for cardData in data {
                             if let cardData = cardData as? Dictionary<String, Any>,
                                 let original = cardData["original"] as? Dictionary<String, Any> {
-                                //                                let customName = cardData["customName"] as? String
+                                let customName = cardData["customName"] as? String
                                 //                                let title = original["name"] as? String
                                 //                                _ = original["account"] as? String
                                 //                                let number = original["number"] as? String
@@ -53,6 +53,7 @@ class CardService: CardServiceProtocol {
 //                                var expirationDate: String? = dayMonthYear(milisecond: original["validThru"] as! Double)
 
                                 guard let card = Card.from(NSDictionary(dictionary: original)) else { return }
+                                card.customName = customName ?? ""
                                 cards.append(card)
                             }
                         }

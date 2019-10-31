@@ -60,10 +60,10 @@ class ContactCell: UITableViewCell {
             let phoneNumberCount = contact.phoneNumbers.count
             
             if phoneNumberCount == 1  {
-                self.contactDetailTextLabel.text = "\(contact.phoneNumbers[0].phoneNumber)"
+                self.contactDetailTextLabel.text = "\(contact.phoneNumbers.joined())"
             }
             else if phoneNumberCount > 1 {
-                self.contactDetailTextLabel.text = "\(contact.phoneNumbers[0].phoneNumber) and \(contact.phoneNumbers.count-1) more"
+                self.contactDetailTextLabel.text = "\(contact.phoneNumbers) and \(contact.phoneNumbers.count-1) more"
             }
             else {
                 self.contactDetailTextLabel.text = GlobalConstants.Strings.phoneNumberNotAvaialable

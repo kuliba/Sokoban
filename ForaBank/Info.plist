@@ -32,6 +32,8 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Можно сканировать номер карты, а не заполнять с клавиатуры</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Разрешите доступ к контактам</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Доступ к камере позволит использовать FaceId</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

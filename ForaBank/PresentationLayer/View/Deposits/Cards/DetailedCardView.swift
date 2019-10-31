@@ -10,7 +10,6 @@ import UIKit
 
 class DetailedCardView: CardView {
     var card: Card? = nil
-
     let backgroundImageView = UIImageView()
     let logoImageView = UIImageView()
     let paypassLogoImageView = UIImageView()
@@ -21,9 +20,10 @@ class DetailedCardView: CardView {
     let cardBlockedImageView = UIImageView()
     var logoImageViewCosntraint: NSLayoutConstraint? = nil
     var expirationDate = UILabel()
-
-
-
+    var newName: String = ""
+    
+    
+    
     enum CardBackGround: String {
         case mastercard = "mastercard_gold"
         case visaGold = "visa_gold"
@@ -94,8 +94,22 @@ class DetailedCardView: CardView {
 //            if card?.type?.rawValue.range(of: "mastercard", options: .caseInsensitive) != nil {
 //                foregroundColor = UIColor.black
 //            }
-            titleLabel.attributedText = NSAttributedString(string: card?.name ?? "", attributes: [.font: UIFont.systemFont(ofSize: 16), .foregroundColor: foregroundColor])
+            guard let name = card?.name else {
+                return
+            }
+            if card?.customName == "" {
+                card?.customName = name
+            }
+
+            titleLabel.attributedText = NSAttributedString(string: card?.customName ?? "\(name)", attributes: [.font: UIFont.systemFont(ofSize: 16), .foregroundColor: foregroundColor])
             //cardView.titleLabel.sizeToFit()
+       
+            
+            titleLabel.text = newName
+          if newName == ""{
+            titleLabel.attributedText = NSAttributedString(string: card?.customName ?? "\(name)", attributes: [.font: UIFont.systemFont(ofSize: 16), .foregroundColor: foregroundColor])
+          }
+            
 
             cardCashLabel.adjustsFontSizeToFitWidth = true
             cardCashLabel.attributedText = NSAttributedString(string: cash, attributes: [.font: UIFont.systemFont(ofSize: 16), .foregroundColor: foregroundColor])
