@@ -19,4 +19,8 @@ class PasscodeViewController: TOPasscodeViewController {
             self.cancelButton.sizeToFit()
         }
     }
+
+    func removeCancelButton() {
+        cancelButton.setTitle("", for: .normal)
+    }
 }

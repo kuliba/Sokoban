@@ -11,7 +11,7 @@ import TOPasscodeViewController
 
 class PasscodeWrapperViewController: UIViewController {
 
-    let passcodeVC = TOPasscodeViewController(style: .opaqueLight, passcodeType: .fourDigits)
+    let passcodeVC = PasscodeViewController(style: .opaqueLight, passcodeType: .fourDigits)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,8 +33,12 @@ class PasscodeWrapperViewController: UIViewController {
     }
 
     func setRightButton(button: UIButton?) {
+
+        guard button != nil else {
+            passcodeVC.removeCancelButton()
+            return
+        }
         passcodeVC.rightAccessoryButton = button
-        passcodeVC.cancelButton.titleLabel?.text = ""
     }
 
     func resetPasscode(animated: Bool, playImpact: Bool) {
