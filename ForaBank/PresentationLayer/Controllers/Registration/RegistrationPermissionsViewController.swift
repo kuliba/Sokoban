@@ -274,7 +274,9 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
 
     func newState(state: State) {
         if state.passcodeSignUpState.isStarted == true {
-            present(PasscodeSignUpViewController(), animated: true, completion: nil)
+            let passcodeVC = PasscodeSignUpViewController()
+            passcodeVC.modalPresentationStyle = .overFullScreen
+            present(passcodeVC, animated: true, completion: nil)
         }
     }
 

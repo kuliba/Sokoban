@@ -8,3 +8,11 @@
 #import "CardIO.h"
 
 #endif /* ForaBank_Bridging_Header_h */
+@import UIKit;
+@import TOPasscodeViewController;
+
+@interface TOPasscodeViewController(PrivateMethods)
+
+- (void)keypadButtonTapped;
+
+@end

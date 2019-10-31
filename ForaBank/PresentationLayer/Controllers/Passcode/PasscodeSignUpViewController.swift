@@ -136,6 +136,8 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
     }
 
     func newState(state: PasscodeSignUpState) {
+        passcodeVC.cancelButton.titleLabel?.text = "Отмена"
+
         guard state.isFinished != true else {
             dismiss(animated: true, completion: nil)
             return
