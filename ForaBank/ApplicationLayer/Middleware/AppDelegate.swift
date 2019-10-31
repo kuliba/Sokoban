@@ -14,7 +14,6 @@ import CryptoSwift
 import UserNotifications
 import Firebase
 
-
 func appReducer(action: Action, state: State?) -> State {
     return State(authenticationState: authenticationReducer(state: state?.authenticationState, action: action),
                  userState: userReducer(state: state?.userState, action: action),
@@ -34,13 +33,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     static var shared: AppDelegate { return UIApplication.shared.delegate as! AppDelegate }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
+
         setNavigationBarAppearance()
         setTextFieldAppearance()
         IQKeyboardManager.shared.enable = true
         //        IQKeyboardManager.shared.layoutIfNeededOnUpdate = true
         store.dispatch(checkAuthCredentials)
-        
+
         FirebaseApp.configure()
         application.registerForRemoteNotifications()
         requestNotificationAuthorization(application: application)
@@ -55,7 +54,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
         store.dispatch(checkAuthCredentials)
     }
-    
+
     var applicationStateString: String {
         if UIApplication.shared.applicationState == .active {
             return "active"

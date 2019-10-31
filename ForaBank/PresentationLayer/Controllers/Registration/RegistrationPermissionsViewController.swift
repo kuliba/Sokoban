@@ -126,7 +126,7 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if segueId == "permissions" {
+        if isMovingToParent {
             if let nav = navigationController as? ProfileNavigationController,
                 pageControl != nil {
                 nav.pageControl.isHidden = false
@@ -141,8 +141,7 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
                 HeroModifier.duration(0.5),
                 HeroModifier.translate(CGPoint(x: centralView.frame.origin.x + view.frame.width, y: 0))
             ]
-        }
-        if segueId == "touchID" {
+        } else {
             if let nav = navigationController as? ProfileNavigationController {
                 nav.pageControl.isHidden = true
                 pageControl.isHidden = false
@@ -188,7 +187,7 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
-        if segueId == "permissions" {
+        if isMovingFromParent {
             if let nav = navigationController as? ProfileNavigationController,
                 pageControl != nil {
                 nav.pageControl.isHidden = false
@@ -200,8 +199,7 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
                 HeroModifier.duration(0.5),
                 HeroModifier.translate(CGPoint(x: centralView.frame.origin.x + view.frame.width, y: 0))
             ]
-        }
-        if segueId == "auth" {
+        } else {
 //            if let nav = navigationController as? ProfileNavigationController {
 //                nav.pageControl.isHidden = true
 //                pageControl.isHidden = false

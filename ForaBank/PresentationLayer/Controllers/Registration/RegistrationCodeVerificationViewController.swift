@@ -211,7 +211,7 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
                 nav.pageControl.setCurrentPage(at: 2)
             }, completion: nil)
         }
-        if segueId == "smsVerification" || segueId == "auth" {
+        if isMovingToParent {
             containerView.hero.id = "content"
             view.hero.id = "view"
             centralView?.hero.modifiers = [
@@ -219,8 +219,7 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
                 HeroModifier.translate(CGPoint(x: centralView.frame.origin.x + view.frame.width, y: 0))
             ]
             header.hero.id = "head"
-        }
-        if segueId == "permissions" {
+        } else {
             containerView.hero.id = "content"
             view.hero.id = "view"
             centralView?.hero.modifiers = [
@@ -268,6 +267,7 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
                 HeroModifier.duration(0.5),
                 HeroModifier.opacity(0)
             ]
+            return
         }
         if segueId == "finish" {
             if let nav = navigationController as? ProfileNavigationController,
@@ -292,8 +292,9 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
                 HeroModifier.duration(0.5),
                 HeroModifier.opacity(0)
             ]
+            return
         }
-        if segueId == "smsVerification" {
+        if isMovingFromParent {
             if let nav = navigationController as? ProfileNavigationController,
                 pageControl != nil {
                 print("sms vc \(nav.pageControl.isHidden)")
@@ -306,10 +307,8 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
             centralView?.hero.modifiers = [
                 HeroModifier.duration(0.5),
                 HeroModifier.translate(CGPoint(x: centralView.frame.origin.x + view.frame.width, y: 0)),
-//                HeroModifier.zPosition(0)
             ]
-        }
-        if segueId == "permissions" {
+        } else {
             if let nav = navigationController as? ProfileNavigationController,
                 pageControl != nil {
                 nav.pageControl.isHidden = false
