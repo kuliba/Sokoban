@@ -923,14 +923,14 @@
 			isa = PBXGroup;
 			children = (
 				09203D8A216CC19900902BD2 /* AuthorizedZone.storyboard */,
+				09E0F13B215A65310042FB6A /* Deposits.storyboard */,
 				09E0F134215A61EB0042FB6A /* Feed.storyboard */,
+				09797561215A49040044C00A /* LaunchScreen.storyboard */,
 				09E0F13E215A65AE0042FB6A /* Payment.storyboard */,
 				09E0F143215A65F10042FB6A /* Profile.storyboard */,
 				BD21B66F233915FD001C5CF7 /* Registration.storyboard */,
-				BD21B67123391C63001C5CF7 /* UnauthorizedZone.storyboard */,
-				09E0F13B215A65310042FB6A /* Deposits.storyboard */,
-				09797561215A49040044C00A /* LaunchScreen.storyboard */,
 				09E0F140215A65D40042FB6A /* Services.storyboard */,
+				BD21B67123391C63001C5CF7 /* UnauthorizedZone.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";

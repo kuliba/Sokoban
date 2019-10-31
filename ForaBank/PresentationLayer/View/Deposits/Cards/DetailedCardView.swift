@@ -21,9 +21,9 @@ class DetailedCardView: CardView {
     var logoImageViewCosntraint: NSLayoutConstraint? = nil
     var expirationDate = UILabel()
     var newName: String = ""
-    
-    
-    
+
+
+
     enum CardBackGround: String {
         case mastercard = "mastercard_gold"
         case visaGold = "visa_gold"
@@ -103,13 +103,13 @@ class DetailedCardView: CardView {
 
             titleLabel.attributedText = NSAttributedString(string: card?.customName ?? "\(name)", attributes: [.font: UIFont.systemFont(ofSize: 16), .foregroundColor: foregroundColor])
             //cardView.titleLabel.sizeToFit()
-       
-            
+
+
             titleLabel.text = newName
-          if newName == ""{
-            titleLabel.attributedText = NSAttributedString(string: card?.customName ?? "\(name)", attributes: [.font: UIFont.systemFont(ofSize: 16), .foregroundColor: foregroundColor])
-          }
-            
+            if newName == "" {
+                titleLabel.attributedText = NSAttributedString(string: card?.customName ?? "\(name)", attributes: [.font: UIFont.systemFont(ofSize: 16), .foregroundColor: foregroundColor])
+            }
+
 
             cardCashLabel.adjustsFontSizeToFitWidth = true
             cardCashLabel.attributedText = NSAttributedString(string: cash, attributes: [.font: UIFont.systemFont(ofSize: 16), .foregroundColor: foregroundColor])
@@ -125,38 +125,39 @@ class DetailedCardView: CardView {
             }
             else if card?.number.prefix(6) == "557986" {
                 backgroundImageView.image = UIImage(named: "card_visa_standart")
-                
+
                 titleLabel.textColor = .black
                 cardCashLabel.textColor = .black
                 cardNumberLabel.textColor = .black
                 cardValidityPeriodLabel.textColor = .black
-                
-            
+
+
             }
-             else if card?.number.prefix(6) == "536466" {
+            else if card?.number.prefix(6) == "536466" {
                 backgroundImageView.image = UIImage(named: "card_visa_virtual")
             }
             else if card?.number.prefix(6) == "470336" {
                 backgroundImageView.image = UIImage(named: "card_visa_infinity")
-              
+
             }
-            else{
-                 backgroundImageView.image = UIImage(named: "card_visa_debet")
+            else {
+                backgroundImageView.image = UIImage(named: "card_visa_debet")
             }
 
 
             color2 = UIColor(red: 0.96, green: 0.45, blue: 0.13, alpha: 1)
             color1 = UIColor(red: 0.89, green: 0.77, blue: 0.35, alpha: 1)
 
-            cardNumberLabel.attributedText = NSAttributedString(string: card?.maskedNumber ?? "", attributes: [.font: UIFont.systemFont(ofSize: 12), .foregroundColor: foregroundColor])
+            cardNumberLabel.attributedText = NSAttributedString(string: card?.maskedNumber ?? "", attributes: [.font: UIFont.systemFont(ofSize: 16), .foregroundColor: foregroundColor])
+            cardNumberLabel.textAlignment = .center
             if card?.number.prefix(6) == "557986" {
                 backgroundImageView.image = UIImage(named: "card_visa_standart")
-                
+
                 titleLabel.textColor = .black
                 cardCashLabel.textColor = .black
                 cardNumberLabel.textColor = .black
                 cardValidityPeriodLabel.textColor = .black
-            
+
             }
             expirationDate.text = card?.expirationDate
             cardValidityPeriodLabel.attributedText = NSAttributedString(string: card?.validityPeriod ?? "", attributes: [.font: UIFont.systemFont(ofSize: 12), .foregroundColor: foregroundColor])
@@ -172,29 +173,29 @@ class DetailedCardView: CardView {
             }
             if card!.blocked == true {
                 cardBlockedImageView.image = UIImage(named: "card_blocked")
-                    if card?.number.prefix(6) == "465626" {
-                            backgroundImageView.image = UIImage(named: "card_visa_gold")
-                        }
-                        else if card?.number.prefix(6) == "457825" {
-                            backgroundImageView.image = UIImage(named: "card_visa_platinum")
-                        }
-                        else if card?.number.prefix(6) == "425690" {
-                            backgroundImageView.image = UIImage(named: "card_visa_debet")
-                        }
-                        else if card?.number.prefix(6) == "557986" {
-                            backgroundImageView.image = UIImage(named: "card_visa_standart")
-                            titleLabel.textColor = .black
-                            cardCashLabel.textColor = .black
-                            cardNumberLabel.textColor = .black
-                            cardValidityPeriodLabel.textColor = .black
-                        }
-                        else if card?.number.prefix(6) == "536466" {
-                            backgroundImageView.image = UIImage(named: "card_visa_virtual")
-                        }
-                       else if card?.number.prefix(6) == "470336" {
-                            backgroundImageView.image = UIImage(named: "card_visa_infinity")
-                        } else {
-                            backgroundImageView.image = UIImage(named: "card_visa_debet")
+                if card?.number.prefix(6) == "465626" {
+                    backgroundImageView.image = UIImage(named: "card_visa_gold")
+                }
+                else if card?.number.prefix(6) == "457825" {
+                    backgroundImageView.image = UIImage(named: "card_visa_platinum")
+                }
+                else if card?.number.prefix(6) == "425690" {
+                    backgroundImageView.image = UIImage(named: "card_visa_debet")
+                }
+                else if card?.number.prefix(6) == "557986" {
+                    backgroundImageView.image = UIImage(named: "card_visa_standart")
+                    titleLabel.textColor = .black
+                    cardCashLabel.textColor = .black
+                    cardNumberLabel.textColor = .black
+                    cardValidityPeriodLabel.textColor = .black
+                }
+                else if card?.number.prefix(6) == "536466" {
+                    backgroundImageView.image = UIImage(named: "card_visa_virtual")
+                }
+                else if card?.number.prefix(6) == "470336" {
+                    backgroundImageView.image = UIImage(named: "card_visa_infinity")
+                } else {
+                    backgroundImageView.image = UIImage(named: "card_visa_debet")
 
                 }
 
@@ -213,12 +214,18 @@ class DetailedCardView: CardView {
         verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[backgroundImageView]-0-|", options: .alignAllCenterX, metrics: nil, views: ["backgroundImageView": backgroundImageView])
         self.addConstraints(verticalConstraints)
 
-        horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[cardNumberLabel(150)]", options: [], metrics: nil, views: ["cardNumberLabel": cardNumberLabel])
-        self.addConstraints(horizontalConstraints)
-        horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[cardValidityPeriodLabel(150)]", options: [], metrics: nil, views: ["cardValidityPeriodLabel": cardValidityPeriodLabel])
-        self.addConstraints(horizontalConstraints)
-        verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[cardNumberLabel(20)]-0-[cardValidityPeriodLabel(20)]-20-|", options: [], metrics: nil, views: ["cardNumberLabel": cardNumberLabel, "cardValidityPeriodLabel": cardValidityPeriodLabel])
-        self.addConstraints(verticalConstraints)
+        // center cardNumberLabel vertically in self
+        self.addConstraint(NSLayoutConstraint(item: cardNumberLabel, attribute: NSLayoutConstraint.Attribute.centerY, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.centerY, multiplier: 1.0, constant: 0.0))
+
+        // align cardNumberLabel from the left and right
+        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-10-[view]-10-|", options: NSLayoutConstraint.FormatOptions(rawValue: 0), metrics: nil, views: ["view": cardNumberLabel]))
+
+//        horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[cardNumberLabel(150)]", options: [], metrics: nil, views: ["cardNumberLabel": cardNumberLabel])
+//        self.addConstraints(horizontalConstraints)
+//        horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[cardValidityPeriodLabel(150)]", options: [], metrics: nil, views: ["cardValidityPeriodLabel": cardValidityPeriodLabel])
+//        self.addConstraints(horizontalConstraints)
+//        verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[cardNumberLabel(20)]-0-[cardValidityPeriodLabel(20)]-20-|", options: [], metrics: nil, views: ["cardNumberLabel": cardNumberLabel, "cardValidityPeriodLabel": cardValidityPeriodLabel])
+//        self.addConstraints(verticalConstraints)
 
         horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:[paypassLogoImageView(13)]-7-[logoImageView]-20-|", options: [], metrics: nil, views: ["logoImageView": logoImageView, "paypassLogoImageView": paypassLogoImageView])
         var logoWidth = 0.0
@@ -281,7 +288,6 @@ class DetailedCardView: CardView {
     }
 
     func blockCard() {
-//        print(card?.blocked as Any)
         if card!.blocked == true {
             cardBlockedImageView.image = UIImage(named: "card_blocked")
         }
