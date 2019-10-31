@@ -34,7 +34,15 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
         performSegue(withIdentifier: "fromRegSmsToPermissions", sender: nil)
     }
 
+    var passcodeVC: PasscodeWrapperViewController? {
+        didSet {
+            passcodeVC?.setTitleLabel(titleText: "Создайте код:")
+            passcodeVC?.setRightButton(button: nil)
+        }
+    }
+
     // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -46,15 +54,15 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
             head.gradientLayer.colors = [UIColor(red: 239 / 255, green: 65 / 255, blue: 54 / 255, alpha: 1).cgColor, UIColor(red: 239 / 255, green: 65 / 255, blue: 54 / 255, alpha: 1).cgColor]
         }
 
-        store.subscribe(self) {
-            return $0.select { $0.verificationCodeState }
+        store.subscribe(self) { state in
+            state.select { $0.passcodeSignUpState }
         }
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if let nav = navigationController as? ProfileNavigationController {
 
+        if let nav = navigationController as? ProfileNavigationController {
             UIView.animate(withDuration: 0.5, delay: 0, options: .beginFromCurrentState, animations: {
                 nav.pageControl.setCurrentPage(at: 2)
             }, completion: nil)
@@ -79,6 +87,10 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+
+        store.subscribe(self) { state in
+            state.select { $0.passcodeSignUpState }
+        }
 
         containerView.hero.modifiers = nil
         containerView.hero.id = nil
@@ -123,15 +135,27 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
         header?.hero.id = nil
     }
 
-    func newState(state: VerificationCodeState) {
-        guard state.isShown == true else {
+    func newState(state: PasscodeSignUpState) {
+        guard state.isFinished != true else {
+            dismiss(animated: true, completion: nil)
             return
         }
-        backButton.isHidden = true
+        guard state.counter < 1 else {
+            passcodeVC?.resetPasscode(animated: true, playImpact: true)
+            return
+        }
+        if let firstPasscode = state.passcodeFirst, firstPasscode.count > 0, state.counter == 0 {
+            passcodeVC?.setTitleLabel(titleText: "Повторите код:")
+            passcodeVC?.resetPasscode(animated: false, playImpact: false)
+        }
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        view.endEditing(true)
+        let destination = segue.destination
+        if let passcodeWrapperVC = destination as? PasscodeWrapperViewController {
+            passcodeVC = passcodeWrapperVC
+            passcodeWrapperVC.setupDelegate(delegate: self)
+        }
     }
 }
 
@@ -148,5 +172,21 @@ extension PasscodeSignUpViewController {
         } else {
             gradientLayer.colors = [UIColor(red: 239 / 255, green: 64 / 255, blue: 54 / 255, alpha: 1).cgColor, UIColor(red: 239 / 255, green: 64 / 255, blue: 54 / 255, alpha: 1).cgColor]
         }
+    }
+}
+
+extension PasscodeSignUpViewController: TOPasscodeViewControllerDelegate {
+
+    func passcodeViewController(_ passcodeViewController: TOPasscodeViewController, isCorrectCode code: String) -> Bool {
+        store.dispatch(enterCode(code: code))
+        return true
+    }
+
+    func didInputCorrectPasscode(in passcodeViewController: TOPasscodeViewController) {
+
+    }
+
+    func didTapCancel(in passcodeViewController: TOPasscodeViewController) {
+        dismiss(animated: true, completion: nil)
     }
 }

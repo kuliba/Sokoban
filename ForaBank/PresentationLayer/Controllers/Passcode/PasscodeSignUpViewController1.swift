@@ -29,13 +29,6 @@ class PasscodeSignUpViewController1: UIViewController, StoreSubscriber {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.clipsToBounds = true
-
-        if let head = header as? MaskedNavigationBar {
-            head.gradientLayer.startPoint = CGPoint(x: 0, y: 1)
-            head.gradientLayer.endPoint = CGPoint(x: 1, y: 1)
-            head.gradientLayer.colors = [UIColor(red: 239 / 255, green: 65 / 255, blue: 54 / 255, alpha: 1).cgColor, UIColor(red: 239 / 255, green: 65 / 255, blue: 54 / 255, alpha: 1).cgColor]
-        }
 
         passcodeVC.passcodeView.titleLabel.adjustsFontSizeToFitWidth = true
         passcodeVC.passcodeView.titleLabel.text = "Создайте код:"
@@ -48,20 +41,6 @@ class PasscodeSignUpViewController1: UIViewController, StoreSubscriber {
 
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        view.hero.modifiers = [
-            HeroModifier.beginWith([HeroModifier.opacity(1)]),
-            HeroModifier.duration(0.5),
-            HeroModifier.delay(0.2),
-            HeroModifier.opacity(0)
-        ]
-        header?.hero.modifiers = [
-            HeroModifier.duration(0.5),
-            HeroModifier.opacity(0)
-        ]
-    }
-
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.modalPresentationStyle = .overCurrentContext
@@ -69,21 +48,6 @@ class PasscodeSignUpViewController1: UIViewController, StoreSubscriber {
         store.subscribe(self) { state in
             state.select { $0.passcodeSignUpState }
         }
-        containerView.hero.modifiers = nil
-        containerView.hero.id = nil
-        view.hero.modifiers = nil
-        view.hero.id = nil
-        header?.hero.modifiers = nil
-        header?.hero.id = nil
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        store.unsubscribe(self)
-    }
-
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
         containerView.hero.modifiers = nil
         containerView.hero.id = nil
         view.hero.modifiers = nil
@@ -106,16 +70,6 @@ class PasscodeSignUpViewController1: UIViewController, StoreSubscriber {
             passcodeVC.passcodeView.resetPasscode(animated: false, playImpact: false)
         }
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
 

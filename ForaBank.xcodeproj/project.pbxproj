@@ -274,6 +274,7 @@
 		BD5170A92332135E001EAFC0 /* VerificationCodeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170A82332135E001EAFC0 /* VerificationCodeState.swift */; };
 		BD5170AB2332250C001EAFC0 /* VerificationCodeReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170AA2332250C001EAFC0 /* VerificationCodeReducer.swift */; };
 		BD5170AD233229F4001EAFC0 /* VerificationCodeActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170AC233229F4001EAFC0 /* VerificationCodeActions.swift */; };
+		BD579343236AF5DB0056740C /* PasscodeWrapperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD579342236AF5DB0056740C /* PasscodeWrapperViewController.swift */; };
 		BD58869E2369AFDA00F97332 /* PasscodeSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD58869D2369AFDA00F97332 /* PasscodeSignUpViewController.swift */; };
 		BD66E0C42366D511002FFA1A /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD66E0C32366D511002FFA1A /* AppConstants.swift */; };
 		BD66E0C62366DD3F002FFA1A /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD66E0C52366DD3F002FFA1A /* Keychain.swift */; };
@@ -603,6 +604,7 @@
 		BD5170A82332135E001EAFC0 /* VerificationCodeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeState.swift; sourceTree = "<group>"; };
 		BD5170AA2332250C001EAFC0 /* VerificationCodeReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeReducer.swift; sourceTree = "<group>"; };
 		BD5170AC233229F4001EAFC0 /* VerificationCodeActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeActions.swift; sourceTree = "<group>"; };
+		BD579342236AF5DB0056740C /* PasscodeWrapperViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeWrapperViewController.swift; sourceTree = "<group>"; };
 		BD58869D2369AFDA00F97332 /* PasscodeSignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignUpViewController.swift; sourceTree = "<group>"; };
 		BD66E0C32366D511002FFA1A /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
 		BD66E0C52366DD3F002FFA1A /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
@@ -1439,6 +1441,7 @@
 				BDB6AFF323268C850006A534 /* PasscodeSignInViewController.swift */,
 				BDB6B00D23269FED0006A534 /* PasscodeSignUpViewController1.swift */,
 				BD58869D2369AFDA00F97332 /* PasscodeSignUpViewController.swift */,
+				BD579342236AF5DB0056740C /* PasscodeWrapperViewController.swift */,
 			);
 			path = Passcode;
 			sourceTree = "<group>";
@@ -1918,6 +1921,7 @@
 				A5B473C821B52E0B00F2E41F /* GroupedBubblesStatsView.swift in Sources */,
 				A5004D3121EF37DC0098E510 /* ActivityIndicatorView.swift in Sources */,
 				BDFE1B0D233CE7BD00C49A5B /* PickerViewController.swift in Sources */,
+				BD579343236AF5DB0056740C /* PasscodeWrapperViewController.swift in Sources */,
 				09C7C3162174A362000EE472 /* DepositsSearchCell.swift in Sources */,
 				A55B7B8821AA698900A8A7FE /* ChatMessage.swift in Sources */,
 				BD20837F2361B4990010E03C /* Product.swift in Sources */,
