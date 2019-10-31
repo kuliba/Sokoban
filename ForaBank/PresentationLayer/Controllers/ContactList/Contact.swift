@@ -38,7 +38,7 @@ open class Contact {
     public let contactId: String?
     
     /// An array of the phone numbers associated with the contact.
-    public let phoneNumbers: [(phoneNumber: String, phoneLabel: String)]
+    public let phoneNumbers: [String]
     
     /// An array of emails associated with the contact,
     public let emails: [(email: String, emailLabel: String )]
@@ -102,13 +102,11 @@ open class Contact {
             birthday = nil
             birthdayString = nil
         }
-        
-        var numbers: [(String, String)] = []
+        var numbers: [(String)] = []
 		for phoneNumber in contact.phoneNumbers {
-			let phoneLabel = phoneNumber.label ?? ""
 			let phone = phoneNumber.value.stringValue
 			
-			numbers.append((phone,phoneLabel))
+			numbers.append((phone))
 		}
         phoneNumbers = numbers
 		

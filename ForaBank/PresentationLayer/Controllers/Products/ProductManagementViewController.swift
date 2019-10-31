@@ -144,12 +144,7 @@ class ProductManagementViewController: UITableViewController {
                 let newName:String = txt.text ?? "\(self.product?.name)"
                 print(newName)
                 NetworkManager.shared().saveCardName(newName: newName, id:id ?? 123, completionHandler: { [unowned self] success, errorMessage, newName, id in })
-                
-                let VC = self.storyboard?.instantiateViewController(withIdentifier: "CardDetailsViewController") as! DetailedCardView
-                print("registeredEmail: \(newName)")
-                VC.newName = newName
-                self.prepare(for: DetailedCardView, sender: newName)
-                prepare(for: DetailedCardView, sender: newName)
+          
             }
             
             alert.showEdit("Изменить название карты", subTitle: "Не более 10 символов", colorStyle: 0xF5534C)

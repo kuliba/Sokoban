@@ -21,7 +21,7 @@ class DetailedCardView: CardView {
     var logoImageViewCosntraint: NSLayoutConstraint? = nil
     var expirationDate = UILabel()
     var newName: String = ""
-
+    
     
     
     enum CardBackGround: String {
@@ -105,8 +105,10 @@ class DetailedCardView: CardView {
             //cardView.titleLabel.sizeToFit()
        
             
-            
-          
+            titleLabel.text = newName
+          if newName == ""{
+            titleLabel.attributedText = NSAttributedString(string: card?.customName ?? "\(name)", attributes: [.font: UIFont.systemFont(ofSize: 16), .foregroundColor: foregroundColor])
+          }
             
 
             cardCashLabel.adjustsFontSizeToFitWidth = true

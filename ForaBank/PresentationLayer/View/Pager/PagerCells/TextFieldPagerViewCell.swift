@@ -24,6 +24,7 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell,ContactsPickerD
     
     @IBAction func contactsList(_ sender: Any) {
         let contactPickerScene = ContactsPicker(delegate: self, multiSelection: true, subtitleCellType: SubtitleCellValue.phoneNumber)
+        
                  let navigationController = UINavigationController(rootViewController: contactPickerScene)
         topMostVC()?.present(navigationController, animated: true, completion: nil)
     }
@@ -50,9 +51,11 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell,ContactsPickerD
        
         
         if  contacts != nil {
-            textField.isHidden = true
-            nameContact.isHidden = false
-            nameContact.text = "\(contact.displayName)"
+            let number: String
+            nameContact.isHidden = true
+            number = "\(contact.phoneNumbers.joined())"
+            let numberFormatted = formattedPhoneNumber(number: number)
+            textField.text = "\(numberFormatted)"
             
                     }
                 }
