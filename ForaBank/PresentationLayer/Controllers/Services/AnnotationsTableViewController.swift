@@ -31,9 +31,9 @@ class AnnotationsTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        var h: CGFloat = annotations[indexPath.row].title != nil ? 20 : 0
+        var h: CGFloat = annotations[indexPath.row].title != nil ? 40 : 40
         h += annotations[indexPath.row].address != nil ? 20 : 0
-        h += annotations[indexPath.row].schedule != nil ? 20 : 0
+        h += annotations[indexPath.row].schedule != nil ? 40 : 0
         h += annotations[indexPath.row].phone != nil ? 20 : 0
         h += h>0 ? 20 : 0
         return h
@@ -58,7 +58,8 @@ class AnnotationsTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "annotationCell", for: indexPath)
-
+       
+        
         // Configure the cell...
         if let cell = cell as? AnnotationTableViewCell {
             cell.set(title: annotations[indexPath.row].title,

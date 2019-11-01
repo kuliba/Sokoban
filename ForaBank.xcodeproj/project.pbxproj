@@ -164,6 +164,7 @@
 		9660EEEA234C7B1100AE0647 /* ExampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9660EEE5234C7B1100AE0647 /* ExampleData.swift */; };
 		966515AF235765C5001D54FC /* CardDetailsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 966515AE235765C5001D54FC /* CardDetailsCell.xib */; };
 		966B4252235F508A00AF4256 /* GoogleService-Info2.plist in Resources */ = {isa = PBXBuildFile; fileRef = 966B4251235F508A00AF4256 /* GoogleService-Info2.plist */; };
+		967AA501236C68DE000EEE6B /* telephone 1.png in Resources */ = {isa = PBXBuildFile; fileRef = 967AA500236C68DE000EEE6B /* telephone 1.png */; };
 		96920C32235604C000CCC7EF /* OperationsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96920C31235604C000CCC7EF /* OperationsList.swift */; };
 		9697E29F2334C29700974505 /* OperatorsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9697E29E2334C29700974505 /* OperatorsList.swift */; };
 		9697E2A32334E30500974505 /* ServicesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9697E2A22334E30500974505 /* ServicesList.swift */; };
@@ -490,6 +491,7 @@
 		9660EEE5234C7B1100AE0647 /* ExampleData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleData.swift; sourceTree = "<group>"; };
 		966515AE235765C5001D54FC /* CardDetailsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CardDetailsCell.xib; sourceTree = "<group>"; };
 		966B4251235F508A00AF4256 /* GoogleService-Info2.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info2.plist"; sourceTree = "<group>"; };
+		967AA500236C68DE000EEE6B /* telephone 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "telephone 1.png"; sourceTree = "<group>"; };
 		96920C31235604C000CCC7EF /* OperationsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationsList.swift; sourceTree = "<group>"; };
 		9697E29E2334C29700974505 /* OperatorsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorsList.swift; sourceTree = "<group>"; };
 		9697E2A22334E30500974505 /* ServicesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesList.swift; sourceTree = "<group>"; };
@@ -1301,6 +1303,7 @@
 				BD7CC1A0232125D000872D06 /* Localizable.strings */,
 				BDFE5D9B233511EB0027A716 /* URLs.swift */,
 				0979755F215A49040044C00A /* Assets.xcassets */,
+				967AA500236C68DE000EEE6B /* telephone 1.png */,
 				9651451F234F8B1B00A4713F /* foralogotype.png */,
 				9651451D234F8ADC00A4713F /* ic_homeBG.jpg */,
 				96514519234F890300A4713F /* ic_logo.png */,
@@ -1646,6 +1649,7 @@
 				096BCB0F21637E27005BC02B /* PaymentCell.xib in Resources */,
 				09E0F13D215A65310042FB6A /* Deposits.storyboard in Resources */,
 				963B62D52360A91900DD9A3E /* JFContactCell.xib in Resources */,
+				967AA501236C68DE000EEE6B /* telephone 1.png in Resources */,
 				9698996A2303FD190066C55B /* LoansCell.xib in Resources */,
 				BD21B670233915FD001C5CF7 /* Registration.storyboard in Resources */,
 				09AF707C216F4B5000E7FCFC /* FeedUpcomingCell.xib in Resources */,

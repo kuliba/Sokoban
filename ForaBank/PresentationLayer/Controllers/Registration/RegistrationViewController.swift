@@ -163,6 +163,7 @@ class RegistrationViewController: UIViewController {
             cardNumberLabelView.isHidden = false
             bankLogo.isHidden = true
             brandLogo.isHidden = true
+            self.continueButton.isHidden = true
 
             self.cardView.backgroundColor = .white
             self.cardView.gradientLayer.opacity = 0
