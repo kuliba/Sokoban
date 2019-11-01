@@ -273,11 +273,6 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
     }
 
     func newState(state: State) {
-        if state.passcodeSignUpState.isStarted == true {
-            let passcodeVC = PasscodeSignUpViewController()
-            passcodeVC.modalPresentationStyle = .overFullScreen
-            present(passcodeVC, animated: true, completion: nil)
-        }
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
