@@ -38,6 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         setTextFieldAppearance()
         IQKeyboardManager.shared.enable = true
         //        IQKeyboardManager.shared.layoutIfNeededOnUpdate = true
+        cleanKeychainIfNeeded()
         store.dispatch(checkAuthCredentials)
 
         FirebaseApp.configure()
@@ -73,6 +74,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } else {
             let settings: UIUserNotificationSettings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
             application.registerUserNotificationSettings(settings)
+        }
+    }
+
+    func cleanKeychainIfNeeded() {
+        let settingsStorage = SettingsStorage.shared
+
+        if settingsStorage.isFirstLaunch() {
+            settingsStorage .setFirstLaunch()
+            removeAllKeychainItems()
         }
     }
 }
