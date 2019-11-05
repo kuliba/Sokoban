@@ -68,6 +68,9 @@ class RegistrationViewController: UIViewController {
         segueId = backSegueId
         view.endEditing(true)
         self.navigationController?.popViewController(animated: true)
+        if navigationController == nil {
+            dismiss(animated: true, completion: nil)
+        }
     }
     @IBAction func scanCardButtonClicked(_ sender: Any) {
         view.endEditing(true)

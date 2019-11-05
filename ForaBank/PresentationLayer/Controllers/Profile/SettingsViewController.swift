@@ -26,12 +26,16 @@ class SettingsViewController: UIViewController
     @IBAction func backButtonClicked(_ sender: Any) {
         view.endEditing(true)
         segueId = backSegueId
-        navigationController?.popViewController(animated: true) }
+        navigationController?.popViewController(animated: true)
+        if navigationController == nil {
+            dismiss(animated: true, completion: nil)
+        }
+    }
 
 
     let cellId = "FeedOptionCell"
-    
-    
+
+
 
 
     let options = [
@@ -95,8 +99,8 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-          performSegue(withIdentifier: "showChangePassword", sender: tableView.cellForRow(at: indexPath))
-      }
+        performSegue(withIdentifier: "showChangePassword", sender: tableView.cellForRow(at: indexPath))
+    }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerCell = UINib(nibName: "ServicesHeader", bundle: nil)

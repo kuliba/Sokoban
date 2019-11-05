@@ -33,6 +33,9 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
         view.endEditing(true)
         store.dispatch(clearSignUpProcess)
         self.navigationController?.popViewController(animated: true)
+        if navigationController == nil {
+            dismiss(animated: true, completion: nil)
+        }
     }
 
     @IBAction func touchIdSwitch(_ sender: Any) {
