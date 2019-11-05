@@ -120,17 +120,8 @@ class ProductManagementViewController: UITableViewController {
      }
      }
      */
+
     
-    override func viewDidLoad() {
-        super.viewDidLoad();
-
-
-        // When user touch myButton, we're going to call loadData method
-        addButton.addTarget(self, action: #selector(self.loadData), forControlEvents: .TouchUpInside)
-        // Load the data
-        self.loadData();
-    }
-
     func loadData() {
         // code to load data from network, and refresh the interface
         tableView.reloadData()

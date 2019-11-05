@@ -187,6 +187,8 @@ class RegistrationViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        segmentedOuterView.isHidden = true
+        segmentedControl.isHidden = true
         dateLabelView.isHidden = true
         addGradientLayerView()
 //        addCircleView()

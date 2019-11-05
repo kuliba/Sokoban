@@ -42,7 +42,7 @@ class CarouselViewController: UIViewController {
     let xDevices = Constants.xDevices
     weak var currentViewController: UIViewController?
     
-    var items = ["Карты", "Счета" , "Вклады", "Кредиты" , "История" , "Статистика"]
+    var items = ["Карты", "Счета" , "Вклады", "Кредиты" , "История"]
     
     
     var segueId: String? = nil
