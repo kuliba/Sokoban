@@ -20,7 +20,7 @@ class DetailedCardView: CardView {
     let cardBlockedImageView = UIImageView()
     var logoImageViewCosntraint: NSLayoutConstraint? = nil
     var expirationDate = UILabel()
-    var newName: String = ""
+    var newName: String? = nil
     
     
     
@@ -106,7 +106,7 @@ class DetailedCardView: CardView {
        
             
             titleLabel.text = newName
-          if newName == ""{
+          if newName == nil{
             titleLabel.attributedText = NSAttributedString(string: card?.customName ?? "\(name)", attributes: [.font: UIFont.systemFont(ofSize: 16), .foregroundColor: foregroundColor])
           }
             

@@ -120,6 +120,22 @@ class ProductManagementViewController: UITableViewController {
      }
      }
      */
+    
+    override func viewDidLoad() {
+        super.viewDidLoad();
+
+
+        // When user touch myButton, we're going to call loadData method
+        addButton.addTarget(self, action: #selector(self.loadData), forControlEvents: .TouchUpInside)
+        // Load the data
+        self.loadData();
+    }
+
+    func loadData() {
+        // code to load data from network, and refresh the interface
+        tableView.reloadData()
+    }
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.item == 1 {
             guard let product = self.product else {
@@ -141,9 +157,11 @@ class ProductManagementViewController: UITableViewController {
             let txt = alert.addTextField("Введите название карты")
             alert.addButton("Сохранить") {
                 let id = self.product?.id
-                let newName:String = txt.text ?? "\(self.product?.name)"
-                NetworkManager.shared().saveCardName(newName: newName, id:id ?? 123, completionHandler: { [unowned self] success, errorMessage, newName, id in })
-          
+                let newName:String = txt.text ?? "\(self.product!.name)"
+                NetworkManager.shared().saveCardName(newName: newName, id:id ?? 123, completionHandler: { success, errorMessage, newName, id in })
+                NetworkManager.shared().getCardList { [weak self] (success, cards) in
+                        self?.cards = cards ?? []
+                }
             }
             
             alert.showEdit("Изменить название карты", subTitle: "Не более 15 символов", colorStyle: 0xF5534C)
