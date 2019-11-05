@@ -119,21 +119,34 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="telephone" translatesAutoresizingMaskIntoConstraints="NO" id="zRm-42-u6L">
+                                    <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="telephone" translatesAutoresizingMaskIntoConstraints="NO" id="zRm-42-u6L">
                                         <rect key="frame" x="283" y="15" width="20" height="26"/>
+                                        <accessibility key="accessibilityConfiguration">
+                                            <accessibilityTraits key="traits" button="YES" link="YES" image="YES"/>
+                                        </accessibility>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="20" id="OOE-rv-x5t"/>
                                         </constraints>
                                     </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kd8-fi-bRT">
+                                        <rect key="frame" x="270" y="4" width="46" height="42"/>
+                                        <state key="normal" title="Button"/>
+                                        <connections>
+                                            <action selector="preparePopUp:" destination="qIQ-98-ugo" eventType="touchUpInside" id="xNu-HX-rWd"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="zRm-42-u6L" secondAttribute="trailing" constant="17" id="206-b0-oxj"/>
                                     <constraint firstAttribute="bottom" secondItem="zRm-42-u6L" secondAttribute="bottom" constant="-11" id="GVM-Dj-pST"/>
+                                    <constraint firstItem="kd8-fi-bRT" firstAttribute="centerX" secondItem="zRm-42-u6L" secondAttribute="centerX" id="QY7-ft-UyC"/>
+                                    <constraint firstItem="kd8-fi-bRT" firstAttribute="top" secondItem="0Bm-Sd-95u" secondAttribute="top" constant="4" id="ROy-Dv-oEQ"/>
                                     <constraint firstAttribute="height" constant="30" id="U42-WA-26c"/>
                                     <constraint firstAttribute="bottom" secondItem="05D-Hx-0wR" secondAttribute="bottom" id="cGj-N5-xyx"/>
                                     <constraint firstItem="zRm-42-u6L" firstAttribute="centerY" secondItem="05D-Hx-0wR" secondAttribute="centerY" constant="8.5" id="eqA-cN-bHI"/>
                                     <constraint firstItem="zRm-42-u6L" firstAttribute="top" secondItem="0Bm-Sd-95u" secondAttribute="top" constant="15" id="fn1-Wj-60n"/>
+                                    <constraint firstAttribute="bottom" secondItem="kd8-fi-bRT" secondAttribute="bottom" constant="-16" id="if2-Dk-ghw"/>
                                     <constraint firstItem="05D-Hx-0wR" firstAttribute="centerX" secondItem="0Bm-Sd-95u" secondAttribute="centerX" id="yV9-VC-Ok6"/>
                                 </constraints>
                             </view>
@@ -175,6 +188,7 @@
                     <connections>
                         <outlet property="annotationsInfoHeight" destination="nUW-Iw-BUI" id="cQc-fI-Xge"/>
                         <outlet property="annotationsInfoView" destination="wgf-Im-hTM" id="via-KI-68U"/>
+                        <outlet property="callIcon" destination="zRm-42-u6L" id="sWU-rx-wog"/>
                         <outlet property="containerView" destination="5VF-sr-6Ly" id="WRb-dH-y9V"/>
                         <outlet property="focusButton" destination="3xC-h5-F9E" id="KRG-w7-Eof"/>
                         <outlet property="mapView" destination="r2X-DS-9gL" id="mvD-Za-KId"/>
@@ -186,6 +200,92 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oDv-if-KuX" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3385.5999999999999" y="1017.3913043478261"/>
+        </scene>
+        <!--Map Pop Up View Controller-->
+        <scene sceneID="Ifn-Me-4e7">
+            <objects>
+                <viewController storyboardIdentifier="mapPopUp" id="SuX-VX-Oez" customClass="MapPopUpViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="nGd-h8-hpC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nCR-Zp-XtP">
+                                <rect key="frame" x="29" y="186" width="320" height="190"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Служба поддержки клиентов:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Icc-7d-Ola">
+                                        <rect key="frame" x="31" y="18" width="238" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="8 (800) 100 9889" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r60-Y5-bNr">
+                                        <rect key="frame" x="56" y="57" width="135" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="8 (495) 775 6555" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7vg-ap-tfm">
+                                        <rect key="frame" x="56" y="85" width="135" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="fora-digital@forabank.ru" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="406-3f-7yo">
+                                        <rect key="frame" x="56" y="120" width="184" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="callfrompopup.png" translatesAutoresizingMaskIntoConstraints="NO" id="WR4-7b-Yxo">
+                                        <rect key="frame" x="32" y="56" width="16" height="25"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="callfrompopup.png" translatesAutoresizingMaskIntoConstraints="NO" id="Qtd-pm-AwS">
+                                        <rect key="frame" x="32" y="83" width="16" height="25"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="mailfrompopup.png" translatesAutoresizingMaskIntoConstraints="NO" id="nl9-6u-Bu2">
+                                        <rect key="frame" x="32" y="123" width="16" height="18"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="N7J-Nc-0c2">
+                                        <rect key="frame" x="124" y="152" width="66" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal">
+                                            <attributedString key="attributedTitle">
+                                                <fragment content="Закрыть">
+                                                    <attributes>
+                                                        <color key="NSColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <font key="NSFont" metaFont="system" size="15"/>
+                                                        <integer key="NSUnderline" value="1"/>
+                                                    </attributes>
+                                                </fragment>
+                                            </attributedString>
+                                        </state>
+                                        <connections>
+                                            <action selector="closePopUp:" destination="SuX-VX-Oez" eventType="touchUpInside" id="Ogj-9J-jzq"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="ZWw-5f-aJi"/>
+                    </view>
+                    <connections>
+                        <outlet property="closePopUp" destination="N7J-Nc-0c2" id="s0I-eh-uXS"/>
+                        <outlet property="mapPopUp" destination="nCR-Zp-XtP" id="9jG-qe-7r5"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="a2m-qH-sxX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4050.4000000000001" y="1024.1379310344828"/>
         </scene>
         <!--Annotations Table View Controller-->
         <scene sceneID="OI2-wU-8ha">
@@ -295,6 +395,8 @@
         </scene>
     </scenes>
     <resources>
+        <image name="callfrompopup.png" width="16" height="16"/>
+        <image name="mailfrompopup.png" width="16" height="16"/>
         <image name="map_locate_on_me" width="16" height="16"/>
         <image name="map_zoom_minus" width="16" height="2"/>
         <image name="map_zoom_plus" width="16" height="16"/>

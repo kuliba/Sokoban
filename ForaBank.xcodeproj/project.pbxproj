@@ -132,6 +132,9 @@
 		96072C882313FF13001CFCBD /* TouchIDAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96072C872313FF13001CFCBD /* TouchIDAuthentication.swift */; };
 		96094AF42319441600A80412 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96094AF32319441600A80412 /* SettingsViewController.swift */; };
 		960AD38822FC1826005399D6 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 960AD38722FC1826005399D6 /* Default-568h@2x.png */; };
+		960C5D10237161A8002C4DC4 /* MapPopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 960C5D0F237161A8002C4DC4 /* MapPopUpViewController.swift */; };
+		960C5D1223716AFE002C4DC4 /* callfrompopup.png in Resources */ = {isa = PBXBuildFile; fileRef = 960C5D1123716AFD002C4DC4 /* callfrompopup.png */; };
+		960C5D1423716B50002C4DC4 /* mailfrompopup.png in Resources */ = {isa = PBXBuildFile; fileRef = 960C5D1323716B50002C4DC4 /* mailfrompopup.png */; };
 		9610CB8E22FD6F0C00FE7C84 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9610CB8D22FD6F0C00FE7C84 /* Account.swift */; };
 		96144B3A233BACF900B9F314 /* AboutTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96144B39233BACF900B9F314 /* AboutTransaction.swift */; };
 		96144B3C233BAD3F00B9F314 /* IAboutTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96144B3B233BAD3F00B9F314 /* IAboutTransaction.swift */; };
@@ -455,6 +458,9 @@
 		96072C872313FF13001CFCBD /* TouchIDAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchIDAuthentication.swift; sourceTree = "<group>"; };
 		96094AF32319441600A80412 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		960AD38722FC1826005399D6 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		960C5D0F237161A8002C4DC4 /* MapPopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapPopUpViewController.swift; sourceTree = "<group>"; };
+		960C5D1123716AFD002C4DC4 /* callfrompopup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = callfrompopup.png; sourceTree = "<group>"; };
+		960C5D1323716B50002C4DC4 /* mailfrompopup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mailfrompopup.png; sourceTree = "<group>"; };
 		9610CB8D22FD6F0C00FE7C84 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		96144B39233BACF900B9F314 /* AboutTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutTransaction.swift; sourceTree = "<group>"; };
 		96144B3B233BAD3F00B9F314 /* IAboutTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAboutTransaction.swift; sourceTree = "<group>"; };
@@ -858,6 +864,7 @@
 				09BE35EC218C627700EA7B24 /* Registration */,
 				A568142821CE6A41002C0899 /* Services */,
 				BD6D5672233A0B2C00B7CF4B /* Zones */,
+				960C5D0F237161A8002C4DC4 /* MapPopUpViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -1303,6 +1310,8 @@
 				BD7CC1A0232125D000872D06 /* Localizable.strings */,
 				BDFE5D9B233511EB0027A716 /* URLs.swift */,
 				0979755F215A49040044C00A /* Assets.xcassets */,
+				960C5D1323716B50002C4DC4 /* mailfrompopup.png */,
+				960C5D1123716AFD002C4DC4 /* callfrompopup.png */,
 				967AA500236C68DE000EEE6B /* telephone 1.png */,
 				9651451F234F8B1B00A4713F /* foralogotype.png */,
 				9651451D234F8ADC00A4713F /* ic_homeBG.jpg */,
@@ -1650,6 +1659,7 @@
 				09E0F13D215A65310042FB6A /* Deposits.storyboard in Resources */,
 				963B62D52360A91900DD9A3E /* JFContactCell.xib in Resources */,
 				967AA501236C68DE000EEE6B /* telephone 1.png in Resources */,
+				960C5D1223716AFE002C4DC4 /* callfrompopup.png in Resources */,
 				9698996A2303FD190066C55B /* LoansCell.xib in Resources */,
 				BD21B670233915FD001C5CF7 /* Registration.storyboard in Resources */,
 				09AF707C216F4B5000E7FCFC /* FeedUpcomingCell.xib in Resources */,
@@ -1671,6 +1681,7 @@
 				9614986E2366E81E0021F70A /* GoogleService-Info.plist in Resources */,
 				0930F181215B78B000CFB593 /* Roboto-Medium.ttf in Resources */,
 				0930F180215B78B000CFB593 /* Roboto-LightItalic.ttf in Resources */,
+				960C5D1423716B50002C4DC4 /* mailfrompopup.png in Resources */,
 				BD35E82523438DC40016BA0D /* TextFieldPagerViewCell.xib in Resources */,
 				BD17F0AD23474FE300CBF400 /* PaymentOptionDropDownCell.xib in Resources */,
 				0930F183215B78B000CFB593 /* Roboto-Regular.ttf in Resources */,
@@ -1884,6 +1895,7 @@
 				096BCB0E21637E27005BC02B /* PaymentCell.swift in Sources */,
 				96514513234F829E00A4713F /* RefreshView.swift in Sources */,
 				096BCB0A216361AA005BC02B /* PaymentTemplateCell.swift in Sources */,
+				960C5D10237161A8002C4DC4 /* MapPopUpViewController.swift in Sources */,
 				BDFE1B13233D083E00C49A5B /* PickerTableViewCell.swift in Sources */,
 				A55663A421EDB22600E48C40 /* OnMapButton.swift in Sources */,
 				9660EEE9234C7B1100AE0647 /* CollapsibleTableViewCell.swift in Sources */,

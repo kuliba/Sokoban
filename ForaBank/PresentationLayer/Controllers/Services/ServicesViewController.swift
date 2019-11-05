@@ -29,7 +29,17 @@ class ServicesViewController: UIViewController {
     var searchBar: ServicesSearchCell?
     var needFocus: Bool = true
    
-
+    @IBOutlet weak var callIcon: UIImageView!
+    
+    @IBAction func preparePopUp(_ sender: Any) {
+    
+            let popOverVC = UIStoryboard(name: "Services", bundle: nil).instantiateViewController(withIdentifier: "mapPopUp") as! MapPopUpViewController
+            self.addChild(popOverVC)
+            popOverVC.view.frame = self.view.frame
+            self.view.addSubview(popOverVC.view)
+            popOverVC.didMove(toParent: self)
+        
+    }
     
     let data_ = [
         [
