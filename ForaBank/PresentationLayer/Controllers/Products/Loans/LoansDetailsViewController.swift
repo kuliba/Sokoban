@@ -43,10 +43,14 @@ class LoansDetailsViewController: UIViewController {
     }()
 
     // MARK: - Actions
-    @IBAction func backButtonClicked(_ sender: Any) {
-        dismiss(animated: true)
-    }
 
+    @IBAction func backButtonCLicked(_ sender: Any) {
+        view.endEditing(true)
+        self.navigationController?.popViewController(animated: true)
+        if navigationController == nil {
+            dismiss(animated: true, completion: nil)
+        }
+    }
 
     override func viewDidLoad() {
         let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductManagementViewController") as? ProductManagementViewController
@@ -147,9 +151,9 @@ private extension LoansDetailsViewController {
             managementVC?.items = loan?.getProductAbout()
             newViewController = managementVC
         case 3:
-                 let managementVC = storyboard?.instantiateViewController(withIdentifier: "CollapsibleTableViewController") as? CollapsibleTableViewController
-                // managementVC?.sections = (loan?.getLoansSchedule())! 
-                 newViewController = managementVC
+            let managementVC = storyboard?.instantiateViewController(withIdentifier: "CollapsibleTableViewController") as? CollapsibleTableViewController
+            // managementVC?.sections = (loan?.getLoansSchedule())!
+            newViewController = managementVC
         default:
             newViewController = storyboard?.instantiateViewController(withIdentifier: "feedfeed\(index)")
         }

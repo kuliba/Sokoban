@@ -14,7 +14,6 @@ import CryptoSwift
 import UserNotifications
 import Firebase
 
-
 func appReducer(action: Action, state: State?) -> State {
     return State(authenticationState: authenticationReducer(state: state?.authenticationState, action: action),
                  userState: userReducer(state: state?.userState, action: action),
@@ -28,19 +27,20 @@ let thunkMiddleware: Middleware<State> = createThunkMiddleware()
 var store = Store<State>(reducer: appReducer, state: nil, middleware: [thunkMiddleware])
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+	class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     static var shared: AppDelegate { return UIApplication.shared.delegate as! AppDelegate }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
+
         setNavigationBarAppearance()
         setTextFieldAppearance()
         IQKeyboardManager.shared.enable = true
         //        IQKeyboardManager.shared.layoutIfNeededOnUpdate = true
+        cleanKeychainIfNeeded()
         store.dispatch(checkAuthCredentials)
-        
+
         FirebaseApp.configure()
         application.registerForRemoteNotifications()
         requestNotificationAuthorization(application: application)
@@ -55,7 +55,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
         store.dispatch(checkAuthCredentials)
     }
-    
+
     var applicationStateString: String {
         if UIApplication.shared.applicationState == .active {
             return "active"
@@ -74,6 +74,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } else {
             let settings: UIUserNotificationSettings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
             application.registerUserNotificationSettings(settings)
+        }
+    }
+
+    func cleanKeychainIfNeeded() {
+        let settingsStorage = SettingsStorage.shared
+
+        if settingsStorage.isFirstLaunch() {
+            settingsStorage .setFirstLaunch()
+            removeAllKeychainItems()
         }
     }
 }

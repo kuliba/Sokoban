@@ -34,7 +34,10 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
     }
 
     @IBAction func backButtonClicked(_ sender: Any) {
-        dismiss(animated: true)
+        self.navigationController?.popViewController(animated: true)
+        if navigationController == nil {
+            dismiss(animated: true, completion: nil)
+        }
     }
 
     @IBAction func pickerButtonClicked(_ sender: UIButton) {

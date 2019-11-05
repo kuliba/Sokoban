@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 import Hero
 
-class ServicesViewController: UIViewController {
+class ServicesViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - Properties
     @IBOutlet weak var tableView: CustomTableView!
@@ -21,13 +21,25 @@ class ServicesViewController: UIViewController {
     @IBOutlet weak var zoomInButton: OnMapButton!
     @IBOutlet weak var focusButton: OnMapButton!
     @IBOutlet weak var containerView: RoundedEdgeView!
-    
+    @IBOutlet weak var scrollView: UIScrollView!
     var branches = [BankBranch]()
     var annotations = [BankBranchAnnotation]()
     let serviceCellId = "ServicesCell"
     let locationManager = CLLocationManager()
     var searchBar: ServicesSearchCell?
     var needFocus: Bool = true
+   
+    @IBOutlet weak var callIcon: UIImageView!
+    
+    @IBAction func preparePopUp(_ sender: Any) {
+    
+            let popOverVC = UIStoryboard(name: "Services", bundle: nil).instantiateViewController(withIdentifier: "mapPopUp") as! MapPopUpViewController
+            self.addChild(popOverVC)
+            popOverVC.view.frame = self.view.frame
+            self.view.addSubview(popOverVC.view)
+            popOverVC.didMove(toParent: self)
+        
+    }
     
     let data_ = [
         [
@@ -47,11 +59,112 @@ class ServicesViewController: UIViewController {
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
+//        phoneicon.setImage(UIImage(named: "telephone"), for: UIControl.State.normal)
         super.viewDidLoad()
         setUpTableView()
+        searchBar?.isHidden = true
         self.annotationsInfoHeight.constant = 0
-        mapView.isHidden = true
+        mapView.isHidden = false
         hero.isEnabled = true
+        annotationsInfoView.layer.shadowColor = UIColor.black.cgColor
+           annotationsInfoView.layer.shadowOpacity = 0.23
+           annotationsInfoView.layer.shadowOffset = .zero
+           annotationsInfoView.layer.shadowRadius = 4
+         tableView.isHidden = true
+                mapView.isHidden = false
+                zoomOutButton.isHidden = false
+                zoomInButton.isHidden = false
+        //        focusButton.isHidden = false
+                print("SHOW MAP \(mapView.subviews)")
+                if searchBar != nil {
+                } else if let searchBar = UINib(nibName: "ServicesSearchCell", bundle: nil)
+                    .instantiate(withOwner: nil, options: nil)[0] as? ServicesSearchCell {
+                    searchBar.backgroundColor = nil
+        //            searchBar.frame.origin.x = 0
+        //            searchBar.frame.origin.y = 30
+        //            searchBar.frame.size.width = view.frame.width
+        //            searchBar.textField.backgroundColor = UIColor(red: 0.968522, green: 0.968688, blue: 0.968512, alpha: 1)
+                    searchBar.textField.backgroundColor = .white
+                    searchBar.textField.alpha = 1
+                    searchBar.textField.layer.cornerRadius = 3
+                    
+                    searchBar.textField.layer.shadowColor = UIColor.black.cgColor
+                    searchBar.textField.layer.shadowOffset = CGSize(width: 0, height: 3.0)
+                    searchBar.textField.layer.shadowOpacity = 0.12
+                    searchBar.textField.layer.shadowRadius = 6
+                    searchBar.translatesAutoresizingMaskIntoConstraints = false
+                    mapView.addSubview(searchBar)
+                    mapView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[sb]-0-|", options: [], metrics: nil, views: ["sb" : searchBar]))
+                    mapView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-30-[sb(65)]", options: [], metrics: nil, views: ["sb" : searchBar]))
+                    searchBar.mapButton.setImage(UIImage(named: "icon_services_to_table"), for: .normal)
+                    searchBar.mapButton.addTarget(self, action: #selector(hideMap), for: .touchUpInside)
+                    searchBar.mapButton.backgroundColor = .white
+                    searchBar.mapButton.layer.cornerRadius = 5
+                    
+                    searchBar.mapButton.layer.shadowColor = UIColor.black.cgColor
+                    searchBar.mapButton.layer.shadowOffset = CGSize(width: 0, height: 3.0)
+                    searchBar.mapButton.layer.shadowOpacity = 0.12
+                    searchBar.mapButton.layer.shadowRadius = 6
+                    
+        //            let rect = CGRect(x: 0.0, y: 0.0, width: 1.0, height: 1.0)
+        //            UIGraphicsBeginImageContext(rect.size)
+        //            let context = UIGraphicsGetCurrentContext()
+        //
+        //            context?.setFillColor(UIColor(red: 0, green: 0, blue: 0, alpha: 0.12).cgColor)
+        //            context?.fill(rect)
+        //
+        //            let image = UIGraphicsGetImageFromCurrentImageContext()
+        //            UIGraphicsEndImageContext()
+        //            searchBar.mapButton.setBackgroundImage(image, for: .highlighted)
+                    self.searchBar = searchBar
+                    searchBar.isHidden = true
+                }
+                
+                mapView.delegate = self
+                locationManager.delegate = self
+        //        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+                locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
+                checkLocationAuthorizationStatus()
+                if annotations.count > 0 {
+                    return
+                }
+                if let branchesAsset = NSDataAsset(name: "bank_branches") {
+                    mapView.removeAnnotations(annotations)
+                    annotations = [BankBranchAnnotation]()
+                    let branchesData = branchesAsset.data
+                    let decoder = JSONDecoder()
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
+                    decoder.dateDecodingStrategy = .formatted(dateFormatter)
+                    if let branches = try? decoder.decode(BankBranches.self, from: branchesData) {
+                        self.branches = branches.branches
+                        for b in self.branches {
+                            if let l = b.latitude,
+                                let long = b.longitude {
+                                annotations.append(
+                                    BankBranchAnnotation(
+                                        coordinate: CLLocationCoordinate2D(latitude: l, longitude: long),
+                                        type: b.type,
+                                        title: b.name,
+                                        address: b.address,
+                                        schedule: b.schedule,
+                                        phone: b.phone
+                                    )
+                                )
+                            }
+                        }
+                    } else {
+                        print("bank branches decoding failed")
+                    }
+                    mapView.addAnnotations(annotations)
+                    mapView.register(BankBranchClusterView.self,
+                                     forAnnotationViewWithReuseIdentifier: MKMapViewDefaultClusterAnnotationViewReuseIdentifier)
+                    mapView.register(BankBranchView.self,
+                                     forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
+        //            mapView.register(BankBranchMarkerView.self, forAnnotationViewWithReuseIdentifier: MKMApviewdef)
+                }
+
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -400,13 +513,14 @@ extension ServicesViewController: MKMapViewDelegate {
 //    }
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
 //        print("did select")
-        if let cluster = view.annotation as? MKClusterAnnotation,
+         if let cluster = view.annotation as? MKClusterAnnotation,
             let aa = cluster.memberAnnotations as? [BankBranchAnnotation],
             let tableVC = children.first as? AnnotationsTableViewController {
             tableVC.annotations = aa
             centerMapOnLocation(coordinate: cluster.coordinate)
             UIView.animate(withDuration: 0.25, delay: 0, options: .beginFromCurrentState, animations: {
                 self.annotationsInfoHeight.constant = 150
+                
                 self.view.layoutIfNeeded()
             }, completion: nil)
         }

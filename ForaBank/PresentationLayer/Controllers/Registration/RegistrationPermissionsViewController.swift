@@ -25,27 +25,28 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
     @IBOutlet weak var header: UIView!
     @IBOutlet weak var touchIdDevice: UIView!
     @IBOutlet weak var faceIdDevice: UIView!
+    @IBOutlet var biometricSwitches: [UISwitch]!
 
     // MARK: - Actions
     @IBAction func backButtonCLicked(_ sender: Any) {
         segueId = backSegueId
         view.endEditing(true)
+        store.dispatch(clearSignUpProcess)
         self.navigationController?.popViewController(animated: true)
+        if navigationController == nil {
+            dismiss(animated: true, completion: nil)
+        }
     }
 
     @IBAction func touchIdSwitch(_ sender: Any) {
-        if let s = sender as? UISwitch,
-            s.isOn == true {
+        guard let switcher = sender as? UISwitch else {
+            return
+        }
+        SettingsStorage.shared.setAllowedBiometricSignIn(allowed: switcher.isOn)
+        if switcher.isOn == true {
             performSegue(withIdentifier: "touchID", sender: nil)
         }
     }
-    @IBAction func pinCodeApp(_ sender: Any) {
-        if let s = sender as? UISwitch,
-            s.isOn == true {
-            store.dispatch(startPasscodeSingUp)
-        }
-    }
-
 
     @IBAction func `continue`(_ sender: Any) {
         NetworkManager.shared().doRegistration(completionHandler: { [unowned self] success, errorMessage, l, p in
@@ -86,7 +87,10 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
     let context = LAContext()
 
     func biometricType() -> BiometricType {
-        let _ = context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
+        let canEvaluatePolicy = context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
+        if !canEvaluatePolicy {
+            biometricSwitches.forEach { $0.isEnabled = false }
+        }
         switch context.biometryType {
         case .none:
             return .none
@@ -126,7 +130,7 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if segueId == "permissions" {
+        if isMovingToParent {
             if let nav = navigationController as? ProfileNavigationController,
                 pageControl != nil {
                 nav.pageControl.isHidden = false
@@ -141,8 +145,7 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
                 HeroModifier.duration(0.5),
                 HeroModifier.translate(CGPoint(x: centralView.frame.origin.x + view.frame.width, y: 0))
             ]
-        }
-        if segueId == "touchID" {
+        } else {
             if let nav = navigationController as? ProfileNavigationController {
                 nav.pageControl.isHidden = true
                 pageControl.isHidden = false
@@ -188,7 +191,31 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
-        if segueId == "permissions" {
+        if segueId == "touchID" {
+            if let nav = navigationController as? ProfileNavigationController {
+                nav.pageControl.isHidden = true
+                pageControl.isHidden = false
+            }
+            containerView.hero.id = "content"
+            containerView.hero.modifiers = [
+                HeroModifier.beginWith([
+                    HeroModifier.opacity(1),
+                    HeroModifier.zPosition(2)
+                ]),
+                HeroModifier.duration(0.5),
+                HeroModifier.translate(CGPoint(x: 0, y: view.frame.height)),
+            ]
+            gradientView.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.opacity(0)
+            ]
+            header?.hero.modifiers = [
+                HeroModifier.duration(0.5),
+                HeroModifier.opacity(0)
+            ]
+            return
+        }
+        if isMovingFromParent {
             if let nav = navigationController as? ProfileNavigationController,
                 pageControl != nil {
                 nav.pageControl.isHidden = false
@@ -200,8 +227,7 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
                 HeroModifier.duration(0.5),
                 HeroModifier.translate(CGPoint(x: centralView.frame.origin.x + view.frame.width, y: 0))
             ]
-        }
-        if segueId == "auth" {
+        } else {
 //            if let nav = navigationController as? ProfileNavigationController {
 //                nav.pageControl.isHidden = true
 //                pageControl.isHidden = false
@@ -234,29 +260,6 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
                 HeroModifier.translate(CGPoint(x: centralView.frame.origin.x - view.frame.width, y: 0))
             ]
         }
-        if segueId == "touchID" {
-            if let nav = navigationController as? ProfileNavigationController {
-                nav.pageControl.isHidden = true
-                pageControl.isHidden = false
-            }
-            containerView.hero.id = "content"
-            containerView.hero.modifiers = [
-                HeroModifier.beginWith([
-                    HeroModifier.opacity(1),
-                    HeroModifier.zPosition(2)
-                ]),
-                HeroModifier.duration(0.5),
-                HeroModifier.translate(CGPoint(x: 0, y: view.frame.height)),
-            ]
-            gradientView.hero.modifiers = [
-                HeroModifier.duration(0.5),
-                HeroModifier.opacity(0)
-            ]
-            header?.hero.modifiers = [
-                HeroModifier.duration(0.5),
-                HeroModifier.opacity(0)
-            ]
-        }
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -274,9 +277,6 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
     }
 
     func newState(state: State) {
-        if state.passcodeSignUpState.isStarted == true {
-            present(PasscodeSignUpViewController(), animated: true, completion: nil)
-        }
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

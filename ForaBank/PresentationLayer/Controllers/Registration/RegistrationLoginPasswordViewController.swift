@@ -93,6 +93,9 @@ class RegistrationLoginPasswordViewController: UIViewController {
         segueId = backSegueId
         view.endEditing(true)
         self.navigationController?.popViewController(animated: true)
+        if navigationController == nil {
+            dismiss(animated: true, completion: nil)
+        }
     }
 
     @IBAction func `continue`(_ sender: Any) {

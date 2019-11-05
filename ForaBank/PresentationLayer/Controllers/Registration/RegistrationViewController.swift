@@ -68,6 +68,9 @@ class RegistrationViewController: UIViewController {
         segueId = backSegueId
         view.endEditing(true)
         self.navigationController?.popViewController(animated: true)
+        if navigationController == nil {
+            dismiss(animated: true, completion: nil)
+        }
     }
     @IBAction func scanCardButtonClicked(_ sender: Any) {
         view.endEditing(true)
@@ -163,6 +166,7 @@ class RegistrationViewController: UIViewController {
             cardNumberLabelView.isHidden = false
             bankLogo.isHidden = true
             brandLogo.isHidden = true
+            self.continueButton.isHidden = true
 
             self.cardView.backgroundColor = .white
             self.cardView.gradientLayer.opacity = 0
