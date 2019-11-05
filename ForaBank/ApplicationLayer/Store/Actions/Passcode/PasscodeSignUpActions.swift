@@ -23,6 +23,10 @@ let finishPasscodeSingUp = Thunk<State> { dispatch, getState in
     dispatch(ClearSignUpProcess())
 }
 
+let clearSignUpProcess = Thunk<State> { dispatch, getState in
+    dispatch(ClearSignUpProcess())
+}
+
 let createPasscode = Thunk<State> { dispatch, getState in
         guard let passcode = getState()?.passcodeSignUpState.passcodeSecond else {
             return
