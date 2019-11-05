@@ -13,6 +13,7 @@ extension UserDefaults: ISettingsStorage {
     private struct Constants {
         static let firstLaunchKey = "isFirstLaunch"
         static let needSetPasscodeKey = "needSetPasscode"
+        static let allowedBiometricSignInKey = "allowedBiometricSignIn"
     }
 
     func isFirstLaunch() -> Bool {
@@ -21,6 +22,14 @@ extension UserDefaults: ISettingsStorage {
 
     func setFirstLaunch() {
         set(true, forKey: Constants.firstLaunchKey)
+    }
+
+    func allowedBiometricSignIn() -> Bool {
+        return bool(forKey: Constants.allowedBiometricSignInKey)
+    }
+
+    func setAllowedBiometricSignIn(allowed: Bool) {
+        set(allowed, forKey: Constants.allowedBiometricSignInKey)
     }
 
     func setNeedSetPasscode(_ needs: Bool) {

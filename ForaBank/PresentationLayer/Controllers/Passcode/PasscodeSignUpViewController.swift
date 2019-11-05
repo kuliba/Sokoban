@@ -34,12 +34,7 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
         performSegue(withIdentifier: "fromRegSmsToPermissions", sender: nil)
     }
 
-    var passcodeVC: PasscodeWrapperViewController? {
-        didSet {
-            passcodeVC?.setTitleLabel(titleText: "Создайте код:")
-            passcodeVC?.setRightButton(button: nil)
-        }
-    }
+    var passcodeVC: PasscodeWrapperViewController?
 
     // MARK: - Lifecycle
 
@@ -61,6 +56,9 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
+        passcodeVC?.setTitleLabel(titleText: "Создайте код:")
+        passcodeVC?.setRightButton(button: nil)
 
         if let nav = navigationController as? ProfileNavigationController {
             UIView.animate(withDuration: 0.5, delay: 0, options: .beginFromCurrentState, animations: {

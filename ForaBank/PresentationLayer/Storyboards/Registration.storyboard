@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="G2i-s7-mnv">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
@@ -39,7 +39,7 @@
             <objects>
                 <viewController storyboardIdentifier="LoginOrSignupViewController" modalTransitionStyle="flipHorizontal" id="VAm-Zg-ZUt" customClass="LoginOrSignupViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="lIZ-Lr-hJF" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="imageView:2kX-UG-InY:image" translatesAutoresizingMaskIntoConstraints="NO" id="2kX-UG-InY">
@@ -47,16 +47,16 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" alpha="0.10000000149011612" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="C_Users_kryukov_AppData_Local_Pa" translatesAutoresizingMaskIntoConstraints="NO" id="dWk-zg-3rL">
-                                <rect key="frame" x="-20" y="0.0" width="434" height="896"/>
+                                <rect key="frame" x="-20" y="0.0" width="434" height="736"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PZ4-cP-Zcc">
-                                <rect key="frame" x="19" y="277.5" width="375" height="302"/>
+                                <rect key="frame" x="19" y="192.66666666666666" width="375" height="301.66666666666674"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pwm-vR-bds">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="45"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="44.666666666666664"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="fora logo" translatesAutoresizingMaskIntoConstraints="NO" id="x66-Bv-eyl">
-                                                <rect key="frame" x="24" y="0.0" width="40" height="45"/>
+                                                <rect key="frame" x="24" y="0.0" width="40" height="44.666666666666664"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="40" id="fMz-bv-ExD"/>
                                                     <constraint firstAttribute="height" constant="40" id="px8-hy-PbD"/>
@@ -68,7 +68,7 @@
                                                 </variation>
                                             </imageView>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="fora logo 2" translatesAutoresizingMaskIntoConstraints="NO" id="0B6-s7-msi">
-                                                <rect key="frame" x="72" y="0.0" width="280" height="45"/>
+                                                <rect key="frame" x="72" y="0.0" width="280" height="44.666666666666664"/>
                                             </imageView>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -84,14 +84,14 @@
                                         </constraints>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Для доступа к счетам и картам зарегистрируйтесь или войдите" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="BVr-3b-P3X">
-                                        <rect key="frame" x="0.0" y="53" width="375" height="115"/>
+                                        <rect key="frame" x="0.0" y="52.666666666666679" width="375" height="115.33333333333331"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="18"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZV0-WO-O6o">
-                                        <rect key="frame" x="0.0" y="246" width="375" height="56"/>
+                                        <rect key="frame" x="0.0" y="246.00000000000003" width="375" height="55.666666666666657"/>
                                         <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="ZV0-WO-O6o" secondAttribute="height" multiplier="168:25" id="A5W-uH-mRk"/>
@@ -105,7 +105,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rxj-v6-40v">
-                                        <rect key="frame" x="0.0" y="176" width="375" height="56"/>
+                                        <rect key="frame" x="0.0" y="176.00000000000003" width="375" height="56"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="rxj-v6-40v" secondAttribute="height" multiplier="168:25" id="hCU-mC-4eW"/>
@@ -187,11 +187,11 @@
             <objects>
                 <viewController modalTransitionStyle="flipHorizontal" id="308-e2-JcT" customClass="RegistrationViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Qlg-S7-bsB">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xyJ-Kf-sFq" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="73" width="414" height="740"/>
+                                <rect key="frame" x="0.0" y="29" width="414" height="658"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XLM-iE-Iae" customClass="FlexiblePageControl" customModule="FlexiblePageControl">
                                         <rect key="frame" x="172" y="28" width="70" height="10"/>
@@ -202,7 +202,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GHX-YX-jgg">
-                                        <rect key="frame" x="27" y="64" width="360" height="676"/>
+                                        <rect key="frame" x="27" y="64" width="360" height="594"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wup-aq-s6e">
                                                 <rect key="frame" x="1" y="1" width="358" height="44"/>
@@ -246,7 +246,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ru-vtb24" translatesAutoresizingMaskIntoConstraints="NO" id="Rwk-ie-wZD">
-                                                        <rect key="frame" x="22" y="10.5" width="100" height="30"/>
+                                                        <rect key="frame" x="22" y="10.666666666666657" width="100" height="30"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" priority="999" constant="100" id="4V3-nj-6Ei"/>
@@ -254,7 +254,7 @@
                                                         </constraints>
                                                     </imageView>
                                                     <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="visa-colored" translatesAutoresizingMaskIntoConstraints="NO" id="y98-uH-GJ2">
-                                                        <rect key="frame" x="311.5" y="17" width="26.5" height="17"/>
+                                                        <rect key="frame" x="311.66666666666669" y="17" width="26.333333333333314" height="17"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="17" id="Yin-4L-J8P"/>
@@ -536,7 +536,7 @@
                                                 </connections>
                                             </button>
                                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dd0-w7-5wN" customClass="ActivityIndicatorView" customModule="ForaBank" customModuleProvider="target">
-                                                <rect key="frame" x="153.5" y="272" width="53" height="53"/>
+                                                <rect key="frame" x="153.66666666666666" y="272" width="53" height="53"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="Dd0-w7-5wN" secondAttribute="height" multiplier="1:1" id="wKx-gB-AlI"/>
@@ -580,10 +580,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Op5-VB-NmQ" customClass="MaskedNavigationBar" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="106"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="62"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Регистрация" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sEV-jX-LIx">
-                                        <rect key="frame" x="146.5" y="57" width="121" height="26"/>
+                                        <rect key="frame" x="146.66666666666666" y="13" width="120.99999999999997" height="26"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="26" id="3h8-pe-QQS"/>
                                             <constraint firstAttribute="width" constant="121" id="KkP-lW-mAi"/>
@@ -593,7 +593,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W3x-JE-iYH">
-                                        <rect key="frame" x="14" y="57" width="26" height="26"/>
+                                        <rect key="frame" x="14" y="13" width="26" height="26"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="26" id="vn6-ZK-PHb"/>
                                             <constraint firstAttribute="height" constant="26" id="zm9-cd-kkq"/>
@@ -667,11 +667,11 @@
             <objects>
                 <viewController modalTransitionStyle="flipHorizontal" modalPresentationStyle="overFullScreen" id="Qcp-yG-LVI" customClass="RegistrationCodeVerificationViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="YmZ-YZ-z4i">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="prt-h4-3x1" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="73" width="414" height="740"/>
+                                <rect key="frame" x="0.0" y="29" width="414" height="658"/>
                                 <subviews>
                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IgS-z8-LFg" customClass="FlexiblePageControl" customModule="FlexiblePageControl">
                                         <rect key="frame" x="172" y="28" width="70" height="10"/>
@@ -682,7 +682,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wgT-ud-smE">
-                                        <rect key="frame" x="8" y="278.5" width="398" height="183"/>
+                                        <rect key="frame" x="8" y="237.66666666666669" width="398" height="183"/>
                                         <subviews>
                                             <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="b4u-GM-GMe">
                                                 <rect key="frame" x="154" y="66" width="90" height="40"/>
@@ -718,7 +718,7 @@
                                                 </connections>
                                             </button>
                                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T4B-Ys-ZHR" customClass="ActivityIndicatorView" customModule="ForaBank" customModuleProvider="target">
-                                                <rect key="frame" x="172.5" y="130" width="53" height="53"/>
+                                                <rect key="frame" x="172.66666666666666" y="130" width="53" height="53"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <color key="tintColor" red="0.91764705879999997" green="0.2666666667" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
@@ -757,10 +757,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ktT-hS-heP" customClass="MaskedNavigationBar" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="106"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="62"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Регистрация" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8LA-u7-5nU">
-                                        <rect key="frame" x="146.5" y="57" width="121" height="26"/>
+                                        <rect key="frame" x="146.66666666666666" y="13" width="120.99999999999997" height="26"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="26" id="D6Y-BA-avX"/>
                                             <constraint firstAttribute="width" constant="121" id="joQ-Or-Btz"/>
@@ -770,7 +770,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZBI-Mu-fBV">
-                                        <rect key="frame" x="14" y="57" width="26" height="26"/>
+                                        <rect key="frame" x="14" y="13" width="26" height="26"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="26" id="DIw-bq-v8Y"/>
                                             <constraint firstAttribute="width" constant="26" id="GN0-Yh-sFA"/>
@@ -829,14 +829,14 @@
             <objects>
                 <viewController modalTransitionStyle="flipHorizontal" id="X68-pN-5sM" customClass="RegistrationLoginPasswordViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9G9-Kf-zOc">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b7v-Gh-40W" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="73" width="414" height="740"/>
+                                <rect key="frame" x="0.0" y="29" width="414" height="658"/>
                                 <subviews>
                                     <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rLe-8j-f7S">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="740"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="658"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3d8-Rp-1UM">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="524"/>
@@ -978,7 +978,7 @@
                                                                 </connections>
                                                             </button>
                                                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a6w-OV-S3a" customClass="ActivityIndicatorView" customModule="ForaBank" customModuleProvider="target">
-                                                                <rect key="frame" x="172.5" y="433" width="53" height="53"/>
+                                                                <rect key="frame" x="172.66666666666666" y="433" width="53" height="53"/>
                                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <color key="tintColor" red="0.91764705879999997" green="0.2666666667" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <constraints>
@@ -986,10 +986,10 @@
                                                                 </constraints>
                                                             </view>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4sJ-Wa-aoc">
-                                                                <rect key="frame" x="96.5" y="387" width="205" height="38"/>
+                                                                <rect key="frame" x="96.333333333333329" y="387" width="205.33333333333337" height="38"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Я прочитал" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EUw-gR-Iy1">
-                                                                        <rect key="frame" x="30" y="4" width="68" height="30"/>
+                                                                        <rect key="frame" x="30.000000000000014" y="4" width="68" height="30"/>
                                                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="13"/>
                                                                         <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                                         <color key="highlightedColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1105,10 +1105,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UoG-ev-0Cu" customClass="MaskedNavigationBar" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="106"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="62"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Регистрация" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gj4-lB-bMn">
-                                        <rect key="frame" x="146.5" y="57" width="121" height="26"/>
+                                        <rect key="frame" x="146.66666666666666" y="13" width="120.99999999999997" height="26"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="26" id="M37-gQ-4kc"/>
                                             <constraint firstAttribute="width" constant="121" id="fFy-uZ-YTS"/>
@@ -1118,7 +1118,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e79-wQ-vqI">
-                                        <rect key="frame" x="14" y="57" width="26" height="26"/>
+                                        <rect key="frame" x="14" y="13" width="26" height="26"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="26" id="E7y-f3-RaC"/>
                                             <constraint firstAttribute="width" constant="26" id="hqg-z7-UqF"/>
@@ -1183,11 +1183,11 @@
             <objects>
                 <viewController storyboardIdentifier="finish" modalPresentationStyle="overCurrentContext" id="3S2-Ql-HD5" customClass="RegistrationPermissionsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1Af-si-LYs">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WVv-9f-Tdt" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="73" width="414" height="740"/>
+                                <rect key="frame" x="0.0" y="29" width="414" height="658"/>
                                 <subviews>
                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BRp-UY-6fh" customClass="FlexiblePageControl" customModule="FlexiblePageControl">
                                         <rect key="frame" x="172" y="28" width="70" height="10"/>
@@ -1228,17 +1228,17 @@
                                                 <rect key="frame" x="20" y="65" width="358" height="247"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6D8-CM-MrY">
-                                                        <rect key="frame" x="0.0" y="0.0" width="358" height="81.5"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="358" height="81.666666666666671"/>
                                                         <subviews>
                                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="touch" translatesAutoresizingMaskIntoConstraints="NO" id="TqN-X8-6K4">
-                                                                <rect key="frame" x="0.0" y="28.5" width="30" height="25"/>
+                                                                <rect key="frame" x="0.0" y="28.333333333333343" width="30" height="25"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="25" id="7AW-t3-3dw"/>
                                                                     <constraint firstAttribute="width" constant="30" id="x5n-iK-oG2"/>
                                                                 </constraints>
                                                             </imageView>
                                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="bcx-RC-rIz">
-                                                                <rect key="frame" x="301" y="25.5" width="49" height="31"/>
+                                                                <rect key="frame" x="301" y="25.333333333333343" width="49" height="31"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="47" id="Opb-eC-OKC"/>
                                                                 </constraints>
@@ -1247,7 +1247,7 @@
                                                                 </connections>
                                                             </switch>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Touch ID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3h3-bt-bM5">
-                                                                <rect key="frame" x="38" y="30.5" width="255" height="21"/>
+                                                                <rect key="frame" x="38" y="30.333333333333343" width="255" height="21"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="21" id="JmK-vQ-9oS"/>
                                                                 </constraints>
@@ -1256,7 +1256,7 @@
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AIw-NQ-Y2E">
-                                                                <rect key="frame" x="0.0" y="81" width="358" height="1"/>
+                                                                <rect key="frame" x="0.0" y="81.333333333333343" width="358" height="1"/>
                                                                 <color key="backgroundColor" white="0.66666666669999997" alpha="0.49435466610000001" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="1" id="1QU-aC-g3C"/>
@@ -1278,17 +1278,17 @@
                                                         </constraints>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eiA-iq-uoy">
-                                                        <rect key="frame" x="0.0" y="82.5" width="358" height="82"/>
+                                                        <rect key="frame" x="0.0" y="82.666666666666657" width="358" height="81.666666666666657"/>
                                                         <subviews>
                                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="face" translatesAutoresizingMaskIntoConstraints="NO" id="h6P-sL-dMK">
-                                                                <rect key="frame" x="0.0" y="28.5" width="30" height="25"/>
+                                                                <rect key="frame" x="0.0" y="28.333333333333343" width="30" height="25"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="25" id="jsC-MM-kDk"/>
                                                                     <constraint firstAttribute="width" constant="30" id="zjU-z0-HOD"/>
                                                                 </constraints>
                                                             </imageView>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Face ID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w6N-sT-6p0">
-                                                                <rect key="frame" x="38" y="30.5" width="54" height="21"/>
+                                                                <rect key="frame" x="38" y="30.333333333333343" width="54" height="21"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="21" id="Mmi-f3-HUZ"/>
                                                                 </constraints>
@@ -1297,14 +1297,14 @@
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TcL-bn-wRX">
-                                                                <rect key="frame" x="0.0" y="81.5" width="358" height="1"/>
+                                                                <rect key="frame" x="0.0" y="81.333333333333343" width="358" height="1"/>
                                                                 <color key="backgroundColor" white="0.66666666669999997" alpha="0.49435466610000001" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="1" id="LiX-JB-NbK"/>
                                                                 </constraints>
                                                             </view>
                                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="4w4-Z8-xBz">
-                                                                <rect key="frame" x="302" y="15.5" width="49" height="51"/>
+                                                                <rect key="frame" x="302" y="15.666666666666682" width="49" height="50.666666666666657"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="47" id="slD-5c-ocM"/>
                                                                 </constraints>
@@ -1328,23 +1328,23 @@
                                                         </constraints>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JAC-7d-Sgo">
-                                                        <rect key="frame" x="0.0" y="165.5" width="358" height="81.5"/>
+                                                        <rect key="frame" x="0.0" y="165.33333333333331" width="358" height="81.666666666666686"/>
                                                         <subviews>
                                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lock" translatesAutoresizingMaskIntoConstraints="NO" id="lsE-zj-lFy">
-                                                                <rect key="frame" x="0.0" y="28" width="30" height="25"/>
+                                                                <rect key="frame" x="0.0" y="28.333333333333371" width="30" height="25"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="30" id="5n3-GK-nbc"/>
                                                                     <constraint firstAttribute="height" constant="25" id="p4h-5Q-I9p"/>
                                                                 </constraints>
                                                             </imageView>
-                                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XmH-Eo-1JC">
-                                                                <rect key="frame" x="301" y="25" width="49" height="31"/>
+                                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XmH-Eo-1JC">
+                                                                <rect key="frame" x="301" y="25.333333333333371" width="49" height="31"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="47" id="TFd-77-Wjf"/>
                                                                 </constraints>
                                                             </switch>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Логин и пароль" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Txz-xm-87V">
-                                                                <rect key="frame" x="38" y="30" width="255" height="21"/>
+                                                                <rect key="frame" x="38" y="30.333333333333371" width="255" height="21"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="21" id="5iG-uH-PiY"/>
                                                                 </constraints>
@@ -1353,7 +1353,7 @@
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pTB-md-muQ">
-                                                                <rect key="frame" x="0.0" y="81" width="358" height="1"/>
+                                                                <rect key="frame" x="0.0" y="81.333333333333371" width="358" height="1"/>
                                                                 <color key="backgroundColor" white="0.66666666669999997" alpha="0.49435466610000001" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="1" id="d5f-yp-zL5"/>
@@ -1403,7 +1403,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Z7b-oS-lgt">
-                                <rect key="frame" x="0.0" y="57" width="415" height="26"/>
+                                <rect key="frame" x="0.0" y="13" width="415" height="26"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Регистрация" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3QZ-qR-FlW">
                                         <rect key="frame" x="147" y="0.0" width="121" height="26"/>
@@ -1464,6 +1464,8 @@
                         <outlet property="header" destination="Z7b-oS-lgt" id="TyQ-dF-5E0"/>
                         <outlet property="pageControl" destination="BRp-UY-6fh" id="Qx4-sP-Lxj"/>
                         <outlet property="touchIdDevice" destination="6D8-CM-MrY" id="Gxg-wf-UcG"/>
+                        <outletCollection property="biometricSwitches" destination="bcx-RC-rIz" collectionClass="NSMutableArray" id="i4m-Qv-DYn"/>
+                        <outletCollection property="biometricSwitches" destination="4w4-Z8-xBz" collectionClass="NSMutableArray" id="qBy-gW-J0w"/>
                         <segue destination="j4D-xD-SzH" kind="show" identifier="touchID" id="Buh-jM-ADK"/>
                         <segue destination="1eR-cn-Ek6" kind="show" identifier="authSms" id="hU2-MH-sRH"/>
                     </connections>
@@ -1477,21 +1479,21 @@
             <objects>
                 <viewController id="fAi-Mj-Me8" customClass="RegistrationFinishViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="EH5-pL-r6u" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n2p-me-D0Q">
-                                <rect key="frame" x="0.0" y="265.5" width="414" height="317"/>
+                                <rect key="frame" x="0.0" y="180.66666666666663" width="414" height="317"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ok" translatesAutoresizingMaskIntoConstraints="NO" id="0BP-fV-jwF">
-                                        <rect key="frame" x="79" y="-59" width="256" height="228"/>
+                                        <rect key="frame" x="79" y="-58.999999999999986" width="256" height="228"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="228" id="DMn-fc-4M7"/>
                                             <constraint firstAttribute="width" constant="256" id="Grz-rV-YDF"/>
                                         </constraints>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Теперь вы можете  использовать приложение" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O1Q-hL-pHW">
-                                        <rect key="frame" x="32" y="185" width="350" height="71"/>
+                                        <rect key="frame" x="32" y="185.00000000000003" width="350" height="70.999999999999972"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="71" id="yP8-pD-Mmu"/>
                                         </constraints>
@@ -1500,7 +1502,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Поздравляем!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Es7-S1-Nbl">
-                                        <rect key="frame" x="107" y="158" width="200" height="21"/>
+                                        <rect key="frame" x="107" y="158.00000000000003" width="200" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="21" id="3sU-oT-Iwd"/>
                                             <constraint firstAttribute="width" constant="200" id="mY4-Tu-oK7"/>
@@ -1573,11 +1575,11 @@
             <objects>
                 <viewController id="j4D-xD-SzH" customClass="RegistrationTouchIDViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="jrW-GE-wF4" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EBs-dU-miI" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="771" width="414" height="125"/>
+                                <rect key="frame" x="0.0" y="611" width="414" height="125"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8rM-Pk-ccU" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="125"/>
@@ -1601,7 +1603,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="56A-AH-ZRI">
-                                <rect key="frame" x="193" y="374" width="28" height="28"/>
+                                <rect key="frame" x="197.66666666666666" y="297" width="18.666666666666657" height="22"/>
                                 <state key="normal" image="FaceIcon">
                                     <color key="titleColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 </state>
@@ -1644,14 +1646,14 @@
             <objects>
                 <viewController modalTransitionStyle="crossDissolve" modalPresentationStyle="overCurrentContext" id="N4i-YV-l6L" customClass="SignInViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2mi-xf-O7K" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UIE-72-Pur" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="91" width="414" height="805"/>
+                                <rect key="frame" x="0.0" y="47" width="414" height="689"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kqf-3l-iTE">
-                                        <rect key="frame" x="20" y="354" width="374" height="305"/>
+                                        <rect key="frame" x="20" y="238" width="374" height="305"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Введите логин и пароль" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HE2-54-8YZ">
                                                 <rect key="frame" x="0.0" y="14" width="374" height="55"/>
@@ -1716,7 +1718,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uVG-3W-T4m">
-                                                <rect key="frame" x="126.5" y="276" width="121" height="34"/>
+                                                <rect key="frame" x="126.66666666666666" y="276" width="121" height="34"/>
                                                 <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
                                                 <state key="normal" title="Забыли пароль?">
                                                     <color key="titleColor" systemColor="systemPinkColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1765,7 +1767,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="elB-7z-XSm">
-                                <rect key="frame" x="0.0" y="57" width="415" height="26"/>
+                                <rect key="frame" x="0.0" y="13" width="415" height="26"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Авторизация" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ogw-Us-Sda">
                                         <rect key="frame" x="147" y="0.0" width="121" height="26"/>
@@ -1844,14 +1846,14 @@
             <objects>
                 <viewController storyboardIdentifier="smsVerification" modalPresentationStyle="overCurrentContext" id="z67-jk-msy" customClass="RegistrationCodeVerificationViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="kIj-D9-BBp">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="E1t-Tl-Llt" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="73" width="414" height="740"/>
+                                <rect key="frame" x="0.0" y="29" width="414" height="658"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g5U-6P-v5r">
-                                        <rect key="frame" x="8" y="171" width="398" height="183"/>
+                                        <rect key="frame" x="8" y="130" width="398" height="183"/>
                                         <subviews>
                                             <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="tbH-1y-acu">
                                                 <rect key="frame" x="154" y="66" width="90" height="40"/>
@@ -1887,7 +1889,7 @@
                                                 </connections>
                                             </button>
                                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RYh-b1-HMB" customClass="ActivityIndicatorView" customModule="ForaBank" customModuleProvider="target">
-                                                <rect key="frame" x="172.5" y="130" width="53" height="53"/>
+                                                <rect key="frame" x="172.66666666666666" y="130" width="53" height="53"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <color key="tintColor" red="0.91764705879999997" green="0.2666666667" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
@@ -1928,7 +1930,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kg1-BL-aW1">
-                                <rect key="frame" x="0.0" y="57" width="415" height="26"/>
+                                <rect key="frame" x="0.0" y="13" width="415" height="26"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Авторизация" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FTt-9k-htf">
                                         <rect key="frame" x="147" y="0.0" width="121" height="26"/>
@@ -1999,14 +2001,14 @@
             <objects>
                 <viewController storyboardIdentifier="smsVerification2" modalPresentationStyle="overCurrentContext" id="1eR-cn-Ek6" customClass="RegistrationCodeVerificationViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="U5t-4h-EgA">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KRj-mg-c4v" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="73" width="414" height="740"/>
+                                <rect key="frame" x="0.0" y="29" width="414" height="658"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MTP-fz-tG7">
-                                        <rect key="frame" x="8" y="278.5" width="398" height="183"/>
+                                        <rect key="frame" x="8" y="237.66666666666669" width="398" height="183"/>
                                         <subviews>
                                             <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="lh9-tP-pbp">
                                                 <rect key="frame" x="154" y="66" width="90" height="40"/>
@@ -2041,7 +2043,7 @@
                                                 </connections>
                                             </button>
                                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G00-sF-Bhd" customClass="ActivityIndicatorView" customModule="ForaBank" customModuleProvider="target">
-                                                <rect key="frame" x="172.5" y="130" width="53" height="53"/>
+                                                <rect key="frame" x="172.66666666666666" y="130" width="53" height="53"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <color key="tintColor" red="0.91764705879999997" green="0.2666666667" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
@@ -2081,7 +2083,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="avU-QW-6WN">
-                                <rect key="frame" x="0.0" y="57" width="415" height="26"/>
+                                <rect key="frame" x="0.0" y="13" width="415" height="26"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Авторизация" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sRA-UR-Eho">
                                         <rect key="frame" x="147" y="0.0" width="121" height="26"/>
@@ -2153,14 +2155,14 @@
             <objects>
                 <viewController modalPresentationStyle="overCurrentContext" useStoryboardIdentifierAsRestorationIdentifier="YES" id="6W6-Wj-5Rw" customClass="RegistrationCodeVerificationViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="jTb-EQ-86m">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nk6-jg-MtA" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="73" width="414" height="740"/>
+                                <rect key="frame" x="0.0" y="29" width="414" height="658"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jJl-JU-EGw">
-                                        <rect key="frame" x="8" y="171" width="398" height="183"/>
+                                        <rect key="frame" x="8" y="130" width="398" height="183"/>
                                         <subviews>
                                             <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="pgb-8z-Apz">
                                                 <rect key="frame" x="154" y="66" width="90" height="40"/>
@@ -2197,7 +2199,7 @@
                                                 </connections>
                                             </button>
                                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IED-AY-uau" customClass="ActivityIndicatorView" customModule="ForaBank" customModuleProvider="target">
-                                                <rect key="frame" x="172.5" y="130" width="53" height="53"/>
+                                                <rect key="frame" x="172.66666666666666" y="130" width="53" height="53"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <color key="tintColor" red="0.91764705879999997" green="0.2666666667" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
@@ -2238,7 +2240,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YDA-JZ-9NU">
-                                <rect key="frame" x="0.0" y="57" width="415" height="26"/>
+                                <rect key="frame" x="0.0" y="13" width="415" height="26"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UV6-Tu-b1D">
                                         <rect key="frame" x="14" y="0.0" width="26" height="26"/>
@@ -2253,7 +2255,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Восстановление пароля" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e0A-1q-atS">
-                                        <rect key="frame" x="82.5" y="0.0" width="250" height="26"/>
+                                        <rect key="frame" x="82.666666666666686" y="0.0" width="250" height="26"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="250" id="cd8-wJ-zRH"/>
                                             <constraint firstAttribute="height" constant="26" id="v5U-x4-7ZF"/>
@@ -2309,14 +2311,14 @@
             <objects>
                 <viewController storyboardIdentifier="loginResetPassword" modalTransitionStyle="crossDissolve" modalPresentationStyle="overCurrentContext" useStoryboardIdentifierAsRestorationIdentifier="YES" id="EKX-dU-kvS" customClass="PrepareResetPassword" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="77g-hh-zfN" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lp1-zx-Hwr" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="73" width="414" height="823"/>
+                                <rect key="frame" x="0.0" y="29" width="414" height="707"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="o3i-5b-vQN">
-                                        <rect key="frame" x="20" y="257" width="374" height="305"/>
+                                        <rect key="frame" x="20" y="141" width="374" height="305"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Введите логин" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8FD-gb-bKw">
                                                 <rect key="frame" x="0.0" y="14" width="374" height="55"/>
@@ -2393,7 +2395,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qBo-uS-pb6">
-                                <rect key="frame" x="0.0" y="57" width="415" height="26"/>
+                                <rect key="frame" x="0.0" y="13" width="415" height="26"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gO7-WX-nNs">
                                         <rect key="frame" x="14" y="0.0" width="26" height="26"/>
@@ -2472,14 +2474,14 @@
             <objects>
                 <viewController storyboardIdentifier="resetPassword" modalTransitionStyle="crossDissolve" modalPresentationStyle="overCurrentContext" useStoryboardIdentifierAsRestorationIdentifier="YES" id="V6e-QM-kSe" customClass="PrepareResetPassword" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="utD-yK-mKP" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tEf-0P-9um" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="73" width="414" height="823"/>
+                                <rect key="frame" x="0.0" y="29" width="414" height="707"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eLu-gr-Ke2">
-                                        <rect key="frame" x="20" y="257" width="374" height="305"/>
+                                        <rect key="frame" x="20" y="141" width="374" height="305"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Введите новый пароль" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zR0-bG-Y42">
                                                 <rect key="frame" x="0.0" y="14" width="374" height="55"/>
@@ -2556,7 +2558,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p78-GY-qXO">
-                                <rect key="frame" x="0.0" y="57" width="415" height="26"/>
+                                <rect key="frame" x="0.0" y="13" width="415" height="26"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Восстановление пароля" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Rl-bd-gqs">
                                         <rect key="frame" x="91" y="0.0" width="235" height="26"/>
@@ -2633,7 +2635,7 @@
             <objects>
                 <viewController id="b0F-Yz-Fgo" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="WQ6-j7-k7D">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="gM9-YD-6it"/>
@@ -2649,14 +2651,14 @@
             <objects>
                 <viewController modalTransitionStyle="flipHorizontal" modalPresentationStyle="overFullScreen" id="0f1-vD-E8P" customClass="PasscodeSignUpViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Cbq-w9-cwq">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HT1-f0-mej" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="73" width="414" height="740"/>
+                                <rect key="frame" x="0.0" y="29" width="414" height="658"/>
                                 <subviews>
                                     <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pep-eu-uke">
-                                        <rect key="frame" x="0.0" y="33" width="414" height="707"/>
+                                        <rect key="frame" x="0.0" y="33" width="414" height="625"/>
                                         <connections>
                                             <segue destination="v71-NX-vDZ" kind="embed" identifier="" id="Y5a-e4-PT4"/>
                                         </connections>
@@ -2671,10 +2673,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6ec-Cb-18p" customClass="MaskedNavigationBar" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="106"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="62"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Регистрация" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jBt-hh-PKj">
-                                        <rect key="frame" x="146.5" y="57" width="121" height="26"/>
+                                        <rect key="frame" x="146.66666666666666" y="13" width="120.99999999999997" height="26"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="121" id="7ab-gj-AoS"/>
                                             <constraint firstAttribute="height" constant="26" id="pMV-GL-vhp"/>
@@ -2684,7 +2686,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wbx-xk-Fvb">
-                                        <rect key="frame" x="14" y="57" width="26" height="26"/>
+                                        <rect key="frame" x="14" y="13" width="26" height="26"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="26" id="6F9-2M-Exe"/>
                                             <constraint firstAttribute="height" constant="26" id="ltp-2d-5c6"/>
@@ -2696,7 +2698,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zfx-mG-RrJ">
-                                        <rect key="frame" x="300" y="57" width="100" height="26"/>
+                                        <rect key="frame" x="300" y="13" width="100" height="26"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="26" id="6Kr-wo-jPk"/>
                                         </constraints>
@@ -2752,9 +2754,10 @@
             <objects>
                 <viewController id="v71-NX-vDZ" customClass="PasscodeWrapperViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="yvM-IA-Zde">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="707"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="625"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="mjM-0I-yuJ"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="L2c-ns-bTF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -2764,7 +2767,7 @@
     </scenes>
     <resources>
         <image name="C_Users_kryukov_AppData_Local_Pa" width="320" height="568"/>
-        <image name="FaceIcon" width="28" height="28"/>
+        <image name="FaceIcon" width="18.666666030883789" height="18.666666030883789"/>
         <image name="button_back" width="8" height="14"/>
         <image name="card_scan" width="26" height="16"/>
         <image name="chat_message_confirm" width="13" height="11"/>

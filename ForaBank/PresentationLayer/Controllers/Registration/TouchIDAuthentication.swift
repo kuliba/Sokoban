@@ -12,7 +12,7 @@ enum BiometricType {
 class BiometricIDAuth {
     let context = LAContext()
     var loginReason = "Logging in with Touch ID"
-    
+
     func biometricType() -> BiometricType {
         let _ = context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
         switch context.biometryType {
@@ -24,17 +24,17 @@ class BiometricIDAuth {
             return .faceID
         }
     }
-    
+
     func canEvaluatePolicy() -> Bool {
         return context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
     }
-    
+
     func authenticateUser(completion: @escaping (String?) -> Void) {
         guard canEvaluatePolicy() else {
             completion("Touch ID not available")
             return
         }
-        
+
         context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: loginReason) { (success, evaluateError) in
             if success {
                 DispatchQueue.main.async {
@@ -43,7 +43,7 @@ class BiometricIDAuth {
                 }
             } else {
                 let message: String
-                
+
                 switch evaluateError {
                 case LAError.authenticationFailed?:
                     message = "There was a problem verifying your identity."
@@ -60,7 +60,8 @@ class BiometricIDAuth {
                 default:
                     message = "Face ID/Touch ID may not be configured"
                 }
-                completion(message)                            }
+                completion(message)
+            }
         }
     }
 }

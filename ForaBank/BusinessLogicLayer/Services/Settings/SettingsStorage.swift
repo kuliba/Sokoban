@@ -21,6 +21,14 @@ class SettingsStorage: ISettingsStorage {
         userDefaults.setFirstLaunch()
     }
 
+    func allowedBiometricSignIn() -> Bool {
+        return userDefaults.allowedBiometricSignIn()
+    }
+
+    func setAllowedBiometricSignIn(allowed: Bool) {
+        userDefaults.setAllowedBiometricSignIn(allowed: allowed)
+    }
+
     func setNeedSetPasscode(_ needs: Bool) {
         userDefaults.setNeedSetPasscode(needs)
     }

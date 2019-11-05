@@ -25,27 +25,25 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
     @IBOutlet weak var header: UIView!
     @IBOutlet weak var touchIdDevice: UIView!
     @IBOutlet weak var faceIdDevice: UIView!
+    @IBOutlet var biometricSwitches: [UISwitch]!
 
     // MARK: - Actions
     @IBAction func backButtonCLicked(_ sender: Any) {
         segueId = backSegueId
         view.endEditing(true)
+        store.dispatch(clearSignUpProcess)
         self.navigationController?.popViewController(animated: true)
     }
 
     @IBAction func touchIdSwitch(_ sender: Any) {
-        if let s = sender as? UISwitch,
-            s.isOn == true {
+        guard let switcher = sender as? UISwitch else {
+            return
+        }
+        SettingsStorage.shared.setAllowedBiometricSignIn(allowed: switcher.isOn)
+        if switcher.isOn == true {
             performSegue(withIdentifier: "touchID", sender: nil)
         }
     }
-    @IBAction func pinCodeApp(_ sender: Any) {
-        if let s = sender as? UISwitch,
-            s.isOn == true {
-            store.dispatch(startPasscodeSingUp)
-        }
-    }
-
 
     @IBAction func `continue`(_ sender: Any) {
         NetworkManager.shared().doRegistration(completionHandler: { [unowned self] success, errorMessage, l, p in
@@ -86,7 +84,10 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
     let context = LAContext()
 
     func biometricType() -> BiometricType {
-        let _ = context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
+        let canEvaluatePolicy = context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
+        if !canEvaluatePolicy {
+            biometricSwitches.forEach { $0.isEnabled = false }
+        }
         switch context.biometryType {
         case .none:
             return .none
