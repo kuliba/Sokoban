@@ -26,12 +26,12 @@ class Card: Mappable, IProduct {
     var blocked: Bool
     var holderName: String
 
-    var  customName: String?
-    
+    var customName: String?
+
     var type: CardType?
     var paypass: Bool?
     var miniStatement: String?
-    var validityPeriod: String?
+    var validThru: Double?
     var startDate: String?
     var expirationDate: String?
     var blockedMoney: Double?
@@ -60,6 +60,8 @@ class Card: Mappable, IProduct {
         try id = map.from("cardID")
         try status = map.from("status")
         try holderName = map.from("holderName")
+        try validThru = map.from("validThru")
+        
         var mskd = ""
         if number.count > 0 {
             mskd = String(number.prefix(6))

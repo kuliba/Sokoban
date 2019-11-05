@@ -15,6 +15,8 @@ class DetailedCardView: CardView {
     let paypassLogoImageView = UIImageView()
     let titleLabel = UILabel()
     let cardNumberLabel = UILabel()
+    let cardHolderNameLabel = UILabel()
+
     let cardValidityPeriodLabel = UILabel()
     let cardCashLabel = UILabel()
     let cardBlockedImageView = UIImageView()
@@ -37,6 +39,7 @@ class DetailedCardView: CardView {
             titleLabel.textColor = foregroundColor
             cardCashLabel.textColor = foregroundColor
             cardNumberLabel.textColor = foregroundColor
+            cardHolderNameLabel.textColor = foregroundColor
             cardValidityPeriodLabel.textColor = foregroundColor
         }
     }
@@ -64,6 +67,7 @@ class DetailedCardView: CardView {
         self.addSubview(logoImageView)
         self.addSubview(titleLabel)
         self.addSubview(cardNumberLabel)
+        addSubview(cardHolderNameLabel)
         self.addSubview(cardValidityPeriodLabel)
         self.addSubview(cardCashLabel)
         self.addSubview(paypassLogoImageView)
@@ -73,6 +77,7 @@ class DetailedCardView: CardView {
         logoImageView.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         cardNumberLabel.translatesAutoresizingMaskIntoConstraints = false
+        cardHolderNameLabel.translatesAutoresizingMaskIntoConstraints = false
         cardValidityPeriodLabel.translatesAutoresizingMaskIntoConstraints = false
         cardCashLabel.translatesAutoresizingMaskIntoConstraints = false
         paypassLogoImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -129,6 +134,7 @@ class DetailedCardView: CardView {
                 titleLabel.textColor = .black
                 cardCashLabel.textColor = .black
                 cardNumberLabel.textColor = .black
+                cardHolderNameLabel.textColor = .black
                 cardValidityPeriodLabel.textColor = .black
 
 
@@ -148,7 +154,7 @@ class DetailedCardView: CardView {
             color2 = UIColor(red: 0.96, green: 0.45, blue: 0.13, alpha: 1)
             color1 = UIColor(red: 0.89, green: 0.77, blue: 0.35, alpha: 1)
 
-            cardNumberLabel.attributedText = NSAttributedString(string: card?.maskedNumber ?? "", attributes: [.font: UIFont.systemFont(ofSize: 16), .foregroundColor: foregroundColor])
+            cardNumberLabel.attributedText = NSAttributedString(string: card?.maskedNumber ?? "", attributes: [.font: UIFont.systemFont(ofSize: 12), .foregroundColor: foregroundColor])
             cardNumberLabel.textAlignment = .center
             if card?.number.prefix(6) == "557986" {
                 backgroundImageView.image = UIImage(named: "card_visa_standart")
@@ -159,8 +165,12 @@ class DetailedCardView: CardView {
                 cardValidityPeriodLabel.textColor = .black
 
             }
+
+            cardHolderNameLabel.text = card?.holderName
+
             expirationDate.text = card?.expirationDate
-            cardValidityPeriodLabel.attributedText = NSAttributedString(string: card?.validityPeriod ?? "", attributes: [.font: UIFont.systemFont(ofSize: 12), .foregroundColor: foregroundColor])
+            cardValidityPeriodLabel.attributedText = NSAttributedString(string: monthYear(milisecond: card?.validThru ?? 0), attributes: [.font: UIFont.systemFont(ofSize: 12), .foregroundColor: foregroundColor])
+
             if card?.type?.rawValue.range(of: "visa", options: .caseInsensitive) != nil {
                 logoImageView.image = UIImage(named: "card_visa_logo")
             }
@@ -187,6 +197,7 @@ class DetailedCardView: CardView {
                     titleLabel.textColor = .black
                     cardCashLabel.textColor = .black
                     cardNumberLabel.textColor = .black
+                    cardHolderNameLabel.textColor = .black
                     cardValidityPeriodLabel.textColor = .black
                 }
                 else if card?.number.prefix(6) == "536466" {
@@ -214,18 +225,12 @@ class DetailedCardView: CardView {
         verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[backgroundImageView]-0-|", options: .alignAllCenterX, metrics: nil, views: ["backgroundImageView": backgroundImageView])
         self.addConstraints(verticalConstraints)
 
-        // center cardNumberLabel vertically in self
-        self.addConstraint(NSLayoutConstraint(item: cardNumberLabel, attribute: NSLayoutConstraint.Attribute.centerY, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.centerY, multiplier: 1.0, constant: 0.0))
-
-        // align cardNumberLabel from the left and right
-        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-10-[view]-10-|", options: NSLayoutConstraint.FormatOptions(rawValue: 0), metrics: nil, views: ["view": cardNumberLabel]))
-
-//        horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[cardNumberLabel(150)]", options: [], metrics: nil, views: ["cardNumberLabel": cardNumberLabel])
-//        self.addConstraints(horizontalConstraints)
-//        horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[cardValidityPeriodLabel(150)]", options: [], metrics: nil, views: ["cardValidityPeriodLabel": cardValidityPeriodLabel])
-//        self.addConstraints(horizontalConstraints)
-//        verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[cardNumberLabel(20)]-0-[cardValidityPeriodLabel(20)]-20-|", options: [], metrics: nil, views: ["cardNumberLabel": cardNumberLabel, "cardValidityPeriodLabel": cardValidityPeriodLabel])
-//        self.addConstraints(verticalConstraints)
+        horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[cardNumberLabel(150)]", options: [], metrics: nil, views: ["cardNumberLabel": cardNumberLabel])
+        self.addConstraints(horizontalConstraints)
+        horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[cardValidityPeriodLabel(150)]", options: [], metrics: nil, views: ["cardValidityPeriodLabel": cardValidityPeriodLabel])
+        self.addConstraints(horizontalConstraints)
+        verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[cardNumberLabel(20)]-0-[cardValidityPeriodLabel(20)]-20-|", options: [], metrics: nil, views: ["cardNumberLabel": cardNumberLabel, "cardValidityPeriodLabel": cardValidityPeriodLabel])
+        self.addConstraints(verticalConstraints)
 
         horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:[paypassLogoImageView(13)]-7-[logoImageView]-20-|", options: [], metrics: nil, views: ["logoImageView": logoImageView, "paypassLogoImageView": paypassLogoImageView])
         var logoWidth = 0.0

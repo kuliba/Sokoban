@@ -41,7 +41,7 @@ func formattedPhoneNumber(number: String) -> String {
     var result = ""
     var index = cleanPhoneNumber.startIndex
     for ch in mask where index < cleanPhoneNumber.endIndex {
-        
+
         if ch == "X" {
             result.append(cleanPhoneNumber[index])
             index = cleanPhoneNumber.index(after: index)
@@ -80,7 +80,12 @@ func maskedCard(with string: String) -> String {
     return dotMaskedString(string: string, mask: mask)
 }
 
-//Money
+func maskedCardNumber(number: String, separator: String) -> String {
+    let mask = [4, 4, 4, 4]
+    return dotMaskedString(string: number, mask: mask)
+}
+
+// Money
 
 func maskSum(sum: Double) -> String {
     let currencyFormatter = NumberFormatter()

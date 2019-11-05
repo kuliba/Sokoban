@@ -8,6 +8,13 @@
 
 import Foundation
 
+func monthYear(milisecond: Double) -> String {
+    let date = Date.init(timeIntervalSince1970: TimeInterval(milisecond) / 1000.0)
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "MM/YY"
+    return dateFormatter.string(from: date)
+}
+
 func dayMonthYear(milisecond: Double) -> String {
     let date = Date.init(timeIntervalSince1970: TimeInterval(milisecond) / 1000.0)
     let dateFormatter = DateFormatter()
