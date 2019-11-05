@@ -209,8 +209,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nCR-Zp-XtP">
-                                <rect key="frame" x="29" y="186" width="317" height="190"/>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nCR-Zp-XtP">
+                                <rect key="frame" x="29" y="186" width="320" height="190"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Служба поддержки клиентов:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Icc-7d-Ola">
                                         <rect key="frame" x="31" y="18" width="238" height="21"/>
@@ -261,7 +262,6 @@
                                                     <attributes>
                                                         <color key="NSColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <font key="NSFont" metaFont="system" size="15"/>
-                                                        <integer key="NSUnderline" value="1"/>
                                                     </attributes>
                                                 </fragment>
                                             </attributedString>
@@ -275,16 +275,9 @@
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <constraints>
-                            <constraint firstItem="nCR-Zp-XtP" firstAttribute="centerX" secondItem="nGd-h8-hpC" secondAttribute="centerX" id="0VU-KO-vTM"/>
-                            <constraint firstItem="ZWw-5f-aJi" firstAttribute="bottom" secondItem="nCR-Zp-XtP" secondAttribute="bottom" constant="291" id="9FZ-JP-Oej"/>
-                            <constraint firstItem="nCR-Zp-XtP" firstAttribute="top" secondItem="ZWw-5f-aJi" secondAttribute="top" constant="186" id="PUA-KA-deq"/>
-                            <constraint firstItem="nCR-Zp-XtP" firstAttribute="leading" secondItem="ZWw-5f-aJi" secondAttribute="leading" constant="29" id="nmj-9p-QJy"/>
-                        </constraints>
                         <viewLayoutGuide key="safeArea" id="ZWw-5f-aJi"/>
                     </view>
                     <connections>
-                        <outlet property="closePopUp" destination="N7J-Nc-0c2" id="s0I-eh-uXS"/>
                         <outlet property="mapPopUp" destination="nCR-Zp-XtP" id="9jG-qe-7r5"/>
                     </connections>
                 </viewController>
