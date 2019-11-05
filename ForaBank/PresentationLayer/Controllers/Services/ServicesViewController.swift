@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 import Hero
 
-class ServicesViewController: UIViewController {
+class ServicesViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - Properties
     @IBOutlet weak var tableView: CustomTableView!
@@ -21,7 +21,7 @@ class ServicesViewController: UIViewController {
     @IBOutlet weak var zoomInButton: OnMapButton!
     @IBOutlet weak var focusButton: OnMapButton!
     @IBOutlet weak var containerView: RoundedEdgeView!
-    
+    @IBOutlet weak var scrollView: UIScrollView!
     var branches = [BankBranch]()
     var annotations = [BankBranchAnnotation]()
     let serviceCellId = "ServicesCell"

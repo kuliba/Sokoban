@@ -27,7 +27,7 @@ let thunkMiddleware: Middleware<State> = createThunkMiddleware()
 var store = Store<State>(reducer: appReducer, state: nil, middleware: [thunkMiddleware])
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+	class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     static var shared: AppDelegate { return UIApplication.shared.delegate as! AppDelegate }

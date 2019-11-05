@@ -142,12 +142,11 @@ class ProductManagementViewController: UITableViewController {
             alert.addButton("Сохранить") {
                 let id = self.product?.id
                 let newName:String = txt.text ?? "\(self.product?.name)"
-                print(newName)
                 NetworkManager.shared().saveCardName(newName: newName, id:id ?? 123, completionHandler: { [unowned self] success, errorMessage, newName, id in })
           
             }
             
-            alert.showEdit("Изменить название карты", subTitle: "Не более 10 символов", colorStyle: 0xF5534C)
+            alert.showEdit("Изменить название карты", subTitle: "Не более 15 символов", colorStyle: 0xF5534C)
             
         }
         else {
