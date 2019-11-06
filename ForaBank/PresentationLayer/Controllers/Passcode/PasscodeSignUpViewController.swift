@@ -31,6 +31,8 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
     }
 
     @IBAction func skipButtonClicked(_ sender: Any) {
+        
+//        ;;;;;;
         performSegue(withIdentifier: "fromRegSmsToPermissions", sender: nil)
     }
 
