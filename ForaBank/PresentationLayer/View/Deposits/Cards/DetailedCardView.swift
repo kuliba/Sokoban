@@ -155,7 +155,8 @@ class DetailedCardView: CardView {
             color1 = UIColor(red: 0.89, green: 0.77, blue: 0.35, alpha: 1)
 
             cardNumberLabel.attributedText = NSAttributedString(string: maskedCardNumber(number: card?.number ?? "", separator: " "), attributes: [.font: UIFont.systemFont(ofSize: 12), .foregroundColor: foregroundColor])
-            cardNumberLabel.textAlignment = .center
+            cardHolderNameLabel.attributedText = NSAttributedString(string: card?.holderName ?? "", attributes: [.font: UIFont.systemFont(ofSize: 12), .foregroundColor: foregroundColor])
+
             if card?.number.prefix(6) == "557986" {
                 backgroundImageView.image = UIImage(named: "card_visa_standart")
 
@@ -173,8 +174,7 @@ class DetailedCardView: CardView {
 
             if card?.type?.rawValue.range(of: "visa", options: .caseInsensitive) != nil {
                 logoImageView.image = UIImage(named: "card_visa_logo")
-            }
-            else if card!.type?.rawValue.range(of: "mastercard", options: .caseInsensitive) != nil {
+            } else if card!.type?.rawValue.range(of: "mastercard", options: .caseInsensitive) != nil {
                 logoImageView.image = UIImage(named: "card_mastercard_logo")
             }
 
@@ -225,9 +225,15 @@ class DetailedCardView: CardView {
         verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[backgroundImageView]-0-|", options: .alignAllCenterX, metrics: nil, views: ["backgroundImageView": backgroundImageView])
         self.addConstraints(verticalConstraints)
 
+        // align cardHolderNameLabel from the left and right
+        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[view]-0-|", options: NSLayoutConstraint.FormatOptions(rawValue: 0), metrics: nil, views: ["view": cardHolderNameLabel]))
+
+        // align cardHolderNameLabel from the top and bottom
+        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[cardNumberLabel]-0-[cardHolderNameLabel]-20-|", options: NSLayoutConstraint.FormatOptions(rawValue: 0), metrics: nil, views: ["cardNumberLabel": cardNumberLabel, "cardHolderNameLabel": cardHolderNameLabel]))
         horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[cardNumberLabel(150)]", options: [], metrics: nil, views: ["cardNumberLabel": cardNumberLabel])
         self.addConstraints(horizontalConstraints)
-        horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[cardValidityPeriodLabel(150)]", options: [], metrics: nil, views: ["cardValidityPeriodLabel": cardValidityPeriodLabel])
+
+        horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:[cardValidityPeriodLabel]-20-[paypassLogoImageView]", options: [], metrics: nil, views: ["cardHolderNameLabel": cardHolderNameLabel, "cardValidityPeriodLabel": cardValidityPeriodLabel, "paypassLogoImageView": paypassLogoImageView])
         self.addConstraints(horizontalConstraints)
         verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[cardNumberLabel(20)]-0-[cardValidityPeriodLabel(20)]-20-|", options: [], metrics: nil, views: ["cardNumberLabel": cardNumberLabel, "cardValidityPeriodLabel": cardValidityPeriodLabel])
         self.addConstraints(verticalConstraints)

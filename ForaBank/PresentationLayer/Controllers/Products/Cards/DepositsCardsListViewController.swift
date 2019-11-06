@@ -270,6 +270,17 @@ class DepositsCardsListViewController: UIViewController {
                 HeroModifier.zPosition(11),
                 HeroModifier.useNormalSnapshot
             ]
+            selectedCardView?.cardHolderNameLabel.hero.id = "cardHolderNameLabel"
+            selectedCardView?.cardHolderNameLabel.hero.modifiers = [
+                HeroModifier.beginWith([
+                    HeroModifier.opacity(1),
+                    HeroModifier.zPosition(11)
+                    ]),
+                HeroModifier.duration(0.5),
+                HeroModifier.opacity(0),
+                HeroModifier.zPosition(11),
+                HeroModifier.useNormalSnapshot
+            ]
             selectedCardView?.cardValidityPeriodLabel.hero.id = "cardValidityPeriodLabel"
             selectedCardView?.cardValidityPeriodLabel.hero.modifiers = [
                 HeroModifier.beginWith([
@@ -333,6 +344,8 @@ class DepositsCardsListViewController: UIViewController {
         selectedCardView?.titleLabel.hero.modifiers = nil
         selectedCardView?.cardNumberLabel.hero.id = nil
         selectedCardView?.cardNumberLabel.hero.modifiers = nil
+        selectedCardView?.cardHolderNameLabel.hero.id = nil
+        selectedCardView?.cardHolderNameLabel.hero.modifiers = nil
         selectedCardView?.cardValidityPeriodLabel.hero.id = nil
         selectedCardView?.cardValidityPeriodLabel.hero.modifiers = nil
         selectedCardView?.cardCashLabel.hero.id = nil
@@ -464,6 +477,17 @@ class DepositsCardsListViewController: UIViewController {
                 HeroModifier.zPosition(8),
                 HeroModifier.useNormalSnapshot
             ]
+            selectedCardView?.cardHolderNameLabel.hero.id = "cardHolderNameLabel"
+            selectedCardView?.cardHolderNameLabel.hero.modifiers = [
+                HeroModifier.beginWith([
+                    HeroModifier.opacity(1),
+                    HeroModifier.zPosition(8)
+                    ]),
+                HeroModifier.duration(0.5),
+                HeroModifier.opacity(0),
+                HeroModifier.zPosition(8),
+                HeroModifier.useNormalSnapshot
+            ]
             selectedCardView?.cardValidityPeriodLabel.hero.id = "cardValidityPeriodLabel"
             selectedCardView?.cardValidityPeriodLabel.hero.modifiers = [
                 HeroModifier.beginWith([
@@ -514,6 +538,8 @@ class DepositsCardsListViewController: UIViewController {
         selectedCardView?.titleLabel.hero.modifiers = nil
         selectedCardView?.cardNumberLabel.hero.id = nil
         selectedCardView?.cardNumberLabel.hero.modifiers = nil
+        selectedCardView?.cardHolderNameLabel.hero.id = nil
+        selectedCardView?.cardHolderNameLabel.hero.modifiers = nil
         selectedCardView?.cardValidityPeriodLabel.hero.id = nil
         selectedCardView?.cardValidityPeriodLabel.hero.modifiers = nil
         selectedCardView?.cardCashLabel.hero.id = nil
