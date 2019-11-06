@@ -66,23 +66,18 @@ func maskedString(string: String, mask: Array<Int>, separator: String) -> String
     return Array(joinedParts).joined(separator: separator)
 }
 
-func dotMaskedString(string: String, mask: Array<Int>) -> String {
-    return maskedString(string: string, mask: mask, separator: "•")
+func dotMaskedString(string: String, mask: Array<Int>, separator: String) -> String {
+    return maskedString(string: string, mask: mask, separator: separator)
 }
 
-func maskedAccount(with string: String) -> String {
+func maskedAccountNumber(number: String, separator: String) -> String {
     let mask = [5, 3, 1, 4, 7]
-    return dotMaskedString(string: string, mask: mask)
-}
-
-func maskedCard(with string: String) -> String {
-    let mask = [4, 4, 4, 4]
-    return dotMaskedString(string: string, mask: mask)
+    return dotMaskedString(string: number, mask: mask, separator: separator)
 }
 
 func maskedCardNumber(number: String, separator: String) -> String {
     let mask = [4, 4, 4, 4]
-    return dotMaskedString(string: number, mask: mask)
+    return dotMaskedString(string: number, mask: mask, separator: separator)
 }
 
 // Money

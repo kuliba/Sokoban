@@ -177,7 +177,7 @@ extension DepositsViewController: UITableViewDataSource, UITableViewDelegate {
         }
 
         cell.titleLabel.text = deposits[indexPath.row].depositProductName
-        cell.subTitleLabel.text = maskedCard(with: deposits[indexPath.row].accountNumber!)
+        cell.subTitleLabel.text = maskedCardNumber(number: deposits[indexPath.row].accountNumber!, separator: " ")
         cell.descriptionLabel.text = maskSum(sum: deposits[indexPath.row].balance!)
         cell.currently.text = deposits[indexPath.row].currencyCode
 

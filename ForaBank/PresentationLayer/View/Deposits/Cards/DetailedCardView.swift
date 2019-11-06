@@ -154,7 +154,7 @@ class DetailedCardView: CardView {
             color2 = UIColor(red: 0.96, green: 0.45, blue: 0.13, alpha: 1)
             color1 = UIColor(red: 0.89, green: 0.77, blue: 0.35, alpha: 1)
 
-            cardNumberLabel.attributedText = NSAttributedString(string: card?.maskedNumber ?? "", attributes: [.font: UIFont.systemFont(ofSize: 12), .foregroundColor: foregroundColor])
+            cardNumberLabel.attributedText = NSAttributedString(string: maskedCardNumber(number: card?.number ?? "", separator: " "), attributes: [.font: UIFont.systemFont(ofSize: 12), .foregroundColor: foregroundColor])
             cardNumberLabel.textAlignment = .center
             if card?.number.prefix(6) == "557986" {
                 backgroundImageView.image = UIImage(named: "card_visa_standart")
