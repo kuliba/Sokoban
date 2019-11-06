@@ -28,25 +28,32 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
     @IBOutlet var biometricSwitches: [UISwitch]!
 
     // MARK: - Actions
+
     @IBAction func backButtonCLicked(_ sender: Any) {
         segueId = backSegueId
         view.endEditing(true)
-        store.dispatch(clearSignUpProcess)
+
         self.navigationController?.popViewController(animated: true)
         if navigationController == nil {
             dismiss(animated: true, completion: nil)
         }
     }
 
-    @IBAction func touchIdSwitch(_ sender: Any) {
-        guard let switcher = sender as? UISwitch else {
-            return
-        }
-        SettingsStorage.shared.setAllowedBiometricSignIn(allowed: switcher.isOn)
-        if switcher.isOn == true {
+    @IBAction func biometricSwitchChanged(_ sender: UISwitch) {
+        SettingsStorage.shared.setAllowedBiometricSignIn(allowed: sender.isOn)
+        if sender.isOn == true {
             performSegue(withIdentifier: "touchID", sender: nil)
         }
     }
+
+    @IBAction func passcodeSwitchChanged(_ sender: Any) {
+        if let s = sender as? UISwitch,
+            s.isOn == true {
+            store.dispatch(clearSignUpProcess)
+            store.dispatch(startPasscodeSingUp)
+        }
+    }
+
 
     @IBAction func `continue`(_ sender: Any) {
         NetworkManager.shared().doRegistration(completionHandler: { [unowned self] success, errorMessage, l, p in
@@ -123,7 +130,10 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
             touchIdDevice.isHidden = true
         default:
             faceIdDevice.isHidden = true
+        }
 
+        if SettingsStorage.shared.isSetPasscode() == true {
+            biometricSwitches.forEach { $0.isEnabled = (SettingsStorage.shared.isSetPasscode() == true) }
         }
     }
 
@@ -277,6 +287,11 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
     }
 
     func newState(state: State) {
+        if state.passcodeSignUpState.isStarted == true {
+            let passcodeVC = PasscodeSignUpViewController()
+            passcodeVC.modalPresentationStyle = .overFullScreen
+            present(passcodeVC, animated: true, completion: nil)
+        }
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

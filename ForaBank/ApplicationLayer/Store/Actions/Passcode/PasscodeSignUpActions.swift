@@ -15,6 +15,7 @@ let startPasscodeSingUp = Thunk<State> { dispatch, getState in
     unsafeRemovePasscodeFromKeychain()
     unsafeRemoveEncryptedPasscodeFromKeychain()
     unsafeRemoveUserDataFromKeychain()
+    SettingsStorage.shared.setIsSetPasscode(true)
     dispatch(UpdatePasscodeSingUpProcess(isFinished: false, isStarted: true))
 }
 
@@ -24,19 +25,20 @@ let finishPasscodeSingUp = Thunk<State> { dispatch, getState in
 }
 
 let clearSignUpProcess = Thunk<State> { dispatch, getState in
+    SettingsStorage.shared.setIsSetPasscode(false)
     dispatch(ClearSignUpProcess())
 }
 
 let createPasscode = Thunk<State> { dispatch, getState in
-        guard let passcode = getState()?.passcodeSignUpState.passcodeSecond else {
-            return
-        }
-        savePasscodeToKeychain(passcode: passcode)
-        if let encryptedPasscode = encrypt(passcode: passcode) {
-            saveEncryptedPasscodeToKeychain(passcode: encryptedPasscode)
-        }
-        dispatch(createdPasscode(passcode: passcode))
-        dispatch(finishRegistration)
+    guard let passcode = getState()?.passcodeSignUpState.passcodeSecond else {
+        return
+    }
+    savePasscodeToKeychain(passcode: passcode)
+    if let encryptedPasscode = encrypt(passcode: passcode) {
+        saveEncryptedPasscodeToKeychain(passcode: encryptedPasscode)
+    }
+    dispatch(createdPasscode(passcode: passcode))
+    dispatch(finishRegistration)
 }
 
 func enterCode(code: String) -> Thunk<State> {

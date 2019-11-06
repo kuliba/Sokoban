@@ -29,10 +29,10 @@ class SettingsStorage: ISettingsStorage {
         userDefaults.setAllowedBiometricSignIn(allowed: allowed)
     }
 
-    func setNeedSetPasscode(_ needs: Bool) {
-        userDefaults.setNeedSetPasscode(needs)
+    func setIsSetPasscode(_ needs: Bool) {
+        userDefaults.setIsSetPasscode(needs)
     }
-    func isNeedSetPasscode() -> Bool {
-        return userDefaults.isNeedSetPasscode()
+    func isSetPasscode() -> Bool {
+        return userDefaults.isSetPasscode()
     }
 }
