@@ -4,14 +4,14 @@
     "nameEn": "Фора-Банк",
     "alias": "forabanks",
     "url": "http://absolutbank.ru/",
-    "backgroundColor": "#EA4442",
+    "backgroundColor": "#EF4136",
     "backgroundColors": [
-      "#EA4442",
-      "#EA4442"
+      "#EF4136",
+      "#EF4136"
     ],
-    "backgroundLightness": "dark",
-    "logoStyle": "dark",
-    "text": "#676766",
+    "backgroundLightness": "light",
+    "logoStyle": "light",
+    "text": "#ffffff",
     "prefixes": [
       "425691",
       "457825",
