@@ -13,6 +13,7 @@ class DoubleRoundedEdgeView: UIView {
     // MARK: - Properties
     let viewMask = CAShapeLayer()
     
+    
     // MARK: - Lifecycle
     override func awakeFromNib() {
         super.awakeFromNib()

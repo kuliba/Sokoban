@@ -39,11 +39,13 @@ class CardToCardUnauthorized: UIViewController {
     @IBOutlet weak var contractView: UIView!
     @IBOutlet weak var header: UIView!
     @IBOutlet weak var activityIndicator: ActivityIndicatorView!
-
+    @IBOutlet weak var cardImage: UIImageView!
+    
     @IBOutlet weak var brandLogo: UIImageView!
     @IBOutlet weak var bankLogo: UIImageView!
     @IBOutlet weak var bankLogoWidth: NSLayoutConstraint!
-
+    @IBOutlet weak var cardNumberPayer: UITextField!
+    
     var previousSegment = 0
 
     var previousTextFieldContent: String?
@@ -97,6 +99,7 @@ class CardToCardUnauthorized: UIViewController {
         if textField.tag == 2 || textField.tag == 3,
             (textField.text?.count ?? 0) >= 2 {
         }
+           
 
         guard let cardNumber = cardNumberTextField.text?.count, cardNumber <= 19 else {
             self.continueButton.isHidden = false
@@ -105,6 +108,7 @@ class CardToCardUnauthorized: UIViewController {
         if cardNumberTextField.text?.count ?? 0 == 19 {
             if textField.tag == 1 {
                 UIView.transition(with: cardView, duration: 0.5, options: .transitionFlipFromLeft, animations: {
+                 
                     self.identifyBank()
                 })
             } else {
@@ -114,7 +118,12 @@ class CardToCardUnauthorized: UIViewController {
             cardNumberLabelView.isHidden = false
             bankLogo.isHidden = true
             brandLogo.isHidden = true
+            
+            if  cardNumberTextField.text?.removeWhitespace().prefix(6) == "111111"{
+                self.cardImage.image = UIImage(named: "card2")
+                cardView.backgroundColor = .black
 
+            }
             self.cardView.backgroundColor = .white
             self.cardView.gradientLayer.opacity = 0
 
@@ -334,7 +343,8 @@ private extension CardToCardUnauthorized {
         gradientLayer.frame.size = gradientView.frame.size
         gradientLayer.startPoint = CGPoint(x: 0, y: 1)
         gradientLayer.endPoint = CGPoint(x: 1, y: 1)
-        gradientLayer.colors = [UIColor(red: 237 / 255, green: 73 / 255, blue: 73 / 255, alpha: 1).cgColor, UIColor(red: 241 / 255, green: 176 / 255, blue: 116 / 255, alpha: 1).cgColor]
+        gradientLayer.colors = [UIColor(red: 243 / 255, green: 58 / 255, blue: 52 / 255, alpha: 1).cgColor, UIColor(red: 243 / 255, green: 58 / 255, blue: 52 / 255, alpha: 1).cgColor]
+//        gradientLayer.colors = [UIColor(red: 237 / 255, green: 73 / 255, blue: 73 / 255, alpha: 1).cgColor, UIColor(red: 241 / 255, green: 176 / 255, blue: 116 / 255, alpha: 1).cgColor]
         gradientView.layer.addSublayer(gradientLayer)
         view.insertSubview(gradientView, at: 0)
     }
