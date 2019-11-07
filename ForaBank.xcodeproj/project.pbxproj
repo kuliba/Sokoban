@@ -269,6 +269,7 @@
 		BD35E82723439A3B0016BA0D /* PagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD35E82623439A3B0016BA0D /* PagerView.swift */; };
 		BD35E82B23439AF60016BA0D /* PagerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD35E82A23439AF60016BA0D /* PagerView.xib */; };
 		BD38198E232104430004728C /* productsData.plist in Resources */ = {isa = PBXBuildFile; fileRef = BD38198D232104430004728C /* productsData.plist */; };
+		BD3BEFEF2373FA3700BA0D9B /* RegistrationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD3BEFEE2373FA3700BA0D9B /* RegistrationSettings.swift */; };
 		BD49E6522344D30D0031561F /* MenuPagerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD49E6502344D30D0031561F /* MenuPagerViewCell.swift */; };
 		BD49E6532344D30D0031561F /* MenuPagerViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD49E6512344D30D0031561F /* MenuPagerViewCell.xib */; };
 		BD49E6572344F7F90031561F /* PagerViewCellHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD49E6562344F7F90031561F /* PagerViewCellHandler.swift */; };
@@ -606,6 +607,7 @@
 		BD35E82623439A3B0016BA0D /* PagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerView.swift; sourceTree = "<group>"; };
 		BD35E82A23439AF60016BA0D /* PagerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PagerView.xib; sourceTree = "<group>"; };
 		BD38198D232104430004728C /* productsData.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = productsData.plist; sourceTree = "<group>"; };
+		BD3BEFEE2373FA3700BA0D9B /* RegistrationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationSettings.swift; sourceTree = "<group>"; };
 		BD49E6502344D30D0031561F /* MenuPagerViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuPagerViewCell.swift; sourceTree = "<group>"; };
 		BD49E6512344D30D0031561F /* MenuPagerViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MenuPagerViewCell.xib; sourceTree = "<group>"; };
 		BD49E6562344F7F90031561F /* PagerViewCellHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerViewCellHandler.swift; sourceTree = "<group>"; };
@@ -897,6 +899,7 @@
 				96144B42233E21BB00B9F314 /* LoanSchedule.swift */,
 				BD20837E2361B4990010E03C /* Product.swift */,
 				A568143321D0CE6C002C0899 /* Profile.swift */,
+				BD3BEFEE2373FA3700BA0D9B /* RegistrationSettings.swift */,
 				0942B86A21625F4800370C71 /* Service.swift */,
 				9697E2A22334E30500974505 /* ServicesList.swift */,
 				A568143721D35FEB002C0899 /* Transaction.swift */,
@@ -1890,6 +1893,7 @@
 				A5B473C621B52D4500F2E41F /* BubblesDetailedStatsView.swift in Sources */,
 				9660EEE7234C7B1100AE0647 /* Extensions.swift in Sources */,
 				BDF4F94C23293C49007C448F /* PasscodeSignInState.swift in Sources */,
+				BD3BEFEF2373FA3700BA0D9B /* RegistrationSettings.swift in Sources */,
 				BDE4D08723226B4C0070BC3D /* IAboutItem.swift in Sources */,
 				BDFE1ACA233BAE9B00C49A5B /* PaymentOption.swift in Sources */,
 				A568143821D35FEB002C0899 /* Transaction.swift in Sources */,

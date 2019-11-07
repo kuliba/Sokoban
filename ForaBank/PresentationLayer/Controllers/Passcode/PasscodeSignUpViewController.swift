@@ -11,6 +11,10 @@ import TOPasscodeViewController
 import ReSwift
 import Hero
 
+protocol PasscodeSignUpViewControllerDelegate: class {
+    func biometricFinished(success: Bool)
+}
+
 class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
 
     // MARK: - Properties
@@ -22,20 +26,7 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
 
     // MARK: - Actions
 
-    @IBAction func backButtonClicked(_ sender: Any) {
-        view.endEditing(true)
-        self.navigationController?.popViewController(animated: true)
-        if navigationController == nil {
-            dismiss(animated: true, completion: nil)
-        }
-    }
-
-    @IBAction func skipButtonClicked(_ sender: Any) {
-
-//        ;;;;;;
-        performSegue(withIdentifier: "fromRegSmsToPermissions", sender: nil)
-    }
-
+    weak var passcodeDelegate: PasscodeSignUpViewControllerDelegate?
     var passcodeVC = PasscodeWrapperViewController()
 
     // MARK: - Lifecycle
@@ -49,7 +40,7 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
         passcodeVC.didMove(toParent: self)
 
         passcodeVC.setupDelegate(delegate: self)
-        
+
         store.subscribe(self) { state in
             state.select { $0.passcodeSignUpState }
         }
@@ -57,7 +48,7 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
 //        let button = UIButton()
 //        button.titleLabel?.text =
 
@@ -80,6 +71,7 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
 
     func newState(state: PasscodeSignUpState) {
         guard state.isFinished != true else {
+            passcodeDelegate?.biometricFinished(success: true)
             dismiss(animated: true, completion: nil)
             return
         }
@@ -117,6 +109,7 @@ extension PasscodeSignUpViewController: TOPasscodeViewControllerDelegate {
 
     func didTapCancel(in passcodeViewController: TOPasscodeViewController) {
         store.dispatch(clearSignUpProcess)
+        passcodeDelegate?.biometricFinished(success: false)
         dismiss(animated: true, completion: nil)
     }
 }

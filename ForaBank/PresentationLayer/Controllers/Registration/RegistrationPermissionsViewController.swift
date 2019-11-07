@@ -13,7 +13,6 @@ import LocalAuthentication
 import ReSwift
 import TOPasscodeViewController
 
-
 class RegistrationPermissionsViewController: UIViewController, CAAnimationDelegate, StoreSubscriber {
 
     // MARK: - Properties
@@ -26,6 +25,7 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
     @IBOutlet weak var touchIdDevice: UIView!
     @IBOutlet weak var faceIdDevice: UIView!
     @IBOutlet var biometricSwitches: [UISwitch]!
+    @IBOutlet weak var passcodeSwitch: UISwitch!
 
     // MARK: - Actions
 
@@ -40,20 +40,20 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
     }
 
     @IBAction func biometricSwitchChanged(_ sender: UISwitch) {
-        SettingsStorage.shared.setAllowedBiometricSignIn(allowed: sender.isOn)
+        registrationSettings.allowBiometric = sender.isOn
         if sender.isOn == true {
             performSegue(withIdentifier: "touchID", sender: nil)
         }
     }
 
-    @IBAction func passcodeSwitchChanged(_ sender: Any) {
-        if let s = sender as? UISwitch,
-            s.isOn == true {
+    @IBAction func passcodeSwitchChanged(_ sender: UISwitch) {
+        if sender.isOn == true {
             store.dispatch(clearSignUpProcess)
             store.dispatch(startPasscodeSingUp)
         }
+        registrationSettings.allowPasscode = sender.isOn
+        registrationSettings.allowPasscode  ? nil : (registrationSettings.allowBiometric = false)
     }
-
 
     @IBAction func `continue`(_ sender: Any) {
         NetworkManager.shared().doRegistration(completionHandler: { [unowned self] success, errorMessage, l, p in
@@ -87,11 +87,15 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
 
     var segueId: String? = nil
     var backSegueId: String? = nil
-    //    let pageControl = FlexiblePageControl()
     let gradientView = UIView()
     let circleView = UIView()
     let touchMe = BiometricIDAuth()
     let context = LAContext()
+    var registrationSettings = RegistrationSettings() {
+        didSet {
+            updateViews()
+        }
+    }
 
     func biometricType() -> BiometricType {
         let canEvaluatePolicy = context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
@@ -130,10 +134,6 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
             touchIdDevice.isHidden = true
         default:
             faceIdDevice.isHidden = true
-        }
-
-        if SettingsStorage.shared.isSetPasscode() == true {
-            biometricSwitches.forEach { $0.isEnabled = (SettingsStorage.shared.isSetPasscode() == true) }
         }
     }
 
@@ -177,6 +177,8 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
                 HeroModifier.opacity(0)
             ]
         }
+
+        updateViews()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -289,9 +291,23 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
     func newState(state: State) {
         if state.passcodeSignUpState.isStarted == true {
             let passcodeVC = PasscodeSignUpViewController()
-            passcodeVC.modalPresentationStyle = .overFullScreen
+            passcodeVC.modalPresentationStyle = .fullScreen
+            passcodeVC.passcodeDelegate = self
             present(passcodeVC, animated: true, completion: nil)
         }
+    }
+
+    func updateViews() {
+
+        biometricSwitches.forEach { [weak self] (switchView) in
+            guard let allowPasscode = self?.registrationSettings.allowPasscode, let allowBiometric = self?.registrationSettings.allowBiometric else {
+                return
+            }
+            switchView.isEnabled = allowPasscode
+            switchView.isOn = allowPasscode ? allowBiometric : false
+        }
+
+        passcodeSwitch.isOn = registrationSettings.allowPasscode
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -303,6 +319,7 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
         if let vc = segue.destination as? RegistrationTouchIDViewController {
             segueId = "touchID"
             vc.segueId = segueId
+            vc.biometricDelegate = self
         }
     }
 }
@@ -357,5 +374,17 @@ private extension RegistrationPermissionsViewController {
         continueButton.setTitleColor(.black, for: [])
         continueButton.layer.borderWidth = 1
         continueButton.layer.borderColor = UIColor.gray.withAlphaComponent(0.25).cgColor
+    }
+}
+
+extension RegistrationPermissionsViewController: RegistrationTouchIDViewControllerDelegate {
+    func passcodeFinished(success: Bool) {
+        registrationSettings.allowBiometric = success
+    }
+}
+
+extension RegistrationPermissionsViewController: PasscodeSignUpViewControllerDelegate {
+    func biometricFinished(success: Bool) {
+        registrationSettings.allowPasscode = success
     }
 }

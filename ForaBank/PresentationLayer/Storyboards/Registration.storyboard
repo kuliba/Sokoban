@@ -1194,11 +1194,11 @@
             <objects>
                 <viewController storyboardIdentifier="finish" modalPresentationStyle="overCurrentContext" id="3S2-Ql-HD5" customClass="RegistrationPermissionsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1Af-si-LYs">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WVv-9f-Tdt" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="29" width="414" height="687"/>
+                                <rect key="frame" x="0.0" y="29" width="414" height="707"/>
                                 <subviews>
                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BRp-UY-6fh" customClass="FlexiblePageControl" customModule="FlexiblePageControl">
                                         <rect key="frame" x="172" y="28" width="70" height="10"/>
@@ -1254,7 +1254,7 @@
                                                                     <constraint firstAttribute="width" constant="47" id="TFd-77-Wjf"/>
                                                                 </constraints>
                                                                 <connections>
-                                                                    <action selector="passcodeSwitchChanged:" destination="3S2-Ql-HD5" eventType="valueChanged" id="byM-dq-kWh"/>
+                                                                    <action selector="passcodeSwitchChanged:" destination="3S2-Ql-HD5" eventType="valueChanged" id="wY0-DN-vSt"/>
                                                                 </connections>
                                                             </switch>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4-x значный код" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Txz-xm-87V">
@@ -1476,6 +1476,7 @@
                         <outlet property="faceIdDevice" destination="eiA-iq-uoy" id="1GS-hC-WZg"/>
                         <outlet property="header" destination="Z7b-oS-lgt" id="TyQ-dF-5E0"/>
                         <outlet property="pageControl" destination="BRp-UY-6fh" id="Qx4-sP-Lxj"/>
+                        <outlet property="passcodeSwitch" destination="XmH-Eo-1JC" id="1gN-xR-xAP"/>
                         <outlet property="touchIdDevice" destination="6D8-CM-MrY" id="Gxg-wf-UcG"/>
                         <outletCollection property="biometricSwitches" destination="bcx-RC-rIz" collectionClass="NSMutableArray" id="i4m-Qv-DYn"/>
                         <outletCollection property="biometricSwitches" destination="4w4-Z8-xBz" collectionClass="NSMutableArray" id="qBy-gW-J0w"/>
@@ -2014,14 +2015,14 @@
             <objects>
                 <viewController storyboardIdentifier="smsVerification2" modalPresentationStyle="overCurrentContext" id="1eR-cn-Ek6" customClass="RegistrationCodeVerificationViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="U5t-4h-EgA">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KRj-mg-c4v" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="29" width="414" height="707"/>
+                                <rect key="frame" x="0.0" y="29" width="414" height="687"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MTP-fz-tG7">
-                                        <rect key="frame" x="8" y="262" width="398" height="183"/>
+                                        <rect key="frame" x="8" y="252" width="398" height="183"/>
                                         <subviews>
                                             <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="lh9-tP-pbp">
                                                 <rect key="frame" x="154" y="66" width="90" height="40"/>
@@ -2890,7 +2891,6 @@ E7UTvRPAE8UTzQAAAAAAAAIBAAAAAAAAAE8AAAAAAAAAAAAAAAAAABPQA
         <image name="visa-colored" width="93" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Buh-jM-ADK"/>
         <segue reference="pC6-h6-eDd"/>
     </inferredMetricsTieBreakers>
 </document>
