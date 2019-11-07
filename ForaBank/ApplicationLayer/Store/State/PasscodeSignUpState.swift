@@ -15,4 +15,5 @@ struct PasscodeSignUpState: StateType {
     var passcodeFirst: String?
     var passcodeSecond: String?
     var counter: Int
+    var registrationSettings: RegistrationSettings?
 }

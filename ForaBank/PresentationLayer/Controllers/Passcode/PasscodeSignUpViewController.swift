@@ -38,12 +38,12 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
         self.view.addSubview(passcodeVC.view)
         self.addChild(passcodeVC)
         passcodeVC.didMove(toParent: self)
-
         passcodeVC.setupDelegate(delegate: self)
 
         store.subscribe(self) { state in
             state.select { $0.passcodeSignUpState }
         }
+        store.dispatch(clearSignUpProcess)
     }
 
     override func viewWillAppear(_ animated: Bool) {

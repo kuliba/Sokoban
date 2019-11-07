@@ -16,27 +16,34 @@ extension UserDefaults: ISettingsStorage {
         static let allowedBiometricSignInKey = "allowedBiometricSignIn"
     }
 
-    func isFirstLaunch() -> Bool {
+    public func isFirstLaunch() -> Bool {
         return !bool(forKey: Constants.firstLaunchKey)
     }
 
-    func setFirstLaunch() {
+    public func setFirstLaunch() {
         set(true, forKey: Constants.firstLaunchKey)
     }
 
-    func allowedBiometricSignIn() -> Bool {
+    public func allowedBiometricSignIn() -> Bool {
         return bool(forKey: Constants.allowedBiometricSignInKey)
     }
 
-    func setAllowedBiometricSignIn(allowed: Bool) {
+    public func setAllowedBiometricSignIn(allowed: Bool) {
         set(allowed, forKey: Constants.allowedBiometricSignInKey)
     }
 
-    func setIsSetPasscode(_ needs: Bool) {
+    public func setIsSetPasscode(_ needs: Bool) {
         set(needs, forKey: Constants.isSetPasscodeKey)
     }
-    
-    func isSetPasscode() -> Bool {
+
+    public func isSetPasscode() -> Bool {
         return bool(forKey: Constants.isSetPasscodeKey)
+    }
+
+    public func invalidateSettings() {
+        removeObject(forKey: Constants.firstLaunchKey)
+        removeObject(forKey: Constants.isSetPasscodeKey)
+        removeObject(forKey: Constants.allowedBiometricSignInKey)
+        synchronize()
     }
 }

@@ -11,12 +11,15 @@ class RegistrationTouchIDViewController: UIViewController {
 
     @IBOutlet weak var touchIDButton: UIButton!
 
-
     @IBAction func backButtonClicked(_ sender: Any) {
         self.navigationController?.popViewController(animated: true)
         if navigationController == nil {
             dismiss(animated: true, completion: nil)
         }
+    }
+
+    @IBAction func biometricButtonClicked(_ sender: UIButton) {
+        authenticateWithBioMetrics()
     }
 
     let touchMe = BiometricIDAuth()
@@ -38,19 +41,25 @@ class RegistrationTouchIDViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        BioMetricAuthenticator.authenticateWithBioMetrics(reason: "Используйте для входа в приложение") { [weak self](result) in
-            switch result {
-            case .success(_):
-                self?.biometricDelegate?.passcodeFinished(success: true)
-                self?.backButtonClicked(NSObject())
-            case .failure(_):
-                self?.biometricDelegate?.passcodeFinished(success: false)
-                AlertService.shared.show(title: "Неудача", message: "Повторите попытку", cancelButtonTitle: nil, okButtonTitle: "Понятно", cancelCompletion: nil, okCompletion: nil)
-            }
-        }
+        authenticateWithBioMetrics()
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
+    }
+
+    func authenticateWithBioMetrics() {
+        BioMetricAuthenticator.authenticateWithBioMetrics(reason: "Используйте для входа в приложение") { [weak self](result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(_):
+                    self?.biometricDelegate?.passcodeFinished(success: true)
+                    self?.backButtonClicked(NSObject())
+                case .failure(_):
+                    self?.biometricDelegate?.passcodeFinished(success: false)
+                    AlertService.shared.show(title: "Неудача", message: "Повторите попытку", cancelButtonTitle: nil, okButtonTitle: "Понятно", cancelCompletion: nil, okCompletion: nil)
+                }
+            }
+        }
     }
 }

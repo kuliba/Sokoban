@@ -48,25 +48,18 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
 
     @IBAction func passcodeSwitchChanged(_ sender: UISwitch) {
         if sender.isOn == true {
-            store.dispatch(clearSignUpProcess)
             store.dispatch(startPasscodeSingUp)
         }
         registrationSettings.allowPasscode = sender.isOn
-        registrationSettings.allowPasscode  ? nil : (registrationSettings.allowBiometric = false)
+        registrationSettings.allowPasscode ? nil : (registrationSettings.allowBiometric = false)
     }
 
     @IBAction func `continue`(_ sender: Any) {
         NetworkManager.shared().doRegistration(completionHandler: { [unowned self] success, errorMessage, l, p in
             if success {
-//                let rootVC:ProfileViewController = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
-//                if let t = self.tabBarController as? TabBarController {
-//                    t.setNumberOfTabsAvailable()
-//                }
-//                self.segueId = "dismiss"
-//                rootVC.segueId = "Registered"
-//                self.navigationController?.setViewControllers([rootVC], animated: true)
                 NetworkManager.shared().login(login: l ?? "", password: p ?? "", completionHandler: { (success, error) in
                     if success {
+                        store.dispatch(registrationSettingsCreated(registrationSettings: self.registrationSettings))
                         self.performSegue(withIdentifier: "authSms", sender: nil)
                     } else {
                         let alert = UIAlertController(title: "Неудачная авторизация", message: "", preferredStyle: UIAlertController.Style.alert)
@@ -177,8 +170,6 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
                 HeroModifier.opacity(0)
             ]
         }
-
-        updateViews()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -308,6 +299,12 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
         }
 
         passcodeSwitch.isOn = registrationSettings.allowPasscode
+
+        if registrationSettings.allowPasscode {
+            continueButton.setTitle("Готово", for: .normal)
+        } else {
+            continueButton.setTitle("Настроить позже", for: .normal)
+        }
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
