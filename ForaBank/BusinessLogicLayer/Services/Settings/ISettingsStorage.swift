@@ -13,4 +13,5 @@ protocol ISettingsStorage {
     func setFirstLaunch()
     func setIsSetPasscode(_ needs: Bool)
     func isSetPasscode() -> Bool
+    func invalidateUserSettings()
 }

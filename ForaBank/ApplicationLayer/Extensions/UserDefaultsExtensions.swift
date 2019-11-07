@@ -40,8 +40,7 @@ extension UserDefaults: ISettingsStorage {
         return bool(forKey: Constants.isSetPasscodeKey)
     }
 
-    public func invalidateSettings() {
-        removeObject(forKey: Constants.firstLaunchKey)
+    public func invalidateUserSettings() {
         removeObject(forKey: Constants.isSetPasscodeKey)
         removeObject(forKey: Constants.allowedBiometricSignInKey)
         synchronize()

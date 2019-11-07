@@ -41,7 +41,7 @@ class SettingsStorage: ISettingsStorage {
         setAllowedBiometricSignIn(allowed: registrationSettings.allowBiometric)
     }
     
-    public func invalidateSettings() {
-        userDefaults.invalidateSettings()
+    public func invalidateUserSettings() {
+        userDefaults.invalidateUserSettings()
     }
 }

@@ -82,7 +82,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         if settingsStorage.isFirstLaunch() {
             settingsStorage.setFirstLaunch()
-            settingsStorage.invalidateSettings()
+            settingsStorage.invalidateUserSettings()
             removeAllKeychainItems()
         }
     }
