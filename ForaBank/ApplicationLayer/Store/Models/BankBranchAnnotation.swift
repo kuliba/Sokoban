@@ -39,7 +39,7 @@ class BankBranchAnnotation: NSObject, MKAnnotation {
         case "Платёжный терминал":
             return "atm_annotation"
         default:
-            return "bank_branch_annotation"
+            return "bank_annotation_dark"
         }
     }
     // Annotation right callout accessory opens this mapItem in Maps app
