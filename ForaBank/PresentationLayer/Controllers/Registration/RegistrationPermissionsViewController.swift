@@ -49,6 +49,8 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
     @IBAction func passcodeSwitchChanged(_ sender: UISwitch) {
         if sender.isOn == true {
             store.dispatch(startPasscodeSingUp)
+        } else {
+            store.dispatch(clearSignUpProcess)
         }
         registrationSettings.allowPasscode = sender.isOn
         registrationSettings.allowPasscode ? nil : (registrationSettings.allowBiometric = false)
@@ -128,6 +130,8 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
         default:
             faceIdDevice.isHidden = true
         }
+
+        updateViews()
     }
 
     override func viewWillAppear(_ animated: Bool) {
