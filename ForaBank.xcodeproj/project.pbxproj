@@ -184,6 +184,8 @@
 		96BEAE5322FABBB60029C63D /* IQKeyboardManagerSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE5222FABBB60029C63D /* IQKeyboardManagerSwift.framework */; };
 		96D0F1C8230694CB0064CECA /* LoansDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D0F1C7230694CA0064CECA /* LoansDetailsViewController.swift */; };
 		96D0F1CE230AE4400064CECA /* DepositDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D0F1CD230AE4400064CECA /* DepositDetailsViewController.swift */; };
+		96E08A3B2371CF900070CA6A /* CardToCardUnauthorized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96E08A3A2371CF900070CA6A /* CardToCardUnauthorized.swift */; };
+		96E08A3D2372C0BA0070CA6A /* BottomRoundedEdge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96E08A3C2372C0BA0070CA6A /* BottomRoundedEdge.swift */; };
 		96E541162341656300770C06 /* ExpandingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96E541142341656300770C06 /* ExpandingTableViewCell.swift */; };
 		96E541172341656300770C06 /* TableExpansionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96E541152341656300770C06 /* TableExpansionViewController.swift */; };
 		A5004D3121EF37DC0098E510 /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5004D3021EF37DC0098E510 /* ActivityIndicatorView.swift */; };
@@ -521,6 +523,8 @@
 		96BEAE5222FABBB60029C63D /* IQKeyboardManagerSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = IQKeyboardManagerSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		96D0F1C7230694CA0064CECA /* LoansDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoansDetailsViewController.swift; sourceTree = "<group>"; };
 		96D0F1CD230AE4400064CECA /* DepositDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositDetailsViewController.swift; sourceTree = "<group>"; };
+		96E08A3A2371CF900070CA6A /* CardToCardUnauthorized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardToCardUnauthorized.swift; sourceTree = "<group>"; };
+		96E08A3C2372C0BA0070CA6A /* BottomRoundedEdge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomRoundedEdge.swift; sourceTree = "<group>"; };
 		96E541142341656300770C06 /* ExpandingTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpandingTableViewCell.swift; sourceTree = "<group>"; };
 		96E541152341656300770C06 /* TableExpansionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableExpansionViewController.swift; sourceTree = "<group>"; };
 		A5004D3021EF37DC0098E510 /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
@@ -937,6 +941,7 @@
 				A55B7B8921AA70A600A8A7FE /* Profile */,
 				A568142221CBCD1C002C0899 /* Services */,
 				962655C82361F31A00697E37 /* ViewModalStyle.swift */,
+				96E08A3C2372C0BA0070CA6A /* BottomRoundedEdge.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1132,6 +1137,14 @@
 				963B62CF2360A91900DD9A3E /* JFContactCell.xib */,
 			);
 			path = ContactList;
+			sourceTree = "<group>";
+		};
+		96E08A392371CF5F0070CA6A /* CardToCardUnauthorized */ = {
+			isa = PBXGroup;
+			children = (
+				96E08A3A2371CF900070CA6A /* CardToCardUnauthorized.swift */,
+			);
+			path = CardToCardUnauthorized;
 			sourceTree = "<group>";
 		};
 		96F0DCEB231FDFAE005ABEED /* Accounts */ = {
@@ -1562,6 +1575,7 @@
 		BDCCE90C2350BC5E0087F5F2 /* PresentationLayer */ = {
 			isa = PBXGroup;
 			children = (
+				96E08A392371CF5F0070CA6A /* CardToCardUnauthorized */,
 				09E0F131215A617A0042FB6A /* Controllers */,
 				09E0F149215A6B170042FB6A /* Storyboards */,
 				09E0F133215A618E0042FB6A /* View */,
@@ -1976,6 +1990,7 @@
 				BD20836B23609A680010E03C /* AuthService.swift in Sources */,
 				A5C5E6E821A2B49A001D6250 /* OptionPickerButton.swift in Sources */,
 				BD49E6522344D30D0031561F /* MenuPagerViewCell.swift in Sources */,
+				96E08A3D2372C0BA0070CA6A /* BottomRoundedEdge.swift in Sources */,
 				BD579351236C4BAB0056740C /* ISettingsStorage.swift in Sources */,
 				09AF7093216F73FD00E7FCFC /* FeedCurrent5Cell.swift in Sources */,
 				096B4F58218704AA00C69E52 /* DepositsCardsDetailsStatementViewController.swift in Sources */,
@@ -2011,6 +2026,7 @@
 				96920C32235604C000CCC7EF /* OperationsList.swift in Sources */,
 				097A6DCC21884B6D00E6C69E /* ButtonRounded.swift in Sources */,
 				BDE4D080232248420070BC3D /* ProductAboutViewController.swift in Sources */,
+				96E08A3B2371CF900070CA6A /* CardToCardUnauthorized.swift in Sources */,
 				BD09A3A62363290000938D66 /* UserState.swift in Sources */,
 				A568142C21CE6CB0002C0899 /* AnnotationTableViewCell.swift in Sources */,
 				A58760C121BFB63D0022DED5 /* ProfileNavigationController.swift in Sources */,

@@ -34,7 +34,7 @@ private extension RoundedEdgeView {
         let bezierPath = UIBezierPath()
         bezierPath.move(to: CGPoint(x: 0, y: y))
         bezierPath.addQuadCurve(to: CGPoint(x: rect.width, y: y), controlPoint: CGPoint(x: rect.width / 2, y: curveTo))
-        bezierPath.addLine(to: CGPoint(x: rect.width, y: rect.height))
+        bezierPath.addLine(to: CGPoint(x: rect.width , y: rect.height))
         bezierPath.addLine(to: CGPoint(x: 0, y: rect.height))
         bezierPath.close()
         let context = UIGraphicsGetCurrentContext()
