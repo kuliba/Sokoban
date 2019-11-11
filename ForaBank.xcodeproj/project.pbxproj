@@ -1257,7 +1257,6 @@
 			isa = PBXGroup;
 			children = (
 				BDB6AFF5232693E90006A534 /* Actions */,
-				09E0F132215A61850042FB6A /* Models */,
 				BDB6B00A232697760006A534 /* Reducers */,
 				BD137A3E2326471200326088 /* State */,
 			);
@@ -1457,6 +1456,7 @@
 				BD57934A236C4AB70056740C /* Extensions */,
 				BD73EB63231EA61C00CB3E58 /* Helpers */,
 				BD6F597B2334BCF9002F4D4E /* Middleware */,
+				09E0F132215A61850042FB6A /* Models */,
 				BD1379FC23263BC000326088 /* Store */,
 			);
 			path = ApplicationLayer;
