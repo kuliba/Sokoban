@@ -17,7 +17,7 @@ class BankBranchAnnotation: NSObject, MKAnnotation {
     var address: String?
     var schedule: String?
     var phone: String?
-    
+
     init(coordinate: CLLocationCoordinate2D,
          type: String?,
          title: String?,
@@ -31,7 +31,7 @@ class BankBranchAnnotation: NSObject, MKAnnotation {
         self.schedule = schedule
         self.phone = phone
     }
-    
+
     var imageName: String? {
         switch type {
         case "Банкомат":
@@ -39,7 +39,7 @@ class BankBranchAnnotation: NSObject, MKAnnotation {
         case "Платёжный терминал":
             return "atm_annotation"
         default:
-            return "bank_annotation_dark"
+            return "bank_annotation"
         }
     }
     // Annotation right callout accessory opens this mapItem in Maps app
