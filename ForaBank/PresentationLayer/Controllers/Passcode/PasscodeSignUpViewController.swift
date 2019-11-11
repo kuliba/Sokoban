@@ -11,6 +11,10 @@ import TOPasscodeViewController
 import ReSwift
 import Hero
 
+protocol PasscodeSignUpViewControllerDelegate: class {
+    func biometricFinished(success: Bool)
+}
+
 class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
 
     // MARK: - Properties
@@ -22,65 +26,34 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
 
     // MARK: - Actions
 
-    @IBAction func backButtonClicked(_ sender: Any) {
-        view.endEditing(true)
-        self.navigationController?.popViewController(animated: true)
-        if navigationController == nil {
-            dismiss(animated: true, completion: nil)
-        }
-    }
-
-    @IBAction func skipButtonClicked(_ sender: Any) {
-        performSegue(withIdentifier: "fromRegSmsToPermissions", sender: nil)
-    }
-
-    var passcodeVC: PasscodeWrapperViewController?
+    weak var passcodeDelegate: PasscodeSignUpViewControllerDelegate?
+    var passcodeVC = PasscodeWrapperViewController()
 
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        addGradientLayerView()
-        view.clipsToBounds = true
-        if let head = header as? MaskedNavigationBar {
-            head.gradientLayer.startPoint = CGPoint(x: 0, y: 1)
-            head.gradientLayer.endPoint = CGPoint(x: 1, y: 1)
-            head.gradientLayer.colors = [UIColor(red: 239 / 255, green: 65 / 255, blue: 54 / 255, alpha: 1).cgColor, UIColor(red: 239 / 255, green: 65 / 255, blue: 54 / 255, alpha: 1).cgColor]
-        }
+        passcodeVC.willMove(toParent: self)
+        self.view.addSubview(passcodeVC.view)
+        self.addChild(passcodeVC)
+        passcodeVC.didMove(toParent: self)
+        passcodeVC.setupDelegate(delegate: self)
 
         store.subscribe(self) { state in
             state.select { $0.passcodeSignUpState }
         }
+        store.dispatch(clearSignUpProcess)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        passcodeVC?.setTitleLabel(titleText: "Создайте код:")
-        passcodeVC?.setRightButton(button: nil)
+//        let button = UIButton()
+//        button.titleLabel?.text =
 
-        if let nav = navigationController as? ProfileNavigationController {
-            UIView.animate(withDuration: 0.5, delay: 0, options: .beginFromCurrentState, animations: {
-                nav.pageControl.setCurrentPage(at: 2)
-            }, completion: nil)
-        }
-        if isMovingToParent {
-            containerView.hero.id = "content"
-            view.hero.id = "view"
-            contentView?.hero.modifiers = [
-                HeroModifier.duration(0.5),
-                HeroModifier.translate(CGPoint(x: contentView.frame.origin.x + view.frame.width, y: 0))
-            ]
-        } else {
-            header.hero.id = "head"
-            containerView.hero.id = "content"
-            view.hero.id = "view"
-            contentView?.hero.modifiers = [
-                HeroModifier.duration(0.5),
-                HeroModifier.translate(CGPoint(x: contentView.frame.origin.x - view.frame.width, y: 0))
-            ]
-        }
+        passcodeVC.setTitleLabel(titleText: "Создайте код:")
+//        passcodeVC.setRightButton(button: nil)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -89,62 +62,26 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
         store.subscribe(self) { state in
             state.select { $0.passcodeSignUpState }
         }
-
-        containerView.hero.modifiers = nil
-        containerView.hero.id = nil
-        view.hero.modifiers = nil
-        view.hero.id = nil
-        contentView.hero.modifiers = nil
-        header?.hero.modifiers = nil
-        header?.hero.id = nil
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         store.unsubscribe(self)
-
-        if isMovingFromParent {
-            containerView.hero.id = "content"
-            view.hero.id = "view"
-            header.hero.id = "head"
-            contentView?.hero.modifiers = [
-                HeroModifier.duration(0.5),
-                HeroModifier.translate(CGPoint(x: contentView.frame.origin.x + view.frame.width, y: 0)),
-            ]
-        } else {
-            containerView.hero.id = "content"
-            view.hero.id = "view"
-            contentView?.hero.modifiers = [
-                HeroModifier.duration(0.5),
-                HeroModifier.translate(CGPoint(x: contentView.frame.origin.x - view.frame.width, y: 0))
-            ]
-        }
-    }
-
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-
-        containerView.hero.modifiers = nil
-        containerView.hero.id = nil
-        view.hero.modifiers = nil
-        view.hero.id = nil
-        contentView?.hero.modifiers = nil
-        header?.hero.modifiers = nil
-        header?.hero.id = nil
     }
 
     func newState(state: PasscodeSignUpState) {
         guard state.isFinished != true else {
-            skipButtonClicked(self)
+            passcodeDelegate?.biometricFinished(success: true)
+            dismiss(animated: true, completion: nil)
             return
         }
         guard state.counter < 1 else {
-            passcodeVC?.resetPasscode(animated: true, playImpact: true)
+            passcodeVC.resetPasscode(animated: true, playImpact: true)
             return
         }
         if let firstPasscode = state.passcodeFirst, firstPasscode.count > 0, state.counter == 0 {
-            passcodeVC?.setTitleLabel(titleText: "Повторите код:")
-            passcodeVC?.resetPasscode(animated: false, playImpact: false)
+            passcodeVC.setTitleLabel(titleText: "Повторите код:")
+            passcodeVC.resetPasscode(animated: false, playImpact: false)
         }
     }
 
@@ -157,21 +94,7 @@ class PasscodeSignUpViewController: UIViewController, StoreSubscriber {
     }
 }
 
-// MARK: - Private methods
-
-extension PasscodeSignUpViewController {
-
-    func addGradientLayerView() {
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.startPoint = CGPoint(x: 0, y: 1)
-        gradientLayer.endPoint = CGPoint(x: 1, y: 1)
-        if header is MaskedNavigationBar {
-            gradientLayer.colors = [UIColor(red: 239 / 255, green: 64 / 255, blue: 54 / 255, alpha: 1).cgColor, UIColor(red: 239 / 255, green: 64 / 255, blue: 54 / 255, alpha: 1).cgColor]
-        } else {
-            gradientLayer.colors = [UIColor(red: 239 / 255, green: 64 / 255, blue: 54 / 255, alpha: 1).cgColor, UIColor(red: 239 / 255, green: 64 / 255, blue: 54 / 255, alpha: 1).cgColor]
-        }
-    }
-}
+// MARK: - TOPasscodeViewControllerDelegate
 
 extension PasscodeSignUpViewController: TOPasscodeViewControllerDelegate {
 
@@ -182,5 +105,11 @@ extension PasscodeSignUpViewController: TOPasscodeViewControllerDelegate {
 
     func didInputCorrectPasscode(in passcodeViewController: TOPasscodeViewController) {
 
+    }
+
+    func didTapCancel(in passcodeViewController: TOPasscodeViewController) {
+        store.dispatch(clearSignUpProcess)
+        passcodeDelegate?.biometricFinished(success: false)
+        dismiss(animated: true, completion: nil)
     }
 }

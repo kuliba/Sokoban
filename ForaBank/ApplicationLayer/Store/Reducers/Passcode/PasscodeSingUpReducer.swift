@@ -24,6 +24,9 @@ func passcodeSignUpReducer(state: PasscodeSignUpState?, action: Action) -> Passc
     case let action as SetSecondPasscode:
         newState.passcodeSecond = action.passcodeSecond
         break
+    case let action as SetRegistrationSettings:
+        newState.registrationSettings = action.registrationSettings
+        break
     case let action as UpdatePasscodeSingUpProcess:
         newState.isStarted = action.isStarted
         newState.isFinished = action.isFinished
@@ -39,5 +42,5 @@ func passcodeSignUpReducer(state: PasscodeSignUpState?, action: Action) -> Passc
 }
 
 func initialPasscodeSignUpState() -> PasscodeSignUpState {
-    return PasscodeSignUpState(isStarted: false, isFinished: false, passcodeFirst: nil, passcodeSecond: nil, counter: 0)
+    return PasscodeSignUpState(isStarted: false, isFinished: false, passcodeFirst: nil, passcodeSecond: nil, counter: 0, registrationSettings: nil)
 }

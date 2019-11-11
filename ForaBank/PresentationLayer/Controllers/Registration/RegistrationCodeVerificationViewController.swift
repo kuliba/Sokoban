@@ -107,7 +107,7 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
             self?.continueButton.isHidden = false
             self?.activityIndicator?.stopAnimating()
             if success {
-                self?.performSegue(withIdentifier: "fromRegistrationVerificationToPasscodeSignUp", sender: nil)
+                self?.performSegue(withIdentifier: "fromRegistrationVerificationToPermissions", sender: nil)
             } else {
                 let alert = UIAlertController(title: "Неудача", message: "Неверный код", preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))

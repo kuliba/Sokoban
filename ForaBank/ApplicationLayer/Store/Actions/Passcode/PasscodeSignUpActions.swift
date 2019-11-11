@@ -20,6 +20,10 @@ let startPasscodeSingUp = Thunk<State> { dispatch, getState in
 
 let finishPasscodeSingUp = Thunk<State> { dispatch, getState in
     dispatch(createPasscode)
+
+    if let settings = getState()?.passcodeSignUpState.registrationSettings {
+        SettingsStorage.shared.update(with: settings)
+    }
     dispatch(ClearSignUpProcess())
 }
 
@@ -28,15 +32,21 @@ let clearSignUpProcess = Thunk<State> { dispatch, getState in
 }
 
 let createPasscode = Thunk<State> { dispatch, getState in
-        guard let passcode = getState()?.passcodeSignUpState.passcodeSecond else {
-            return
-        }
-        savePasscodeToKeychain(passcode: passcode)
-        if let encryptedPasscode = encrypt(passcode: passcode) {
-            saveEncryptedPasscodeToKeychain(passcode: encryptedPasscode)
-        }
-        dispatch(createdPasscode(passcode: passcode))
-        dispatch(finishRegistration)
+    guard let passcode = getState()?.passcodeSignUpState.passcodeSecond else {
+        return
+    }
+    savePasscodeToKeychain(passcode: passcode)
+    if let encryptedPasscode = encrypt(passcode: passcode) {
+        saveEncryptedPasscodeToKeychain(passcode: encryptedPasscode)
+    }
+    dispatch(createdPasscode(passcode: passcode))
+    dispatch(finishRegistration)
+}
+
+func registrationSettingsCreated(registrationSettings: RegistrationSettings) -> Thunk<State> {
+    return Thunk<State> { dispatch, getState in
+        dispatch(SetRegistrationSettings(registrationSettings: registrationSettings))
+    }
 }
 
 func enterCode(code: String) -> Thunk<State> {
@@ -60,6 +70,10 @@ struct SetFirstPasscode: Action {
 
 struct SetSecondPasscode: Action {
     let passcodeSecond: String
+}
+
+struct SetRegistrationSettings: Action {
+    let registrationSettings: RegistrationSettings
 }
 
 struct UpdatePasscodeSingUpProcess: Action {

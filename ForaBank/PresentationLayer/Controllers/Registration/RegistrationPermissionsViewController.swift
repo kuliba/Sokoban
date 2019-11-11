@@ -13,7 +13,6 @@ import LocalAuthentication
 import ReSwift
 import TOPasscodeViewController
 
-
 class RegistrationPermissionsViewController: UIViewController, CAAnimationDelegate, StoreSubscriber {
 
     // MARK: - Properties
@@ -26,40 +25,41 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
     @IBOutlet weak var touchIdDevice: UIView!
     @IBOutlet weak var faceIdDevice: UIView!
     @IBOutlet var biometricSwitches: [UISwitch]!
+    @IBOutlet weak var passcodeSwitch: UISwitch!
 
     // MARK: - Actions
+
     @IBAction func backButtonCLicked(_ sender: Any) {
         segueId = backSegueId
         view.endEditing(true)
-        store.dispatch(clearSignUpProcess)
+
         self.navigationController?.popViewController(animated: true)
         if navigationController == nil {
             dismiss(animated: true, completion: nil)
         }
     }
 
-    @IBAction func touchIdSwitch(_ sender: Any) {
-        guard let switcher = sender as? UISwitch else {
-            return
-        }
-        SettingsStorage.shared.setAllowedBiometricSignIn(allowed: switcher.isOn)
-        if switcher.isOn == true {
+    @IBAction func biometricSwitchChanged(_ sender: UISwitch) {
+        registrationSettings.allowBiometric = sender.isOn
+        if sender.isOn == true {
             performSegue(withIdentifier: "touchID", sender: nil)
         }
+    }
+
+    @IBAction func passcodeSwitchChanged(_ sender: UISwitch) {
+        if sender.isOn == true {
+            store.dispatch(startPasscodeSingUp)
+        }
+        registrationSettings.allowPasscode = sender.isOn
+        registrationSettings.allowPasscode ? nil : (registrationSettings.allowBiometric = false)
     }
 
     @IBAction func `continue`(_ sender: Any) {
         NetworkManager.shared().doRegistration(completionHandler: { [unowned self] success, errorMessage, l, p in
             if success {
-//                let rootVC:ProfileViewController = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
-//                if let t = self.tabBarController as? TabBarController {
-//                    t.setNumberOfTabsAvailable()
-//                }
-//                self.segueId = "dismiss"
-//                rootVC.segueId = "Registered"
-//                self.navigationController?.setViewControllers([rootVC], animated: true)
                 NetworkManager.shared().login(login: l ?? "", password: p ?? "", completionHandler: { (success, error) in
                     if success {
+                        store.dispatch(registrationSettingsCreated(registrationSettings: self.registrationSettings))
                         self.performSegue(withIdentifier: "authSms", sender: nil)
                     } else {
                         let alert = UIAlertController(title: "Неудачная авторизация", message: "", preferredStyle: UIAlertController.Style.alert)
@@ -80,11 +80,15 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
 
     var segueId: String? = nil
     var backSegueId: String? = nil
-    //    let pageControl = FlexiblePageControl()
     let gradientView = UIView()
     let circleView = UIView()
     let touchMe = BiometricIDAuth()
     let context = LAContext()
+    var registrationSettings = RegistrationSettings() {
+        didSet {
+            updateViews()
+        }
+    }
 
     func biometricType() -> BiometricType {
         let canEvaluatePolicy = context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
@@ -123,7 +127,6 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
             touchIdDevice.isHidden = true
         default:
             faceIdDevice.isHidden = true
-
         }
     }
 
@@ -277,6 +280,31 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
     }
 
     func newState(state: State) {
+        if state.passcodeSignUpState.isStarted == true {
+            let passcodeVC = PasscodeSignUpViewController()
+            passcodeVC.modalPresentationStyle = .fullScreen
+            passcodeVC.passcodeDelegate = self
+            present(passcodeVC, animated: true, completion: nil)
+        }
+    }
+
+    func updateViews() {
+
+        biometricSwitches.forEach { [weak self] (switchView) in
+            guard let allowPasscode = self?.registrationSettings.allowPasscode, let allowBiometric = self?.registrationSettings.allowBiometric else {
+                return
+            }
+            switchView.isEnabled = allowPasscode
+            switchView.isOn = allowPasscode ? allowBiometric : false
+        }
+
+        passcodeSwitch.isOn = registrationSettings.allowPasscode
+
+        if registrationSettings.allowPasscode {
+            continueButton.setTitle("Готово", for: .normal)
+        } else {
+            continueButton.setTitle("Настроить позже", for: .normal)
+        }
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -288,6 +316,7 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
         if let vc = segue.destination as? RegistrationTouchIDViewController {
             segueId = "touchID"
             vc.segueId = segueId
+            vc.biometricDelegate = self
         }
     }
 }
@@ -342,5 +371,17 @@ private extension RegistrationPermissionsViewController {
         continueButton.setTitleColor(.black, for: [])
         continueButton.layer.borderWidth = 1
         continueButton.layer.borderColor = UIColor.gray.withAlphaComponent(0.25).cgColor
+    }
+}
+
+extension RegistrationPermissionsViewController: RegistrationTouchIDViewControllerDelegate {
+    func passcodeFinished(success: Bool) {
+        registrationSettings.allowBiometric = success
+    }
+}
+
+extension RegistrationPermissionsViewController: PasscodeSignUpViewControllerDelegate {
+    func biometricFinished(success: Bool) {
+        registrationSettings.allowPasscode = success
     }
 }

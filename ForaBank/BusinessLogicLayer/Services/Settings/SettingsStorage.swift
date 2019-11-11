@@ -10,29 +10,38 @@ import Foundation
 
 class SettingsStorage: ISettingsStorage {
 
-    static let shared = SettingsStorage()
-    let userDefaults = UserDefaults.standard
+    public static let shared = SettingsStorage()
+    private let userDefaults = UserDefaults.standard
 
-    func isFirstLaunch() -> Bool {
+    public func isFirstLaunch() -> Bool {
         return userDefaults.isFirstLaunch()
     }
 
-    func setFirstLaunch() {
+    public func setFirstLaunch() {
         userDefaults.setFirstLaunch()
     }
 
-    func allowedBiometricSignIn() -> Bool {
+    public func allowedBiometricSignIn() -> Bool {
         return userDefaults.allowedBiometricSignIn()
     }
 
-    func setAllowedBiometricSignIn(allowed: Bool) {
+    public func setAllowedBiometricSignIn(allowed: Bool) {
         userDefaults.setAllowedBiometricSignIn(allowed: allowed)
     }
 
-    func setNeedSetPasscode(_ needs: Bool) {
-        userDefaults.setNeedSetPasscode(needs)
+    public func setIsSetPasscode(_ isSet: Bool) {
+        userDefaults.setIsSetPasscode(isSet)
     }
-    func isNeedSetPasscode() -> Bool {
-        return userDefaults.isNeedSetPasscode()
+    public func isSetPasscode() -> Bool {
+        return userDefaults.isSetPasscode()
+    }
+
+    public func update(with registrationSettings: RegistrationSettings) {
+        setIsSetPasscode(registrationSettings.allowPasscode)
+        setAllowedBiometricSignIn(allowed: registrationSettings.allowBiometric)
+    }
+    
+    public func invalidateUserSettings() {
+        userDefaults.invalidateUserSettings()
     }
 }

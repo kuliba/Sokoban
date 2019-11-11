@@ -11,6 +11,7 @@ import Foundation
 protocol ISettingsStorage {
     func isFirstLaunch() -> Bool
     func setFirstLaunch()
-    func setNeedSetPasscode(_ needs: Bool)
-    func isNeedSetPasscode() -> Bool
+    func setIsSetPasscode(_ needs: Bool)
+    func isSetPasscode() -> Bool
+    func invalidateUserSettings()
 }
