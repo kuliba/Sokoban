@@ -26,7 +26,9 @@ class PaymentsTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
-
+        cell.backgroundColor = .white
+        cell.textLabel?.textColor = .black
+        
         switch indexPath.item {
         case 0:
             cell.imageView?.image = UIImage(named: "feed_option_accounts")
