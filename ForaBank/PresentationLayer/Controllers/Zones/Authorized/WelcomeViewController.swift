@@ -17,6 +17,7 @@ class WelcomeViewController: UIViewController, StoreSubscriber {
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var greetingLabel: UILabel!
+    @IBOutlet weak var nameLabel: UILabel!
 
     let transitionDuration: TimeInterval = 2
 
@@ -31,10 +32,6 @@ class WelcomeViewController: UIViewController, StoreSubscriber {
             self?.navigationController?.popToRootViewController(animated: true)
             self?.performSegue(withIdentifier: "formWelcomeToTabBarSegue", sender: nil)
         }
-    }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -85,14 +82,15 @@ class WelcomeViewController: UIViewController, StoreSubscriber {
         containerView.hero.modifiers = nil
         store.unsubscribe(self)
     }
-    
+
     func newState(state: State) {
         let userState = state.userState
         let productsState = state.productsState
 
         if let firstName = userState.profile?.firstName, let patronymic = userState.profile?.patronymic, firstName != "", patronymic != "" {
-            greetingLabel.text = "Добрый день, \(firstName) \(patronymic)!"
+            nameLabel.text = "\(firstName) \(patronymic)!"
         }
+        
         if productsState.isUpToDateProducts == true {
         }
     }
