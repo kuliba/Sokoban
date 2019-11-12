@@ -23,6 +23,9 @@ class CardToCardUnauthorized: UIViewController {
     @IBOutlet weak var scanCardButton: UIButton!
 
     @IBOutlet weak var cardView: CardView!
+    @IBOutlet weak var payerView: CardView!
+    @IBOutlet weak var payarView: CardView!
+
     @IBOutlet weak var payerCardView: CardView!
     @IBOutlet weak var cardNumberLabelView: UILabel!
     @IBOutlet weak var dateLabelView: UILabel!
@@ -34,6 +37,8 @@ class CardToCardUnauthorized: UIViewController {
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var continueButton: UIButton!
     @IBOutlet weak var centralView: UIView!
+    @IBOutlet weak var secondCentralView: UIView!
+
 
     @IBOutlet weak var depositView: UIView!
     @IBOutlet weak var contractView: UIView!
