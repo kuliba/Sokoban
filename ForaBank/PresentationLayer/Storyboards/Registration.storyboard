@@ -20,6 +20,10 @@
         <scene sceneID="SCX-ZS-CfS">
             <objects>
                 <navigationController navigationBarHidden="YES" id="G2i-s7-mnv" customClass="ProfileNavigationController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="" image="tabbar_icon_profile" id="ANF-Zo-JDd" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
+                        <inset key="imageInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="-10"/>
+                    </tabBarItem>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="LEC-8J-u4m">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -157,9 +161,6 @@
                             </mask>
                         </variation>
                     </view>
-                    <tabBarItem key="tabBarItem" title="" image="tabbar_icon_profile" id="ANF-Zo-JDd" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
-                        <inset key="imageInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="-10"/>
-                    </tabBarItem>
                     <navigationItem key="navigationItem" id="aEs-I5-Q6B"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <userDefinedRuntimeAttributes>

@@ -1327,20 +1327,20 @@
 		BD38198C232103EC0004728C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				966B4251235F508A00AF4256 /* GoogleService-Info2.plist */,
+				9651451D234F8ADC00A4713F /* ic_homeBG.jpg */,
 				9614986D2366E81E0021F70A /* GoogleService-Info.plist */,
+				966B4251235F508A00AF4256 /* GoogleService-Info2.plist */,
 				09797564215A49040044C00A /* Info.plist */,
 				BD38198D232104430004728C /* productsData.plist */,
+				960C5D1123716AFD002C4DC4 /* callfrompopup.png */,
 				960AD38722FC1826005399D6 /* Default-568h@2x.png */,
+				9651451F234F8B1B00A4713F /* foralogotype.png */,
+				96514519234F890300A4713F /* ic_logo.png */,
+				960C5D1323716B50002C4DC4 /* mailfrompopup.png */,
+				967AA500236C68DE000EEE6B /* telephone 1.png */,
 				BD7CC1A0232125D000872D06 /* Localizable.strings */,
 				BDFE5D9B233511EB0027A716 /* URLs.swift */,
 				0979755F215A49040044C00A /* Assets.xcassets */,
-				960C5D1323716B50002C4DC4 /* mailfrompopup.png */,
-				960C5D1123716AFD002C4DC4 /* callfrompopup.png */,
-				967AA500236C68DE000EEE6B /* telephone 1.png */,
-				9651451F234F8B1B00A4713F /* foralogotype.png */,
-				9651451D234F8ADC00A4713F /* ic_homeBG.jpg */,
-				96514519234F890300A4713F /* ic_logo.png */,
 				A55B7B7821A6B4A200A8A7FE /* animation */,
 			);
 			path = Resources;
