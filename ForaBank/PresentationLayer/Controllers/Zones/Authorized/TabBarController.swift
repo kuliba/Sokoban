@@ -19,7 +19,7 @@ class TabBarController: UITabBarController, StoreSubscriber {
     override func viewDidLoad() {
         super.viewDidLoad()
         //setSelectedIndexToLast()
-        setNumberOfTabsAvailable()
+//        setNumberOfTabsAvailable()
         selectedIndex = 0
         hero.isEnabled = true
         hero.tabBarAnimationType = .none
@@ -51,7 +51,6 @@ class TabBarController: UITabBarController, StoreSubscriber {
 
     // MARK: - public methods
     func setNumberOfTabsAvailable() {
-        // if !signedIn (!authorized)
         NetworkManager.shared().isSignedIn { [unowned self] (flag) in
             if !flag && self.viewControllers?.count == 5 {
                 self.viewControllers?.remove(at: 1)
