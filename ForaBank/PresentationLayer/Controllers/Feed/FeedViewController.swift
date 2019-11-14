@@ -38,7 +38,7 @@ class FeedViewController: UIViewController {
     
     weak var currentViewController: UIViewController?
     
-    var items = ["Текущее", "Предстоящее", "Предложения", "Информация"]
+    var items = ["Текущее", "Предстоящее", "Перевести"]
     
     private var isSignedUp: Bool? = nil {
         didSet {
