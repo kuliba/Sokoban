@@ -37,10 +37,10 @@
             </objects>
             <point key="canvasLocation" x="480.80000000000001" y="154.27286356821591"/>
         </scene>
-        <!--Feed-->
+        <!--Payment-->
         <scene sceneID="j3p-ui-zmb">
             <objects>
-                <viewControllerPlaceholder storyboardName="Feed" id="gLF-1W-dY7" sceneMemberID="viewController">
+                <viewControllerPlaceholder storyboardName="Payment" id="gLF-1W-dY7" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" id="fHP-Ta-PWt"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gjd-g6-x9p" userLabel="First Responder" sceneMemberID="firstResponder"/>
