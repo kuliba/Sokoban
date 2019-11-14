@@ -23,17 +23,22 @@ class CardToCardUnauthorized: UIViewController {
     @IBOutlet weak var scanCardButton: UIButton!
 
     @IBOutlet weak var cardView: CardView!
+    @IBOutlet weak var payarView: CardView!
+
     @IBOutlet weak var payerCardView: CardView!
     @IBOutlet weak var cardNumberLabelView: UILabel!
     @IBOutlet weak var dateLabelView: UILabel!
     @IBOutlet weak var cvvLabelView: UILabel!
-
+    @IBOutlet weak var deleteLabel: UILabel!
+    
     @IBOutlet weak var cardNumberTextField: UITextField!
     @IBOutlet weak var scanButton: UIButton!
 
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var continueButton: UIButton!
     @IBOutlet weak var centralView: UIView!
+    @IBOutlet weak var secondCentralView: UIView!
+
 
     @IBOutlet weak var depositView: UIView!
     @IBOutlet weak var contractView: UIView!
@@ -44,7 +49,18 @@ class CardToCardUnauthorized: UIViewController {
     @IBOutlet weak var brandLogo: UIImageView!
     @IBOutlet weak var bankLogo: UIImageView!
     @IBOutlet weak var bankLogoWidth: NSLayoutConstraint!
+    
+    
+    
     @IBOutlet weak var cardNumberPayer: UITextField!
+    @IBOutlet weak var cardPayerLabel: UILabel!
+    @IBOutlet weak var brandLogoPayer: UIImageView!
+    @IBOutlet weak var bankLogoPayer: UIImageView!
+    @IBOutlet weak var widthBankLogoPayer: NSLayoutConstraint!
+    
+    @IBOutlet weak var scanButtonPayer: UIButton!
+    @IBOutlet weak var amoutTextField: UITextField!
+    
     
     var previousSegment = 0
 
@@ -74,6 +90,17 @@ class CardToCardUnauthorized: UIViewController {
         }
     }
     @IBAction func scanCardButtonClicked(_ sender: Any) {
+        view.endEditing(true)
+        let cardIOVC = CardIOPaymentViewController(paymentDelegate: self)
+        
+        cardIOVC?.modalPresentationStyle = .fullScreen
+        cardIOVC?.collectCVV = false
+        cardIOVC?.collectExpiry = false
+        cardIOVC?.guideColor = UIColor(red: 0.13, green: 0.54, blue: 0.61, alpha: 1.00)
+        cardIOVC?.hideCardIOLogo = true
+        present(cardIOVC!, animated: true, completion: nil)
+    }
+    @IBAction func scanButtonPayer(_ sender: Any) {
         view.endEditing(true)
         let cardIOVC = CardIOPaymentViewController(paymentDelegate: self)
         
@@ -119,18 +146,15 @@ class CardToCardUnauthorized: UIViewController {
             bankLogo.isHidden = true
             brandLogo.isHidden = true
             
-            if  cardNumberTextField.text?.removeWhitespace().prefix(6) == "111111"{
-                self.cardImage.image = UIImage(named: "card2")
-                cardView.backgroundColor = .black
-
-            }
+         
             self.cardView.backgroundColor = .white
             self.cardView.gradientLayer.opacity = 0
-
+            
+            self.cardNumberTextField.textColor = UIColor(hexFromString: "#FFFFFF")
             self.cardNumberLabelView.textColor = UIColor(hexFromString: "#9B9B9B")
-            self.dateLabelView.textColor = UIColor(hexFromString: "#9B9B9B")
-            self.cvvLabelView.textColor = UIColor(hexFromString: "#9B9B9B")
 
+            
+            
             //            self.scanCardButton.setImage(self.scanCardButton.image(for: [])?.withRenderingMode(.alwaysTemplate), for: [])
             self.scanCardButton.tintColor = UIColor(hexFromString: "#B5B5B5")
 
@@ -139,6 +163,45 @@ class CardToCardUnauthorized: UIViewController {
             
         }
     }
+    @IBAction func payerCardDatasChanged(_ textField: UITextField) {
+         if textField.tag == 2 || textField.tag == 3,
+             (textField.text?.count ?? 0) >= 2 {
+         }
+            
+
+         guard let cardNumber = cardNumberPayer.text?.count, cardNumber <= 19 else {
+             self.continueButton.isHidden = false
+             return
+         }
+         if cardNumberPayer.text?.count ?? 0 == 19 {
+             if textField.tag == 1 {
+                 UIView.transition(with: payarView, duration: 0.5, options: .transitionFlipFromLeft, animations: {
+                  
+                     self.identifyBankPayer()
+                 })
+             } else {
+                 identifyBankPayer()
+             }
+         } else {
+             cardNumberPayer.isHidden = false
+             bankLogoPayer.isHidden = true
+             brandLogoPayer.isHidden = true
+             
+          
+             self.payarView.backgroundColor = .white
+             self.payarView.gradientLayer.opacity = 0
+
+             self.cardNumberPayer.textColor = UIColor(hexFromString: "#9B9B9B")
+            
+
+             //            self.scanCardButton.setImage(self.scanCardButton.image(for: [])?.withRenderingMode(.alwaysTemplate), for: [])
+             self.scanButtonPayer.tintColor = UIColor(hexFromString: "#FFFFFF")
+
+             self.cardNumberPayer.tintColor = .white
+             self.cardNumberPayer.textColor = .black
+             
+         }
+     }
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -146,10 +209,19 @@ class CardToCardUnauthorized: UIViewController {
         addGradientLayerView()
 //        addCircleView()
 
+        amoutTextField.placeholder = "0"
+        if amoutTextField.text?.count != 0{
+            amoutTextField.backgroundColor = .clear
+            amoutTextField.textColor = .white
+        } else if amoutTextField.text?.count == 0{
+          amoutTextField.backgroundColor = .white
+            amoutTextField.textColor = .black
+        }
         if pageControl != nil {
             setUpPageControl()
         }
         setUpCardNumberTextField()
+        setUpCardNumberTextFieldPayer()
 
         setUpTextFieldDelegates()
         view.clipsToBounds = true
@@ -195,6 +267,17 @@ class CardToCardUnauthorized: UIViewController {
                 identifyBank()
             }
         }
+        if cardNumberPayer.text?.count ?? 0 == 75 {
+                  if needAnimateCard {
+                      UIView.transition(with: payarView, duration: 0.5, options: .transitionFlipFromLeft, animations: {
+                          self.identifyBankPayer()
+                      }) { (_) in
+                          self.needAnimateCard = false
+                      }
+                  } else {
+                      identifyBankPayer()
+                  }
+              }
         if segueId == "Registration" {
             if let nav = navigationController as? ProfileNavigationController,
                 pageControl != nil {
@@ -386,7 +469,15 @@ private extension CardToCardUnauthorized {
             cardNumberTextField.font = cardNumberTextField.font!.withSize(14)
         }
 
-        scanButton.imageView?.contentMode = .scaleAspectFit
+    }
+    func setUpCardNumberTextFieldPayer() {
+        cardNumberPayer.addTarget(self, action: #selector(reformatAsCardNumber), for: .editingChanged)
+
+        if Device().isOneOf(Constants.iphone5Devices) {
+            cardNumberPayer.font = cardNumberPayer.font!.withSize(14)
+        }
+
+        scanButtonPayer.imageView?.contentMode = .scaleAspectFit
     }
 
     func setCardShadow() {
@@ -550,7 +641,6 @@ extension CardToCardUnauthorized: UITextFieldDelegate {
         }
         cardNumberLabelView.isHidden = false
         bankLogo.isHidden = true
-        self.cardView.backgroundColor = .white
         self.cardView.gradientLayer.opacity = 0
         var textColor: UIColor = UIColor(hexFromString: "#9B9B9B")!
         var scanButtonColor: UIColor = UIColor(hexFromString: "#B5B5B5")!
@@ -560,7 +650,8 @@ extension CardToCardUnauthorized: UITextFieldDelegate {
                 let c2 = UIColor(hexFromString: bank.backgroundColors?[1] ?? "") {
                 self.cardView.color1 = c1
                 self.cardView.color1 = c2
-                self.cardView.gradientLayer.opacity = 1
+                self.cardView.gradientLayer.opacity = 0
+                self.deleteLabel.textColor = .white
             }
             if let bc = UIColor(hexFromString: bank.backgroundColor ?? "") {
                 self.cardView.backgroundColor = bc
@@ -590,6 +681,70 @@ extension CardToCardUnauthorized: UITextFieldDelegate {
         self.cardNumberTextField.textColor = tintColor
         
     }
+    
+    
+    func identifyBankPayer() {
+
+        guard let cardNumber = cardNumberPayer.text?.removeWhitespace() else {
+            return
+        }
+
+
+        brandLogoPayer.isHidden = true
+        CardBrand.allCases.forEach { (brand) in
+            if cardNumber.range(of: brand.rawValue.0, options: .regularExpression, range: nil, locale: nil) != nil {
+                brandLogoPayer.image = UIImage(named: brand.rawValue.1)
+                brandLogoPayer.isHidden = false
+            }
+        }
+        
+        var identifiedBank: CardBank? = nil
+        for b in banks ?? [] {
+            for p in b.prefixes ?? [] {
+                if cardNumber.starts(with: p) {
+                    identifiedBank = b
+                }
+            }
+        }
+        cardPayerLabel.isHidden = false
+        bankLogoPayer.isHidden = true
+        self.payarView.gradientLayer.opacity = 0
+        var textColor: UIColor = UIColor(hexFromString: "#9B9B9B")!
+        var scanButtonColor: UIColor = UIColor(hexFromString: "#B5B5B5")!
+        var tintColor: UIColor = .black
+        if let bank = identifiedBank {
+            if let c1 = UIColor(hexFromString: bank.backgroundColors?[0] ?? ""),
+                let c2 = UIColor(hexFromString: bank.backgroundColors?[1] ?? "") {
+                self.payarView.color1 = c1
+                self.payarView.color1 = c2
+                self.payarView.gradientLayer.opacity = 0
+                self.deleteLabel.textColor = .white
+            }
+            if let bc = UIColor(hexFromString: bank.backgroundColor ?? "") {
+                self.payarView.backgroundColor = bc
+            }
+
+            if let bankImage = UIImage(named: bank.alias ?? "") {
+                bankLogoPayer.image = bankImage
+                print(bankImage.size)
+                let maxHeight: CGFloat = (bankImage.size.width / bankImage.size.height > 2.4) ? 20 : 30
+                widthBankLogoPayer.constant = bankImage.size.width * maxHeight / bankImage.size.height
+                bankLogoPayer.isHidden = false
+            }
+            if let tc = UIColor(hexFromString: bank.textColor ?? "") {
+                textColor = tc
+                tintColor = tc
+                scanButtonColor = tc
+            }
+        }
+        self.cardPayerLabel.isHidden = true
+        self.scanCardButton.tintColor = scanButtonColor
+
+        self.cardNumberPayer.tintColor = tintColor
+        self.cardNumberPayer.textColor = tintColor
+        
+    }
+    
 }
 
 extension CardToCardUnauthorized: CardIOPaymentViewControllerDelegate {
