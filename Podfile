@@ -29,5 +29,4 @@ target 'ForaBank' do
   pod 'Firebase/Core'
   pod 'SCLAlertView'
 
-  #pod 'XCGLogger'
 end
