@@ -48,5 +48,10 @@ extension RefreshView {
     func stopAnimation() {
         gradientView.layer.removeAllAnimations()
         gradientView = nil
+        
+    }
+    func stopAnimating(){
+        imgVLogo.isHidden = true
+        imgVBG.isHidden = true
     }
 }

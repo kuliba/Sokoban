@@ -123,37 +123,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fwS-pj-Lv8">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="30"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Перевод" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4du-DO-k3Q">
-                                        <rect key="frame" x="127" y="8.5" width="66" height="21.5"/>
-                                        <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1V6-4m-FGU">
-                                        <rect key="frame" x="14" y="0.0" width="30" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" secondItem="1V6-4m-FGU" secondAttribute="height" multiplier="1:1" id="JtF-SG-on7"/>
-                                        </constraints>
-                                        <inset key="imageEdgeInsets" minX="9" minY="8" maxX="8" maxY="3"/>
-                                        <state key="normal" image="button_back"/>
-                                        <connections>
-                                            <action selector="backButtonClicked:" destination="afX-Am-FVA" eventType="touchUpInside" id="Q5F-Ps-plg"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstItem="1V6-4m-FGU" firstAttribute="top" secondItem="fwS-pj-Lv8" secondAttribute="top" id="RvJ-cj-9cj"/>
-                                    <constraint firstItem="4du-DO-k3Q" firstAttribute="centerX" secondItem="fwS-pj-Lv8" secondAttribute="centerX" id="UzD-uZ-yeB"/>
-                                    <constraint firstAttribute="bottom" secondItem="4du-DO-k3Q" secondAttribute="bottom" id="idY-rA-0H2"/>
-                                    <constraint firstItem="1V6-4m-FGU" firstAttribute="leading" secondItem="fwS-pj-Lv8" secondAttribute="leading" constant="14" id="imo-81-Oro"/>
-                                    <constraint firstAttribute="bottom" secondItem="1V6-4m-FGU" secondAttribute="bottom" id="nSv-cE-Df9"/>
-                                    <constraint firstAttribute="height" constant="30" id="uFK-QD-zGE"/>
-                                </constraints>
-                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7jF-kB-QvE" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="25" width="320" height="543"/>
                                 <subviews>
@@ -342,6 +311,37 @@
                                     <constraint firstItem="B3J-EX-QK6" firstAttribute="leading" secondItem="7jF-kB-QvE" secondAttribute="leading" id="ulO-B9-ysM"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fwS-pj-Lv8">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="55"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Перевод" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4du-DO-k3Q">
+                                        <rect key="frame" x="127" y="16.5" width="66" height="21.5"/>
+                                        <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1V6-4m-FGU">
+                                        <rect key="frame" x="14" y="10" width="30" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="1V6-4m-FGU" secondAttribute="height" multiplier="1:1" id="JtF-SG-on7"/>
+                                        </constraints>
+                                        <inset key="imageEdgeInsets" minX="9" minY="8" maxX="8" maxY="3"/>
+                                        <state key="normal" image="button_back"/>
+                                        <connections>
+                                            <action selector="backButtonClicked:" destination="afX-Am-FVA" eventType="touchUpInside" id="Q5F-Ps-plg"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="1V6-4m-FGU" firstAttribute="top" secondItem="fwS-pj-Lv8" secondAttribute="top" constant="10" id="RvJ-cj-9cj"/>
+                                    <constraint firstItem="4du-DO-k3Q" firstAttribute="centerX" secondItem="fwS-pj-Lv8" secondAttribute="centerX" id="UzD-uZ-yeB"/>
+                                    <constraint firstAttribute="bottom" secondItem="4du-DO-k3Q" secondAttribute="bottom" constant="17" id="idY-rA-0H2"/>
+                                    <constraint firstItem="1V6-4m-FGU" firstAttribute="leading" secondItem="fwS-pj-Lv8" secondAttribute="leading" constant="14" id="imo-81-Oro"/>
+                                    <constraint firstAttribute="bottom" secondItem="1V6-4m-FGU" secondAttribute="bottom" constant="15" id="nSv-cE-Df9"/>
+                                    <constraint firstAttribute="height" constant="55" id="uFK-QD-zGE"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -349,7 +349,7 @@
                             <constraint firstItem="fwS-pj-Lv8" firstAttribute="top" secondItem="Gs4-v2-uTc" secondAttribute="top" id="1ji-DF-0Nm"/>
                             <constraint firstItem="Gs4-v2-uTc" firstAttribute="trailing" secondItem="7jF-kB-QvE" secondAttribute="trailing" id="5Pb-DJ-Npe"/>
                             <constraint firstItem="Gs4-v2-uTc" firstAttribute="trailing" secondItem="fwS-pj-Lv8" secondAttribute="trailing" id="71m-01-ukG"/>
-                            <constraint firstItem="7jF-kB-QvE" firstAttribute="top" secondItem="fwS-pj-Lv8" secondAttribute="bottom" constant="-5" id="BeW-JO-IUK"/>
+                            <constraint firstItem="7jF-kB-QvE" firstAttribute="top" secondItem="fwS-pj-Lv8" secondAttribute="bottom" constant="-30" id="BeW-JO-IUK"/>
                             <constraint firstItem="7jF-kB-QvE" firstAttribute="leading" secondItem="Gs4-v2-uTc" secondAttribute="leading" id="QNz-uO-tTD"/>
                             <constraint firstItem="7jF-kB-QvE" firstAttribute="leading" secondItem="fwS-pj-Lv8" secondAttribute="leading" id="Zur-pa-LII"/>
                             <constraint firstItem="fwS-pj-Lv8" firstAttribute="leading" secondItem="Gs4-v2-uTc" secondAttribute="leading" id="aDX-2p-Z3M"/>

@@ -25,6 +25,7 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
     var operationSum: String?
     var segueId: String? = nil
 
+    @IBOutlet weak var foraPreloader: RefreshView!
     let gradientView = UIView()
     let circleView = UIView()
 //    var message: String? = nil
@@ -50,11 +51,12 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
 
     @IBAction func authContinue(_ sender: Any) {
         view.endEditing(true)
-        activityIndicator?.startAnimation()
+        foraPreloader.isHidden = false
+        foraPreloader?.startAnimation()
         continueButton.isHidden = true
         NetworkManager.shared().checkVerificationCode(code: self.codeNumberTextField.text ?? "") { [weak self] (success) in
             self?.continueButton.isHidden = false
-            self?.activityIndicator?.stopAnimating()
+            self?.foraPreloader?.isHidden = false
             if success {
                 store.dispatch(finishVerification)
             } else {
@@ -73,11 +75,12 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
 
     @IBAction func resetPasswordCheckCode(_ sender: Any) {
         view.endEditing(true)
-        activityIndicator?.startAnimation()
+        foraPreloader.isHidden = false
+        foraPreloader?.startAnimation()
         continueButton.isHidden = true
         NetworkManager.shared().checkCodeResetPassword(code: self.codeNumberTextField.text ?? "") { [weak self] (success) in
             self?.continueButton.isHidden = false
-            self?.activityIndicator?.stopAnimating()
+            self?.foraPreloader?.stopAnimating()
             if success {
                 self?.performSegue(withIdentifier: "newPasswordReset", sender: self)
 
@@ -101,11 +104,12 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
 
                 return
         }
-        activityIndicator?.startAnimation()
+        foraPreloader.isHidden = false
+        foraPreloader?.startAnimation()
         continueButton.isHidden = true
         NetworkManager.shared().verifyCode(verificationCode: code) { [weak self] (success, errorMessage) in
             self?.continueButton.isHidden = false
-            self?.activityIndicator?.stopAnimating()
+            self?.foraPreloader?.isHidden = true
             if success {
                 self?.performSegue(withIdentifier: "fromRegistrationVerificationToPermissions", sender: nil)
             } else {
@@ -117,11 +121,12 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
     }
 
     @IBAction func firstAuth(_ sender: Any) {
-        activityIndicator?.startAnimation()
+        foraPreloader.isHidden = false
+        foraPreloader?.startAnimation()
         continueButton.isHidden = true
         NetworkManager.shared().checkVerificationCode(code: self.codeNumberTextField.text ?? "") { [weak self] (success) in
             self?.continueButton.isHidden = false
-            self?.activityIndicator?.stopAnimating()
+            self?.foraPreloader?.isHidden = true
             if success {
                 store.dispatch(finishPasscodeSingUp)
                 self?.performSegue(withIdentifier: "finish", sender: nil)
@@ -140,11 +145,12 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
     }
 
     @IBAction func checkPaymentCode(_ sender: Any) {
-        activityIndicator?.startAnimation()
+        foraPreloader.isHidden = false
+        foraPreloader?.startAnimation()
         continueButton.isHidden = true
         NetworkManager.shared().makeCard2Card(code: self.codeNumberTextField.text ?? "") { [weak self] (success) in
             self?.continueButton.isHidden = false
-            self?.activityIndicator?.stopAnimating()
+            self?.foraPreloader?.isHidden = true
             if success {
 //                self?.performSegue(withIdentifier: "finish", sender: nil)
             } else {

@@ -31,12 +31,14 @@ class DepositsHistoryViewController: UIViewController {
     
     let cellId = "DepositsHistoryCell"
     
+    @IBOutlet weak var foraPreloader: RefreshView!
     let decoder = JSONDecoder()
     var selectIndex: Int? = nil
     var selectedSection: Int? = nil
  
     var sortedTransactionsStatement = [DatedTransactionsStatement]() {
         didSet{
+            foraPreloader.isHidden = true
             self.tableView.reloadData()
         }
     }
@@ -88,10 +90,26 @@ class DepositsHistoryViewController: UIViewController {
     }
     
     
+    
+
+  
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        if (sortedTransactionsStatement == nil) {
+            foraPreloader.startAnimation()
+
+        }
+
+
+    }
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpTableView()
+        foraPreloader.startAnimation()
         NetworkManager.shared().getSortedFullStatement { [weak self] (success, fullStatement, error) in
             print("DepositsHistoryViewController getSortedFullStatement \(success)")
             if success {
