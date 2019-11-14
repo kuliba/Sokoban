@@ -40,7 +40,7 @@ private extension DoubleRoundedEdgeView {
         bezierPath.addLine(to: CGPoint(x: 0, y: rect.height))
         bezierPath.close()
         let context = UIGraphicsGetCurrentContext()
-        context!.setLineWidth(4.0)
+        context!.setLineWidth(14.0)
         UIColor.white.setFill()
         bezierPath.fill()
         
