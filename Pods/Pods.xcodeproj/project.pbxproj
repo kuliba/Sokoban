@@ -602,7 +602,6 @@
 		BC5A0A060BE33BF11BB2552E68492C54 /* GULNSData+zlib.h in Headers */ = {isa = PBXBuildFile; fileRef = AFCF6D2063E8E93241F03B4D2E629601 /* GULNSData+zlib.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BC6B687229B999C2CE7E4E7572915D48 /* FIRMessagingReceiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F2EBE3899D9329E1960C5BF2BADC3B /* FIRMessagingReceiver.m */; };
 		BD07B8345C53AB48875EC7620C9B6A5A /* Blowfish+Foundation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC7FB27215D2C52926BC7F045D0C528A /* Blowfish+Foundation.swift */; };
-		BD69D9EA237D2FEB0020562B /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD69D9E9237D2FEB0020562B /* File.swift */; };
 		BD8808715AF64706D39834CE0EFFBFB6 /* ReSwift-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C6113A884DD2538D906C5B14466ECC /* ReSwift-dummy.m */; };
 		BE5FDB6EF058BD50B0580A205679FEA2 /* FIRInstanceIDTokenFetchOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 975B00E22535FAA769BE617C6E57E919 /* FIRInstanceIDTokenFetchOperation.m */; };
 		BEE6B677416CA71C981D1D3F60B18C96 /* Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6488EE54433F9053922E4664BBD86D30 /* Alamofire.swift */; };
@@ -1829,7 +1828,6 @@
 		BC1A987B07D83BE6DFBBE570ACA6B039 /* FIRInstanceIDBackupExcludedPlist.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FIRInstanceIDBackupExcludedPlist.m; path = Firebase/InstanceID/FIRInstanceIDBackupExcludedPlist.m; sourceTree = "<group>"; };
 		BC7FB27215D2C52926BC7F045D0C528A /* Blowfish+Foundation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Blowfish+Foundation.swift"; path = "Sources/CryptoSwift/Foundation/Blowfish+Foundation.swift"; sourceTree = "<group>"; };
 		BCAB60BE2D387EE553C2A2A3361CFC52 /* NVActivityIndicatorView-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "NVActivityIndicatorView-prefix.pch"; sourceTree = "<group>"; };
-		BD69D9E9237D2FEB0020562B /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = File.swift; path = ../../../Desktop/File.swift; sourceTree = "<group>"; };
 		BD8D059DB6A0CABC529FBAB4D5A61919 /* FIRInstanceID_Private.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FIRInstanceID_Private.h; path = Firebase/InstanceID/Private/FIRInstanceID_Private.h; sourceTree = "<group>"; };
 		BE4A232A5E788F7078F93EE704954FAD /* NVActivityIndicatorAnimationBallZigZagDeflect.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NVActivityIndicatorAnimationBallZigZagDeflect.swift; path = Source/NVActivityIndicatorView/Animations/NVActivityIndicatorAnimationBallZigZagDeflect.swift; sourceTree = "<group>"; };
 		BE4A9BDDAB5242DFFF05B9A061A40958 /* FirebaseCore-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "FirebaseCore-dummy.m"; sourceTree = "<group>"; };
@@ -3723,7 +3721,6 @@
 		CF1408CF629C7361332E53B88F7BD30C = {
 			isa = PBXGroup;
 			children = (
-				BD69D9E9237D2FEB0020562B /* File.swift */,
 				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
 				B2C4F2C72EE2ACECBF2453AAD841B5F4 /* Frameworks */,
 				8694AD7A3535F71EBE8DAB80D22073DE /* Pods */,
@@ -5309,7 +5306,6 @@
 				931BBB8230A25161D5C37528A8F9FECF /* SessionManager.swift in Sources */,
 				AFC64B1097F7355FF423D6A73E9C7210 /* TaskDelegate.swift in Sources */,
 				933FDA5970AA525D6CB92BFEBA2BAB4A /* Timeline.swift in Sources */,
-				BD69D9EA237D2FEB0020562B /* File.swift in Sources */,
 				53791F5E5F07400F92CFDFC89A432305 /* Validation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
