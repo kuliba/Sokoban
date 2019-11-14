@@ -18,7 +18,7 @@ class SignInViewController: UIViewController, ContactsPickerDelegate {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var centralView: UIView!
-    
+
 
     var segueId: String? = nil
     var backSegueId: String? = nil
@@ -26,23 +26,23 @@ class SignInViewController: UIViewController, ContactsPickerDelegate {
 
     @IBAction func contactList(_ sender: Any) {
         let contactPickerScene = ContactsPicker(delegate: self, multiSelection: true, subtitleCellType: SubtitleCellValue.email)
-           let navigationController = UINavigationController(rootViewController: contactPickerScene)
-           self.present(navigationController, animated: true, completion: nil)
-        
+        let navigationController = UINavigationController(rootViewController: contactPickerScene)
+        self.present(navigationController, animated: true, completion: nil)
+
     }
     func contactPicker(_: ContactsPicker, didContactFetchFailed error: NSError) {
         print("Failed with error \(error.description)")
     }
-    
+
     func contactPicker(_: ContactsPicker, didSelectContact contact: Contact) {
         print("Contact \(contact.displayName) has been selected")
     }
-    
+
     func contactPickerDidCancel(_ picker: ContactsPicker) {
         picker.dismiss(animated: true, completion: nil)
-        print("User canceled the selection");
+        print("User canceled the selection")
     }
-    
+
     func contactPicker(_ picker: ContactsPicker, didSelectMultipleContacts contacts: [Contact]) {
         defer { picker.dismiss(animated: true, completion: nil) }
         guard !contacts.isEmpty else { return }
@@ -50,17 +50,17 @@ class SignInViewController: UIViewController, ContactsPickerDelegate {
         for contact in contacts {
             print("\(contact.displayName)")
         }
-    
+
     }
-    
-    
+
+
     // MARK: - Actions
     @IBAction func backButtonClicked() {
         view.endEditing(true)
         segueId = backSegueId
         navigationController?.popViewController(animated: true)
     }
-     @IBAction  func tappedButton(sender: UIButton!) {
+    @IBAction func tappedButton(sender: UIButton!) {
         performSegue(withIdentifier: "smsResetPassword", sender: nil)
     }
 
@@ -72,13 +72,11 @@ class SignInViewController: UIViewController, ContactsPickerDelegate {
                                               self.performSegue(withIdentifier: "smsVerification", sender: self)
                                               store.dispatch(createCredentials(login: self.loginTextField.text ?? "", pwd: self.passwordTextField.text ?? ""))
                                           } else {
-                                              let alert = UIAlertController(title: "Неудача", message: errorMessage, preferredStyle: UIAlertController.Style.alert)
-                                              alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-                                              self.present(alert, animated: true, completion: nil)
+                                              AlertService.shared.show(title: "Неудача", message: errorMessage, cancelButtonTitle: "Ок", okButtonTitle: nil, cancelCompletion: nil, okCompletion: nil)
                                           }
                                       })
     }
-  
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -918,6 +918,7 @@
 			isa = PBXGroup;
 			children = (
 				A5004D3021EF37DC0098E510 /* ActivityIndicatorView.swift */,
+				96E08A3C2372C0BA0070CA6A /* BottomRoundedEdge.swift */,
 				097A6DCB21884B6D00E6C69E /* ButtonRounded.swift */,
 				09BE35F0218C729C00EA7B24 /* ButtonRoundedBordered.swift */,
 				09F0E5CC2179DC3B0016BB6E /* CardView.swift */,
@@ -932,6 +933,7 @@
 				A55663A321EDB22600E48C40 /* OnMapButton.swift */,
 				A5C5E6E721A2B49A001D6250 /* OptionPickerButton.swift */,
 				0930F165215B5CDB00CFB593 /* RoundedEdgeView.swift */,
+				962655C82361F31A00697E37 /* ViewModalStyle.swift */,
 				BD49E6542344F6910031561F /* Cells */,
 				89C8DF0F2191AE7A00D92B0A /* Deposits */,
 				BDABE68B23474B0100CA0754 /* DropDown */,
@@ -940,8 +942,6 @@
 				A5B473C221B3C09800F2E41F /* Payments */,
 				A55B7B8921AA70A600A8A7FE /* Profile */,
 				A568142221CBCD1C002C0899 /* Services */,
-				962655C82361F31A00697E37 /* ViewModalStyle.swift */,
-				96E08A3C2372C0BA0070CA6A /* BottomRoundedEdge.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";

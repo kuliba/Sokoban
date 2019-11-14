@@ -23,9 +23,9 @@ class DetailedCardView: CardView {
     var logoImageViewCosntraint: NSLayoutConstraint? = nil
     var expirationDate = UILabel()
     var newName: String? = nil
-    
-    
-    
+
+
+
     enum CardBackGround: String {
         case mastercard = "mastercard_gold"
         case visaGold = "visa_gold"
@@ -62,7 +62,8 @@ class DetailedCardView: CardView {
         titleLabel.lineBreakMode = .byWordWrapping
         titleLabel.numberOfLines = 2
         cardCashLabel.textAlignment = .right
-        //print("DetailedCardView init(frame: CGRect)")
+        cardValidityPeriodLabel.isHidden = true
+
         self.addSubview(backgroundImageView)
         self.addSubview(logoImageView)
         self.addSubview(titleLabel)
@@ -111,10 +112,10 @@ class DetailedCardView: CardView {
 
 
             titleLabel.text = newName
-          if newName == nil{
-            titleLabel.attributedText = NSAttributedString(string: card?.customName ?? "\(name)", attributes: [.font: UIFont.systemFont(ofSize: 16), .foregroundColor: foregroundColor])
-          }
-            
+            if newName == nil {
+                titleLabel.attributedText = NSAttributedString(string: card?.customName ?? "\(name)", attributes: [.font: UIFont.systemFont(ofSize: 16), .foregroundColor: foregroundColor])
+            }
+
 
             cardCashLabel.adjustsFontSizeToFitWidth = true
             cardCashLabel.attributedText = NSAttributedString(string: cash, attributes: [.font: UIFont.systemFont(ofSize: 16), .foregroundColor: foregroundColor])
@@ -154,7 +155,7 @@ class DetailedCardView: CardView {
             color2 = UIColor(red: 0.96, green: 0.45, blue: 0.13, alpha: 1)
             color1 = UIColor(red: 0.89, green: 0.77, blue: 0.35, alpha: 1)
 
-            cardNumberLabel.attributedText = NSAttributedString(string: maskedCardNumber(number: card?.number ?? "", separator: " "), attributes: [.font: UIFont.systemFont(ofSize: 12), .foregroundColor: foregroundColor])
+            cardNumberLabel.attributedText = NSAttributedString(string: card?.maskedNumber.replace(string: "-", replacement: " ") ?? "", attributes: [.font: UIFont.systemFont(ofSize: 12), .foregroundColor: foregroundColor])
             cardHolderNameLabel.attributedText = NSAttributedString(string: card?.holderName ?? "", attributes: [.font: UIFont.systemFont(ofSize: 12), .foregroundColor: foregroundColor])
 
             if card?.number.prefix(6) == "557986" {
