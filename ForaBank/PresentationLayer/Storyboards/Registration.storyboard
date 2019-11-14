@@ -725,6 +725,37 @@
                                                     <constraint firstAttribute="width" secondItem="T4B-Ys-ZHR" secondAttribute="height" multiplier="1:1" id="IW7-KX-qg5"/>
                                                 </constraints>
                                             </view>
+                                            <view hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" id="lDp-dm-vZ0" customClass="RefreshView" customModule="ForaBank" customModuleProvider="target">
+                                                <rect key="frame" x="-8" y="138.33333333333331" width="413" height="54"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <subviews>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="bottom" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="09k-e6-zvc">
+                                                        <rect key="frame" x="-3" y="292" width="420" height="656"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="656" id="itY-Gw-0PT"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="foralogotype" translatesAutoresizingMaskIntoConstraints="NO" id="bhD-Az-mp4">
+                                                        <rect key="frame" x="150" y="0.0" width="114" height="40"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="40" id="YZi-ab-Vnv"/>
+                                                            <constraint firstAttribute="width" constant="114" id="ZMD-yS-Vmf"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="bhD-Az-mp4" firstAttribute="top" secondItem="7yZ-nI-D05" secondAttribute="top" id="5gK-3m-IbW"/>
+                                                    <constraint firstItem="bhD-Az-mp4" firstAttribute="centerX" secondItem="09k-e6-zvc" secondAttribute="centerX" id="Lsw-49-RJ9"/>
+                                                    <constraint firstItem="09k-e6-zvc" firstAttribute="top" secondItem="lDp-dm-vZ0" secondAttribute="top" constant="292" id="V4c-sv-7Rl"/>
+                                                    <constraint firstItem="09k-e6-zvc" firstAttribute="leading" secondItem="7yZ-nI-D05" secondAttribute="leading" constant="-3" id="fVM-D4-UjZ"/>
+                                                    <constraint firstItem="7yZ-nI-D05" firstAttribute="trailing" secondItem="09k-e6-zvc" secondAttribute="trailing" constant="-4" id="jzQ-UV-hJZ"/>
+                                                </constraints>
+                                                <viewLayoutGuide key="safeArea" id="7yZ-nI-D05"/>
+                                                <connections>
+                                                    <outlet property="imgVBG" destination="09k-e6-zvc" id="hX3-zZ-e9p"/>
+                                                    <outlet property="imgVLogo" destination="bhD-Az-mp4" id="Szu-3Z-ImY"/>
+                                                </connections>
+                                            </view>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
@@ -815,6 +846,7 @@
                         <outlet property="codeNumberTextField" destination="b4u-GM-GMe" id="6MK-uH-wt1"/>
                         <outlet property="containerView" destination="prt-h4-3x1" id="zfE-wz-Qyy"/>
                         <outlet property="continueButton" destination="8C3-Jj-Rk9" id="Xyn-9B-UMQ"/>
+                        <outlet property="foraPreloader" destination="lDp-dm-vZ0" id="3qN-3b-gDp"/>
                         <outlet property="header" destination="ktT-hS-heP" id="8bA-ut-mZw"/>
                         <outlet property="pageControl" destination="IgS-z8-LFg" id="OAl-xJ-h1J"/>
                         <segue destination="0f1-vD-E8P" kind="show" identifier="fromRegistrationVerificationToPasscodeSignUp" id="Cm0-qY-BYm"/>
@@ -985,6 +1017,37 @@
                                                                     <constraint firstAttribute="width" secondItem="a6w-OV-S3a" secondAttribute="height" multiplier="1:1" id="tBB-4o-uYb"/>
                                                                 </constraints>
                                                             </view>
+                                                            <view hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" id="fmc-Z4-mhs" customClass="RefreshView" customModule="ForaBank" customModuleProvider="target">
+                                                                <rect key="frame" x="-7" y="435" width="413" height="54"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <subviews>
+                                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="bottom" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xmq-RZ-QVS">
+                                                                        <rect key="frame" x="-3" y="292" width="420" height="656"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="height" constant="656" id="Q9L-hR-ado"/>
+                                                                        </constraints>
+                                                                    </imageView>
+                                                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="foralogotype" translatesAutoresizingMaskIntoConstraints="NO" id="0Uj-jf-YcK">
+                                                                        <rect key="frame" x="150" y="0.0" width="114" height="40"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="height" constant="40" id="L9g-qb-S8g"/>
+                                                                            <constraint firstAttribute="width" constant="114" id="Ua9-k4-BuK"/>
+                                                                        </constraints>
+                                                                    </imageView>
+                                                                </subviews>
+                                                                <constraints>
+                                                                    <constraint firstItem="pnW-mw-VKH" firstAttribute="trailing" secondItem="xmq-RZ-QVS" secondAttribute="trailing" constant="-4" id="5vb-TC-Vrp"/>
+                                                                    <constraint firstItem="xmq-RZ-QVS" firstAttribute="leading" secondItem="pnW-mw-VKH" secondAttribute="leading" constant="-3" id="6Rl-9G-fIz"/>
+                                                                    <constraint firstItem="0Uj-jf-YcK" firstAttribute="top" secondItem="pnW-mw-VKH" secondAttribute="top" id="OdJ-xI-nyH"/>
+                                                                    <constraint firstItem="0Uj-jf-YcK" firstAttribute="centerX" secondItem="xmq-RZ-QVS" secondAttribute="centerX" id="YzF-16-gnu"/>
+                                                                    <constraint firstItem="xmq-RZ-QVS" firstAttribute="top" secondItem="fmc-Z4-mhs" secondAttribute="top" constant="292" id="cem-tT-J6X"/>
+                                                                </constraints>
+                                                                <viewLayoutGuide key="safeArea" id="pnW-mw-VKH"/>
+                                                                <connections>
+                                                                    <outlet property="imgVBG" destination="xmq-RZ-QVS" id="vb2-s3-H6s"/>
+                                                                    <outlet property="imgVLogo" destination="0Uj-jf-YcK" id="DVt-is-KVz"/>
+                                                                </connections>
+                                                            </view>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4sJ-Wa-aoc">
                                                                 <rect key="frame" x="96.333333333333329" y="387" width="205.33333333333337" height="38"/>
                                                                 <subviews>
@@ -992,7 +1055,7 @@
                                                                         <rect key="frame" x="30.000000000000014" y="4" width="68" height="30"/>
                                                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="13"/>
                                                                         <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                                        <color key="highlightedColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                        <color key="highlightedColor" systemColor="linkColor" red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     </label>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zws-jv-nwU">
                                                                         <rect key="frame" x="0.0" y="8" width="22" height="22"/>
@@ -1008,14 +1071,13 @@
                                                                             <action selector="acceptAgreement:" destination="X68-pN-5sM" eventType="touchUpInside" id="ZfJ-Hq-psB"/>
                                                                         </connections>
                                                                     </button>
-                                                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ey0-20-XWT">
-                                                                        <rect key="frame" x="102.9999999999997" y="4" width="104" height="30"/>
-                                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ey0-20-XWT">
+                                                                        <rect key="frame" x="103" y="4" width="104" height="30"/>
                                                                         <state key="normal">
                                                                             <attributedString key="attributedTitle">
                                                                                 <fragment content="условия банка">
                                                                                     <attributes>
-                                                                                        <color key="NSColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                                        <color key="NSColor" systemColor="secondaryLabelColor" red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                                                                         <font key="NSFont" metaFont="system" size="15"/>
                                                                                         <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                                                                         <integer key="NSUnderline" value="1"/>
@@ -1034,6 +1096,8 @@
                                                                     <constraint firstItem="Zws-jv-nwU" firstAttribute="centerY" secondItem="EUw-gR-Iy1" secondAttribute="centerY" id="VSw-tO-QEm"/>
                                                                     <constraint firstItem="EUw-gR-Iy1" firstAttribute="leading" secondItem="Zws-jv-nwU" secondAttribute="trailing" constant="8" id="Y3Z-yk-NTg"/>
                                                                     <constraint firstAttribute="trailing" secondItem="EUw-gR-Iy1" secondAttribute="trailing" constant="107.33333333333333" id="cJu-d3-Jag"/>
+                                                                    <constraint firstItem="ey0-20-XWT" firstAttribute="leading" secondItem="EUw-gR-Iy1" secondAttribute="trailing" constant="4.9999999999997016" id="pEm-uj-0PS"/>
+                                                                    <constraint firstItem="ey0-20-XWT" firstAttribute="top" secondItem="EUw-gR-Iy1" secondAttribute="top" id="sTG-Mr-9xS"/>
                                                                     <constraint firstItem="Zws-jv-nwU" firstAttribute="leading" secondItem="4sJ-Wa-aoc" secondAttribute="leading" id="t3r-7n-8eP"/>
                                                                     <constraint firstAttribute="height" constant="38" id="t94-Lq-BRr"/>
                                                                     <constraint firstItem="EUw-gR-Iy1" firstAttribute="top" secondItem="4sJ-Wa-aoc" secondAttribute="top" constant="4" id="ywE-ZU-w0j"/>
@@ -1176,6 +1240,7 @@
                         <outlet property="confirmPasswordTextField" destination="ucG-i8-Xdy" id="Ula-m3-T7T"/>
                         <outlet property="containerView" destination="b7v-Gh-40W" id="sYp-GE-TAe"/>
                         <outlet property="continueButton" destination="9rG-jh-w33" id="XmM-6r-J8Q"/>
+                        <outlet property="foraPreloader" destination="fmc-Z4-mhs" id="vj4-J0-CXV"/>
                         <outlet property="header" destination="UoG-ev-0Cu" id="NYa-n3-OGc"/>
                         <outlet property="inputPasswordLabel" destination="xUk-Ci-Dwa" id="yFX-fT-Lyn"/>
                         <outlet property="loginTextField" destination="CmH-7j-trq" id="V2E-HH-LHP"/>
@@ -1614,7 +1679,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="56A-AH-ZRI">
-                                <rect key="frame" x="188.66666666666666" y="289.66666666666669" width="37" height="37"/>
+                                <rect key="frame" x="197.66666666666666" y="297" width="18.666666666666657" height="22"/>
                                 <state key="normal" image="FaceIcon">
                                     <color key="titleColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 </state>
@@ -1732,7 +1797,7 @@
                                                 <rect key="frame" x="126.66666666666666" y="276" width="121" height="34"/>
                                                 <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
                                                 <state key="normal" title="Забыли пароль?">
-                                                    <color key="titleColor" systemColor="systemPinkColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="titleColor" systemColor="systemPinkColor" red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </state>
                                                 <connections>
                                                     <action selector="tappedButtonWithSender:" destination="N4i-YV-l6L" eventType="touchUpInside" id="CvC-Pr-XkG"/>
@@ -2061,6 +2126,37 @@
                                                     <constraint firstAttribute="width" secondItem="G00-sF-Bhd" secondAttribute="height" multiplier="1:1" id="Ngl-zy-hPg"/>
                                                 </constraints>
                                             </view>
+                                            <view hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" id="OTd-e6-OoC" customClass="RefreshView" customModule="ForaBank" customModuleProvider="target">
+                                                <rect key="frame" x="-8" y="129.33333333333331" width="413" height="54"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <subviews>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="bottom" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6UJ-bY-nBz">
+                                                        <rect key="frame" x="-3" y="292" width="420" height="656"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="656" id="cas-eD-weu"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="foralogotype" translatesAutoresizingMaskIntoConstraints="NO" id="Uev-mp-6nR">
+                                                        <rect key="frame" x="150" y="0.0" width="114" height="40"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="40" id="crj-HE-hCK"/>
+                                                            <constraint firstAttribute="width" constant="114" id="iLt-QQ-QzK"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="Uev-mp-6nR" firstAttribute="top" secondItem="rs9-40-n30" secondAttribute="top" id="6XM-eQ-ARP"/>
+                                                    <constraint firstItem="6UJ-bY-nBz" firstAttribute="leading" secondItem="rs9-40-n30" secondAttribute="leading" constant="-3" id="I4b-Xo-WQP"/>
+                                                    <constraint firstItem="rs9-40-n30" firstAttribute="trailing" secondItem="6UJ-bY-nBz" secondAttribute="trailing" constant="-4" id="Ndt-RL-iaJ"/>
+                                                    <constraint firstItem="Uev-mp-6nR" firstAttribute="centerX" secondItem="6UJ-bY-nBz" secondAttribute="centerX" id="cn6-8u-5oU"/>
+                                                    <constraint firstItem="6UJ-bY-nBz" firstAttribute="top" secondItem="OTd-e6-OoC" secondAttribute="top" constant="292" id="uzD-Kk-ZDd"/>
+                                                </constraints>
+                                                <viewLayoutGuide key="safeArea" id="rs9-40-n30"/>
+                                                <connections>
+                                                    <outlet property="imgVBG" destination="6UJ-bY-nBz" id="fSj-Xt-kvO"/>
+                                                    <outlet property="imgVLogo" destination="Uev-mp-6nR" id="Hyp-bA-eAM"/>
+                                                </connections>
+                                            </view>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
@@ -2153,6 +2249,7 @@
                         <outlet property="codeNumberTextField" destination="lh9-tP-pbp" id="z7r-90-Zlx"/>
                         <outlet property="containerView" destination="KRj-mg-c4v" id="cL2-B4-rMb"/>
                         <outlet property="continueButton" destination="Mye-zM-dSU" id="Mbc-8l-vmJ"/>
+                        <outlet property="foraPreloader" destination="OTd-e6-OoC" id="G5A-LS-w5l"/>
                         <outlet property="header" destination="avU-QW-6WN" id="eyQ-4F-QDP"/>
                         <segue destination="fAi-Mj-Me8" kind="show" identifier="finish" id="ecv-B0-fHb"/>
                     </connections>
@@ -2785,6 +2882,7 @@
         <image name="face" width="19" height="19"/>
         <image name="fora logo" width="32" height="32"/>
         <image name="fora logo 2" width="430.5" height="59.5"/>
+        <image name="foralogotype" width="88" height="88"/>
         <image name="hidden" width="50" height="42"/>
         <image name="hide_password" width="25" height="18"/>
         <image name="imageView:2kX-UG-InY:image" width="16" height="16">
