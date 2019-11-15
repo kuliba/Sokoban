@@ -19,7 +19,9 @@ class WelcomeViewController: UIViewController, StoreSubscriber {
     @IBOutlet weak var greetingLabel: UILabel!
     @IBOutlet weak var nameLabel: UILabel!
 
+    var timer: Timer?
     let transitionDuration: TimeInterval = 2
+    var isProductsLoaded = false
 
     var segueId: String? = nil
     var animator: UIViewPropertyAnimator? = nil
@@ -29,12 +31,8 @@ class WelcomeViewController: UIViewController, StoreSubscriber {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        timer = Timer.scheduledTimer(timeInterval: transitionDuration, target: self, selector: #selector(self.timerFired), userInfo: nil, repeats: false)
         greetingLabel.text = getGreeting() + ","
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) { [weak self] in
-            self?.navigationController?.popToRootViewController(animated: true)
-            self?.performSegue(withIdentifier: "formWelcomeToTabBarSegue", sender: nil)
-        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -94,7 +92,9 @@ class WelcomeViewController: UIViewController, StoreSubscriber {
             nameLabel.text = "\(firstName) \(patronymic)!"
         }
 
-        if productsState.isUpToDateProducts == true {
+        if let isUpToDatePoducts = productsState.isUpToDateProducts {
+            isProductsLoaded = isUpToDatePoducts
+            continueIfNeeded()
         }
     }
 }
@@ -116,5 +116,25 @@ private extension WelcomeViewController {
             break
         }
         return "Здравствуйте"
+    }
+
+    @objc private func timerFired() {
+        guard let timer = timer else {
+            return
+        }
+
+        timer.invalidate()
+        continueIfNeeded()
+    }
+
+    private func continueIfNeeded() {
+        guard let timer = timer else {
+            return
+        }
+
+        if !timer.isValid && isProductsLoaded {
+            navigationController?.popToRootViewController(animated: true)
+            performSegue(withIdentifier: "formWelcomeToTabBarSegue", sender: nil)
+        }
     }
 }

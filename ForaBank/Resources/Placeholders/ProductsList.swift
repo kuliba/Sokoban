@@ -8,7 +8,7 @@
 
 import Foundation
 
-let productList = [(title: "Карта", image: ""),
-                   (title: "Счёт", image: ""),
-                   (title: "Вклад", image: ""),
-                   (title: "Кредит", image: "")]
+let productList = [(title: "Карта", image: "card-colored"),
+                   (title: "Счёт", image: "account-colored"),
+                   (title: "Вклад", image: "deposit-colored"),
+                   (title: "Кредит", image: "loan-colored")]
