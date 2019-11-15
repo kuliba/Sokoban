@@ -33,7 +33,7 @@ enum ProductType: String {
         case .card:
             return NSLocalizedString("Карты", comment: "")
         case .account:
-            return NSLocalizedString("Счёта", comment: "")
+            return NSLocalizedString("Счета", comment: "")
         case .deposit:
             return NSLocalizedString("Вклады", comment: "")
         case .loan:

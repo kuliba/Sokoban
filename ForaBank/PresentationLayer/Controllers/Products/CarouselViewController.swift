@@ -28,12 +28,12 @@ class CarouselViewController: UIViewController {
         return recognizer
     }()
     var previousIndex = -1
-    
+
     var labels = [UILabel?]()
     let gradientView = GradientView()
     let gradients = [
         [UIColor(hexFromString: "EF4136")!, UIColor(hexFromString: "EF4136")!],
-       [UIColor(hexFromString: "EF4136")!, UIColor(hexFromString: "EF4136")!],
+        [UIColor(hexFromString: "EF4136")!, UIColor(hexFromString: "EF4136")!],
         [UIColor(hexFromString: "EF4136")!, UIColor(hexFromString: "EF4136")!],
         [UIColor(hexFromString: "EF4136")!, UIColor(hexFromString: "EF4136")!],
         [UIColor(hexFromString: "EF4136")!, UIColor(hexFromString: "EF4136")!],
@@ -41,50 +41,54 @@ class CarouselViewController: UIViewController {
     ]
     let xDevices = Constants.xDevices
     weak var currentViewController: UIViewController?
-    
-    var items = ["Карты", "Счета" , "Вклады", "Кредиты" , "История"]
-    
-    
+
+    var items: Array<AnyHashable> = [ProductType.card,
+                                     ProductType.account,
+                                     ProductType.deposit,
+                                     ProductType.loan,
+                                     "История"]
+
+
     var segueId: String? = nil
     var backSegueId: String? = nil
-    
-    
-    
+
+
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
-        
-     
-        currentViewController = storyboard?.instantiateViewController(withIdentifier: "deposits0")
+        super.viewDidLoad()
+
+        currentViewController = storyboard?.instantiateViewController(withIdentifier: "DepositsCardsListViewController")
         currentViewController!.view.translatesAutoresizingMaskIntoConstraints = false
         addChild(currentViewController!)
         addSubview(self.currentViewController!.view, toView: self.containerView)
 
         labels = [UILabel?].init(repeating: nil, count: items.count)
         super.viewDidLoad()
-        
+
         carousel.delegate = self
         carousel.dataSource = self
         carousel.type = .wheel
         carousel.bounces = false
         // carousel.isPagingEnabled = true
         // carousel.isScrollEnabled = false
-        
+
         gradientView.frame = view.frame
         gradientView.color1 = gradients[0][0]
         gradientView.color2 = gradients[0][1]
         view.insertSubview(gradientView, at: 0)
         containerView.addGestureRecognizer(leftSwipeRecognizer)
         containerView.addGestureRecognizer(rightSwipeRecognizer)
-        
+
         hero.isEnabled = true
         hero.modalAnimationType = .none
     }
-    
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         carousel.frame.size.height = Device().isOneOf(xDevices) ? 120 : 90
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if segueId == "CardDetailsViewController" {
@@ -92,7 +96,7 @@ class CarouselViewController: UIViewController {
                 HeroModifier.beginWith([
                     HeroModifier.opacity(1),
                     HeroModifier.zPosition(1)
-                    ]),
+                ]),
                 HeroModifier.duration(0.25),
                 HeroModifier.opacity(0),
             ]
@@ -100,7 +104,7 @@ class CarouselViewController: UIViewController {
                 HeroModifier.beginWith([
                     HeroModifier.opacity(1),
                     HeroModifier.zPosition(1)
-                    ]),
+                ]),
                 HeroModifier.duration(0.25),
                 HeroModifier.opacity(0)
             ]
@@ -108,13 +112,13 @@ class CarouselViewController: UIViewController {
                 HeroModifier.beginWith([
                     HeroModifier.opacity(1),
                     HeroModifier.zPosition(3)
-                    ]),
+                ]),
                 HeroModifier.duration(0.5),
                 HeroModifier.translate(CGPoint(x: 0, y: containerView.frame.height)),
                 HeroModifier.forceNonFade,
                 HeroModifier.zPosition(0)
             ]
-            
+
         } else {
             containerView.hero.modifiers = [
                 HeroModifier.duration(0.3),
@@ -130,15 +134,15 @@ class CarouselViewController: UIViewController {
             containerView.hero.id = "content"
         }
     }
-    
-    
+
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         containerView.hero.modifiers = nil
         containerView.hero.id = nil
         view.hero.modifiers = nil
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if segueId == "CardDetailsViewController" {
@@ -146,7 +150,7 @@ class CarouselViewController: UIViewController {
                 HeroModifier.beginWith([
                     HeroModifier.opacity(1),
                     HeroModifier.zPosition(1)
-                    ]),
+                ]),
                 HeroModifier.duration(0.25),
                 HeroModifier.opacity(0),
             ]
@@ -154,7 +158,7 @@ class CarouselViewController: UIViewController {
                 HeroModifier.beginWith([
                     HeroModifier.opacity(1),
                     HeroModifier.zPosition(1)
-                    ]),
+                ]),
                 HeroModifier.duration(0.25),
                 HeroModifier.opacity(0)
             ]
@@ -162,7 +166,7 @@ class CarouselViewController: UIViewController {
                 HeroModifier.beginWith([
                     HeroModifier.opacity(1),
                     HeroModifier.zPosition(3)
-                    ]),
+                ]),
                 HeroModifier.duration(0.5),
                 HeroModifier.translate(x: 0, y: containerView.frame.height, z: 1),
                 HeroModifier.forceNonFade,
@@ -181,7 +185,7 @@ class CarouselViewController: UIViewController {
             containerView.hero.id = "content"
         }
     }
-    
+
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         gradientView.hero.modifiers = nil
@@ -190,19 +194,14 @@ class CarouselViewController: UIViewController {
         containerView.hero.id = nil
         view.hero.modifiers = nil
     }
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//        print("deposits view controller \(containerView.viewMask.path)")
-//        print("container \(containerView)")
-//    }
 }
 
 extension CarouselViewController: iCarouselDataSource, iCarouselDelegate {
-    
+
     func numberOfItems(in carousel: iCarousel) -> Int {
         return items.count
     }
-    
+
     func carousel(_ carousel: iCarousel, viewForItemAt index: Int, reusing view: UIView?) -> UIView {
         var label: UILabel
 
@@ -210,25 +209,29 @@ extension CarouselViewController: iCarouselDataSource, iCarouselDelegate {
             label = view
         } else {
             label = UILabel(frame: CGRect(x: 0, y: 0, width: 120, height: 40))
-            
+
             label.backgroundColor = .clear
             label.textAlignment = .center
             label.textColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
             label.font = UIFont(name: "Roboto-Light", size: 16)
             label.tag = 1
         }
-        label.text = "\(items[index])"
+        if let title = items[index] as? ProductType {
+            label.text = "\(title.localizedListName)"
+        } else if let title = items[index] as? String {
+            label.text = title
+        }
         labels[index] = label
-        
+
         return label
     }
-    
+
     func carousel(_ carousel: iCarousel, valueFor option: iCarouselOption, withDefault value: CGFloat) -> CGFloat {
-        
+
         if option == .wrap {
             return 0.0
         }
-        
+
         if option == .arc {
             if Device().isOneOf(Constants.iphone5Devices) {
                 return CGFloat(Double.pi) / 1.75 // 2.75 - if not authorized
@@ -238,7 +241,7 @@ extension CarouselViewController: iCarouselDataSource, iCarouselDelegate {
                 return CGFloat(Double.pi) / 3.5 // 3.5 - if not authorized
             }
         }
-        
+
         if option == .radius {
             if Device().isOneOf(Constants.iphone5Devices) {
                 return 800
@@ -250,15 +253,15 @@ extension CarouselViewController: iCarouselDataSource, iCarouselDelegate {
         }
         return value
     }
-    
+
     func numberOfPlaceholders(in carousel: iCarousel) -> Int {
         return 6
     }
-    
+
     func carousel(_ carousel: iCarousel, placeholderViewAt index: Int, reusing view: UIView?) -> UIView {
         return UIView()
     }
-    
+
     func carousel(_ carousel: iCarousel, didSelectItemAt index: Int) {
         labels[previousIndex]?.textColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
         labels[previousIndex]?.font = UIFont(name: "Roboto-Light", size: 16)
@@ -277,20 +280,20 @@ extension CarouselViewController: iCarouselDataSource, iCarouselDelegate {
             direction = .none
         }
         previousIndex = index
-        
+
         showComponent(index: index, direction: direction)
         UIView.animate(withDuration: 1,
                        delay: 0,
                        options: .beginFromCurrentState,
                        animations: {
-            self.gradientView.gradientLayer.colors = [self.gradients[index][0].cgColor,
-                                                      self.gradients[index][1].cgColor]
-        
-        }, completion: nil)
+                           self.gradientView.gradientLayer.colors = [self.gradients[index][0].cgColor,
+                                                                     self.gradients[index][1].cgColor]
+
+                       }, completion: nil)
     }
-    
+
     func carouselDidEndScrollingAnimation(_ carousel: iCarousel) {
-        if previousIndex<0 || previousIndex == carousel.currentItemIndex{
+        if previousIndex < 0 || previousIndex == carousel.currentItemIndex {
             previousIndex = carousel.currentItemIndex
             labels[carousel.currentItemIndex]?.textColor = .white
             labels[carousel.currentItemIndex]?.font = UIFont(name: "Roboto-Regular", size: 16)
@@ -318,41 +321,63 @@ extension CarouselViewController: iCarouselDataSource, iCarouselDelegate {
                        delay: 0,
                        options: .beginFromCurrentState,
                        animations: {
-            self.gradientView.gradientLayer.colors = [self.gradients[self.previousIndex][0].cgColor,
-                                                      self.gradients[self.previousIndex][1].cgColor]
-            }, completion: nil)
+                           self.gradientView.gradientLayer.colors = [self.gradients[self.previousIndex][0].cgColor,
+                                                                     self.gradients[self.previousIndex][1].cgColor]
+                       }, completion: nil)
     }
 }
 
 private extension CarouselViewController {
-    
-    func addSubview(_ subView:UIView, toView parentView:UIView) {
+
+    func addSubview(_ subView: UIView, toView parentView: UIView) {
         parentView.addSubview(subView)
-        
+
         var viewBindingsDict = [String: AnyObject]()
         viewBindingsDict["subView"] = subView
         parentView.addConstraints(
             NSLayoutConstraint.constraints(withVisualFormat: "H:|[subView]|",
                                            options: [], metrics: nil, views: viewBindingsDict
-        ))
-        
+            ))
+
         parentView.addConstraints(
             NSLayoutConstraint.constraints(withVisualFormat: "V:|[subView]|",
                                            options: [], metrics: nil, views: viewBindingsDict
-        ))
+            ))
     }
-    
+
     func showComponent(index: Int, direction: Direction) {
-        let newViewController = storyboard?.instantiateViewController(withIdentifier: "deposits\(index)")
-        newViewController!.view.translatesAutoresizingMaskIntoConstraints = false
-        cycleFromViewController(oldViewController: self.currentViewController!, toViewController: newViewController!, direction: direction)
-        currentViewController = newViewController
+
+        var newViewController: UIViewController?
+
+        if let item = items[index] as? ProductType {
+            switch item {
+            case .card:
+                newViewController = storyboard?.instantiateViewController(withIdentifier: "DepositsCardsListViewController")
+            case .account:
+                newViewController = storyboard?.instantiateViewController(withIdentifier: "AccountsViewController")
+            case .deposit:
+                newViewController = storyboard?.instantiateViewController(withIdentifier: "DepositsViewController")
+            case .loan:
+                newViewController = storyboard?.instantiateViewController(withIdentifier: "LoansViewController")
+            }
+        } else if let item = items[index] as? String, item == "История" {
+            newViewController = storyboard?.instantiateViewController(withIdentifier: "DepositsHistoryViewController")
+        }
+        newViewController?.view.translatesAutoresizingMaskIntoConstraints = false
+
+        if let currentViewController = self.currentViewController,
+            let nonNilNewViewController = newViewController {
+            cycleFromViewController(oldViewController: currentViewController,
+                                    toViewController: nonNilNewViewController,
+                                    direction: direction)
+            self.currentViewController = nonNilNewViewController
+        }
     }
-    
+
     func cycleFromViewController(oldViewController: UIViewController, toViewController newViewController: UIViewController, direction: Direction) {
         oldViewController.willMove(toParent: nil)
         addChild(newViewController)
-        addSubview(newViewController.view, toView:containerView)
+        addSubview(newViewController.view, toView: containerView)
         // TODO: Set the starting state of your constraints here
         switch direction {
         case .left:
@@ -363,9 +388,9 @@ private extension CarouselViewController {
             newViewController.view.alpha = 0
             newViewController.view.bounds.origin.y -= 10
         }
-        
+
         newViewController.view.layoutIfNeeded()
-        
+
         // TODO: Set the ending state of your constraints here
 
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
@@ -387,7 +412,7 @@ private extension CarouselViewController {
                 UIView.animate(withDuration: 0.25, animations: {
                     newViewController.view.alpha = 1
                     newViewController.view.bounds.origin.y += 10
-                    
+
                 }, completion: { _ in
                     oldViewController.view.removeFromSuperview()
                     oldViewController.removeFromParent()
@@ -400,24 +425,24 @@ private extension CarouselViewController {
             }
         })
     }
-    
+
     @objc func swipeAction(_ gesture: UISwipeGestureRecognizer) {
         if gesture.direction == .left {
-            if carousel.currentItemIndex < carousel.numberOfItems-1 {
-                carousel.scrollToItem(at: carousel.currentItemIndex+1, animated: true)
+            if carousel.currentItemIndex < carousel.numberOfItems - 1 {
+                carousel.scrollToItem(at: carousel.currentItemIndex + 1, animated: true)
             }
         } else if gesture.direction == .right {
             if carousel.currentItemIndex > 0 {
-                carousel.scrollToItem(at: carousel.currentItemIndex-1, animated: true)
+                carousel.scrollToItem(at: carousel.currentItemIndex - 1, animated: true)
             }
         }
     }
 }
 
 extension CarouselViewController: CustomTransitionOriginator, CustomTransitionDestination {
-    var fromAnimatedSubviews: [String : UIView] {
-        var views = [String : UIView]()
-        
+    var fromAnimatedSubviews: [String: UIView] {
+        var views = [String: UIView]()
+
 
         views["carousel"] = carousel
         guard let c = currentViewController as? CustomTransitionOriginator else {
@@ -426,9 +451,9 @@ extension CarouselViewController: CustomTransitionOriginator, CustomTransitionDe
         views.merge(c.fromAnimatedSubviews, uniquingKeysWith: { (first, _) in first })
         return views
     }
-    
-    var toAnimatedSubviews: [String : UIView] {
-        var views = [String : UIView]()
+
+    var toAnimatedSubviews: [String: UIView] {
+        var views = [String: UIView]()
 
         views["carousel"] = carousel
         guard let c = currentViewController as? CustomTransitionDestination else {
