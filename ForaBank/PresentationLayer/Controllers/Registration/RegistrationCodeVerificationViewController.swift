@@ -25,6 +25,7 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
     var operationSum: String?
     var segueId: String? = nil
 
+    @IBOutlet weak var authForaPreloader: RefreshView!
     @IBOutlet weak var foraPreloader: RefreshView!
     let gradientView = UIView()
     let circleView = UIView()
@@ -121,12 +122,12 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
     }
 
     @IBAction func firstAuth(_ sender: Any) {
-        foraPreloader.isHidden = false
-        foraPreloader?.startAnimation()
+        authForaPreloader.isHidden = false
+        authForaPreloader?.startAnimation()
         continueButton.isHidden = true
         NetworkManager.shared().checkVerificationCode(code: self.codeNumberTextField.text ?? "") { [weak self] (success) in
             self?.continueButton.isHidden = false
-            self?.foraPreloader?.isHidden = true
+            self?.authForaPreloader?.isHidden = true
             if success {
                 store.dispatch(finishPasscodeSingUp)
                 self?.performSegue(withIdentifier: "finish", sender: nil)

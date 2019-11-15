@@ -18,12 +18,11 @@ class ProductManagementViewController: UITableViewController {
     var product: IProduct?
     var color2: UIColor = .black
     var card: Card? = nil
-    var newName: String = ""
     var cards: [Card] = [Card]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+      
         actions = arrayWith(key: actionsType, fromPlist: "productsData")
 
         tableView.tableFooterView = UIView()
@@ -40,6 +39,7 @@ class ProductManagementViewController: UITableViewController {
         hero.isEnabled = true
         hero.modalAnimationType = .none
     }
+
 
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let scrollUserInfo = ["tableView": tableView]
@@ -152,9 +152,16 @@ class ProductManagementViewController: UITableViewController {
                 NetworkManager.shared().saveCardName(newName: newName, id:id ?? 123, completionHandler: { success, errorMessage, newName, id in })
                 NetworkManager.shared().getCardList { [weak self] (success, cards) in
                         self?.cards = cards ?? []
+                    var newName = self?.cards[indexPath.section].customName
+                    if newName == ""{
+                        newName = self?.cards[indexPath.section].name
+                    }
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "customName"), object: newName)
+                
                 }
             }
             
+             
             alert.showEdit("Изменить название карты", subTitle: "Не более 15 символов", colorStyle: 0xF5534C)
             
         }
@@ -162,7 +169,7 @@ class ProductManagementViewController: UITableViewController {
             AlertService.shared.show(title: "Функционал недоступен", message: "Функционал временно недоступен", cancelButtonTitle: "Понятно", okButtonTitle: nil, cancelCompletion: nil, okCompletion: nil)
         }
     }
-    
+
 
 
 

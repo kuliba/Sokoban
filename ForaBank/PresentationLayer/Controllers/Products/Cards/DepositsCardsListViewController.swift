@@ -134,6 +134,11 @@ class DepositsCardsListViewController: UIViewController {
         return b
     }()
 
+    @objc func handlePopucclosing(notification: Notification){
+           let customNameVc = notification.object as! String
+        cards[0].customName = customNameVc
+    }
+    
     //MARK: - lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -142,6 +147,7 @@ class DepositsCardsListViewController: UIViewController {
         hero.isEnabled = true
         hero.modalAnimationType = .none
         saveData()
+        NotificationCenter.default.addObserver(self, selector: #selector(handlePopucclosing), name: NSNotification.Name(rawValue: "customName"), object: nil)
     
     }
     
