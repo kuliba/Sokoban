@@ -10,8 +10,23 @@ import UIKit
 
 class PaymentsTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
+    @IBOutlet weak var backButton: UIButton!
+
+    @IBAction func backButtonClicked(_ sender: Any) {
+        self.navigationController?.popViewController(animated: true)
+        if navigationController == nil {
+            dismiss(animated: true, completion: nil)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if navigationController != nil || tabBarController != nil {
+            backButton.isHidden = true
+        } else if isModal {
+            backButton.isHidden = false
+        }
     }
 
     // MARK: - Table view data source

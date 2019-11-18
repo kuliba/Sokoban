@@ -108,6 +108,7 @@
                     <navigationItem key="navigationItem" title="Платежи и переводы" id="QDA-v9-Z6f"/>
                     <size key="freeformSize" width="320" height="568"/>
                     <connections>
+                        <outlet property="backButton" destination="oz5-Cv-z4N" id="ptu-zn-Xbz"/>
                         <segue destination="E2i-9b-iqL" kind="show" identifier="OperationsList" id="lOr-aK-UK8"/>
                         <segue destination="afX-Am-FVA" kind="show" identifier="OperationPayment" id="SRn-Xq-6aQ"/>
                     </connections>

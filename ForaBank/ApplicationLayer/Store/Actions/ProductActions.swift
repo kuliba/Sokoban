@@ -28,7 +28,6 @@ func didReviceProducts(products: [Product]) -> Thunk<State> {
 
 func startPayment(sourceOption: PaymentOption?, destionationOption: PaymentOption?) -> Thunk<State> {
     return Thunk<State> { dispatch, getState in
-//        showPaymentViewController()
         showPaymentsTableViewController()
         dispatch(SetPaymentOptions(sourceOption: sourceOption, destinationOption: destionationOption))
     }
