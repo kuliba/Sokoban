@@ -9,11 +9,12 @@
 import Foundation
 
 protocol IProduct {
-    var name: String { get }
     var id: Double { get }
     var balance: Double { get }
     var number: String { get }
     var maskedNumber: String { get }
+
+    var name: String? { get }
 }
 
 protocol ICustomName {

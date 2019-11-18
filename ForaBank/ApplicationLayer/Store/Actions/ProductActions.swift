@@ -19,6 +19,10 @@ let fetchProducts = Thunk<State> { dispatch, getState in
     }
 }
 
+let invalidateCurrentProducts = Thunk<State> { dispatch, getState in
+    dispatch(SetProductsUpToDate(isUpToDateProducts: false))
+}
+
 func didReviceProducts(products: [Product]) -> Thunk<State> {
     return Thunk<State> { dispatch, getState in
         dispatch(SetProducts(products: products))

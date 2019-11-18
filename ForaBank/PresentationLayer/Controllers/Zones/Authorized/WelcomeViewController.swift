@@ -31,7 +31,10 @@ class WelcomeViewController: UIViewController, StoreSubscriber {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        store.dispatch(invalidateCurrentProducts)
+        
         timer = Timer.scheduledTimer(timeInterval: transitionDuration, target: self, selector: #selector(self.timerFired), userInfo: nil, repeats: false)
+        
         greetingLabel.text = getGreeting() + ","
     }
 

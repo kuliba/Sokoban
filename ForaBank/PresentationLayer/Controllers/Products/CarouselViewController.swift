@@ -10,8 +10,9 @@ import UIKit
 import DeviceKit
 import iCarousel
 import Hero
+import ReSwift
 
-class CarouselViewController: UIViewController {
+class CarouselViewController: UIViewController, StoreSubscriber {
 
     // MARK: - Properties
     @IBOutlet var carousel: iCarousel!
@@ -42,12 +43,14 @@ class CarouselViewController: UIViewController {
     let xDevices = Constants.xDevices
     weak var currentViewController: UIViewController?
 
-    var items: Array<AnyHashable> = [ProductType.card,
-                                     ProductType.account,
-                                     ProductType.deposit,
-                                     ProductType.loan,
-                                     "История"]
 
+    var menuItems: Array<AnyHashable> {
+        get {
+            return Array<AnyHashable>(dynamicMenuItems) + Array<AnyHashable>(staticMenuItems)
+        }
+    }
+    var dynamicMenuItems: Array<ProductType> = []
+    var staticMenuItems: Array<String> = ["История"]
 
     var segueId: String? = nil
     var backSegueId: String? = nil
@@ -63,8 +66,7 @@ class CarouselViewController: UIViewController {
         addChild(currentViewController!)
         addSubview(self.currentViewController!.view, toView: self.containerView)
 
-        labels = [UILabel?].init(repeating: nil, count: items.count)
-        super.viewDidLoad()
+        labels = [UILabel?].init(repeating: nil, count: menuItems.count)
 
         carousel.delegate = self
         carousel.dataSource = self
@@ -141,6 +143,10 @@ class CarouselViewController: UIViewController {
         containerView.hero.modifiers = nil
         containerView.hero.id = nil
         view.hero.modifiers = nil
+
+        store.subscribe(self) { state in
+            state.select { $0.productsState }
+        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -193,13 +199,32 @@ class CarouselViewController: UIViewController {
         containerView.hero.modifiers = nil
         containerView.hero.id = nil
         view.hero.modifiers = nil
+
+        store.unsubscribe(self)
+    }
+
+    func newState(state: ProductState) {
+        if menuItems.count == staticMenuItems.count {
+            var productTypesSet = Set<ProductType>()
+            state.products?.forEach { productTypesSet.insert($0.productType) }
+
+            dynamicMenuItems = Array<ProductType>(productTypesSet).sorted { $0 < $1 }
+            updateCrousel()
+        }
+    }
+}
+
+extension CarouselViewController {
+    private func updateCrousel() {
+        labels = [UILabel?].init(repeating: nil, count: menuItems.count)
+        carousel.reloadData()
     }
 }
 
 extension CarouselViewController: iCarouselDataSource, iCarouselDelegate {
 
     func numberOfItems(in carousel: iCarousel) -> Int {
-        return items.count
+        return menuItems.count
     }
 
     func carousel(_ carousel: iCarousel, viewForItemAt index: Int, reusing view: UIView?) -> UIView {
@@ -216,9 +241,9 @@ extension CarouselViewController: iCarouselDataSource, iCarouselDelegate {
             label.font = UIFont(name: "Roboto-Light", size: 16)
             label.tag = 1
         }
-        if let title = items[index] as? ProductType {
+        if let title = menuItems[index] as? ProductType {
             label.text = "\(title.localizedListName)"
-        } else if let title = items[index] as? String {
+        } else if let title = menuItems[index] as? String {
             label.text = title
         }
         labels[index] = label
@@ -349,7 +374,7 @@ private extension CarouselViewController {
 
         var newViewController: UIViewController?
 
-        if let item = items[index] as? ProductType {
+        if let item = menuItems[index] as? ProductType {
             switch item {
             case .card:
                 newViewController = storyboard?.instantiateViewController(withIdentifier: "DepositsCardsListViewController")
@@ -360,7 +385,7 @@ private extension CarouselViewController {
             case .loan:
                 newViewController = storyboard?.instantiateViewController(withIdentifier: "LoansViewController")
             }
-        } else if let item = items[index] as? String, item == "История" {
+        } else if let item = menuItems[index] as? String, item == "История" {
             newViewController = storyboard?.instantiateViewController(withIdentifier: "DepositsHistoryViewController")
         }
         newViewController?.view.translatesAutoresizingMaskIntoConstraints = false
