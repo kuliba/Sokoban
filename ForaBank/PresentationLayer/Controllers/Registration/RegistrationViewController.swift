@@ -82,6 +82,11 @@ class RegistrationViewController: UIViewController {
         cardIOVC?.guideColor = UIColor(red: 0.13, green: 0.54, blue: 0.61, alpha: 1.00)
         cardIOVC?.hideCardIOLogo = true
         present(cardIOVC!, animated: true, completion: nil)
+        if cardNumberTextField.text?.count == 1{
+                 continueButton.isHidden = false
+             } else{
+                 continueButton.isHidden = false
+             }
     }
     @IBAction func segmentedControlValueChanged(_ sender: Any) {
         let direction = segmentedControl.selectedSegmentIndex - previousSegment
