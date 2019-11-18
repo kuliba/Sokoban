@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "tabbar_icon_payment.png",
+      "filename" : "Frame 6.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "tabbar_icon_payment@2x.png",
+      "filename" : "Frame 6 (1).png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "tabbar_icon_payment@3x.png",
+      "filename" : "Frame 6 (2).png",
       "scale" : "3x"
     }
   ],
