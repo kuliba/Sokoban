@@ -28,6 +28,9 @@ class WelcomeViewController: UIViewController, StoreSubscriber {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        greetingLabel.text = getGreeting() + ","
+
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) { [weak self] in
             self?.navigationController?.popToRootViewController(animated: true)
             self?.performSegue(withIdentifier: "formWelcomeToTabBarSegue", sender: nil)
@@ -90,8 +93,28 @@ class WelcomeViewController: UIViewController, StoreSubscriber {
         if let firstName = userState.profile?.firstName, let patronymic = userState.profile?.patronymic, firstName != "", patronymic != "" {
             nameLabel.text = "\(firstName) \(patronymic)!"
         }
-        
+
         if productsState.isUpToDateProducts == true {
         }
+    }
+}
+
+private extension WelcomeViewController {
+    private func getGreeting() -> String {
+        let hour = Calendar.current.component(.hour, from: Date())
+
+        switch hour {
+        case 0..<4:
+            return "Здравствуйте"
+        case 4..<12:
+            return "Доброе утро"
+        case 12..<18:
+            return "Добрый день"
+        case 18..<24:
+            return "Добрый вечер"
+        default:
+            break
+        }
+        return "Здравствуйте"
     }
 }
