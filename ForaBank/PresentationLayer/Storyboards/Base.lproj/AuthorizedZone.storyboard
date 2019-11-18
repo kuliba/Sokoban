@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="aRB-rj-TmI">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="aRB-rj-TmI">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -29,25 +29,24 @@
                         <userDefinedRuntimeAttribute type="string" keyPath="setTitle" value="Name"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
-                        <segue destination="gLF-1W-dY7" kind="relationship" relationship="viewControllers" id="bgj-1D-vBC"/>
-                        <segue destination="g5d-6R-9xD" kind="relationship" relationship="viewControllers" id="omT-JM-hoe"/>
-                        <segue destination="BHf-9A-TH8" kind="relationship" relationship="viewControllers" id="a2D-P9-rkW"/>
-                        <segue destination="Q48-Gj-Kh1" kind="relationship" relationship="viewControllers" id="Xc8-Et-TjE"/>
+                        <segue destination="g5d-6R-9xD" kind="relationship" relationship="viewControllers" id="A3x-m6-cWH"/>
+                        <segue destination="gLF-1W-dY7" kind="relationship" relationship="viewControllers" id="adN-eV-mfx"/>
+                        <segue destination="Q48-Gj-Kh1" kind="relationship" relationship="viewControllers" id="9fL-gE-UTt"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="U2L-3G-47v" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="480.80000000000001" y="154.27286356821591"/>
         </scene>
-        <!--Feed-->
+        <!--Payment-->
         <scene sceneID="j3p-ui-zmb">
             <objects>
-                <viewControllerPlaceholder storyboardName="Feed" id="gLF-1W-dY7" sceneMemberID="viewController">
+                <viewControllerPlaceholder storyboardName="Payment" id="gLF-1W-dY7" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" id="fHP-Ta-PWt"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gjd-g6-x9p" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1100.8" y="50.374812593703155"/>
+            <point key="canvasLocation" x="1136" y="152"/>
         </scene>
         <!--Deposits-->
         <scene sceneID="BWy-zs-beG">
@@ -57,17 +56,7 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="h9v-5p-TTs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1120" y="101.64917541229386"/>
-        </scene>
-        <!--Services-->
-        <scene sceneID="4GL-9k-vKc">
-            <objects>
-                <viewControllerPlaceholder storyboardName="Services" id="BHf-9A-TH8" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="3WE-p7-pAx"/>
-                </viewControllerPlaceholder>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="DVp-jo-wzS" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1119.2" y="209.59520239880061"/>
+            <point key="canvasLocation" x="1155" y="32"/>
         </scene>
         <!--Profile-->
         <scene sceneID="wxt-9s-0pJ">
@@ -77,7 +66,7 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="98P-XJ-ECd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1108.8" y="263.56821589205401"/>
+            <point key="canvasLocation" x="1144" y="277"/>
         </scene>
         <!--Welcome View Controller-->
         <scene sceneID="8EP-BC-VoB">

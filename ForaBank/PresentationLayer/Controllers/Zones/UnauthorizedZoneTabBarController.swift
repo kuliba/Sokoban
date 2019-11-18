@@ -16,12 +16,16 @@ class UnauthorizedZoneTabBarController: UITabBarController, StoreSubscriber {
     @IBAction func unwindSegue(segue: UIStoryboardSegue) { }
 
     var currState: PasscodeSignInState?
-    
+
     // MARK: - Lifecycle
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        selectedIndex = 0
+
+        if let vcCount = viewControllers?.count {
+            selectedIndex = vcCount - 1
+        }
+
         hero.isEnabled = true
         hero.tabBarAnimationType = .none
         delegate = self
@@ -41,11 +45,11 @@ class UnauthorizedZoneTabBarController: UITabBarController, StoreSubscriber {
     }
 
     func newState(state: PasscodeSignInState) {
-        
+
         if let nonNilCurrState = currState, ForaBank.isEqual(first: state, to: nonNilCurrState) {
             return
         }
-        
+
         currState = state
 
         if state.isShown == true {

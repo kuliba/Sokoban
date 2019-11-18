@@ -8,34 +8,49 @@
 
 import UIKit
 
-class PaymentsTableViewController: UITableViewController {
+class PaymentsTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
+    @IBOutlet weak var backButton: UIButton!
+
+    @IBAction func backButtonClicked(_ sender: Any) {
+        self.navigationController?.popViewController(animated: true)
+        if navigationController == nil {
+            dismiss(animated: true, completion: nil)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if navigationController != nil || tabBarController != nil {
+            backButton.isHidden = true
+        } else if isModal {
+            backButton.isHidden = false
+        }
     }
 
     // MARK: - Table view data source
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 3
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
         cell.backgroundColor = .white
         cell.textLabel?.textColor = .black
-        
+
         switch indexPath.item {
         case 0:
-            cell.imageView?.image = UIImage(named: "feed_option_accounts")
+            cell.imageView?.image = UIImage(named: "payments_transfer_between-accounts")
             cell.textLabel?.text = "Между своими счетами"
             break
         case 1:
-            cell.imageView?.image = UIImage(named: "payments_transfer_between-accounts")
+            cell.imageView?.image = UIImage(named: "payments_transfer_to-bank-client")
             cell.textLabel?.text = "Клиенту Фора-Банка"
             break
         case 2:
@@ -48,7 +63,7 @@ class PaymentsTableViewController: UITableViewController {
         return cell
     }
 
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 //        store.dispatch(startPayment(sourceOption: nil, destionationOption: nil))
 
         guard let paymentDetailsVC = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentDetailsViewController") as? PaymentsDetailsViewController else {

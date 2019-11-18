@@ -918,6 +918,7 @@
 			isa = PBXGroup;
 			children = (
 				A5004D3021EF37DC0098E510 /* ActivityIndicatorView.swift */,
+				96E08A3C2372C0BA0070CA6A /* BottomRoundedEdge.swift */,
 				097A6DCB21884B6D00E6C69E /* ButtonRounded.swift */,
 				09BE35F0218C729C00EA7B24 /* ButtonRoundedBordered.swift */,
 				09F0E5CC2179DC3B0016BB6E /* CardView.swift */,
@@ -932,6 +933,7 @@
 				A55663A321EDB22600E48C40 /* OnMapButton.swift */,
 				A5C5E6E721A2B49A001D6250 /* OptionPickerButton.swift */,
 				0930F165215B5CDB00CFB593 /* RoundedEdgeView.swift */,
+				962655C82361F31A00697E37 /* ViewModalStyle.swift */,
 				BD49E6542344F6910031561F /* Cells */,
 				89C8DF0F2191AE7A00D92B0A /* Deposits */,
 				BDABE68B23474B0100CA0754 /* DropDown */,
@@ -940,8 +942,6 @@
 				A5B473C221B3C09800F2E41F /* Payments */,
 				A55B7B8921AA70A600A8A7FE /* Profile */,
 				A568142221CBCD1C002C0899 /* Services */,
-				962655C82361F31A00697E37 /* ViewModalStyle.swift */,
-				96E08A3C2372C0BA0070CA6A /* BottomRoundedEdge.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1327,20 +1327,20 @@
 		BD38198C232103EC0004728C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				966B4251235F508A00AF4256 /* GoogleService-Info2.plist */,
+				9651451D234F8ADC00A4713F /* ic_homeBG.jpg */,
 				9614986D2366E81E0021F70A /* GoogleService-Info.plist */,
+				966B4251235F508A00AF4256 /* GoogleService-Info2.plist */,
 				09797564215A49040044C00A /* Info.plist */,
 				BD38198D232104430004728C /* productsData.plist */,
+				960C5D1123716AFD002C4DC4 /* callfrompopup.png */,
 				960AD38722FC1826005399D6 /* Default-568h@2x.png */,
+				9651451F234F8B1B00A4713F /* foralogotype.png */,
+				96514519234F890300A4713F /* ic_logo.png */,
+				960C5D1323716B50002C4DC4 /* mailfrompopup.png */,
+				967AA500236C68DE000EEE6B /* telephone 1.png */,
 				BD7CC1A0232125D000872D06 /* Localizable.strings */,
 				BDFE5D9B233511EB0027A716 /* URLs.swift */,
 				0979755F215A49040044C00A /* Assets.xcassets */,
-				960C5D1323716B50002C4DC4 /* mailfrompopup.png */,
-				960C5D1123716AFD002C4DC4 /* callfrompopup.png */,
-				967AA500236C68DE000EEE6B /* telephone 1.png */,
-				9651451F234F8B1B00A4713F /* foralogotype.png */,
-				9651451D234F8ADC00A4713F /* ic_homeBG.jpg */,
-				96514519234F890300A4713F /* ic_logo.png */,
 				A55B7B7821A6B4A200A8A7FE /* animation */,
 			);
 			path = Resources;
