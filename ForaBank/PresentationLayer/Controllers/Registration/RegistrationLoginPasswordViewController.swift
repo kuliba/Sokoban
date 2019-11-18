@@ -73,6 +73,7 @@ class RegistrationLoginPasswordViewController: UIViewController {
     @IBOutlet weak var inputPasswordLabel: UILabel!
     @IBOutlet weak var activityIndicatorView: ActivityIndicatorView!
 
+    @IBOutlet weak var foraPreloader: RefreshView!
     var headerSnapshot: UIView? = nil
 
     var cardNumber: String? = nil
@@ -133,12 +134,13 @@ class RegistrationLoginPasswordViewController: UIViewController {
         guard let cardNum = cardNumber, let login = self.loginTextField.text, let pwd = self.passwordTextField.text else {
             return
         }
-        activityIndicatorView.startAnimation()
+        foraPreloader.isHidden = false
+        foraPreloader.startAnimation()
         continueButton.isHidden = true
         NetworkManager.shared().checkClient(cardNumber: cardNum, login: login, password: pwd, phone: phone, verificationCode: 0, completionHandler: { [weak self] success, errorMessage in
 
             self?.continueButton.isHidden = false
-            self?.activityIndicatorView.stopAnimating()
+            self?.foraPreloader.isHidden = true
             if success {
                 store.dispatch(createdLoginPwd(login: login, pwd: pwd))
                 self?.performSegue(withIdentifier: "regSmsVerification", sender: nil)

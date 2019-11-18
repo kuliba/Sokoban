@@ -24,6 +24,7 @@ class LoansViewController: UIViewController {
 
     let cellId = "DepositsObligationsCell"
     
+    @IBOutlet weak var foraPreloader: RefreshView!
     @IBOutlet weak var LabelNoProduct: UILabel!
     
   var refreshView: RefreshView!
@@ -74,7 +75,7 @@ class LoansViewController: UIViewController {
     var loan = [Loan]() {
         didSet {
             tableView.reloadData()
-            activityInd.stopAnimating()
+            foraPreloader.isHidden = true
             hiddenAccount()
             
         }
@@ -86,7 +87,7 @@ class LoansViewController: UIViewController {
     }    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        activityInd.startAnimation()
+        foraPreloader.startAnimation()
         setUpTableView()
         LabelNoProduct.isHidden = true
         self.tableView.delegate = self
@@ -108,7 +109,7 @@ class LoansViewController: UIViewController {
         super.viewWillAppear(animated)
 
         if (loan == nil) {
-            activityInd.startAnimation()
+            foraPreloader.startAnimation()
 
         }
 

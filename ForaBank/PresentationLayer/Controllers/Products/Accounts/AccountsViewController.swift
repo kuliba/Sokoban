@@ -20,6 +20,7 @@ class AccountsViewController: UIViewController {
     @IBOutlet weak var activityIndicatorView: ActivityIndicatorView!
     let transitionAnimator = AccountsSegueAnimator()
 
+    @IBOutlet weak var foraPreloader: RefreshView!
     let cellId = "DepositsDepositCell"
     
     var refreshView: RefreshView!
@@ -69,7 +70,7 @@ class AccountsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        activityIndicatorView.startAnimation()
+        foraPreloader.startAnimation()
         setUpTableView()
         LabelNoProduct.isHidden = true
           prepareUI()
@@ -83,7 +84,7 @@ class AccountsViewController: UIViewController {
     var accounts = [Account]() {
         didSet {
             tableView.reloadData()
-            activityIndicatorView.stopAnimating()
+            foraPreloader.isHidden = true
             hiddenAccount()
 
         }
@@ -98,7 +99,7 @@ class AccountsViewController: UIViewController {
         super.viewWillAppear(animated)
 
         if (accounts == nil) {
-            activityIndicatorView.startAnimation()
+            foraPreloader.startAnimation()
             LabelNoProduct.isHidden = false
         }
     }

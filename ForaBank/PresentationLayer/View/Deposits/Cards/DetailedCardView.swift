@@ -13,7 +13,7 @@ class DetailedCardView: CardView {
     let backgroundImageView = UIImageView()
     let logoImageView = UIImageView()
     let paypassLogoImageView = UIImageView()
-    let titleLabel = UILabel()
+    var titleLabel = UILabel()
     let cardNumberLabel = UILabel()
     let cardHolderNameLabel = UILabel()
 
@@ -22,7 +22,7 @@ class DetailedCardView: CardView {
     let cardBlockedImageView = UIImageView()
     var logoImageViewCosntraint: NSLayoutConstraint? = nil
     var expirationDate = UILabel()
-    var newName: String? = nil
+    var newName: String?
     
     
     
@@ -57,8 +57,16 @@ class DetailedCardView: CardView {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
+  
+    
+    @objc func handlePopucclosing(notification: Notification){
+        let customNameVc = notification.object as! String
+        titleLabel.text = customNameVc
+           }
 
+    
     func addSubviews() {
+         NotificationCenter.default.addObserver(self, selector: #selector(handlePopucclosing), name: NSNotification.Name(rawValue: "customName"), object: nil)
         titleLabel.lineBreakMode = .byWordWrapping
         titleLabel.numberOfLines = 2
         cardCashLabel.textAlignment = .right
@@ -102,6 +110,7 @@ class DetailedCardView: CardView {
             guard let name = card?.name else {
                 return
             }
+            
             if card?.customName == "" {
                 card?.customName = name
             }

@@ -20,7 +20,8 @@ class DepositsViewController: UIViewController {
                alertVC.addAction(okAction)
                show(alertVC, sender: self)
      }
-
+    @IBOutlet weak var ForaIndicator: RefreshView!
+    
     @IBOutlet weak var tableView: CustomTableView!
     var color2: UIColor = .black
 
@@ -105,7 +106,7 @@ class DepositsViewController: UIViewController {
     var deposits = [Deposit]() {
         didSet {
             tableView.reloadData()
-            activityIndicator.stopAnimating()
+            ForaIndicator.isHidden = true
             hiddenAccount()
 
         }
@@ -120,7 +121,7 @@ class DepositsViewController: UIViewController {
         super.viewWillAppear(animated)
 
         if (deposits == nil) {
-            activityIndicator.startAnimation()
+            ForaIndicator.startAnimation()
         }
     }
 
@@ -131,11 +132,12 @@ class DepositsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        activityIndicator.startAnimation()
+        ForaIndicator.startAnimation()
         setUpTableView()
         LabelNoProduct.isHidden = true
         prepareUI()
         tableView.backgroundColor = .white
+        
 
     }
 
