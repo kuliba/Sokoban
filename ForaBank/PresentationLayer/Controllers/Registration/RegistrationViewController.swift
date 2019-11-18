@@ -87,6 +87,13 @@ class RegistrationViewController: UIViewController {
              } else{
                  continueButton.isHidden = false
              }
+        
+        if cardNumberTextField.text == "" {
+            continueButton.isHidden = false
+        }
+        cardNumberTextField.textInputView.reloadInputViews()
+        
+      
     }
     @IBAction func segmentedControlValueChanged(_ sender: Any) {
         let direction = segmentedControl.selectedSegmentIndex - previousSegment
@@ -192,6 +199,9 @@ class RegistrationViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        if cardNumberTextField.text?.count == 0 {
+            continueButton.isHidden = true
+        }
         segmentedOuterView.isHidden = true
         segmentedControl.isHidden = true
         dateLabelView.isHidden = true

@@ -696,7 +696,7 @@
                                                         </connections>
                                                     </button>
                                                 </subviews>
-                                                <color key="backgroundColor" systemColor="tertiarySystemGroupedBackgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="backgroundColor" systemColor="tertiarySystemGroupedBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
                                                     <constraint firstItem="7tZ-UF-aFc" firstAttribute="leading" secondItem="AVf-9X-Mg7" secondAttribute="trailing" constant="-38.666666666666629" id="0Px-wz-WeD"/>
                                                     <constraint firstItem="b2b-dq-93V" firstAttribute="leading" secondItem="fA6-4x-FjH" secondAttribute="leading" constant="22" id="2wP-N0-n89"/>
@@ -736,7 +736,7 @@
                                                 </constraints>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="color" keyPath="color1">
-                                                        <color key="value" systemColor="secondarySystemBackgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="value" systemColor="secondarySystemBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </userDefinedRuntimeAttribute>
                                                     <userDefinedRuntimeAttribute type="color" keyPath="color2">
                                                         <color key="value" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
@@ -832,10 +832,10 @@
                                                 </constraints>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="color" keyPath="color1">
-                                                        <color key="value" systemColor="secondarySystemBackgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="value" systemColor="secondarySystemBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </userDefinedRuntimeAttribute>
                                                     <userDefinedRuntimeAttribute type="color" keyPath="color2">
-                                                        <color key="value" systemColor="secondarySystemBackgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="value" systemColor="secondarySystemBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </view>
@@ -897,7 +897,7 @@
                                         <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
                                     </textField>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="ruble" translatesAutoresizingMaskIntoConstraints="NO" id="qdt-Oe-b2S">
-                                        <rect key="frame" x="265" y="18" width="21" height="23"/>
+                                        <rect key="frame" x="265" y="30" width="21" height="23"/>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Комиссия 15 руб (3%)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="36L-xv-4Q7">
                                         <rect key="frame" x="128" y="70" width="166.33333333333337" height="34"/>
@@ -934,7 +934,7 @@
                                     <constraint firstItem="TUy-Q6-2IW" firstAttribute="firstBaseline" secondItem="tHE-j3-MIP" secondAttribute="baseline" constant="33" id="p1x-Kd-RBX"/>
                                     <constraint firstItem="36L-xv-4Q7" firstAttribute="top" secondItem="1rH-B9-2IR" secondAttribute="bottom" constant="4" id="raq-vz-BmW"/>
                                     <constraint firstItem="TUy-Q6-2IW" firstAttribute="firstBaseline" secondItem="tHE-j3-MIP" secondAttribute="baseline" constant="33" id="zao-dm-D0g"/>
-                                    <constraint firstItem="tHE-j3-MIP" firstAttribute="top" secondItem="qdt-Oe-b2S" secondAttribute="bottom" constant="65" id="zgo-eB-azf"/>
+                                    <constraint firstItem="tHE-j3-MIP" firstAttribute="top" secondItem="qdt-Oe-b2S" secondAttribute="bottom" constant="53" id="zgo-eB-azf"/>
                                 </constraints>
                             </view>
                         </subviews>
