@@ -869,6 +869,7 @@
 		09E0F131215A617A0042FB6A /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				960C5D0F237161A8002C4DC4 /* MapPopUpViewController.swift */,
 				9697E29E2334C29700974505 /* OperatorsList.swift */,
 				BDB7916C2338C8B10002C7EE /* VerificationCodeViewController.swift */,
 				96AF922B2360A85B00C9E746 /* ContactList */,
@@ -880,7 +881,6 @@
 				09BE35EC218C627700EA7B24 /* Registration */,
 				A568142821CE6A41002C0899 /* Services */,
 				BD6D5672233A0B2C00B7CF4B /* Zones */,
-				960C5D0F237161A8002C4DC4 /* MapPopUpViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
