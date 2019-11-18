@@ -42,24 +42,7 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell,ContactsPickerD
        }
        
 
-    func contactPicker(_ picker: ContactsPicker, didSelectMultipleContacts contacts: [Contact]) {
-           defer { picker.dismiss(animated: true, completion: nil) }
-           guard !contacts.isEmpty else { return }
-           print("The following contacts are selected")
-           for contact in contacts {
-            print("\(contact.displayName)","\(contact.phoneNumbers)")
-       
-        
-        if  contacts != nil {
-            let number: String
-            nameContact.isHidden = true
-            number = "\(contact.phoneNumbers.joined())"
-            let numberFormatted = formattedPhoneNumber(number: number)
-            textField.text = "\(numberFormatted)"
-            
-                    }
-                }
-       }
+  
     
     
     
@@ -85,6 +68,37 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell,ContactsPickerD
 
         leftButton.setImage(UIImage(named: textInputCellProvider.iconName), for: .normal)
     }
+    
+    
+    
+    
+    func contactPicker(_ picker: ContactsPicker, didSelectMultipleContacts contacts: [Contact]) {
+             defer { picker.dismiss(animated: true, completion: nil) }
+             guard !contacts.isEmpty else { return }
+             print("The following contacts are selected")
+             for contact in contacts {
+              print("\(contact.displayName)","\(contact.phoneNumbers)")
+         
+          
+          if  contacts != nil {
+              var number: String
+              nameContact.isHidden = true
+              number = "\(contact.phoneNumbers[0])"
+              
+              if let i = number.firstIndex(of: "7"){
+                  number.remove(at: i)
+             
+                let numberFormatted = formattedNumberInPhoneContacts(number: String(number))
+                  textField.text = "\(numberFormatted)"
+              }
+              
+             
+              
+           
+              
+                      }
+                  }
+         }
 }
 
 extension TextFieldPagerViewCell: UITextFieldDelegate {
