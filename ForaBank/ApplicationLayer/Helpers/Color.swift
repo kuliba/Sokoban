@@ -32,6 +32,6 @@ extension UIColor {
     }
 
     @nonobjc class var unselectedBlack: UIColor {
-        return UIColor(red: 0.233, green: 0.233, blue: 0.233, alpha: 1)
+        return UIColor(red: 0.325, green: 0.325, blue: 0.325, alpha: 1)
     }
 }
