@@ -125,7 +125,7 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
                 self?.present(alertVC, animated: true, completion: nil)
             }
         }
-
+       
 
         if destinationConfig is PhoneNumberPagerItem {
             NetworkManager.shared().prepareCard2Phone(from: sourceNumber, to: destinationNumber, amount: amount, completionHandler: completion)
