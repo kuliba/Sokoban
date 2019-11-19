@@ -35,7 +35,7 @@ enum ProductType: String, Comparable {
     static func < (lhs: ProductType, rhs: ProductType) -> Bool {
         return lhs.sortOrder < rhs.sortOrder
     }
-
+    
     var localizedName: String {
         switch self {
         case .card:
@@ -59,6 +59,19 @@ enum ProductType: String, Comparable {
             return NSLocalizedString("Вклады", comment: "")
         case .loan:
             return NSLocalizedString("Кредиты", comment: "")
+        }
+    }
+
+    var coloredImageName: String {
+        switch self {
+        case .card:
+            return NSLocalizedString("Карта", comment: "")
+        case .account:
+            return NSLocalizedString("Счёт", comment: "")
+        case .deposit:
+            return NSLocalizedString("Вклад", comment: "")
+        case .loan:
+            return NSLocalizedString("Кредит", comment: "")
         }
     }
 }
