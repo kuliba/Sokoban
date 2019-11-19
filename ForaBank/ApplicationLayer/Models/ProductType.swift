@@ -65,7 +65,7 @@ enum ProductType: String, Comparable {
     var coloredImageName: String {
         switch self {
         case .card:
-            return NSLocalizedString("Карта", comment: "")
+            return ""
         case .account:
             return NSLocalizedString("Счёт", comment: "")
         case .deposit:

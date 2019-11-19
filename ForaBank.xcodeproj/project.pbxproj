@@ -859,6 +859,7 @@
 				96E541142341656300770C06 /* ExpandingTableViewCell.swift */,
 				BDE4D07F232248420070BC3D /* ProductAboutViewController.swift */,
 				895768CC2192D992005754D5 /* ProductDetailsViewController.swift */,
+				BD82F97A2383E0AA00EB6C8C /* ProductListViewController.swift */,
 				096B4F532186E29300C69E52 /* ProductManagementViewController.swift */,
 				96E541152341656300770C06 /* TableExpansionViewController.swift */,
 				96F0DCEB231FDFAE005ABEED /* Accounts */,
@@ -868,7 +869,6 @@
 				96F0DCEC231FE36B005ABEED /* Loans */,
 				9660EEE0234C7AD200AE0647 /* LoansExpandingTable */,
 				A528EF3D21B00C0500D189DD /* Stats */,
-				BD82F97A2383E0AA00EB6C8C /* ProductListViewController.swift */,
 			);
 			path = Products;
 			sourceTree = "<group>";

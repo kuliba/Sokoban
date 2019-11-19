@@ -18,8 +18,6 @@ class ProductListViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
 
-
-    /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -27,8 +25,7 @@ class ProductListViewController: UIViewController {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
     }
-    */
-
+    
 }
 
 extension ProductListViewController: UITableViewDelegate, UITableViewDataSource {
@@ -38,6 +35,9 @@ extension ProductListViewController: UITableViewDelegate, UITableViewDataSource 
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
+        cell.textLabel?.text = products[indexPath.item].localizedName
+        cell.imageView?.image = UIImage(named: products[indexPath.item].coloredImageName)
+
         return cell
     }
 }
