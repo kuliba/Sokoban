@@ -310,6 +310,9 @@
 		BDB6B0132326A9E00006A534 /* PasscodeSingUpReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6B0122326A9E00006A534 /* PasscodeSingUpReducer.swift */; };
 		BDB6B0162326AAA60006A534 /* PasscodeSignUpState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6B0152326AAA60006A534 /* PasscodeSignUpState.swift */; };
 		BDB7916D2338C8B10002C7EE /* VerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB7916C2338C8B10002C7EE /* VerificationCodeViewController.swift */; };
+		BDB823A423841EE300030B5F /* ProductsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB823A323841EE300030B5F /* ProductsCoordinator.swift */; };
+		BDB823A623842E5900030B5F /* ProductsModuleConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB823A523842E5900030B5F /* ProductsModuleConfigurator.swift */; };
+		BDB823A8238433B400030B5F /* ProductsNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB823A7238433B400030B5F /* ProductsNavigator.swift */; };
 		BDC019962360806F0022FC78 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDC019952360806F0022FC78 /* WelcomeViewController.swift */; };
 		BDCCE9092350BB6E0087F5F2 /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCCE9082350BB6E0087F5F2 /* AlertService.swift */; };
 		BDCCE90B2350BB8C0087F5F2 /* IAlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCCE90A2350BB8C0087F5F2 /* IAlertService.swift */; };
@@ -654,6 +657,9 @@
 		BDB6B0122326A9E00006A534 /* PasscodeSingUpReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSingUpReducer.swift; sourceTree = "<group>"; };
 		BDB6B0152326AAA60006A534 /* PasscodeSignUpState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignUpState.swift; sourceTree = "<group>"; };
 		BDB7916C2338C8B10002C7EE /* VerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeViewController.swift; sourceTree = "<group>"; };
+		BDB823A323841EE300030B5F /* ProductsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsCoordinator.swift; sourceTree = "<group>"; };
+		BDB823A523842E5900030B5F /* ProductsModuleConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsModuleConfigurator.swift; sourceTree = "<group>"; };
+		BDB823A7238433B400030B5F /* ProductsNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsNavigator.swift; sourceTree = "<group>"; };
 		BDC019952360806F0022FC78 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		BDCCE9082350BB6E0087F5F2 /* AlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertService.swift; sourceTree = "<group>"; };
 		BDCCE90A2350BB8C0087F5F2 /* IAlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAlertService.swift; sourceTree = "<group>"; };
@@ -1574,6 +1580,16 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
+		BDB823A223841EC000030B5F /* Coordination */ = {
+			isa = PBXGroup;
+			children = (
+				BDB823A323841EE300030B5F /* ProductsCoordinator.swift */,
+				BDB823A523842E5900030B5F /* ProductsModuleConfigurator.swift */,
+				BDB823A7238433B400030B5F /* ProductsNavigator.swift */,
+			);
+			path = Coordination;
+			sourceTree = "<group>";
+		};
 		BDC019942360803B0022FC78 /* Authorized */ = {
 			isa = PBXGroup;
 			children = (
@@ -1595,6 +1611,7 @@
 		BDCCE90C2350BC5E0087F5F2 /* PresentationLayer */ = {
 			isa = PBXGroup;
 			children = (
+				BDB823A223841EC000030B5F /* Coordination */,
 				96E08A392371CF5F0070CA6A /* CardToCardUnauthorized */,
 				09E0F131215A617A0042FB6A /* Controllers */,
 				09E0F149215A6B170042FB6A /* Storyboards */,
@@ -1904,6 +1921,7 @@
 				A528EF4021B00C9300D189DD /* MonthCollectionViewCell.swift in Sources */,
 				09D3C03D215CD03E00998F57 /* SearchCell.swift in Sources */,
 				093B862A21620806008A5222 /* ServicesViewController.swift in Sources */,
+				BDB823A623842E5900030B5F /* ProductsModuleConfigurator.swift in Sources */,
 				BD49E65A2345E7CC0031561F /* PaymentOptionCellProvider.swift in Sources */,
 				09C7C30D21747293000EE472 /* CarouselViewController.swift in Sources */,
 				BD2083792360A29C0010E03C /* DepositsService.swift in Sources */,
@@ -1924,6 +1942,7 @@
 				96094AF42319441600A80412 /* SettingsViewController.swift in Sources */,
 				09C7C33D2175FADE000EE472 /* DepositsHistoryHeader.swift in Sources */,
 				BDB6B0132326A9E00006A534 /* PasscodeSingUpReducer.swift in Sources */,
+				BDB823A423841EE300030B5F /* ProductsCoordinator.swift in Sources */,
 				BD20837723609B560010E03C /* PaymentServices.swift in Sources */,
 				BD588AB0237E934E00727056 /* ProductType.swift in Sources */,
 				A5B473C621B52D4500F2E41F /* BubblesDetailedStatsView.swift in Sources */,
@@ -1967,6 +1986,7 @@
 				9660EEE9234C7B1100AE0647 /* CollapsibleTableViewCell.swift in Sources */,
 				89C8DF0E2191ADF200D92B0A /* AccountsViewController.swift in Sources */,
 				09E2141F21873DCA00D16D21 /* DepositsCardsDetailsStatementDetailsViewController.swift in Sources */,
+				BDB823A8238433B400030B5F /* ProductsNavigator.swift in Sources */,
 				A5C5C03C21B66485005D6B8F /* BubbleDetailedStatsView.swift in Sources */,
 				A55B7B9021AAAAB300A8A7FE /* ChatMessagesTransferRequestTableViewCell.swift in Sources */,
 				BD35E82423438DC40016BA0D /* TextFieldPagerViewCell.swift in Sources */,

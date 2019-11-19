@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Zlb-hj-4wP">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="UUW-Uy-lmj">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -16,10 +16,10 @@
         </array>
     </customFonts>
     <scenes>
-        <!--Продукты-->
+        <!--Carousel View Controller-->
         <scene sceneID="jnb-tn-H9V">
             <objects>
-                <viewController storyboardIdentifier="depositsRoot" id="Zlb-hj-4wP" customClass="CarouselViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Zlb-hj-4wP" customClass="CarouselViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="DE7-uu-jrD">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -58,19 +58,20 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="7HN-mU-qUK"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Продукты" image="tabbar_icon_deposits" id="8zp-wW-i5v" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
-                        <inset key="imageInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="-10"/>
-                        <inset key="largeContentSizeImageInsets" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
-                    </tabBarItem>
-                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <navigationItem key="navigationItem" id="Zt0-ea-Xyf"/>
                     <connections>
                         <outlet property="carousel" destination="YOA-tq-CAv" id="UbS-ad-Lwd"/>
                         <outlet property="containerView" destination="6i6-O9-AuI" id="vX7-di-8ym"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PhQ-qH-P8Y" sceneMemberID="firstResponder"/>
+                <customObject id="xsl-wU-QvT" customClass="ProductsModuleInitializer" customModule="ForaBank" customModuleProvider="target">
+                    <connections>
+                        <outlet property="carouselViewController" destination="Zlb-hj-4wP" id="zyK-OO-T7c"/>
+                    </connections>
+                </customObject>
             </objects>
-            <point key="canvasLocation" x="-866" y="-761"/>
+            <point key="canvasLocation" x="72.799999999999997" y="-761.46926536731644"/>
         </scene>
         <!--Deposits View Controller-->
         <scene sceneID="Uc7-N4-90s">
@@ -2584,6 +2585,129 @@
             </objects>
             <point key="canvasLocation" x="-4" y="1623"/>
         </scene>
+        <!--Продукты-->
+        <scene sceneID="LYy-Fu-VNP">
+            <objects>
+                <navigationController storyboardIdentifier="depositsRoot" automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="UUW-Uy-lmj" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Продукты" image="tabbar_icon_deposits" id="8zp-wW-i5v" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
+                        <inset key="imageInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="-10"/>
+                        <inset key="largeContentSizeImageInsets" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
+                    </tabBarItem>
+                    <toolbarItems/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="1Ma-rV-9z1">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="dca-7z-WfN">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
+                    <connections>
+                        <segue destination="Zlb-hj-4wP" kind="relationship" relationship="rootViewController" id="gWg-z7-hdv"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4mo-DZ-4rp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-866.39999999999998" y="-761.46926536731644"/>
+        </scene>
+        <!--Платежи и переводы-->
+        <scene sceneID="O16-SI-n2m">
+            <objects>
+                <viewController storyboardIdentifier="ProductListViewController" modalPresentationStyle="fullScreen" id="uqa-ze-8di" customClass="ProductListViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="haJ-Jp-eXT" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bER-wf-s2h">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="30"/>
+                                <subviews>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d2f-kb-oWW">
+                                        <rect key="frame" x="14" y="0.0" width="30" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="d2f-kb-oWW" secondAttribute="height" multiplier="1:1" id="Tns-uJ-b7f"/>
+                                        </constraints>
+                                        <inset key="imageEdgeInsets" minX="9" minY="8" maxX="8" maxY="3"/>
+                                        <state key="normal" image="button_back"/>
+                                        <connections>
+                                            <action selector="backButtonClicked:" destination="uqa-ze-8di" eventType="touchUpInside" id="llF-BX-DaO"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Открыть продукт" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KCk-8Q-XGV">
+                                        <rect key="frame" x="94" y="8.5" width="132" height="21.5"/>
+                                        <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="Ir6-0s-Cj5"/>
+                                    <constraint firstItem="KCk-8Q-XGV" firstAttribute="centerX" secondItem="bER-wf-s2h" secondAttribute="centerX" id="JPh-rd-VgL"/>
+                                    <constraint firstAttribute="bottom" secondItem="KCk-8Q-XGV" secondAttribute="bottom" id="Ojc-ft-YAJ"/>
+                                    <constraint firstAttribute="bottom" secondItem="d2f-kb-oWW" secondAttribute="bottom" id="bFZ-0n-IP0"/>
+                                    <constraint firstItem="d2f-kb-oWW" firstAttribute="leading" secondItem="bER-wf-s2h" secondAttribute="leading" constant="14" id="fOi-QZ-rT8"/>
+                                    <constraint firstItem="d2f-kb-oWW" firstAttribute="top" secondItem="bER-wf-s2h" secondAttribute="top" id="j4V-an-3lT"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9gf-3F-wKp" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="25" width="320" height="543"/>
+                                <subviews>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" sectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Uxl-5t-TGR" customClass="CustomTableView" customModule="ForaBank" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="543"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="sectionIndexColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="sectionIndexBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="sectionIndexTrackingBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <connections>
+                                            <outlet property="dataSource" destination="uqa-ze-8di" id="9bH-Uq-GC3"/>
+                                            <outlet property="delegate" destination="uqa-ze-8di" id="VgO-o5-eHu"/>
+                                        </connections>
+                                    </tableView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="Uxl-5t-TGR" secondAttribute="bottom" id="ElY-Ac-Tur"/>
+                                    <constraint firstAttribute="trailing" secondItem="Uxl-5t-TGR" secondAttribute="trailing" id="IZk-KC-2lt"/>
+                                    <constraint firstItem="Uxl-5t-TGR" firstAttribute="top" secondItem="9gf-3F-wKp" secondAttribute="top" id="WbI-e4-C28"/>
+                                    <constraint firstItem="Uxl-5t-TGR" firstAttribute="leading" secondItem="9gf-3F-wKp" secondAttribute="leading" id="jf7-DA-rIp"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="9gf-3F-wKp" firstAttribute="top" secondItem="bER-wf-s2h" secondAttribute="bottom" constant="-5" id="6Qt-6b-hbx"/>
+                            <constraint firstItem="9gf-3F-wKp" firstAttribute="trailing" secondItem="bER-wf-s2h" secondAttribute="trailing" id="9hp-jB-Egi"/>
+                            <constraint firstItem="HHe-5S-jM0" firstAttribute="trailing" secondItem="bER-wf-s2h" secondAttribute="trailing" id="KRv-mS-U5R"/>
+                            <constraint firstItem="9gf-3F-wKp" firstAttribute="leading" secondItem="bER-wf-s2h" secondAttribute="leading" id="Mkw-Pz-JsA"/>
+                            <constraint firstItem="9gf-3F-wKp" firstAttribute="leading" secondItem="HHe-5S-jM0" secondAttribute="leading" id="UYo-bO-YP4"/>
+                            <constraint firstItem="bER-wf-s2h" firstAttribute="top" secondItem="HHe-5S-jM0" secondAttribute="top" id="VJD-5r-zz8"/>
+                            <constraint firstItem="bER-wf-s2h" firstAttribute="leading" secondItem="HHe-5S-jM0" secondAttribute="leading" id="XAS-oL-5xx"/>
+                            <constraint firstItem="9gf-3F-wKp" firstAttribute="bottom" secondItem="haJ-Jp-eXT" secondAttribute="bottom" id="Xpx-pq-YDO"/>
+                            <constraint firstItem="HHe-5S-jM0" firstAttribute="trailing" secondItem="9gf-3F-wKp" secondAttribute="trailing" id="j0z-Gv-G5J"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="HHe-5S-jM0"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="color" keyPath="color1">
+                                <color key="value" red="0.93725490199999995" green="0.25490196079999999" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="color" keyPath="color2">
+                                <color key="value" red="0.93805062770000003" green="0.25358119610000002" blue="0.2107679546" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" title="Платежи и переводы" id="4H3-xF-kuL"/>
+                    <size key="freeformSize" width="320" height="568"/>
+                    <connections>
+                        <outlet property="backButton" destination="d2f-kb-oWW" id="luR-n2-QuQ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gAQ-Me-fBR" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="909" y="-806"/>
+        </scene>
     </scenes>
     <resources>
         <image name="button_back" width="8" height="14"/>
@@ -2598,7 +2722,7 @@
         <image name="food" width="71" height="73"/>
         <image name="forabank_visaclassic_290x185" width="280" height="159"/>
         <image name="foralogotype" width="88" height="88"/>
-        <image name="tabbar_icon_deposits" width="25" height="22"/>
+        <image name="tabbar_icon_deposits" width="33" height="30"/>
         <image name="visalogo" width="41" height="18"/>
     </resources>
     <inferredMetricsTieBreakers>

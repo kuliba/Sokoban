@@ -28,9 +28,7 @@ class CarouselViewController: UIViewController, StoreSubscriber {
         recognizer.direction = .right
         return recognizer
     }()
-    var previousIndex = -1
 
-    var labels = [UILabel?]()
     let gradientView = GradientView()
     let gradients = [
         [UIColor(hexFromString: "EF4136")!, UIColor(hexFromString: "EF4136")!],
@@ -41,9 +39,10 @@ class CarouselViewController: UIViewController, StoreSubscriber {
         [UIColor(hexFromString: "EF4136")!, UIColor(hexFromString: "EF4136")!]
     ]
     let xDevices = Constants.xDevices
+    let navigator: 
+    
     weak var currentViewController: UIViewController?
-
-
+    var labels = [UILabel?]()
     var menuItems: Array<AnyHashable> {
         get {
             return Array<AnyHashable>(dynamicMenuItems) + Array<AnyHashable>(staticMenuItems)
@@ -51,11 +50,9 @@ class CarouselViewController: UIViewController, StoreSubscriber {
     }
     var dynamicMenuItems: Array<ProductType> = []
     var staticMenuItems: Array<String> = ["История"]
-
     var segueId: String? = nil
     var backSegueId: String? = nil
-
-
+    var previousIndex = -1
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
