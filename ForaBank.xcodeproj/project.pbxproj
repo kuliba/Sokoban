@@ -259,7 +259,7 @@
 		BD20837D2360AD420010E03C /* INetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD20837C2360AD420010E03C /* INetworkManager.swift */; };
 		BD20837F2361B4990010E03C /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD20837E2361B4990010E03C /* Product.swift */; };
 		BD2083812361E0FF0010E03C /* ProductsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2083802361E0FF0010E03C /* ProductsService.swift */; };
-		BD2083832361E3240010E03C /* IService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2083822361E3240010E03C /* IService.swift */; };
+		BD2083832361E3240010E03C /* IProductService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2083822361E3240010E03C /* IProductService.swift */; };
 		BD21B66A2338E08E001C5CF7 /* RegistrationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD21B6692338E08E001C5CF7 /* RegistrationState.swift */; };
 		BD21B66C2338E0FA001C5CF7 /* RegistrationActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD21B66B2338E0FA001C5CF7 /* RegistrationActions.swift */; };
 		BD21B66E2338E1AF001C5CF7 /* RegistrationReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD21B66D2338E1AF001C5CF7 /* RegistrationReducer.swift */; };
@@ -286,6 +286,8 @@
 		BD57934F236C4B900056740C /* SettingsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD57934E236C4B900056740C /* SettingsStorage.swift */; };
 		BD579351236C4BAB0056740C /* ISettingsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD579350236C4BAB0056740C /* ISettingsStorage.swift */; };
 		BD58869E2369AFDA00F97332 /* PasscodeSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD58869D2369AFDA00F97332 /* PasscodeSignUpViewController.swift */; };
+		BD588AAE237D8D7400727056 /* ProductsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD588AAD237D8D7400727056 /* ProductsList.swift */; };
+		BD588AB0237E934E00727056 /* ProductType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD588AAF237E934E00727056 /* ProductType.swift */; };
 		BD66E0C42366D511002FFA1A /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD66E0C32366D511002FFA1A /* AppConstants.swift */; };
 		BD66E0C62366DD3F002FFA1A /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD66E0C52366DD3F002FFA1A /* Keychain.swift */; };
 		BD6D5674233A0B9000B7CF4B /* UnauthorizedZoneTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6D5673233A0B9000B7CF4B /* UnauthorizedZoneTabBarController.swift */; };
@@ -600,7 +602,7 @@
 		BD20837C2360AD420010E03C /* INetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = INetworkManager.swift; sourceTree = "<group>"; };
 		BD20837E2361B4990010E03C /* Product.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
 		BD2083802361E0FF0010E03C /* ProductsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsService.swift; sourceTree = "<group>"; };
-		BD2083822361E3240010E03C /* IService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IService.swift; sourceTree = "<group>"; };
+		BD2083822361E3240010E03C /* IProductService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IProductService.swift; sourceTree = "<group>"; };
 		BD21B6692338E08E001C5CF7 /* RegistrationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationState.swift; sourceTree = "<group>"; };
 		BD21B66B2338E0FA001C5CF7 /* RegistrationActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationActions.swift; sourceTree = "<group>"; };
 		BD21B66D2338E1AF001C5CF7 /* RegistrationReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationReducer.swift; sourceTree = "<group>"; };
@@ -627,6 +629,8 @@
 		BD57934E236C4B900056740C /* SettingsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStorage.swift; sourceTree = "<group>"; };
 		BD579350236C4BAB0056740C /* ISettingsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ISettingsStorage.swift; sourceTree = "<group>"; };
 		BD58869D2369AFDA00F97332 /* PasscodeSignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignUpViewController.swift; sourceTree = "<group>"; };
+		BD588AAD237D8D7400727056 /* ProductsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsList.swift; sourceTree = "<group>"; };
+		BD588AAF237E934E00727056 /* ProductType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductType.swift; sourceTree = "<group>"; };
 		BD66E0C32366D511002FFA1A /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
 		BD66E0C52366DD3F002FFA1A /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		BD6D5673233A0B9000B7CF4B /* UnauthorizedZoneTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnauthorizedZoneTabBarController.swift; sourceTree = "<group>"; };
@@ -904,6 +908,7 @@
 				969899632303F2E20066C55B /* Loan.swift */,
 				96144B42233E21BB00B9F314 /* LoanSchedule.swift */,
 				BD20837E2361B4990010E03C /* Product.swift */,
+				BD588AAF237E934E00727056 /* ProductType.swift */,
 				A568143321D0CE6C002C0899 /* Profile.swift */,
 				BD3BEFEE2373FA3700BA0D9B /* RegistrationSettings.swift */,
 				0942B86A21625F4800370C71 /* Service.swift */,
@@ -1315,7 +1320,7 @@
 				BD20835723609A680010E03C /* CardStatementService.swift */,
 				BD2083782360A29C0010E03C /* DepositsService.swift */,
 				BD20834D23609A670010E03C /* HIstoryService.swift */,
-				BD2083822361E3240010E03C /* IService.swift */,
+				BD2083822361E3240010E03C /* IProductService.swift */,
 				BD20835923609A680010E03C /* LoanPaymentSchedule.swift */,
 				BD20835123609A670010E03C /* LoansService.swift */,
 				BD20837623609B560010E03C /* PaymentServices.swift */,
@@ -1329,6 +1334,7 @@
 		BD38198C232103EC0004728C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				BD588AAC237D8C1A00727056 /* Placeholders */,
 				9651451D234F8ADC00A4713F /* ic_homeBG.jpg */,
 				9614986D2366E81E0021F70A /* GoogleService-Info.plist */,
 				966B4251235F508A00AF4256 /* GoogleService-Info2.plist */,
@@ -1423,6 +1429,14 @@
 				BD579350236C4BAB0056740C /* ISettingsStorage.swift */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		BD588AAC237D8C1A00727056 /* Placeholders */ = {
+			isa = PBXGroup;
+			children = (
+				BD588AAD237D8D7400727056 /* ProductsList.swift */,
+			);
+			path = Placeholders;
 			sourceTree = "<group>";
 		};
 		BD6D5672233A0B2C00B7CF4B /* Zones */ = {
@@ -1908,6 +1922,7 @@
 				09C7C33D2175FADE000EE472 /* DepositsHistoryHeader.swift in Sources */,
 				BDB6B0132326A9E00006A534 /* PasscodeSingUpReducer.swift in Sources */,
 				BD20837723609B560010E03C /* PaymentServices.swift in Sources */,
+				BD588AB0237E934E00727056 /* ProductType.swift in Sources */,
 				A5B473C621B52D4500F2E41F /* BubblesDetailedStatsView.swift in Sources */,
 				9660EEE7234C7B1100AE0647 /* Extensions.swift in Sources */,
 				BDF4F94C23293C49007C448F /* PasscodeSignInState.swift in Sources */,
@@ -2007,7 +2022,8 @@
 				963B62D02360A91900DD9A3E /* ContactCell.swift in Sources */,
 				9622CFBE234B225B0005701E /* changePasswordController.swift in Sources */,
 				A568142A21CE6A79002C0899 /* AnnotationsTableViewController.swift in Sources */,
-				BD2083832361E3240010E03C /* IService.swift in Sources */,
+				BD588AAE237D8D7400727056 /* ProductsList.swift in Sources */,
+				BD2083832361E3240010E03C /* IProductService.swift in Sources */,
 				BD5170AB2332250C001EAFC0 /* VerificationCodeReducer.swift in Sources */,
 				09AF707E216F676300E7FCFC /* FeedCurrentViewController.swift in Sources */,
 				BD81069F234DD048004A43E9 /* PaymentHandlersProvider.swift in Sources */,
