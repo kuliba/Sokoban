@@ -263,7 +263,7 @@ extension CarouselViewController: iCarouselDataSource, iCarouselDelegate {
         labels[previousIndex]?.textColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
         labels[previousIndex]?.font = UIFont(name: "Roboto-Light", size: 16)
 
-        labels[index]?.textColor = .white
+        labels[index]?.textColor = .commonRed
         labels[index]?.font = UIFont(name: "Roboto-Regular", size: 16)
 
         let indexOffset = index - previousIndex
@@ -292,14 +292,14 @@ extension CarouselViewController: iCarouselDataSource, iCarouselDelegate {
     func carouselDidEndScrollingAnimation(_ carousel: iCarousel) {
         if previousIndex<0 || previousIndex == carousel.currentItemIndex{
             previousIndex = carousel.currentItemIndex
-            labels[carousel.currentItemIndex]?.textColor = .white
+            labels[carousel.currentItemIndex]?.textColor = .commonRed
             labels[carousel.currentItemIndex]?.font = UIFont(name: "Roboto-Regular", size: 16)
             return
         }
         labels[previousIndex]?.textColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
         labels[previousIndex]?.font = UIFont(name: "Roboto-Light", size: 16)
 
-        labels[carousel.currentItemIndex]?.textColor = .white
+        labels[carousel.currentItemIndex]?.textColor = .commonRed
         labels[carousel.currentItemIndex]?.font = UIFont(name: "Roboto-Regular", size: 16)
 
         let indexOffset = carousel.currentItemIndex - previousIndex
