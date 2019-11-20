@@ -115,7 +115,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="qrO-ww-itf"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Главная" image="menufora" largeContentSizeImage="foralogotype" badgeValue="12" springLoaded="YES" id="jR7-9V-Xs1" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
+                    <tabBarItem key="tabBarItem" title="Главная" image="menufora" largeContentSizeImage="foralogotype" springLoaded="YES" id="jR7-9V-Xs1" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
                         <inset key="largeContentSizeImageInsets" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
                         <color key="badgeColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBarItem>
