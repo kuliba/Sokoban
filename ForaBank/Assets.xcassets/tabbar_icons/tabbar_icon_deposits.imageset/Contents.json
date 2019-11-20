@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "tabbar_icon_deposits.png",
+      "filename" : "products.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "tabbar_icon_deposits@2x.png",
+      "filename" : "products-2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "tabbar_icon_deposits@3x.png",
+      "filename" : "products-3x.png",
       "scale" : "3x"
     }
   ],
