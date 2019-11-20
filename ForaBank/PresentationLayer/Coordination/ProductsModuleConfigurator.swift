@@ -18,7 +18,7 @@ class ProductsModuleConfigurator {
     }
 
     private func configure(viewController: CarouselViewController) {
-        let router = AuthRouter(transitionHandler: viewController)
+        let router = ProductsNavigator(rootViewController: viewController)
         viewController.router = router
     }
 

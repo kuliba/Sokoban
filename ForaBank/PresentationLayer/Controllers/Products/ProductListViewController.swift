@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ProductListViewController: UIViewController {
+class ProductListViewController: BaseViewController {
 
     let products = [ProductType.card]
 
@@ -25,7 +25,7 @@ class ProductListViewController: UIViewController {
 //        // Get the new view controller using segue.destination.
 //        // Pass the selected object to the new view controller.
 //    }
-    
+
 }
 
 extension ProductListViewController: UITableViewDelegate, UITableViewDataSource {
@@ -39,5 +39,18 @@ extension ProductListViewController: UITableViewDelegate, UITableViewDataSource 
         cell.imageView?.image = UIImage(named: products[indexPath.item].coloredImageName)
 
         return cell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let product = products[indexPath.item]
+
+        switch product {
+        case .card:
+            guard let url = URL(string: "https://cashback-card.forabank.ru/?metka=mp") else { return }
+            UIApplication.shared.open(url)
+            break
+        default:
+            break
+        }
     }
 }

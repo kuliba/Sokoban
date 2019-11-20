@@ -313,6 +313,7 @@
 		BDB823A423841EE300030B5F /* ProductsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB823A323841EE300030B5F /* ProductsCoordinator.swift */; };
 		BDB823A623842E5900030B5F /* ProductsModuleConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB823A523842E5900030B5F /* ProductsModuleConfigurator.swift */; };
 		BDB823A8238433B400030B5F /* ProductsNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB823A7238433B400030B5F /* ProductsNavigator.swift */; };
+		BDB823AA23852A7000030B5F /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB823A923852A7000030B5F /* BaseViewController.swift */; };
 		BDC019962360806F0022FC78 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDC019952360806F0022FC78 /* WelcomeViewController.swift */; };
 		BDCCE9092350BB6E0087F5F2 /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCCE9082350BB6E0087F5F2 /* AlertService.swift */; };
 		BDCCE90B2350BB8C0087F5F2 /* IAlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCCE90A2350BB8C0087F5F2 /* IAlertService.swift */; };
@@ -660,6 +661,7 @@
 		BDB823A323841EE300030B5F /* ProductsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsCoordinator.swift; sourceTree = "<group>"; };
 		BDB823A523842E5900030B5F /* ProductsModuleConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsModuleConfigurator.swift; sourceTree = "<group>"; };
 		BDB823A7238433B400030B5F /* ProductsNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsNavigator.swift; sourceTree = "<group>"; };
+		BDB823A923852A7000030B5F /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		BDC019952360806F0022FC78 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		BDCCE9082350BB6E0087F5F2 /* AlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertService.swift; sourceTree = "<group>"; };
 		BDCCE90A2350BB8C0087F5F2 /* IAlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAlertService.swift; sourceTree = "<group>"; };
@@ -884,6 +886,7 @@
 		09E0F131215A617A0042FB6A /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				BDB823A923852A7000030B5F /* BaseViewController.swift */,
 				960C5D0F237161A8002C4DC4 /* MapPopUpViewController.swift */,
 				9697E29E2334C29700974505 /* OperatorsList.swift */,
 				BDB7916C2338C8B10002C7EE /* VerificationCodeViewController.swift */,
@@ -1989,6 +1992,7 @@
 				BDB823A8238433B400030B5F /* ProductsNavigator.swift in Sources */,
 				A5C5C03C21B66485005D6B8F /* BubbleDetailedStatsView.swift in Sources */,
 				A55B7B9021AAAAB300A8A7FE /* ChatMessagesTransferRequestTableViewCell.swift in Sources */,
+				BDB823AA23852A7000030B5F /* BaseViewController.swift in Sources */,
 				BD35E82423438DC40016BA0D /* TextFieldPagerViewCell.swift in Sources */,
 				A55B7B5721A5866F00A8A7FE /* UIImage+GIF.swift in Sources */,
 				A5004D3321EF56CF0098E510 /* CardBank.swift in Sources */,

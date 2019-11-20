@@ -13,6 +13,7 @@ class DepositsCardsListViewController: UIViewController {
 
     //чтобы перекладывать карты
     @IBOutlet weak var activityIndicator: ActivityIndicatorView!
+
     lazy var panGesture: UIPanGestureRecognizer = {
         let gesture = UIPanGestureRecognizer(target: self, action: #selector(dragUnselectedCardView(_:)))
         return gesture
@@ -48,18 +49,13 @@ class DepositsCardsListViewController: UIViewController {
 
     var cards: [Card] = [Card]() {
         didSet {
-
             activityIndicator.stopAnimating()
         }
     }
 
     var cardViews: [DetailedCardView] = [DetailedCardView]()
-
     var segueId: String? = nil
     var backSegueId: String? = nil
-
-
-
 
     let scrollView: UIScrollView = {
         let v = UIScrollView()
@@ -76,14 +72,11 @@ class DepositsCardsListViewController: UIViewController {
     }()
     let addCardButton: CardActionRoundedButton = {
         let cardActionButton = CardActionRoundedButton(type: .system)
-        cardActionButton.addTarget(self, action: #selector(DepositsCardsListViewController.makePusg), for: .touchUpInside)
+        cardActionButton.setAttributedTitle(NSAttributedString(string: "Открыть продукт", attributes: [.font: UIFont.systemFont(ofSize: 15)]), for: .normal)
+        cardActionButton.addTarget(nil, action: #selector(CarouselViewController.createProductButtonClicked), for: .touchUpInside)
 
         return cardActionButton
     }()
-
-    @objc func makePusg() {
-        navigationController?.pushViewController(UIViewController(), animated: true)
-    }
 
     let optionPickerButton: OptionPickerButton = {
         let b = OptionPickerButton(type: .system)

@@ -17,12 +17,7 @@ protocol INavigator {
 class ProductsNavigator: INavigator {
 
     private struct SegueIdentifier {
-        static let loginSegue = "loginSegue"
-        static let signUp = "ToPasscodeSignUpViewControllerSegue"
-        static let activateCard = "ToActivateCardViewControllerSegue"
-        static let createPaymentSegue = "createPaymentSegue"
-        static let passcodeSignUn = "passcodeSignUp"
-        static let thermsAndConditions = "ToThermsViewControllerSegue"
+        static let productListSegue = "toProductList"
     }
 
     enum Destination {
@@ -40,10 +35,9 @@ class ProductsNavigator: INavigator {
     // MARK: - Navigator
 
     public func navigate(to destination: Destination) {
-
         switch destination {
         case .createProduct:
-            rootViewController?.performSegue(withIdentifier: "", sender: nil)
+            rootViewController?.performSegue(withIdentifier: SegueIdentifier.productListSegue, sender: nil)
             break
         }
     }

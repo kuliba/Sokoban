@@ -39,8 +39,8 @@ class CarouselViewController: UIViewController, StoreSubscriber {
         [UIColor(hexFromString: "EF4136")!, UIColor(hexFromString: "EF4136")!]
     ]
     let xDevices = Constants.xDevices
-    let navigator: 
-    
+
+    var router: ProductsNavigator?
     weak var currentViewController: UIViewController?
     var labels = [UILabel?]()
     var menuItems: Array<AnyHashable> {
@@ -55,6 +55,7 @@ class CarouselViewController: UIViewController, StoreSubscriber {
     var previousIndex = -1
 
     // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -483,5 +484,13 @@ extension CarouselViewController: CustomTransitionOriginator, CustomTransitionDe
         }
         views.merge(c.toAnimatedSubviews, uniquingKeysWith: { (first, _) in first })
         return views
+    }
+}
+
+// MARK: - Public methods
+
+extension CarouselViewController {
+    @objc public func createProductButtonClicked() {
+        router?.navigate(to: .createProduct)
     }
 }

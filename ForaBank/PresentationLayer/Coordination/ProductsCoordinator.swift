@@ -15,8 +15,8 @@ class ProductsModuleInitializer: NSObject {
 
     override func awakeFromNib() {
 
-        let configurator = AuthorizationModuleConfigurator()
-        configurator.configureModuleForViewInput(viewInput: authorizationViewController)
+        let configurator = ProductsModuleConfigurator()
+        configurator.configureModuleForView(view: carouselViewController)
     }
 
 }
