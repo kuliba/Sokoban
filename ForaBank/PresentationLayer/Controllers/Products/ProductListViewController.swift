@@ -35,6 +35,8 @@ extension ProductListViewController: UITableViewDelegate, UITableViewDataSource 
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
+        cell.backgroundColor = .white
+        cell.selectionStyle = .none
         cell.textLabel?.text = products[indexPath.item].localizedName
         cell.imageView?.image = UIImage(named: products[indexPath.item].coloredImageName)
 

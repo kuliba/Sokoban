@@ -305,7 +305,6 @@
 		BDABE688234640D000CA0754 /* PaymentOptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDABE687234640D000CA0754 /* PaymentOptionView.swift */; };
 		BDABE68A2346417C00CA0754 /* PaymentOptionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDABE6892346417C00CA0754 /* PaymentOptionView.xib */; };
 		BDB6AFF423268C850006A534 /* PasscodeSignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6AFF323268C850006A534 /* PasscodeSignInViewController.swift */; };
-		BDB6B00E23269FED0006A534 /* PasscodeSignUpViewController1.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6B00D23269FED0006A534 /* PasscodeSignUpViewController1.swift */; };
 		BDB6B0112326A9C10006A534 /* PasscodeSignUpActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6B0102326A9C10006A534 /* PasscodeSignUpActions.swift */; };
 		BDB6B0132326A9E00006A534 /* PasscodeSingUpReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6B0122326A9E00006A534 /* PasscodeSingUpReducer.swift */; };
 		BDB6B0162326AAA60006A534 /* PasscodeSignUpState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6B0152326AAA60006A534 /* PasscodeSignUpState.swift */; };
@@ -653,7 +652,6 @@
 		BDABE687234640D000CA0754 /* PaymentOptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentOptionView.swift; sourceTree = "<group>"; };
 		BDABE6892346417C00CA0754 /* PaymentOptionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentOptionView.xib; sourceTree = "<group>"; };
 		BDB6AFF323268C850006A534 /* PasscodeSignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignInViewController.swift; sourceTree = "<group>"; };
-		BDB6B00D23269FED0006A534 /* PasscodeSignUpViewController1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignUpViewController1.swift; sourceTree = "<group>"; };
 		BDB6B0102326A9C10006A534 /* PasscodeSignUpActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignUpActions.swift; sourceTree = "<group>"; };
 		BDB6B0122326A9E00006A534 /* PasscodeSingUpReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSingUpReducer.swift; sourceTree = "<group>"; };
 		BDB6B0152326AAA60006A534 /* PasscodeSignUpState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignUpState.swift; sourceTree = "<group>"; };
@@ -1513,7 +1511,6 @@
 				BDB6AFF323268C850006A534 /* PasscodeSignInViewController.swift */,
 				BD58869D2369AFDA00F97332 /* PasscodeSignUpViewController.swift */,
 				BD579342236AF5DB0056740C /* PasscodeWrapperViewController.swift */,
-				BDB6B00D23269FED0006A534 /* PasscodeSignUpViewController1.swift */,
 				BD122C192368283B00FE0F01 /* PasscodeViewController.swift */,
 			);
 			path = Passcode;
@@ -1931,7 +1928,6 @@
 				895768CF2192E768005754D5 /* DepositsStatsViewController.swift in Sources */,
 				BD122C1A2368283B00FE0F01 /* PasscodeViewController.swift in Sources */,
 				BDF4F9462329105D007C448F /* Security.swift in Sources */,
-				BDB6B00E23269FED0006A534 /* PasscodeSignUpViewController1.swift in Sources */,
 				BD57934F236C4B900056740C /* SettingsStorage.swift in Sources */,
 				0930F166215B5CDB00CFB593 /* RoundedEdgeView.swift in Sources */,
 				BDB6AFF423268C850006A534 /* PasscodeSignInViewController.swift in Sources */,
