@@ -28,10 +28,10 @@
                         <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="NO"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
-                        <segue destination="g5d-6R-9xD" kind="relationship" relationship="viewControllers" id="A3x-m6-cWH"/>
-                        <segue destination="gLF-1W-dY7" kind="relationship" relationship="viewControllers" id="adN-eV-mfx"/>
-                        <segue destination="Q48-Gj-Kh1" kind="relationship" relationship="viewControllers" id="9fL-gE-UTt"/>
                         <segue destination="9f2-zx-0Zh" kind="relationship" relationship="viewControllers" id="f2J-TH-JMB"/>
+                        <segue destination="g5d-6R-9xD" kind="relationship" relationship="viewControllers" id="yQz-lk-kKA"/>
+                        <segue destination="gLF-1W-dY7" kind="relationship" relationship="viewControllers" id="Wln-Lz-6Op"/>
+                        <segue destination="Q48-Gj-Kh1" kind="relationship" relationship="viewControllers" id="vhW-gf-szQ"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="U2L-3G-47v" sceneMemberID="firstResponder"/>
@@ -318,6 +318,6 @@ vADIAMoAzADOAUQBSQFUAV0BYwFmAW8BdAF8AX8BigGSAZ8BrAHBAcYBygHMAc4B0AHZAd4B5AHsAe4B
 AABUAAAAAAAAAAAAAAAAAAAT6w
 </mutableData>
         </image>
-        <image name="tabbar_icon_profile" width="25" height="23"/>
+        <image name="tabbar_icon_profile" width="33" height="30"/>
     </resources>
 </document>
