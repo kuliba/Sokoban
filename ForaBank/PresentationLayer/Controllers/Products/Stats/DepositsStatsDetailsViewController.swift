@@ -22,7 +22,7 @@ class DepositsStatsDetailsViewController: UIViewController {
     var previousOffset: CGFloat = 0
     
     var offset: CGFloat = {
-        if Device().isOneOf(Constants.xDevices) {
+        if Device.current.isOneOf(Constants.browDevices) {
             return 100 // models: x
         } else {
             return 75 // models 7 7+ se

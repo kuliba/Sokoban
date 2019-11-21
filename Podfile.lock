@@ -3,7 +3,7 @@ PODS:
   - BiometricAuthentication (3.0)
   - CardIO (5.4.1)
   - CryptoSwift (1.1.2)
-  - DeviceKit (1.11.0)
+  - DeviceKit (2.3.0)
   - DropDown (2.3.13)
   - Firebase/Analytics (6.10.0):
     - Firebase/Core
@@ -111,7 +111,7 @@ DEPENDENCIES:
   - BiometricAuthentication
   - CardIO (= 5.4.1)
   - CryptoSwift
-  - DeviceKit (= 1.11.0)
+  - DeviceKit
   - DropDown
   - Firebase/Analytics
   - Firebase/Core
@@ -171,7 +171,7 @@ SPEC CHECKSUMS:
   BiometricAuthentication: e39b1a55040d679d5dbc4fa90d76e067c432de7f
   CardIO: 56983b39b62f495fc6dae9ad7cf875143df06443
   CryptoSwift: 31dacd1f13427439ddae5b5cbaae4c8dbc43047e
-  DeviceKit: a3a86f8dddbe1317a9a243cdf9646858bf135dce
+  DeviceKit: da103891aa928d89f64ea8dd8aca738c5f3d8ac0
   DropDown: 8a2116376c1981888557f72ec2ffc9a5e0e456ec
   Firebase: 5e6b7b12bf9adb90986688edc06b156c37e109cd
   FirebaseAnalytics: 0e3ecff2c5d86070f7d4325e21f1edabfbd558dc
@@ -201,6 +201,6 @@ SPEC CHECKSUMS:
   SCLAlertView: 6a77bb2edfc65e04dbe57725546cb4107a506b85
   TOPasscodeViewController: 03b5df3762a7be1511102093c644a42275bddf24
 
-PODFILE CHECKSUM: 91a255a54e13177fff98ac4b944253df5ab07669
+PODFILE CHECKSUM: ee56df07b8b6a1550b66cc5f76f4b16ac8cad7b8
 
-COCOAPODS: 1.8.0.beta.2
+COCOAPODS: 1.8.3
