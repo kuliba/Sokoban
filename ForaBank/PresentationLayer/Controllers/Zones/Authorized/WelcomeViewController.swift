@@ -126,7 +126,7 @@ private extension WelcomeViewController {
     }
 
     @objc private func timerFired(timer: Timer) {
-        
+
         if timer == timerMax {
             isProductsLoaded = true
         }
@@ -139,9 +139,10 @@ private extension WelcomeViewController {
             return
         }
 
-        if !timer.isValid && isProductsLoaded {
-            navigationController?.popToRootViewController(animated: true)
-            performSegue(withIdentifier: "formWelcomeToTabBarSegue", sender: nil)
+        if !timer.isValid && isProductsLoaded && self == topMostVC() {
+            DispatchQueue.main.async { [weak self] in
+                self?.performSegue(withIdentifier: "fromWelcomeToTabBarSegue", sender: nil)
+            }
         }
     }
 }
