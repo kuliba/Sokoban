@@ -3,7 +3,7 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -16,7 +16,7 @@
         </array>
     </customFonts>
     <scenes>
-        <!--Feed View Controller-->
+        <!--Переводы-->
         <scene sceneID="gDD-Ne-ZKP">
             <objects>
                 <viewController storyboardIdentifier="Feed" id="52N-eH-AcH" customClass="FeedViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
@@ -25,15 +25,15 @@
                         <viewControllerLayoutGuide type="bottom" id="kWZ-tI-GK9"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="rSK-hS-fQW">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ebB-aS-s1i" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="25" width="414" height="711"/>
+                                <rect key="frame" x="0.0" y="69" width="414" height="827"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nVE-ow-WwT" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="25" width="414" height="711"/>
+                                <rect key="frame" x="0.0" y="69" width="414" height="827"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </containerView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j7l-MZ-sN0" customClass="iCarousel">
@@ -68,7 +68,7 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
-                    <tabBarItem key="tabBarItem" title="" image="tabbar_icon_payment" id="vEr-ZG-iYP" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
+                    <tabBarItem key="tabBarItem" title="Переводы" image="tabbar_icon_payment" id="vEr-ZG-iYP" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
                         <inset key="imageInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="-10"/>
                         <inset key="largeContentSizeImageInsets" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
                     </tabBarItem>
@@ -90,7 +90,7 @@
             <objects>
                 <viewController id="Ram-pf-RG8" customClass="FeedOffersViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Sdm-ED-QkQ">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="q7m-xP-BDm">
@@ -136,7 +136,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ru-vtb24" translatesAutoresizingMaskIntoConstraints="NO" id="dGr-vj-Lk4">
-                                                <rect key="frame" x="22" y="10.666666666666657" width="100" height="30"/>
+                                                <rect key="frame" x="22" y="10.5" width="100" height="30"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" priority="999" constant="100" id="Oae-l5-5Ut"/>
@@ -144,7 +144,7 @@
                                                 </constraints>
                                             </imageView>
                                             <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="visa-colored" translatesAutoresizingMaskIntoConstraints="NO" id="VYi-yL-Mwu">
-                                                <rect key="frame" x="311.66666666666669" y="17" width="26.333333333333314" height="17"/>
+                                                <rect key="frame" x="311.5" y="17" width="26.5" height="17"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="VYi-yL-Mwu" secondAttribute="height" multiplier="93:60" id="eER-4P-7aa"/>
@@ -408,7 +408,7 @@
                                         </state>
                                     </button>
                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zmg-Sb-xcC" customClass="ActivityIndicatorView" customModule="ForaBank" customModuleProvider="target">
-                                        <rect key="frame" x="153.66666666666666" y="272" width="53" height="53"/>
+                                        <rect key="frame" x="153.5" y="272" width="53" height="53"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="zmg-Sb-xcC" secondAttribute="height" multiplier="1:1" id="JBh-Ne-zdX"/>
@@ -455,11 +455,11 @@
             <objects>
                 <viewController storyboardIdentifier="feed4" id="6Wx-za-ukR" customClass="FeedOptionsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="G8m-zp-UtB" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" allowsSelection="NO" rowHeight="60" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="wSj-dk-RSZ" customClass="CustomTableView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="10" width="414" height="726"/>
+                                <rect key="frame" x="0.0" y="54" width="414" height="808"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -497,11 +497,11 @@
             <objects>
                 <viewController storyboardIdentifier="feed1" id="OQ3-Ne-9GB" customClass="FeedUpcomingViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="aPC-wU-jm5">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" pagingEnabled="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="dL1-GL-1vI">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="862"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
                         </subviews>
@@ -527,11 +527,11 @@
             <objects>
                 <viewController storyboardIdentifier="feed0" id="RZn-1g-4K0" customClass="FeedCurrentViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Pp8-3d-dZl">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" pagingEnabled="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="kGb-2l-DBT">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="862"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
                         </subviews>
@@ -557,11 +557,11 @@
             <objects>
                 <viewController storyboardIdentifier="feedInformation" id="kDS-6c-kbU" customClass="FeedInfoViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="RrA-In-DNO">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Q4b-aw-1Nm">
-                                <rect key="frame" x="0.0" y="15" width="414" height="721"/>
+                                <rect key="frame" x="0.0" y="15" width="414" height="847"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
                         </subviews>
@@ -587,11 +587,11 @@
             <objects>
                 <viewController storyboardIdentifier="feed2" modalTransitionStyle="flipHorizontal" id="b0p-6q-o3J" customClass="CardToCardUnauthorized" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ksc-it-7lc">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SZa-aL-eu7">
-                                <rect key="frame" x="-1" y="-2" width="416" height="315"/>
+                                <rect key="frame" x="-1" y="42" width="416" height="315"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cni-IK-clw">
                                         <rect key="frame" x="27" y="-2" width="361" height="218"/>
@@ -609,7 +609,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ru-vtb24" translatesAutoresizingMaskIntoConstraints="NO" id="Cgv-Up-fEu">
-                                                        <rect key="frame" x="22" y="10.666666666666664" width="100" height="30"/>
+                                                        <rect key="frame" x="22" y="10.5" width="100" height="30"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" priority="999" constant="100" id="nzZ-3L-KIT"/>
@@ -617,7 +617,7 @@
                                                         </constraints>
                                                     </imageView>
                                                     <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="visa-colored" translatesAutoresizingMaskIntoConstraints="NO" id="Dkg-G2-LQk">
-                                                        <rect key="frame" x="309" y="17" width="26.333333333333314" height="17"/>
+                                                        <rect key="frame" x="309" y="17" width="26.5" height="17"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="17" id="Ak0-iW-DLA"/>
@@ -670,13 +670,13 @@
                                                         <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                                     </textField>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CVV" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aOQ-m3-gCN">
-                                                        <rect key="frame" x="279.33333333333331" y="86" width="62" height="21"/>
+                                                        <rect key="frame" x="279.5" y="86" width="62" height="21"/>
                                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
                                                         <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <textField opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="zQF-MO-Yzm">
-                                                        <rect key="frame" x="279.33333333333331" y="110" width="62" height="34"/>
+                                                        <rect key="frame" x="279.5" y="110" width="62" height="34"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="62" id="1BO-HZ-zPg"/>
                                                         </constraints>
@@ -684,7 +684,7 @@
                                                         <textInputTraits key="textInputTraits" keyboardType="numberPad" secureTextEntry="YES" textContentType="password"/>
                                                     </textField>
                                                     <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7tZ-UF-aFc">
-                                                        <rect key="frame" x="302.33333333333331" y="46" width="30" height="30"/>
+                                                        <rect key="frame" x="302.5" y="46" width="30" height="30"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="30" id="0wh-6F-N1c"/>
                                                             <constraint firstAttribute="width" constant="30" id="6R9-tz-RXA"/>
@@ -774,7 +774,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ru-vtb24" translatesAutoresizingMaskIntoConstraints="NO" id="SUN-yy-D7M">
-                                                        <rect key="frame" x="22" y="10.666666666666657" width="100" height="30"/>
+                                                        <rect key="frame" x="22" y="10.5" width="100" height="30"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" priority="999" constant="100" id="KlH-ww-kBe"/>
@@ -782,7 +782,7 @@
                                                         </constraints>
                                                     </imageView>
                                                     <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="visa-colored" translatesAutoresizingMaskIntoConstraints="NO" id="YpB-29-YSP">
-                                                        <rect key="frame" x="309" y="17" width="26.333333333333314" height="17"/>
+                                                        <rect key="frame" x="309" y="17" width="26.5" height="17"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="YpB-29-YSP" secondAttribute="height" multiplier="93:60" id="6xi-I2-ONR"/>
@@ -798,7 +798,7 @@
                                                         </connections>
                                                     </textField>
                                                     <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2np-hg-YMF">
-                                                        <rect key="frame" x="302.33333333333331" y="46" width="30" height="30"/>
+                                                        <rect key="frame" x="302.5" y="46" width="30" height="30"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="30" id="C2z-oA-0dJ"/>
                                                             <constraint firstAttribute="width" constant="30" id="Zpw-fi-hQO"/>
@@ -866,7 +866,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YLa-bb-4zN">
-                                <rect key="frame" x="-4" y="314" width="419" height="425"/>
+                                <rect key="frame" x="-4" y="358" width="419" height="507"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tHE-j3-MIP" customClass="ButtonRoundedBordered" customModule="ForaBank" customModuleProvider="target">
                                         <rect key="frame" x="30" y="106" width="360" height="53"/>
@@ -900,7 +900,7 @@
                                         <rect key="frame" x="265" y="30" width="21" height="23"/>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Комиссия 15 руб (3%)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="36L-xv-4Q7">
-                                        <rect key="frame" x="128" y="70" width="166.33333333333337" height="34"/>
+                                        <rect key="frame" x="128" y="70" width="166" height="34"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>

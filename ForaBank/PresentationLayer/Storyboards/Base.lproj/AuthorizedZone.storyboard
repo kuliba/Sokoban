@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="aRB-rj-TmI">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="aRB-rj-TmI">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -29,9 +29,10 @@
                         <userDefinedRuntimeAttribute type="string" keyPath="setTitle" value="Name"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
-                        <segue destination="g5d-6R-9xD" kind="relationship" relationship="viewControllers" id="A3x-m6-cWH"/>
-                        <segue destination="gLF-1W-dY7" kind="relationship" relationship="viewControllers" id="adN-eV-mfx"/>
-                        <segue destination="Q48-Gj-Kh1" kind="relationship" relationship="viewControllers" id="9fL-gE-UTt"/>
+                        <segue destination="9f2-zx-0Zh" kind="relationship" relationship="viewControllers" id="f2J-TH-JMB"/>
+                        <segue destination="g5d-6R-9xD" kind="relationship" relationship="viewControllers" id="yQz-lk-kKA"/>
+                        <segue destination="gLF-1W-dY7" kind="relationship" relationship="viewControllers" id="Wln-Lz-6Op"/>
+                        <segue destination="Q48-Gj-Kh1" kind="relationship" relationship="viewControllers" id="vhW-gf-szQ"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="U2L-3G-47v" sceneMemberID="firstResponder"/>
@@ -67,6 +68,17 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="98P-XJ-ECd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1144" y="277"/>
+        </scene>
+        <!--MainScreen-->
+        <scene sceneID="2Ff-Dv-Uow">
+            <objects>
+                <viewControllerPlaceholder storyboardName="MainScreen" id="9f2-zx-0Zh" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="m08-t8-1jh"/>
+                    <navigationItem key="navigationItem" id="6ar-NQ-brg"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Dan-gs-aoq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1142" y="201"/>
         </scene>
         <!--Welcome View Controller-->
         <scene sceneID="8EP-BC-VoB">
@@ -307,6 +319,6 @@ vADIAMoAzADOAUQBSQFUAV0BYwFmAW8BdAF8AX8BigGSAZ8BrAHBAcYBygHMAc4B0AHZAd4B5AHsAe4B
 AABUAAAAAAAAAAAAAAAAAAAT6w
 </mutableData>
         </image>
-        <image name="tabbar_icon_profile" width="25" height="23"/>
+        <image name="tabbar_icon_profile" width="33" height="30"/>
     </resources>
 </document>

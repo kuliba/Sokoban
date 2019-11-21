@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Zlb-hj-4wP">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Zlb-hj-4wP">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -16,10 +16,10 @@
         </array>
     </customFonts>
     <scenes>
-        <!--Carousel View Controller-->
+        <!--Продукты-->
         <scene sceneID="jnb-tn-H9V">
             <objects>
-                <viewController storyboardIdentifier="depositsRoot" id="Zlb-hj-4wP" customClass="CarouselViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="depositsRoot" modalPresentationStyle="fullScreen" id="Zlb-hj-4wP" customClass="CarouselViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="DE7-uu-jrD">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -58,7 +58,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="7HN-mU-qUK"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="" image="tabbar_icon_deposits" id="8zp-wW-i5v" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
+                    <tabBarItem key="tabBarItem" title="Продукты" image="tabbar_icon_deposits" id="8zp-wW-i5v" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
                         <inset key="imageInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="-10"/>
                         <inset key="largeContentSizeImageInsets" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
                     </tabBarItem>
@@ -320,7 +320,7 @@
         <!--Deposits History View Controller-->
         <scene sceneID="c89-d9-vHz">
             <objects>
-                <viewController storyboardIdentifier="deposits4" id="9mX-Vi-gdx" customClass="DepositsHistoryViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="deposits4" modalPresentationStyle="fullScreen" id="9mX-Vi-gdx" customClass="DepositsHistoryViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="wsg-22-ki8">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1460,17 +1460,17 @@
         <scene sceneID="nAh-kC-cgw">
             <objects>
                 <viewController modalPresentationStyle="fullScreen" id="EqD-Vl-vHc" customClass="DepositsCardsDetailsStatementDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" ambiguous="YES" id="BYg-Jn-nAL">
+                    <view key="view" contentMode="scaleToFill" id="BYg-Jn-nAL">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fqT-Pd-ezL">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fqT-Pd-ezL">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qFm-tP-W8W">
+                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qFm-tP-W8W">
                                         <rect key="frame" x="0.0" y="304" width="375" height="852"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sOV-ZM-iOn">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sOV-ZM-iOn">
                                                 <rect key="frame" x="0.0" y="0.0" width="375" height="227"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UrA-LF-mCJ">
@@ -1528,7 +1528,7 @@
                                                     <constraint firstAttribute="height" constant="227" id="u5q-E8-9PI"/>
                                                 </constraints>
                                             </view>
-                                            <containerView opaque="NO" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qyb-Zt-TS5">
+                                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qyb-Zt-TS5">
                                                 <rect key="frame" x="20" y="586" width="335" height="177"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
@@ -1538,10 +1538,10 @@
                                                     <segue destination="vzA-uw-b4a" kind="embed" id="HUx-oz-m02"/>
                                                 </connections>
                                             </containerView>
-                                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lUF-95-UCU" customClass="DoubleRoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lUF-95-UCU" customClass="DoubleRoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="250" width="375" height="328"/>
                                                 <subviews>
-                                                    <containerView opaque="NO" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dkN-cg-Cjp">
+                                                    <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dkN-cg-Cjp">
                                                         <rect key="frame" x="0.0" y="35" width="375" height="258"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <connections>

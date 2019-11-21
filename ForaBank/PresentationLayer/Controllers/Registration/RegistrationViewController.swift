@@ -75,13 +75,13 @@ class RegistrationViewController: UIViewController {
     @IBAction func scanCardButtonClicked(_ sender: Any) {
         view.endEditing(true)
         let cardIOVC = CardIOPaymentViewController(paymentDelegate: self)
-        
         cardIOVC?.modalPresentationStyle = .fullScreen
         cardIOVC?.collectCVV = false
         cardIOVC?.collectExpiry = false
         cardIOVC?.guideColor = UIColor(red: 0.13, green: 0.54, blue: 0.61, alpha: 1.00)
         cardIOVC?.hideCardIOLogo = true
         present(cardIOVC!, animated: true, completion: nil)
+    
         if cardNumberTextField.text?.count == 1{
                  continueButton.isHidden = false
              } else{
@@ -684,7 +684,11 @@ extension RegistrationViewController: CardIOPaymentViewControllerDelegate {
     // Close ScanCard Screen
     public func userDidCancel(_ paymentViewController: CardIOPaymentViewController!) {
         paymentViewController.dismiss(animated: true, completion: nil)
+        continueButton.isHidden = true
+
     }
+
+    
 
     // Using this delegate method, retrive card information
     func userDidProvide(_ cardInfo: CardIOCreditCardInfo!, in paymentViewController: CardIOPaymentViewController!) {

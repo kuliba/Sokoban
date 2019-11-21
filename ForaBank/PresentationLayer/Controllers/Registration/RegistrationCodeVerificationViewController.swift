@@ -146,12 +146,12 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
     }
 
     @IBAction func checkPaymentCode(_ sender: Any) {
-        foraPreloader.isHidden = false
-        foraPreloader?.startAnimation()
+        activityIndicator?.isHidden = false
+        activityIndicator?.startAnimation()
         continueButton.isHidden = true
         NetworkManager.shared().makeCard2Card(code: self.codeNumberTextField.text ?? "") { [weak self] (success) in
             self?.continueButton.isHidden = false
-            self?.foraPreloader?.isHidden = true
+            self?.activityIndicator?.isHidden = true
             if success {
 //                self?.performSegue(withIdentifier: "finish", sender: nil)
             } else {
