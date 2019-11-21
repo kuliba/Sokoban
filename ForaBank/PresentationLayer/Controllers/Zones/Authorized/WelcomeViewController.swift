@@ -19,8 +19,11 @@ class WelcomeViewController: UIViewController, StoreSubscriber {
     @IBOutlet weak var greetingLabel: UILabel!
     @IBOutlet weak var nameLabel: UILabel!
 
-    var timer: Timer?
-    let transitionDuration: TimeInterval = 2
+    var timerMin: Timer?
+    var timerMax: Timer?
+
+    let transitionMinDuration: TimeInterval = 2
+    let transitionMaxDuration: TimeInterval = 10
     var isProductsLoaded = false
 
     var segueId: String? = nil
@@ -32,9 +35,10 @@ class WelcomeViewController: UIViewController, StoreSubscriber {
         super.viewDidLoad()
 
         store.dispatch(invalidateCurrentProducts)
-        
-        timer = Timer.scheduledTimer(timeInterval: transitionDuration, target: self, selector: #selector(self.timerFired), userInfo: nil, repeats: false)
-        
+
+        timerMin = Timer.scheduledTimer(timeInterval: transitionMinDuration, target: self, selector: #selector(self.timerFired), userInfo: nil, repeats: false)
+        timerMax = Timer.scheduledTimer(timeInterval: transitionMaxDuration, target: self, selector: #selector(self.timerFired), userInfo: nil, repeats: false)
+
         greetingLabel.text = getGreeting() + ","
     }
 
@@ -121,17 +125,17 @@ private extension WelcomeViewController {
         return "Здравствуйте"
     }
 
-    @objc private func timerFired() {
-        guard let timer = timer else {
-            return
+    @objc private func timerFired(timer: Timer) {
+        
+        if timer == timerMax {
+            isProductsLoaded = true
         }
-
         timer.invalidate()
         continueIfNeeded()
     }
 
     private func continueIfNeeded() {
-        guard let timer = timer else {
+        guard let timer = timerMin else {
             return
         }
 
