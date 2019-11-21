@@ -16,6 +16,7 @@ class CarouselViewController: UIViewController {
     // MARK: - Properties
     @IBOutlet var carousel: iCarousel!
     @IBOutlet weak var containerView: RoundedEdgeView!
+    @IBOutlet weak var carouselMaskCenterVerticalyConstraint: NSLayoutConstraint!
 
     lazy var leftSwipeRecognizer: UISwipeGestureRecognizer = {
         let recognizer = UISwipeGestureRecognizer(target: self, action: #selector(swipeAction(_:)))
@@ -39,7 +40,7 @@ class CarouselViewController: UIViewController {
         [UIColor(hexFromString: "EF4136")!, UIColor(hexFromString: "EF4136")!],
         [UIColor(hexFromString: "EF4136")!, UIColor(hexFromString: "EF4136")!]
     ]
-    let xDevices = Constants.browDevices
+    let browDevices = Constants.browDevices
     weak var currentViewController: UIViewController?
 
     var items = ["Карты", "Счета", "Вклады", "Кредиты", "История"]
@@ -82,7 +83,10 @@ class CarouselViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        carousel.frame.size.height = Device.current.isOneOf(xDevices) ? 120 : 90
+
+        let isBrowDevice = Device.current.isOneOf(browDevices)
+        carousel.frame.size.height = isBrowDevice ? 120 : 90
+        carouselMaskCenterVerticalyConstraint.constant = isBrowDevice ? 22 : 7
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -232,7 +236,7 @@ extension CarouselViewController: iCarouselDataSource, iCarouselDelegate {
         if option == .arc {
             if Device.current.isOneOf(Constants.iphone5Devices) {
                 return CGFloat(Double.pi) / 1.75 // 2.75 - if not authorized
-            } else if Device.current.isOneOf(xDevices) {
+            } else if Device.current.isOneOf(browDevices) {
                 return CGFloat(Double.pi) / 3.5 // 3.5 - if not authorized
             } else {
                 return CGFloat(Double.pi) / 3.5 // 3.5 - if not authorized
@@ -242,7 +246,7 @@ extension CarouselViewController: iCarouselDataSource, iCarouselDelegate {
         if option == .radius {
             if Device.current.isOneOf(Constants.iphone5Devices) {
                 return 800
-            } else if Device.current.isOneOf(xDevices) {
+            } else if Device.current.isOneOf(browDevices) {
                 return 1300
             } else {
                 return 1300
