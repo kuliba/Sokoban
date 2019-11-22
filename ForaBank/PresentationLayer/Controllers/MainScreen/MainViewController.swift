@@ -18,7 +18,7 @@ class DataItem : Equatable {
 }
 
 
-class ViewController: UIViewController, KDDragAndDropCollectionViewDataSource, UICollectionViewDelegate {
+class ViewController: UIViewController, KDDragAndDropCollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
    
     
     @IBOutlet weak var firstCollectionView: KDDragAndDropCollectionView!
@@ -40,6 +40,10 @@ class ViewController: UIViewController, KDDragAndDropCollectionViewDataSource, U
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        
+        
           // generate some mock data (change in real world project)
         firstCollectionView.collectionViewLayout.invalidateLayout()
         let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
@@ -55,6 +59,12 @@ class ViewController: UIViewController, KDDragAndDropCollectionViewDataSource, U
         )
     
         
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        return CGSize(width: 204, height: 157)
     }
 
     
@@ -205,6 +215,13 @@ class ViewController: UIViewController, KDDragAndDropCollectionViewDataSource, U
     
 
 }
+//extension ViewController: UICollectionViewDelegateFlowLayout{
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//
+//       return CGSize(width: width, height:requiredHeight)
+//    }
+//}
+
 
 
 

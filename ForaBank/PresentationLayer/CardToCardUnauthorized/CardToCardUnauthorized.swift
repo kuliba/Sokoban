@@ -208,7 +208,7 @@ class CardToCardUnauthorized: UIViewController {
         super.viewDidLoad()
         addGradientLayerView()
 //        addCircleView()
-
+    
         amoutTextField.placeholder = "0"
         if amoutTextField.text?.count != 0{
             amoutTextField.backgroundColor = .clear

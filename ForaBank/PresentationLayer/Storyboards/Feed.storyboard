@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="52N-eH-AcH">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="52N-eH-AcH">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -882,6 +882,7 @@
                                         </state>
                                         <connections>
                                             <action selector="continue:" destination="b0p-6q-o3J" eventType="touchUpInside" id="N3Y-c1-HRy"/>
+                                            <segue destination="ckA-Od-gYY" kind="show" identifier="loginPassword" id="gdk-gG-jd0"/>
                                         </connections>
                                     </button>
                                     <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="1rH-B9-2IR">
@@ -983,12 +984,95 @@
             </objects>
             <point key="canvasLocation" x="28.985507246376812" y="741.84782608695662"/>
         </scene>
+        <!--WebC2C View Controller-->
+        <scene sceneID="QRy-6B-tUU">
+            <objects>
+                <viewController modalPresentationStyle="fullScreen" id="ckA-Od-gYY" customClass="WebC2CViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="oDU-Xf-Xl5">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IBC-au-K7O">
+                                <rect key="frame" x="-1" y="45" width="418" height="30"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Перевести" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="has-wE-7ch">
+                                        <rect key="frame" x="161" y="4.5" width="96" height="25.5"/>
+                                        <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="19"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="el2-qo-6rw">
+                                        <rect key="frame" x="9" y="3" width="40" height="29"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <accessibility key="accessibilityConfiguration">
+                                            <accessibilityTraits key="traits" button="YES" image="YES"/>
+                                        </accessibility>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" image="button_back"/>
+                                        <connections>
+                                            <action selector="backButtonClicked:" destination="ckA-Od-gYY" eventType="touchUpInside" id="7ZH-3v-MHD"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="has-wE-7ch" secondAttribute="bottom" id="1VH-dZ-Vca"/>
+                                    <constraint firstItem="has-wE-7ch" firstAttribute="centerX" secondItem="IBC-au-K7O" secondAttribute="centerX" id="Dg3-mD-TkD"/>
+                                    <constraint firstAttribute="height" constant="30" id="jMu-lI-825"/>
+                                </constraints>
+                                <viewLayoutGuide key="safeArea" id="YNw-HN-vol"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6h9-gg-C68" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="71" width="414" height="834"/>
+                                <subviews>
+                                    <wkWebView contentMode="scaleToFill" allowsBackForwardNavigationGestures="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ec9-D4-PSd">
+                                        <rect key="frame" x="-1" y="46" width="418" height="745"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <wkWebViewConfiguration key="configuration">
+                                            <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                            <wkPreferences key="preferences"/>
+                                        </wkWebViewConfiguration>
+                                    </wkWebView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstItem="ec9-D4-PSd" firstAttribute="leading" secondItem="6h9-gg-C68" secondAttribute="leading" constant="-1" id="73T-za-N6O"/>
+                                    <constraint firstItem="ec9-D4-PSd" firstAttribute="top" secondItem="6h9-gg-C68" secondAttribute="top" constant="46" id="KCj-YA-Edh"/>
+                                    <constraint firstAttribute="bottom" secondItem="ec9-D4-PSd" secondAttribute="bottom" constant="43" id="rN0-IO-lyJ"/>
+                                    <constraint firstAttribute="trailing" secondItem="ec9-D4-PSd" secondAttribute="trailing" constant="-3" id="zOW-oO-fXh"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="IBC-au-K7O" firstAttribute="leading" secondItem="oDU-Xf-Xl5" secondAttribute="leadingMargin" constant="-21" id="1t3-r9-g5U"/>
+                            <constraint firstItem="IBC-au-K7O" firstAttribute="top" secondItem="3S6-Zj-kJh" secondAttribute="top" constant="1" id="Ahf-nP-VPt"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="IBC-au-K7O" secondAttribute="trailing" constant="-23" id="BwI-yL-9dK"/>
+                            <constraint firstItem="IBC-au-K7O" firstAttribute="top" secondItem="3S6-Zj-kJh" secondAttribute="top" constant="1" id="LKQ-ut-VPJ"/>
+                            <constraint firstItem="6h9-gg-C68" firstAttribute="bottom" secondItem="3S6-Zj-kJh" secondAttribute="bottom" constant="43" id="Vlu-MA-1Ka"/>
+                            <constraint firstItem="6h9-gg-C68" firstAttribute="top" secondItem="IBC-au-K7O" secondAttribute="bottom" constant="-4" id="iZL-fp-gOf"/>
+                            <constraint firstItem="3S6-Zj-kJh" firstAttribute="trailing" secondItem="6h9-gg-C68" secondAttribute="trailing" id="pGh-GD-l7L"/>
+                            <constraint firstItem="6h9-gg-C68" firstAttribute="leading" secondItem="3S6-Zj-kJh" secondAttribute="leading" id="ue5-1H-tsS"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="3S6-Zj-kJh"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="AEP-S4-Pag"/>
+                    <connections>
+                        <outlet property="backButton" destination="el2-qo-6rw" id="QMe-7v-nT2"/>
+                        <outlet property="webC2C" destination="ec9-D4-PSd" id="uC1-hB-Tc0"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yQa-XJ-cdO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="953.62318840579712" y="741.96428571428567"/>
+        </scene>
     </scenes>
     <resources>
+        <image name="button_back" width="8" height="14"/>
         <image name="card_scan" width="26" height="16"/>
         <image name="ru-vtb24" width="600" height="165"/>
         <image name="ruble" width="21" height="23"/>
-        <image name="tabbar_icon_payment" width="25" height="20"/>
+        <image name="tabbar_icon_payment" width="33" height="30"/>
         <image name="visa-colored" width="93" height="60"/>
     </resources>
 </document>
