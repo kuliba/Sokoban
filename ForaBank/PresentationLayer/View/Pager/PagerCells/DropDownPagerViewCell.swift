@@ -47,10 +47,9 @@ class DropDownPagerViewCell: FSPagerViewCell, IConfigurableCell {
         }
         dropDown.cellNib = UINib(nibName: String(describing: PaymentOptionDropDownCell.self), bundle: nil)
         dropDown.cellConfiguration = nil
-
         dropDown.dismissMode = .onTap
         dropDown.direction = .bottom
-        dropDown.anchorView = paymentOptionView
+
         dropDown.selectionAction = { [weak self] (index, item) in
             guard let option = self?.paymentOptions[index] else {
                 return
@@ -72,6 +71,9 @@ class DropDownPagerViewCell: FSPagerViewCell, IConfigurableCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
+        dropDown.anchorView = self
+        dropDown.width = self.superview?.bounds.size.width
+        dropDown.bottomOffset = CGPoint(x: 0, y: self.bounds.size.height)
     }
 
     func configure(provider: ICellProvider) {
