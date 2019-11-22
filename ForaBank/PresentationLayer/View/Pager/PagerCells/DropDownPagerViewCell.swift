@@ -40,40 +40,9 @@ class DropDownPagerViewCell: FSPagerViewCell, IConfigurableCell {
         commonInit()
     }
 
-    private func commonInit() {
-        dropDown.customCellConfiguration = { [weak self] (index: Index, item: String, cell: DropDownCell) -> Void in
-            guard let cell = cell as? PaymentOptionDropDownCell, let paymentOption = self?.paymentOptions[index] else { return }
-            cell.paymentOptionView.setupLayout(withPickerItem: paymentOption, isDroppable: false)
-        }
-        dropDown.cellNib = UINib(nibName: String(describing: PaymentOptionDropDownCell.self), bundle: nil)
-        dropDown.cellConfiguration = nil
-        dropDown.dismissMode = .onTap
-        dropDown.direction = .bottom
-
-        dropDown.selectionAction = { [weak self] (index, item) in
-            guard let option = self?.paymentOptions[index] else {
-                return
-            }
-            DispatchQueue.main.async {
-                self?.provider?.currentValue = option
-                self?.paymentOptionView.setupLayout(withPickerItem: option, isDroppable: true)
-            }
-        }
-
-        let appearance = DropDown.appearance()
-        appearance.cellHeight = 60
-        appearance.selectionBackgroundColor = UIColor(red: 0.6494, green: 0.8155, blue: 1.0, alpha: 0.2)
-        appearance.shadowColor = UIColor(white: 0.6, alpha: 1)
-        appearance.shadowOpacity = 0.9
-        appearance.shadowRadius = 25
-        appearance.animationduration = 0.25
-    }
-
     override func awakeFromNib() {
         super.awakeFromNib()
-        dropDown.anchorView = self
-        dropDown.width = self.superview?.bounds.size.width
-        dropDown.bottomOffset = CGPoint(x: 0, y: self.bounds.size.height)
+        setupViews()
     }
 
     func configure(provider: ICellProvider) {
@@ -107,8 +76,47 @@ class DropDownPagerViewCell: FSPagerViewCell, IConfigurableCell {
     }
 
 
-    @objc
-    fileprivate func paymentOptionViewTapped() {
+
+}
+
+private extension DropDownPagerViewCell {
+
+    private func commonInit() {
+        dropDown.customCellConfiguration = { [weak self] (index: Index, item: String, cell: DropDownCell) -> Void in
+            guard let cell = cell as? PaymentOptionDropDownCell, let paymentOption = self?.paymentOptions[index] else { return }
+            cell.paymentOptionView.setupLayout(withPickerItem: paymentOption, isDroppable: false)
+        }
+        dropDown.cellNib = UINib(nibName: String(describing: PaymentOptionDropDownCell.self), bundle: nil)
+        dropDown.cellConfiguration = nil
+        dropDown.dismissMode = .onTap
+        dropDown.direction = .bottom
+
+        dropDown.selectionAction = { [weak self] (index, item) in
+            guard let option = self?.paymentOptions[index] else {
+                return
+            }
+            DispatchQueue.main.async {
+                self?.provider?.currentValue = option
+                self?.paymentOptionView.setupLayout(withPickerItem: option, isDroppable: true)
+            }
+        }
+
+        let appearance = DropDown.appearance()
+        appearance.cellHeight = 60
+        appearance.selectionBackgroundColor = UIColor(red: 0.6494, green: 0.8155, blue: 1.0, alpha: 0.2)
+        appearance.shadowColor = UIColor(white: 0.6, alpha: 1)
+        appearance.shadowOpacity = 0.9
+        appearance.shadowRadius = 25
+        appearance.animationduration = 0.25
+    }
+
+    private func setupViews() {
+        dropDown.anchorView = paymentOptionView
+        dropDown.width = self.superview?.bounds.size.width
+        dropDown.bottomOffset = CGPoint(x: 0, y: paymentOptionView.bounds.size.height)
+    }
+
+    @objc private func paymentOptionViewTapped() {
         dropDown.show()
     }
 }
