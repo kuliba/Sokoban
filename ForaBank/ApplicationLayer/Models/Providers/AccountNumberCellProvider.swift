@@ -9,6 +9,8 @@
 import Foundation
 
 class AccountNumberCellProvider: NSObject, ITextInputCellProvider {
+    var textField: String = ""
+    
 
     let iconName = "feed_option_accounts"
     let placeholder = "Введите номер счёта"

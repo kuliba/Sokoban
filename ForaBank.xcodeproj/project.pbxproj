@@ -129,6 +129,8 @@
 		89C8DF0E2191ADF200D92B0A /* AccountsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C8DF0D2191ADF200D92B0A /* AccountsViewController.swift */; };
 		89C8DF122191AFA700D92B0A /* DepositsDepositCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C8DF102191AFA600D92B0A /* DepositsDepositCell.swift */; };
 		89C8DF132191AFA700D92B0A /* DepositsDepositCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89C8DF112191AFA700D92B0A /* DepositsDepositCell.xib */; };
+		9605AC132383D47500652635 /* MainScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9605AC122383D47500652635 /* MainScreen.storyboard */; };
+		9605AC162383D5A200652635 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9605AC152383D5A200652635 /* MainViewController.swift */; };
 		96072C882313FF13001CFCBD /* TouchIDAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96072C872313FF13001CFCBD /* TouchIDAuthentication.swift */; };
 		96094AF42319441600A80412 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96094AF32319441600A80412 /* SettingsViewController.swift */; };
 		960AD38822FC1826005399D6 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 960AD38722FC1826005399D6 /* Default-568h@2x.png */; };
@@ -188,6 +190,11 @@
 		96E08A3D2372C0BA0070CA6A /* BottomRoundedEdge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96E08A3C2372C0BA0070CA6A /* BottomRoundedEdge.swift */; };
 		96E541162341656300770C06 /* ExpandingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96E541142341656300770C06 /* ExpandingTableViewCell.swift */; };
 		96E541172341656300770C06 /* TableExpansionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96E541152341656300770C06 /* TableExpansionViewController.swift */; };
+		96FE29E8238416B80076656C /* DataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96FE29E7238416B80076656C /* DataItem.swift */; };
+		96FE29EA238416D40076656C /* ColorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96FE29E9238416D40076656C /* ColorCell.swift */; };
+		96FE29EC238416E90076656C /* KDDragAndDropManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96FE29EB238416E90076656C /* KDDragAndDropManager.swift */; };
+		96FE29EE238417000076656C /* KDDragAndDropCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96FE29ED238417000076656C /* KDDragAndDropCollectionView.swift */; };
+		96FE29F0238435080076656C /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96FE29EF238435080076656C /* Item.swift */; };
 		A5004D3121EF37DC0098E510 /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5004D3021EF37DC0098E510 /* ActivityIndicatorView.swift */; };
 		A5004D3321EF56CF0098E510 /* CardBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5004D3221EF56CF0098E510 /* CardBank.swift */; };
 		A5004D3521EF56DD0098E510 /* CardBrand.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5004D3421EF56DD0098E510 /* CardBrand.swift */; };
@@ -470,6 +477,8 @@
 		89C8DF0D2191ADF200D92B0A /* AccountsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsViewController.swift; sourceTree = "<group>"; };
 		89C8DF102191AFA600D92B0A /* DepositsDepositCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositsDepositCell.swift; sourceTree = "<group>"; };
 		89C8DF112191AFA700D92B0A /* DepositsDepositCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DepositsDepositCell.xib; sourceTree = "<group>"; };
+		9605AC122383D47500652635 /* MainScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainScreen.storyboard; sourceTree = "<group>"; };
+		9605AC152383D5A200652635 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		96072C872313FF13001CFCBD /* TouchIDAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchIDAuthentication.swift; sourceTree = "<group>"; };
 		96094AF32319441600A80412 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		960AD38722FC1826005399D6 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
@@ -534,6 +543,11 @@
 		96E08A3C2372C0BA0070CA6A /* BottomRoundedEdge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomRoundedEdge.swift; sourceTree = "<group>"; };
 		96E541142341656300770C06 /* ExpandingTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpandingTableViewCell.swift; sourceTree = "<group>"; };
 		96E541152341656300770C06 /* TableExpansionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableExpansionViewController.swift; sourceTree = "<group>"; };
+		96FE29E7238416B80076656C /* DataItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataItem.swift; sourceTree = "<group>"; };
+		96FE29E9238416D40076656C /* ColorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCell.swift; sourceTree = "<group>"; };
+		96FE29EB238416E90076656C /* KDDragAndDropManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KDDragAndDropManager.swift; sourceTree = "<group>"; };
+		96FE29ED238417000076656C /* KDDragAndDropCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KDDragAndDropCollectionView.swift; sourceTree = "<group>"; };
+		96FE29EF238435080076656C /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		A5004D3021EF37DC0098E510 /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		A5004D3221EF56CF0098E510 /* CardBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardBank.swift; sourceTree = "<group>"; };
 		A5004D3421EF56DD0098E510 /* CardBrand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardBrand.swift; sourceTree = "<group>"; };
@@ -886,6 +900,7 @@
 			children = (
 				BDB823A923852A7000030B5F /* BaseViewController.swift */,
 				960C5D0F237161A8002C4DC4 /* MapPopUpViewController.swift */,
+				9605AC142383D58400652635 /* MainScreen */,
 				9697E29E2334C29700974505 /* OperatorsList.swift */,
 				BDB7916C2338C8B10002C7EE /* VerificationCodeViewController.swift */,
 				96AF922B2360A85B00C9E746 /* ContactList */,
@@ -975,6 +990,7 @@
 				BD21B66F233915FD001C5CF7 /* Registration.storyboard */,
 				09E0F140215A65D40042FB6A /* Services.storyboard */,
 				BD21B67123391C63001C5CF7 /* UnauthorizedZone.storyboard */,
+				9605AC122383D47500652635 /* MainScreen.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -1081,6 +1097,19 @@
 				BDFE1B0C233CE7BD00C49A5B /* PickerViewController.xib */,
 			);
 			path = Payments;
+			sourceTree = "<group>";
+		};
+		9605AC142383D58400652635 /* MainScreen */ = {
+			isa = PBXGroup;
+			children = (
+				9605AC152383D5A200652635 /* MainViewController.swift */,
+				96FE29E7238416B80076656C /* DataItem.swift */,
+				96FE29E9238416D40076656C /* ColorCell.swift */,
+				96FE29EB238416E90076656C /* KDDragAndDropManager.swift */,
+				96FE29ED238417000076656C /* KDDragAndDropCollectionView.swift */,
+				96FE29EF238435080076656C /* Item.swift */,
+			);
+			path = MainScreen;
 			sourceTree = "<group>";
 		};
 		9622CFBC234B22440005701E /* changePassword */ = {
@@ -1750,6 +1779,7 @@
 				9651451E234F8ADC00A4713F /* ic_homeBG.jpg in Resources */,
 				09E0F144215A65F10042FB6A /* Profile.storyboard in Resources */,
 				09AF7082216F6B6F00E7FCFC /* FeedCurrent1Cell.xib in Resources */,
+				9605AC132383D47500652635 /* MainScreen.storyboard in Resources */,
 				09797560215A49040044C00A /* Assets.xcassets in Resources */,
 				09AF708D216F73FD00E7FCFC /* FeedCurrent4Cell.xib in Resources */,
 				0930F185215B78B000CFB593 /* Roboto-ThinItalic.ttf in Resources */,
@@ -1909,6 +1939,7 @@
 				09F2410921707B86007B7D73 /* FeedInfo3Cell.swift in Sources */,
 				BDB6B0112326A9C10006A534 /* PasscodeSignUpActions.swift in Sources */,
 				9660EEE8234C7B1100AE0647 /* CollapsibleTableViewController.swift in Sources */,
+				9605AC162383D5A200652635 /* MainViewController.swift in Sources */,
 				89C8DF0C21918DDC00D92B0A /* OptionPickerViewController.swift in Sources */,
 				BDFE1AC2233B906D00C49A5B /* App.swift in Sources */,
 				0939B5FB21774EA70029F03D /* DoubleRoundedEdgeView.swift in Sources */,
@@ -1918,6 +1949,7 @@
 				094FFC0D218837580069DDCB /* RegistrationViewController.swift in Sources */,
 				BD21B66C2338E0FA001C5CF7 /* RegistrationActions.swift in Sources */,
 				BD20836023609A680010E03C /* AccountsService.swift in Sources */,
+				96FE29F0238435080076656C /* Item.swift in Sources */,
 				A528EF4021B00C9300D189DD /* MonthCollectionViewCell.swift in Sources */,
 				09D3C03D215CD03E00998F57 /* SearchCell.swift in Sources */,
 				093B862A21620806008A5222 /* ServicesViewController.swift in Sources */,
@@ -2006,6 +2038,7 @@
 				BD49E65C2345ED0A0031561F /* ICellProvider.swift in Sources */,
 				BD20836823609A680010E03C /* LoansService.swift in Sources */,
 				094FFC0E218837580069DDCB /* RegistrationCodeVerificationViewController.swift in Sources */,
+				96FE29EA238416D40076656C /* ColorCell.swift in Sources */,
 				BD182E3F232A402100DB231F /* PasscodeSingInActions.swift in Sources */,
 				BDFE5D9C233511EB0027A716 /* URLs.swift in Sources */,
 				BDF4F94E23293D1E007C448F /* AuthenticationState.swift in Sources */,
@@ -2060,12 +2093,14 @@
 				A5004D3521EF56DD0098E510 /* CardBrand.swift in Sources */,
 				09D3C048215E07DB00998F57 /* ChatMessagesViewController.swift in Sources */,
 				09FC8FED215BB2B200A4694B /* ProfileMenuTableViewController.swift in Sources */,
+				96FE29EC238416E90076656C /* KDDragAndDropManager.swift in Sources */,
 				9697E29F2334C29700974505 /* OperatorsList.swift in Sources */,
 				A568142121CBCD03002C0899 /* BankBranchAnnotation.swift in Sources */,
 				0942B86D21625F7800370C71 /* Friend.swift in Sources */,
 				96AB361923323B2B009FD828 /* CardHistory.swift in Sources */,
 				A5C5C03A21B537AB005D6B8F /* BubblesDetailedStatsViewController.swift in Sources */,
 				09045059216B5ADC00F3B295 /* FeedOffersCell.swift in Sources */,
+				96FE29E8238416B80076656C /* DataItem.swift in Sources */,
 				09C7C3382175E486000EE472 /* DepositsHistoryCell.swift in Sources */,
 				96920C32235604C000CCC7EF /* OperationsList.swift in Sources */,
 				097A6DCC21884B6D00E6C69E /* ButtonRounded.swift in Sources */,
@@ -2096,6 +2131,7 @@
 				09203D98216E150500902BD2 /* FeedOptionsViewController.swift in Sources */,
 				09D3C04C215E5AE800998F57 /* CustomTableView.swift in Sources */,
 				BD5170A92332135E001EAFC0 /* VerificationCodeState.swift in Sources */,
+				96FE29EE238417000076656C /* KDDragAndDropCollectionView.swift in Sources */,
 				093B862E21620B1F008A5222 /* ServicesSearchCell.swift in Sources */,
 				BD17F0AC23474FE300CBF400 /* PaymentOptionDropDownCell.swift in Sources */,
 				09AF7092216F73FD00E7FCFC /* FeedCurrent4Cell.swift in Sources */,

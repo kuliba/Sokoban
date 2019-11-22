@@ -129,9 +129,9 @@ class DepositsCardsListViewController: UIViewController {
         return b
     }()
 
-    @objc func handlePopucclosing(notification: Notification) {
-        let customNameVc = notification.object as! String
-        cards[0].customName = customNameVc
+    @objc func handlePopucclosing(notification: Notification){
+           let customNameVc = notification.object as! String
+        selectedCard?.customName = customNameVc
     }
 
     //MARK: - lifecycle

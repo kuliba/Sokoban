@@ -19,7 +19,7 @@
         <!--Carousel View Controller-->
         <scene sceneID="jnb-tn-H9V">
             <objects>
-                <viewController id="Zlb-hj-4wP" customClass="CarouselViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="depositsRoot" modalPresentationStyle="fullScreen" id="Zlb-hj-4wP" customClass="CarouselViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="DE7-uu-jrD">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -322,7 +322,7 @@
         <!--Deposits History View Controller-->
         <scene sceneID="c89-d9-vHz">
             <objects>
-                <viewController storyboardIdentifier="DepositsHistoryViewController" id="9mX-Vi-gdx" customClass="DepositsHistoryViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="deposits4" modalPresentationStyle="fullScreen" id="9mX-Vi-gdx" customClass="DepositsHistoryViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="wsg-22-ki8">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

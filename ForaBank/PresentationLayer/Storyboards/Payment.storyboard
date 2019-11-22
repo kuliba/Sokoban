@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="OPN-w7-Pxo">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="OPN-w7-Pxo">
     <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
+        <array key="Roboto-Light.ttf">
+            <string>Roboto-Light</string>
+        </array>
         <array key="Roboto-Regular.ttf">
             <string>Roboto-Regular</string>
         </array>
@@ -131,7 +134,7 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B3J-EX-QK6">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="543"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X2I-VJ-MYg" customClass="DoubleRoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X2I-VJ-MYg" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="320" height="220"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LTJ-Hn-8tn">
@@ -464,7 +467,7 @@
                                 <rect key="frame" x="0.0" y="25" width="320" height="543"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eDa-n2-lst">
-                                        <rect key="frame" x="14" y="180" width="292" height="183"/>
+                                        <rect key="frame" x="14" y="79" width="292" height="183"/>
                                         <subviews>
                                             <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="C8a-Xm-vI6">
                                                 <rect key="frame" x="97.5" y="66" width="97" height="40"/>
@@ -477,11 +480,11 @@
                                                 <textInputTraits key="textInputTraits" keyboardType="numberPad" textContentType="one-time-code"/>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Введите код, который мы прислали на номер телефона" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C6a-Br-7FF">
-                                                <rect key="frame" x="0.0" y="0.0" width="292" height="55"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="292" height="66"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="55" id="AUP-Vn-POF"/>
+                                                    <constraint firstAttribute="height" constant="66" id="AUP-Vn-POF"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
+                                                <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
                                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -504,7 +507,8 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="183" id="5UG-6e-FZK"/>
-                                            <constraint firstItem="C8a-Xm-vI6" firstAttribute="top" secondItem="C6a-Br-7FF" secondAttribute="bottom" constant="11" id="Fhd-2o-1tF"/>
+                                            <constraint firstItem="C8a-Xm-vI6" firstAttribute="top" secondItem="C6a-Br-7FF" secondAttribute="bottom" id="Fhd-2o-1tF"/>
+                                            <constraint firstAttribute="width" constant="292" id="IQG-t1-sXk"/>
                                             <constraint firstItem="zFG-Bn-eR0" firstAttribute="top" secondItem="C8a-Xm-vI6" secondAttribute="bottom" constant="24" id="PVl-wR-X81"/>
                                             <constraint firstAttribute="trailing" secondItem="zFG-Bn-eR0" secondAttribute="trailing" constant="20" id="TOe-ad-Aco"/>
                                             <constraint firstItem="C6a-Br-7FF" firstAttribute="leading" secondItem="eDa-n2-lst" secondAttribute="leading" id="abK-2I-Z4B"/>
@@ -521,9 +525,8 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="eDa-n2-lst" secondAttribute="trailing" constant="14" id="hqA-X2-vWY"/>
-                                    <constraint firstItem="eDa-n2-lst" firstAttribute="centerY" secondItem="8pP-cj-CYT" secondAttribute="centerY" id="j4A-bM-taI"/>
                                     <constraint firstItem="eDa-n2-lst" firstAttribute="leading" secondItem="8pP-cj-CYT" secondAttribute="leading" constant="14" id="rs1-HS-bUs"/>
-                                    <constraint firstItem="eDa-n2-lst" firstAttribute="centerX" secondItem="8pP-cj-CYT" secondAttribute="centerX" id="w40-BI-46g"/>
+                                    <constraint firstItem="eDa-n2-lst" firstAttribute="top" secondItem="8pP-cj-CYT" secondAttribute="top" constant="79" id="wta-M8-0KN"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -566,7 +569,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gjU-dn-lu1" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3728" y="1038"/>
+            <point key="canvasLocation" x="3727.5" y="1037.323943661972"/>
         </scene>
         <!--Payments Details Success View Controller-->
         <scene sceneID="Qmn-ro-rR4">
@@ -951,7 +954,7 @@
     <resources>
         <image name="Group 6 Copy" width="9" height="25"/>
         <image name="button_back" width="8" height="14"/>
-        <image name="tabbar_icon_payment" width="25" height="20"/>
+        <image name="tabbar_icon_payment" width="33" height="30"/>
         <image name="vertical_arrows" width="5" height="11"/>
     </resources>
 </document>

@@ -47,6 +47,8 @@ class PagerViewCellHandler<CellType: IConfigurableCell, ProviderType: ICellProvi
         } else if let paymentOption = item as? PaymentOption {
             return paymentOption.number
         }
+//        let number = TextFieldPagerViewCell.textFieldShouldEndEditing?() as! TextFieldPagerViewCell
+        
         return ""
     }
 }
