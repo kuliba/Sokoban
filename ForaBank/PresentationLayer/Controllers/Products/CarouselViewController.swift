@@ -10,8 +10,9 @@ import UIKit
 import DeviceKit
 import iCarousel
 import Hero
+import ReSwift
 
-class CarouselViewController: UIViewController {
+class CarouselViewController: UIViewController, StoreSubscriber {
 
     // MARK: - Properties
     @IBOutlet var carousel: iCarousel!
@@ -28,9 +29,7 @@ class CarouselViewController: UIViewController {
         recognizer.direction = .right
         return recognizer
     }()
-    var previousIndex = -1
 
-    var labels = [UILabel?]()
     let gradientView = GradientView()
     let gradients = [
         [UIColor(hexFromString: "EF4136")!, UIColor(hexFromString: "EF4136")!],
@@ -42,26 +41,30 @@ class CarouselViewController: UIViewController {
     ]
     let browDevices = Constants.browDevices
     weak var currentViewController: UIViewController?
-
-    var items = ["Карты", "Счета", "Вклады", "Кредиты", "История"]
-
-
+    var labels = [UILabel?]()
+    var menuItems: Array<AnyHashable> {
+        get {
+            return Array<AnyHashable>(dynamicMenuItems) + Array<AnyHashable>(staticMenuItems)
+        }
+    }
+    var dynamicMenuItems: Array<ProductType> = [ProductType.card, ProductType.account, ProductType.deposit, ProductType.loan]
+    var staticMenuItems: Array<String> = ["История"]
     var segueId: String? = nil
     var backSegueId: String? = nil
 
 
 
     // MARK: - Lifecycle
+
     override func viewDidLoad() {
+        super.viewDidLoad()
 
-
-        currentViewController = storyboard?.instantiateViewController(withIdentifier: "deposits0")
+        currentViewController = storyboard?.instantiateViewController(withIdentifier: "DepositsCardsListViewController")
         currentViewController!.view.translatesAutoresizingMaskIntoConstraints = false
         addChild(currentViewController!)
         addSubview(self.currentViewController!.view, toView: self.containerView)
 
-        labels = [UILabel?].init(repeating: nil, count: items.count)
-        super.viewDidLoad()
+        labels = [UILabel?].init(repeating: nil, count: menuItems.count)
 
         carousel.delegate = self
         carousel.dataSource = self
@@ -141,6 +144,10 @@ class CarouselViewController: UIViewController {
         containerView.hero.modifiers = nil
         containerView.hero.id = nil
         view.hero.modifiers = nil
+
+        store.subscribe(self) { state in
+            state.select { $0.productsState }
+        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -193,18 +200,32 @@ class CarouselViewController: UIViewController {
         containerView.hero.modifiers = nil
         containerView.hero.id = nil
         view.hero.modifiers = nil
+
+        store.unsubscribe(self)
     }
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//        print("deposits view controller \(containerView.viewMask.path)")
-//        print("container \(containerView)")
-//    }
+
+    func newState(state: ProductState) {
+        if menuItems.count == staticMenuItems.count {
+            var productTypesSet = Set<ProductType>()
+            state.products?.forEach { productTypesSet.insert($0.productType) }
+
+            dynamicMenuItems = Array<ProductType>(productTypesSet).sorted { $0 < $1 }
+            updateCrousel()
+        }
+    }
+}
+
+extension CarouselViewController {
+    private func updateCrousel() {
+        labels = [UILabel?].init(repeating: nil, count: menuItems.count)
+        carousel.reloadData()
+    }
 }
 
 extension CarouselViewController: iCarouselDataSource, iCarouselDelegate {
 
     func numberOfItems(in carousel: iCarousel) -> Int {
-        return items.count
+        return menuItems.count
     }
 
     func carousel(_ carousel: iCarousel, viewForItemAt index: Int, reusing view: UIView?) -> UIView {
@@ -221,7 +242,11 @@ extension CarouselViewController: iCarouselDataSource, iCarouselDelegate {
             label.font = UIFont(name: "Roboto-Light", size: 16)
             label.tag = 1
         }
-        label.text = "\(items[index])"
+        if let title = menuItems[index] as? ProductType {
+            label.text = "\(title.localizedListName)"
+        } else if let title = menuItems[index] as? String {
+            label.text = title
+        }
         labels[index] = label
 
         return label
@@ -347,10 +372,32 @@ private extension CarouselViewController {
     }
 
     func showComponent(index: Int, direction: Direction) {
-        let newViewController = storyboard?.instantiateViewController(withIdentifier: "deposits\(index)")
-        newViewController!.view.translatesAutoresizingMaskIntoConstraints = false
-        cycleFromViewController(oldViewController: self.currentViewController!, toViewController: newViewController!, direction: direction)
-        currentViewController = newViewController
+
+        var newViewController: UIViewController?
+
+        if let item = menuItems[index] as? ProductType {
+            switch item {
+            case .card:
+                newViewController = storyboard?.instantiateViewController(withIdentifier: "DepositsCardsListViewController")
+            case .account:
+                newViewController = storyboard?.instantiateViewController(withIdentifier: "AccountsViewController")
+            case .deposit:
+                newViewController = storyboard?.instantiateViewController(withIdentifier: "DepositsViewController")
+            case .loan:
+                newViewController = storyboard?.instantiateViewController(withIdentifier: "LoansViewController")
+            }
+        } else if let item = menuItems[index] as? String, item == "История" {
+            newViewController = storyboard?.instantiateViewController(withIdentifier: "DepositsHistoryViewController")
+        }
+        newViewController?.view.translatesAutoresizingMaskIntoConstraints = false
+
+        if let currentViewController = self.currentViewController,
+            let nonNilNewViewController = newViewController {
+            cycleFromViewController(oldViewController: currentViewController,
+                                    toViewController: nonNilNewViewController,
+                                    direction: direction)
+            self.currentViewController = nonNilNewViewController
+        }
     }
 
     func cycleFromViewController(oldViewController: UIViewController, toViewController newViewController: UIViewController, direction: Direction) {
@@ -440,5 +487,13 @@ extension CarouselViewController: CustomTransitionOriginator, CustomTransitionDe
         }
         views.merge(c.toAnimatedSubviews, uniquingKeysWith: { (first, _) in first })
         return views
+    }
+}
+
+// MARK: - Public methods
+
+extension CarouselViewController {
+    @objc public func createProductButtonClicked() {
+        router?.navigate(to: .createProduct)
     }
 }

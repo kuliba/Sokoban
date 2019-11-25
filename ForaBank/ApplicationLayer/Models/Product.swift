@@ -11,12 +11,6 @@ import Mapper
 
 class Product: Mappable, IProduct {
 
-    enum ProductType: String {
-        case card = "CARD"
-        case account = "ACCOUNT"
-        case loan = "LOAN"
-    }
-
     enum ProductStatus: String {
         case active = "Действует"
         case NOT_BLOCKED = "NOT_BLOCKED"
@@ -38,13 +32,14 @@ class Product: Mappable, IProduct {
     var accountNumber: String
     var allowDebit: Bool
     var allowCredit: Bool
-    var cardID: Int
-    var name: String
-    var validThru: Int
-    var status: ProductStatus
-    var holderName: String
-    var product: String
-    var branch: String
+
+    var cardID: Int?
+    var validThru: Int?
+    var holderName: String?
+    var product: String?
+    var branchName: String?
+    var name: String?
+    var status: ProductStatus?
 
     required init(map: Mapper) throws {
         try number = map.from("number")
@@ -57,12 +52,13 @@ class Product: Mappable, IProduct {
         try accountNumber = map.from("accountNumber")
         try allowDebit = map.from("allowDebit")
         try allowCredit = map.from("allowCredit")
-        try cardID = map.from("cardID")
-        try name = map.from("name")
-        try validThru = map.from("validThru")
-        try status = map.from("status")
-        try holderName = map.from("holderName")
-        try product = map.from("product")
-        try branch = map.from("branch")
+
+        validThru = map.optionalFrom("validThru")
+        cardID = map.optionalFrom("cardID")
+        holderName = map.optionalFrom("holderName")
+        product = map.optionalFrom("product")
+        branchName = map.optionalFrom("branchName")
+        name = map.optionalFrom("name")
+        status = map.optionalFrom("status")
     }
 }
