@@ -18,4 +18,5 @@ protocol IPickerItem {
     var title: String { get }
     var subTitle: String { get }
     var value: Double { get }
+    var provider: String? { get }
 }

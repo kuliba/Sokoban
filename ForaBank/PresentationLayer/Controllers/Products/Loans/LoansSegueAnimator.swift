@@ -12,7 +12,7 @@ import DeviceKit
 class LoansSegueAnimator: NSObject, UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate {
     
     let iphone5Devices = Constants.iphone5Devices
-    let xDevices = Constants.xDevices
+    let xDevices = Constants.browDevices
     
     // MARK: методы протокола UIViewControllerTransitioningDelegate
     
@@ -102,7 +102,7 @@ extension LoansSegueAnimator {
         let roundedMask = CAShapeLayer()
         maskedWhiteBackgroundView.layer.mask = roundedMask
 
-        let initTop: CGFloat = Device().isOneOf(xDevices) ? 69 : 45
+        let initTop: CGFloat = Device.current.isOneOf(xDevices) ? 69 : 45
         let arcOffset: CGFloat = 33
         
         let pathInitial = UIBezierPath()
@@ -239,7 +239,7 @@ extension LoansSegueAnimator {
         let roundedMask = CAShapeLayer()
         maskedWhiteBackgroundView.layer.mask = roundedMask
 
-        let initTop: CGFloat = Device().isOneOf(xDevices) ? 69 : 45
+        let initTop: CGFloat = Device.current.isOneOf(xDevices) ? 69 : 45
         let arcOffset: CGFloat = 33
         
         let pathInitial = UIBezierPath()

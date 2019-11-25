@@ -9,8 +9,9 @@
 import UIKit
 import FSPagerView
 
-class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPickerDelegate {
+class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell {
 
+    @IBOutlet weak var buttonContactList: UIButton!
     @IBOutlet weak var scanButton: UIButton!
     @IBOutlet weak var leftButton: UIButton!
     @IBOutlet weak var textField: UITextField!
@@ -46,28 +47,10 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPicker
         print("User canceled the selection")
     }
 
-
-    func contactPicker(_ picker: ContactsPicker, didSelectMultipleContacts contacts: [Contact]) {
-        defer { picker.dismiss(animated: true, completion: nil) }
-        guard !contacts.isEmpty else { return }
-        print("The following contacts are selected")
-        for contact in contacts {
-            print("\(contact.displayName)", "\(contact.phoneNumbers)")
-
-            if contacts != nil {
-                let number: String
-                nameContact.isHidden = true
-                number = "\(contact.phoneNumbers.joined())"
-                let numberFormatted = formattedPhoneNumber(number: number)
-                textField.text = "\(numberFormatted)"
-
-            }
-        }
-    }
-
     override func awakeFromNib() {
         super.awakeFromNib()
     }
+
 
     func configure(provider: ICellProvider) {
         guard let textInputCellProvider = provider as? ITextInputCellProvider else {
@@ -82,8 +65,16 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPicker
             textInputCellProvider.currentValue = newValue
         }
 
+        if textInputCellProvider.currentValue == nil {
+            self.textField.reloadInputViews()
+
+            textInputCellProvider.currentValue = textField.text
+        }
+        buttonContactList.isHidden = true
         if provider is PhoneNumberCellProvider {
             textField.text = "+7"
+            buttonContactList.isHidden = false
+
         }
         textField.delegate = self
         textField.placeholder = textInputCellProvider.placeholder
@@ -120,5 +111,37 @@ extension TextFieldPagerViewCell: CardIOPaymentViewControllerDelegate {
             textField.sendActions(for: .editingChanged)
         }
         paymentViewController.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension TextFieldPagerViewCell: ContactsPickerDelegate {
+
+    public func contactPicker(_ picker: ContactsPicker, didSelectMultipleContacts contacts: [Contact]) {
+
+        defer { picker.dismiss(animated: true, completion: nil) }
+        guard !contacts.isEmpty else { return }
+        print("The following contacts are selected")
+        for contact in contacts {
+            print("\(contact.displayName)", "\(contact.phoneNumbers)")
+
+
+            if contacts != nil {
+                var number: String
+                nameContact.isHidden = true
+                number = "\(contact.phoneNumbers[0])"
+                if number[number.startIndex] == "+" {
+                    number.removeFirst(2)
+                } else {
+                    number.remove(at: number.startIndex)
+                }
+                print(number)
+
+
+                let numberFormatted = formattedNumberInPhoneContacts(number: String(number))
+                textField.text = "\(numberFormatted)"
+                newValueCallback?(cleanNumberString(string: numberFormatted))
+            }
+        }
+
     }
 }

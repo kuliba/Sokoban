@@ -102,6 +102,7 @@
                 </userDefinedRuntimeAttribute>
             </userDefinedRuntimeAttributes>
             <connections>
+                <outlet property="buttonContactList" destination="n8P-hA-omH" id="88z-0c-WWi"/>
                 <outlet property="leftButton" destination="f5S-dd-w1e" id="2eU-GJ-feS"/>
                 <outlet property="nameContact" destination="AHE-5o-KrN" id="k0W-Cg-ZNs"/>
                 <outlet property="scanButton" destination="U0c-o4-oM9" id="9tg-2p-bDB"/>

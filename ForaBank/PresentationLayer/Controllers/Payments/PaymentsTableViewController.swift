@@ -42,6 +42,7 @@ class PaymentsTableViewController: UIViewController, UITableViewDelegate, UITabl
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
         cell.backgroundColor = .white
+        cell.selectionStyle = .none
         cell.textLabel?.textColor = .black
 
         switch indexPath.item {

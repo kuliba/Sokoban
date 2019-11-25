@@ -22,9 +22,9 @@ class AccountsViewController: UIViewController {
 
     @IBOutlet weak var foraPreloader: RefreshView!
     let cellId = "DepositsDepositCell"
-    
+
     var refreshView: RefreshView!
-    
+
     var tableViewRefreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
         refreshControl.backgroundColor = .clear
@@ -32,29 +32,29 @@ class AccountsViewController: UIViewController {
         refreshControl.addTarget(self, action: #selector(refreshTableView), for: .valueChanged)
         return refreshControl
     }()
-    
-    
+
+
     func prepareUI() {
         // Adding 'tableViewRefreshControl' to tableView
         tableView.refreshControl = tableViewRefreshControl
         // Getting the nib from bundle
         getRefereshView()
     }
-    
+
     @objc func refreshTableView() {
-          refreshView.startAnimation()
+        refreshView.startAnimation()
         NetworkManager.shared().getDepos { (success, accounts) in
             if success {
                 self.accounts = accounts ?? []
             }
-            
+
             self.refreshView.stopAnimation()
             self.tableViewRefreshControl.endRefreshing()
         }
 
-        
-      }
-    
+
+    }
+
     func getRefereshView() {
         if let objOfRefreshView = Bundle.main.loadNibNamed("RefreshView", owner: self, options: nil)?.first as? RefreshView {
             // Initializing the 'refreshView'
@@ -65,7 +65,7 @@ class AccountsViewController: UIViewController {
             tableViewRefreshControl.addSubview(refreshView)
         }
     }
-    
+
 
 
     override func viewDidLoad() {
@@ -73,11 +73,11 @@ class AccountsViewController: UIViewController {
         foraPreloader.startAnimation()
         setUpTableView()
         LabelNoProduct.isHidden = true
-          prepareUI()
-       
-    
+        prepareUI()
 
-        
+
+
+
 
     }
 
@@ -167,8 +167,9 @@ extension AccountsViewController: UITableViewDataSource, UITableViewDelegate {
         if section == 0 {
             let footerView = UIView(frame: CGRect(x: tableView.frame.minX + 20, y: 0, width: tableView.frame.width - 40, height: 95))
             let addDepositButton = UIButton(frame: CGRect(x: footerView.frame.minX, y: footerView.frame.minY + 15, width: footerView.frame.width, height: 45))
+            addDepositButton.addTarget(nil, action: #selector(CarouselViewController.createProductButtonClicked), for: .touchUpInside)
 
-            addDepositButton.setTitle("Открыть счет", for: .normal)
+            addDepositButton.setTitle("Открыть продукт", for: .normal)
             addDepositButton.titleLabel?.font = UIFont(name: "Roboto-Regular", size: 16)
             addDepositButton.setTitleColor(.black, for: [])
 
