@@ -48,7 +48,7 @@ class CarouselViewController: UIViewController, StoreSubscriber {
             return Array<AnyHashable>(dynamicMenuItems) + Array<AnyHashable>(staticMenuItems)
         }
     }
-    var dynamicMenuItems: Array<ProductType> = []
+    var dynamicMenuItems: Array<ProductType> = [ProductType.card, ProductType.account, ProductType.deposit, ProductType.loan]
     var staticMenuItems: Array<String> = ["История"]
     var segueId: String? = nil
     var backSegueId: String? = nil
