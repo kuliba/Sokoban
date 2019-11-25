@@ -10,26 +10,26 @@ import UIKit
 import DeviceKit
 
 class AccountsSegueAnimator: NSObject, UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate {
-    
+
     let iphone5Devices = Constants.iphone5Devices
-    let xDevices = Constants.xDevices
-    
+    let xDevices = Constants.browDevices
+
     // MARK: методы протокола UIViewControllerTransitioningDelegate
-    
+
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return self
     }
-    
+
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return self
     }
-    
+
     // MARK: методы протокола UIViewControllerAnimatedTransitioning
-    
+
     open func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.4
     }
-    
+
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         if transitionContext.viewController(forKey: .to) is ProductDetailsViewController {
             animateSegueToDetailsViewController(using: transitionContext)
@@ -40,7 +40,7 @@ class AccountsSegueAnimator: NSObject, UIViewControllerAnimatedTransitioning, UI
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         }
     }
-    
+
 }
 
 //extension AccountsSegueAnimator: CAAnimationDelegate {
@@ -51,9 +51,9 @@ class AccountsSegueAnimator: NSObject, UIViewControllerAnimatedTransitioning, UI
 
 // MARK: - Private methods
 extension AccountsSegueAnimator {
-    
+
     func animateSegueToDetailsViewController(using transitionContext: UIViewControllerContextTransitioning) {
-        
+
         guard
             let fromVC = transitionContext.viewController(forKey: .from) as? UIViewController & CustomTransitionOriginator,
             let toVC = transitionContext.viewController(forKey: .to) as? UIViewController & CustomTransitionDestination
@@ -72,8 +72,8 @@ extension AccountsSegueAnimator {
             snapshot.frame = container.convert(view.frame, from: view.superview)
             return snapshot
         }
-        
-        
+
+
         let toSnapshots = toVC.toAnimatedSubviews/*.mapValues { view -> UIView in
             let snapshot = view.snapshotView(afterScreenUpdates: true)!
             snapshot.frame = container.convert(view.frame, from: view.superview)
@@ -86,44 +86,44 @@ extension AccountsSegueAnimator {
         let maskedWhiteBackgroundView = UIView()
         maskedWhiteBackgroundView.frame = tableSnapshot.frame
         maskedWhiteBackgroundView.backgroundColor = .white
-        
+
         tableSnapshot.layer.opacity = 0
         fromSnapshots["tableView"]?.layer.opacity = 0
         fromSnapshots["carousel"]?.layer.opacity = 0
         maskedWhiteBackgroundView.layer.opacity = 0
-        
+
 //        container.addSubview(toVCsnapshot)
         container.addSubview(maskedWhiteBackgroundView)
         container.addSubview(fromSnapshots["carousel"]!)
         container.addSubview(fromSnapshots["tableView"]!)
         fromVC.view.removeFromSuperview()
         container.addSubview(tableSnapshot)
-        
+
         let roundedMask = CAShapeLayer()
         maskedWhiteBackgroundView.layer.mask = roundedMask
 
-        let initTop: CGFloat = Device().isOneOf(xDevices) ? 69 : 45
+        let initTop: CGFloat = Device.current.isOneOf(xDevices) ? 69 : 45
         let arcOffset: CGFloat = 33
-        
+
         let pathInitial = UIBezierPath()
-        pathInitial.move(to: CGPoint(x: 0, y: initTop+arcOffset))
-        pathInitial.addQuadCurve(to: CGPoint(x: maskedWhiteBackgroundView.frame.width, y: initTop+arcOffset), controlPoint: CGPoint(x: maskedWhiteBackgroundView.frame.width / 2, y: initTop))
+        pathInitial.move(to: CGPoint(x: 0, y: initTop + arcOffset))
+        pathInitial.addQuadCurve(to: CGPoint(x: maskedWhiteBackgroundView.frame.width, y: initTop + arcOffset), controlPoint: CGPoint(x: maskedWhiteBackgroundView.frame.width / 2, y: initTop))
         pathInitial.addLine(to: CGPoint(x: maskedWhiteBackgroundView.frame.width, y: maskedWhiteBackgroundView.frame.height))
         pathInitial.addLine(to: CGPoint(x: 0, y: maskedWhiteBackgroundView.frame.height))
         pathInitial.close()
-        
+
         let finalTop: CGFloat = toSnapshots["container"]!.frame.origin.y
 
         let pathFinal = UIBezierPath()
-        pathFinal.move(to: CGPoint(x: 0, y: finalTop+arcOffset))
-        pathFinal.addQuadCurve(to: CGPoint(x: maskedWhiteBackgroundView.frame.width, y: finalTop+arcOffset),
+        pathFinal.move(to: CGPoint(x: 0, y: finalTop + arcOffset))
+        pathFinal.addQuadCurve(to: CGPoint(x: maskedWhiteBackgroundView.frame.width, y: finalTop + arcOffset),
                                controlPoint: CGPoint(x: maskedWhiteBackgroundView.frame.width / 2, y: finalTop))
         pathFinal.addLine(to: CGPoint(x: maskedWhiteBackgroundView.frame.width, y: maskedWhiteBackgroundView.frame.height))
         pathFinal.addLine(to: CGPoint(x: 0, y: maskedWhiteBackgroundView.frame.height))
         pathFinal.close()
 
         roundedMask.path = pathInitial.cgPath
-        
+
         let dur = transitionDuration(using: transitionContext)
 
         CATransaction.begin()
@@ -141,34 +141,34 @@ extension AccountsSegueAnimator {
 
         let a3 = CAKeyframeAnimation(keyPath: "transform.translation.y")
         a3.keyTimes = [0, 1]
-        a3.values = [0, (finalTop-initTop)*0.9]
+        a3.values = [0, (finalTop - initTop) * 0.9]
         a3.duration = dur
 //        a3.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-        
+
         let a4 = CAKeyframeAnimation(keyPath: "transform.translation.y")
         a4.keyTimes = [0, 0.5, 1]
-        a4.values = [(finalTop-initTop)*0.5, (finalTop-initTop)*0.5, 0]
+        a4.values = [(finalTop - initTop) * 0.5, (finalTop - initTop) * 0.5, 0]
         a4.duration = dur
 //        a4.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-        
+
         let a5 = CAKeyframeAnimation(keyPath: "opacity")
         a5.keyTimes = [0, 0.5, 1]
         a5.values = [0, 0, 1]
         a5.duration = dur
 //        a5.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-        
+
         let a6 = CAKeyframeAnimation(keyPath: "opacity")
         a6.keyTimes = [0, 1]
-        a6.values = [1,1]
+        a6.values = [1, 1]
         a6.duration = dur
-        
+
         //completition
         CATransaction.setCompletionBlock {
 //            toVC.view.alpha = 1
 //            gradientLayer.removeFromSuperlayer()
 //            snapshot.removeFromSuperview()
             fromSnapshots.forEach({ (tuple) in
-                
+
                 tuple.1.removeFromSuperview()
             })
 //            toVCsnapshot.removeFromSuperview()
@@ -177,7 +177,7 @@ extension AccountsSegueAnimator {
             print("animateSegueToDetailsViewController after \(container.subviews)")
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         }
-        
+
         // add animation
         roundedMask.add(a1, forKey: "path")
         fromSnapshots["carousel"]?.layer.add(a2, forKey: "opacity")
@@ -188,9 +188,9 @@ extension AccountsSegueAnimator {
         maskedWhiteBackgroundView.layer.add(a6, forKey: "opacity")
         CATransaction.commit()
     }
-    
+
     func animateUnwindSegue(using transitionContext: UIViewControllerContextTransitioning) {
-        
+
         guard
             let fromVC = transitionContext.viewController(forKey: .from) as? UIViewController & CustomTransitionOriginator,
             let toVC = transitionContext.viewController(forKey: .to) as? UIViewController & CustomTransitionDestination
@@ -206,8 +206,8 @@ extension AccountsSegueAnimator {
 
         let fromSnapshots = fromVC.fromAnimatedSubviews
         let fromVCsnapshot = fromVC.view.snapshotView(afterScreenUpdates: false)!
-        
-        
+
+
         let toSnapshots = toVC.toAnimatedSubviews.mapValues { view -> UIView in
             let snapshot = view.snapshotView(afterScreenUpdates: true)!
             snapshot.frame = container.convert(view.frame, from: view.superview)
@@ -215,19 +215,19 @@ extension AccountsSegueAnimator {
         }
 
         let tableSnapshot = fromSnapshots["tableView"]!
-        
+
 //        let toVCsnapshot = toVC.view.snapshotView(afterScreenUpdates: true)!
 
         let maskedWhiteBackgroundView = UIView()
         maskedWhiteBackgroundView.frame = tableSnapshot.frame
         maskedWhiteBackgroundView.backgroundColor = .white
-        
+
         tableSnapshot.layer.opacity = 0
         toSnapshots["tableView"]?.layer.opacity = 0
         toSnapshots["carousel"]?.layer.opacity = 0
         maskedWhiteBackgroundView.layer.opacity = 0
         fromVCsnapshot.layer.opacity = 0
-        
+
         container.addSubview(fromVCsnapshot)
         fromVC.view.removeFromSuperview()
 //        container.addSubview(toVCsnapshot)
@@ -235,25 +235,25 @@ extension AccountsSegueAnimator {
         container.addSubview(toSnapshots["carousel"]!)
         container.addSubview(toSnapshots["tableView"]!)
         container.addSubview(tableSnapshot)
-        
+
         let roundedMask = CAShapeLayer()
         maskedWhiteBackgroundView.layer.mask = roundedMask
 
-        let initTop: CGFloat = Device().isOneOf(xDevices) ? 69 : 45
+        let initTop: CGFloat = Device.current.isOneOf(xDevices) ? 69 : 45
         let arcOffset: CGFloat = 33
-        
+
         let pathInitial = UIBezierPath()
-        pathInitial.move(to: CGPoint(x: 0, y: initTop+arcOffset))
-        pathInitial.addQuadCurve(to: CGPoint(x: maskedWhiteBackgroundView.frame.width, y: initTop+arcOffset), controlPoint: CGPoint(x: maskedWhiteBackgroundView.frame.width / 2, y: initTop))
+        pathInitial.move(to: CGPoint(x: 0, y: initTop + arcOffset))
+        pathInitial.addQuadCurve(to: CGPoint(x: maskedWhiteBackgroundView.frame.width, y: initTop + arcOffset), controlPoint: CGPoint(x: maskedWhiteBackgroundView.frame.width / 2, y: initTop))
         pathInitial.addLine(to: CGPoint(x: maskedWhiteBackgroundView.frame.width, y: maskedWhiteBackgroundView.frame.height))
         pathInitial.addLine(to: CGPoint(x: 0, y: maskedWhiteBackgroundView.frame.height))
         pathInitial.close()
-        
+
         let finalTop: CGFloat = fromSnapshots["container"]!.frame.origin.y
-        
+
         let pathFinal = UIBezierPath()
-        pathFinal.move(to: CGPoint(x: 0, y: finalTop+arcOffset))
-        pathFinal.addQuadCurve(to: CGPoint(x: maskedWhiteBackgroundView.frame.width, y: finalTop+arcOffset),
+        pathFinal.move(to: CGPoint(x: 0, y: finalTop + arcOffset))
+        pathFinal.addQuadCurve(to: CGPoint(x: maskedWhiteBackgroundView.frame.width, y: finalTop + arcOffset),
                                controlPoint: CGPoint(x: maskedWhiteBackgroundView.frame.width / 2, y: finalTop))
         pathFinal.addLine(to: CGPoint(x: maskedWhiteBackgroundView.frame.width, y: maskedWhiteBackgroundView.frame.height))
         pathFinal.addLine(to: CGPoint(x: 0, y: maskedWhiteBackgroundView.frame.height))
@@ -262,7 +262,7 @@ extension AccountsSegueAnimator {
         roundedMask.path = pathFinal.cgPath
 
         let dur = transitionDuration(using: transitionContext)
-        
+
         CATransaction.begin()
         let a1 = CAKeyframeAnimation(keyPath: "path")
         a1.keyTimes = [0, 0.9, 1]
@@ -278,13 +278,13 @@ extension AccountsSegueAnimator {
 
         let a3 = CAKeyframeAnimation(keyPath: "transform.translation.y")
         a3.keyTimes = [0, 0.9, 1]
-        a3.values = [(finalTop-initTop)*0.9, 0, 0]
+        a3.values = [(finalTop - initTop) * 0.9, 0, 0]
         a3.duration = dur
 //        a3.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
 
         let a4 = CAKeyframeAnimation(keyPath: "transform.translation.y")
         a4.keyTimes = [0, 0.5, 1]
-        a4.values = [0, (finalTop-initTop)/2, (finalTop-initTop)/2]
+        a4.values = [0, (finalTop - initTop) / 2, (finalTop - initTop) / 2]
         a4.duration = dur
 //        a4.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
 
@@ -296,14 +296,14 @@ extension AccountsSegueAnimator {
 
         let a6 = CAKeyframeAnimation(keyPath: "opacity")
         a6.keyTimes = [0, 1]
-        a6.values = [1,1]
+        a6.values = [1, 1]
         a6.duration = dur
 
         let a7 = CAKeyframeAnimation(keyPath: "opacity")
         a7.keyTimes = [0, 0.9, 1]
         a7.values = [1, 1, 0]
         a7.duration = dur
-        
+
         //completition
         CATransaction.setCompletionBlock {
             toSnapshots.forEach({ (tuple) in
@@ -315,7 +315,7 @@ extension AccountsSegueAnimator {
             tableSnapshot.removeFromSuperview()
             print("animateUnwindSegue after \(container.subviews)")
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-            
+
         }
 
         // add animation

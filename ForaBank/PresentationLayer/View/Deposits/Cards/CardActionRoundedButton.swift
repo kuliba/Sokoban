@@ -30,6 +30,9 @@ class CardActionRoundedButton: UIButton {
         self.backgroundColor = .clear
         self.layer.borderWidth = 0.5
         self.layer.borderColor = UIColor(hexFromString: "D3D3D3")!.cgColor
+        self.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        self.tintColor = .black
+        self.translatesAutoresizingMaskIntoConstraints = false
     }
     
     required init?(coder aDecoder: NSCoder) {

@@ -416,8 +416,8 @@ extension RegistrationCodeVerificationViewController: UITextFieldDelegate {
         }
         guard let text = textField.text else { return true }
         let count = text.count + string.count - range.length
-        continueButton?.isEnabled = count >= 3
-        continueButton?.alpha = (count >= 3) ? 1 : 0.25
+        continueButton?.isEnabled = count >= 6
+        continueButton?.alpha = (count >= 6) ? 1 : 0.25
         return true
     }
 }

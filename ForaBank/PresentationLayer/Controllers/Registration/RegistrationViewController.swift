@@ -447,7 +447,7 @@ private extension RegistrationViewController {
     func setUpCardNumberTextField() {
         cardNumberTextField.addTarget(self, action: #selector(reformatAsCardNumber), for: .editingChanged)
 
-        if Device().isOneOf(Constants.iphone5Devices) {
+        if Device.current.isOneOf(Constants.iphone5Devices) {
             cardNumberTextField.font = cardNumberTextField.font!.withSize(14)
         }
 

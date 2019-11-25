@@ -146,18 +146,24 @@ enum Constants {
     static let iphone5Devices: [Device] = [.iPhone5, .iPhone5c, .iPhone5s, .iPhoneSE,
                                                .simulator(.iPhone5), .simulator(.iPhone5c), .simulator(.iPhone5s), .simulator(.iPhoneSE)]
 
-    static let xDevices: [Device] = [
+    static let browDevices: [Device] = [
             .iPhoneX,
             .iPhoneX,
-            .iPhoneXr,
-            .iPhoneXs,
-            .iPhoneXsMax,
+            .iPhoneXR,
+            .iPhoneXS,
+            .iPhoneXSMax,
+            .iPhone11,
+            .iPhone11Pro,
+            .iPhone11ProMax,
 
             .simulator(.iPhoneX),
             .simulator(.iPhoneX),
-            .simulator(.iPhoneXr),
-            .simulator(.iPhoneXs),
-            .simulator(.iPhoneXsMax)
+            .simulator(.iPhoneXR),
+            .simulator(.iPhoneXS),
+            .simulator(.iPhoneXSMax),
+            .simulator(.iPhone11),
+            .simulator(.iPhone11Pro),
+            .simulator(.iPhone11ProMax),
     ]
 }
 

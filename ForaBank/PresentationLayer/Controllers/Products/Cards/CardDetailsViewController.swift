@@ -30,7 +30,7 @@ class CardDetailsViewController: UIViewController {
     var card: Card? = nil
 
     var offset: CGFloat = {
-        if Device().isOneOf(Constants.xDevices) {
+        if Device.current.isOneOf(Constants.browDevices) {
             return 100 // models: x
         } else {
             return 75 // models 7 7+ se
@@ -371,9 +371,9 @@ extension CardDetailsViewController: iCarouselDataSource, iCarouselDelegate {
         }
 
         if option == .arc {
-            if Device().isOneOf(Constants.iphone5Devices) {
+            if Device.current.isOneOf(Constants.iphone5Devices) {
                 return CGFloat(Double.pi) / 2.5 // 2.75 - if not authorized
-            } else if Device().isOneOf(Constants.xDevices) {
+            } else if Device.current.isOneOf(Constants.browDevices) {
                 return CGFloat(Double.pi) / 3.25 // 3.5 - if not authorized
             } else {
                 return CGFloat(Double.pi) / 3.25 // 3.5 - if not authorized
@@ -381,9 +381,9 @@ extension CardDetailsViewController: iCarouselDataSource, iCarouselDelegate {
         }
 
         if option == .radius {
-            if Device().isOneOf(Constants.iphone5Devices) {
+            if Device.current.isOneOf(Constants.iphone5Devices) {
                 return 800
-            } else if Device().isOneOf(Constants.xDevices) {
+            } else if Device.current.isOneOf(Constants.browDevices) {
                 return 1300
             } else {
                 return 1300

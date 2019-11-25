@@ -49,9 +49,9 @@ class ProfileNavigationController: UINavigationController {
         pageControl.setCurrentPage(at: 0)
         view.addSubview(pageControl)
         var topInset: CGFloat = 0
-        if Device().isOneOf(Constants.iphone5Devices) {
+        if Device.current.isOneOf(Constants.iphone5Devices) {
             topInset = 77
-        } else if Device().isOneOf(Constants.xDevices) {
+        } else if Device.current.isOneOf(Constants.browDevices) {
             topInset = 101
         } else {
             topInset = 101

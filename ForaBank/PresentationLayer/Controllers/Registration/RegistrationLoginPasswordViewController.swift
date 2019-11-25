@@ -78,17 +78,17 @@ class RegistrationLoginPasswordViewController: UIViewController {
 
     var cardNumber: String? = nil
 
-   
+
     @IBAction func linkPrivacyPolicy(_ sender: Any) {
-       UIApplication.shared.openURL(URL(string: "https://www.forabank.ru/private/dokumenty/UKBO_03-08-2019.pdf")!)
-        
+        UIApplication.shared.openURL(URL(string: "https://www.forabank.ru/private/dokumenty/UKBO_03-08-2019.pdf")!)
     }
+
     var segueId: String? = nil
     var backSegueId: String? = nil
 //    let pageControl = FlexiblePageControl()
     let gradientView = UIView()
     let circleView = UIView()
-   
+
     // MARK: - Actions
     @IBAction func backButtonCLicked(_ sender: Any) {
         segueId = backSegueId
@@ -245,7 +245,7 @@ class RegistrationLoginPasswordViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-      
+
         addGradientLayerView()
 //        addCircleView()
         if pageControl != nil {

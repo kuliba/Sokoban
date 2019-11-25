@@ -11,7 +11,7 @@ struct GlobalConstants {
 //MARK: String Constants
     struct Strings {
         static let birthdayDateFormat = "MMM d"
-        static let contactsTitle = "Contacts"
+        static let contactsTitle = "Контакты"
         static let phoneNumberNotAvaialable = "No phone numbers available"
         static let emailNotAvaialable = "No emails available"
         static let bundleIdentifier = "JFContactsPicker"

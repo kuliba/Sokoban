@@ -192,10 +192,12 @@ extension DepositsViewController: UITableViewDataSource, UITableViewDelegate {
             let footerView = UIView(frame: CGRect(x: tableView.frame.minX + 20, y: 0, width: tableView.frame.width - 40, height: 95))
             let doneButton = UIButton(type: .system)
       
+            doneButton.addTarget(nil, action: #selector(CarouselViewController.createProductButtonClicked), for: .touchUpInside)
+
             
             doneButton.frame = CGRect(x: footerView.frame.minX, y: footerView.frame.minY + 15, width: footerView.frame.width, height: 45)
 
-            doneButton.setTitle("Открыть вклад", for: .normal)
+            doneButton.setTitle("Открыть продукт", for: .normal)
 
             doneButton.titleLabel?.font = UIFont(name: "Roboto-Regular", size: 16)
 
