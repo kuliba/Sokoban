@@ -9,7 +9,7 @@ target 'ForaBank' do
   pod 'RMMapper'  
   pod 'KeychainAccess'
   pod 'iCarousel', '1.8.3'
-  pod 'DeviceKit', '1.11.0'
+  pod 'DeviceKit'
   pod 'FlexiblePageControl', '1.0.7'
   pod 'IQKeyboardManagerSwift', '6.2.0'
   pod 'Alamofire', '4.8.0'

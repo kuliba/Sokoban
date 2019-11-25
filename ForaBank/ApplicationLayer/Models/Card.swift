@@ -16,7 +16,6 @@ enum CardType: String {
 }
 
 class Card: Mappable, IProduct {
-    var name: String
     var product: String
     var balance: Double
     var number: String
@@ -28,6 +27,7 @@ class Card: Mappable, IProduct {
 
     var customName: String?
 
+    var name: String?
     var type: CardType?
     var paypass: Bool?
     var miniStatement: String?
@@ -49,19 +49,20 @@ class Card: Mappable, IProduct {
         return [
             AboutItem(title: "Доступный остаток", value: "\(balance)"),
 
-            AboutItem(title: "Тариф", value: name)]
+            AboutItem(title: "Тариф", value: name ?? "")]
     }
 
     required init(map: Mapper) throws {
         try number = map.from("number")
-        try name = map.from("name")
         try product = map.from("product")
         try balance = map.from("balance")
         try id = map.from("cardID")
         try status = map.from("status")
         try holderName = map.from("holderName")
         try validThru = map.from("validThru")
-        
+
+        name = map.optionalFrom("name")
+
         var mskd = ""
         if number.count > 0 {
             mskd = String(number.prefix(6))

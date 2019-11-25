@@ -95,7 +95,7 @@ class PaymentServices: IPaymetsApi {
             NetworkManager.shared().getCardList { (success, cards) in
                 if success, let nonNilCards = cards {
                     let options = nonNilCards.compactMap({ (card) -> PaymentOption? in
-                        return PaymentOption(id: card.id, name: card.name, type: .paymentOption, sum: card.balance, number: card.number, maskedNumber: card.maskedNumber, provider: card.type?.rawValue ?? "")
+                        return PaymentOption(id: card.id, name: card.name ?? "", type: .paymentOption, sum: card.balance, number: card.number, maskedNumber: card.maskedNumber, provider: card.type?.rawValue ?? "")
                     })
                     paymentOptions.append(contentsOf: options)
                 }
