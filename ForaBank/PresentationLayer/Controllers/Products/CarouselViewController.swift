@@ -40,6 +40,7 @@ class CarouselViewController: UIViewController, StoreSubscriber {
         [UIColor(hexFromString: "EF4136")!, UIColor(hexFromString: "EF4136")!]
     ]
     let browDevices = Constants.browDevices
+    var router: ProductsNavigator?
     weak var currentViewController: UIViewController?
     var labels = [UILabel?]()
     var menuItems: Array<AnyHashable> {
@@ -51,7 +52,7 @@ class CarouselViewController: UIViewController, StoreSubscriber {
     var staticMenuItems: Array<String> = ["История"]
     var segueId: String? = nil
     var backSegueId: String? = nil
-
+    var previousIndex = -1
 
 
     // MARK: - Lifecycle

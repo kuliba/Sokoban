@@ -20,6 +20,7 @@ class DataItem : Equatable {
 
 class ViewController: UIViewController, KDDragAndDropCollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
    
+    @IBOutlet weak var viewCollection: RoundedEdgeView!
     
     @IBOutlet weak var firstCollectionView: KDDragAndDropCollectionView!
     @IBOutlet weak var secondCollectionView: KDDragAndDropCollectionView!
@@ -27,10 +28,10 @@ class ViewController: UIViewController, KDDragAndDropCollectionViewDataSource, U
     
     var items: [Any] = ICollectionViewCell.getArray()
     var images: [String] = [
-        "phone", "transfer", "history", "account"
+        "phone", "transfer", "account", "history"
     ]
     var labeltext: [String] = [
-          "Перевод по номеру телефона", "Перевод по номеру карты", "История", "Перевод между своими счетами"
+          "Перевод по номеру телефона", "Перевод по номеру карты", "Перевод между своими счетами", "История"
       ]
 
     
@@ -63,9 +64,8 @@ class ViewController: UIViewController, KDDragAndDropCollectionViewDataSource, U
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        return CGSize(width: 204, height: 157)
-    }
+        return CGSize(width: view.frame.width/2, height: viewCollection.frame.height/3)
+        }
 
     
     // MARK : UICollectionViewDataSource
@@ -74,9 +74,7 @@ class ViewController: UIViewController, KDDragAndDropCollectionViewDataSource, U
             guard let paymentDetailsVC = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentDetailsViewController") as? PaymentsDetailsViewController else {
                 return
             }
-        guard let histroyDetail = UIStoryboard(name: "Deposits", bundle: nil).instantiateViewController(withIdentifier: "deposits4") as? DepositsHistoryViewController else {
-                       return
-                   }
+     
 
             let sourceProvider = PaymentOptionCellProvider()
             let destinationProvider = PaymentOptionCellProvider()
@@ -112,9 +110,11 @@ class ViewController: UIViewController, KDDragAndDropCollectionViewDataSource, U
                                ]
                 break
             case "История":
-             let storyBoard : UIStoryboard = UIStoryboard(name: "Deposits", bundle:nil)
-                let nextViewController = storyBoard.instantiateViewController(withIdentifier: "deposits4") as! DepositsHistoryViewController
-                self.present(nextViewController, animated:true, completion:nil)
+               let alert = UIAlertController(title: "Не доступно", message: "Функционал в разработке", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default) { action in
+                                            // обработка нажатия кнопки
+                                        })
+                self.present(alert, animated: true, completion: nil)
 
                 
             break

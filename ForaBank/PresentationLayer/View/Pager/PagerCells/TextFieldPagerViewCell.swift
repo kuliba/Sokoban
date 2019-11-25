@@ -52,31 +52,6 @@ class TextFieldPagerViewCell: FSPagerViewCell,  IConfigurableCell, ContactsPicke
         }
 
     
-     public func contactPicker(_ picker: ContactsPicker, didSelectMultipleContacts contacts: [Contact]) {
-      
-             defer { picker.dismiss(animated: true, completion: nil) }
-             guard !contacts.isEmpty else { return }
-             print("The following contacts are selected")
-             for contact in contacts {
-              print("\(contact.displayName)","\(contact.phoneNumbers)")
-         
-          
-          if  contacts != nil {
-              var number: String
-              nameContact.isHidden = true
-              number = "\(contact.phoneNumbers[0])"
-              
-              if let i = number.firstIndex(of: "7"){
-                  number.remove(at: i)
-             
-                let numberFormatted = formattedNumberInPhoneContacts(number: String(number))
-                  textField.text = "\(numberFormatted)"
-            }
-                }
-        }
-        
-    }
-    
     public func configure(provider: ICellProvider) {
         
         
