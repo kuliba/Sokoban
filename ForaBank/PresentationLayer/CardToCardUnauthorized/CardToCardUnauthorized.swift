@@ -113,14 +113,11 @@ class CardToCardUnauthorized: UIViewController {
     }
 
     @IBAction func `continue`(_ sender: Any) {
-        guard let cardNumber = cardNumberTextField.text?.removeWhitespace() else {
-            let alert = UIAlertController(title: "Неудача", message: "Номер карты неправильно введен", preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-            return
-        }
-        checkedCardNumber = cardNumber
-        performSegue(withIdentifier: "loginPassword", sender: nil)
+       let alert = UIAlertController(title: "Функционал не доступен", message: "В разработке", preferredStyle: .alert)
+       alert.addAction(UIAlertAction(title: "OK", style: .default) { action in
+                                   // обработка нажатия кнопки
+                               })
+       self.present(alert, animated: true, completion: nil)
     }
     @IBAction func cardDatasChanged(_ textField: UITextField) {
         if textField.tag == 2 || textField.tag == 3,

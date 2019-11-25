@@ -66,7 +66,6 @@ class TextFieldPagerViewCell: FSPagerViewCell,  IConfigurableCell, ContactsPicke
         if textInputCellProvider.currentValue == nil {
                      self.textField.reloadInputViews()
                      print(self.contactNumber)
-                     print("pisya")
             textInputCellProvider.currentValue = textField.text
                  }
          buttonContactList.isHidden = true
