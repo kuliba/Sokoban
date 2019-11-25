@@ -34,4 +34,8 @@ extension UIColor {
     @nonobjc class var unselectedBlack: UIColor {
         return UIColor(red: 0.325, green: 0.325, blue: 0.325, alpha: 1)
     }
+
+    @nonobjc class var commonRed: UIColor {
+        return UIColor(hexFromString: "ED433D") ?? UIColor.red
+    }
 }

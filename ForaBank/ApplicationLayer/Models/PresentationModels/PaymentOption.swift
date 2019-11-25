@@ -52,7 +52,7 @@ struct PaymentOption: IPickerItem, IPresentationModel {
 
     init(product: IProduct) {
         id = product.id
-        name = product.name
+        name = product.name ?? ""
         sum = product.balance
         number = product.number
         maskedNumber = product.maskedNumber
