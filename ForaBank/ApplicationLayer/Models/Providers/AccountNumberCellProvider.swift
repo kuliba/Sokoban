@@ -14,6 +14,7 @@ class AccountNumberCellProvider: NSObject, ITextInputCellProvider {
     let placeholder = "Введите номер счёта"
     let charactersMaxCount = 24
     let keyboardType: UIKeyboardType = .numberPad
+    let isScan = false
 
     var currentValue: IPresentationModel?
     var isLoading: Bool = false

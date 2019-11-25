@@ -14,6 +14,7 @@ class CardNumberCellProvider: NSObject, ITextInputCellProvider {
     let placeholder = "Введите номер карты"
     let charactersMaxCount = 19
     let keyboardType: UIKeyboardType = .numberPad
+    let isScan = true
 
     var currentValue: IPresentationModel?
     var isLoading: Bool = false

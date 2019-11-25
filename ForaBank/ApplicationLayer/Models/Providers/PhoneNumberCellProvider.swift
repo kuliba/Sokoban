@@ -14,7 +14,8 @@ class PhoneNumberCellProvider: NSObject, ITextInputCellProvider {
     let placeholder = "Введите номер телефона"
     let charactersMaxCount = 17
     let keyboardType: UIKeyboardType = .phonePad
-    
+    let isScan = false
+
     var currentValue: IPresentationModel?
     var isLoading: Bool = false
 

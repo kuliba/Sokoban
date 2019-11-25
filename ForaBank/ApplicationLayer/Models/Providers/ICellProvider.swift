@@ -26,6 +26,8 @@ protocol ITextInputCellProvider: ICellProvider, UITextFieldDelegate {
     var placeholder: String { get }
     var charactersMaxCount: Int { get }
     var keyboardType: UIKeyboardType { get }
+    var isScan: Bool { get }
+
 
     func formatted(stringToFormat string: String) -> String
 }
