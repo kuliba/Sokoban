@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "tabbar_icon_services.png",
+      "filename" : "active oncierge.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "tabbar_icon_services@2x.png",
+      "filename" : "active oncierge (1).png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "tabbar_icon_services@3x.png",
+      "filename" : "active oncierge (2).png",
       "scale" : "3x"
     }
   ],

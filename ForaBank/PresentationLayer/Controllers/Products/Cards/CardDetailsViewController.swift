@@ -26,7 +26,7 @@ class CardDetailsViewController: UIViewController {
     @IBOutlet weak var backgroundImageView: UIImageView!
    var cards: [Card] = [Card]()
     var previousIndex = -1
-
+    var newName: String?
     var card: Card? = nil
 
     var offset: CGFloat = {
@@ -56,13 +56,19 @@ class CardDetailsViewController: UIViewController {
         }
     }
     
-
+    @objc func handlePopucclosing(notification: Notification){
+        let customNameVc = notification.object as! String
+        cardView.titleLabel.text = customNameVc
+      
+           }
     // MARK: - Lifecycle
     override func viewDidLoad() {
+            NotificationCenter.default.addObserver(self, selector: #selector(handlePopucclosing), name: NSNotification.Name(rawValue: "customName"), object: nil)
+        
+        
         let vc = UIViewController()
         vc.modalPresentationStyle = .overFullScreen
         self.present(vc, animated: true, completion: nil)
-        
         if let card = card {
             cardView.update(withCard: card)
             cardView.backgroundImageView.alpha = 0

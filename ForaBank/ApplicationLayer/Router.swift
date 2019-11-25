@@ -41,11 +41,9 @@ func showPaymentViewController() {
 
 func showPaymentsTableViewController() {
     let paymentsTableVC = PaymentsTableViewController()
-    guard let paymentsVC = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentsViewController") as? PaymentsViewController else {
+    guard let paymentsVC = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentsTableViewController") as? PaymentsTableViewController else {
         return
     }
 
-    paymentsVC.altTableViewDataSource = paymentsTableVC
-    paymentsVC.altTableViewDelegate = paymentsTableVC
     topMostVC()?.present(paymentsVC, animated: true)
 }
