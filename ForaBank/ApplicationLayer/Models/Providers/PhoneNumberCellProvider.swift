@@ -13,7 +13,8 @@ class PhoneNumberCellProvider: NSObject, ITextInputCellProvider {
     let iconName = "payments_services_phone-billing"
     let placeholder = "Введите номер телефона"
     let charactersMaxCount = 17
-
+    let keyboardType: UIKeyboardType = .phonePad
+    
     var currentValue: IPresentationModel?
     var isLoading: Bool = false
 

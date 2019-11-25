@@ -25,6 +25,7 @@ protocol ITextInputCellProvider: ICellProvider, UITextFieldDelegate {
     var iconName: String { get }
     var placeholder: String { get }
     var charactersMaxCount: Int { get }
-    
+    var keyboardType: UIKeyboardType { get }
+
     func formatted(stringToFormat string: String) -> String
 }

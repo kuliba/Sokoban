@@ -13,6 +13,7 @@ class AccountNumberCellProvider: NSObject, ITextInputCellProvider {
     let iconName = "feed_option_accounts"
     let placeholder = "Введите номер счёта"
     let charactersMaxCount = 24
+    let keyboardType: UIKeyboardType = .numberPad
 
     var currentValue: IPresentationModel?
     var isLoading: Bool = false
