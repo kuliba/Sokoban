@@ -1,0 +1,14 @@
+//
+//  ProductsList.swift
+//  ForaBank
+//
+//  Created by Бойко Владимир on 14.11.2019.
+//  Copyright © 2019 (C) 2017-2019 OОО "Бриг Инвест". All rights reserved.
+//
+
+import Foundation
+
+let productList = [(title: "Карта", image: "card-colored"),
+                   (title: "Счёт", image: "account-colored"),
+                   (title: "Вклад", image: "deposit-colored"),
+                   (title: "Кредит", image: "loan-colored")]

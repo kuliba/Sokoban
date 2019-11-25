@@ -9,7 +9,7 @@
 import Mapper
 
 class Account: Mappable, IProduct {
-    var name: String {
+    var name: String? {
         get {
             productName
         }

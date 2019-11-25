@@ -19,7 +19,12 @@ class WelcomeViewController: UIViewController, StoreSubscriber {
     @IBOutlet weak var greetingLabel: UILabel!
     @IBOutlet weak var nameLabel: UILabel!
 
-    let transitionDuration: TimeInterval = 2
+    var timerMin: Timer?
+    var timerMax: Timer?
+
+    let transitionMinDuration: TimeInterval = 2
+    let transitionMaxDuration: TimeInterval = 10
+    var isProductsLoaded = false
 
     var segueId: String? = nil
     var animator: UIViewPropertyAnimator? = nil
@@ -29,12 +34,12 @@ class WelcomeViewController: UIViewController, StoreSubscriber {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        greetingLabel.text = getGreeting() + ","
+        store.dispatch(invalidateCurrentProducts)
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) { [weak self] in
-            self?.navigationController?.popToRootViewController(animated: true)
-            self?.performSegue(withIdentifier: "formWelcomeToTabBarSegue", sender: nil)
-        }
+        timerMin = Timer.scheduledTimer(timeInterval: transitionMinDuration, target: self, selector: #selector(self.timerFired), userInfo: nil, repeats: false)
+        timerMax = Timer.scheduledTimer(timeInterval: transitionMaxDuration, target: self, selector: #selector(self.timerFired), userInfo: nil, repeats: false)
+
+        greetingLabel.text = getGreeting() + ","
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -94,7 +99,9 @@ class WelcomeViewController: UIViewController, StoreSubscriber {
             nameLabel.text = "\(firstName) \(patronymic)!"
         }
 
-        if productsState.isUpToDateProducts == true {
+        if let isUpToDatePoducts = productsState.isUpToDateProducts {
+            isProductsLoaded = isUpToDatePoducts
+            continueIfNeeded()
         }
     }
 }
@@ -116,5 +123,26 @@ private extension WelcomeViewController {
             break
         }
         return "Здравствуйте"
+    }
+
+    @objc private func timerFired(timer: Timer) {
+
+        if timer == timerMax {
+            isProductsLoaded = true
+        }
+        timer.invalidate()
+        continueIfNeeded()
+    }
+
+    private func continueIfNeeded() {
+        guard let timer = timerMin else {
+            return
+        }
+
+        if !timer.isValid && isProductsLoaded && self == topMostVC() {
+            DispatchQueue.main.async { [weak self] in
+                self?.performSegue(withIdentifier: "fromWelcomeToTabBarSegue", sender: nil)
+            }
+        }
     }
 }

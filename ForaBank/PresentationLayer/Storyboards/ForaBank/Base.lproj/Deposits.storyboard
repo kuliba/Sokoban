@@ -75,7 +75,7 @@
         <!--Deposits View Controller-->
         <scene sceneID="Uc7-N4-90s">
             <objects>
-                <viewController storyboardIdentifier="deposits2" id="Iag-Bi-Zjh" customClass="DepositsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DepositsViewController" id="Iag-Bi-Zjh" customClass="DepositsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4Gt-nR-VR4">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -165,7 +165,7 @@
         <!--Loans View Controller-->
         <scene sceneID="vDq-M7-Y0Q">
             <objects>
-                <viewController storyboardIdentifier="deposits3" id="3vm-B4-e1J" userLabel="Loans View Controller" customClass="LoansViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoansViewController" id="3vm-B4-e1J" userLabel="Loans View Controller" customClass="LoansViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="E6a-tu-3Ev">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -247,7 +247,7 @@
         <!--Accounts View Controller-->
         <scene sceneID="CHq-xi-EoF">
             <objects>
-                <viewController storyboardIdentifier="deposits1" id="6dq-J5-Emt" customClass="AccountsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AccountsViewController" id="6dq-J5-Emt" customClass="AccountsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="HWW-p7-npH">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -315,12 +315,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iI0-1N-Nbh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-572" y="2396"/>
+            <point key="canvasLocation" x="-1682" y="48"/>
         </scene>
         <!--Deposits History View Controller-->
         <scene sceneID="c89-d9-vHz">
             <objects>
-                <viewController storyboardIdentifier="deposits4" id="9mX-Vi-gdx" customClass="DepositsHistoryViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DepositsHistoryViewController" id="9mX-Vi-gdx" customClass="DepositsHistoryViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="wsg-22-ki8">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -613,12 +613,12 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vIj-h2-jYU" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="hCu-fa-nln" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="911.20000000000005" y="913.94302848575717"/>
+            <point key="canvasLocation" x="913" y="880"/>
         </scene>
         <!--Deposits Cards List View Controller-->
         <scene sceneID="IPX-FN-eW7">
             <objects>
-                <viewController storyboardIdentifier="deposits0" modalPresentationStyle="fullScreen" id="VIS-28-LnS" customClass="DepositsCardsListViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DepositsCardsListViewController" modalPresentationStyle="fullScreen" id="VIS-28-LnS" customClass="DepositsCardsListViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2Cr-6Y-gsT">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -648,7 +648,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7nx-7B-LT7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1911" y="50"/>
+            <point key="canvasLocation" x="-2841" y="50"/>
         </scene>
         <!--Deposits Cards Details Statement View Controller-->
         <scene sceneID="nAA-UQ-j6T">
@@ -2088,7 +2088,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kqP-sd-G6h" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-586" y="3258"/>
+            <point key="canvasLocation" x="-1682" y="865"/>
         </scene>
         <!--Loans Details View Controller-->
         <scene sceneID="hUE-IL-H7B">
@@ -2223,7 +2223,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oXd-wy-SIG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-4" y="914.392803598201"/>
+            <point key="canvasLocation" x="-4" y="865"/>
         </scene>
         <!--Product About View Controller-->
         <scene sceneID="47A-0p-AMk">
@@ -2572,7 +2572,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="24b-85-VGj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-866.39999999999998" y="914.392803598201"/>
+            <point key="canvasLocation" x="-866" y="865"/>
         </scene>
         <!--Collapsible Table View Controller-->
         <scene sceneID="eYQ-SJ-XzC">
