@@ -266,6 +266,7 @@
 		BD21B670233915FD001C5CF7 /* Registration.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD21B66F233915FD001C5CF7 /* Registration.storyboard */; };
 		BD21B67223391C63001C5CF7 /* UnauthorizedZone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD21B67123391C63001C5CF7 /* UnauthorizedZone.storyboard */; };
 		BD21B67423391DE3001C5CF7 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD21B67323391DE3001C5CF7 /* Router.swift */; };
+		BD292FF5238BFC520018A7FC /* CardIOViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD292FF4238BFC520018A7FC /* CardIOViewControllerDelegate.swift */; };
 		BD35E82423438DC40016BA0D /* TextFieldPagerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD35E82223438DC40016BA0D /* TextFieldPagerViewCell.swift */; };
 		BD35E82523438DC40016BA0D /* TextFieldPagerViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD35E82323438DC40016BA0D /* TextFieldPagerViewCell.xib */; };
 		BD35E82723439A3B0016BA0D /* PagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD35E82623439A3B0016BA0D /* PagerView.swift */; };
@@ -607,6 +608,7 @@
 		BD21B66F233915FD001C5CF7 /* Registration.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Registration.storyboard; sourceTree = "<group>"; };
 		BD21B67123391C63001C5CF7 /* UnauthorizedZone.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = UnauthorizedZone.storyboard; sourceTree = "<group>"; };
 		BD21B67323391DE3001C5CF7 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		BD292FF4238BFC520018A7FC /* CardIOViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardIOViewControllerDelegate.swift; sourceTree = "<group>"; };
 		BD35E82223438DC40016BA0D /* TextFieldPagerViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldPagerViewCell.swift; sourceTree = "<group>"; };
 		BD35E82323438DC40016BA0D /* TextFieldPagerViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TextFieldPagerViewCell.xib; sourceTree = "<group>"; };
 		BD35E82623439A3B0016BA0D /* PagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerView.swift; sourceTree = "<group>"; };
@@ -1326,6 +1328,14 @@
 			path = API;
 			sourceTree = "<group>";
 		};
+		BD292FF3238BFBF70018A7FC /* Delegates */ = {
+			isa = PBXGroup;
+			children = (
+				BD292FF4238BFC520018A7FC /* CardIOViewControllerDelegate.swift */,
+			);
+			path = Delegates;
+			sourceTree = "<group>";
+		};
 		BD38198C232103EC0004728C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -1578,6 +1588,7 @@
 		BDCCE90C2350BC5E0087F5F2 /* PresentationLayer */ = {
 			isa = PBXGroup;
 			children = (
+				BD292FF3238BFBF70018A7FC /* Delegates */,
 				96E08A392371CF5F0070CA6A /* CardToCardUnauthorized */,
 				09E0F131215A617A0042FB6A /* Controllers */,
 				09E0F149215A6B170042FB6A /* Storyboards */,
@@ -2087,6 +2098,7 @@
 				094FFC0F218837580069DDCB /* LoginOrSignupViewController.swift in Sources */,
 				0942B86B21625F4800370C71 /* Service.swift in Sources */,
 				BDCCE90E2350BDB10087F5F2 /* ProfileViewController.swift in Sources */,
+				BD292FF5238BFC520018A7FC /* CardIOViewControllerDelegate.swift in Sources */,
 				09797559215A49020044C00A /* AppDelegate.swift in Sources */,
 				A568141F21CBCCB3002C0899 /* BankBranch.swift in Sources */,
 				A5C5E6E521A2B492001D6250 /* CardActionRoundedButton.swift in Sources */,

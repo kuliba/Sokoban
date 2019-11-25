@@ -17,7 +17,7 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPicker
     @IBOutlet weak var nameContact: UILabel!
 
     @IBAction func scanButtonClicked(_ sender: UIButton) {
-
+        showScanCardController(delegate: self)
     }
 
     @IBAction func contactsList(_ sender: Any) {
@@ -106,5 +106,19 @@ extension TextFieldPagerViewCell: UITextFieldDelegate {
         let formatedText = nonNilFormattingFunc(text)
         textField.text = formatedText
         newValueCallback?(cleanNumberString(string: text))
+    }
+}
+
+extension TextFieldPagerViewCell: CardIOPaymentViewControllerDelegate {
+    func userDidCancel(_ paymentViewController: CardIOPaymentViewController!) {
+        paymentViewController.dismiss(animated: true, completion: nil)
+    }
+
+    func userDidProvide(_ cardInfo: CardIOCreditCardInfo!, in paymentViewController: CardIOPaymentViewController!) {
+        if let info = cardInfo {
+            textField.text = info.cardNumber
+            textField.sendActions(for: .editingChanged)
+        }
+        paymentViewController.dismiss(animated: true, completion: nil)
     }
 }
