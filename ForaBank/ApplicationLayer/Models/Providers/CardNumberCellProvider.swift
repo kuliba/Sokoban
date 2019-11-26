@@ -10,7 +10,7 @@ import Foundation
 
 class CardNumberCellProvider: NSObject, ITextInputCellProvider {
 
-    let iconName = "payments_transfer_between-accounts"
+    let iconName = "feed_option_cards"
     let placeholder = "Введите номер карты"
     let charactersMaxCount = 19
     let keyboardType: UIKeyboardType = .numberPad
