@@ -41,16 +41,16 @@ protocol PaymentProcessHandlerDelegate {
 class PaymentDetailsPresenter: IPaymentDetailsPresenter {
     var delegate: PaymentDetailsPresenterDelegate
 
-    var canAskFee: Bool
-    var canMakePayment: Bool
+    var canAskFee = false
+    var canMakePayment = false
+
+    private var sourcePaymentOption: PaymentOption?
+    private var destinaionPaymentOption: PaymentOption?
+    private var sum: Double = 0.0
 
     init(delegate: PaymentDetailsPresenterDelegate) {
         self.delegate = delegate
     }
-
-    private var sourcePaymentOption: PaymentOption
-    private var destinaionPaymentOption: PaymentOption
-    private var sum: Double
 }
 
 extension PaymentDetailsPresenter: PaymentProcessHandlerDelegate {

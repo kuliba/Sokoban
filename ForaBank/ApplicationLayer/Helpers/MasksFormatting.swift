@@ -52,6 +52,24 @@ func formattedPhoneNumber(number: String) -> String {
     return result
 }
 
+func formattedNumberInPhoneContacts(number: String) -> String {
+    let cleanPhoneNumber = number.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
+    let mask = "+7 (XXX) XXX-XXXX"
+
+    var result = ""
+    var index = cleanPhoneNumber.startIndex
+    for ch in mask where index < cleanPhoneNumber.endIndex {
+
+        if ch == "X" {
+            result.append(cleanPhoneNumber[index])
+            index = cleanPhoneNumber.index(after: index)
+        } else {
+            result.append(ch)
+        }
+    }
+    return result
+}
+
 // Numbers masks
 
 func maskedString(string: String, mask: Array<Int>, separator: String) -> String {
