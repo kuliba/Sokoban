@@ -24,30 +24,15 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
     @IBOutlet weak var destinationName: UILabel!
     @IBOutlet weak var destinationNumber: UILabel!
     @IBOutlet weak var destinationSum: UILabel!
-    @IBAction func createTemplate(_ sender: Any) {
-        let alertVC = UIAlertController(title: "Функционал недоступен", message: "Функционал временно недоступен", preferredStyle: .alert)
-              let okAction = UIAlertAction(title: "Понятно", style: .cancel, handler: nil)
-              alertVC.addAction(okAction)
-              show(alertVC, sender: self)
-    }
-    
-    @IBOutlet weak var createTemplate: ButtonRounded!
-    
+
     // MARK: - Actions
     @IBAction func returnButtonClicked(_ sender: Any) {
         dismissToRootViewController()
     }
-    
-        var operationSum: String?
-      var sourceOption: PaymentOption?
-      var destinationOption: PaymentOption?
-      var destinationNum: String?
-
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
 
         arrowImageView.image = arrowImageView.image?.withRenderingMode(.alwaysTemplate)
         arrowImageView.tintColor = .white
@@ -55,26 +40,6 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
         returnButton.backgroundColor = .clear
         returnButton.layer.borderWidth = 1
         returnButton.layer.borderColor = UIColor.white.cgColor
-        
-        cardNameLabel.text = sourceOption?.name
-             if let value = destinationOption?.value {
-                 cardSumLabel.text = String(describing: value)
-             }
-             cardNumberLabel.text = sourceOption?.maskedNumber
-
-             destinationName.text = destinationOption?.name
-             if let value = destinationOption?.value {
-                 destinationSum.text = String(describing: value)
-             }
-
-             if destinationOption == nil {
-                 destinationNumber.text = destinationNum
-             } else {
-                 destinationNumber.text = destinationOption?.maskedNumber
-             }
-
-             sumLabel.text = "123 ₽"
-        
     }
 
     override func viewDidAppear(_ animated: Bool) {

@@ -751,7 +751,6 @@
 				09F2410B2170871F007B7D73 /* FeedInfoViewController.swift */,
 				09AF7077216F4A9600E7FCFC /* FeedUpcomingViewController.swift */,
 				09203D97216E150500902BD2 /* FeedOptionsViewController.swift */,
-				9696DED12387FAAE006BC972 /* WebC2CViewController.swift */,
 			);
 			path = Feed;
 			sourceTree = "<group>";
@@ -1198,6 +1197,7 @@
 			children = (
 				96E08A3A2371CF900070CA6A /* CardToCardUnauthorized.swift */,
 				96B0E5E3238D16460045FE7A /* ServiceBest2Pay.swift */,
+				9696DED12387FAAE006BC972 /* WebC2CViewController.swift */,
 			);
 			path = CardToCardUnauthorized;
 			sourceTree = "<group>";

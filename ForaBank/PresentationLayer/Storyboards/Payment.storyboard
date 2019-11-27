@@ -603,13 +603,13 @@
                                     <color key="titleColor" red="0.93805062770000003" green="0.25358119610000002" blue="0.2107679546" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" misplaced="YES" text="-9550 ₽" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J5q-LI-SJd">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" ambiguous="YES" misplaced="YES" text="-9550 ₽" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J5q-LI-SJd">
                                 <rect key="frame" x="107" y="199" width="136" height="43"/>
                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="32"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Перевод успешно совершен" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aGd-R4-Z3w">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Перевод успешно совершен" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aGd-R4-Z3w">
                                 <rect key="frame" x="34" y="249.5" width="257" height="22.5"/>
                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -773,7 +773,7 @@
                             <constraint firstItem="Gtw-UZ-fge" firstAttribute="bottom" secondItem="u46-KW-caT" secondAttribute="bottom" constant="38" id="PbB-1B-jwR"/>
                             <constraint firstItem="Gtw-UZ-fge" firstAttribute="trailing" secondItem="aGd-R4-Z3w" secondAttribute="trailing" constant="29" id="Z2M-Ef-jnX"/>
                             <constraint firstItem="Yhq-KU-zzm" firstAttribute="leading" secondItem="V48-Wh-DLl" secondAttribute="leading" id="a38-os-2Hd"/>
-                            <constraint firstItem="J5q-LI-SJd" firstAttribute="centerX" secondItem="V48-Wh-DLl" secondAttribute="centerX" id="aUA-i0-Hkt"/>
+                            <constraint firstItem="J5q-LI-SJd" firstAttribute="centerX" secondItem="V48-Wh-DLl" secondAttribute="centerX" constant="15" id="aUA-i0-Hkt"/>
                             <constraint firstItem="u46-KW-caT" firstAttribute="trailing" secondItem="Yhq-KU-zzm" secondAttribute="trailing" id="kB5-jn-kO1"/>
                             <constraint firstItem="V48-Wh-DLl" firstAttribute="leading" secondItem="Gtw-UZ-fge" secondAttribute="leading" constant="14" id="t8J-LX-gG6"/>
                         </constraints>
@@ -801,7 +801,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="320" height="30"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Платежи и переводы" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D6D-IF-bKx">
-                                    <rect key="frame" x="80" y="8.5" width="160" height="21.5"/>
+                                    <rect key="frame" x="80.5" y="11" width="159" height="19"/>
                                     <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
