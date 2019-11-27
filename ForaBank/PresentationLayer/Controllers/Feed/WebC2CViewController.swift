@@ -46,10 +46,10 @@ class WebC2CViewController: UIViewController {
                           }
                           let data = response.request
                       }
-       
+        
         let url = URL(string: "https://www.google.com")
         let request = URLRequest(url: url!)
-        let urlP2P = URL(string: "https://test.best2pay.net/webapi/P2PTransfer?sector=1009&address=Shirokaya%20str%2C%20b.%202%2C%20fl.%2036&pan1=4256901080001052&pan2=4656260150230695&amount=880")
+        let urlP2P = URL(string: "https://test.best2pay.net/webapi/P2PTransfer?sector=1009&apan2=4656260150230695&amount=1188000")
          let requestP2P = URLRequest(url: urlP2P!)
             
             

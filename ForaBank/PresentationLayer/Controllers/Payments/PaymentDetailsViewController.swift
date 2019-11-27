@@ -58,8 +58,7 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
     var selectedViewType: Bool = false //false - source; true - destination
     var activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
 
-//    private let sourceProvider = PaymentOptionCellProvider(asSource: true)
-//    private let destinationProvider = PaymentOptionCellProvider(asSource: true)
+    
     var sourceConfigurations: [ICellConfigurator]?
     var destinationConfigurations: [ICellConfigurator]?
 
@@ -114,7 +113,7 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
         let sourceNumber = sourceConfig.stringFromSelection()
         let destinationNumber = destinationConfig.stringFromSelection()
         let completion: (Bool, String?) -> Void = { [weak self] (success, token) in
-            //store.dispatch(payment(sourceOption: sourceOption, destionationOption: distinationOption, sum: self?.sumTextField.text))
+       //     store.dispatch(payment(sourceOption: sourceOption, destionationOption: distinationOption, sum: self?.sumTextField.text))
             self?.activityIndicator.stopAnimating()
             if success {
                 self?.performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
