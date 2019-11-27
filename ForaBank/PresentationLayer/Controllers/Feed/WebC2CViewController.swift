@@ -8,19 +8,54 @@
 
 import UIKit
 import WebKit
+import Alamofire
 
 class WebC2CViewController: UIViewController {
     @IBOutlet weak var backButton: UIButton!
       @IBOutlet weak var webC2C: WKWebView!
-    
+    var fee:Int = 0
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+     
+        let headers = [
+                          "Content-Type": "application/x-www-form-urlencoded"
+                      ]
+                      let parameters = [
+                          "sector": 1009,
+                          "amount": 1000,
+                          "pan1": "4656260150230695",
+                          "pan2": "4809388889655340",
+                          "currency": 643,
+                          "cvc": "314",
+                          "month": "07",
+                          "year": "2024",
+                          "fee": 7000,
+                          "signature": String()
+                      ] as [String : Any]
+                  
+                      Alamofire.request("https://test.best2pay.net/webapi/P2PTransfer", method: .post, parameters: parameters, encoding:  URLEncoding.httpBody, headers: headers).responseJSON { (response:DataResponse<Any>) in
 
+                          switch(response.result) {
+                          case.success(let data):
+                              let intData:Int = data as! Int
+                              print("success \((intData)/100)")
+                              self.fee = (intData)/100
+                          case.failure(let error):
+                              print("Not Success",error)
+                          }
+                          let data = response.request
+                      }
+       
         let url = URL(string: "https://www.google.com")
         let request = URLRequest(url: url!)
+        let urlP2P = URL(string: "https://test.best2pay.net/webapi/P2PTransfer?sector=1009&address=Shirokaya%20str%2C%20b.%202%2C%20fl.%2036&pan1=4256901080001052&pan2=4656260150230695&amount=880")
+         let requestP2P = URLRequest(url: urlP2P!)
+            
+            
+        webC2C.load(requestP2P)
         
-        
-        webC2C.load(request)
+       
     }
     @IBAction func backButtonClicked(_ sender: Any) {
         self.navigationController?.popViewController(animated: true)

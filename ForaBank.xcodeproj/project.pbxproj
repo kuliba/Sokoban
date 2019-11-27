@@ -179,6 +179,7 @@
 		969899662303F3380066C55B /* LoansCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969899652303F3380066C55B /* LoansCell.swift */; };
 		9698996A2303FD190066C55B /* LoansCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 969899692303FD190066C55B /* LoansCell.xib */; };
 		96AB361923323B2B009FD828 /* CardHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AB361823323B2B009FD828 /* CardHistory.swift */; };
+		96B0E5E4238D16460045FE7A /* ServiceBest2Pay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96B0E5E3238D16460045FE7A /* ServiceBest2Pay.swift */; };
 		96BEAE4922FABBA00029C63D /* iCarousel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE4822FABBA00029C63D /* iCarousel.framework */; };
 		96BEAE4B22FABBA40029C63D /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE4A22FABBA40029C63D /* Alamofire.framework */; };
 		96BEAE4D22FABBA80029C63D /* DeviceKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE4C22FABBA80029C63D /* DeviceKit.framework */; };
@@ -533,6 +534,7 @@
 		969899652303F3380066C55B /* LoansCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoansCell.swift; sourceTree = "<group>"; };
 		969899692303FD190066C55B /* LoansCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoansCell.xib; sourceTree = "<group>"; };
 		96AB361823323B2B009FD828 /* CardHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardHistory.swift; sourceTree = "<group>"; };
+		96B0E5E3238D16460045FE7A /* ServiceBest2Pay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceBest2Pay.swift; sourceTree = "<group>"; };
 		96BEAE4022FAB9170029C63D /* iCarousel */ = {isa = PBXFileReference; lastKnownFileType = folder; name = iCarousel; path = Pods/iCarousel; sourceTree = "<group>"; };
 		96BEAE4822FABBA00029C63D /* iCarousel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = iCarousel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		96BEAE4A22FABBA40029C63D /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1195,6 +1197,7 @@
 			isa = PBXGroup;
 			children = (
 				96E08A3A2371CF900070CA6A /* CardToCardUnauthorized.swift */,
+				96B0E5E3238D16460045FE7A /* ServiceBest2Pay.swift */,
 			);
 			path = CardToCardUnauthorized;
 			sourceTree = "<group>";
@@ -1976,6 +1979,7 @@
 				BDFE1AC8233B95B900C49A5B /* ProductReducer.swift in Sources */,
 				BDC019962360806F0022FC78 /* WelcomeViewController.swift in Sources */,
 				BDFE5D982334C3300027A716 /* IProduct.swift in Sources */,
+				96B0E5E4238D16460045FE7A /* ServiceBest2Pay.swift in Sources */,
 				96094AF42319441600A80412 /* SettingsViewController.swift in Sources */,
 				09C7C33D2175FADE000EE472 /* DepositsHistoryHeader.swift in Sources */,
 				BDB6B0132326A9E00006A534 /* PasscodeSingUpReducer.swift in Sources */,
