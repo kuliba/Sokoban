@@ -14,6 +14,17 @@ typealias CardNumberPagerItem = PagerViewCellHandler<TextFieldPagerViewCell, Car
 typealias PaymentOptionsPagerItem = PagerViewCellHandler<DropDownPagerViewCell, CardNumberCellProvider>
 typealias PhoneNumberPagerItem = PagerViewCellHandler<TextFieldPagerViewCell, PhoneNumberCellProvider>
 
+protocol PaymentsDetailsViewControllerDelegate {
+
+    func didChangeSource(paymentOption: PaymentOptionType)
+    func didChangeDestination(paymentOption: PaymentOptionType)
+
+    func didChangeSum(sum: Double)
+
+    func didPressFeeButton()
+    func didPressPaymentButton()
+}
+
 class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
 
     // MARK: - Properties
@@ -30,7 +41,40 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
     // MARK: - Actions
 
     @IBAction func sendButtonClicked(_ sender: Any) {
-        makeC2C()
+//        makeC2C()
+
+        guard let sourceConfig = sourceConfigurations?[sourcePagerView.currentIndex], let destinationConfig = destinationConfigurations?[destinationPagerView.currentIndex], let amount = Double(sumTextField.text!), let sourceOption = sourceConfig.item as? PaymentOption else {
+            return
+        }
+        switch sourceConfig {
+        case is AccountNumberPagerItem:
+            delegate?.didChangeSource(paymentOption: .account(sourceOption))
+            break
+        case is CardNumberPagerItem:
+            delegate?.didChangeSource(paymentOption: .card(sourceOption))
+            break
+        default:
+            break
+        }
+
+        switch (destinationConfig, destinationConfig.item) {
+        case (is AccountNumberPagerItem, let destinationOption as PaymentOption):
+            delegate?.didChangeDestination(paymentOption: .account(destinationOption))
+            break
+        case (is CardNumberPagerItem, let destinationOption as PaymentOption):
+            delegate?.didChangeDestination(paymentOption: .card(destinationOption))
+            break
+        case (is CardNumberPagerItem, let destinationOption as String):
+            delegate?.didChangeDestination(paymentOption: .phoneNumber(destinationOption))
+            break
+        default:
+            break
+        }
+
+        let alertVC = UIAlertController(title: "Ошибка", message: "При выполнении платежа произошла ошибка, попробуйте ещё раз позже", preferredStyle: .alert)
+        let cancelButton = UIAlertAction(title: "Продолжить", style: .cancel, handler: nil)
+        alertVC.addAction(cancelButton)
+        self?.present(alertVC, animated: true, completion: nil)
     }
 
     @IBAction func backButtonClicked(_ sender: Any) {
@@ -53,17 +97,17 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
         }
     }
 
+    var presenter: PaymentDetailsPresenter?
+    var sourceConfigurations: [ICellConfigurator]?
+    var destinationConfigurations: [ICellConfigurator]?
+    var delegate: PaymentsDetailsViewControllerDelegate?
+
     var remittanceSourceView: RemittanceOptionView!
     var remittanceDestinationView: RemittanceOptionView!
     var selectedViewType: Bool = false //false - source; true - destination
     var activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
 
-//    private let sourceProvider = PaymentOptionCellProvider(asSource: true)
-//    private let destinationProvider = PaymentOptionCellProvider(asSource: true)
-    var sourceConfigurations: [ICellConfigurator]?
-    var destinationConfigurations: [ICellConfigurator]?
-
-    // MARK: - Lifecycle
+// MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -104,35 +148,7 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
 //        setUpRemittanceViews()
     }
 
-    func makeC2C() {
-        activityIndicator.startAnimating()
 
-        guard let sourceConfig = sourceConfigurations?[sourcePagerView.currentIndex], let destinationConfig = destinationConfigurations?[destinationPagerView.currentIndex], let amount = Double(sumTextField.text!) else {
-            return
-        }
-
-        let sourceNumber = sourceConfig.stringFromSelection()
-        let destinationNumber = destinationConfig.stringFromSelection()
-        let completion: (Bool, String?) -> Void = { [weak self] (success, token) in
-            //store.dispatch(payment(sourceOption: sourceOption, destionationOption: distinationOption, sum: self?.sumTextField.text))
-            self?.activityIndicator.stopAnimating()
-            if success {
-                self?.performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
-            } else {
-                let alertVC = UIAlertController(title: "Ошибка", message: "При выполнении платежа произошла ошибка, попробуйте ещё раз позже", preferredStyle: .alert)
-                let cancelButton = UIAlertAction(title: "Продолжить", style: .cancel, handler: nil)
-                alertVC.addAction(cancelButton)
-                self?.present(alertVC, animated: true, completion: nil)
-            }
-        }
-
-
-        if destinationConfig is PhoneNumberPagerItem {
-            NetworkManager.shared().prepareCard2Phone(from: sourceNumber, to: destinationNumber, amount: amount, completionHandler: completion)
-        } else {
-            NetworkManager.shared().prepareCard2Card(from: sourceNumber, to: destinationNumber, amount: amount, completionHandler: completion)
-        }
-    }
 }
 
 // - MARK: Private methods
@@ -180,5 +196,11 @@ extension PaymentsDetailsViewController: RemittancePickerDelegate {
             remittanceSourceView.frame = frame
             remittanceSourceView.translatesAutoresizingMaskIntoConstraints = true
         }
+    }
+}
+
+extension PaymentsDetailsViewController: PaymentDetailsPresenterDelegate {
+    func didUpdate(isLoading: Bool, canAskFee: Bool, canMakePayment: Bool) {
+
     }
 }

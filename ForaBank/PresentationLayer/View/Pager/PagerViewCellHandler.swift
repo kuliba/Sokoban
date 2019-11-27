@@ -21,20 +21,26 @@ protocol ICellConfigurator {
     func stringFromSelection() -> String
 }
 
+protocol PagerViewCellHandlerDelegate: class {
+    func didSelectPaymentOption(paymentOption: IPresentationModel)
+}
+
 class PagerViewCellHandler<CellType: IConfigurableCell, ProviderType: ICellProvider>: ICellConfigurator where CellType.ICellProvider == ICellProvider, CellType: FSPagerViewCell {
 
     static var reuseId: String { return String(describing: CellType.self) }
 
     let provider: ICellProvider
+    let delegate: PagerViewCellHandlerDelegate
+    
     var item: IPresentationModel? {
         get {
             return provider.currentValue
         }
     }
 
-    init(provider: ICellProvider) {
+    init(provider: ICellProvider, delegate: PagerViewCellHandlerDelegate) {
         self.provider = provider
-
+        self.delegate = delegate
     }
 
     func configure(cell: UIView) {

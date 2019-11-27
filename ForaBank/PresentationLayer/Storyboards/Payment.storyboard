@@ -388,6 +388,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UFN-wo-miF" sceneMemberID="firstResponder"/>
+                <customObject id="yvx-Ke-FPU" customClass="PaymentModuleInitializer" customModule="ForaBank" customModuleProvider="target"/>
             </objects>
             <point key="canvasLocation" x="2979.375" y="1037.323943661972"/>
         </scene>
@@ -951,7 +952,7 @@
     <resources>
         <image name="Group 6 Copy" width="9" height="25"/>
         <image name="button_back" width="8" height="14"/>
-        <image name="tabbar_icon_payment" width="25" height="20"/>
+        <image name="tabbar_icon_payment" width="33" height="30"/>
         <image name="vertical_arrows" width="5" height="11"/>
     </resources>
 </document>

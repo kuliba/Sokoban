@@ -14,14 +14,7 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPicker
     @IBOutlet weak var buttonContactList: UIButton!
     @IBOutlet weak var leftButton: UIButton!
     @IBOutlet weak var textField: UITextField!
-
-    var newValueCallback: ((_ newValue: IPresentationModel) -> ())?
-    var charactersMaxCount: Int?
-    var formattingFunc: ((String) -> (String))?
-
     @IBOutlet weak var nameContact: UILabel!
-
-
 
     @IBAction func contactsList(_ sender: Any) {
         let contactPickerScene = ContactsPicker(delegate: self, multiSelection: true, subtitleCellType: SubtitleCellValue.phoneNumber)
@@ -29,6 +22,14 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPicker
         let navigationController = UINavigationController(rootViewController: contactPickerScene)
         topMostVC()?.present(navigationController, animated: true, completion: nil)
     }
+
+    weak var delegate: PagerViewCellHandlerDelegate?
+
+    var newValueCallback: ((_ newValue: IPresentationModel) -> ())?
+    var charactersMaxCount: Int?
+    var formattingFunc: ((String) -> (String))?
+
+
     func contactPicker(_: ContactsPicker, didContactFetchFailed error: NSError) {
         print("Failed with error \(error.description)")
     }
@@ -45,8 +46,6 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPicker
     override func awakeFromNib() {
         super.awakeFromNib()
     }
-
-
 
     public func configure(provider: ICellProvider) {
 
