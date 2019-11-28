@@ -23,6 +23,7 @@ class DropDownPagerViewCell: FSPagerViewCell, IConfigurableCell {
     let dropDown = DropDown()
     let activityIndicator = UIActivityIndicatorView(style: .gray)
 
+    weak var delegate: ConfigurableCellDelegate?
     var paymentOptions = [PaymentOption]() {
         didSet {
             dropDown.dataSource = Array(repeating: "", count: paymentOptions.count)

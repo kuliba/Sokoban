@@ -11,6 +11,8 @@ import FSPagerView
 
 class MenuPagerViewCell: FSPagerViewCell, IConfigurableCell {
 
+    weak var delegate: ConfigurableCellDelegate?
+
     @IBOutlet weak var titleLabel: UILabel!
 
     override func awakeFromNib() {

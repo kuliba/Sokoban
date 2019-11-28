@@ -10,7 +10,7 @@ import UIKit
 import FSPagerView
 
 class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPickerDelegate {
-
+    
     @IBOutlet weak var buttonContactList: UIButton!
     @IBOutlet weak var leftButton: UIButton!
     @IBOutlet weak var textField: UITextField!
@@ -23,9 +23,8 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPicker
         topMostVC()?.present(navigationController, animated: true, completion: nil)
     }
 
-    weak var delegate: PagerViewCellHandlerDelegate?
+    weak var delegate: ConfigurableCellDelegate?
 
-    var newValueCallback: ((_ newValue: IPresentationModel) -> ())?
     var charactersMaxCount: Int?
     var formattingFunc: ((String) -> (String))?
 
@@ -48,16 +47,12 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPicker
     }
 
     public func configure(provider: ICellProvider) {
-
-
         guard let textInputCellProvider = provider as? ITextInputCellProvider else {
             return
         }
         formattingFunc = textInputCellProvider.formatted
         charactersMaxCount = textInputCellProvider.charactersMaxCount
-        newValueCallback = { (newValue) in
-            textInputCellProvider.currentValue = newValue
-        }
+
         if textInputCellProvider.currentValue == nil {
             self.textField.reloadInputViews()
             textInputCellProvider.currentValue = textField.text
@@ -79,8 +74,10 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPicker
             textField.text = "+7"
         }
         textField.delegate = self
+        textField.text = ""
         textField.placeholder = textInputCellProvider.placeholder
         textField.addTarget(self, action: #selector(reformatAsCardNumber), for: .editingChanged)
+        textField.sendActions(for: .editingChanged)
 
         leftButton.setImage(UIImage(named: textInputCellProvider.iconName), for: .normal)
     }
@@ -94,12 +91,13 @@ extension TextFieldPagerViewCell: UITextFieldDelegate {
     }
 
 
-    @objc func reformatAsCardNumber(textField: UITextField) {
+    @objc private func reformatAsCardNumber(textField: UITextField) {
         guard let text = textField.text, let nonNilFormattingFunc = formattingFunc else { return }
         let formatedText = nonNilFormattingFunc(text)
         textField.text = formatedText
-        newValueCallback?(cleanNumberString(string: text))
+        delegate?.didInputPaymentValue(value: cleanNumberString(string: text))
     }
+
     public func contactPicker(_ picker: ContactsPicker, didSelectMultipleContacts contacts: [Contact]) {
 
         defer { picker.dismiss(animated: true, completion: nil) }
@@ -107,24 +105,18 @@ extension TextFieldPagerViewCell: UITextFieldDelegate {
         print("The following contacts are selected")
         for contact in contacts {
             print("\(contact.displayName)", "\(contact.phoneNumbers)")
-
-
-            if contacts != nil {
-                var number: String
-                nameContact.isHidden = true
-                number = "\(contact.phoneNumbers[0])"
-                if number[number.startIndex] == "+" {
-                    number.removeFirst(2)
-                } else {
-                    number.remove(at: number.startIndex)
-                }
-                print(number)
-
-
-                let numberFormatted = formattedNumberInPhoneContacts(number: String(number))
-                textField.text = "\(numberFormatted)"
-                newValueCallback?(cleanNumberString(string: numberFormatted))
+            var number: String
+            nameContact.isHidden = true
+            number = "\(contact.phoneNumbers[0])"
+            if number[number.startIndex] == "+" {
+                number.removeFirst(2)
+            } else {
+                number.remove(at: number.startIndex)
             }
+            print(number)
+            let numberFormatted = formattedNumberInPhoneContacts(number: String(number))
+            textField.text = "\(numberFormatted)"
+            delegate?.didInputPaymentValue(value: cleanNumberString(string: numberFormatted))
         }
 
     }

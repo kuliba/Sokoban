@@ -19,7 +19,7 @@ class PagerView: UIView {
             self.pageControl.contentInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
         }
     }
-   
+
     var configurations = [ICellConfigurator]()
     var currentIndex: Int {
         return pagerView.currentIndex
@@ -75,11 +75,15 @@ extension PagerView: FSPagerViewDelegate, FSPagerViewDataSource {
         return cell
     }
 
-    // MARK:- FSPagerView Delegate
+    // MARK: - FSPagerViewDelegate
 
     func pagerView(_ pagerView: FSPagerView, didSelectItemAt index: Int) {
         pagerView.deselectItem(at: index, animated: true)
         pagerView.scrollToItem(at: index, animated: true)
+    }
+
+    func pagerViewWillBeginDragging(_ pagerView: FSPagerView) {
+        self.endEditing(true)
     }
 
     func pagerViewWillEndDragging(_ pagerView: FSPagerView, targetIndex: Int) {

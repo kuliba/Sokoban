@@ -9,20 +9,10 @@
 import Foundation
 import FSPagerView
 
-protocol IConfigurableCell {
-    associatedtype ICellProvider
-    func configure(provider: ICellProvider)
-}
-
 protocol ICellConfigurator {
     static var reuseId: String { get }
     var item: IPresentationModel? { get }
     func configure(cell: UIView)
-    func stringFromSelection() -> String
-}
-
-protocol PagerViewCellHandlerDelegate: class {
-    func didSelectPaymentOption(paymentOption: IPresentationModel)
 }
 
 class PagerViewCellHandler<CellType: IConfigurableCell, ProviderType: ICellProvider>: ICellConfigurator where CellType.ICellProvider == ICellProvider, CellType: FSPagerViewCell {
@@ -30,29 +20,22 @@ class PagerViewCellHandler<CellType: IConfigurableCell, ProviderType: ICellProvi
     static var reuseId: String { return String(describing: CellType.self) }
 
     let provider: ICellProvider
-    let delegate: PagerViewCellHandlerDelegate
-    
+
+    weak var cellDelegate: ConfigurableCellDelegate?
     var item: IPresentationModel? {
         get {
             return provider.currentValue
         }
     }
 
-    init(provider: ICellProvider, delegate: PagerViewCellHandlerDelegate) {
+    init(provider: ICellProvider, delegate: ConfigurableCellDelegate) {
         self.provider = provider
-        self.delegate = delegate
+        cellDelegate = delegate
     }
 
     func configure(cell: UIView) {
-        (cell as! CellType).configure(provider: provider)
-    }
-
-    func stringFromSelection() -> String {
-        if let stringItem = item as? String {
-            return stringItem
-        } else if let paymentOption = item as? PaymentOption {
-            return paymentOption.number
-        }
-        return ""
+        guard let cell = cell as? CellType else { return }
+        cell.configure(provider: provider)
+        cell.delegate = cellDelegate
     }
 }

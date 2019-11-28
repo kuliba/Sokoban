@@ -75,14 +75,14 @@ private extension PaymentDetailsPresenter {
             }
         }
 
-        switch (sourcePaymentOption, destinaionPaymentOption) {
-        case (.cardNumber(let sourceOption), .cardNumber(let destinationOption)), (.accountNumber(let sourceOption), .cardNumber(let destinationOption)):
-            NetworkManager.shared().prepareCard2Card(from: sourceOption.number, to: sourceOption.number, amount: amount, completionHandler: completion)
-        case (.cardNumber(let sourceOption), .phoneNumber(let phoneNumber)), (.accountNumber(let sourceOption), .phoneNumber(let phoneNumber)):
-            NetworkManager.shared().prepareCard2Phone(from: sourceOption.number, to: phoneNumber, amount: amount, completionHandler: completion)
-        default:
-            break
-        }
+//        switch (sourcePaymentOption, destinaionPaymentOption) {
+//        case (.cardNumber(let sourceOption), .cardNumber(let destinationOption)), (.accountNumber(let sourceOption), .cardNumber(let destinationOption)):
+//            NetworkManager.shared().prepareCard2Card(from: sourceOption.number, to: sourceOption.number, amount: amount, completionHandler: completion)
+//        case (.cardNumber(let sourceOption), .phoneNumber(let phoneNumber)), (.accountNumber(let sourceOption), .phoneNumber(let phoneNumber)):
+//            NetworkManager.shared().prepareCard2Phone(from: sourceOption.number, to: phoneNumber, amount: amount, completionHandler: completion)
+//        default:
+//            break
+//        }
 
 //
 //

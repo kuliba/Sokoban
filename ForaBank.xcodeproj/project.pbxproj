@@ -319,6 +319,7 @@
 		BDCCE90B2350BB8C0087F5F2 /* IAlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCCE90A2350BB8C0087F5F2 /* IAlertService.swift */; };
 		BDCCE90E2350BDB10087F5F2 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCCE90D2350BDB10087F5F2 /* ProfileViewController.swift */; };
 		BDD2C58A2382BE3600CC3774 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD2C5892382BE3600CC3774 /* Color.swift */; };
+		BDD5B0F4238FBE7700E07044 /* IConfigurableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD5B0F3238FBE7700E07044 /* IConfigurableCell.swift */; };
 		BDDF9BAA238E972C0025E2E8 /* PaymentModuleInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDF9BA9238E972C0025E2E8 /* PaymentModuleInitializer.swift */; };
 		BDDF9BAC238E9B310025E2E8 /* PaymentModuleConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDF9BAB238E9B310025E2E8 /* PaymentModuleConfigurator.swift */; };
 		BDE4D080232248420070BC3D /* ProductAboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE4D07F232248420070BC3D /* ProductAboutViewController.swift */; };
@@ -670,6 +671,7 @@
 		BDCCE90A2350BB8C0087F5F2 /* IAlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAlertService.swift; sourceTree = "<group>"; };
 		BDCCE90D2350BDB10087F5F2 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		BDD2C5892382BE3600CC3774 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
+		BDD5B0F3238FBE7700E07044 /* IConfigurableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IConfigurableCell.swift; sourceTree = "<group>"; };
 		BDDF9BA9238E972C0025E2E8 /* PaymentModuleInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentModuleInitializer.swift; sourceTree = "<group>"; };
 		BDDF9BAB238E9B310025E2E8 /* PaymentModuleConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentModuleConfigurator.swift; sourceTree = "<group>"; };
 		BDE4D07F232248420070BC3D /* ProductAboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductAboutViewController.swift; sourceTree = "<group>"; };
@@ -1382,6 +1384,7 @@
 				BD49E6512344D30D0031561F /* MenuPagerViewCell.xib */,
 				BDABE68123463D4A00CA0754 /* DropDownPagerViewCell.swift */,
 				BDABE68223463D4A00CA0754 /* DropDownPagerViewCell.xib */,
+				BDD5B0F3238FBE7700E07044 /* IConfigurableCell.swift */,
 			);
 			path = PagerCells;
 			sourceTree = "<group>";
@@ -2144,6 +2147,7 @@
 				BDFE5D9A2334E7ED0027A716 /* LoansSegueAnimator.swift in Sources */,
 				BD58869E2369AFDA00F97332 /* PasscodeSignUpViewController.swift in Sources */,
 				BD20837023609A680010E03C /* LoanPaymentSchedule.swift in Sources */,
+				BDD5B0F4238FBE7700E07044 /* IConfigurableCell.swift in Sources */,
 				A56B59FA21AD623B00CE4798 /* AccountsSegueAnimator.swift in Sources */,
 				BDE4D08323224E570070BC3D /* AboutItem.swift in Sources */,
 				09BE35F1218C729C00EA7B24 /* ButtonRoundedBordered.swift in Sources */,

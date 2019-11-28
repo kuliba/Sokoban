@@ -74,7 +74,7 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
         let alertVC = UIAlertController(title: "Ошибка", message: "При выполнении платежа произошла ошибка, попробуйте ещё раз позже", preferredStyle: .alert)
         let cancelButton = UIAlertAction(title: "Продолжить", style: .cancel, handler: nil)
         alertVC.addAction(cancelButton)
-        self?.present(alertVC, animated: true, completion: nil)
+        self.present(alertVC, animated: true, completion: nil)
     }
 
     @IBAction func backButtonClicked(_ sender: Any) {
@@ -202,5 +202,19 @@ extension PaymentsDetailsViewController: RemittancePickerDelegate {
 extension PaymentsDetailsViewController: PaymentDetailsPresenterDelegate {
     func didUpdate(isLoading: Bool, canAskFee: Bool, canMakePayment: Bool) {
 
+    }
+}
+
+
+extension PaymentsDetailsViewController: ConfigurableCellDelegate {
+    func didInputPaymentValue(value: Any) {
+        print(value)
+//        delegate?.didChangeDestination(paymentOption: <#T##PaymentOptionType#>)
+//        if let stringItem = item as? String {
+//            return stringItem
+//        } else if let paymentOption = item as? PaymentOption {
+//            return paymentOption.number
+//        }
+//        return ""
     }
 }
