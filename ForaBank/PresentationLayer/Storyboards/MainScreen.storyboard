@@ -31,28 +31,28 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7lO-Xy-mWu" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
                                 <rect key="frame" x="-3" y="247" width="420" height="444"/>
                                 <subviews>
-                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" directionalLockEnabled="YES" alwaysBounceVertical="YES" alwaysBounceHorizontal="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" prefetchingEnabled="NO" springLoaded="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OUd-Wa-Sz7" customClass="KDDragAndDropCollectionView" customModule="ForaBank" customModuleProvider="target">
-                                        <rect key="frame" x="2" y="52" width="415" height="343"/>
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" prefetchingEnabled="NO" springLoaded="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OUd-Wa-Sz7" customClass="KDDragAndDropCollectionView" customModule="ForaBank" customModuleProvider="target">
+                                        <rect key="frame" x="2" y="33" width="415" height="388"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="343" id="xhm-mP-25w"/>
+                                            <constraint firstAttribute="height" constant="388" id="xhm-mP-25w"/>
                                         </constraints>
                                         <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="CyY-WG-yaT">
-                                            <size key="itemSize" width="157" height="124"/>
+                                            <size key="itemSize" width="198" height="133"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" tag="4" contentMode="right" semanticContentAttribute="spatial" reuseIdentifier="Cell" id="biK-9v-SYP" customClass="ColorCell" customModule="ForaBank" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="198" height="152"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="198" height="133"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                                    <rect key="frame" x="0.0" y="0.0" width="198" height="152"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="198" height="133"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Перевод между своими счетами" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Qk3-ha-q3r">
-                                                            <rect key="frame" x="19" y="83" width="152" height="49"/>
+                                                            <rect key="frame" x="23" y="83" width="152" height="49"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <accessibility key="accessibilityConfiguration">
                                                                 <accessibilityTraits key="traits" image="YES" staticText="YES"/>
@@ -61,8 +61,12 @@
                                                             <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="phone" translatesAutoresizingMaskIntoConstraints="NO" id="ve6-aW-kAC">
-                                                            <rect key="frame" x="62" y="3" width="69" height="71"/>
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="phone" translatesAutoresizingMaskIntoConstraints="NO" id="ve6-aW-kAC">
+                                                            <rect key="frame" x="64.666666666666671" y="3" width="69.000000000000014" height="71"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="71" id="VgS-7C-med"/>
+                                                                <constraint firstAttribute="width" constant="69" id="fDF-cW-E0t"/>
+                                                            </constraints>
                                                         </imageView>
                                                     </subviews>
                                                 </view>
@@ -70,12 +74,11 @@
                                                 <constraints>
                                                     <constraint firstAttribute="trailing" secondItem="Qk3-ha-q3r" secondAttribute="trailing" constant="8" id="KE8-H4-Zj1"/>
                                                     <constraint firstItem="Qk3-ha-q3r" firstAttribute="leading" secondItem="biK-9v-SYP" secondAttribute="leading" constant="8" id="Vrk-ot-Enf"/>
-                                                    <constraint firstItem="ve6-aW-kAC" firstAttribute="leading" secondItem="biK-9v-SYP" secondAttribute="leadingMargin" constant="54" id="gSl-B7-bnJ"/>
+                                                    <constraint firstItem="ve6-aW-kAC" firstAttribute="centerX" secondItem="biK-9v-SYP" secondAttribute="centerX" id="eN9-rH-slu"/>
                                                     <constraint firstItem="ve6-aW-kAC" firstAttribute="top" secondItem="biK-9v-SYP" secondAttribute="topMargin" constant="-5" id="k2Q-q6-cVG"/>
-                                                    <constraint firstItem="Qk3-ha-q3r" firstAttribute="firstBaseline" secondItem="ve6-aW-kAC" secondAttribute="baseline" constant="21.333333333333332" symbolType="layoutAnchor" id="nbi-Dt-w5x"/>
-                                                    <constraint firstAttribute="trailingMargin" secondItem="ve6-aW-kAC" secondAttribute="trailing" constant="59" id="zkj-o9-49i"/>
+                                                    <constraint firstItem="Qk3-ha-q3r" firstAttribute="firstBaseline" secondItem="ve6-aW-kAC" secondAttribute="baseline" constant="22.666666666666671" id="nbi-Dt-w5x"/>
                                                 </constraints>
-                                                <size key="customSize" width="198" height="152"/>
+                                                <size key="customSize" width="198" height="133"/>
                                                 <connections>
                                                     <outlet property="imageView" destination="ve6-aW-kAC" id="KsK-t6-P1t"/>
                                                     <outlet property="label" destination="Qk3-ha-q3r" id="BIN-0C-fbI"/>
@@ -95,10 +98,10 @@
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="OUd-Wa-Sz7" secondAttribute="trailing" constant="3" id="Iar-6a-5rs"/>
                                     <constraint firstItem="OUd-Wa-Sz7" firstAttribute="leading" secondItem="7lO-Xy-mWu" secondAttribute="leading" constant="2" id="Nqh-lB-9dD"/>
-                                    <constraint firstAttribute="bottom" secondItem="OUd-Wa-Sz7" secondAttribute="bottom" constant="49" id="ZAc-AX-saW"/>
+                                    <constraint firstAttribute="bottom" secondItem="OUd-Wa-Sz7" secondAttribute="bottom" constant="23" id="ZAc-AX-saW"/>
                                     <constraint firstItem="OUd-Wa-Sz7" firstAttribute="leading" secondItem="7lO-Xy-mWu" secondAttribute="leading" constant="2" id="gPi-yw-bfA"/>
                                     <constraint firstAttribute="trailing" secondItem="OUd-Wa-Sz7" secondAttribute="trailing" constant="3" id="h4c-a7-3Ce"/>
-                                    <constraint firstItem="OUd-Wa-Sz7" firstAttribute="top" secondItem="7lO-Xy-mWu" secondAttribute="top" constant="52" id="wXQ-R7-rSo"/>
+                                    <constraint firstItem="OUd-Wa-Sz7" firstAttribute="top" secondItem="7lO-Xy-mWu" secondAttribute="top" constant="33" id="wXQ-R7-rSo"/>
                                 </constraints>
                             </view>
                         </subviews>

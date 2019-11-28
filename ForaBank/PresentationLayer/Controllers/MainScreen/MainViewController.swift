@@ -47,6 +47,7 @@ class ViewController: UIViewController, KDDragAndDropCollectionViewDataSource, U
 //        labelCell.bottomAnchor.constraint(equalTo: firstCollectionView)
           // generate some mock data (change in real world project)
         firstCollectionView.collectionViewLayout.invalidateLayout()
+        
         let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
         backgroundImage.image = UIImage(named: "mainscreen-1")
         backgroundImage.contentMode = UIView.ContentMode.scaleAspectFill
@@ -64,8 +65,10 @@ class ViewController: UIViewController, KDDragAndDropCollectionViewDataSource, U
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width/2, height: viewCollection.frame.height/3)
+        return CGSize(width: view.frame.width/2, height: 133)
         }
+    
+    
 
     
     // MARK : UICollectionViewDataSource
