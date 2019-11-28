@@ -44,7 +44,7 @@ class ViewController: UIViewController, KDDragAndDropCollectionViewDataSource, U
         
         
         
-        
+//        labelCell.bottomAnchor.constraint(equalTo: firstCollectionView)
           // generate some mock data (change in real world project)
         firstCollectionView.collectionViewLayout.invalidateLayout()
         let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
