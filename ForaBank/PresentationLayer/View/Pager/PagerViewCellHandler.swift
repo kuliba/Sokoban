@@ -9,33 +9,38 @@
 import Foundation
 import FSPagerView
 
-protocol ICellConfigurator {
+protocol ICellConfigurator: NSObject {
     static var reuseId: String { get }
-    var item: IPresentationModel? { get }
+    var delegate: ICellConfiguratorDelegate? { get set }
     func configure(cell: UIView)
 }
 
-class PagerViewCellHandler<CellType: IConfigurableCell, ProviderType: ICellProvider>: ICellConfigurator where CellType.ICellProvider == ICellProvider, CellType: FSPagerViewCell {
+protocol ICellConfiguratorDelegate: class {
+    func didReciveNewValue(value: Any, from configurator: ICellConfigurator)
+}
+
+class PagerViewCellHandler<CellType: IConfigurableCell, ProviderType: ICellProvider>: NSObject, ICellConfigurator where CellType.ICellProvider == ICellProvider, CellType: FSPagerViewCell {
 
     static var reuseId: String { return String(describing: CellType.self) }
 
     let provider: ICellProvider
 
-    weak var cellDelegate: ConfigurableCellDelegate?
-    var item: IPresentationModel? {
-        get {
-            return provider.currentValue
-        }
-    }
+    weak var delegate: ICellConfiguratorDelegate?
 
-    init(provider: ICellProvider, delegate: ConfigurableCellDelegate) {
+    init(provider: ICellProvider, delegate: ICellConfiguratorDelegate) {
         self.provider = provider
-        cellDelegate = delegate
+        self.delegate = delegate
     }
 
     func configure(cell: UIView) {
         guard let cell = cell as? CellType else { return }
         cell.configure(provider: provider)
-        cell.delegate = cellDelegate
+        cell.delegate = self
+    }
+}
+
+extension PagerViewCellHandler: ConfigurableCellDelegate {
+    func didInputPaymentValue(value: Any) {
+        delegate?.didReciveNewValue(value: value, from: self)
     }
 }

@@ -14,7 +14,7 @@ class PaymentModuleInitializer: NSObject {
     @IBOutlet private weak var paymentsDetailsViewController: PaymentsDetailsViewController!
 
     override func awakeFromNib() {
-        let configurator = ProductsModuleConfigurator()
+        let configurator = PaymentModuleConfigurator()
         configurator.configureModuleForView(view: paymentsDetailsViewController)
     }
 

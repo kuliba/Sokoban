@@ -9,9 +9,10 @@
 import Foundation
 
 enum PaymentOptionType {
+    case option(PaymentOption)
+    case cardNumber(String)
+    case accountNumber(String)
     case phoneNumber(String)
-    case card(PaymentOption)
-    case account(PaymentOption)
 }
 
 protocol IPaymentDetailsPresenter: class {
@@ -39,10 +40,12 @@ class PaymentDetailsPresenter: IPaymentDetailsPresenter {
 extension PaymentDetailsPresenter: PaymentsDetailsViewControllerDelegate {
 
     func didChangeSource(paymentOption: PaymentOptionType) {
+        print(paymentOption)
         sourcePaymentOption = paymentOption
     }
 
     func didChangeDestination(paymentOption: PaymentOptionType) {
+        print(paymentOption)
         destinaionPaymentOption = paymentOption
     }
 

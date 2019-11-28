@@ -43,33 +43,24 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
     @IBAction func sendButtonClicked(_ sender: Any) {
 //        makeC2C()
 
-        guard let sourceConfig = sourceConfigurations?[sourcePagerView.currentIndex], let destinationConfig = destinationConfigurations?[destinationPagerView.currentIndex], let amount = Double(sumTextField.text!), let sourceOption = sourceConfig.item as? PaymentOption else {
-            return
-        }
-        switch sourceConfig {
-        case is AccountNumberPagerItem:
-            delegate?.didChangeSource(paymentOption: .account(sourceOption))
-            break
-        case is CardNumberPagerItem:
-            delegate?.didChangeSource(paymentOption: .card(sourceOption))
-            break
-        default:
-            break
-        }
+//        guard let sourceConfig = sourceConfigurations?[sourcePagerView.currentIndex], let destinationConfig = destinationConfigurations?[destinationPagerView.currentIndex], let amount = Double(sumTextField.text!), let sourceOption = sourceConfig.item as? PaymentOption else {
+//            return
+//        }
 
-        switch (destinationConfig, destinationConfig.item) {
-        case (is AccountNumberPagerItem, let destinationOption as PaymentOption):
-            delegate?.didChangeDestination(paymentOption: .account(destinationOption))
-            break
-        case (is CardNumberPagerItem, let destinationOption as PaymentOption):
-            delegate?.didChangeDestination(paymentOption: .card(destinationOption))
-            break
-        case (is CardNumberPagerItem, let destinationOption as String):
-            delegate?.didChangeDestination(paymentOption: .phoneNumber(destinationOption))
-            break
-        default:
-            break
-        }
+
+//        switch (destinationConfig, destinationConfig.item) {
+//        case (is AccountNumberPagerItem, let destinationOption as PaymentOption):
+//            delegate?.didChangeDestination(paymentOption: .account(destinationOption))
+//            break
+//        case (is CardNumberPagerItem, let destinationOption as PaymentOption):
+//            delegate?.didChangeDestination(paymentOption: .card(destinationOption))
+//            break
+//        case (is CardNumberPagerItem, let destinationOption as String):
+//            delegate?.didChangeDestination(paymentOption: .phoneNumber(destinationOption))
+//            break
+//        default:
+//            break
+//        }
 
         let alertVC = UIAlertController(title: "Ошибка", message: "При выполнении платежа произошла ошибка, попробуйте ещё раз позже", preferredStyle: .alert)
         let cancelButton = UIAlertAction(title: "Продолжить", style: .cancel, handler: nil)
@@ -205,16 +196,43 @@ extension PaymentsDetailsViewController: PaymentDetailsPresenterDelegate {
     }
 }
 
-
-extension PaymentsDetailsViewController: ConfigurableCellDelegate {
-    func didInputPaymentValue(value: Any) {
-        print(value)
-//        delegate?.didChangeDestination(paymentOption: <#T##PaymentOptionType#>)
-//        if let stringItem = item as? String {
-//            return stringItem
-//        } else if let paymentOption = item as? PaymentOption {
-//            return paymentOption.number
-//        }
-//        return ""
+extension PaymentsDetailsViewController: ICellConfiguratorDelegate {
+    func didReciveNewValue(value: Any, from configurator: ICellConfigurator) {
+        if let sourceConfig = sourceConfigurations?.filter({ $0 == configurator }).first {
+//            switch sourceConfig {
+//            case let config as AccountNumberPagerItem:
+//                delegate?.didChangeSource(paymentOption: .account())
+//                break
+//            case let config as CardNumberPagerItem:
+//                delegate?.didChangeSource(paymentOption: .card(config``))
+//                break
+//            default:
+//                break
+//            }
+            switch (sourceConfig, value) {
+            case (is PaymentOptionsPagerItem, let destinationOption as PaymentOption):
+                delegate?.didChangeSource(paymentOption: .option(destinationOption))
+                break
+            default:
+                break
+            }
+        } else if let destinationConfig = destinationConfigurations?.filter({ $0 == configurator }).first {
+            switch (destinationConfig, value) {
+            case (is PaymentOptionsPagerItem, let destinationOption as PaymentOption):
+                delegate?.didChangeDestination(paymentOption: .option(destinationOption))
+                break
+            case (is CardNumberPagerItem, let destinationOption as String):
+                delegate?.didChangeDestination(paymentOption: .cardNumber(destinationOption))
+                break
+            case (is PhoneNumberPagerItem, let destinationOption as String):
+                delegate?.didChangeDestination(paymentOption: .phoneNumber(destinationOption))
+                break
+            case (is AccountNumberPagerItem, let destinationOption as String):
+                delegate?.didChangeDestination(paymentOption: .accountNumber(destinationOption))
+                break
+            default:
+                break
+            }
+        }
     }
 }

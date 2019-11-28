@@ -117,7 +117,7 @@
             </objects>
             <point key="canvasLocation" x="2224" y="1043"/>
         </scene>
-        <!--Платежи и переводы-->
+        <!--Payments Details View Controller-->
         <scene sceneID="mUk-Xs-fOz">
             <objects>
                 <viewController storyboardIdentifier="PaymentDetailsViewController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="afX-Am-FVA" customClass="PaymentsDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
@@ -388,7 +388,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UFN-wo-miF" sceneMemberID="firstResponder"/>
-                <customObject id="yvx-Ke-FPU" customClass="PaymentModuleInitializer" customModule="ForaBank" customModuleProvider="target"/>
+                <customObject id="yvx-Ke-FPU" customClass="PaymentModuleInitializer" customModule="ForaBank" customModuleProvider="target">
+                    <connections>
+                        <outlet property="paymentsDetailsViewController" destination="afX-Am-FVA" id="iki-Qi-xzF"/>
+                    </connections>
+                </customObject>
             </objects>
             <point key="canvasLocation" x="2979.375" y="1037.323943661972"/>
         </scene>
