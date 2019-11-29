@@ -34,8 +34,7 @@ class PagerViewCellHandler<CellType: IConfigurableCell, ProviderType: ICellProvi
 
     func configure(cell: UIView) {
         guard let cell = cell as? CellType else { return }
-        cell.configure(provider: provider)
-        cell.delegate = self
+        cell.configure(provider: provider, delegate: self)
     }
 }
 

@@ -20,7 +20,7 @@ class MenuPagerViewCell: FSPagerViewCell, IConfigurableCell {
         // Initialization code
     }
 
-    func configure(provider: ICellProvider) {
+    func configure(provider: ICellProvider, delegate: ConfigurableCellDelegate) {
         guard provider != nil else {
             titleLabel.text = "Выбрать из контактов"
             return

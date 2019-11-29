@@ -26,14 +26,58 @@ protocol PaymentDetailsPresenterDelegate: class {
 class PaymentDetailsPresenter: IPaymentDetailsPresenter {
     weak var delegate: PaymentDetailsPresenterDelegate?
 
-    private var sourcePaymentOption: PaymentOptionType?
-    private var destinaionPaymentOption: PaymentOptionType?
-    private var amount: Double = 0.0
+    private var sourcePaymentOption: PaymentOptionType? {
+        didSet {
+            onSomeValueUpdated()
+        }
+    }
+    private var destinaionPaymentOption: PaymentOptionType? {
+        didSet {
+            onSomeValueUpdated()
+        }
+    }
+    private var amount: Double? {
+        didSet {
+            onSomeValueUpdated()
+        }
+    }
+
+    private var isLoading = false
     private var canAskFee = false
     private var canMakePayment = false
 
     init(delegate: PaymentDetailsPresenterDelegate) {
         self.delegate = delegate
+    }
+}
+
+extension PaymentDetailsPresenter {
+
+    private func onSomeValueUpdated() {
+        guard let destination = destinaionPaymentOption, let source = sourcePaymentOption else {
+            return
+        }
+
+        let isValidDestination = isValid(paymentOption: destination)
+        let isValidSource = isValid(paymentOption: source)
+
+        let canStartWithOptions = isValidSource && isValidDestination && amount != nil
+        canAskFee = canStartWithOptions
+
+        delegate?.didUpdate(isLoading: isLoading, canAskFee: canAskFee, canMakePayment: canMakePayment)
+    }
+
+    private func isValid(paymentOption: PaymentOptionType) -> Bool {
+        switch paymentOption {
+        case .option(_):
+            return true
+        case .accountNumber(let accountNumber):
+            return accountNumber.count == 20
+        case .cardNumber(let cardNumber):
+            return cardNumber.count == 16
+        case .phoneNumber(let phoneNumber):
+            return phoneNumber.count == 11
+        }
     }
 }
 
@@ -49,8 +93,8 @@ extension PaymentDetailsPresenter: PaymentsDetailsViewControllerDelegate {
         destinaionPaymentOption = paymentOption
     }
 
-    func didChangeSum(sum: Double) {
-        self.amount = sum
+    func didChangeAmount(amount: Double?) {
+        self.amount = amount
     }
 
     func didPressFeeButton() {

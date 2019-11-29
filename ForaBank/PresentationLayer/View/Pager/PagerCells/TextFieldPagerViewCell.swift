@@ -46,7 +46,9 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPicker
         super.awakeFromNib()
     }
 
-    public func configure(provider: ICellProvider) {
+    public func configure(provider: ICellProvider, delegate: ConfigurableCellDelegate) {
+        self.delegate = delegate
+
         guard let textInputCellProvider = provider as? ITextInputCellProvider else {
             return
         }
@@ -63,23 +65,14 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPicker
             buttonContactList.isHidden = false
 
         }
-        textField.delegate = self
-        textField.placeholder = textInputCellProvider.placeholder
-        textField.addTarget(self, action: #selector(reformatAsCardNumber), for: .editingChanged)
 
         leftButton.setImage(UIImage(named: textInputCellProvider.iconName), for: .normal)
 
-
-        if provider is PhoneNumberCellProvider {
-            textField.text = "+7"
-        }
         textField.delegate = self
         textField.text = ""
         textField.placeholder = textInputCellProvider.placeholder
         textField.addTarget(self, action: #selector(reformatAsCardNumber), for: .editingChanged)
         textField.sendActions(for: .editingChanged)
-
-        leftButton.setImage(UIImage(named: textInputCellProvider.iconName), for: .normal)
     }
 }
 
@@ -89,7 +82,6 @@ extension TextFieldPagerViewCell: UITextFieldDelegate {
         let newLength = text.count + string.count - range.length
         return newLength <= nonNilCharactersMaxCount
     }
-
 
     @objc private func reformatAsCardNumber(textField: UITextField) {
         guard let text = textField.text, let nonNilFormattingFunc = formattingFunc else { return }

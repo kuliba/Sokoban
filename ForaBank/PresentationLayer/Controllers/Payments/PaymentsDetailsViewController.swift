@@ -19,7 +19,7 @@ protocol PaymentsDetailsViewControllerDelegate {
     func didChangeSource(paymentOption: PaymentOptionType)
     func didChangeDestination(paymentOption: PaymentOptionType)
 
-    func didChangeSum(sum: Double)
+    func didChangeAmount(amount: Double?)
 
     func didPressFeeButton()
     func didPressPaymentButton()
@@ -33,35 +33,18 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
 
     @IBOutlet weak var picker: UIView!
     @IBOutlet weak var pickerImageView: UIImageView!
-    @IBOutlet weak var sumTextField: UITextField!
+    @IBOutlet weak var amountTextField: UITextField!
     @IBOutlet weak var containterView: RoundedEdgeView!
     @IBOutlet weak var pickerLabel: UILabel!
     @IBOutlet weak var pickerButton: UIButton!
+    @IBOutlet weak var sendButton: ButtonRounded!
 
     // MARK: - Actions
+    @IBAction func amountTextFieldValueChanged(_ sender: Any) {
+        delegate?.didChangeAmount(amount: Double(amountTextField.text!))
+    }
 
     @IBAction func sendButtonClicked(_ sender: Any) {
-//        makeC2C()
-
-//        guard let sourceConfig = sourceConfigurations?[sourcePagerView.currentIndex], let destinationConfig = destinationConfigurations?[destinationPagerView.currentIndex], let amount = Double(sumTextField.text!), let sourceOption = sourceConfig.item as? PaymentOption else {
-//            return
-//        }
-
-
-//        switch (destinationConfig, destinationConfig.item) {
-//        case (is AccountNumberPagerItem, let destinationOption as PaymentOption):
-//            delegate?.didChangeDestination(paymentOption: .account(destinationOption))
-//            break
-//        case (is CardNumberPagerItem, let destinationOption as PaymentOption):
-//            delegate?.didChangeDestination(paymentOption: .card(destinationOption))
-//            break
-//        case (is CardNumberPagerItem, let destinationOption as String):
-//            delegate?.didChangeDestination(paymentOption: .phoneNumber(destinationOption))
-//            break
-//        default:
-//            break
-//        }
-
         let alertVC = UIAlertController(title: "Ошибка", message: "При выполнении платежа произошла ошибка, попробуйте ещё раз позже", preferredStyle: .alert)
         let cancelButton = UIAlertAction(title: "Продолжить", style: .cancel, handler: nil)
         alertVC.addAction(cancelButton)
@@ -110,6 +93,10 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
         }
     }
 
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print(touches, event)
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         store.subscribe(self) { state in
@@ -129,34 +116,31 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
 
     internal func newState(state: ProductState) {
         //optionsTable.reloadData()
-//        setUpRemittanceViews()
     }
-
-    private func setUpLayout() {
-        activityIndicator.center = view.center
-        view.addSubview(activityIndicator)
-        setUpPicker()
-//        setUpRemittanceViews()
-    }
-
-
 }
 
 // - MARK: Private methods
 
 private extension PaymentsDetailsViewController {
-    func setUpPicker() {
+    private func setUpPicker() {
         picker.layer.cornerRadius = 3
         pickerImageView.image = pickerImageView.image?.withRenderingMode(.alwaysTemplate)
         pickerImageView.tintColor = .white
     }
 
-    func addGradientView() {
+    private func addGradientView() {
         let containerGradientView = GradientView()
         containerGradientView.frame = containterView.frame
         containerGradientView.color1 = UIColor(red: 243 / 255, green: 58 / 255, blue: 52 / 255, alpha: 1)
         containerGradientView.color2 = UIColor(red: 243 / 255, green: 58 / 255, blue: 52 / 255, alpha: 1)
         containterView.insertSubview(containerGradientView, at: 0)
+    }
+
+    private func setUpLayout() {
+        sendButton.changeEnabled(isEnabled: false)
+        activityIndicator.center = view.center
+        view.addSubview(activityIndicator)
+        setUpPicker()
     }
 }
 
@@ -172,7 +156,6 @@ extension PaymentsDetailsViewController: OptionPickerDelegate {
 
 extension PaymentsDetailsViewController: RemittancePickerDelegate {
     func didSelectOptionView(optionView: RemittanceOptionView?, paymentOption: PaymentOption?) {
-//        self.selectedDestinationPaymentOption = paymentOption
         if selectedViewType {
             let frame = remittanceDestinationView.frame
             remittanceDestinationView.removeFromSuperview()
@@ -192,23 +175,14 @@ extension PaymentsDetailsViewController: RemittancePickerDelegate {
 
 extension PaymentsDetailsViewController: PaymentDetailsPresenterDelegate {
     func didUpdate(isLoading: Bool, canAskFee: Bool, canMakePayment: Bool) {
-
+        print(isLoading, canAskFee, canMakePayment)
+        sendButton.changeEnabled(isEnabled: canAskFee)
     }
 }
 
 extension PaymentsDetailsViewController: ICellConfiguratorDelegate {
     func didReciveNewValue(value: Any, from configurator: ICellConfigurator) {
         if let sourceConfig = sourceConfigurations?.filter({ $0 == configurator }).first {
-//            switch sourceConfig {
-//            case let config as AccountNumberPagerItem:
-//                delegate?.didChangeSource(paymentOption: .account())
-//                break
-//            case let config as CardNumberPagerItem:
-//                delegate?.didChangeSource(paymentOption: .card(config``))
-//                break
-//            default:
-//                break
-//            }
             switch (sourceConfig, value) {
             case (is PaymentOptionsPagerItem, let destinationOption as PaymentOption):
                 delegate?.didChangeSource(paymentOption: .option(destinationOption))

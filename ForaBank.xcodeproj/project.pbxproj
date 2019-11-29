@@ -62,7 +62,7 @@
 		09797559215A49020044C00A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09797558215A49020044C00A /* AppDelegate.swift */; };
 		09797560215A49040044C00A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0979755F215A49040044C00A /* Assets.xcassets */; };
 		09797563215A49040044C00A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 09797561215A49040044C00A /* LaunchScreen.storyboard */; };
-		0979D95021903DF700034BC0 /* PaymentDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0979D94F21903DF700034BC0 /* PaymentDetailsViewController.swift */; };
+		0979D95021903DF700034BC0 /* PaymentsDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0979D94F21903DF700034BC0 /* PaymentsDetailsViewController.swift */; };
 		097A6DCC21884B6D00E6C69E /* ButtonRounded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 097A6DCB21884B6D00E6C69E /* ButtonRounded.swift */; };
 		097A6DCE21899C5B00E6C69E /* RegistrationLoginPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 097A6DCD21899C5B00E6C69E /* RegistrationLoginPasswordViewController.swift */; };
 		09AF7078216F4A9600E7FCFC /* FeedUpcomingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AF7077216F4A9600E7FCFC /* FeedUpcomingViewController.swift */; };
@@ -408,7 +408,7 @@
 		0979755F215A49040044C00A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../Assets.xcassets; sourceTree = "<group>"; };
 		09797562215A49040044C00A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		09797564215A49040044C00A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
-		0979D94F21903DF700034BC0 /* PaymentDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailsViewController.swift; sourceTree = "<group>"; };
+		0979D94F21903DF700034BC0 /* PaymentsDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsDetailsViewController.swift; sourceTree = "<group>"; };
 		097A6DCB21884B6D00E6C69E /* ButtonRounded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonRounded.swift; sourceTree = "<group>"; };
 		097A6DCD21899C5B00E6C69E /* RegistrationLoginPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationLoginPasswordViewController.swift; sourceTree = "<group>"; };
 		09AF7077216F4A9600E7FCFC /* FeedUpcomingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedUpcomingViewController.swift; sourceTree = "<group>"; };
@@ -1083,7 +1083,7 @@
 				96920C302356048E00CCC7EF /* OperationsList */,
 				89C8DF0B21918DDC00D92B0A /* OptionPickerViewController.swift */,
 				96414BC62354C06B00C12EED /* PaymentsDetailsSuccessViewController.swift */,
-				0979D94F21903DF700034BC0 /* PaymentDetailsViewController.swift */,
+				0979D94F21903DF700034BC0 /* PaymentsDetailsViewController.swift */,
 				0943729121907198003A66CC /* PaymentsResultViewController.swift */,
 				BD81069C234CDD12004A43E9 /* PaymentsTableViewController.swift */,
 				096BCB062163518A005BC02B /* PaymentsViewController.swift */,
@@ -1981,7 +1981,7 @@
 				BDFE1B09233CA6FE00C49A5B /* DropDownTableViewCell.swift in Sources */,
 				09E0F146215A68DC0042FB6A /* CustomTabBar.swift in Sources */,
 				093B863121620EE8008A5222 /* ServicesCell.swift in Sources */,
-				0979D95021903DF700034BC0 /* PaymentDetailsViewController.swift in Sources */,
+				0979D95021903DF700034BC0 /* PaymentsDetailsViewController.swift in Sources */,
 				093B8634216224C3008A5222 /* ServicesHeader.swift in Sources */,
 				BDF4F94823293A5C007C448F /* AuthenticationReducer.swift in Sources */,
 				A5B473C121B3BBCD00F2E41F /* RemittancePickerViewController.swift in Sources */,
