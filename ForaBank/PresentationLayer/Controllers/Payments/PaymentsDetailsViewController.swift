@@ -21,7 +21,7 @@ protocol PaymentsDetailsViewControllerDelegate {
 
     func didChangeAmount(amount: Double?)
 
-    func didPressFeeButton()
+    func didPressPrepareButton()
     func didPressPaymentButton()
 }
 
@@ -45,10 +45,7 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
     }
 
     @IBAction func sendButtonClicked(_ sender: Any) {
-        let alertVC = UIAlertController(title: "Ошибка", message: "При выполнении платежа произошла ошибка, попробуйте ещё раз позже", preferredStyle: .alert)
-        let cancelButton = UIAlertAction(title: "Продолжить", style: .cancel, handler: nil)
-        alertVC.addAction(cancelButton)
-        self.present(alertVC, animated: true, completion: nil)
+        delegate?.didPressPrepareButton()
     }
 
     @IBAction func backButtonClicked(_ sender: Any) {
@@ -174,6 +171,14 @@ extension PaymentsDetailsViewController: RemittancePickerDelegate {
 }
 
 extension PaymentsDetailsViewController: PaymentDetailsPresenterDelegate {
+    func didFinishPreparation(success: Bool) {
+        if success {
+            performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
+        } else {
+            AlertService.shared.show(title: "Ошибка", message: "При выполнении платежа произошла ошибка, попробуйте ещё раз позже", cancelButtonTitle: "Продолжить", okButtonTitle: nil, cancelCompletion: nil, okCompletion: nil)
+        }
+    }
+
     func didUpdate(isLoading: Bool, canAskFee: Bool, canMakePayment: Bool) {
         print(isLoading, canAskFee, canMakePayment)
         sendButton.changeEnabled(isEnabled: canAskFee)

@@ -21,6 +21,7 @@ protocol IPaymentDetailsPresenter: class {
 
 protocol PaymentDetailsPresenterDelegate: class {
     func didUpdate(isLoading: Bool, canAskFee: Bool, canMakePayment: Bool)
+    func didFinishPreparation(success: Bool)
 }
 
 class PaymentDetailsPresenter: IPaymentDetailsPresenter {
@@ -97,8 +98,8 @@ extension PaymentDetailsPresenter: PaymentsDetailsViewControllerDelegate {
         self.amount = amount
     }
 
-    func didPressFeeButton() {
-
+    func didPressPrepareButton() {
+        preparePayment()
     }
 
     func didPressPaymentButton() {
@@ -108,6 +109,10 @@ extension PaymentDetailsPresenter: PaymentsDetailsViewControllerDelegate {
 
 private extension PaymentDetailsPresenter {
     func preparePayment() {
+
+        guard let amount = self.amount else {
+            return
+        }
         delegate?.didUpdate(isLoading: true, canAskFee: canAskFee, canMakePayment: canMakePayment)
 
         let completion: (Bool, String?) -> Void = { [weak self] (success, token) in
@@ -115,29 +120,21 @@ private extension PaymentDetailsPresenter {
                 return
             }
             self?.delegate?.didUpdate(isLoading: false, canAskFee: canAskFee, canMakePayment: canMakePayment)
-            if success {
-//                self?.performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
-            } else {
-
-            }
+            self?.delegate?.didFinishPreparation(success: success)
         }
 
-//        switch (sourcePaymentOption, destinaionPaymentOption) {
-//        case (.cardNumber(let sourceOption), .cardNumber(let destinationOption)), (.accountNumber(let sourceOption), .cardNumber(let destinationOption)):
-//            NetworkManager.shared().prepareCard2Card(from: sourceOption.number, to: sourceOption.number, amount: amount, completionHandler: completion)
-//        case (.cardNumber(let sourceOption), .phoneNumber(let phoneNumber)), (.accountNumber(let sourceOption), .phoneNumber(let phoneNumber)):
-//            NetworkManager.shared().prepareCard2Phone(from: sourceOption.number, to: phoneNumber, amount: amount, completionHandler: completion)
-//        default:
-//            break
-//        }
-
-//
-//
-//
-//        if destinationConfig is PhoneNumberPagerItem {
-//            NetworkManager.shared().prepareCard2Phone(from: sourceNumber, to: destinationNumber, amount: amount, completionHandler: completion)
-//        } else {
-//            NetworkManager.shared().prepareCard2Card(from: sourceNumber, to: destinationNumber, amount: amount, completionHandler: completion)
-//        }
+        switch (sourcePaymentOption, destinaionPaymentOption) {
+        case (.option(let sourceOption), .option(let destinationOption)):
+            NetworkManager.shared().prepareCard2Card(from: sourceOption.number, to: destinationOption.number, amount: amount, completionHandler: completion)
+            break
+        case (.option(let sourceOption), .phoneNumber(let phoneNumber)):
+            NetworkManager.shared().prepareCard2Phone(from: sourceOption.number, to: phoneNumber, amount: amount, completionHandler: completion)
+            break
+        case (.option(let sourceOption), .cardNumber(let stringNumber)), (.option(let sourceOption), .accountNumber(let stringNumber)):
+            NetworkManager.shared().prepareCard2Card(from: sourceOption.number, to: stringNumber, amount: amount, completionHandler: completion)
+            break
+        default:
+            break
+        }
     }
 }
