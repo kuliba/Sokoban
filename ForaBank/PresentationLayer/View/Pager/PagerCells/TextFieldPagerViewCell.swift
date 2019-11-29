@@ -10,7 +10,7 @@ import UIKit
 import FSPagerView
 
 class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPickerDelegate {
-    
+
     @IBOutlet weak var buttonContactList: UIButton!
     @IBOutlet weak var leftButton: UIButton!
     @IBOutlet weak var textField: UITextField!
@@ -53,10 +53,10 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPicker
         formattingFunc = textInputCellProvider.formatted
         charactersMaxCount = textInputCellProvider.charactersMaxCount
 
-        if textInputCellProvider.currentValue == nil {
-            self.textField.reloadInputViews()
-            textInputCellProvider.currentValue = textField.text
-        }
+//        if textInputCellProvider.currentValue == nil {
+//            self.textField.reloadInputViews()
+//            textInputCellProvider.currentValue = textField.text
+//        }
         buttonContactList.isHidden = true
         if provider is PhoneNumberCellProvider {
             textField.text = "+7"
@@ -99,7 +99,6 @@ extension TextFieldPagerViewCell: UITextFieldDelegate {
     }
 
     public func contactPicker(_ picker: ContactsPicker, didSelectMultipleContacts contacts: [Contact]) {
-
         defer { picker.dismiss(animated: true, completion: nil) }
         guard !contacts.isEmpty else { return }
         print("The following contacts are selected")
@@ -118,6 +117,5 @@ extension TextFieldPagerViewCell: UITextFieldDelegate {
             textField.text = "\(numberFormatted)"
             delegate?.didInputPaymentValue(value: cleanNumberString(string: numberFormatted))
         }
-
     }
 }

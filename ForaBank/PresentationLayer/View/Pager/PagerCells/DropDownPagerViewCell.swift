@@ -70,7 +70,7 @@ class DropDownPagerViewCell: FSPagerViewCell, IConfigurableCell {
                 return
             }
             DispatchQueue.main.async {
-                self?.provider?.currentValue = option
+                self?.delegate?.didInputPaymentValue(value: option)
                 self?.paymentOptionView.setupLayout(withPickerItem: option, isDroppable: true)
             }
         }
@@ -96,8 +96,8 @@ private extension DropDownPagerViewCell {
             guard let option = self?.paymentOptions[index] else {
                 return
             }
+            self?.delegate?.didInputPaymentValue(value: option)
             DispatchQueue.main.async {
-                self?.provider?.currentValue = option
                 self?.paymentOptionView.setupLayout(withPickerItem: option, isDroppable: true)
             }
         }

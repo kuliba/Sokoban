@@ -1378,13 +1378,13 @@
 		BD49E64F2344D20E0031561F /* PagerCells */ = {
 			isa = PBXGroup;
 			children = (
-				BD35E82223438DC40016BA0D /* TextFieldPagerViewCell.swift */,
-				BD35E82323438DC40016BA0D /* TextFieldPagerViewCell.xib */,
-				BD49E6502344D30D0031561F /* MenuPagerViewCell.swift */,
-				BD49E6512344D30D0031561F /* MenuPagerViewCell.xib */,
 				BDABE68123463D4A00CA0754 /* DropDownPagerViewCell.swift */,
 				BDABE68223463D4A00CA0754 /* DropDownPagerViewCell.xib */,
 				BDD5B0F3238FBE7700E07044 /* IConfigurableCell.swift */,
+				BD49E6502344D30D0031561F /* MenuPagerViewCell.swift */,
+				BD49E6512344D30D0031561F /* MenuPagerViewCell.xib */,
+				BD35E82223438DC40016BA0D /* TextFieldPagerViewCell.swift */,
+				BD35E82323438DC40016BA0D /* TextFieldPagerViewCell.xib */,
 			);
 			path = PagerCells;
 			sourceTree = "<group>";
