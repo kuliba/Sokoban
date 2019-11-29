@@ -21,23 +21,18 @@ class DataItem : Equatable {
 class ViewController: UIViewController, KDDragAndDropCollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
    
     @IBOutlet weak var viewCollection: RoundedEdgeView!
-    
     @IBOutlet weak var firstCollectionView: KDDragAndDropCollectionView!
     @IBOutlet weak var secondCollectionView: KDDragAndDropCollectionView!
     @IBOutlet weak var thirdCollectionView: KDDragAndDropCollectionView!
     
     var items: [Any] = ICollectionViewCell.getArray()
-    var images: [String] = [
-        "phone", "transfer", "account", "history"
-    ]
-    var labeltext: [String] = [
-          "Перевод по номеру телефона", "Перевод по номеру карты", "Перевод между своими счетами", "История"
-      ]
-
-    
+    var images: [String] = ["phone", "transfer", "account", "history"]
+    var labeltext: [String] = ["Перевод по номеру телефона", "Перевод по номеру карты", "Перевод между своими счетами", "История"]
     var data : [[DataItem]] = [[DataItem]]()
-    
     var dragAndDropManager : KDDragAndDropManager?
+    
+    
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,6 +63,7 @@ class ViewController: UIViewController, KDDragAndDropCollectionViewDataSource, U
         return CGSize(width: view.frame.width/2, height: 133)
         }
     
+ 
     
 
     
@@ -89,10 +85,7 @@ class ViewController: UIViewController, KDDragAndDropCollectionViewDataSource, U
                 PaymentOptionsPagerItem(provider: sourceProvider)
             ]
 
-        
-        var dataName = (0...3).map({ i in (0...3).map({ j in DataItem("\(String(i)):\(String(j))","\(labeltext[j])", (UIImage(named: images[j])!))})})
-        
-        
+       
         
         switch data[0][indexPath.row].textLabel{
             case "Перевод по номеру телефона":
@@ -134,9 +127,7 @@ class ViewController: UIViewController, KDDragAndDropCollectionViewDataSource, U
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return data[collectionView.tag].count
     }
-    func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
+
 
     func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         

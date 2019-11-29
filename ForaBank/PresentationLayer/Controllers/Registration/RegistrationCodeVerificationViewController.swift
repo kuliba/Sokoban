@@ -61,6 +61,7 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
             if success {
                 store.dispatch(finishVerification)
             } else {
+                 self?.foraPreloader?.isHidden = true
                 let alert = UIAlertController(title: "Неудача", message: "Неверный код", preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
                 alert.addAction(UIAlertAction(title: "Отменить", style: UIAlertAction.Style.default, handler: { (action) in

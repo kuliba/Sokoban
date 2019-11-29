@@ -579,6 +579,8 @@ private extension RegistrationViewController {
             texfield?.delegate = self
         }
     }
+    
+    
 }
 
 // MARK: - UITextFieldDelegate
