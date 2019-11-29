@@ -9,7 +9,7 @@
 import UIKit
 import FSPagerView
 
-class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPickerDelegate {
+class TextFieldPagerViewCell: FSPagerViewCell,  IConfigurableCell, ContactsPickerDelegate {
 
     @IBOutlet weak var buttonContactList: UIButton!
     @IBOutlet weak var leftButton: UIButton!

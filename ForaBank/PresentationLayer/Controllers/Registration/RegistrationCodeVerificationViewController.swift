@@ -61,6 +61,7 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
             if success {
                 store.dispatch(finishVerification)
             } else {
+                 self?.foraPreloader?.isHidden = true
                 let alert = UIAlertController(title: "Неудача", message: "Неверный код", preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
                 alert.addAction(UIAlertAction(title: "Отменить", style: UIAlertAction.Style.default, handler: { (action) in
@@ -146,12 +147,12 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
     }
 
     @IBAction func checkPaymentCode(_ sender: Any) {
-        foraPreloader.isHidden = false
-        foraPreloader?.startAnimation()
+        activityIndicator?.isHidden = false
+        activityIndicator?.startAnimation()
         continueButton.isHidden = true
         NetworkManager.shared().makeCard2Card(code: self.codeNumberTextField.text ?? "") { [weak self] (success) in
             self?.continueButton.isHidden = false
-            self?.foraPreloader?.isHidden = true
+            self?.activityIndicator?.isHidden = true
             if success {
 //                self?.performSegue(withIdentifier: "finish", sender: nil)
             } else {

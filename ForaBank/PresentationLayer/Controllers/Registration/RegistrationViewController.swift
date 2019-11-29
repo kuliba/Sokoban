@@ -578,6 +578,8 @@ private extension RegistrationViewController {
             texfield?.delegate = self
         }
     }
+    
+    
 }
 
 // MARK: - UITextFieldDelegate
@@ -683,7 +685,11 @@ extension RegistrationViewController: CardIOPaymentViewControllerDelegate {
     // Close ScanCard Screen
     public func userDidCancel(_ paymentViewController: CardIOPaymentViewController!) {
         paymentViewController.dismiss(animated: true, completion: nil)
+        continueButton.isHidden = true
+
     }
+
+    
 
     // Using this delegate method, retrive card information
     func userDidProvide(_ cardInfo: CardIOCreditCardInfo!, in paymentViewController: CardIOPaymentViewController!) {

@@ -85,6 +85,11 @@ protocol DepositsServiceProtocol {
                   completionHandler: @escaping (_ success: Bool, _ obligations: [Deposit]?) -> Void)
 }
 
+protocol best2PayProtocol {
+    func best2Pay(headers: HTTPHeaders,
+    completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void)
+}
+
 protocol RegServiceProtocol {
     func checkClient(headers: HTTPHeaders,
                      cardNumber: String,
