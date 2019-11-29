@@ -90,10 +90,6 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
         }
     }
 
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        print(touches, event)
-    }
-
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         store.subscribe(self) { state in
