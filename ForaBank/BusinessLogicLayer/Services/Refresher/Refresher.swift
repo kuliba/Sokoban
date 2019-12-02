@@ -8,23 +8,12 @@
 
 import Foundation
 
-protocol IRefreshing {
-    func refresh()
-}
-
-protocol IRefresher {
-    associatedtype RefreshTarget: IRefreshing
-
-    var interval: Double { get }
-    var target: RefreshTarget { get }
-}
-
-struct Refresher<T: IRefreshing>: IRefresher {
+class Refresher<T: IRefreshing>: IRefresher {
 
     internal let interval: Double
-    internal let target: T
+    internal weak var target: T?
 
-    init(target: T, interval: Double) {
+    init(target: T?, interval: Double) {
         self.interval = interval
         self.target = target
     }

@@ -124,6 +124,9 @@
 		09FC8FED215BB2B200A4694B /* ProfileMenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */; };
 		4678EF6D23952D8600E060BD /* IPasscodeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4678EF6C23952D8600E060BD /* IPasscodeService.swift */; };
 		4678EF6F23952D9800E060BD /* PasscodeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4678EF6E23952D9800E060BD /* PasscodeService.swift */; };
+		46ADFD17239553D200492472 /* IRefresher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46ADFD16239553D200492472 /* IRefresher.swift */; };
+		46ADFD19239557A900492472 /* PasscodeServiceConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46ADFD18239557A900492472 /* PasscodeServiceConfigurator.swift */; };
+		46ADFD1B2395585900492472 /* PasscodeServiceInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46ADFD1A2395585900492472 /* PasscodeServiceInitializer.swift */; };
 		895768CD2192D992005754D5 /* ProductDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895768CC2192D992005754D5 /* ProductDetailsViewController.swift */; };
 		895768CF2192E768005754D5 /* DepositsStatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895768CE2192E768005754D5 /* DepositsStatsViewController.swift */; };
 		895768D12192E9F0005754D5 /* DepositsStatsDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895768D02192E9F0005754D5 /* DepositsStatsDetailsViewController.swift */; };
@@ -478,6 +481,9 @@
 		09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileMenuTableViewController.swift; sourceTree = "<group>"; };
 		4678EF6C23952D8600E060BD /* IPasscodeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPasscodeService.swift; sourceTree = "<group>"; };
 		4678EF6E23952D9800E060BD /* PasscodeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeService.swift; sourceTree = "<group>"; };
+		46ADFD16239553D200492472 /* IRefresher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IRefresher.swift; sourceTree = "<group>"; };
+		46ADFD18239557A900492472 /* PasscodeServiceConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeServiceConfigurator.swift; sourceTree = "<group>"; };
+		46ADFD1A2395585900492472 /* PasscodeServiceInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeServiceInitializer.swift; sourceTree = "<group>"; };
 		895768CC2192D992005754D5 /* ProductDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailsViewController.swift; sourceTree = "<group>"; };
 		895768CE2192E768005754D5 /* DepositsStatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsStatsViewController.swift; sourceTree = "<group>"; };
 		895768D02192E9F0005754D5 /* DepositsStatsDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsStatsDetailsViewController.swift; sourceTree = "<group>"; };
@@ -1079,8 +1085,19 @@
 			children = (
 				4678EF6C23952D8600E060BD /* IPasscodeService.swift */,
 				4678EF6E23952D9800E060BD /* PasscodeService.swift */,
+				46ADFD18239557A900492472 /* PasscodeServiceConfigurator.swift */,
+				46ADFD1A2395585900492472 /* PasscodeServiceInitializer.swift */,
 			);
 			path = Passcode;
+			sourceTree = "<group>";
+		};
+		46ADFD15239553B800492472 /* Refresher */ = {
+			isa = PBXGroup;
+			children = (
+				46ADFD16239553D200492472 /* IRefresher.swift */,
+				BD5930CD2375A42A007CF3A7 /* Refresher.swift */,
+			);
+			path = Refresher;
 			sourceTree = "<group>";
 		};
 		89C8DF0F2191AE7A00D92B0A /* Deposits */ = {
@@ -1538,7 +1555,6 @@
 		BD8106AB234F1FA9004A43E9 /* BusinessLogicLayer */ = {
 			isa = PBXGroup;
 			children = (
-				BD5930CD2375A42A007CF3A7 /* Refresher.swift */,
 				BD20830B236099820010E03C /* Network */,
 				BDB6B0172327F20F0006A534 /* Services */,
 			);
@@ -1628,6 +1644,7 @@
 		BDB6B0172327F20F0006A534 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				46ADFD15239553B800492472 /* Refresher */,
 				4678EF6B23952D4100E060BD /* Passcode */,
 				BD57934D236C4B5D0056740C /* Settings */,
 				BDCCE9072350BB490087F5F2 /* AlertService */,
@@ -1961,6 +1978,7 @@
 				895768CD2192D992005754D5 /* ProductDetailsViewController.swift in Sources */,
 				09D3C03A215CBCAB00998F57 /* ChatDialogsViewController.swift in Sources */,
 				BD94E09F231EA6E50006456E /* MasksFormatting.swift in Sources */,
+				46ADFD17239553D200492472 /* IRefresher.swift in Sources */,
 				9660EEEA234C7B1100AE0647 /* ExampleData.swift in Sources */,
 				09F2410921707B86007B7D73 /* FeedInfo3Cell.swift in Sources */,
 				BDB6B0112326A9C10006A534 /* PasscodeSignUpActions.swift in Sources */,
@@ -2158,6 +2176,7 @@
 				BDFE1B10233CEC3100C49A5B /* IPickerItem.swift in Sources */,
 				96D0F1CE230AE4400064CECA /* DepositDetailsViewController.swift in Sources */,
 				BD21B66A2338E08E001C5CF7 /* RegistrationState.swift in Sources */,
+				46ADFD1B2395585900492472 /* PasscodeServiceInitializer.swift in Sources */,
 				09F54A0A218B24DA003CB6D3 /* RegistrationPermissionsViewController.swift in Sources */,
 				096BCB072163518A005BC02B /* PaymentsViewController.swift in Sources */,
 				09203D98216E150500902BD2 /* FeedOptionsViewController.swift in Sources */,
@@ -2198,6 +2217,7 @@
 				09797559215A49020044C00A /* AppDelegate.swift in Sources */,
 				A568141F21CBCCB3002C0899 /* BankBranch.swift in Sources */,
 				A5C5E6E521A2B492001D6250 /* CardActionRoundedButton.swift in Sources */,
+				46ADFD19239557A900492472 /* PasscodeServiceConfigurator.swift in Sources */,
 				09AF707B216F4B5000E7FCFC /* FeedUpcomingCell.swift in Sources */,
 				BD35E82723439A3B0016BA0D /* PagerView.swift in Sources */,
 				09E0F148215A69310042FB6A /* CustomTabBarItem.swift in Sources */,

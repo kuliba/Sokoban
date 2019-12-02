@@ -8,7 +8,14 @@
 
 import Foundation
 
-protocol IPasscodeService {
+protocol IPasscodeService: class {
+    typealias PasscodeRefresher = Refresher<PasscodeService>
+
+    var refresher: PasscodeRefresher? {get}
     var shouldAskPasscode: Bool {get}
     var isPasscodeSetted: Bool {get}
+}
+
+extension IPasscodeService where Self: IRefreshing {
+    
 }

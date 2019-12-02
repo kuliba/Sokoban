@@ -9,15 +9,22 @@
 import Foundation
 
 class PasscodeService: IPasscodeService {
-    
+
     static let shared = PasscodeService(shouldAskPasscode: false)
     
-    var shouldAskPasscode: Bool
     var isPasscodeSetted: Bool {
         return (keychainCredentialsPasscode() != nil) && SettingsStorage.shared.isSetPasscode() ? true : false
     }
-    
+    var shouldAskPasscode: Bool
+    var refresher: PasscodeRefresher?
+
     init(shouldAskPasscode: Bool) {
         self.shouldAskPasscode = shouldAskPasscode
+    }
+}
+
+extension PasscodeService: IRefreshing {
+    func refresh() {
+        
     }
 }
