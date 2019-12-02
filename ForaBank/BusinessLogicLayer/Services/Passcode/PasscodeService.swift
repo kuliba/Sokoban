@@ -9,9 +9,15 @@
 import Foundation
 
 class PasscodeService: IPasscodeService {
-    var canAskPasscode: Bool
     
-    init(canAskPasscode: Bool) {
-        self.canAskPasscode = canAskPasscode
+    static let shared = PasscodeService(shouldAskPasscode: false)
+    
+    var shouldAskPasscode: Bool
+    var isPasscodeSetted: Bool {
+        return (keychainCredentialsPasscode() != nil) && SettingsStorage.shared.isSetPasscode() ? true : false
+    }
+    
+    init(shouldAskPasscode: Bool) {
+        self.shouldAskPasscode = shouldAskPasscode
     }
 }

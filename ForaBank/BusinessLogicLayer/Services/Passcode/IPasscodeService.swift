@@ -9,5 +9,6 @@
 import Foundation
 
 protocol IPasscodeService {
-    var canAskPasscode: Bool {get}
+    var shouldAskPasscode: Bool {get}
+    var isPasscodeSetted: Bool {get}
 }
