@@ -80,19 +80,8 @@ class TextFieldPagerViewCell: FSPagerViewCell,  IConfigurableCell, ContactsPicke
 
          leftButton.setImage(UIImage(named: textInputCellProvider.iconName), for: .normal)
      }
-
-            if provider is PhoneNumberCellProvider {
-                textField.text = "+7"
-            }
-            textField.delegate = self
-            textField.placeholder = textInputCellProvider.placeholder
-            textField.addTarget(self, action: #selector(reformatAsCardNumber), for: .editingChanged)
-
-            leftButton.setImage(UIImage(named: textInputCellProvider.iconName), for: .normal)
-        }
+}
     
-    }
-
     extension TextFieldPagerViewCell: UITextFieldDelegate {
         func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
             guard let text = textField.text, let nonNilCharactersMaxCount = charactersMaxCount else { return true }

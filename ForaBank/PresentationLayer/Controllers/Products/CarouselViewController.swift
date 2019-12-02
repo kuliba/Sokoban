@@ -29,7 +29,6 @@ class CarouselViewController: UIViewController, StoreSubscriber {
         recognizer.direction = .right
         return recognizer
     }()
-    var previousIndex = -1
 
     let gradientView = GradientView()
     let gradients = [
@@ -43,7 +42,6 @@ class CarouselViewController: UIViewController, StoreSubscriber {
     let browDevices = Constants.browDevices
     var router: ProductsNavigator?
     weak var currentViewController: UIViewController?
-    var router: ProductsNavigator?
     var labels = [UILabel?]()
     var menuItems: Array<AnyHashable> {
         get {
