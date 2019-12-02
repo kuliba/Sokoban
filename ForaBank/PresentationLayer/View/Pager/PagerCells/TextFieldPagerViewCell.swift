@@ -9,7 +9,7 @@
 import UIKit
 import FSPagerView
 
-class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPickerDelegate {
+class TextFieldPagerViewCell: FSPagerViewCell,  IConfigurableCell, ContactsPickerDelegate {
 
     @IBOutlet weak var buttonContactList: UIButton!
     @IBOutlet weak var leftButton: UIButton!
@@ -43,31 +43,13 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPicker
     }
 
 
-    func contactPicker(_ picker: ContactsPicker, didSelectMultipleContacts contacts: [Contact]) {
-        defer { picker.dismiss(animated: true, completion: nil) }
-        guard !contacts.isEmpty else { return }
-        print("The following contacts are selected")
-        for contact in contacts {
-            print("\(contact.displayName)", "\(contact.phoneNumbers)")
 
-
-            if contacts != nil {
-                let number: String
-                nameContact.isHidden = true
-                number = "\(contact.phoneNumbers.joined())"
-                let numberFormatted = formattedPhoneNumber(number: number)
-                textField.text = "\(numberFormatted)"
-
-            }
-            }
-        }
-
+    let contactNumber = NumberFormatter()
 
 
         override func awakeFromNib() {
             super.awakeFromNib()
         }
-
 
     
     public func configure(provider: ICellProvider) {
@@ -109,6 +91,7 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPicker
             leftButton.setImage(UIImage(named: textInputCellProvider.iconName), for: .normal)
         }
     
+    }
 
     extension TextFieldPagerViewCell: UITextFieldDelegate {
         func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {

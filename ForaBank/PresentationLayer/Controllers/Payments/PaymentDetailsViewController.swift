@@ -58,8 +58,8 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
     var selectedViewType: Bool = false //false - source; true - destination
     var activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
 
-//    private let sourceProvider = PaymentOptionCellProvider(asSource: true)
-//    private let destinationProvider = PaymentOptionCellProvider(asSource: true)
+    private let sourceProvider = PaymentOptionCellProvider()
+     private let destinationProvider = PaymentOptionCellProvider()
     var sourceConfigurations: [ICellConfigurator]?
     var destinationConfigurations: [ICellConfigurator]?
 
@@ -68,7 +68,7 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpLayout()
-
+      
         if let source = sourceConfigurations, let dest = destinationConfigurations {
             sourcePagerView.setConfig(config: source)
             destinationPagerView.setConfig(config: dest)
@@ -110,11 +110,15 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
         guard let sourceConfig = sourceConfigurations?[sourcePagerView.currentIndex], let destinationConfig = destinationConfigurations?[destinationPagerView.currentIndex], let amount = Double(sumTextField.text!) else {
             return
         }
+        
+        
+        
 
         let sourceNumber = sourceConfig.stringFromSelection()
         let destinationNumber = destinationConfig.stringFromSelection()
         let completion: (Bool, String?) -> Void = { [weak self] (success, token) in
-            //store.dispatch(payment(sourceOption: sourceOption, destionationOption: distinationOption, sum: self?.sumTextField.text))
+        //    store.dispatch(payment(sourceOption: sourceConfig as? PaymentOption, destionationOption: destinationConfig as? PaymentOption, sum: self?.sumTextField.text))
+          
             self?.activityIndicator.stopAnimating()
             if success {
                 self?.performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
@@ -125,7 +129,7 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
                 self?.present(alertVC, animated: true, completion: nil)
             }
         }
-
+       
 
         if destinationConfig is PhoneNumberPagerItem {
             NetworkManager.shared().prepareCard2Phone(from: sourceNumber, to: destinationNumber, amount: amount, completionHandler: completion)

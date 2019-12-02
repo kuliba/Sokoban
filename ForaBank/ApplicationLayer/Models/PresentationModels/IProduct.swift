@@ -14,6 +14,7 @@ protocol IProduct {
     var number: String { get }
     var maskedNumber: String { get }
 
+
     var name: String? { get }
 }
 

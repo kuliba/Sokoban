@@ -210,6 +210,10 @@ class NetworkManager {
               }
           }
       }
+    func best2Pay(completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ id: Double?, _ name: String?) -> Void) {
+        self.best2Pay(completionHandler: completionHandler)
+                
+             }
     func verifyCode(verificationCode: Int,
                     completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void) {
         authService.csrf(headers: headers) { [unowned self] (success, newHeaders) in
