@@ -9,7 +9,13 @@
 import Foundation
 
 class PasscodeServiceConfigurator {
+    
+    private struct Constants {
+        // 2 minutes
+        static let expireTime: TimeInterval = 0.5 * 60
+    }
+    
     func configure(passcodeService: PasscodeService) {
-        passcodeService.refresher = Refresher(target: passcodeService, interval: 0.5)
+        passcodeService.refresher = Refresher(target: passcodeService, interval: Constants.expireTime)
     }
 }

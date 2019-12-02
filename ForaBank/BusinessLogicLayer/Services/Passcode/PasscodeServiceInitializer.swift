@@ -10,7 +10,7 @@ import Foundation
 
 class PasscodeServiceInitializer {
     class func createPasscodeService() -> IPasscodeService {
-        let passcodeService = PasscodeService(shouldAskPasscode: false)
+        let passcodeService = PasscodeService(shouldAskPasscode: true)
         let configurator = PasscodeServiceConfigurator()
         configurator.configure(passcodeService: passcodeService)
         return passcodeService

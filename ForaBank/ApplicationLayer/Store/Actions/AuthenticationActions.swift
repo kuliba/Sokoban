@@ -11,7 +11,7 @@ import ReSwift
 import ReSwiftThunk
 
 let checkAuthCredentials = Thunk<State> { dispatch, getStat in
-    guard let passcode = keychainCredentialsPasscode() else {
+    guard PasscodeService.shared.isPasscodeSetted else {
         return
     }
     dispatch(UpdatePasscodeSingInProcess(isShown: true))

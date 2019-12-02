@@ -10,21 +10,34 @@ import Foundation
 
 class PasscodeService: IPasscodeService {
 
-    static let shared = PasscodeService(shouldAskPasscode: false)
+    static let shared = PasscodeServiceInitializer.createPasscodeService()
     
     var isPasscodeSetted: Bool {
         return (keychainCredentialsPasscode() != nil) && SettingsStorage.shared.isSetPasscode() ? true : false
     }
-    var shouldAskPasscode: Bool
+    var shouldAskPasscode: Bool {
+        didSet{
+            
+        }
+    }
     var refresher: PasscodeRefresher?
 
     init(shouldAskPasscode: Bool) {
         self.shouldAskPasscode = shouldAskPasscode
     }
+    
+    public func startAuthIfNeeded() {
+        guard shouldAskPasscode else {
+            return
+        }
+        
+        store.dispatch(checkAuthCredentials)
+        shouldAskPasscode = false
+    }
 }
 
 extension PasscodeService: IRefreshing {
     func refresh() {
-        
+        shouldAskPasscode = true
     }
 }

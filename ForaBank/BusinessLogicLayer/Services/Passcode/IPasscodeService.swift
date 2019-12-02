@@ -14,8 +14,6 @@ protocol IPasscodeService: class {
     var refresher: PasscodeRefresher? {get}
     var shouldAskPasscode: Bool {get}
     var isPasscodeSetted: Bool {get}
-}
-
-extension IPasscodeService where Self: IRefreshing {
     
+    func startAuthIfNeeded()
 }

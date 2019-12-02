@@ -16,5 +16,9 @@ class Refresher<T: IRefreshing>: IRefresher {
     init(target: T?, interval: Double) {
         self.interval = interval
         self.target = target
+        
+        Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] (timer) in
+            self?.target?.refresh()
+        }
     }
 }
