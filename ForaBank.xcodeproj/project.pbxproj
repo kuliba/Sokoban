@@ -300,6 +300,7 @@
 		BD58869E2369AFDA00F97332 /* PasscodeSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD58869D2369AFDA00F97332 /* PasscodeSignUpViewController.swift */; };
 		BD588AAE237D8D7400727056 /* ProductsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD588AAD237D8D7400727056 /* ProductsList.swift */; };
 		BD588AB0237E934E00727056 /* ProductType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD588AAF237E934E00727056 /* ProductType.swift */; };
+		BD5930CE2375A42A007CF3A7 /* Refresher.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5930CD2375A42A007CF3A7 /* Refresher.swift */; };
 		BD66E0C42366D511002FFA1A /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD66E0C32366D511002FFA1A /* AppConstants.swift */; };
 		BD66E0C62366DD3F002FFA1A /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD66E0C52366DD3F002FFA1A /* Keychain.swift */; };
 		BD6D5674233A0B9000B7CF4B /* UnauthorizedZoneTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6D5673233A0B9000B7CF4B /* UnauthorizedZoneTabBarController.swift */; };
@@ -659,6 +660,7 @@
 		BD58869D2369AFDA00F97332 /* PasscodeSignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignUpViewController.swift; sourceTree = "<group>"; };
 		BD588AAD237D8D7400727056 /* ProductsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsList.swift; sourceTree = "<group>"; };
 		BD588AAF237E934E00727056 /* ProductType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductType.swift; sourceTree = "<group>"; };
+		BD5930CD2375A42A007CF3A7 /* Refresher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Refresher.swift; sourceTree = "<group>"; };
 		BD66E0C32366D511002FFA1A /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
 		BD66E0C52366DD3F002FFA1A /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		BD6D5673233A0B9000B7CF4B /* UnauthorizedZoneTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnauthorizedZoneTabBarController.swift; sourceTree = "<group>"; };
@@ -1536,6 +1538,7 @@
 		BD8106AB234F1FA9004A43E9 /* BusinessLogicLayer */ = {
 			isa = PBXGroup;
 			children = (
+				BD5930CD2375A42A007CF3A7 /* Refresher.swift */,
 				BD20830B236099820010E03C /* Network */,
 				BDB6B0172327F20F0006A534 /* Services */,
 			);
@@ -2100,6 +2103,7 @@
 				A5C5E6DA21A2B40A001D6250 /* DepositsCardsListViewController.swift in Sources */,
 				096B4F4E2183089900C69E52 /* TwoViewController.swift in Sources */,
 				A57CF1BC2204364E00E855A5 /* TransactionStatement.swift in Sources */,
+				BD5930CE2375A42A007CF3A7 /* Refresher.swift in Sources */,
 				96144B3C233BAD3F00B9F314 /* IAboutTransaction.swift in Sources */,
 				9697E2A32334E30500974505 /* ServicesList.swift in Sources */,
 				BDFE1AC6233B952B00C49A5B /* ProductActions.swift in Sources */,
