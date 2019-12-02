@@ -122,6 +122,8 @@
 		09F5DCE6218C3E7200390304 /* RegistrationFinishViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F5DCE5218C3E7200390304 /* RegistrationFinishViewController.swift */; };
 		09F5DCE8218C4A5200390304 /* RegistrationTouchIDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F5DCE7218C4A5200390304 /* RegistrationTouchIDViewController.swift */; };
 		09FC8FED215BB2B200A4694B /* ProfileMenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */; };
+		4678EF6D23952D8600E060BD /* IPasscodeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4678EF6C23952D8600E060BD /* IPasscodeService.swift */; };
+		4678EF6F23952D9800E060BD /* PasscodeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4678EF6E23952D9800E060BD /* PasscodeService.swift */; };
 		895768CD2192D992005754D5 /* ProductDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895768CC2192D992005754D5 /* ProductDetailsViewController.swift */; };
 		895768CF2192E768005754D5 /* DepositsStatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895768CE2192E768005754D5 /* DepositsStatsViewController.swift */; };
 		895768D12192E9F0005754D5 /* DepositsStatsDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895768D02192E9F0005754D5 /* DepositsStatsDetailsViewController.swift */; };
@@ -464,6 +466,8 @@
 		09F5DCE5218C3E7200390304 /* RegistrationFinishViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationFinishViewController.swift; sourceTree = "<group>"; };
 		09F5DCE7218C4A5200390304 /* RegistrationTouchIDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationTouchIDViewController.swift; sourceTree = "<group>"; };
 		09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileMenuTableViewController.swift; sourceTree = "<group>"; };
+		4678EF6C23952D8600E060BD /* IPasscodeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPasscodeService.swift; sourceTree = "<group>"; };
+		4678EF6E23952D9800E060BD /* PasscodeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeService.swift; sourceTree = "<group>"; };
 		895768CC2192D992005754D5 /* ProductDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailsViewController.swift; sourceTree = "<group>"; };
 		895768CE2192E768005754D5 /* DepositsStatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsStatsViewController.swift; sourceTree = "<group>"; };
 		895768D02192E9F0005754D5 /* DepositsStatsDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositsStatsDetailsViewController.swift; sourceTree = "<group>"; };
@@ -1048,6 +1052,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		4678EF6B23952D4100E060BD /* Passcode */ = {
+			isa = PBXGroup;
+			children = (
+				4678EF6C23952D8600E060BD /* IPasscodeService.swift */,
+				4678EF6E23952D9800E060BD /* PasscodeService.swift */,
+			);
+			path = Passcode;
+			sourceTree = "<group>";
+		};
 		89C8DF0F2191AE7A00D92B0A /* Deposits */ = {
 			isa = PBXGroup;
 			children = (
@@ -1577,6 +1590,7 @@
 		BDB6B0172327F20F0006A534 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				4678EF6B23952D4100E060BD /* Passcode */,
 				BD57934D236C4B5D0056740C /* Settings */,
 				BDCCE9072350BB490087F5F2 /* AlertService */,
 			);
@@ -1999,6 +2013,7 @@
 				096B4F502183257300C69E52 /* ThreeViewController.swift in Sources */,
 				BD21B66E2338E1AF001C5CF7 /* RegistrationReducer.swift in Sources */,
 				9698995E2303076F0066C55B /* LoansViewController.swift in Sources */,
+				4678EF6D23952D8600E060BD /* IPasscodeService.swift in Sources */,
 				BD3E042823880BDA00826D9D /* CardProviderType.swift in Sources */,
 				BD21B67423391DE3001C5CF7 /* Router.swift in Sources */,
 				0941525B219028000068B6B1 /* SignInViewController.swift in Sources */,
@@ -2069,6 +2084,7 @@
 				0942B86D21625F7800370C71 /* Friend.swift in Sources */,
 				96AB361923323B2B009FD828 /* CardHistory.swift in Sources */,
 				A5C5C03A21B537AB005D6B8F /* BubblesDetailedStatsViewController.swift in Sources */,
+				4678EF6F23952D9800E060BD /* PasscodeService.swift in Sources */,
 				09045059216B5ADC00F3B295 /* FeedOffersCell.swift in Sources */,
 				09C7C3382175E486000EE472 /* DepositsHistoryCell.swift in Sources */,
 				96920C32235604C000CCC7EF /* OperationsList.swift in Sources */,

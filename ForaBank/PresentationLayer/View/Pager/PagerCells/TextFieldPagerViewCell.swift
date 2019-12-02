@@ -108,7 +108,7 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPicker
 
             leftButton.setImage(UIImage(named: textInputCellProvider.iconName), for: .normal)
         }
-    }
+    
 
     extension TextFieldPagerViewCell: UITextFieldDelegate {
         func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
