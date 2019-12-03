@@ -9,7 +9,7 @@
 import UIKit
 import FSPagerView
 
-class TextFieldPagerViewCell: FSPagerViewCell,  IConfigurableCell, ContactsPickerDelegate {
+class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPickerDelegate {
 
     @IBOutlet weak var buttonContactList: UIButton!
     @IBOutlet weak var leftButton: UIButton!
@@ -43,39 +43,32 @@ class TextFieldPagerViewCell: FSPagerViewCell,  IConfigurableCell, ContactsPicke
     }
 
 
+    func contactPicker(_ picker: ContactsPicker, didSelectMultipleContacts contacts: [Contact]) {
+        defer { picker.dismiss(animated: true, completion: nil) }
+        guard !contacts.isEmpty else { return }
+        print("The following contacts are selected")
+        for contact in contacts {
+            print("\(contact.displayName)", "\(contact.phoneNumbers)")
 
-    let contactNumber = NumberFormatter()
+
+            if contacts != nil {
+                let number: String
+                nameContact.isHidden = true
+                number = "\(contact.phoneNumbers.joined())"
+                let numberFormatted = formattedPhoneNumber(number: number)
+                textField.text = "\(numberFormatted)"
+
+            }
+            }
+        }
+
 
 
         override func awakeFromNib() {
             super.awakeFromNib()
         }
 
-    
-     public func contactPicker(_ picker: ContactsPicker, didSelectMultipleContacts contacts: [Contact]) {
-      
-             defer { picker.dismiss(animated: true, completion: nil) }
-             guard !contacts.isEmpty else { return }
-             print("The following contacts are selected")
-             for contact in contacts {
-              print("\(contact.displayName)","\(contact.phoneNumbers)")
-         
-          
-          if  contacts != nil {
-              var number: String
-              nameContact.isHidden = true
-              number = "\(contact.phoneNumbers[0])"
-              
-              if let i = number.firstIndex(of: "7"){
-                  number.remove(at: i)
-             
-                let numberFormatted = formattedNumberInPhoneContacts(number: String(number))
-                  textField.text = "\(numberFormatted)"
-            }
-                }
-        }
-        
-    }
+
     
     public func configure(provider: ICellProvider) {
         
@@ -91,7 +84,6 @@ class TextFieldPagerViewCell: FSPagerViewCell,  IConfigurableCell, ContactsPicke
         if textInputCellProvider.currentValue == nil {
                      self.textField.reloadInputViews()
                      print(self.contactNumber)
-                     print("pisya")
             textInputCellProvider.currentValue = textField.text
                  }
          buttonContactList.isHidden = true
@@ -107,6 +99,15 @@ class TextFieldPagerViewCell: FSPagerViewCell,  IConfigurableCell, ContactsPicke
          leftButton.setImage(UIImage(named: textInputCellProvider.iconName), for: .normal)
      }
 
+            if provider is PhoneNumberCellProvider {
+                textField.text = "+7"
+            }
+            textField.delegate = self
+            textField.placeholder = textInputCellProvider.placeholder
+            textField.addTarget(self, action: #selector(reformatAsCardNumber), for: .editingChanged)
+
+            leftButton.setImage(UIImage(named: textInputCellProvider.iconName), for: .normal)
+        }
     }
 
     extension TextFieldPagerViewCell: UITextFieldDelegate {
@@ -123,4 +124,32 @@ class TextFieldPagerViewCell: FSPagerViewCell,  IConfigurableCell, ContactsPicke
             textField.text = formatedText
             newValueCallback?(cleanNumberString(string: text))
         }
+        public func contactPicker(_ picker: ContactsPicker, didSelectMultipleContacts contacts: [Contact]) {
+            
+                   defer { picker.dismiss(animated: true, completion: nil) }
+                   guard !contacts.isEmpty else { return }
+                   print("The following contacts are selected")
+                   for contact in contacts {
+                    print("\(contact.displayName)","\(contact.phoneNumbers)")
+               
+                
+                if  contacts != nil {
+                    var number: String
+                    nameContact.isHidden = true
+                    number = "\(contact.phoneNumbers[0])"
+                   if number[number.startIndex] == "+"{
+                        number.removeFirst(2)
+                   } else {
+                     number.remove(at: number.startIndex)
+                    }
+                                        print(number)
+                   
+                   
+                      let numberFormatted = formattedNumberInPhoneContacts(number: String(number))
+                        textField.text = "\(numberFormatted)"
+                        newValueCallback?(cleanNumberString(string: numberFormatted))
+                      }
+              }
+              
+          }
     }

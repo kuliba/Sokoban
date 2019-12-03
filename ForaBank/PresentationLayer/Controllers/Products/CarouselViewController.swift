@@ -17,6 +17,7 @@ class CarouselViewController: UIViewController, StoreSubscriber {
     // MARK: - Properties
     @IBOutlet var carousel: iCarousel!
     @IBOutlet weak var containerView: RoundedEdgeView!
+    @IBOutlet weak var carouselMaskCenterVerticalyConstraint: NSLayoutConstraint!
 
     lazy var leftSwipeRecognizer: UISwipeGestureRecognizer = {
         let recognizer = UISwipeGestureRecognizer(target: self, action: #selector(swipeAction(_:)))
@@ -38,9 +39,7 @@ class CarouselViewController: UIViewController, StoreSubscriber {
         [UIColor(hexFromString: "EF4136")!, UIColor(hexFromString: "EF4136")!],
         [UIColor(hexFromString: "EF4136")!, UIColor(hexFromString: "EF4136")!]
     ]
-    let xDevices = Constants.xDevices
-
-    var router: ProductsNavigator?
+    let browDevices = Constants.browDevices
     weak var currentViewController: UIViewController?
     var labels = [UILabel?]()
     var menuItems: Array<AnyHashable> {
@@ -52,7 +51,8 @@ class CarouselViewController: UIViewController, StoreSubscriber {
     var staticMenuItems: Array<String> = ["История"]
     var segueId: String? = nil
     var backSegueId: String? = nil
-    var previousIndex = -1
+
+
 
     // MARK: - Lifecycle
 
@@ -86,7 +86,10 @@ class CarouselViewController: UIViewController, StoreSubscriber {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        carousel.frame.size.height = Device().isOneOf(xDevices) ? 120 : 90
+
+        let isBrowDevice = Device.current.isOneOf(browDevices)
+        carousel.frame.size.height = isBrowDevice ? 120 : 90
+        carouselMaskCenterVerticalyConstraint.constant = isBrowDevice ? 22 : 7
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -256,9 +259,9 @@ extension CarouselViewController: iCarouselDataSource, iCarouselDelegate {
         }
 
         if option == .arc {
-            if Device().isOneOf(Constants.iphone5Devices) {
+            if Device.current.isOneOf(Constants.iphone5Devices) {
                 return CGFloat(Double.pi) / 1.75 // 2.75 - if not authorized
-            } else if Device().isOneOf(xDevices) {
+            } else if Device.current.isOneOf(browDevices) {
                 return CGFloat(Double.pi) / 3.5 // 3.5 - if not authorized
             } else {
                 return CGFloat(Double.pi) / 3.5 // 3.5 - if not authorized
@@ -266,9 +269,9 @@ extension CarouselViewController: iCarouselDataSource, iCarouselDelegate {
         }
 
         if option == .radius {
-            if Device().isOneOf(Constants.iphone5Devices) {
+            if Device.current.isOneOf(Constants.iphone5Devices) {
                 return 800
-            } else if Device().isOneOf(xDevices) {
+            } else if Device.current.isOneOf(browDevices) {
                 return 1300
             } else {
                 return 1300
@@ -289,7 +292,7 @@ extension CarouselViewController: iCarouselDataSource, iCarouselDelegate {
         labels[previousIndex]?.textColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
         labels[previousIndex]?.font = UIFont(name: "Roboto-Light", size: 16)
 
-        labels[index]?.textColor = .white
+        labels[index]?.textColor = .commonRed
         labels[index]?.font = UIFont(name: "Roboto-Regular", size: 16)
 
         let indexOffset = index - previousIndex
@@ -318,14 +321,14 @@ extension CarouselViewController: iCarouselDataSource, iCarouselDelegate {
     func carouselDidEndScrollingAnimation(_ carousel: iCarousel) {
         if previousIndex < 0 || previousIndex == carousel.currentItemIndex {
             previousIndex = carousel.currentItemIndex
-            labels[carousel.currentItemIndex]?.textColor = .white
+            labels[carousel.currentItemIndex]?.textColor = .commonRed
             labels[carousel.currentItemIndex]?.font = UIFont(name: "Roboto-Regular", size: 16)
             return
         }
         labels[previousIndex]?.textColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
         labels[previousIndex]?.font = UIFont(name: "Roboto-Light", size: 16)
 
-        labels[carousel.currentItemIndex]?.textColor = .white
+        labels[carousel.currentItemIndex]?.textColor = .commonRed
         labels[carousel.currentItemIndex]?.font = UIFont(name: "Roboto-Regular", size: 16)
 
         let indexOffset = carousel.currentItemIndex - previousIndex

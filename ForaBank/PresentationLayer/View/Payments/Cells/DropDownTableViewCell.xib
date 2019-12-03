@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -62,7 +62,7 @@
                                     <constraint firstAttribute="width" constant="13" id="vKr-gf-EOI"/>
                                 </constraints>
                             </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="card_visa_logo" translatesAutoresizingMaskIntoConstraints="NO" id="gpp-XC-BMl">
+                            <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="card_visa_logo" translatesAutoresizingMaskIntoConstraints="NO" id="gpp-XC-BMl">
                                 <rect key="frame" x="133.5" y="42.5" width="45" height="15"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="15" id="X5T-Pl-tP1"/>
@@ -118,7 +118,7 @@
     </objects>
     <resources>
         <image name="card_visa_logo" width="41" height="18"/>
-        <image name="tabbar_icon_feed" width="25" height="25"/>
+        <image name="tabbar_icon_feed" width="33" height="30"/>
         <image name="vertical_arrows" width="5" height="11"/>
     </resources>
 </document>

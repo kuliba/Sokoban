@@ -161,13 +161,22 @@ open class ContactsPicker: UIViewController, UITableViewDelegate, UITableViewDat
         
         registerContactCell()
         initializeBarButtons()
+        
         setUpSearchBar()
+        self.navigationController?.navigationBar.barStyle = UIBarStyle.black
+
+        self.navigationController?.navigationBar.barTintColor  = .red
+        navigationController?.setToolbarHidden(false, animated: false)
+        self.navigationController?.navigationBar.backgroundColor = UIColor(hexFromString: "EA4644")!
+        
+        
         reloadContacts()
     }
     
     func setUpSearchBar() {
         searchBar.sizeToFit()
         self.tableView.tableHeaderView = searchBar
+        
     }
     
     func initializeBarButtons() {
