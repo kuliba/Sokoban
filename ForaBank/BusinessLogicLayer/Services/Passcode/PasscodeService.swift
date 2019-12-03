@@ -19,11 +19,7 @@ class PasscodeService: IPasscodeService {
     var isPasscodeSetted: Bool {
         return (keychainCredentialsPasscode() != nil) && SettingsStorage.shared.isSetPasscode() ? true : false
     }
-    var shouldAskPasscode: Bool {
-        didSet {
-///?????????????????????????????????????????
-        }
-    }
+    var shouldAskPasscode: Bool
     var refresher: PasscodeRefresher?
 
     init(shouldAskPasscode: Bool) {
