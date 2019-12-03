@@ -91,8 +91,7 @@ extension PasscodeSignInViewController: TOPasscodeViewControllerDelegate {
     }
 
     func didTapCancel(in passcodeViewController: TOPasscodeViewController) {
-        store.dispatch(canceledPasscodeSignIn)
-        dismiss(animated: true, completion: nil)
+        PasscodeService.shared.cancelPasscodeAuth()
     }
 
     func didPerformBiometricValidationRequest(in passcodeViewController: TOPasscodeViewController) {

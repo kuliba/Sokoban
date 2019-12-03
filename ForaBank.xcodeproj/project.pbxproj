@@ -916,13 +916,13 @@
 		09E0F131215A617A0042FB6A /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				9605AC142383D58400652635 /* MainScreen */,
 				BDB823A923852A7000030B5F /* BaseViewController.swift */,
 				960C5D0F237161A8002C4DC4 /* MapPopUpViewController.swift */,
 				9697E29E2334C29700974505 /* OperatorsList.swift */,
 				BDB7916C2338C8B10002C7EE /* VerificationCodeViewController.swift */,
 				96AF922B2360A85B00C9E746 /* ContactList */,
 				09203D99216E150C00902BD2 /* Feed */,
+				9605AC142383D58400652635 /* MainScreen */,
 				BDA9EB3B2326862F00D68BEE /* Passcode */,
 				89C8DF142191BDF500D92B0A /* Payments */,
 				09C7C30B2174727A000EE472 /* Products */,

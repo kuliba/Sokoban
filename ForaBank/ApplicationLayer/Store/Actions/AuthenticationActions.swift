@@ -14,6 +14,10 @@ let checkAuthCredentials = Thunk<State> { dispatch, getStat in
     guard PasscodeService.shared.isPasscodeSetted else {
         return
     }
+    let passcodeVC = PasscodeSignInViewController()
+    passcodeVC.modalPresentationStyle = .overFullScreen
+    topMostVC()?.present(passcodeVC, animated: true, completion: nil)
+    
     dispatch(UpdatePasscodeSingInProcess(isShown: true))
 }
 
@@ -21,6 +25,7 @@ let userDidSignIn = Thunk<State> { dispatch, getStat in
     dispatch(fetchUserData)
     dispatch(fetchProducts)
     setupAuthorizedZone()
+    PasscodeService.shared.preparePasscodeIfNeeded()
 }
 
 let doLogout = Thunk<State> { dispatch, getStat in

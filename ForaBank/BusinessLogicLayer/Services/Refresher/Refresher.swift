@@ -9,16 +9,21 @@
 import Foundation
 
 class Refresher<T: IRefreshing>: IRefresher {
-
-    internal let interval: Double
+    
     internal weak var target: T?
-
-    init(target: T?, interval: Double) {
-        self.interval = interval
+    private var timer: Timer?
+    
+    init(target: T?) {
         self.target = target
-        
-        Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] (timer) in
+    }
+    
+    public func launchTimer(repeats: Bool, timeInterval: TimeInterval) {
+        timer = Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: repeats) { [weak self] (timer) in
             self?.target?.refresh()
         }
+    }
+    
+    func invalidateTimer() {
+        timer?.invalidate()
     }
 }

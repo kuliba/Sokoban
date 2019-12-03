@@ -10,14 +10,18 @@ import Foundation
 
 class PasscodeService: IPasscodeService {
 
+    private struct Constants {
+        static let expireTime: TimeInterval = 1 * 60
+    }
+
     static let shared = PasscodeServiceInitializer.createPasscodeService()
-    
+
     var isPasscodeSetted: Bool {
         return (keychainCredentialsPasscode() != nil) && SettingsStorage.shared.isSetPasscode() ? true : false
     }
     var shouldAskPasscode: Bool {
-        didSet{
-            
+        didSet {
+///?????????????????????????????????????????
         }
     }
     var refresher: PasscodeRefresher?
@@ -25,14 +29,27 @@ class PasscodeService: IPasscodeService {
     init(shouldAskPasscode: Bool) {
         self.shouldAskPasscode = shouldAskPasscode
     }
-    
+
     public func startAuthIfNeeded() {
         guard shouldAskPasscode else {
             return
         }
-        
+
         store.dispatch(checkAuthCredentials)
         shouldAskPasscode = false
+    }
+
+    public func preparePasscodeIfNeeded() {
+        guard isPasscodeSetted else {
+            return
+        }
+        refresher?.launchTimer(repeats: false, timeInterval: Constants.expireTime)
+    }
+
+    public func cancelPasscodeAuth() {
+        store.dispatch(canceledPasscodeSignIn)
+        refresher?.invalidateTimer()
+        store.dispatch(doLogout)
     }
 }
 

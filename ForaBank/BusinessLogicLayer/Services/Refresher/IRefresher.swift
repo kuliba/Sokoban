@@ -15,6 +15,8 @@ protocol IRefreshing: class {
 protocol IRefresher {
     associatedtype RefreshTarget: IRefreshing
 
-    var interval: Double { get }
     var target: RefreshTarget? { get }
+
+    func launchTimer(repeats: Bool, timeInterval: TimeInterval)
+    func invalidateTimer()
 }
