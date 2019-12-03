@@ -179,6 +179,7 @@ extension PaymentsDetailsViewController: PaymentDetailsPresenterDelegate {
     func didUpdate(isLoading: Bool, canAskFee: Bool, canMakePayment: Bool) {
         print(isLoading, canAskFee, canMakePayment)
         sendButton.changeEnabled(isEnabled: canAskFee)
+        isLoading ? activityIndicator.startAnimating() : activityIndicator.stopAnimating()
     }
 }
 
