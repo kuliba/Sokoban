@@ -16,7 +16,7 @@ class PagerView: UIView {
     @IBOutlet weak var pagerView: FSPagerView!
     @IBOutlet weak var pageControl: FSPageControl! {
         didSet {
-            pageControl.contentInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
+            pageControl.contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
             pageControl.setFillColor(.gray, for: .normal)
             pageControl.setFillColor(.commonRed, for: .selected)
         }
