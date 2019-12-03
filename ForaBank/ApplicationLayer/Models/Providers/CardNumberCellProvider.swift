@@ -12,12 +12,11 @@ class CardNumberCellProvider: NSObject, ITextInputCellProvider {
     var textField: String = ""
     
 
-    let iconName = "payments_transfer_between-accounts"
-    let placeholder = "Введите номер карты"
-    
-    
- 
+    let iconName = "feed_option_cards"
+    let placeholder = "По номеру карты"
     let charactersMaxCount = 19
+    let keyboardType: UIKeyboardType = .numberPad
+    let isScan = true
 
     var currentValue: IPresentationModel?
     var isLoading: Bool = false

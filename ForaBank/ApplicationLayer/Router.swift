@@ -40,10 +40,24 @@ func showPaymentViewController() {
 }
 
 func showPaymentsTableViewController() {
-    let paymentsTableVC = PaymentsTableViewController()
     guard let paymentsVC = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentsTableViewController") as? PaymentsTableViewController else {
         return
     }
 
     topMostVC()?.present(paymentsVC, animated: true)
+}
+
+//MARK: - Scan
+
+func showScanCardController(delegate: CardIOPaymentViewControllerDelegate) {
+
+    guard let cardScanVC = CardIOPaymentViewController(paymentDelegate: delegate, scanningEnabled: true) else { return }
+    
+    cardScanVC.modalPresentationStyle = .fullScreen
+    cardScanVC.collectCVV = false
+    cardScanVC.collectExpiry = false
+    cardScanVC.guideColor = UIColor(red: 0.13, green: 0.54, blue: 0.61, alpha: 1.00)
+    cardScanVC.hideCardIOLogo = true
+    
+    topMostVC()?.present(cardScanVC, animated: true, completion: nil)
 }
