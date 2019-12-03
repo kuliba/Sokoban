@@ -16,7 +16,6 @@ extension String: IPresentationModel {
 
 protocol ICellProvider: class {
     var isLoading: Bool { get }
-    var currentValue: IPresentationModel? { get set }
 
     func getData(completion: @escaping (_ data: [IPresentationModel]) -> ())
 }
@@ -25,9 +24,6 @@ protocol ITextInputCellProvider: ICellProvider, UITextFieldDelegate {
     var iconName: String { get }
     var placeholder: String { get }
     var charactersMaxCount: Int { get }
-    var keyboardType: UIKeyboardType { get }
-    var isScan: Bool { get }
-
 
     func formatted(stringToFormat string: String) -> String
 }

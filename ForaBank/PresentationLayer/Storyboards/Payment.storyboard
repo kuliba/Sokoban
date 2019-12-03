@@ -120,7 +120,7 @@
             </objects>
             <point key="canvasLocation" x="2224" y="1043"/>
         </scene>
-        <!--Платежи и переводы-->
+        <!--Payments Details View Controller-->
         <scene sceneID="mUk-Xs-fOz">
             <objects>
                 <viewController storyboardIdentifier="PaymentDetailsViewController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="afX-Am-FVA" customClass="PaymentsDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
@@ -248,6 +248,9 @@
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="25"/>
                                                 <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
+                                                <connections>
+                                                    <action selector="amountTextFieldValueChanged:" destination="afX-Am-FVA" eventType="editingChanged" id="AqE-Rj-Bh9"/>
+                                                </connections>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="₽" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oQo-1Q-oWy">
                                                 <rect key="frame" x="193.5" y="323" width="15" height="50"/>
@@ -379,18 +382,24 @@
                     <navigationItem key="navigationItem" title="Платежи и переводы" id="58H-bR-aNV"/>
                     <size key="freeformSize" width="320" height="568"/>
                     <connections>
+                        <outlet property="amountTextField" destination="2cO-cF-Vnw" id="1zs-nj-3oh"/>
                         <outlet property="containterView" destination="7jF-kB-QvE" id="4oP-n4-FsA"/>
                         <outlet property="destinationPagerView" destination="g1p-TJ-nON" id="siG-NV-DbH"/>
                         <outlet property="picker" destination="cOr-dw-QEx" id="E3P-CW-lAq"/>
                         <outlet property="pickerButton" destination="kfC-FM-FXM" id="PUa-To-1Iv"/>
                         <outlet property="pickerImageView" destination="IBa-Pg-g1h" id="lJr-Yw-yik"/>
                         <outlet property="pickerLabel" destination="XCt-5D-j6q" id="a3E-CI-EBb"/>
+                        <outlet property="sendButton" destination="97j-FL-klS" id="XG9-XP-Kke"/>
                         <outlet property="sourcePagerView" destination="f9s-h8-3Nc" id="TXt-Cw-Lgd"/>
-                        <outlet property="sumTextField" destination="2cO-cF-Vnw" id="FFJ-Vb-Cd2"/>
                         <segue destination="Xda-th-p6I" kind="show" identifier="fromPaymentToPaymentVerification" id="cst-cx-Cgc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UFN-wo-miF" sceneMemberID="firstResponder"/>
+                <customObject id="yvx-Ke-FPU" customClass="PaymentModuleInitializer" customModule="ForaBank" customModuleProvider="target">
+                    <connections>
+                        <outlet property="paymentsDetailsViewController" destination="afX-Am-FVA" id="iki-Qi-xzF"/>
+                    </connections>
+                </customObject>
             </objects>
             <point key="canvasLocation" x="2979.375" y="1037.323943661972"/>
         </scene>
@@ -488,7 +497,7 @@
                                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zFG-Bn-eR0" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
+                                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zFG-Bn-eR0" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
                                                 <rect key="frame" x="20" y="130" width="252" height="53"/>
                                                 <color key="backgroundColor" red="0.91764705879999997" green="0.2666666667" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
@@ -603,13 +612,13 @@
                                     <color key="titleColor" red="0.93805062770000003" green="0.25358119610000002" blue="0.2107679546" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" misplaced="YES" text="-9550 ₽" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J5q-LI-SJd">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" ambiguous="YES" misplaced="YES" text="-9550 ₽" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J5q-LI-SJd">
                                 <rect key="frame" x="107" y="199" width="136" height="43"/>
                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="32"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Перевод успешно совершен" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aGd-R4-Z3w">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Перевод успешно совершен" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aGd-R4-Z3w">
                                 <rect key="frame" x="34" y="249.5" width="257" height="22.5"/>
                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -773,7 +782,7 @@
                             <constraint firstItem="Gtw-UZ-fge" firstAttribute="bottom" secondItem="u46-KW-caT" secondAttribute="bottom" constant="38" id="PbB-1B-jwR"/>
                             <constraint firstItem="Gtw-UZ-fge" firstAttribute="trailing" secondItem="aGd-R4-Z3w" secondAttribute="trailing" constant="29" id="Z2M-Ef-jnX"/>
                             <constraint firstItem="Yhq-KU-zzm" firstAttribute="leading" secondItem="V48-Wh-DLl" secondAttribute="leading" id="a38-os-2Hd"/>
-                            <constraint firstItem="J5q-LI-SJd" firstAttribute="centerX" secondItem="V48-Wh-DLl" secondAttribute="centerX" id="aUA-i0-Hkt"/>
+                            <constraint firstItem="J5q-LI-SJd" firstAttribute="centerX" secondItem="V48-Wh-DLl" secondAttribute="centerX" constant="15" id="aUA-i0-Hkt"/>
                             <constraint firstItem="u46-KW-caT" firstAttribute="trailing" secondItem="Yhq-KU-zzm" secondAttribute="trailing" id="kB5-jn-kO1"/>
                             <constraint firstItem="V48-Wh-DLl" firstAttribute="leading" secondItem="Gtw-UZ-fge" secondAttribute="leading" constant="14" id="t8J-LX-gG6"/>
                         </constraints>
@@ -801,7 +810,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="320" height="30"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Платежи и переводы" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D6D-IF-bKx">
-                                    <rect key="frame" x="80" y="8.5" width="160" height="21.5"/>
+                                    <rect key="frame" x="80.5" y="11" width="159" height="19"/>
                                     <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>

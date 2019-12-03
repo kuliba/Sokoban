@@ -16,6 +16,7 @@ class ProductManagementViewController: UITableViewController {
     var actions: Array<Dictionary<String, String>> = []
     var actionsType = ""
     var product: IProduct?
+    var customName: ICustomName?
     var color2: UIColor = .black
     var card: Card? = nil
     var cards: [Card] = [Card]()
@@ -148,13 +149,13 @@ class ProductManagementViewController: UITableViewController {
             let txt = alert.addTextField("Введите название карты")
             alert.addButton("Сохранить") {
                 let id = self.product?.id
-                let newName:String = txt.text ?? "\(self.product!.name)"
+                var newName:String = txt.text ?? "\(self.product!.name)"
                 NetworkManager.shared().saveCardName(newName: newName, id:id ?? 123, completionHandler: { success, errorMessage, newName, id in })
                 NetworkManager.shared().getCardList { [weak self] (success, cards) in
                         self?.cards = cards ?? []
-                    var newName = self?.cards[indexPath.section].customName
+                    var newName:String = txt.text ?? "\(self?.product!.name)"
                     if newName == ""{
-                        newName = self?.cards[indexPath.section].name
+                        newName = (self?.cards[indexPath.row].name)!
                     }
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "customName"), object: newName)
                 

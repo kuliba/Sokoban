@@ -29,7 +29,6 @@ class CarouselViewController: UIViewController, StoreSubscriber {
         recognizer.direction = .right
         return recognizer
     }()
-    var previousIndex = -1
 
     let gradientView = GradientView()
     let gradients = [
@@ -41,7 +40,7 @@ class CarouselViewController: UIViewController, StoreSubscriber {
         [UIColor(hexFromString: "EF4136")!, UIColor(hexFromString: "EF4136")!]
     ]
     let browDevices = Constants.browDevices
-
+    
     var router: ProductsNavigator?
     weak var currentViewController: UIViewController?
     var labels = [UILabel?]()
@@ -54,8 +53,7 @@ class CarouselViewController: UIViewController, StoreSubscriber {
     var staticMenuItems: Array<String> = ["История"]
     var segueId: String? = nil
     var backSegueId: String? = nil
-
-
+    var previousIndex = -1
 
     // MARK: - Lifecycle
 
