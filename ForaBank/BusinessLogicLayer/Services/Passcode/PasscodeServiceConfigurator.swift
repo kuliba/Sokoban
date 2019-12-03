@@ -12,7 +12,7 @@ class PasscodeServiceConfigurator {
     
     private struct Constants {
         // 2 minutes
-        static let expireTime: TimeInterval = 0.5 * 60
+        static let expireTime: TimeInterval = 1 * 60
     }
     
     func configure(passcodeService: PasscodeService) {
