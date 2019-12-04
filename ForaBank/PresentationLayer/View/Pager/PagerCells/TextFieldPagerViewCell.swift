@@ -9,19 +9,12 @@
 import UIKit
 import FSPagerView
 
-class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPickerDelegate {
+class TextFieldPagerViewCell: FSPagerViewCell,  IConfigurableCell, ContactsPickerDelegate {
 
     @IBOutlet weak var buttonContactList: UIButton!
     @IBOutlet weak var leftButton: UIButton!
     @IBOutlet weak var textField: UITextField!
-
-    var newValueCallback: ((_ newValue: IPresentationModel) -> ())?
-    var charactersMaxCount: Int?
-    var formattingFunc: ((String) -> (String))?
-
     @IBOutlet weak var nameContact: UILabel!
-
-
 
     @IBAction func contactsList(_ sender: Any) {
         let contactPickerScene = ContactsPicker(delegate: self, multiSelection: true, subtitleCellType: SubtitleCellValue.phoneNumber)
@@ -29,6 +22,13 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPicker
         let navigationController = UINavigationController(rootViewController: contactPickerScene)
         topMostVC()?.present(navigationController, animated: true, completion: nil)
     }
+
+    weak var delegate: ConfigurableCellDelegate?
+
+    var charactersMaxCount: Int?
+    var formattingFunc: ((String) -> (String))?
+
+
     func contactPicker(_: ContactsPicker, didContactFetchFailed error: NSError) {
         print("Failed with error \(error.description)")
     }
@@ -42,15 +42,9 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPicker
         print("User canceled the selection")
     }
 
-
-
-    let contactNumber = NumberFormatter()
-
-
     override func awakeFromNib() {
         super.awakeFromNib()
     }
-
 
     public func configure(provider: ICellProvider, delegate: ConfigurableCellDelegate) {
         self.delegate = delegate
@@ -61,10 +55,10 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPicker
         formattingFunc = textInputCellProvider.formatted
         charactersMaxCount = textInputCellProvider.charactersMaxCount
 
-        //        if textInputCellProvider.currentValue == nil {
-        //            self.textField.reloadInputViews()
-        //            textInputCellProvider.currentValue = textField.text
-        //        }
+//        if textInputCellProvider.currentValue == nil {
+//            self.textField.reloadInputViews()
+//            textInputCellProvider.currentValue = textField.text
+//        }
         buttonContactList.isHidden = true
         if provider is PhoneNumberCellProvider {
             textField.text = "+7"
@@ -89,39 +83,31 @@ extension TextFieldPagerViewCell: UITextFieldDelegate {
         return newLength <= nonNilCharactersMaxCount
     }
 
-
-    @objc func reformatAsCardNumber(textField: UITextField) {
+    @objc private func reformatAsCardNumber(textField: UITextField) {
         guard let text = textField.text, let nonNilFormattingFunc = formattingFunc else { return }
         let formatedText = nonNilFormattingFunc(text)
         textField.text = formatedText
-        newValueCallback?(cleanNumberString(string: text))
+        delegate?.didInputPaymentValue(value: cleanNumberString(string: text))
     }
-    public func contactPicker(_ picker: ContactsPicker, didSelectMultipleContacts contacts: [Contact]) {
 
+    public func contactPicker(_ picker: ContactsPicker, didSelectMultipleContacts contacts: [Contact]) {
         defer { picker.dismiss(animated: true, completion: nil) }
         guard !contacts.isEmpty else { return }
         print("The following contacts are selected")
         for contact in contacts {
             print("\(contact.displayName)", "\(contact.phoneNumbers)")
-
-
-            if contacts != nil {
-                var number: String
-                nameContact.isHidden = true
-                number = "\(contact.phoneNumbers[0])"
-                if number[number.startIndex] == "+" {
-                    number.removeFirst(2)
-                } else {
-                    number.remove(at: number.startIndex)
-                }
-                print(number)
-
-
-                let numberFormatted = formattedNumberInPhoneContacts(number: String(number))
-                textField.text = "\(numberFormatted)"
-                newValueCallback?(cleanNumberString(string: numberFormatted))
+            var number: String
+            nameContact.isHidden = true
+            number = "\(contact.phoneNumbers[0])"
+            if number[number.startIndex] == "+" {
+                number.removeFirst(2)
+            } else {
+                number.remove(at: number.startIndex)
             }
-            }
-
+            print(number)
+            let numberFormatted = formattedNumberInPhoneContacts(number: String(number))
+            textField.text = "\(numberFormatted)"
+            delegate?.didInputPaymentValue(value: cleanNumberString(string: numberFormatted))
         }
     }
+}
