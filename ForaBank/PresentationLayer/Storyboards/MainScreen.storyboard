@@ -147,6 +147,16 @@
             </objects>
             <point key="canvasLocation" x="375" y="34"/>
         </scene>
+        <!--Deposits-->
+        <scene sceneID="Lb2-WI-WqU">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Deposits" id="bFM-mR-xjP" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="bQf-yL-0Tl"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IOs-6b-CUm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3187" y="99"/>
+        </scene>
         <!--Главная-->
         <scene sceneID="6SL-Db-1Cb">
             <objects>
@@ -211,6 +221,7 @@
                     <connections>
                         <outlet property="containerViewController" destination="GUW-gf-iHb" id="lFv-SS-sxb"/>
                         <outlet property="roundedEdge" destination="XG0-Ga-1iR" id="gwD-NT-Kbv"/>
+                        <segue destination="bFM-mR-xjP" kind="show" identifier="presetDepositsController" id="bpS-Ry-48q"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0bD-wP-t74" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

@@ -28,7 +28,7 @@ class MainView_ontroller2: UIViewController, UICollectionViewDataSource, UIColle
            let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
            let cv: UICollectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: layout)
            cv.register(Cell.self, forCellWithReuseIdentifier: Cell.id)
-            layout.itemSize = CGSize(width: screenWidth/2, height: screenWidth/2)
+        layout.itemSize = CGSize(width: screenWidth/2, height: screenWidth/2.5)
            cv.dataSource = self
         layout.minimumInteritemSpacing = 0
         
@@ -68,7 +68,7 @@ class MainView_ontroller2: UIViewController, UICollectionViewDataSource, UIColle
                backgroundImage.image = UIImage(named: "mainscreen-1")
                backgroundImage.contentMode = UIView.ContentMode.scaleAspectFill
         
-      containerViewController.addSubview(collectionView)
+        containerViewController.addSubview(collectionView)
         roundedEdge.translatesAutoresizingMaskIntoConstraints = false
         
         collectionView.backgroundColor = .white
@@ -80,7 +80,7 @@ class MainView_ontroller2: UIViewController, UICollectionViewDataSource, UIColle
 
            var cell: (UICollectionViewCell?, IndexPath?) {
                guard let indexPath = collectionView.indexPathForItem(at: gesture.location(in: collectionView)),
-                   let cell = collectionView.cellForItem(at: indexPath) else { return (nil, nil) }
+                let cell = collectionView.cellForItem(at: indexPath) else { return (nil, nil) }
                return (cell, indexPath)
            }
 
@@ -105,7 +105,7 @@ class MainView_ontroller2: UIViewController, UICollectionViewDataSource, UIColle
            default:
             movingCell?.cell.alpha = 0.5
             movingCell?.reset()
-               movingCell = nil
+            movingCell = nil
             
         
            }
@@ -195,13 +195,10 @@ class MainView_ontroller2: UIViewController, UICollectionViewDataSource, UIColle
                                ]
                 break
             case "История":
-               let alert = UIAlertController(title: "Не доступно", message: "Функционал в разработке", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default) { action in
-                                            // обработка нажатия кнопки
-                                        })
-                self.present(alert, animated: true, completion: nil)
+                let storyboard = UIStoryboard(name: "Deposits", bundle: nil)
 
-                
+                let newVC = storyboard.instantiateViewController(withIdentifier: "DepositsHistoryViewController")
+                    self.present(newVC, animated: true, completion: nil)
             break
             default:
                 break

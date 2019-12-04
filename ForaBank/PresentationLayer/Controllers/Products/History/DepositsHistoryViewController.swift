@@ -116,7 +116,13 @@ class DepositsHistoryViewController: UIViewController {
                 self?.sortedTransactionsStatement = fullStatement ?? [DatedTransactionsStatement]()
             }
         }
-        prepareUI()
+        view.backgroundColor = .white
+        
+        
+       if isModal == false {
+                prepareUI()
+ }
+        
     }
     
     override func viewDidDisappear(_ animated: Bool) {
