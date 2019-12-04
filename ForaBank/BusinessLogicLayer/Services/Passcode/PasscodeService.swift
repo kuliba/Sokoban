@@ -10,47 +10,21 @@ import Foundation
 
 class PasscodeService: IPasscodeService {
 
-    private struct Constants {
-        static let expireTime: TimeInterval = 1 * 60
-    }
-
-    static let shared = PasscodeServiceInitializer.createPasscodeService()
+    static let shared: IPasscodeService = PasscodeServiceInitializer.createPasscodeService()
 
     var isPasscodeSetted: Bool {
         return (keychainCredentialsPasscode() != nil) && SettingsStorage.shared.isSetPasscode() ? true : false
     }
-    var shouldAskPasscode: Bool
-    var refresher: PasscodeRefresher?
 
-    init(shouldAskPasscode: Bool) {
-        self.shouldAskPasscode = shouldAskPasscode
+    init() {
     }
 
-    public func startAuthIfNeeded() {
-        guard shouldAskPasscode else {
-            return
-        }
-
+    public func showPasscodeScreen() {
         store.dispatch(checkAuthCredentials)
-        shouldAskPasscode = false
-    }
-
-    public func preparePasscodeIfNeeded() {
-        guard isPasscodeSetted else {
-            return
-        }
-        refresher?.launchTimer(repeats: false, timeInterval: Constants.expireTime)
     }
 
     public func cancelPasscodeAuth() {
+        AuthenticationService.shared.onAuthCanceled()
         store.dispatch(canceledPasscodeSignIn)
-        refresher?.invalidateTimer()
-        store.dispatch(doLogout)
-    }
-}
-
-extension PasscodeService: IRefreshing {
-    func refresh() {
-        shouldAskPasscode = true
     }
 }

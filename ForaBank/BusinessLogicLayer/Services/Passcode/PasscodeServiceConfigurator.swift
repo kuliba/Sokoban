@@ -11,6 +11,5 @@ import Foundation
 class PasscodeServiceConfigurator {
 
     func configure(passcodeService: PasscodeService) {
-        passcodeService.refresher = Refresher(target: passcodeService)
     }
 }

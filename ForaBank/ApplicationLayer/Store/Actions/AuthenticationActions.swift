@@ -17,7 +17,7 @@ let checkAuthCredentials = Thunk<State> { dispatch, getStat in
     let passcodeVC = PasscodeSignInViewController()
     passcodeVC.modalPresentationStyle = .overFullScreen
     topMostVC()?.present(passcodeVC, animated: true, completion: nil)
-    
+
     dispatch(UpdatePasscodeSingInProcess(isShown: true))
 }
 
@@ -25,7 +25,7 @@ let userDidSignIn = Thunk<State> { dispatch, getStat in
     dispatch(fetchUserData)
     dispatch(fetchProducts)
     setupAuthorizedZone()
-    PasscodeService.shared.preparePasscodeIfNeeded()
+    AuthenticationService.shared.afterLogin()
 }
 
 let doLogout = Thunk<State> { dispatch, getStat in
