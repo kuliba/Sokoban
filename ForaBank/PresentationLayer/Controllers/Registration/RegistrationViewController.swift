@@ -162,11 +162,11 @@ class RegistrationViewController: UIViewController {
             (textField.text?.count ?? 0) >= 2 {
         }
 
-        guard let cardNumber = cardNumberTextField.text?.count, cardNumber <= 19 else {
-            self.continueButton.isHidden = false
+        guard let cardNumber = cardNumberTextField.text?.removeWhitespace().count, cardNumber <= 16 else {
+           self.continueButton.isHidden = false
             return
         }
-        if cardNumberTextField.text?.count ?? 0 == 19 {
+        if cardNumberTextField.text?.removeWhitespace().count ?? 0 == 16 {
             if textField.tag == 1 {
                 UIView.transition(with: cardView, duration: 0.5, options: .transitionFlipFromLeft, animations: {
                     self.identifyBank()
