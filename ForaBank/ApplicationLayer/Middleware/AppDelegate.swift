@@ -39,7 +39,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         IQKeyboardManager.shared.enable = true
         //        IQKeyboardManager.shared.layoutIfNeededOnUpdate = true
         cleanKeychainIfNeeded()
-        store.dispatch(checkAuthCredentials)
+//        store.dispatch(checkAuthCredentials)
+        AuthenticationService.shared.startSecurityCheckIfNeeded()
 
         FirebaseApp.configure()
         application.registerForRemoteNotifications()
@@ -53,7 +54,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
-        store.dispatch(checkAuthCredentials)
+//        store.dispatch(checkAuthCredentials)
+        AuthenticationService.shared.startSecurityCheckIfNeeded()
     }
 
     var applicationStateString: String {
