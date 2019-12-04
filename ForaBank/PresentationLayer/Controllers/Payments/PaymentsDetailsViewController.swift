@@ -41,7 +41,7 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
 
     // MARK: - Actions
     @IBAction func amountTextFieldValueChanged(_ sender: Any) {
-        delegate?.didChangeAmount(amount: Double(amountTextField.text!))
+        delegate?.didChangeAmount(amount: Double(amountTextField.text!.replacingOccurrences(of: ",", with: ".")))
     }
 
     @IBAction func sendButtonClicked(_ sender: Any) {
