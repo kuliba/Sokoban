@@ -29,6 +29,11 @@
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad" textContentType="cc-number"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="_placeholderLabel.textColor">
+                                        <color key="value" systemColor="opaqueSeparatorColor" red="0.77647058820000003" green="0.77647058820000003" blue="0.7843137255" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f5S-dd-w1e">
                                 <rect key="frame" x="8" y="15" width="31" height="31"/>
@@ -86,11 +91,6 @@
                 <constraint firstAttribute="trailing" secondItem="D8h-Vw-o5e" secondAttribute="trailing" id="dtt-ud-Lsy"/>
             </constraints>
             <size key="customSize" width="320" height="60"/>
-            <userDefinedRuntimeAttributes>
-                <userDefinedRuntimeAttribute type="color" keyPath="_placeholderLabel.textColor">
-                    <color key="value" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                </userDefinedRuntimeAttribute>
-            </userDefinedRuntimeAttributes>
             <connections>
                 <outlet property="buttonContactList" destination="n8P-hA-omH" id="88z-0c-WWi"/>
                 <outlet property="leftButton" destination="f5S-dd-w1e" id="2eU-GJ-feS"/>
