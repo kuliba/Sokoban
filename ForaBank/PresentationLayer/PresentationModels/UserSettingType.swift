@@ -25,4 +25,30 @@ enum UserSettingType {
             return SettingsStorage.shared.allowedBiometricSignIn()
         }
     }
+
+    var localizedName: String {
+        switch self {
+        case .changePassword:
+            return NSLocalizedString("Изменть пароль", comment: "")
+        case .changePasscode:
+            return NSLocalizedString("Изменить 4-х значный код", comment: "")
+        case .isPasscodeSetted:
+            return NSLocalizedString("4-х значный код", comment: "")
+        case .allowedBiometricSignIn:
+            return NSLocalizedString("TouchID/FaceID", comment: "")
+        }
+    }
+
+    var imageName: String {
+        switch self {
+        case .changePassword:
+            return "lock"
+        case .changePasscode:
+            return "passcodeChange"
+        case .isPasscodeSetted:
+            return "keypad"
+        case .allowedBiometricSignIn:
+            return "touch"
+        }
+    }
 }

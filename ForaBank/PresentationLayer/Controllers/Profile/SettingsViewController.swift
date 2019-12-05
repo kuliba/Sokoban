@@ -15,11 +15,7 @@ import Hero
 
 class SettingsViewController: UIViewController
 {
-    var gradientViews = [GradientView2]()
 
-    var backSegueId: String? = nil
-    var segueId: String? = nil
-    // MARK: - Properties
     @IBOutlet weak var tableView: CustomTableView!
     @IBOutlet weak var containerView: RoundedEdgeView!
 
@@ -32,12 +28,9 @@ class SettingsViewController: UIViewController
         }
     }
 
+    // MARK: - Properties
 
     let cellId = "FeedOptionCell"
-
-
-
-
     let options = [
         [
             FeedOption(name: "Смена пароля кода", iconName: "group choose", section: "Пользовательские настройки", button: true),
@@ -69,56 +62,20 @@ class SettingsViewController: UIViewController
         ]
     ]
 
+    var gradientViews = [GradientView2]()
+    var backSegueId: String? = nil
+    var segueId: String? = nil
+
     // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpTableView()
     }
 }
 
-// MARK: - UITableView Delegate and DataSource
-extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
-
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return options.count
-    }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return options[section].count
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? FeedOptionCell else {
-            fatalError()
-        }
-
-        cell.titleLabel.text = options[indexPath.section][indexPath.row].name
-        cell.iconImageView.image = UIImage(named: options[indexPath.section][indexPath.row].iconName)
-
-
-        return cell
-    }
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "showChangePassword", sender: tableView.cellForRow(at: indexPath))
-    }
-
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerCell = UINib(nibName: "ServicesHeader", bundle: nil)
-            .instantiate(withOwner: nil, options: nil)[0] as! ServicesHeader
-
-        let headerView = UIView(frame: headerCell.frame)
-        headerView.addSubview(headerCell)
-        headerView.backgroundColor = .clear
-        headerCell.titleLabel.text = options[section][0].section
-        return headerView
-    }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 35
-    }
-}
-
 // MARK: - Private methods
+
 private extension SettingsViewController {
 
     func setUpTableView() {
@@ -128,8 +85,8 @@ private extension SettingsViewController {
     }
 
     func setTableViewDelegateAndDataSource() {
-        tableView.dataSource = self
-        tableView.delegate = self
+//        tableView.dataSource = self
+//        tableView.delegate = self
     }
 
     func setAutomaticRowHeight() {
