@@ -324,6 +324,9 @@
 		BDABE68423463D4A00CA0754 /* DropDownPagerViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDABE68223463D4A00CA0754 /* DropDownPagerViewCell.xib */; };
 		BDABE688234640D000CA0754 /* PaymentOptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDABE687234640D000CA0754 /* PaymentOptionView.swift */; };
 		BDABE68A2346417C00CA0754 /* PaymentOptionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDABE6892346417C00CA0754 /* PaymentOptionView.xib */; };
+		BDAEE0EB23991032007690E7 /* SettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDAEE0EA23991032007690E7 /* SettingsPresenter.swift */; };
+		BDAEE0ED2399104C007690E7 /* ISettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDAEE0EC2399104C007690E7 /* ISettingsPresenter.swift */; };
+		BDAEE0EF23991295007690E7 /* UserSettingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDAEE0EE23991295007690E7 /* UserSettingType.swift */; };
 		BDB6AFF423268C850006A534 /* PasscodeSignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6AFF323268C850006A534 /* PasscodeSignInViewController.swift */; };
 		BDB6B0112326A9C10006A534 /* PasscodeSignUpActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6B0102326A9C10006A534 /* PasscodeSignUpActions.swift */; };
 		BDB6B0132326A9E00006A534 /* PasscodeSingUpReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6B0122326A9E00006A534 /* PasscodeSingUpReducer.swift */; };
@@ -696,6 +699,9 @@
 		BDABE68223463D4A00CA0754 /* DropDownPagerViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DropDownPagerViewCell.xib; sourceTree = "<group>"; };
 		BDABE687234640D000CA0754 /* PaymentOptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentOptionView.swift; sourceTree = "<group>"; };
 		BDABE6892346417C00CA0754 /* PaymentOptionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentOptionView.xib; sourceTree = "<group>"; };
+		BDAEE0EA23991032007690E7 /* SettingsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPresenter.swift; sourceTree = "<group>"; };
+		BDAEE0EC2399104C007690E7 /* ISettingsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ISettingsPresenter.swift; sourceTree = "<group>"; };
+		BDAEE0EE23991295007690E7 /* UserSettingType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingType.swift; sourceTree = "<group>"; };
 		BDB6AFF323268C850006A534 /* PasscodeSignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignInViewController.swift; sourceTree = "<group>"; };
 		BDB6B0102326A9C10006A534 /* PasscodeSignUpActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignUpActions.swift; sourceTree = "<group>"; };
 		BDB6B0122326A9E00006A534 /* PasscodeSingUpReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSingUpReducer.swift; sourceTree = "<group>"; };
@@ -897,8 +903,7 @@
 		09BE35ED218C629100EA7B24 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
-				9622CFBC234B22440005701E /* changePassword */,
-				9630327C234625DA00C211D8 /* resetPassword */,
+				BDAEE0E923991014007690E7 /* Presentation */,
 				09D3C039215CBCAB00998F57 /* ChatDialogsViewController.swift */,
 				09D3C047215E07DB00998F57 /* ChatMessagesViewController.swift */,
 				09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */,
@@ -906,6 +911,8 @@
 				BDCCE90D2350BDB10087F5F2 /* ProfileViewController.swift */,
 				96094AF32319441600A80412 /* SettingsViewController.swift */,
 				0941525A219028000068B6B1 /* SignInViewController.swift */,
+				9622CFBC234B22440005701E /* changePassword */,
+				9630327C234625DA00C211D8 /* resetPassword */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -936,7 +943,6 @@
 			children = (
 				BDB823A923852A7000030B5F /* BaseViewController.swift */,
 				960C5D0F237161A8002C4DC4 /* MapPopUpViewController.swift */,
-				9605AC142383D58400652635 /* MainScreen */,
 				9697E29E2334C29700974505 /* OperatorsList.swift */,
 				BDB7916C2338C8B10002C7EE /* VerificationCodeViewController.swift */,
 				96AF922B2360A85B00C9E746 /* ContactList */,
@@ -978,8 +984,6 @@
 				9697E2A22334E30500974505 /* ServicesList.swift */,
 				A568143721D35FEB002C0899 /* Transaction.swift */,
 				A57CF1BB2204364E00E855A5 /* TransactionStatement.swift */,
-				BDE4D08123224E430070BC3D /* PresentationModels */,
-				BD49E6582345E7790031561F /* Providers */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1609,6 +1613,7 @@
 				BD73EB63231EA61C00CB3E58 /* Helpers */,
 				BD6F597B2334BCF9002F4D4E /* Middleware */,
 				09E0F132215A61850042FB6A /* Models */,
+				BD49E6582345E7790031561F /* Providers */,
 				BD1379FC23263BC000326088 /* Store */,
 			);
 			path = ApplicationLayer;
@@ -1632,6 +1637,15 @@
 				BD17F0AB23474FE300CBF400 /* PaymentOptionDropDownCell.xib */,
 			);
 			path = DropDown;
+			sourceTree = "<group>";
+		};
+		BDAEE0E923991014007690E7 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				BDAEE0EA23991032007690E7 /* SettingsPresenter.swift */,
+				BDAEE0EC2399104C007690E7 /* ISettingsPresenter.swift */,
+			);
+			path = Presentation;
 			sourceTree = "<group>";
 		};
 		BDB6AFF5232693E90006A534 /* Actions */ = {
@@ -1725,12 +1739,12 @@
 		BDCCE90C2350BC5E0087F5F2 /* PresentationLayer */ = {
 			isa = PBXGroup;
 			children = (
-				BD292FF3238BFBF70018A7FC /* Delegates */,
-				BDB823A223841EC000030B5F /* Coordination */,
-				BDDF9BA8238E95560025E2E8 /* Presentors */,
-				BDB823A223841EC000030B5F /* Configuration */,
 				96E08A392371CF5F0070CA6A /* CardToCardUnauthorized */,
+				BDB823A223841EC000030B5F /* Configuration */,
 				09E0F131215A617A0042FB6A /* Controllers */,
+				BD292FF3238BFBF70018A7FC /* Delegates */,
+				BDE4D08123224E430070BC3D /* PresentationModels */,
+				BDDF9BA8238E95560025E2E8 /* Presentors */,
 				09E0F149215A6B170042FB6A /* Storyboards */,
 				09E0F133215A618E0042FB6A /* View */,
 			);
@@ -1749,12 +1763,13 @@
 			isa = PBXGroup;
 			children = (
 				BDE4D08223224E570070BC3D /* AboutItem.swift */,
-				BDE4D08623226B4C0070BC3D /* IAboutItem.swift */,
-				BDFE5D972334C3300027A716 /* IProduct.swift */,
 				96144B39233BACF900B9F314 /* AboutTransaction.swift */,
+				BDE4D08623226B4C0070BC3D /* IAboutItem.swift */,
 				96144B3B233BAD3F00B9F314 /* IAboutTransaction.swift */,
-				BDFE1AC9233BAE9B00C49A5B /* PaymentOption.swift */,
 				BDFE1B0F233CEC3100C49A5B /* IPickerItem.swift */,
+				BDFE5D972334C3300027A716 /* IProduct.swift */,
+				BDFE1AC9233BAE9B00C49A5B /* PaymentOption.swift */,
+				BDAEE0EE23991295007690E7 /* UserSettingType.swift */,
 			);
 			path = PresentationModels;
 			sourceTree = "<group>";
@@ -2031,10 +2046,13 @@
 				895768CD2192D992005754D5 /* ProductDetailsViewController.swift in Sources */,
 				09D3C03A215CBCAB00998F57 /* ChatDialogsViewController.swift in Sources */,
 				BD94E09F231EA6E50006456E /* MasksFormatting.swift in Sources */,
+				BDAEE0EB23991032007690E7 /* SettingsPresenter.swift in Sources */,
 				46ADFD17239553D200492472 /* IRefresher.swift in Sources */,
 				9660EEEA234C7B1100AE0647 /* ExampleData.swift in Sources */,
+				BDAEE0EF23991295007690E7 /* UserSettingType.swift in Sources */,
 				09F2410921707B86007B7D73 /* FeedInfo3Cell.swift in Sources */,
 				BDB6B0112326A9C10006A534 /* PasscodeSignUpActions.swift in Sources */,
+				BDAEE0ED2399104C007690E7 /* ISettingsPresenter.swift in Sources */,
 				9660EEE8234C7B1100AE0647 /* CollapsibleTableViewController.swift in Sources */,
 				9605AC162383D5A200652635 /* MainViewController.swift in Sources */,
 				89C8DF0C21918DDC00D92B0A /* OptionPickerViewController.swift in Sources */,
