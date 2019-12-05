@@ -22,7 +22,7 @@ class WebC2CViewController: UIViewController {
                           "Content-Type": "application/x-www-form-urlencoded"
                       ]
                       let parameters = [
-                          "sector": 1009,
+                          "sector": 881,
                           "amount": 1000,
                           "pan1": "4656260150230695",
                           "pan2": "4809388889655340",
@@ -49,7 +49,7 @@ class WebC2CViewController: UIViewController {
         
         let url = URL(string: "https://www.google.com")
         let request = URLRequest(url: url!)
-        let urlP2P = URL(string: "https://test.best2pay.net/webapi/P2PTransfer?sector=1009&apan2=4656260150230695")
+        let urlP2P = URL(string: "https://pay.best2pay.net/webapi/P2PTransfer?sector=881")
          let requestP2P = URLRequest(url: urlP2P!)
             
             

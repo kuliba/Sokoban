@@ -183,7 +183,7 @@ class MainView_ontroller2: UIViewController, UICollectionViewDataSource, UIColle
                                ]
                
                 break
-            case "Перевод c карты на карту":
+            case "Перевод по номеру карты":
                 paymentDetailsVC.destinationConfigurations = [
                     CardNumberPagerItem(provider: destinationProviderCardNumber),
                     AccountNumberPagerItem(provider: destinationProviderAccountNumber),
