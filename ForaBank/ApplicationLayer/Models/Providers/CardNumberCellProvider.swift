@@ -9,18 +9,13 @@
 import Foundation
 
 class CardNumberCellProvider: NSObject, ITextInputCellProvider {
-    var textField: String = ""
-    
-
     let iconName = "payments_transfer_between-accounts"
     let placeholder = "Введите номер карты"
-    
-    
- 
     let charactersMaxCount = 19
 
     var currentValue: IPresentationModel?
     var isLoading: Bool = false
+    var textField: String = ""
 
     func getData(completion: ([IPresentationModel]) -> ()) {
 
