@@ -9,13 +9,8 @@
 import Foundation
 
 protocol IPasscodeService: class {
-    typealias PasscodeRefresher = Refresher<PasscodeService>
-
-    var refresher: PasscodeRefresher? { get }
-    var shouldAskPasscode: Bool { get }
     var isPasscodeSetted: Bool { get }
 
-    func startAuthIfNeeded()
-    func preparePasscodeIfNeeded()
+    func showPasscodeScreen()
     func cancelPasscodeAuth()
 }

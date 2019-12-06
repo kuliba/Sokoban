@@ -247,6 +247,10 @@
 		A5C5E6E621A2B492001D6250 /* DetailedCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6E421A2B491001D6250 /* DetailedCardView.swift */; };
 		A5C5E6E821A2B49A001D6250 /* OptionPickerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C5E6E721A2B49A001D6250 /* OptionPickerButton.swift */; };
 		B8323065D0D76292CEB00626 /* Pods_ForaBank.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8EB261ED46D5F939F8B2E27 /* Pods_ForaBank.framework */; };
+		BD02598A2396B91300D0B23A /* IAuthenticationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD0259892396B91300D0B23A /* IAuthenticationService.swift */; };
+		BD02598D2396BAC300D0B23A /* AuthenticationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD02598C2396BAC300D0B23A /* AuthenticationService.swift */; };
+		BD02598F2397D6E500D0B23A /* AuthenticationServiceInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD02598E2397D6E500D0B23A /* AuthenticationServiceInitializer.swift */; };
+		BD0259912397D85300D0B23A /* AuthenticationServiceConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD0259902397D85300D0B23A /* AuthenticationServiceConfigurator.swift */; };
 		BD09A3A2236326BB00938D66 /* UserActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD09A3A1236326BB00938D66 /* UserActions.swift */; };
 		BD09A3A4236328C100938D66 /* UserReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD09A3A3236328C100938D66 /* UserReducer.swift */; };
 		BD09A3A62363290000938D66 /* UserState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD09A3A52363290000938D66 /* UserState.swift */; };
@@ -614,6 +618,10 @@
 		A5C5E6E721A2B49A001D6250 /* OptionPickerButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionPickerButton.swift; sourceTree = "<group>"; };
 		B7304E53553072E2F516AE5B /* Pods-ForaBank.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ForaBank.release.xcconfig"; path = "Target Support Files/Pods-ForaBank/Pods-ForaBank.release.xcconfig"; sourceTree = "<group>"; };
 		B745669DC4B425C3C513CBBC /* Pods-ForaBank.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ForaBank.debug.xcconfig"; path = "Target Support Files/Pods-ForaBank/Pods-ForaBank.debug.xcconfig"; sourceTree = "<group>"; };
+		BD0259892396B91300D0B23A /* IAuthenticationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAuthenticationService.swift; sourceTree = "<group>"; };
+		BD02598C2396BAC300D0B23A /* AuthenticationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationService.swift; sourceTree = "<group>"; };
+		BD02598E2397D6E500D0B23A /* AuthenticationServiceInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationServiceInitializer.swift; sourceTree = "<group>"; };
+		BD0259902397D85300D0B23A /* AuthenticationServiceConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationServiceConfigurator.swift; sourceTree = "<group>"; };
 		BD09A3A1236326BB00938D66 /* UserActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserActions.swift; sourceTree = "<group>"; };
 		BD09A3A3236328C100938D66 /* UserReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserReducer.swift; sourceTree = "<group>"; };
 		BD09A3A52363290000938D66 /* UserState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserState.swift; sourceTree = "<group>"; };
@@ -1364,6 +1372,17 @@
 			path = Payments;
 			sourceTree = "<group>";
 		};
+		BD02598B2396B91900D0B23A /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				BD02598C2396BAC300D0B23A /* AuthenticationService.swift */,
+				BD0259902397D85300D0B23A /* AuthenticationServiceConfigurator.swift */,
+				BD02598E2397D6E500D0B23A /* AuthenticationServiceInitializer.swift */,
+				BD0259892396B91300D0B23A /* IAuthenticationService.swift */,
+			);
+			path = Authentication;
+			sourceTree = "<group>";
+		};
 		BD1379FC23263BC000326088 /* Store */ = {
 			isa = PBXGroup;
 			children = (
@@ -1653,10 +1672,11 @@
 		BDB6B0172327F20F0006A534 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				46ADFD15239553B800492472 /* Refresher */,
-				4678EF6B23952D4100E060BD /* Passcode */,
-				BD57934D236C4B5D0056740C /* Settings */,
+				BD02598B2396B91900D0B23A /* Authentication */,
 				BDCCE9072350BB490087F5F2 /* AlertService */,
+				4678EF6B23952D4100E060BD /* Passcode */,
+				46ADFD15239553B800492472 /* Refresher */,
+				BD57934D236C4B5D0056740C /* Settings */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -2041,6 +2061,7 @@
 				BD20837723609B560010E03C /* PaymentServices.swift in Sources */,
 				BD588AB0237E934E00727056 /* ProductType.swift in Sources */,
 				A5B473C621B52D4500F2E41F /* BubblesDetailedStatsView.swift in Sources */,
+				BD02598D2396BAC300D0B23A /* AuthenticationService.swift in Sources */,
 				9660EEE7234C7B1100AE0647 /* Extensions.swift in Sources */,
 				9696DED22387FAAF006BC972 /* WebC2CViewController.swift in Sources */,
 				BDF4F94C23293C49007C448F /* PasscodeSignInState.swift in Sources */,
@@ -2102,6 +2123,7 @@
 				BD57934C236C4AE00056740C /* UserDefaultsExtensions.swift in Sources */,
 				09AF7081216F6B6F00E7FCFC /* FeedCurrent1Cell.swift in Sources */,
 				963B62D42360A91900DD9A3E /* ExtensionsContactList.swift in Sources */,
+				BD0259912397D85300D0B23A /* AuthenticationServiceConfigurator.swift in Sources */,
 				BD49E65C2345ED0A0031561F /* ICellProvider.swift in Sources */,
 				BD20836823609A680010E03C /* LoansService.swift in Sources */,
 				094FFC0E218837580069DDCB /* RegistrationCodeVerificationViewController.swift in Sources */,
@@ -2110,6 +2132,7 @@
 				BDFE5D9C233511EB0027A716 /* URLs.swift in Sources */,
 				BDF4F94E23293D1E007C448F /* AuthenticationState.swift in Sources */,
 				BD09A3A2236326BB00938D66 /* UserActions.swift in Sources */,
+				BD02598F2397D6E500D0B23A /* AuthenticationServiceInitializer.swift in Sources */,
 				BD20837D2360AD420010E03C /* INetworkManager.swift in Sources */,
 				BD82F97B2383E0AA00EB6C8C /* ProductListViewController.swift in Sources */,
 				096B4F4D2183089900C69E52 /* CardDetailsViewController.swift in Sources */,
@@ -2214,6 +2237,7 @@
 				BD66E0C62366DD3F002FFA1A /* Keychain.swift in Sources */,
 				96072C882313FF13001CFCBD /* TouchIDAuthentication.swift in Sources */,
 				09F5DCE6218C3E7200390304 /* RegistrationFinishViewController.swift in Sources */,
+				BD02598A2396B91300D0B23A /* IAuthenticationService.swift in Sources */,
 				BD6D5674233A0B9000B7CF4B /* UnauthorizedZoneTabBarController.swift in Sources */,
 				A568142421CBCD38002C0899 /* BankBranchViews.swift in Sources */,
 				09AF708C216F73FD00E7FCFC /* FeedCurrent2Cell.swift in Sources */,
