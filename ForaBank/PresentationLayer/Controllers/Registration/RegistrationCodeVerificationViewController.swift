@@ -24,7 +24,8 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
     @IBOutlet weak var activityIndicator: ActivityIndicatorView?
     var operationSum: String?
     var segueId: String? = nil
-
+    var sourceConfigurations: [ICellConfigurator]?
+    var destinationConfigurations: [ICellConfigurator]?
     @IBOutlet weak var authForaPreloader: RefreshView!
     @IBOutlet weak var foraPreloader: RefreshView!
     let gradientView = UIView()

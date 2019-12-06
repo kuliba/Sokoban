@@ -119,7 +119,16 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
         let completion: (Bool, String?) -> Void = { [weak self] (success, token) in
         //    store.dispatch(payment(sourceOption: sourceConfig as? PaymentOption, destionationOption: destinationConfig as? PaymentOption, sum: self?.sumTextField.            self?.activityIndicator.stopAnimating()
             if success {
-                self?.performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
+//
+//                func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//               // Get the new view controller using segue.destination.
+//               // Pass the selected object to the new view controller.
+//               if (segue.identifier == "fromPaymentToPaymentVerificationt") {
+//                   let showContactViewController: RegistrationCodeVerificationViewController = segue.destination as! RegistrationCodeVerificationViewController
+//                showContactViewController.destinationConfigurations  = self!.destinationConfigurations
+//               }
+//           }
+             self?.performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
             } else {
                 let alertVC = UIAlertController(title: "Ошибка", message: "При выполнении платежа произошла ошибка, попробуйте ещё раз позже", preferredStyle: .alert)
                 let cancelButton = UIAlertAction(title: "Продолжить", style: .cancel, handler: nil)
