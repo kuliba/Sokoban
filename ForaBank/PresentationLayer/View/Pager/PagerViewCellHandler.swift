@@ -9,46 +9,37 @@
 import Foundation
 import FSPagerView
 
-protocol IConfigurableCell {
-    associatedtype ICellProvider
-    func configure(provider: ICellProvider)
-}
-
-protocol ICellConfigurator {
+protocol ICellConfigurator: NSObject {
     static var reuseId: String { get }
-    var item: IPresentationModel? { get }
+    var delegate: ICellConfiguratorDelegate? { get set }
     func configure(cell: UIView)
-    func stringFromSelection() -> String
 }
 
-class PagerViewCellHandler<CellType: IConfigurableCell, ProviderType: ICellProvider>: ICellConfigurator where CellType.ICellProvider == ICellProvider, CellType: FSPagerViewCell {
+protocol ICellConfiguratorDelegate: class {
+    func didReciveNewValue(value: Any, from configurator: ICellConfigurator)
+}
+
+class PagerViewCellHandler<CellType: IConfigurableCell, ProviderType: ICellProvider>: NSObject, ICellConfigurator where CellType.ICellProvider == ICellProvider, CellType: FSPagerViewCell {
 
     static var reuseId: String { return String(describing: CellType.self) }
 
     let provider: ICellProvider
-    var item: IPresentationModel? {
-        get {
-            return provider.currentValue
-        }
-    }
 
-    init(provider: ICellProvider) {
+    weak var delegate: ICellConfiguratorDelegate?
+
+    init(provider: ICellProvider, delegate: ICellConfiguratorDelegate) {
         self.provider = provider
-
+        self.delegate = delegate
     }
 
     func configure(cell: UIView) {
-        (cell as! CellType).configure(provider: provider)
+        guard let cell = cell as? CellType else { return }
+        cell.configure(provider: provider, delegate: self)
     }
+}
 
-    func stringFromSelection() -> String {
-        if let stringItem = item as? String {
-            return stringItem
-        } else if let paymentOption = item as? PaymentOption {
-            return paymentOption.number
-        }
-//        let number = TextFieldPagerViewCell.textFieldShouldEndEditing?() as! TextFieldPagerViewCell
-        
-        return ""
+extension PagerViewCellHandler: ConfigurableCellDelegate {
+    func didInputPaymentValue(value: Any) {
+        delegate?.didReciveNewValue(value: value, from: self)
     }
 }

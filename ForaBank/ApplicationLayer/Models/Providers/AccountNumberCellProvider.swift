@@ -16,13 +16,12 @@ class AccountNumberCellProvider: NSObject, ITextInputCellProvider {
     let placeholder = "Введите номер счёта"
     let charactersMaxCount = 24
 
-    var currentValue: IPresentationModel?
     var isLoading: Bool = false
 
     func getData(completion: ([IPresentationModel]) -> ()) {
 
     }
-    
+
     func formatted(stringToFormat string: String) -> String {
         return formatedCreditCardString(creditCardString: string)
     }
