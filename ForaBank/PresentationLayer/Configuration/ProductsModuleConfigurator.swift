@@ -21,5 +21,4 @@ class ProductsModuleConfigurator {
         let router = ProductsNavigator(rootViewController: viewController)
         viewController.router = router
     }
-
 }

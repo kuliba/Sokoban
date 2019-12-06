@@ -8,24 +8,22 @@
 
 import Foundation
 
-class SettingsPresenter: NSObject {
+class SettingsPresenter: NSObject, ISettingsPresenter {
+    let options: Array<UserSettingType>
+    internal weak var delegate: SettingsPresenterDelegate?
 
-    var options: Array<UserSettingType> = [UserSettingType.changePasscode,
-                                           UserSettingType.isPasscodeSettedDefault(),
-                                           UserSettingType.allowedBiometricSignInDefault(),
-                                           UserSettingType.changePasscode]
-
-
+    init(options: Array<UserSettingType>, delegate: SettingsPresenterDelegate) {
+        self.options = options
+        self.delegate = delegate
+    }
 }
 
 // MARK: - UITableViewDelegate, UITableViewDataSource
 
 extension SettingsPresenter: UITableViewDelegate, UITableViewDataSource {
 
-    static let cellId = "FeedOptionCell"
-
     func numberOfSections(in tableView: UITableView) -> Int {
-        return options.count
+        return 1
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -33,7 +31,7 @@ extension SettingsPresenter: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: SettingsPresenter.cellId, for: indexPath) as? FeedOptionCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: FeedOptionCell.Constants.cellReuseIdentifier, for: indexPath) as? FeedOptionCell else {
             fatalError()
         }
 

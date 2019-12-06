@@ -8,6 +8,11 @@
 
 import Foundation
 
-protocol ISettingsPresenter {
-    var options: Array<String> { get }
+protocol SettingsPresenterDelegate: class {
+
+}
+
+protocol ISettingsPresenter: class {
+    var options: Array<UserSettingType> { get }
+    var delegate: SettingsPresenterDelegate? { get }
 }

@@ -327,6 +327,12 @@
 		BDAEE0EB23991032007690E7 /* SettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDAEE0EA23991032007690E7 /* SettingsPresenter.swift */; };
 		BDAEE0ED2399104C007690E7 /* ISettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDAEE0EC2399104C007690E7 /* ISettingsPresenter.swift */; };
 		BDAEE0EF23991295007690E7 /* UserSettingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDAEE0EE23991295007690E7 /* UserSettingType.swift */; };
+		BDAEE0F1239A50D6007690E7 /* ITableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDAEE0F0239A50D6007690E7 /* ITableViewController.swift */; };
+		BDAEE0F3239A6E7C007690E7 /* SettingsModuleInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDAEE0F2239A6E7C007690E7 /* SettingsModuleInitializer.swift */; };
+		BDAEE0F5239A7410007690E7 /* SettingsModuleConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDAEE0F4239A7410007690E7 /* SettingsModuleConfigurator.swift */; };
+		BDAEE0F7239A764C007690E7 /* IPaymentDetailsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDAEE0F6239A764C007690E7 /* IPaymentDetailsPresenter.swift */; };
+		BDAEE0F9239A76AD007690E7 /* PaymentOptionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDAEE0F8239A76AD007690E7 /* PaymentOptionType.swift */; };
+		BDAEE0FD239A9114007690E7 /* SettingsPresenterInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDAEE0FC239A9114007690E7 /* SettingsPresenterInitializer.swift */; };
 		BDB6AFF423268C850006A534 /* PasscodeSignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6AFF323268C850006A534 /* PasscodeSignInViewController.swift */; };
 		BDB6B0112326A9C10006A534 /* PasscodeSignUpActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6B0102326A9C10006A534 /* PasscodeSignUpActions.swift */; };
 		BDB6B0132326A9E00006A534 /* PasscodeSingUpReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6B0122326A9E00006A534 /* PasscodeSingUpReducer.swift */; };
@@ -702,6 +708,12 @@
 		BDAEE0EA23991032007690E7 /* SettingsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPresenter.swift; sourceTree = "<group>"; };
 		BDAEE0EC2399104C007690E7 /* ISettingsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ISettingsPresenter.swift; sourceTree = "<group>"; };
 		BDAEE0EE23991295007690E7 /* UserSettingType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingType.swift; sourceTree = "<group>"; };
+		BDAEE0F0239A50D6007690E7 /* ITableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ITableViewController.swift; sourceTree = "<group>"; };
+		BDAEE0F2239A6E7C007690E7 /* SettingsModuleInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModuleInitializer.swift; sourceTree = "<group>"; };
+		BDAEE0F4239A7410007690E7 /* SettingsModuleConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModuleConfigurator.swift; sourceTree = "<group>"; };
+		BDAEE0F6239A764C007690E7 /* IPaymentDetailsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPaymentDetailsPresenter.swift; sourceTree = "<group>"; };
+		BDAEE0F8239A76AD007690E7 /* PaymentOptionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentOptionType.swift; sourceTree = "<group>"; };
+		BDAEE0FC239A9114007690E7 /* SettingsPresenterInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPresenterInitializer.swift; sourceTree = "<group>"; };
 		BDB6AFF323268C850006A534 /* PasscodeSignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignInViewController.swift; sourceTree = "<group>"; };
 		BDB6B0102326A9C10006A534 /* PasscodeSignUpActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSignUpActions.swift; sourceTree = "<group>"; };
 		BDB6B0122326A9E00006A534 /* PasscodeSingUpReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSingUpReducer.swift; sourceTree = "<group>"; };
@@ -903,7 +915,6 @@
 		09BE35ED218C629100EA7B24 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
-				BDAEE0E923991014007690E7 /* Presentation */,
 				09D3C039215CBCAB00998F57 /* ChatDialogsViewController.swift */,
 				09D3C047215E07DB00998F57 /* ChatMessagesViewController.swift */,
 				09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */,
@@ -976,6 +987,7 @@
 				0942B86C21625F7800370C71 /* Friend.swift */,
 				969899632303F2E20066C55B /* Loan.swift */,
 				96144B42233E21BB00B9F314 /* LoanSchedule.swift */,
+				BDAEE0F8239A76AD007690E7 /* PaymentOptionType.swift */,
 				BD20837E2361B4990010E03C /* Product.swift */,
 				BD588AAF237E934E00727056 /* ProductType.swift */,
 				A568143321D0CE6C002C0899 /* Profile.swift */,
@@ -1639,15 +1651,6 @@
 			path = DropDown;
 			sourceTree = "<group>";
 		};
-		BDAEE0E923991014007690E7 /* Presentation */ = {
-			isa = PBXGroup;
-			children = (
-				BDAEE0EA23991032007690E7 /* SettingsPresenter.swift */,
-				BDAEE0EC2399104C007690E7 /* ISettingsPresenter.swift */,
-			);
-			path = Presentation;
-			sourceTree = "<group>";
-		};
 		BDB6AFF5232693E90006A534 /* Actions */ = {
 			isa = PBXGroup;
 			children = (
@@ -1709,11 +1712,14 @@
 		BDB823A223841EC000030B5F /* Configuration */ = {
 			isa = PBXGroup;
 			children = (
-				BDB823A323841EE300030B5F /* ProductsModuleInitializer.swift */,
-				BDB823A523842E5900030B5F /* ProductsModuleConfigurator.swift */,
-				BDB823A7238433B400030B5F /* ProductsNavigator.swift */,
-				BDDF9BA9238E972C0025E2E8 /* PaymentModuleInitializer.swift */,
+				BDAEE0F0239A50D6007690E7 /* ITableViewController.swift */,
 				BDDF9BAB238E9B310025E2E8 /* PaymentModuleConfigurator.swift */,
+				BDDF9BA9238E972C0025E2E8 /* PaymentModuleInitializer.swift */,
+				BDB823A523842E5900030B5F /* ProductsModuleConfigurator.swift */,
+				BDB823A323841EE300030B5F /* ProductsModuleInitializer.swift */,
+				BDB823A7238433B400030B5F /* ProductsNavigator.swift */,
+				BDAEE0F2239A6E7C007690E7 /* SettingsModuleInitializer.swift */,
+				BDAEE0F4239A7410007690E7 /* SettingsModuleConfigurator.swift */,
 			);
 			path = Configuration;
 			sourceTree = "<group>";
@@ -1744,19 +1750,23 @@
 				09E0F131215A617A0042FB6A /* Controllers */,
 				BD292FF3238BFBF70018A7FC /* Delegates */,
 				BDE4D08123224E430070BC3D /* PresentationModels */,
-				BDDF9BA8238E95560025E2E8 /* Presentors */,
+				BDDF9BA8238E95560025E2E8 /* Presenters */,
 				09E0F149215A6B170042FB6A /* Storyboards */,
 				09E0F133215A618E0042FB6A /* View */,
 			);
 			path = PresentationLayer;
 			sourceTree = "<group>";
 		};
-		BDDF9BA8238E95560025E2E8 /* Presentors */ = {
+		BDDF9BA8238E95560025E2E8 /* Presenters */ = {
 			isa = PBXGroup;
 			children = (
+				BDAEE0F6239A764C007690E7 /* IPaymentDetailsPresenter.swift */,
+				BDAEE0EC2399104C007690E7 /* ISettingsPresenter.swift */,
 				BDFE3926238D15A800E0436E /* PaymentDetailsPresenter.swift */,
+				BDAEE0EA23991032007690E7 /* SettingsPresenter.swift */,
+				BDAEE0FC239A9114007690E7 /* SettingsPresenterInitializer.swift */,
 			);
-			path = Presentors;
+			path = Presenters;
 			sourceTree = "<group>";
 		};
 		BDE4D08123224E430070BC3D /* PresentationModels */ = {
@@ -2113,6 +2123,7 @@
 				A5B473C121B3BBCD00F2E41F /* RemittancePickerViewController.swift in Sources */,
 				96E541172341656300770C06 /* TableExpansionViewController.swift in Sources */,
 				09045056216B51B400F3B295 /* FeedOffersViewController.swift in Sources */,
+				BDAEE0F3239A6E7C007690E7 /* SettingsModuleInitializer.swift in Sources */,
 				09E0F130215A5B9D0042FB6A /* TabBarController.swift in Sources */,
 				BD182E3D232A3F7000DB231F /* PasscodeSignInReducer.swift in Sources */,
 				895768D12192E9F0005754D5 /* DepositsStatsDetailsViewController.swift in Sources */,
@@ -2161,6 +2172,7 @@
 				96FE29EA238416D40076656C /* ColorCell.swift in Sources */,
 				BD182E3F232A402100DB231F /* PasscodeSingInActions.swift in Sources */,
 				BDFE5D9C233511EB0027A716 /* URLs.swift in Sources */,
+				BDAEE0F5239A7410007690E7 /* SettingsModuleConfigurator.swift in Sources */,
 				BDF4F94E23293D1E007C448F /* AuthenticationState.swift in Sources */,
 				BD09A3A2236326BB00938D66 /* UserActions.swift in Sources */,
 				BD02598F2397D6E500D0B23A /* AuthenticationServiceInitializer.swift in Sources */,
@@ -2171,6 +2183,7 @@
 				963B62D32360A91900DD9A3E /* Contact.swift in Sources */,
 				0943729221907198003A66CC /* PaymentsResultViewController.swift in Sources */,
 				A5B473C821B52E0B00F2E41F /* GroupedBubblesStatsView.swift in Sources */,
+				BDAEE0F7239A764C007690E7 /* IPaymentDetailsPresenter.swift in Sources */,
 				A5004D3121EF37DC0098E510 /* ActivityIndicatorView.swift in Sources */,
 				BDFE1B0D233CE7BD00C49A5B /* PickerViewController.swift in Sources */,
 				BD579343236AF5DB0056740C /* PasscodeWrapperViewController.swift in Sources */,
@@ -2242,7 +2255,9 @@
 				09AF7090216F73FD00E7FCFC /* FeedCurrent3Cell.swift in Sources */,
 				096B4F542186E29300C69E52 /* ProductManagementViewController.swift in Sources */,
 				A57CF1BE22043DDE00E855A5 /* BriginvestResponse.swift in Sources */,
+				BDAEE0F9239A76AD007690E7 /* PaymentOptionType.swift in Sources */,
 				89C8DF122191AFA700D92B0A /* DepositsDepositCell.swift in Sources */,
+				BDAEE0F1239A50D6007690E7 /* ITableViewController.swift in Sources */,
 				A568142621CBCD48002C0899 /* BankBranchClusterView.swift in Sources */,
 				BD6F597A2334BAA4002F4D4E /* StateReducer.swift in Sources */,
 				A5C5E6D621A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift in Sources */,
@@ -2250,6 +2265,7 @@
 				BDB6B0162326AAA60006A534 /* PasscodeSignUpState.swift in Sources */,
 				96D0F1C8230694CB0064CECA /* LoansDetailsViewController.swift in Sources */,
 				BDFE1B10233CEC3100C49A5B /* IPickerItem.swift in Sources */,
+				BDAEE0FD239A9114007690E7 /* SettingsPresenterInitializer.swift in Sources */,
 				96D0F1CE230AE4400064CECA /* DepositDetailsViewController.swift in Sources */,
 				BD21B66A2338E08E001C5CF7 /* RegistrationState.swift in Sources */,
 				BDDF9BAC238E9B310025E2E8 /* PaymentModuleConfigurator.swift in Sources */,
