@@ -12,6 +12,7 @@ import ReSwiftThunk
 
 let manageWrongPasscode = Thunk<State> { dispatch, getState in
     guard let fails = getState()?.passcodeSignInState.failCounter, fails < 2 else {
+        AuthenticationService.shared.logoutAndClearAllUserData()
         dispatch(UpdatePasscodeSingInProcess(isShown: false))
         return
     }

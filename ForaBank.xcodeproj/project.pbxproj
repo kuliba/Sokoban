@@ -1639,8 +1639,8 @@
 			children = (
 				BDB6AFF323268C850006A534 /* PasscodeSignInViewController.swift */,
 				BD58869D2369AFDA00F97332 /* PasscodeSignUpViewController.swift */,
-				BD579342236AF5DB0056740C /* PasscodeWrapperViewController.swift */,
 				BD122C192368283B00FE0F01 /* PasscodeViewController.swift */,
+				BD579342236AF5DB0056740C /* PasscodeWrapperViewController.swift */,
 			);
 			path = Passcode;
 			sourceTree = "<group>";
