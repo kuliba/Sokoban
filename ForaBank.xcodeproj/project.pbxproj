@@ -150,6 +150,7 @@
 		9622CFBE234B225B0005701E /* ChangePasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9622CFBD234B225B0005701E /* ChangePasswordController.swift */; };
 		962655C92361F31A00697E37 /* ViewModalStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 962655C82361F31A00697E37 /* ViewModalStyle.swift */; };
 		9630327E2346260000C211D8 /* prepareResetPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9630327D2346260000C211D8 /* prepareResetPassword.swift */; };
+		963B5B7D2394FFD6000F3A38 /* MainViewСontroller2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963B5B7C2394FFD6000F3A38 /* MainViewСontroller2.swift */; };
 		963B62D02360A91900DD9A3E /* ContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963B62CA2360A91400DD9A3E /* ContactCell.swift */; };
 		963B62D12360A91900DD9A3E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963B62CB2360A91500DD9A3E /* Constants.swift */; };
 		963B62D22360A91900DD9A3E /* ContactsPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963B62CC2360A91500DD9A3E /* ContactsPicker.swift */; };
@@ -526,6 +527,7 @@
 		9622CFBD234B225B0005701E /* ChangePasswordController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordController.swift; sourceTree = "<group>"; };
 		962655C82361F31A00697E37 /* ViewModalStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModalStyle.swift; sourceTree = "<group>"; };
 		9630327D2346260000C211D8 /* prepareResetPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = prepareResetPassword.swift; sourceTree = "<group>"; };
+		963B5B7C2394FFD6000F3A38 /* MainViewСontroller2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewСontroller2.swift"; sourceTree = "<group>"; };
 		963B62CA2360A91400DD9A3E /* ContactCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactCell.swift; sourceTree = "<group>"; };
 		963B62CB2360A91500DD9A3E /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		963B62CC2360A91500DD9A3E /* ContactsPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsPicker.swift; sourceTree = "<group>"; };
@@ -1182,6 +1184,7 @@
 				96FE29EB238416E90076656C /* KDDragAndDropManager.swift */,
 				96FE29ED238417000076656C /* KDDragAndDropCollectionView.swift */,
 				96FE29EF238435080076656C /* Item.swift */,
+				963B5B7C2394FFD6000F3A38 /* MainViewСontroller2.swift */,
 			);
 			path = MainScreen;
 			sourceTree = "<group>";
@@ -2074,6 +2077,7 @@
 				094FFC0D218837580069DDCB /* RegistrationViewController.swift in Sources */,
 				BD21B66C2338E0FA001C5CF7 /* RegistrationActions.swift in Sources */,
 				BD20836023609A680010E03C /* AccountsService.swift in Sources */,
+				963B5B7D2394FFD6000F3A38 /* MainViewСontroller2.swift in Sources */,
 				96FE29F0238435080076656C /* Item.swift in Sources */,
 				A528EF4021B00C9300D189DD /* MonthCollectionViewCell.swift in Sources */,
 				09D3C03D215CD03E00998F57 /* SearchCell.swift in Sources */,

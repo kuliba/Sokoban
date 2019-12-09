@@ -80,6 +80,13 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
 
 // MARK: - Lifecycle
 
+//    private let sourceProvider = PaymentOptionCellProvider()
+//     private let destinationProvider = PaymentOptionCellProvider()
+//    var sourceConfigurations: [ICellConfigurator]?
+//    var destinationConfigurations: [ICellConfigurator]?
+
+    // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpLayout()
