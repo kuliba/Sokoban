@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="23P-JG-uBd">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="a4X-QJ-bdx">
     <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -37,7 +37,7 @@
                                         <constraints>
                                             <constraint firstAttribute="height" constant="388" id="xhm-mP-25w"/>
                                         </constraints>
-                                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="CyY-WG-yaT">
+                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="CyY-WG-yaT">
                                             <size key="itemSize" width="198" height="133"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -135,7 +135,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZRD-ba-Rhn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-427.536231884058" y="118.20652173913044"/>
+            <point key="canvasLocation" x="-820" y="77"/>
         </scene>
         <!--PaymentDetailsViewController-->
         <scene sceneID="6CC-oe-ZH5">
@@ -147,10 +147,92 @@
             </objects>
             <point key="canvasLocation" x="375" y="34"/>
         </scene>
+        <!--Deposits-->
+        <scene sceneID="Lb2-WI-WqU">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Deposits" id="bFM-mR-xjP" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="bQf-yL-0Tl"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IOs-6b-CUm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3187" y="99"/>
+        </scene>
+        <!--Главная-->
+        <scene sceneID="6SL-Db-1Cb">
+            <objects>
+                <viewController id="a4X-QJ-bdx" customClass="MainView_ontroller2" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="P9u-32-EpT">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" misplaced="YES" image="mainscreen" translatesAutoresizingMaskIntoConstraints="NO" id="Qmk-aq-qlb">
+                                <rect key="frame" x="-3" y="-43" width="423" height="810"/>
+                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vF4-hI-Jdh">
+                                <rect key="frame" x="-2" y="-6" width="420" height="940"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="mainscreen-1" translatesAutoresizingMaskIntoConstraints="NO" id="xWZ-Ji-3PW">
+                                        <rect key="frame" x="-4" y="-38" width="424" height="867"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XG0-Ga-1iR" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
+                                <rect key="frame" x="-3" y="247" width="420" height="444"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" button="YES"/>
+                                </accessibility>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GUW-gf-iHb">
+                                <rect key="frame" x="-3" y="304" width="420" height="432"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="XG0-Ga-1iR" firstAttribute="centerX" secondItem="P9u-32-EpT" secondAttribute="centerX" id="76x-il-VAN"/>
+                            <constraint firstItem="vF4-hI-Jdh" firstAttribute="top" secondItem="P9u-32-EpT" secondAttribute="topMargin" constant="-6" id="8AI-Ue-OYv"/>
+                            <constraint firstItem="XG0-Ga-1iR" firstAttribute="bottom" secondItem="9PE-Vt-KWC" secondAttribute="bottom" constant="4" id="8TM-M7-WyR"/>
+                            <constraint firstItem="XG0-Ga-1iR" firstAttribute="centerX" secondItem="9PE-Vt-KWC" secondAttribute="centerX" id="D6t-aB-8sd"/>
+                            <constraint firstItem="Qmk-aq-qlb" firstAttribute="top" secondItem="P9u-32-EpT" secondAttribute="topMargin" constant="-43" id="FLe-YW-fOi"/>
+                            <constraint firstItem="vF4-hI-Jdh" firstAttribute="centerX" secondItem="Qmk-aq-qlb" secondAttribute="centerX" id="HCw-vi-7J4"/>
+                            <constraint firstItem="XG0-Ga-1iR" firstAttribute="leading" secondItem="Qmk-aq-qlb" secondAttribute="leading" id="IgC-NH-buw"/>
+                            <constraint firstItem="9PE-Vt-KWC" firstAttribute="bottom" secondItem="GUW-gf-iHb" secondAttribute="bottom" constant="-49" id="RfY-3y-BR2"/>
+                            <constraint firstItem="GUW-gf-iHb" firstAttribute="top" secondItem="XG0-Ga-1iR" secondAttribute="top" constant="57" id="UYP-B0-QNe"/>
+                            <constraint firstItem="GUW-gf-iHb" firstAttribute="leading" secondItem="XG0-Ga-1iR" secondAttribute="leading" id="XIj-Ve-Hgg"/>
+                            <constraint firstItem="XG0-Ga-1iR" firstAttribute="leading" secondItem="P9u-32-EpT" secondAttribute="leadingMargin" constant="-23" id="be7-MM-OJr"/>
+                            <constraint firstItem="XG0-Ga-1iR" firstAttribute="top" secondItem="9PE-Vt-KWC" secondAttribute="top" constant="247" id="m1c-ih-3ck"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="vF4-hI-Jdh" secondAttribute="trailing" constant="-24" id="oBE-vq-EFR"/>
+                            <constraint firstItem="vF4-hI-Jdh" firstAttribute="leading" secondItem="P9u-32-EpT" secondAttribute="leadingMargin" constant="-22" id="raz-8X-iKp"/>
+                            <constraint firstItem="vF4-hI-Jdh" firstAttribute="bottom" secondItem="XG0-Ga-1iR" secondAttribute="bottom" constant="243" id="tfO-jx-PtX"/>
+                            <constraint firstItem="GUW-gf-iHb" firstAttribute="centerX" secondItem="XG0-Ga-1iR" secondAttribute="centerX" id="x1k-jH-Hzn"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="Qmk-aq-qlb" secondAttribute="bottom" constant="-80" id="zYz-LA-nhg"/>
+                            <constraint firstItem="GUW-gf-iHb" firstAttribute="trailing" secondItem="XG0-Ga-1iR" secondAttribute="trailing" id="ze0-Nc-ylH"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="9PE-Vt-KWC"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Главная" image="menufora" largeContentSizeImage="foralogotype" springLoaded="YES" id="Vlj-u8-EYY" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
+                        <inset key="largeContentSizeImageInsets" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
+                        <color key="badgeColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBarItem>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="containerViewController" destination="GUW-gf-iHb" id="lFv-SS-sxb"/>
+                        <outlet property="roundedEdge" destination="XG0-Ga-1iR" id="gwD-NT-Kbv"/>
+                        <segue destination="bFM-mR-xjP" kind="show" identifier="presetDepositsController" id="bpS-Ry-48q"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0bD-wP-t74" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2362.3188405797105" y="62.771739130434788"/>
+        </scene>
     </scenes>
     <resources>
         <image name="foralogotype" width="88" height="88"/>
         <image name="mainscreen" width="180" height="318"/>
+        <image name="mainscreen-1" width="640" height="1194"/>
         <image name="menufora" width="21.666666030883789" height="21.666666030883789"/>
         <image name="phone" width="162" height="186"/>
     </resources>
