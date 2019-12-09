@@ -49,6 +49,10 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
+
+        let placeholder = textField.placeholder
+        textField.attributedPlaceholder = NSAttributedString(string: placeholder ?? ""
+                                                             , attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray])
     }
 
 
@@ -81,6 +85,10 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell {
         textField.addTarget(self, action: #selector(reformatAsCardNumber), for: .editingChanged)
 
         leftButton.setImage(UIImage(named: textInputCellProvider.iconName), for: .normal)
+
+        let placeholder = textField.placeholder
+        textField.attributedPlaceholder = NSAttributedString(string: placeholder ?? ""
+                                                             , attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray])
     }
 }
 
