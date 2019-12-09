@@ -17,7 +17,7 @@ enum UserSettingType {
     var localizedName: String {
         switch self {
         case .changePassword:
-            return NSLocalizedString("Изменть пароль", comment: "")
+            return NSLocalizedString("Изменить пароль", comment: "")
         case .changePasscode:
             return NSLocalizedString("Изменить 4-х значный код", comment: "")
         case .allowedPasscode:
