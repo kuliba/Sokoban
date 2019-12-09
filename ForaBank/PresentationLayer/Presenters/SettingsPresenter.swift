@@ -38,6 +38,7 @@ extension SettingsPresenter: UITableViewDelegate, UITableViewDataSource {
         let option = options[indexPath.item]
         cell.titleLabel.text = option.localizedName
         cell.iconImageView.image = UIImage(named: option.imageName)
+        cell.isToggable = option.isToggable
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -48,10 +49,11 @@ extension SettingsPresenter: UITableViewDelegate, UITableViewDataSource {
         let headerCell = UINib(nibName: "ServicesHeader", bundle: nil)
             .instantiate(withOwner: nil, options: nil)[0] as! ServicesHeader
 
+        let option = options.first
         let headerView = UIView(frame: headerCell.frame)
         headerView.addSubview(headerCell)
         headerView.backgroundColor = .clear
-//        headerCell.titleLabel.text = options[section][0].section
+        headerCell.titleLabel.text = option?.localizedFieldName
         return headerView
     }
 

@@ -11,11 +11,11 @@ import Foundation
 enum UserSettingType {
     case changePassword
     case changePasscode
-    case isPasscodeSetted(() -> Bool)
+    case allowedPasscode(() -> Bool)
     case allowedBiometricSignIn(() -> Bool)
 
     public static func isPasscodeSettedDefault() -> UserSettingType {
-        return UserSettingType.isPasscodeSetted { () -> Bool in
+        return UserSettingType.allowedPasscode { () -> Bool in
             return SettingsStorage.shared.isSetPasscode()
         }
     }
@@ -32,7 +32,7 @@ enum UserSettingType {
             return NSLocalizedString("Изменть пароль", comment: "")
         case .changePasscode:
             return NSLocalizedString("Изменить 4-х значный код", comment: "")
-        case .isPasscodeSetted:
+        case .allowedPasscode:
             return NSLocalizedString("4-х значный код", comment: "")
         case .allowedBiometricSignIn:
             return NSLocalizedString("TouchID/FaceID", comment: "")
@@ -45,10 +45,27 @@ enum UserSettingType {
             return "lock"
         case .changePasscode:
             return "passcodeChange"
-        case .isPasscodeSetted:
+        case .allowedPasscode:
             return "keypad"
         case .allowedBiometricSignIn:
             return "touch"
         }
+    }
+
+    var isToggable: Bool {
+        switch self {
+        case .changePassword:
+            return false
+        case .changePasscode:
+            return false
+        case .allowedPasscode:
+            return true
+        case .allowedBiometricSignIn:
+            return true
+        }
+    }
+
+    var localizedFieldName: String {
+        return "Параметры входа"
     }
 }

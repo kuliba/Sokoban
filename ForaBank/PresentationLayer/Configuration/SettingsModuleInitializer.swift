@@ -17,5 +17,4 @@ class SettingsModuleInitializer: NSObject {
         let configurator = SettingsModuleConfigurator()
         configurator.configureModuleForView(view: settingsViewController)
     }
-
 }

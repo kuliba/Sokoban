@@ -21,6 +21,9 @@ class SettingsModuleConfigurator {
 
     private func configure(viewController: SettingsViewController) {
         let presenter = SettingsPresenterInitializer.createSettingsPresenter(withDelegate: viewController)
+        viewController.presenter = presenter
+        viewController.loadViewIfNeeded()
         viewController.setTable(delegate: presenter, dataSource: presenter)
+        viewController.registerNibCell(cellName: FeedOptionCell.Constants.cellReuseIdentifier)
     }
 }

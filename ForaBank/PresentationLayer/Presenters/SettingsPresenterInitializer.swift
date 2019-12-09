@@ -9,8 +9,8 @@
 import Foundation
 
 class SettingsPresenterInitializer {
-    class func createSettingsPresenter(withDelegate delegate: SettingsPresenterDelegate) -> ISettingsPresenter {
-        let settingsPresenter = SettingsPresenter(options: [UserSettingType.changePasscode,
+    class func createSettingsPresenter(withDelegate delegate: SettingsPresenterDelegate) -> SettingsPresenter {
+        let settingsPresenter = SettingsPresenter(options: [UserSettingType.changePassword,
                                                             UserSettingType.isPasscodeSettedDefault(),
                                                             UserSettingType.allowedBiometricSignInDefault(),
                                                             UserSettingType.changePasscode], delegate: delegate)

@@ -16,11 +16,17 @@ class FeedOptionCell: UITableViewCell {
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var iconImageView: UIImageView!
-    @IBOutlet weak var changePinCode: UISwitch!
+    @IBOutlet weak var `switch`: UISwitch!
 
     @IBAction func changePinCode(_ sender: Any) {
         if let s = sender as? UISwitch,
             s.isOn == true {
+        }
+    }
+
+    var isToggable: Bool? {
+        didSet {
+            self.switch.isHidden = !(isToggable ?? true)
         }
     }
 }
