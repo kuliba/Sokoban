@@ -82,8 +82,8 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
 
 //    private let sourceProvider = PaymentOptionCellProvider()
 //     private let destinationProvider = PaymentOptionCellProvider()
-    var sourceConfigurations: [ICellConfigurator]?
-    var destinationConfigurations: [ICellConfigurator]?
+//    var sourceConfigurations: [ICellConfigurator]?
+//    var destinationConfigurations: [ICellConfigurator]?
 
     // MARK: - Lifecycle
 
@@ -117,55 +117,6 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
     internal func newState(state: ProductState) {
         //optionsTable.reloadData()
 //        setUpRemittanceViews()
-    }
-
-
-    private func setUpLayout() {
-        activityIndicator.center = view.center
-        view.addSubview(activityIndicator)
-        setUpPicker()
-//        setUpRemittanceViews()
-    }
-
-    func makeC2C() {
-        activityIndicator.startAnimating()
-
-        guard let sourceConfig = sourceConfigurations?[sourcePagerView.currentIndex], let destinationConfig = destinationConfigurations?[destinationPagerView.currentIndex], let amount = Double(sumTextField.text!) else {
-            return
-        }
-        
-        
-        
-
-        let sourceNumber = sourceConfig.stringFromSelection()
-        let destinationNumber = destinationConfig.stringFromSelection()
-        let completion: (Bool, String?) -> Void = { [weak self] (success, token) in
-        //    store.dispatch(payment(sourceOption: sourceConfig as? PaymentOption, destionationOption: destinationConfig as? PaymentOption, sum: self?.sumTextField.            self?.activityIndicator.stopAnimating()
-            if success {
-//
-//                func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//               // Get the new view controller using segue.destination.
-//               // Pass the selected object to the new view controller.
-//               if (segue.identifier == "fromPaymentToPaymentVerificationt") {
-//                   let showContactViewController: RegistrationCodeVerificationViewController = segue.destination as! RegistrationCodeVerificationViewController
-//                showContactViewController.destinationConfigurations  = self!.destinationConfigurations
-//               }
-//           }
-             self?.performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
-            } else {
-                let alertVC = UIAlertController(title: "Ошибка", message: "При выполнении платежа произошла ошибка, попробуйте ещё раз позже", preferredStyle: .alert)
-                let cancelButton = UIAlertAction(title: "Продолжить", style: .cancel, handler: nil)
-                alertVC.addAction(cancelButton)
-                self?.present(alertVC, animated: true, completion: nil)
-            }
-        }
-       
-
-        if destinationConfig is PhoneNumberPagerItem {
-            NetworkManager.shared().prepareCard2Phone(from: sourceNumber, to: destinationNumber, amount: amount, completionHandler: completion)
-        } else {
-            NetworkManager.shared().prepareCard2Card(from: sourceNumber, to: destinationNumber, amount: amount, completionHandler: completion)
-        }
     }
 }
 

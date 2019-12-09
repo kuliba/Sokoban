@@ -171,7 +171,7 @@ class MainView_ontroller2: UIViewController, UICollectionViewDataSource, UIColle
             let destinationProviderPhoneNumber = PhoneNumberCellProvider()
 
             paymentDetailsVC.sourceConfigurations = [
-                PaymentOptionsPagerItem(provider: sourceProvider)
+                PaymentOptionsPagerItem(provider: sourceProvider, delegate: paymentDetailsVC)
             ]
 
        
@@ -179,19 +179,19 @@ class MainView_ontroller2: UIViewController, UICollectionViewDataSource, UIColle
         switch labeltext[indexPath.row]{
             case "Перевод по номеру телефона":
                 paymentDetailsVC.destinationConfigurations = [
-                                   PhoneNumberPagerItem(provider: destinationProviderPhoneNumber)
+                    PhoneNumberPagerItem(provider: destinationProviderPhoneNumber, delegate: paymentDetailsVC)
                                ]
                
                 break
             case "Перевод по номеру карты":
                 paymentDetailsVC.destinationConfigurations = [
-                    CardNumberPagerItem(provider: destinationProviderCardNumber),
-                    AccountNumberPagerItem(provider: destinationProviderAccountNumber),
+                    CardNumberPagerItem(provider: destinationProviderCardNumber, delegate: paymentDetailsVC),
+                    AccountNumberPagerItem(provider: destinationProviderAccountNumber, delegate: paymentDetailsVC),
                 ]
                 break
             case "Перевод между своими счетами":
                  paymentDetailsVC.destinationConfigurations = [
-                                   PaymentOptionsPagerItem(provider: destinationProvider)
+                    PaymentOptionsPagerItem(provider: destinationProvider, delegate: paymentDetailsVC)
                                ]
                 break
             case "История":
