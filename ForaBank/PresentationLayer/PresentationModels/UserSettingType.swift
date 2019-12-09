@@ -14,18 +14,6 @@ enum UserSettingType {
     case allowedPasscode(() -> Bool)
     case allowedBiometricSignIn(() -> Bool)
 
-    public static func isPasscodeSettedDefault() -> UserSettingType {
-        return UserSettingType.allowedPasscode { () -> Bool in
-            return SettingsStorage.shared.isSetPasscode()
-        }
-    }
-
-    public static func allowedBiometricSignInDefault() -> UserSettingType {
-        return UserSettingType.allowedBiometricSignIn { () -> Bool in
-            return SettingsStorage.shared.allowedBiometricSignIn()
-        }
-    }
-
     var localizedName: String {
         switch self {
         case .changePassword:
@@ -67,5 +55,35 @@ enum UserSettingType {
 
     var localizedFieldName: String {
         return "Параметры входа"
+    }
+
+    public static func isPasscodeSettedDefault() -> UserSettingType {
+        return UserSettingType.allowedPasscode { () -> Bool in
+            return SettingsStorage.shared.isSetPasscode()
+        }
+    }
+
+    public static func allowedBiometricSignInDefault() -> UserSettingType {
+        return UserSettingType.allowedBiometricSignIn { () -> Bool in
+            return SettingsStorage.shared.allowedBiometricSignIn()
+        }
+    }
+
+    public func toggleValueIfPossiable() {
+        guard isToggable else {
+            return
+        }
+        switch self {
+        case .allowedBiometricSignIn(let isToggleOn):
+            let currentValue = isToggleOn()
+            SettingsStorage.shared.setAllowedBiometricSignIn(allowed: !currentValue)
+            break
+        case .allowedPasscode(let isToggleOn):
+            let currentValue = isToggleOn()
+            SettingsStorage.shared.setIsSetPasscode(!currentValue)
+            break
+        default:
+            break
+        }
     }
 }

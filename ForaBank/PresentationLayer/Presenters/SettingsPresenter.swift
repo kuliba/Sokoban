@@ -38,11 +38,35 @@ extension SettingsPresenter: UITableViewDelegate, UITableViewDataSource {
         let option = options[indexPath.item]
         cell.titleLabel.text = option.localizedName
         cell.iconImageView.image = UIImage(named: option.imageName)
-        cell.isToggable = option.isToggable
+        cell.switch.isHidden = !option.isToggable
+        cell.indexPath = indexPath
+        cell.delegate = self
+
+        if option.isToggable {
+            cell.isToggable = option.isToggable
+            switch option {
+            case .allowedBiometricSignIn(let isToggleOn):
+                cell.switch.isOn = isToggleOn()
+                break
+            case .allowedPasscode(let isToggleOn):
+                cell.switch.isOn = isToggleOn()
+                break
+            default:
+                break
+            }
+        }
         return cell
     }
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        performSegue(withIdentifier: "showChangePassword", sender: tableView.cellForRow(at: indexPath))
+        let option = options[indexPath.item]
+        switch option {
+        case .changePassword:
+            delegate?.didSelectOption(option: option)
+            break
+        default:
+            break
+        }
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -59,5 +83,21 @@ extension SettingsPresenter: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 35
+    }
+}
+
+extension SettingsPresenter: FeedOptionCellDelegate {
+    func didChangedSwitch(at indexPath: IndexPath) {
+        let option = options[indexPath.item]
+        switch option {
+        case .allowedBiometricSignIn(_):
+            option.toggleValueIfPossiable()
+            break
+        case .allowedPasscode(_):
+            option.toggleValueIfPossiable()
+            break
+        default:
+            break
+        }
     }
 }

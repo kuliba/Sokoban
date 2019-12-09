@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol FeedOptionCellDelegate: class {
+    func didChangedSwitch(at indexPath: IndexPath)
+}
+
 class FeedOptionCell: UITableViewCell {
 
     public struct Constants {
@@ -19,14 +23,16 @@ class FeedOptionCell: UITableViewCell {
     @IBOutlet weak var `switch`: UISwitch!
 
     @IBAction func changePinCode(_ sender: Any) {
-        if let s = sender as? UISwitch,
-            s.isOn == true {
+        if let nonNilIndexPath = indexPath {
+            delegate?.didChangedSwitch(at: nonNilIndexPath)
         }
     }
 
+    weak var delegate: FeedOptionCellDelegate?
     var isToggable: Bool? {
         didSet {
             self.switch.isHidden = !(isToggable ?? true)
         }
     }
+    var indexPath: IndexPath?
 }

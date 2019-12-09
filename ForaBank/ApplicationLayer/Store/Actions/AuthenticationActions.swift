@@ -11,9 +11,6 @@ import ReSwift
 import ReSwiftThunk
 
 let checkAuthCredentials = Thunk<State> { dispatch, getStat in
-    guard PasscodeService.shared.isPasscodeSetted else {
-        return
-    }
     let passcodeVC = PasscodeSignInViewController()
     passcodeVC.modalPresentationStyle = .overFullScreen
     topMostVC()?.present(passcodeVC, animated: true, completion: nil)
@@ -32,7 +29,6 @@ let doLogout = Thunk<State> { dispatch, getStat in
     NetworkManager.shared().logOut { (success) in
         if success {
             setupUnauthorizedZone()
-            dispatch(clearPasscodeData)
         }
     }
 }

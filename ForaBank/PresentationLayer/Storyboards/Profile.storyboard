@@ -19,7 +19,6 @@
         <!--Profile View Controller-->
         <scene sceneID="S61-e5-IA7">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="VIL-9P-5mH" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="ProfileViewController" id="rjX-8E-7Jb" customClass="ProfileViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="tTC-gw-ECh" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
@@ -119,6 +118,7 @@
                         <segue destination="JKq-JP-xt2" kind="show" identifier="SettingsViewController" id="0eA-i4-16e"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VIL-9P-5mH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2737" y="1254"/>
         </scene>
@@ -561,7 +561,7 @@
         <!--Change Password Controller-->
         <scene sceneID="t70-g9-GWS">
             <objects>
-                <viewController modalPresentationStyle="fullScreen" id="6Eu-Zr-wmX" customClass="changePasswordController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="6Eu-Zr-wmX" customClass="ChangePasswordController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="F7d-W9-RZ0">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -572,7 +572,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xg1-cs-Clp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4421" y="-284"/>
+            <point key="canvasLocation" x="5368" y="518"/>
         </scene>
         <!--Settings View Controller-->
         <scene sceneID="13g-qD-a5o">
@@ -585,7 +585,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Uc0-F2-RhH" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="23" width="320" height="584"/>
                                 <subviews>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" allowsSelection="NO" rowHeight="60" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="oCD-eX-yo7" customClass="CustomTableView" customModule="ForaBank" customModuleProvider="target">
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="60" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="oCD-eX-yo7" customClass="CustomTableView" customModule="ForaBank" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="19" width="320" height="638"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="separatorColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

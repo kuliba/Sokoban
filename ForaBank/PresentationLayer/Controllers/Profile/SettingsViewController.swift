@@ -51,5 +51,13 @@ extension SettingsViewController: IListViewController {
 }
 
 extension SettingsViewController: SettingsPresenterDelegate {
-
+    func didSelectOption(option: UserSettingType) {
+        switch option {
+        case .changePassword:
+            //performSegue(withIdentifier: "showChangePassword", sender: nil)
+            break
+        default:
+            break
+        }
+    }
 }

@@ -10,6 +10,7 @@ import Foundation
 
 protocol SettingsPresenterDelegate: class {
 
+    func didSelectOption(option: UserSettingType)
 }
 
 protocol ISettingsPresenter: class {
