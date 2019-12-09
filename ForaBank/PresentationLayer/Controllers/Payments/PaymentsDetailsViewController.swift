@@ -82,8 +82,7 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
 
 //    private let sourceProvider = PaymentOptionCellProvider()
 //     private let destinationProvider = PaymentOptionCellProvider()
-    var sourceConfigurations: [ICellConfigurator]?
-    var destinationConfigurations: [ICellConfigurator]?
+
 
     // MARK: - Lifecycle
 
@@ -186,12 +185,7 @@ private extension PaymentsDetailsViewController {
         containterView.insertSubview(containerGradientView, at: 0)
     }
 
-    private func setUpLayout() {
-        sendButton.changeEnabled(isEnabled: false)
-        activityIndicator.center = view.center
-        view.addSubview(activityIndicator)
-        setUpPicker()
-    }
+
 }
 
 extension PaymentsDetailsViewController: OptionPickerDelegate {
