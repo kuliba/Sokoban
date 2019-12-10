@@ -15,7 +15,7 @@ class NetworkManager {
     // MARK: - Properties
 
     private static var sharedNetworkManager: NetworkManager = {
-        let host = "https://git.briginvest.ru/dbo/api/v2/"
+        let host = apiBaseURL
 
         let authService = AuthService(baseURLString: host)
         let cardService = CardService(baseURLString: host)

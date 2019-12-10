@@ -8,5 +8,20 @@
 
 import Foundation
 
-let apiBaseURL = "https://git.briginvest.ru/dbo/api/v2/"
+enum ServerType {
+    case test
+    case production
+}
 
+var serverType: ServerType = ServerType.test
+public var apiBaseURL: String {
+    switch serverType {
+    case .test:
+        return testApiBaseURL
+    case .production:
+        return productionApiBaseURL
+    }
+}
+
+let testApiBaseURL: String = "https://git.briginvest.ru/dbo/api/v2/"
+let productionApiBaseURL: String = "https://git.briginvest.ru/dbo/api/v2/"
