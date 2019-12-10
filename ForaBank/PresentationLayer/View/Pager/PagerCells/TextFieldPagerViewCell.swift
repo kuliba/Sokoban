@@ -9,17 +9,12 @@
 import UIKit
 import FSPagerView
 
-class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell {
+class TextFieldPagerViewCell: FSPagerViewCell,  IConfigurableCell, ContactsPickerDelegate {
 
     @IBOutlet weak var buttonContactList: UIButton!
-    @IBOutlet weak var scanButton: UIButton!
     @IBOutlet weak var leftButton: UIButton!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var nameContact: UILabel!
-
-    @IBAction func scanButtonClicked(_ sender: UIButton) {
-        showScanCardController(delegate: self)
-    }
 
     @IBAction func contactsList(_ sender: Any) {
         let contactPickerScene = ContactsPicker(delegate: self, multiSelection: true, subtitleCellType: SubtitleCellValue.phoneNumber)
@@ -28,8 +23,8 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell {
         topMostVC()?.present(navigationController, animated: true, completion: nil)
     }
 
+    weak var delegate: ConfigurableCellDelegate?
 
-    var newValueCallback: ((_ newValue: IPresentationModel) -> ())?
     var charactersMaxCount: Int?
     var formattingFunc: ((String) -> (String))?
 
@@ -49,38 +44,35 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-
-        let placeholder = textField.placeholder
-        textField.attributedPlaceholder = NSAttributedString(string: placeholder ?? ""
-                                                             , attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray])
     }
 
+    public func configure(provider: ICellProvider, delegate: ConfigurableCellDelegate) {
+        self.delegate = delegate
 
-    func configure(provider: ICellProvider) {
         guard let textInputCellProvider = provider as? ITextInputCellProvider else {
             return
         }
-
-        scanButton.isHidden = !textInputCellProvider.isScan
-        textField.keyboardType = textInputCellProvider.keyboardType
         formattingFunc = textInputCellProvider.formatted
         charactersMaxCount = textInputCellProvider.charactersMaxCount
 
+//        if textInputCellProvider.currentValue == nil {
+//            self.textField.reloadInputViews()
+//            textInputCellProvider.currentValue = textField.text
+//        }
         buttonContactList.isHidden = true
         if provider is PhoneNumberCellProvider {
             textField.text = "+7"
             buttonContactList.isHidden = false
 
         }
-        textField.delegate = self
-        textField.placeholder = textInputCellProvider.placeholder
-        textField.addTarget(self, action: #selector(reformatAsCardNumber), for: .editingChanged)
 
         leftButton.setImage(UIImage(named: textInputCellProvider.iconName), for: .normal)
 
-        let placeholder = textField.placeholder
-        textField.attributedPlaceholder = NSAttributedString(string: placeholder ?? ""
-                                                             , attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray])
+        textField.delegate = self
+        textField.text = ""
+        textField.placeholder = textInputCellProvider.placeholder
+        textField.addTarget(self, action: #selector(reformatAsCardNumber), for: .editingChanged)
+        textField.sendActions(for: .editingChanged)
     }
 }
 
@@ -91,57 +83,31 @@ extension TextFieldPagerViewCell: UITextFieldDelegate {
         return newLength <= nonNilCharactersMaxCount
     }
 
-
-    @objc func reformatAsCardNumber(textField: UITextField) {
+    @objc private func reformatAsCardNumber(textField: UITextField) {
         guard let text = textField.text, let nonNilFormattingFunc = formattingFunc else { return }
         let formatedText = nonNilFormattingFunc(text)
         textField.text = formatedText
-        newValueCallback?(cleanNumberString(string: text))
+        delegate?.didInputPaymentValue(value: cleanNumberString(string: text))
     }
-}
-
-extension TextFieldPagerViewCell: CardIOPaymentViewControllerDelegate {
-    func userDidCancel(_ paymentViewController: CardIOPaymentViewController!) {
-        paymentViewController.dismiss(animated: true, completion: nil)
-    }
-
-    func userDidProvide(_ cardInfo: CardIOCreditCardInfo!, in paymentViewController: CardIOPaymentViewController!) {
-        if let info = cardInfo {
-            textField.text = info.cardNumber
-            textField.sendActions(for: .editingChanged)
-        }
-        paymentViewController.dismiss(animated: true, completion: nil)
-    }
-}
-
-extension TextFieldPagerViewCell: ContactsPickerDelegate {
 
     public func contactPicker(_ picker: ContactsPicker, didSelectMultipleContacts contacts: [Contact]) {
-
         defer { picker.dismiss(animated: true, completion: nil) }
         guard !contacts.isEmpty else { return }
         print("The following contacts are selected")
         for contact in contacts {
             print("\(contact.displayName)", "\(contact.phoneNumbers)")
-
-
-            if contacts != nil {
-                var number: String
-                nameContact.isHidden = true
-                number = "\(contact.phoneNumbers[0])"
-                if number[number.startIndex] == "+" {
-                    number.removeFirst(2)
-                } else {
-                    number.remove(at: number.startIndex)
-                }
-                print(number)
-
-
-                let numberFormatted = formattedNumberInPhoneContacts(number: String(number))
-                textField.text = "\(numberFormatted)"
-                newValueCallback?(cleanNumberString(string: numberFormatted))
+            var number: String
+            nameContact.isHidden = true
+            number = "\(contact.phoneNumbers[0])"
+            if number[number.startIndex] == "+" {
+                number.removeFirst(2)
+            } else {
+                number.remove(at: number.startIndex)
             }
+            print(number)
+            let numberFormatted = formattedNumberInPhoneContacts(number: String(number))
+            textField.text = "\(numberFormatted)"
+            delegate?.didInputPaymentValue(value: cleanNumberString(string: numberFormatted))
         }
-
     }
 }
