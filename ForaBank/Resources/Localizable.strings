@@ -6,5 +6,7 @@
   Copyright © 2019 BraveRobin. All rights reserved.
 */
 
+"Logout" = "Выход";
 "Cancel" = "Отмена";
+"Cancel1" = "Отмена1";
 "Delete" = "Удалить";

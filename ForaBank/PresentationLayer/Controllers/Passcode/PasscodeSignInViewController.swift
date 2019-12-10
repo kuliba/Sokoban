@@ -22,7 +22,7 @@ class PasscodeSignInViewController: UIViewController, StoreSubscriber {
 
         passcodeVC.passcodeView.titleLabel.adjustsFontSizeToFitWidth = true
         passcodeVC.passcodeView.titleLabel.text = "Введите код:"
-        passcodeVC.rightAccessoryButton?.titleLabel?.text = "Отмена"
+        passcodeVC.rightAccessoryButton?.titleLabel?.text = "Выход"
 
         passcodeVC.delegate = self
         passcodeVC.automaticallyPromptForBiometricValidation = true

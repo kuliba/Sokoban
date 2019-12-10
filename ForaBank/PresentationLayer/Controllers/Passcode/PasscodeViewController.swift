@@ -12,7 +12,7 @@ import TOPasscodeViewController
 class PasscodeViewController: TOPasscodeViewController {
     override func keypadButtonTapped() {
         guard let count = self.passcodeView.passcode?.count else { return }
-        let title = count > 0 ? "Delete" : "Cancel"
+        let title = count > 0 ? "Delete" : "Cancel1"
 
         UIView.performWithoutAnimation {
             self.cancelButton.setTitle(NSLocalizedString(title, comment: title), for: .normal)
@@ -22,5 +22,14 @@ class PasscodeViewController: TOPasscodeViewController {
 
     func removeCancelButton() {
         cancelButton.setTitle("", for: .normal)
+    }
+
+    override func optionsCodeButtonTapped() {
+        super.optionsCodeButtonTapped()
+        
+        if (!(self.rightAccessoryButton != nil) && !self.cancelButton) {
+            
+//            [self.cancelButton setTitle:NSLocalizedString(@"Cancel", @"Cancel") forState:UIControlStateNormal];
+        }
     }
 }
