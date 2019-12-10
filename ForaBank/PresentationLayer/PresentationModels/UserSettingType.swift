@@ -53,6 +53,19 @@ enum UserSettingType {
         }
     }
 
+    var isActive: Bool {
+        switch self {
+        case .changePassword:
+            return false
+        case .changePasscode:
+            return false //SettingsStorage.shared.isSetPasscode()
+        case .allowedPasscode:
+            return PasscodeService.shared.isPasscodeSetted
+        case .allowedBiometricSignIn:
+            return SettingsStorage.shared.allowedBiometricSignIn()
+        }
+    }
+
     var localizedFieldName: String {
         return "Параметры входа"
     }

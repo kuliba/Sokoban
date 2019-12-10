@@ -41,6 +41,8 @@ extension SettingsPresenter: UITableViewDelegate, UITableViewDataSource {
         cell.switch.isHidden = !option.isToggable
         cell.indexPath = indexPath
         cell.delegate = self
+        cell.contentView.alpha = option.isActive ? 1 : 0.5
+        cell.isUserInteractionEnabled = option.isActive
 
         if option.isToggable {
             cell.isToggable = option.isToggable
