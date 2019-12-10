@@ -75,26 +75,25 @@ class RegistrationViewController: UIViewController {
     @IBAction func scanCardButtonClicked(_ sender: Any) {
         view.endEditing(true)
         let cardIOVC = CardIOPaymentViewController(paymentDelegate: self)
-        
+
         cardIOVC?.modalPresentationStyle = .fullScreen
         cardIOVC?.collectCVV = false
         cardIOVC?.collectExpiry = false
         cardIOVC?.guideColor = UIColor(red: 0.13, green: 0.54, blue: 0.61, alpha: 1.00)
         cardIOVC?.hideCardIOLogo = true
         present(cardIOVC!, animated: true, completion: nil)
-        if cardNumberTextField.text?.count == 1{
-                 continueButton.isHidden = false
-             } else{
-                 continueButton.isHidden = false
-             }
-        
+        if cardNumberTextField.text?.count == 1 {
+            continueButton.isHidden = false
+        } else {
+            continueButton.isHidden = false
+        }
+
         if cardNumberTextField.text == "" {
             continueButton.isHidden = false
         }
         cardNumberTextField.textInputView.reloadInputViews()
-        
-      
     }
+
     @IBAction func segmentedControlValueChanged(_ sender: Any) {
         let direction = segmentedControl.selectedSegmentIndex - previousSegment
         var previousView: UIView? = nil
@@ -162,11 +161,11 @@ class RegistrationViewController: UIViewController {
             (textField.text?.count ?? 0) >= 2 {
         }
 
-        guard let cardNumber = cardNumberTextField.text?.count, cardNumber <= 19 else {
-            self.continueButton.isHidden = false
+        guard let cardNumber = cardNumberTextField.text?.removeWhitespace().count, cardNumber <= 16 else {
+           self.continueButton.isHidden = false
             return
         }
-        if cardNumberTextField.text?.count ?? 0 == 19 {
+        if cardNumberTextField.text?.removeWhitespace().count ?? 0 == 16 {
             if textField.tag == 1 {
                 UIView.transition(with: cardView, duration: 0.5, options: .transitionFlipFromLeft, animations: {
                     self.identifyBank()
@@ -192,7 +191,7 @@ class RegistrationViewController: UIViewController {
 
             self.cardNumberTextField.tintColor = .black
             self.cardNumberTextField.textColor = .black
-            
+
         }
     }
 
@@ -579,6 +578,8 @@ private extension RegistrationViewController {
             texfield?.delegate = self
         }
     }
+    
+    
 }
 
 // MARK: - UITextFieldDelegate
@@ -626,7 +627,7 @@ extension RegistrationViewController: UITextFieldDelegate {
                 brandLogo.isHidden = false
             }
         }
-        
+
         var identifiedBank: CardBank? = nil
         for b in banks ?? [] {
             for p in b.prefixes ?? [] {
@@ -675,7 +676,7 @@ extension RegistrationViewController: UITextFieldDelegate {
 
         self.cardNumberTextField.tintColor = tintColor
         self.cardNumberTextField.textColor = tintColor
-        
+
         self.continueButton.isHidden = false
     }
 }
@@ -684,7 +685,11 @@ extension RegistrationViewController: CardIOPaymentViewControllerDelegate {
     // Close ScanCard Screen
     public func userDidCancel(_ paymentViewController: CardIOPaymentViewController!) {
         paymentViewController.dismiss(animated: true, completion: nil)
+        continueButton.isHidden = true
+
     }
+
+    
 
     // Using this delegate method, retrive card information
     func userDidProvide(_ cardInfo: CardIOCreditCardInfo!, in paymentViewController: CardIOPaymentViewController!) {

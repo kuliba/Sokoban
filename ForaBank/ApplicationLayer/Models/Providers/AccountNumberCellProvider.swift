@@ -9,6 +9,8 @@
 import Foundation
 
 class AccountNumberCellProvider: NSObject, ITextInputCellProvider {
+    var textField: String = ""
+    
 
     let iconName = "feed_option_accounts"
     let placeholder = "По номеру счёта"
@@ -16,13 +18,12 @@ class AccountNumberCellProvider: NSObject, ITextInputCellProvider {
     let keyboardType: UIKeyboardType = .numberPad
     let isScan = false
 
-    var currentValue: IPresentationModel?
     var isLoading: Bool = false
 
     func getData(completion: ([IPresentationModel]) -> ()) {
 
     }
-    
+
     func formatted(stringToFormat string: String) -> String {
         return formatedCreditCardString(creditCardString: string)
     }

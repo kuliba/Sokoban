@@ -9,6 +9,8 @@
 import UIKit
 import ReSwift
 
+
+
 class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
 
     // MARK: - Properties
@@ -24,20 +26,14 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
     @IBOutlet weak var destinationName: UILabel!
     @IBOutlet weak var destinationNumber: UILabel!
     @IBOutlet weak var destinationSum: UILabel!
-    @IBAction func createTemplate(_ sender: Any) {
-        let alertVC = UIAlertController(title: "Функционал недоступен", message: "Функционал временно недоступен", preferredStyle: .alert)
-              let okAction = UIAlertAction(title: "Понятно", style: .cancel, handler: nil)
-              alertVC.addAction(okAction)
-              show(alertVC, sender: self)
-    }
-    
-    @IBOutlet weak var createTemplate: ButtonRounded!
-    
+    var sourceConfigurations: [ICellConfigurator]?
+       var destinationConfigurations: [ICellConfigurator]?
     // MARK: - Actions
     @IBAction func returnButtonClicked(_ sender: Any) {
         dismissToRootViewController()
     }
-
+    private let sourceProvider = PaymentOptionCellProvider()
+       private let destinationProvider = PaymentOptionCellProvider()
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,8 +44,7 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
         returnButton.backgroundColor = .clear
         returnButton.layer.borderWidth = 1
         returnButton.layer.borderColor = UIColor.white.cgColor
-        
-    }
+            }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -65,8 +60,8 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
     }
 
     internal func newState(state: ProductState) {
-        //        defaultSourcePaymentOption = state.sourceOption
-        //        defaultDestinationPaymentOption = state.destinationOption
+         //      defaultSourcePaymentOption = state.sourceOption
+        //       defaultDestinationPaymentOption = state.destinationOption
         //
         //        if (defaultSourcePaymentOption != nil) {
         //            selectedSourcePaymentOption = defaultSourcePaymentOption

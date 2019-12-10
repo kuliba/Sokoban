@@ -23,6 +23,7 @@ class DropDownPagerViewCell: FSPagerViewCell, IConfigurableCell {
     let dropDown = DropDown()
     let activityIndicator = UIActivityIndicatorView(style: .gray)
 
+    weak var delegate: ConfigurableCellDelegate?
     var paymentOptions = [PaymentOption]() {
         didSet {
             dropDown.dataSource = Array(repeating: "", count: paymentOptions.count)
@@ -45,11 +46,13 @@ class DropDownPagerViewCell: FSPagerViewCell, IConfigurableCell {
         setupViews()
     }
 
-    func configure(provider: ICellProvider) {
+    func configure(provider: ICellProvider, delegate: ConfigurableCellDelegate) {
         paymentOptionView.addSubview(activityIndicator)
         paymentOptionView.bringSubviewToFront(activityIndicator)
         activityIndicator.center = paymentOptionView.center
 
+        self.delegate = delegate
+        
         guard let paymentOptionProvider = provider as? PaymentOptionCellProvider else {
             return
         }
@@ -69,7 +72,7 @@ class DropDownPagerViewCell: FSPagerViewCell, IConfigurableCell {
                 return
             }
             DispatchQueue.main.async {
-                self?.provider?.currentValue = option
+                self?.delegate?.didInputPaymentValue(value: option)
                 self?.paymentOptionView.setupLayout(withPickerItem: option, isDroppable: true)
             }
         }
@@ -95,8 +98,8 @@ private extension DropDownPagerViewCell {
             guard let option = self?.paymentOptions[index] else {
                 return
             }
+            self?.delegate?.didInputPaymentValue(value: option)
             DispatchQueue.main.async {
-                self?.provider?.currentValue = option
                 self?.paymentOptionView.setupLayout(withPickerItem: option, isDroppable: true)
             }
         }

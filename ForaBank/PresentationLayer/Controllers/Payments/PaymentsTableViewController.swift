@@ -18,10 +18,10 @@ class PaymentsTableViewController: UIViewController, UITableViewDelegate, UITabl
             dismiss(animated: true, completion: nil)
         }
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         if navigationController != nil || tabBarController != nil {
             backButton.isHidden = true
         } else if isModal {
@@ -78,24 +78,24 @@ class PaymentsTableViewController: UIViewController, UITableViewDelegate, UITabl
         let destinationProviderPhoneNumber = PhoneNumberCellProvider()
 
         paymentDetailsVC.sourceConfigurations = [
-            PaymentOptionsPagerItem(provider: sourceProvider)
+            PaymentOptionsPagerItem(provider: sourceProvider, delegate: paymentDetailsVC)
         ]
 
         switch indexPath.item {
         case 0:
             paymentDetailsVC.destinationConfigurations = [
-                PaymentOptionsPagerItem(provider: destinationProvider)
+                PaymentOptionsPagerItem(provider: destinationProvider, delegate: paymentDetailsVC)
             ]
             break
         case 1:
             paymentDetailsVC.destinationConfigurations = [
-                CardNumberPagerItem(provider: destinationProviderCardNumber),
-                AccountNumberPagerItem(provider: destinationProviderAccountNumber),
+                CardNumberPagerItem(provider: destinationProviderCardNumber, delegate: paymentDetailsVC),
+                AccountNumberPagerItem(provider: destinationProviderAccountNumber, delegate: paymentDetailsVC),
             ]
             break
         case 2:
             paymentDetailsVC.destinationConfigurations = [
-                PhoneNumberPagerItem(provider: destinationProviderPhoneNumber)
+                PhoneNumberPagerItem(provider: destinationProviderPhoneNumber, delegate: paymentDetailsVC)
             ]
             break
         default:

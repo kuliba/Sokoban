@@ -41,9 +41,7 @@ class TabBarController: UITabBarController, StoreSubscriber {
 
     func newState(state: PasscodeSignInState) {
         if state.isShown == true {
-            let passcodeVC = PasscodeSignInViewController()
-            passcodeVC.modalPresentationStyle = .overFullScreen
-            present(passcodeVC, animated: true, completion: nil)
+            
         } else if state.isShown == false {
 
         }

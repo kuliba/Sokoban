@@ -11,6 +11,12 @@ import DeviceKit
 import FlexiblePageControl
 import Hero
 import IQKeyboardManagerSwift
+import Alamofire
+
+class Commission {
+    var commission: Int?
+}
+
 
 class CardToCardUnauthorized: UIViewController {
 
@@ -79,7 +85,50 @@ class CardToCardUnauthorized: UIViewController {
     var needAnimateCard: Bool = false
 
     var banks: [CardBank]? = nil
+    
+    @IBOutlet weak var commissionSum: UILabel!
+    var fee = 70
+    @IBAction func commissionCalculated(_ sender: Any) {
+        
+//        let parameters = [
+//            "id": 13,
+//            "sector": 1009,
+//            "amount": 800,
+//            "pan1": "2200200111114591",
+//            "pan2": "4809388889655340"
+//            ] as [String : Any]
 
+         let headers = [
+                "Content-Type": "application/x-www-form-urlencoded"
+            ]
+            let parameters = [
+                "sector": 1009,
+                "amount": amoutTextField.text! + "00",
+                "pan1": cardNumberTextField.text?.removeWhitespace() ?? "0",
+                "pan2": cardNumberPayer.text?.removeWhitespace() ?? "0"
+            ] as [String : Any]
+        
+            Alamofire.request("https://test.best2pay.net/webapi/P2PFee", method: .post, parameters: parameters, encoding:  URLEncoding.httpBody, headers: headers).responseJSON { (response:DataResponse<Any>) in
+
+                switch(response.result) {
+                case.success(let data):
+                    let intData:Int = data as! Int
+                    print("success \((intData)/100)")
+                    self.fee = (intData)/100
+                case.failure(let error):
+                    print("Not Success",error)
+                }
+                let data = response.request
+
+            }
+       
+        
+        print("Плохая фи \(fee)")
+        commissionSum.isHidden = false
+        continueButton.setTitle("Перевести \((Int(amoutTextField.text ?? "0") ?? 0) + fee) ₽", for: .normal)
+        commissionSum.text = "Комиссия \(fee) ₽"
+
+    }
     // MARK: - Actions
     @IBAction func backButtonCLicked(_ sender: Any) {
         segueId = backSegueId
@@ -112,14 +161,40 @@ class CardToCardUnauthorized: UIViewController {
         present(cardIOVC!, animated: true, completion: nil)
     }
 
-    @IBAction func `continue`(_ sender: Any) {
-        guard let cardNumber = cardNumberTextField.text?.removeWhitespace() else {
-            let alert = UIAlertController(title: "Неудача", message: "Номер карты неправильно введен", preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-            return
-        }
-        checkedCardNumber = cardNumber
+     @IBAction func `continue`(_ sender: Any) {
+      
+        
+        let headers = [
+                    "Content-Type": "application/x-www-form-urlencoded"
+                ]
+                let parameters = [
+                    "sector": 1009,
+                    "amount": 1000,
+                    "pan1": "4656260150230695",
+                    "pan2": "4809388889655340",
+                    "currency": 643,
+                    "cvc": "314",
+                    "month": "07",
+                    "year": "2024",
+                    "signature": String()
+                ] as [String : Any]
+            
+                Alamofire.request("https://test.best2pay.net/webapi/P2PTransfer", method: .post, parameters: parameters, encoding:  URLEncoding.httpBody, headers: headers).responseJSON { (response:DataResponse<Any>) in
+
+                    switch(response.result) {
+                    case.success(let data):
+                        let intData:Int = data as! Int
+                        print("success \((intData)/100)")
+                        self.fee = (intData)/100
+                    case.failure(let error):
+                        print("Not Success",error)
+                    }
+                    let data = response.request
+
+                }
+        
+        
+        
         performSegue(withIdentifier: "loginPassword", sender: nil)
     }
     @IBAction func cardDatasChanged(_ textField: UITextField) {
@@ -208,7 +283,8 @@ class CardToCardUnauthorized: UIViewController {
         super.viewDidLoad()
         addGradientLayerView()
 //        addCircleView()
-
+       
+        commissionSum.isHidden = true
         amoutTextField.placeholder = "0"
         if amoutTextField.text?.count != 0{
             amoutTextField.backgroundColor = .clear

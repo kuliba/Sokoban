@@ -35,6 +35,15 @@ class DepositsHistoryDetailsViewController: UIViewController {
     green: CGFloat(65)/CGFloat(255),
     blue: CGFloat(54)/CGFloat(255),
     alpha: 1)
+    
+    @IBAction func backButtonClicked(_ sender: Any) {
+        self.navigationController?.popViewController(animated: true)
+        if navigationController == nil {
+            dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 //        print(scrollView.gestureRecognizers)
@@ -67,7 +76,7 @@ class DepositsHistoryDetailsViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        defaultTopViewOffset = topView.frame.size.height + topView.frame.origin.y
+      
     }
 }
 
@@ -81,9 +90,6 @@ extension DepositsHistoryDetailsViewController: UIScrollViewDelegate {
         let percent = offset/defaultTopViewOffset
         let zoomScale = 1 - percent/4
         let alphaScale = 1 - percent/2
-        UIView.animate(withDuration: 0.1) {
-            self.topView.transform = CGAffineTransform(scaleX: zoomScale, y: zoomScale)
-            self.topView.alpha = alphaScale>1 ? 1 : alphaScale
-        }
+      
     }
 }

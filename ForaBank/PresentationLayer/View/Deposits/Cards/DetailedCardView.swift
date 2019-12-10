@@ -82,6 +82,18 @@ class DetailedCardView: CardView {
         self.addSubview(paypassLogoImageView)
         self.addSubview(cardBlockedImageView)
         //constraints
+        
+        //SHADOW ON TEXT
+//            let textColor = UIColor()
+//        self.cardNumberLabel.shadowColor = UIColor(displayP3Red: 0, green: 0, blue: 0, alpha: 0.7)
+//             cardNumberLabel.layer.masksToBounds = false
+//             cardNumberLabel.layer.shadowOffset = CGSize(width: 2, height: 0)
+//             cardNumberLabel.layer.rasterizationScale = UIScreen.main.scale
+//             cardNumberLabel.layer.shadowRadius = 2.0
+//             cardNumberLabel.layer.shadowOpacity = 1.0
+//            cardNumberLabel.layer.position = cardNumberLabel.center
+        
+        
         backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
         logoImageView.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
