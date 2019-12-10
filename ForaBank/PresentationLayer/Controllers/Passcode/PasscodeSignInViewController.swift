@@ -15,7 +15,7 @@ class PasscodeSignInViewController: UIViewController, StoreSubscriber {
 
     typealias SignInState = (passcodeState: PasscodeSignInState, verificationState: VerificationCodeState)
 
-    let passcodeVC = PasscodeViewController(style: .opaqueLight, passcodeType: .fourDigits)
+    let passcodeVC = PasscodeViewController(rightTitle: NSLocalizedString("Logout", comment: "Logout"), style: .opaqueLight, passcodeType: .fourDigits)
 
     override func viewDidLoad() {
         super.viewDidLoad()

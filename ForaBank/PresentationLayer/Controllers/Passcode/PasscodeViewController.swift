@@ -12,6 +12,7 @@ import TOPasscodeViewController
 class PasscodeViewController: TOPasscodeViewController {
 
     let rightTitle: String
+
     init(rightTitle: String, style: TOPasscodeViewStyle, passcodeType: TOPasscodeType) {
         self.rightTitle = rightTitle
         super.init(style: style, passcodeType: passcodeType)
@@ -22,8 +23,8 @@ class PasscodeViewController: TOPasscodeViewController {
     }
 
     override func keypadButtonTapped() {
-        guard let count = self.passcodeView.passcode?.count else { return }
-        let title = count > 0 ? "Delete" : "Cancel1"
+        let count = self.passcodeView.passcode?.count ?? 0
+        let title = (count > 0) && (count != nil) ? "Delete" : rightTitle
 
         UIView.performWithoutAnimation {
             self.cancelButton.setTitle(NSLocalizedString(title, comment: title), for: .normal)
@@ -35,15 +36,11 @@ class PasscodeViewController: TOPasscodeViewController {
         cancelButton.setTitle("", for: .normal)
     }
 
-    override func optionsCodeButtonTapped() {
-        super.optionsCodeButtonTapped()
-
-        if (self.rightAccessoryButton == nil && self.cancelButton == nil) {
-            guard let count = self.passcodeView.passcode?.count else { return }
-            let title = count > 0 ? "Delete" : "Cancel1"
-
+    override func setUpAccessoryButtons() {
+        super.setUpAccessoryButtons()
+        if (self.cancelButton != nil) {
             UIView.performWithoutAnimation {
-                self.cancelButton.setTitle(NSLocalizedString(title, comment: title), for: .normal)
+                self.cancelButton.setTitle(NSLocalizedString(rightTitle, comment: rightTitle), for: .normal)
                 self.cancelButton.sizeToFit()
             }
         }

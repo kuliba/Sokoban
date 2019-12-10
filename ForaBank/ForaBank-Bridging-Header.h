@@ -14,6 +14,6 @@
 @interface TOPasscodeViewController(PrivateMethods)
 
 - (void)keypadButtonTapped;
-- (void)optionsCodeButtonTapped;
+- (void)setUpAccessoryButtons;
 
 @end
