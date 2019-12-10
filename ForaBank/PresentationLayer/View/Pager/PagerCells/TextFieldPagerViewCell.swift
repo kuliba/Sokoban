@@ -65,15 +65,7 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell {
         textField.keyboardType = textInputCellProvider.keyboardType
         formattingFunc = textInputCellProvider.formatted
         charactersMaxCount = textInputCellProvider.charactersMaxCount
-        newValueCallback = { (newValue) in
-            textInputCellProvider.currentValue = newValue
-        }
 
-        if textInputCellProvider.currentValue == nil {
-            self.textField.reloadInputViews()
-
-            textInputCellProvider.currentValue = textField.text
-        }
         buttonContactList.isHidden = true
         if provider is PhoneNumberCellProvider {
             textField.text = "+7"
