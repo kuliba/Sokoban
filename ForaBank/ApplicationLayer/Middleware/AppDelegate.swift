@@ -13,6 +13,7 @@ import ReSwiftThunk
 import CryptoSwift
 import UserNotifications
 import Firebase
+import FirebaseMessaging
 
 func appReducer(action: Action, state: State?) -> State {
     return State(authenticationState: authenticationReducer(state: state?.authenticationState, action: action),
