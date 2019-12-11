@@ -53,12 +53,20 @@
                                     <action selector="contactsList:" destination="gTV-IL-0wX" eventType="touchUpInside" id="Qqb-7g-8hp"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zF8-Je-bUD">
+                                <rect key="frame" x="264" y="19" width="26" height="22"/>
+                                <state key="normal" image="card_scan"/>
+                                <connections>
+                                    <action selector="scanButtonClicked:" destination="gTV-IL-0wX" eventType="touchUpInside" id="erq-sS-z2I"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="AHE-5o-KrN" firstAttribute="bottom" secondItem="f5S-dd-w1e" secondAttribute="bottom" id="0I1-Qj-ODO"/>
                             <constraint firstItem="AHE-5o-KrN" firstAttribute="trailing" secondItem="bM1-E1-Pv4" secondAttribute="trailing" id="2if-11-jAi"/>
                             <constraint firstAttribute="bottom" secondItem="f5S-dd-w1e" secondAttribute="bottom" constant="15" id="4dz-eQ-Tdx"/>
+                            <constraint firstItem="bM1-E1-Pv4" firstAttribute="trailing" secondItem="zF8-Je-bUD" secondAttribute="trailing" constant="10" id="7pZ-j6-WQB"/>
                             <constraint firstItem="bM1-E1-Pv4" firstAttribute="leading" secondItem="n8P-hA-omH" secondAttribute="trailing" id="8Ce-ec-hdg"/>
                             <constraint firstItem="f5S-dd-w1e" firstAttribute="top" secondItem="D8h-Vw-o5e" secondAttribute="top" constant="15" id="8VH-hM-Uv8"/>
                             <constraint firstItem="n8P-hA-omH" firstAttribute="top" secondItem="D8h-Vw-o5e" secondAttribute="top" constant="11" id="C7J-9h-ief"/>
@@ -67,6 +75,7 @@
                             <constraint firstAttribute="trailing" secondItem="bM1-E1-Pv4" secondAttribute="trailing" constant="20" id="Mb6-xq-fUU"/>
                             <constraint firstItem="AHE-5o-KrN" firstAttribute="leading" secondItem="bM1-E1-Pv4" secondAttribute="leading" id="PEw-RI-NTl"/>
                             <constraint firstItem="n8P-hA-omH" firstAttribute="centerY" secondItem="f5S-dd-w1e" secondAttribute="centerY" id="Yrd-IS-rhC"/>
+                            <constraint firstItem="zF8-Je-bUD" firstAttribute="centerY" secondItem="bM1-E1-Pv4" secondAttribute="centerY" id="jED-5B-wTe"/>
                             <constraint firstItem="n8P-hA-omH" firstAttribute="centerX" secondItem="f5S-dd-w1e" secondAttribute="centerX" id="s0z-55-1xG"/>
                             <constraint firstItem="AHE-5o-KrN" firstAttribute="top" secondItem="f5S-dd-w1e" secondAttribute="top" id="v8R-Pa-4tO"/>
                             <constraint firstItem="bM1-E1-Pv4" firstAttribute="top" secondItem="D8h-Vw-o5e" secondAttribute="top" constant="13" id="vi2-Je-Fa4"/>
@@ -86,12 +95,14 @@
                 <outlet property="buttonContactList" destination="n8P-hA-omH" id="cw9-rL-ACd"/>
                 <outlet property="leftButton" destination="f5S-dd-w1e" id="2eU-GJ-feS"/>
                 <outlet property="nameContact" destination="AHE-5o-KrN" id="k0W-Cg-ZNs"/>
+                <outlet property="scanButton" destination="zF8-Je-bUD" id="A2Y-LL-pem"/>
                 <outlet property="textField" destination="bM1-E1-Pv4" id="Fov-lT-VZj"/>
             </connections>
             <point key="canvasLocation" x="62.318840579710148" y="139.28571428571428"/>
         </collectionViewCell>
     </objects>
     <resources>
+        <image name="card_scan" width="26" height="16"/>
         <image name="payments_transfer_between-accounts" width="17" height="15"/>
     </resources>
 </document>

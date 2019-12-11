@@ -11,6 +11,7 @@ import FSPagerView
 
 class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPickerDelegate {
 
+    @IBOutlet weak var scanButton: UIButton!
     @IBOutlet weak var buttonContactList: UIButton!
     @IBOutlet weak var leftButton: UIButton!
     @IBOutlet weak var textField: UITextField!
@@ -21,6 +22,10 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPicker
 
         let navigationController = UINavigationController(rootViewController: contactPickerScene)
         topMostVC()?.present(navigationController, animated: true, completion: nil)
+    }
+
+    @IBAction func scanButtonClicked(_ sender: UIButton) {
+        showScanCardController(delegate: self)
     }
 
     weak var delegate: ConfigurableCellDelegate?
@@ -56,7 +61,8 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPicker
         guard let textInputCellProvider = provider as? ITextInputCellProvider else {
             return
         }
-        
+
+        scanButton.isHidden = !textInputCellProvider.isScan
         textField.text = ""
         formattingFunc = textInputCellProvider.formatted
         charactersMaxCount = textInputCellProvider.charactersMaxCount
@@ -113,5 +119,19 @@ extension TextFieldPagerViewCell: UITextFieldDelegate {
             textField.text = "\(numberFormatted)"
             delegate?.didInputPaymentValue(value: cleanNumberString(string: numberFormatted))
         }
+    }
+}
+
+extension TextFieldPagerViewCell: CardIOPaymentViewControllerDelegate {
+    func userDidCancel(_ paymentViewController: CardIOPaymentViewController!) {
+        paymentViewController.dismiss(animated: true, completion: nil)
+    }
+
+    func userDidProvide(_ cardInfo: CardIOCreditCardInfo!, in paymentViewController: CardIOPaymentViewController!) {
+        if let info = cardInfo {
+            textField.text = info.cardNumber
+            textField.sendActions(for: .editingChanged)
+        }
+        paymentViewController.dismiss(animated: true, completion: nil)
     }
 }
