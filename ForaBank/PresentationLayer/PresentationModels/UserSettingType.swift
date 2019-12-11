@@ -62,7 +62,7 @@ enum UserSettingType {
         case .allowedPasscode:
             return PasscodeService.shared.isPasscodeSetted
         case .allowedBiometricSignIn:
-            return SettingsStorage.shared.allowedBiometricSignIn()
+            return PasscodeService.shared.isPasscodeSetted && SettingsStorage.shared.isSetPasscode()
         }
     }
 
@@ -72,13 +72,13 @@ enum UserSettingType {
 
     public static func isPasscodeSettedDefault() -> UserSettingType {
         return UserSettingType.allowedPasscode { () -> Bool in
-            return SettingsStorage.shared.isSetPasscode()
+            return SettingsStorage.shared.isSetPasscode() && PasscodeService.shared.isPasscodeSetted
         }
     }
 
     public static func allowedBiometricSignInDefault() -> UserSettingType {
         return UserSettingType.allowedBiometricSignIn { () -> Bool in
-            return SettingsStorage.shared.allowedBiometricSignIn()
+            return SettingsStorage.shared.allowedBiometricSignIn() && SettingsStorage.shared.isSetPasscode() && PasscodeService.shared.isPasscodeSetted
         }
     }
 
@@ -87,12 +87,12 @@ enum UserSettingType {
             return
         }
         switch self {
-        case .allowedBiometricSignIn(let isToggleOn):
-            let currentValue = isToggleOn()
+        case .allowedBiometricSignIn(_):
+            let currentValue = SettingsStorage.shared.allowedBiometricSignIn()
             SettingsStorage.shared.setAllowedBiometricSignIn(allowed: !currentValue)
             break
-        case .allowedPasscode(let isToggleOn):
-            let currentValue = isToggleOn()
+        case .allowedPasscode(_):
+            let currentValue = SettingsStorage.shared.isSetPasscode()
             SettingsStorage.shared.setIsSetPasscode(!currentValue)
             break
         default:

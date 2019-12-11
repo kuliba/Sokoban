@@ -101,5 +101,6 @@ extension SettingsPresenter: FeedOptionCellDelegate {
         default:
             break
         }
+        delegate?.reloadData()
     }
 }

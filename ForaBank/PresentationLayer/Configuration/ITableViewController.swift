@@ -12,6 +12,9 @@ protocol IListViewController {
     associatedtype TableView
 
     var tableView: TableView! { get set }
+    func setTable(delegate: UITableViewDelegate, dataSource: UITableViewDataSource)
+    func registerNibCell(cellName: String)
+    func reloadData()
 }
 
 extension IListViewController where Self.TableView: UITableView {
@@ -24,5 +27,9 @@ extension IListViewController where Self.TableView: UITableView {
     func registerNibCell(cellName: String) {
         let nibCell = UINib(nibName: cellName, bundle: nil)
         tableView.register(nibCell, forCellReuseIdentifier: cellName)
+    }
+
+    func reloadData() {
+        tableView.reloadData()
     }
 }

@@ -48,6 +48,10 @@ extension SettingsViewController: IListViewController {
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
     }
+
+    func reloadData() {
+        UIView.transition(with: tableView, duration: 0.3, options: .transitionCrossDissolve, animations: { [weak self] in self?.tableView.reloadData() }, completion: nil)
+    }
 }
 
 extension SettingsViewController: SettingsPresenterDelegate {

@@ -11,6 +11,11 @@ import Foundation
 protocol SettingsPresenterDelegate: class {
 
     func didSelectOption(option: UserSettingType)
+    func reloadData()
+}
+
+extension IListViewController where Self: SettingsPresenterDelegate {
+    
 }
 
 protocol ISettingsPresenter: class {

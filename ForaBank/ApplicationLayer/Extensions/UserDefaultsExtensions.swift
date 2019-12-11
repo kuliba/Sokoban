@@ -22,6 +22,7 @@ extension UserDefaults: ISettingsStorage {
 
     public func setFirstLaunch() {
         set(true, forKey: Constants.firstLaunchKey)
+        synchronize()
     }
 
     public func allowedBiometricSignIn() -> Bool {
@@ -30,10 +31,12 @@ extension UserDefaults: ISettingsStorage {
 
     public func setAllowedBiometricSignIn(allowed: Bool) {
         set(allowed, forKey: Constants.allowedBiometricSignInKey)
+        synchronize()
     }
 
     public func setIsSetPasscode(_ needs: Bool) {
         set(needs, forKey: Constants.isSetPasscodeKey)
+        synchronize()
     }
 
     public func isSetPasscode() -> Bool {

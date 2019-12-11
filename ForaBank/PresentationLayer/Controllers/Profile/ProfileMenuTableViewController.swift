@@ -31,7 +31,7 @@ class ProfileMenuTableViewController: UITableViewController {
     }
 
     @IBAction func quitButtonClicked(_ sender: Any) {
-        store.dispatch(doLogout)
+        AuthenticationService.shared.logoutAndClearAllUserData()
     }
 
     // MARK: - Lifecycle
