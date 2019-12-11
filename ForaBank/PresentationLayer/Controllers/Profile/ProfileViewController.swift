@@ -17,14 +17,14 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var header: UIView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var userImageView: CircularImageView!
-    
+
     var segueId: String? = nil
-    
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if segueId == "SignedIn" {
@@ -32,7 +32,7 @@ class ProfileViewController: UIViewController {
                 HeroModifier.beginWith([
                     HeroModifier.opacity(1),
                     HeroModifier.zPosition(1)
-                    ]),
+                ]),
                 HeroModifier.duration(0.5),
                 HeroModifier.forceNonFade,
                 HeroModifier.opacity(1)
@@ -41,7 +41,7 @@ class ProfileViewController: UIViewController {
                 HeroModifier.beginWith([
                     HeroModifier.opacity(1),
                     HeroModifier.zPosition(3)
-                    ]),
+                ]),
                 HeroModifier.duration(0.5),
                 HeroModifier.translate(CGPoint(x: -view.frame.width, y: 0))
             ]
@@ -51,7 +51,7 @@ class ProfileViewController: UIViewController {
                 HeroModifier.beginWith([
                     HeroModifier.opacity(1),
                     HeroModifier.zPosition(2)
-                    ]),
+                ]),
                 HeroModifier.duration(0.5),
                 HeroModifier.forceNonFade,
                 HeroModifier.opacity(1),
@@ -61,7 +61,7 @@ class ProfileViewController: UIViewController {
                 HeroModifier.beginWith([
                     HeroModifier.opacity(1),
                     HeroModifier.zPosition(3)
-                    ]),
+                ]),
                 HeroModifier.duration(0.5),
                 HeroModifier.delay(0.2),
                 HeroModifier.translate(CGPoint(x: -view.frame.width, y: 0))
@@ -72,9 +72,9 @@ class ProfileViewController: UIViewController {
                 let firstName = profile?.firstName,
                 let lastName = profile?.lastName {
                 self?.nameLabel.text = "\(firstName)\n\(lastName)"
-                
+
                 if let imageUrl = profile?.imageURL {
-                    if let image = UIImage(named: imageUrl){ //load from bundle
+                    if let image = UIImage(named: imageUrl) { //load from bundle
                         self?.userImageView.image = image
                     } else { //load image from url
                         //NEED AlamofireImage downloading
@@ -103,13 +103,13 @@ class ProfileViewController: UIViewController {
             }
         }
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         containerView.hero.modifiers = nil
         menu.hero.modifiers = nil
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if segueId == "logout" {
@@ -123,16 +123,15 @@ class ProfileViewController: UIViewController {
             ]
         }
     }
-    
+
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         containerView.hero.modifiers = nil
         view.hero.modifiers = nil
     }
-    
-  
+
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        print("prepare")
         if segue.identifier == "SettingsViewController" {
             segueId = nil
         }

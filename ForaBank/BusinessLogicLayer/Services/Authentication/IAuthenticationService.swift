@@ -17,5 +17,6 @@ protocol IAuthenticationService {
     func afterLogin()
     func startSecurityCheckIfNeeded()
     func onAuthCanceled()
-    func logout()
+    func logoutAndClearAllUserData()
+    func logoutWithoutClearUserData()
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -94,8 +94,8 @@
             <viewLayoutGuide key="safeArea" id="SSe-t4-uua"/>
             <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
             <connections>
-                <outlet property="changePinCode" destination="sgq-Rn-jsG" id="WOA-bx-U20"/>
                 <outlet property="iconImageView" destination="6hz-fb-JhD" id="0VM-qS-KJl"/>
+                <outlet property="switch" destination="sgq-Rn-jsG" id="Iv6-hm-47D"/>
                 <outlet property="titleLabel" destination="ALz-gk-mvh" id="fgi-W1-EhJ"/>
             </connections>
             <point key="canvasLocation" x="137.59999999999999" y="235.68215892053973"/>
@@ -103,6 +103,6 @@
     </objects>
     <resources>
         <image name="Screenshot 2018-10-01 at 12.15.32" width="1700" height="412"/>
-        <image name="payments_services_phone-billing" width="12" height="20"/>
+        <image name="payments_services_phone-billing" width="19" height="19"/>
     </resources>
 </document>

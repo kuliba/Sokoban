@@ -8,22 +8,6 @@
 
 import Foundation
 
-enum PaymentOptionType {
-    case option(PaymentOption)
-    case cardNumber(String)
-    case accountNumber(String)
-    case phoneNumber(String)
-}
-
-protocol IPaymentDetailsPresenter: class {
-    var delegate: PaymentDetailsPresenterDelegate? { get }
-}
-
-protocol PaymentDetailsPresenterDelegate: class {
-    func didUpdate(isLoading: Bool, canAskFee: Bool, canMakePayment: Bool)
-    func didFinishPreparation(success: Bool)
-}
-
 class PaymentDetailsPresenter: IPaymentDetailsPresenter {
     weak var delegate: PaymentDetailsPresenterDelegate?
 

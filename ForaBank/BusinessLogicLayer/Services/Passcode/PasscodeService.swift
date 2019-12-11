@@ -13,13 +13,20 @@ class PasscodeService: IPasscodeService {
     static let shared: IPasscodeService = PasscodeServiceInitializer.createPasscodeService()
 
     var isPasscodeSetted: Bool {
-        return (keychainCredentialsPasscode() != nil) && SettingsStorage.shared.isSetPasscode() ? true : false
+        return keychainCredentialsPasscode() != nil ? true : false
+    }
+
+    var allowedPasscode: Bool {
+        return SettingsStorage.shared.isSetPasscode() ? true : false
     }
 
     init() {
     }
 
     public func showPasscodeScreen() {
+        guard isPasscodeSetted && allowedPasscode else {
+            return
+        }
         store.dispatch(checkAuthCredentials)
     }
 

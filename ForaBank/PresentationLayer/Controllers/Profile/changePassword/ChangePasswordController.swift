@@ -13,8 +13,7 @@ import Hero
 
 
 
-class changePasswordController: UIViewController
-{
+class ChangePasswordController: UIViewController {
     var gradientViews = [GradientView2]()
 
     var backSegueId: String? = nil
@@ -42,7 +41,7 @@ class changePasswordController: UIViewController
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpTableView()
+//        setUpTableView()
 
 
 
@@ -51,7 +50,7 @@ class changePasswordController: UIViewController
 
 
 // MARK: - Private methods
-private extension changePasswordController {
+private extension ChangePasswordController {
 
     func setUpTableView() {
         setAutomaticRowHeight()
