@@ -2733,22 +2733,16 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w8N-od-haL">
-                                <rect key="frame" x="15.5" y="174" width="344" height="217"/>
+                                <rect key="frame" x="15.5" y="167" width="344" height="221"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Изменить название карты" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HCn-aj-HLA">
-                                        <rect key="frame" x="74" y="7" width="196.5" height="21.5"/>
+                                        <rect key="frame" x="74" y="10" width="196.5" height="21.5"/>
                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="* не более 15 символов" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HLC-aU-eYd">
-                                        <rect key="frame" x="23" y="91" width="139.5" height="15"/>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Введите новое название" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="g2n-kn-EtI">
-                                        <rect key="frame" x="19" y="38" width="311" height="34"/>
+                                        <rect key="frame" x="19" y="46" width="311" height="34"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                     </textField>
@@ -2758,7 +2752,7 @@
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="59i-gw-sxo"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="18"/>
+                                        <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                         <state key="normal" title="Сохранить">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
@@ -2767,39 +2761,51 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DFH-6P-wab" customClass="ButtonBlackRounded" customModule="ForaBank" customModuleProvider="target">
-                                        <rect key="frame" x="17" y="164" width="314" height="50"/>
+                                        <rect key="frame" x="17" y="164" width="314" height="42"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="50" id="qci-zl-fen"/>
+                                            <constraint firstAttribute="height" constant="42" id="qci-zl-fen"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="18"/>
+                                        <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
                                         <state key="normal" title="Закрыть">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="value" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                <real key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="15"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
                                             <action selector="onTapCancelButton:" destination="YGb-NV-cJx" eventType="touchUpInside" id="J9r-bq-xyl"/>
                                         </connections>
                                     </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="* не более 15 символов" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HLC-aU-eYd">
+                                        <rect key="frame" x="21" y="82" width="130.5" height="16"/>
+                                        <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="12"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="HLC-aU-eYd" firstAttribute="top" secondItem="g2n-kn-EtI" secondAttribute="bottom" constant="19" id="0tj-Dy-dCx"/>
-                                    <constraint firstAttribute="height" constant="217" id="1RQ-ei-alH"/>
+                                    <constraint firstItem="HLC-aU-eYd" firstAttribute="top" secondItem="g2n-kn-EtI" secondAttribute="bottom" constant="2" id="0tj-Dy-dCx"/>
+                                    <constraint firstAttribute="height" constant="221" id="1RQ-ei-alH"/>
                                     <constraint firstItem="DFH-6P-wab" firstAttribute="centerX" secondItem="Q5D-12-jH6" secondAttribute="centerX" id="3Ci-VQ-T1n"/>
-                                    <constraint firstItem="HLC-aU-eYd" firstAttribute="top" secondItem="HCn-aj-HLA" secondAttribute="bottom" constant="62.5" id="CtH-qw-JNi"/>
+                                    <constraint firstItem="HLC-aU-eYd" firstAttribute="top" secondItem="HCn-aj-HLA" secondAttribute="bottom" constant="50.5" id="CtH-qw-JNi"/>
                                     <constraint firstItem="DFH-6P-wab" firstAttribute="top" secondItem="Q5D-12-jH6" secondAttribute="bottom" constant="4" id="FOQ-uh-t5M"/>
                                     <constraint firstAttribute="width" constant="344" id="J3b-JN-azm"/>
-                                    <constraint firstItem="Q5D-12-jH6" firstAttribute="top" secondItem="HLC-aU-eYd" secondAttribute="bottom" constant="10" id="QTd-Dc-QZZ"/>
+                                    <constraint firstItem="Q5D-12-jH6" firstAttribute="top" secondItem="HLC-aU-eYd" secondAttribute="bottom" constant="18" id="QTd-Dc-QZZ"/>
                                     <constraint firstItem="DFH-6P-wab" firstAttribute="trailing" secondItem="Q5D-12-jH6" secondAttribute="trailing" id="Wpp-Rl-JGm"/>
                                     <constraint firstItem="Q5D-12-jH6" firstAttribute="leading" secondItem="w8N-od-haL" secondAttribute="leading" constant="17" id="Zen-XY-MP0"/>
-                                    <constraint firstItem="HLC-aU-eYd" firstAttribute="centerX" secondItem="w8N-od-haL" secondAttribute="centerX" constant="-79.25" id="arF-Uf-OOG"/>
+                                    <constraint firstItem="HLC-aU-eYd" firstAttribute="centerX" secondItem="w8N-od-haL" secondAttribute="centerX" constant="-85.75" id="arF-Uf-OOG"/>
                                     <constraint firstItem="g2n-kn-EtI" firstAttribute="leading" secondItem="w8N-od-haL" secondAttribute="leading" constant="19" id="bLi-mN-Ugh"/>
                                     <constraint firstItem="Q5D-12-jH6" firstAttribute="centerX" secondItem="HCn-aj-HLA" secondAttribute="centerX" constant="2" id="gvu-EQ-v1F"/>
-                                    <constraint firstAttribute="bottom" secondItem="Q5D-12-jH6" secondAttribute="bottom" constant="57" id="hkV-eV-SqR"/>
+                                    <constraint firstAttribute="bottom" secondItem="Q5D-12-jH6" secondAttribute="bottom" constant="61" id="hkV-eV-SqR"/>
                                     <constraint firstAttribute="trailing" secondItem="g2n-kn-EtI" secondAttribute="trailing" constant="14" id="nh0-d9-cMy"/>
                                 </constraints>
                             </view>
@@ -2808,7 +2814,7 @@
                         <constraints>
                             <constraint firstItem="w8N-od-haL" firstAttribute="centerX" secondItem="3RF-UH-e09" secondAttribute="centerX" id="1CE-Go-0mp"/>
                             <constraint firstItem="HCn-aj-HLA" firstAttribute="centerX" secondItem="3RF-UH-e09" secondAttribute="centerX" id="DoC-Ja-MGA"/>
-                            <constraint firstItem="w8N-od-haL" firstAttribute="centerY" secondItem="3RF-UH-e09" secondAttribute="centerY" multiplier="0.7" constant="49.050000000000011" id="sy6-bK-x7g"/>
+                            <constraint firstItem="w8N-od-haL" firstAttribute="centerY" secondItem="3RF-UH-e09" secondAttribute="centerY" multiplier="0.7" constant="44.050000000000011" id="sy6-bK-x7g"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="0CV-V1-ycP"/>
                     </view>

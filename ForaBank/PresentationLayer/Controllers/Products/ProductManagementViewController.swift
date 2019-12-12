@@ -188,8 +188,8 @@ class ProductManagementViewController: UITableViewController, CustomAlertViewDel
 //
 //
 //            alert.showEdit("Изменить название карты", subTitle: "Не более 15 символов", colorStyle: 0xF5534C)
-            
-        }
+//
+       }
         else {
             AlertService.shared.show(title: "Функционал недоступен", message: "Функционал временно недоступен", cancelButtonTitle: "Понятно", okButtonTitle: nil, cancelCompletion: nil, okCompletion: nil)
         }
