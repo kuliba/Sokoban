@@ -74,7 +74,6 @@ class DepositsCardsListViewController: UIViewController {
         let cardActionButton = CardActionRoundedButton(type: .system)
         cardActionButton.setAttributedTitle(NSAttributedString(string: "Открыть продукт", attributes: [.font: UIFont.systemFont(ofSize: 15)]), for: .normal)
         cardActionButton.addTarget(nil, action: #selector(CarouselViewController.createProductButtonClicked), for: .touchUpInside)
-
         return cardActionButton
     }()
 
@@ -830,13 +829,6 @@ private extension DepositsCardsListViewController {
         if contentViewHeightConstraint != nil {
             scrollView.removeConstraint(contentViewHeightConstraint!)
         }
-        contentViewHeightConstraint = NSLayoutConstraint(item: contentView,
-                                                         attribute: .height,
-                                                         relatedBy: .equal,
-                                                         toItem: nil,
-                                                         attribute: .notAnAttribute,
-                                                         multiplier: 1,
-                                                         constant: cardsStackHeight! + 180)
         scrollView.addConstraint(contentViewHeightConstraint!)
 
         //CardViews

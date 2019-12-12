@@ -62,7 +62,7 @@ class CardDetailsViewController: UIViewController {
       
            }
     // MARK: - Lifecycle
-    override func viewDidLoad() {
+    override func viewDidLoad() {   
             NotificationCenter.default.addObserver(self, selector: #selector(handlePopucclosing), name: NSNotification.Name(rawValue: "customName"), object: nil)
         
         

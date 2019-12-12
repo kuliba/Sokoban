@@ -21,6 +21,20 @@ class ButtonRounded: UIButton {
     }
 }
 
+class ButtonBlackRounded: UIButton {
+    let gold = UIColor(named: "#000000")
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        layer.cornerRadius = frame.height / 2
+    }
+    
+    func changeEnabled(isEnabled: Bool) {
+        self.isEnabled = isEnabled
+        alpha = isEnabled ? 1 : 0.5
+    }
+}
+
+
 
 
 

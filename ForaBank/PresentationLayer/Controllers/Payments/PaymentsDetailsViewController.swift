@@ -25,7 +25,7 @@ protocol PaymentsDetailsViewControllerDelegate {
     func didPressPaymentButton()
 }
 
-class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
+class PaymentsDetailsViewController: UIViewController, StoreSubscriber, UITextFieldDelegate {
 
     // MARK: - Properties
     @IBOutlet weak var sourcePagerView: PagerView!
@@ -39,11 +39,22 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
     @IBOutlet weak var pickerButton: UIButton!
     @IBOutlet weak var sendButton: ButtonRounded!
 
+   
+
     // MARK: - Actions
     @IBAction func amountTextFieldValueChanged(_ sender: Any) {
         delegate?.didChangeAmount(amount: Double(amountTextField.text!.replacingOccurrences(of: ",", with: ".")))
+      
+//        if amountTextField.text != ""{
+//             amountTextField.text = amountTextField.text! + ".00"
+//        } else if amountTextField.text != nil {
+//             amountTextField.text = amountTextField.text!
+//        }
+       
     }
-
+   
+    
+    
     @IBAction func sendButtonClicked(_ sender: Any) {
         delegate?.didPressPrepareButton()
     }
@@ -90,19 +101,33 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpLayout()
-
+        amountTextField.delegate = self
+        amountTextField.smartInsertDeleteType = UITextSmartInsertDeleteType.no
         if let source = sourceConfigurations, let dest = destinationConfigurations {
             sourcePagerView.setConfig(config: source)
             destinationPagerView.setConfig(config: dest)
         }
+    
     }
+    
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        store.subscribe(self) { state in
-            state.select { $0.productsState }
-        }
-    }
+    
+        
+    let taskTextFieldlimitLength = 9
+
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+         switch textField {
+         case textField:
+             guard let text = textField.text else { return true }
+             let newLength = text.count + string.count - range.length
+             return newLength <= taskTextFieldlimitLength 
+            
+         default:
+             return true
+         }
+     }
+    
+ 
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)

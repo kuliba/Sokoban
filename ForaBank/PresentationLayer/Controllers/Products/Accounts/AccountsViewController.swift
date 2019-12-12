@@ -172,7 +172,7 @@ extension AccountsViewController: UITableViewDataSource, UITableViewDelegate {
             addDepositButton.setTitle("Открыть продукт", for: .normal)
             addDepositButton.titleLabel?.font = UIFont(name: "Roboto-Regular", size: 16)
             addDepositButton.setTitleColor(.black, for: [])
-
+            
             addDepositButton.layer.borderWidth = 0.5
             addDepositButton.layer.borderColor = UIColor(red: 211 / 255, green: 211 / 255, blue: 211 / 255, alpha: 1).cgColor
             addDepositButton.layer.cornerRadius = addDepositButton.frame.height / 2

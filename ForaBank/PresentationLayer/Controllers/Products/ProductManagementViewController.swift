@@ -11,7 +11,17 @@ import Hero
 import SCLAlertView
 
 
-class ProductManagementViewController: UITableViewController {
+class ProductManagementViewController: UITableViewController, CustomAlertViewDelegate {
+
+    
+    func okButtonTapped(selectedOption: String, textFieldValue: String) {
+        print("okButtonTapped with \(selectedOption) option selected")
+        print("TextField has value: \(textFieldValue)")
+    }
+    
+    func cancelButtonTapped() {
+        print("cancelButtonTapped")
+    }
 
     var actions: Array<Dictionary<String, String>> = []
     var actionsType = ""
@@ -145,25 +155,39 @@ class ProductManagementViewController: UITableViewController {
         }
         else if indexPath.item == 5 {
 
-            let alert = SCLAlertView()
-            let txt = alert.addTextField("Введите название карты")
-            alert.addButton("Сохранить") {
-                let id = self.product?.id
-                var newName:String = txt.text ?? "\(self.product!.name)"
-                NetworkManager.shared().saveCardName(newName: newName, id:id ?? 123, completionHandler: { success, errorMessage, newName, id in })
-                NetworkManager.shared().getCardList { [weak self] (success, cards) in
-                        self?.cards = cards ?? []
-                    var newName:String = txt.text ?? "\(self?.product!.name)"
-                    if newName == ""{
-                        newName = (self?.cards[indexPath.row].name)!
-                    }
-                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "customName"), object: newName)
-                
-                }
-            }
             
-             
-            alert.showEdit("Изменить название карты", subTitle: "Не более 15 символов", colorStyle: 0xF5534C)
+            
+         
+            
+            let customAlert = self.storyboard?.instantiateViewController(withIdentifier: "CustomAlertID") as! CustomAlertView
+            customAlert.providesPresentationContextTransitionStyle = true
+            customAlert.definesPresentationContext = true
+            customAlert.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+            customAlert.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+            customAlert.delegate = self as! CustomAlertViewDelegate
+
+            self.present(customAlert, animated: true, completion: nil)
+
+            
+//            let alert = SCLAlertView()
+//            let txt = alert.addTextField("Введите название карты")
+//            alert.addButton("Сохранить") {
+//                let id = self.product?.id
+//                var newName:String = txt.text ?? "\(self.product!.name)"
+//                NetworkManager.shared().saveCardName(newName: newName, id:id ?? 123, completionHandler: { success, errorMessage, newName, id in })
+//                NetworkManager.shared().getCardList { [weak self] (success, cards) in
+//                        self?.cards = cards ?? []
+//                    var newName:String = txt.text ?? "\(self?.product!.name)"
+//                    if newName == ""{
+//                        newName = (self?.cards[indexPath.row].name)!
+//                    }
+//                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "customName"), object: newName)
+//
+//                }
+//            }
+//
+//
+//            alert.showEdit("Изменить название карты", subTitle: "Не более 15 символов", colorStyle: 0xF5534C)
             
         }
         else {
