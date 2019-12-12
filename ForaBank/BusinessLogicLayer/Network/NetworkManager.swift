@@ -15,20 +15,20 @@ class NetworkManager {
     // MARK: - Properties
 
     private static var sharedNetworkManager: NetworkManager = {
-        let host = apiBaseURL
+        let host = Host.shared
 
-        let authService = AuthService(baseURLString: host)
-        let cardService = CardService(baseURLString: host)
-        let paymentServices = PaymentServices(baseURLString: host)
-        let regService = RegService(baseURLString: host)
-        let depositsService = DepositService(baseURLString: host)
-        let accountsService = AccountsService(baseURLString: host)
-        let loansService = LoansService(baseURLString: host)
-        let historyService = HistoryService(baseURLString: host)
-        let statementService = StatementService(baseURLString: host)
-        let loanPaymentSchedule = LoanPaymentSchedule(baseURLString: host)
-        let productService = ProductsService(baseURLString: host)
-        
+        let authService = AuthService(host: host)
+        let cardService = CardService(host: host)
+        let paymentServices = PaymentServices(host: host)
+        let regService = RegService(host: host)
+        let depositsService = DepositService(host: host)
+        let accountsService = AccountsService(host: host)
+        let loansService = LoansService(host: host)
+        let historyService = HistoryService(host: host)
+        let statementService = StatementService(host: host)
+        let loanPaymentSchedule = LoanPaymentSchedule(host: host)
+        let productService = ProductsService(host: host)
+
 
         let networkManager = NetworkManager(host, authService, regService, cardService, paymentServices, depositsService, accountsService, loanPaymentSchedule, historyService, loansService, statementService, productService: productService)
         // Configuration
@@ -36,6 +36,7 @@ class NetworkManager {
 
         return networkManager
     }()
+
     private let authService: AuthServiceProtocol
     private let regService: RegServiceProtocol
     private let cardService: CardServiceProtocol
@@ -47,8 +48,8 @@ class NetworkManager {
     private let historyService: HistoryServiceProtocol
     private let loansService: LoansServiceProtocol
     private let statementService: StatementServiceProtocol
-
-    private let baseURLString: String
+    private let host: Host
+    
     public var headers: HTTPHeaders = [
         "Accept": "application/json",
         "Content-Type": "application/json",
@@ -57,8 +58,8 @@ class NetworkManager {
     ]
 
 // Initialization
-    private init(_ baseURLString: String, _ authService: AuthServiceProtocol, _ regService: RegServiceProtocol, _ cardService: CardServiceProtocol, _ paymentsServices: IPaymetsApi, _ depositsService: DepositsServiceProtocol, _ accountsService: AccountsServiceProtocol, _ LaonSchedules: LoanPaymentScheduleProtocol, _ historyService: HistoryServiceProtocol, _ loansService: LoansServiceProtocol, _ statementService: StatementServiceProtocol, productService: IProductService) {
-        self.baseURLString = baseURLString
+    private init(_ host: Host, _ authService: AuthServiceProtocol, _ regService: RegServiceProtocol, _ cardService: CardServiceProtocol, _ paymentsServices: IPaymetsApi, _ depositsService: DepositsServiceProtocol, _ accountsService: AccountsServiceProtocol, _ LaonSchedules: LoanPaymentScheduleProtocol, _ historyService: HistoryServiceProtocol, _ loansService: LoansServiceProtocol, _ statementService: StatementServiceProtocol, productService: IProductService) {
+        self.host = host
         self.authService = authService
         self.regService = regService
         self.cardService = cardService
@@ -201,19 +202,19 @@ class NetworkManager {
         }
     }
     func saveCardName(newName: String, id: Double, completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ id: Double?, _ name: String?) -> Void) {
-          authService.csrf(headers: headers) { [unowned self] (success, newHeaders) in
-              if success {
-                self.regService.saveCardName(headers: self.headers, id: id,newName: newName, completionHandler: completionHandler)
-              }
-              else {
-                  completionHandler(false, nil, nil, nil)
-              }
-          }
-      }
+        authService.csrf(headers: headers) { [unowned self] (success, newHeaders) in
+            if success {
+                self.regService.saveCardName(headers: self.headers, id: id, newName: newName, completionHandler: completionHandler)
+            }
+            else {
+                completionHandler(false, nil, nil, nil)
+            }
+        }
+    }
     func best2Pay(completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ id: Double?, _ name: String?) -> Void) {
         self.best2Pay(completionHandler: completionHandler)
-                
-             }
+
+    }
     func verifyCode(verificationCode: Int,
                     completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void) {
         authService.csrf(headers: headers) { [unowned self] (success, newHeaders) in
@@ -228,7 +229,7 @@ class NetworkManager {
             }
         }
     }
-    
+
 
 //MARK: - card service
     func getCardList(completionHandler: @escaping (_ success: Bool, _ cards: [Card]?) -> Void) {

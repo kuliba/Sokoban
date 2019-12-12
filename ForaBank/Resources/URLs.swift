@@ -13,15 +13,21 @@ enum ServerType {
     case production
 }
 
-var serverType: ServerType = ServerType.test
-public var apiBaseURL: String {
-    switch serverType {
-    case .test:
-        return testApiBaseURL
-    case .production:
-        return productionApiBaseURL
-    }
-}
+class Host {
 
-let testApiBaseURL: String = "https://git.briginvest.ru/dbo/api/v2/"
-let productionApiBaseURL: String = "https://git.briginvest.ru/dbo/api/v2/"
+    static let shared: Host = Host()
+
+    public var serverType: ServerType = ServerType.test
+    public var apiBaseURL: String {
+        switch serverType {
+        case .test:
+            return testApiBaseURL
+        case .production:
+            return productionApiBaseURL
+        }
+    }
+
+    private let testApiBaseURL: String = "https://git.briginvest.ru/dbo/api/v2/"
+    private let productionApiBaseURL: String = "https://bg.forabank.ru/dbs/api/v3/f437e29a3a094bcfa73cea12366de95b/"
+
+}

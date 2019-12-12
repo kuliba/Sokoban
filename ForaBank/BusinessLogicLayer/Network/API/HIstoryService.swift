@@ -13,37 +13,37 @@ import UIKit
 
 
 class HistoryService: HistoryServiceProtocol {
-    
-    
-    private let baseURLString: String
+
+
+    private let host: Host
     private var datedTransactions = [DatedTransactions]()
-    
-    init(baseURLString: String) {
-        self.baseURLString = baseURLString
+
+    init(host: Host) {
+        self.host = host
     }
-    
-    
+
+
     func getHistoryCard(headers: HTTPHeaders, completionHandler: @escaping (Bool, [HistoryCard]?) -> Void) {
         var historycard = [HistoryCard]()
-        let url = baseURLString + "/rest/getCardStatement"
+        let url = host.apiBaseURL + "/rest/getCardStatement"
         Alamofire.request(url, method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])
             .responseJSON { [unowned self] response in
-                
+
                 if let json = response.result.value as? Dictionary<String, Any>,
                     let errorMessage = json["errorMessage"] as? String {
                     print("\(errorMessage) \(self)")
                     completionHandler(false, historycard)
                     return
                 }
-                
+
                 switch response.result {
                 case .success:
                     if let json = response.result.value as? Dictionary<String, Any>,
-                        
+
                         let data = json["data"] as? Array<Any> {
-                        
+
                         for cardData in data {
                             if let cardData = cardData as? Dictionary<String, Any>,
                                 let original = cardData["original"] as? Dictionary<String, Any> {
@@ -53,10 +53,10 @@ class HistoryService: HistoryServiceProtocol {
                                 let operationType = original["operationType"] as? String
 
 
-                                
-                                
-                                let historycards = HistoryCard(amount: amount!, comment: comment,operationType:operationType,accountID:accountID )
-                                
+
+
+                                let historycards = HistoryCard(amount: amount!, comment: comment, operationType: operationType, accountID: accountID)
+
                                 historycard.append(historycards)
                             }
                         }
@@ -65,7 +65,7 @@ class HistoryService: HistoryServiceProtocol {
                         print("rest/getDepositList cant parse json \(String(describing: response.result.value))")
                         completionHandler(false, historycard)
                     }
-                    
+
                 case .failure(let error):
                     print("rest/getDepositList \(error) \(self)")
                     completionHandler(false, historycard)
@@ -79,11 +79,11 @@ class HistoryService: HistoryServiceProtocol {
             //        }
             completionHandler(false)
         }
-        
+
         func getTransactionsStatement(forCardNumber: String, fromDate: Date, toDate: Date, headers: HTTPHeaders, completionHandler: @escaping (Bool, [DatedTransactions]?) -> Void) {
             completionHandler(false, datedTransactions)
         }
-        
-        
+
+
     }
 }

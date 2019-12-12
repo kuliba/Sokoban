@@ -11,14 +11,14 @@ import Alamofire
 
 class PaymentServices: IPaymetsApi {
 
-    private let baseURLString: String
+    private let host: Host
 
-    init(baseURLString: String) {
-        self.baseURLString = baseURLString
+    init(host: Host) {
+        self.host = host
     }
 
     func getPaymentsList(completionHandler: @escaping (Bool, [Operations]?) -> Void) {
-        let url = baseURLString + "rest/getOperatorsList"
+        let url = host.apiBaseURL + "rest/getOperatorsList"
         let headers = NetworkManager.shared().headers
         var payments = [Operations]()
 
@@ -128,7 +128,7 @@ class PaymentServices: IPaymetsApi {
             "amount": amount as AnyObject
         ]
 
-        Alamofire.request(apiBaseURL + "/rest/prepareCard2Card", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+        Alamofire.request(Host.shared.apiBaseURL + "/rest/prepareCard2Card", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])
             .responseJSON { response in
@@ -165,7 +165,7 @@ class PaymentServices: IPaymetsApi {
             "amount": amount as AnyObject
         ]
 
-        Alamofire.request(apiBaseURL + "/rest/prepareCard2Phone", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+        Alamofire.request(Host.shared.apiBaseURL + "/rest/prepareCard2Phone", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])
             .responseJSON { response in
@@ -203,7 +203,7 @@ class PaymentServices: IPaymetsApi {
             "verificationCode": Int(code) as AnyObject
         ]
 
-        Alamofire.request(apiBaseURL + "/rest/makeCard2Card", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+        Alamofire.request(Host.shared.apiBaseURL + "/rest/makeCard2Card", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])
             .responseJSON { response in

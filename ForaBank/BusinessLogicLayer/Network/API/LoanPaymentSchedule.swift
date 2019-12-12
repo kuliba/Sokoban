@@ -14,15 +14,15 @@ class LoanPaymentSchedule: LoanPaymentScheduleProtocol {
 
     var loan = "10001475158"
 
-    private let baseURLString: String
+    private let host: Host
 
-    init(baseURLString: String) {
-        self.baseURLString = baseURLString
+    init(host: Host) {
+        self.host = host
     }
 
     func getLoansPayment(headers: HTTPHeaders, completionHandler: @escaping (Bool, [LaonSchedules]?) -> Void) {
         var dataPayment = [LaonSchedules]()
-        let url = baseURLString + "rest/getLoanPaymentSchedule"
+        let url = host.apiBaseURL + "rest/getLoanPaymentSchedule"
         let parameters: [String: AnyObject] = [
             "id": loan as AnyObject
         ]

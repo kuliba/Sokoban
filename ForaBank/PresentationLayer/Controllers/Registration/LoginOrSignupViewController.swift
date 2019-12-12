@@ -20,10 +20,10 @@ class LoginOrSignupViewController: UIViewController {
     @IBAction func changeServer(_ sender: UIButton, forEvent event: UIEvent) {
         let actions: [((UIAlertAction) -> Void)?] = [{ (action) in
             print(action.title ?? "")
-            serverType = .test
+            Host.shared.serverType = .test
         }, { (action) in
                 print(action.title ?? "")
-                serverType = .production
+                Host.shared.serverType = .production
             }]
         AlertService.shared.show(title: "Сменить сервер", message: "Сменить сервер", cancelButtonTitle: "Отмена", okButtonTitles: ["Тест", "Прод"], cancelCompletion: nil, okCompletions: actions)
     }
