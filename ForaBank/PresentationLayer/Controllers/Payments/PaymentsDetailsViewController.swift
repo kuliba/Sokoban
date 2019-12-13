@@ -203,6 +203,9 @@ extension PaymentsDetailsViewController: PaymentDetailsPresenterDelegate {
     func didFinishPreparation(success: Bool) {
         if success {
             performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
+            
+            
+            
         } else {
             AlertService.shared.show(title: "Ошибка", message: "При выполнении платежа произошла ошибка, попробуйте ещё раз позже", cancelButtonTitle: "Продолжить", okButtonTitle: nil, cancelCompletion: nil, okCompletion: nil)
         }

@@ -9,9 +9,127 @@
 import UIKit
 import ReSwift
 
+protocol IPaymetsApiC {
+    func getPaymentsList(completionHandler: @escaping (_ success: Bool, _ payments: [Operations]?) -> Void)
+    func allPaymentOptions(completionHandler: @escaping (Bool, [PaymentOption]?) -> Void)
+    func prepareCard2Card(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void)
+    func prepareCard2Phone(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void)
+    func makeCard2Card(code: String, completionHandler: @escaping (Bool) -> Void)
+}
 
 
-class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
+
+class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber, IPaymentDetailsPresenter,PaymentDetailsPresenterDelegate, PaymentsDetailsViewControllerDelegate {
+    func didUpdate(isLoading: Bool, canAskFee: Bool, canMakePayment: Bool) {
+        
+    }
+    
+    func didFinishPreparation(success: Bool) {
+        
+    }
+    
+    weak var delegate: PaymentDetailsPresenterDelegate?
+
+    private var sourcePaymentOption: PaymentOptionType? {
+        didSet {
+            onSomeValueUpdated()
+        }
+    }
+    private var destinaionPaymentOption: PaymentOptionType? {
+        didSet {
+            onSomeValueUpdated()
+        }
+    }
+    private var amount: Double? {
+        didSet {
+            onSomeValueUpdated()
+        }
+    }
+    private func onSomeValueUpdated() {
+        guard let destination = destinaionPaymentOption, let source = sourcePaymentOption else {
+            return
+        }
+
+       
+
+        let canStartWithOptions = amount != nil
+        canAskFee = canStartWithOptions
+
+        delegate?.didUpdate(isLoading: isLoading, canAskFee: canAskFee, canMakePayment: canMakePayment)
+    }
+    func preparePayment() {
+
+        guard let amount = self.amount else {
+            return
+        }
+        delegate?.didUpdate(isLoading: true, canAskFee: canAskFee, canMakePayment: canMakePayment)
+
+        let completion: (Bool, String?) -> Void = { [weak self] (success, token) in
+            guard let canAskFee = self?.canAskFee, let canMakePayment = self?.canMakePayment else {
+                return
+            }
+            self?.delegate?.didUpdate(isLoading: false, canAskFee: canAskFee, canMakePayment: canMakePayment)
+            self?.delegate?.didFinishPreparation(success: success)
+        }
+
+        switch (sourcePaymentOption, destinaionPaymentOption) {
+        case (.option(let sourceOption), .option(let destinationOption)):
+            NetworkManager.shared().prepareCard2Card(from: sourceOption.number, to: destinationOption.number, amount: amount, completionHandler: completion)
+            break
+        case (.option(let sourceOption), .phoneNumber(let phoneNumber)):
+            NetworkManager.shared().prepareCard2Phone(from: sourceOption.number, to: phoneNumber, amount: amount, completionHandler: completion)
+            break
+        case (.option(let sourceOption), .cardNumber(let stringNumber)), (.option(let sourceOption), .accountNumber(let stringNumber)):
+            NetworkManager.shared().prepareCard2Card(from: sourceOption.number, to: stringNumber, amount: amount, completionHandler: completion)
+            break
+        default:
+            break
+        }
+        
+    }
+
+    private var isLoading = false
+    private var canAskFee = false
+    private var canMakePayment = false
+
+  
+    
+  
+  
+    
+    func didChangeSource(paymentOption: PaymentOptionType) {
+          print(paymentOption)
+          sourcePaymentOption = paymentOption
+      }
+
+      func didChangeDestination(paymentOption: PaymentOptionType) {
+          print(paymentOption)
+          destinaionPaymentOption = paymentOption
+      }
+
+      func didChangeAmount(amount: Double?) {
+          self.amount = amount
+      }
+
+      func didPressPrepareButton() {
+          preparePayment()
+      }
+
+      func didPressPaymentButton() {
+
+      }
+    
+    
+    
+    
+    
+    func prepareCard2Phone(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void){
+        return
+    }
+    
+    
+    var delegatePresent: PaymentDetailsPresenterDelegate?
+    
 
     // MARK: - Properties
     @IBOutlet weak var arrowImageView: UIImageView!
@@ -26,6 +144,9 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
     @IBOutlet weak var destinationName: UILabel!
     @IBOutlet weak var destinationNumber: UILabel!
     @IBOutlet weak var destinationSum: UILabel!
+    var sourceOption: String = ""
+    var phoneNumber: String = ""
+
     var sourceConfigurations: [ICellConfigurator]?
        var destinationConfigurations: [ICellConfigurator]?
     // MARK: - Actions
@@ -37,13 +158,15 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
         arrowImageView.image = arrowImageView.image?.withRenderingMode(.alwaysTemplate)
         arrowImageView.tintColor = .white
 
         returnButton.backgroundColor = .clear
         returnButton.layer.borderWidth = 1
         returnButton.layer.borderColor = UIColor.white.cgColor
+        
+        
+        
             }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -74,19 +197,17 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
         //optionsTable.reloadData()
         //        setUpRemittanceViews()
 
-        guard let sourceOption = state.sourceOption, let destinationOption = state.destinationOption, let sum = state.paymentSum else {
-            return
-        }
+    
 
-        cardNameLabel.text = sourceOption.name
-        cardSumLabel.text = String(describing: sourceOption.value)
-        cardNumberLabel.text = sourceOption.maskedNumber
+        cardNameLabel.text = state.products![0].name
+        cardSumLabel.text = String(state.products![0].balance)
+        cardNumberLabel.text = state.products![0].numberMasked
+        sumLabel.text = "Nothing"
+        destinationName.text = "Nothing"
+        destinationNumber.text = "Nothing"
+        destinationSum.text = "Nothing"
 
-        destinationName.text = destinationOption.name
-        destinationSum.text = String(describing: destinationOption.value)
-        destinationNumber.text = destinationOption.maskedNumber
 
-        sumLabel.text = "\(sum) ₽"
     }
 
     // MARK: - Methods
@@ -102,3 +223,4 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
         }
     }
 }
+
