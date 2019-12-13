@@ -11,16 +11,16 @@ import Alamofire
 
 class ProductsService: IProductService {
 
-    private let baseURLString: String
+    private let host: Host
 
-    init(baseURLString: String) {
-        self.baseURLString = baseURLString
+    init(host: Host) {
+        self.host = host
     }
 
     func getProducts(completionHandler: @escaping (Bool, [Product]?) -> Void) {
         var products = [Product]()
         let headers = NetworkManager.shared().headers
-        let url = baseURLString + "rest/getProductList"
+        let url = host.apiBaseURL + "rest/getProductList"
 
         Alamofire.request(url, method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
@@ -39,7 +39,7 @@ class ProductsService: IProductService {
                     if let json = response.result.value as? Dictionary<String, Any>, let data = json["data"] as? Array<Any> {
                         for productData in data {
                             guard let productData = productData as? Dictionary<String, Any>,
-                            let product = Product.from(NSDictionary(dictionary: productData)) else { continue }
+                                let product = Product.from(NSDictionary(dictionary: productData)) else { continue }
                             products.append(product)
                         }
                         completionHandler(true, products)

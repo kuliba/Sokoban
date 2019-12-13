@@ -11,14 +11,14 @@ import Alamofire
 
 class StatementService: StatementServiceProtocol {
 
-    private let baseURLString: String
+    private let host: Host
 
-    init(baseURLString: String) {
-        self.baseURLString = baseURLString
+    init(host: Host) {
+        self.host = host
     }
 
     func getSortedFullStatement(headers: HTTPHeaders, completionHandler: @escaping (Bool, [DatedTransactionsStatement]?, String?) -> Void) {
-        let url = baseURLString + "rest/getFullStatement"
+        let url = host.apiBaseURL + "rest/getFullStatement"
         Alamofire.request(url, method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<406))
             .responseJSON { [unowned self] response in

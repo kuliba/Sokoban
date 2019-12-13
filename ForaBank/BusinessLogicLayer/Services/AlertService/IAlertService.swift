@@ -11,7 +11,9 @@ import Foundation
 protocol IAlertService {
     var isAlertShown: Bool { get }
 
-    //swiftlint:disable:next function_parameter_count
     func show(title: String?, message: String?, cancelButtonTitle: String?, okButtonTitle: String?, cancelCompletion: ((_ action: UIAlertAction) -> Void)?, okCompletion: ((_ action: UIAlertAction) -> Void)?)
+
+    func show(title: String?, message: String?, cancelButtonTitle: String?, okButtonTitles: [String?], cancelCompletion: ((_ action: UIAlertAction) -> Void)?, okCompletions: [((_ action: UIAlertAction) -> Void)?])
+
     func removeAllAlerts()
 }
