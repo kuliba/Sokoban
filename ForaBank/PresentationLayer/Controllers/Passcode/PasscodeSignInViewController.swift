@@ -15,14 +15,14 @@ class PasscodeSignInViewController: UIViewController, StoreSubscriber {
 
     typealias SignInState = (passcodeState: PasscodeSignInState, verificationState: VerificationCodeState)
 
-    let passcodeVC = PasscodeViewController(style: .opaqueLight, passcodeType: .fourDigits)
+    let passcodeVC = PasscodeViewController(rightTitle: NSLocalizedString("Logout", comment: "Logout"), style: .opaqueLight, passcodeType: .fourDigits)
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         passcodeVC.passcodeView.titleLabel.adjustsFontSizeToFitWidth = true
         passcodeVC.passcodeView.titleLabel.text = "Введите код:"
-        passcodeVC.rightAccessoryButton?.titleLabel?.text = "Отмена"
+        passcodeVC.rightAccessoryButton?.titleLabel?.text = "Выход"
 
         passcodeVC.delegate = self
         passcodeVC.automaticallyPromptForBiometricValidation = true

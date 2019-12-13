@@ -26,30 +26,41 @@ class AuthenticationService: IAuthenticationService {
     }
 
     //TODO: - Refactor
-    func afterLogin() {
+
+    public func afterLogin() {
         isAuthorized = true
         isUserSessionAlive = true
         refresher?.launchTimer(repeats: false, timeInterval: Constants.expireTime)
     }
 
-    func startSecurityCheckIfNeeded() {
+    public func startSecurityCheckIfNeeded() {
         guard !isUserSessionAlive else { return }
-        if PasscodeService.shared.isPasscodeSetted {
+        if PasscodeService.shared.isPasscodeSetted && PasscodeService.shared.allowedPasscode {
             PasscodeService.shared.showPasscodeScreen()
-        } else {
-            logout()
+        } else if !PasscodeService.shared.isPasscodeSetted && PasscodeService.shared.allowedPasscode {
+            logoutWithoutClearUserData()
+        } else if !PasscodeService.shared.isPasscodeSetted {
+            logoutAndClearAllUserData()
         }
     }
 
-    func logout() {
+    public func logoutAndClearAllUserData() {
+        isAuthorized = false
+        isUserSessionAlive = false
+        store.dispatch(doLogout)
+        store.dispatch(clearPasscodeData)
+        refresher?.invalidateTimer()
+    }
+
+    public func logoutWithoutClearUserData() {
         isAuthorized = false
         isUserSessionAlive = false
         store.dispatch(doLogout)
         refresher?.invalidateTimer()
     }
 
-    func onAuthCanceled() {
-        logout()
+    public func onAuthCanceled() {
+        logoutAndClearAllUserData()
     }
 }
 

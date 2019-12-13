@@ -8,18 +8,31 @@
 
 import UIKit
 
+protocol FeedOptionCellDelegate: class {
+    func didChangedSwitch(at indexPath: IndexPath)
+}
+
 class FeedOptionCell: UITableViewCell {
 
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var iconImageView: UIImageView!    
-
-        @IBOutlet weak var changePinCode: UISwitch!
-    @IBAction func changePinCode(_ sender: Any) {
-        if let s = sender as? UISwitch,
-            s.isOn == true {
-        }
-     
+    public struct Constants {
+        public static let cellReuseIdentifier: String = "FeedOptionCell"
     }
-    
-    
+
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var iconImageView: UIImageView!
+    @IBOutlet weak var `switch`: UISwitch!
+
+    @IBAction func changePinCode(_ sender: Any) {
+        if let nonNilIndexPath = indexPath {
+            delegate?.didChangedSwitch(at: nonNilIndexPath)
+        }
+    }
+
+    weak var delegate: FeedOptionCellDelegate?
+    var isToggable: Bool? {
+        didSet {
+            self.switch.isHidden = !(isToggable ?? true)
+        }
+    }
+    var indexPath: IndexPath?
 }

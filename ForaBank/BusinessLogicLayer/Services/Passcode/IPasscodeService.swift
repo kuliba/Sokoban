@@ -10,6 +10,7 @@ import Foundation
 
 protocol IPasscodeService: class {
     var isPasscodeSetted: Bool { get }
+    var allowedPasscode: Bool { get }
 
     func showPasscodeScreen()
     func cancelPasscodeAuth()

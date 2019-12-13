@@ -32,6 +32,7 @@ class SettingsStorage: ISettingsStorage {
     public func setIsSetPasscode(_ isSet: Bool) {
         userDefaults.setIsSetPasscode(isSet)
     }
+
     public func isSetPasscode() -> Bool {
         return userDefaults.isSetPasscode()
     }
@@ -40,7 +41,7 @@ class SettingsStorage: ISettingsStorage {
         setIsSetPasscode(registrationSettings.allowPasscode)
         setAllowedBiometricSignIn(allowed: registrationSettings.allowBiometric)
     }
-    
+
     public func invalidateUserSettings() {
         userDefaults.invalidateUserSettings()
     }

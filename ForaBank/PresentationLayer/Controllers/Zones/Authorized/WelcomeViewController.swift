@@ -18,7 +18,7 @@ class WelcomeViewController: UIViewController, StoreSubscriber {
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var greetingLabel: UILabel!
     @IBOutlet weak var nameLabel: UILabel!
-
+    
     var timerMin: Timer?
     var timerMax: Timer?
 
