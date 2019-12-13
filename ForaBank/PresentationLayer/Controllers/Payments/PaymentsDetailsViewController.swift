@@ -118,9 +118,7 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber, UITextFi
     
     }
     
-
-    
-        
+  
     let taskTextFieldlimitLength = 9
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {

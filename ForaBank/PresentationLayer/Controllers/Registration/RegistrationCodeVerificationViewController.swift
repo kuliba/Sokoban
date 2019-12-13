@@ -51,6 +51,10 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
         }
     }
 
+    
+    
+    
+    
     @IBAction func authContinue(_ sender: Any) {
         view.endEditing(true)
         foraPreloader.isHidden = false
@@ -75,7 +79,6 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
             }
         }
     }
-
     @IBAction func resetPasswordCheckCode(_ sender: Any) {
         view.endEditing(true)
         foraPreloader.isHidden = false
@@ -361,6 +364,8 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
 
 // MARK: - Private methods
 extension RegistrationCodeVerificationViewController: UITextFieldDelegate {
+    
+        
     func addGradientLayerView() {
         gradientView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         let gradientLayer = CAGradientLayer()
@@ -411,7 +416,10 @@ extension RegistrationCodeVerificationViewController: UITextFieldDelegate {
 //        containerView.addSubview(pageControl)
     }
 
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+      
+        
         let set = CharacterSet.decimalDigits
         if (string.rangeOfCharacter(from: set.inverted) != nil) {
             return false
@@ -420,6 +428,11 @@ extension RegistrationCodeVerificationViewController: UITextFieldDelegate {
         let count = text.count + string.count - range.length
         continueButton?.isEnabled = count >= 6
         continueButton?.alpha = (count >= 6) ? 1 : 0.25
+//        if  textField.text!.count >= 5{
+//            let tap: UILongPressGestureRecognizer = UILongPressGestureRecognizer()
+//            self.authContinue(tap)
+//        }
         return true
     }
+    
 }
