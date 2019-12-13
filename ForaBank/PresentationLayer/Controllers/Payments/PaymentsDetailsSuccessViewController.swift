@@ -43,11 +43,11 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
     // MARK: - Lifecycle
 
     func setSource(config: Any?, value: Any?) {
-        switch (config, value) {
-        case (is PaymentOptionsPagerItem, let destinationOption as PaymentOption):
-            cardNameLabel.text = destinationOption.name
-            cardSumLabel.text = "\(String(destinationOption.value)) ₽"
-            cardNumberLabel.text = destinationOption.maskedNumber
+        switch value {
+        case let sourceOption as PaymentOption:
+            cardNameLabel.text = sourceOption.name
+            cardSumLabel.text = "\(String(sourceOption.value)) ₽"
+            cardNumberLabel.text = sourceOption.maskedNumber
         default:
             break
         }
