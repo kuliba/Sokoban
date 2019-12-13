@@ -29,8 +29,6 @@ struct PaymentOption: IPickerItem, IPresentationModel {
     }
 
     var itemType: PickerItemType
-
-
     let id: Double
     let name: String
     var type: RemittanceOptionViewType
@@ -38,8 +36,9 @@ struct PaymentOption: IPickerItem, IPresentationModel {
     let number: String
     let maskedNumber: String
     let provider: String?
-
-    init(id: Double, name: String, type: PickerItemType, sum: Double, number: String, maskedNumber: String, provider: String) {
+    let productType: ProductType
+    
+    init(id: Double, name: String, type: PickerItemType, sum: Double, number: String, maskedNumber: String, provider: String, productType: ProductType) {
         self.id = id
         self.name = name
         self.sum = sum
@@ -48,6 +47,7 @@ struct PaymentOption: IPickerItem, IPresentationModel {
         self.type = .custom
         self.provider = provider
         self.itemType = type
+        self.productType = productType
     }
 
     init(product: IProduct) {
@@ -58,12 +58,28 @@ struct PaymentOption: IPickerItem, IPresentationModel {
         maskedNumber = product.maskedNumber
         provider = nil
         type = .custom
+
         switch product {
         case is Card, is Deposit, is Account:
             itemType = .paymentOption
             break
         default:
             itemType = .plain
+            break
+        }
+        
+        switch product {
+        case is Card:
+            productType = .card
+            break
+        case is Deposit:
+            productType = .deposit
+            break
+        case is Account:
+            productType = .account
+            break
+        default:
+            productType = .loan
             break
         }
     }

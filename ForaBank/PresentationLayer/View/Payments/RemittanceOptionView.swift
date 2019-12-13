@@ -223,12 +223,12 @@ class RemittanceOptionView: UIView {
     }
 
     override init(frame: CGRect) {
-        self.paymentOption = PaymentOption(id: 0, name: "", type: .paymentOption, sum: 0, number: "", maskedNumber: "", provider: "")
+        self.paymentOption = PaymentOption(id: 0, name: "", type: .paymentOption, sum: 0, number: "", maskedNumber: "", provider: "", productType: .card)
         super.init(frame: frame)
     }
 
     required init?(coder aDecoder: NSCoder) {
-        self.paymentOption = PaymentOption(id: 0, name: "", type: .paymentOption, sum: 0, number: "", maskedNumber: "", provider: "")
+        self.paymentOption = PaymentOption(id: 0, name: "", type: .paymentOption, sum: 0, number: "", maskedNumber: "", provider: "", productType: .card)
         super.init(coder: aDecoder)
     }
 

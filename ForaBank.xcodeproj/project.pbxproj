@@ -123,6 +123,7 @@
 		09FC8FED215BB2B200A4694B /* ProfileMenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */; };
 		4678EF6D23952D8600E060BD /* IPasscodeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4678EF6C23952D8600E060BD /* IPasscodeService.swift */; };
 		4678EF6F23952D9800E060BD /* PasscodeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4678EF6E23952D9800E060BD /* PasscodeService.swift */; };
+		469ED82C23A43F15002C23F5 /* PaymentRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469ED82B23A43F15002C23F5 /* PaymentRequestHandler.swift */; };
 		46ADFD17239553D200492472 /* IRefresher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46ADFD16239553D200492472 /* IRefresher.swift */; };
 		46ADFD19239557A900492472 /* PasscodeServiceConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46ADFD18239557A900492472 /* PasscodeServiceConfigurator.swift */; };
 		46ADFD1B2395585900492472 /* PasscodeServiceInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46ADFD1A2395585900492472 /* PasscodeServiceInitializer.swift */; };
@@ -498,6 +499,7 @@
 		09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileMenuTableViewController.swift; sourceTree = "<group>"; };
 		4678EF6C23952D8600E060BD /* IPasscodeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPasscodeService.swift; sourceTree = "<group>"; };
 		4678EF6E23952D9800E060BD /* PasscodeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeService.swift; sourceTree = "<group>"; };
+		469ED82B23A43F15002C23F5 /* PaymentRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentRequestHandler.swift; sourceTree = "<group>"; };
 		46ADFD16239553D200492472 /* IRefresher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IRefresher.swift; sourceTree = "<group>"; };
 		46ADFD18239557A900492472 /* PasscodeServiceConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeServiceConfigurator.swift; sourceTree = "<group>"; };
 		46ADFD1A2395585900492472 /* PasscodeServiceInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeServiceInitializer.swift; sourceTree = "<group>"; };
@@ -1434,6 +1436,7 @@
 				BD20837C2360AD420010E03C /* INetworkManager.swift */,
 				BD20834C23609A670010E03C /* NetworkManager.swift */,
 				BD20837A2360A6410010E03C /* API */,
+				469ED82B23A43F15002C23F5 /* PaymentRequestHandler.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -2097,6 +2100,7 @@
 				BDFE5D982334C3300027A716 /* IProduct.swift in Sources */,
 				96B0E5E4238D16460045FE7A /* ServiceBest2Pay.swift in Sources */,
 				96094AF42319441600A80412 /* SettingsViewController.swift in Sources */,
+				469ED82C23A43F15002C23F5 /* PaymentRequestHandler.swift in Sources */,
 				09C7C33D2175FADE000EE472 /* DepositsHistoryHeader.swift in Sources */,
 				BDB6B0132326A9E00006A534 /* PasscodeSingUpReducer.swift in Sources */,
 				BDB823A423841EE300030B5F /* ProductsModuleInitializer.swift in Sources */,

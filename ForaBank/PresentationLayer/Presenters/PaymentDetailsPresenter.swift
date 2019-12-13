@@ -94,7 +94,7 @@ extension PaymentDetailsPresenter: PaymentsDetailsViewControllerDelegate {
 private extension PaymentDetailsPresenter {
     func preparePayment() {
 
-        guard let amount = self.amount else {
+        guard let amount = self.amount, let nonNilsourcePaymentOption = sourcePaymentOption, let nonNilDestinaionPaymentOption = destinaionPaymentOption else {
             return
         }
         delegate?.didUpdate(isLoading: true, canAskFee: canAskFee, canMakePayment: canMakePayment)
@@ -106,19 +106,8 @@ private extension PaymentDetailsPresenter {
             self?.delegate?.didUpdate(isLoading: false, canAskFee: canAskFee, canMakePayment: canMakePayment)
             self?.delegate?.didFinishPreparation(success: success)
         }
-
-        switch (sourcePaymentOption, destinaionPaymentOption) {
-        case (.option(let sourceOption), .option(let destinationOption)):
-            NetworkManager.shared().prepareCard2Card(from: sourceOption.number, to: destinationOption.number, amount: amount, completionHandler: completion)
-            break
-        case (.option(let sourceOption), .phoneNumber(let phoneNumber)):
-            NetworkManager.shared().prepareCard2Phone(from: sourceOption.number, to: phoneNumber, amount: amount, completionHandler: completion)
-            break
-        case (.option(let sourceOption), .cardNumber(let stringNumber)), (.option(let sourceOption), .accountNumber(let stringNumber)):
-            NetworkManager.shared().prepareCard2Card(from: sourceOption.number, to: stringNumber, amount: amount, completionHandler: completion)
-            break
-        default:
-            break
-        }
+        
+        let handler = PaymentRequestHandler(amount: amount, completion: completion)
+        handler.preparePayment(sourcePaymentOption: nonNilsourcePaymentOption, destinaionPaymentOption: nonNilDestinaionPaymentOption)
     }
 }

@@ -95,7 +95,7 @@ class PaymentServices: IPaymetsApi {
             NetworkManager.shared().getCardList { (success, cards) in
                 if success, let nonNilCards = cards {
                     let options = nonNilCards.compactMap({ (card) -> PaymentOption? in
-                        return PaymentOption(id: card.id, name: card.name ?? "", type: .paymentOption, sum: card.balance, number: card.number, maskedNumber: card.maskedNumber, provider: card.type?.rawValue ?? "")
+                        return PaymentOption(id: card.id, name: card.name ?? "", type: .paymentOption, sum: card.balance, number: card.number, maskedNumber: card.maskedNumber, provider: card.type?.rawValue ?? "", productType: .card)
                     })
                     paymentOptions.append(contentsOf: options)
                 }
@@ -107,7 +107,7 @@ class PaymentServices: IPaymetsApi {
             NetworkManager.shared().getDepos { (success, deposits) in
                 if success, let nonNilDeposits = deposits {
                     let options = nonNilDeposits.compactMap({ (deposit) -> PaymentOption? in
-                        return PaymentOption(id: deposit.id, name: deposit.productName, type: .paymentOption, sum: deposit.balance, number: deposit.accountNumber, maskedNumber: deposit.accountNumber, provider: deposit.productName)
+                        return PaymentOption(id: deposit.id, name: deposit.productName, type: .paymentOption, sum: deposit.balance, number: deposit.accountNumber, maskedNumber: deposit.accountNumber, provider: deposit.productName, productType: .account)
                     })
                     paymentOptions.append(contentsOf: options)
                 }
@@ -156,7 +156,44 @@ class PaymentServices: IPaymetsApi {
                 }
         }
     }
+    
+    func prepareCard2Account(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void) {
+        let headers = NetworkManager.shared().headers
+        let parameters: [String: AnyObject] = [
+            "payeePhone": destinationNumber as AnyObject,
+            "payerCardNumber": sourceNumber as AnyObject,
+            "amount": amount as AnyObject
+        ]
 
+        Alamofire.request(Host.shared.apiBaseURL + "/rest/prepareCard2Account", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+            .validate(statusCode: MultiRange(200..<300, 401..<402))
+            .validate(contentType: ["application/json"])
+            .responseJSON { response in
+
+                if let json = response.result.value as? Dictionary<String, Any>,
+                    let result = json["result"] as? String,
+                    result == "ERROR" {
+                    print("errorMessage")
+                    completionHandler(false, nil)
+                    return
+                }
+
+                switch response.result {
+                case .success:
+                    if let json = response.result.value as? Dictionary<String, Any>, let token = json["result"] as? String {
+                        completionHandler(true, token)
+                    } else {
+                        print("rest/prepareCard2Account cant parse json \(String(describing: response.result.value))")
+                        completionHandler(false, nil)
+                    }
+
+                case .failure(let error):
+                    print("rest/prepareCard2Account \(error)")
+                    completionHandler(false, nil)
+                }
+        }
+    }
+    
     func prepareCard2Phone(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void) {
         let headers = NetworkManager.shared().headers
         let parameters: [String: AnyObject] = [
@@ -194,6 +231,117 @@ class PaymentServices: IPaymetsApi {
         }
     }
 
+    func prepareAccount2Account(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void) {
+        let headers = NetworkManager.shared().headers
+        let parameters: [String: AnyObject] = [
+            "payeePhone": destinationNumber as AnyObject,
+            "payerCardNumber": sourceNumber as AnyObject,
+            "amount": amount as AnyObject
+        ]
+
+        Alamofire.request(Host.shared.apiBaseURL + "/rest/prepareAccount2Account", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+            .validate(statusCode: MultiRange(200..<300, 401..<402))
+            .validate(contentType: ["application/json"])
+            .responseJSON { response in
+
+                if let json = response.result.value as? Dictionary<String, Any>,
+                    let result = json["result"] as? String,
+                    result == "ERROR" {
+                    print("errorMessage")
+                    completionHandler(false, nil)
+                    return
+                }
+
+                switch response.result {
+                case .success:
+                    if let json = response.result.value as? Dictionary<String, Any>, let token = json["result"] as? String {
+                        completionHandler(true, token)
+                    } else {
+                        print("rest/prepareAccount2Account cant parse json \(String(describing: response.result.value))")
+                        completionHandler(false, nil)
+                    }
+
+                case .failure(let error):
+                    print("rest/prepareAccount2Account \(error)")
+                    completionHandler(false, nil)
+                }
+        }
+    }
+    
+    func prepareAccount2Card(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void) {
+        let headers = NetworkManager.shared().headers
+        let parameters: [String: AnyObject] = [
+            "payeePhone": destinationNumber as AnyObject,
+            "payerCardNumber": sourceNumber as AnyObject,
+            "amount": amount as AnyObject
+        ]
+
+        Alamofire.request(Host.shared.apiBaseURL + "/rest/prepareAccount2Card", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+            .validate(statusCode: MultiRange(200..<300, 401..<402))
+            .validate(contentType: ["application/json"])
+            .responseJSON { response in
+
+                if let json = response.result.value as? Dictionary<String, Any>,
+                    let result = json["result"] as? String,
+                    result == "ERROR" {
+                    print("errorMessage")
+                    completionHandler(false, nil)
+                    return
+                }
+
+                switch response.result {
+                case .success:
+                    if let json = response.result.value as? Dictionary<String, Any>, let token = json["result"] as? String {
+                        completionHandler(true, token)
+                    } else {
+                        print("rest/prepareAccount2Card cant parse json \(String(describing: response.result.value))")
+                        completionHandler(false, nil)
+                    }
+
+                case .failure(let error):
+                    print("rest/prepareAccount2Card \(error)")
+                    completionHandler(false, nil)
+                }
+        }
+    }
+    
+    func prepareAccount2Phone(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void) {
+        let headers = NetworkManager.shared().headers
+        let parameters: [String: AnyObject] = [
+            "payeePhone": destinationNumber as AnyObject,
+            "payerCardNumber": sourceNumber as AnyObject,
+            "amount": amount as AnyObject
+        ]
+
+        Alamofire.request(Host.shared.apiBaseURL + "/rest/prepareAccount2Phone", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+            .validate(statusCode: MultiRange(200..<300, 401..<402))
+            .validate(contentType: ["application/json"])
+            .responseJSON { response in
+
+                if let json = response.result.value as? Dictionary<String, Any>,
+                    let result = json["result"] as? String,
+                    result == "ERROR" {
+                    print("errorMessage")
+                    completionHandler(false, nil)
+                    return
+                }
+
+                switch response.result {
+                case .success:
+                    if let json = response.result.value as? Dictionary<String, Any>, let token = json["result"] as? String {
+                        completionHandler(true, token)
+                    } else {
+                        print("rest/prepareAccount2Phone cant parse json \(String(describing: response.result.value))")
+                        completionHandler(false, nil)
+                    }
+
+                case .failure(let error):
+                    print("rest/prepareAccount2Phone \(error)")
+                    completionHandler(false, nil)
+                }
+        }
+    }
+    
     func makeCard2Card(code: String, completionHandler: @escaping (Bool) -> Void) {
         let headers = NetworkManager.shared().headers
         let parameters: [String: AnyObject] = [

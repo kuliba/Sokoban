@@ -308,6 +308,22 @@ extension NetworkManager: IProductsApi {
 //MARK: - Payments
 
 extension NetworkManager: IPaymetsApi {
+    func prepareCard2Account(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void) {
+        paymentServices.prepareCard2Account(from: sourceNumber, to: destinationNumber, amount: amount, completionHandler: completionHandler)
+    }
+    
+    func prepareAccount2Phone(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void) {
+        paymentServices.prepareAccount2Phone(from: sourceNumber, to: destinationNumber, amount: amount, completionHandler: completionHandler)
+    }
+    
+    func prepareAccount2Card(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void) {
+        paymentServices.prepareAccount2Card(from: sourceNumber, to: destinationNumber, amount: amount, completionHandler: completionHandler)
+    }
+    
+    func prepareAccount2Account(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void) {
+        paymentServices.prepareAccount2Account(from: sourceNumber, to: destinationNumber, amount: amount, completionHandler: completionHandler)
+    }
+    
     func allPaymentOptions(completionHandler: @escaping (Bool, [PaymentOption]?) -> Void) {
         paymentServices.allPaymentOptions(completionHandler: completionHandler)
     }
