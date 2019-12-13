@@ -13,7 +13,6 @@ import ReSwift
 
 class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
 
-    // MARK: - Properties
     @IBOutlet weak var arrowImageView: UIImageView!
     @IBOutlet weak var returnButton: ButtonRounded!
 
@@ -26,15 +25,53 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
     @IBOutlet weak var destinationName: UILabel!
     @IBOutlet weak var destinationNumber: UILabel!
     @IBOutlet weak var destinationSum: UILabel!
-    var sourceConfigurations: [ICellConfigurator]?
-       var destinationConfigurations: [ICellConfigurator]?
+
     // MARK: - Actions
+
     @IBAction func returnButtonClicked(_ sender: Any) {
         dismissToRootViewController()
     }
-    private let sourceProvider = PaymentOptionCellProvider()
-       private let destinationProvider = PaymentOptionCellProvider()
+
+    // MARK: - Properties
+
+    var sourceConfig: Any?
+    var sourceValue: Any?
+    var destinationConfig: Any?
+    var destinationValue: Any?
+    var operationSum: String?
+
     // MARK: - Lifecycle
+
+    func setSource(config: Any?, value: Any?) {
+        switch (config, value) {
+        case (is PaymentOptionsPagerItem, let destinationOption as PaymentOption):
+            cardNameLabel.text = destinationOption.name
+            cardSumLabel.text = "\(String(destinationOption.value)) ₽"
+            cardNumberLabel.text = destinationOption.maskedNumber
+        default:
+            break
+        }
+    }
+
+    func setDestination(config: Any?, value: Any?) {
+        destinationSum.text = ""
+        destinationNumber.text = ""
+        switch (config, value) {
+        case (is PaymentOptionsPagerItem, let destinationOption as PaymentOption):
+            destinationName.text = (destinationOption.name)
+            destinationSum.text = "\(String(destinationOption.value)) ₽"
+            destinationNumber.text = destinationOption.maskedNumber
+        case (is CardNumberPagerItem, let destinationOption as String):
+            destinationName.text = destinationOption
+        case (is PhoneNumberPagerItem, let destinationOption as String):
+            destinationName.text = destinationOption
+        case (is AccountNumberPagerItem, let destinationOption as String):
+            destinationName.text = destinationOption
+        default:
+            break
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -44,7 +81,11 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
         returnButton.backgroundColor = .clear
         returnButton.layer.borderWidth = 1
         returnButton.layer.borderColor = UIColor.white.cgColor
-            }
+
+        setSource(config: sourceConfig, value: sourceValue)
+        setDestination(config: destinationConfig, value: destinationValue)
+        sumLabel.text = "\(String(describing: operationSum!)) ₽"
+    }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -60,7 +101,7 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
     }
 
     internal func newState(state: ProductState) {
-         //      defaultSourcePaymentOption = state.sourceOption
+        //      defaultSourcePaymentOption = state.sourceOption
         //       defaultDestinationPaymentOption = state.destinationOption
         //
         //        if (defaultSourcePaymentOption != nil) {
@@ -86,10 +127,10 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
         destinationSum.text = String(describing: destinationOption.value)
         destinationNumber.text = destinationOption.maskedNumber
 
-        sumLabel.text = "\(sum) ₽"
+//        sumLabel.text = "\(sum) ₽"
     }
 
-    // MARK: - Methods
+// MARK: - Methods
 
     func dismissToRootViewController() {
         if let first = presentingViewController,

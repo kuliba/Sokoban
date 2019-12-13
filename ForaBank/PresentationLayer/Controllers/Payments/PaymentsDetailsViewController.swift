@@ -72,6 +72,10 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
     var sourceConfigurations: [ICellConfigurator]?
     var destinationConfigurations: [ICellConfigurator]?
     var delegate: PaymentsDetailsViewControllerDelegate?
+    var sourceConfig: Any?
+    var sourceValue: Any?
+    var destinationConfig: Any?
+    var destinationValue: Any?
 
     var remittanceSourceView: RemittanceOptionView!
     var remittanceDestinationView: RemittanceOptionView!
@@ -117,6 +121,16 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
     internal func newState(state: ProductState) {
         //optionsTable.reloadData()
 //        setUpRemittanceViews()
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "fromPaymentToPaymentVerification", let destinationVC = segue.destination as? RegistrationCodeVerificationViewController {
+            destinationVC.sourceConfig = destinationConfig
+            destinationVC.sourceValue = sourceValue
+            destinationVC.destinationConfig = destinationConfig
+            destinationVC.destinationValue = destinationValue
+            destinationVC.operationSum = amountTextField.text
+        }
     }
 }
 
@@ -200,6 +214,8 @@ extension PaymentsDetailsViewController: ICellConfiguratorDelegate {
             default:
                 break
             }
+            self.sourceConfig = sourceConfig
+            self.sourceValue = value
         } else if let destinationConfig = destinationConfigurations?.filter({ $0 == configurator }).first {
             switch (destinationConfig, value) {
             case (is PaymentOptionsPagerItem, let destinationOption as PaymentOption):
@@ -217,6 +233,8 @@ extension PaymentsDetailsViewController: ICellConfiguratorDelegate {
             default:
                 break
             }
+            self.destinationConfig = destinationConfig
+            self.destinationValue = value
         }
     }
 }

@@ -22,10 +22,8 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
     @IBOutlet weak var centralView: UIView!
     @IBOutlet weak var header: UIView!
     @IBOutlet weak var activityIndicator: ActivityIndicatorView?
-    var operationSum: String?
     var segueId: String? = nil
-    var sourceConfigurations: [ICellConfigurator]?
-    var destinationConfigurations: [ICellConfigurator]?
+
     @IBOutlet weak var authForaPreloader: RefreshView!
     @IBOutlet weak var foraPreloader: RefreshView!
     let gradientView = UIView()
@@ -62,7 +60,7 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
             if success {
                 store.dispatch(finishVerification)
             } else {
-                 self?.foraPreloader?.isHidden = true
+                self?.foraPreloader?.isHidden = true
                 let alert = UIAlertController(title: "Неудача", message: "Неверный код", preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
                 alert.addAction(UIAlertAction(title: "Отменить", style: UIAlertAction.Style.default, handler: { (action) in
@@ -169,6 +167,12 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
             }
         }
     }
+
+    var sourceConfig: Any?
+    var sourceValue: Any?
+    var destinationConfig: Any?
+    var destinationValue: Any?
+    var operationSum: String?
 
     func newState(state: VerificationCodeState) {
         guard state.isShown == true else {
@@ -355,6 +359,13 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
         if let vc = segue.destination as? RegistrationFinishViewController {
             segueId = "finish"
             vc.segueId = segueId
+        }
+        if let destinationVC = segue.destination as? PaymentsDetailsSuccessViewController {
+            destinationVC.sourceConfig = destinationConfig
+            destinationVC.sourceValue = sourceValue
+            destinationVC.destinationConfig = destinationConfig
+            destinationVC.destinationValue = destinationValue
+            destinationVC.operationSum = operationSum
         }
     }
 }
