@@ -9,128 +9,19 @@
 import UIKit
 import ReSwift
 
-protocol IPaymetsApiC {
-    func getPaymentsList(completionHandler: @escaping (_ success: Bool, _ payments: [Operations]?) -> Void)
-    func allPaymentOptions(completionHandler: @escaping (Bool, [PaymentOption]?) -> Void)
-    func prepareCard2Card(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void)
-    func prepareCard2Phone(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void)
-    func makeCard2Card(code: String, completionHandler: @escaping (Bool) -> Void)
-}
 
-
-
-class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber, IPaymentDetailsPresenter,PaymentDetailsPresenterDelegate, PaymentsDetailsViewControllerDelegate {
-    func didUpdate(isLoading: Bool, canAskFee: Bool, canMakePayment: Bool) {
-        
-    }
-    
-    func didFinishPreparation(success: Bool) {
-        
-    }
+class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber{
     
     weak var delegate: PaymentDetailsPresenterDelegate?
 
-    private var sourcePaymentOption: PaymentOptionType? {
-        didSet {
-            onSomeValueUpdated()
-        }
-    }
-    private var destinaionPaymentOption: PaymentOptionType? {
-        didSet {
-            onSomeValueUpdated()
-        }
-    }
-    private var amount: Double? {
-        didSet {
-            onSomeValueUpdated()
-        }
-    }
-    private func onSomeValueUpdated() {
-        guard let destination = destinaionPaymentOption, let source = sourcePaymentOption else {
-            return
-        }
 
-       
-
-        let canStartWithOptions = amount != nil
-        canAskFee = canStartWithOptions
-
-        delegate?.didUpdate(isLoading: isLoading, canAskFee: canAskFee, canMakePayment: canMakePayment)
-    }
-    func preparePayment() {
-
-        guard let amount = self.amount else {
-            return
-        }
-        delegate?.didUpdate(isLoading: true, canAskFee: canAskFee, canMakePayment: canMakePayment)
-
-        let completion: (Bool, String?) -> Void = { [weak self] (success, token) in
-            guard let canAskFee = self?.canAskFee, let canMakePayment = self?.canMakePayment else {
-                return
-            }
-            self?.delegate?.didUpdate(isLoading: false, canAskFee: canAskFee, canMakePayment: canMakePayment)
-            self?.delegate?.didFinishPreparation(success: success)
-        }
-
-        switch (sourcePaymentOption, destinaionPaymentOption) {
-        case (.option(let sourceOption), .option(let destinationOption)):
-            NetworkManager.shared().prepareCard2Card(from: sourceOption.number, to: destinationOption.number, amount: amount, completionHandler: completion)
-            break
-        case (.option(let sourceOption), .phoneNumber(let phoneNumber)):
-            NetworkManager.shared().prepareCard2Phone(from: sourceOption.number, to: phoneNumber, amount: amount, completionHandler: completion)
-            break
-        case (.option(let sourceOption), .cardNumber(let stringNumber)), (.option(let sourceOption), .accountNumber(let stringNumber)):
-            NetworkManager.shared().prepareCard2Card(from: sourceOption.number, to: stringNumber, amount: amount, completionHandler: completion)
-            break
-        default:
-            break
-        }
-        
-    }
 
     private var isLoading = false
     private var canAskFee = false
     private var canMakePayment = false
-
-  
-    
-  
-  
-    
-    func didChangeSource(paymentOption: PaymentOptionType) {
-          print(paymentOption)
-          sourcePaymentOption = paymentOption
-      }
-
-      func didChangeDestination(paymentOption: PaymentOptionType) {
-          print(paymentOption)
-          destinaionPaymentOption = paymentOption
-      }
-
-      func didChangeAmount(amount: Double?) {
-          self.amount = amount
-      }
-
-      func didPressPrepareButton() {
-          preparePayment()
-      }
-
-      func didPressPaymentButton() {
-
-      }
-    
-    
-    
-    
-    
-    func prepareCard2Phone(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void){
-        return
-    }
     
     
     var delegatePresent: PaymentDetailsPresenterDelegate?
-    
-
     // MARK: - Properties
     @IBOutlet weak var arrowImageView: UIImageView!
     @IBOutlet weak var returnButton: ButtonRounded!

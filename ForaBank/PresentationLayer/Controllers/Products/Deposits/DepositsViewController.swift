@@ -186,16 +186,19 @@ extension DepositsViewController: UITableViewDataSource, UITableViewDelegate {
         return cell
     }
 
+    public var screenHeight: CGFloat {
+        return UIScreen.main.bounds.height
+    }
+    
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if section == 0 {
-
+        
             let footerView = UIView(frame: CGRect(x: tableView.frame.minX + 20, y: 0, width: tableView.frame.width - 40, height: 95))
             let doneButton = UIButton(type: .system)
       
             doneButton.addTarget(nil, action: #selector(CarouselViewController.createProductButtonClicked), for: .touchUpInside)
 
             
-            doneButton.frame = CGRect(x: footerView.frame.minX, y: footerView.frame.minY + 15, width: footerView.frame.width, height: 45)
+        doneButton.frame = CGRect(x: footerView.frame.minX, y: screenHeight - (screenHeight/4.5), width: footerView.frame.width, height: 45)
 
             doneButton.setTitle("Открыть продукт", for: .normal)
 
@@ -209,11 +212,9 @@ extension DepositsViewController: UITableViewDataSource, UITableViewDelegate {
 
             doneButton.layer.cornerRadius = doneButton.frame.height / 2
 
-            footerView.addSubview(doneButton)
+            view.addSubview(doneButton)
             return footerView
-        }
-
-        return nil
+       
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

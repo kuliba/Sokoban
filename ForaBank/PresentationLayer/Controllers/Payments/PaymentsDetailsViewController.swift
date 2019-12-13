@@ -27,6 +27,7 @@ protocol PaymentsDetailsViewControllerDelegate {
 
 class PaymentsDetailsViewController: UIViewController, StoreSubscriber, UITextFieldDelegate {
 
+    
     // MARK: - Properties
     @IBOutlet weak var sourcePagerView: PagerView!
     @IBOutlet weak var destinationPagerView: PagerView!
@@ -53,6 +54,8 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber, UITextFi
        
     }
    
+
+    
     
     
     @IBAction func sendButtonClicked(_ sender: Any) {
@@ -89,6 +92,11 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber, UITextFi
     var selectedViewType: Bool = false //false - source; true - destination
     var activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
 
+ 
+       private let destinationProviderCardNumber = CardNumberCellProvider()
+       private let destinationProviderAccountNumber = AccountNumberCellProvider()
+       private let destinationProviderPhoneNumber = PhoneNumberCellProvider()
+    
 // MARK: - Lifecycle
 
 //    private let sourceProvider = PaymentOptionCellProvider()
