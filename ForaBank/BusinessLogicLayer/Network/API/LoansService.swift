@@ -13,20 +13,17 @@ import UIKit
 
 
 class LoansService: LoansServiceProtocol {
-
-
-
-    private let baseURLString: String
+    private let host: Host
     private var datedTransactions = [DatedTransactions]()
 
-    init(baseURLString: String) {
-        self.baseURLString = baseURLString
+    init(host: Host) {
+        self.host = host
     }
 
 
     func getLoans(headers: HTTPHeaders, completionHandler: @escaping (Bool, [Loan]?) -> Void) {
         var loans = [Loan]()
-        let url = baseURLString + "rest/getLoanList"
+        let url = host.apiBaseURL + "rest/getLoanList"
         Alamofire.request(url, method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])
@@ -60,7 +57,7 @@ class LoansService: LoansServiceProtocol {
                                 let principalDebt = original["principalDebt"] as? Double
                                 if principalDebt == 0 { continue }
                                 let userAnnual = original["userAnnual"] as? Double
-                                 let loanID = original["loanID"] as? Int
+                                let loanID = original["loanID"] as? Int
                                 let loan = Loan(
                                     Amount: Amount!,
                                     currencyCode: currencyCode, principalDebt: principalDebt, userAnnual: userAnnual, branchBrief: branchBrief, number: number, DateValue: dateValue, loanID: loanID!

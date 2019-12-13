@@ -14,16 +14,16 @@ import UIKit
 class DepositService: DepositsServiceProtocol {
 
 
-    private let baseURLString: String
+    private let host: Host
     private var datedTransactions = [DatedTransactions]()
 
-    init(baseURLString: String) {
-        self.baseURLString = baseURLString
+    init(host: Host) {
+        self.host = host
     }
 
     func getBonds(headers: HTTPHeaders, completionHandler: @escaping (Bool, [Deposit]?) -> Void) {
         var deposits = [Deposit]()
-        let url = baseURLString + "rest/getDepositList"
+        let url = host.apiBaseURL + "rest/getDepositList"
         Alamofire.request(url, method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])

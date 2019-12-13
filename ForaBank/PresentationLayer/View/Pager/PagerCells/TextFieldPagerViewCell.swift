@@ -9,8 +9,9 @@
 import UIKit
 import FSPagerView
 
-class TextFieldPagerViewCell: FSPagerViewCell,  IConfigurableCell, ContactsPickerDelegate {
+class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPickerDelegate {
 
+    @IBOutlet weak var scanButton: UIButton!
     @IBOutlet weak var buttonContactList: UIButton!
     @IBOutlet weak var leftButton: UIButton!
     @IBOutlet weak var textField: UITextField!
@@ -21,6 +22,10 @@ class TextFieldPagerViewCell: FSPagerViewCell,  IConfigurableCell, ContactsPicke
 
         let navigationController = UINavigationController(rootViewController: contactPickerScene)
         topMostVC()?.present(navigationController, animated: true, completion: nil)
+    }
+
+    @IBAction func scanButtonClicked(_ sender: UIButton) {
+        showScanCardController(delegate: self)
     }
 
     weak var delegate: ConfigurableCellDelegate?
@@ -44,6 +49,10 @@ class TextFieldPagerViewCell: FSPagerViewCell,  IConfigurableCell, ContactsPicke
 
     override func awakeFromNib() {
         super.awakeFromNib()
+
+        let placeholder = textField.placeholder
+        textField.attributedPlaceholder = NSAttributedString(string: placeholder ?? ""
+                                                             , attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray])
     }
 
     public func configure(provider: ICellProvider, delegate: ConfigurableCellDelegate) {
@@ -52,27 +61,28 @@ class TextFieldPagerViewCell: FSPagerViewCell,  IConfigurableCell, ContactsPicke
         guard let textInputCellProvider = provider as? ITextInputCellProvider else {
             return
         }
+
+        scanButton.isHidden = !textInputCellProvider.isScan
+        textField.text = ""
         formattingFunc = textInputCellProvider.formatted
         charactersMaxCount = textInputCellProvider.charactersMaxCount
 
-//        if textInputCellProvider.currentValue == nil {
-//            self.textField.reloadInputViews()
-//            textInputCellProvider.currentValue = textField.text
-//        }
         buttonContactList.isHidden = true
         if provider is PhoneNumberCellProvider {
             textField.text = "+7"
             buttonContactList.isHidden = false
-
         }
 
         leftButton.setImage(UIImage(named: textInputCellProvider.iconName), for: .normal)
 
         textField.delegate = self
-        textField.text = ""
         textField.placeholder = textInputCellProvider.placeholder
         textField.addTarget(self, action: #selector(reformatAsCardNumber), for: .editingChanged)
         textField.sendActions(for: .editingChanged)
+
+        let placeholder = textField.placeholder
+        textField.attributedPlaceholder = NSAttributedString(string: placeholder ?? ""
+                                                             , attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray])
     }
 }
 
@@ -109,5 +119,19 @@ extension TextFieldPagerViewCell: UITextFieldDelegate {
             textField.text = "\(numberFormatted)"
             delegate?.didInputPaymentValue(value: cleanNumberString(string: numberFormatted))
         }
+    }
+}
+
+extension TextFieldPagerViewCell: CardIOPaymentViewControllerDelegate {
+    func userDidCancel(_ paymentViewController: CardIOPaymentViewController!) {
+        paymentViewController.dismiss(animated: true, completion: nil)
+    }
+
+    func userDidProvide(_ cardInfo: CardIOCreditCardInfo!, in paymentViewController: CardIOPaymentViewController!) {
+        if let info = cardInfo {
+            textField.text = info.cardNumber
+            textField.sendActions(for: .editingChanged)
+        }
+        paymentViewController.dismiss(animated: true, completion: nil)
     }
 }

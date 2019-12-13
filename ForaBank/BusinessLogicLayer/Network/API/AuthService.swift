@@ -10,20 +10,17 @@ import Foundation
 import Alamofire
 import RMMapper
 class AuthService: AuthServiceProtocol {
-    private let baseURLString: String
 
     private var isSigned: Bool = false
     private var login: String? = nil
     private var password: String? = nil
     private var profile: Profile? = nil
     private var myContext: Bool = false
+    private let host: Host
 
-
-
-    init(baseURLString: String) {
-        self.baseURLString = baseURLString
+    init(host: Host) {
+        self.host = host
     }
-
 
     func isSignedIn(completionHandler: @escaping (_ success: Bool) -> Void) {
         completionHandler(isSigned)
@@ -31,9 +28,8 @@ class AuthService: AuthServiceProtocol {
     }
 
     func csrf(headers: HTTPHeaders, completionHandler: @escaping (_ success: Bool, _ headers: HTTPHeaders?) -> Void) {
-        let url = baseURLString + "csrf"
+        let url = Host.shared.apiBaseURL + "csrf"
         Alamofire.request(url, headers: headers)
-            .validate(statusCode: MultiRange(200..<300, 401..<402))
             .responseJSON { [unowned self] response in
                 if let json = response.result.value as? Dictionary<String, Any>,
                     let errorMessage = json["errorMessage"] as? String {
@@ -71,7 +67,7 @@ class AuthService: AuthServiceProtocol {
     }
 
     func loginDo(headers: HTTPHeaders, login: String, password: String, completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void) {
-        let url = baseURLString + "login.do"
+        let url = Host.shared.apiBaseURL + "login.do"
         let parameters: [String: AnyObject] = [
             "appId": "AND" as AnyObject,
             "fingerprint": false as AnyObject,
@@ -108,7 +104,7 @@ class AuthService: AuthServiceProtocol {
         }
     }
     func prepareResetPassword(headers: HTTPHeaders, login: String, completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void) {
-        let url = baseURLString + "prepareResetPassword"
+        let url = Host.shared.apiBaseURL + "prepareResetPassword"
         let parameters: [String: AnyObject] = [
             "appId": "AND" as AnyObject,
             "fingerprint": false as AnyObject,
@@ -144,7 +140,7 @@ class AuthService: AuthServiceProtocol {
         }
     }
     func newPasswordReset(headers: HTTPHeaders, password: String, completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void) {
-        let url = baseURLString + "resetPassword"
+        let url = Host.shared.apiBaseURL + "resetPassword"
         let parameters: [String: AnyObject] = [
             "appId": "AND" as AnyObject,
             "fingerprint": false as AnyObject,
@@ -181,7 +177,7 @@ class AuthService: AuthServiceProtocol {
     }
 
     func checkVerificationCode(headers: HTTPHeaders, code: String, completionHandler: @escaping (_ success: Bool) -> Void) {
-        let url = baseURLString + "verify/checkVerificationCode"
+        let url = Host.shared.apiBaseURL + "verify/checkVerificationCode"
         let parameters: [String: AnyObject] = [
             "appId": "AND" as AnyObject,
             "fingerprint": false as AnyObject,
@@ -219,7 +215,7 @@ class AuthService: AuthServiceProtocol {
         }
     }
     func checkCodeResetPassword(headers: HTTPHeaders, code: String, completionHandler: @escaping (_ success: Bool) -> Void) {
-        let url = baseURLString + "resetPassword"
+        let url = Host.shared.apiBaseURL + "resetPassword"
         let parameters: [String: AnyObject] = [
             "appId": "AND" as AnyObject,
             "fingerprint": false as AnyObject,
@@ -269,7 +265,7 @@ class AuthService: AuthServiceProtocol {
             return
         }
 
-        let url = baseURLString + "rest/getPerson"
+        let url = Host.shared.apiBaseURL + "rest/getPerson"
         Alamofire.request(url, method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<406))
             .responseJSON { [unowned self] response in

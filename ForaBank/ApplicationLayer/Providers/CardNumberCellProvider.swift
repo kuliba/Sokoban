@@ -9,13 +9,15 @@
 import Foundation
 
 class CardNumberCellProvider: NSObject, ITextInputCellProvider {
-    let iconName = "payments_transfer_between-accounts"
-    let placeholder = "Введите номер карты"
+
+    let iconName = "feed_option_cards"
+    let placeholder = "По номеру карты"
     let charactersMaxCount = 19
+    let keyboardType: UIKeyboardType = .numberPad
+    let isScan = true
 
     var currentValue: IPresentationModel?
     var isLoading: Bool = false
-    var textField: String = ""
 
     func getData(completion: ([IPresentationModel]) -> ()) {
 

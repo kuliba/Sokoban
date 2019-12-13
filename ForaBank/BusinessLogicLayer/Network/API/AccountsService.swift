@@ -14,17 +14,17 @@ import UIKit
 
 class AccountsService: AccountsServiceProtocol {
 
-    private let baseURLString: String
+    private let host: Host
     private var datedTransactions = [DatedTransactions]()
 
-    init(baseURLString: String) {
-        self.baseURLString = baseURLString
+    init(host: Host) {
+        self.host = host
     }
 
 
     func getDepos(headers: HTTPHeaders, completionHandler: @escaping (Bool, [Account]?) -> Void) {
         var accounts = [Account]()
-        let url = baseURLString + "rest/getDepositList"
+        let url = host.apiBaseURL + "rest/getDepositList"
         Alamofire.request(url, method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])

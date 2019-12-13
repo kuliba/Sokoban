@@ -11,16 +11,16 @@ import Alamofire
 
 class CardService: CardServiceProtocol {
 
-    private let baseURLString: String
+    private let host: Host
     private var datedTransactions = [DatedTransactions]()
 
-    init(baseURLString: String) {
-        self.baseURLString = baseURLString
+    init(host: Host) {
+        self.host = host
     }
 
     func getCardList(headers: HTTPHeaders, completionHandler: @escaping (Bool, [Card]?) -> Void) {
         var cards = [Card]()
-        let url = baseURLString + "rest/getCardList"
+        let url = host.apiBaseURL + "rest/getCardList"
 
         Alamofire.request(url, method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))

@@ -9,12 +9,13 @@
 import Foundation
 
 class AlertService: IAlertService {
+
     static let shared = AlertService()
 
     private(set) var alerts = [UIAlertController]()
     private(set) var isAlertShown = false
 
-    func show(title: String?, message: String?, cancelButtonTitle: String?, okButtonTitle: String?, cancelCompletion: ((_ action: UIAlertAction) -> Void)?, okCompletion: ((_ action: UIAlertAction) -> Void)?) {
+    public func show(title: String?, message: String?, cancelButtonTitle: String?, okButtonTitle: String?, cancelCompletion: ((_ action: UIAlertAction) -> Void)?, okCompletion: ((_ action: UIAlertAction) -> Void)?) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
 
         if isDuplicated(alert: alert) {
@@ -46,7 +47,41 @@ class AlertService: IAlertService {
         alerts.append(alert)
     }
 
-    func removeAllAlerts() {
+    public func show(title: String?, message: String?, cancelButtonTitle: String?, okButtonTitles: [String?], cancelCompletion: ((UIAlertAction) -> Void)?, okCompletions: [((UIAlertAction) -> Void)?]) {
+
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+
+        if isDuplicated(alert: alert) {
+            return
+        }
+
+        for title in okButtonTitles {
+            let index = okButtonTitles.firstIndex(of: title)!
+            let okAction = UIAlertAction(title: title, style: .default, handler: { [weak self](_ action: UIAlertAction) -> Void in
+                alert.dismiss(animated: true, completion: nil)
+                okCompletions[index]!(action)
+                self?.handleAlertDissmissing()
+            })
+            alert.addAction(okAction)
+        }
+
+        if let title = cancelButtonTitle {
+            let cancelAction = UIAlertAction(title: title, style: .cancel, handler: { [weak self](_ action: UIAlertAction) -> Void in
+                alert.dismiss(animated: true, completion: nil)
+                cancelCompletion?(action)
+                self?.handleAlertDissmissing()
+            })
+            alert.addAction(cancelAction)
+        }
+
+        if isAlertShown == false {
+            topMostVC()?.present(alert, animated: true, completion: nil)
+        }
+        isAlertShown = true
+        alerts.append(alert)
+    }
+
+    public func removeAllAlerts() {
         if let alert = alerts.first {
             alert.dismiss(animated: false, completion: nil)
         }
