@@ -40,14 +40,14 @@ class PaymentRequestHandler {
         guard let nonNilAmount = amount, let nonNilCompletion = completion else {
             return
         }
-        switch (sourceOption.productType, destinationOption.type) {
+        switch (sourceOption.productType, destinationOption.productType) {
         case (.card, .card):
             NetworkManager.shared().prepareCard2Card(from: sourceOption.number, to: destinationOption.number, amount: nonNilAmount, completionHandler: nonNilCompletion)
             break
-        case (.card, .safeDeposit):
+        case (.card, .account):
             NetworkManager.shared().prepareCard2Account(from: sourceOption.number, to: destinationOption.number, amount: nonNilAmount, completionHandler: nonNilCompletion)
             break
-        case (.account, .safeDeposit):
+        case (.account, .account):
             NetworkManager.shared().prepareAccount2Account(from: sourceOption.number, to: destinationOption.number, amount: nonNilAmount, completionHandler: nonNilCompletion)
             break
         case (.account, .card):
