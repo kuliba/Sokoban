@@ -129,21 +129,21 @@ class ProductManagementViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.item == 1 {
+        if indexPath.item == 0 {
             guard let product = self.product else {
                 return
             }
             let paymentOption = PaymentOption(product: product)
             store.dispatch(startPayment(sourceOption: paymentOption, destionationOption: nil))
             return
-        } else if indexPath.item == 3 {
+        } else if indexPath.item == 1 {
             guard let product = self.product else {
                 return
             }
             showShareScreen(textToShare: "Номер моей карты: \(product.number)")
             return
         }
-        else if indexPath.item == 5 {
+        else if indexPath.item == 2 {
 
             let alert = SCLAlertView()
             let txt = alert.addTextField("Введите название карты")
