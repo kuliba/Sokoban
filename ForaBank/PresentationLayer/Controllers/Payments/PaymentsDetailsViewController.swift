@@ -110,29 +110,39 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber, UITextFi
         super.viewDidLoad()
         setUpLayout()
         amountTextField.delegate = self
-        amountTextField.smartInsertDeleteType = UITextSmartInsertDeleteType.no
+     
         if let source = sourceConfigurations, let dest = destinationConfigurations {
             sourcePagerView.setConfig(config: source)
             destinationPagerView.setConfig(config: dest)
         }
+        
     
     }
     
   
-    let taskTextFieldlimitLength = 9
+    let taskTextFieldlimitLength = 11
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-         switch textField {
-         case textField:
-             guard let text = textField.text else { return true }
-             let newLength = text.count + string.count - range.length
-             return newLength <= taskTextFieldlimitLength 
+        let dotString = "."
+        let character = ""
+        let maxLength = 9
+                
+        if let text = textField.text{
+            textField.text = "\(text)"
             
-         default:
-             return true
-         }
-     }
-    
+            let isDeleteKey = string.isEmpty
+            if !isDeleteKey {
+                if text.contains(dotString) {
+                    if text.components(separatedBy: dotString)[1].count == 2 || string == "."  {
+                    return false
+                    }
+                }
+            }
+        }
+        let currentString: NSString = textField.text! as NSString
+        let newString: NSString = currentString.replacingCharacters(in: range, with: string) as NSString
+        return newString.length <= maxLength
+    }
  
 
     override func viewDidDisappear(_ animated: Bool) {
