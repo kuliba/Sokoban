@@ -507,15 +507,6 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </view>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Введите данные карты Фора-Банка" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Cqa-4X-Hnr">
-                                                <rect key="frame" x="0.0" y="30" width="360" height="50"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="50" id="VMU-iw-GTg"/>
-                                                </constraints>
-                                                <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="14"/>
-                                                <color key="textColor" red="0.13725490200000001" green="0.13725490200000001" blue="0.13725490200000001" alpha="1" colorSpace="calibratedRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WCB-ji-wVM" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="272" width="360" height="53"/>
                                                 <color key="backgroundColor" red="0.91764705879999997" green="0.2666666667" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
@@ -537,6 +528,15 @@
                                                     <constraint firstAttribute="width" secondItem="Dd0-w7-5wN" secondAttribute="height" multiplier="1:1" id="wKx-gB-AlI"/>
                                                 </constraints>
                                             </view>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Введите данные карты Фора-Банка" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Cqa-4X-Hnr">
+                                                <rect key="frame" x="2" y="32" width="360" height="33"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="33" id="VMU-iw-GTg"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="14"/>
+                                                <color key="textColor" red="0.13725490200000001" green="0.13725490200000001" blue="0.13725490200000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
@@ -548,15 +548,15 @@
                                             <constraint firstAttribute="trailing" secondItem="dN6-Z6-uQv" secondAttribute="trailing" id="KY2-Zt-jjY"/>
                                             <constraint firstItem="Dd0-w7-5wN" firstAttribute="top" secondItem="WCB-ji-wVM" secondAttribute="top" id="P1d-bu-sVR"/>
                                             <constraint firstItem="dN6-Z6-uQv" firstAttribute="top" secondItem="Wup-aq-s6e" secondAttribute="bottom" constant="26" id="PFW-vN-FLz"/>
-                                            <constraint firstItem="Cqa-4X-Hnr" firstAttribute="leading" secondItem="GHX-YX-jgg" secondAttribute="leading" id="PaV-er-dcW"/>
+                                            <constraint firstItem="Cqa-4X-Hnr" firstAttribute="leading" secondItem="GHX-YX-jgg" secondAttribute="leading" constant="2" id="PaV-er-dcW"/>
                                             <constraint firstItem="7je-pp-Yfd" firstAttribute="top" secondItem="Wup-aq-s6e" secondAttribute="bottom" constant="26" id="Pm6-wJ-anZ"/>
-                                            <constraint firstAttribute="trailing" secondItem="Cqa-4X-Hnr" secondAttribute="trailing" id="S5q-id-MrB"/>
+                                            <constraint firstAttribute="trailing" secondItem="Cqa-4X-Hnr" secondAttribute="trailing" constant="-2" id="S5q-id-MrB"/>
                                             <constraint firstAttribute="trailing" secondItem="7je-pp-Yfd" secondAttribute="trailing" id="VoX-6h-WpM"/>
                                             <constraint firstItem="7je-pp-Yfd" firstAttribute="leading" secondItem="GHX-YX-jgg" secondAttribute="leading" id="W0W-fp-d7S"/>
                                             <constraint firstItem="enS-k7-M23" firstAttribute="top" secondItem="Wup-aq-s6e" secondAttribute="bottom" constant="26" id="bvO-jG-Bpb"/>
                                             <constraint firstItem="dN6-Z6-uQv" firstAttribute="leading" secondItem="GHX-YX-jgg" secondAttribute="leading" id="fZ9-JC-ZfX"/>
                                             <constraint firstItem="Wup-aq-s6e" firstAttribute="leading" secondItem="GHX-YX-jgg" secondAttribute="leading" constant="1" id="hJB-4M-xqC"/>
-                                            <constraint firstItem="Cqa-4X-Hnr" firstAttribute="top" secondItem="7je-pp-Yfd" secondAttribute="bottom" constant="-217" id="j5G-BR-pqe"/>
+                                            <constraint firstItem="Cqa-4X-Hnr" firstAttribute="top" secondItem="7je-pp-Yfd" secondAttribute="bottom" constant="-215" id="j5G-BR-pqe"/>
                                             <constraint firstItem="enS-k7-M23" firstAttribute="leading" secondItem="GHX-YX-jgg" secondAttribute="leading" id="jOP-FQ-JO2"/>
                                             <constraint firstItem="Dd0-w7-5wN" firstAttribute="height" secondItem="WCB-ji-wVM" secondAttribute="height" id="jpV-LX-jva"/>
                                             <constraint firstAttribute="trailing" secondItem="Wup-aq-s6e" secondAttribute="trailing" constant="1" id="rVh-9k-fqN"/>
@@ -655,7 +655,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8Ng-Jk-fCg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2737" y="2379"/>
+            <point key="canvasLocation" x="2736.231884057971" y="2378.804347826087"/>
         </scene>
         <!--Registration Code Verification View Controller-->
         <scene sceneID="PuF-OC-QqY">
@@ -1045,10 +1045,10 @@
                                                                 </connections>
                                                             </view>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4sJ-Wa-aoc">
-                                                                <rect key="frame" x="96.666666666666686" y="387" width="205" height="38"/>
+                                                                <rect key="frame" x="95.666666666666671" y="387" width="206.66666666666663" height="38"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Я прочитал" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EUw-gR-Iy1">
-                                                                        <rect key="frame" x="29.999999999999986" y="4" width="67.666666666666671" height="30"/>
+                                                                        <rect key="frame" x="29.999999999999993" y="4" width="69.333333333333314" height="30"/>
                                                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="13"/>
                                                                         <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                                         <color key="highlightedColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1068,7 +1068,7 @@
                                                                         </connections>
                                                                     </button>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ey0-20-XWT">
-                                                                        <rect key="frame" x="102.66666666666669" y="4" width="104" height="30"/>
+                                                                        <rect key="frame" x="104.33333333333331" y="4" width="104" height="30"/>
                                                                         <state key="normal">
                                                                             <attributedString key="attributedTitle">
                                                                                 <fragment content="условия банка">
@@ -1411,7 +1411,7 @@
                                                                 </constraints>
                                                             </imageView>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Face ID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w6N-sT-6p0">
-                                                                <rect key="frame" x="38" y="30.333333333333371" width="54" height="21"/>
+                                                                <rect key="frame" x="38" y="30.333333333333371" width="55" height="21"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="21" id="Mmi-f3-HUZ"/>
                                                                 </constraints>

@@ -160,15 +160,29 @@ class ProductManagementViewController: UITableViewController, CustomAlertViewDel
          
             
             let customAlert = self.storyboard?.instantiateViewController(withIdentifier: "CustomAlertID") as! CustomAlertView
+            
             customAlert.providesPresentationContextTransitionStyle = true
             customAlert.definesPresentationContext = true
             customAlert.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
             customAlert.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
             customAlert.delegate = self as! CustomAlertViewDelegate
-
+            let id = product?.id
+            customAlert.product = product
             self.present(customAlert, animated: true, completion: nil)
 
             
+         performSegue(withIdentifier: "changeNameCard", sender: product?.id)
+            
+            func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+                if segue.identifier == "changeNameCard" {
+                    let cards: CustomAlertView = segue.destination as! CustomAlertView
+                            cards.product = product
+
+                }
+            }
+            
+            
+//
 //            let alert = SCLAlertView()
 //            let txt = alert.addTextField("Введите название карты")
 //            alert.addButton("Сохранить") {
@@ -188,7 +202,7 @@ class ProductManagementViewController: UITableViewController, CustomAlertViewDel
 //
 //
 //            alert.showEdit("Изменить название карты", subTitle: "Не более 15 символов", colorStyle: 0xF5534C)
-//
+
        }
         else {
             AlertService.shared.show(title: "Функционал недоступен", message: "Функционал временно недоступен", cancelButtonTitle: "Понятно", okButtonTitle: nil, cancelCompletion: nil, okCompletion: nil)

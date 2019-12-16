@@ -60,13 +60,13 @@ class CustomAlertView: UIViewController {
     @IBAction func onTapOkButton(_ sender: Any) {
         let txt = alertTextField.text
             let id = self.product?.id
-                     var newName:String = txt ?? "\(self.product!.name)"
-                     NetworkManager.shared().saveCardName(newName: newName, id:id ?? 123, completionHandler: { success, errorMessage, newName, id in })
-                     NetworkManager.shared().getCardList { [weak self] (success, cards) in
-                             self?.cards = cards ?? []
-                         var newName:String = txt ?? "\(self?.product!.name)"
-                         if newName == ""{
-                            newName = (self?.product!.name)!
+        let newName:String = txt ?? "\(self.product!.name)"
+            NetworkManager.shared().saveCardName(newName: newName, id:id ?? 123, completionHandler: { success, errorMessage, newName, id in })
+            NetworkManager.shared().getCardList { [weak self] (success, cards) in
+            self?.cards = cards ?? []
+            var newName:String = txt ?? "\(self?.product!.name)"
+            if newName == ""{
+                    newName = (self?.product!.name)!
                          }
                          NotificationCenter.default.post(name: NSNotification.Name(rawValue: "customName"), object: newName)
 
@@ -74,19 +74,6 @@ class CustomAlertView: UIViewController {
           self.dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func onTapSegmentedControl(_ sender: UISegmentedControl) {
-        switch sender.selectedSegmentIndex {
-        case 0:
-            print("First option")
-            selectedOption = "First"
-            break
-        case 1:
-            print("Second option")
-            selectedOption = "Second"
-            break
-        default:
-            break
-        }
-    }
+
 }
 
