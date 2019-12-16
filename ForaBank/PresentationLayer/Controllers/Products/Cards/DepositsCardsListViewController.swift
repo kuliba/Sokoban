@@ -829,6 +829,13 @@ private extension DepositsCardsListViewController {
         if contentViewHeightConstraint != nil {
             scrollView.removeConstraint(contentViewHeightConstraint!)
         }
+        contentViewHeightConstraint = NSLayoutConstraint(item: contentView,
+                                                               attribute: .height,
+                                                               relatedBy: .equal,
+                                                               toItem: nil,
+                                                               attribute: .notAnAttribute,
+                                                               multiplier: 1,
+                                                               constant: UIScreen.main.bounds.height - cardViewHeight!/2.5)
         scrollView.addConstraint(contentViewHeightConstraint!)
 
         //CardViews
@@ -1030,7 +1037,7 @@ private extension DepositsCardsListViewController {
                            self.blockCardButton.alpha = 0
                            self.addMoneyButton.alpha = 0
                            self.addCardButton.alpha = 1
-                           self.contentViewHeightConstraint?.constant = self.cardsStackHeight! + 180
+                        self.contentViewHeightConstraint?.constant = UIScreen.main.bounds.height - self.cardViewHeight!/2.5
                            self.sortPickerButtonTopConstraint?.constant = 40
                            self.contentView.removeConstraint(self.selectedCardViewCenterYConstraint!)
 
