@@ -128,7 +128,7 @@ class PaymentServices: IPaymetsApi {
             "amount": amount as AnyObject
         ]
 
-        Alamofire.request(Host.shared.apiBaseURL + "/rest/prepareCard2Card", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+        Alamofire.request(Host.shared.apiBaseURL + "rest/prepareCard2Card", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])
             .responseJSON { response in
@@ -165,7 +165,7 @@ class PaymentServices: IPaymetsApi {
             "amount": amount as AnyObject
         ]
 
-        Alamofire.request(Host.shared.apiBaseURL + "/rest/prepareCard2Account", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+        Alamofire.request(Host.shared.apiBaseURL + "rest/prepareCard2Account", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])
             .responseJSON { response in
@@ -202,7 +202,7 @@ class PaymentServices: IPaymetsApi {
             "amount": amount as AnyObject
         ]
 
-        Alamofire.request(Host.shared.apiBaseURL + "/rest/prepareCard2Phone", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+        Alamofire.request(Host.shared.apiBaseURL + "rest/prepareCard2Phone", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])
             .responseJSON { response in
@@ -239,7 +239,7 @@ class PaymentServices: IPaymetsApi {
             "amount": amount as AnyObject
         ]
 
-        Alamofire.request(Host.shared.apiBaseURL + "/rest/prepareAccount2Account", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+        Alamofire.request(Host.shared.apiBaseURL + "rest/prepareAccount2Account", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])
             .responseJSON { response in
@@ -276,7 +276,7 @@ class PaymentServices: IPaymetsApi {
             "amount": amount as AnyObject
         ]
 
-        Alamofire.request(Host.shared.apiBaseURL + "/rest/prepareAccount2Card", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+        Alamofire.request(Host.shared.apiBaseURL + "rest/prepareAccount2Card", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])
             .responseJSON { response in
@@ -313,7 +313,7 @@ class PaymentServices: IPaymetsApi {
             "amount": amount as AnyObject
         ]
 
-        Alamofire.request(Host.shared.apiBaseURL + "/rest/prepareAccount2Phone", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+        Alamofire.request(Host.shared.apiBaseURL + "rest/prepareAccount2Phone", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])
             .responseJSON { response in
@@ -351,7 +351,7 @@ class PaymentServices: IPaymetsApi {
             "verificationCode": Int(code) as AnyObject
         ]
 
-        Alamofire.request(Host.shared.apiBaseURL + "/rest/makeCard2Card", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+        Alamofire.request(Host.shared.apiBaseURL + "rest/makeCard2Card", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])
             .responseJSON { response in
