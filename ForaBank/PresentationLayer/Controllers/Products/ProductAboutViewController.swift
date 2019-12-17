@@ -7,9 +7,19 @@
 //
 
 import UIKit
+import Alamofire
+
+public typealias HTTPHeaders = [String: String]
 
 class ProductAboutViewController: UITableViewController {
+  
+    private var datedTransactions = [DatedTransactions]()
 
+
+
+
+ 
+    
     var items: [IAboutItem]?
 
 //    func set(card: Card?) {
@@ -27,6 +37,7 @@ class ProductAboutViewController: UITableViewController {
         tableView.contentInset.bottom = 10
         tableView.backgroundColor = .white
 
+        
         // Uncomment the following line to pre10
         //         serve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false

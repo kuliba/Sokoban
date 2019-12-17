@@ -661,7 +661,7 @@ class DepositsCardsListViewController: UIViewController {
             vc.pickerFrame = contentView.convert(optionPickerButton.frame, to: nil)
             vc.pickerFrame.origin.x = vc.pickerFrame.origin.x + 25
             vc.pickerFrame.size.width = vc.pickerFrame.size.width - 25
-            vc.pickerOptions = ["по состоянию счета", "по сроку годности", "по имени"]
+            vc.pickerOptions = ["По статусу карты (по умолчанию)", "по сроку действия "]
             vc.delegate = self
             present(vc, animated: true, completion: nil)
         }
