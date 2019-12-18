@@ -46,11 +46,13 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber, UITextFi
     @IBAction func amountTextFieldValueChanged(_ sender: Any) {
         delegate?.didChangeAmount(amount: Double(amountTextField.text!.replacingOccurrences(of: ",", with: ".")))
       
-//        if amountTextField.text != ""{
-//             amountTextField.text = amountTextField.text! + ".00"
-//        } else if amountTextField.text != nil {
-//             amountTextField.text = amountTextField.text!
-//        }
+        let dotString = "."
+        var maxLength = 9
+        if (amountTextField.text?.contains(dotString))! {
+                maxLength = 12
+            }
+        
+        
        
     }
    
@@ -123,9 +125,16 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber, UITextFi
     let taskTextFieldlimitLength = 11
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let dotString = "."
-        let character = ""
-        let maxLength = 9
+        let dotString = ","
+        let characters = ""
+        var maxLength = 9
+        if (textField.text?.contains(dotString))! {
+            maxLength = 12
+        }
+        if string == ","{
+            textField.text = textField.text! + ","
+            maxLength = 12
+        }
                 
         if let text = textField.text{
             textField.text = "\(text)"
@@ -133,15 +142,15 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber, UITextFi
             let isDeleteKey = string.isEmpty
             if !isDeleteKey {
                 if text.contains(dotString) {
-                    if text.components(separatedBy: dotString)[1].count == 2 || string == "."  {
-                    return false
+                    if text.components(separatedBy: dotString)[1].count == 2 || string == ","  {
+                     return false
                     }
                 }
             }
         }
-        let currentString: NSString = textField.text! as NSString
-        let newString: NSString = currentString.replacingCharacters(in: range, with: string) as NSString
-        return newString.length <= maxLength
+    guard let text = textField.text else { return true }
+           let newLength = text.count + string.count - range.length
+           return newLength <= maxLength // replace 30 for your max length value
     }
  
 

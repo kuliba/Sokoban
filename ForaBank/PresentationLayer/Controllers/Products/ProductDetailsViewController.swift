@@ -21,6 +21,7 @@ class ProductDetailsViewController: UIViewController {
     @IBOutlet weak var contentViewTop: NSLayoutConstraint!
     var previousIndex = -1
     var account: Account?
+    var cards: [Card] = [Card]()
     weak var currentViewController: UIViewController?
     var previousOffset: CGFloat = 0
     var items = ["Управление", "История", "О счете"]
@@ -133,7 +134,12 @@ private extension ProductDetailsViewController {
             newViewController = managementVC
         case 2:
             let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductAboutViewController") as? ProductAboutViewController
+            NetworkManager.shared().getCardList { [weak self] (success, cards) in
+                self?.cards = cards ?? []
+            }
+
             managementVC?.items = account?.getProductAbout()
+            managementVC?.cards = cards.self
             newViewController = managementVC
         default:
             newViewController = storyboard?.instantiateViewController(withIdentifier: "feedfeed\(index)")

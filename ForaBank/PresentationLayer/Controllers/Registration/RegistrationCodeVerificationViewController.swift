@@ -191,7 +191,10 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
             setUpPageControl()
         }
 
+        
+        
         codeNumberTextField.delegate = self
+        
         view.clipsToBounds = true
 
         if let head = header as? MaskedNavigationBar {
@@ -206,6 +209,8 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
         }
     }
 
+      
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if let nav = navigationController as? ProfileNavigationController,
@@ -412,27 +417,42 @@ extension RegistrationCodeVerificationViewController: UITextFieldDelegate {
         pageControl.animateDuration = 0
         pageControl.setCurrentPage(at: 2)
 //        pageControl.center.x = view.center.x
-//        pageControl.frame.origin.y = 40
+//        pageControl.frame.origin.y = -140
 //        containerView.addSubview(pageControl)
     }
 
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
       
+        let count = codeNumberTextField.text!.count + string.count - range.length
+
+        if  count == 6{
         
+            codeNumberTextField.text = codeNumberTextField.text! + string
+             continueButton.sendActions(for: .allEvents)
+        
+        }
+
         let set = CharacterSet.decimalDigits
         if (string.rangeOfCharacter(from: set.inverted) != nil) {
             return false
         }
-        guard let text = textField.text else { return true }
-        let count = text.count + string.count - range.length
+        guard var text = textField.text else { return true }
         continueButton?.isEnabled = count >= 6
         continueButton?.alpha = (count >= 6) ? 1 : 0.25
-//        if  textField.text!.count >= 5{
-//            let tap: UILongPressGestureRecognizer = UILongPressGestureRecognizer()
-//            self.authContinue(tap)
-//        }
+        codeNumberTextField.text =  text
+   
+        let textFeildMoy = String(codeNumberTextField.text!)
+
+        let currentCharacterCount = textField.text?.count ?? 0
+        if range.length + range.location > currentCharacterCount {
+            return false
+        }
+        let newLength = currentCharacterCount + string.count - range.length
+        return newLength <= 6
+
         return true
     }
+    
     
 }

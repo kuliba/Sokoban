@@ -11,6 +11,8 @@ import UIKit
 class ProductAboutViewController: UITableViewController {
 
     var items: [IAboutItem]?
+    var card: Card? = nil
+    var cards: [Card] = [Card]()
 
 //    func set(card: Card?) {
 //        self.card = card
@@ -26,6 +28,9 @@ class ProductAboutViewController: UITableViewController {
         tableView.contentInset.top = 35
         tableView.contentInset.bottom = 10
         tableView.backgroundColor = .white
+        NetworkManager.shared().getCardList { [weak self] (success, cards) in
+            self?.cards = cards ?? []
+        }
 
         // Uncomment the following line to pre10
         //         serve selection between presentations
@@ -54,7 +59,7 @@ class ProductAboutViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return items?.count ?? 0
+        return items!.count + cards.count 
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
