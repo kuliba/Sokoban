@@ -139,6 +139,7 @@ class AuthService: AuthServiceProtocol {
                 }
         }
     }
+
     func newPasswordReset(headers: HTTPHeaders, password: String, completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void) {
         let url = Host.shared.apiBaseURL + "resetPassword"
         let parameters: [String: AnyObject] = [
@@ -171,6 +172,38 @@ class AuthService: AuthServiceProtocol {
                     completionHandler(true, nil)
                 case .failure(let error):
                     print("\(error) \(self)")
+                    completionHandler(false, "prepareResetPassword result validation failure")
+                }
+        }
+    }
+
+    func changePassword(headers: HTTPHeaders, oldPassword: String, newPassword: String, completionHandler: @escaping (Bool, String?) -> Void) {
+        let url = Host.shared.apiBaseURL + "rest/changePassword"
+        let parameters: [String: AnyObject] = [
+            "appId": "AND" as AnyObject,
+            "newPassword": newPassword as AnyObject,
+            "oldPassword": oldPassword as AnyObject,
+            "token": headers["X-XSRF-TOKEN"] as AnyObject,
+        ]
+
+        Alamofire.request(url, method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+            .validate(statusCode: MultiRange(200..<300, 401..<402))
+            .validate(contentType: ["application/json"])
+            .responseJSON { [weak self] response in
+
+                print("changePassword result: \(response.result)") // response serialization result
+                if let json = response.result.value as? Dictionary<String, Any>,
+                    let errorMessage = json["errorMessage"] as? String {
+                    print("\(errorMessage) \(String(describing: self))")
+                    completionHandler(false, errorMessage)
+                    return
+                }
+                switch response.result {
+                case .success:
+                    print("prepareResetPassword result: \(String(describing: response.result.value))")
+                    completionHandler(true, nil)
+                case .failure(let error):
+                    print("\(error) \(String(describing: self))")
                     completionHandler(false, "prepareResetPassword result validation failure")
                 }
         }

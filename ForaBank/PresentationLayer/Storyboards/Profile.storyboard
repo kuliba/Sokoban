@@ -612,7 +612,6 @@
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="iXq-H5-RiQ" firstAttribute="top" secondItem="17y-rv-zi4" secondAttribute="top" constant="8" id="8Ow-Dy-XSV"/>
                                     <constraint firstItem="iXq-H5-RiQ" firstAttribute="leading" secondItem="17y-rv-zi4" secondAttribute="leading" constant="14" id="A8t-37-bm3"/>
@@ -675,7 +674,7 @@
                                 <rect key="frame" x="0.0" y="23" width="320" height="545"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="MJ2-ft-eAp">
-                                        <rect key="frame" x="20" y="49" width="280" height="35"/>
+                                        <rect key="frame" x="20" y="63.5" width="280" height="35"/>
                                         <color key="backgroundColor" red="0.96862745098039216" green="0.96862745098039216" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="35" id="1t6-q8-o5e"/>
@@ -684,7 +683,7 @@
                                         <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tr0-38-TTq">
-                                        <rect key="frame" x="267" y="56.5" width="25" height="20"/>
+                                        <rect key="frame" x="267" y="71" width="25" height="20"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="25" id="gtj-d0-4bY"/>
                                             <constraint firstAttribute="height" constant="20" id="jEt-03-37E"/>
@@ -693,13 +692,13 @@
                                         <state key="selected" image="hide_password"/>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Текущий пароль" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Loo-b7-Cjf">
-                                        <rect key="frame" x="20" y="27" width="99" height="18"/>
+                                        <rect key="frame" x="20" y="42" width="98.5" height="17.5"/>
                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="13"/>
                                         <color key="textColor" red="0.60784313725490191" green="0.60784313725490191" blue="0.60784313725490191" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="45q-f1-UDW">
-                                        <rect key="frame" x="20" y="121" width="280" height="35"/>
+                                        <rect key="frame" x="20" y="135" width="280" height="35"/>
                                         <color key="backgroundColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="35" id="ene-R6-6kg"/>
@@ -708,7 +707,7 @@
                                         <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UeO-4p-Ldh">
-                                        <rect key="frame" x="267" y="128.5" width="25" height="20"/>
+                                        <rect key="frame" x="267" y="142.5" width="25" height="20"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="20" id="J9f-ut-Qcx"/>
                                             <constraint firstAttribute="width" constant="25" id="sk5-IZ-cl5"/>
@@ -716,14 +715,14 @@
                                         <state key="normal" image="hidden"/>
                                         <state key="selected" image="hide_password"/>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Текущий пароль" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lKi-Jc-nCd">
-                                        <rect key="frame" x="20" y="99" width="99" height="18"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Новый пароль" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lKi-Jc-nCd">
+                                        <rect key="frame" x="20" y="113.5" width="87" height="17.5"/>
                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="13"/>
                                         <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5yX-ZM-s4F">
-                                        <rect key="frame" x="20" y="193" width="280" height="35"/>
+                                        <rect key="frame" x="20" y="206.5" width="280" height="35"/>
                                         <color key="backgroundColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="35" id="0lB-nK-0Bi"/>
@@ -732,7 +731,7 @@
                                         <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3OR-hB-Cm9">
-                                        <rect key="frame" x="267" y="200.5" width="25" height="20"/>
+                                        <rect key="frame" x="267" y="214" width="25" height="20"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="25" id="IEj-v7-ThB"/>
                                             <constraint firstAttribute="height" constant="20" id="nL0-ev-yfG"/>
@@ -740,14 +739,14 @@
                                         <state key="normal" image="hidden"/>
                                         <state key="selected" image="hide_password"/>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Текущий пароль" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Oy-dB-UCh">
-                                        <rect key="frame" x="20" y="171" width="99" height="18"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Повторите новый пароль" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Oy-dB-UCh">
+                                        <rect key="frame" x="20" y="185" width="152.5" height="17.5"/>
                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="13"/>
                                         <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6eL-UU-Mfj" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
-                                        <rect key="frame" x="20" y="248" width="280" height="53"/>
+                                        <rect key="frame" x="20" y="261.5" width="280" height="53"/>
                                         <color key="backgroundColor" red="0.91764705879999997" green="0.2666666667" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="53" id="uuY-ea-LZf"/>
@@ -789,11 +788,7 @@
                                 <rect key="frame" x="0.0" y="-5" width="320" height="40"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Изменить пароль" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3eo-H1-ALB">
-                                        <rect key="frame" x="99.5" y="10" width="121" height="26"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="121" id="h0F-Xh-DY1"/>
-                                            <constraint firstAttribute="height" constant="26" id="u53-ND-caz"/>
-                                        </constraints>
+                                        <rect key="frame" x="94" y="9.5" width="132.5" height="21.5"/>
                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -811,13 +806,12 @@
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="6UX-l9-nfr" firstAttribute="leading" secondItem="yjR-Tq-qJZ" secondAttribute="leading" constant="14" id="CrF-uj-7xj"/>
                                     <constraint firstItem="3eo-H1-ALB" firstAttribute="centerX" secondItem="yjR-Tq-qJZ" secondAttribute="centerXWithinMargins" id="HL1-aR-6rb"/>
                                     <constraint firstItem="6UX-l9-nfr" firstAttribute="top" secondItem="yjR-Tq-qJZ" secondAttribute="top" constant="8" id="Sji-aI-wbC"/>
                                     <constraint firstAttribute="bottom" secondItem="6UX-l9-nfr" secondAttribute="bottom" constant="6" id="WKH-dr-orl"/>
-                                    <constraint firstItem="3eo-H1-ALB" firstAttribute="centerY" secondItem="yjR-Tq-qJZ" secondAttribute="centerYWithinMargins" constant="3" id="j9F-4o-Oj1"/>
+                                    <constraint firstItem="3eo-H1-ALB" firstAttribute="centerY" secondItem="yjR-Tq-qJZ" secondAttribute="centerYWithinMargins" id="j9F-4o-Oj1"/>
                                 </constraints>
                                 <viewLayoutGuide key="safeArea" id="JQH-2d-wWn"/>
                             </view>
@@ -830,7 +824,7 @@
                             <constraint firstAttribute="trailing" secondItem="yjR-Tq-qJZ" secondAttribute="trailing" id="UH2-Pi-ygV"/>
                             <constraint firstItem="yjR-Tq-qJZ" firstAttribute="trailing" secondItem="CeX-hi-aNM" secondAttribute="trailing" id="hg7-RI-ukX"/>
                             <constraint firstItem="ZIE-ql-svj" firstAttribute="bottom" secondItem="CeX-hi-aNM" secondAttribute="bottom" id="lBm-Iu-Ezm"/>
-                            <constraint firstItem="Loo-b7-Cjf" firstAttribute="top" secondItem="yjR-Tq-qJZ" secondAttribute="bottom" constant="15" id="lwD-Rl-F6n"/>
+                            <constraint firstItem="Loo-b7-Cjf" firstAttribute="top" secondItem="yjR-Tq-qJZ" secondAttribute="bottom" constant="30" id="lwD-Rl-F6n"/>
                             <constraint firstItem="CeX-hi-aNM" firstAttribute="top" secondItem="ZIE-ql-svj" secondAttribute="top" constant="23" id="yP0-8q-PER"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ZIE-ql-svj"/>

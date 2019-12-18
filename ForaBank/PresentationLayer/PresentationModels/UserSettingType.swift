@@ -56,9 +56,9 @@ enum UserSettingType {
     var isActive: Bool {
         switch self {
         case .changePassword:
-            return false
+            return true
         case .changePasscode:
-            return false //SettingsStorage.shared.isSetPasscode()
+            return false
         case .allowedPasscode:
             return PasscodeService.shared.isPasscodeSetted
         case .allowedBiometricSignIn:
