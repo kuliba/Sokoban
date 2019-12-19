@@ -2487,7 +2487,7 @@
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 6.0;
+				MARKETING_VERSION = 7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ForaBank/ForaBank-Bridging-Header.h";
@@ -2511,7 +2511,7 @@
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 6.0;
+				MARKETING_VERSION = 7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ForaBank/ForaBank-Bridging-Header.h";
