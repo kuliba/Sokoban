@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol IAboutItem {
+protocol IAboutItem{
     var title: String { get }
     var value: String { get }
 }

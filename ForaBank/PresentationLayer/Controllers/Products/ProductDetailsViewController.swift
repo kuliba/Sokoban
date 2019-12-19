@@ -134,6 +134,7 @@ private extension ProductDetailsViewController {
         case 2:
             let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductAboutViewController") as? ProductAboutViewController
             managementVC?.items = account?.getProductAbout()
+            managementVC?.cards  = "Hello"
             newViewController = managementVC
         default:
             newViewController = storyboard?.instantiateViewController(withIdentifier: "feedfeed\(index)")
