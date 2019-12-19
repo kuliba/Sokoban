@@ -156,11 +156,11 @@ class PaymentServices: IPaymetsApi {
                 }
         }
     }
-    
+
     func prepareCard2Account(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void) {
         let headers = NetworkManager.shared().headers
         let parameters: [String: AnyObject] = [
-            "payeePhone": destinationNumber as AnyObject,
+            "payeeAccountNumber": destinationNumber as AnyObject,
             "payerCardNumber": sourceNumber as AnyObject,
             "amount": amount as AnyObject
         ]
@@ -193,7 +193,7 @@ class PaymentServices: IPaymetsApi {
                 }
         }
     }
-    
+
     func prepareCard2Phone(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void) {
         let headers = NetworkManager.shared().headers
         let parameters: [String: AnyObject] = [
@@ -234,9 +234,9 @@ class PaymentServices: IPaymetsApi {
     func prepareAccount2Account(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void) {
         let headers = NetworkManager.shared().headers
         let parameters: [String: AnyObject] = [
-            "payeePhone": destinationNumber as AnyObject,
-            "payerCardNumber": sourceNumber as AnyObject,
-            "amount": amount as AnyObject
+            "payeeAccountNumber": destinationNumber as AnyObject,
+            "payerAccountNumber": sourceNumber as AnyObject,
+            "amount": amount as AnyObject,
         ]
 
         Alamofire.request(Host.shared.apiBaseURL + "rest/prepareAccount2Account", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
@@ -267,12 +267,12 @@ class PaymentServices: IPaymetsApi {
                 }
         }
     }
-    
+
     func prepareAccount2Card(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void) {
         let headers = NetworkManager.shared().headers
         let parameters: [String: AnyObject] = [
-            "payeePhone": destinationNumber as AnyObject,
-            "payerCardNumber": sourceNumber as AnyObject,
+            "payeeCardNumber": destinationNumber as AnyObject,
+            "payerAccountNumber": sourceNumber as AnyObject,
             "amount": amount as AnyObject
         ]
 
@@ -304,13 +304,13 @@ class PaymentServices: IPaymetsApi {
                 }
         }
     }
-    
+
     func prepareAccount2Phone(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void) {
         let headers = NetworkManager.shared().headers
         let parameters: [String: AnyObject] = [
             "payeePhone": destinationNumber as AnyObject,
-            "payerCardNumber": sourceNumber as AnyObject,
-            "amount": amount as AnyObject
+            "payerAccountNumber": sourceNumber as AnyObject,
+            "amount": amount as AnyObject,
         ]
 
         Alamofire.request(Host.shared.apiBaseURL + "rest/prepareAccount2Phone", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
@@ -341,7 +341,7 @@ class PaymentServices: IPaymetsApi {
                 }
         }
     }
-    
+
     func makeCard2Card(code: String, completionHandler: @escaping (Bool) -> Void) {
         let headers = NetworkManager.shared().headers
         let parameters: [String: AnyObject] = [
