@@ -76,12 +76,9 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
 
     @IBAction func resetPasswordCheckCode(_ sender: Any) {
         view.endEditing(true)
-        foraPreloader.isHidden = false
-        foraPreloader?.startAnimation()
         continueButton.isHidden = true
         NetworkManager.shared().checkCodeResetPassword(code: self.codeNumberTextField.text ?? "") { [weak self] (success) in
             self?.continueButton.isHidden = false
-            self?.foraPreloader?.stopAnimating()
             if success {
                 self?.performSegue(withIdentifier: "newPasswordReset", sender: self)
 

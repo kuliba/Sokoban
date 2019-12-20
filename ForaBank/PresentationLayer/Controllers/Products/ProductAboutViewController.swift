@@ -22,15 +22,16 @@ class ProductAboutViewController: UITableViewController {
         let longitude: Double
 
         static let locations = [
-            Location(title: "something", value: "123", description: "Old.", latitude: 10.11111, longitude: 1.11111),
-            Location(title: "something", value: "123", description: "Old.", latitude: 10.11111, longitude: 1.11111),
-            Location(title: "something", value: "123", description: "Old.", latitude: 10.11111, longitude: 1.11111)
+            Location(title: "Начало действия карты", value: "123", description: "Old.", latitude: 10.11111, longitude: 1.11111),
+            Location(title: "Дата окончания действия карты", value: "123", description: "Old.", latitude: 10.11111, longitude: 1.11111),
+            Location(title: "Дата и время актуализации остатка", value: "123", description: "Old.", latitude: 10.11111, longitude: 1.11111)
         ]
     }
 
-
+  
+    
     var locationsAll = Location.locations
-    var cards: String = ""
+    var cards: String? = nil
     var items: [IAboutItem]?
 
 //    let flattenCollection = [locationsAll, items].joined() // type: FlattenBidirectionalCollection<[Array<Int>]>
@@ -57,7 +58,7 @@ class ProductAboutViewController: UITableViewController {
         tableView.contentInset.bottom = 10
         tableView.backgroundColor = .white
  
-        
+      
 
                 
         
@@ -82,6 +83,8 @@ class ProductAboutViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
+
+    
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
