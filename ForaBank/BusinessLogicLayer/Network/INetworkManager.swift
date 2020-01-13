@@ -23,7 +23,10 @@ protocol AuthServiceProtocol {
     func newPasswordReset(headers: HTTPHeaders,
                           password: String,
                           completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void)
-
+    func changePassword(headers: HTTPHeaders,
+                        oldPassword: String,
+                        newPassword: String,
+                        completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void)
 
     func checkVerificationCode(headers: HTTPHeaders,
                                code: String,
@@ -52,7 +55,7 @@ protocol CardServiceProtocol {
 
 protocol SaveCardNameProtocol {
     func getSaveCardName(headers: HTTPHeaders,
-                     completionHandler: @escaping (_ success: Bool, _ saveCardName: [Product]?) -> Void)
+                         completionHandler: @escaping (_ success: Bool, _ saveCardName: [Product]?) -> Void)
 }
 
 protocol IPaymetsApi {
@@ -91,7 +94,7 @@ protocol DepositsServiceProtocol {
 
 protocol best2PayProtocol {
     func best2Pay(headers: HTTPHeaders,
-    completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void)
+                  completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void)
 }
 
 protocol RegServiceProtocol {
@@ -108,7 +111,7 @@ protocol RegServiceProtocol {
 
     func doRegistration(headers: HTTPHeaders,
                         completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ login: String?, _ password: String?) -> Void)
-    func saveCardName(headers: HTTPHeaders,id:Double, newName:String,
+    func saveCardName(headers: HTTPHeaders, id: Double, newName: String,
                       completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ id: Double?, _ name: String?) -> Void)
 
 }
