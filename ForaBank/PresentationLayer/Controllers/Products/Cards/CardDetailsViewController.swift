@@ -24,10 +24,11 @@ class CardDetailsViewController: UIViewController {
     @IBOutlet weak var contentViewTop: NSLayoutConstraint!
     @IBOutlet weak var cardView: DetailedCardView!
     @IBOutlet weak var backgroundImageView: UIImageView!
-   var cards: [Card] = [Card]()
+    var cards: [Card] = [Card]()
     var previousIndex = -1
     var newName: String?
     var card: Card? = nil
+
 
     var offset: CGFloat = {
         if Device.current.isOneOf(Constants.browDevices) {
@@ -273,6 +274,7 @@ private extension CardDetailsViewController {
         case 2:
             let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductAboutViewController") as? ProductAboutViewController
             managementVC?.items = card?.getProductAbout()
+            managementVC?.cards = "card"
             newViewController = managementVC
      
         default:

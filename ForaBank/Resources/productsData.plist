@@ -5,14 +5,6 @@
 	<key>card</key>
 	<array>
 		<dict>
-			<key>image</key>
-			<string>depositIcon</string>
-			<key>text</key>
-			<string>Пополнить карту</string>
-			<key>action</key>
-			<string></string>
-		</dict>
-		<dict>
 			<key>action</key>
 			<string></string>
 			<key>text</key>
@@ -24,25 +16,9 @@
 			<key>action</key>
 			<string></string>
 			<key>text</key>
-			<string>Управление лимитами</string>
-			<key>image</key>
-			<string>limitIcon</string>
-		</dict>
-		<dict>
-			<key>action</key>
-			<string></string>
-			<key>text</key>
 			<string>Поделиться реквизитами</string>
 			<key>image</key>
 			<string>shareIcon</string>
-		</dict>
-		<dict>
-			<key>action</key>
-			<string></string>
-			<key>text</key>
-			<string>Сменить PIN-код</string>
-			<key>image</key>
-			<string>changePinIcon</string>
 		</dict>
 		<dict>
 			<key>image</key>
