@@ -33,8 +33,6 @@ class ProductAboutViewController: UITableViewController {
     var locationsAll = Location.locations
     var cards: String? = nil
     var items: [IAboutItem]?
-    var card: Card? = nil
-    var cards: [Card] = [Card]()
 
 //    let flattenCollection = [locationsAll, items].joined() // type: FlattenBidirectionalCollection<[Array<Int>]>
 //    let flattenArray = Array(flattenCollection)
@@ -60,9 +58,9 @@ class ProductAboutViewController: UITableViewController {
         tableView.contentInset.bottom = 10
         tableView.backgroundColor = .white
 
-        NetworkManager.shared().getCardList { [weak self] (success, cards) in
-            self?.cards = cards ?? []
-        }
+//        NetworkManager.shared().getCardList { [weak self] (success, cards) in
+//            self?.cards = cards ?? []
+//        }
 
                 
         
@@ -96,7 +94,7 @@ class ProductAboutViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
-        return items!.count + cards.count
+        return items!.count + cards!.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
