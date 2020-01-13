@@ -118,7 +118,6 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber, UITextFi
             destinationPagerView.setConfig(config: dest)
         }
         
-    
     }
     
   

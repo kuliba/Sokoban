@@ -19,6 +19,8 @@ class PagerView: UIView {
             self.pageControl.contentInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
         }
     }
+    
+
 
     var configurations = [ICellConfigurator]()
     var currentIndex: Int {
@@ -36,6 +38,7 @@ class PagerView: UIView {
         super.init(coder: coder)
         commonInit()
     }
+    
 
     private func commonInit() {
         Bundle.main.loadNibNamed(String(describing: PagerView.self), owner: self, options: nil)

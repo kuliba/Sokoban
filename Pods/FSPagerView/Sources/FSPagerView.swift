@@ -417,7 +417,7 @@ open class FSPagerView: UIView,UICollectionViewDataSource,UICollectionViewDelega
         if let function = self.delegate?.pagerViewWillEndDragging(_:targetIndex:) {
             let contentOffset = self.scrollDirection == .horizontal ? targetContentOffset.pointee.x : targetContentOffset.pointee.y
             let targetItem = lround(Double(contentOffset/self.collectionViewLayout.itemSpacing))
-            function(self, targetItem % self.numberOfItems)
+                function(self, targetItem % self.numberOfItems)
         }
         if self.automaticSlidingInterval > 0 {
             self.startTimer()
@@ -555,7 +555,7 @@ open class FSPagerView: UIView,UICollectionViewDataSource,UICollectionViewDelega
         
         // Content View
         let contentView = UIView(frame:CGRect.zero)
-        contentView.backgroundColor = UIColor.clear
+        contentView.backgroundColor = UIColor(red: 241/255, green: 63/255, blue: 56/255, alpha: 1)
         self.addSubview(contentView)
         self.contentView = contentView
         
@@ -564,7 +564,7 @@ open class FSPagerView: UIView,UICollectionViewDataSource,UICollectionViewDelega
         let collectionView = FSPagerCollectionView(frame: CGRect.zero, collectionViewLayout: collectionViewLayout)
         collectionView.dataSource = self
         collectionView.delegate = self
-        collectionView.backgroundColor = UIColor.clear
+        collectionView.backgroundColor = UIColor(red: 241/255, green: 63/255, blue: 56/255, alpha: 1)
         self.contentView.addSubview(collectionView)
         self.collectionView = collectionView
         self.collectionViewLayout = collectionViewLayout
