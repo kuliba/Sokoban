@@ -162,26 +162,27 @@ extension AccountsViewController: UITableViewDataSource, UITableViewDelegate {
 
         return cell
     }
+    
+    public var screenHeight: CGFloat {
+          return UIScreen.main.bounds.height
+      }
 
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if section == 0 {
-            let footerView = UIView(frame: CGRect(x: tableView.frame.minX + 20, y: 0, width: tableView.frame.width - 40, height: 95))
-            let addDepositButton = UIButton(frame: CGRect(x: footerView.frame.minX, y: footerView.frame.minY + 15, width: footerView.frame.width, height: 45))
+            let footerView = UIView(frame: CGRect(x: tableView.frame.minX + 20, y: 0, width: tableView.frame.width - 40, height: UIScreen.main.bounds.height ))
+        let addDepositButton = UIButton(frame: CGRect(x: footerView.frame.minX, y: screenHeight - (screenHeight/4.5), width: footerView.frame.width, height: 45))
             addDepositButton.addTarget(nil, action: #selector(CarouselViewController.createProductButtonClicked), for: .touchUpInside)
 
             addDepositButton.setTitle("Открыть продукт", for: .normal)
             addDepositButton.titleLabel?.font = UIFont(name: "Roboto-Regular", size: 16)
             addDepositButton.setTitleColor(.black, for: [])
-
+            
             addDepositButton.layer.borderWidth = 0.5
             addDepositButton.layer.borderColor = UIColor(red: 211 / 255, green: 211 / 255, blue: 211 / 255, alpha: 1).cgColor
             addDepositButton.layer.cornerRadius = addDepositButton.frame.height / 2
 
-            footerView.addSubview(addDepositButton)
+            view.addSubview(addDepositButton)
             return footerView
-        }
 
-        return nil
     }
 
 

@@ -74,7 +74,6 @@ class DepositsCardsListViewController: UIViewController {
         let cardActionButton = CardActionRoundedButton(type: .system)
         cardActionButton.setAttributedTitle(NSAttributedString(string: "Открыть продукт", attributes: [.font: UIFont.systemFont(ofSize: 15)]), for: .normal)
         cardActionButton.addTarget(nil, action: #selector(CarouselViewController.createProductButtonClicked), for: .touchUpInside)
-
         return cardActionButton
     }()
 
@@ -831,12 +830,12 @@ private extension DepositsCardsListViewController {
             scrollView.removeConstraint(contentViewHeightConstraint!)
         }
         contentViewHeightConstraint = NSLayoutConstraint(item: contentView,
-                                                         attribute: .height,
-                                                         relatedBy: .equal,
-                                                         toItem: nil,
-                                                         attribute: .notAnAttribute,
-                                                         multiplier: 1,
-                                                         constant: cardsStackHeight! + 180)
+                                                               attribute: .height,
+                                                               relatedBy: .equal,
+                                                               toItem: nil,
+                                                               attribute: .notAnAttribute,
+                                                               multiplier: 1,
+                                                               constant: UIScreen.main.bounds.height - cardViewHeight!/2.5)
         scrollView.addConstraint(contentViewHeightConstraint!)
 
         //CardViews
@@ -1038,7 +1037,7 @@ private extension DepositsCardsListViewController {
                            self.blockCardButton.alpha = 0
                            self.addMoneyButton.alpha = 0
                            self.addCardButton.alpha = 1
-                           self.contentViewHeightConstraint?.constant = self.cardsStackHeight! + 180
+                        self.contentViewHeightConstraint?.constant = UIScreen.main.bounds.height - self.cardViewHeight!/2.5
                            self.sortPickerButtonTopConstraint?.constant = 40
                            self.contentView.removeConstraint(self.selectedCardViewCenterYConstraint!)
 

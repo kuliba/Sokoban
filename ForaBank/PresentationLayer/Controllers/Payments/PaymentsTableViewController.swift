@@ -36,7 +36,7 @@ class PaymentsTableViewController: UIViewController, UITableViewDelegate, UITabl
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return 4
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -58,6 +58,10 @@ class PaymentsTableViewController: UIViewController, UITableViewDelegate, UITabl
             cell.imageView?.image = UIImage(named: "payments_services_phone-billing")
             cell.textLabel?.text = "По номеру телефона"
             break
+        case 3:
+            cell.imageView?.image = UIImage(named: "payments_transfer_to-another-bank")
+            cell.textLabel?.text = "По свободным реквизитам"
+            break
         default:
             break
         }
@@ -70,6 +74,9 @@ class PaymentsTableViewController: UIViewController, UITableViewDelegate, UITabl
         guard let paymentDetailsVC = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentDetailsViewController") as? PaymentsDetailsViewController else {
             return
         }
+        guard let freeDetailsVC = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "FreeDetailsController") as? FreeDetailsViewController else {
+                   return
+               }
 
         let sourceProvider = PaymentOptionCellProvider()
         let destinationProvider = PaymentOptionCellProvider()
@@ -80,6 +87,9 @@ class PaymentsTableViewController: UIViewController, UITableViewDelegate, UITabl
         paymentDetailsVC.sourceConfigurations = [
             PaymentOptionsPagerItem(provider: sourceProvider, delegate: paymentDetailsVC)
         ]
+        freeDetailsVC.sourceConfigurations = [
+                  PaymentOptionsPagerItem(provider: sourceProvider, delegate: freeDetailsVC)
+              ]
 
         switch indexPath.item {
         case 0:
@@ -97,6 +107,18 @@ class PaymentsTableViewController: UIViewController, UITableViewDelegate, UITabl
             paymentDetailsVC.destinationConfigurations = [
                 PhoneNumberPagerItem(provider: destinationProviderPhoneNumber, delegate: paymentDetailsVC)
             ]
+            break
+        case 3:
+
+            freeDetailsVC.sourceConfigurations = [
+            PaymentOptionsPagerItem(provider: sourceProvider, delegate: freeDetailsVC)
+            
+            ]
+            
+            let rootVC = tableView.parentContainerViewController()
+            rootVC?.present(freeDetailsVC, animated: true, completion: nil)
+            //    let freeViewController = self.storyboard?.instantiateViewController(withIdentifier: "FreeDetailsController")
+            //            self.present(freeViewController!, animated: true)
             break
         default:
             break

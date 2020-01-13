@@ -168,6 +168,8 @@
 		9651451A234F890300A4713F /* ic_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 96514519234F890300A4713F /* ic_logo.png */; };
 		9651451E234F8ADC00A4713F /* ic_homeBG.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9651451D234F8ADC00A4713F /* ic_homeBG.jpg */; };
 		96514520234F8B1B00A4713F /* foralogotype.png in Resources */ = {isa = PBXBuildFile; fileRef = 9651451F234F8B1B00A4713F /* foralogotype.png */; };
+		9658B98B23A140D600117727 /* CustomAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9658B98A23A140D600117727 /* CustomAlertView.swift */; };
+		9658B98D23A140FD00117727 /* CustomAlertViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9658B98C23A140FD00117727 /* CustomAlertViewDelegate.swift */; };
 		9660EEE6234C7B1100AE0647 /* CollapsibleTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9660EEE1234C7B1000AE0647 /* CollapsibleTableViewHeader.swift */; };
 		9660EEE7234C7B1100AE0647 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9660EEE2234C7B1000AE0647 /* Extensions.swift */; };
 		9660EEE8234C7B1100AE0647 /* CollapsibleTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9660EEE3234C7B1000AE0647 /* CollapsibleTableViewController.swift */; };
@@ -198,6 +200,7 @@
 		96E08A3D2372C0BA0070CA6A /* BottomRoundedEdge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96E08A3C2372C0BA0070CA6A /* BottomRoundedEdge.swift */; };
 		96E541162341656300770C06 /* ExpandingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96E541142341656300770C06 /* ExpandingTableViewCell.swift */; };
 		96E541172341656300770C06 /* TableExpansionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96E541152341656300770C06 /* TableExpansionViewController.swift */; };
+		96F0DF4F23C721D60012A8F0 /* FreeDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F0DF4E23C721D60012A8F0 /* FreeDetailsViewController.swift */; };
 		96FE29E8238416B80076656C /* DataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96FE29E7238416B80076656C /* DataItem.swift */; };
 		96FE29EA238416D40076656C /* ColorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96FE29E9238416D40076656C /* ColorCell.swift */; };
 		96FE29EC238416E90076656C /* KDDragAndDropManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96FE29EB238416E90076656C /* KDDragAndDropManager.swift */; };
@@ -548,6 +551,8 @@
 		96514519234F890300A4713F /* ic_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_logo.png; sourceTree = "<group>"; };
 		9651451D234F8ADC00A4713F /* ic_homeBG.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = ic_homeBG.jpg; sourceTree = "<group>"; };
 		9651451F234F8B1B00A4713F /* foralogotype.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = foralogotype.png; sourceTree = "<group>"; };
+		9658B98A23A140D600117727 /* CustomAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlertView.swift; sourceTree = "<group>"; };
+		9658B98C23A140FD00117727 /* CustomAlertViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlertViewDelegate.swift; sourceTree = "<group>"; };
 		9660EEE1234C7B1000AE0647 /* CollapsibleTableViewHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollapsibleTableViewHeader.swift; sourceTree = "<group>"; };
 		9660EEE2234C7B1000AE0647 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		9660EEE3234C7B1000AE0647 /* CollapsibleTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollapsibleTableViewController.swift; sourceTree = "<group>"; };
@@ -579,6 +584,7 @@
 		96E08A3C2372C0BA0070CA6A /* BottomRoundedEdge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomRoundedEdge.swift; sourceTree = "<group>"; };
 		96E541142341656300770C06 /* ExpandingTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpandingTableViewCell.swift; sourceTree = "<group>"; };
 		96E541152341656300770C06 /* TableExpansionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableExpansionViewController.swift; sourceTree = "<group>"; };
+		96F0DF4E23C721D60012A8F0 /* FreeDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeDetailsViewController.swift; sourceTree = "<group>"; };
 		96FE29E7238416B80076656C /* DataItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataItem.swift; sourceTree = "<group>"; };
 		96FE29E9238416D40076656C /* ColorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCell.swift; sourceTree = "<group>"; };
 		96FE29EB238416E90076656C /* KDDragAndDropManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KDDragAndDropManager.swift; sourceTree = "<group>"; };
@@ -954,6 +960,7 @@
 		09E0F131215A617A0042FB6A /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				9658B98923A140A100117727 /* CustomAlertView */,
 				BDB823A923852A7000030B5F /* BaseViewController.swift */,
 				960C5D0F237161A8002C4DC4 /* MapPopUpViewController.swift */,
 				9697E29E2334C29700974505 /* OperatorsList.swift */,
@@ -1171,6 +1178,7 @@
 				BDFE1B0B233CE7BD00C49A5B /* PickerViewController.swift */,
 				A5B473C021B3BBCD00F2E41F /* RemittancePickerViewController.swift */,
 				BDFE1B0C233CE7BD00C49A5B /* PickerViewController.xib */,
+				96F0DF4E23C721D60012A8F0 /* FreeDetailsViewController.swift */,
 			);
 			path = Payments;
 			sourceTree = "<group>";
@@ -1226,6 +1234,15 @@
 				96514512234F829E00A4713F /* RefreshView.xib */,
 			);
 			path = refreshControl;
+			sourceTree = "<group>";
+		};
+		9658B98923A140A100117727 /* CustomAlertView */ = {
+			isa = PBXGroup;
+			children = (
+				9658B98A23A140D600117727 /* CustomAlertView.swift */,
+				9658B98C23A140FD00117727 /* CustomAlertViewDelegate.swift */,
+			);
+			path = CustomAlertView;
 			sourceTree = "<group>";
 		};
 		9660EEE0234C7AD200AE0647 /* LoansExpandingTable */ = {
@@ -2228,6 +2245,7 @@
 				BD0A1B61234607230079320D /* CardNumberCellProvider.swift in Sources */,
 				09F2410121707B3B007B7D73 /* FeedInfo1Cell.swift in Sources */,
 				0904505D216B774600F3B295 /* FeedOfferCustom1Cell.swift in Sources */,
+				9658B98B23A140D600117727 /* CustomAlertView.swift in Sources */,
 				963B62DE2360A93A00DD9A3E /* JFContactsPicker-dummy.m in Sources */,
 				A5004D3521EF56DD0098E510 /* CardBrand.swift in Sources */,
 				09D3C048215E07DB00998F57 /* ChatMessagesViewController.swift in Sources */,
@@ -2251,6 +2269,7 @@
 				BD09A3A62363290000938D66 /* UserState.swift in Sources */,
 				A568142C21CE6CB0002C0899 /* AnnotationTableViewCell.swift in Sources */,
 				A58760C121BFB63D0022DED5 /* ProfileNavigationController.swift in Sources */,
+				96F0DF4F23C721D60012A8F0 /* FreeDetailsViewController.swift in Sources */,
 				962655C92361F31A00697E37 /* ViewModalStyle.swift in Sources */,
 				BDFE3927238D15A800E0436E /* PaymentDetailsPresenter.swift in Sources */,
 				BDCCE9092350BB6E0087F5F2 /* AlertService.swift in Sources */,
@@ -2260,6 +2279,7 @@
 				096B4F542186E29300C69E52 /* ProductManagementViewController.swift in Sources */,
 				A57CF1BE22043DDE00E855A5 /* BriginvestResponse.swift in Sources */,
 				BDAEE0F9239A76AD007690E7 /* PaymentOptionType.swift in Sources */,
+				9658B98D23A140FD00117727 /* CustomAlertViewDelegate.swift in Sources */,
 				89C8DF122191AFA700D92B0A /* DepositsDepositCell.swift in Sources */,
 				BDAEE0F1239A50D6007690E7 /* ITableViewController.swift in Sources */,
 				A568142621CBCD48002C0899 /* BankBranchClusterView.swift in Sources */,

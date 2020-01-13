@@ -25,8 +25,9 @@ protocol PaymentsDetailsViewControllerDelegate {
     func didPressPaymentButton()
 }
 
-class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
+class PaymentsDetailsViewController: UIViewController, StoreSubscriber, UITextFieldDelegate {
 
+    
     // MARK: - Properties
     @IBOutlet weak var sourcePagerView: PagerView!
     @IBOutlet weak var destinationPagerView: PagerView!
@@ -39,11 +40,26 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
     @IBOutlet weak var pickerButton: UIButton!
     @IBOutlet weak var sendButton: ButtonRounded!
 
+   
+
     // MARK: - Actions
     @IBAction func amountTextFieldValueChanged(_ sender: Any) {
         delegate?.didChangeAmount(amount: Double(amountTextField.text!.replacingOccurrences(of: ",", with: ".")))
+      
+        let dotString = "."
+        var maxLength = 9
+        if (amountTextField.text?.contains(dotString))! {
+                maxLength = 12
+            }
+        
+        
+       
     }
+   
 
+    
+    
+    
     @IBAction func sendButtonClicked(_ sender: Any) {
         delegate?.didPressPrepareButton()
     }
@@ -82,6 +98,11 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
     var selectedViewType: Bool = false //false - source; true - destination
     var activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
 
+ 
+       private let destinationProviderCardNumber = CardNumberCellProvider()
+       private let destinationProviderAccountNumber = AccountNumberCellProvider()
+       private let destinationProviderPhoneNumber = PhoneNumberCellProvider()
+    
 // MARK: - Lifecycle
 
 //    private let sourceProvider = PaymentOptionCellProvider()
@@ -94,19 +115,47 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpLayout()
-
+        amountTextField.delegate = self
+     
         if let source = sourceConfigurations, let dest = destinationConfigurations {
             sourcePagerView.setConfig(config: source)
             destinationPagerView.setConfig(config: dest)
         }
+        
     }
+    
+  
+    let taskTextFieldlimitLength = 11
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        store.subscribe(self) { state in
-            state.select { $0.productsState }
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let dotString = ","
+        let characters = ""
+        var maxLength = 9
+        if (textField.text?.contains(dotString))! {
+            maxLength = 12
         }
+        if string == ","{
+            textField.text = textField.text! + ","
+            maxLength = 12
+        }
+                
+        if let text = textField.text{
+            textField.text = "\(text)"
+            
+            let isDeleteKey = string.isEmpty
+            if !isDeleteKey {
+                if text.contains(dotString) {
+                    if text.components(separatedBy: dotString)[1].count == 2 || string == ","  {
+                     return false
+                    }
+                }
+            }
+        }
+    guard let text = textField.text else { return true }
+           let newLength = text.count + string.count - range.length
+           return newLength <= maxLength // replace 30 for your max length value
     }
+ 
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
@@ -192,6 +241,9 @@ extension PaymentsDetailsViewController: PaymentDetailsPresenterDelegate {
     func didFinishPreparation(success: Bool) {
         if success {
             performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
+            
+            
+            
         } else {
             AlertService.shared.show(title: "Ошибка", message: "При выполнении платежа произошла ошибка, попробуйте ещё раз позже", cancelButtonTitle: "Продолжить", okButtonTitle: nil, cancelCompletion: nil, okCompletion: nil)
         }

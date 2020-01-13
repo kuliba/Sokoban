@@ -89,6 +89,7 @@ class CustomTextField: UITextField {
         return true
     }
 
+
     open override func resignFirstResponder() -> Bool {
         layer.customBorderColor = defaultBorderColor
         super.resignFirstResponder()

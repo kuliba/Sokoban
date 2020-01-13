@@ -21,6 +21,8 @@ class PagerView: UIView {
             pageControl.setFillColor(.commonRed, for: .selected)
         }
     }
+    
+
 
     var configurations = [ICellConfigurator]()
     var currentIndex: Int {
@@ -38,6 +40,7 @@ class PagerView: UIView {
         super.init(coder: coder)
         commonInit()
     }
+    
 
     private func commonInit() {
         Bundle.main.loadNibNamed(String(describing: PagerView.self), owner: self, options: nil)

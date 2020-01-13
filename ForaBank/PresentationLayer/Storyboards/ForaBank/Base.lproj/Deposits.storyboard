@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="UUW-Uy-lmj">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="UUW-Uy-lmj">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -1125,7 +1125,7 @@
                         <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="YES"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
-                        <segue destination="DBp-1k-qSd" kind="presentation" identifier="changeNameCard" id="NUV-re-Eqm"/>
+                        <segue destination="YGb-NV-cJx" kind="show" identifier="changeNameCard" id="Sfi-bz-vOi"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bar-5X-qkZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1373,101 +1373,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="J6P-5w-9s5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1554" y="1577"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="P2g-o4-QkI">
-            <objects>
-                <viewController storyboardIdentifier="changeNameCard" modalPresentationStyle="overFullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="DBp-1k-qSd" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="mr0-NT-kw5">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cCp-qs-xfN" customClass="DesignableView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="70" y="242" width="240" height="128"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="93p-Gz-b83" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
-                                        <rect key="frame" x="8" y="85" width="106" height="35"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
-                                        <state key="normal" title="Отмена"/>
-                                    </button>
-                                    <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="cardName" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="R0A-8f-oea">
-                                        <rect key="frame" x="29" y="48" width="183" height="34"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
-                                        <textInputTraits key="textInputTraits"/>
-                                    </textField>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Введите название карты" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zSk-KC-zsL">
-                                        <rect key="frame" x="22" y="17" width="196" height="23"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="17"/>
-                                        <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Okq-aC-YdM" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
-                                        <rect key="frame" x="112" y="85" width="106" height="35"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="17"/>
-                                        <state key="normal" title="Сохранить"/>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="10"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
-                                        <integer key="value" value="7"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="layer.borderColor">
-                                        <color key="value" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
-                                    <userDefinedRuntimeAttribute type="size" keyPath="layer.shadowOffset">
-                                        <size key="value" width="5" height="5"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="point" keyPath="layer.shadowOpacity">
-                                        <point key="value" x="0.0" y="7"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.shadowRadius">
-                                        <integer key="value" value="5"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="layer.shadowColor">
-                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="layer.borderUIColor">
-                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="10"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                        <real key="value" value="1"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                        <color key="value" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
-                                        <real key="value" value="7"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
-                                        <real key="value" value="5"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="shadowColor">
-                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </view>
-                        </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="8Nz-4Z-F0j"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="xlT-JA-uhs" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-3375.1999999999998" y="2306.8965517241381"/>
         </scene>
         <!--Deposits Cards Details Statement Details View Controller-->
         <scene sceneID="nAh-kC-cgw">
@@ -2719,6 +2624,118 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gAQ-Me-fBR" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="909" y="-806"/>
+        </scene>
+        <!--Custom Alert View-->
+        <scene sceneID="7zg-MO-4WU">
+            <objects>
+                <viewController storyboardIdentifier="CustomAlertID" id="YGb-NV-cJx" customClass="CustomAlertView" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="kzO-uj-Z1o"/>
+                        <viewControllerLayoutGuide type="bottom" id="j5c-T8-hC7"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="3RF-UH-e09">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w8N-od-haL">
+                                <rect key="frame" x="15.5" y="160" width="344" height="221"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Изменить название карты" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HCn-aj-HLA">
+                                        <rect key="frame" x="74" y="10" width="196.5" height="21.5"/>
+                                        <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Введите новое название" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="g2n-kn-EtI">
+                                        <rect key="frame" x="19" y="46" width="311" height="34"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no"/>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q5D-12-jH6" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
+                                        <rect key="frame" x="17" y="116" width="314" height="44"/>
+                                        <color key="backgroundColor" red="0.91764705879999997" green="0.2666666667" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="59i-gw-sxo"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
+                                        <state key="normal" title="Сохранить">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onTapOkButton:" destination="YGb-NV-cJx" eventType="touchUpInside" id="nb2-zA-fh6"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DFH-6P-wab" customClass="ButtonBlackRounded" customModule="ForaBank" customModuleProvider="target">
+                                        <rect key="frame" x="17" y="164" width="314" height="42"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="42" id="qci-zl-fen"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
+                                        <state key="normal" title="Закрыть">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                <color key="value" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                <real key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="15"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="onTapCancelButton:" destination="YGb-NV-cJx" eventType="touchUpInside" id="J9r-bq-xyl"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="* не более 15 символов" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HLC-aU-eYd">
+                                        <rect key="frame" x="21" y="82" width="130.5" height="16"/>
+                                        <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="12"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="HLC-aU-eYd" firstAttribute="top" secondItem="g2n-kn-EtI" secondAttribute="bottom" constant="2" id="0tj-Dy-dCx"/>
+                                    <constraint firstAttribute="height" constant="221" id="1RQ-ei-alH"/>
+                                    <constraint firstItem="DFH-6P-wab" firstAttribute="centerX" secondItem="Q5D-12-jH6" secondAttribute="centerX" id="3Ci-VQ-T1n"/>
+                                    <constraint firstItem="HLC-aU-eYd" firstAttribute="top" secondItem="HCn-aj-HLA" secondAttribute="bottom" constant="50.5" id="CtH-qw-JNi"/>
+                                    <constraint firstItem="DFH-6P-wab" firstAttribute="top" secondItem="Q5D-12-jH6" secondAttribute="bottom" constant="4" id="FOQ-uh-t5M"/>
+                                    <constraint firstAttribute="width" constant="344" id="J3b-JN-azm"/>
+                                    <constraint firstItem="Q5D-12-jH6" firstAttribute="top" secondItem="HLC-aU-eYd" secondAttribute="bottom" constant="18" id="QTd-Dc-QZZ"/>
+                                    <constraint firstItem="DFH-6P-wab" firstAttribute="trailing" secondItem="Q5D-12-jH6" secondAttribute="trailing" id="Wpp-Rl-JGm"/>
+                                    <constraint firstItem="Q5D-12-jH6" firstAttribute="leading" secondItem="w8N-od-haL" secondAttribute="leading" constant="17" id="Zen-XY-MP0"/>
+                                    <constraint firstItem="HLC-aU-eYd" firstAttribute="centerX" secondItem="w8N-od-haL" secondAttribute="centerX" constant="-85.75" id="arF-Uf-OOG"/>
+                                    <constraint firstItem="g2n-kn-EtI" firstAttribute="leading" secondItem="w8N-od-haL" secondAttribute="leading" constant="19" id="bLi-mN-Ugh"/>
+                                    <constraint firstItem="Q5D-12-jH6" firstAttribute="centerX" secondItem="HCn-aj-HLA" secondAttribute="centerX" constant="2" id="gvu-EQ-v1F"/>
+                                    <constraint firstAttribute="bottom" secondItem="Q5D-12-jH6" secondAttribute="bottom" constant="61" id="hkV-eV-SqR"/>
+                                    <constraint firstAttribute="trailing" secondItem="g2n-kn-EtI" secondAttribute="trailing" constant="14" id="nh0-d9-cMy"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="w8N-od-haL" firstAttribute="centerX" secondItem="3RF-UH-e09" secondAttribute="centerX" id="1CE-Go-0mp"/>
+                            <constraint firstItem="HCn-aj-HLA" firstAttribute="centerX" secondItem="3RF-UH-e09" secondAttribute="centerX" id="DoC-Ja-MGA"/>
+                            <constraint firstItem="w8N-od-haL" firstAttribute="centerY" secondItem="3RF-UH-e09" secondAttribute="centerY" multiplier="0.7" constant="44.050000000000011" id="sy6-bK-x7g"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="0CV-V1-ycP"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="wIc-zz-gor"/>
+                    <connections>
+                        <outlet property="alertTextField" destination="g2n-kn-EtI" id="He6-HI-j11"/>
+                        <outlet property="alertView" destination="w8N-od-haL" id="DJ5-Jj-TeD"/>
+                        <outlet property="cancelButton" destination="DFH-6P-wab" id="kHW-Zn-mTU"/>
+                        <outlet property="messageLabel" destination="HLC-aU-eYd" id="NjM-Yq-uB5"/>
+                        <outlet property="okButton" destination="Q5D-12-jH6" id="vl5-eh-Q3J"/>
+                        <outlet property="titleLabel" destination="HCn-aj-HLA" id="Cvb-fp-vey"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MUq-Zy-OOf" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3367" y="2391"/>
         </scene>
     </scenes>
     <resources>

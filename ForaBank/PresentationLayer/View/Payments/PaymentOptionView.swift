@@ -14,7 +14,6 @@ class PaymentOptionView: UIView {
     @IBOutlet weak var optionNameLabel: UILabel!
     @IBOutlet weak var optionValueLabel: UILabel!
     @IBOutlet weak var optionNumberLabel: UILabel!
-
     @IBOutlet weak var companyImageView: UIImageView!
     @IBOutlet weak var providerImageView: UIImageView!
     @IBOutlet weak var arrowsImageView: UIImageView!
@@ -26,6 +25,7 @@ class PaymentOptionView: UIView {
         super.init(frame: frame)
         commonInit()
     }
+    
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
@@ -37,6 +37,9 @@ class PaymentOptionView: UIView {
         addSubview(contentView)
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+//        arrowsImageView.isHidden = true
+//        optionNameLabel.textColor = UIColor.red
+        
     }
 
     internal func setupLayout(withPickerItem pickerItem: IPickerItem, isDroppable: Bool) {

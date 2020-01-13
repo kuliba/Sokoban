@@ -49,6 +49,10 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
         }
     }
 
+    
+    
+    
+    
     @IBAction func authContinue(_ sender: Any) {
         view.endEditing(true)
         foraPreloader.isHidden = false
@@ -73,7 +77,6 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
             }
         }
     }
-
     @IBAction func resetPasswordCheckCode(_ sender: Any) {
         view.endEditing(true)
         continueButton.isHidden = true
@@ -189,7 +192,10 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
             setUpPageControl()
         }
 
+        
+        
         codeNumberTextField.delegate = self
+        
         view.clipsToBounds = true
 
         if let head = header as? MaskedNavigationBar {
@@ -204,6 +210,8 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
         }
     }
 
+      
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if let nav = navigationController as? ProfileNavigationController,
@@ -369,6 +377,8 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
 
 // MARK: - Private methods
 extension RegistrationCodeVerificationViewController: UITextFieldDelegate {
+    
+        
     func addGradientLayerView() {
         gradientView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         let gradientLayer = CAGradientLayer()
@@ -415,19 +425,42 @@ extension RegistrationCodeVerificationViewController: UITextFieldDelegate {
         pageControl.animateDuration = 0
         pageControl.setCurrentPage(at: 2)
 //        pageControl.center.x = view.center.x
-//        pageControl.frame.origin.y = 40
+//        pageControl.frame.origin.y = -140
 //        containerView.addSubview(pageControl)
     }
 
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+      
+        let count = codeNumberTextField.text!.count + string.count - range.length
+
+        if  count == 6{
+        
+            codeNumberTextField.text = codeNumberTextField.text! + string
+             continueButton.sendActions(for: .allEvents)
+        
+        }
+
         let set = CharacterSet.decimalDigits
         if (string.rangeOfCharacter(from: set.inverted) != nil) {
             return false
         }
-        guard let text = textField.text else { return true }
-        let count = text.count + string.count - range.length
+        guard var text = textField.text else { return true }
         continueButton?.isEnabled = count >= 6
         continueButton?.alpha = (count >= 6) ? 1 : 0.25
+        codeNumberTextField.text =  text
+   
+        let textFeildMoy = String(codeNumberTextField.text!)
+
+        let currentCharacterCount = textField.text?.count ?? 0
+        if range.length + range.location > currentCharacterCount {
+            return false
+        }
+        let newLength = currentCharacterCount + string.count - range.length
+        return newLength <= 6
+
         return true
     }
+    
+    
 }
