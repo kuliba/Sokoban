@@ -106,7 +106,8 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber{
         
         
         
-            }
+            
+
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)

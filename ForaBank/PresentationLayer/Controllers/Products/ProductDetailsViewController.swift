@@ -139,7 +139,6 @@ private extension ProductDetailsViewController {
             }
 
             managementVC?.items = account?.getProductAbout()
-            managementVC?.cards = cards.self
             newViewController = managementVC
         default:
             newViewController = storyboard?.instantiateViewController(withIdentifier: "feedfeed\(index)")
