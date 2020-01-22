@@ -9,6 +9,7 @@
 import UIKit
 import ReSwift
 
+
 typealias AccountNumberPagerItem = PagerViewCellHandler<TextFieldPagerViewCell, AccountNumberCellProvider>
 typealias CardNumberPagerItem = PagerViewCellHandler<TextFieldPagerViewCell, CardNumberCellProvider>
 typealias PaymentOptionsPagerItem = PagerViewCellHandler<DropDownPagerViewCell, CardNumberCellProvider>
@@ -31,7 +32,6 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber, UITextFi
     // MARK: - Properties
     @IBOutlet weak var sourcePagerView: PagerView!
     @IBOutlet weak var destinationPagerView: PagerView!
-
     @IBOutlet weak var picker: UIView!
     @IBOutlet weak var pickerImageView: UIImageView!
     @IBOutlet weak var amountTextField: UITextField!
@@ -51,14 +51,7 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber, UITextFi
         if (amountTextField.text?.contains(dotString))! {
                 maxLength = 12
             }
-        
-        
-       
     }
-   
-
-    
-    
     
     @IBAction func sendButtonClicked(_ sender: Any) {
         delegate?.didPressPrepareButton()
@@ -121,6 +114,8 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber, UITextFi
             sourcePagerView.setConfig(config: source)
             destinationPagerView.setConfig(config: dest)
         }
+        
+        
         
     }
     

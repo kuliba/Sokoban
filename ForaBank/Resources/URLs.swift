@@ -29,5 +29,6 @@ class Host {
 
     private let testApiBaseURL: String = "https://git.briginvest.ru/dbo/api/v2/"
     private let productionApiBaseURL: String = "https://bg.forabank.ru/dbo/api/v3/f437e29a3a094bcfa73cea12366de95b/"
+    
 
 }

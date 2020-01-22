@@ -9,6 +9,7 @@
 import UIKit
 import ReSwift
 
+
 protocol FreeDetailsViewControllerDelegate {
 
     func didChangeSource(paymentOption: PaymentOptionType)
@@ -21,8 +22,29 @@ protocol FreeDetailsViewControllerDelegate {
 }
 
 
-class FreeDetailsViewController: UIViewController, UITextFieldDelegate {
+class FreeDetailsViewController: UIViewController, UITextFieldDelegate,FreeDetailsViewControllerDelegate {
+    func didChangeSource(paymentOption: PaymentOptionType) {
 
+    }
+    
+    func didChangeDestination(paymentOption: PaymentOptionType) {
+        
+    }
+    
+    func didChangeAmount(amount: Double?) {
+        
+    }
+    
+    func didPressPrepareButton() {
+        
+    }
+    
+    func didPressPaymentButton() {
+        
+    }
+    
+
+    @IBOutlet weak var header: UIView!
     @IBOutlet weak var sourcePagerView: PagerView!
     @IBOutlet weak var numberAcoount: CustomTextField!
     @IBOutlet weak var kppBank: CustomTextField!
@@ -45,9 +67,6 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate {
         if (amountTextField.text?.contains(dotString))! {
                 maxLength = 12
             }
-        
-        
-       
     }
     
     @IBAction func backButtonClicked(_ sender: Any) {
@@ -56,15 +75,15 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate {
             dismiss(animated: true, completion: nil)
         }
     }
+    var optionPicker: PaymentOptionView?
     var presenter: PaymentDetailsPresenter?
     var sourceConfigurations: [ICellConfigurator]?
     var destinationConfigurations: [ICellConfigurator]?
     var delegate: FreeDetailsViewControllerDelegate?
     var remittanceSourceView: RemittanceOptionView!
-     var remittanceDestinationView: RemittanceOptionView!
-     var selectedViewType: Bool = false //false - source; true - destination
-     var activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
-    
+    var remittanceDestinationView: RemittanceOptionView!
+    var selectedViewType: Bool = false //false - source; true - destination
+    var activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
 
   private let destinationProviderCardNumber = CardNumberCellProvider()
   private let destinationProviderAccountNumber = AccountNumberCellProvider()
@@ -77,15 +96,18 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate {
     
         // Do any additional setup after loading the view.
   
-        self.sourcePagerView.pageControl.backgroundColor = UIColor(red: 241/255, green: 63/255, blue: 56/255, alpha: 1)
-    
-    
-           if let source = sourceConfigurations{
-               sourcePagerView.setConfig(config: source)
-             
-           }
-           
+     
+ 
+        let optionPickerRed = optionPicker as? PaymentOptionView
+              optionPickerRed?.contentView.backgroundColor = UIColor.red
+              
+        
     }
+    
+    
+    
+    
+    
     
     
     let taskTextFieldlimitLength = 11
@@ -131,6 +153,11 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate {
     }
     */
 
+    
+
+
+
+    
 }
 
 extension UITextField {
@@ -165,6 +192,7 @@ extension FreeDetailsViewController: OptionPickerDelegate {
         }
         pickerButton.isEnabled = true
     }
+
 }
 extension FreeDetailsViewController: RemittancePickerDelegate {
     func didSelectOptionView(optionView: RemittanceOptionView?, paymentOption: PaymentOption?) {

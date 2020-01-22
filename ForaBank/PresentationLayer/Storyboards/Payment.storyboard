@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="OPN-w7-Pxo">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="OPN-w7-Pxo">
     <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -39,7 +39,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Платежи и переводы" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8dV-nZ-mMl">
-                                        <rect key="frame" x="80" y="8.5" width="160" height="21.5"/>
+                                        <rect key="frame" x="80.5" y="11" width="159" height="19"/>
                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -58,9 +58,8 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Yz-SV-jwE" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="25" width="320" height="543"/>
                                 <subviews>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" sectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="dNT-nK-TXt" customClass="CustomTableView" customModule="ForaBank" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="543"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="dNT-nK-TXt" customClass="CustomTableView" customModule="ForaBank" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="27" width="320" height="516"/>
                                         <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="sectionIndexColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="sectionIndexBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -76,7 +75,7 @@
                                     <constraint firstItem="dNT-nK-TXt" firstAttribute="leading" secondItem="8Yz-SV-jwE" secondAttribute="leading" id="BLf-4j-65J"/>
                                     <constraint firstAttribute="trailing" secondItem="dNT-nK-TXt" secondAttribute="trailing" id="WaX-sW-oP7"/>
                                     <constraint firstAttribute="bottom" secondItem="dNT-nK-TXt" secondAttribute="bottom" id="XoB-R8-nL1"/>
-                                    <constraint firstItem="dNT-nK-TXt" firstAttribute="top" secondItem="8Yz-SV-jwE" secondAttribute="top" id="lT6-h3-j6k"/>
+                                    <constraint firstItem="dNT-nK-TXt" firstAttribute="top" secondItem="8Yz-SV-jwE" secondAttribute="top" constant="27" id="lT6-h3-j6k"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -118,7 +117,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a3Z-UH-zhd" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2224" y="1043"/>
+            <point key="canvasLocation" x="2223.75" y="1042.605633802817"/>
         </scene>
         <!--Payments Details View Controller-->
         <scene sceneID="mUk-Xs-fOz">
@@ -617,12 +616,12 @@
                                                     <constraint firstItem="kC3-0W-tZP" firstAttribute="top" secondItem="I7A-7M-Xa6" secondAttribute="bottom" constant="2" id="x7O-PT-wSC"/>
                                                 </constraints>
                                             </view>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Комиссия (0%)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hST-eZ-kZE">
-                                                <rect key="frame" x="14" y="471" width="292" height="21"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Размер комиссии будет рассчитан на следующем шаге" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hST-eZ-kZE">
+                                                <rect key="frame" x="42" y="452" width="232" height="40"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="21" id="lee-go-nTq"/>
+                                                    <constraint firstAttribute="height" constant="40" id="lee-go-nTq"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="14"/>
+                                                <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="13"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -636,58 +635,62 @@
                                                 <state key="normal" title="Перевести">
                                                     <color key="titleColor" red="0.87647289039999998" green="0.40053808689999998" blue="0.35289543870000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 </state>
+                                                <connections>
+                                                    <segue destination="Xda-th-p6I" kind="show" id="fUU-h3-bWM"/>
+                                                </connections>
                                             </button>
+                                            <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="LFG-sL-18B" customClass="CustomTextField" customModule="ForaBank" customModuleProvider="target">
+                                                <rect key="frame" x="111.5" y="424" width="97" height="30"/>
+                                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.070000000000000007" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="tintColor" red="0.94897240400000005" green="0.67658257479999995" blue="0.44718337060000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="30" id="Jkr-fX-FeR"/>
+                                                    <constraint firstAttribute="width" constant="97" id="QyU-1S-v4F"/>
+                                                </constraints>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="18"/>
+                                                <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
+                                                <connections>
+                                                    <action selector="amountTextFieldValueChanged:" destination="fd0-20-J9h" eventType="editingChanged" id="Loh-ab-Psa"/>
+                                                    <action selector="amountTextFieldValueChanged:" destination="fd0-20-J9h" eventType="valueChanged" id="xcM-cP-MNK"/>
+                                                </connections>
+                                            </textField>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="₽" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZqK-rO-UZP">
+                                                <rect key="frame" x="192" y="424" width="15" height="30"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="30" id="DDF-cg-f7I"/>
+                                                    <constraint firstAttribute="width" constant="15" id="kcD-6F-5Pg"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="17"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                         </subviews>
                                         <color key="backgroundColor" red="0.93805062770000003" green="0.25358119610000002" blue="0.2107679546" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="BHL-jb-4Ty" secondAttribute="trailing" id="2eo-0c-jKN"/>
+                                            <constraint firstItem="ZqK-rO-UZP" firstAttribute="leading" secondItem="LFG-sL-18B" secondAttribute="trailing" constant="-16.5" id="3O9-Ai-0Xk"/>
+                                            <constraint firstItem="ZqK-rO-UZP" firstAttribute="bottom" secondItem="LFG-sL-18B" secondAttribute="bottom" id="7Pe-zm-qfi"/>
                                             <constraint firstItem="BHL-jb-4Ty" firstAttribute="top" secondItem="YzH-Gz-6Tm" secondAttribute="top" constant="76" id="Ja6-8I-ocW"/>
-                                            <constraint firstAttribute="trailing" secondItem="hST-eZ-kZE" secondAttribute="trailing" constant="14" id="NsE-xB-Tag"/>
-                                            <constraint firstItem="hST-eZ-kZE" firstAttribute="top" secondItem="BHL-jb-4Ty" secondAttribute="bottom" constant="57" id="Ok3-Vo-Q8e"/>
+                                            <constraint firstItem="hST-eZ-kZE" firstAttribute="top" secondItem="LFG-sL-18B" secondAttribute="bottom" constant="-2" id="MHS-pB-4Pt"/>
+                                            <constraint firstItem="LFG-sL-18B" firstAttribute="centerX" secondItem="YzH-Gz-6Tm" secondAttribute="centerX" id="NkX-jB-Hk5"/>
+                                            <constraint firstAttribute="trailing" secondItem="hST-eZ-kZE" secondAttribute="trailing" constant="46" id="NsE-xB-Tag"/>
+                                            <constraint firstItem="hST-eZ-kZE" firstAttribute="top" secondItem="BHL-jb-4Ty" secondAttribute="bottom" constant="38" id="Ok3-Vo-Q8e"/>
                                             <constraint firstAttribute="trailing" secondItem="Tnj-Nt-S8u" secondAttribute="trailing" constant="8" id="Uld-4g-XPl"/>
                                             <constraint firstItem="BHL-jb-4Ty" firstAttribute="leading" secondItem="YzH-Gz-6Tm" secondAttribute="leading" id="f53-H7-Pz3"/>
                                             <constraint firstItem="Tnj-Nt-S8u" firstAttribute="leading" secondItem="YzH-Gz-6Tm" secondAttribute="leading" constant="8" id="guj-0D-HOm"/>
+                                            <constraint firstItem="hST-eZ-kZE" firstAttribute="centerX" secondItem="YzH-Gz-6Tm" secondAttribute="centerX" constant="-2" id="p2C-YW-MI2"/>
                                             <constraint firstItem="Tnj-Nt-S8u" firstAttribute="top" secondItem="hST-eZ-kZE" secondAttribute="bottom" constant="3" id="sSv-B6-lbw"/>
-                                            <constraint firstItem="hST-eZ-kZE" firstAttribute="leading" secondItem="YzH-Gz-6Tm" secondAttribute="leading" constant="14" id="tKB-pL-UWQ"/>
+                                            <constraint firstItem="hST-eZ-kZE" firstAttribute="leading" secondItem="YzH-Gz-6Tm" secondAttribute="leading" constant="42" id="tKB-pL-UWQ"/>
                                         </constraints>
                                     </view>
-                                    <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="LFG-sL-18B" customClass="CustomTextField" customModule="ForaBank" customModuleProvider="target">
-                                        <rect key="frame" x="111.5" y="376" width="97" height="50"/>
-                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.070000000000000007" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <color key="tintColor" red="0.94897240400000005" green="0.67658257479999995" blue="0.44718337060000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="50" id="Jkr-fX-FeR"/>
-                                            <constraint firstAttribute="width" constant="97" id="QyU-1S-v4F"/>
-                                        </constraints>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="25"/>
-                                        <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
-                                        <connections>
-                                            <action selector="amountTextFieldValueChanged:" destination="fd0-20-J9h" eventType="editingChanged" id="Loh-ab-Psa"/>
-                                            <action selector="amountTextFieldValueChanged:" destination="fd0-20-J9h" eventType="valueChanged" id="xcM-cP-MNK"/>
-                                        </connections>
-                                    </textField>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="₽" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZqK-rO-UZP">
-                                        <rect key="frame" x="193.5" y="376" width="15" height="50"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="15" id="pyP-mH-tqB"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="17"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" red="0.93805062770000003" green="0.25358119610000002" blue="0.2107679546" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="YzH-Gz-6Tm" secondAttribute="bottom" constant="-20" id="2ft-nV-hSA"/>
                                     <constraint firstItem="YzH-Gz-6Tm" firstAttribute="top" secondItem="pEF-At-NnA" secondAttribute="top" constant="-44" id="7xw-89-7Nz"/>
                                     <constraint firstAttribute="trailing" secondItem="YzH-Gz-6Tm" secondAttribute="trailing" id="FHa-cf-OxE"/>
-                                    <constraint firstItem="ZqK-rO-UZP" firstAttribute="trailing" secondItem="LFG-sL-18B" secondAttribute="trailing" id="KnZ-Er-vGH"/>
-                                    <constraint firstItem="LFG-sL-18B" firstAttribute="centerX" secondItem="pEF-At-NnA" secondAttribute="centerX" id="Wag-CU-gDx"/>
-                                    <constraint firstItem="ZqK-rO-UZP" firstAttribute="top" secondItem="LFG-sL-18B" secondAttribute="top" id="Wgd-xG-PWu"/>
                                     <constraint firstItem="YzH-Gz-6Tm" firstAttribute="leading" secondItem="pEF-At-NnA" secondAttribute="leading" id="XmU-Fb-rmc"/>
-                                    <constraint firstItem="hST-eZ-kZE" firstAttribute="top" secondItem="LFG-sL-18B" secondAttribute="bottom" constant="1" id="gRS-zJ-BI6"/>
-                                    <constraint firstItem="ZqK-rO-UZP" firstAttribute="bottom" secondItem="LFG-sL-18B" secondAttribute="bottom" id="hl9-c0-ms0"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9BD-5a-los">
@@ -710,7 +713,7 @@
                                             <action selector="backButtonClicked:" destination="fd0-20-J9h" eventType="touchUpInside" id="pse-wY-JH7"/>
                                         </connections>
                                     </button>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uKy-yF-DeS" customClass="PagerView" customModule="ForaBank" customModuleProvider="target">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uKy-yF-DeS" customClass="PaymentRedOptionView" customModule="ForaBank" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="35" width="322" height="58"/>
                                         <color key="backgroundColor" red="0.93805062770000003" green="0.25358119610000002" blue="0.2107679546" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </view>
@@ -764,6 +767,7 @@
                         <outlet property="amountTextField" destination="LFG-sL-18B" id="S2R-Vg-gr9"/>
                         <outlet property="bikBank" destination="Bde-Cs-nnn" id="Cdi-Bt-9hS"/>
                         <outlet property="containerView" destination="pEF-At-NnA" id="lrB-1L-N29"/>
+                        <outlet property="header" destination="9BD-5a-los" id="hEn-h0-O7n"/>
                         <outlet property="innBank" destination="s8h-6c-uid" id="qWd-A3-ml9"/>
                         <outlet property="kppBank" destination="kC3-0W-tZP" id="1Pb-VF-tgR"/>
                         <outlet property="numberAcoount" destination="cct-HH-wKM" id="7lF-yc-66O"/>
@@ -1282,9 +1286,8 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Kga-02-0rp">
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Kga-02-0rp" customClass="CustomTableView" customModule="ForaBank" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="23" width="320" height="521"/>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                     </tableView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1343,4 +1346,7 @@
         <image name="tabbar_icon_payment" width="33" height="30"/>
         <image name="vertical_arrows" width="5" height="11"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="cst-cx-Cgc"/>
+    </inferredMetricsTieBreakers>
 </document>

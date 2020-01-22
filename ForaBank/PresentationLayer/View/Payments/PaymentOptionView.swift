@@ -38,7 +38,7 @@ class PaymentOptionView: UIView {
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 //        arrowsImageView.isHidden = true
-//        optionNameLabel.textColor = UIColor.red
+      
         
     }
 

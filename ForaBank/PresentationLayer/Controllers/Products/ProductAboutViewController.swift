@@ -94,12 +94,12 @@ class ProductAboutViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
-        return items!.count + cards!.count
+        return items!.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
-        let item = items![indexPath.item]
+        let item = items![indexPath.row]
         cell.backgroundColor = UIColor.white
         cell.tintColor = UIColor.white
         cell.textLabel?.text = item.title ?? ""

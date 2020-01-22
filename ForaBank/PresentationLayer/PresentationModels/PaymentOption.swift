@@ -30,11 +30,11 @@ struct PaymentOption: IPickerItem, IPresentationModel {
 
     var itemType: PickerItemType
     let id: Double
-    let name: String
+    var name: String
     var type: RemittanceOptionViewType
     let sum: Double
     let number: String
-    let maskedNumber: String
+    var maskedNumber: String
     let provider: String?
     let productType: ProductType
     

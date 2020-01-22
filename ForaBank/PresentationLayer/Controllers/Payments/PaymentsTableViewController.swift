@@ -27,6 +27,7 @@ class PaymentsTableViewController: UIViewController, UITableViewDelegate, UITabl
         } else if isModal {
             backButton.isHidden = false
         }
+        
     }
 
     // MARK: - Table view data source
@@ -39,27 +40,36 @@ class PaymentsTableViewController: UIViewController, UITableViewDelegate, UITabl
         return 4
     }
 
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100.0
+    }
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
         cell.backgroundColor = .white
         cell.selectionStyle = .none
         cell.textLabel?.textColor = .black
-
+    
+        
+        tableView.separatorColor = .lightGray
+        tableView.separatorStyle = .singleLine
+        cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+      
         switch indexPath.item {
         case 0:
-            cell.imageView?.image = UIImage(named: "payments_transfer_between-accounts")
+            cell.imageView?.image = UIImage(named: "cardscolor")
             cell.textLabel?.text = "Между своими счетами"
             break
         case 1:
-            cell.imageView?.image = UIImage(named: "payments_transfer_to-bank-client")
+            cell.imageView?.image = UIImage(named: "towncolor")
             cell.textLabel?.text = "Клиенту Фора-Банка"
             break
         case 2:
-            cell.imageView?.image = UIImage(named: "payments_services_phone-billing")
+            cell.imageView?.image = UIImage(named: "mobilecolorweight")
             cell.textLabel?.text = "По номеру телефона"
             break
         case 3:
-            cell.imageView?.image = UIImage(named: "payments_transfer_to-another-bank")
+            cell.imageView?.image = UIImage(named: "freecolor")
             cell.textLabel?.text = "По свободным реквизитам"
             break
         default:
@@ -67,6 +77,8 @@ class PaymentsTableViewController: UIViewController, UITableViewDelegate, UITabl
         }
         return cell
     }
+    
+
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 //        store.dispatch(startPayment(sourceOption: nil, destionationOption: nil))
@@ -112,7 +124,7 @@ class PaymentsTableViewController: UIViewController, UITableViewDelegate, UITabl
 
             freeDetailsVC.sourceConfigurations = [
             PaymentOptionsPagerItem(provider: sourceProvider, delegate: freeDetailsVC)
-            
+                
             ]
             
             let rootVC = tableView.parentContainerViewController()

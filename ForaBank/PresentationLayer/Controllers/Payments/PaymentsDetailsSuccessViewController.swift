@@ -10,20 +10,8 @@ import UIKit
 import ReSwift
 
 
-class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber{
-    
-    weak var delegate: PaymentDetailsPresenterDelegate?
 
-
-
-
-    private var isLoading = false
-    private var canAskFee = false
-    private var canMakePayment = false
-    
-    
-    var delegatePresent: PaymentDetailsPresenterDelegate?
-    // MARK: - Properties
+class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
 
     @IBOutlet weak var arrowImageView: UIImageView!
     @IBOutlet weak var returnButton: ButtonRounded!
@@ -38,11 +26,6 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber{
     @IBOutlet weak var destinationNumber: UILabel!
     @IBOutlet weak var destinationSum: UILabel!
 
-    var sourceOption: String = ""
-    var phoneNumber: String = ""
-
-    var sourceConfigurations: [ICellConfigurator]?
-       var destinationConfigurations: [ICellConfigurator]?
     // MARK: - Actions
 
     @IBAction func returnButtonClicked(_ sender: Any) {
@@ -60,11 +43,11 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber{
     // MARK: - Lifecycle
 
     func setSource(config: Any?, value: Any?) {
-        switch value {
-        case let sourceOption as PaymentOption:
-            cardNameLabel.text = sourceOption.name
-            cardSumLabel.text = "\(String(sourceOption.value)) ₽"
-            cardNumberLabel.text = sourceOption.maskedNumber
+        switch (config, value) {
+        case (is PaymentOptionsPagerItem, let destinationOption as PaymentOption):
+            cardNameLabel.text = destinationOption.name
+            cardSumLabel.text = "\(String(destinationOption.value)) ₽"
+            cardNumberLabel.text = destinationOption.maskedNumber
         default:
             break
         }
@@ -91,6 +74,7 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber{
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         arrowImageView.image = arrowImageView.image?.withRenderingMode(.alwaysTemplate)
         arrowImageView.tintColor = .white
 
@@ -98,16 +82,10 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber{
         returnButton.layer.borderWidth = 1
         returnButton.layer.borderColor = UIColor.white.cgColor
 
-
         setSource(config: sourceConfig, value: sourceValue)
         setDestination(config: destinationConfig, value: destinationValue)
         sumLabel.text = "\(String(describing: operationSum!)) ₽"
     }
-        
-        
-        
-            
-
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -137,19 +115,19 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber{
         //optionsTable.reloadData()
         //        setUpRemittanceViews()
 
-    
+        guard let sourceOption = state.sourceOption, let destinationOption = state.destinationOption, let sum = state.paymentSum else {
+            return
+        }
 
-        cardNameLabel.text = state.products![0].name
-        cardSumLabel.text = String(state.products![0].balance)
-        cardNumberLabel.text = state.products![0].numberMasked
-        sumLabel.text = "Nothing"
-        destinationName.text = "Nothing"
-        destinationNumber.text = "Nothing"
-        destinationSum.text = "Nothing"
+        cardNameLabel.text = sourceOption.name
+        cardSumLabel.text = String(describing: sourceOption.value)
+        cardNumberLabel.text = sourceOption.maskedNumber
 
+        destinationName.text = destinationOption.name
+        destinationSum.text = String(describing: destinationOption.value)
+        destinationNumber.text = destinationOption.maskedNumber
 
 //        sumLabel.text = "\(sum) ₽"
-
     }
 
 // MARK: - Methods
@@ -165,4 +143,3 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber{
         }
     }
 }
-

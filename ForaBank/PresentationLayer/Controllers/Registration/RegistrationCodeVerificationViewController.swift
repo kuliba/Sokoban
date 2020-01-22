@@ -10,6 +10,7 @@ import UIKit
 import FlexiblePageControl
 import Hero
 import ReSwift
+import Alamofire
 
 class RegistrationCodeVerificationViewController: UIViewController, StoreSubscriber {
 
@@ -62,7 +63,9 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
             self?.continueButton.isHidden = false
             self?.foraPreloader?.isHidden = false
             if success {
+                
                 store.dispatch(finishVerification)
+                
             } else {
                 self?.foraPreloader?.isHidden = true
                 let alert = UIAlertController(title: "Неудача", message: "Неверный код", preferredStyle: UIAlertController.Style.alert)
@@ -79,6 +82,7 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
     }
     @IBAction func resetPasswordCheckCode(_ sender: Any) {
         view.endEditing(true)
+        
         continueButton.isHidden = true
         NetworkManager.shared().checkCodeResetPassword(code: self.codeNumberTextField.text ?? "") { [weak self] (success) in
             self?.continueButton.isHidden = false
@@ -190,9 +194,13 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
 //        addCircleView()
         if pageControl != nil {
             setUpPageControl()
+            
+          
+            
+            
         }
-
         
+   
         
         codeNumberTextField.delegate = self
         
