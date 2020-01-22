@@ -163,8 +163,6 @@
 		963B62E02360A93A00DD9A3E /* JFContactsPicker.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 963B62DB2360A93A00DD9A3E /* JFContactsPicker.xcconfig */; };
 		963B62E12360A93A00DD9A3E /* JFContactsPicker-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 963B62DC2360A93A00DD9A3E /* JFContactsPicker-Info.plist */; };
 		96414BC72354C06B00C12EED /* PaymentsDetailsSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96414BC62354C06B00C12EED /* PaymentsDetailsSuccessViewController.swift */; };
-		9648AD3323CED9CE0090C196 /* PaymentRedOptionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9648AD3223CED9CE0090C196 /* PaymentRedOptionView.xib */; };
-		9648AD3923CEE8880090C196 /* PaymentRedOptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9648AD3823CEE8880090C196 /* PaymentRedOptionView.swift */; };
 		96514513234F829E00A4713F /* RefreshView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96514511234F829D00A4713F /* RefreshView.swift */; };
 		96514514234F829E00A4713F /* RefreshView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96514512234F829E00A4713F /* RefreshView.xib */; };
 		9651451A234F890300A4713F /* ic_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 96514519234F890300A4713F /* ic_logo.png */; };
@@ -548,8 +546,6 @@
 		963B62DC2360A93A00DD9A3E /* JFContactsPicker-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "JFContactsPicker-Info.plist"; sourceTree = "<group>"; };
 		963B62DD2360A93A00DD9A3E /* JFContactsPicker-umbrella.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JFContactsPicker-umbrella.h"; sourceTree = "<group>"; };
 		96414BC62354C06B00C12EED /* PaymentsDetailsSuccessViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentsDetailsSuccessViewController.swift; sourceTree = "<group>"; };
-		9648AD3223CED9CE0090C196 /* PaymentRedOptionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentRedOptionView.xib; sourceTree = "<group>"; };
-		9648AD3823CEE8880090C196 /* PaymentRedOptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentRedOptionView.swift; sourceTree = "<group>"; };
 		96514511234F829D00A4713F /* RefreshView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RefreshView.swift; sourceTree = "<group>"; };
 		96514512234F829E00A4713F /* RefreshView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RefreshView.xib; sourceTree = "<group>"; };
 		96514519234F890300A4713F /* ic_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_logo.png; sourceTree = "<group>"; };
@@ -1410,9 +1406,7 @@
 				BDABE687234640D000CA0754 /* PaymentOptionView.swift */,
 				BDABE6892346417C00CA0754 /* PaymentOptionView.xib */,
 				A5B473C321B3C0D200F2E41F /* RemittanceOptionView.swift */,
-				9648AD3223CED9CE0090C196 /* PaymentRedOptionView.xib */,
 				BDFE1B15233D085400C49A5B /* Cells */,
-				9648AD3823CEE8880090C196 /* PaymentRedOptionView.swift */,
 			);
 			path = Payments;
 			sourceTree = "<group>";
@@ -1920,7 +1914,6 @@
 				09F2410A21707B86007B7D73 /* FeedInfo3Cell.xib in Resources */,
 				A55B7B8021A6B51E00A8A7FE /* 10.mov in Resources */,
 				966B4252235F508A00AF4256 /* GoogleService-Info2.plist in Resources */,
-				9648AD3323CED9CE0090C196 /* PaymentRedOptionView.xib in Resources */,
 				09E0F13F215A65AE0042FB6A /* Payment.storyboard in Resources */,
 				09E0F142215A65D40042FB6A /* Services.storyboard in Resources */,
 				BDFE1B14233D083E00C49A5B /* PickerTableViewCell.xib in Resources */,
@@ -2289,7 +2282,6 @@
 				9658B98D23A140FD00117727 /* CustomAlertViewDelegate.swift in Sources */,
 				89C8DF122191AFA700D92B0A /* DepositsDepositCell.swift in Sources */,
 				BDAEE0F1239A50D6007690E7 /* ITableViewController.swift in Sources */,
-				9648AD3923CEE8880090C196 /* PaymentRedOptionView.swift in Sources */,
 				A568142621CBCD48002C0899 /* BankBranchClusterView.swift in Sources */,
 				BD6F597A2334BAA4002F4D4E /* StateReducer.swift in Sources */,
 				A5C5E6D621A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift in Sources */,
