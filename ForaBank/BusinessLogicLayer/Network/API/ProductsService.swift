@@ -40,6 +40,8 @@ class ProductsService: IProductService {
                         for productData in data {
                             guard let productData = productData as? Dictionary<String, Any>,
                                 let product = Product.from(NSDictionary(dictionary: productData)) else { continue }
+                     
+
                             products.append(product)
                         }
                         completionHandler(true, products)

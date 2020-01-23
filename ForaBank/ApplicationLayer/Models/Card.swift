@@ -50,6 +50,7 @@ class Card: Mappable, IProduct {
             AboutItem(title: "Доступный остаток", value: "\(balance)"),
 
             AboutItem(title: "Тариф", value: name ?? "")]
+        
     }
 
     required init(map: Mapper) throws {

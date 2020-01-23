@@ -1,4 +1,4 @@
-/*
+    /*
  * Copyright (C) 2017-2019 Brig Invest ltd. All rights reserved.
  * CONFIDENTIAL
  *
@@ -142,7 +142,11 @@ class DepositsCardsListViewController: UIViewController {
         hero.modalAnimationType = .none
         saveData()
         NotificationCenter.default.addObserver(self, selector: #selector(handlePopucclosing), name: NSNotification.Name(rawValue: "customName"), object: nil)
-
+        cards.sort(by: {$0.number > $1.number})
+        
+        for i in 0..<cards.count{
+            print(cards[i].number)
+        }
     }
 
 
@@ -660,8 +664,23 @@ class DepositsCardsListViewController: UIViewController {
             vc.pickerFrame = contentView.convert(optionPickerButton.frame, to: nil)
             vc.pickerFrame.origin.x = vc.pickerFrame.origin.x + 25
             vc.pickerFrame.size.width = vc.pickerFrame.size.width - 25
-            vc.pickerOptions = ["По статусу карты (по умолчанию)", "по сроку действия "]
+            vc.pickerOptions = ["По статусу карты", "по сроку действия "]
             vc.delegate = self
+            
+            let statusCardSort = vc.pickerOptions[0]
+            let dateCardSort = vc.pickerOptions[1]
+            let pickOptionTag = vc.pickerOptions.indices.contains(sender.tag)
+            if pickOptionTag == true  {
+                cards.sort(by: {Int($0.validThru!) < Int($1.validThru!) })
+                
+                
+                for i in 0..<cards.count{
+                          print(cards[i].validThru)
+                      }
+                
+            }
+            
+            print(pickOptionTag)
             present(vc, animated: true, completion: nil)
         }
     }

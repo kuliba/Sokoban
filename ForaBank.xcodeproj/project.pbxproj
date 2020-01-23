@@ -188,6 +188,7 @@
 		9698996A2303FD190066C55B /* LoansCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 969899692303FD190066C55B /* LoansCell.xib */; };
 		96AB361923323B2B009FD828 /* CardHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AB361823323B2B009FD828 /* CardHistory.swift */; };
 		96B0E5E4238D16460045FE7A /* ServiceBest2Pay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96B0E5E3238D16460045FE7A /* ServiceBest2Pay.swift */; };
+		96BB09AF23D85F3D00E8BD23 /* CardInfoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BB09AE23D85F3D00E8BD23 /* CardInfoService.swift */; };
 		96BEAE4922FABBA00029C63D /* iCarousel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE4822FABBA00029C63D /* iCarousel.framework */; };
 		96BEAE4B22FABBA40029C63D /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE4A22FABBA40029C63D /* Alamofire.framework */; };
 		96BEAE4D22FABBA80029C63D /* DeviceKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE4C22FABBA80029C63D /* DeviceKit.framework */; };
@@ -571,6 +572,7 @@
 		969899692303FD190066C55B /* LoansCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoansCell.xib; sourceTree = "<group>"; };
 		96AB361823323B2B009FD828 /* CardHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardHistory.swift; sourceTree = "<group>"; };
 		96B0E5E3238D16460045FE7A /* ServiceBest2Pay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceBest2Pay.swift; sourceTree = "<group>"; };
+		96BB09AE23D85F3D00E8BD23 /* CardInfoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardInfoService.swift; sourceTree = "<group>"; };
 		96BEAE4022FAB9170029C63D /* iCarousel */ = {isa = PBXFileReference; lastKnownFileType = folder; name = iCarousel; path = Pods/iCarousel; sourceTree = "<group>"; };
 		96BEAE4822FABBA00029C63D /* iCarousel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = iCarousel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		96BEAE4A22FABBA40029C63D /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1473,6 +1475,7 @@
 				BD2083802361E0FF0010E03C /* ProductsService.swift */,
 				BD20835E23609A680010E03C /* RegService.swift */,
 				BD20834E23609A670010E03C /* StatementService.swift */,
+				96BB09AE23D85F3D00E8BD23 /* CardInfoService.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -2311,6 +2314,7 @@
 				BD02598A2396B91300D0B23A /* IAuthenticationService.swift in Sources */,
 				BD6D5674233A0B9000B7CF4B /* UnauthorizedZoneTabBarController.swift in Sources */,
 				A568142421CBCD38002C0899 /* BankBranchViews.swift in Sources */,
+				96BB09AF23D85F3D00E8BD23 /* CardInfoService.swift in Sources */,
 				09AF708C216F73FD00E7FCFC /* FeedCurrent2Cell.swift in Sources */,
 				09F2410C2170871F007B7D73 /* FeedInfoViewController.swift in Sources */,
 				BD8106A1234E1263004A43E9 /* PhoneNumberCellProvider.swift in Sources */,

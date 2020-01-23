@@ -9,7 +9,7 @@
 import Foundation
 import Alamofire
 
-class CardService: CardServiceProtocol {
+class CardInfoService: CardInfoServiceProtocol {
 
     private let host: Host
     private var datedTransactions = [DatedTransactions]()
@@ -18,9 +18,9 @@ class CardService: CardServiceProtocol {
         self.host = host
     }
 
-    func getCardList(headers: HTTPHeaders, completionHandler: @escaping (Bool, [Card]?) -> Void) {
+    func getCardInfo(headers: HTTPHeaders, completionHandler: @escaping (Bool, [Card]?) -> Void) {
         var cards = [Card]()
-        let url = host.apiBaseURL + "rest/getCardList"
+        let url = host.apiBaseURL + "rest/getCardInfo"
 
         Alamofire.request(url, method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
@@ -54,15 +54,7 @@ class CardService: CardServiceProtocol {
 
                                 guard let card = Card.from(NSDictionary(dictionary: original)) else { return }
                                 card.customName = customName ?? ""
-
-
                                 cards.append(card)
-
-                                cards.sort(by: {$0.status > $1.status})
-                                     
-                                     for i in 0..<cards.count{
-                                         print(cards[i].status)
-                                     }
                             }
                         }
                         completionHandler(true, cards)

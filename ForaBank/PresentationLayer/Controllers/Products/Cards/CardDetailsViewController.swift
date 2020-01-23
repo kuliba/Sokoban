@@ -136,7 +136,7 @@ class CardDetailsViewController: UIViewController {
 
         hero.isEnabled = true
         hero.modalAnimationType = .none
-    }
+        }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -274,7 +274,7 @@ private extension CardDetailsViewController {
         case 2:
             let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductAboutViewController") as? ProductAboutViewController
             managementVC?.items = card?.getProductAbout()
-            managementVC?.cards = "card"
+            managementVC?.numberCard = card!.number
             newViewController = managementVC
      
         default:

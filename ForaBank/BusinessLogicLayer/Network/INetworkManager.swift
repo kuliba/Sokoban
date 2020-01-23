@@ -43,6 +43,7 @@ protocol AuthServiceProtocol {
 protocol CardServiceProtocol {
     func getCardList(headers: HTTPHeaders,
                      completionHandler: @escaping (_ success: Bool, _ cards: [Card]?) -> Void)
+
     func blockCard(withNumber num: String,
                    completionHandler: @escaping (_ success: Bool) -> Void)
     func getTransactionsStatement(forCardNumber: String,
@@ -52,6 +53,11 @@ protocol CardServiceProtocol {
                                   completionHandler: @escaping (_ success: Bool, _ datedTransactions: [DatedTransactions]?) -> Void)
 }
 
+
+protocol CardInfoServiceProtocol {
+    func getCardInfo(headers: HTTPHeaders,
+                         completionHandler: @escaping (_ success: Bool, _ saveCardName: [Card]?) -> Void)
+}
 
 protocol SaveCardNameProtocol {
     func getSaveCardName(headers: HTTPHeaders,

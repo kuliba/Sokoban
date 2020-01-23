@@ -20,7 +20,6 @@ class ProductAboutViewController: UITableViewController {
         let description: String
         let latitude: Double
         let longitude: Double
-
         static let locations = [
             Location(title: "Начало действия карты", value: "123", description: "Old.", latitude: 10.11111, longitude: 1.11111),
             Location(title: "Дата окончания действия карты", value: "123", description: "Old.", latitude: 10.11111, longitude: 1.11111),
@@ -28,11 +27,12 @@ class ProductAboutViewController: UITableViewController {
         ]
     }
 
-  
+
     
     var locationsAll = Location.locations
-    var cards: String? = nil
+    var cards =  [Card]()
     var items: [IAboutItem]?
+    var numberCard: String = ""
 
 //    let flattenCollection = [locationsAll, items].joined() // type: FlattenBidirectionalCollection<[Array<Int>]>
 //    let flattenArray = Array(flattenCollection)
@@ -58,11 +58,15 @@ class ProductAboutViewController: UITableViewController {
         tableView.contentInset.bottom = 10
         tableView.backgroundColor = .white
 
-//        NetworkManager.shared().getCardList { [weak self] (success, cards) in
-//            self?.cards = cards ?? []
-//        }
+        NetworkManager.shared().getCardList { [weak self] (success, cards) in
+            self?.cards = cards ?? []
+        }
+        NetworkManager.shared().getCardInfo { [weak self] (success, cards) in
+                  self?.cards = cards ?? []
+              }
 
-                
+
+       
         
         // Uncomment the following line to pre10
         //         serve selection between presentations
@@ -93,19 +97,21 @@ class ProductAboutViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
+        
         return items!.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
         let item = items![indexPath.row]
+        let cardInfo = numberCard
+
         cell.backgroundColor = UIColor.white
         cell.tintColor = UIColor.white
-        cell.textLabel?.text = item.title ?? ""
+        cell.textLabel?.text = item.title ?? cardInfo
         cell.textLabel?.font = UIFont(name: "Roboto-Light", size: 16.0)
 
-        cell.detailTextLabel?.text = item.value ?? ""
+        cell.detailTextLabel?.text = item.value ?? "123"
         cell.detailTextLabel?.font = UIFont(name: "Roboto", size: 18.0)
         cell.detailTextLabel?.textColor = UIColor(named: "black")
         cell.textLabel?.textColor = UIColor.black
