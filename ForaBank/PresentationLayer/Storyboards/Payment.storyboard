@@ -322,7 +322,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="55"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Перевод" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4du-DO-k3Q">
-                                        <rect key="frame" x="127" y="16.5" width="66" height="21.5"/>
+                                        <rect key="frame" x="127" y="19" width="66" height="19"/>
                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -713,22 +713,22 @@
                                             <action selector="backButtonClicked:" destination="fd0-20-J9h" eventType="touchUpInside" id="pse-wY-JH7"/>
                                         </connections>
                                     </button>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uKy-yF-DeS" customClass="PaymentOptionView" customModule="ForaBank" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="35" width="322" height="58"/>
-                                        <color key="backgroundColor" red="0.93805062770000003" green="0.25358119610000002" blue="0.2107679546" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KNO-Zr-uOP" customClass="PagerView" customModule="ForaBank" customModuleProvider="target">
+                                        <rect key="frame" x="16" y="37" width="290" height="65"/>
+                                        <color key="backgroundColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </view>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="101" id="0C9-6t-AyD"/>
                                     <constraint firstItem="0YK-Og-yIt" firstAttribute="centerX" secondItem="9BD-5a-los" secondAttribute="centerX" id="1SH-7Y-AKU"/>
-                                    <constraint firstAttribute="bottom" secondItem="uKy-yF-DeS" secondAttribute="bottom" constant="8" id="3cn-Xp-KFW"/>
-                                    <constraint firstItem="uKy-yF-DeS" firstAttribute="top" secondItem="CGT-yO-68G" secondAttribute="bottom" constant="-5" id="4e0-NZ-C5w"/>
                                     <constraint firstAttribute="bottom" secondItem="0YK-Og-yIt" secondAttribute="bottom" constant="63" id="Ag4-pX-mxY"/>
-                                    <constraint firstAttribute="trailing" secondItem="uKy-yF-DeS" secondAttribute="trailing" constant="-2" id="DL6-M2-5LT"/>
                                     <constraint firstItem="CGT-yO-68G" firstAttribute="top" secondItem="9BD-5a-los" secondAttribute="top" constant="10" id="Jd8-Pa-q27"/>
-                                    <constraint firstItem="uKy-yF-DeS" firstAttribute="leading" secondItem="9BD-5a-los" secondAttribute="leading" id="Yz5-bJ-b4f"/>
+                                    <constraint firstItem="KNO-Zr-uOP" firstAttribute="leading" secondItem="9BD-5a-los" secondAttribute="leading" constant="16" id="cu7-LJ-WlJ"/>
+                                    <constraint firstAttribute="bottom" secondItem="KNO-Zr-uOP" secondAttribute="bottom" constant="-1" id="d0j-fV-ww0"/>
+                                    <constraint firstItem="KNO-Zr-uOP" firstAttribute="top" secondItem="9BD-5a-los" secondAttribute="top" constant="37" id="qLn-9M-y40"/>
                                     <constraint firstItem="CGT-yO-68G" firstAttribute="leading" secondItem="9BD-5a-los" secondAttribute="leading" constant="14" id="u2J-kG-tBA"/>
+                                    <constraint firstAttribute="trailing" secondItem="KNO-Zr-uOP" secondAttribute="trailing" constant="14" id="wOf-HX-sDs"/>
                                     <constraint firstAttribute="bottom" secondItem="CGT-yO-68G" secondAttribute="bottom" constant="61" id="wn0-6e-zMy"/>
                                 </constraints>
                             </view>
@@ -767,11 +767,11 @@
                         <outlet property="amountTextField" destination="LFG-sL-18B" id="S2R-Vg-gr9"/>
                         <outlet property="bikBank" destination="Bde-Cs-nnn" id="Cdi-Bt-9hS"/>
                         <outlet property="containerView" destination="pEF-At-NnA" id="lrB-1L-N29"/>
-                        <outlet property="header" destination="9BD-5a-los" id="hEn-h0-O7n"/>
                         <outlet property="innBank" destination="s8h-6c-uid" id="qWd-A3-ml9"/>
                         <outlet property="kppBank" destination="kC3-0W-tZP" id="1Pb-VF-tgR"/>
                         <outlet property="numberAcoount" destination="cct-HH-wKM" id="7lF-yc-66O"/>
-                        <outlet property="sourcePagerView" destination="uKy-yF-DeS" id="SMT-ZL-1du"/>
+                        <outlet property="roundedEdgeText" destination="BHL-jb-4Ty" id="jY3-Rh-96C"/>
+                        <outlet property="sourcePagerView" destination="KNO-Zr-uOP" id="r6s-9y-dbz"/>
                         <outlet property="textField" destination="0ph-eK-zcn" id="2ye-6s-vXM"/>
                     </connections>
                 </viewController>
@@ -837,7 +837,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Перевод" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Li-FN-g8p">
-                                        <rect key="frame" x="127.5" y="11" width="65.5" height="19"/>
+                                        <rect key="frame" x="127.5" y="8.5" width="65.5" height="21.5"/>
                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -1347,6 +1347,6 @@
         <image name="vertical_arrows" width="5" height="11"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="cst-cx-Cgc"/>
+        <segue reference="fUU-h3-bWM"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -58,6 +58,10 @@ protocol CardInfoServiceProtocol {
     func getCardInfo(headers: HTTPHeaders,
                          completionHandler: @escaping (_ success: Bool, _ saveCardName: [Card]?) -> Void)
 }
+protocol SuggestBankServiceProtocol {
+    func getSuggestBank(headers: HTTPHeaders,
+    completionHandler: @escaping (_ success: Bool, _ saveCardName: [Card]?) -> Void)
+}
 
 protocol SaveCardNameProtocol {
     func getSaveCardName(headers: HTTPHeaders,

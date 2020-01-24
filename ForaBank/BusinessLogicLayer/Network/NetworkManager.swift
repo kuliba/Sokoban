@@ -21,6 +21,7 @@ class NetworkManager {
         let cardService = CardService(host: host)
         let cardInfoService = CardInfoService(host: host)
         let paymentServices = PaymentServices(host: host)
+        let suggestBankService = SuggestBankService(host: host)
         let regService = RegService(host: host)
         let depositsService = DepositService(host: host)
         let accountsService = AccountsService(host: host)
@@ -31,7 +32,7 @@ class NetworkManager {
         let productService = ProductsService(host: host)
 
 
-        let networkManager = NetworkManager(host, authService, regService, cardService, cardInfoService, paymentServices, depositsService, accountsService, loanPaymentSchedule, historyService, loansService, statementService, productService: productService)
+        let networkManager = NetworkManager(host, authService, suggestBankService, regService, cardService, cardInfoService, paymentServices, depositsService, accountsService, loanPaymentSchedule, historyService, loansService, statementService, productService: productService)
         // Configuration
 
 
@@ -42,6 +43,7 @@ class NetworkManager {
     private let regService: RegServiceProtocol
     private let cardService: CardServiceProtocol
     private let cardInfoService: CardInfoServiceProtocol
+    private let suggestBankService: SuggestBankService
     private let paymentServices: IPaymetsApi
     private let productService: IProductService
     private let depositsService: DepositsServiceProtocol
@@ -60,12 +62,13 @@ class NetworkManager {
     ]
 
 // Initialization
-    private init(_ host: Host, _ authService: AuthServiceProtocol, _ regService: RegServiceProtocol, _ cardService: CardServiceProtocol, _ cardInfoService: CardInfoServiceProtocol, _ paymentsServices: IPaymetsApi, _ depositsService: DepositsServiceProtocol, _ accountsService: AccountsServiceProtocol, _ LaonSchedules: LoanPaymentScheduleProtocol, _ historyService: HistoryServiceProtocol, _ loansService: LoansServiceProtocol, _ statementService: StatementServiceProtocol, productService: IProductService) {
+    private init(_ host: Host, _ authService: AuthServiceProtocol, _ suggestBankService: SuggestBankService, _ regService: RegServiceProtocol, _ cardService: CardServiceProtocol, _ cardInfoService: CardInfoServiceProtocol, _ paymentsServices: IPaymetsApi, _ depositsService: DepositsServiceProtocol, _ accountsService: AccountsServiceProtocol, _ LaonSchedules: LoanPaymentScheduleProtocol, _ historyService: HistoryServiceProtocol, _ loansService: LoansServiceProtocol, _ statementService: StatementServiceProtocol, productService: IProductService) {
         self.host = host
         self.authService = authService
         self.regService = regService
         self.cardService = cardService
         self.cardInfoService = cardInfoService
+        self.suggestBankService = suggestBankService
         self.paymentServices = paymentsServices
         self.loansService = loansService
         self.loanPaymentSchedule = LaonSchedules
@@ -241,6 +244,12 @@ class NetworkManager {
     func getCardInfo(completionHandler: @escaping (_ success: Bool, _ cardInfo: [Card]?) -> Void) {
         cardInfoService.getCardInfo(headers: headers, completionHandler: completionHandler)
     }
+    func getSuggestBank(completionHandler: @escaping (_ success: Bool, _ cardInfo: [Card]?) -> Void) {
+              suggestBankService.getSuggestBank(headers: headers, completionHandler: completionHandler)
+        
+
+      }
+
 
     func getPaymentsList(completionHandler: @escaping (_ success: Bool, _ payments: [Operations]?) -> Void) {
         paymentServices.getPaymentsList(completionHandler: completionHandler)

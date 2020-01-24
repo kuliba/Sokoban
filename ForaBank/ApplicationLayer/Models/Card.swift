@@ -32,7 +32,7 @@ class Card: Mappable, IProduct {
     var paypass: Bool?
     var miniStatement: String?
     var validThru: Double?
-    var startDate: String?
+    var startDate: Int?
     var expirationDate: String?
     var blockedMoney: Double?
     var updatingDate: Date?

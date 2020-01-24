@@ -9,7 +9,8 @@
 import Foundation
 import Alamofire
 
-class CardService: CardServiceProtocol {
+class SuggestBankService: SuggestBankServiceProtocol {
+    
 
     private let host: Host
     private var datedTransactions = [DatedTransactions]()
@@ -18,15 +19,18 @@ class CardService: CardServiceProtocol {
         self.host = host
     }
 
-    func getCardList(headers: HTTPHeaders, completionHandler: @escaping (Bool, [Card]?) -> Void) {
+    func getSuggestBank(headers: HTTPHeaders, completionHandler: @escaping (Bool, [Card]?) -> Void) {
         var cards = [Card]()
-        let url = host.apiBaseURL + "rest/getCardList"
+        let url =  "https://git.briginvest.ru/dbo/api/v2/rest/suggestBank"
 
-        Alamofire.request(url, method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: headers)
+        let parametrs: [String: Any] = ["query": "044525000"]
+        
+        
+        Alamofire.request(url, method: HTTPMethod.post, parameters: parametrs, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])
             .responseJSON { [unowned self] response in
-
+                
                 if let json = response.result.value as? Dictionary<String, Any>,
                     let errorMessage = json["errorMessage"] as? String {
                     print("\(errorMessage) \(self)")
@@ -37,32 +41,29 @@ class CardService: CardServiceProtocol {
                 switch response.result {
                 case .success:
                     if let json = response.result.value as? Dictionary<String, Any>,
-                        let data = json["data"] as? Array<Any> {
-                    for cardData in data {
+                        let data = json["data"] as? Array<Any>{
+                            for cardData in data {
                             if let cardData = cardData as? Dictionary<String, Any>,
                             let original = cardData["original"] as? Dictionary<String, Any> {
+                                let startDate = original["dateStart"] as? Int
+
+                                let dateEnd = original["dateEnd"] as? Int
                                 let customName = cardData["customName"] as? String
-                                //                                let title = original["name"] as? String
-                                //                                _ = original["account"] as? String
-                                //                                let number = original["number"] as? String
-                                //                                let maskedNumber = original["maskedNumber"] as? String
-//                                let availableBalance = original["balance"] as? Double
-//                                let branch = original["branch"] as? String
-//                                let id = original["cardID"] as? String
-//                                let product = (original["product"] as? String) ?? ""
-//                                var expirationDate: String? = dayMonthYear(milisecond: original["validThru"] as! Double)
 
-                                guard let card = Card.from(NSDictionary(dictionary: original)) else { return }
+                                                                let title = original["name"] as? String
+                                                                _ = original["account"] as? String
+                                                                let number = original["number"] as? String
+                                                                let maskedNumber = original["maskedNumber"] as? String
+                                let availableBalance = original["balance"] as? Double
+                                let branch = original["branch"] as? String
+                                let id = original["cardID"] as? String
+                                let product = (original["product"] as? String) ?? ""
+                                var expirationDate: String? = dayMonthYear(milisecond: original["validThru"] as! Double)
+
+                                guard let card = Card.from(NSDictionary(dictionary: cardData)) else { return }
                                 card.customName = customName ?? ""
-
-
+                                card.startDate = startDate
                                 cards.append(card)
-
-                                cards.sort(by: {$0.status > $1.status})
-                                     
-                                     for i in 0..<cards.count{
-                                         print(cards[i].status)
-                                     }
                             }
                         }
                         completionHandler(true, cards)

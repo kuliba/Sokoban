@@ -142,11 +142,8 @@ class DepositsCardsListViewController: UIViewController {
         hero.modalAnimationType = .none
         saveData()
         NotificationCenter.default.addObserver(self, selector: #selector(handlePopucclosing), name: NSNotification.Name(rawValue: "customName"), object: nil)
-        cards.sort(by: {$0.number > $1.number})
-        
-        for i in 0..<cards.count{
-            print(cards[i].number)
-        }
+        self.scrollView.contentSize.height = 1.0 // disable vertical scroll
+
     }
 
 
@@ -667,20 +664,7 @@ class DepositsCardsListViewController: UIViewController {
             vc.pickerOptions = ["По статусу карты", "по сроку действия "]
             vc.delegate = self
             
-            let statusCardSort = vc.pickerOptions[0]
-            let dateCardSort = vc.pickerOptions[1]
-            let pickOptionTag = vc.pickerOptions.indices.contains(sender.tag)
-            if pickOptionTag == true  {
-                cards.sort(by: {Int($0.validThru!) < Int($1.validThru!) })
-                
-                
-                for i in 0..<cards.count{
-                          print(cards[i].validThru)
-                      }
-                
-            }
-            
-            print(pickOptionTag)
+         
             present(vc, animated: true, completion: nil)
         }
     }
@@ -895,7 +879,14 @@ private extension DepositsCardsListViewController {
                                                          constant: cardViewHeight!))
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(cardViewClicked(_:)))
             cardView.addGestureRecognizer(tapGesture)
+            
+
+
             cardViews.append(cardView)
+       
+            
+
+
         }
         //        panGesture = UIPanGestureRecognizer(target: self, action: #selector(dragUnselectedCardView(_:)))
         selectedCardView = cardViews.last
