@@ -10,6 +10,8 @@ import Foundation
 import Alamofire
 
 class RegService: RegServiceProtocol {
+ 
+    
 
 
 
@@ -62,6 +64,77 @@ class RegService: RegServiceProtocol {
                 }
         }
     }
+    
+    
+    
+    func paymentCompany(headers: HTTPHeaders,
+                        numberAcoount : String,
+                        amount : String,
+                        kppBank : String,
+                        innBank : String,
+                        bikBank : String,
+                        comment: String,
+                        nameCompany: String,
+                        commission: Double,
+    completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ commission: Double?) -> Void) {
+        var commissions: Double?
+           let url = "https://git.briginvest.ru/dbo/api/v2/rest/prepareExternal"
+                 print(url)
+                 let date = NSDate()
+                 let parameters: [String: AnyObject] = [
+                   "amount": amount as AnyObject,
+                   "payeeKPP": kppBank as AnyObject,
+                   "compilerStatus": "00" as AnyObject,
+                   "payeeINN": innBank as AnyObject,
+                   "payeeBankBIC": bikBank as AnyObject,
+                   "date": "2020-01-28" as AnyObject,
+                   "payeeName": nameCompany as AnyObject,
+                   "payerCardNumber": "4656260150230695" as AnyObject,
+                   "payeeAccountNumber": numberAcoount as AnyObject,
+                   "payerINN": "0" as AnyObject,
+                    "comment": comment as AnyObject
+                 ]
+
+                 Alamofire.request(url, method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+                     .validate(statusCode: MultiRange(200..<300, 401..<402))
+                     .validate(contentType: ["application/json"])
+                     .responseJSON { [unowned self] response in
+
+                         if let json = response.result.value as? Dictionary<String, Any>,
+                             let errorMessage = json["errorMessage"] as? String {
+                            
+                             print("error1")
+                             print("\(errorMessage) \(self)")
+
+                             return
+                         }
+
+                         switch response.result {
+                         case .success:
+                            if let json = response.result.value as? Dictionary<String, Any>,
+                            let data = json["data"] as? Array<Any> {
+                            for cardData in data {
+                                if let cardData = cardData as? Dictionary<String, Any>{
+                                let commission = cardData["amount"] as? Double
+                                    let description = cardData["description"] as? String
+                                    print(commission!, description!)
+                                    commissions = commission
+                                }
+                                }
+                              completionHandler(false, "Error", commissions)
+                            
+                            }
+                          
+                            
+                            
+                            
+                             print(response.result.error.debugDescription)
+                         case .failure(let error):
+                             print("error")
+                             print("\(error) \(self)")
+                         }
+                 }
+             }
 
 
     func checkClient(headers: HTTPHeaders,

@@ -175,9 +175,13 @@
 		9660EEE8234C7B1100AE0647 /* CollapsibleTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9660EEE3234C7B1000AE0647 /* CollapsibleTableViewController.swift */; };
 		9660EEE9234C7B1100AE0647 /* CollapsibleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9660EEE4234C7B1100AE0647 /* CollapsibleTableViewCell.swift */; };
 		9660EEEA234C7B1100AE0647 /* ExampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9660EEE5234C7B1100AE0647 /* ExampleData.swift */; };
+		96617C1123E2BFC8001F7C0D /* TransferConfirmation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96617C1023E2BFC8001F7C0D /* TransferConfirmation.swift */; };
+		96617C1323E31EB7001F7C0D /* SourceValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96617C1223E31EB7001F7C0D /* SourceValue.swift */; };
 		966515AF235765C5001D54FC /* CardDetailsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 966515AE235765C5001D54FC /* CardDetailsCell.xib */; };
 		966B4252235F508A00AF4256 /* GoogleService-Info2.plist in Resources */ = {isa = PBXBuildFile; fileRef = 966B4251235F508A00AF4256 /* GoogleService-Info2.plist */; };
 		966DF5D823DB1A3D00F16CB9 /* SuggestBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966DF5D723DB1A3D00F16CB9 /* SuggestBank.swift */; };
+		966DF5DA23DEC38E00F16CB9 /* BankSuggest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966DF5D923DEC38E00F16CB9 /* BankSuggest.swift */; };
+		966DF5DC23DEDD5500F16CB9 /* SuggestCompany.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966DF5DB23DEDD5500F16CB9 /* SuggestCompany.swift */; };
 		967AA501236C68DE000EEE6B /* telephone 1.png in Resources */ = {isa = PBXBuildFile; fileRef = 967AA500236C68DE000EEE6B /* telephone 1.png */; };
 		96920C32235604C000CCC7EF /* OperationsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96920C31235604C000CCC7EF /* OperationsList.swift */; };
 		9696DED22387FAAF006BC972 /* WebC2CViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9696DED12387FAAE006BC972 /* WebC2CViewController.swift */; };
@@ -560,9 +564,13 @@
 		9660EEE3234C7B1000AE0647 /* CollapsibleTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollapsibleTableViewController.swift; sourceTree = "<group>"; };
 		9660EEE4234C7B1100AE0647 /* CollapsibleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollapsibleTableViewCell.swift; sourceTree = "<group>"; };
 		9660EEE5234C7B1100AE0647 /* ExampleData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleData.swift; sourceTree = "<group>"; };
+		96617C1023E2BFC8001F7C0D /* TransferConfirmation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferConfirmation.swift; sourceTree = "<group>"; };
+		96617C1223E31EB7001F7C0D /* SourceValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceValue.swift; sourceTree = "<group>"; };
 		966515AE235765C5001D54FC /* CardDetailsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CardDetailsCell.xib; sourceTree = "<group>"; };
 		966B4251235F508A00AF4256 /* GoogleService-Info2.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info2.plist"; sourceTree = "<group>"; };
 		966DF5D723DB1A3D00F16CB9 /* SuggestBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestBank.swift; sourceTree = "<group>"; };
+		966DF5D923DEC38E00F16CB9 /* BankSuggest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankSuggest.swift; sourceTree = "<group>"; };
+		966DF5DB23DEDD5500F16CB9 /* SuggestCompany.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestCompany.swift; sourceTree = "<group>"; };
 		967AA500236C68DE000EEE6B /* telephone 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "telephone 1.png"; sourceTree = "<group>"; };
 		96920C31235604C000CCC7EF /* OperationsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationsList.swift; sourceTree = "<group>"; };
 		9696DED12387FAAE006BC972 /* WebC2CViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebC2CViewController.swift; sourceTree = "<group>"; };
@@ -1009,6 +1017,8 @@
 				9697E2A22334E30500974505 /* ServicesList.swift */,
 				A568143721D35FEB002C0899 /* Transaction.swift */,
 				A57CF1BB2204364E00E855A5 /* TransactionStatement.swift */,
+				966DF5D923DEC38E00F16CB9 /* BankSuggest.swift */,
+				96617C1223E31EB7001F7C0D /* SourceValue.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1183,6 +1193,7 @@
 				A5B473C021B3BBCD00F2E41F /* RemittancePickerViewController.swift */,
 				BDFE1B0C233CE7BD00C49A5B /* PickerViewController.xib */,
 				96F0DF4E23C721D60012A8F0 /* FreeDetailsViewController.swift */,
+				96617C1023E2BFC8001F7C0D /* TransferConfirmation.swift */,
 			);
 			path = Payments;
 			sourceTree = "<group>";
@@ -1479,6 +1490,7 @@
 				BD20834E23609A670010E03C /* StatementService.swift */,
 				96BB09AE23D85F3D00E8BD23 /* CardInfoService.swift */,
 				966DF5D723DB1A3D00F16CB9 /* SuggestBank.swift */,
+				966DF5DB23DEDD5500F16CB9 /* SuggestCompany.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -2091,6 +2103,7 @@
 				BDAEE0ED2399104C007690E7 /* ISettingsPresenter.swift in Sources */,
 				9660EEE8234C7B1100AE0647 /* CollapsibleTableViewController.swift in Sources */,
 				9605AC162383D5A200652635 /* MainViewController.swift in Sources */,
+				96617C1123E2BFC8001F7C0D /* TransferConfirmation.swift in Sources */,
 				89C8DF0C21918DDC00D92B0A /* OptionPickerViewController.swift in Sources */,
 				BDFE1AC2233B906D00C49A5B /* App.swift in Sources */,
 				0939B5FB21774EA70029F03D /* DoubleRoundedEdgeView.swift in Sources */,
@@ -2110,10 +2123,12 @@
 				BD2083792360A29C0010E03C /* DepositsService.swift in Sources */,
 				895768CF2192E768005754D5 /* DepositsStatsViewController.swift in Sources */,
 				BD122C1A2368283B00FE0F01 /* PasscodeViewController.swift in Sources */,
+				966DF5DC23DEDD5500F16CB9 /* SuggestCompany.swift in Sources */,
 				BDF4F9462329105D007C448F /* Security.swift in Sources */,
 				BD57934F236C4B900056740C /* SettingsStorage.swift in Sources */,
 				0930F166215B5CDB00CFB593 /* RoundedEdgeView.swift in Sources */,
 				BDB6AFF423268C850006A534 /* PasscodeSignInViewController.swift in Sources */,
+				96617C1323E31EB7001F7C0D /* SourceValue.swift in Sources */,
 				BDABE68323463D4A00CA0754 /* DropDownPagerViewCell.swift in Sources */,
 				96E541162341656300770C06 /* ExpandingTableViewCell.swift in Sources */,
 				A528EF4221B106CF00D189DD /* BubblesStatsScrollView.swift in Sources */,
@@ -2136,6 +2151,7 @@
 				BDF4F94C23293C49007C448F /* PasscodeSignInState.swift in Sources */,
 				BD3BEFEF2373FA3700BA0D9B /* RegistrationSettings.swift in Sources */,
 				BDE4D08723226B4C0070BC3D /* IAboutItem.swift in Sources */,
+				966DF5DA23DEC38E00F16CB9 /* BankSuggest.swift in Sources */,
 				BDFE1ACA233BAE9B00C49A5B /* PaymentOption.swift in Sources */,
 				A568143821D35FEB002C0899 /* Transaction.swift in Sources */,
 				09F5DCE8218C4A5200390304 /* RegistrationTouchIDViewController.swift in Sources */,

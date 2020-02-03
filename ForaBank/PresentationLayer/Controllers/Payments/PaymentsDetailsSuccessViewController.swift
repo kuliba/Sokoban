@@ -84,7 +84,7 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
 
         setSource(config: sourceConfig, value: sourceValue)
         setDestination(config: destinationConfig, value: destinationValue)
-        sumLabel.text = "\(String(describing: operationSum!)) ₽"
+        sumLabel.text = "\(String(describing: operationSum ?? "12")) ₽"
     }
 
     override func viewDidAppear(_ animated: Bool) {

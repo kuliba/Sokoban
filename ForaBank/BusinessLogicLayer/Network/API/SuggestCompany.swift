@@ -9,7 +9,7 @@
 import Foundation
 import Alamofire
 
-class SuggestBankService: SuggestBankServiceProtocol {
+class SuggestCompanyService: SuggestCompanyServiceProtocol {
  
 
     private let host: Host
@@ -19,9 +19,9 @@ class SuggestBankService: SuggestBankServiceProtocol {
         self.host = host
     }
 
-   func getSuggestBank(bicBank: String?, headers: HTTPHeaders, completionHandler: @escaping (Bool, [BankSuggest]?, String?) -> Void) {
+   func getSuggestCompany(bicBank: String?, headers: HTTPHeaders, completionHandler: @escaping (Bool, [BankSuggest]?, String?) -> Void) {
     var cards = [BankSuggest]()
-        let url =  "https://git.briginvest.ru/dbo/api/v2/rest/suggestBank"
+        let url =  "https://git.briginvest.ru/dbo/api/v2/rest/suggestCompany"
         var parametrs: [String: Any] = ["query": bicBank as AnyObject,]
         
         
@@ -45,9 +45,9 @@ class SuggestBankService: SuggestBankServiceProtocol {
                             if let cardData = cardData as? Dictionary<String, Any>,
                             let original = cardData["data"] as? Dictionary<String, Any> {
                                 let value = cardData["value"] as? String
-                              
-
-                                let card = BankSuggest(value: value, kpp: "String")
+                              let dataCompany =  cardData["data"] as? Dictionary<String, Any>
+                                let kpp = dataCompany!["kpp"] as? String?
+                                let card = BankSuggest(value: value, kpp: kpp as! String)
                                
                                 cards.append(card)
                             }

@@ -8,7 +8,7 @@
 
 import UIKit
 import ReSwift
-
+import Alamofire
 
 
 
@@ -39,7 +39,9 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var pickerButton: UIButton!
     @IBOutlet weak var pagerView: PagerView!
     @IBOutlet weak var amountTextField: UITextField!
+    @IBOutlet weak var paymentCompany: ButtonRounded!
     
+    @IBOutlet weak var comment: CustomTextField!
     @IBOutlet weak var roundedEdgeText: RoundedEdgeView!
     
     @IBAction func amountTextFieldValueChanged(_ sender: Any) {
@@ -70,12 +72,102 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate {
      var selectedViewType: Bool = false //false - source; true - destination
      var activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
     var sourceConfig: Any?
-    var sourceValue: Any?
+    var sourceValue = Any?.self
     var destinationConfig: Any?
     var destinationValue: Any?
-    var cards = [Card]()
+    var cards = [BankSuggest]()
     var scrollView: UIScrollView!
+    var newName: String? = nil
+    var id: String? = nil
 
+    @IBOutlet weak var bankName: UILabel!
+    @IBAction func bikTextField(_ sender: Any) {
+        var bicBank: String = self.bikBank.text ?? "123"
+        if bikBank.text?.count == 9{
+            NetworkManager.shared().getSuggestBank(bicBank: bicBank) { [weak self] (success, cards, bicBank) in
+                self?.cards = cards ?? []
+                self!.bankName.text = "Банк не найден"
+                if cards?.count != 0{
+                var bicBank: String = self?.bikBank.text ?? "123"
+                self?.bankName.text = cards?[0].value
+                }
+            }
+            
+            bankName.isHidden = false
+        } else {
+            bankName.isHidden = true
+        }
+    }
+    
+    @IBOutlet weak var kppLabel: UILabel!
+    @IBOutlet weak var innCompany: UILabel!
+  
+    @IBAction func innCompany(_ sender: Any) {
+        let bicBank: String = self.innBank.text ?? "123"
+       
+        if innBank.text?.count == 10{
+            NetworkManager.shared().getSuggestCompany(bicBank: bicBank) { [weak self] (success, cards, bicBank) in
+                self?.cards = cards ?? []
+                self!.innCompany.text = "Юридическое лицо не найдено"
+                if cards?.count != 0{
+                self?.innCompany.text = cards?[0].value
+                self?.kppBank.text = cards?[0].kpp
+            }
+            }
+            innCompany.isHidden = false
+            bankName.isHidden = false
+        } else if innBank.text?.count == 12{
+            NetworkManager.shared().getSuggestCompany(bicBank: bicBank) { [weak self] (success, cards, bicBank) in
+                           self?.cards = cards ?? []
+                self!.innCompany.text = "Индивидуальный предприниматель не найден"
+                if cards?.count != 0{
+                            
+                           self?.innCompany.text = cards?[0].value
+                           self?.kppBank.text = cards?[0].kpp
+                       }
+            }
+                innCompany.isHidden = false
+                kppBank.isHidden = true
+                kppLabel.isHidden = true
+            
+            
+            }
+        else {
+            innCompany.isHidden = true
+            kppBank.isHidden = false
+            kppLabel.isHidden = false
+        }
+        
+        
+    
+    }
+
+    var comission = 20.0
+    @IBAction func paymentCompany(_ sender: Any) {
+        delegate?.didPressPrepareButton()
+       
+        NetworkManager.shared().paymentCompany( numberAcoount: numberAcoount.text! , amount: amountTextField.text!,  kppBank: kppBank.text!, innBank: innBank.text!, bikBank: bikBank.text!, comment: textField.text!, nameCompany: cards[0].value ?? "Банк не определен",commission:comission, completionHandler: { [weak self] success, errorMessage,comissions  in
+            let comission = comissions
+            
+            
+                if success {
+                    self?.delegate?.didPressPaymentButton()
+                    self?.performSegue(withIdentifier: "regSmsVerification", sender: nil)
+                } else {
+                    let alert = UIAlertController(title: "Неудача", message: errorMessage, preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                   
+                    self?.present(alert, animated: true, completion: nil)
+                    
+                }
+            })
+    }
+    
+    
+
+    
+
+    
     private let destinationProviderCardNumber = CardNumberCellProvider()
   private let destinationProviderAccountNumber = AccountNumberCellProvider()
   private let destinationProviderPhoneNumber = PhoneNumberCellProvider()
@@ -89,20 +181,33 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate {
   
         self.sourcePagerView.pageControl.backgroundColor = UIColor(red: 241/255, green: 63/255, blue: 56/255, alpha: 1)
     
-    
+        
            if let source = sourceConfigurations{
                sourcePagerView.setConfig(config: source)
              
            }
  
         
-        
-        NetworkManager.shared().getSuggestBank { [weak self] (success, cards) in
-                  self?.cards = cards ?? []
-
-        }
+        bankName.isHidden = true
+   
     }
     
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+                     if let dest = segue.destination as? TransferConfirmation {
+                       dest.bikNumberText = bikBank.text
+                       dest.innNumberText = innBank.text
+                       dest.kppNumberText = kppBank.text
+                       dest.numberAccountText = numberAcoount.text
+                       dest.amountText = amountTextField.text
+                        dest.commentText = textField.text ?? "Comment not found"
+                     }
+                 }
+
+    
+
+   
     
     let taskTextFieldlimitLength = 11
 
@@ -148,6 +253,62 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate {
     */
 
 }
+
+extension FreeDetailsViewController: PaymentDetailsPresenterDelegate {
+    func didFinishPreparation(success: Bool) {
+        if success {
+            performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
+            
+            
+            
+        } else {
+            AlertService.shared.show(title: "Ошибка", message: "При выполнении платежа произошла ошибка, попробуйте ещё раз позже", cancelButtonTitle: "Продолжить", okButtonTitle: nil, cancelCompletion: nil, okCompletion: nil)
+        }
+    }
+
+    func didUpdate(isLoading: Bool, canAskFee: Bool, canMakePayment: Bool) {
+        print(isLoading, canAskFee, canMakePayment)
+        paymentCompany.changeEnabled(isEnabled: canAskFee)
+    }
+}
+
+
+
+extension FreeDetailsViewController: ICellConfiguratorDelegate {
+    func didReciveNewValue(value: Any, from configurator: ICellConfigurator) {
+        if let sourceConfig = sourceConfigurations?.filter({ $0 == configurator }).first {
+            switch (sourceConfig, value) {
+            case (is PaymentOptionsPagerItem, let destinationOption as PaymentOption):
+                delegate?.didChangeSource(paymentOption: .option(destinationOption))
+                break
+            default:
+                break
+            }
+            self.sourceConfig = sourceConfig
+            self.sourceValue = value as! Any?.Type
+        } else if let destinationConfig = destinationConfigurations?.filter({ $0 == configurator }).first {
+            switch (destinationConfig, value) {
+            case (is PaymentOptionsPagerItem, let destinationOption as PaymentOption):
+                delegate?.didChangeDestination(paymentOption: .option(destinationOption))
+                break
+            case (is CardNumberPagerItem, let destinationOption as String):
+                delegate?.didChangeDestination(paymentOption: .cardNumber(destinationOption))
+                break
+            case (is PhoneNumberPagerItem, let destinationOption as String):
+                delegate?.didChangeDestination(paymentOption: .phoneNumber(destinationOption))
+                break
+            case (is AccountNumberPagerItem, let destinationOption as String):
+                delegate?.didChangeDestination(paymentOption: .accountNumber(destinationOption))
+                break
+            default:
+                break
+            }
+            self.destinationConfig = destinationConfig
+            self.destinationValue = value
+        }
+    }
+}
+
 
 extension UITextField {
 
@@ -200,33 +361,4 @@ extension FreeDetailsViewController: RemittancePickerDelegate {
         }
     }
 }
-extension FreeDetailsViewController: ICellConfiguratorDelegate {
-    func didReciveNewValue(value: Any, from configurator: ICellConfigurator) {
-        if let sourceConfig = sourceConfigurations?.filter({ $0 == configurator }).first {
-            switch (sourceConfig, value) {
-            case (is PaymentOptionsPagerItem, let destinationOption as PaymentOption):
-                delegate?.didChangeSource(paymentOption: .option(destinationOption))
-                break
-            default:
-                break
-            }
-        } else if let destinationConfig = destinationConfigurations?.filter({ $0 == configurator }).first {
-            switch (destinationConfig, value) {
-            case (is PaymentOptionsPagerItem, let destinationOption as PaymentOption):
-                delegate?.didChangeDestination(paymentOption: .option(destinationOption))
-                break
-            case (is CardNumberPagerItem, let destinationOption as String):
-                delegate?.didChangeDestination(paymentOption: .cardNumber(destinationOption))
-                break
-            case (is PhoneNumberPagerItem, let destinationOption as String):
-                delegate?.didChangeDestination(paymentOption: .phoneNumber(destinationOption))
-                break
-            case (is AccountNumberPagerItem, let destinationOption as String):
-                delegate?.didChangeDestination(paymentOption: .accountNumber(destinationOption))
-                break
-            default:
-                break
-            }
-        }
-    }
-}
+

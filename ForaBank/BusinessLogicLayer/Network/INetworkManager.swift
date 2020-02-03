@@ -59,8 +59,12 @@ protocol CardInfoServiceProtocol {
                          completionHandler: @escaping (_ success: Bool, _ saveCardName: [Card]?) -> Void)
 }
 protocol SuggestBankServiceProtocol {
-    func getSuggestBank(headers: HTTPHeaders,
-    completionHandler: @escaping (_ success: Bool, _ saveCardName: [Card]?) -> Void)
+    func getSuggestBank(bicBank: String?, headers: HTTPHeaders,
+                        completionHandler: @escaping (_ success: Bool, _ saveCardName: [BankSuggest]?,_ bicBank: String?) -> Void)
+}
+protocol SuggestCompanyServiceProtocol {
+    func getSuggestCompany(bicBank: String?, headers: HTTPHeaders,
+                        completionHandler: @escaping (_ success: Bool, _ saveCardName: [BankSuggest]?,_ bicBank: String?) -> Void)
 }
 
 protocol SaveCardNameProtocol {
@@ -97,6 +101,18 @@ protocol LoansServiceProtocol {
                   completionHandler: @escaping (_ success: Bool, _ obligations: [Loan]?) -> Void)
 }
 
+protocol paymentCompany {
+    func paymentCompany(headers: HTTPHeaders,
+                      numberAcoount: String,
+                      amount: String,
+                      kppBank: String,
+                      innBank: String,
+                      bikBank: String,
+                      comment: String,
+                      nameCompany: String,
+                      commission: Double,
+                      completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ commission: Double?) -> Void)
+}
 protocol DepositsServiceProtocol {
     func getBonds(headers: HTTPHeaders,
                   completionHandler: @escaping (_ success: Bool, _ obligations: [Deposit]?) -> Void)
@@ -115,6 +131,16 @@ protocol RegServiceProtocol {
                      phone: String,
                      verificationCode: Int,
                      completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void)
+    func paymentCompany(headers: HTTPHeaders,
+                         numberAcoount: String,
+                         amount: String,
+                         kppBank: String,
+                         innBank: String,
+                         bikBank: String,
+                         comment: String,
+                         nameCompany: String,
+                         commission: Double,
+                         completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ commission: Double?) -> Void)
     func verifyCode(headers: HTTPHeaders,
                     verificationCode: Int,
                     completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void)

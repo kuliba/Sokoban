@@ -22,6 +22,8 @@ class NetworkManager {
         let cardInfoService = CardInfoService(host: host)
         let paymentServices = PaymentServices(host: host)
         let suggestBankService = SuggestBankService(host: host)
+        let suggestCompanyService = SuggestCompanyService(host: host)
+
         let regService = RegService(host: host)
         let depositsService = DepositService(host: host)
         let accountsService = AccountsService(host: host)
@@ -32,7 +34,7 @@ class NetworkManager {
         let productService = ProductsService(host: host)
 
 
-        let networkManager = NetworkManager(host, authService, suggestBankService, regService, cardService, cardInfoService, paymentServices, depositsService, accountsService, loanPaymentSchedule, historyService, loansService, statementService, productService: productService)
+        let networkManager = NetworkManager(host, authService, suggestBankService, suggestCompanyService, regService, cardService, cardInfoService, paymentServices, depositsService, accountsService, loanPaymentSchedule, historyService, loansService, statementService, productService: productService)
         // Configuration
 
 
@@ -44,6 +46,7 @@ class NetworkManager {
     private let cardService: CardServiceProtocol
     private let cardInfoService: CardInfoServiceProtocol
     private let suggestBankService: SuggestBankService
+    private let suggestCompanyService: SuggestCompanyService
     private let paymentServices: IPaymetsApi
     private let productService: IProductService
     private let depositsService: DepositsServiceProtocol
@@ -62,7 +65,7 @@ class NetworkManager {
     ]
 
 // Initialization
-    private init(_ host: Host, _ authService: AuthServiceProtocol, _ suggestBankService: SuggestBankService, _ regService: RegServiceProtocol, _ cardService: CardServiceProtocol, _ cardInfoService: CardInfoServiceProtocol, _ paymentsServices: IPaymetsApi, _ depositsService: DepositsServiceProtocol, _ accountsService: AccountsServiceProtocol, _ LaonSchedules: LoanPaymentScheduleProtocol, _ historyService: HistoryServiceProtocol, _ loansService: LoansServiceProtocol, _ statementService: StatementServiceProtocol, productService: IProductService) {
+    private init(_ host: Host, _ authService: AuthServiceProtocol, _ suggestBankService: SuggestBankService,_ suggestCompanyService: SuggestCompanyService, _ regService: RegServiceProtocol, _ cardService: CardServiceProtocol, _ cardInfoService: CardInfoServiceProtocol, _ paymentsServices: IPaymetsApi, _ depositsService: DepositsServiceProtocol, _ accountsService: AccountsServiceProtocol, _ LaonSchedules: LoanPaymentScheduleProtocol, _ historyService: HistoryServiceProtocol, _ loansService: LoansServiceProtocol, _ statementService: StatementServiceProtocol, productService: IProductService) {
         self.host = host
         self.authService = authService
         self.regService = regService
@@ -71,6 +74,7 @@ class NetworkManager {
         self.suggestBankService = suggestBankService
         self.paymentServices = paymentsServices
         self.loansService = loansService
+        self.suggestCompanyService = suggestCompanyService
         self.loanPaymentSchedule = LaonSchedules
         self.depositsService = depositsService
         self.accountsService = accountsService
@@ -193,6 +197,29 @@ class NetworkManager {
             }
         }
     }
+    func paymentCompany(
+    numberAcoount: String,
+    amount: String,
+    kppBank: String,
+    innBank: String,
+    bikBank: String,
+    comment: String,
+    nameCompany: String,
+    commission: Double,
+    completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ commission: Double?) -> Void) {
+        authService.csrf(headers: headers) { [unowned self] (success, newHeaders) in
+            if success {
+                self.headers.merge(newHeaders ?? [:], uniquingKeysWith: { (_, k2) -> String in
+                    return k2
+                })
+                self.regService.paymentCompany(headers: self.headers, numberAcoount: numberAcoount, amount: amount, kppBank: kppBank, innBank: innBank, bikBank: bikBank, comment: comment, nameCompany: nameCompany, commission: commission , completionHandler: completionHandler)
+            }
+            else {
+                completionHandler(false, nil, 20.0)
+            }
+        }
+    }
+
 
     func doRegistration(completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ login: String?, _ password: String?) -> Void) {
         authService.csrf(headers: headers) { [unowned self] (success, newHeaders) in
@@ -244,11 +271,17 @@ class NetworkManager {
     func getCardInfo(completionHandler: @escaping (_ success: Bool, _ cardInfo: [Card]?) -> Void) {
         cardInfoService.getCardInfo(headers: headers, completionHandler: completionHandler)
     }
-    func getSuggestBank(completionHandler: @escaping (_ success: Bool, _ cardInfo: [Card]?) -> Void) {
-              suggestBankService.getSuggestBank(headers: headers, completionHandler: completionHandler)
+    func getSuggestBank(bicBank: String, completionHandler: @escaping (_ success: Bool, _ cardInfo: [BankSuggest]?,_ bicBank: String?) -> Void) {
+        suggestBankService.getSuggestBank(bicBank: bicBank, headers: headers, completionHandler: completionHandler)
         
 
       }
+    func getSuggestCompany(bicBank: String, completionHandler: @escaping (_ success: Bool, _ cardInfo: [BankSuggest]?,_ bicBank: String?) -> Void) {
+        suggestCompanyService.getSuggestCompany(bicBank: bicBank, headers: headers, completionHandler: completionHandler)
+        
+
+      }
+
 
 
     func getPaymentsList(completionHandler: @escaping (_ success: Bool, _ payments: [Operations]?) -> Void) {
