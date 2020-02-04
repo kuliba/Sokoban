@@ -25,7 +25,43 @@ protocol FreeDetailsViewControllerDelegate {
 }
 
 
-class FreeDetailsViewController: UIViewController, UITextFieldDelegate {
+class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellConfiguratorDelegate {
+    
+    var sourceValue: Any?
+
+     func didReciveNewValue(value: Any, from configurator: ICellConfigurator) {
+           if let sourceConfig = sourceConfigurations?.filter({ $0 == configurator }).first {
+               switch (sourceConfig, value) {
+               case (is PaymentOptionsPagerItem, let destinationOption as PaymentOption):
+                   delegate?.didChangeSource(paymentOption: .option(destinationOption))
+                   break
+               default:
+                   break
+               }
+               self.sourceConfig = sourceConfig
+            self.sourceValue = value
+           } else if let destinationConfig = destinationConfigurations?.filter({ $0 == configurator }).first {
+               switch (destinationConfig, value) {
+               case (is PaymentOptionsPagerItem, let destinationOption as PaymentOption):
+                   delegate?.didChangeDestination(paymentOption: .option(destinationOption))
+                   break
+               case (is CardNumberPagerItem, let destinationOption as String):
+                   delegate?.didChangeDestination(paymentOption: .cardNumber(destinationOption))
+                   break
+               case (is PhoneNumberPagerItem, let destinationOption as String):
+                   delegate?.didChangeDestination(paymentOption: .phoneNumber(destinationOption))
+                   break
+               case (is AccountNumberPagerItem, let destinationOption as String):
+                   delegate?.didChangeDestination(paymentOption: .accountNumber(destinationOption))
+                   break
+               default:
+                   break
+               }
+               self.destinationConfig = destinationConfig
+               self.destinationValue = value
+           }
+       }
+    
 
     @IBOutlet weak var sourcePagerView: PagerView!
     @IBOutlet weak var numberAcoount: CustomTextField!
@@ -72,7 +108,6 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate {
      var selectedViewType: Bool = false //false - source; true - destination
      var activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
     var sourceConfig: Any?
-    var sourceValue = Any?.self
     var destinationConfig: Any?
     var destinationValue: Any?
     var cards = [BankSuggest]()
@@ -143,11 +178,17 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate {
     }
 
     var comission = 20.0
+    var numberPayeer: String = ""
+    
     @IBAction func paymentCompany(_ sender: Any) {
         delegate?.didPressPrepareButton()
-       
-        NetworkManager.shared().paymentCompany( numberAcoount: numberAcoount.text! , amount: amountTextField.text!,  kppBank: kppBank.text!, innBank: innBank.text!, bikBank: bikBank.text!, comment: textField.text!, nameCompany: cards[0].value ?? "Банк не определен",commission:comission, completionHandler: { [weak self] success, errorMessage,comissions  in
+        let numberCard = self.sourceValue as! PaymentOption
+        let numberPayer = numberCard.number
+        NetworkManager.shared().paymentCompany( numberAcoount: numberAcoount.text! , amount: amountTextField.text!,  kppBank: kppBank.text!, payerCard: numberPayer, innBank: innBank.text!, bikBank: bikBank.text!, comment: textField.text!, nameCompany: cards[0].value ?? "Банк не определен",commission:comission, completionHandler: { [weak self] success, errorMessage,comissions  in
             let comission = comissions
+           
+           
+            
             
             
                 if success {
@@ -176,7 +217,7 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         amountTextField.delegate = self
-    
+  
         // Do any additional setup after loading the view.
   
         self.sourcePagerView.pageControl.backgroundColor = UIColor(red: 241/255, green: 63/255, blue: 56/255, alpha: 1)
@@ -185,8 +226,7 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate {
            if let source = sourceConfigurations{
                sourcePagerView.setConfig(config: source)
              
-           }
- 
+        }
         
         bankName.isHidden = true
    
@@ -274,40 +314,7 @@ extension FreeDetailsViewController: PaymentDetailsPresenterDelegate {
 
 
 
-extension FreeDetailsViewController: ICellConfiguratorDelegate {
-    func didReciveNewValue(value: Any, from configurator: ICellConfigurator) {
-        if let sourceConfig = sourceConfigurations?.filter({ $0 == configurator }).first {
-            switch (sourceConfig, value) {
-            case (is PaymentOptionsPagerItem, let destinationOption as PaymentOption):
-                delegate?.didChangeSource(paymentOption: .option(destinationOption))
-                break
-            default:
-                break
-            }
-            self.sourceConfig = sourceConfig
-            self.sourceValue = value as! Any?.Type
-        } else if let destinationConfig = destinationConfigurations?.filter({ $0 == configurator }).first {
-            switch (destinationConfig, value) {
-            case (is PaymentOptionsPagerItem, let destinationOption as PaymentOption):
-                delegate?.didChangeDestination(paymentOption: .option(destinationOption))
-                break
-            case (is CardNumberPagerItem, let destinationOption as String):
-                delegate?.didChangeDestination(paymentOption: .cardNumber(destinationOption))
-                break
-            case (is PhoneNumberPagerItem, let destinationOption as String):
-                delegate?.didChangeDestination(paymentOption: .phoneNumber(destinationOption))
-                break
-            case (is AccountNumberPagerItem, let destinationOption as String):
-                delegate?.didChangeDestination(paymentOption: .accountNumber(destinationOption))
-                break
-            default:
-                break
-            }
-            self.destinationConfig = destinationConfig
-            self.destinationValue = value
-        }
-    }
-}
+
 
 
 extension UITextField {

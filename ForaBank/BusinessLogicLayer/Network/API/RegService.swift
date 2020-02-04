@@ -70,6 +70,7 @@ class RegService: RegServiceProtocol {
     func paymentCompany(headers: HTTPHeaders,
                         numberAcoount : String,
                         amount : String,
+                        payerCard: String,
                         kppBank : String,
                         innBank : String,
                         bikBank : String,
@@ -89,7 +90,7 @@ class RegService: RegServiceProtocol {
                    "payeeBankBIC": bikBank as AnyObject,
                    "date": "2020-01-28" as AnyObject,
                    "payeeName": nameCompany as AnyObject,
-                   "payerCardNumber": "4656260150230695" as AnyObject,
+                   "payerCardNumber": payerCard as AnyObject,
                    "payeeAccountNumber": numberAcoount as AnyObject,
                    "payerINN": "0" as AnyObject,
                     "comment": comment as AnyObject

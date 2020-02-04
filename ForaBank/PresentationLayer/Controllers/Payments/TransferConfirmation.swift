@@ -7,8 +7,10 @@
 //
 
 import UIKit
+import ReSwift
 
-class TransferConfirmation: UIViewController {
+class TransferConfirmation: UIViewController    {
+    
 
     @IBOutlet weak var kppNumber: CustomTextField!
     @IBOutlet weak var innNumber: CustomTextField!
@@ -35,6 +37,7 @@ class TransferConfirmation: UIViewController {
           }
       }
     
+
     
     
     override func viewDidLoad() {
@@ -49,12 +52,20 @@ class TransferConfirmation: UIViewController {
         // Do any additional setup after loading the view.
     }
     
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+                        if let dest = segue.destination as? PaymentsDetailsSuccessViewController {
+                            dest.destinationSum.text = amountText ?? "mOE"
+                        
+                        }
+                    }
+    
 
         @IBAction func checkPaymentCode(_ sender: Any) {
         
             NetworkManager.shared().makeCard2Card(code: self.codeNumberTextField.text ?? "") { [weak self] (success) in
                 if success {
-                    self?.performSegue(withIdentifier: "finish", sender: nil)
+                    self?.performSegue(withIdentifier: "toSuccess", sender: nil)
                 } else {
                     let alert = UIAlertController(title: "Неудача", message: "Неверный код", preferredStyle: UIAlertController.Style.alert)
                     alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
