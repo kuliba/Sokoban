@@ -206,14 +206,14 @@ class NetworkManager {
     bikBank: String,
     comment: String,
     nameCompany: String,
-    commission: Double,
+    comission: Double,
     completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ commission: Double?) -> Void) {
         authService.csrf(headers: headers) { [unowned self] (success, newHeaders) in
             if success {
                 self.headers.merge(newHeaders ?? [:], uniquingKeysWith: { (_, k2) -> String in
                     return k2
                 })
-                self.regService.paymentCompany(headers: self.headers, numberAcoount: numberAcoount, amount: amount, payerCard: payerCard, kppBank: kppBank, innBank: innBank, bikBank: bikBank, comment: comment, nameCompany: nameCompany, commission: commission , completionHandler: completionHandler)
+                self.regService.paymentCompany(headers: self.headers, numberAcoount: numberAcoount, amount: amount, payerCard: payerCard, kppBank: kppBank, innBank: innBank, bikBank: bikBank, comment: comment, nameCompany: nameCompany, commission: comission , completionHandler: completionHandler)
             }
             else {
                 completionHandler(false, nil, 20.0)

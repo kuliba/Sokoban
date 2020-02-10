@@ -1,25 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina5_5" orientation="portrait" appearance="light"/>
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15705"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PagerView" customModule="ForaBank" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="RedPagerView" customModule="ForaBank" customModuleProvider="target">
             <connections>
-                <outlet property="contentView" destination="iN0-l3-epB" id="1an-FX-IEv"/>
-                <outlet property="pageControl" destination="q3p-Uf-xIK" id="E7o-Y4-eTi"/>
-                <outlet property="pagerView" destination="FRE-Sd-7nW" id="5ZF-2B-JzJ"/>
+                <outlet property="contentView" destination="Y7A-vF-coI" id="cHh-Il-0FD"/>
+                <outlet property="pageControl" destination="ibV-Vq-Fyf" id="Zfz-y2-sTW"/>
+                <outlet property="pagerView" destination="xFA-8h-d7l" id="guP-FO-he0"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB">
+        <view contentMode="scaleToFill" id="Y7A-vF-coI">
             <rect key="frame" x="0.0" y="0.0" width="290" height="70"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FRE-Sd-7nW" customClass="FSPagerView" customModule="FSPagerView">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xFA-8h-d7l" customClass="FSPagerView" customModule="FSPagerView">
                     <rect key="frame" x="0.0" y="0.0" width="290" height="60"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <userDefinedRuntimeAttributes>
@@ -28,15 +29,15 @@
                         <userDefinedRuntimeAttribute type="boolean" keyPath="alwaysBounceHorizontal" value="YES"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
-                        <outlet property="dataSource" destination="-1" id="GND-di-I3P"/>
-                        <outlet property="delegate" destination="-1" id="yaE-gS-vvz"/>
+                        <outlet property="dataSource" destination="-1" id="biY-7P-70r"/>
+                        <outlet property="delegate" destination="-1" id="JFu-h5-OS8"/>
                     </connections>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q3p-Uf-xIK" customClass="FSPageControl" customModule="FSPagerView">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ibV-Vq-Fyf" customClass="FSPageControl" customModule="FSPagerView">
                     <rect key="frame" x="0.0" y="60" width="290" height="10"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="10" id="0tg-hW-f5n"/>
+                        <constraint firstAttribute="height" constant="10" id="f47-2M-Fv1"/>
                     </constraints>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="hidesForSinglePage" value="YES"/>
@@ -45,15 +46,16 @@
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="FRE-Sd-7nW" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="2fm-yL-3Js"/>
-                <constraint firstAttribute="bottom" secondItem="q3p-Uf-xIK" secondAttribute="bottom" id="EJX-1q-fRy"/>
-                <constraint firstAttribute="trailing" secondItem="q3p-Uf-xIK" secondAttribute="trailing" id="OMr-3x-z2P"/>
-                <constraint firstAttribute="top" secondItem="FRE-Sd-7nW" secondAttribute="top" id="Yw3-9R-0JZ"/>
-                <constraint firstAttribute="leading" secondItem="q3p-Uf-xIK" secondAttribute="leading" id="cYa-oT-PB6"/>
-                <constraint firstItem="FRE-Sd-7nW" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="cl4-gO-Lxu"/>
-                <constraint firstItem="q3p-Uf-xIK" firstAttribute="top" secondItem="FRE-Sd-7nW" secondAttribute="bottom" id="sGK-Pk-udS"/>
+                <constraint firstAttribute="trailing" secondItem="ibV-Vq-Fyf" secondAttribute="trailing" id="DEG-Dx-3ho"/>
+                <constraint firstAttribute="leading" secondItem="ibV-Vq-Fyf" secondAttribute="leading" id="Uz9-mv-dqa"/>
+                <constraint firstAttribute="top" secondItem="xFA-8h-d7l" secondAttribute="top" id="Wmh-vz-FgQ"/>
+                <constraint firstItem="xFA-8h-d7l" firstAttribute="leading" secondItem="Y7A-vF-coI" secondAttribute="leading" id="iD4-gD-7uB"/>
+                <constraint firstItem="ibV-Vq-Fyf" firstAttribute="top" secondItem="xFA-8h-d7l" secondAttribute="bottom" id="j2a-TX-9x3"/>
+                <constraint firstItem="xFA-8h-d7l" firstAttribute="trailing" secondItem="Y7A-vF-coI" secondAttribute="trailing" id="pKX-fl-Rlq"/>
+                <constraint firstAttribute="bottom" secondItem="ibV-Vq-Fyf" secondAttribute="bottom" id="zxS-0c-pgD"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="v1T-w0-uQ0"/>
             <point key="canvasLocation" x="-360.86956521739131" y="-152.00892857142856"/>
         </view>
     </objects>

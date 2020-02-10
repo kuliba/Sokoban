@@ -46,9 +46,9 @@ class UnauthorizedZoneTabBarController: UITabBarController, StoreSubscriber {
 
     func newState(state: PasscodeSignInState) {
 
-        if let nonNilCurrState = currState, ForaBank.isEqual(first: state, to: nonNilCurrState) {
-            return
-        }
+//        if let nonNilCurrState = currState, ForaBank.isEqual(first: state, to: nonNilCurrState) {
+//            return
+//        }
 
         currState = state
 

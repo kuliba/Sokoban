@@ -10,7 +10,8 @@ import UIKit
 import ReSwift
 
 class TransferConfirmation: UIViewController    {
-    
+    weak var delegate: FirstViewControllerDelegate?
+
 
     @IBOutlet weak var kppNumber: CustomTextField!
     @IBOutlet weak var innNumber: CustomTextField!
@@ -22,12 +23,11 @@ class TransferConfirmation: UIViewController    {
     var innNumberText: String? = nil
     var kppNumberText: String? = nil
     var numberAccountText: String? = nil
-    var commissions: Double? = nil
+    var commission: Double? = 30.0
     var amountText: String? = nil
     @IBOutlet weak var codeNumberTextField: UITextField!
     var commentText: String? = nil
     var segueId: String? = nil
-
     @IBOutlet weak var sendButton: ButtonRounded!
     
     @IBAction func backButtonClicked(_ sender: Any) {
@@ -38,7 +38,8 @@ class TransferConfirmation: UIViewController    {
       }
     
 
-    
+  
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,19 +47,54 @@ class TransferConfirmation: UIViewController    {
         innNumber.text = innNumberText
         kppNumber.text = kppNumberText
         numberAccountPayer.text = numberAccountText
-        amount.text = amountText 
+        amount.text = ("\(amountText!)р (коммиссия \(commission!)р)")
         comment.text = commentText
-        print(commissions as Any)
+        print("Это комиссия \(commission)")
+        delegate?.update(text: 30.0)
+        var sourceValue = "СоурсеВелью"
+        guard let amount = amountText else { return }
+        let amountDouble = Double(amount)
+        let commissionDouble = Double(commission!)
+        sendButton.setTitle("Перевести \(amountDouble! + commissionDouble)", for:.normal)
         // Do any additional setup after loading the view.
+
     }
     
+    var sourceConfig: Any?
+       var sourceValue: Any?
+       var destinationConfig: Any?
+       var destinationValue: Any?
+       var operationSum: String?
+    
+    func newState(state: VerificationCodeState) {
+         guard state.isShown == true else {
+             return
+         }
+     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-                        if let dest = segue.destination as? PaymentsDetailsSuccessViewController {
-                            dest.destinationSum.text = amountText ?? "mOE"
-                        
-                        }
-                    }
+            view.endEditing(true)
+            segueId = nil
+                  if let destinationVC = segue.destination as? PaymentsDetailsSuccessViewController {
+                    destinationVC.setSource(config: "123", value: "123")
+                    destinationVC.setDestination(config: "123", value: "123")
+                    destinationVC.sourceConfig = "123"
+                    destinationVC.sourceValue = "123"
+                    destinationVC.destinationConfig = "123"
+                    destinationVC.destinationValue = "321"
+                      destinationVC.operationSum = amountText
+                
+              }
+          }
+          
+    
+    
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//                        if let dest = segue.destination as? PaymentsDetailsSuccessViewController {
+//                            dest.destinationSum.text = amountText ?? "mOE"
+//
+//                        }
+//                    }
     
 
         @IBAction func checkPaymentCode(_ sender: Any) {

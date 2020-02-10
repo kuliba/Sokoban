@@ -1,15 +1,8 @@
-//
-//  PagerView.swift
-//  ForaBank
-//
-//  Created by Бойко Владимир on 01/10/2019.
-//  Copyright © 2019 (C) 2017-2019 OОО "Бриг Инвест". All rights reserved.
-//
 
 import UIKit
 import FSPagerView
 
-class PagerView: UIView {
+class RedPagerView: UIView {
 
     @IBOutlet weak var contentView: UIView!
 
@@ -22,6 +15,7 @@ class PagerView: UIView {
         }
     }
     
+    
 
 
     var configurations = [ICellConfigurator]()
@@ -33,18 +27,27 @@ class PagerView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        commonInit()
+        commonInitRed()
+        pagerView.backgroundColor = UIColor.red
+        contentView.backgroundColor = UIColor.red
+
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        commonInit()
+        commonInitRed()
+        pagerView.backgroundColor = UIColor.red
+        contentView.backgroundColor = UIColor.red
+
+
     }
     
 
-    private func commonInit() {
+    private func commonInitRed() {
         Bundle.main.loadNibNamed(String(describing: RedPagerView.self), owner: self, options: nil)
+        contentView.backgroundColor = UIColor.red
         addSubview(contentView)
+        
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.pagerView.register(UINib(nibName: String(describing: TextFieldPagerViewCell.self), bundle: nil), forCellWithReuseIdentifier: String(describing: TextFieldPagerViewCell.self))
@@ -61,7 +64,7 @@ class PagerView: UIView {
     }
 }
 
-extension PagerView: FSPagerViewDelegate, FSPagerViewDataSource {
+extension RedPagerView: FSPagerViewDelegate, FSPagerViewDataSource {
 
     // MARK:- FSPagerView DataSource
 

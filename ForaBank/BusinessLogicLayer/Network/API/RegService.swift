@@ -116,13 +116,16 @@ class RegService: RegServiceProtocol {
                             let data = json["data"] as? Array<Any> {
                             for cardData in data {
                                 if let cardData = cardData as? Dictionary<String, Any>{
-                                let commission = cardData["amount"] as? Double
+                                    let commissions = cardData["amount"] as? Double
                                     let description = cardData["description"] as? String
-                                    print(commission!, description!)
-                                    commissions = commission
+                                    print(commission, description!)
+                                    var commission = commissions ?? 5000
+                                    completionHandler(true, "Error", commission)
+
                                 }
+                                completionHandler(false, "Error", commission)
+
                                 }
-                              completionHandler(false, "Error", commissions)
                             
                             }
                           

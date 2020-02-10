@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="OPN-w7-Pxo">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="OPN-w7-Pxo">
     <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -426,7 +426,7 @@
                                                             <constraint firstAttribute="height" constant="25" id="TGI-5l-nYj"/>
                                                         </constraints>
                                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                        <color key="textColor" red="0.38726419210000002" green="0.38731426000000002" blue="0.38724720480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="textColor" red="0.1058695242" green="0.1058908477" blue="0.1058628187" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ИНН получателя" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F2f-dv-NnC">
@@ -435,7 +435,7 @@
                                                             <constraint firstAttribute="height" constant="25" id="jTW-Qp-Uwj"/>
                                                         </constraints>
                                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                        <color key="textColor" red="0.38726419210000002" green="0.38731426000000002" blue="0.38724720480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="textColor" red="0.1058695242" green="0.1058908477" blue="0.1058628187" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="КПП получателя" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I7A-7M-Xa6">
@@ -444,7 +444,7 @@
                                                             <constraint firstAttribute="height" constant="25" id="nCi-nL-81j"/>
                                                         </constraints>
                                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                        <color key="textColor" red="0.38726419210000002" green="0.38731426000000002" blue="0.38724720480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="textColor" red="0.1058695242" green="0.1058908477" blue="0.1058628187" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Номер счета получателя" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WMJ-bO-NaM">
@@ -453,7 +453,7 @@
                                                             <constraint firstAttribute="height" constant="25" id="DyW-uc-elK"/>
                                                         </constraints>
                                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                        <color key="textColor" red="0.38726419210000002" green="0.38731426000000002" blue="0.38724720480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="textColor" red="0.1058695242" green="0.1058908477" blue="0.1058628187" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Назначение перевода" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Xp-zH-MTE">
@@ -462,7 +462,7 @@
                                                             <constraint firstAttribute="height" constant="25" id="XOU-y1-A1Y"/>
                                                         </constraints>
                                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                        <color key="textColor" red="0.38726419210000002" green="0.38731426000000002" blue="0.38724720480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="textColor" red="0.1058695242" green="0.1058908477" blue="0.1058628187" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Bde-Cs-nnn" customClass="CustomTextField" customModule="ForaBank" customModuleProvider="target">
@@ -471,7 +471,7 @@
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="27" id="zFK-Zo-RVp"/>
                                                         </constraints>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -660,7 +660,6 @@
                                                 </state>
                                                 <connections>
                                                     <action selector="paymentCompany:" destination="fd0-20-J9h" eventType="touchUpInside" id="q8T-Nz-Yr9"/>
-                                                    <segue destination="Adr-ke-faE" kind="show" id="ig4-Hp-k62"/>
                                                 </connections>
                                             </button>
                                             <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="LFG-sL-18B" customClass="CustomTextField" customModule="ForaBank" customModuleProvider="target">
@@ -737,7 +736,7 @@
                                             <action selector="backButtonClicked:" destination="fd0-20-J9h" eventType="touchUpInside" id="pse-wY-JH7"/>
                                         </connections>
                                     </button>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KNO-Zr-uOP" customClass="PagerView" customModule="ForaBank" customModuleProvider="target">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KNO-Zr-uOP" customClass="RedPagerView" customModule="ForaBank" customModuleProvider="target">
                                         <rect key="frame" x="16" y="37" width="290" height="52"/>
                                         <color key="backgroundColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </view>
@@ -800,6 +799,7 @@
                         <outlet property="roundedEdgeText" destination="BHL-jb-4Ty" id="jY3-Rh-96C"/>
                         <outlet property="sourcePagerView" destination="KNO-Zr-uOP" id="r6s-9y-dbz"/>
                         <outlet property="textField" destination="0ph-eK-zcn" id="2ye-6s-vXM"/>
+                        <segue destination="Adr-ke-faE" kind="show" identifier="regSmsVerification" id="8lu-2v-JyX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R9d-1B-Apc" sceneMemberID="firstResponder"/>
@@ -1694,7 +1694,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="101"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Перевод" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ty8-cb-JPW">
-                                        <rect key="frame" x="127" y="16.5" width="66" height="21.5"/>
+                                        <rect key="frame" x="127" y="19" width="66" height="19"/>
                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -1786,7 +1786,7 @@
         <!--Transfer Confirmation View Controller-->
         <scene sceneID="NzH-oQ-5EP">
             <objects>
-                <viewController modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Adr-ke-faE" userLabel="Transfer Confirmation View Controller" customClass="TransferConfirmation" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="TransferConfirmation" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Adr-ke-faE" userLabel="Transfer Confirmation View Controller" customClass="TransferConfirmation" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="fka-Mb-PDT" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1807,7 +1807,7 @@
                                                             <constraint firstAttribute="height" constant="25" id="K8K-lM-Doa"/>
                                                         </constraints>
                                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                        <color key="textColor" red="0.38726419210000002" green="0.38731426000000002" blue="0.38724720480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="textColor" red="0.1058695242" green="0.1058908477" blue="0.1058628187" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ИНН получателя" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IUV-Lx-BHY">
@@ -1816,7 +1816,7 @@
                                                             <constraint firstAttribute="height" constant="25" id="4Ca-eF-jWX"/>
                                                         </constraints>
                                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                        <color key="textColor" red="0.38726419210000002" green="0.38731426000000002" blue="0.38724720480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="textColor" red="0.1058695242" green="0.1058908477" blue="0.1058628187" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="КПП получателя" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9MD-o7-sqG">
@@ -1825,7 +1825,7 @@
                                                             <constraint firstAttribute="height" constant="25" id="rVq-pu-VKF"/>
                                                         </constraints>
                                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                        <color key="textColor" red="0.38726419210000002" green="0.38731426000000002" blue="0.38724720480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="textColor" red="0.1058695242" green="0.1058908477" blue="0.1058628187" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Номер счета получателя" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fYQ-X4-LDC">
@@ -1834,7 +1834,7 @@
                                                             <constraint firstAttribute="height" constant="25" id="c3d-Eg-jqB"/>
                                                         </constraints>
                                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                        <color key="textColor" red="0.38726419210000002" green="0.38731426000000002" blue="0.38724720480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="textColor" red="0.1058695242" green="0.1058908477" blue="0.1058628187" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Назначение перевода" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EiQ-z2-NLo">
@@ -1843,7 +1843,7 @@
                                                             <constraint firstAttribute="height" constant="25" id="FBp-EE-uOW"/>
                                                         </constraints>
                                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                        <color key="textColor" red="0.38726419210000002" green="0.38731426000000002" blue="0.38724720480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="textColor" red="0.1058695242" green="0.1058908477" blue="0.1058628187" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5Qe-LV-WNx" customClass="CustomTextField" customModule="ForaBank" customModuleProvider="target">
@@ -1855,7 +1855,7 @@
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="27" id="rZO-ZI-tOB"/>
                                                         </constraints>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                         <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -2018,7 +2018,7 @@
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Сумма перевода" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bri-XW-ZhZ">
                                                         <rect key="frame" x="17" y="332.5" width="358" height="21.5"/>
                                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                        <color key="textColor" red="0.38726419210000002" green="0.38731426000000002" blue="0.38724720480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="textColor" red="0.1058695242" green="0.1058908477" blue="0.1058628187" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                 </subviews>
@@ -2079,7 +2079,6 @@
                                                 </state>
                                                 <connections>
                                                     <action selector="checkPaymentCode:" destination="Adr-ke-faE" eventType="touchUpInside" id="LeU-PF-C3j"/>
-                                                    <segue destination="EQl-SA-zTp" kind="show" identifier="toSuccess" id="0kb-9J-cmg"/>
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Введите код, который мы прислали на номер телефона" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7uN-63-4oD">
@@ -2197,6 +2196,7 @@
                         <outlet property="kppNumber" destination="mzC-k1-7E3" id="bMx-7j-fx2"/>
                         <outlet property="numberAccountPayer" destination="eeW-Ic-wdm" id="StA-qZ-gyI"/>
                         <outlet property="sendButton" destination="eRy-NC-wSW" id="KDp-rd-Tr9"/>
+                        <segue destination="EQl-SA-zTp" kind="show" identifier="toSuccess" id="XIb-0E-bAd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qzD-tU-sHT" sceneMemberID="firstResponder"/>
@@ -2496,7 +2496,7 @@
                     </userDefinedRuntimeAttributes>
                 </view>
             </objects>
-            <point key="canvasLocation" x="4005" y="2411"/>
+            <point key="canvasLocation" x="3988" y="2215"/>
         </scene>
     </scenes>
     <resources>
@@ -2506,6 +2506,6 @@
         <image name="vertical_arrows" width="5" height="11"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="0kb-9J-cmg"/>
+        <segue reference="XIb-0E-bAd"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Roboto-Light.ttf">
+            <string>Roboto-Light</string>
+        </array>
+        <array key="Roboto-Regular.ttf">
+            <string>Roboto-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PaymentRedOptionView" customModule="ForaBank" customModuleProvider="target">
+            <connections>
+                <outlet property="arrowsImageView" destination="Qgv-Je-jI5" id="HcK-8C-d2i"/>
+                <outlet property="contentView" destination="I8E-KI-SAW" id="cxR-hx-Vhg"/>
+                <outlet property="optionNameLabel" destination="Q4N-Qx-lQf" id="TVB-el-i9j"/>
+                <outlet property="optionNumberLabel" destination="tgD-EL-mcr" id="KHv-w7-nDU"/>
+                <outlet property="optionValueLabel" destination="Xqh-Ef-Fap" id="u8s-NR-lN3"/>
+                <outlet property="providerImageView" destination="gdc-M9-tlj" id="dG1-Ki-VDy"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" restorationIdentifier="PaymentOptionView" id="I8E-KI-SAW">
+            <rect key="frame" x="0.0" y="0.0" width="290" height="60"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="25W-Ht-Ffl">
+                    <rect key="frame" x="16" y="0.0" width="274" height="60"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="0.000 000 000 ₽" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xqh-Ef-Fap">
+                            <rect key="frame" x="124" y="18" width="130" height="24"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="24" id="gsw-Zy-d4h"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="18"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="252" text="0000 **** **** 0000" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tgD-EL-mcr">
+                            <rect key="frame" x="11" y="42.5" width="114.5" height="17.5"/>
+                            <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="13"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="card_visa_logo" translatesAutoresizingMaskIntoConstraints="NO" id="gdc-M9-tlj">
+                            <rect key="frame" x="133.5" y="44" width="45" height="15"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="15" id="4qm-wX-l4Y"/>
+                                <constraint firstAttribute="width" secondItem="gdc-M9-tlj" secondAttribute="height" multiplier="3:1" id="5yb-VZ-0SO"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Моя карта" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q4N-Qx-lQf">
+                            <rect key="frame" x="8" y="-1" width="77.5" height="42.5"/>
+                            <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="gdc-M9-tlj" firstAttribute="leading" secondItem="tgD-EL-mcr" secondAttribute="trailing" constant="8" symbolic="YES" id="9Bb-lU-Btt"/>
+                        <constraint firstItem="Q4N-Qx-lQf" firstAttribute="top" secondItem="25W-Ht-Ffl" secondAttribute="top" constant="-1" id="DRM-zT-Y37"/>
+                        <constraint firstItem="Q4N-Qx-lQf" firstAttribute="leading" secondItem="25W-Ht-Ffl" secondAttribute="leadingMargin" id="K74-gd-Ktm"/>
+                        <constraint firstItem="tgD-EL-mcr" firstAttribute="leading" secondItem="25W-Ht-Ffl" secondAttribute="leading" constant="11" id="Oyu-ND-i6h"/>
+                        <constraint firstItem="Xqh-Ef-Fap" firstAttribute="centerY" secondItem="25W-Ht-Ffl" secondAttribute="centerY" id="fJA-mR-eQT"/>
+                        <constraint firstAttribute="trailing" secondItem="Xqh-Ef-Fap" secondAttribute="trailing" constant="20" symbolic="YES" id="gsi-KC-sMl"/>
+                        <constraint firstItem="gdc-M9-tlj" firstAttribute="centerY" secondItem="tgD-EL-mcr" secondAttribute="centerY" id="ld7-uE-1gV"/>
+                        <constraint firstItem="tgD-EL-mcr" firstAttribute="top" secondItem="Q4N-Qx-lQf" secondAttribute="bottom" constant="1" id="liE-Qv-tOa"/>
+                        <constraint firstAttribute="bottom" secondItem="tgD-EL-mcr" secondAttribute="bottom" id="z1A-cg-qbB"/>
+                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="gdc-M9-tlj" secondAttribute="trailing" constant="20" symbolic="YES" id="z80-na-Dog"/>
+                    </constraints>
+                </view>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="vertical_arrows" translatesAutoresizingMaskIntoConstraints="NO" id="Qgv-Je-jI5">
+                    <rect key="frame" x="9" y="29.5" width="7" height="1"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="7" id="AEW-Bn-SK8"/>
+                    </constraints>
+                </imageView>
+            </subviews>
+            <color key="backgroundColor" red="0.93805062770000003" green="0.25358119610000002" blue="0.2107679546" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="Qgv-Je-jI5" firstAttribute="leading" secondItem="I8E-KI-SAW" secondAttribute="leading" constant="9" id="4Fx-gI-kS9"/>
+                <constraint firstItem="25W-Ht-Ffl" firstAttribute="top" secondItem="I8E-KI-SAW" secondAttribute="top" id="4bT-Nc-8sM"/>
+                <constraint firstAttribute="bottom" secondItem="25W-Ht-Ffl" secondAttribute="bottom" id="eAd-wO-PZY"/>
+                <constraint firstItem="25W-Ht-Ffl" firstAttribute="leading" secondItem="I8E-KI-SAW" secondAttribute="leading" id="mcD-54-FXX"/>
+                <constraint firstItem="25W-Ht-Ffl" firstAttribute="leading" secondItem="Qgv-Je-jI5" secondAttribute="trailing" id="pxy-Ur-K74"/>
+                <constraint firstAttribute="trailing" secondItem="25W-Ht-Ffl" secondAttribute="trailing" id="sOp-rm-cmu"/>
+                <constraint firstItem="Qgv-Je-jI5" firstAttribute="centerY" secondItem="I8E-KI-SAW" secondAttribute="centerY" id="slU-jE-n2P"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="Z3y-lJ-0y5"/>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="mcD-54-FXX"/>
+                </mask>
+            </variation>
+            <point key="canvasLocation" x="42.028985507246382" y="-136.14130434782609"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="card_visa_logo" width="41" height="18"/>
+        <image name="vertical_arrows" width="5" height="11"/>
+    </resources>
+</document>

@@ -54,8 +54,8 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
     }
 
     func setDestination(config: Any?, value: Any?) {
-        destinationSum.text = ""
-        destinationNumber.text = ""
+//        destinationSum.text = ""
+//        destinationNumber.text = ""
         switch (config, value) {
         case (is PaymentOptionsPagerItem, let destinationOption as PaymentOption):
             destinationName.text = (destinationOption.name)

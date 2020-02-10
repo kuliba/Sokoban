@@ -71,9 +71,7 @@ class SignInViewController: UIViewController, ContactsPickerDelegate {
                                           if success {
                                               self.performSegue(withIdentifier: "smsVerification", sender: self)
                                               store.dispatch(createCredentials(login: self.loginTextField.text ?? "", pwd: self.passwordTextField.text ?? ""))
-                                            let alert = UIAlertController(title: "\(success)", message: "Message", preferredStyle: UIAlertController.Style.alert)
-                                                         alert.addAction(UIAlertAction(title: "Click", style: UIAlertAction.Style.default, handler: nil))
-                                                         self.present(alert, animated: true, completion: nil)
+                                        
 
                                             
                                           } else {

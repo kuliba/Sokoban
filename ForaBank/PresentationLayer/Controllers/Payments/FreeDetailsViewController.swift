@@ -10,7 +10,9 @@ import UIKit
 import ReSwift
 import Alamofire
 
-
+protocol FirstViewControllerDelegate: class {
+    func update(text: Double)
+}
 
 
 protocol FreeDetailsViewControllerDelegate {
@@ -25,7 +27,16 @@ protocol FreeDetailsViewControllerDelegate {
 }
 
 
-class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellConfiguratorDelegate {
+class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellConfiguratorDelegate, FirstViewControllerDelegate {
+    func update(text: Double) {
+        comissions = 30.0
+    }
+    
+   
+    
+
+ 
+    
     
     var sourceValue: Any?
 
@@ -63,7 +74,7 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
        }
     
 
-    @IBOutlet weak var sourcePagerView: PagerView!
+    @IBOutlet weak var sourcePagerView: RedPagerView!
     @IBOutlet weak var numberAcoount: CustomTextField!
     @IBOutlet weak var kppBank: CustomTextField!
     @IBOutlet weak var innBank: CustomTextField!
@@ -73,7 +84,7 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
     @IBOutlet weak var containerView: RoundedEdgeView!
     @IBOutlet weak var pickerLabel: UILabel!
     @IBOutlet weak var pickerButton: UIButton!
-    @IBOutlet weak var pagerView: PagerView!
+    @IBOutlet weak var pagerView: RedPagerView!
     @IBOutlet weak var amountTextField: UITextField!
     @IBOutlet weak var paymentCompany: ButtonRounded!
     
@@ -177,23 +188,37 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
     
     }
 
-    var comission = 20.0
+    var comissions: Double = 10.0
     var numberPayeer: String = ""
+    
+
+
+    
+    func newState(state: VerificationCodeState) {
+        guard state.isShown == true else {
+            return
+        }
+    }
     
     @IBAction func paymentCompany(_ sender: Any) {
         delegate?.didPressPrepareButton()
         let numberCard = self.sourceValue as! PaymentOption
         let numberPayer = numberCard.number
-        NetworkManager.shared().paymentCompany( numberAcoount: numberAcoount.text! , amount: amountTextField.text!,  kppBank: kppBank.text!, payerCard: numberPayer, innBank: innBank.text!, bikBank: bikBank.text!, comment: textField.text!, nameCompany: cards[0].value ?? "Банк не определен",commission:comission, completionHandler: { [weak self] success, errorMessage,comissions  in
-            let comission = comissions
-           
-           
-            
-            
-            
+        let comission = comissions
+    
+        NetworkManager.shared().paymentCompany( numberAcoount: numberAcoount.text! , amount: amountTextField.text!,  kppBank: kppBank.text!, payerCard: numberPayer, innBank: innBank.text!, bikBank: bikBank.text!, comment: textField.text!, nameCompany: cards[0].value ?? "Банк не определен",comission:comission, completionHandler: { [weak self] success, errorMessage,comissions  in
                 if success {
+              
+                           let storyboard = UIStoryboard(name: "Payment", bundle: Bundle.main)
+                               let destination = storyboard.instantiateViewController(withIdentifier: "TransferConfirmation") as! TransferConfirmation
+                               destination.commission = comissions
+                    self?.navigationController?.pushViewController(destination, animated: true)
+                    
+                    
                     self?.delegate?.didPressPaymentButton()
-                    self?.performSegue(withIdentifier: "regSmsVerification", sender: nil)
+                    
+                    self?.performSegue(withIdentifier: "regSmsVerification", sender: comissions)
+                    
                 } else {
                     let alert = UIAlertController(title: "Неудача", message: errorMessage, preferredStyle: UIAlertController.Style.alert)
                     alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
@@ -202,6 +227,7 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
                     
                 }
             })
+        
     }
     
     
@@ -216,6 +242,8 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
   
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+
         amountTextField.delegate = self
   
         // Do any additional setup after loading the view.
