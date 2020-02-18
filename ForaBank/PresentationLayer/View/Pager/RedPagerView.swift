@@ -1,4 +1,5 @@
 
+
 import UIKit
 import FSPagerView
 
@@ -15,7 +16,6 @@ class RedPagerView: UIView {
         }
     }
     
-    
 
 
     var configurations = [ICellConfigurator]()
@@ -28,26 +28,17 @@ class RedPagerView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInitRed()
-        pagerView.backgroundColor = UIColor.red
-        contentView.backgroundColor = UIColor.red
-
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         commonInitRed()
-        pagerView.backgroundColor = UIColor.red
-        contentView.backgroundColor = UIColor.red
-
-
     }
     
 
     private func commonInitRed() {
         Bundle.main.loadNibNamed(String(describing: RedPagerView.self), owner: self, options: nil)
-        contentView.backgroundColor = UIColor.red
         addSubview(contentView)
-        
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.pagerView.register(UINib(nibName: String(describing: TextFieldPagerViewCell.self), bundle: nil), forCellWithReuseIdentifier: String(describing: TextFieldPagerViewCell.self))

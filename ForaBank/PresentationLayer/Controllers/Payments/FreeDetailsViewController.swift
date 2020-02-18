@@ -36,7 +36,9 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
     
 
  
+    @IBOutlet weak var accountNumberNon: UILabel!
     
+
     
     var sourceValue: Any?
 
@@ -74,23 +76,23 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
        }
     
 
-    @IBOutlet weak var sourcePagerView: RedPagerView!
+    @IBOutlet weak var sourcePagerView: PagerView!
     @IBOutlet weak var numberAcoount: CustomTextField!
     @IBOutlet weak var kppBank: CustomTextField!
     @IBOutlet weak var innBank: CustomTextField!
     @IBOutlet weak var bikBank: CustomTextField!
     @IBOutlet weak var textField: CustomTextField!
+
     @IBOutlet weak var tableView: CustomTableView!
     @IBOutlet weak var containerView: RoundedEdgeView!
     @IBOutlet weak var pickerLabel: UILabel!
     @IBOutlet weak var pickerButton: UIButton!
-    @IBOutlet weak var pagerView: RedPagerView!
     @IBOutlet weak var amountTextField: UITextField!
     @IBOutlet weak var paymentCompany: ButtonRounded!
     
     @IBOutlet weak var comment: CustomTextField!
     @IBOutlet weak var roundedEdgeText: RoundedEdgeView!
-    
+
     @IBAction func amountTextFieldValueChanged(_ sender: Any) {
         delegate?.didChangeAmount(amount: Double(amountTextField.text!.replacingOccurrences(of: ",", with: ".")))
       
@@ -102,6 +104,12 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
         
         
        
+    }
+    
+    @IBAction func didChangeNumberAccount(_ sender: Any) {
+//        if numberAcoount.text = "444"{
+//
+//        }
     }
     
     @IBAction func backButtonClicked(_ sender: Any) {
@@ -201,12 +209,21 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
     }
     
     @IBAction func paymentCompany(_ sender: Any) {
+        
+        if bikBank.text == "" && innBank.text == "" &&  numberAcoount.text == "" && comment.text == ""{
+            let alert = UIAlertController(title: "Заполните все поля", message: "", preferredStyle: UIAlertController.Style.alert)
+             alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+            
+            self.present(alert, animated: true, completion: nil)
+        } else {
+               // either textfield 1 or 2's text is empty
+           
         delegate?.didPressPrepareButton()
         let numberCard = self.sourceValue as! PaymentOption
         let numberPayer = numberCard.number
         let comission = comissions
     
-        NetworkManager.shared().paymentCompany( numberAcoount: numberAcoount.text! , amount: amountTextField.text!,  kppBank: kppBank.text!, payerCard: numberPayer, innBank: innBank.text!, bikBank: bikBank.text!, comment: textField.text!, nameCompany: cards[0].value ?? "Банк не определен",comission:comission, completionHandler: { [weak self] success, errorMessage,comissions  in
+        NetworkManager.shared().paymentCompany( numberAcoount: numberAcoount.text! , amount: amountTextField.text!,  kppBank: kppBank.text!, payerCard: numberPayer, innBank: innBank.text!, bikBank: bikBank.text!, comment: comment.text!, nameCompany: cards[0].value ?? "Банк не определен",comission:comission, completionHandler: { [weak self] success, errorMessage,comissions  in
                 if success {
               
                            let storyboard = UIStoryboard(name: "Payment", bundle: Bundle.main)
@@ -227,7 +244,8 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
                     
                 }
             })
-        
+     
+        } 
     }
     
     
@@ -242,23 +260,32 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
   
     override func viewDidLoad() {
         super.viewDidLoad()
-        
 
         amountTextField.delegate = self
   
         // Do any additional setup after loading the view.
   
-        self.sourcePagerView.pageControl.backgroundColor = UIColor(red: 241/255, green: 63/255, blue: 56/255, alpha: 1)
     
         
-           if let source = sourceConfigurations{
-               sourcePagerView.setConfig(config: source)
-             
-        }
         
         bankName.isHidden = true
-   
+        amountTextField.delegate = self
+        
+        
+            if let source = sourceConfigurations{
+                        sourcePagerView.setConfig(config: source)
+                      
+                 }
+
+
+        
+    
+        
+        
     }
+ 
+
+    
     
     
     
@@ -269,7 +296,7 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
                        dest.kppNumberText = kppBank.text
                        dest.numberAccountText = numberAcoount.text
                        dest.amountText = amountTextField.text
-                        dest.commentText = textField.text ?? "Comment not found"
+                        dest.commentText = comment.text ?? "Comment not found"
                      }
                  }
 
@@ -322,6 +349,30 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
 
 }
 
+
+private extension PaymentsDetailsViewController {
+    private func setUpPicker() {
+        picker.layer.cornerRadius = 3
+        pickerImageView.image = pickerImageView.image?.withRenderingMode(.alwaysTemplate)
+        pickerImageView.tintColor = .white
+    }
+
+    private func addGradientView() {
+        let containerGradientView = GradientView()
+        containerGradientView.frame = containterView.frame
+        containerGradientView.color1 = UIColor(red: 243 / 255, green: 58 / 255, blue: 52 / 255, alpha: 1)
+        containerGradientView.color2 = UIColor(red: 243 / 255, green: 58 / 255, blue: 52 / 255, alpha: 1)
+        containterView.insertSubview(containerGradientView, at: 0)
+    }
+
+    private func setUpLayout() {
+        activityIndicator.center = view.center
+        view.addSubview(activityIndicator)
+        setUpPicker()
+    }
+}
+
+
 extension FreeDetailsViewController: PaymentDetailsPresenterDelegate {
     func didFinishPreparation(success: Bool) {
         if success {
@@ -337,6 +388,7 @@ extension FreeDetailsViewController: PaymentDetailsPresenterDelegate {
     func didUpdate(isLoading: Bool, canAskFee: Bool, canMakePayment: Bool) {
         print(isLoading, canAskFee, canMakePayment)
         paymentCompany.changeEnabled(isEnabled: canAskFee)
+        isLoading ? activityIndicator.startAnimating() : activityIndicator.stopAnimating()
     }
 }
 
@@ -394,6 +446,40 @@ extension FreeDetailsViewController: RemittancePickerDelegate {
             remittanceSourceView.frame = frame
             remittanceSourceView.translatesAutoresizingMaskIntoConstraints = true
         }
+    }
+}
+private var kAssociationKeyMaxLength: Int = 0
+
+extension CustomTextField {
+
+    @IBInspectable var maxLength: Int {
+        get {
+            if let length = objc_getAssociatedObject(self, &kAssociationKeyMaxLength) as? Int {
+                return length
+            } else {
+                return Int.max
+            }
+        }
+        set {
+            objc_setAssociatedObject(self, &kAssociationKeyMaxLength, newValue, .OBJC_ASSOCIATION_RETAIN)
+            addTarget(self, action: #selector(checkMaxLength), for: .editingChanged)
+        }
+    }
+
+    @objc func checkMaxLength(textField: UITextField) {
+        guard let prospectiveText = self.text,
+            prospectiveText.count > maxLength
+            else {
+                return
+        }
+
+        let selection = selectedTextRange
+
+        let indexEndOfText = prospectiveText.index(prospectiveText.startIndex, offsetBy: maxLength)
+        let substring = prospectiveText[..<indexEndOfText]
+        text = String(substring)
+
+        selectedTextRange = selection
     }
 }
 

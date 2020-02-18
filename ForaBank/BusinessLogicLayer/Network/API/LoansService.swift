@@ -53,11 +53,14 @@ class LoansService: LoansServiceProtocol {
 
                                 let branchBrief = original["branchBrief"] as? String
                                 var dateValue: String? = dayMonthYear(milisecond: original["dateValue"] as! Double)
+//                                var dateEnd: String? = dayMonthYear(milisecond: original["dateEnd"] as! Double)
+
                                 let number = original["number"] as? String
                                 let principalDebt = original["principalDebt"] as? Double
                                 if principalDebt == 0 { continue }
                                 let userAnnual = original["userAnnual"] as? Double
                                 let loanID = original["loanID"] as? Int
+                                let currentInterestRate = original["currentInterestRate"] as? Double
                                 let loan = Loan(
                                     Amount: Amount!,
                                     currencyCode: currencyCode, principalDebt: principalDebt, userAnnual: userAnnual, branchBrief: branchBrief, number: number, DateValue: dateValue, loanID: loanID!

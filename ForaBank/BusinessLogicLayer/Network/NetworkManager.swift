@@ -269,8 +269,8 @@ class NetworkManager {
     func getCardList(completionHandler: @escaping (_ success: Bool, _ cards: [Card]?) -> Void) {
         cardService.getCardList(headers: headers, completionHandler: completionHandler)
     }
-    func getCardInfo(completionHandler: @escaping (_ success: Bool, _ cardInfo: [Card]?) -> Void) {
-        cardInfoService.getCardInfo(headers: headers, completionHandler: completionHandler)
+    func getCardInfo(cardNumber: String, completionHandler: @escaping (_ success: Bool, _ cardInfo: [AboutItem]?) -> Void) {
+        cardInfoService.getCardInfo(cardNumber: cardNumber, headers: headers, completionHandler: completionHandler)
     }
     func getSuggestBank(bicBank: String, completionHandler: @escaping (_ success: Bool, _ cardInfo: [BankSuggest]?,_ bicBank: String?) -> Void) {
         suggestBankService.getSuggestBank(bicBank: bicBank, headers: headers, completionHandler: completionHandler)

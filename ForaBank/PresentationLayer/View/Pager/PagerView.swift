@@ -43,7 +43,7 @@ class PagerView: UIView {
     
 
     private func commonInit() {
-        Bundle.main.loadNibNamed(String(describing: RedPagerView.self), owner: self, options: nil)
+        Bundle.main.loadNibNamed(String(describing: PagerView.self), owner: self, options: nil)
         addSubview(contentView)
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]

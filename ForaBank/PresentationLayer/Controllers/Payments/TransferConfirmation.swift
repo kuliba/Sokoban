@@ -10,7 +10,6 @@ import UIKit
 import ReSwift
 
 class TransferConfirmation: UIViewController    {
-    weak var delegate: FirstViewControllerDelegate?
 
 
     @IBOutlet weak var kppNumber: CustomTextField!
@@ -50,7 +49,6 @@ class TransferConfirmation: UIViewController    {
         amount.text = ("\(amountText!)р (коммиссия \(commission!)р)")
         comment.text = commentText
         print("Это комиссия \(commission)")
-        delegate?.update(text: 30.0)
         var sourceValue = "СоурсеВелью"
         guard let amount = amountText else { return }
         let amountDouble = Double(amount)
@@ -75,14 +73,9 @@ class TransferConfirmation: UIViewController    {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
             view.endEditing(true)
             segueId = nil
-                  if let destinationVC = segue.destination as? PaymentsDetailsSuccessViewController {
-                    destinationVC.setSource(config: "123", value: "123")
-                    destinationVC.setDestination(config: "123", value: "123")
-                    destinationVC.sourceConfig = "123"
-                    destinationVC.sourceValue = "123"
-                    destinationVC.destinationConfig = "123"
-                    destinationVC.destinationValue = "321"
-                      destinationVC.operationSum = amountText
+                  if let destinationVC = segue.destination as? PaymentsResultViewController {
+          
+                    destinationVC.sumString = amountText!
                 
               }
           }

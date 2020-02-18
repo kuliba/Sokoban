@@ -10,7 +10,7 @@ import UIKit
 import Hero
 import RMMapper
 
-class SignInViewController: UIViewController, ContactsPickerDelegate {
+class ConfirmPassword: UIViewController {
 
     @IBOutlet weak var loginTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
@@ -18,72 +18,95 @@ class SignInViewController: UIViewController, ContactsPickerDelegate {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var centralView: UIView!
-
-
+    
+    @IBOutlet weak var newPassword: UITextField!
+    @IBOutlet weak var newPasswordAgain: UITextField!
     var segueId: String? = nil
     var backSegueId: String? = nil
 
-
-    @IBAction func contactList(_ sender: Any) {
-        let contactPickerScene = ContactsPicker(delegate: self, multiSelection: true, subtitleCellType: SubtitleCellValue.email)
-        let navigationController = UINavigationController(rootViewController: contactPickerScene)
-        self.present(navigationController, animated: true, completion: nil)
-
-    }
-    func contactPicker(_: ContactsPicker, didContactFetchFailed error: NSError) {
-        print("Failed with error \(error.description)")
-    }
-
-    func contactPicker(_: ContactsPicker, didSelectContact contact: Contact) {
-        print("Contact \(contact.displayName) has been selected")
-    }
-
-    func contactPickerDidCancel(_ picker: ContactsPicker) {
-        picker.dismiss(animated: true, completion: nil)
-        print("User canceled the selection")
-    }
-
-    func contactPicker(_ picker: ContactsPicker, didSelectMultipleContacts contacts: [Contact]) {
-        defer { picker.dismiss(animated: true, completion: nil) }
-        guard !contacts.isEmpty else { return }
-        print("The following contacts are selected")
-        for contact in contacts {
-            print("\(contact.displayName)")
-        }
-
-    }
-
-
+    @IBOutlet weak var nonConfirmPassword: UILabel!
+    
     // MARK: - Actions
     @IBAction func backButtonClicked() {
         view.endEditing(true)
         segueId = backSegueId
         navigationController?.popViewController(animated: true)
     }
-    @IBAction func tappedButton(sender: UIButton!) {
-    }
+   
 
-    @IBAction func signInButtonClicked() {
-        NetworkManager.shared().login(login: self.loginTextField.text ?? "",
-                                      password: self.passwordTextField.text ?? "",
-                                      completionHandler: { [unowned self] success, errorMessage in
-                                          if success {
-                                              self.performSegue(withIdentifier: "smsVerification", sender: self)
-                                              store.dispatch(createCredentials(login: self.loginTextField.text ?? "", pwd: self.passwordTextField.text ?? ""))
-                                        
+    @IBAction func preparePasswordReset() {
+         NetworkManager.shared().prepareResetPassword(login: self.loginTextField.text ?? "",
+                                       completionHandler: { [unowned self] success, errorMessage in
+                                           if success {
+                                               self.performSegue(withIdentifier: "smsCheckCode", sender: self)
+                                                                                } else {
+                                               let alert = UIAlertController(title: "Неудача", message: errorMessage, preferredStyle: UIAlertController.Style.alert)
+                                               alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                                               self.present(alert, animated: true, completion: nil)
+                                           }
+                                       })
+        
+     }
+    
+    @IBAction func newPasswordReset() {
+        NetworkManager.shared().newPasswordReset(password: self.newPassword.text ?? "",
+                                       completionHandler: { [unowned self] success, errorMessage in
+                                           if success {
+                                               self.performSegue(withIdentifier: "finishResetPassword", sender: self)
+                                                                                } else {
+                                               let alert = UIAlertController(title: "Неудача", message: errorMessage, preferredStyle: UIAlertController.Style.alert)
+                                               alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                                               self.present(alert, animated: true, completion: nil)
+                                           }
+                                       })
+        if self.newPassword.text != self.newPasswordAgain.text && self.newPassword.text != "" {
+                  let alert = UIAlertController(title: "Неудача", message: "Пароли не совпадают", preferredStyle: UIAlertController.Style.alert)
+                  alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                  self.present(alert, animated: true, completion: nil)
 
-                                            
-                                          } else {
-                                              AlertService.shared.show(title: "Неудача", message: errorMessage, cancelButtonTitle: "Ок", okButtonTitle: nil, cancelCompletion: nil, okCompletion: nil)
-                                          }
-                                      })
-    }
-
+                  return
+              }
+     }
+    @IBAction func showPassword(_ sender: UIButton) {
+         if newPassword.isSecureTextEntry == true {
+             newPassword.isSecureTextEntry = false
+             sender.isSelected = true
+         } else {
+             newPassword.isSecureTextEntry = true
+             sender.isSelected = false
+         }
+     }
+     @IBAction func showPassword2(_ sender: UIButton) {
+         if newPasswordAgain.isSecureTextEntry == true {
+             newPasswordAgain.isSecureTextEntry = false
+             sender.isSelected = true
+         } else {
+             newPasswordAgain.isSecureTextEntry = true
+             sender.isSelected = false
+         }
+     }
+   
     // MARK: - Lifecycle
+    @IBOutlet weak var buttonContinue: ButtonRounded!
     override func viewDidLoad() {
         super.viewDidLoad()
-        _ = loginTextField.becomeFirstResponder()
+        
+        nonConfirmPassword.isHidden = true
+//        buttonContinue.isEnabled = false
     }
+    
+    @IBAction func didChangePasswordAgain(_ sender: Any) {
+//        if newPassword.text != newPasswordAgain.text{
+//                  nonConfirmPassword.isHidden = false
+//                  buttonContinue.isEnabled = false
+//
+//              } else if newPassword.text == newPasswordAgain.text{
+//                  buttonContinue.isEnabled = true
+//
+//              }
+        
+    }
+    
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

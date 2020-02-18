@@ -9,7 +9,6 @@ class PaymentRedOptionView: UIView {
     @IBOutlet weak var optionNumberLabel: UILabel!
     @IBOutlet weak var companyImageView: UIImageView!
     @IBOutlet weak var providerImageView: UIImageView!
-    @IBOutlet weak var arrowsImageView: UIImageView!
 
     @IBOutlet weak var leadingToArrowConstraint: NSLayoutConstraint!
     @IBOutlet weak var leadingToSuperviewConstraint: NSLayoutConstraint!
@@ -23,10 +22,11 @@ class PaymentRedOptionView: UIView {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         commonInitRed()
+    
     }
 
     private func commonInitRed() {
-        Bundle.main.loadNibNamed(String(describing: PaymentRedOptionView.self), owner: self, options: nil)
+        Bundle.main.loadNibNamed(String(describing: RedPagerView.self), owner: self, options: nil)
         addSubview(contentView)
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -38,7 +38,6 @@ class PaymentRedOptionView: UIView {
     internal func setupLayout(withPickerItem pickerItem: IPickerItem, isDroppable: Bool) {
         leadingToArrowConstraint.isActive = isDroppable
         leadingToSuperviewConstraint.isActive = !isDroppable
-        arrowsImageView.isHidden = !isDroppable
 
         optionNameLabel.text = pickerItem.title
         optionNumberLabel.text = pickerItem.subTitle

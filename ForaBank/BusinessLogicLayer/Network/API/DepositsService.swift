@@ -55,9 +55,18 @@ class DepositService: DepositsServiceProtocol {
                                 let currencyCode = accountData!["currencyCode"] as? String
                                 let ownerAgentBrief = original["ownerAgentBrief"] as? String
                                 let number = original["number"] as? String
-                                let deposit = Deposit(depositProductName: depositProductName,
+                                let dateStart =  dayMonthYear(milisecond: (original["dateStart"] as? Double)!)
+                                let dateEnd =  dayMonthYear(milisecond: (original["dateEnd"] as? Double)!)
+                                let minimumBalance = original["minimumBalance"] as? Double
+                                let creditMinimumAmount = original["creditMinimumAmount"] as? Double
+                                let isCreditOperationsAvailable  = accountData!["isCreditOperationsAvailable "] as? Bool
+                                let isDebitOperationsAvailable  = accountData!["isDebitOperationsAvailable "] as? Bool
+                                let initialAmount  = original["initialAmount "] as? Double
+                                let interestRate = accountData!["interestRate"] as? Double
+                                
+                                let deposit = Deposit(depositProductName: depositProductName,isCreditOperationsAvailable:isCreditOperationsAvailable,
                                                       currencyCode: currencyCode, balance: balance,
-                                                      accountNumber: accountNumber)
+                                                      accountNumber: accountNumber,minimumBalance:minimumBalance, interestRate: interestRate, isDebitOperationsAvailable:isDebitOperationsAvailable,creditMinimumAmount:creditMinimumAmount, initialAmount:initialAmount, dateEnd: dateEnd, dateStart:dateStart)
                                 deposits.append(deposit)
 
                             }

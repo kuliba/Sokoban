@@ -33,6 +33,7 @@ class Card: Mappable, IProduct {
     var miniStatement: String?
     var validThru: Double?
     var startDate: Int?
+    var dateEnd: Int?
     var expirationDate: String?
     var blockedMoney: Double?
     var updatingDate: Date?

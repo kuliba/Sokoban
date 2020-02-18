@@ -55,8 +55,8 @@ protocol CardServiceProtocol {
 
 
 protocol CardInfoServiceProtocol {
-    func getCardInfo(headers: HTTPHeaders,
-                         completionHandler: @escaping (_ success: Bool, _ saveCardName: [Card]?) -> Void)
+    func getCardInfo(cardNumber: String?, headers: HTTPHeaders,
+                         completionHandler: @escaping (_ success: Bool, _ saveCardName: [AboutItem]?) -> Void)
 }
 protocol SuggestBankServiceProtocol {
     func getSuggestBank(bicBank: String?, headers: HTTPHeaders,

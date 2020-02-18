@@ -19,16 +19,16 @@
         <!--Carousel View Controller-->
         <scene sceneID="jnb-tn-H9V">
             <objects>
-                <viewController id="Zlb-hj-4wP" customClass="CarouselViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Zlb-hj-4wP" customClass="CarouselViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="DE7-uu-jrD">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6i6-O9-AuI" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6i6-O9-AuI" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="25" width="375" height="642"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </containerView>
-                            <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3aL-P3-Ud8" customClass="ActivityIndicatorView" customModule="ForaBank" customModuleProvider="target">
+                            <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3aL-P3-Ud8" customClass="ActivityIndicatorView" customModule="ForaBank_Beta" customModuleProvider="target">
                                 <rect key="frame" x="133" y="257" width="54" height="54"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" red="0.91764705879999997" green="0.2666666667" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
@@ -75,7 +75,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PhQ-qH-P8Y" sceneMemberID="firstResponder"/>
-                <customObject id="xsl-wU-QvT" customClass="ProductsModuleInitializer" customModule="ForaBank" customModuleProvider="target">
+                <customObject id="xsl-wU-QvT" customClass="ProductsModuleInitializer" customModule="ForaBank_Beta" customModuleProvider="target">
                     <connections>
                         <outlet property="carouselViewController" destination="Zlb-hj-4wP" id="zyK-OO-T7c"/>
                     </connections>
@@ -86,7 +86,7 @@
         <!--Deposits View Controller-->
         <scene sceneID="Uc7-N4-90s">
             <objects>
-                <viewController storyboardIdentifier="DepositsViewController" id="Iag-Bi-Zjh" customClass="DepositsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DepositsViewController" id="Iag-Bi-Zjh" customClass="DepositsViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4Gt-nR-VR4">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -98,7 +98,7 @@
                                 <color key="sectionIndexColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="sectionIndexBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PNB-cP-yMy" customClass="ActivityIndicatorView" customModule="ForaBank" customModuleProvider="target">
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PNB-cP-yMy" customClass="ActivityIndicatorView" customModule="ForaBank_Beta" customModuleProvider="target">
                                 <rect key="frame" x="160.5" y="306.5" width="54" height="54"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" red="0.91764705879999997" green="0.2666666667" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
@@ -108,7 +108,7 @@
                                     <constraint firstAttribute="height" constant="54" id="gsb-hW-B5n"/>
                                 </constraints>
                             </view>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" id="0tN-OK-WMX" customClass="RefreshView" customModule="ForaBank" customModuleProvider="target">
+                            <view clipsSubviews="YES" contentMode="scaleToFill" id="0tN-OK-WMX" customClass="RefreshView" customModule="ForaBank_Beta" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="16" width="375" height="652"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -176,12 +176,12 @@
         <!--Loans View Controller-->
         <scene sceneID="vDq-M7-Y0Q">
             <objects>
-                <viewController storyboardIdentifier="LoansViewController" id="3vm-B4-e1J" userLabel="Loans View Controller" customClass="LoansViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoansViewController" id="3vm-B4-e1J" userLabel="Loans View Controller" customClass="LoansViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="E6a-tu-3Ev">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="LYF-if-ZeX" customClass="CustomTableView" customModule="ForaBank" customModuleProvider="target">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="LYF-if-ZeX" customClass="CustomTableView" customModule="ForaBank_Beta" customModuleProvider="target">
                                 <rect key="frame" x="-7" y="-3" width="389" height="673"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -197,7 +197,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" id="8lU-vc-sor" customClass="RefreshView" customModule="ForaBank" customModuleProvider="target">
+                            <view clipsSubviews="YES" contentMode="scaleToFill" id="8lU-vc-sor" customClass="RefreshView" customModule="ForaBank_Beta" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="7" width="375" height="652"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -258,7 +258,7 @@
         <!--Accounts View Controller-->
         <scene sceneID="CHq-xi-EoF">
             <objects>
-                <viewController storyboardIdentifier="AccountsViewController" id="6dq-J5-Emt" customClass="AccountsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AccountsViewController" id="6dq-J5-Emt" customClass="AccountsViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="HWW-p7-npH">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -274,7 +274,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" id="L3r-Z5-sR6" customClass="RefreshView" customModule="ForaBank" customModuleProvider="target">
+                            <view clipsSubviews="YES" contentMode="scaleToFill" id="L3r-Z5-sR6" customClass="RefreshView" customModule="ForaBank_Beta" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="7" width="375" height="652"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -331,7 +331,7 @@
         <!--Deposits History View Controller-->
         <scene sceneID="c89-d9-vHz">
             <objects>
-                <viewController storyboardIdentifier="DepositsHistoryViewController" id="9mX-Vi-gdx" customClass="DepositsHistoryViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DepositsHistoryViewController" id="9mX-Vi-gdx" customClass="DepositsHistoryViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="wsg-22-ki8">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -344,7 +344,7 @@
                                 <color key="sectionIndexColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <color key="sectionIndexBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" id="Vss-eN-Cpz" customClass="RefreshView" customModule="ForaBank" customModuleProvider="target">
+                            <view clipsSubviews="YES" contentMode="scaleToFill" id="Vss-eN-Cpz" customClass="RefreshView" customModule="ForaBank_Beta" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="7" width="375" height="652"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -397,8 +397,8 @@
         <!--Deposits History Details View Controller-->
         <scene sceneID="C98-ev-cmG">
             <objects>
-                <viewController modalPresentationStyle="fullScreen" id="zzR-we-aef" customClass="DepositsHistoryDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8rJ-8l-U8X" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
+                <viewController modalPresentationStyle="fullScreen" id="zzR-we-aef" customClass="DepositsHistoryDetailsViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8rJ-8l-U8X" customClass="GradientView" customModule="ForaBank_Beta" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="700"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -468,7 +468,7 @@
                                                     <segue destination="hCu-fa-nln" kind="unwind" identifier="TabBarViewController" unwindAction="unwindSegueWithSegue:" id="IzU-MV-h5S"/>
                                                 </connections>
                                             </button>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tMF-32-9Lr" customClass="DoubleRoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tMF-32-9Lr" customClass="DoubleRoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="220" width="375" height="237"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sbC-b3-90Z">
@@ -631,12 +631,12 @@
         <!--Deposits Cards List View Controller-->
         <scene sceneID="IPX-FN-eW7">
             <objects>
-                <viewController storyboardIdentifier="DepositsCardsListViewController" modalPresentationStyle="fullScreen" id="VIS-28-LnS" customClass="DepositsCardsListViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DepositsCardsListViewController" modalPresentationStyle="fullScreen" id="VIS-28-LnS" customClass="DepositsCardsListViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2Cr-6Y-gsT">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="huB-Vb-TkR" customClass="ActivityIndicatorView" customModule="ForaBank" customModuleProvider="target">
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="huB-Vb-TkR" customClass="ActivityIndicatorView" customModule="ForaBank_Beta" customModuleProvider="target">
                                 <rect key="frame" x="132" y="257" width="55" height="54"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" red="0.95298033950000005" green="0.37958133220000001" blue="0.35467350479999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -666,7 +666,7 @@
         <!--Deposits Cards Details Statement View Controller-->
         <scene sceneID="nAA-UQ-j6T">
             <objects>
-                <viewController storyboardIdentifier="feed1" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="KxZ-uG-ucE" customClass="DepositsCardsDetailsStatementViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="feed1" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="KxZ-uG-ucE" customClass="DepositsCardsDetailsStatementViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="TLU-pc-wDg">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -698,12 +698,12 @@
         <!--Deposits Stats View Controller-->
         <scene sceneID="DQJ-ca-hCo">
             <objects>
-                <viewController storyboardIdentifier="deposits5" id="qjs-8G-5Db" customClass="DepositsStatsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="deposits5" id="qjs-8G-5Db" customClass="DepositsStatsViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="pUL-d8-BYG">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" alwaysBounceVertical="YES" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fjj-Nf-2c5" customClass="BubblesStatsScrollView" customModule="ForaBank" customModuleProvider="target">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" alwaysBounceVertical="YES" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fjj-Nf-2c5" customClass="BubblesStatsScrollView" customModule="ForaBank_Beta" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </scrollView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qpa-Mm-Cai">
@@ -776,7 +776,7 @@
         <!--Profile Menu Table View Controller-->
         <scene sceneID="Ohn-Jp-VPC">
             <objects>
-                <tableViewController id="JBl-kd-Qxj" customClass="ProfileMenuTableViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="JBl-kd-Qxj" customClass="ProfileMenuTableViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="static" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="50" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="NCZ-nQ-oDM">
                         <rect key="frame" x="0.0" y="0.0" width="335" height="151"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -914,7 +914,7 @@
         <!--Card Details View Controller-->
         <scene sceneID="Zgj-qe-Qfl">
             <objects>
-                <viewController storyboardIdentifier="CardDetailsViewController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Oxz-tM-k7M" customClass="CardDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CardDetailsViewController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Oxz-tM-k7M" customClass="CardDetailsViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="uDV-DK-9d5">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -939,14 +939,14 @@
                                                     <action selector="backButtonClicked:" destination="Oxz-tM-k7M" eventType="touchUpInside" id="Z7a-rf-dUJ"/>
                                                 </connections>
                                             </button>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uvc-rh-Yuh" customClass="DetailedCardView" customModule="ForaBank" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uvc-rh-Yuh" customClass="DetailedCardView" customModule="ForaBank_Beta" customModuleProvider="target">
                                                 <rect key="frame" x="16" y="77" width="343" height="176"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="uvc-rh-Yuh" secondAttribute="height" multiplier="7:4" constant="35" id="vgQ-aL-1mx"/>
                                                 </constraints>
                                             </view>
-                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jcO-au-BP0" customClass="CardView" customModule="ForaBank" customModuleProvider="target">
+                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jcO-au-BP0" customClass="CardView" customModule="ForaBank_Beta" customModuleProvider="target">
                                                 <rect key="frame" x="16" y="80" width="343" height="176"/>
                                                 <subviews>
                                                     <view alpha="0.25" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oca-7o-Vhf">
@@ -1038,7 +1038,7 @@
                                             <constraint firstAttribute="bottom" secondItem="no0-sb-ln5" secondAttribute="bottom" constant="-10" id="zou-99-mlX"/>
                                         </constraints>
                                     </view>
-                                    <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XIO-zo-3E1" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
+                                    <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XIO-zo-3E1" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="300" width="375" height="367"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </containerView>
@@ -1093,7 +1093,7 @@
         <!--Deposits Cards List Onhold Block View Controller-->
         <scene sceneID="yPu-Cp-zT0">
             <objects>
-                <viewController modalPresentationStyle="fullScreen" id="Xv3-je-rnb" customClass="DepositsCardsListOnholdBlockViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="Xv3-je-rnb" customClass="DepositsCardsListOnholdBlockViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5ZP-xB-AaV">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1108,7 +1108,7 @@
         <!--Product Management View Controller-->
         <scene sceneID="yYv-IY-3rh">
             <objects>
-                <tableViewController storyboardIdentifier="ProductManagementViewController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="oHR-xs-SU6" customClass="ProductManagementViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="ProductManagementViewController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="oHR-xs-SU6" customClass="ProductManagementViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="static" style="plain" separatorStyle="default" rowHeight="50" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="XeI-RU-e7t">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1135,7 +1135,7 @@
         <!--Deposits Cards Details About View Controller-->
         <scene sceneID="Dyt-SZ-iFn">
             <objects>
-                <tableViewController storyboardIdentifier="feed2" useStoryboardIdentifierAsRestorationIdentifier="YES" id="571-cD-BJe" customClass="DepositsCardsDetailsAboutViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="feed2" useStoryboardIdentifierAsRestorationIdentifier="YES" id="571-cD-BJe" customClass="DepositsCardsDetailsAboutViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="static" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="50" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="mJz-kE-FJd">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1377,7 +1377,7 @@
         <!--Deposits Cards Details Statement Details View Controller-->
         <scene sceneID="nAh-kC-cgw">
             <objects>
-                <viewController modalPresentationStyle="fullScreen" id="EqD-Vl-vHc" customClass="DepositsCardsDetailsStatementDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="EqD-Vl-vHc" customClass="DepositsCardsDetailsStatementDetailsViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="BYg-Jn-nAL">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1456,7 +1456,7 @@
                                                     <segue destination="vzA-uw-b4a" kind="embed" id="HUx-oz-m02"/>
                                                 </connections>
                                             </containerView>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lUF-95-UCU" customClass="DoubleRoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lUF-95-UCU" customClass="DoubleRoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="250" width="375" height="328"/>
                                                 <subviews>
                                                     <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dkN-cg-Cjp">
@@ -1526,7 +1526,7 @@
         <!--Profile Menu Table View Controller-->
         <scene sceneID="BHr-kR-ULl">
             <objects>
-                <tableViewController id="vzA-uw-b4a" customClass="ProfileMenuTableViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="vzA-uw-b4a" customClass="ProfileMenuTableViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="static" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="50" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="moE-3S-PZ4">
                         <rect key="frame" x="0.0" y="0.0" width="335" height="177"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1664,7 +1664,7 @@
         <!--Profile Menu Table View Controller-->
         <scene sceneID="oUM-M7-bFF">
             <objects>
-                <tableViewController id="YbL-fW-eUR" customClass="ProfileMenuTableViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="YbL-fW-eUR" customClass="ProfileMenuTableViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="static" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="50" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="h8a-C8-49o">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="258"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1843,7 +1843,7 @@
         <!--Deposits Cards Details Statement View Controller-->
         <scene sceneID="DXt-gb-BVI">
             <objects>
-                <viewController storyboardIdentifier="feedfeed1" useStoryboardIdentifierAsRestorationIdentifier="YES" id="dZT-YC-pJL" customClass="DepositsCardsDetailsStatementViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="feedfeed1" useStoryboardIdentifierAsRestorationIdentifier="YES" id="dZT-YC-pJL" customClass="DepositsCardsDetailsStatementViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ct1-Gz-euE">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1876,15 +1876,15 @@
         <!--Product Details View Controller-->
         <scene sceneID="UyC-Lb-fTu">
             <objects>
-                <viewController storyboardIdentifier="ProductDetailsViewController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="dKH-6f-sJB" customClass="ProductDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="11r-9d-uJN" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
+                <viewController storyboardIdentifier="ProductDetailsViewController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="dKH-6f-sJB" customClass="ProductDetailsViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="11r-9d-uJN" customClass="GradientView" customModule="ForaBank_Beta" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1LH-E0-oQp">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
-                                    <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BJy-WN-0li" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
+                                    <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BJy-WN-0li" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="308" width="375" height="367"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </containerView>
@@ -2011,15 +2011,15 @@
         <!--Loans Details View Controller-->
         <scene sceneID="hUE-IL-H7B">
             <objects>
-                <viewController storyboardIdentifier="LoansDetailsViewController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="xqK-z0-WSt" customClass="LoansDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="M4V-pH-YAl" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
+                <viewController storyboardIdentifier="LoansDetailsViewController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="xqK-z0-WSt" customClass="LoansDetailsViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="M4V-pH-YAl" customClass="GradientView" customModule="ForaBank_Beta" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cHs-eF-nd5">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
-                                    <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4bf-lm-6TS" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
+                                    <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4bf-lm-6TS" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="300" width="375" height="367"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </containerView>
@@ -2146,14 +2146,56 @@
         <!--Product About View Controller-->
         <scene sceneID="47A-0p-AMk">
             <objects>
-                <tableViewController storyboardIdentifier="ProductAboutViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="aQO-4q-pmf" customClass="ProductAboutViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="static" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="35" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="cdv-Wd-Ga4">
+                <tableViewController storyboardIdentifier="ProductAboutViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="aQO-4q-pmf" customClass="ProductAboutViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="cdv-Wd-Ga4" customClass="CustomTableView" customModule="ForaBank_Beta" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="contentLayoutGuide" id="Vye-4b-oB4"/>
+                        <viewLayoutGuide key="frameLayoutGuide" id="cqB-le-kBw"/>
                         <inset key="separatorInset" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
                         <color key="sectionIndexColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <color key="sectionIndexBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="productAboutCell" rowHeight="70" id="Ksb-vE-HvI" customClass="PaymentTemplateCell" customModule="ForaBank_Beta" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="375" height="70"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ksb-vE-HvI" id="17R-Kx-Ob9">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SNt-rW-hoR">
+                                            <rect key="frame" x="225" y="12" width="122" height="52"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4rs-FN-Ygs">
+                                            <rect key="frame" x="18" y="12" width="186" height="50"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="186" id="cy2-Qy-tH0"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" weight="light" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="4rs-FN-Ygs" firstAttribute="top" secondItem="17R-Kx-Ob9" secondAttribute="topMargin" constant="1" id="BNK-JM-wCX"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="4rs-FN-Ygs" secondAttribute="bottom" constant="-3" id="GWc-AS-1O4"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="SNt-rW-hoR" secondAttribute="trailing" constant="12" id="IAY-Fz-0Xb"/>
+                                        <constraint firstItem="4rs-FN-Ygs" firstAttribute="leading" secondItem="17R-Kx-Ob9" secondAttribute="leadingMargin" constant="2" id="iFT-cg-iFj"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="SNt-rW-hoR" secondAttribute="bottom" constant="-5" id="mG2-Dx-tmd"/>
+                                        <constraint firstItem="SNt-rW-hoR" firstAttribute="firstBaseline" secondItem="4rs-FN-Ygs" secondAttribute="firstBaseline" id="o1a-fB-15y"/>
+                                        <constraint firstItem="SNt-rW-hoR" firstAttribute="leading" secondItem="4rs-FN-Ygs" secondAttribute="trailing" constant="21" id="snN-R4-8XF"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="descriptionLabel" destination="SNt-rW-hoR" id="NxW-Np-XjP"/>
+                                    <outlet property="titleLabel" destination="4rs-FN-Ygs" id="7if-Kh-xe3"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
                         <sections/>
                         <connections>
                             <outlet property="dataSource" destination="aQO-4q-pmf" id="AXh-T6-MBR"/>
@@ -2163,12 +2205,12 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JUb-VN-sKj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="405" y="3300"/>
+            <point key="canvasLocation" x="404" y="3299.1004497751128"/>
         </scene>
         <!--Deposits Cards Details Statement View Controller-->
         <scene sceneID="9Sc-9J-MhC">
             <objects>
-                <viewController storyboardIdentifier="feedfeedfeed1" useStoryboardIdentifierAsRestorationIdentifier="YES" id="awJ-hG-rWG" customClass="DepositsCardsDetailsStatementViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="feedfeedfeed1" useStoryboardIdentifierAsRestorationIdentifier="YES" id="awJ-hG-rWG" customClass="DepositsCardsDetailsStatementViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ea5-7I-lql">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2200,7 +2242,7 @@
         <!--Deposits Stats Details View Controller-->
         <scene sceneID="dIG-RQ-Jw5">
             <objects>
-                <viewController storyboardIdentifier="DepositsStatsDetailsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="rXr-Kb-7u1" customClass="DepositsStatsDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DepositsStatsDetailsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="rXr-Kb-7u1" customClass="DepositsStatsDetailsViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="qUu-bO-A00">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2211,7 +2253,7 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H76-6d-JRa">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="967"/>
                                         <subviews>
-                                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mfC-zk-QcY" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
+                                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mfC-zk-QcY" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="300" width="375" height="667"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <connections>
@@ -2329,7 +2371,7 @@
         <!--Bubbles Detailed Stats View Controller-->
         <scene sceneID="wxw-dd-43H">
             <objects>
-                <viewController id="sL6-vn-o8d" customClass="BubblesDetailedStatsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="sL6-vn-o8d" customClass="BubblesDetailedStatsViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2M2-TG-Mfw">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2358,15 +2400,15 @@
         <!--Deposit Details View Controller-->
         <scene sceneID="04i-4d-ToT">
             <objects>
-                <viewController storyboardIdentifier="DepositDetailsViewController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="yDh-99-FRd" customClass="DepositDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="T6t-Kb-oFp" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
+                <viewController storyboardIdentifier="DepositDetailsViewController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="yDh-99-FRd" customClass="DepositDetailsViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="T6t-Kb-oFp" customClass="GradientView" customModule="ForaBank_Beta" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hvm-M3-Z3R">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
-                                    <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NFe-8U-rJ9" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
+                                    <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NFe-8U-rJ9" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="300" width="375" height="367"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </containerView>
@@ -2495,7 +2537,7 @@
         <!--Collapsible Table View Controller-->
         <scene sceneID="eYQ-SJ-XzC">
             <objects>
-                <viewController storyboardIdentifier="CollapsibleTableViewController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="fwp-UO-gpq" customClass="CollapsibleTableViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CollapsibleTableViewController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="fwp-UO-gpq" customClass="CollapsibleTableViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8w4-pe-2tz" sceneMemberID="firstResponder"/>
@@ -2506,7 +2548,7 @@
         <scene sceneID="LYy-Fu-VNP">
             <objects>
                 <navigationController storyboardIdentifier="depositsRoot" automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="UUW-Uy-lmj" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Продукты" image="tabbar_icon_deposits" id="8zp-wW-i5v" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
+                    <tabBarItem key="tabBarItem" title="Продукты" image="tabbar_icon_deposits" id="8zp-wW-i5v" customClass="CustomTabBarItem" customModule="ForaBank_Beta" customModuleProvider="target">
                         <inset key="imageInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="-10"/>
                         <inset key="largeContentSizeImageInsets" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
                     </tabBarItem>
@@ -2530,8 +2572,8 @@
         <!--Product List View Controller-->
         <scene sceneID="O16-SI-n2m">
             <objects>
-                <viewController storyboardIdentifier="ProductListViewController" modalPresentationStyle="fullScreen" id="uqa-ze-8di" customClass="ProductListViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="haJ-Jp-eXT" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
+                <viewController storyboardIdentifier="ProductListViewController" modalPresentationStyle="fullScreen" id="uqa-ze-8di" customClass="ProductListViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="haJ-Jp-eXT" customClass="GradientView" customModule="ForaBank_Beta" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -2566,7 +2608,7 @@
                                     <constraint firstItem="d2f-kb-oWW" firstAttribute="top" secondItem="bER-wf-s2h" secondAttribute="top" id="j4V-an-3lT"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9gf-3F-wKp" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9gf-3F-wKp" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="25" width="320" height="543"/>
                                 <subviews>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" sectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Uxl-5t-TGR">
@@ -2628,7 +2670,7 @@
         <!--Custom Alert View-->
         <scene sceneID="7zg-MO-4WU">
             <objects>
-                <viewController storyboardIdentifier="CustomAlertID" id="YGb-NV-cJx" customClass="CustomAlertView" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CustomAlertID" id="YGb-NV-cJx" customClass="CustomAlertView" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="kzO-uj-Z1o"/>
                         <viewControllerLayoutGuide type="bottom" id="j5c-T8-hC7"/>
@@ -2651,7 +2693,7 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                     </textField>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q5D-12-jH6" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q5D-12-jH6" customClass="ButtonRounded" customModule="ForaBank_Beta" customModuleProvider="target">
                                         <rect key="frame" x="17" y="116" width="314" height="44"/>
                                         <color key="backgroundColor" red="0.91764705879999997" green="0.2666666667" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
@@ -2665,7 +2707,7 @@
                                             <action selector="onTapOkButton:" destination="YGb-NV-cJx" eventType="touchUpInside" id="nb2-zA-fh6"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DFH-6P-wab" customClass="ButtonBlackRounded" customModule="ForaBank" customModuleProvider="target">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DFH-6P-wab" customClass="ButtonBlackRounded" customModule="ForaBank_Beta" customModuleProvider="target">
                                         <rect key="frame" x="17" y="164" width="314" height="42"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="42" id="qci-zl-fen"/>

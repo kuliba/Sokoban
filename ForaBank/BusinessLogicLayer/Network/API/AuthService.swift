@@ -250,7 +250,7 @@ class AuthService: AuthServiceProtocol {
         }
     }
     func checkCodeResetPassword(headers: HTTPHeaders, code: String, completionHandler: @escaping (_ success: Bool) -> Void) {
-        let url = Host.shared.apiBaseURL + "resetPassword"
+        let url = Host.shared.apiBaseURL + "resetPasswordCheckCode"
         let parameters: [String: AnyObject] = [
             "appId": "AND" as AnyObject,
             "fingerprint": false as AnyObject,

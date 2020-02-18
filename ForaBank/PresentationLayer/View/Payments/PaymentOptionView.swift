@@ -33,7 +33,7 @@ class PaymentOptionView: UIView {
     }
 
     private func commonInit() {
-        Bundle.main.loadNibNamed(String(describing: PaymentRedOptionView.self), owner: self, options: nil)
+        Bundle.main.loadNibNamed(String(describing: PaymentOptionView.self), owner: self, options: nil)
         addSubview(contentView)
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -43,9 +43,9 @@ class PaymentOptionView: UIView {
     }
 
     internal func setupLayout(withPickerItem pickerItem: IPickerItem, isDroppable: Bool) {
-//        leadingToArrowConstraint.isActive = isDroppable
-//        leadingToSuperviewConstraint.isActive = !isDroppable
-//        arrowsImageView.isHidden = !isDroppable
+        leadingToArrowConstraint.isActive = isDroppable
+        leadingToSuperviewConstraint.isActive = !isDroppable
+        arrowsImageView.isHidden = !isDroppable
 
         optionNameLabel.text = pickerItem.title
         optionNumberLabel.text = pickerItem.subTitle

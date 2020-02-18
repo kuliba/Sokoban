@@ -19,10 +19,12 @@ class PrepareResetPassword: UIViewController {
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var centralView: UIView!
     
+    @IBOutlet weak var newPassword: UITextField!
+    @IBOutlet weak var newPasswordAgain: UITextField!
     var segueId: String? = nil
     var backSegueId: String? = nil
 
-
+    
     // MARK: - Actions
     @IBAction func backButtonClicked() {
         view.endEditing(true)
@@ -45,7 +47,7 @@ class PrepareResetPassword: UIViewController {
      }
     
     @IBAction func newPasswordReset() {
-        NetworkManager.shared().newPasswordReset(password: self.loginTextField.text ?? "",
+        NetworkManager.shared().newPasswordReset(password: self.newPassword.text ?? "",
                                        completionHandler: { [unowned self] success, errorMessage in
                                            if success {
                                                self.performSegue(withIdentifier: "finishResetPassword", sender: self)
@@ -57,10 +59,11 @@ class PrepareResetPassword: UIViewController {
                                        })
      }
 
+   
     // MARK: - Lifecycle
+    @IBOutlet weak var buttonContinue: ButtonRounded!
     override func viewDidLoad() {
         super.viewDidLoad()
-        _ = loginTextField.becomeFirstResponder()
     }
 
     override func viewWillAppear(_ animated: Bool) {

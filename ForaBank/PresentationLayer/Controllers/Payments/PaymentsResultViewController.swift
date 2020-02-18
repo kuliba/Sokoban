@@ -24,6 +24,7 @@ class PaymentsResultViewController: UIViewController, StoreSubscriber {
     @IBOutlet weak var destinationName: UILabel!
     @IBOutlet weak var destinationNumber: UILabel!
     @IBOutlet weak var destinationSum: UILabel!
+    var sumString: String = ""
 
     // MARK: - Actions
     @IBAction func returnButtonClicked(_ sender: Any) {
@@ -34,8 +35,7 @@ class PaymentsResultViewController: UIViewController, StoreSubscriber {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        arrowImageView.image = arrowImageView.image?.withRenderingMode(.alwaysTemplate)
-        arrowImageView.tintColor = .white
+        sumLabel.text = "\(Int(sumString)! + 30) ₽"
 
         returnButton.backgroundColor = .clear
         returnButton.layer.borderWidth = 1
@@ -74,15 +74,9 @@ class PaymentsResultViewController: UIViewController, StoreSubscriber {
             return
         }
 
-        cardNameLabel.text = sourceOption.name
-        cardSumLabel.text = String(describing: sourceOption.value)
-        cardNumberLabel.text = sourceOption.maskedNumber
+  
 
-        destinationName.text = destinationOption.name
-        destinationSum.text = String(describing: destinationOption.value)
-        destinationNumber.text = destinationOption.maskedNumber
-
-        sumLabel.text = "\(sum) ₽"
+        sumLabel.text = "\(Int(sumString)! + 30) ₽"
     }
 
     // MARK: - Methods
