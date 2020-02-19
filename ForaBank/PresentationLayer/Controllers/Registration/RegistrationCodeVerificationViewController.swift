@@ -94,12 +94,6 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
             } else {
                 let alert = UIAlertController(title: "Неудача", message: "Неверный код", preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-                alert.addAction(UIAlertAction(title: "Отменить", style: UIAlertAction.Style.default, handler: { (action) in
-                    let rootVC = self?.storyboard?.instantiateViewController(withIdentifier: "LoginOrSignupViewController") as! LoginOrSignupViewController
-                    self?.segueId = "dismiss"
-                    rootVC.segueId = "logout"
-                    self?.navigationController?.setViewControllers([rootVC], animated: true)
-                }))
                 self?.present(alert, animated: true, completion: nil)
             }
         }

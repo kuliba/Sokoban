@@ -38,13 +38,15 @@ class DepositDetailsViewController: UIViewController {
 
     // MARK: - Actions
 
-    @IBAction func backButtonCLicked(_ sender: Any) {
-        view.endEditing(true)
-        self.navigationController?.popViewController(animated: true)
-        if navigationController == nil {
-            dismiss(animated: true, completion: nil)
-        }
+    @IBAction func backButtonClicked(_ sender: Any) {
+   
+    view.endEditing(true)
+       self.navigationController?.popViewController(animated: true)
+       if navigationController == nil {
+           dismiss(animated: true, completion: nil)
+       }
     }
+   
 
 
 

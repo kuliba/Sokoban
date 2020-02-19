@@ -78,12 +78,7 @@ class ProductAboutViewController: UITableViewController {
         let timeNow = AboutItem(title: String("Дата и время актуализации остатка"), value: formattedDate)
         self.items?.append(timeNow)
 
-//        switch storyboard.id {
-//        case <#pattern#>:
-//            <#code#>
-//        default:
-//            <#code#>
-//        }
+
        
         
         // Uncomment the following line to pre10

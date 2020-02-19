@@ -44,7 +44,7 @@ class LoansService: LoansServiceProtocol {
                             if let cardData = cardData as? Dictionary<String, Any>,
                                 let original = cardData["original"] as? Dictionary<String, Any> {
                                 let currencyCode = original["currencyCode"] as? String
-                                let Amount = original["Amount"] as? Int?
+                                let Amount = original["amount"] as? Double?
                                 if(Amount != nil) {
                                     print(Amount! as Any) // развернутое значение
                                 } else {
@@ -53,7 +53,7 @@ class LoansService: LoansServiceProtocol {
 
                                 let branchBrief = original["branchBrief"] as? String
                                 var dateValue: String? = dayMonthYear(milisecond: original["dateValue"] as! Double)
-//                                var dateEnd: String? = dayMonthYear(milisecond: original["dateEnd"] as! Double)
+                                var dateEnd: String? = dayMonthYear(milisecond: original["dateEnd"] as! Double)
 
                                 let number = original["number"] as? String
                                 let principalDebt = original["principalDebt"] as? Double
@@ -61,9 +61,10 @@ class LoansService: LoansServiceProtocol {
                                 let userAnnual = original["userAnnual"] as? Double
                                 let loanID = original["loanID"] as? Int
                                 let currentInterestRate = original["currentInterestRate"] as? Double
+                                let isClosed = original["isClosed"] as? Bool
                                 let loan = Loan(
                                     Amount: Amount!,
-                                    currencyCode: currencyCode, principalDebt: principalDebt, userAnnual: userAnnual, branchBrief: branchBrief, number: number, DateValue: dateValue, loanID: loanID!
+                                    currencyCode: currencyCode, principalDebt: principalDebt, userAnnual: userAnnual, branchBrief: branchBrief, number: number, DateValue: dateValue, loanID: loanID, currentInterestRate: currentInterestRate, dateEnd: dateEnd, isClosed:isClosed
                                 )
                                 loans.append(loan)
                             }

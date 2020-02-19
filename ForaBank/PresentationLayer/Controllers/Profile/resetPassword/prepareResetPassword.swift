@@ -52,9 +52,9 @@ class PrepareResetPassword: UIViewController {
                                            if success {
                                                self.performSegue(withIdentifier: "finishResetPassword", sender: self)
                                                                                 } else {
-                                               let alert = UIAlertController(title: "Неудача", message: errorMessage, preferredStyle: UIAlertController.Style.alert)
+                                           let alert = UIAlertController(title: "Неудача", message: "Неверный код", preferredStyle: UIAlertController.Style.alert)
                                                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-                                               self.present(alert, animated: true, completion: nil)
+                                            self.present(alert, animated: true, completion: nil)
                                            }
                                        })
      }
