@@ -245,7 +245,7 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
                 }
             })
      
-        } 
+        }
     }
     
     

@@ -24,7 +24,9 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
     @IBOutlet weak var header: UIView!
     @IBOutlet weak var activityIndicator: ActivityIndicatorView?
     var segueId: String? = nil
-
+    var operationSum: String?
+    var sourceConfigurations: [ICellConfigurator]?
+    var destinationConfigurations: [ICellConfigurator]?
     @IBOutlet weak var authForaPreloader: RefreshView!
     @IBOutlet weak var foraPreloader: RefreshView!
     let gradientView = UIView()
@@ -176,7 +178,6 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
     var sourceValue: Any?
     var destinationConfig: Any?
     var destinationValue: Any?
-    var operationSum: String?
 
     func newState(state: VerificationCodeState) {
         guard state.isShown == true else {

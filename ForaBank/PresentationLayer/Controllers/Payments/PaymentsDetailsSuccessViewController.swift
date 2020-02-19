@@ -43,19 +43,19 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
     // MARK: - Lifecycle
 
     func setSource(config: Any?, value: Any?) {
-        switch (config, value) {
-        case (is PaymentOptionsPagerItem, let destinationOption as PaymentOption):
-            cardNameLabel.text = destinationOption.name
-            cardSumLabel.text = "\(String(destinationOption.value)) ₽"
-            cardNumberLabel.text = destinationOption.maskedNumber
+        switch value {
+        case let sourceOption as PaymentOption:
+            cardNameLabel.text = sourceOption.name
+            cardSumLabel.text = "\(String(sourceOption.value)) ₽"
+            cardNumberLabel.text = sourceOption.maskedNumber
         default:
             break
         }
     }
 
     func setDestination(config: Any?, value: Any?) {
-//        destinationSum.text = ""
-//        destinationNumber.text = ""
+        destinationSum.text = ""
+        destinationNumber.text = ""
         switch (config, value) {
         case (is PaymentOptionsPagerItem, let destinationOption as PaymentOption):
             destinationName.text = (destinationOption.name)
@@ -84,7 +84,7 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
 
         setSource(config: sourceConfig, value: sourceValue)
         setDestination(config: destinationConfig, value: destinationValue)
-        sumLabel.text = "\(String(describing: operationSum ?? "12")) ₽"
+        sumLabel.text = "\(String(describing: operationSum ?? "Нет соеденения")) ₽"
     }
 
     override func viewDidAppear(_ animated: Bool) {
