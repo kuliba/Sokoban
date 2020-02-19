@@ -33,6 +33,23 @@ func formatedCreditCardString(creditCardString: String) -> String {
     }
     return modifiedCreditCardString
 }
+func formattedAccountNumberTextField(accountNumberTextField: String) -> String {
+    let cleanAccounNumber = accountNumberTextField.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
+      let mask = "XXXXX XXX X XXXX XXXXXXX"
+
+      var result = ""
+      var index = cleanAccounNumber.startIndex
+      for ch in mask where index < cleanAccounNumber.endIndex {
+
+          if ch == "X" {
+              result.append(cleanAccounNumber[index])
+              index = cleanAccounNumber.index(after: index)
+          } else {
+              result.append(ch)
+          }
+      }
+      return result
+}
 
 func formattedPhoneNumber(number: String) -> String {
     let cleanPhoneNumber = number.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
@@ -72,17 +89,20 @@ func formattedNumberInPhoneContacts(number: String) -> String {
 // Numbers masks
 
 func maskedString(string: String, mask: Array<Int>, separator: String) -> String {
+
+    if string != ""{
     var temp = string.map { String($0) }
     let parts = mask.map { (item) -> [String] in
         let part = temp[0...item - 1]
         temp = Array(temp.suffix(from: item))
         return Array(part)
-    }
-
+        }
+    
     let joinedParts = parts.map({ $0.joined() })
     return Array(joinedParts).joined(separator: separator)
+    }
+    return string
 }
-
 func dotMaskedString(string: String, mask: Array<Int>, separator: String) -> String {
     return maskedString(string: string, mask: mask, separator: separator)
 }

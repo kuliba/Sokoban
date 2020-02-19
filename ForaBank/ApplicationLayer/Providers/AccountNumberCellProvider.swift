@@ -25,6 +25,6 @@ class AccountNumberCellProvider: NSObject, ITextInputCellProvider {
     }
 
     func formatted(stringToFormat string: String) -> String {
-        return formatedCreditCardString(creditCardString: string)
+        return formattedAccountNumberTextField(accountNumberTextField: string)
     }
 }

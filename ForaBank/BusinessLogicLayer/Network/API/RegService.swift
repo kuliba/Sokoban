@@ -165,11 +165,15 @@ class RegService: RegServiceProtocol {
             .responseJSON { [unowned self] response in
 
                 if let json = response.result.value as? Dictionary<String, Any>,
-                    let errorMessage = json["errorMessage"] as? String {
-                    print("error1")
+                    var errorMessage = json["errorMessage"] as? String {
+                   
+                    if errorMessage == "4: Сбой при поиске данных"{
+                         errorMessage  = "Карта с таким номером не найдена Пожалуйста, проверьте корректность введённых данных"
+                    }
                     print("\(errorMessage) \(self)")
+                   
                     completionHandler(false, errorMessage)
-
+                    
                     return
                 }
                 switch response.result {
