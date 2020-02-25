@@ -1871,7 +1871,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kO2-Jl-vGr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-586" y="4045"/>
+            <point key="canvasLocation" x="-3246" y="3271"/>
         </scene>
         <!--Product Details View Controller-->
         <scene sceneID="UyC-Lb-fTu">
@@ -2797,6 +2797,6 @@
         <image name="visalogo" width="41" height="18"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="xAX-aZ-8L4"/>
+        <segue reference="HSU-U3-jID"/>
     </inferredMetricsTieBreakers>
 </document>

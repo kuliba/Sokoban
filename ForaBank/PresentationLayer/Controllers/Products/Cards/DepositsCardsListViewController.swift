@@ -664,7 +664,13 @@ class DepositsCardsListViewController: UIViewController {
             vc.pickerOptions = ["По статусу карты", "по сроку действия "]
             vc.delegate = self
             
-         
+            if vc.pickerOptions == vc.pickerOptions{
+                cards.sort(by: {$0.status < $1.status})
+                contentView.self.setNeedsLayout()
+//               contentView.isHidden = true
+                let countArray = cardViews.count
+                view.reloadInputViews()
+            }
             present(vc, animated: true, completion: nil)
         }
     }

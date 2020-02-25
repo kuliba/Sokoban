@@ -63,7 +63,7 @@ class Account: Mappable, IProduct {
         if isClosed.description == "true"{
             status = "Не действует"
         } else{
-            status = "Дейтсвует"
+            status = "Действует"
         }
         let dateStartFormatter = dayMonthYear(milisecond: dateStart)
         return
@@ -71,7 +71,7 @@ class Account: Mappable, IProduct {
             AboutItem(title: "Договор действует с", value: "\(dateStartFormatter)"),
              AboutItem(title: "Валюта", value: "\(currencyCode)"),
              AboutItem(title: "Доступный остаток", value: "\(balance) \(currencyCode)"),
-             AboutItem(title: "Состояние", value: "\(status)"),
+             AboutItem(title: "Состояние", value: "\(status)")
 
         ]
     
