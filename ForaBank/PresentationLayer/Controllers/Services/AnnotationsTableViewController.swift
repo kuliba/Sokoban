@@ -19,7 +19,6 @@ class AnnotationsTableViewController: UITableViewController, CLLocationManagerDe
             tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true) //скролим вверх(чтобы ячейка не смещалась)
         }
     }
-    //var arrayPhoneNumber = Array<String>()
     
     @IBOutlet weak var scrollView: UIScrollView!
     
@@ -28,8 +27,8 @@ class AnnotationsTableViewController: UITableViewController, CLLocationManagerDe
         self.locationManager.requestAlwaysAuthorization()
 
         // For use in foreground
+        // для определения геолокации
         self.locationManager.requestWhenInUseAuthorization()
-
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
             locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
@@ -48,7 +47,12 @@ class AnnotationsTableViewController: UITableViewController, CLLocationManagerDe
     @IBAction func actionCall(_ sender: Any) {
         // получаем индекс ячейки в которой нажата кнопка
         guard let indexPath = tableView.indexPathForRow(at: (sender as AnyObject).convert(CGPoint(),to: tableView)) else{return}
-        guard let numberPhone = annotations[indexPath.row].phone else{return}
+        var numberPhone = ""
+        let cellNum = tableView.cellForRow(at: indexPath) // достаем ячейку
+        if let cell = cellNum as? AnnotationTableViewCell {
+            guard cell.phoneLabel.text != nil else{return} // получаем из нее телефон
+            numberPhone = cell.phoneLabel.text!
+        }
         // строка с двумя номерами
         if numberPhone.contains(";"){ // если в строке 2 номера, то создаем 2 вызова
             let arrayNumber = numberPhone.components(separatedBy: [";"])
@@ -117,6 +121,10 @@ class AnnotationsTableViewController: UITableViewController, CLLocationManagerDe
         cell.layoutIfNeeded()
         return cell
     }
+    
+//    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        print(indexPath)
+//    }
 
     /*
     // Override to support conditional editing of the table view.
@@ -165,6 +173,8 @@ class AnnotationsTableViewController: UITableViewController, CLLocationManagerDe
 
 }
 
+
+//MARK: Location
 extension AnnotationsTableViewController{
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }

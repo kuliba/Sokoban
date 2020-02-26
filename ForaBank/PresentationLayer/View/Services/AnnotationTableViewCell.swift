@@ -55,7 +55,14 @@ class AnnotationTableViewCell: UITableViewCell {
         }
         if let t = phone {
             phoneLabel.text = t
-            
+        }
+        // нет телефона, нет кнопки
+        if phone == nil || phone == ""  {
+            buttonCall.isUserInteractionEnabled = false
+            buttonCall.alpha = 0
+        }else{
+            buttonCall.isUserInteractionEnabled = true
+            buttonCall.alpha = 1
         }
     }
 
