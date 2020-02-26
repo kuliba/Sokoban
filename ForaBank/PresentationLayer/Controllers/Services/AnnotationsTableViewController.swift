@@ -57,18 +57,8 @@ class AnnotationsTableViewController: UITableViewController, CLLocationManagerDe
         if numberPhone.contains(";"){ // если в строке 2 номера, то создаем 2 вызова
             let arrayNumber = numberPhone.components(separatedBy: [";"])
             callNumber(arrayNumber[0])
-//            let numberPhoneReplace  = arrayNumber[0].replace(string: " ", replacement: "") // убираем пробелы
-//            guard let url = URL(string: "tel://\(numberPhoneReplace)") else{return}
-//            if UIApplication.shared.canOpenURL(url) {
-//                UIApplication.shared.open(url)
-//            }
         }else{ // если один
             callNumber(numberPhone)
-//            let numberPhoneReplace  = numberPhone.replace(string: " ", replacement: "") // убираем пробелы
-//            guard let url = URL(string: "tel://\(numberPhoneReplace)") else{return}
-//            if UIApplication.shared.canOpenURL(url) {
-//                UIApplication.shared.open(url)
-//            }
         }
     }
     
