@@ -14,16 +14,28 @@ class AnnotationTableViewCell: UITableViewCell {
     @IBOutlet weak var addressLabel: UILabel!
     @IBOutlet weak var scheduleLabel: UILabel!
     @IBOutlet weak var phoneLabel: UILabel!
-    @IBOutlet weak var titleHeight: NSLayoutConstraint!
-    @IBOutlet weak var addressHeight: NSLayoutConstraint!
-    @IBOutlet weak var scheduleHeight: NSLayoutConstraint!
-    @IBOutlet weak var phoneHeight: NSLayoutConstraint!
+    
+    @IBOutlet weak var buttonRoute: UIButton!
+    @IBOutlet weak var buttonCall: UIButton!
+    //@IBOutlet weak var titleHeight: NSLayoutConstraint!
+    //@IBOutlet weak var addressHeight: NSLayoutConstraint!
+    //@IBOutlet weak var scheduleHeight: NSLayoutConstraint!
+    //@IBOutlet weak var phoneHeight: NSLayoutConstraint!
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        
+        //setup Buttons
+        buttonRoute.backgroundColor = UIColor(hexFromString: "EE433C")
+        buttonRoute.setTitle("маршрут", for: .normal)
+        buttonRoute.setTitleColor(UIColor.white, for: .normal)
+        buttonRoute.layer.cornerRadius = buttonRoute.frame.height/3
+        
+        buttonCall.backgroundColor = UIColor(hexFromString: "EE433C")
+        buttonCall.setTitle("вызов", for: .normal)
+        buttonCall.setTitleColor(UIColor.white, for: .normal)
+        buttonCall.layer.cornerRadius = buttonCall.frame.height/3
     }
-
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
@@ -48,3 +60,4 @@ class AnnotationTableViewCell: UITableViewCell {
     }
 
 }
+
