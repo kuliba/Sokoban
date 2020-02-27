@@ -14,13 +14,8 @@ class AnnotationTableViewCell: UITableViewCell {
     @IBOutlet weak var addressLabel: UILabel!
     @IBOutlet weak var scheduleLabel: UILabel!
     @IBOutlet weak var phoneLabel: UILabel!
-    
     @IBOutlet weak var buttonRoute: UIButton!
     @IBOutlet weak var buttonCall: UIButton!
-    //@IBOutlet weak var titleHeight: NSLayoutConstraint!
-    //@IBOutlet weak var addressHeight: NSLayoutConstraint!
-    //@IBOutlet weak var scheduleHeight: NSLayoutConstraint!
-    //@IBOutlet weak var phoneHeight: NSLayoutConstraint!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -57,7 +52,7 @@ class AnnotationTableViewCell: UITableViewCell {
             phoneLabel.text = t
         }
         // нет телефона, нет кнопки
-        if phone == nil || phone == ""  {
+        if phone == nil || phone == ""{
             buttonCall.isUserInteractionEnabled = false
             buttonCall.alpha = 0
         }else{
