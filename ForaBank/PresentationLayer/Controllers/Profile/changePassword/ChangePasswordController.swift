@@ -92,18 +92,33 @@ class ChangePasswordController: UIViewController {
     }
     
     
-    @IBAction func hideOldPassword(_ sender: Any) {
+    @IBAction func hideOldPassword(_ sender: UIButton) {
         oldPassword.isSecureTextEntry = !oldPassword.isSecureTextEntry
+        if oldPassword.isSecureTextEntry{
+            sender.setImage(UIImage(named: "hidden"), for: .normal)
+        }else{
+            sender.setImage(UIImage(named: "hide_password"), for: .normal)
+        }
     }
     
     
-    @IBAction func hideNewPassword(_ sender: Any) {
+    @IBAction func hideNewPassword(_ sender: UIButton) {
         newPassword.isSecureTextEntry = !newPassword.isSecureTextEntry
+        if newPassword.isSecureTextEntry{
+            sender.setImage(UIImage(named: "hidden"), for: .normal)
+        }else{
+            sender.setImage(UIImage(named: "hide_password"), for: .normal)
+        }
     }
     
     
-    @IBAction func hideReplyPassword(_ sender: Any) {
+    @IBAction func hideReplyPassword(_ sender: UIButton) {
         replayPassword.isSecureTextEntry = !replayPassword.isSecureTextEntry
+        if replayPassword.isSecureTextEntry{
+            sender.setImage(UIImage(named: "hidden"), for: .normal)
+        }else{
+            sender.setImage(UIImage(named: "hide_password"), for: .normal)
+        }
     }
     
 }
