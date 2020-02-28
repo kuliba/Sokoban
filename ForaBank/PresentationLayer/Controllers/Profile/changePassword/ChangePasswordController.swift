@@ -90,6 +90,22 @@ class ChangePasswordController: UIViewController {
             dismiss(animated: true, completion: nil)
         }
     }
+    
+    
+    @IBAction func hideOldPassword(_ sender: Any) {
+        oldPassword.isSecureTextEntry = !oldPassword.isSecureTextEntry
+    }
+    
+    
+    @IBAction func hideNewPassword(_ sender: Any) {
+        newPassword.isSecureTextEntry = !newPassword.isSecureTextEntry
+    }
+    
+    
+    @IBAction func hideReplyPassword(_ sender: Any) {
+        replayPassword.isSecureTextEntry = !replayPassword.isSecureTextEntry
+    }
+    
 }
 
 

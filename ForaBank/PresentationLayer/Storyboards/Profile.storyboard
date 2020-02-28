@@ -659,6 +659,9 @@
                                         </constraints>
                                         <state key="normal" image="hidden"/>
                                         <state key="selected" image="hide_password"/>
+                                        <connections>
+                                            <action selector="hideOldPassword:" destination="Zkk-3H-ddV" eventType="touchUpInside" id="HEb-Gv-RX1"/>
+                                        </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Текущий пароль" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Loo-b7-Cjf">
                                         <rect key="frame" x="20" y="42" width="100.5" height="15.5"/>
@@ -683,6 +686,9 @@
                                         </constraints>
                                         <state key="normal" image="hidden"/>
                                         <state key="selected" image="hide_password"/>
+                                        <connections>
+                                            <action selector="hideNewPassword:" destination="Zkk-3H-ddV" eventType="touchUpInside" id="aBZ-cJ-7Ab"/>
+                                        </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Новый пароль" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lKi-Jc-nCd">
                                         <rect key="frame" x="20" y="111.5" width="88" height="15.5"/>
@@ -707,6 +713,9 @@
                                         </constraints>
                                         <state key="normal" image="hidden"/>
                                         <state key="selected" image="hide_password"/>
+                                        <connections>
+                                            <action selector="hideReplyPassword:" destination="Zkk-3H-ddV" eventType="touchUpInside" id="7Ya-Rd-fqy"/>
+                                        </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Повторите новый пароль" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Oy-dB-UCh">
                                         <rect key="frame" x="20" y="181" width="154.5" height="15.5"/>
