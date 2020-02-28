@@ -31,6 +31,7 @@ class ProfileMenuTableViewController: UITableViewController {
     }
 
     @IBAction func quitButtonClicked(_ sender: Any) {
+        UserDefaults.standard.removeObject(forKey: "userImageView")
         AuthenticationService.shared.logoutAndClearAllUserData()
     }
 

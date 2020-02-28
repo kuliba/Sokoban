@@ -122,6 +122,7 @@ class NetworkManager {
             }
         }
     }
+    
     func newPasswordReset(password: String,
                           completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void) {
         authService.csrf(headers: headers) { [unowned self] (success, newHeaders) in
@@ -138,6 +139,14 @@ class NetworkManager {
             else {
                 completionHandler(false, nil)
             }
+        }
+    }
+    
+    func changePassword(oldPassword: String,
+                        newPassword: String,
+                        completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void){
+        authService.changePassword(headers: self.headers, oldPassword: oldPassword, newPassword: newPassword) { (success, errorMessage) in
+            completionHandler(success, errorMessage)
         }
     }
 
