@@ -9,6 +9,7 @@
 import UIKit
 import ReSwift
 import Alamofire
+import TKFormTextField
 
 protocol FirstViewControllerDelegate: class {
     func update(text: Double)
@@ -77,7 +78,7 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
     
     @IBOutlet weak var header: UIView!
     @IBOutlet weak var sourcePagerView: PagerView!
-    @IBOutlet weak var numberAcoount: DTTextField!
+    @IBOutlet weak var numberAcoount: TKFormTextField!
     @IBOutlet weak var kppBank: CustomTextField!
     @IBOutlet weak var innBank: CustomTextField!
     @IBOutlet weak var bikBank: CustomTextField!
@@ -223,6 +224,14 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
         guard state.isShown == true else {
             return
         }
+    }
+    
+    func updateError(numberAcoount: TKFormTextField) {
+      guard let text = numberAcoount.text, !text.isEmpty else {
+        numberAcoount.error = "Text is empty!" // to show error message in errorLabel
+        return
+      }
+      numberAcoount.error = nil // to remove the error message
     }
     
     @IBAction func paymentCompany(_ sender: Any) {
@@ -387,10 +396,10 @@ private extension  FreeDetailsViewController {
     
     func validateData() -> Bool {
            
-        guard !(numberAcoount!.text != nil) else {
-               numberAcoount.showError(message: numberAccountError)
-               return false
-           }
+//        guard !(numberAcoount!.text != nil) else {
+//               numberAcoount.showError(message: numberAccountError)
+//               return false
+//           }
            
            return true
        }

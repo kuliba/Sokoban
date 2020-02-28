@@ -104,6 +104,7 @@ PODS:
     - ReSwift (~> 5.0)
   - RMMapper (1.1.5)
   - SCLAlertView (0.8)
+  - TKFormTextField (0.3.1)
   - TOPasscodeViewController (0.0.2)
 
 DEPENDENCIES:
@@ -128,6 +129,7 @@ DEPENDENCIES:
   - ReSwiftThunk
   - RMMapper
   - SCLAlertView
+  - TKFormTextField
   - TOPasscodeViewController
 
 SPEC REPOS:
@@ -164,6 +166,7 @@ SPEC REPOS:
     - ReSwiftThunk
     - RMMapper
     - SCLAlertView
+    - TKFormTextField
     - TOPasscodeViewController
 
 SPEC CHECKSUMS:
@@ -199,8 +202,9 @@ SPEC CHECKSUMS:
   ReSwiftThunk: 23c8ea9092d9dc94b72005f19352dbd37fa42533
   RMMapper: 21122d753c736d975f6c61e674afce8db73579af
   SCLAlertView: 6a77bb2edfc65e04dbe57725546cb4107a506b85
+  TKFormTextField: def6294d3d3bd944d864ee48d5cc6e36863d6ade
   TOPasscodeViewController: 03b5df3762a7be1511102093c644a42275bddf24
 
-PODFILE CHECKSUM: ee56df07b8b6a1550b66cc5f76f4b16ac8cad7b8
+PODFILE CHECKSUM: cacd961df381600790ae9a54086242851504faaa
 
-COCOAPODS: 1.8.3
+COCOAPODS: 1.8.4
