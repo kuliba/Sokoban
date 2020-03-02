@@ -172,3 +172,10 @@ class SignInViewController: UIViewController, ContactsPickerDelegate {
         }
     }
 }
+
+
+extension SignInViewController{
+    private func saveLoginAndPassword(_ login: String, _ password:String){
+        
+    }
+}

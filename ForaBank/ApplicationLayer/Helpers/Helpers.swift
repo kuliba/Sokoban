@@ -351,3 +351,12 @@ func arrayWith(key: String, fromPlist name: String) -> Array<Dictionary<String, 
     }
     return nsDictionary?[key] as? Array<Dictionary<String, String>> ?? []
 }
+
+// функция вызываем меню набора номера (number - номер телефона)
+func callNumber(_ number: String){
+    let numberPhoneReplace  = number.replace(string: " ", replacement: "") // убираем пробелы
+    guard let url = URL(string: "tel://\(numberPhoneReplace)") else{return}
+    if UIApplication.shared.canOpenURL(url) {
+        UIApplication.shared.open(url)
+    }
+}
