@@ -9,7 +9,6 @@
 import UIKit
 import ReSwift
 import Alamofire
-import TKFormTextField
 
 protocol FirstViewControllerDelegate: class {
     func update(text: Double)
@@ -76,25 +75,21 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
            }
        }
     
-    @IBOutlet weak var header: UIView!
+
     @IBOutlet weak var sourcePagerView: PagerView!
-    @IBOutlet weak var numberAcoount: TKFormTextField!
+    @IBOutlet weak var numberAcoount: CustomTextField!
     @IBOutlet weak var kppBank: CustomTextField!
     @IBOutlet weak var innBank: CustomTextField!
     @IBOutlet weak var bikBank: CustomTextField!
     @IBOutlet weak var textField: CustomTextField!
-    @IBOutlet weak var centralView: UIScrollView!
 
-    @IBOutlet weak var otherPayments: UILabel!
     @IBOutlet weak var tableView: CustomTableView!
     @IBOutlet weak var containerView: RoundedEdgeView!
     @IBOutlet weak var pickerLabel: UILabel!
     @IBOutlet weak var pickerButton: UIButton!
     @IBOutlet weak var amountTextField: UITextField!
     @IBOutlet weak var paymentCompany: ButtonRounded!
-    @IBOutlet weak var foraPreloader: RefreshView!
-
-    @IBOutlet weak var imagePreloader: UIImageView!
+    
     @IBOutlet weak var comment: CustomTextField!
     @IBOutlet weak var roundedEdgeText: RoundedEdgeView!
 
@@ -106,25 +101,17 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
         if (amountTextField.text?.contains(dotString))! {
                 maxLength = 12
             }
+        
+        
+       
     }
     
-   
-    
-    @IBAction func didChangedAcountNumber(_ sender: Any) {
-        if numberAcoount.text! == "40101"{
-                  otherPayments.isHidden = false
-            paymentCompany.isEnabled = false
-            paymentCompany.alpha = 0.27
-        } else if numberAcoount.text! == "40302"{
-             otherPayments.isHidden = false
-                 paymentCompany.isEnabled = false
-                 paymentCompany.alpha = 0.27
-        }else {
-            otherPayments.isHidden = true
-            paymentCompany.isEnabled = true
-            paymentCompany.alpha = 1
-        }
+    @IBAction func didChangeNumberAccount(_ sender: Any) {
+//        if numberAcoount.text = "444"{
+//
+//        }
     }
+    
     @IBAction func backButtonClicked(_ sender: Any) {
         self.navigationController?.popViewController(animated: true)
         if navigationController == nil {
@@ -146,9 +133,6 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
     var scrollView: UIScrollView!
     var newName: String? = nil
     var id: String? = nil
-    let numberAccountError = NSLocalizedString("Вы ввели реквизиты для перевода средств в бюджет РФ. Проверьте корректность указанных данных или перейдите в соответствующий раздел.", comment: "")
-    
-    
 
     @IBOutlet weak var bankName: UILabel!
     @IBAction func bikTextField(_ sender: Any) {
@@ -198,8 +182,6 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
             }
                 innCompany.isHidden = false
                 kppBank.isHidden = true
-            if kppBank.isHidden == true{
-            }
                 kppLabel.isHidden = true
             
             
@@ -226,29 +208,13 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
         }
     }
     
-    func updateError(numberAcoount: TKFormTextField) {
-      guard let text = numberAcoount.text, !text.isEmpty else {
-        numberAcoount.error = "Text is empty!" // to show error message in errorLabel
-        return
-      }
-      numberAcoount.error = nil // to remove the error message
-    }
-    
     @IBAction func paymentCompany(_ sender: Any) {
-        guard validateData() else { return }
-         
         
-        foraPreloader.isHidden = false
-        foraPreloader.startAnimation()
-        paymentCompany.isHidden = true
         if bikBank.text == "" && innBank.text == "" &&  numberAcoount.text == "" && comment.text == ""{
             let alert = UIAlertController(title: "Заполните все поля", message: "", preferredStyle: UIAlertController.Style.alert)
              alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
             
             self.present(alert, animated: true, completion: nil)
-            foraPreloader.isHidden = true
-            paymentCompany.isHidden = false
-
         } else {
                // either textfield 1 or 2's text is empty
            
@@ -271,9 +237,6 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
                     self?.performSegue(withIdentifier: "regSmsVerification", sender: comissions)
                     
                 } else {
-                    self!.foraPreloader.isHidden = true
-                    self!.paymentCompany.isHidden = false
-
                     let alert = UIAlertController(title: "Неудача", message: errorMessage, preferredStyle: UIAlertController.Style.alert)
                     alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
                    
@@ -297,13 +260,14 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
   
     override func viewDidLoad() {
         super.viewDidLoad()
-       
+
         amountTextField.delegate = self
+  
         // Do any additional setup after loading the view.
   
-        foraPreloader.isHidden = true
+    
         
-        otherPayments.isHidden = true
+        
         bankName.isHidden = true
         amountTextField.delegate = self
         
@@ -373,37 +337,39 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
     
  
 
+    /*
+    // MARK: - Navigation
 
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destination.
+        // Pass the selected object to the new view controller.
     }
-    
+    */
+
 }
 
 
-private extension  FreeDetailsViewController {
- 
-    @objc func keyboardWillShow(notification:Notification) {
-        guard let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue else { return }
-        scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardHeight.height, right: 0)
-      }
-    
-    @objc func keyboardWillHide(notification:Notification) {
-          scrollView.contentInset = .zero
-      }
-    
-    func validateData() -> Bool {
-           
-//        guard !(numberAcoount!.text != nil) else {
-//               numberAcoount.showError(message: numberAccountError)
-//               return false
-//           }
-           
-           return true
-       }
+private extension PaymentsDetailsViewController {
+    private func setUpPicker() {
+        picker.layer.cornerRadius = 3
+        pickerImageView.image = pickerImageView.image?.withRenderingMode(.alwaysTemplate)
+        pickerImageView.tintColor = .white
+    }
 
+    private func addGradientView() {
+        let containerGradientView = GradientView()
+        containerGradientView.frame = containterView.frame
+        containerGradientView.color1 = UIColor(red: 243 / 255, green: 58 / 255, blue: 52 / 255, alpha: 1)
+        containerGradientView.color2 = UIColor(red: 243 / 255, green: 58 / 255, blue: 52 / 255, alpha: 1)
+        containterView.insertSubview(containerGradientView, at: 0)
+    }
+
+    private func setUpLayout() {
+        activityIndicator.center = view.center
+        view.addSubview(activityIndicator)
+        setUpPicker()
+    }
 }
 
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="OPN-w7-Pxo">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="OPN-w7-Pxo">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -416,11 +416,11 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YzH-Gz-6Tm">
                                         <rect key="frame" x="0.0" y="-44" width="320" height="587"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BHL-jb-4Ty" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="20" width="320" height="479.5"/>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BHL-jb-4Ty" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="20" width="320" height="450"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="БИК банка получателя" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="CpJ-3e-Mag">
-                                                        <rect key="frame" x="17" y="131" width="183.5" height="25"/>
+                                                        <rect key="frame" x="17" y="131" width="358" height="25"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="25" id="TGI-5l-nYj"/>
@@ -430,7 +430,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ИНН получателя" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F2f-dv-NnC">
-                                                        <rect key="frame" x="17" y="199" width="183.5" height="25"/>
+                                                        <rect key="frame" x="17" y="199" width="358" height="25"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="25" id="jTW-Qp-Uwj"/>
                                                         </constraints>
@@ -448,7 +448,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Номер счета получателя" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WMJ-bO-NaM">
-                                                        <rect key="frame" x="17" y="324" width="183.5" height="25"/>
+                                                        <rect key="frame" x="17" y="324" width="358" height="25"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="25" id="DyW-uc-elK"/>
                                                         </constraints>
@@ -457,7 +457,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Назначение перевода" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Xp-zH-MTE">
-                                                        <rect key="frame" x="17" y="372" width="162" height="25"/>
+                                                        <rect key="frame" x="17" y="395" width="358" height="25"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="25" id="XOU-y1-A1Y"/>
                                                         </constraints>
@@ -490,9 +490,12 @@
                                                                 <integer key="value" value="9"/>
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
+                                                        <connections>
+                                                            <action selector="bikTextField:" destination="fd0-20-J9h" eventType="editingChanged" id="uJ4-1o-XYl"/>
+                                                        </connections>
                                                     </textField>
                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="s8h-6c-uid" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
-                                                        <rect key="frame" x="17" y="227" width="284" height="27"/>
+                                                        <rect key="frame" x="15" y="227" width="284" height="27"/>
                                                         <color key="backgroundColor" red="0.96940189600000004" green="0.96951788660000005" blue="0.96936243769999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="27" id="OBI-2E-y8m"/>
@@ -547,7 +550,7 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </textField>
                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cct-HH-wKM" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
-                                                        <rect key="frame" x="17" y="352" width="284" height="27"/>
+                                                        <rect key="frame" x="15" y="352" width="284" height="27"/>
                                                         <color key="backgroundColor" red="0.96940189600000004" green="0.96951788660000005" blue="0.96936243769999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="27" id="P7p-cQ-CRX"/>
@@ -576,10 +579,9 @@
                                                         </connections>
                                                     </textField>
                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0ph-eK-zcn" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
-                                                        <rect key="frame" x="17" y="399" width="284" height="27"/>
+                                                        <rect key="frame" x="15" y="422" width="284" height="27"/>
                                                         <color key="backgroundColor" red="0.96940189600000004" green="0.96951788660000005" blue="0.96936243769999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" constant="284" id="8G0-VG-LYA"/>
                                                             <constraint firstAttribute="height" constant="27" id="boR-Q6-8pY"/>
                                                         </constraints>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -603,25 +605,26 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </textField>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kBW-hN-9O1">
-                                                        <rect key="frame" x="17" y="181" width="183.5" height="22"/>
+                                                        <rect key="frame" x="17" y="181" width="358" height="22"/>
                                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
                                                         <color key="textColor" red="0.38726419210000002" green="0.38731426000000002" blue="0.38724720480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oh4-Sa-bq8">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oh4-Sa-bq8">
                                                         <rect key="frame" x="16" y="252" width="358" height="22"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
                                                         <color key="textColor" red="0.38726419210000002" green="0.38731426000000002" blue="0.38724720480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2NX-Pv-HEt">
-                                                        <rect key="frame" x="17" y="375" width="0.0" height="0.0"/>
+                                                        <rect key="frame" x="15" y="375" width="358" height="23"/>
                                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
                                                         <color key="textColor" red="0.38726419210000002" green="0.38731426000000002" blue="0.38724720480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <color key="highlightedColor" red="0.93805062770000003" green="0.25358119610000002" blue="0.2107679546" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </label>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RzN-8C-blC" customClass="PagerView" customModule="ForaBank_Beta" customModuleProvider="target">
-                                                        <rect key="frame" x="17" y="61" width="286" height="55"/>
+                                                        <rect key="frame" x="15" y="61" width="290" height="55"/>
                                                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9rO-JB-7cv">
@@ -632,7 +635,7 @@
                                                         </constraints>
                                                     </view>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Group 6 Copy" translatesAutoresizingMaskIntoConstraints="NO" id="dvU-qe-6zT">
-                                                        <rect key="frame" x="271" y="92.5" width="30" height="50"/>
+                                                        <rect key="frame" x="269" y="105" width="30" height="25"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="30" id="7dC-B2-Zkf"/>
                                                         </constraints>
@@ -641,57 +644,58 @@
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstItem="WMJ-bO-NaM" firstAttribute="trailing" secondItem="F2f-dv-NnC" secondAttribute="trailing" id="2S5-Gp-bER"/>
+                                                    <constraint firstItem="0ph-eK-zcn" firstAttribute="leading" secondItem="BHL-jb-4Ty" secondAttribute="leading" constant="15" id="4iI-fV-9uZ"/>
+                                                    <constraint firstItem="Bde-Cs-nnn" firstAttribute="leading" secondItem="BHL-jb-4Ty" secondAttribute="leading" constant="14" id="4tJ-O2-Ham"/>
                                                     <constraint firstItem="WMJ-bO-NaM" firstAttribute="leading" secondItem="F2f-dv-NnC" secondAttribute="leading" id="4yl-uE-Jgf"/>
                                                     <constraint firstItem="CpJ-3e-Mag" firstAttribute="top" secondItem="RzN-8C-blC" secondAttribute="bottom" constant="15" id="5pq-Ls-GyQ"/>
-                                                    <constraint firstItem="RzN-8C-blC" firstAttribute="centerX" secondItem="9rO-JB-7cv" secondAttribute="centerX" id="5q5-C7-Hhf"/>
                                                     <constraint firstItem="0ph-eK-zcn" firstAttribute="leading" secondItem="cct-HH-wKM" secondAttribute="leading" id="7Vn-gD-aiD"/>
-                                                    <constraint firstItem="Bde-Cs-nnn" firstAttribute="top" secondItem="BHL-jb-4Ty" secondAttribute="top" constant="157" id="9cf-Ds-4oy"/>
+                                                    <constraint firstAttribute="bottom" secondItem="4Xp-zH-MTE" secondAttribute="bottom" constant="30" id="B4c-Pr-uqq"/>
                                                     <constraint firstItem="WMJ-bO-NaM" firstAttribute="leading" secondItem="CpJ-3e-Mag" secondAttribute="leading" id="Bp5-FX-Iil"/>
+                                                    <constraint firstItem="CpJ-3e-Mag" firstAttribute="top" secondItem="BHL-jb-4Ty" secondAttribute="top" constant="131" id="CEp-5t-9Ah"/>
                                                     <constraint firstItem="cct-HH-wKM" firstAttribute="top" secondItem="WMJ-bO-NaM" secondAttribute="bottom" constant="3" id="DfM-PO-0iS"/>
-                                                    <constraint firstItem="RzN-8C-blC" firstAttribute="leading" secondItem="BHL-jb-4Ty" secondAttribute="leading" constant="17" id="G05-kP-4Qc"/>
+                                                    <constraint firstAttribute="trailing" secondItem="2NX-Pv-HEt" secondAttribute="trailing" constant="-53" id="FdC-de-Bkd"/>
+                                                    <constraint firstAttribute="trailing" secondItem="I7A-7M-Xa6" secondAttribute="trailing" constant="-54" id="FpF-0g-mJw"/>
+                                                    <constraint firstAttribute="height" constant="450" id="Gog-bg-iM4"/>
                                                     <constraint firstItem="0ph-eK-zcn" firstAttribute="trailing" secondItem="cct-HH-wKM" secondAttribute="trailing" id="HJ0-kS-Xn3"/>
-                                                    <constraint firstItem="RzN-8C-blC" firstAttribute="centerX" secondItem="BHL-jb-4Ty" secondAttribute="centerX" id="HYs-eO-RbD"/>
                                                     <constraint firstItem="kBW-hN-9O1" firstAttribute="top" secondItem="CpJ-3e-Mag" secondAttribute="bottom" constant="25" id="Hj8-gX-81t"/>
                                                     <constraint firstItem="Bde-Cs-nnn" firstAttribute="top" secondItem="CpJ-3e-Mag" secondAttribute="bottom" constant="1" id="I37-He-rUR"/>
-                                                    <constraint firstItem="oh4-Sa-bq8" firstAttribute="top" secondItem="F2f-dv-NnC" secondAttribute="bottom" constant="28" id="LQU-Mx-4A0"/>
                                                     <constraint firstItem="dvU-qe-6zT" firstAttribute="trailing" secondItem="s8h-6c-uid" secondAttribute="trailing" id="NS8-UG-ykG"/>
-                                                    <constraint firstItem="kC3-0W-tZP" firstAttribute="top" secondItem="oh4-Sa-bq8" secondAttribute="bottom" constant="22" id="Oh8-oE-SMv"/>
-                                                    <constraint firstItem="I7A-7M-Xa6" firstAttribute="leading" secondItem="oh4-Sa-bq8" secondAttribute="leading" id="QHg-tC-Qhk"/>
+                                                    <constraint firstAttribute="trailing" secondItem="Bde-Cs-nnn" secondAttribute="trailing" constant="23" id="O7t-Xh-i7t"/>
+                                                    <constraint firstItem="I7A-7M-Xa6" firstAttribute="top" secondItem="BHL-jb-4Ty" secondAttribute="top" constant="270" id="OT4-Up-3Sh"/>
+                                                    <constraint firstItem="9rO-JB-7cv" firstAttribute="centerX" secondItem="BHL-jb-4Ty" secondAttribute="centerX" id="Pgh-vr-16c"/>
+                                                    <constraint firstItem="4Xp-zH-MTE" firstAttribute="leading" secondItem="BHL-jb-4Ty" secondAttribute="leading" constant="17" id="SQq-Ge-V7j"/>
                                                     <constraint firstItem="0ph-eK-zcn" firstAttribute="trailing" secondItem="s8h-6c-uid" secondAttribute="trailing" id="UxM-Tz-mEZ"/>
-                                                    <constraint firstItem="Bde-Cs-nnn" firstAttribute="leading" secondItem="BHL-jb-4Ty" secondAttribute="leading" constant="14" id="VDg-69-dpy"/>
+                                                    <constraint firstAttribute="trailing" secondItem="4Xp-zH-MTE" secondAttribute="trailing" constant="-55" id="VTu-oQ-W9Z"/>
                                                     <constraint firstItem="I7A-7M-Xa6" firstAttribute="top" secondItem="s8h-6c-uid" secondAttribute="bottom" constant="16" id="XBM-Gv-d08"/>
-                                                    <constraint firstItem="I7A-7M-Xa6" firstAttribute="leading" secondItem="BHL-jb-4Ty" secondAttribute="leading" constant="16" id="XMJ-A7-KXT"/>
                                                     <constraint firstItem="9rO-JB-7cv" firstAttribute="top" secondItem="RzN-8C-blC" secondAttribute="bottom" constant="-1" id="Zf4-kq-pXd"/>
                                                     <constraint firstItem="RzN-8C-blC" firstAttribute="leading" secondItem="s8h-6c-uid" secondAttribute="leading" id="a5M-Tz-uPQ"/>
                                                     <constraint firstItem="0ph-eK-zcn" firstAttribute="leading" secondItem="s8h-6c-uid" secondAttribute="leading" id="aCV-ko-F2E"/>
                                                     <constraint firstItem="0ph-eK-zcn" firstAttribute="top" secondItem="4Xp-zH-MTE" secondAttribute="bottom" constant="2" id="c0u-gn-a5x"/>
                                                     <constraint firstItem="kBW-hN-9O1" firstAttribute="leading" secondItem="F2f-dv-NnC" secondAttribute="leading" id="cGb-ca-QEd"/>
+                                                    <constraint firstAttribute="trailing" secondItem="kC3-0W-tZP" secondAttribute="trailing" constant="20" id="dQ3-Hh-LM7"/>
                                                     <constraint firstItem="9rO-JB-7cv" firstAttribute="trailing" secondItem="kC3-0W-tZP" secondAttribute="trailing" id="dRS-uM-ZfI"/>
+                                                    <constraint firstItem="I7A-7M-Xa6" firstAttribute="leading" secondItem="BHL-jb-4Ty" secondAttribute="leading" constant="16" id="djq-4s-7be"/>
                                                     <constraint firstItem="0ph-eK-zcn" firstAttribute="top" secondItem="2NX-Pv-HEt" secondAttribute="bottom" constant="24" id="dqt-Lj-uuc"/>
                                                     <constraint firstItem="s8h-6c-uid" firstAttribute="top" secondItem="kBW-hN-9O1" secondAttribute="bottom" constant="24" id="e9Z-4v-fe4"/>
-                                                    <constraint firstAttribute="trailing" secondItem="Bde-Cs-nnn" secondAttribute="trailing" constant="23" id="eb0-IJ-IEg"/>
+                                                    <constraint firstAttribute="trailing" secondItem="WMJ-bO-NaM" secondAttribute="trailing" constant="-55" id="fde-bL-jDU"/>
                                                     <constraint firstItem="RzN-8C-blC" firstAttribute="leading" secondItem="2NX-Pv-HEt" secondAttribute="leading" id="gnM-4s-xRi"/>
                                                     <constraint firstItem="WMJ-bO-NaM" firstAttribute="trailing" secondItem="CpJ-3e-Mag" secondAttribute="trailing" id="h4l-qM-9WP"/>
                                                     <constraint firstItem="WMJ-bO-NaM" firstAttribute="top" secondItem="kC3-0W-tZP" secondAttribute="bottom" constant="1" id="ihH-41-A7B"/>
                                                     <constraint firstItem="kC3-0W-tZP" firstAttribute="leading" secondItem="I7A-7M-Xa6" secondAttribute="leading" id="jcc-zk-yDS"/>
                                                     <constraint firstItem="CpJ-3e-Mag" firstAttribute="top" secondItem="9rO-JB-7cv" secondAttribute="bottom" constant="15" id="jrF-Be-KJR"/>
-                                                    <constraint firstItem="9rO-JB-7cv" firstAttribute="leading" secondItem="BHL-jb-4Ty" secondAttribute="leading" constant="20" id="l9r-FS-Lfy"/>
-                                                    <constraint firstItem="RzN-8C-blC" firstAttribute="leading" secondItem="CpJ-3e-Mag" secondAttribute="leading" id="o9g-QX-b4j"/>
-                                                    <constraint firstItem="RzN-8C-blC" firstAttribute="top" secondItem="BHL-jb-4Ty" secondAttribute="top" constant="61" id="oFe-p1-lOJ"/>
-                                                    <constraint firstAttribute="trailing" secondItem="I7A-7M-Xa6" secondAttribute="trailing" constant="-54" id="pEi-ty-zUj"/>
                                                     <constraint firstItem="s8h-6c-uid" firstAttribute="top" secondItem="F2f-dv-NnC" secondAttribute="bottom" constant="3" id="puR-8y-Mso"/>
-                                                    <constraint firstItem="F2f-dv-NnC" firstAttribute="top" secondItem="Bde-Cs-nnn" secondAttribute="bottom" constant="15" id="qeI-7u-5iM"/>
+                                                    <constraint firstAttribute="trailing" secondItem="0ph-eK-zcn" secondAttribute="trailing" constant="21" id="qFo-Fr-AFJ"/>
                                                     <constraint firstItem="kBW-hN-9O1" firstAttribute="trailing" secondItem="F2f-dv-NnC" secondAttribute="trailing" id="qeX-a1-ZYv"/>
+                                                    <constraint firstItem="WMJ-bO-NaM" firstAttribute="leading" secondItem="BHL-jb-4Ty" secondAttribute="leading" constant="17" id="tNw-T4-105"/>
                                                     <constraint firstItem="9rO-JB-7cv" firstAttribute="centerY" secondItem="dvU-qe-6zT" secondAttribute="centerY" constant="-2" id="tqn-av-N5v"/>
                                                     <constraint firstItem="2NX-Pv-HEt" firstAttribute="top" secondItem="cct-HH-wKM" secondAttribute="bottom" constant="-4" id="ujm-wD-hVl"/>
+                                                    <constraint firstItem="RzN-8C-blC" firstAttribute="top" secondItem="BHL-jb-4Ty" secondAttribute="top" constant="61" id="vpe-aZ-Tn9"/>
                                                     <constraint firstItem="9rO-JB-7cv" firstAttribute="centerX" secondItem="RzN-8C-blC" secondAttribute="centerX" id="wYP-8t-hry"/>
                                                     <constraint firstItem="kC3-0W-tZP" firstAttribute="top" secondItem="I7A-7M-Xa6" secondAttribute="bottom" constant="1" id="x7O-PT-wSC"/>
-                                                    <constraint firstItem="I7A-7M-Xa6" firstAttribute="trailing" secondItem="oh4-Sa-bq8" secondAttribute="trailing" id="xlM-1Q-bmZ"/>
-                                                    <constraint firstItem="0ph-eK-zcn" firstAttribute="leading" secondItem="4Xp-zH-MTE" secondAttribute="leading" id="xwT-5z-QlM"/>
                                                 </constraints>
                                             </view>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Размер комиссии будет рассчитан на следующем шаге" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hST-eZ-kZE">
-                                                <rect key="frame" x="42" y="535" width="232" height="10"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Размер комиссии будет рассчитан на следующем шаге" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hST-eZ-kZE">
+                                                <rect key="frame" x="42" y="505" width="232" height="40"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="lee-go-nTq"/>
                                                 </constraints>
@@ -699,7 +703,7 @@
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tnj-Nt-S8u" customClass="ButtonRounded" customModule="ForaBank_Beta" customModuleProvider="target">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tnj-Nt-S8u" customClass="ButtonRounded" customModule="ForaBank_Beta" customModuleProvider="target">
                                                 <rect key="frame" x="8" y="547" width="304" height="53"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
@@ -713,8 +717,8 @@
                                                     <action selector="paymentCompany:" destination="fd0-20-J9h" eventType="touchUpInside" id="fyQ-D0-KeK"/>
                                                 </connections>
                                             </button>
-                                            <textField opaque="NO" tag="1" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="LFG-sL-18B" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
-                                                <rect key="frame" x="111.5" y="506" width="97" height="30"/>
+                                            <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="LFG-sL-18B" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                <rect key="frame" x="111.5" y="476" width="97" height="30"/>
                                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.070000000000000007" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <color key="tintColor" red="0.94897240400000005" green="0.67658257479999995" blue="0.44718337060000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 <constraints>
@@ -729,8 +733,8 @@
                                                     <action selector="amountTextFieldValueChanged:" destination="fd0-20-J9h" eventType="valueChanged" id="xcM-cP-MNK"/>
                                                 </connections>
                                             </textField>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="₽" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZqK-rO-UZP">
-                                                <rect key="frame" x="192" y="506" width="15" height="30"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="₽" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZqK-rO-UZP">
+                                                <rect key="frame" x="192" y="476" width="15" height="30"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="30" id="DDF-cg-f7I"/>
                                                     <constraint firstAttribute="width" constant="15" id="kcD-6F-5Pg"/>
@@ -742,17 +746,17 @@
                                         </subviews>
                                         <color key="backgroundColor" red="0.93805062770000003" green="0.25358119610000002" blue="0.2107679546" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="BHL-jb-4Ty" secondAttribute="trailing" id="2eo-0c-jKN"/>
                                             <constraint firstItem="ZqK-rO-UZP" firstAttribute="leading" secondItem="LFG-sL-18B" secondAttribute="trailing" constant="-16.5" id="3O9-Ai-0Xk"/>
                                             <constraint firstItem="ZqK-rO-UZP" firstAttribute="bottom" secondItem="LFG-sL-18B" secondAttribute="bottom" id="7Pe-zm-qfi"/>
-                                            <constraint firstItem="BHL-jb-4Ty" firstAttribute="top" secondItem="YzH-Gz-6Tm" secondAttribute="top" constant="20" id="82U-UL-9W6"/>
-                                            <constraint firstItem="LFG-sL-18B" firstAttribute="top" secondItem="BHL-jb-4Ty" secondAttribute="bottom" constant="6.5" id="ADx-ml-2nQ"/>
+                                            <constraint firstItem="BHL-jb-4Ty" firstAttribute="top" secondItem="YzH-Gz-6Tm" secondAttribute="top" constant="20" id="Ja6-8I-ocW"/>
                                             <constraint firstItem="hST-eZ-kZE" firstAttribute="top" secondItem="LFG-sL-18B" secondAttribute="bottom" constant="-1" id="MHS-pB-4Pt"/>
                                             <constraint firstItem="LFG-sL-18B" firstAttribute="centerX" secondItem="YzH-Gz-6Tm" secondAttribute="centerX" id="NkX-jB-Hk5"/>
                                             <constraint firstAttribute="trailing" secondItem="hST-eZ-kZE" secondAttribute="trailing" constant="46" id="NsE-xB-Tag"/>
+                                            <constraint firstItem="hST-eZ-kZE" firstAttribute="top" secondItem="BHL-jb-4Ty" secondAttribute="bottom" constant="35" id="Ok3-Vo-Q8e"/>
                                             <constraint firstAttribute="trailing" secondItem="Tnj-Nt-S8u" secondAttribute="trailing" constant="8" id="Uld-4g-XPl"/>
+                                            <constraint firstItem="BHL-jb-4Ty" firstAttribute="leading" secondItem="YzH-Gz-6Tm" secondAttribute="leading" id="f53-H7-Pz3"/>
                                             <constraint firstItem="Tnj-Nt-S8u" firstAttribute="leading" secondItem="YzH-Gz-6Tm" secondAttribute="leading" constant="8" id="guj-0D-HOm"/>
-                                            <constraint firstItem="BHL-jb-4Ty" firstAttribute="leading" secondItem="YzH-Gz-6Tm" secondAttribute="leading" id="ihP-LD-1kK"/>
-                                            <constraint firstItem="BHL-jb-4Ty" firstAttribute="centerX" secondItem="LFG-sL-18B" secondAttribute="centerX" id="k01-fK-53k"/>
                                             <constraint firstItem="hST-eZ-kZE" firstAttribute="centerX" secondItem="YzH-Gz-6Tm" secondAttribute="centerX" constant="-2" id="p2C-YW-MI2"/>
                                             <constraint firstItem="Tnj-Nt-S8u" firstAttribute="top" secondItem="hST-eZ-kZE" secondAttribute="bottom" constant="2" id="sSv-B6-lbw"/>
                                             <constraint firstItem="hST-eZ-kZE" firstAttribute="leading" secondItem="YzH-Gz-6Tm" secondAttribute="leading" constant="42" id="tKB-pL-UWQ"/>
@@ -833,6 +837,7 @@
                         <outlet property="accountNumberNon" destination="2NX-Pv-HEt" id="RrL-Qt-JTm"/>
                         <outlet property="amountTextField" destination="LFG-sL-18B" id="S2R-Vg-gr9"/>
                         <outlet property="bankName" destination="kBW-hN-9O1" id="UA3-Id-w4s"/>
+                        <outlet property="bikBank" destination="Bde-Cs-nnn" id="Cdi-Bt-9hS"/>
                         <outlet property="comment" destination="0ph-eK-zcn" id="syF-Sb-Bs1"/>
                         <outlet property="containerView" destination="pEF-At-NnA" id="lrB-1L-N29"/>
                         <outlet property="innBank" destination="s8h-6c-uid" id="qWd-A3-ml9"/>
@@ -852,7 +857,7 @@
                     </connections>
                 </customObject>
             </objects>
-            <point key="canvasLocation" x="2299" y="1789"/>
+            <point key="canvasLocation" x="2198.4000000000001" y="1786.5067466266869"/>
         </scene>
         <!--Option Picker View Controller-->
         <scene sceneID="buM-zJ-7Md">
@@ -1408,6 +1413,423 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NGS-TG-TBo" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2223.75" y="332.74647887323943"/>
+        </scene>
+        <!--Free Details View Controller-->
+        <scene sceneID="qNN-rI-vJF">
+            <objects>
+                <viewController modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="x8Q-kK-Tim" userLabel="Free Details View Controller" customClass="FreeDetailsViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="KsM-GT-Y0y" customClass="GradientView" customModule="ForaBank_Beta" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="650"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dzI-GB-qBB" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="45" width="320" height="605"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1on-uA-Ytx">
+                                        <rect key="frame" x="0.0" y="-44" width="320" height="669"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JCm-oq-2Ae" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="76" width="320" height="387"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="БИК банка получателя" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xw2-zA-GwC">
+                                                        <rect key="frame" x="17" y="31" width="358" height="25"/>
+                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="25" id="nO0-ds-gaf"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
+                                                        <color key="textColor" red="0.38726419210000002" green="0.38731426000000002" blue="0.38724720480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ИНН получателя" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mn8-jU-SDD">
+                                                        <rect key="frame" x="17" y="96" width="358" height="25"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="25" id="q4P-aR-jEC"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
+                                                        <color key="textColor" red="0.38726419210000002" green="0.38731426000000002" blue="0.38724720480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="КПП получателя" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RnH-zL-Y54">
+                                                        <rect key="frame" x="16" y="167" width="358" height="25"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="25" id="uHm-f6-H0M"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
+                                                        <color key="textColor" red="0.38726419210000002" green="0.38731426000000002" blue="0.38724720480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Номер счета получателя" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="umd-6h-dMu">
+                                                        <rect key="frame" x="17" y="221" width="358" height="25"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="25" id="YoQ-qj-C73"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
+                                                        <color key="textColor" red="0.38726419210000002" green="0.38731426000000002" blue="0.38724720480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Назначение перевода" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="duT-IC-Cqh">
+                                                        <rect key="frame" x="17" y="277" width="358" height="25"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="25" id="nIV-Xz-lVL"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
+                                                        <color key="textColor" red="0.38726419210000002" green="0.38731426000000002" blue="0.38724720480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Сумма перевода" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sf2-v9-VMt">
+                                                        <rect key="frame" x="18" y="327" width="358" height="25"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="25" id="syP-hx-ck6"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
+                                                        <color key="textColor" red="0.38726419210000002" green="0.38731426000000002" blue="0.38724720480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Uyd-68-wTw" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                        <rect key="frame" x="14" y="57" width="283" height="27"/>
+                                                        <color key="backgroundColor" red="0.96940189600000004" green="0.96951788660000005" blue="0.96936243769999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="27" id="92c-zl-Oon"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                        <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                <real key="value" value="2"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                                <real key="value" value="0.0"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="paddingLeft">
+                                                                <real key="value" value="10"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="paddingRight">
+                                                                <real key="value" value="10"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                        <connections>
+                                                            <action selector="bikTextField:" destination="x8Q-kK-Tim" eventType="editingChanged" id="neo-e5-QIi"/>
+                                                        </connections>
+                                                    </textField>
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Cg7-Wh-6GC" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                        <rect key="frame" x="15" y="124" width="284" height="27"/>
+                                                        <color key="backgroundColor" red="0.96940189600000004" green="0.96951788660000005" blue="0.96936243769999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="27" id="Cfm-xG-5H3"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                <real key="value" value="2"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                                <real key="value" value="0.0"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="paddingLeft">
+                                                                <real key="value" value="10"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="paddingRight">
+                                                                <real key="value" value="10"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                        <connections>
+                                                            <action selector="innCompany:" destination="x8Q-kK-Tim" eventType="editingChanged" id="g1H-Xy-0W6"/>
+                                                        </connections>
+                                                    </textField>
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="F8R-Oi-6a3" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                        <rect key="frame" x="16" y="193" width="284" height="27"/>
+                                                        <color key="backgroundColor" red="0.96940189600000004" green="0.96951788660000005" blue="0.96936243769999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="27" id="byX-ox-M9y"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                <real key="value" value="2"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                                <real key="value" value="0.0"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="paddingLeft">
+                                                                <real key="value" value="10"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="paddingRight">
+                                                                <real key="value" value="10"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </textField>
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Jyn-5D-Fwk" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                        <rect key="frame" x="15" y="249" width="284" height="27"/>
+                                                        <color key="backgroundColor" red="0.96940189600000004" green="0.96951788660000005" blue="0.96936243769999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="27" id="3oZ-cO-rgn"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                <real key="value" value="2"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                                <real key="value" value="0.0"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="paddingLeft">
+                                                                <real key="value" value="10"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="paddingRight">
+                                                                <real key="value" value="10"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </textField>
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hW8-0C-htH" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                        <rect key="frame" x="15" y="303" width="284" height="27"/>
+                                                        <color key="backgroundColor" red="0.96940189600000004" green="0.96951788660000005" blue="0.96936243769999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="27" id="o3Z-5I-g7a"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <textInputTraits key="textInputTraits"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                <real key="value" value="2"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                                <real key="value" value="0.0"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="paddingLeft">
+                                                                <real key="value" value="10"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="paddingRight">
+                                                                <real key="value" value="10"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </textField>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hjm-Na-rbX">
+                                                        <rect key="frame" x="17" y="81" width="358" height="22"/>
+                                                        <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
+                                                        <color key="textColor" red="0.38726419210000002" green="0.38731426000000002" blue="0.38724720480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qgZ-xH-6zt">
+                                                        <rect key="frame" x="16" y="149" width="358" height="22"/>
+                                                        <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
+                                                        <color key="textColor" red="0.38726419210000002" green="0.38731426000000002" blue="0.38724720480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="PjB-T7-TeW" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                        <rect key="frame" x="16" y="354" width="284" height="27"/>
+                                                        <color key="backgroundColor" red="0.96940189600000004" green="0.96951788660000005" blue="0.96936243769999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="27" id="nqX-TJ-Bab"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <textInputTraits key="textInputTraits"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                <real key="value" value="2"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                                <real key="value" value="0.0"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="paddingLeft">
+                                                                <real key="value" value="10"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="paddingRight">
+                                                                <real key="value" value="10"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </textField>
+                                                </subviews>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="trailing" secondItem="Uyd-68-wTw" secondAttribute="trailing" constant="23" id="09i-Qt-fp4"/>
+                                                    <constraint firstAttribute="trailing" secondItem="umd-6h-dMu" secondAttribute="trailing" constant="-55" id="3jF-Lw-blb"/>
+                                                    <constraint firstItem="RnH-zL-Y54" firstAttribute="top" secondItem="Cg7-Wh-6GC" secondAttribute="bottom" constant="16" id="7F0-Ny-TMy"/>
+                                                    <constraint firstItem="hjm-Na-rbX" firstAttribute="leading" secondItem="mn8-jU-SDD" secondAttribute="leading" id="7ju-2G-rDe"/>
+                                                    <constraint firstItem="Uyd-68-wTw" firstAttribute="top" secondItem="Xw2-zA-GwC" secondAttribute="bottom" constant="1" id="8j4-wg-yej"/>
+                                                    <constraint firstItem="umd-6h-dMu" firstAttribute="leading" secondItem="Xw2-zA-GwC" secondAttribute="leading" id="AJT-eJ-fav"/>
+                                                    <constraint firstItem="Uyd-68-wTw" firstAttribute="leading" secondItem="JCm-oq-2Ae" secondAttribute="leading" constant="14" id="CCy-Mc-tpq"/>
+                                                    <constraint firstItem="Jyn-5D-Fwk" firstAttribute="top" secondItem="umd-6h-dMu" secondAttribute="bottom" constant="3" id="COd-ca-fFZ"/>
+                                                    <constraint firstItem="hW8-0C-htH" firstAttribute="top" secondItem="duT-IC-Cqh" secondAttribute="bottom" constant="1" id="DI9-6v-p2S"/>
+                                                    <constraint firstItem="F8R-Oi-6a3" firstAttribute="leading" secondItem="RnH-zL-Y54" secondAttribute="leading" id="DiR-xY-7Yl"/>
+                                                    <constraint firstItem="Cg7-Wh-6GC" firstAttribute="top" secondItem="hjm-Na-rbX" secondAttribute="bottom" constant="21" id="EtH-ny-ogt"/>
+                                                    <constraint firstAttribute="bottom" secondItem="duT-IC-Cqh" secondAttribute="bottom" constant="36" id="FFL-1u-h6g"/>
+                                                    <constraint firstItem="hW8-0C-htH" firstAttribute="leading" secondItem="Cg7-Wh-6GC" secondAttribute="leading" id="H5L-lk-GGr"/>
+                                                    <constraint firstItem="PjB-T7-TeW" firstAttribute="top" secondItem="JCm-oq-2Ae" secondAttribute="top" constant="354" id="HOg-hu-TRp"/>
+                                                    <constraint firstItem="hW8-0C-htH" firstAttribute="leading" secondItem="JCm-oq-2Ae" secondAttribute="leading" constant="15" id="IQF-Qo-HZ1"/>
+                                                    <constraint firstItem="hW8-0C-htH" firstAttribute="trailing" secondItem="Jyn-5D-Fwk" secondAttribute="trailing" id="MKn-Q5-wLV"/>
+                                                    <constraint firstAttribute="trailing" secondItem="hW8-0C-htH" secondAttribute="trailing" constant="21" id="Qdy-KJ-LU7"/>
+                                                    <constraint firstItem="PjB-T7-TeW" firstAttribute="leading" secondItem="F8R-Oi-6a3" secondAttribute="leading" id="Qkm-BO-wZi"/>
+                                                    <constraint firstItem="RnH-zL-Y54" firstAttribute="top" secondItem="JCm-oq-2Ae" secondAttribute="top" constant="167" id="UPd-eR-wuk"/>
+                                                    <constraint firstItem="umd-6h-dMu" firstAttribute="leading" secondItem="mn8-jU-SDD" secondAttribute="leading" id="VLI-II-EJE"/>
+                                                    <constraint firstAttribute="trailing" secondItem="duT-IC-Cqh" secondAttribute="trailing" constant="-55" id="WBI-0C-EpD"/>
+                                                    <constraint firstItem="RnH-zL-Y54" firstAttribute="leading" secondItem="JCm-oq-2Ae" secondAttribute="leading" constant="16" id="WLO-vK-zGp"/>
+                                                    <constraint firstItem="sf2-v9-VMt" firstAttribute="leading" secondItem="JCm-oq-2Ae" secondAttribute="leading" constant="18" id="b0D-4I-4ei"/>
+                                                    <constraint firstItem="umd-6h-dMu" firstAttribute="leading" secondItem="JCm-oq-2Ae" secondAttribute="leading" constant="17" id="bWH-Pg-jHY"/>
+                                                    <constraint firstItem="hW8-0C-htH" firstAttribute="trailing" secondItem="Cg7-Wh-6GC" secondAttribute="trailing" id="bxn-dj-fxY"/>
+                                                    <constraint firstItem="hW8-0C-htH" firstAttribute="leading" secondItem="Jyn-5D-Fwk" secondAttribute="leading" id="cP8-X2-TUZ"/>
+                                                    <constraint firstItem="F8R-Oi-6a3" firstAttribute="top" secondItem="RnH-zL-Y54" secondAttribute="bottom" constant="1" id="dxu-AN-rbV"/>
+                                                    <constraint firstItem="PjB-T7-TeW" firstAttribute="top" secondItem="sf2-v9-VMt" secondAttribute="bottom" constant="2" id="e0d-Yb-3fG"/>
+                                                    <constraint firstItem="PjB-T7-TeW" firstAttribute="trailing" secondItem="F8R-Oi-6a3" secondAttribute="trailing" id="fuG-St-hcq"/>
+                                                    <constraint firstItem="duT-IC-Cqh" firstAttribute="leading" secondItem="JCm-oq-2Ae" secondAttribute="leading" constant="17" id="gEw-lv-yb7"/>
+                                                    <constraint firstItem="sf2-v9-VMt" firstAttribute="top" secondItem="duT-IC-Cqh" secondAttribute="bottom" constant="25" id="hS3-Fg-b4s"/>
+                                                    <constraint firstItem="umd-6h-dMu" firstAttribute="trailing" secondItem="Xw2-zA-GwC" secondAttribute="trailing" id="hY3-5h-kRn"/>
+                                                    <constraint firstItem="PjB-T7-TeW" firstAttribute="leading" secondItem="qgZ-xH-6zt" secondAttribute="leading" id="iDU-SG-23K"/>
+                                                    <constraint firstItem="Cg7-Wh-6GC" firstAttribute="top" secondItem="mn8-jU-SDD" secondAttribute="bottom" constant="3" id="l7T-Uf-6u9"/>
+                                                    <constraint firstItem="umd-6h-dMu" firstAttribute="trailing" secondItem="mn8-jU-SDD" secondAttribute="trailing" id="lyA-PG-swy"/>
+                                                    <constraint firstItem="hjm-Na-rbX" firstAttribute="top" secondItem="Xw2-zA-GwC" secondAttribute="bottom" constant="25" id="mgP-1Z-8Xt"/>
+                                                    <constraint firstAttribute="trailing" secondItem="F8R-Oi-6a3" secondAttribute="trailing" constant="20" id="nsa-bZ-Kfk"/>
+                                                    <constraint firstItem="hjm-Na-rbX" firstAttribute="trailing" secondItem="mn8-jU-SDD" secondAttribute="trailing" id="odb-Lv-0Va"/>
+                                                    <constraint firstItem="umd-6h-dMu" firstAttribute="top" secondItem="F8R-Oi-6a3" secondAttribute="bottom" constant="1" id="orJ-c4-c9H"/>
+                                                    <constraint firstItem="Xw2-zA-GwC" firstAttribute="top" secondItem="JCm-oq-2Ae" secondAttribute="top" constant="31" id="rab-Tw-cFV"/>
+                                                    <constraint firstAttribute="height" constant="338" id="umU-WB-NFC"/>
+                                                    <constraint firstAttribute="bottom" secondItem="PjB-T7-TeW" secondAttribute="bottom" constant="6" id="urY-Hg-dHL"/>
+                                                    <constraint firstAttribute="trailing" secondItem="RnH-zL-Y54" secondAttribute="trailing" constant="-54" id="wDZ-1K-wFP"/>
+                                                    <constraint firstAttribute="trailing" secondItem="sf2-v9-VMt" secondAttribute="trailing" constant="-56" id="x8O-lb-Ysh"/>
+                                                </constraints>
+                                            </view>
+                                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H8X-GM-8AK" customClass="ButtonRounded" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                <rect key="frame" x="8" y="576" width="304" height="53"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="53" id="l9b-nb-I4p"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="18"/>
+                                                <state key="normal" title="Перевести">
+                                                    <color key="titleColor" red="0.87647289039999998" green="0.40053808689999998" blue="0.35289543870000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                </state>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" red="0.93805062770000003" green="0.25358119610000002" blue="0.2107679546" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="H8X-GM-8AK" secondAttribute="trailing" constant="8" id="A3F-yO-HML"/>
+                                            <constraint firstItem="H8X-GM-8AK" firstAttribute="leading" secondItem="1on-uA-Ytx" secondAttribute="leading" constant="8" id="B8b-vL-1h8"/>
+                                            <constraint firstItem="JCm-oq-2Ae" firstAttribute="top" secondItem="1on-uA-Ytx" secondAttribute="top" constant="76" id="cg6-S4-401"/>
+                                            <constraint firstAttribute="trailing" secondItem="JCm-oq-2Ae" secondAttribute="trailing" id="rco-gn-hoZ"/>
+                                            <constraint firstItem="JCm-oq-2Ae" firstAttribute="leading" secondItem="1on-uA-Ytx" secondAttribute="leading" id="zJA-tH-9oT"/>
+                                        </constraints>
+                                    </view>
+                                    <textField opaque="NO" tag="3" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="fTa-v8-ipk">
+                                        <rect key="frame" x="110" y="483" width="97" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="97" id="Xqx-9o-fLn"/>
+                                            <constraint firstAttribute="height" constant="40" id="qCu-gP-WGb"/>
+                                        </constraints>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="numberPad" textContentType="one-time-code"/>
+                                    </textField>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Введите код, который мы прислали на номер телефона" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="088-jo-GaS">
+                                        <rect key="frame" x="10" y="417" width="292" height="66"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.93805062770000003" green="0.25358119610000002" blue="0.2107679546" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstItem="1on-uA-Ytx" firstAttribute="leading" secondItem="dzI-GB-qBB" secondAttribute="leading" id="3iD-bR-LiK"/>
+                                    <constraint firstAttribute="trailing" secondItem="1on-uA-Ytx" secondAttribute="trailing" id="5ux-IF-hEY"/>
+                                    <constraint firstItem="1on-uA-Ytx" firstAttribute="top" secondItem="dzI-GB-qBB" secondAttribute="top" constant="-44" id="pdv-so-Z3j"/>
+                                    <constraint firstAttribute="bottom" secondItem="1on-uA-Ytx" secondAttribute="bottom" constant="-20" id="vSe-Ke-edR"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GXd-NY-Lju">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="101"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Перевод" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ty8-cb-JPW">
+                                        <rect key="frame" x="127" y="16.5" width="66" height="21.5"/>
+                                        <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sry-aD-Elh">
+                                        <rect key="frame" x="14" y="10" width="30" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="Sry-aD-Elh" secondAttribute="height" multiplier="1:1" id="YaY-cU-cw6"/>
+                                        </constraints>
+                                        <inset key="imageEdgeInsets" minX="9" minY="8" maxX="8" maxY="3"/>
+                                        <state key="normal" image="button_back"/>
+                                        <connections>
+                                            <action selector="backButtonClicked:" destination="x8Q-kK-Tim" eventType="touchUpInside" id="7ZU-xr-Hyo"/>
+                                        </connections>
+                                    </button>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xBP-Vj-gH7" customClass="PagerView" customModule="ForaBank_Beta" customModuleProvider="target">
+                                        <rect key="frame" x="16" y="37" width="290" height="65"/>
+                                        <color key="backgroundColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="xBP-Vj-gH7" firstAttribute="leading" secondItem="GXd-NY-Lju" secondAttribute="leading" constant="16" id="Ana-Pf-fDW"/>
+                                    <constraint firstItem="ty8-cb-JPW" firstAttribute="centerX" secondItem="GXd-NY-Lju" secondAttribute="centerX" id="CDM-R3-4OH"/>
+                                    <constraint firstItem="Sry-aD-Elh" firstAttribute="top" secondItem="GXd-NY-Lju" secondAttribute="top" constant="10" id="KOf-P7-GUE"/>
+                                    <constraint firstAttribute="bottom" secondItem="xBP-Vj-gH7" secondAttribute="bottom" constant="-1" id="LNB-et-qHY"/>
+                                    <constraint firstAttribute="trailing" secondItem="xBP-Vj-gH7" secondAttribute="trailing" constant="14" id="MQS-ca-GyI"/>
+                                    <constraint firstAttribute="bottom" secondItem="Sry-aD-Elh" secondAttribute="bottom" constant="61" id="XS9-GG-Tkd"/>
+                                    <constraint firstAttribute="height" constant="101" id="gFL-B0-LPI"/>
+                                    <constraint firstItem="xBP-Vj-gH7" firstAttribute="top" secondItem="GXd-NY-Lju" secondAttribute="top" constant="37" id="piV-LW-Y9W"/>
+                                    <constraint firstAttribute="bottom" secondItem="ty8-cb-JPW" secondAttribute="bottom" constant="63" id="rFc-9P-Ux4"/>
+                                    <constraint firstItem="Sry-aD-Elh" firstAttribute="leading" secondItem="GXd-NY-Lju" secondAttribute="leading" constant="14" id="vRa-0f-EWo"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="dzI-GB-qBB" firstAttribute="bottom" secondItem="KsM-GT-Y0y" secondAttribute="bottom" id="2qq-vf-RCe"/>
+                            <constraint firstItem="GXd-NY-Lju" firstAttribute="leading" secondItem="rsp-y5-n2t" secondAttribute="leading" id="IuU-nT-unL"/>
+                            <constraint firstItem="dzI-GB-qBB" firstAttribute="leading" secondItem="GXd-NY-Lju" secondAttribute="leading" id="Nza-yE-vw2"/>
+                            <constraint firstItem="dzI-GB-qBB" firstAttribute="top" secondItem="rsp-y5-n2t" secondAttribute="top" constant="45" id="OwF-5K-Wox"/>
+                            <constraint firstItem="dzI-GB-qBB" firstAttribute="trailing" secondItem="GXd-NY-Lju" secondAttribute="trailing" id="e9G-gc-oKV"/>
+                            <constraint firstItem="dzI-GB-qBB" firstAttribute="leading" secondItem="rsp-y5-n2t" secondAttribute="leading" id="kp7-Mc-1jY"/>
+                            <constraint firstItem="rsp-y5-n2t" firstAttribute="trailing" secondItem="GXd-NY-Lju" secondAttribute="trailing" id="r73-st-ZKH"/>
+                            <constraint firstItem="rsp-y5-n2t" firstAttribute="trailing" secondItem="dzI-GB-qBB" secondAttribute="trailing" id="uFd-DP-JWz"/>
+                            <constraint firstItem="GXd-NY-Lju" firstAttribute="top" secondItem="rsp-y5-n2t" secondAttribute="top" id="uPC-yG-Gzw"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="rsp-y5-n2t"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="color" keyPath="color1">
+                                <color key="value" red="0.93805062770000003" green="0.25358119610000002" blue="0.2107679546" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="color" keyPath="color2">
+                                <color key="value" red="0.93805062770000003" green="0.25358119610000002" blue="0.2107679546" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="" image="tabbar_icon_payment" id="ARp-bZ-Wdp" customClass="CustomTabBarItem" customModule="ForaBank_Beta" customModuleProvider="target">
+                        <inset key="imageInsets" minX="0.0" minY="7" maxX="0.0" maxY="-7"/>
+                        <inset key="largeContentSizeImageInsets" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
+                    </tabBarItem>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" title="Платежи и переводы" id="7a0-G0-cCS"/>
+                    <size key="freeformSize" width="320" height="650"/>
+                    <connections>
+                        <outlet property="bankName" destination="hjm-Na-rbX" id="iGu-Ka-8sl"/>
+                        <outlet property="bikBank" destination="Uyd-68-wTw" id="9mt-mo-fqn"/>
+                        <outlet property="containerView" destination="dzI-GB-qBB" id="Hki-TV-ppH"/>
+                        <outlet property="innBank" destination="Cg7-Wh-6GC" id="tRk-x0-gC2"/>
+                        <outlet property="innCompany" destination="qgZ-xH-6zt" id="Sf7-Xr-YFu"/>
+                        <outlet property="kppBank" destination="F8R-Oi-6a3" id="IdQ-Up-ATa"/>
+                        <outlet property="kppLabel" destination="RnH-zL-Y54" id="di5-XZ-p42"/>
+                        <outlet property="numberAcoount" destination="Jyn-5D-Fwk" id="6Op-rs-t2Q"/>
+                        <outlet property="roundedEdgeText" destination="JCm-oq-2Ae" id="y4P-BW-Byq"/>
+                        <outlet property="sourcePagerView" destination="xBP-Vj-gH7" id="BhC-Yd-ipq"/>
+                        <outlet property="textField" destination="hW8-0C-htH" id="v0g-6T-Zkf"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="geP-C7-eyh" sceneMemberID="firstResponder"/>
+                <customObject id="qRj-DW-NZV" customClass="PaymentModuleInitializer" customModule="ForaBank_Beta" customModuleProvider="target">
+                    <connections>
+                        <outlet property="paymentsDetailsViewController" destination="x8Q-kK-Tim" id="mFd-xd-O4S"/>
+                    </connections>
+                </customObject>
+            </objects>
+            <point key="canvasLocation" x="1127" y="2414"/>
         </scene>
         <!--Transfer Confirmation View Controller-->
         <scene sceneID="NzH-oQ-5EP">
@@ -1970,803 +2392,11 @@
             </objects>
             <point key="canvasLocation" x="3694" y="1789"/>
         </scene>
-        <!--Legacy Payment View Controller-->
-        <scene sceneID="o6R-ji-0Aa">
-            <objects>
-                <viewController id="0WO-ZI-nba" customClass="LegacyPaymentViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="twW-WK-ldf">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hIh-M1-QcN" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="43" width="375" height="458"/>
-                                <subviews>
-                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jmA-JE-END">
-                                        <rect key="frame" x="8" y="106" width="359" height="356"/>
-                                        <subviews>
-                                            <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="wfg-jw-IfZ" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
-                                                <rect key="frame" x="24" y="235" width="316" height="40"/>
-                                                <color key="backgroundColor" red="0.91764705879999997" green="0.91764705879999997" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="40" id="JYZ-0c-07C"/>
-                                                </constraints>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" textContentType="tel"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                        <real key="value" value="2"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="paddingRight">
-                                                        <real key="value" value="10"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="paddingLeft">
-                                                        <real key="value" value="10"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="maxLength">
-                                                        <integer key="value" value="9"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </textField>
-                                            <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="F2k-Th-uTa" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="165" width="320" height="40"/>
-                                                <color key="backgroundColor" red="0.91764705879999997" green="0.91764705879999997" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="40" id="qJ1-y3-2xO"/>
-                                                </constraints>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" textContentType="tel"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                        <real key="value" value="2"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="paddingRight">
-                                                        <real key="value" value="10"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="paddingLeft">
-                                                        <real key="value" value="10"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="maxLength">
-                                                        <integer key="value" value="9"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </textField>
-                                            <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="5Ux-gF-d2w" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="94" width="320" height="40"/>
-                                                <color key="backgroundColor" red="0.91764705879999997" green="0.91764705879999997" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="320" id="DvB-5C-a74"/>
-                                                    <constraint firstAttribute="height" constant="40" id="lnT-aH-6nk"/>
-                                                </constraints>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" textContentType="tel"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                        <real key="value" value="2"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="paddingRight">
-                                                        <real key="value" value="10"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="paddingLeft">
-                                                        <real key="value" value="10"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="maxLength">
-                                                        <integer key="value" value="9"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </textField>
-                                            <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="c1P-M5-V1v" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="20" width="320" height="40"/>
-                                                <color key="backgroundColor" red="0.91764705879999997" green="0.91764705879999997" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="40" id="5Yw-Wu-cWQ"/>
-                                                </constraints>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" textContentType="tel"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                        <real key="value" value="2"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="paddingRight">
-                                                        <real key="value" value="10"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="paddingLeft">
-                                                        <real key="value" value="10"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="maxLength">
-                                                        <integer key="value" value="9"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </textField>
-                                            <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="Z0G-H9-13S" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
-                                                <rect key="frame" x="24" y="303" width="316" height="40"/>
-                                                <color key="backgroundColor" red="0.91764705879999997" green="0.91764705879999997" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="40" id="fJi-of-e3v"/>
-                                                </constraints>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" textContentType="tel"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                        <real key="value" value="2"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="paddingRight">
-                                                        <real key="value" value="10"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="paddingLeft">
-                                                        <real key="value" value="10"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="maxLength">
-                                                        <integer key="value" value="9"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </textField>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Назначение перевода" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hwN-2d-0zN">
-                                                <rect key="frame" x="24" y="283" width="183.5" height="21.5"/>
-                                                <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Номер счета получателя" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Eqv-lb-JZN">
-                                                <rect key="frame" x="24" y="212" width="183.5" height="21.5"/>
-                                                <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ИНН получателя" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="73y-9Q-Itq">
-                                                <rect key="frame" x="24" y="73" width="183.5" height="21.5"/>
-                                                <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="calibratedRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="КПП получателя" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iGo-mf-hp2">
-                                                <rect key="frame" x="24" y="142" width="183.5" height="25"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="25" id="sdL-VX-1Gk"/>
-                                                    <constraint firstAttribute="width" constant="183.5" id="t1u-7w-uhT"/>
-                                                </constraints>
-                                                <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="БИК банка получателя" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="niv-7Z-k59">
-                                                <rect key="frame" x="24" y="-2" width="183.5" height="25"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="25" id="J4E-xf-eeB"/>
-                                                    <constraint firstAttribute="width" constant="183.5" id="c6z-Yd-WGl"/>
-                                                </constraints>
-                                                <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                <color key="textColor" red="0.1058695242" green="0.1058908477" blue="0.1058628187" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                        <constraints>
-                                            <constraint firstItem="iGo-mf-hp2" firstAttribute="trailing" secondItem="73y-9Q-Itq" secondAttribute="trailing" id="3K6-qX-n3u"/>
-                                            <constraint firstItem="pSG-8Y-FQL" firstAttribute="trailing" secondItem="c1P-M5-V1v" secondAttribute="trailing" constant="19" id="6B2-LU-hAc"/>
-                                            <constraint firstAttribute="trailing" secondItem="c1P-M5-V1v" secondAttribute="trailing" constant="19" id="6vn-cv-dgf"/>
-                                            <constraint firstItem="5Ux-gF-d2w" firstAttribute="trailing" secondItem="F2k-Th-uTa" secondAttribute="trailing" id="9cW-wk-fLX"/>
-                                            <constraint firstItem="iGo-mf-hp2" firstAttribute="leading" secondItem="hwN-2d-0zN" secondAttribute="leading" id="CTd-0j-57j"/>
-                                            <constraint firstItem="c1P-M5-V1v" firstAttribute="top" secondItem="pSG-8Y-FQL" secondAttribute="top" constant="20" id="Cg5-1A-WoR"/>
-                                            <constraint firstItem="iGo-mf-hp2" firstAttribute="leading" secondItem="Eqv-lb-JZN" secondAttribute="leading" id="DDC-WG-w2Z"/>
-                                            <constraint firstItem="iGo-mf-hp2" firstAttribute="leading" secondItem="73y-9Q-Itq" secondAttribute="leading" id="EXA-MF-ccj"/>
-                                            <constraint firstItem="iGo-mf-hp2" firstAttribute="top" secondItem="5Ux-gF-d2w" secondAttribute="bottom" constant="8" id="Fgn-ME-Sfo"/>
-                                            <constraint firstItem="iGo-mf-hp2" firstAttribute="leading" secondItem="niv-7Z-k59" secondAttribute="leading" id="Pe3-f6-Nuw"/>
-                                            <constraint firstItem="wfg-jw-IfZ" firstAttribute="leading" secondItem="Z0G-H9-13S" secondAttribute="leading" id="Se8-S4-tc6"/>
-                                            <constraint firstItem="5Ux-gF-d2w" firstAttribute="leading" secondItem="pSG-8Y-FQL" secondAttribute="leading" constant="20" id="TIz-eO-Hmy"/>
-                                            <constraint firstItem="c1P-M5-V1v" firstAttribute="centerX" secondItem="jmA-JE-END" secondAttribute="centerX" id="U2b-5X-zqy"/>
-                                            <constraint firstItem="73y-9Q-Itq" firstAttribute="top" secondItem="niv-7Z-k59" secondAttribute="bottom" constant="50" id="Ul3-X9-1Ml"/>
-                                            <constraint firstItem="5Ux-gF-d2w" firstAttribute="leading" secondItem="F2k-Th-uTa" secondAttribute="leading" id="VzL-OX-k4K"/>
-                                            <constraint firstItem="wfg-jw-IfZ" firstAttribute="top" secondItem="F2k-Th-uTa" secondAttribute="bottom" constant="30" id="Zwi-V0-Kg4"/>
-                                            <constraint firstItem="iGo-mf-hp2" firstAttribute="trailing" secondItem="hwN-2d-0zN" secondAttribute="trailing" id="aq1-Ku-Xl1"/>
-                                            <constraint firstItem="5Ux-gF-d2w" firstAttribute="top" secondItem="c1P-M5-V1v" secondAttribute="bottom" constant="34" id="bwC-cV-vkU"/>
-                                            <constraint firstItem="F2k-Th-uTa" firstAttribute="top" secondItem="5Ux-gF-d2w" secondAttribute="bottom" constant="31" id="dTv-Zo-iFp"/>
-                                            <constraint firstItem="wfg-jw-IfZ" firstAttribute="trailing" secondItem="Z0G-H9-13S" secondAttribute="trailing" id="eM3-dR-AJA"/>
-                                            <constraint firstItem="hwN-2d-0zN" firstAttribute="top" secondItem="wfg-jw-IfZ" secondAttribute="bottom" constant="8" id="iq6-lX-AlK"/>
-                                            <constraint firstItem="73y-9Q-Itq" firstAttribute="top" secondItem="c1P-M5-V1v" secondAttribute="bottom" constant="13" id="jZP-oX-cTd"/>
-                                            <constraint firstItem="wfg-jw-IfZ" firstAttribute="leading" secondItem="pSG-8Y-FQL" secondAttribute="leading" constant="24" id="jht-0D-geJ"/>
-                                            <constraint firstItem="Z0G-H9-13S" firstAttribute="top" secondItem="wfg-jw-IfZ" secondAttribute="bottom" constant="28" id="kAb-89-Hkq"/>
-                                            <constraint firstAttribute="bottom" secondItem="Z0G-H9-13S" secondAttribute="bottom" constant="34" id="oQo-Rd-d0V"/>
-                                            <constraint firstItem="iGo-mf-hp2" firstAttribute="leading" secondItem="wfg-jw-IfZ" secondAttribute="leading" id="pHV-hd-usc"/>
-                                            <constraint firstItem="F2k-Th-uTa" firstAttribute="trailing" secondItem="wfg-jw-IfZ" secondAttribute="trailing" id="qh5-zI-uzU"/>
-                                            <constraint firstItem="5Ux-gF-d2w" firstAttribute="leading" secondItem="c1P-M5-V1v" secondAttribute="leading" id="vJu-Bb-jNU"/>
-                                            <constraint firstItem="5Ux-gF-d2w" firstAttribute="trailing" secondItem="c1P-M5-V1v" secondAttribute="trailing" id="vdV-gC-Diu"/>
-                                            <constraint firstItem="Eqv-lb-JZN" firstAttribute="top" secondItem="iGo-mf-hp2" secondAttribute="bottom" constant="45" id="zs2-2e-vLY"/>
-                                        </constraints>
-                                        <viewLayoutGuide key="contentLayoutGuide" id="PYv-Nc-c55"/>
-                                        <viewLayoutGuide key="frameLayoutGuide" id="pSG-8Y-FQL"/>
-                                    </scrollView>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dqv-sh-OQ6" customClass="PagerView" customModule="ForaBank_Beta" customModuleProvider="target">
-                                        <rect key="frame" x="13" y="19" width="349" height="79"/>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="349" id="QoY-Zs-xxl"/>
-                                        </constraints>
-                                    </view>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Group 6 Copy" translatesAutoresizingMaskIntoConstraints="NO" id="t8C-q2-hP2">
-                                        <rect key="frame" x="305" y="81" width="30" height="25"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="30" id="I59-9J-1Us"/>
-                                        </constraints>
-                                    </imageView>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="o2W-zH-RpM">
-                                        <rect key="frame" x="23" y="93" width="317" height="1"/>
-                                        <color key="backgroundColor" red="0.82745098039999998" green="0.82745098039999998" blue="0.82745098039999998" alpha="1" colorSpace="calibratedRGB"/>
-                                    </view>
-                                </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="o2W-zH-RpM" secondAttribute="trailing" constant="35" id="5Em-ka-60F"/>
-                                    <constraint firstItem="jmA-JE-END" firstAttribute="leading" secondItem="hIh-M1-QcN" secondAttribute="leadingMargin" id="5rN-or-aPC"/>
-                                    <constraint firstAttribute="trailing" secondItem="t8C-q2-hP2" secondAttribute="trailing" constant="40" id="8Q8-03-KGh"/>
-                                    <constraint firstItem="o2W-zH-RpM" firstAttribute="top" secondItem="hIh-M1-QcN" secondAttribute="top" constant="93" id="ABV-UL-Hnk"/>
-                                    <constraint firstItem="jmA-JE-END" firstAttribute="top" secondItem="hIh-M1-QcN" secondAttribute="top" constant="106" id="DNg-PW-3nn"/>
-                                    <constraint firstItem="Dqv-sh-OQ6" firstAttribute="leading" secondItem="hIh-M1-QcN" secondAttribute="leading" constant="13" id="DfU-yv-9Nd"/>
-                                    <constraint firstAttribute="trailing" secondItem="Dqv-sh-OQ6" secondAttribute="trailing" constant="13" id="ZoX-kg-13B"/>
-                                    <constraint firstItem="jmA-JE-END" firstAttribute="top" secondItem="Dqv-sh-OQ6" secondAttribute="bottom" constant="8" id="eEh-u2-yw7"/>
-                                    <constraint firstItem="o2W-zH-RpM" firstAttribute="centerY" secondItem="t8C-q2-hP2" secondAttribute="centerY" id="jqW-1e-zO9"/>
-                                    <constraint firstItem="o2W-zH-RpM" firstAttribute="leading" secondItem="hIh-M1-QcN" secondAttribute="leading" constant="23" id="oTx-ek-AtO"/>
-                                    <constraint firstItem="jmA-JE-END" firstAttribute="trailing" secondItem="hIh-M1-QcN" secondAttribute="trailingMargin" id="rSb-Kt-BHL"/>
-                                    <constraint firstItem="Dqv-sh-OQ6" firstAttribute="top" secondItem="hIh-M1-QcN" secondAttribute="top" constant="19" id="xsa-ZO-Eif"/>
-                                    <constraint firstItem="jmA-JE-END" firstAttribute="top" secondItem="t8C-q2-hP2" secondAttribute="bottom" id="zPv-ZR-ifQ"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0qp-gF-Rx1">
-                                <rect key="frame" x="0.0" y="497" width="375" height="170"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vrj-O0-sDE" customClass="ButtonRounded" customModule="ForaBank_Beta" customModuleProvider="target">
-                                        <rect key="frame" x="35.5" y="109" width="304" height="53"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="53" id="dxq-oA-V6v"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="18"/>
-                                        <state key="normal" title="Перевести">
-                                            <color key="titleColor" red="0.87647289039999998" green="0.40053808689999998" blue="0.35289543870000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                        </state>
-                                    </button>
-                                    <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="BKL-PD-lm8" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
-                                        <rect key="frame" x="139" y="28" width="97" height="41"/>
-                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.070000000000000007" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <color key="tintColor" red="0.94897240400000005" green="0.67658257479999995" blue="0.44718337060000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="97" id="RqA-LN-COl"/>
-                                        </constraints>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="25"/>
-                                        <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
-                                        <connections>
-                                            <action selector="amountTextFieldValueChanged:" destination="afX-Am-FVA" eventType="editingChanged" id="hSj-Z6-HT4"/>
-                                        </connections>
-                                    </textField>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="₽" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vCh-rE-wMx">
-                                        <rect key="frame" x="218" y="33.5" width="15" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="m1K-cy-ubn"/>
-                                            <constraint firstAttribute="width" constant="15" id="nGS-0a-EnY"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="17"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Размер комиссии будет рассчитан на следующем шаге" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ovr-AN-T9I">
-                                        <rect key="frame" x="77" y="69" width="232" height="40"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="40" id="u3x-UY-Ozy"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="13"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstItem="ovr-AN-T9I" firstAttribute="top" secondItem="vCh-rE-wMx" secondAttribute="bottom" constant="5.5" id="5BR-ig-0Ac"/>
-                                    <constraint firstItem="ovr-AN-T9I" firstAttribute="leading" secondItem="0qp-gF-Rx1" secondAttribute="leading" constant="77" id="AQr-28-JdL"/>
-                                    <constraint firstAttribute="trailing" secondItem="ovr-AN-T9I" secondAttribute="trailing" constant="66" id="FAv-JT-3hs"/>
-                                    <constraint firstItem="BKL-PD-lm8" firstAttribute="centerX" secondItem="vrj-O0-sDE" secondAttribute="centerX" id="OdE-XS-X3U"/>
-                                    <constraint firstItem="BKL-PD-lm8" firstAttribute="centerY" secondItem="vCh-rE-wMx" secondAttribute="centerY" id="W6V-NF-zST"/>
-                                    <constraint firstAttribute="trailing" secondItem="vCh-rE-wMx" secondAttribute="trailing" constant="142" id="cGw-Sa-nse"/>
-                                    <constraint firstItem="vrj-O0-sDE" firstAttribute="leading" secondItem="0qp-gF-Rx1" secondAttribute="leading" constant="35.5" id="gMY-3J-hhz"/>
-                                    <constraint firstItem="BKL-PD-lm8" firstAttribute="top" secondItem="0qp-gF-Rx1" secondAttribute="top" constant="28" id="rIx-af-sZ3"/>
-                                    <constraint firstItem="BKL-PD-lm8" firstAttribute="centerX" secondItem="0qp-gF-Rx1" secondAttribute="centerX" id="rL0-Uq-bJk"/>
-                                    <constraint firstItem="vrj-O0-sDE" firstAttribute="top" secondItem="BKL-PD-lm8" secondAttribute="bottom" constant="40" id="slh-CX-OOf"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wBJ-Ae-bC9">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="55.5"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Перевод" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mr7-Es-et2">
-                                        <rect key="frame" x="154.5" y="17" width="66" height="21.5"/>
-                                        <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="itB-Lh-omx">
-                                        <rect key="frame" x="14" y="10" width="30" height="30.5"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="30" id="l8I-td-hyu"/>
-                                        </constraints>
-                                        <inset key="imageEdgeInsets" minX="9" minY="8" maxX="8" maxY="3"/>
-                                        <state key="normal" image="button_back"/>
-                                        <connections>
-                                            <action selector="backButtonClicked:" destination="afX-Am-FVA" eventType="touchUpInside" id="fMU-od-ftB"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstItem="mr7-Es-et2" firstAttribute="centerX" secondItem="wBJ-Ae-bC9" secondAttribute="centerX" id="6j3-0q-ZS5"/>
-                                    <constraint firstItem="mr7-Es-et2" firstAttribute="top" secondItem="wBJ-Ae-bC9" secondAttribute="top" constant="17" id="8bA-BL-9M1"/>
-                                    <constraint firstItem="itB-Lh-omx" firstAttribute="top" secondItem="wBJ-Ae-bC9" secondAttribute="top" constant="10" id="GuA-Nq-eZl"/>
-                                    <constraint firstAttribute="bottom" secondItem="itB-Lh-omx" secondAttribute="bottom" constant="15" id="bvN-k2-zCv"/>
-                                    <constraint firstItem="itB-Lh-omx" firstAttribute="leading" secondItem="wBJ-Ae-bC9" secondAttribute="leading" constant="14" id="lt9-BW-mlh"/>
-                                    <constraint firstItem="mr7-Es-et2" firstAttribute="centerY" secondItem="wBJ-Ae-bC9" secondAttribute="centerY" id="oYy-oH-iqe"/>
-                                </constraints>
-                            </view>
-                        </subviews>
-                        <color key="backgroundColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="wBJ-Ae-bC9" firstAttribute="leading" secondItem="hIh-M1-QcN" secondAttribute="leading" id="3Sf-Pd-cxE"/>
-                            <constraint firstItem="hIh-M1-QcN" firstAttribute="top" secondItem="6XN-bk-pEH" secondAttribute="top" constant="43" id="8rH-Ry-kyl"/>
-                            <constraint firstItem="hIh-M1-QcN" firstAttribute="bottom" secondItem="0qp-gF-Rx1" secondAttribute="bottom" constant="-166" id="AyF-Zx-Vb0"/>
-                            <constraint firstItem="hIh-M1-QcN" firstAttribute="leading" secondItem="0qp-gF-Rx1" secondAttribute="leading" id="Jqs-Vw-6SQ"/>
-                            <constraint firstItem="0qp-gF-Rx1" firstAttribute="top" secondItem="twW-WK-ldf" secondAttribute="top" constant="497" id="Jss-gp-Qxa"/>
-                            <constraint firstItem="wBJ-Ae-bC9" firstAttribute="leading" secondItem="6XN-bk-pEH" secondAttribute="leading" id="QeX-Ec-DeD"/>
-                            <constraint firstItem="wBJ-Ae-bC9" firstAttribute="trailing" secondItem="hIh-M1-QcN" secondAttribute="trailing" id="Qyl-1Q-GnO"/>
-                            <constraint firstItem="wBJ-Ae-bC9" firstAttribute="top" secondItem="6XN-bk-pEH" secondAttribute="top" id="UhL-F2-trG"/>
-                            <constraint firstItem="0qp-gF-Rx1" firstAttribute="bottom" secondItem="6XN-bk-pEH" secondAttribute="bottom" id="ar9-8N-mRu"/>
-                            <constraint firstItem="hIh-M1-QcN" firstAttribute="leading" secondItem="0qp-gF-Rx1" secondAttribute="trailing" constant="-375" id="hnW-9k-lC0"/>
-                            <constraint firstItem="hIh-M1-QcN" firstAttribute="trailing" secondItem="0qp-gF-Rx1" secondAttribute="trailing" id="lw0-jG-qQI"/>
-                            <constraint firstItem="jmA-JE-END" firstAttribute="baseline" secondItem="0qp-gF-Rx1" secondAttribute="firstBaseline" constant="8" symbolType="layoutAnchor" id="rSU-T3-0Qo"/>
-                            <constraint firstItem="wBJ-Ae-bC9" firstAttribute="centerX" secondItem="twW-WK-ldf" secondAttribute="centerX" id="zXu-vg-d6b"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="6XN-bk-pEH"/>
-                    </view>
-                    <connections>
-                        <outlet property="emailTextField" destination="c1P-M5-V1v" id="CPK-3q-Jdb"/>
-                        <outlet property="submitButton" destination="vrj-O0-sDE" id="iLe-9a-UXw"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Dlh-r1-v0y" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="720.79999999999995" y="1781.5592203898052"/>
-        </scene>
-        <!--Free Details View Controller-->
-        <scene sceneID="sQh-JS-iXu">
-            <objects>
-                <viewController storyboardIdentifier="FreeDetailsController1" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="D79-La-1e6" customClass="FreeDetailsViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="ION-Rr-fJe">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T52-cD-4J8">
-                                <rect key="frame" x="0.0" y="29" width="375" height="638"/>
-                                <subviews>
-                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GyG-ay-uJU">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="638"/>
-                                        <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OH4-Gh-xwH" customClass="UIScrollView">
-                                                <rect key="frame" x="0.0" y="-3" width="239.5" height="638"/>
-                                                <subviews>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F3u-qf-c7S">
-                                                        <rect key="frame" x="8" y="38" width="223.5" height="596"/>
-                                                        <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="БИК банка получателя" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aFn-lP-HrY">
-                                                                <rect key="frame" x="20" y="68.5" width="183.5" height="25"/>
-                                                                <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                                <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="calibratedRGB"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                            <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="lB0-xQ-VHZ" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
-                                                                <rect key="frame" x="20" y="93.5" width="183.5" height="40"/>
-                                                                <color key="backgroundColor" red="0.91764705879999997" green="0.91764705879999997" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" constant="40" id="7vL-TR-xwb"/>
-                                                                </constraints>
-                                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                                <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="14"/>
-                                                                <textInputTraits key="textInputTraits" keyboardType="phonePad" textContentType="tel"/>
-                                                                <userDefinedRuntimeAttributes>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="paddingLeft">
-                                                                        <real key="value" value="10"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="paddingRight">
-                                                                        <real key="value" value="10"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="maxLength">
-                                                                        <integer key="value" value="9"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                        <real key="value" value="2"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                </userDefinedRuntimeAttributes>
-                                                                <connections>
-                                                                    <action selector="bikTextField:" destination="D79-La-1e6" eventType="editingChanged" id="7RP-lN-qKv"/>
-                                                                </connections>
-                                                            </textField>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ИНН получателя" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lhz-tF-qvu">
-                                                                <rect key="frame" x="20" y="156.5" width="183.5" height="25"/>
-                                                                <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                                <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="calibratedRGB"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                            <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="Ylp-cR-jbk" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
-                                                                <rect key="frame" x="20" y="182.5" width="183.5" height="40"/>
-                                                                <color key="backgroundColor" red="0.92156862750000001" green="0.92156862750000001" blue="0.92156862750000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                                <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="14"/>
-                                                                <textInputTraits key="textInputTraits" textContentType="tel"/>
-                                                                <userDefinedRuntimeAttributes>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                        <real key="value" value="2"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="paddingLeft">
-                                                                        <real key="value" value="10"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="paddingRight">
-                                                                        <real key="value" value="10"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="maxLength">
-                                                                        <integer key="value" value="12"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                </userDefinedRuntimeAttributes>
-                                                                <connections>
-                                                                    <action selector="innCompany:" destination="D79-La-1e6" eventType="editingChanged" id="R9E-Du-gDg"/>
-                                                                </connections>
-                                                            </textField>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="КПП получателя" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bN1-FR-isc">
-                                                                <rect key="frame" x="20" y="238" width="183.5" height="25"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" constant="25" id="Xfk-6e-PkF"/>
-                                                                </constraints>
-                                                                <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                                <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                            <textField opaque="NO" tag="3" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="77N-P9-Jts" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
-                                                                <rect key="frame" x="20" y="264" width="319" height="40"/>
-                                                                <color key="backgroundColor" red="0.91764705879999997" green="0.91764705879999997" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                                <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="14"/>
-                                                                <textInputTraits key="textInputTraits" textContentType="tel"/>
-                                                                <userDefinedRuntimeAttributes>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                        <real key="value" value="2"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="paddingRight">
-                                                                        <real key="value" value="10"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="paddingLeft">
-                                                                        <real key="value" value="10"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="maxLength">
-                                                                        <integer key="value" value="9"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                </userDefinedRuntimeAttributes>
-                                                            </textField>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Номер счета получателя" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aAu-Le-xVq">
-                                                                <rect key="frame" x="20" y="323" width="183.5" height="21.5"/>
-                                                                <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                                <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Назначение перевода" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y5e-mv-ApK">
-                                                                <rect key="frame" x="20" y="395.5" width="183.5" height="21.5"/>
-                                                                <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                                <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                            <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="Q5j-59-hlZ" customClass="TKFormTextField" customModule="TKFormTextField">
-                                                                <rect key="frame" x="20" y="344.5" width="183.5" height="40"/>
-                                                                <color key="backgroundColor" red="0.92156862750000001" green="0.92156862750000001" blue="0.92156862750000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" constant="40" id="BEa-oW-rKG"/>
-                                                                </constraints>
-                                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                                <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="14"/>
-                                                                <textInputTraits key="textInputTraits" textContentType="tel"/>
-                                                                <userDefinedRuntimeAttributes>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="paddingLeft">
-                                                                        <real key="value" value="10"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="paddingRight">
-                                                                        <real key="value" value="10"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                        <real key="value" value="2"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="maxLength">
-                                                                        <integer key="value" value="20"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                </userDefinedRuntimeAttributes>
-                                                                <connections>
-                                                                    <action selector="didChangedAcountNumber:" destination="D79-La-1e6" eventType="editingChanged" id="ald-ld-hZK"/>
-                                                                </connections>
-                                                            </textField>
-                                                            <textField opaque="NO" tag="3" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="ULV-DK-Wft" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
-                                                                <rect key="frame" x="21" y="415" width="319" height="40"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                                <color key="backgroundColor" red="0.91764705879999997" green="0.91764705879999997" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                                <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="14"/>
-                                                                <textInputTraits key="textInputTraits"/>
-                                                                <userDefinedRuntimeAttributes>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="maxLength">
-                                                                        <integer key="value" value="210"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="paddingLeft">
-                                                                        <real key="value" value="10"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="paddingRight">
-                                                                        <real key="value" value="10"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                        <real key="value" value="2"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                </userDefinedRuntimeAttributes>
-                                                            </textField>
-                                                            <view hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" id="0Cj-g3-QJr" customClass="RefreshView" customModule="ForaBank_Beta" customModuleProvider="target">
-                                                                <rect key="frame" x="-7" y="527" width="413" height="54"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                                <subviews>
-                                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="bottom" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nLG-F6-3Xs">
-                                                                        <rect key="frame" x="-3" y="292" width="379" height="656"/>
-                                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                                    </imageView>
-                                                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="foralogotype" translatesAutoresizingMaskIntoConstraints="NO" id="IAn-U7-s64">
-                                                                        <rect key="frame" x="142.5" y="6" width="88" height="40"/>
-                                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                                    </imageView>
-                                                                </subviews>
-                                                                <connections>
-                                                                    <outlet property="imgVBG" destination="nLG-F6-3Xs" id="Hlm-Fm-NFw"/>
-                                                                    <outlet property="imgVLogo" destination="IAn-U7-s64" id="odt-og-c1Y"/>
-                                                                </connections>
-                                                            </view>
-                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dpQ-65-mYR" customClass="PagerView" customModule="ForaBank_Beta" customModuleProvider="target">
-                                                                <rect key="frame" x="17" y="7" width="189.5" height="61"/>
-                                                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                                            </view>
-                                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KTd-os-lMO">
-                                                                <rect key="frame" x="18" y="63" width="317" height="1"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                                <color key="backgroundColor" red="0.82745098039999998" green="0.82745098039999998" blue="0.82745098039999998" alpha="1" colorSpace="calibratedRGB"/>
-                                                            </view>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PJ2-vx-1Hc">
-                                                                <rect key="frame" x="22" y="158" width="312" height="0.0"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                                <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                                <color key="textColor" red="0.38726419210000002" green="0.38731426000000002" blue="0.38724720480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v0B-Y2-4mD">
-                                                                <rect key="frame" x="20" y="223" width="183.5" height="0.0"/>
-                                                                <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                                                <color key="textColor" red="0.38726419210000002" green="0.38731426000000002" blue="0.38724720480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Group 6 Copy" translatesAutoresizingMaskIntoConstraints="NO" id="XOt-N4-9yQ">
-                                                                <rect key="frame" x="290" y="53" width="30" height="25"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                            </imageView>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rP8-Ka-lfo">
-                                                                <rect key="frame" x="15" y="322" width="319" height="51.5"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                                <string key="text">Вы ввели реквизиты для перевода средств в бюджет РФ. Проверьте корректность указанных данных или перейдите в соответствующий раздел</string>
-                                                                <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="13"/>
-                                                                <color key="textColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                        </subviews>
-                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <constraints>
-                                                            <constraint firstItem="lB0-xQ-VHZ" firstAttribute="leading" secondItem="Y5e-mv-ApK" secondAttribute="leading" id="4IA-2K-Xv0"/>
-                                                            <constraint firstAttribute="bottom" secondItem="Q5j-59-hlZ" secondAttribute="bottom" constant="211.5" id="A1Y-4W-ius"/>
-                                                            <constraint firstItem="lB0-xQ-VHZ" firstAttribute="top" secondItem="F3u-qf-c7S" secondAttribute="top" constant="93.5" id="DVn-ke-Jhm"/>
-                                                            <constraint firstItem="lB0-xQ-VHZ" firstAttribute="leading" secondItem="Lhz-tF-qvu" secondAttribute="leading" id="EcY-fp-fMW"/>
-                                                            <constraint firstItem="dpQ-65-mYR" firstAttribute="leading" secondItem="F3u-qf-c7S" secondAttribute="leading" constant="17" id="FIZ-yX-FFC"/>
-                                                            <constraint firstItem="lB0-xQ-VHZ" firstAttribute="trailing" secondItem="Lhz-tF-qvu" secondAttribute="trailing" id="Fyi-bc-okg"/>
-                                                            <constraint firstAttribute="trailing" secondItem="lB0-xQ-VHZ" secondAttribute="trailing" constant="20" id="LrS-u3-LOB"/>
-                                                            <constraint firstItem="lB0-xQ-VHZ" firstAttribute="trailing" secondItem="bN1-FR-isc" secondAttribute="trailing" id="OEv-UH-4u7"/>
-                                                            <constraint firstItem="bN1-FR-isc" firstAttribute="top" secondItem="v0B-Y2-4mD" secondAttribute="bottom" constant="15" id="QO3-vs-m6h"/>
-                                                            <constraint firstItem="lB0-xQ-VHZ" firstAttribute="leading" secondItem="aAu-Le-xVq" secondAttribute="leading" id="QhQ-qZ-kgb"/>
-                                                            <constraint firstItem="lB0-xQ-VHZ" firstAttribute="leading" secondItem="F3u-qf-c7S" secondAttribute="leading" constant="20" id="TAk-GJ-DZ4"/>
-                                                            <constraint firstItem="lB0-xQ-VHZ" firstAttribute="leading" secondItem="Ylp-cR-jbk" secondAttribute="leading" id="Uzq-Lu-XbE"/>
-                                                            <constraint firstItem="bN1-FR-isc" firstAttribute="top" secondItem="F3u-qf-c7S" secondAttribute="top" constant="238" id="WvE-da-eel"/>
-                                                            <constraint firstItem="77N-P9-Jts" firstAttribute="top" secondItem="bN1-FR-isc" secondAttribute="bottom" constant="0.5" id="YSe-Tl-HbL"/>
-                                                            <constraint firstItem="lB0-xQ-VHZ" firstAttribute="leading" secondItem="bN1-FR-isc" secondAttribute="leading" id="YmV-bn-407"/>
-                                                            <constraint firstItem="lB0-xQ-VHZ" firstAttribute="trailing" secondItem="aAu-Le-xVq" secondAttribute="trailing" id="ZpF-p3-wcm"/>
-                                                            <constraint firstItem="Lhz-tF-qvu" firstAttribute="top" secondItem="lB0-xQ-VHZ" secondAttribute="bottom" constant="23" id="a2Y-yS-mrP"/>
-                                                            <constraint firstItem="lB0-xQ-VHZ" firstAttribute="leading" secondItem="Q5j-59-hlZ" secondAttribute="leading" id="aXa-5E-r26"/>
-                                                            <constraint firstItem="lB0-xQ-VHZ" firstAttribute="centerX" secondItem="v0B-Y2-4mD" secondAttribute="centerX" id="bhM-9s-nvE"/>
-                                                            <constraint firstItem="lB0-xQ-VHZ" firstAttribute="trailing" secondItem="aFn-lP-HrY" secondAttribute="trailing" id="ceX-zj-I3g"/>
-                                                            <constraint firstItem="lB0-xQ-VHZ" firstAttribute="trailing" secondItem="v0B-Y2-4mD" secondAttribute="trailing" id="dFk-e1-Ev0"/>
-                                                            <constraint firstItem="lB0-xQ-VHZ" firstAttribute="leading" secondItem="aFn-lP-HrY" secondAttribute="leading" id="eYC-uB-zCT"/>
-                                                            <constraint firstItem="aFn-lP-HrY" firstAttribute="top" secondItem="dpQ-65-mYR" secondAttribute="bottom" constant="0.5" id="gbQ-az-cwl"/>
-                                                            <constraint firstItem="lB0-xQ-VHZ" firstAttribute="centerX" secondItem="dpQ-65-mYR" secondAttribute="centerX" id="h7A-is-Dqb"/>
-                                                            <constraint firstItem="lB0-xQ-VHZ" firstAttribute="trailing" secondItem="Y5e-mv-ApK" secondAttribute="trailing" id="hVv-TZ-20f"/>
-                                                            <constraint firstItem="lB0-xQ-VHZ" firstAttribute="trailing" secondItem="Q5j-59-hlZ" secondAttribute="trailing" id="iH8-HA-gkI"/>
-                                                            <constraint firstItem="dpQ-65-mYR" firstAttribute="top" secondItem="F3u-qf-c7S" secondAttribute="top" constant="7" id="nxl-Ps-BKI"/>
-                                                            <constraint firstItem="Ylp-cR-jbk" firstAttribute="top" secondItem="Lhz-tF-qvu" secondAttribute="bottom" constant="1" id="piN-Wq-n6X"/>
-                                                            <constraint firstAttribute="bottom" secondItem="dpQ-65-mYR" secondAttribute="bottom" constant="528" id="qcJ-4E-rB9"/>
-                                                            <constraint firstItem="lB0-xQ-VHZ" firstAttribute="leading" secondItem="77N-P9-Jts" secondAttribute="leading" id="tz1-QO-qj3"/>
-                                                            <constraint firstItem="lB0-xQ-VHZ" firstAttribute="trailing" secondItem="77N-P9-Jts" secondAttribute="trailing" id="wT4-OJ-1Xe"/>
-                                                            <constraint firstItem="lB0-xQ-VHZ" firstAttribute="top" secondItem="aFn-lP-HrY" secondAttribute="bottom" id="wmF-Hu-EOU"/>
-                                                            <constraint firstItem="v0B-Y2-4mD" firstAttribute="top" secondItem="Ylp-cR-jbk" secondAttribute="bottom" constant="0.5" id="wyR-oB-b6R"/>
-                                                            <constraint firstItem="Ylp-cR-jbk" firstAttribute="top" secondItem="F3u-qf-c7S" secondAttribute="top" constant="182.5" id="xEg-Ch-q5j"/>
-                                                            <constraint firstItem="lB0-xQ-VHZ" firstAttribute="trailing" secondItem="Ylp-cR-jbk" secondAttribute="trailing" id="ytm-4Q-lOc"/>
-                                                            <constraint firstItem="Y5e-mv-ApK" firstAttribute="top" secondItem="Q5j-59-hlZ" secondAttribute="bottom" constant="11" id="yy0-md-miI"/>
-                                                            <constraint firstItem="Q5j-59-hlZ" firstAttribute="top" secondItem="aAu-Le-xVq" secondAttribute="bottom" id="zMV-0Q-CuJ"/>
-                                                        </constraints>
-                                                    </view>
-                                                </subviews>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <constraints>
-                                                    <constraint firstItem="F3u-qf-c7S" firstAttribute="leading" secondItem="OH4-Gh-xwH" secondAttribute="leadingMargin" id="0KS-J7-Odk"/>
-                                                    <constraint firstAttribute="height" constant="638" id="1TY-UH-clH"/>
-                                                    <constraint firstAttribute="bottom" secondItem="F3u-qf-c7S" secondAttribute="bottom" constant="4" id="NhD-NY-sfy"/>
-                                                    <constraint firstItem="F3u-qf-c7S" firstAttribute="trailing" secondItem="OH4-Gh-xwH" secondAttribute="trailingMargin" id="o3X-xr-wMy"/>
-                                                    <constraint firstItem="F3u-qf-c7S" firstAttribute="top" secondItem="OH4-Gh-xwH" secondAttribute="top" constant="38" id="s5j-6e-oiX"/>
-                                                </constraints>
-                                            </view>
-                                        </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstAttribute="bottom" secondItem="OH4-Gh-xwH" secondAttribute="bottom" constant="3" id="Hts-Yn-yAQ"/>
-                                            <constraint firstItem="OH4-Gh-xwH" firstAttribute="leading" secondItem="GyG-ay-uJU" secondAttribute="leading" id="TeX-ic-UJR"/>
-                                            <constraint firstAttribute="trailing" secondItem="OH4-Gh-xwH" secondAttribute="trailing" id="lPz-Eg-naI"/>
-                                            <constraint firstItem="OH4-Gh-xwH" firstAttribute="top" secondItem="GyG-ay-uJU" secondAttribute="top" constant="-3" id="llz-kY-1ea"/>
-                                        </constraints>
-                                    </scrollView>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZM0-yR-hq2">
-                                        <rect key="frame" x="-1" y="495" width="377" height="154"/>
-                                        <subviews>
-                                            <textField opaque="NO" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="F4k-9T-hVE" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
-                                                <rect key="frame" x="140" y="12" width="97" height="50"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.070000000000000007" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <color key="tintColor" red="0.94897240400000005" green="0.67658257479999995" blue="0.44718337060000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="25"/>
-                                                <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
-                                                <connections>
-                                                    <action selector="amountTextFieldValueChanged:" destination="afX-Am-FVA" eventType="editingChanged" id="U2S-Zi-3TP"/>
-                                                </connections>
-                                            </textField>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="₽" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VgP-L2-IQi">
-                                                <rect key="frame" x="222" y="22" width="15" height="30"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="17"/>
-                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z8B-zH-S6S" customClass="ButtonRounded" customModule="ForaBank_Beta" customModuleProvider="target">
-                                                <rect key="frame" x="29" y="71" width="319" height="53"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
-                                                <state key="normal" title="Продолжить">
-                                                    <color key="titleColor" red="0.93805062770000003" green="0.25358119610000002" blue="0.2107679546" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                </state>
-                                                <connections>
-                                                    <action selector="paymentCompany:" destination="D79-La-1e6" eventType="touchUpInside" id="b86-kQ-3mm"/>
-                                                </connections>
-                                            </button>
-                                            <view hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" id="KqA-Ct-vqM" customClass="RefreshView" customModule="ForaBank_Beta" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="73" width="378" height="54"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <subviews>
-                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="bottom" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JgZ-hq-ROb">
-                                                        <rect key="frame" x="-3" y="292" width="384" height="656"/>
-                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    </imageView>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="foralogotype" translatesAutoresizingMaskIntoConstraints="NO" id="jyR-Ah-gGZ">
-                                                        <rect key="frame" x="145" y="0.0" width="88" height="40"/>
-                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    </imageView>
-                                                </subviews>
-                                                <connections>
-                                                    <outlet property="imgVBG" destination="JgZ-hq-ROb" id="v0c-Sn-dih"/>
-                                                    <outlet property="imgVLogo" destination="jyR-Ah-gGZ" id="Kja-pC-NT6"/>
-                                                </connections>
-                                            </view>
-                                        </subviews>
-                                        <color key="backgroundColor" red="0.93805062770000003" green="0.25358119610000002" blue="0.2107679546" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    </view>
-                                </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstItem="ZM0-yR-hq2" firstAttribute="top" secondItem="T52-cD-4J8" secondAttribute="top" constant="495" id="7qk-p1-tQp"/>
-                                    <constraint firstItem="ZM0-yR-hq2" firstAttribute="leading" secondItem="T52-cD-4J8" secondAttribute="leading" constant="-1" id="HNE-71-FvY"/>
-                                    <constraint firstAttribute="bottom" secondItem="ZM0-yR-hq2" secondAttribute="bottom" constant="-11" id="HeF-i6-MpG"/>
-                                    <constraint firstItem="ZM0-yR-hq2" firstAttribute="centerX" secondItem="GyG-ay-uJU" secondAttribute="centerX" id="ND3-P7-Ntt"/>
-                                    <constraint firstItem="ZM0-yR-hq2" firstAttribute="centerX" secondItem="GyG-ay-uJU" secondAttribute="centerX" id="VyM-fm-vvK"/>
-                                    <constraint firstItem="GyG-ay-uJU" firstAttribute="centerX" secondItem="ZM0-yR-hq2" secondAttribute="centerX" id="Ytd-Tn-Nvq"/>
-                                    <constraint firstItem="GyG-ay-uJU" firstAttribute="top" secondItem="T52-cD-4J8" secondAttribute="top" id="bbU-Rl-oei"/>
-                                    <constraint firstItem="GyG-ay-uJU" firstAttribute="leading" secondItem="T52-cD-4J8" secondAttribute="leading" id="eQn-wN-e8e"/>
-                                    <constraint firstItem="ZM0-yR-hq2" firstAttribute="centerX" secondItem="GyG-ay-uJU" secondAttribute="centerX" id="srl-1U-67t"/>
-                                    <constraint firstItem="GyG-ay-uJU" firstAttribute="centerY" secondItem="T52-cD-4J8" secondAttribute="centerY" id="tN6-WK-86W"/>
-                                    <constraint firstItem="ZM0-yR-hq2" firstAttribute="centerX" secondItem="T52-cD-4J8" secondAttribute="centerX" id="xYR-KR-fjb"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WY5-Da-2vf" customClass="MaskedNavigationBar" customModule="ForaBank_Beta" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="62"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Перевод" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fMo-NS-AYC">
-                                        <rect key="frame" x="127" y="13" width="121" height="26"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="19"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ECK-Ey-hBV">
-                                        <rect key="frame" x="14" y="13" width="26" height="26"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <inset key="imageEdgeInsets" minX="9" minY="8" maxX="8" maxY="3"/>
-                                        <state key="normal" image="button_back"/>
-                                        <connections>
-                                            <action selector="backButtonClicked:" destination="D79-La-1e6" eventType="touchUpInside" id="nSR-LE-T9I"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" red="0.93805062770000003" green="0.25358119610000002" blue="0.2107679546" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </view>
-                        </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <constraints>
-                            <constraint firstItem="WY5-Da-2vf" firstAttribute="top" secondItem="New-hb-39Q" secondAttribute="top" id="3o0-oi-mFb"/>
-                            <constraint firstItem="WY5-Da-2vf" firstAttribute="centerX" secondItem="ION-Rr-fJe" secondAttribute="centerX" id="Dsw-a2-xk0"/>
-                            <constraint firstItem="WY5-Da-2vf" firstAttribute="trailing" secondItem="T52-cD-4J8" secondAttribute="trailing" id="IhT-6s-7c0"/>
-                            <constraint firstItem="T52-cD-4J8" firstAttribute="bottom" secondItem="New-hb-39Q" secondAttribute="bottom" id="Sg7-gz-seo"/>
-                            <constraint firstItem="New-hb-39Q" firstAttribute="bottom" secondItem="WY5-Da-2vf" secondAttribute="bottom" constant="605" id="dT9-BY-t7H"/>
-                            <constraint firstItem="T52-cD-4J8" firstAttribute="top" secondItem="New-hb-39Q" secondAttribute="top" constant="29" id="hMK-G8-dZG"/>
-                            <constraint firstItem="WY5-Da-2vf" firstAttribute="leading" secondItem="T52-cD-4J8" secondAttribute="leading" id="j8V-8r-VCr"/>
-                            <constraint firstItem="WY5-Da-2vf" firstAttribute="leading" secondItem="New-hb-39Q" secondAttribute="leading" id="mxX-H8-WK7"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="New-hb-39Q"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="730-6e-dgM"/>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="NO"/>
-                    </userDefinedRuntimeAttributes>
-                    <connections>
-                        <outlet property="amountTextField" destination="F4k-9T-hVE" id="yNl-D2-Zq3"/>
-                        <outlet property="bankName" destination="PJ2-vx-1Hc" id="BjT-N2-LBD"/>
-                        <outlet property="bikBank" destination="lB0-xQ-VHZ" id="4gj-1v-cky"/>
-                        <outlet property="centralView" destination="GyG-ay-uJU" id="w7S-nR-Qid"/>
-                        <outlet property="comment" destination="ULV-DK-Wft" id="uoM-QF-xT1"/>
-                        <outlet property="containerView" destination="T52-cD-4J8" id="xui-dj-9a1"/>
-                        <outlet property="foraPreloader" destination="KqA-Ct-vqM" id="dm4-yI-W6I"/>
-                        <outlet property="header" destination="WY5-Da-2vf" id="OfH-lO-lP8"/>
-                        <outlet property="innBank" destination="Ylp-cR-jbk" id="ifA-ns-3ja"/>
-                        <outlet property="innCompany" destination="v0B-Y2-4mD" id="FE8-9F-gem"/>
-                        <outlet property="kppBank" destination="77N-P9-Jts" id="9S9-pw-SeW"/>
-                        <outlet property="kppLabel" destination="bN1-FR-isc" id="X08-QU-ooL"/>
-                        <outlet property="numberAcoount" destination="Q5j-59-hlZ" id="hbC-qQ-oyn"/>
-                        <outlet property="otherPayments" destination="rP8-Ka-lfo" id="76S-np-kM4"/>
-                        <outlet property="paymentCompany" destination="z8B-zH-S6S" id="Ejo-UT-aa2"/>
-                        <outlet property="sourcePagerView" destination="dpQ-65-mYR" id="KP5-uc-Fqf"/>
-                        <segue destination="Adr-ke-faE" kind="show" identifier="regSmsVerification" id="Njb-wL-poT"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="m7m-9a-DG2" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1677.5999999999999" y="1784.257871064468"/>
-        </scene>
     </scenes>
     <resources>
         <image name="Group 6 Copy" width="9" height="25"/>
         <image name="button_back" width="8" height="14"/>
-        <image name="foralogotype" width="88" height="88"/>
         <image name="tabbar_icon_payment" width="33" height="30"/>
         <image name="vertical_arrows" width="5" height="11"/>
     </resources>
-    <inferredMetricsTieBreakers>
-        <segue reference="8lu-2v-JyX"/>
-    </inferredMetricsTieBreakers>
 </document>
