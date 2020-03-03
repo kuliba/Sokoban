@@ -121,6 +121,7 @@
 		09F5DCE6218C3E7200390304 /* RegistrationFinishViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F5DCE5218C3E7200390304 /* RegistrationFinishViewController.swift */; };
 		09F5DCE8218C4A5200390304 /* RegistrationTouchIDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F5DCE7218C4A5200390304 /* RegistrationTouchIDViewController.swift */; };
 		09FC8FED215BB2B200A4694B /* ProfileMenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */; };
+		2CCDA0BB24093A9C0038E410 /* LegacyPaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCDA0BA24093A9C0038E410 /* LegacyPaymentViewController.swift */; };
 		4678EF6D23952D8600E060BD /* IPasscodeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4678EF6C23952D8600E060BD /* IPasscodeService.swift */; };
 		4678EF6F23952D9800E060BD /* PasscodeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4678EF6E23952D9800E060BD /* PasscodeService.swift */; };
 		469ED82C23A43F15002C23F5 /* PaymentRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469ED82B23A43F15002C23F5 /* PaymentRequestHandler.swift */; };
@@ -147,7 +148,13 @@
 		96144B3C233BAD3F00B9F314 /* IAboutTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96144B3B233BAD3F00B9F314 /* IAboutTransaction.swift */; };
 		96144B3F233DFF2300B9F314 /* LoanPaymentScheduleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96144B3E233DFF2300B9F314 /* LoanPaymentScheduleController.swift */; };
 		96144B43233E21BB00B9F314 /* LoanSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96144B42233E21BB00B9F314 /* LoanSchedule.swift */; };
+		9614936423F3DF45000C3C17 /* SuccessResetPasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9614936323F3DF45000C3C17 /* SuccessResetPasswordController.swift */; };
+		9614936623F42050000C3C17 /* confirmPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9614936523F42050000C3C17 /* confirmPassword.swift */; };
 		9614986E2366E81E0021F70A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9614986D2366E81E0021F70A /* GoogleService-Info.plist */; };
+		961ACBFC23F1253300D2E9EC /* PaymentRedOptionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 961ACBFB23F1253300D2E9EC /* PaymentRedOptionView.xib */; };
+		961ACBFE23F1255000D2E9EC /* PaymentRedOptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961ACBFD23F1255000D2E9EC /* PaymentRedOptionView.swift */; };
+		961ACC0023F12AF200D2E9EC /* RedPagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961ACBFF23F12AF200D2E9EC /* RedPagerView.swift */; };
+		961ACC0223F12B2800D2E9EC /* RedPagerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 961ACC0123F12B2800D2E9EC /* RedPagerView.xib */; };
 		9622CFBE234B225B0005701E /* ChangePasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9622CFBD234B225B0005701E /* ChangePasswordController.swift */; };
 		962655C92361F31A00697E37 /* ViewModalStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 962655C82361F31A00697E37 /* ViewModalStyle.swift */; };
 		9630327E2346260000C211D8 /* prepareResetPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9630327D2346260000C211D8 /* prepareResetPassword.swift */; };
@@ -175,8 +182,13 @@
 		9660EEE8234C7B1100AE0647 /* CollapsibleTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9660EEE3234C7B1000AE0647 /* CollapsibleTableViewController.swift */; };
 		9660EEE9234C7B1100AE0647 /* CollapsibleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9660EEE4234C7B1100AE0647 /* CollapsibleTableViewCell.swift */; };
 		9660EEEA234C7B1100AE0647 /* ExampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9660EEE5234C7B1100AE0647 /* ExampleData.swift */; };
+		96617C1123E2BFC8001F7C0D /* TransferConfirmation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96617C1023E2BFC8001F7C0D /* TransferConfirmation.swift */; };
+		96617C1323E31EB7001F7C0D /* SourceValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96617C1223E31EB7001F7C0D /* SourceValue.swift */; };
 		966515AF235765C5001D54FC /* CardDetailsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 966515AE235765C5001D54FC /* CardDetailsCell.xib */; };
 		966B4252235F508A00AF4256 /* GoogleService-Info2.plist in Resources */ = {isa = PBXBuildFile; fileRef = 966B4251235F508A00AF4256 /* GoogleService-Info2.plist */; };
+		966DF5D823DB1A3D00F16CB9 /* SuggestBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966DF5D723DB1A3D00F16CB9 /* SuggestBank.swift */; };
+		966DF5DA23DEC38E00F16CB9 /* BankSuggest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966DF5D923DEC38E00F16CB9 /* BankSuggest.swift */; };
+		966DF5DC23DEDD5500F16CB9 /* SuggestCompany.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966DF5DB23DEDD5500F16CB9 /* SuggestCompany.swift */; };
 		967AA501236C68DE000EEE6B /* telephone 1.png in Resources */ = {isa = PBXBuildFile; fileRef = 967AA500236C68DE000EEE6B /* telephone 1.png */; };
 		96920C32235604C000CCC7EF /* OperationsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96920C31235604C000CCC7EF /* OperationsList.swift */; };
 		9696DED22387FAAF006BC972 /* WebC2CViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9696DED12387FAAE006BC972 /* WebC2CViewController.swift */; };
@@ -188,6 +200,7 @@
 		9698996A2303FD190066C55B /* LoansCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 969899692303FD190066C55B /* LoansCell.xib */; };
 		96AB361923323B2B009FD828 /* CardHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AB361823323B2B009FD828 /* CardHistory.swift */; };
 		96B0E5E4238D16460045FE7A /* ServiceBest2Pay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96B0E5E3238D16460045FE7A /* ServiceBest2Pay.swift */; };
+		96BB09AF23D85F3D00E8BD23 /* CardInfoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BB09AE23D85F3D00E8BD23 /* CardInfoService.swift */; };
 		96BEAE4922FABBA00029C63D /* iCarousel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE4822FABBA00029C63D /* iCarousel.framework */; };
 		96BEAE4B22FABBA40029C63D /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE4A22FABBA40029C63D /* Alamofire.framework */; };
 		96BEAE4D22FABBA80029C63D /* DeviceKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BEAE4C22FABBA80029C63D /* DeviceKit.framework */; };
@@ -436,7 +449,7 @@
 		096BCB09216361AA005BC02B /* PaymentTemplateCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentTemplateCell.xib; sourceTree = "<group>"; };
 		096BCB0C21637E27005BC02B /* PaymentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCell.swift; sourceTree = "<group>"; };
 		096BCB0D21637E27005BC02B /* PaymentCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentCell.xib; sourceTree = "<group>"; };
-		09797555215A49020044C00A /* ForaBank.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ForaBank.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		09797555215A49020044C00A /* ForaBank Beta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ForaBank Beta.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		09797558215A49020044C00A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0979755F215A49040044C00A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../Assets.xcassets; sourceTree = "<group>"; };
 		09797562215A49040044C00A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -500,6 +513,7 @@
 		09F5DCE5218C3E7200390304 /* RegistrationFinishViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationFinishViewController.swift; sourceTree = "<group>"; };
 		09F5DCE7218C4A5200390304 /* RegistrationTouchIDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationTouchIDViewController.swift; sourceTree = "<group>"; };
 		09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileMenuTableViewController.swift; sourceTree = "<group>"; };
+		2CCDA0BA24093A9C0038E410 /* LegacyPaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyPaymentViewController.swift; sourceTree = "<group>"; };
 		4678EF6C23952D8600E060BD /* IPasscodeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPasscodeService.swift; sourceTree = "<group>"; };
 		4678EF6E23952D9800E060BD /* PasscodeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeService.swift; sourceTree = "<group>"; };
 		469ED82B23A43F15002C23F5 /* PaymentRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentRequestHandler.swift; sourceTree = "<group>"; };
@@ -527,7 +541,13 @@
 		96144B3D233CE68400B9F314 /* ForaBank.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ForaBank.entitlements; sourceTree = "<group>"; };
 		96144B3E233DFF2300B9F314 /* LoanPaymentScheduleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanPaymentScheduleController.swift; sourceTree = "<group>"; };
 		96144B42233E21BB00B9F314 /* LoanSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanSchedule.swift; sourceTree = "<group>"; };
+		9614936323F3DF45000C3C17 /* SuccessResetPasswordController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessResetPasswordController.swift; sourceTree = "<group>"; };
+		9614936523F42050000C3C17 /* confirmPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = confirmPassword.swift; sourceTree = "<group>"; };
 		9614986D2366E81E0021F70A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		961ACBFB23F1253300D2E9EC /* PaymentRedOptionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentRedOptionView.xib; sourceTree = "<group>"; };
+		961ACBFD23F1255000D2E9EC /* PaymentRedOptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentRedOptionView.swift; sourceTree = "<group>"; };
+		961ACBFF23F12AF200D2E9EC /* RedPagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedPagerView.swift; sourceTree = "<group>"; };
+		961ACC0123F12B2800D2E9EC /* RedPagerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RedPagerView.xib; sourceTree = "<group>"; };
 		9622CFBD234B225B0005701E /* ChangePasswordController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordController.swift; sourceTree = "<group>"; };
 		962655C82361F31A00697E37 /* ViewModalStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModalStyle.swift; sourceTree = "<group>"; };
 		9630327D2346260000C211D8 /* prepareResetPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = prepareResetPassword.swift; sourceTree = "<group>"; };
@@ -558,8 +578,13 @@
 		9660EEE3234C7B1000AE0647 /* CollapsibleTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollapsibleTableViewController.swift; sourceTree = "<group>"; };
 		9660EEE4234C7B1100AE0647 /* CollapsibleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollapsibleTableViewCell.swift; sourceTree = "<group>"; };
 		9660EEE5234C7B1100AE0647 /* ExampleData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleData.swift; sourceTree = "<group>"; };
+		96617C1023E2BFC8001F7C0D /* TransferConfirmation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferConfirmation.swift; sourceTree = "<group>"; };
+		96617C1223E31EB7001F7C0D /* SourceValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceValue.swift; sourceTree = "<group>"; };
 		966515AE235765C5001D54FC /* CardDetailsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CardDetailsCell.xib; sourceTree = "<group>"; };
 		966B4251235F508A00AF4256 /* GoogleService-Info2.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info2.plist"; sourceTree = "<group>"; };
+		966DF5D723DB1A3D00F16CB9 /* SuggestBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestBank.swift; sourceTree = "<group>"; };
+		966DF5D923DEC38E00F16CB9 /* BankSuggest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankSuggest.swift; sourceTree = "<group>"; };
+		966DF5DB23DEDD5500F16CB9 /* SuggestCompany.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestCompany.swift; sourceTree = "<group>"; };
 		967AA500236C68DE000EEE6B /* telephone 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "telephone 1.png"; sourceTree = "<group>"; };
 		96920C31235604C000CCC7EF /* OperationsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationsList.swift; sourceTree = "<group>"; };
 		9696DED12387FAAE006BC972 /* WebC2CViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebC2CViewController.swift; sourceTree = "<group>"; };
@@ -571,6 +596,7 @@
 		969899692303FD190066C55B /* LoansCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoansCell.xib; sourceTree = "<group>"; };
 		96AB361823323B2B009FD828 /* CardHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardHistory.swift; sourceTree = "<group>"; };
 		96B0E5E3238D16460045FE7A /* ServiceBest2Pay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceBest2Pay.swift; sourceTree = "<group>"; };
+		96BB09AE23D85F3D00E8BD23 /* CardInfoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardInfoService.swift; sourceTree = "<group>"; };
 		96BEAE4022FAB9170029C63D /* iCarousel */ = {isa = PBXFileReference; lastKnownFileType = folder; name = iCarousel; path = Pods/iCarousel; sourceTree = "<group>"; };
 		96BEAE4822FABBA00029C63D /* iCarousel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = iCarousel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		96BEAE4A22FABBA40029C63D /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -867,7 +893,7 @@
 		09797556215A49020044C00A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				09797555215A49020044C00A /* ForaBank.app */,
+				09797555215A49020044C00A /* ForaBank Beta.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -916,6 +942,7 @@
 				09F5DCE7218C4A5200390304 /* RegistrationTouchIDViewController.swift */,
 				094FFC09218837580069DDCB /* RegistrationViewController.swift */,
 				96072C872313FF13001CFCBD /* TouchIDAuthentication.swift */,
+				9614936323F3DF45000C3C17 /* SuccessResetPasswordController.swift */,
 			);
 			path = Registration;
 			sourceTree = "<group>";
@@ -1005,6 +1032,8 @@
 				9697E2A22334E30500974505 /* ServicesList.swift */,
 				A568143721D35FEB002C0899 /* Transaction.swift */,
 				A57CF1BB2204364E00E855A5 /* TransactionStatement.swift */,
+				966DF5D923DEC38E00F16CB9 /* BankSuggest.swift */,
+				96617C1223E31EB7001F7C0D /* SourceValue.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1179,6 +1208,8 @@
 				A5B473C021B3BBCD00F2E41F /* RemittancePickerViewController.swift */,
 				BDFE1B0C233CE7BD00C49A5B /* PickerViewController.xib */,
 				96F0DF4E23C721D60012A8F0 /* FreeDetailsViewController.swift */,
+				96617C1023E2BFC8001F7C0D /* TransferConfirmation.swift */,
+				2CCDA0BA24093A9C0038E410 /* LegacyPaymentViewController.swift */,
 			);
 			path = Payments;
 			sourceTree = "<group>";
@@ -1209,6 +1240,7 @@
 			isa = PBXGroup;
 			children = (
 				9630327D2346260000C211D8 /* prepareResetPassword.swift */,
+				9614936523F42050000C3C17 /* confirmPassword.swift */,
 			);
 			path = resetPassword;
 			sourceTree = "<group>";
@@ -1406,6 +1438,8 @@
 				BDABE687234640D000CA0754 /* PaymentOptionView.swift */,
 				BDABE6892346417C00CA0754 /* PaymentOptionView.xib */,
 				A5B473C321B3C0D200F2E41F /* RemittanceOptionView.swift */,
+				961ACBFB23F1253300D2E9EC /* PaymentRedOptionView.xib */,
+				961ACBFD23F1255000D2E9EC /* PaymentRedOptionView.swift */,
 				BDFE1B15233D085400C49A5B /* Cells */,
 			);
 			path = Payments;
@@ -1473,6 +1507,9 @@
 				BD2083802361E0FF0010E03C /* ProductsService.swift */,
 				BD20835E23609A680010E03C /* RegService.swift */,
 				BD20834E23609A670010E03C /* StatementService.swift */,
+				96BB09AE23D85F3D00E8BD23 /* CardInfoService.swift */,
+				966DF5D723DB1A3D00F16CB9 /* SuggestBank.swift */,
+				966DF5DB23DEDD5500F16CB9 /* SuggestCompany.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -1551,6 +1588,8 @@
 				BD35E82A23439AF60016BA0D /* PagerView.xib */,
 				BD35E82623439A3B0016BA0D /* PagerView.swift */,
 				BD49E6562344F7F90031561F /* PagerViewCellHandler.swift */,
+				961ACC0123F12B2800D2E9EC /* RedPagerView.xib */,
+				961ACBFF23F12AF200D2E9EC /* RedPagerView.swift */,
 				BD49E64F2344D20E0031561F /* PagerCells */,
 			);
 			path = Pager;
@@ -1834,7 +1873,7 @@
 			);
 			name = ForaBank;
 			productName = ForaBank;
-			productReference = 09797555215A49020044C00A /* ForaBank.app */;
+			productReference = 09797555215A49020044C00A /* ForaBank Beta.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1914,6 +1953,7 @@
 				09F2410A21707B86007B7D73 /* FeedInfo3Cell.xib in Resources */,
 				A55B7B8021A6B51E00A8A7FE /* 10.mov in Resources */,
 				966B4252235F508A00AF4256 /* GoogleService-Info2.plist in Resources */,
+				961ACBFC23F1253300D2E9EC /* PaymentRedOptionView.xib in Resources */,
 				09E0F13F215A65AE0042FB6A /* Payment.storyboard in Resources */,
 				09E0F142215A65D40042FB6A /* Services.storyboard in Resources */,
 				BDFE1B14233D083E00C49A5B /* PickerTableViewCell.xib in Resources */,
@@ -1942,6 +1982,7 @@
 				09F2410621707B7B007B7D73 /* FeedInfo2Cell.xib in Resources */,
 				09203D8B216CC19900902BD2 /* AuthorizedZone.storyboard in Resources */,
 				BD35E82B23439AF60016BA0D /* PagerView.xib in Resources */,
+				961ACC0223F12B2800D2E9EC /* RedPagerView.xib in Resources */,
 				BD49E6532344D30D0031561F /* MenuPagerViewCell.xib in Resources */,
 				BDFE1B0E233CE7BD00C49A5B /* PickerViewController.xib in Resources */,
 				093B8636216224CC008A5222 /* ServicesHeader.xib in Resources */,
@@ -2016,6 +2057,7 @@
 				"${BUILT_PRODUCTS_DIR}/ReSwift/ReSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/ReSwiftThunk/ReSwiftThunk.framework",
 				"${BUILT_PRODUCTS_DIR}/SCLAlertView/SCLAlertView.framework",
+				"${BUILT_PRODUCTS_DIR}/TKFormTextField/TKFormTextField.framework",
 				"${BUILT_PRODUCTS_DIR}/TOPasscodeViewController/TOPasscodeViewController.framework",
 				"${BUILT_PRODUCTS_DIR}/iCarousel/iCarousel.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
@@ -2040,6 +2082,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReSwiftThunk.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SCLAlertView.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TKFormTextField.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TOPasscodeViewController.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/iCarousel.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
@@ -2082,9 +2125,11 @@
 				BDAEE0EF23991295007690E7 /* UserSettingType.swift in Sources */,
 				09F2410921707B86007B7D73 /* FeedInfo3Cell.swift in Sources */,
 				BDB6B0112326A9C10006A534 /* PasscodeSignUpActions.swift in Sources */,
+				961ACBFE23F1255000D2E9EC /* PaymentRedOptionView.swift in Sources */,
 				BDAEE0ED2399104C007690E7 /* ISettingsPresenter.swift in Sources */,
 				9660EEE8234C7B1100AE0647 /* CollapsibleTableViewController.swift in Sources */,
 				9605AC162383D5A200652635 /* MainViewController.swift in Sources */,
+				96617C1123E2BFC8001F7C0D /* TransferConfirmation.swift in Sources */,
 				89C8DF0C21918DDC00D92B0A /* OptionPickerViewController.swift in Sources */,
 				BDFE1AC2233B906D00C49A5B /* App.swift in Sources */,
 				0939B5FB21774EA70029F03D /* DoubleRoundedEdgeView.swift in Sources */,
@@ -2104,10 +2149,13 @@
 				BD2083792360A29C0010E03C /* DepositsService.swift in Sources */,
 				895768CF2192E768005754D5 /* DepositsStatsViewController.swift in Sources */,
 				BD122C1A2368283B00FE0F01 /* PasscodeViewController.swift in Sources */,
+				9614936423F3DF45000C3C17 /* SuccessResetPasswordController.swift in Sources */,
+				966DF5DC23DEDD5500F16CB9 /* SuggestCompany.swift in Sources */,
 				BDF4F9462329105D007C448F /* Security.swift in Sources */,
 				BD57934F236C4B900056740C /* SettingsStorage.swift in Sources */,
 				0930F166215B5CDB00CFB593 /* RoundedEdgeView.swift in Sources */,
 				BDB6AFF423268C850006A534 /* PasscodeSignInViewController.swift in Sources */,
+				96617C1323E31EB7001F7C0D /* SourceValue.swift in Sources */,
 				BDABE68323463D4A00CA0754 /* DropDownPagerViewCell.swift in Sources */,
 				96E541162341656300770C06 /* ExpandingTableViewCell.swift in Sources */,
 				A528EF4221B106CF00D189DD /* BubblesStatsScrollView.swift in Sources */,
@@ -2124,12 +2172,14 @@
 				BD20837723609B560010E03C /* PaymentServices.swift in Sources */,
 				BD588AB0237E934E00727056 /* ProductType.swift in Sources */,
 				A5B473C621B52D4500F2E41F /* BubblesDetailedStatsView.swift in Sources */,
+				961ACC0023F12AF200D2E9EC /* RedPagerView.swift in Sources */,
 				BD02598D2396BAC300D0B23A /* AuthenticationService.swift in Sources */,
 				9660EEE7234C7B1100AE0647 /* Extensions.swift in Sources */,
 				9696DED22387FAAF006BC972 /* WebC2CViewController.swift in Sources */,
 				BDF4F94C23293C49007C448F /* PasscodeSignInState.swift in Sources */,
 				BD3BEFEF2373FA3700BA0D9B /* RegistrationSettings.swift in Sources */,
 				BDE4D08723226B4C0070BC3D /* IAboutItem.swift in Sources */,
+				966DF5DA23DEC38E00F16CB9 /* BankSuggest.swift in Sources */,
 				BDFE1ACA233BAE9B00C49A5B /* PaymentOption.swift in Sources */,
 				A568143821D35FEB002C0899 /* Transaction.swift in Sources */,
 				09F5DCE8218C4A5200390304 /* RegistrationTouchIDViewController.swift in Sources */,
@@ -2280,8 +2330,10 @@
 				A57CF1BE22043DDE00E855A5 /* BriginvestResponse.swift in Sources */,
 				BDAEE0F9239A76AD007690E7 /* PaymentOptionType.swift in Sources */,
 				9658B98D23A140FD00117727 /* CustomAlertViewDelegate.swift in Sources */,
+				9614936623F42050000C3C17 /* confirmPassword.swift in Sources */,
 				89C8DF122191AFA700D92B0A /* DepositsDepositCell.swift in Sources */,
 				BDAEE0F1239A50D6007690E7 /* ITableViewController.swift in Sources */,
+				2CCDA0BB24093A9C0038E410 /* LegacyPaymentViewController.swift in Sources */,
 				A568142621CBCD48002C0899 /* BankBranchClusterView.swift in Sources */,
 				BD6F597A2334BAA4002F4D4E /* StateReducer.swift in Sources */,
 				A5C5E6D621A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift in Sources */,
@@ -2302,6 +2354,7 @@
 				96FE29EE238417000076656C /* KDDragAndDropCollectionView.swift in Sources */,
 				093B862E21620B1F008A5222 /* ServicesSearchCell.swift in Sources */,
 				BD17F0AC23474FE300CBF400 /* PaymentOptionDropDownCell.swift in Sources */,
+				966DF5D823DB1A3D00F16CB9 /* SuggestBank.swift in Sources */,
 				09AF7092216F73FD00E7FCFC /* FeedCurrent4Cell.swift in Sources */,
 				09203D95216E13A700902BD2 /* FeedOptionCell.swift in Sources */,
 				BDE4D085232254430070BC3D /* Date.swift in Sources */,
@@ -2311,6 +2364,7 @@
 				BD02598A2396B91300D0B23A /* IAuthenticationService.swift in Sources */,
 				BD6D5674233A0B9000B7CF4B /* UnauthorizedZoneTabBarController.swift in Sources */,
 				A568142421CBCD38002C0899 /* BankBranchViews.swift in Sources */,
+				96BB09AF23D85F3D00E8BD23 /* CardInfoService.swift in Sources */,
 				09AF708C216F73FD00E7FCFC /* FeedCurrent2Cell.swift in Sources */,
 				09F2410C2170871F007B7D73 /* FeedInfoViewController.swift in Sources */,
 				BD8106A1234E1263004A43E9 /* PhoneNumberCellProvider.swift in Sources */,
@@ -2500,16 +2554,20 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 10.0;
+				PRODUCT_BUNDLE_IDENTIFIER = forabank.betaapps;
+				PRODUCT_NAME = "ForaBank Beta";
 				MARKETING_VERSION = 7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "ForaBank/ForaBank-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -2524,16 +2582,20 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 10.0;
+				PRODUCT_BUNDLE_IDENTIFIER = forabank.betaapps;
+				PRODUCT_NAME = "ForaBank Beta";
 				MARKETING_VERSION = 7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "ForaBank/ForaBank-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;

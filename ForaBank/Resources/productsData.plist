@@ -40,14 +40,6 @@
 	<key>account</key>
 	<array>
 		<dict>
-			<key>image</key>
-			<string>depositIcon</string>
-			<key>text</key>
-			<string>Пополнить счёт</string>
-			<key>action</key>
-			<string></string>
-		</dict>
-		<dict>
 			<key>action</key>
 			<string></string>
 			<key>text</key>
@@ -62,73 +54,17 @@
 			<string>Поделиться реквизитами</string>
 			<key>image</key>
 			<string>shareIcon</string>
-		</dict>
-		<dict>
-			<key>action</key>
-			<string></string>
-			<key>text</key>
-			<string>Привязать карту</string>
-			<key>image</key>
-			<string>addCardIcon</string>
-		</dict>
-		<dict>
-			<key>action</key>
-			<string></string>
-			<key>text</key>
-			<string>Продлить срок действия</string>
-			<key>image</key>
-			<string>clockIcon</string>
-		</dict>
-		<dict>
-			<key>action</key>
-			<string></string>
-			<key>text</key>
-			<string>Заблокировать счёт</string>
-			<key>image</key>
-			<string>redLockIcon</string>
 		</dict>
 	</array>
 	<key>loan</key>
 	<array>
 		<dict>
-			<key>image</key>
-			<string>depositIcon</string>
-			<key>text</key>
-			<string>Пополнить счёт</string>
-			<key>action</key>
-			<string></string>
-		</dict>
-		<dict>
-			<key>action</key>
-			<string></string>
-			<key>text</key>
-			<string>Платёж или перевод</string>
-			<key>image</key>
-			<string>paymentIcon</string>
-		</dict>
-		<dict>
 			<key>action</key>
 			<string></string>
 			<key>text</key>
 			<string>Поделиться реквизитами</string>
 			<key>image</key>
 			<string>shareIcon</string>
-		</dict>
-		<dict>
-			<key>action</key>
-			<string></string>
-			<key>text</key>
-			<string>Привязать карту</string>
-			<key>image</key>
-			<string>addCardIcon</string>
-		</dict>
-		<dict>
-			<key>action</key>
-			<string></string>
-			<key>text</key>
-			<string>Продлить срок действия</string>
-			<key>image</key>
-			<string>clockIcon</string>
 		</dict>
 		<dict>
 			<key>action</key>
@@ -142,52 +78,12 @@
 	<key>deposit</key>
 	<array>
 		<dict>
-			<key>image</key>
-			<string>depositIcon</string>
-			<key>text</key>
-			<string>Пополнить вклад</string>
-			<key>action</key>
-			<string></string>
-		</dict>
-		<dict>
-			<key>action</key>
-			<string></string>
-			<key>text</key>
-			<string>Платёж или перевод</string>
-			<key>image</key>
-			<string>paymentIcon</string>
-		</dict>
-		<dict>
 			<key>action</key>
 			<string></string>
 			<key>text</key>
 			<string>Поделиться реквизитами</string>
 			<key>image</key>
 			<string>shareIcon</string>
-		</dict>
-		<dict>
-			<key>action</key>
-			<string></string>
-			<key>text</key>
-			<string>Привязать карту</string>
-			<key>image</key>
-			<string>addCardIcon</string>
-		</dict>
-		<dict>
-			<key>action</key>
-			<string></string>
-			<key>text</key>
-			<string>Продлить срок действия</string>
-			<key>image</key>
-			<string>clockIcon</string>
-		</dict>
-		<dict>
-			<key>action</key>
-			<string></string>
-			<key>text</key>
-			<string>Заблокировать счёт</string>
-			<key>image</key>
-			<string>redLockIcon</string>
 		</dict>
 	</array>
 </dict>

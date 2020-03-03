@@ -14,25 +14,18 @@ public typealias HTTPHeaders = [String: String]
 class ProductAboutViewController: UITableViewController {
   
     private var datedTransactions = [DatedTransactions]()
-    struct Location {
-        let title: String
-        let value: String
-        let description: String
-        let latitude: Double
-        let longitude: Double
 
-        static let locations = [
-            Location(title: "Начало действия карты", value: "123", description: "Old.", latitude: 10.11111, longitude: 1.11111),
-            Location(title: "Дата окончания действия карты", value: "123", description: "Old.", latitude: 10.11111, longitude: 1.11111),
-            Location(title: "Дата и время актуализации остатка", value: "123", description: "Old.", latitude: 10.11111, longitude: 1.11111)
-        ]
-    }
 
-  
+    @IBOutlet weak var textlLabel: UILabel!
     
-    var locationsAll = Location.locations
-    var cards: String? = nil
+    @IBOutlet weak var descriptionLabel: UILabel!
+    
+    var cards =  [Card]()
+    var deposits = [Deposit]()
+    var aboutCard = [IAboutItem]()
     var items: [IAboutItem]?
+    var numberCard: String = ""
+    var depositId: String = ""
 
 //    let flattenCollection = [locationsAll, items].joined() // type: FlattenBidirectionalCollection<[Array<Int>]>
 //    let flattenArray = Array(flattenCollection)
@@ -47,8 +40,6 @@ class ProductAboutViewController: UITableViewController {
 //    }
 
 
-    var airports  = ["YYZ": "Toronto Pearson", "DUB": "Dublin"]
-    var airports2 = ["YYZ2": "Toronto Pearson2", "DUB2": "Dublin2", "DUB3": "Dublin123"]
     
     
     override func viewDidLoad() {
@@ -57,12 +48,38 @@ class ProductAboutViewController: UITableViewController {
         tableView.contentInset.top = 35
         tableView.contentInset.bottom = 10
         tableView.backgroundColor = .white
+        tableView.rowHeight = UITableView.automaticDimension
 
-//        NetworkManager.shared().getCardList { [weak self] (success, cards) in
-//            self?.cards = cards ?? []
-//        }
 
-                
+            
+        NetworkManager.shared().getCardList { [weak self] (success, cards) in
+            self?.cards = cards ?? []
+        }
+        NetworkManager.shared().getCardInfo(cardNumber: numberCard) { [weak self] (success, cards) in
+                  self?.aboutCard = cards ?? []
+            self?.numberCard = self!.numberCard
+            if self!.aboutCard.count != 0{
+            self!.items?.append((self!.aboutCard[0]))
+            self!.tableView.reloadData()
+            }
+        }
+     
+
+        
+        
+        
+        
+        
+        let date = Date()
+        let format = DateFormatter()
+        format.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let formattedDate = format.string(from: date)
+        print(formattedDate)
+        let timeNow = AboutItem(title: String("Дата и время актуализации остатка"), value: formattedDate)
+        self.items?.append(timeNow)
+
+
+       
         
         // Uncomment the following line to pre10
         //         serve selection between presentations
@@ -91,24 +108,33 @@ class ProductAboutViewController: UITableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
+        
         return items!.count
     }
-
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "productAboutCell", for: indexPath) as! PaymentTemplateCell
         let item = items![indexPath.row]
+        let cardInfo = numberCard
+        cell.textLabel?.numberOfLines = 3
+        cell.textLabel?.adjustsFontSizeToFitWidth = true;
+
+
         cell.backgroundColor = UIColor.white
         cell.tintColor = UIColor.white
-        cell.textLabel?.text = item.title ?? ""
-        cell.textLabel?.font = UIFont(name: "Roboto-Light", size: 16.0)
-
-        cell.detailTextLabel?.text = item.value ?? ""
-        cell.detailTextLabel?.font = UIFont(name: "Roboto", size: 18.0)
-        cell.detailTextLabel?.textColor = UIColor(named: "black")
+//        cell.textLabel?.text = item.title ?? cardInfo
+//        cell.textLabel?.font = UIFont(name: "Roboto-Light", size: 16.0)
+        cell.textLabel?.numberOfLines = 0
+        cell.titleLabel.text = item.title ?? cardInfo
+        cell.descriptionLabel.text = item.value ?? "123"
+//        cell.detailTextLabel?.text = item.value ?? "123"
+//        cell.detailTextLabel?.font = UIFont(name: "Roboto", size: 18.0)
+//        cell.detailTextLabel?.textColor = UIColor(named: "black")
+        cell.detailTextLabel?.adjustsFontSizeToFitWidth = true
         cell.textLabel?.textColor = UIColor.black
+        
         cell.detailTextLabel?.textColor = UIColor.black
 
 

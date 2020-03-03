@@ -47,7 +47,6 @@ class PagerView: UIView {
         addSubview(contentView)
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-
         self.pagerView.register(UINib(nibName: String(describing: TextFieldPagerViewCell.self), bundle: nil), forCellWithReuseIdentifier: String(describing: TextFieldPagerViewCell.self))
         self.pagerView.register(UINib(nibName: String(describing: MenuPagerViewCell.self), bundle: nil), forCellWithReuseIdentifier: String(describing: MenuPagerViewCell.self))
         self.pagerView.register(UINib(nibName: String(describing: DropDownPagerViewCell.self), bundle: nil), forCellWithReuseIdentifier: String(describing: DropDownPagerViewCell.self))

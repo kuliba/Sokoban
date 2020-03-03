@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "09797554215A49020044C00A"
-               BuildableName = "ForaBank.app"
+               BuildableName = "ForaBank Beta.app"
                BlueprintName = "ForaBank"
                ReferencedContainer = "container:ForaBank.xcodeproj">
             </BuildableReference>
@@ -31,7 +31,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "09797554215A49020044C00A"
-            BuildableName = "ForaBank.app"
+            BuildableName = "ForaBank Beta.app"
             BlueprintName = "ForaBank"
             ReferencedContainer = "container:ForaBank.xcodeproj">
          </BuildableReference>
@@ -54,7 +54,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "09797554215A49020044C00A"
-            BuildableName = "ForaBank.app"
+            BuildableName = "ForaBank Beta.app"
             BlueprintName = "ForaBank"
             ReferencedContainer = "container:ForaBank.xcodeproj">
          </BuildableReference>
@@ -75,7 +75,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "09797554215A49020044C00A"
-            BuildableName = "ForaBank.app"
+            BuildableName = "ForaBank Beta.app"
             BlueprintName = "ForaBank"
             ReferencedContainer = "container:ForaBank.xcodeproj">
          </BuildableReference>

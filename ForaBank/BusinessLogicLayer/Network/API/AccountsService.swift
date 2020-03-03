@@ -52,6 +52,8 @@ class AccountsService: AccountsServiceProtocol {
 
                                 guard let accountNumber = accountData?["accountNumber"] as? String,
                                     let currencyCode = accountData?["currencyCode"] as? String,
+
+                                    
                                     let balance = accountData?["balance"] as? Double else {
                                         continue
                                 }
@@ -59,6 +61,8 @@ class AccountsService: AccountsServiceProtocol {
                                 original["accountNumber"] = accountNumber
                                 original["currencyCode"] = currencyCode
                                 original["balance"] = balance
+                                let dateStart = dayMonthYear(milisecond: Double((original["dateStart"] as? Double)!))
+                                let isClosed = original["isClosed"] as? Bool
 
                                 let depositProductName = original["depositProductName"] as? String
                                 let depositProductID = original["depositProductID"] as? Int

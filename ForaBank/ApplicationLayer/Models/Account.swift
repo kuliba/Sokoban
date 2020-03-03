@@ -27,6 +27,8 @@ class Account: Mappable, IProduct {
     var currencyCode: String
     var balance: Double
     var accountNumber: String
+    var dateStart: Double
+    var isClosed: Bool
     var number: String {
         get {
             accountNumber
@@ -49,9 +51,29 @@ class Account: Mappable, IProduct {
         try accountNumber = map.from("accountNumber")
         try currencyCode = map.from("currencyCode")
         try id = map.from("depositID")
+        try dateStart = map.from("dateStart")
+        try isClosed = map.from("isClosed")
+
+
     }
 
     func getProductAbout() -> Array<AboutItem> {
-        return [AboutItem(title: "Доступно для снятия", value: "\(balance) \(currencyCode)")]
+        var status: String
+        print(isClosed.description)
+        if isClosed.description == "true"{
+            status = "Не действует"
+        } else{
+            status = "Действует"
+        }
+        let dateStartFormatter = dayMonthYear(milisecond: dateStart)
+        return
+            [AboutItem(title: "Номер", value: "\(accountNumber)"),
+            AboutItem(title: "Договор действует с", value: "\(dateStartFormatter)"),
+             AboutItem(title: "Валюта", value: "\(currencyCode)"),
+             AboutItem(title: "Доступный остаток", value: "\(balance) \(currencyCode)"),
+             AboutItem(title: "Состояние", value: "\(status)")
+
+        ]
+    
     }
 }

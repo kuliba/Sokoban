@@ -19,7 +19,11 @@ class NetworkManager {
 
         let authService = AuthService(host: host)
         let cardService = CardService(host: host)
+        let cardInfoService = CardInfoService(host: host)
         let paymentServices = PaymentServices(host: host)
+        let suggestBankService = SuggestBankService(host: host)
+        let suggestCompanyService = SuggestCompanyService(host: host)
+
         let regService = RegService(host: host)
         let depositsService = DepositService(host: host)
         let accountsService = AccountsService(host: host)
@@ -30,7 +34,7 @@ class NetworkManager {
         let productService = ProductsService(host: host)
 
 
-        let networkManager = NetworkManager(host, authService, regService, cardService, paymentServices, depositsService, accountsService, loanPaymentSchedule, historyService, loansService, statementService, productService: productService)
+        let networkManager = NetworkManager(host, authService, suggestBankService, suggestCompanyService, regService, cardService, cardInfoService, paymentServices, depositsService, accountsService, loanPaymentSchedule, historyService, loansService, statementService, productService: productService)
         // Configuration
 
 
@@ -40,6 +44,9 @@ class NetworkManager {
     private let authService: AuthServiceProtocol
     private let regService: RegServiceProtocol
     private let cardService: CardServiceProtocol
+    private let cardInfoService: CardInfoServiceProtocol
+    private let suggestBankService: SuggestBankService
+    private let suggestCompanyService: SuggestCompanyService
     private let paymentServices: IPaymetsApi
     private let productService: IProductService
     private let depositsService: DepositsServiceProtocol
@@ -58,13 +65,16 @@ class NetworkManager {
     ]
 
 // Initialization
-    private init(_ host: Host, _ authService: AuthServiceProtocol, _ regService: RegServiceProtocol, _ cardService: CardServiceProtocol, _ paymentsServices: IPaymetsApi, _ depositsService: DepositsServiceProtocol, _ accountsService: AccountsServiceProtocol, _ LaonSchedules: LoanPaymentScheduleProtocol, _ historyService: HistoryServiceProtocol, _ loansService: LoansServiceProtocol, _ statementService: StatementServiceProtocol, productService: IProductService) {
+    private init(_ host: Host, _ authService: AuthServiceProtocol, _ suggestBankService: SuggestBankService,_ suggestCompanyService: SuggestCompanyService, _ regService: RegServiceProtocol, _ cardService: CardServiceProtocol, _ cardInfoService: CardInfoServiceProtocol, _ paymentsServices: IPaymetsApi, _ depositsService: DepositsServiceProtocol, _ accountsService: AccountsServiceProtocol, _ LaonSchedules: LoanPaymentScheduleProtocol, _ historyService: HistoryServiceProtocol, _ loansService: LoansServiceProtocol, _ statementService: StatementServiceProtocol, productService: IProductService) {
         self.host = host
         self.authService = authService
         self.regService = regService
         self.cardService = cardService
+        self.cardInfoService = cardInfoService
+        self.suggestBankService = suggestBankService
         self.paymentServices = paymentsServices
         self.loansService = loansService
+        self.suggestCompanyService = suggestCompanyService
         self.loanPaymentSchedule = LaonSchedules
         self.depositsService = depositsService
         self.accountsService = accountsService
@@ -122,6 +132,7 @@ class NetworkManager {
             }
         }
     }
+    
     func newPasswordReset(password: String,
                           completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void) {
         authService.csrf(headers: headers) { [unowned self] (success, newHeaders) in
@@ -138,6 +149,14 @@ class NetworkManager {
             else {
                 completionHandler(false, nil)
             }
+        }
+    }
+    
+    func changePassword(oldPassword: String,
+                        newPassword: String,
+                        completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void){
+        authService.changePassword(headers: self.headers, oldPassword: oldPassword, newPassword: newPassword) { (success, errorMessage) in
+            completionHandler(success, errorMessage)
         }
     }
 
@@ -187,6 +206,30 @@ class NetworkManager {
             }
         }
     }
+    func paymentCompany(
+    numberAcoount: String,
+    amount: String,
+    kppBank: String,
+    payerCard: String,
+    innBank: String,
+    bikBank: String,
+    comment: String,
+    nameCompany: String,
+    comission: Double,
+    completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ commission: Double?) -> Void) {
+        authService.csrf(headers: headers) { [unowned self] (success, newHeaders) in
+            if success {
+                self.headers.merge(newHeaders ?? [:], uniquingKeysWith: { (_, k2) -> String in
+                    return k2
+                })
+                self.regService.paymentCompany(headers: self.headers, numberAcoount: numberAcoount, amount: amount, payerCard: payerCard, kppBank: kppBank, innBank: innBank, bikBank: bikBank, comment: comment, nameCompany: nameCompany, commission: comission , completionHandler: completionHandler)
+            }
+            else {
+                completionHandler(false, nil, 20.0)
+            }
+        }
+    }
+
 
     func doRegistration(completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ login: String?, _ password: String?) -> Void) {
         authService.csrf(headers: headers) { [unowned self] (success, newHeaders) in
@@ -235,6 +278,21 @@ class NetworkManager {
     func getCardList(completionHandler: @escaping (_ success: Bool, _ cards: [Card]?) -> Void) {
         cardService.getCardList(headers: headers, completionHandler: completionHandler)
     }
+    func getCardInfo(cardNumber: String, completionHandler: @escaping (_ success: Bool, _ cardInfo: [AboutItem]?) -> Void) {
+        cardInfoService.getCardInfo(cardNumber: cardNumber, headers: headers, completionHandler: completionHandler)
+    }
+    func getSuggestBank(bicBank: String, completionHandler: @escaping (_ success: Bool, _ cardInfo: [BankSuggest]?,_ bicBank: String?) -> Void) {
+        suggestBankService.getSuggestBank(bicBank: bicBank, headers: headers, completionHandler: completionHandler)
+        
+
+      }
+    func getSuggestCompany(bicBank: String, completionHandler: @escaping (_ success: Bool, _ cardInfo: [BankSuggest]?,_ bicBank: String?) -> Void) {
+        suggestCompanyService.getSuggestCompany(bicBank: bicBank, headers: headers, completionHandler: completionHandler)
+        
+
+      }
+
+
 
     func getPaymentsList(completionHandler: @escaping (_ success: Bool, _ payments: [Operations]?) -> Void) {
         paymentServices.getPaymentsList(completionHandler: completionHandler)

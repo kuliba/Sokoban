@@ -19,10 +19,12 @@ class PrepareResetPassword: UIViewController {
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var centralView: UIView!
     
+    @IBOutlet weak var newPassword: UITextField!
+    @IBOutlet weak var newPasswordAgain: UITextField!
     var segueId: String? = nil
     var backSegueId: String? = nil
 
-
+    
     // MARK: - Actions
     @IBAction func backButtonClicked() {
         view.endEditing(true)
@@ -45,22 +47,23 @@ class PrepareResetPassword: UIViewController {
      }
     
     @IBAction func newPasswordReset() {
-        NetworkManager.shared().newPasswordReset(password: self.loginTextField.text ?? "",
+        NetworkManager.shared().newPasswordReset(password: self.newPassword.text ?? "",
                                        completionHandler: { [unowned self] success, errorMessage in
                                            if success {
                                                self.performSegue(withIdentifier: "finishResetPassword", sender: self)
                                                                                 } else {
-                                               let alert = UIAlertController(title: "Неудача", message: errorMessage, preferredStyle: UIAlertController.Style.alert)
+                                           let alert = UIAlertController(title: "Неудача", message: "Неверный код", preferredStyle: UIAlertController.Style.alert)
                                                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-                                               self.present(alert, animated: true, completion: nil)
+                                            self.present(alert, animated: true, completion: nil)
                                            }
                                        })
      }
 
+   
     // MARK: - Lifecycle
+    @IBOutlet weak var buttonContinue: ButtonRounded!
     override func viewDidLoad() {
         super.viewDidLoad()
-        _ = loginTextField.becomeFirstResponder()
     }
 
     override func viewWillAppear(_ animated: Bool) {

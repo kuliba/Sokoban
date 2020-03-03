@@ -7,12 +7,16 @@
  */
 
 import UIKit
+import MapKit
 
-class AnnotationsTableViewController: UITableViewController {
+class AnnotationsTableViewController: UITableViewController, CLLocationManagerDelegate {
 
+    let locationManager = CLLocationManager()
+    var coordinations = CLLocationCoordinate2D()
     var annotations = [BankBranchAnnotation]() {
         didSet {
             tableView.reloadData()
+            tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true) //скролим вверх(чтобы ячейка не смещалась)
         }
     }
     
@@ -20,7 +24,16 @@ class AnnotationsTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.locationManager.requestAlwaysAuthorization()
 
+        // For use in foreground
+        // для определения геолокации
+        self.locationManager.requestWhenInUseAuthorization()
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            locationManager.startUpdatingLocation()
+        }
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -28,17 +41,45 @@ class AnnotationsTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
         tableView.tableFooterView = UIView()
+        tableView.isPagingEnabled = true //позволяет уцентрить ячейку
     }
 
+    @IBAction func actionCall(_ sender: Any) {
+        // получаем индекс ячейки в которой нажата кнопка
+        guard let indexPath = tableView.indexPathForRow(at: (sender as AnyObject).convert(CGPoint(),to: tableView)) else{return}
+        var numberPhone = ""
+        let cellNum = tableView.cellForRow(at: indexPath) // достаем ячейку
+        if let cell = cellNum as? AnnotationTableViewCell {
+            guard cell.phoneLabel.text != nil else{return} // получаем из нее телефон
+            numberPhone = cell.phoneLabel.text!
+        }
+        // строка с двумя номерами
+        if numberPhone.contains(";"){ // если в строке 2 номера, то создаем 2 вызова
+            let arrayNumber = numberPhone.components(separatedBy: [";"])
+            callNumber(arrayNumber[0])
+        }else{ // если один
+            callNumber(numberPhone)
+        }
+    }
+    
+    
+    @IBAction func actionRoute(_ sender: Any) {
+        guard let indexPath = tableView.indexPathForRow(at: (sender as AnyObject).convert(CGPoint(),to: tableView)) else{return}
+        let coordinates = CLLocationCoordinate2DMake(coordinations.latitude, coordinations.longitude) //геопозиция откуда
+        let coondinateDest = annotations[indexPath.row].coordinate // геопозиция куда
+        let source = MKMapItem(placemark: MKPlacemark(coordinate: coordinates))
+        let destination = MKMapItem(placemark: MKPlacemark(coordinate: coondinateDest))
+        destination.name = annotations[indexPath.row].address
+        MKMapItem.openMaps(with: [source, destination], launchOptions: [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving])
+        
+    }
+    
+    
+    
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        var h: CGFloat = annotations[indexPath.row].title != nil ? 40 : 40
-        h += annotations[indexPath.row].address != nil ? 20 : 0
-        h += annotations[indexPath.row].schedule != nil ? 40 : 0
-        h += annotations[indexPath.row].phone != nil ? 20 : 0
-        h += h>0 ? 20 : 0
-        return h
+        return tableView.frame.size.height
     }
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 0
@@ -69,9 +110,13 @@ class AnnotationsTableViewController: UITableViewController {
                      schedule: annotations[indexPath.row].schedule,
                      phone: annotations[indexPath.row].phone)
         }
-
+        cell.layoutIfNeeded()
         return cell
     }
+    
+//    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        print(indexPath)
+//    }
 
     /*
     // Override to support conditional editing of the table view.
@@ -119,3 +164,15 @@ class AnnotationsTableViewController: UITableViewController {
     */
 
 }
+
+
+//MARK: Location
+extension AnnotationsTableViewController{
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
+        coordinations = locValue
+    }
+}
+
+
+

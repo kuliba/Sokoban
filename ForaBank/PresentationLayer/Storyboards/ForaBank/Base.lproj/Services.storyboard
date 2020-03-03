@@ -325,77 +325,85 @@
             <objects>
                 <tableViewController id="5fg-Yd-9yB" customClass="AnnotationsTableViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="162" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" contentViewInsetsToSafeArea="NO" id="x27-bV-KI1">
-                        <rect key="frame" x="0.0" y="0.0" width="235" height="139"/>
+                        <rect key="frame" x="0.0" y="0.0" width="235" height="400"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <color key="sectionIndexColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <color key="sectionIndexBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="annotationCell" rowHeight="162" id="7uL-mk-RHz" customClass="AnnotationTableViewCell" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="235" height="162"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="annotationCell" rowHeight="200" id="7uL-mk-RHz" customClass="AnnotationTableViewCell" customModule="ForaBank" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="235" height="200"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7uL-mk-RHz" id="wvA-La-4Xt">
-                                    <rect key="frame" x="0.0" y="0.0" width="235" height="162"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="235" height="200"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Филиал в г. Ростов-на-Дону" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VXb-x2-2g3">
-                                            <rect key="frame" x="16" y="0.0" width="203" height="46"/>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="46" id="bdr-hM-Xes"/>
-                                            </constraints>
-                                            <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
-                                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="улица Пушкинская, дом 117" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LQz-9A-fj1">
-                                            <rect key="frame" x="16" y="38" width="203" height="44"/>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="44" id="p15-uw-0wB"/>
-                                            </constraints>
-                                            <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="пн.-пт.: 09:00-20:00, сб.: 10:00-16:00" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VTf-Cp-X4v">
-                                            <rect key="frame" x="16" y="74" width="203" height="45"/>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="45" id="qBR-Ws-M0R"/>
-                                            </constraints>
-                                            <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="8 (863) 240-36-46" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5gc-WZ-CFE">
-                                            <rect key="frame" x="16" y="120" width="203" height="20"/>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <accessibility key="accessibilityConfiguration">
-                                                <accessibilityTraits key="traits" button="YES" link="YES" staticText="YES"/>
-                                            </accessibility>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="20" id="yTO-bU-EUl"/>
-                                            </constraints>
-                                            <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
-                                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="y7v-bK-73M">
+                                            <rect key="frame" x="10" y="10" width="215" height="180"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Филиал в г. Ростов-на-Дону" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VXb-x2-2g3">
+                                                    <rect key="frame" x="0.0" y="0.0" width="215" height="32"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
+                                                    <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="улица Пушкинская, дом 117" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LQz-9A-fj1">
+                                                    <rect key="frame" x="0.0" y="37" width="215" height="32"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
+                                                    <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="пн.-пт.: 09:00-20:00, сб.: 10:00-16:00" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VTf-Cp-X4v">
+                                                    <rect key="frame" x="0.0" y="74" width="215" height="32"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
+                                                    <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5gc-WZ-CFE">
+                                                    <rect key="frame" x="0.0" y="111" width="215" height="32"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <accessibility key="accessibilityConfiguration">
+                                                        <accessibilityTraits key="traits" button="YES" link="YES" staticText="YES"/>
+                                                    </accessibility>
+                                                    <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
+                                                    <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="mUy-9G-MQe">
+                                                    <rect key="frame" x="0.0" y="148" width="215" height="32"/>
+                                                    <subviews>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U9G-rg-JNm">
+                                                            <rect key="frame" x="0.0" y="0.0" width="102.5" height="32"/>
+                                                            <color key="backgroundColor" red="0.92380827669999999" green="0.29604312780000003" blue="0.248837322" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <state key="normal" title="Button"/>
+                                                            <connections>
+                                                                <action selector="actionRoute:" destination="5fg-Yd-9yB" eventType="touchUpInside" id="1qe-94-8iJ"/>
+                                                                <action selector="actionRoute:" destination="zSy-2F-ipM" eventType="touchUpInside" id="AR2-8y-syv"/>
+                                                            </connections>
+                                                        </button>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hac-XV-Ska">
+                                                            <rect key="frame" x="112.5" y="0.0" width="102.5" height="32"/>
+                                                            <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                            <state key="normal" title="Button"/>
+                                                            <connections>
+                                                                <action selector="actionCall:" destination="zSy-2F-ipM" eventType="touchUpInside" id="3fe-u4-eDM"/>
+                                                                <action selector="actionCall:" destination="5fg-Yd-9yB" eventType="touchUpInside" id="JjM-LZ-G7N"/>
+                                                            </connections>
+                                                        </button>
+                                                    </subviews>
+                                                </stackView>
+                                            </subviews>
+                                        </stackView>
                                     </subviews>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
-                                        <constraint firstAttribute="trailingMargin" secondItem="5gc-WZ-CFE" secondAttribute="trailing" id="2a5-V2-CQK"/>
-                                        <constraint firstItem="VXb-x2-2g3" firstAttribute="leading" secondItem="wvA-La-4Xt" secondAttribute="leadingMargin" id="8Rz-gd-IAf"/>
-                                        <constraint firstItem="LQz-9A-fj1" firstAttribute="leading" secondItem="wvA-La-4Xt" secondAttribute="leadingMargin" id="G2m-P7-0Bd"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="VTf-Cp-X4v" secondAttribute="trailing" id="LIW-mC-rTC"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="VXb-x2-2g3" secondAttribute="trailing" id="QbD-gG-8ix"/>
-                                        <constraint firstItem="LQz-9A-fj1" firstAttribute="top" secondItem="VXb-x2-2g3" secondAttribute="bottom" constant="-8" id="R2j-BS-F28"/>
-                                        <constraint firstItem="VTf-Cp-X4v" firstAttribute="leading" secondItem="wvA-La-4Xt" secondAttribute="leadingMargin" id="dbW-T2-TeU"/>
-                                        <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="LQz-9A-fj1" secondAttribute="trailing" id="nfG-F2-HLc"/>
-                                        <constraint firstItem="5gc-WZ-CFE" firstAttribute="leading" secondItem="wvA-La-4Xt" secondAttribute="leadingMargin" id="pfz-Sy-bFc"/>
-                                        <constraint firstItem="VXb-x2-2g3" firstAttribute="top" secondItem="wvA-La-4Xt" secondAttribute="topMargin" constant="-11" id="sDU-SD-naq"/>
-                                        <constraint firstItem="VTf-Cp-X4v" firstAttribute="top" secondItem="LQz-9A-fj1" secondAttribute="bottom" constant="-8" id="sIo-8F-rq7"/>
-                                        <constraint firstItem="5gc-WZ-CFE" firstAttribute="top" secondItem="VTf-Cp-X4v" secondAttribute="bottom" constant="1" id="tkk-o9-vAw"/>
+                                        <constraint firstItem="y7v-bK-73M" firstAttribute="leading" secondItem="wvA-La-4Xt" secondAttribute="leading" constant="10" id="C7E-hu-sDo"/>
+                                        <constraint firstItem="y7v-bK-73M" firstAttribute="top" secondItem="wvA-La-4Xt" secondAttribute="top" constant="10" id="JXF-lY-Pxl"/>
+                                        <constraint firstAttribute="trailing" secondItem="y7v-bK-73M" secondAttribute="trailing" constant="10" id="d7f-ve-tRY"/>
+                                        <constraint firstAttribute="bottom" secondItem="y7v-bK-73M" secondAttribute="bottom" constant="10" id="uQC-XR-O4L"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -405,13 +413,11 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <outlet property="addressHeight" destination="p15-uw-0wB" id="eoS-co-ERf"/>
                                     <outlet property="addressLabel" destination="LQz-9A-fj1" id="q6d-JL-ReY"/>
-                                    <outlet property="phoneHeight" destination="yTO-bU-EUl" id="Od3-F4-iwr"/>
+                                    <outlet property="buttonCall" destination="Hac-XV-Ska" id="xGY-uP-jfb"/>
+                                    <outlet property="buttonRoute" destination="U9G-rg-JNm" id="eny-Du-n9G"/>
                                     <outlet property="phoneLabel" destination="5gc-WZ-CFE" id="hZB-CE-wvb"/>
-                                    <outlet property="scheduleHeight" destination="qBR-Ws-M0R" id="IvY-1g-4Rs"/>
                                     <outlet property="scheduleLabel" destination="VTf-Cp-X4v" id="dTB-0c-Dgw"/>
-                                    <outlet property="titleHeight" destination="bdr-hM-Xes" id="dBL-L6-I2D"/>
                                     <outlet property="titleLabel" destination="VXb-x2-2g3" id="ACj-Y6-DCI"/>
                                 </connections>
                             </tableViewCell>
@@ -421,10 +427,12 @@
                             <outlet property="delegate" destination="5fg-Yd-9yB" id="BdN-bh-cR6"/>
                         </connections>
                     </tableView>
+                    <size key="freeformSize" width="235" height="400"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="L06-lN-VZ9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="zSy-2F-ipM" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="3384.8000000000002" y="1495.5022488755624"/>
+            <point key="canvasLocation" x="3386" y="1625"/>
         </scene>
     </scenes>
     <resources>
@@ -433,7 +441,7 @@
         <image name="map_locate_on_me" width="16" height="16"/>
         <image name="map_zoom_minus" width="16" height="2"/>
         <image name="map_zoom_plus" width="16" height="16"/>
-        <image name="tabbar_icon_services" width="25" height="22"/>
+        <image name="tabbar_icon_services" width="33" height="30"/>
         <image name="telephone" width="50" height="50"/>
     </resources>
 </document>

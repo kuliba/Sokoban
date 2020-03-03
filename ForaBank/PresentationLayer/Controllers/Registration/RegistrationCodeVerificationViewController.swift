@@ -24,7 +24,9 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
     @IBOutlet weak var header: UIView!
     @IBOutlet weak var activityIndicator: ActivityIndicatorView?
     var segueId: String? = nil
-
+    var operationSum: String?
+    var sourceConfigurations: [ICellConfigurator]?
+    var destinationConfigurations: [ICellConfigurator]?
     @IBOutlet weak var authForaPreloader: RefreshView!
     @IBOutlet weak var foraPreloader: RefreshView!
     let gradientView = UIView()
@@ -92,12 +94,6 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
             } else {
                 let alert = UIAlertController(title: "Неудача", message: "Неверный код", preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-                alert.addAction(UIAlertAction(title: "Отменить", style: UIAlertAction.Style.default, handler: { (action) in
-                    let rootVC = self?.storyboard?.instantiateViewController(withIdentifier: "LoginOrSignupViewController") as! LoginOrSignupViewController
-                    self?.segueId = "dismiss"
-                    rootVC.segueId = "logout"
-                    self?.navigationController?.setViewControllers([rootVC], animated: true)
-                }))
                 self?.present(alert, animated: true, completion: nil)
             }
         }
@@ -176,7 +172,6 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
     var sourceValue: Any?
     var destinationConfig: Any?
     var destinationValue: Any?
-    var operationSum: String?
 
     func newState(state: VerificationCodeState) {
         guard state.isShown == true else {

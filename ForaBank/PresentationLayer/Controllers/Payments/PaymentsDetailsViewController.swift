@@ -236,7 +236,7 @@ extension PaymentsDetailsViewController: PaymentDetailsPresenterDelegate {
     func didFinishPreparation(success: Bool) {
         if success {
             performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
-            
+
             
             
         } else {

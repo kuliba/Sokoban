@@ -38,9 +38,9 @@ class CardService: CardServiceProtocol {
                 case .success:
                     if let json = response.result.value as? Dictionary<String, Any>,
                         let data = json["data"] as? Array<Any> {
-                        for cardData in data {
+                    for cardData in data {
                             if let cardData = cardData as? Dictionary<String, Any>,
-                                let original = cardData["original"] as? Dictionary<String, Any> {
+                            let original = cardData["original"] as? Dictionary<String, Any> {
                                 let customName = cardData["customName"] as? String
                                 //                                let title = original["name"] as? String
                                 //                                _ = original["account"] as? String
@@ -54,7 +54,15 @@ class CardService: CardServiceProtocol {
 
                                 guard let card = Card.from(NSDictionary(dictionary: original)) else { return }
                                 card.customName = customName ?? ""
+
+
                                 cards.append(card)
+
+                                cards.sort(by: {$0.status > $1.status})
+                                     
+                                     for i in 0..<cards.count{
+                                         print(cards[i].status)
+                                     }
                             }
                         }
                         completionHandler(true, cards)

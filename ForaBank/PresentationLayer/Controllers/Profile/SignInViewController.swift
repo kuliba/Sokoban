@@ -61,7 +61,6 @@ class SignInViewController: UIViewController, ContactsPickerDelegate {
         navigationController?.popViewController(animated: true)
     }
     @IBAction func tappedButton(sender: UIButton!) {
-        performSegue(withIdentifier: "smsResetPassword", sender: nil)
     }
 
     @IBAction func signInButtonClicked() {
@@ -71,9 +70,7 @@ class SignInViewController: UIViewController, ContactsPickerDelegate {
                                           if success {
                                               self.performSegue(withIdentifier: "smsVerification", sender: self)
                                               store.dispatch(createCredentials(login: self.loginTextField.text ?? "", pwd: self.passwordTextField.text ?? ""))
-                                            let alert = UIAlertController(title: "\(success)", message: "Message", preferredStyle: UIAlertController.Style.alert)
-                                                         alert.addAction(UIAlertAction(title: "Click", style: UIAlertAction.Style.default, handler: nil))
-                                                         self.present(alert, animated: true, completion: nil)
+                                        
 
                                             
                                           } else {
@@ -173,5 +170,12 @@ class SignInViewController: UIViewController, ContactsPickerDelegate {
             vc.segueId = segueId
             vc.backSegueId = segueId
         }
+    }
+}
+
+
+extension SignInViewController{
+    private func saveLoginAndPassword(_ login: String, _ password:String){
+        
     }
 }

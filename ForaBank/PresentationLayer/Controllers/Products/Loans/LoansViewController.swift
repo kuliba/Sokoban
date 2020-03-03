@@ -15,6 +15,8 @@ import UIKit
 
 class LoansViewController: UIViewController {
 
+    
+    
     var product: String?
     let transitionAnimator = LoansSegueAnimator()
     // MARK: - Properties
@@ -38,6 +40,17 @@ class LoansViewController: UIViewController {
      }()
      
      
+    @IBAction func backButtonClicked(_ sender: Any) {
+  view.endEditing(true)
+     self.navigationController?.popViewController(animated: true)
+     if navigationController == nil {
+         dismiss(animated: true, completion: nil)
+     }
+    
+    }
+  
+    
+    
      func prepareUI() {
          // Adding 'tableViewRefreshControl' to tableView
          tableView.refreshControl = tableViewRefreshControl
@@ -136,16 +149,16 @@ class LoansViewController: UIViewController {
     }
  
 
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        if let selectedRow = tableView.indexPathForSelectedRow {
-            //tableView.deselectRow(at: selectedRow, animated: false)
-            performSegue(withIdentifier: "LoansDetailsViewController", sender: nil)
-
-        }
-
-
-    }
+//    override func viewDidDisappear(_ animated: Bool) {
+//        super.viewDidDisappear(animated)
+//        if let selectedRow = tableView.indexPathForSelectedRow {
+//            //tableView.deselectRow(at: selectedRow, animated: false)
+//            performSegue(withIdentifier: "LoansDetailsViewController", sender: nil)
+//
+//        }
+//
+//
+//    }
 
 
 

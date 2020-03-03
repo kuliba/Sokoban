@@ -1,4 +1,4 @@
-/*
+    /*
  * Copyright (C) 2017-2019 Brig Invest ltd. All rights reserved.
  * CONFIDENTIAL
  *
@@ -142,6 +142,7 @@ class DepositsCardsListViewController: UIViewController {
         hero.modalAnimationType = .none
         saveData()
         NotificationCenter.default.addObserver(self, selector: #selector(handlePopucclosing), name: NSNotification.Name(rawValue: "customName"), object: nil)
+        self.scrollView.contentSize.height = 1.0 // disable vertical scroll
 
     }
 
@@ -660,8 +661,16 @@ class DepositsCardsListViewController: UIViewController {
             vc.pickerFrame = contentView.convert(optionPickerButton.frame, to: nil)
             vc.pickerFrame.origin.x = vc.pickerFrame.origin.x + 25
             vc.pickerFrame.size.width = vc.pickerFrame.size.width - 25
-            vc.pickerOptions = ["По статусу карты (по умолчанию)", "по сроку действия "]
+            vc.pickerOptions = ["По статусу карты", "по сроку действия "]
             vc.delegate = self
+            
+            if vc.pickerOptions == vc.pickerOptions{
+                cards.sort(by: {$0.status < $1.status})
+                contentView.self.setNeedsLayout()
+//               contentView.isHidden = true
+                let countArray = cardViews.count
+                view.reloadInputViews()
+            }
             present(vc, animated: true, completion: nil)
         }
     }
@@ -876,7 +885,14 @@ private extension DepositsCardsListViewController {
                                                          constant: cardViewHeight!))
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(cardViewClicked(_:)))
             cardView.addGestureRecognizer(tapGesture)
+            
+
+
             cardViews.append(cardView)
+       
+            
+
+
         }
         //        panGesture = UIPanGestureRecognizer(target: self, action: #selector(dragUnselectedCardView(_:)))
         selectedCardView = cardViews.last
