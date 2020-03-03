@@ -9,6 +9,8 @@
 import Foundation
 
 class AccountNumberCellProvider: NSObject, ITextInputCellProvider {
+    var recipientType: RecipientType = .byAccountNumber
+    
     var textField: String = ""
     
 
@@ -16,7 +18,7 @@ class AccountNumberCellProvider: NSObject, ITextInputCellProvider {
     let placeholder = "По номеру счёта"
     let charactersMaxCount = 24
     let keyboardType: UIKeyboardType = .numberPad
-    let isScan = false
+    let isActiveRigthTF = false
 
     var isLoading: Bool = false
 

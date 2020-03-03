@@ -111,8 +111,10 @@ class PaymentsTableViewController: UIViewController, UITableViewDelegate, UITabl
             break
         case 1:
             paymentDetailsVC.destinationConfigurations = [
+                PhoneNumberPagerItem(provider: destinationProviderPhoneNumber, delegate: paymentDetailsVC),
                 CardNumberPagerItem(provider: destinationProviderCardNumber, delegate: paymentDetailsVC),
                 AccountNumberPagerItem(provider: destinationProviderAccountNumber, delegate: paymentDetailsVC),
+                
             ]
             break
         case 2:

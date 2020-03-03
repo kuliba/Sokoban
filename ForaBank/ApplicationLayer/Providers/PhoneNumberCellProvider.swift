@@ -9,12 +9,14 @@
 import Foundation
 
 class PhoneNumberCellProvider: NSObject, ITextInputCellProvider {
+    var recipientType: RecipientType = .byPhoneNumber
+    
 
     let iconName = "payments_services_phone-billing"
-    let placeholder = "Введите номер телефона"
+    let placeholder = "По номеру телефона"
     let charactersMaxCount = 17
     let keyboardType: UIKeyboardType = .phonePad
-    let isScan = false
+    let isActiveRigthTF = true
 
     var currentValue: IPresentationModel?
     var isLoading: Bool = false

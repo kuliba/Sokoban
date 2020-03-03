@@ -25,34 +25,24 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Введите номер карты" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bM1-E1-Pv4">
-                                <rect key="frame" x="47" y="13" width="253" height="34"/>
+                                <rect key="frame" x="46" y="13" width="254" height="34"/>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad" textContentType="cc-number"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f5S-dd-w1e">
-                                <rect key="frame" x="8" y="15" width="31" height="31"/>
+                                <rect key="frame" x="8" y="15" width="30" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="f5S-dd-w1e" secondAttribute="height" multiplier="1:1" id="BrI-lT-RUM"/>
                                 </constraints>
                                 <state key="normal" image="payments_transfer_between-accounts"/>
                             </button>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AHE-5o-KrN">
-                                <rect key="frame" x="47" y="15" width="253" height="31"/>
+                                <rect key="frame" x="46" y="15" width="254" height="30"/>
                                 <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="18"/>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n8P-hA-omH">
-                                <rect key="frame" x="0.0" y="11" width="46" height="39"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="46" id="Jbf-cN-zHc"/>
-                                    <constraint firstAttribute="height" constant="39" id="m95-WF-bSH"/>
-                                </constraints>
-                                <connections>
-                                    <action selector="contactsList:" destination="gTV-IL-0wX" eventType="touchUpInside" id="Qqb-7g-8hp"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zF8-Je-bUD">
                                 <rect key="frame" x="264" y="19" width="26" height="22"/>
                                 <state key="normal" image="card_scan"/>
@@ -67,16 +57,12 @@
                             <constraint firstItem="AHE-5o-KrN" firstAttribute="trailing" secondItem="bM1-E1-Pv4" secondAttribute="trailing" id="2if-11-jAi"/>
                             <constraint firstAttribute="bottom" secondItem="f5S-dd-w1e" secondAttribute="bottom" constant="15" id="4dz-eQ-Tdx"/>
                             <constraint firstItem="bM1-E1-Pv4" firstAttribute="trailing" secondItem="zF8-Je-bUD" secondAttribute="trailing" constant="10" id="7pZ-j6-WQB"/>
-                            <constraint firstItem="bM1-E1-Pv4" firstAttribute="leading" secondItem="n8P-hA-omH" secondAttribute="trailing" id="8Ce-ec-hdg"/>
                             <constraint firstItem="f5S-dd-w1e" firstAttribute="top" secondItem="D8h-Vw-o5e" secondAttribute="top" constant="15" id="8VH-hM-Uv8"/>
-                            <constraint firstItem="n8P-hA-omH" firstAttribute="top" secondItem="D8h-Vw-o5e" secondAttribute="top" constant="11" id="C7J-9h-ief"/>
                             <constraint firstAttribute="bottom" secondItem="bM1-E1-Pv4" secondAttribute="bottom" constant="13" id="EQP-gv-YZ0"/>
                             <constraint firstItem="bM1-E1-Pv4" firstAttribute="leading" secondItem="f5S-dd-w1e" secondAttribute="trailing" constant="8" symbolic="YES" id="KUC-3I-9YS"/>
                             <constraint firstAttribute="trailing" secondItem="bM1-E1-Pv4" secondAttribute="trailing" constant="20" id="Mb6-xq-fUU"/>
                             <constraint firstItem="AHE-5o-KrN" firstAttribute="leading" secondItem="bM1-E1-Pv4" secondAttribute="leading" id="PEw-RI-NTl"/>
-                            <constraint firstItem="n8P-hA-omH" firstAttribute="centerY" secondItem="f5S-dd-w1e" secondAttribute="centerY" id="Yrd-IS-rhC"/>
                             <constraint firstItem="zF8-Je-bUD" firstAttribute="centerY" secondItem="bM1-E1-Pv4" secondAttribute="centerY" id="jED-5B-wTe"/>
-                            <constraint firstItem="n8P-hA-omH" firstAttribute="centerX" secondItem="f5S-dd-w1e" secondAttribute="centerX" id="s0z-55-1xG"/>
                             <constraint firstItem="AHE-5o-KrN" firstAttribute="top" secondItem="f5S-dd-w1e" secondAttribute="top" id="v8R-Pa-4tO"/>
                             <constraint firstItem="bM1-E1-Pv4" firstAttribute="top" secondItem="D8h-Vw-o5e" secondAttribute="top" constant="13" id="vi2-Je-Fa4"/>
                             <constraint firstItem="f5S-dd-w1e" firstAttribute="leading" secondItem="D8h-Vw-o5e" secondAttribute="leading" constant="8" id="wP9-hh-xJe"/>
@@ -92,10 +78,9 @@
             </constraints>
             <size key="customSize" width="320" height="60"/>
             <connections>
-                <outlet property="buttonContactList" destination="n8P-hA-omH" id="cw9-rL-ACd"/>
                 <outlet property="leftButton" destination="f5S-dd-w1e" id="2eU-GJ-feS"/>
                 <outlet property="nameContact" destination="AHE-5o-KrN" id="k0W-Cg-ZNs"/>
-                <outlet property="scanButton" destination="zF8-Je-bUD" id="A2Y-LL-pem"/>
+                <outlet property="rightButtonInTF" destination="zF8-Je-bUD" id="A2Y-LL-pem"/>
                 <outlet property="textField" destination="bM1-E1-Pv4" id="Fov-lT-VZj"/>
             </connections>
             <point key="canvasLocation" x="62.318840579710148" y="139.28571428571428"/>

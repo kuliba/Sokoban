@@ -818,7 +818,7 @@ public enum Device {
   public var name: String? {
     guard isCurrent else { return nil }
     #if os(watchOS)
-    return WKInterfaceDevice.current().name
+    return WKInterfaceDevice.current().recipientType
     #else
     return UIDevice.current.name
     #endif
