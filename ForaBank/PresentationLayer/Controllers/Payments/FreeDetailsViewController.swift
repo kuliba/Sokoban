@@ -412,7 +412,7 @@ extension UITextField {
 
     @IBInspectable var paddingRight: CGFloat {
         get {
-            return rightView!.frame.size.width
+            return rightView?.frame.size.width ?? UIScreen.main.bounds.size.width
         }
         set {
             let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: newValue, height: frame.size.height))
