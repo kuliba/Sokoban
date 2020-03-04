@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="OPN-w7-Pxo">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="OPN-w7-Pxo">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
-
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -20,8 +19,8 @@
         <!--Платежи и переводы-->
         <scene sceneID="2lK-ok-2qs">
             <objects>
-                <viewController storyboardIdentifier="PaymentsTableViewController" modalPresentationStyle="fullScreen" id="OPN-w7-Pxo" customClass="PaymentsTableViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="YRK-kd-i2t" customClass="GradientView" customModule="ForaBank_Beta" customModuleProvider="target">
+                <viewController storyboardIdentifier="PaymentsTableViewController" modalPresentationStyle="fullScreen" id="OPN-w7-Pxo" customClass="PaymentsTableViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="YRK-kd-i2t" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -40,7 +39,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Платежи и переводы" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8dV-nZ-mMl">
-                                        <rect key="frame" x="80" y="8.5" width="160" height="21.5"/>
+                                        <rect key="frame" x="80.5" y="11" width="159" height="19"/>
                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -56,10 +55,10 @@
                                     <constraint firstItem="8dV-nZ-mMl" firstAttribute="centerX" secondItem="ooe-uE-Oeb" secondAttribute="centerX" id="owm-Wf-xX0"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Yz-SV-jwE" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Yz-SV-jwE" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="25" width="320" height="543"/>
                                 <subviews>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="dNT-nK-TXt" customClass="CustomTableView" customModule="ForaBank_Beta" customModuleProvider="target">
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="dNT-nK-TXt" customClass="CustomTableView" customModule="ForaBank" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="27" width="320" height="516"/>
                                         <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="sectionIndexColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -103,7 +102,7 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Переводы" image="tabbar_icon_payment" id="7DW-Ag-o7m" customClass="CustomTabBarItem" customModule="ForaBank_Beta" customModuleProvider="target">
+                    <tabBarItem key="tabBarItem" title="Переводы" image="tabbar_icon_payment" id="7DW-Ag-o7m" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
                         <inset key="imageInsets" minX="0.0" minY="7" maxX="0.0" maxY="-7"/>
                         <inset key="largeContentSizeImageInsets" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
                     </tabBarItem>
@@ -123,24 +122,24 @@
         <!--Payments Details View Controller-->
         <scene sceneID="mUk-Xs-fOz">
             <objects>
-                <viewController storyboardIdentifier="PaymentDetailsViewController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="afX-Am-FVA" customClass="PaymentsDetailsViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="6mz-Qx-ghH" customClass="GradientView" customModule="ForaBank_Beta" customModuleProvider="target">
+                <viewController storyboardIdentifier="PaymentDetailsViewController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="afX-Am-FVA" customClass="PaymentsDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="6mz-Qx-ghH" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7jF-kB-QvE" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7jF-kB-QvE" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="25" width="320" height="543"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B3J-EX-QK6">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="543"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X2I-VJ-MYg" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X2I-VJ-MYg" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="320" height="220"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LTJ-Hn-8tn">
                                                         <rect key="frame" x="15" y="24" width="290" height="172"/>
                                                         <subviews>
-                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f9s-h8-3Nc" customClass="PagerView" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f9s-h8-3Nc" customClass="PagerView" customModule="ForaBank" customModuleProvider="target">
                                                                 <rect key="frame" x="0.0" y="0.0" width="290" height="87"/>
                                                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                             </view>
@@ -151,7 +150,7 @@
                                                                     <constraint firstAttribute="height" constant="1" id="3Bf-ow-5dE"/>
                                                                 </constraints>
                                                             </view>
-                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g1p-TJ-nON" customClass="PagerView" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g1p-TJ-nON" customClass="PagerView" customModule="ForaBank" customModuleProvider="target">
                                                                 <rect key="frame" x="0.0" y="86" width="290" height="87"/>
                                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             </view>
@@ -238,7 +237,7 @@
                                                     <constraint firstItem="kfC-FM-FXM" firstAttribute="leading" secondItem="cOr-dw-QEx" secondAttribute="leading" id="wl2-PW-Usp"/>
                                                 </constraints>
                                             </view>
-                                            <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="2cO-cF-Vnw" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
+                                            <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="2cO-cF-Vnw" customClass="CustomTextField" customModule="ForaBank" customModuleProvider="target">
                                                 <rect key="frame" x="111.5" y="323" width="97" height="50"/>
                                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.070000000000000007" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <color key="tintColor" red="0.94897240400000005" green="0.67658257479999995" blue="0.44718337060000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -270,7 +269,7 @@
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="97j-FL-klS" customClass="ButtonRounded" customModule="ForaBank_Beta" customModuleProvider="target">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="97j-FL-klS" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
                                                 <rect key="frame" x="8" y="414" width="304" height="53"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
@@ -323,7 +322,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="55"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Перевод" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4du-DO-k3Q">
-                                        <rect key="frame" x="127" y="16.5" width="66" height="21.5"/>
+                                        <rect key="frame" x="127" y="19" width="66" height="19"/>
                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -374,7 +373,7 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
-                    <tabBarItem key="tabBarItem" title="" image="tabbar_icon_payment" id="VMI-KP-OJB" customClass="CustomTabBarItem" customModule="ForaBank_Beta" customModuleProvider="target">
+                    <tabBarItem key="tabBarItem" title="" image="tabbar_icon_payment" id="VMI-KP-OJB" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
                         <inset key="imageInsets" minX="0.0" minY="7" maxX="0.0" maxY="-7"/>
                         <inset key="largeContentSizeImageInsets" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
                     </tabBarItem>
@@ -395,7 +394,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UFN-wo-miF" sceneMemberID="firstResponder"/>
-                <customObject id="yvx-Ke-FPU" customClass="PaymentModuleInitializer" customModule="ForaBank_Beta" customModuleProvider="target">
+                <customObject id="yvx-Ke-FPU" customClass="PaymentModuleInitializer" customModule="ForaBank" customModuleProvider="target">
                     <connections>
                         <outlet property="paymentsDetailsViewController" destination="afX-Am-FVA" id="iki-Qi-xzF"/>
                     </connections>
@@ -406,18 +405,18 @@
         <!--Free Details View Controller-->
         <scene sceneID="v0k-r7-pBn">
             <objects>
-                <viewController storyboardIdentifier="FreeDetailsController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="fd0-20-J9h" userLabel="Free Details View Controller" customClass="FreeDetailsViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="y3O-4M-LYr" customClass="GradientView" customModule="ForaBank_Beta" customModuleProvider="target">
+                <viewController storyboardIdentifier="FreeDetailsController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="fd0-20-J9h" userLabel="Free Details View Controller" customClass="FreeDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="y3O-4M-LYr" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pEF-At-NnA" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pEF-At-NnA" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="45" width="320" height="523"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YzH-Gz-6Tm">
                                         <rect key="frame" x="0.0" y="-44" width="320" height="587"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BHL-jb-4Ty" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BHL-jb-4Ty" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="20" width="320" height="450"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="БИК банка получателя" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="CpJ-3e-Mag">
@@ -466,7 +465,7 @@
                                                         <color key="textColor" red="0.1058695242" green="0.1058908477" blue="0.1058628187" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Bde-Cs-nnn" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Bde-Cs-nnn" customClass="CustomTextField" customModule="ForaBank" customModuleProvider="target">
                                                         <rect key="frame" x="14" y="157" width="283" height="27"/>
                                                         <color key="backgroundColor" red="0.96940189600000004" green="0.96951788660000005" blue="0.96936243769999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
@@ -495,7 +494,7 @@
                                                             <action selector="bikTextField:" destination="fd0-20-J9h" eventType="editingChanged" id="uJ4-1o-XYl"/>
                                                         </connections>
                                                     </textField>
-                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="s8h-6c-uid" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="s8h-6c-uid" customClass="CustomTextField" customModule="ForaBank" customModuleProvider="target">
                                                         <rect key="frame" x="15" y="227" width="284" height="27"/>
                                                         <color key="backgroundColor" red="0.96940189600000004" green="0.96951788660000005" blue="0.96936243769999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
@@ -524,7 +523,7 @@
                                                             <action selector="innCompany:" destination="fd0-20-J9h" eventType="editingChanged" id="hw6-Sq-M4W"/>
                                                         </connections>
                                                     </textField>
-                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kC3-0W-tZP" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kC3-0W-tZP" customClass="CustomTextField" customModule="ForaBank" customModuleProvider="target">
                                                         <rect key="frame" x="16" y="296" width="284" height="27"/>
                                                         <color key="backgroundColor" red="0.96940189600000004" green="0.96951788660000005" blue="0.96936243769999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
@@ -550,7 +549,7 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </textField>
-                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cct-HH-wKM" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cct-HH-wKM" customClass="CustomTextField" customModule="ForaBank" customModuleProvider="target">
                                                         <rect key="frame" x="15" y="352" width="284" height="27"/>
                                                         <color key="backgroundColor" red="0.96940189600000004" green="0.96951788660000005" blue="0.96936243769999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
@@ -579,7 +578,7 @@
                                                             <action selector="didChangeNumberAccount:" destination="fd0-20-J9h" eventType="editingChanged" id="Mrx-t0-sdY"/>
                                                         </connections>
                                                     </textField>
-                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0ph-eK-zcn" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0ph-eK-zcn" customClass="CustomTextField" customModule="ForaBank" customModuleProvider="target">
                                                         <rect key="frame" x="15" y="422" width="284" height="27"/>
                                                         <color key="backgroundColor" red="0.96940189600000004" green="0.96951788660000005" blue="0.96936243769999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
@@ -624,7 +623,7 @@
                                                         <color key="textColor" red="0.38726419210000002" green="0.38731426000000002" blue="0.38724720480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <color key="highlightedColor" red="0.93805062770000003" green="0.25358119610000002" blue="0.2107679546" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </label>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RzN-8C-blC" customClass="PagerView" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RzN-8C-blC" customClass="PagerView" customModule="ForaBank" customModuleProvider="target">
                                                         <rect key="frame" x="15" y="61" width="290" height="55"/>
                                                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                     </view>
@@ -636,7 +635,7 @@
                                                         </constraints>
                                                     </view>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Group 6 Copy" translatesAutoresizingMaskIntoConstraints="NO" id="dvU-qe-6zT">
-                                                        <rect key="frame" x="269" y="105" width="30" height="25"/>
+                                                        <rect key="frame" x="269" y="92.5" width="30" height="50"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="30" id="7dC-B2-Zkf"/>
                                                         </constraints>
@@ -704,7 +703,7 @@
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tnj-Nt-S8u" customClass="ButtonRounded" customModule="ForaBank_Beta" customModuleProvider="target">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tnj-Nt-S8u" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
                                                 <rect key="frame" x="8" y="547" width="304" height="53"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
@@ -718,7 +717,7 @@
                                                     <action selector="paymentCompany:" destination="fd0-20-J9h" eventType="touchUpInside" id="fyQ-D0-KeK"/>
                                                 </connections>
                                             </button>
-                                            <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="LFG-sL-18B" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
+                                            <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="LFG-sL-18B" customClass="CustomTextField" customModule="ForaBank" customModuleProvider="target">
                                                 <rect key="frame" x="111.5" y="476" width="97" height="30"/>
                                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.070000000000000007" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <color key="tintColor" red="0.94897240400000005" green="0.67658257479999995" blue="0.44718337060000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -776,7 +775,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="37"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Перевод" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0YK-Og-yIt">
-                                        <rect key="frame" x="127" y="9.5" width="66" height="21.5"/>
+                                        <rect key="frame" x="127" y="12" width="66" height="19"/>
                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -827,7 +826,7 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
-                    <tabBarItem key="tabBarItem" title="" image="tabbar_icon_payment" id="zwN-6V-tnG" customClass="CustomTabBarItem" customModule="ForaBank_Beta" customModuleProvider="target">
+                    <tabBarItem key="tabBarItem" title="" image="tabbar_icon_payment" id="zwN-6V-tnG" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
                         <inset key="imageInsets" minX="0.0" minY="7" maxX="0.0" maxY="-7"/>
                         <inset key="largeContentSizeImageInsets" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
                     </tabBarItem>
@@ -852,7 +851,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R9d-1B-Apc" sceneMemberID="firstResponder"/>
-                <customObject id="VCv-T9-yrG" customClass="PaymentModuleInitializer" customModule="ForaBank_Beta" customModuleProvider="target">
+                <customObject id="VCv-T9-yrG" customClass="PaymentModuleInitializer" customModule="ForaBank" customModuleProvider="target">
                     <connections>
                         <outlet property="paymentsDetailsViewController" destination="fd0-20-J9h" id="cBq-Nd-qS1"/>
                     </connections>
@@ -863,7 +862,7 @@
         <!--Option Picker View Controller-->
         <scene sceneID="buM-zJ-7Md">
             <objects>
-                <viewController storyboardIdentifier="ppvc" modalTransitionStyle="crossDissolve" modalPresentationStyle="overCurrentContext" id="pFx-tN-Bda" customClass="OptionPickerViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ppvc" modalTransitionStyle="crossDissolve" modalPresentationStyle="overCurrentContext" id="pFx-tN-Bda" customClass="OptionPickerViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="B2K-yN-lxS">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -878,7 +877,7 @@
         <!--Remittance Picker View Controller-->
         <scene sceneID="xzv-qy-ysW">
             <objects>
-                <viewController storyboardIdentifier="opvc" modalTransitionStyle="crossDissolve" modalPresentationStyle="overCurrentContext" id="waI-7q-Czi" customClass="RemittancePickerViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="opvc" modalTransitionStyle="crossDissolve" modalPresentationStyle="overCurrentContext" id="waI-7q-Czi" customClass="RemittancePickerViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="u1b-3W-LRp">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -893,8 +892,8 @@
         <!--Платежи и переводы-->
         <scene sceneID="1uN-92-def">
             <objects>
-                <viewController modalTransitionStyle="crossDissolve" modalPresentationStyle="fullScreen" id="Xda-th-p6I" customClass="RegistrationCodeVerificationViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Y2y-5v-GPv" customClass="GradientView" customModule="ForaBank_Beta" customModuleProvider="target">
+                <viewController modalTransitionStyle="crossDissolve" modalPresentationStyle="fullScreen" id="Xda-th-p6I" customClass="RegistrationCodeVerificationViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Y2y-5v-GPv" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -913,7 +912,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Перевод" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Li-FN-g8p">
-                                        <rect key="frame" x="127.5" y="8.5" width="65.5" height="21.5"/>
+                                        <rect key="frame" x="127.5" y="11" width="65.5" height="19"/>
                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -929,7 +928,7 @@
                                     <constraint firstAttribute="bottom" secondItem="6Li-FN-g8p" secondAttribute="bottom" id="uDR-Ra-RoJ"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8pP-cj-CYT" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8pP-cj-CYT" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="25" width="320" height="543"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eDa-n2-lst">
@@ -954,7 +953,7 @@
                                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zFG-Bn-eR0" customClass="ButtonRounded" customModule="ForaBank_Beta" customModuleProvider="target">
+                                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zFG-Bn-eR0" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
                                                 <rect key="frame" x="20" y="130" width="252" height="53"/>
                                                 <color key="backgroundColor" red="0.91764705879999997" green="0.2666666667" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
@@ -1019,7 +1018,7 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
-                    <tabBarItem key="tabBarItem" title="" image="tabbar_icon_payment" id="pTs-P4-fH9" customClass="CustomTabBarItem" customModule="ForaBank_Beta" customModuleProvider="target">
+                    <tabBarItem key="tabBarItem" title="" image="tabbar_icon_payment" id="pTs-P4-fH9" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
                         <inset key="imageInsets" minX="0.0" minY="7" maxX="0.0" maxY="-7"/>
                         <inset key="largeContentSizeImageInsets" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
                     </tabBarItem>
@@ -1040,12 +1039,12 @@
         <!--Payments Details Success View Controller-->
         <scene sceneID="Qmn-ro-rR4">
             <objects>
-                <viewController storyboardIdentifier="PaymentsFinishScreen" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="EQl-SA-zTp" customClass="PaymentsDetailsSuccessViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PaymentsFinishScreen" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="EQl-SA-zTp" customClass="PaymentsDetailsSuccessViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="CJI-YM-4Dg">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u46-KW-caT" customClass="ButtonRounded" customModule="ForaBank_Beta" customModuleProvider="target">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u46-KW-caT" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
                                 <rect key="frame" x="14" y="574" width="347" height="55"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="55" id="CqQ-Me-4X6"/>
@@ -1058,7 +1057,7 @@
                                     <action selector="returnButtonClicked:" destination="EQl-SA-zTp" eventType="touchUpInside" id="ALb-bs-vwW"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yhq-KU-zzm" customClass="ButtonRounded" customModule="ForaBank_Beta" customModuleProvider="target">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yhq-KU-zzm" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
                                 <rect key="frame" x="14" y="520" width="347" height="53"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -1259,7 +1258,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CCl-bu-7dK" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <view contentMode="scaleToFill" id="HVp-fk-Cje" customClass="GradientView" customModule="ForaBank_Beta" customModuleProvider="target">
+                <view contentMode="scaleToFill" id="HVp-fk-Cje" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <subviews>
@@ -1267,7 +1266,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="320" height="30"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Платежи и переводы" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D6D-IF-bKx">
-                                    <rect key="frame" x="80" y="8.5" width="160" height="21.5"/>
+                                    <rect key="frame" x="80.5" y="11" width="159" height="19"/>
                                     <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
@@ -1280,10 +1279,10 @@
                                 <constraint firstAttribute="height" constant="30" id="ndU-vL-MAs"/>
                             </constraints>
                         </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tI0-KO-V2f" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tI0-KO-V2f" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="25" width="320" height="543"/>
                             <subviews>
-                                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" sectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="f5w-l0-4zT" customClass="CustomTableView" customModule="ForaBank_Beta" customModuleProvider="target">
+                                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" sectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="f5w-l0-4zT" customClass="CustomTableView" customModule="ForaBank" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="543"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1330,8 +1329,8 @@
         <!--Платежи и переводы-->
         <scene sceneID="wgA-wS-Cms">
             <objects>
-                <viewController modalPresentationStyle="fullScreen" id="E2i-9b-iqL" customClass="OperationList" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="iUF-C4-xjO" customClass="GradientView" customModule="ForaBank_Beta" customModuleProvider="target">
+                <viewController modalPresentationStyle="fullScreen" id="E2i-9b-iqL" customClass="OperationList" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="iUF-C4-xjO" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -1339,7 +1338,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="30"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Оплата услуг" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ira-1N-lVZ">
-                                        <rect key="frame" x="111" y="8.5" width="98.5" height="21.5"/>
+                                        <rect key="frame" x="110.5" y="11" width="99.5" height="19"/>
                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -1352,7 +1351,7 @@
                                     <constraint firstAttribute="bottom" secondItem="ira-1N-lVZ" secondAttribute="bottom" id="Zer-sd-QZY"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1np-Ib-Drf" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1np-Ib-Drf" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="25" width="320" height="543"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="tGX-B6-xq5">
@@ -1362,7 +1361,7 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Kga-02-0rp" customClass="CustomTableView" customModule="ForaBank_Beta" customModuleProvider="target">
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Kga-02-0rp" customClass="CustomTableView" customModule="ForaBank" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="23" width="320" height="521"/>
                                     </tableView>
                                 </subviews>
@@ -1398,7 +1397,7 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
-                    <tabBarItem key="tabBarItem" title="" image="tabbar_icon_payment" id="rej-sk-LH5" customClass="CustomTabBarItem" customModule="ForaBank_Beta" customModuleProvider="target">
+                    <tabBarItem key="tabBarItem" title="" image="tabbar_icon_payment" id="rej-sk-LH5" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
                         <inset key="imageInsets" minX="0.0" minY="7" maxX="0.0" maxY="-7"/>
                         <inset key="largeContentSizeImageInsets" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
                     </tabBarItem>
@@ -1418,18 +1417,18 @@
         <!--Free Details View Controller-->
         <scene sceneID="qNN-rI-vJF">
             <objects>
-                <viewController modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="x8Q-kK-Tim" userLabel="Free Details View Controller" customClass="FreeDetailsViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="KsM-GT-Y0y" customClass="GradientView" customModule="ForaBank_Beta" customModuleProvider="target">
+                <viewController modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="x8Q-kK-Tim" userLabel="Free Details View Controller" customClass="FreeDetailsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="KsM-GT-Y0y" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="650"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dzI-GB-qBB" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dzI-GB-qBB" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="45" width="320" height="605"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1on-uA-Ytx">
                                         <rect key="frame" x="0.0" y="-44" width="320" height="669"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JCm-oq-2Ae" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JCm-oq-2Ae" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="76" width="320" height="387"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="БИК банка получателя" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xw2-zA-GwC">
@@ -1487,7 +1486,7 @@
                                                         <color key="textColor" red="0.38726419210000002" green="0.38731426000000002" blue="0.38724720480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Uyd-68-wTw" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Uyd-68-wTw" customClass="CustomTextField" customModule="ForaBank" customModuleProvider="target">
                                                         <rect key="frame" x="14" y="57" width="283" height="27"/>
                                                         <color key="backgroundColor" red="0.96940189600000004" green="0.96951788660000005" blue="0.96936243769999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
@@ -1513,7 +1512,7 @@
                                                             <action selector="bikTextField:" destination="x8Q-kK-Tim" eventType="editingChanged" id="neo-e5-QIi"/>
                                                         </connections>
                                                     </textField>
-                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Cg7-Wh-6GC" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Cg7-Wh-6GC" customClass="CustomTextField" customModule="ForaBank" customModuleProvider="target">
                                                         <rect key="frame" x="15" y="124" width="284" height="27"/>
                                                         <color key="backgroundColor" red="0.96940189600000004" green="0.96951788660000005" blue="0.96936243769999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
@@ -1539,7 +1538,7 @@
                                                             <action selector="innCompany:" destination="x8Q-kK-Tim" eventType="editingChanged" id="g1H-Xy-0W6"/>
                                                         </connections>
                                                     </textField>
-                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="F8R-Oi-6a3" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="F8R-Oi-6a3" customClass="CustomTextField" customModule="ForaBank" customModuleProvider="target">
                                                         <rect key="frame" x="16" y="193" width="284" height="27"/>
                                                         <color key="backgroundColor" red="0.96940189600000004" green="0.96951788660000005" blue="0.96936243769999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
@@ -1562,7 +1561,7 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </textField>
-                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Jyn-5D-Fwk" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Jyn-5D-Fwk" customClass="CustomTextField" customModule="ForaBank" customModuleProvider="target">
                                                         <rect key="frame" x="15" y="249" width="284" height="27"/>
                                                         <color key="backgroundColor" red="0.96940189600000004" green="0.96951788660000005" blue="0.96936243769999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
@@ -1585,7 +1584,7 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </textField>
-                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hW8-0C-htH" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hW8-0C-htH" customClass="CustomTextField" customModule="ForaBank" customModuleProvider="target">
                                                         <rect key="frame" x="15" y="303" width="284" height="27"/>
                                                         <color key="backgroundColor" red="0.96940189600000004" green="0.96951788660000005" blue="0.96936243769999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
@@ -1620,7 +1619,7 @@
                                                         <color key="textColor" red="0.38726419210000002" green="0.38731426000000002" blue="0.38724720480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="PjB-T7-TeW" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="PjB-T7-TeW" customClass="CustomTextField" customModule="ForaBank" customModuleProvider="target">
                                                         <rect key="frame" x="16" y="354" width="284" height="27"/>
                                                         <color key="backgroundColor" red="0.96940189600000004" green="0.96951788660000005" blue="0.96936243769999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
@@ -1692,7 +1691,7 @@
                                                     <constraint firstAttribute="trailing" secondItem="sf2-v9-VMt" secondAttribute="trailing" constant="-56" id="x8O-lb-Ysh"/>
                                                 </constraints>
                                             </view>
-                                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H8X-GM-8AK" customClass="ButtonRounded" customModule="ForaBank_Beta" customModuleProvider="target">
+                                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H8X-GM-8AK" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
                                                 <rect key="frame" x="8" y="576" width="304" height="53"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
@@ -1743,7 +1742,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="101"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Перевод" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ty8-cb-JPW">
-                                        <rect key="frame" x="127" y="16.5" width="66" height="21.5"/>
+                                        <rect key="frame" x="127" y="19" width="66" height="19"/>
                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -1759,7 +1758,7 @@
                                             <action selector="backButtonClicked:" destination="x8Q-kK-Tim" eventType="touchUpInside" id="7ZU-xr-Hyo"/>
                                         </connections>
                                     </button>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xBP-Vj-gH7" customClass="PagerView" customModule="ForaBank_Beta" customModuleProvider="target">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xBP-Vj-gH7" customClass="PagerView" customModule="ForaBank" customModuleProvider="target">
                                         <rect key="frame" x="16" y="37" width="290" height="65"/>
                                         <color key="backgroundColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </view>
@@ -1802,7 +1801,7 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
-                    <tabBarItem key="tabBarItem" title="" image="tabbar_icon_payment" id="ARp-bZ-Wdp" customClass="CustomTabBarItem" customModule="ForaBank_Beta" customModuleProvider="target">
+                    <tabBarItem key="tabBarItem" title="" image="tabbar_icon_payment" id="ARp-bZ-Wdp" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
                         <inset key="imageInsets" minX="0.0" minY="7" maxX="0.0" maxY="-7"/>
                         <inset key="largeContentSizeImageInsets" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
                     </tabBarItem>
@@ -1824,7 +1823,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="geP-C7-eyh" sceneMemberID="firstResponder"/>
-                <customObject id="qRj-DW-NZV" customClass="PaymentModuleInitializer" customModule="ForaBank_Beta" customModuleProvider="target">
+                <customObject id="qRj-DW-NZV" customClass="PaymentModuleInitializer" customModule="ForaBank" customModuleProvider="target">
                     <connections>
                         <outlet property="paymentsDetailsViewController" destination="x8Q-kK-Tim" id="mFd-xd-O4S"/>
                     </connections>
@@ -1835,18 +1834,18 @@
         <!--Transfer Confirmation View Controller-->
         <scene sceneID="NzH-oQ-5EP">
             <objects>
-                <viewController storyboardIdentifier="TransferConfirmation" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Adr-ke-faE" userLabel="Transfer Confirmation View Controller" customClass="TransferConfirmation" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="fka-Mb-PDT" customClass="GradientView" customModule="ForaBank_Beta" customModuleProvider="target">
+                <viewController storyboardIdentifier="TransferConfirmation" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Adr-ke-faE" userLabel="Transfer Confirmation View Controller" customClass="TransferConfirmation" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="fka-Mb-PDT" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B0j-Jx-QuB" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B0j-Jx-QuB" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="29" width="320" height="539"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ttN-ei-OaR">
                                         <rect key="frame" x="0.0" y="-44" width="320" height="587"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wxJ-sM-IUM" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wxJ-sM-IUM" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="52" width="320" height="386"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="БИК банка получателя" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ulM-b2-xw9">
@@ -1895,7 +1894,7 @@
                                                         <color key="textColor" red="0.1058695242" green="0.1058908477" blue="0.1058628187" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5Qe-LV-WNx" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                    <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5Qe-LV-WNx" customClass="CustomTextField" customModule="ForaBank" customModuleProvider="target">
                                                         <rect key="frame" x="14" y="63" width="283" height="27"/>
                                                         <color key="backgroundColor" red="0.96940189600000004" green="0.96951788660000005" blue="0.96936243769999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <accessibility key="accessibilityConfiguration">
@@ -1921,7 +1920,7 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </textField>
-                                                    <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="PT0-gW-wvo" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                    <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="PT0-gW-wvo" customClass="CustomTextField" customModule="ForaBank" customModuleProvider="target">
                                                         <rect key="frame" x="15" y="130" width="284" height="27"/>
                                                         <color key="backgroundColor" red="0.96940189600000004" green="0.96951788660000005" blue="0.96936243769999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <accessibility key="accessibilityConfiguration">
@@ -1947,7 +1946,7 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </textField>
-                                                    <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="mzC-k1-7E3" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                    <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="mzC-k1-7E3" customClass="CustomTextField" customModule="ForaBank" customModuleProvider="target">
                                                         <rect key="frame" x="16" y="199" width="284" height="27"/>
                                                         <color key="backgroundColor" red="0.96940189600000004" green="0.96951788660000005" blue="0.96936243769999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <accessibility key="accessibilityConfiguration">
@@ -1973,7 +1972,7 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </textField>
-                                                    <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eeW-Ic-wdm" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                    <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eeW-Ic-wdm" customClass="CustomTextField" customModule="ForaBank" customModuleProvider="target">
                                                         <rect key="frame" x="15" y="255" width="284" height="27"/>
                                                         <color key="backgroundColor" red="0.96940189600000004" green="0.96951788660000005" blue="0.96936243769999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <accessibility key="accessibilityConfiguration">
@@ -1999,7 +1998,7 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </textField>
-                                                    <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="aAZ-Tt-mab" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                    <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="aAZ-Tt-mab" customClass="CustomTextField" customModule="ForaBank" customModuleProvider="target">
                                                         <rect key="frame" x="15" y="309" width="284" height="27"/>
                                                         <color key="backgroundColor" red="0.96940189600000004" green="0.96951788660000005" blue="0.96936243769999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <accessibility key="accessibilityConfiguration">
@@ -2025,7 +2024,7 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </textField>
-                                                    <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="k9N-IX-AQD" customClass="CustomTextField" customModule="ForaBank_Beta" customModuleProvider="target">
+                                                    <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="k9N-IX-AQD" customClass="CustomTextField" customModule="ForaBank" customModuleProvider="target">
                                                         <rect key="frame" x="17" y="355" width="284" height="27"/>
                                                         <color key="backgroundColor" red="0.96940189600000004" green="0.96951788660000005" blue="0.96936243769999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <accessibility key="accessibilityConfiguration">
@@ -2065,7 +2064,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Сумма перевода" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bri-XW-ZhZ">
-                                                        <rect key="frame" x="17" y="332.5" width="358" height="21.5"/>
+                                                        <rect key="frame" x="17" y="335" width="358" height="19"/>
                                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="16"/>
                                                         <color key="textColor" red="0.1058695242" green="0.1058908477" blue="0.1058628187" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
@@ -2116,7 +2115,7 @@
                                                     <constraint firstItem="aAZ-Tt-mab" firstAttribute="leading" secondItem="eeW-Ic-wdm" secondAttribute="leading" id="zI5-4X-hcr"/>
                                                 </constraints>
                                             </view>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eRy-NC-wSW" customClass="ButtonRounded" customModule="ForaBank_Beta" customModuleProvider="target">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eRy-NC-wSW" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
                                                 <rect key="frame" x="8" y="527" width="304" height="53"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
@@ -2178,7 +2177,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="57"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Подтверждение перевода" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gAJ-j3-7yz">
-                                        <rect key="frame" x="61" y="16.5" width="198" height="21.5"/>
+                                        <rect key="frame" x="61" y="19" width="198" height="19"/>
                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -2229,7 +2228,7 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
-                    <tabBarItem key="tabBarItem" title="" image="tabbar_icon_payment" id="Rgf-U2-llP" customClass="CustomTabBarItem" customModule="ForaBank_Beta" customModuleProvider="target">
+                    <tabBarItem key="tabBarItem" title="" image="tabbar_icon_payment" id="Rgf-U2-llP" customClass="CustomTabBarItem" customModule="ForaBank" customModuleProvider="target">
                         <inset key="imageInsets" minX="0.0" minY="7" maxX="0.0" maxY="-7"/>
                         <inset key="largeContentSizeImageInsets" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
                     </tabBarItem>
@@ -2249,7 +2248,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qzD-tU-sHT" sceneMemberID="firstResponder"/>
-                <customObject id="Q5M-ju-15P" customClass="PaymentModuleInitializer" customModule="ForaBank_Beta" customModuleProvider="target">
+                <customObject id="Q5M-ju-15P" customClass="PaymentModuleInitializer" customModule="ForaBank" customModuleProvider="target">
                     <connections>
                         <outlet property="paymentsDetailsViewController" destination="Adr-ke-faE" id="C9z-DK-60o"/>
                     </connections>
@@ -2260,12 +2259,12 @@
         <!--Payments Result View Controller-->
         <scene sceneID="85q-7z-l5D">
             <objects>
-                <viewController storyboardIdentifier="FreePaymentsFinishScreen" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="qzN-EF-e7e" customClass="PaymentsResultViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FreePaymentsFinishScreen" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="qzN-EF-e7e" customClass="PaymentsResultViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="AGD-hR-Iej">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zDn-bp-HXc" customClass="ButtonRounded" customModule="ForaBank_Beta" customModuleProvider="target">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zDn-bp-HXc" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
                                 <rect key="frame" x="14" y="574" width="347" height="55"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="55" id="38s-eJ-zO3"/>
@@ -2278,7 +2277,7 @@
                                     <action selector="returnButtonClicked:" destination="qzN-EF-e7e" eventType="touchUpInside" id="iWb-5c-tv6"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zi3-4A-MgJ" customClass="ButtonRounded" customModule="ForaBank_Beta" customModuleProvider="target">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zi3-4A-MgJ" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
                                 <rect key="frame" x="14" y="520" width="347" height="53"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -2290,13 +2289,13 @@
                                 </state>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="-9550 ₽" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jlD-mU-eWs">
-                                <rect key="frame" x="134" y="209" width="107" height="42.5"/>
+                                <rect key="frame" x="132.5" y="209" width="110.5" height="37.5"/>
                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="32"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Платеж принят в обработку" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rut-XD-NpB">
-                                <rect key="frame" x="34" y="257.5" width="312" height="22.5"/>
+                                <rect key="frame" x="34" y="252.5" width="312" height="20"/>
                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -2325,7 +2324,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fR4-NC-rCc" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <view contentMode="scaleToFill" id="EAN-bq-for" customClass="GradientView" customModule="ForaBank_Beta" customModuleProvider="target">
+                <view contentMode="scaleToFill" id="EAN-bq-for" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <subviews>
@@ -2333,7 +2332,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="320" height="30"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Платежи и переводы" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="04Z-Xf-4kC">
-                                    <rect key="frame" x="80" y="8.5" width="160" height="21.5"/>
+                                    <rect key="frame" x="80.5" y="11" width="159" height="19"/>
                                     <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
@@ -2346,10 +2345,10 @@
                                 <constraint firstAttribute="bottom" secondItem="04Z-Xf-4kC" secondAttribute="bottom" id="bH4-rL-tnb"/>
                             </constraints>
                         </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Wb-QJ-Ki1" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Wb-QJ-Ki1" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="25" width="320" height="543"/>
                             <subviews>
-                                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" sectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Zhn-to-U9t" customClass="CustomTableView" customModule="ForaBank_Beta" customModuleProvider="target">
+                                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" sectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Zhn-to-U9t" customClass="CustomTableView" customModule="ForaBank" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="543"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
