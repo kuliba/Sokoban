@@ -25,13 +25,16 @@ class MapService: MapServiceProtocol {
     
     //MARK: Get Bank Branches
     ///для получания всех отображаемых на карте точек (JSON)
-    func getBankBranches(headers: HTTPHeaders, completionHandler: @escaping (_ success: Bool, NSDataAsset?, _ errorMessage: String?) -> Void){
-        //https://git.briginvest.ru/dbo/api/v2/smartfeed/bank_branches.json
+    func getBankBranches(headers: HTTPHeaders, completionHandler: @escaping (_ success: Bool, _ nsData: Data?, _ errorMessage: String?) -> Void){
         let url = "https://git.briginvest.ru/dbo/api/v2/smartfeed/bank_branches.json"
-        Alamofire.request(url, method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: headers)
+        Alamofire.request(url, method: HTTPMethod.get, parameters: nil, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<406))
-            .responseJSON { [unowned self] response in
-                print(response.result)
+            .responseJSON {response in
+                guard let dataBB = response.data else{
+                    completionHandler(false, nil, "Что-то пошло не так")
+                    return
+                }
+                completionHandler(true, dataBB, nil)
         }
     }
 }

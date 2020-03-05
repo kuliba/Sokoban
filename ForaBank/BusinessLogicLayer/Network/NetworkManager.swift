@@ -405,10 +405,17 @@ extension NetworkManager: IPaymetsApi {
 
 //MARK: Map Bank Branches
 extension NetworkManager{
-    func getBankBranches(completionHandler: @escaping (_ success: Bool, _ bankBranches: NSDataAsset?) -> Void){
+    func getBankBranches(completionHandler: @escaping (_ success: Bool, _ bankBranches: Data?, _ errorMessage: String?) -> Void){
         mapService.getBankBranches(headers: headers) { (success, nsData, errorMessage) in
             if success{
-                print("Запрос на поулчение точек на карте ")
+                guard let dataData = nsData else {
+                    completionHandler(false, nil, "Не удалось получить данные")
+                    return
+                }
+                completionHandler(success, dataData, errorMessage)
+                return
+            }else{
+                completionHandler(success, nil, errorMessage)
             }
         }
     }
