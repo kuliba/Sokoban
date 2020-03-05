@@ -108,6 +108,7 @@ class PaymentsTableViewController: UIViewController, UITableViewDelegate, UITabl
             paymentDetailsVC.destinationConfigurations = [
                 PaymentOptionsPagerItem(provider: destinationProvider, delegate: paymentDetailsVC)
             ]
+            paymentDetailsVC.messageRecipientIsHidden = true
             break
         case 1:
             paymentDetailsVC.destinationConfigurations = [

@@ -40,6 +40,7 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber, UITextFi
     //@IBOutlet weak var pickerButton: UIButton!
     @IBOutlet weak var sendButton: ButtonRounded!
     //@IBOutlet weak var messageRecipient: UITextField!
+    @IBOutlet weak var messageRecipientView: UIView!
     @IBOutlet weak var messageRecipient: UITextView!
     
 
@@ -79,6 +80,7 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber, UITextFi
 //    }
     let placeHolderMessageRecipient = "Сообщение получателю"
     let colorBorderMessageRecipient = UIColor.systemGray.withAlphaComponent(0.5).cgColor
+    var messageRecipientIsHidden = false
     var presenter: PaymentDetailsPresenter?
     var sourceConfigurations: [ICellConfigurator]?
     var destinationConfigurations: [ICellConfigurator]?
@@ -117,10 +119,9 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber, UITextFi
             sourcePagerView.setConfig(config: source)
             destinationPagerView.setConfig(config: dest)
         }
+        
+        self.messageRecipientView.isHidden = messageRecipientIsHidden
     }
-    
-    
-    
   
     let taskTextFieldlimitLength = 11
 
