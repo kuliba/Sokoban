@@ -121,7 +121,7 @@ protocol DepositsServiceProtocol {
 
 protocol MapServiceProtocol {
     func getBankBranches(headers: HTTPHeaders,
-                         completionHandler: @escaping (_ success: Bool, NSDataAsset?, _ errorMessage: String?) -> Void)
+                         completionHandler: @escaping (_ success: Bool, Data?, _ errorMessage: String?) -> Void)
 }
 
 protocol best2PayProtocol {

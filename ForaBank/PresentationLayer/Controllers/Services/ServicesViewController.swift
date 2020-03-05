@@ -185,46 +185,8 @@ class ServicesViewController: UIViewController, UIScrollViewDelegate {
     }
 
     func reloadMap() {
-        
-        NetworkManager.shared().getBankBranches { (success, bankBranches) in
-            print("success getBankBranches = ", success)
-        }
-        
-        if let branchesAsset = NSDataAsset(name: "bank_branches") {
-            mapView.removeAnnotations(annotations)
-            annotations = [BankBranchAnnotation]()
-            let branchesData = branchesAsset.data
-            let decoder = JSONDecoder()
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
-            decoder.dateDecodingStrategy = .formatted(dateFormatter)
-            if let branches = try? decoder.decode(BankBranches.self, from: branchesData) {
-                self.branches = branches.branches
-                for b in self.branches {
-                    if let l = b.latitude,
-                        let long = b.longitude {
-                        annotations.append(
-                            BankBranchAnnotation(
-                                coordinate: CLLocationCoordinate2D(latitude: l, longitude: long),
-                                type: b.type,
-                                title: b.name,
-                                address: b.address,
-                                schedule: b.schedule,
-                                phone: b.phone
-                            )
-                        )
-                    }
-                }
-            } else {
-                print("bank branches decoding failed")
-            }
-            mapView.addAnnotations(annotations)
-            mapView.register(BankBranchClusterView.self,
-                             forAnnotationViewWithReuseIdentifier: MKMapViewDefaultClusterAnnotationViewReuseIdentifier)
-            mapView.register(BankBranchView.self,
-                             forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
-            //            mapView.register(BankBranchMarkerView.self, forAnnotationViewWithReuseIdentifier: MKMApviewdef)
-        }
+        // получаем JSON
+        getBankBranchAnnotation()
     }
 
     @IBAction func zoomOut(_ sender: Any) {
@@ -402,42 +364,46 @@ extension ServicesViewController {
         if annotations.count > 0 {
             return
         }
-        if let branchesAsset = NSDataAsset(name: "bank_branches") {
-            mapView.removeAnnotations(annotations)
-            annotations = [BankBranchAnnotation]()
-            let branchesData = branchesAsset.data
-            let decoder = JSONDecoder()
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
-            decoder.dateDecodingStrategy = .formatted(dateFormatter)
-            if let branches = try? decoder.decode(BankBranches.self, from: branchesData) {
-                self.branches = branches.branches
-                for b in self.branches {
-                    if let l = b.latitude,
-                        let long = b.longitude {
-                        annotations.append(
-                            BankBranchAnnotation(
-                                coordinate: CLLocationCoordinate2D(latitude: l, longitude: long),
-                                type: b.type,
-                                title: b.name,
-                                address: b.address,
-                                schedule: b.schedule,
-                                phone: b.phone
-                            )
-                        )
+        getBankBranchAnnotation()
+    }
+    
+    private func getBankBranchAnnotation(){
+        //получаем местонахождения всех точек 
+        NetworkManager.shared().getBankBranches { [weak self](success, data, errorMessage) in
+            if success{ // проверка на корректность данных
+                let decoder = JSONDecoder()
+                if let data = data{ //проверяем что данные есть
+                    if let branches = try? decoder.decode(BankBranches.self, from: data){
+                        self!.branches = branches.branches
+                        for b in self!.branches {
+                            if let l = b.latitude,
+                                let long = b.longitude {
+                                self!.annotations.append(
+                                    BankBranchAnnotation(
+                                        coordinate: CLLocationCoordinate2D(latitude: l, longitude: long),
+                                        type: b.type,
+                                        title: b.name,
+                                        address: b.address,
+                                        schedule: b.schedule,
+                                        phone: b.phone
+                                    )
+                                )
+                            }
+                        }
+                    } else {
+                        print("bank branches decoding failed")
                     }
+                    self!.mapView.addAnnotations(self!.annotations)
+                    self!.mapView.register(BankBranchClusterView.self,
+                                     forAnnotationViewWithReuseIdentifier: MKMapViewDefaultClusterAnnotationViewReuseIdentifier)
+                    self!.mapView.register(BankBranchView.self,
+                                     forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
+                    //            mapView.register(BankBranchMarkerView.self, forAnnotationViewWithReuseIdentifier: MKMApviewdef)
                 }
-            } else {
-                print("bank branches decoding failed")
             }
-            mapView.addAnnotations(annotations)
-            mapView.register(BankBranchClusterView.self,
-                             forAnnotationViewWithReuseIdentifier: MKMapViewDefaultClusterAnnotationViewReuseIdentifier)
-            mapView.register(BankBranchView.self,
-                             forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
-//            mapView.register(BankBranchMarkerView.self, forAnnotationViewWithReuseIdentifier: MKMApviewdef)
         }
     }
+    
     func checkLocationAuthorizationStatus() {
         if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
             focusButton.isHidden = false
