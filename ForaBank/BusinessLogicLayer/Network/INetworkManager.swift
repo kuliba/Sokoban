@@ -119,6 +119,11 @@ protocol DepositsServiceProtocol {
                   completionHandler: @escaping (_ success: Bool, _ obligations: [Deposit]?) -> Void)
 }
 
+protocol MapServiceProtocol {
+    func getBankBranches(headers: HTTPHeaders,
+                         completionHandler: @escaping (_ success: Bool, NSDataAsset?, _ errorMessage: String?) -> Void)
+}
+
 protocol best2PayProtocol {
     func best2Pay(headers: HTTPHeaders,
                   completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void)

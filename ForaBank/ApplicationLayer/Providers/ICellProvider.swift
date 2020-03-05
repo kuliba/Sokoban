@@ -25,8 +25,17 @@ protocol ITextInputCellProvider: ICellProvider, UITextFieldDelegate {
     var placeholder: String { get }
     var charactersMaxCount: Int { get }
     var keyboardType: UIKeyboardType { get }
-    var isScan: Bool { get }
-
+    var isActiveRigthTF: Bool { get } // активируем левую кнопку в TextField
+    var recipientType: RecipientType { get } // тип рекзивиза получателя
 
     func formatted(stringToFormat string: String) -> String
+}
+
+
+//определяем тип рекзивиза получателя
+enum RecipientType{
+    case byPhoneNumber // по номеру телефона
+    case byAccountNumber // по номеру счета
+    case byCartNumber // по номеру карты
+    case byNone // неизвестно 
 }

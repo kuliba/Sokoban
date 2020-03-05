@@ -316,6 +316,7 @@
 		BD5170A92332135E001EAFC0 /* VerificationCodeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170A82332135E001EAFC0 /* VerificationCodeState.swift */; };
 		BD5170AB2332250C001EAFC0 /* VerificationCodeReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170AA2332250C001EAFC0 /* VerificationCodeReducer.swift */; };
 		BD5170AD233229F4001EAFC0 /* VerificationCodeActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170AC233229F4001EAFC0 /* VerificationCodeActions.swift */; };
+		BD5690AB24111476004AE2D7 /* MapService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5690AA24111476004AE2D7 /* MapService.swift */; };
 		BD579343236AF5DB0056740C /* PasscodeWrapperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD579342236AF5DB0056740C /* PasscodeWrapperViewController.swift */; };
 		BD579349236C2B660056740C /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD579348236C2B660056740C /* UserDefaults.swift */; };
 		BD57934C236C4AE00056740C /* UserDefaultsExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD57934B236C4AE00056740C /* UserDefaultsExtensions.swift */; };
@@ -449,7 +450,7 @@
 		096BCB09216361AA005BC02B /* PaymentTemplateCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentTemplateCell.xib; sourceTree = "<group>"; };
 		096BCB0C21637E27005BC02B /* PaymentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCell.swift; sourceTree = "<group>"; };
 		096BCB0D21637E27005BC02B /* PaymentCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentCell.xib; sourceTree = "<group>"; };
-		09797555215A49020044C00A /* ForaBank Beta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ForaBank Beta.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		09797555215A49020044C00A /* ForaBank.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ForaBank.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		09797558215A49020044C00A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0979755F215A49040044C00A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../Assets.xcassets; sourceTree = "<group>"; };
 		09797562215A49040044C00A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -714,6 +715,7 @@
 		BD5170A82332135E001EAFC0 /* VerificationCodeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeState.swift; sourceTree = "<group>"; };
 		BD5170AA2332250C001EAFC0 /* VerificationCodeReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeReducer.swift; sourceTree = "<group>"; };
 		BD5170AC233229F4001EAFC0 /* VerificationCodeActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeActions.swift; sourceTree = "<group>"; };
+		BD5690AA24111476004AE2D7 /* MapService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapService.swift; sourceTree = "<group>"; };
 		BD579342236AF5DB0056740C /* PasscodeWrapperViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeWrapperViewController.swift; sourceTree = "<group>"; };
 		BD579348236C2B660056740C /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 		BD57934B236C4AE00056740C /* UserDefaultsExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsExtensions.swift; sourceTree = "<group>"; };
@@ -893,7 +895,7 @@
 		09797556215A49020044C00A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				09797555215A49020044C00A /* ForaBank Beta.app */,
+				09797555215A49020044C00A /* ForaBank.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1510,6 +1512,7 @@
 				96BB09AE23D85F3D00E8BD23 /* CardInfoService.swift */,
 				966DF5D723DB1A3D00F16CB9 /* SuggestBank.swift */,
 				966DF5DB23DEDD5500F16CB9 /* SuggestCompany.swift */,
+				BD5690AA24111476004AE2D7 /* MapService.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -1873,7 +1876,7 @@
 			);
 			name = ForaBank;
 			productName = ForaBank;
-			productReference = 09797555215A49020044C00A /* ForaBank Beta.app */;
+			productReference = 09797555215A49020044C00A /* ForaBank.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -2170,6 +2173,7 @@
 				BDB6B0132326A9E00006A534 /* PasscodeSingUpReducer.swift in Sources */,
 				BDB823A423841EE300030B5F /* ProductsModuleInitializer.swift in Sources */,
 				BD20837723609B560010E03C /* PaymentServices.swift in Sources */,
+				BD5690AB24111476004AE2D7 /* MapService.swift in Sources */,
 				BD588AB0237E934E00727056 /* ProductType.swift in Sources */,
 				A5B473C621B52D4500F2E41F /* BubblesDetailedStatsView.swift in Sources */,
 				961ACC0023F12AF200D2E9EC /* RedPagerView.swift in Sources */,
@@ -2561,9 +2565,6 @@
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 10.0;
-				PRODUCT_BUNDLE_IDENTIFIER = forabank.betaapps;
-				PRODUCT_NAME = "ForaBank Beta";
 				MARKETING_VERSION = 7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2589,9 +2590,6 @@
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 10.0;
-				PRODUCT_BUNDLE_IDENTIFIER = forabank.betaapps;
-				PRODUCT_NAME = "ForaBank Beta";
 				MARKETING_VERSION = 7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";

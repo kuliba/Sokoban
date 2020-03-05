@@ -352,9 +352,9 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
 
 private extension PaymentsDetailsViewController {
     private func setUpPicker() {
-        picker.layer.cornerRadius = 3
-        pickerImageView.image = pickerImageView.image?.withRenderingMode(.alwaysTemplate)
-        pickerImageView.tintColor = .white
+//        picker.layer.cornerRadius = 3
+//        pickerImageView.image = pickerImageView.image?.withRenderingMode(.alwaysTemplate)
+//        pickerImageView.tintColor = .white
     }
 
     private func addGradientView() {
@@ -412,7 +412,7 @@ extension UITextField {
 
     @IBInspectable var paddingRight: CGFloat {
         get {
-            return rightView!.frame.size.width
+            return rightView?.frame.size.width ?? UIScreen.main.bounds.size.width
         }
         set {
             let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: newValue, height: frame.size.height))

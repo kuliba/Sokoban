@@ -37,7 +37,7 @@ class PaymentsTableViewController: UIViewController, UITableViewDelegate, UITabl
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 4
+        return 3
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -64,11 +64,11 @@ class PaymentsTableViewController: UIViewController, UITableViewDelegate, UITabl
             cell.imageView?.image = UIImage(named: "towncolor")
             cell.textLabel?.text = "Клиенту Фора-Банка"
             break
+//        case 2:
+//            cell.imageView?.image = UIImage(named: "mobilecolorweight")
+//            cell.textLabel?.text = "По номеру телефона"
+//            break
         case 2:
-            cell.imageView?.image = UIImage(named: "mobilecolorweight")
-            cell.textLabel?.text = "По номеру телефона"
-            break
-        case 3:
             cell.imageView?.image = UIImage(named: "freecolor")
             cell.textLabel?.text = "По свободным реквизитам"
             break
@@ -108,19 +108,22 @@ class PaymentsTableViewController: UIViewController, UITableViewDelegate, UITabl
             paymentDetailsVC.destinationConfigurations = [
                 PaymentOptionsPagerItem(provider: destinationProvider, delegate: paymentDetailsVC)
             ]
+            paymentDetailsVC.messageRecipientIsHidden = true // убираем поле комментария при переводе между своими счетами 
             break
         case 1:
             paymentDetailsVC.destinationConfigurations = [
+                PhoneNumberPagerItem(provider: destinationProviderPhoneNumber, delegate: paymentDetailsVC),
                 CardNumberPagerItem(provider: destinationProviderCardNumber, delegate: paymentDetailsVC),
                 AccountNumberPagerItem(provider: destinationProviderAccountNumber, delegate: paymentDetailsVC),
+                
             ]
             break
+//        case 2:
+//            paymentDetailsVC.destinationConfigurations = [
+//                PhoneNumberPagerItem(provider: destinationProviderPhoneNumber, delegate: paymentDetailsVC)
+//            ]
+//            break
         case 2:
-            paymentDetailsVC.destinationConfigurations = [
-                PhoneNumberPagerItem(provider: destinationProviderPhoneNumber, delegate: paymentDetailsVC)
-            ]
-            break
-        case 3:
 
             freeDetailsVC.sourceConfigurations = [
             PaymentOptionsPagerItem(provider: sourceProvider, delegate: freeDetailsVC)

@@ -23,7 +23,8 @@ class NetworkManager {
         let paymentServices = PaymentServices(host: host)
         let suggestBankService = SuggestBankService(host: host)
         let suggestCompanyService = SuggestCompanyService(host: host)
-
+        let mapService = MapService(host: host) //для работы с картами
+        
         let regService = RegService(host: host)
         let depositsService = DepositService(host: host)
         let accountsService = AccountsService(host: host)
@@ -34,7 +35,7 @@ class NetworkManager {
         let productService = ProductsService(host: host)
 
 
-        let networkManager = NetworkManager(host, authService, suggestBankService, suggestCompanyService, regService, cardService, cardInfoService, paymentServices, depositsService, accountsService, loanPaymentSchedule, historyService, loansService, statementService, productService: productService)
+        let networkManager = NetworkManager(host, authService, suggestBankService, suggestCompanyService, regService, cardService, cardInfoService, paymentServices, depositsService, accountsService, loanPaymentSchedule, historyService, loansService, statementService, productService: productService, mapService: mapService)
         // Configuration
 
 
@@ -55,6 +56,7 @@ class NetworkManager {
     private let historyService: HistoryServiceProtocol
     private let loansService: LoansServiceProtocol
     private let statementService: StatementServiceProtocol
+    private let mapService: MapServiceProtocol
     private let host: Host
     
     public var headers: HTTPHeaders = [
@@ -65,7 +67,7 @@ class NetworkManager {
     ]
 
 // Initialization
-    private init(_ host: Host, _ authService: AuthServiceProtocol, _ suggestBankService: SuggestBankService,_ suggestCompanyService: SuggestCompanyService, _ regService: RegServiceProtocol, _ cardService: CardServiceProtocol, _ cardInfoService: CardInfoServiceProtocol, _ paymentsServices: IPaymetsApi, _ depositsService: DepositsServiceProtocol, _ accountsService: AccountsServiceProtocol, _ LaonSchedules: LoanPaymentScheduleProtocol, _ historyService: HistoryServiceProtocol, _ loansService: LoansServiceProtocol, _ statementService: StatementServiceProtocol, productService: IProductService) {
+    private init(_ host: Host, _ authService: AuthServiceProtocol, _ suggestBankService: SuggestBankService,_ suggestCompanyService: SuggestCompanyService, _ regService: RegServiceProtocol, _ cardService: CardServiceProtocol, _ cardInfoService: CardInfoServiceProtocol, _ paymentsServices: IPaymetsApi, _ depositsService: DepositsServiceProtocol, _ accountsService: AccountsServiceProtocol, _ LaonSchedules: LoanPaymentScheduleProtocol, _ historyService: HistoryServiceProtocol, _ loansService: LoansServiceProtocol, _ statementService: StatementServiceProtocol, productService: IProductService, mapService:MapServiceProtocol) {
         self.host = host
         self.authService = authService
         self.regService = regService
@@ -81,6 +83,7 @@ class NetworkManager {
         self.historyService = historyService
         self.statementService = statementService
         self.productService = productService
+        self.mapService = mapService
     }
 
 // MARK: - Accessors
@@ -397,5 +400,16 @@ extension NetworkManager: IPaymetsApi {
     func makeCard2Card(code: String,
                        completionHandler: @escaping (_ success: Bool) -> Void) {
         paymentServices.makeCard2Card(code: code, completionHandler: completionHandler)
+    }
+}
+
+//MARK: Map Bank Branches
+extension NetworkManager{
+    func getBankBranches(completionHandler: @escaping (_ success: Bool, _ bankBranches: NSDataAsset?) -> Void){
+        mapService.getBankBranches(headers: headers) { (success, nsData, errorMessage) in
+            if success{
+                print("Запрос на поулчение точек на карте ")
+            }
+        }
     }
 }
