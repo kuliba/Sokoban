@@ -185,6 +185,11 @@ class ServicesViewController: UIViewController, UIScrollViewDelegate {
     }
 
     func reloadMap() {
+        
+        NetworkManager.shared().getBankBranches { (success, bankBranches) in
+            print("success getBankBranches = ", success)
+        }
+        
         if let branchesAsset = NSDataAsset(name: "bank_branches") {
             mapView.removeAnnotations(annotations)
             annotations = [BankBranchAnnotation]()
