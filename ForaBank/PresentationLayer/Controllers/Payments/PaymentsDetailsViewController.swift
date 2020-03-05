@@ -294,9 +294,9 @@ extension PaymentsDetailsViewController: UITextViewDelegate{
     private func setupTextView(){
         self.messageRecipient.delegate = self
         self.messageRecipient.layer.cornerRadius = 5.0
-        self.messageRecipient.layer.borderWidth = 1
         self.messageRecipient.layer.borderColor = colorBorderMessageRecipient
         self.messageRecipient.text = self.placeHolderMessageRecipient
+        self.messageRecipient.layer.borderColor = UIColor.red.cgColor
         self.messageRecipient.textColor = UIColor.systemGray
     }
     
@@ -320,7 +320,7 @@ extension PaymentsDetailsViewController: UITextViewDelegate{
     
     //условия при начале работы с textView
     func textViewDidBeginEditing(_ textView: UITextView) {
-        self.messageRecipient.layer.borderColor = UIColor.red.cgColor
+        self.messageRecipient.layer.borderWidth = 1
         //place Holder Message Recipient off
         if self.messageRecipient.text == self.placeHolderMessageRecipient{
             self.messageRecipient.text = ""
@@ -330,7 +330,7 @@ extension PaymentsDetailsViewController: UITextViewDelegate{
     
     // условия при окончании работы с textView
     func textViewDidEndEditing(_ textView: UITextView) {
-        self.messageRecipient.layer.borderColor = colorBorderMessageRecipient
+        self.messageRecipient.layer.borderWidth = 0
         //place Holder Message Recipient on
         if self.messageRecipient.text == ""{
             self.messageRecipient.text = self.placeHolderMessageRecipient
