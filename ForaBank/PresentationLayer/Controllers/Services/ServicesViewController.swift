@@ -368,7 +368,7 @@ extension ServicesViewController {
     }
     
     private func getBankBranchAnnotation(){
-        //получаем местонахождения всех точек 
+        //получаем местонахождения всех точек
         NetworkManager.shared().getBankBranches { [weak self](success, data, errorMessage) in
             if success{ // проверка на корректность данных
                 let decoder = JSONDecoder()
