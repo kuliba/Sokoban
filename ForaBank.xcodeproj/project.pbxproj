@@ -281,7 +281,7 @@
 		BD182E3F232A402100DB231F /* PasscodeSingInActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD182E3E232A402100DB231F /* PasscodeSingInActions.swift */; };
 		BD20836023609A680010E03C /* AccountsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD20834923609A670010E03C /* AccountsService.swift */; };
 		BD20836323609A680010E03C /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD20834C23609A670010E03C /* NetworkManager.swift */; };
-		BD20836423609A680010E03C /* HIstoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD20834D23609A670010E03C /* HIstoryService.swift */; };
+		BD20836423609A680010E03C /* HistoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD20834D23609A670010E03C /* HistoryService.swift */; };
 		BD20836523609A680010E03C /* StatementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD20834E23609A670010E03C /* StatementService.swift */; };
 		BD20836823609A680010E03C /* LoansService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD20835123609A670010E03C /* LoansService.swift */; };
 		BD20836B23609A680010E03C /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD20835423609A670010E03C /* AuthService.swift */; };
@@ -679,7 +679,7 @@
 		BD182E3E232A402100DB231F /* PasscodeSingInActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSingInActions.swift; sourceTree = "<group>"; };
 		BD20834923609A670010E03C /* AccountsService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountsService.swift; sourceTree = "<group>"; };
 		BD20834C23609A670010E03C /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
-		BD20834D23609A670010E03C /* HIstoryService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HIstoryService.swift; sourceTree = "<group>"; };
+		BD20834D23609A670010E03C /* HistoryService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryService.swift; sourceTree = "<group>"; };
 		BD20834E23609A670010E03C /* StatementService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatementService.swift; sourceTree = "<group>"; };
 		BD20835123609A670010E03C /* LoansService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoansService.swift; sourceTree = "<group>"; };
 		BD20835423609A670010E03C /* AuthService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
@@ -1499,7 +1499,7 @@
 				BD20835423609A670010E03C /* AuthService.swift */,
 				BD20835823609A680010E03C /* CardService.swift */,
 				BD2083782360A29C0010E03C /* DepositsService.swift */,
-				BD20834D23609A670010E03C /* HIstoryService.swift */,
+				BD20834D23609A670010E03C /* HistoryService.swift */,
 				BD2083822361E3240010E03C /* IProductService.swift */,
 				BD20835923609A680010E03C /* LoanPaymentSchedule.swift */,
 				BD20835123609A670010E03C /* LoansService.swift */,
@@ -2113,7 +2113,7 @@
 				09203D87216CA79C00902BD2 /* FeedViewController.swift in Sources */,
 				BD66E0C42366D511002FFA1A /* AppConstants.swift in Sources */,
 				BD137A402326472D00326088 /* State.swift in Sources */,
-				BD20836423609A680010E03C /* HIstoryService.swift in Sources */,
+				BD20836423609A680010E03C /* HistoryService.swift in Sources */,
 				09C7C30F2174888B000EE472 /* DepositsViewController.swift in Sources */,
 				A5C5E6E621A2B492001D6250 /* DetailedCardView.swift in Sources */,
 				895768CD2192D992005754D5 /* ProductDetailsViewController.swift in Sources */,
@@ -2556,17 +2556,14 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 10.0;
-				PRODUCT_BUNDLE_IDENTIFIER = forabank.betaapps;
-				PRODUCT_NAME = "ForaBank Beta";
 				MARKETING_VERSION = 7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "ForaBank Beta";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "ForaBank/ForaBank-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -2584,17 +2581,14 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 10.0;
-				PRODUCT_BUNDLE_IDENTIFIER = forabank.betaapps;
-				PRODUCT_NAME = "ForaBank Beta";
 				MARKETING_VERSION = 7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "ForaBank Beta";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "ForaBank/ForaBank-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;

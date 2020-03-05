@@ -263,13 +263,17 @@ private extension CardDetailsViewController {
     func showComponent(index: Int) {
         NotificationCenter.default.removeObserver(self)
 
-        let newViewController: UIViewController?
+        var newViewController: UIViewController?
 
         switch index {
         case 0:
             let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductManagementViewController") as? ProductManagementViewController
             managementVC?.actionsType = "card"
             managementVC?.product = card
+            newViewController = managementVC
+        case 1:
+            let managementVC = storyboard?.instantiateViewController(withIdentifier: "feed\(index)") as? DepositsCardsDetailsStatementViewController
+            managementVC?.numberCard = card!.number
             newViewController = managementVC
         case 2:
             let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductAboutViewController") as? ProductAboutViewController
@@ -278,7 +282,8 @@ private extension CardDetailsViewController {
             newViewController = managementVC
      
         default:
-            newViewController = storyboard?.instantiateViewController(withIdentifier: "feed\(index)")
+            newViewController = storyboard?.instantiateViewController(withIdentifier: "feed\(index)") 
+
         }
 
         guard let nonNilNewVC = newViewController else {

@@ -49,6 +49,7 @@ class ProductDetailsViewController: UIViewController {
     override func viewDidLoad() {
         let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductManagementViewController") as? ProductManagementViewController
         managementVC?.actionsType = "account"
+        managementVC?.account = account
         currentViewController = managementVC
         currentViewController!.view.translatesAutoresizingMaskIntoConstraints = false
         addChild(currentViewController!)
@@ -129,7 +130,7 @@ private extension ProductDetailsViewController {
 
         switch index {
         case 0:
-            let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductManagementViewController") as? ProductManagementViewController
+                let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductManagementViewController") as? ProductManagementViewController
             managementVC?.actionsType = "account"
             newViewController = managementVC
         case 2:

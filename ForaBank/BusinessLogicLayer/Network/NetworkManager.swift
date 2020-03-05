@@ -335,8 +335,8 @@ class NetworkManager {
     func getLoansPayment(completionHandler: @escaping (_ success: Bool, _ obligations: [LaonSchedules]?) -> Void) {
         loanPaymentSchedule.getLoansPayment(headers: headers, completionHandler: completionHandler)
     }
-    func getHistoryCard(completionHandler: @escaping (_ success: Bool, _ obligations: [HistoryCard]?) -> Void) {
-        historyService.getHistoryCard(headers: headers, completionHandler: completionHandler)
+    func getHistoryCard(cardNumber: String, completionHandler: @escaping (_ success: Bool, _ obligations: [DatedCardTransactionsStatement]?) -> Void) {
+        historyService.getHistoryCard(headers: headers, cardNumber: cardNumber, completionHandler: completionHandler)
     }
 //MARK: - deposits service
     func getDepos(completionHandler: @escaping (_ success: Bool, _ obligations: [Account]?) -> Void) {

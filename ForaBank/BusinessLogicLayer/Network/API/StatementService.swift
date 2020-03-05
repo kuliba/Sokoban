@@ -19,6 +19,7 @@ class StatementService: StatementServiceProtocol {
 
     func getSortedFullStatement(headers: HTTPHeaders, completionHandler: @escaping (Bool, [DatedTransactionsStatement]?, String?) -> Void) {
         let url = host.apiBaseURL + "rest/getFullStatement"
+       
         Alamofire.request(url, method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<406))
             .responseJSON { [unowned self] response in
@@ -31,20 +32,10 @@ class StatementService: StatementServiceProtocol {
 
                 switch response.result {
                 case .success:
-//                    print("JSON: \(response.result.value)") // serialized json response
-//                    if let json = response.result.value as? BriginvestResponse<[TransactionStatement]>
-//                        print("rest/getFullStatement result: \(json)")
-//                        completionHandler(true, nil, nil)
-//                    } else {
-//                        print("rest/getFullStatement cant parse json \(String(describing: response.result.value))")
-//                        completionHandler(false, nil, "")
-//                    }
                     let decoder = JSONDecoder()
                     decoder.dateDecodingStrategy = .millisecondsSince1970
-//                    print("rest/getFullStatement data: \(response.data)")
                     do {
                         if let result = (try decoder.decode(BriginvestResponse<[TransactionStatement]>.self, from: response.data ?? Data())) as? BriginvestResponse<[TransactionStatement]> {
-//                            print(response)
                             let sortedTransations = DatedTransactionsStatement.sortByDays(transactions: result.data)
                             completionHandler(true, sortedTransations, nil)
                             return

@@ -30,6 +30,8 @@ class ProductManagementViewController: UITableViewController, CustomAlertViewDel
     var color2: UIColor = .black
     var card: Card? = nil
     var cards: [Card] = [Card]()
+    var account: Account?
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -140,25 +142,23 @@ class ProductManagementViewController: UITableViewController, CustomAlertViewDel
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.item == 0 {
-            guard let product = self.product else {
-                return
-            }
-            let paymentOption = PaymentOption(product: product)
-            store.dispatch(startPayment(sourceOption: paymentOption, destionationOption: nil))
-            return
+          
+            let storyBoard : UIStoryboard = UIStoryboard(name: "Payment", bundle:nil)
+            let nextViewController = storyBoard.instantiateViewController(withIdentifier: "PaymentsTableViewController") as! PaymentsTableViewController
+            self.present(nextViewController, animated:true, completion:nil)
+            
         } else if indexPath.item == 1 {
+            if product?.number != nil{
             guard let product = self.product else {
                 return
             }
-            showShareScreen(textToShare: "Номер моей карты: \(product.number)")
+                showShareScreen(textToShare: "Номер моей карты: \(product.number)")
+            } else {
+                showShareScreen(textToShare: "Банк получателя: АКБ 'ФОРА-БАНК' (АО) ,БИК: 044525341 , Корреспондентский счёт: 30101810300000000341, ИНН банка получателя: 7704113772, КПП банка получателя: 770401001, Счёт получателя: \(String(describing: account?.productName))")
+            }
             return
         }
         else if indexPath.item == 2 {
-
-            
-            
-         
-            
             let customAlert = self.storyboard?.instantiateViewController(withIdentifier: "CustomAlertID") as! CustomAlertView
             
             customAlert.providesPresentationContextTransitionStyle = true

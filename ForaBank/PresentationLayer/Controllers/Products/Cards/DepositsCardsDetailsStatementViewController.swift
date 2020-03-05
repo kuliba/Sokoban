@@ -15,17 +15,17 @@ class DepositsCardsDetailsStatementViewController: UIViewController, TabCardDeta
     
     let cellId = "DepositsHistoryCell"
     var displayedPeriod: (Date, Date) = (Calendar.current.date(byAdding: .year, value: -5, to: Date())!, Date())
-    var sortedTransactionsStatement = [DatedTransactionsStatement]() {
+    var sortedTransactionsStatement = [DatedCardTransactionsStatement]() {
         didSet{
             self.tableView.reloadData()
             }
     }
-
     var datedTransactions = [DatedTransactions]() {
         didSet{
             self.tableView.reloadData()
         }
     }
+    var cardHistory = [DatedCardTransactionsStatement]()
     var card: Card? = nil
     func set(card: Card?) {
         self.card = card
@@ -34,17 +34,20 @@ class DepositsCardsDetailsStatementViewController: UIViewController, TabCardDeta
   let decoder = JSONDecoder()
   var selectIndex: Int? = nil
   var selectedSection: Int? = nil
-    
+    var numberCard: String = ""
+
     // MARK: - Lifecycle
        override func viewDidLoad() {
             super.viewDidLoad()
             setUpTableView()
-            NetworkManager.shared().getSortedFullStatement { [weak self] (success, fullStatement, error) in
-                print("DepositsHistoryViewController getSortedFullStatement \(success)")
-                if success {
-                    self?.sortedTransactionsStatement = fullStatement ?? [DatedTransactionsStatement]()
-                }
+        let cardNumber = card as? CardDetailsViewController
+        NetworkManager.shared().getHistoryCard(cardNumber: "\(numberCard)") { [weak self] (success, error) in
+                      print("CardHistory getCardHistory \(success)")
+            if success{
+                self!.sortedTransactionsStatement = error ?? [DatedCardTransactionsStatement]()
             }
+                   
+                  }
         }
         
         override func viewDidDisappear(_ animated: Bool) {

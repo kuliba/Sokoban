@@ -30,8 +30,8 @@ class DepositsCardsDetailsStatementDetailsViewController: UIViewController {
     lazy var panRecognizer =  UIPanGestureRecognizer()
     var defaultTopViewOffset: CGFloat = 0
     var product: DatedTransactions?
-    var sortedTransactionsStatement: DatedTransactionsStatement?
-     var transaction: TransactionStatement?
+    var sortedTransactionsStatement: DatedCardTransactionsStatement?
+     var transaction: TransactionCardStatement?
     
 
       // MARK: - Actions
@@ -48,7 +48,7 @@ class DepositsCardsDetailsStatementDetailsViewController: UIViewController {
 //        print(scrollView.gestureRecognizers)
        // recipient.text = "\((transaction?.comment)!)"
         nameTransaction.text = "\((transaction?.comment) ?? "1")"
-        datetransaction.text = "\((transaction?.operationDate)!)"
+        datetransaction.text = "\((transaction?.date)!)"
         amountPaT.text = "\(maskSum(sum:transaction?.amount ?? 11))" + "\("₽")"
         if var data = transaction?.operationType {
             if data == "CREDIT"{
