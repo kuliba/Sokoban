@@ -154,7 +154,7 @@ class ProductManagementViewController: UITableViewController, CustomAlertViewDel
             }
                 showShareScreen(textToShare: "Номер моей карты: \(product.number)")
             } else {
-                showShareScreen(textToShare: "Банк получателя: АКБ 'ФОРА-БАНК' (АО) ,БИК: 044525341 , Корреспондентский счёт: 30101810300000000341, ИНН банка получателя: 7704113772, КПП банка получателя: 770401001, Счёт получателя: \(String(describing: account?.productName))")
+                showShareScreen(textToShare: "Банк получателя: АКБ 'ФОРА-БАНК' (АО) \nБИК: 044525341 \n Корреспондентский счёт: 30101810300000000341 \n ИНН банка получателя: 7704113772 \n КПП банка получателя: 770401001 \n Счёт получателя: \(String(describing: account?.accountNumber))")
             }
             return
         }
