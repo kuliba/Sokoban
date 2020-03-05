@@ -1268,11 +1268,11 @@
             <objects>
                 <viewController storyboardIdentifier="finish" modalPresentationStyle="overCurrentContext" id="3S2-Ql-HD5" customClass="RegistrationPermissionsViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1Af-si-LYs">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="548"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WVv-9f-Tdt" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="29" width="320" height="519"/>
+                                <rect key="frame" x="0.0" y="29" width="320" height="539"/>
                                 <subviews>
                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BRp-UY-6fh" customClass="FlexiblePageControl" customModule="FlexiblePageControl">
                                         <rect key="frame" x="125" y="28" width="70" height="10"/>
@@ -3158,7 +3158,6 @@ E7UTvRPAE8UTzQAAAAAAAAIBAAAAAAAAAE8AAAAAAAAAAAAAAAAAABPQA
         <image name="visa-colored" width="93" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Buh-jM-ADK"/>
         <segue reference="pC6-h6-eDd"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -60,6 +60,9 @@ extension SettingsViewController: SettingsPresenterDelegate {
         case .changePassword:
             performSegue(withIdentifier: "showChangePassword", sender: nil)
             break
+        case .changePasscode:
+            
+            print("Изменение Passcode")
         default:
             break
         }
