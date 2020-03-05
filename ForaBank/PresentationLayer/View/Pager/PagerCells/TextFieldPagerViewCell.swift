@@ -73,7 +73,8 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPicker
         charactersMaxCount = textInputCellProvider.charactersMaxCount
 
         
-        leftButton.setImage(UIImage(named: textInputCellProvider.iconName), for: .normal)
+        //leftButton.setImage(UIImage(named: textInputCellProvider.iconName), for: .normal)
+        leftButton.setBackgroundImage(UIImage(named: textInputCellProvider.iconName), for: .normal)
 
         textField.delegate = self
         textField.placeholder = textInputCellProvider.placeholder

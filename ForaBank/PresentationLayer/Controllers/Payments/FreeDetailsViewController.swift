@@ -352,9 +352,9 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
 
 private extension PaymentsDetailsViewController {
     private func setUpPicker() {
-        picker.layer.cornerRadius = 3
-        pickerImageView.image = pickerImageView.image?.withRenderingMode(.alwaysTemplate)
-        pickerImageView.tintColor = .white
+//        picker.layer.cornerRadius = 3
+//        pickerImageView.image = pickerImageView.image?.withRenderingMode(.alwaysTemplate)
+//        pickerImageView.tintColor = .white
     }
 
     private func addGradientView() {

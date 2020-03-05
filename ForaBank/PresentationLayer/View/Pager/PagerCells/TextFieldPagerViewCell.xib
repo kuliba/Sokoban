@@ -35,7 +35,7 @@
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="f5S-dd-w1e" secondAttribute="height" multiplier="1:1" id="BrI-lT-RUM"/>
                                 </constraints>
-                                <state key="normal" image="payments_transfer_between-accounts"/>
+                                <state key="normal" backgroundImage="payments_transfer_between-accounts"/>
                             </button>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AHE-5o-KrN">
                                 <rect key="frame" x="46" y="15" width="254" height="30"/>

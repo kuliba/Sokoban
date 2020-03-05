@@ -360,3 +360,44 @@ func callNumber(_ number: String){
         UIApplication.shared.open(url)
     }
 }
+
+// MARK: UIView (update height/width Constaint)
+extension UIView {
+    // получаем констреинт высоты
+    var heightConstaint: NSLayoutConstraint? {
+        get {
+            return constraints.filter {
+                if $0.firstAttribute == .height, $0.relation == .equal {
+                    return true
+                }
+                return false
+                }.first
+        }
+        set{ setNeedsLayout() }
+    }
+    
+    // получаем констреинт ширины
+    var widthConstaint: NSLayoutConstraint? {
+        get {
+            return constraints.filter {
+                if $0.firstAttribute == .width, $0.relation == .equal {
+                    return true
+                }
+                return false
+                }.first
+        }
+        set{ setNeedsLayout() }
+    }
+}
+
+//MARK: - UITextView
+extension UITextView{
+    // определяем количество строк
+    func numberOfLines() -> Int{
+        if let fontUnwrapped = self.font{
+            return Int(self.contentSize.height / fontUnwrapped.lineHeight)
+        }
+        return 0
+    }
+
+}
