@@ -80,7 +80,7 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber, UITextFi
 //    }
     let placeHolderMessageRecipient = "Сообщение получателю"
     let colorBorderMessageRecipient = UIColor.systemGray.withAlphaComponent(0.5).cgColor
-    var messageRecipientIsHidden = false
+    var messageRecipientIsHidden = false // флаг отображения поля коментария
     var presenter: PaymentDetailsPresenter?
     var sourceConfigurations: [ICellConfigurator]?
     var destinationConfigurations: [ICellConfigurator]?
