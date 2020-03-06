@@ -58,7 +58,7 @@ enum UserSettingType {
         case .changePassword:
             return true
         case .changePasscode:
-            return false
+            return true
         case .allowedPasscode:
             return PasscodeService.shared.isPasscodeSetted
         case .allowedBiometricSignIn:

@@ -60,6 +60,12 @@ extension SettingsViewController: SettingsPresenterDelegate {
         case .changePassword:
             performSegue(withIdentifier: "showChangePassword", sender: nil)
             break
+        case .changePasscode:
+            //performSegue(withIdentifier: "showChangePasscod", sender: nil)
+            let passcodeVC = ChangePasscodeVC()
+            passcodeVC.modalPresentationStyle = .overFullScreen
+            present(passcodeVC, animated: true, completion: nil)
+            print("Изменение Passcode")
         default:
             break
         }

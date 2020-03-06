@@ -60,10 +60,14 @@ extension SettingsPresenter: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
 
+    // настройки таблица с настройками профиля
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let option = options[indexPath.item]
         switch option {
         case .changePassword:
+            delegate?.didSelectOption(option: option)
+            break
+        case .changePasscode:
             delegate?.didSelectOption(option: option)
             break
         default:
