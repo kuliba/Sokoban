@@ -31,11 +31,18 @@ class ProductManagementViewController: UITableViewController, CustomAlertViewDel
     var card: Card? = nil
     var cards: [Card] = [Card]()
     var account: Account?
+    var profile: Profile?
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
       
+        NetworkManager.shared().getProfile { [weak self] (success, profile, errorMessage) in
+            if success {
+                self?.profile = profile 
+                }
+            }
+        
         actions = arrayWith(key: actionsType, fromPlist: "productsData")
 
         tableView.tableFooterView = UIView()
@@ -154,7 +161,7 @@ class ProductManagementViewController: UITableViewController, CustomAlertViewDel
             }
                 showShareScreen(textToShare: "Номер моей карты: \(product.number)")
             } else {
-                showShareScreen(textToShare: "Банк получателя: АКБ 'ФОРА-БАНК' (АО) \nБИК: 044525341 \n Корреспондентский счёт: 30101810300000000341 \n ИНН банка получателя: 7704113772 \n КПП банка получателя: 770401001 \n Счёт получателя: \(String(describing: account?.accountNumber))")
+                showShareScreen(textToShare: "Банк получателя: АКБ 'ФОРА-БАНК' (АО) \nБИК: 044525341 \nКорреспондентский счёт: 30101810300000000341 \nИНН банка получателя: 7704113772 \nКПП банка получателя: 770401001 \nСчёт получателя: \(account?.accountNumber ?? "123") \nФИО: \(profile?.firstName ?? "123") \(profile?.patronymic ?? "123") \(profile?.lastName ?? "123")")
             }
             return
         }
