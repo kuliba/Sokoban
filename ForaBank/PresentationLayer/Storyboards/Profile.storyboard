@@ -620,6 +620,7 @@
                     <connections>
                         <outlet property="tableView" destination="oCD-eX-yo7" id="HMR-UT-V7a"/>
                         <segue destination="Zkk-3H-ddV" kind="show" identifier="showChangePassword" id="8Os-t5-Z9d"/>
+                        <segue destination="ghQ-lc-xyH" kind="show" identifier="showChangePasscod" id="x4l-Fc-dRX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Kev-Gh-asv" sceneMemberID="firstResponder"/>
@@ -630,6 +631,22 @@
                 </customObject>
             </objects>
             <point key="canvasLocation" x="4419.375" y="517.6056338028169"/>
+        </scene>
+        <!--Change PasscodeVC-->
+        <scene sceneID="ouA-8E-R7T">
+            <objects>
+                <viewController id="ghQ-lc-xyH" customClass="ChangePasscodeVC" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="vcR-PR-eiu">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="548"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="9sf-9e-JhU"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Qco-YL-MfV"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xa4-8A-bC6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5641" y="695"/>
         </scene>
         <!--Settings View Controller-->
         <scene sceneID="n0R-xJ-oQJ">
@@ -643,7 +660,7 @@
                                 <rect key="frame" x="0.0" y="23" width="320" height="545"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="MJ2-ft-eAp">
-                                        <rect key="frame" x="20" y="61.5" width="280" height="35"/>
+                                        <rect key="frame" x="20" y="63.5" width="280" height="35"/>
                                         <color key="backgroundColor" red="0.96862745098039216" green="0.96862745098039216" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="35" id="1t6-q8-o5e"/>
@@ -652,7 +669,7 @@
                                         <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tr0-38-TTq">
-                                        <rect key="frame" x="267" y="69" width="25" height="20"/>
+                                        <rect key="frame" x="267" y="71" width="25" height="20"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="25" id="gtj-d0-4bY"/>
                                             <constraint firstAttribute="height" constant="20" id="jEt-03-37E"/>
@@ -664,13 +681,13 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Текущий пароль" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Loo-b7-Cjf">
-                                        <rect key="frame" x="20" y="42" width="100.5" height="15.5"/>
+                                        <rect key="frame" x="20" y="42" width="98.5" height="17.5"/>
                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="13"/>
                                         <color key="textColor" red="0.60784313725490191" green="0.60784313725490191" blue="0.60784313725490191" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="45q-f1-UDW">
-                                        <rect key="frame" x="20" y="131" width="280" height="35"/>
+                                        <rect key="frame" x="20" y="135" width="280" height="35"/>
                                         <color key="backgroundColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="35" id="ene-R6-6kg"/>
@@ -679,7 +696,7 @@
                                         <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UeO-4p-Ldh">
-                                        <rect key="frame" x="267" y="138.5" width="25" height="20"/>
+                                        <rect key="frame" x="267" y="142.5" width="25" height="20"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="20" id="J9f-ut-Qcx"/>
                                             <constraint firstAttribute="width" constant="25" id="sk5-IZ-cl5"/>
@@ -691,13 +708,13 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Новый пароль" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lKi-Jc-nCd">
-                                        <rect key="frame" x="20" y="111.5" width="88" height="15.5"/>
+                                        <rect key="frame" x="20" y="113.5" width="87" height="17.5"/>
                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="13"/>
                                         <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5yX-ZM-s4F">
-                                        <rect key="frame" x="20" y="200.5" width="280" height="35"/>
+                                        <rect key="frame" x="20" y="206.5" width="280" height="35"/>
                                         <color key="backgroundColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="35" id="0lB-nK-0Bi"/>
@@ -706,7 +723,7 @@
                                         <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3OR-hB-Cm9">
-                                        <rect key="frame" x="267" y="208" width="25" height="20"/>
+                                        <rect key="frame" x="267" y="214" width="25" height="20"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="25" id="IEj-v7-ThB"/>
                                             <constraint firstAttribute="height" constant="20" id="nL0-ev-yfG"/>
@@ -718,13 +735,13 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Повторите новый пароль" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Oy-dB-UCh">
-                                        <rect key="frame" x="20" y="181" width="154.5" height="15.5"/>
+                                        <rect key="frame" x="20" y="185" width="152.5" height="17.5"/>
                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="13"/>
                                         <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6eL-UU-Mfj" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
-                                        <rect key="frame" x="20" y="255.5" width="280" height="53"/>
+                                        <rect key="frame" x="20" y="261.5" width="280" height="53"/>
                                         <color key="backgroundColor" red="0.91764705879999997" green="0.2666666667" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="53" id="uuY-ea-LZf"/>
@@ -769,7 +786,7 @@
                                 <rect key="frame" x="0.0" y="-5" width="320" height="40"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Изменить пароль" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3eo-H1-ALB">
-                                        <rect key="frame" x="94.5" y="10.5" width="131.5" height="19"/>
+                                        <rect key="frame" x="94" y="9.5" width="132.5" height="21.5"/>
                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -836,7 +853,7 @@
                     </connections>
                 </customObject>
             </objects>
-            <point key="canvasLocation" x="5259" y="518"/>
+            <point key="canvasLocation" x="5522" y="-145"/>
         </scene>
     </scenes>
     <resources>

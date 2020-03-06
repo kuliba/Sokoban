@@ -61,7 +61,18 @@ extension SettingsViewController: SettingsPresenterDelegate {
             performSegue(withIdentifier: "showChangePassword", sender: nil)
             break
         case .changePasscode:
+<<<<<<< Updated upstream
             
+=======
+<<<<<<< HEAD
+            //performSegue(withIdentifier: "showChangePasscod", sender: nil)
+            let passcodeVC = ChangePasscodeVC()
+            passcodeVC.modalPresentationStyle = .overFullScreen
+            present(passcodeVC, animated: true, completion: nil)
+=======
+            
+>>>>>>> DBSNEW-267ak2
+>>>>>>> Stashed changes
             print("Изменение Passcode")
         default:
             break

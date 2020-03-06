@@ -317,6 +317,7 @@
 		BD5170AB2332250C001EAFC0 /* VerificationCodeReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170AA2332250C001EAFC0 /* VerificationCodeReducer.swift */; };
 		BD5170AD233229F4001EAFC0 /* VerificationCodeActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5170AC233229F4001EAFC0 /* VerificationCodeActions.swift */; };
 		BD5690AB24111476004AE2D7 /* MapService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5690AA24111476004AE2D7 /* MapService.swift */; };
+		BD5690B02412783C004AE2D7 /* ChangePasscodeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5690AF2412783C004AE2D7 /* ChangePasscodeVC.swift */; };
 		BD579343236AF5DB0056740C /* PasscodeWrapperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD579342236AF5DB0056740C /* PasscodeWrapperViewController.swift */; };
 		BD579349236C2B660056740C /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD579348236C2B660056740C /* UserDefaults.swift */; };
 		BD57934C236C4AE00056740C /* UserDefaultsExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD57934B236C4AE00056740C /* UserDefaultsExtensions.swift */; };
@@ -716,6 +717,7 @@
 		BD5170AA2332250C001EAFC0 /* VerificationCodeReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeReducer.swift; sourceTree = "<group>"; };
 		BD5170AC233229F4001EAFC0 /* VerificationCodeActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeActions.swift; sourceTree = "<group>"; };
 		BD5690AA24111476004AE2D7 /* MapService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapService.swift; sourceTree = "<group>"; };
+		BD5690AF2412783C004AE2D7 /* ChangePasscodeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasscodeVC.swift; sourceTree = "<group>"; };
 		BD579342236AF5DB0056740C /* PasscodeWrapperViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeWrapperViewController.swift; sourceTree = "<group>"; };
 		BD579348236C2B660056740C /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 		BD57934B236C4AE00056740C /* UserDefaultsExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsExtensions.swift; sourceTree = "<group>"; };
@@ -952,6 +954,7 @@
 		09BE35ED218C629100EA7B24 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				BD5690AE24127787004AE2D7 /* changePass */,
 				09D3C039215CBCAB00998F57 /* ChatDialogsViewController.swift */,
 				09D3C047215E07DB00998F57 /* ChatMessagesViewController.swift */,
 				09FC8FEC215BB2B200A4694B /* ProfileMenuTableViewController.swift */,
@@ -1609,6 +1612,14 @@
 				BD8106A0234E1262004A43E9 /* PhoneNumberCellProvider.swift */,
 			);
 			path = Providers;
+			sourceTree = "<group>";
+		};
+		BD5690AE24127787004AE2D7 /* changePass */ = {
+			isa = PBXGroup;
+			children = (
+				BD5690AF2412783C004AE2D7 /* ChangePasscodeVC.swift */,
+			);
+			path = changePass;
 			sourceTree = "<group>";
 		};
 		BD57934A236C4AB70056740C /* Extensions */ = {
@@ -2334,6 +2345,7 @@
 				A57CF1BE22043DDE00E855A5 /* BriginvestResponse.swift in Sources */,
 				BDAEE0F9239A76AD007690E7 /* PaymentOptionType.swift in Sources */,
 				9658B98D23A140FD00117727 /* CustomAlertViewDelegate.swift in Sources */,
+				BD5690B02412783C004AE2D7 /* ChangePasscodeVC.swift in Sources */,
 				9614936623F42050000C3C17 /* confirmPassword.swift in Sources */,
 				89C8DF122191AFA700D92B0A /* DepositsDepositCell.swift in Sources */,
 				BDAEE0F1239A50D6007690E7 /* ITableViewController.swift in Sources */,
