@@ -32,6 +32,8 @@ class ProductManagementViewController: UITableViewController, CustomAlertViewDel
     var cards: [Card] = [Card]()
     var account: Account?
     var profile: Profile?
+    var loan: Loan?
+    var deposits: Deposit?
     
 
     override func viewDidLoad() {
@@ -160,8 +162,12 @@ class ProductManagementViewController: UITableViewController, CustomAlertViewDel
                 return
             }
                 showShareScreen(textToShare: "Номер моей карты: \(product.number)")
-            } else {
+            } else if account?.accountNumber != nil{
                 showShareScreen(textToShare: "Банк получателя: АКБ 'ФОРА-БАНК' (АО) \nБИК: 044525341 \nКорреспондентский счёт: 30101810300000000341 \nИНН банка получателя: 7704113772 \nКПП банка получателя: 770401001 \nСчёт получателя: \(account?.accountNumber ?? "123") \nФИО: \(profile?.firstName ?? "123") \(profile?.patronymic ?? "123") \(profile?.lastName ?? "123")")
+            } else if loan?.accountNumber != nil{
+                showShareScreen(textToShare: "Банк получателя: АКБ 'ФОРА-БАНК' (АО) \nБИК: 044525341 \nКорреспондентский счёт: 30101810300000000341 \nИНН банка получателя: 7704113772 \nКПП банка получателя: 770401001 \nСчёт получателя: \(loan?.accountNumber ?? "123") \nФИО: \(profile?.firstName ?? "123") \(profile?.patronymic ?? "123") \(profile?.lastName ?? "123")")
+            } else {
+                showShareScreen(textToShare: "Банк получателя: АКБ 'ФОРА-БАНК' (АО) \nБИК: 044525341 \nКорреспондентский счёт: 30101810300000000341 \nИНН банка получателя: 7704113772 \nКПП банка получателя: 770401001 \nСчёт получателя: \(deposits?.accountNumber ?? "123") \nФИО: \(profile?.firstName ?? "123") \(profile?.patronymic ?? "123") \(profile?.lastName ?? "123")")
             }
             return
         }

@@ -55,6 +55,7 @@ class DepositDetailsViewController: UIViewController {
     override func viewDidLoad() {
         let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductManagementViewController") as? ProductManagementViewController
         managementVC?.actionsType = "deposit"
+        managementVC?.deposits = deposit
         currentViewController = managementVC
         currentViewController!.view.translatesAutoresizingMaskIntoConstraints = false
         addChild(currentViewController!)
@@ -143,6 +144,7 @@ private extension DepositDetailsViewController {
         case 0:
             let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductManagementViewController") as? ProductManagementViewController
             managementVC?.actionsType = "deposit"
+            managementVC?.deposits = deposit
             newViewController = managementVC
         case 2:
             let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductAboutViewController") as? ProductAboutViewController

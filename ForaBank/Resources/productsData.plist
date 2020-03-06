@@ -70,6 +70,14 @@
 			<key>action</key>
 			<string></string>
 			<key>text</key>
+			<string>Платеж</string>
+			<key>image</key>
+			<string>paymentIcon</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string></string>
+			<key>text</key>
 			<string>Поделиться реквизитами</string>
 			<key>image</key>
 			<string>shareIcon</string>
@@ -78,9 +86,9 @@
 			<key>action</key>
 			<string></string>
 			<key>text</key>
-			<string>Закрыть кредит</string>
+			<string>Переименовать</string>
 			<key>image</key>
-			<string>redLockIcon</string>
+			<string>pencil1</string>
 		</dict>
 	</array>
 	<key>deposit</key>
@@ -88,10 +96,34 @@
 		<dict>
 			<key>action</key>
 			<string></string>
+			<key>image</key>
+			<string>paymentIcon</string>
+			<key>text</key>
+			<string>Платеж и перевод</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string></string>
 			<key>text</key>
 			<string>Поделиться реквизитами</string>
 			<key>image</key>
 			<string>shareIcon</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string></string>
+			<key>image</key>
+			<string>pencil1</string>
+			<key>text</key>
+			<string>Переименовать</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string></string>
+			<key>text</key>
+			<string>Закрыть вклад</string>
+			<key>image</key>
+			<string>redLockIcon</string>
 		</dict>
 	</array>
 </dict>

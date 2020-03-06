@@ -21,3 +21,11 @@ protocol IProduct {
 protocol ICustomName {
     var customName: String { get }
 }
+
+protocol IProductAccount {
+    var accountNumber: String { get }
+}
+protocol IProductLoan {
+    var accountNumber: String { get }
+}
+
