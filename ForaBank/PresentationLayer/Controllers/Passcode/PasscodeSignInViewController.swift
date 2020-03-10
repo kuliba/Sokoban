@@ -62,6 +62,7 @@ class PasscodeSignInViewController: UIViewController, StoreSubscriber {
             dismiss(animated: true, completion: nil)
             return
         }
+        
         if state.passcodeState.failCounter >= 1 {
             passcodeVC.passcodeView.titleLabel.text = "Осталось \(3 - state.passcodeState.failCounter) попыток"
             passcodeVC.passcodeView.resetPasscode(animated: true, playImpact: false)

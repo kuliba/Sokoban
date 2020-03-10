@@ -18,6 +18,7 @@ class ChangePasscodeVC: UIViewController, StoreSubscriber{
     
     var stateChangePasscode = 0
     var newPasscode = String()
+    var oldPassowrd = String()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -93,6 +94,7 @@ extension ChangePasscodeVC: TOPasscodeViewControllerDelegate{
                 passcodeVC.passcodeView.resetPasscode(animated: true, playImpact: true)
                 return false
             }
+            oldPassowrd = code
             return true
         case 1: //записавыем новый пароль
             newPasscode = code // запоминаем новый код
@@ -118,15 +120,36 @@ extension ChangePasscodeVC: TOPasscodeViewControllerDelegate{
             stateChangePasscode = 2 // переводим на стадию повтора нового пароля
             passcodeVC.passcodeView.titleLabel.text = "Повторите новый код"
         case 2:
-            print("Пароль будет обновлен")
+            // сначала удаляем пароль
+            unsafeRemoveEncryptedPasscodeFromKeychain()
+            unsafeRemovePasscodeFromKeychain()
+            
+            //сохраняем новый пароль
+            savePasscodeToKeychain(passcode: newPasscode)
+            if let encryptedPasscode = encrypt(passcode: newPasscode) {
+                saveEncryptedPasscodeToKeychain(passcode: encryptedPasscode)
+            }
+            
+            if let dataUserEncrypt = keychainCredentialsUserData(){ //получаем данные пользователя
+                if let dataUser = decryptUserData(userData: dataUserEncrypt, withPossiblePasscode: oldPassowrd){ //расшифровываем данные пользователя
+                    if let saveUserData = encrypt(userData: dataUser, withPasscode: newPasscode){ //расшифровываем данные пользователя с новым passcode
+                        unsafeRemoveUserDataFromKeychain() //удаляем данные перед записью новых
+                        saveUserDataToKeychain(userData: saveUserData)
+                    }
+                }
+                
+            }else{
+                self.dismiss(animated: true, completion: nil)
+            }
+            
+            self.dismiss(animated: true, completion: nil)
         default:
-            print("Что-то не так")
+            self.dismiss(animated: true, completion: nil)
             //ToDo: доделать обновление пароля и кнопки назад
         }
     }
 
     func didTapCancel(in passcodeViewController: TOPasscodeViewController) {
-        //print("didTapCancel")
         PasscodeService.shared.cancelPasscodeAuth()
     }
 
