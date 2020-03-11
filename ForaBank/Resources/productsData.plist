@@ -70,7 +70,7 @@
 			<key>action</key>
 			<string></string>
 			<key>text</key>
-			<string>Платеж</string>
+			<string>Платеж или перевод</string>
 			<key>image</key>
 			<string>paymentIcon</string>
 		</dict>
@@ -99,7 +99,7 @@
 			<key>image</key>
 			<string>paymentIcon</string>
 			<key>text</key>
-			<string>Платеж и перевод</string>
+			<string>Платеж или перевод</string>
 		</dict>
 		<dict>
 			<key>action</key>
