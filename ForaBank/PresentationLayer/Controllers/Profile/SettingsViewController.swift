@@ -54,21 +54,29 @@ extension SettingsViewController: IListViewController {
     }
 }
 
-extension SettingsViewController: SettingsPresenterDelegate {
+extension SettingsViewController: SettingsPresenterDelegate{
+    
     func didSelectOption(option: UserSettingType) {
         switch option {
         case .changePassword:
             performSegue(withIdentifier: "showChangePassword", sender: nil)
             break
         case .changePasscode:
-            //performSegue(withIdentifier: "showChangePasscod", sender: nil)
             let passcodeVC = ChangePasscodeVC()
             passcodeVC.modalPresentationStyle = .overFullScreen
             present(passcodeVC, animated: true, completion: nil)
+        case .allowedPasscode(_):
+            if keychainCredentialsPasscode() == nil{
+                let passcodeVC = ChangePasscodeVC()
+                passcodeVC.modalPresentationStyle = .overFullScreen
+                present(passcodeVC, animated: true, completion: nil)
+            }
         default:
             break
         }
+        
     }
+    
 }
 
 

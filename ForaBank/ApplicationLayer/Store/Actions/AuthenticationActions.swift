@@ -35,9 +35,21 @@ let doLogout = Thunk<State> { dispatch, getStat in
 
 func createCredentials(login: String, pwd: String) -> Thunk<State> {
     return Thunk<State> { dispatch, getState in
-        guard let passcode = keychainCredentialsPasscode(), let encryptedUserData = encrypt(userData: UserData(login: login, pwd: pwd), withPasscode: passcode) else {
-            return
+//        guard let passcode = keychainCredentialsPasscode(), let encryptedUserData = encrypt(userData: UserData(login: login, pwd: pwd), withPasscode: passcode) else {
+//            return
+//        }
+//        saveUserDataToKeychain(userData: encryptedUserData)
+        
+        if let passcode = keychainCredentialsPasscode(){ //сохраняем данные через пас код, если он есть
+            if let encryptedUserData = encrypt(userData: UserData(login: login, pwd: pwd), withPasscode: passcode){
+                saveUserDataToKeychain(userData: encryptedUserData)
+            }
+        }else{ //если нет, то вресто паскода заклыдываем "passcode"
+            if let encryptedUserData = encrypt(userData: UserData(login: login, pwd: pwd), withPasscode: "passcode"){
+                print("Входи стандартно ")
+                saveUserDataToKeychain(userData: encryptedUserData)
+            }
         }
-        saveUserDataToKeychain(userData: encryptedUserData)
+        
     }
 }

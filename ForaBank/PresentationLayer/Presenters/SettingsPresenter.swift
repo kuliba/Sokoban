@@ -51,6 +51,8 @@ extension SettingsPresenter: UITableViewDelegate, UITableViewDataSource {
                 cell.switch.isOn = isToggleOn()
                 break
             case .allowedPasscode(let isToggleOn):
+                cell.contentView.alpha = 1
+                cell.isUserInteractionEnabled = true
                 cell.switch.isOn = isToggleOn()
                 break
             default:
@@ -68,6 +70,9 @@ extension SettingsPresenter: UITableViewDelegate, UITableViewDataSource {
             delegate?.didSelectOption(option: option)
             break
         case .changePasscode:
+            delegate?.didSelectOption(option: option)
+            break
+        case .allowedPasscode(_):
             delegate?.didSelectOption(option: option)
             break
         default:
@@ -101,6 +106,7 @@ extension SettingsPresenter: FeedOptionCellDelegate {
             break
         case .allowedPasscode(_):
             option.toggleValueIfPossiable()
+            delegate?.didSelectOption(option: option)
             break
         default:
             break

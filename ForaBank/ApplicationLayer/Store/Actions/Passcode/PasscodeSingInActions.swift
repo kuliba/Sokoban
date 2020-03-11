@@ -33,7 +33,7 @@ func startSignInWith(passcode: String) -> Thunk<State> {
             dispatch(manageWrongPasscode)
             return
         }
-        print("signIn")
+        print("keychainCredentialsPasscode()")
         dispatch(signIn(passcode: passcode))
     }
 }
@@ -48,19 +48,15 @@ func signIn(passcode: String?) -> Thunk<State> {
         guard let encryptedUserData = keychainCredentialsUserData() else {
             return
         }
-        print("userData")
         var userData: UserData?
         if let passcode = passcode {
-            print("let passcode = passcode")
             userData = decryptUserData(userData: encryptedUserData, withPossiblePasscode: passcode)
         } else if let passcode = keychainCredentialsPasscode() {
-            print("let passcode = keychainCredentialsPasscode()")
             userData = decryptUserData(userData: encryptedUserData, withPossiblePasscode: passcode)
         }
         guard let nonNilUserData = userData else {
             return
         }
-        print("NetworkManager.shared().login")
         NetworkManager.shared().login(login: nonNilUserData.login,
                                       password: nonNilUserData.pwd,
                                       completionHandler: { success, errorMessage in

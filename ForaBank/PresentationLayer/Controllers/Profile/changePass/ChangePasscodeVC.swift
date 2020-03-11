@@ -24,9 +24,17 @@ class ChangePasscodeVC: UIViewController, StoreSubscriber{
         super.viewDidLoad()
 
         passcodeVC.passcodeView.titleLabel.adjustsFontSizeToFitWidth = true
-        passcodeVC.passcodeView.titleLabel.text = "Введите текущий код"
-        passcodeVC.rightAccessoryButton?.titleLabel?.text = "Выход"
+//        passcodeVC.passcodeView.titleLabel.text = "Введите текущий код"
+//        passcodeVC.rightAccessoryButton?.titleLabel?.text = "Выход"
 
+        if keychainCredentialsPasscode() == nil{
+            passcodeVC.passcodeView.titleLabel.text = "Установите новый код"
+            stateChangePasscode = 1
+        }else{
+            passcodeVC.passcodeView.titleLabel.text = "Введите текущий код"
+            passcodeVC.rightAccessoryButton?.titleLabel?.text = "Выход"
+        }
+        
         passcodeVC.delegate = self
         //passcodeVC.automaticallyPromptForBiometricValidation = true
         //passcodeVC.allowBiometricValidation = true
@@ -39,7 +47,9 @@ class ChangePasscodeVC: UIViewController, StoreSubscriber{
 //            passcodeVC.leftAccessoryButton = UIButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
 //            passcodeVC.allowBiometricValidation = false
 //        }
-
+        
+        
+        
         passcodeVC.willMove(toParent: self)
         self.view.addSubview(passcodeVC.view)
         self.addChild(passcodeVC)
@@ -49,7 +59,7 @@ class ChangePasscodeVC: UIViewController, StoreSubscriber{
     
 
     func newState(state: SignInState) {
-        print("Пароль верен")
+        
         guard state.passcodeState.isShown == true else {
             dismiss(animated: true, completion: nil)
             return
@@ -60,12 +70,6 @@ class ChangePasscodeVC: UIViewController, StoreSubscriber{
         }
 
         if state.verificationState.isShown == true {
-            print("Пароль верен")
-//            let paymentStoryboard = UIStoryboard(name: "Registration", bundle: nil)
-//            let verifyVC = paymentStoryboard.instantiateViewController(withIdentifier: "smsVerification")
-//            verifyVC.modalTransitionStyle = .crossDissolve
-//
-//            present(verifyVC, animated: true, completion: nil)
         }
     }
     
@@ -133,38 +137,32 @@ extension ChangePasscodeVC: TOPasscodeViewControllerDelegate{
             if let dataUserEncrypt = keychainCredentialsUserData(){ //получаем данные пользователя
                 if let dataUser = decryptUserData(userData: dataUserEncrypt, withPossiblePasscode: oldPassowrd){ //расшифровываем данные пользователя
                     if let saveUserData = encrypt(userData: dataUser, withPasscode: newPasscode){ //расшифровываем данные пользователя с новым passcode
-                        unsafeRemoveUserDataFromKeychain() //удаляем данные перед записью новых
-                        saveUserDataToKeychain(userData: saveUserData)
+                        updateUserData(saveUserData: saveUserData)
+                    }
+                }else if let dataUser = decryptUserData(userData: dataUserEncrypt, withPossiblePasscode: "passcode"){
+                    if let saveUserData = encrypt(userData: dataUser, withPasscode: newPasscode){ //расшифровываем данные пользователя с новым passcode
+                        updateUserData(saveUserData: saveUserData)
                     }
                 }
-                
             }else{
                 self.dismiss(animated: true, completion: nil)
             }
-            
             self.dismiss(animated: true, completion: nil)
         default:
             self.dismiss(animated: true, completion: nil)
-            //ToDo: доделать обновление пароля и кнопки назад
         }
     }
 
     func didTapCancel(in passcodeViewController: TOPasscodeViewController) {
         PasscodeService.shared.cancelPasscodeAuth()
     }
+}
 
-    func didPerformBiometricValidationRequest(in passcodeViewController: TOPasscodeViewController) {
-//        BioMetricAuthenticator.authenticateWithBioMetrics(reason: "Вход в приложение") { (result) in
-//            switch result {
-//            case .success(_):
-//                store.dispatch(startSignInWithBiometric)
-//            case .failure(_):
-//                print("Authentication Failed")
-//            }
-//        }
-    }
-    
-    private func stateChangeCode(_ stateChange: Int){
-        
+//MARK: Update User Data
+extension ChangePasscodeVC{
+    // обновляем UserData
+    private func updateUserData( saveUserData: String){
+        unsafeRemoveUserDataFromKeychain() //удаляем данные перед записью новых
+        saveUserDataToKeychain(userData: saveUserData)
     }
 }

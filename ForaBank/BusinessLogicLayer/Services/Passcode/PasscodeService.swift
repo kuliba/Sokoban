@@ -13,7 +13,7 @@ class PasscodeService: IPasscodeService {
     static let shared: IPasscodeService = PasscodeServiceInitializer.createPasscodeService()
 
     var isPasscodeSetted: Bool {
-        return keychainCredentialsPasscode() == nil ? true : false
+        return keychainCredentialsPasscode() != nil ? true : false
     }
 
     var allowedPasscode: Bool {
