@@ -47,9 +47,7 @@ class ChangePasscodeVC: UIViewController, StoreSubscriber{
 //            passcodeVC.leftAccessoryButton = UIButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
 //            passcodeVC.allowBiometricValidation = false
 //        }
-        
-        
-        
+
         passcodeVC.willMove(toParent: self)
         self.view.addSubview(passcodeVC.view)
         self.addChild(passcodeVC)
@@ -59,7 +57,6 @@ class ChangePasscodeVC: UIViewController, StoreSubscriber{
     
 
     func newState(state: SignInState) {
-        
         guard state.passcodeState.isShown == true else {
             dismiss(animated: true, completion: nil)
             return
@@ -165,4 +162,5 @@ extension ChangePasscodeVC{
         unsafeRemoveUserDataFromKeychain() //удаляем данные перед записью новых
         saveUserDataToKeychain(userData: saveUserData)
     }
+
 }

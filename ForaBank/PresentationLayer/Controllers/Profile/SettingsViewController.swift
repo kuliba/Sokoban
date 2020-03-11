@@ -71,6 +71,7 @@ extension SettingsViewController: SettingsPresenterDelegate{
                 passcodeVC.modalPresentationStyle = .overFullScreen
                 present(passcodeVC, animated: true, completion: nil)
             }
+
         default:
             break
         }
