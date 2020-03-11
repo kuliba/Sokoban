@@ -47,7 +47,9 @@ class ChangePasscodeVC: UIViewController, StoreSubscriber{
 //            passcodeVC.leftAccessoryButton = UIButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
 //            passcodeVC.allowBiometricValidation = false
 //        }
-
+        
+        
+        
         passcodeVC.willMove(toParent: self)
         self.view.addSubview(passcodeVC.view)
         self.addChild(passcodeVC)
