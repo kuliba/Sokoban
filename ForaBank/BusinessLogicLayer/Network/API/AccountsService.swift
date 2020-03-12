@@ -49,7 +49,6 @@ class AccountsService: AccountsServiceProtocol {
 
                                 var accountList: Array<Any> = original["accountList"] as! Array
                                 let accountData = accountList[0] as? Dictionary<String , Any>
-
                                 guard let accountNumber = accountData?["accountNumber"] as? String,
                                     let currencyCode = accountData?["currencyCode"] as? String,
 

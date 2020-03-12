@@ -60,11 +60,13 @@ class LoansService: LoansServiceProtocol {
                                 if principalDebt == 0 { continue }
                                 let userAnnual = original["userAnnual"] as? Double
                                 let loanID = original["loanID"] as? Int
+                                let accountNumber = original["settlementAccount"] as? String
+
                                 let currentInterestRate = original["currentInterestRate"] as? Double
                                 let isClosed = original["isClosed"] as? Bool
                                 let loan = Loan(
                                     Amount: Amount!,
-                                    currencyCode: currencyCode, principalDebt: principalDebt, userAnnual: userAnnual, branchBrief: branchBrief, number: number, DateValue: dateValue, loanID: loanID, currentInterestRate: currentInterestRate, dateEnd: dateEnd, isClosed:isClosed
+                                    currencyCode: currencyCode, principalDebt: principalDebt, userAnnual: userAnnual, branchBrief: branchBrief, accountNumber: accountNumber, number: number, DateValue: dateValue, loanID: loanID, currentInterestRate: currentInterestRate, dateEnd: dateEnd, isClosed:isClosed
                                 )
                                 loans.append(loan)
                             }

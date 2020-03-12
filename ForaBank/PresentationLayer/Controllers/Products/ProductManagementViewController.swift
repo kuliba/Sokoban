@@ -30,10 +30,21 @@ class ProductManagementViewController: UITableViewController, CustomAlertViewDel
     var color2: UIColor = .black
     var card: Card? = nil
     var cards: [Card] = [Card]()
+    var account: Account?
+    var profile: Profile?
+    var loan: Loan?
+    var deposits: Deposit?
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
       
+        NetworkManager.shared().getProfile { [weak self] (success, profile, errorMessage) in
+            if success {
+                self?.profile = profile 
+                }
+            }
+        
         actions = arrayWith(key: actionsType, fromPlist: "productsData")
 
         tableView.tableFooterView = UIView()
@@ -140,25 +151,27 @@ class ProductManagementViewController: UITableViewController, CustomAlertViewDel
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.item == 0 {
-            guard let product = self.product else {
-                return
-            }
-            let paymentOption = PaymentOption(product: product)
-            store.dispatch(startPayment(sourceOption: paymentOption, destionationOption: nil))
-            return
+          
+            let storyBoard : UIStoryboard = UIStoryboard(name: "Payment", bundle:nil)
+            let nextViewController = storyBoard.instantiateViewController(withIdentifier: "PaymentsTableViewController") as! PaymentsTableViewController
+            self.present(nextViewController, animated:true, completion:nil)
+            
         } else if indexPath.item == 1 {
+            if product?.number != nil{
             guard let product = self.product else {
                 return
             }
-            showShareScreen(textToShare: "Номер моей карты: \(product.number)")
+                showShareScreen(textToShare: "Номер моей карты: \(product.number)")
+            } else if account?.accountNumber != nil{
+                showShareScreen(textToShare: "Банк получателя: АКБ 'ФОРА-БАНК' (АО) \nБИК: 044525341 \nКорреспондентский счёт: 30101810300000000341 \nИНН банка получателя: 7704113772 \nКПП банка получателя: 770401001 \nСчёт получателя: \(account?.accountNumber ?? "123") \nФИО: \(profile?.firstName ?? "123") \(profile?.patronymic ?? "123") \(profile?.lastName ?? "123")")
+            } else if loan?.accountNumber != nil{
+                showShareScreen(textToShare: "Банк получателя: АКБ 'ФОРА-БАНК' (АО) \nБИК: 044525341 \nКорреспондентский счёт: 30101810300000000341 \nИНН банка получателя: 7704113772 \nКПП банка получателя: 770401001 \nСчёт получателя: \(loan?.accountNumber ?? "123") \nФИО: \(profile?.firstName ?? "123") \(profile?.patronymic ?? "123") \(profile?.lastName ?? "123")")
+            } else {
+                showShareScreen(textToShare: "Банк получателя: АКБ 'ФОРА-БАНК' (АО) \nБИК: 044525341 \nКорреспондентский счёт: 30101810300000000341 \nИНН банка получателя: 7704113772 \nКПП банка получателя: 770401001 \nСчёт получателя: \(deposits?.accountNumber ?? "123") \nФИО: \(profile?.firstName ?? "123") \(profile?.patronymic ?? "123") \(profile?.lastName ?? "123")")
+            }
             return
         }
         else if indexPath.item == 2 {
-
-            
-            
-         
-            
             let customAlert = self.storyboard?.instantiateViewController(withIdentifier: "CustomAlertID") as! CustomAlertView
             
             customAlert.providesPresentationContextTransitionStyle = true

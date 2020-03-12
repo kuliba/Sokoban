@@ -1271,8 +1271,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="548"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WVv-9f-Tdt" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="29" width="320" height="519"/>
+
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WVv-9f-Tdt" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="29" width="320" height="539"/>
                                 <subviews>
                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BRp-UY-6fh" customClass="FlexiblePageControl" customModule="FlexiblePageControl">
                                         <rect key="frame" x="125" y="28" width="70" height="10"/>
@@ -1565,8 +1566,9 @@
         <!--Registration Finish View Controller-->
         <scene sceneID="Mcj-iH-Mvf">
             <objects>
-                <viewController id="fAi-Mj-Me8" customClass="RegistrationFinishViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="EH5-pL-r6u" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
+
+                <viewController id="fAi-Mj-Me8" customClass="RegistrationFinishViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="EH5-pL-r6u" customClass="GradientView" customModule="ForaBank_Beta" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="548"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -1661,12 +1663,13 @@
         <!--Registration TouchID View Controller-->
         <scene sceneID="ytH-Ix-Zxl">
             <objects>
-                <viewController id="j4D-xD-SzH" customClass="RegistrationTouchIDViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="jrW-GE-wF4" customClass="GradientView" customModule="ForaBank" customModuleProvider="target">
+
+                <viewController id="j4D-xD-SzH" customClass="RegistrationTouchIDViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="jrW-GE-wF4" customClass="GradientView" customModule="ForaBank_Beta" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="548"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EBs-dU-miI" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EBs-dU-miI" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="423" width="320" height="125"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8rM-Pk-ccU" customClass="ButtonRounded" customModule="ForaBank" customModuleProvider="target">
@@ -2121,7 +2124,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="548"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KRj-mg-c4v" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KRj-mg-c4v" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="29" width="320" height="519"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MTP-fz-tG7">
@@ -2655,7 +2658,9 @@
                                     <constraint firstItem="F3v-UU-oZI" firstAttribute="top" secondItem="0Rl-bd-gqs" secondAttribute="top" id="zQa-qz-cek"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tEf-0P-9um" customClass="RoundedEdgeView" customModule="ForaBank" customModuleProvider="target">
+
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tEf-0P-9um" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
+
                                 <rect key="frame" x="0.0" y="55" width="320" height="513"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eLu-gr-Ke2">

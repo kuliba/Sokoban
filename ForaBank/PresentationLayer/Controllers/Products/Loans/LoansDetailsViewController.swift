@@ -55,6 +55,7 @@ class LoansDetailsViewController: UIViewController {
     override func viewDidLoad() {
         let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductManagementViewController") as? ProductManagementViewController
         managementVC?.actionsType = "loan"
+        managementVC?.loan = loan 
         currentViewController = managementVC
         currentViewController!.view.translatesAutoresizingMaskIntoConstraints = false
         addChild(currentViewController!)
@@ -145,6 +146,7 @@ private extension LoansDetailsViewController {
         case 0:
             let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductManagementViewController") as? ProductManagementViewController
             managementVC?.actionsType = "account"
+            managementVC?.loan = loan
             newViewController = managementVC
         case 2:
             let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductAboutViewController") as? ProductAboutViewController

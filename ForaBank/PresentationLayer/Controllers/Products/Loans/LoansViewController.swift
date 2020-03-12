@@ -236,7 +236,6 @@ private extension LoansViewController {
     }
 
     func setTableViewEstimatedAutomaticRowHeight() {
-        tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
     }
 

@@ -23,10 +23,11 @@ class HistoryService: HistoryServiceProtocol {
     }
 
 
-    func getHistoryCard(headers: HTTPHeaders, completionHandler: @escaping (Bool, [HistoryCard]?) -> Void) {
-        var historycard = [HistoryCard]()
+    func getHistoryCard(headers: HTTPHeaders, cardNumber: String, completionHandler: @escaping (Bool, [DatedCardTransactionsStatement]?) -> Void) {
+        var historycard = [DatedCardTransactionsStatement]()
         let url = host.apiBaseURL + "/rest/getCardStatement"
-        Alamofire.request(url, method: HTTPMethod.post, parameters: nil, encoding: JSONEncoding.default, headers: headers)
+         var parametrs: [String: Any] = ["cardNumber": cardNumber as AnyObject, "id": 0, "name": "string", "statementFormat": "CSV"]
+        Alamofire.request(url, method: HTTPMethod.post, parameters: parametrs, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])
             .responseJSON { [unowned self] response in
@@ -40,36 +41,25 @@ class HistoryService: HistoryServiceProtocol {
 
                 switch response.result {
                 case .success:
-                    if let json = response.result.value as? Dictionary<String, Any>,
-
-                        let data = json["data"] as? Array<Any> {
-
-                        for cardData in data {
-                            if let cardData = cardData as? Dictionary<String, Any>,
-                                let original = cardData["original"] as? Dictionary<String, Any> {
-                                let amount = original["amount"] as? Int
-                                let accountID = original["accountID"] as? Int
-                                let comment = original["comment"] as? String
-                                let operationType = original["operationType"] as? String
-
-
-
-
-                                let historycards = HistoryCard(amount: amount!, comment: comment, operationType: operationType, accountID: accountID)
-
-                                historycard.append(historycards)
-                            }
+                    let decoder = JSONDecoder()
+                    decoder.dateDecodingStrategy = .millisecondsSince1970
+                    do {
+                        if let result = (try decoder.decode(BriginvestResponse<[TransactionCardStatement]>.self, from: response.data ?? Data())) as? BriginvestResponse<[TransactionCardStatement]> {
+                            
+                            let sortedTransations = DatedCardTransactionsStatement.sortByDays(transactions: result.data)
+                            completionHandler(true, sortedTransations)
+                            print(sortedTransations)
+                            return
                         }
-                        completionHandler(true, historycard)
-                    } else {
-                        print("rest/getDepositList cant parse json \(String(describing: response.result.value))")
-                        completionHandler(false, historycard)
+                    } catch let error as NSError {
+                        print("rest/getFullStatement cant parse json \(error)")
                     }
-
+                    completionHandler(false, nil)
                 case .failure(let error):
-                    print("rest/getDepositList \(error) \(self)")
-                    completionHandler(false, historycard)
+                    print("\(error) \(self)")
+                    completionHandler(false, nil)
                 }
+
         }
         func blockCard(withNumber num: String, completionHandler: @escaping (Bool) -> Void) {
             //        for i in 0..<cards.count {
