@@ -60,6 +60,11 @@ class ProductManagementViewController: UITableViewController, CustomAlertViewDel
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
         hero.isEnabled = true
         hero.modalAnimationType = .none
+        
+        print("account", account)
+        print("loan", loan)
+        print("deposits", deposits)
+        
     }
 
 
