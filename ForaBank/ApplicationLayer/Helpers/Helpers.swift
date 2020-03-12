@@ -401,3 +401,10 @@ extension UITextView{
     }
 
 }
+
+extension UIViewController{
+    //let errorView = UIView()
+    static func noInternet(){
+        print("Нет интернета")
+    }
+}

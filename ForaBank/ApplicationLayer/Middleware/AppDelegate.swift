@@ -14,6 +14,7 @@ import CryptoSwift
 import UserNotifications
 import Firebase
 import FirebaseMessaging
+//import Network
 
 func appReducer(action: Action, state: State?) -> State {
     return State(authenticationState: authenticationReducer(state: state?.authenticationState, action: action),
@@ -50,6 +51,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             NSLog("[RemoteNotification] applicationState: \(applicationStateString) didFinishLaunchingWithOptions for iOS9: \(userInfo)")
             //TODO: Handle background notification
         }
+        checkInternetConnection()
         return true
     }
 
@@ -151,5 +153,80 @@ extension AppDelegate: MessagingDelegate {
         } else {
             //TODO: Handle background notification
         }
+    }
+}
+
+
+extension AppDelegate{
+    
+    //запускаем постоянную проверку сети
+    func checkInternetConnection(){
+        DispatchQueue.global(qos: .background).async {
+            var firstStatus = Reach().connectionStatus() // последний статус сети
+            while 1==1{
+                let status = Reach().connectionStatus() // текущий статус сети
+                if firstStatus.description != status.description{
+                    self.changeInternetStatus(status)
+                    firstStatus = status
+                }
+                
+            }
+        }
+    }
+    
+    // определяет действие при изменении сети
+    func changeInternetStatus(_ status: ReachabilityStatus){
+        switch status {
+        case .offline, .unknown:
+            addViewToRoot()
+        case .online(.wiFi), .online(.wwan):
+            removeViewToRoot()
+        }
+    }
+    
+    // добавляет оповещение view в rootVC
+    func addViewToRoot(){
+        DispatchQueue.main.async {
+            guard let rootVC = getRootVC() else {return}
+            let viewStatus = self.getViewChangeInternetStatus()
+            rootVC.view.addSubview(viewStatus)
+        }
+    }
+    
+    // удаляем оповещение view в rootVC
+    func removeViewToRoot(){
+        DispatchQueue.main.async {
+            guard let rootVC = getRootVC() else {return}
+            guard let removeView = rootVC.view.viewWithTag(999) else{return}
+            removeView.removeFromSuperview()
+        }
+    }
+    
+    //создаем  view c оповещением
+    func getViewChangeInternetStatus()->UIView{
+        let viewStatus = UIView(frame: CGRect(x: 0, y: 34, width: UIScreen.main.bounds.size.width, height: 10))
+        viewStatus.tag = 999 // нужен для поределения этого view
+        viewStatus.isHidden = false
+        viewStatus.backgroundColor = .lightGray
+        
+        let label = UILabel()
+        label.text = "нет соединения"
+        label.textColor = .red
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 8)
+        
+        viewStatus.addSubview(label)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        let horizontalConstraint = label.centerXAnchor.constraint(equalTo: viewStatus.centerXAnchor)
+        let verticalConstraint = label.centerYAnchor.constraint(equalTo: viewStatus.centerYAnchor)
+        let widthConstraint = label.widthAnchor.constraint(equalToConstant: viewStatus.frame.size.width)
+        let heightConstraint = label.heightAnchor.constraint(equalToConstant: viewStatus.frame.size.height)
+        viewStatus.addConstraints([horizontalConstraint, verticalConstraint, widthConstraint, heightConstraint])
+        horizontalConstraint.isActive = true
+        verticalConstraint.isActive = true
+        heightConstraint.isActive = true
+        widthConstraint.isActive = true
+        
+        return viewStatus
     }
 }

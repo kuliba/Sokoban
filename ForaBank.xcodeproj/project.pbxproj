@@ -332,6 +332,7 @@
 		BD6D5674233A0B9000B7CF4B /* UnauthorizedZoneTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6D5673233A0B9000B7CF4B /* UnauthorizedZoneTabBarController.swift */; };
 		BD6F59782334B74F002F4D4E /* StateActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6F59772334B74F002F4D4E /* StateActions.swift */; };
 		BD6F597A2334BAA4002F4D4E /* StateReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6F59792334BAA4002F4D4E /* StateReducer.swift */; };
+		BD78AAE2241A2FED00C8D775 /* Reach.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD78AAE1241A2FED00C8D775 /* Reach.swift */; };
 		BD7CC1A1232125D000872D06 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = BD7CC1A0232125D000872D06 /* Localizable.strings */; };
 		BD81069B234CA52B004A43E9 /* AccountNumberCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD81069A234CA52B004A43E9 /* AccountNumberCellProvider.swift */; };
 		BD81069D234CDD12004A43E9 /* PaymentsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD81069C234CDD12004A43E9 /* PaymentsTableViewController.swift */; };
@@ -732,6 +733,7 @@
 		BD6D5673233A0B9000B7CF4B /* UnauthorizedZoneTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnauthorizedZoneTabBarController.swift; sourceTree = "<group>"; };
 		BD6F59772334B74F002F4D4E /* StateActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateActions.swift; sourceTree = "<group>"; };
 		BD6F59792334BAA4002F4D4E /* StateReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateReducer.swift; sourceTree = "<group>"; };
+		BD78AAE1241A2FED00C8D775 /* Reach.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reach.swift; sourceTree = "<group>"; };
 		BD7CC1A0232125D000872D06 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		BD81069A234CA52B004A43E9 /* AccountNumberCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountNumberCellProvider.swift; sourceTree = "<group>"; };
 		BD81069C234CDD12004A43E9 /* PaymentsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTableViewController.swift; sourceTree = "<group>"; };
@@ -1676,6 +1678,7 @@
 				BDF4F9452329105D007C448F /* Security.swift */,
 				A55B7B5621A5866F00A8A7FE /* UIImage+GIF.swift */,
 				BD579348236C2B660056740C /* UserDefaults.swift */,
+				BD78AAE1241A2FED00C8D775 /* Reach.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -2329,6 +2332,7 @@
 				09C7C3382175E486000EE472 /* DepositsHistoryCell.swift in Sources */,
 				96920C32235604C000CCC7EF /* OperationsList.swift in Sources */,
 				097A6DCC21884B6D00E6C69E /* ButtonRounded.swift in Sources */,
+				BD78AAE2241A2FED00C8D775 /* Reach.swift in Sources */,
 				BDE4D080232248420070BC3D /* ProductAboutViewController.swift in Sources */,
 				96E08A3B2371CF900070CA6A /* CardToCardUnauthorized.swift in Sources */,
 				BD09A3A62363290000938D66 /* UserState.swift in Sources */,
