@@ -75,8 +75,7 @@ class LoansDetailsViewController: UIViewController {
         carousel.type = .wheel
         carousel.bounces = false
 
-
-        product.text = "\((loan?.number)!)"
+        product.text = (loan?.customName == nil) ? "\((loan?.number)!)":"\((loan?.customName)!)"
         principalDebt.text = "\(maskSum(sum: (loan?.principalDebt)!)) \((loan?.currencyCode)!)"
 
     }

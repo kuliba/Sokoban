@@ -156,7 +156,8 @@ protocol RegServiceProtocol {
                         completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ login: String?, _ password: String?) -> Void)
     func saveCardName(headers: HTTPHeaders, id: Double, newName: String,
                       completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ id: Double?, _ name: String?) -> Void)
-
+    func saveLoanName(headers: HTTPHeaders, id: Int, newName: String,
+    completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ id: Int?, _ name: String?) -> Void)
 }
 
 protocol StatementServiceProtocol {

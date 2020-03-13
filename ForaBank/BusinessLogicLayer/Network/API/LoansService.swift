@@ -64,9 +64,15 @@ class LoansService: LoansServiceProtocol {
 
                                 let currentInterestRate = original["currentInterestRate"] as? Double
                                 let isClosed = original["isClosed"] as? Bool
+                                
+                                let loanName = original["loanName"] as? String
+                                let customName = cardData["customName"] as? String
                                 let loan = Loan(
                                     Amount: Amount!,
-                                    currencyCode: currencyCode, principalDebt: principalDebt, userAnnual: userAnnual, branchBrief: branchBrief, accountNumber: accountNumber, number: number, DateValue: dateValue, loanID: loanID, currentInterestRate: currentInterestRate, dateEnd: dateEnd, isClosed:isClosed
+                                    currencyCode: currencyCode, principalDebt: principalDebt,
+                                    userAnnual: userAnnual, branchBrief: branchBrief, accountNumber: accountNumber, customName:customName,
+                                    number: number, DateValue: dateValue, loanID: loanID,
+                                    currentInterestRate: currentInterestRate, dateEnd: dateEnd, isClosed:isClosed, loanName:loanName
                                 )
                                 loans.append(loan)
                             }

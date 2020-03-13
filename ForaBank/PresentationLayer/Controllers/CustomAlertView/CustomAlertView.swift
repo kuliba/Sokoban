@@ -25,10 +25,13 @@ class CustomAlertView: UIViewController {
     var delegate: CustomAlertViewDelegate?
     var selectedOption = "First"
     let alertViewGrayColor = UIColor(red: 224.0/255.0, green: 224.0/255.0, blue: 224.0/255.0, alpha: 1)
+    var account: Account?
+    var loan: Loan?
+    var deposit: Deposit?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        alertTextField.becomeFirstResponder()
+        _ = alertTextField.becomeFirstResponder()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -52,14 +55,43 @@ class CustomAlertView: UIViewController {
     }
     
     @IBAction func onTapCancelButton(_ sender: Any) {
-        alertTextField.resignFirstResponder()
+        _ = alertTextField.resignFirstResponder()
         delegate?.cancelButtonTapped()
         self.dismiss(animated: true, completion: nil)
     }
     
     @IBAction func onTapOkButton(_ sender: Any) {
+        guard let newName = alertTextField.text else {return}
+        if loan != nil{ //меняем название кредита
+            guard let loanID = loan?.loanID else {return}
+            resetLoadName(id: loanID, resetName: newName)
+        }else if deposit != nil{
+            print("Меняем название вклада")
+        }else if account != nil{
+            print("Меняем название счета")
+        }else{  //меняем название карты
+            resetCartName()
+        }
+    }
+    
+
+}
+
+
+extension CustomAlertView{
+    
+    private func resetLoadName(id: Int, resetName: String){
+        NetworkManager.shared().saveLoanName(newName: resetName, id: id) { (success, errorMessage, id, name) in
+            print("resetLoadName = " , success)
+            NetworkManager.shared().getLoans { (_, _) in
+            }
+        }
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    private func resetCartName(){
         let txt = alertTextField.text
-            let id = self.product?.id
+        let id = self.product?.id
         let newName:String = txt ?? "\(self.product!.name)"
             NetworkManager.shared().saveCardName(newName: newName, id:id ?? 123, completionHandler: { success, errorMessage, newName, id in })
             NetworkManager.shared().getCardList { [weak self] (success, cards) in
@@ -74,6 +106,5 @@ class CustomAlertView: UIViewController {
           self.dismiss(animated: true, completion: nil)
     }
     
-
+    
 }
-

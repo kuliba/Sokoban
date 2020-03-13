@@ -9,12 +9,8 @@
 import Foundation
 import Alamofire
 
-class RegService: RegServiceProtocol {
- 
+class RegService: RegServiceProtocol {    
     
-
-
-
     private let host: Host
     private var cardNumber: String? = nil
     private var login: String? = nil
@@ -28,6 +24,39 @@ class RegService: RegServiceProtocol {
         self.host = host
     }
 
+    func saveLoanName(headers: HTTPHeaders, id: Int, newName: String, completionHandler: @escaping (Bool, String?, Int?, String?) -> Void) {
+        let url = host.apiBaseURL + "rest/saveLoanName"
+        let parameters: [String: AnyObject] = [
+            "id": id as AnyObject,
+            "name": newName as AnyObject,
+            "token": headers["X-XSRF-TOKEN"] as AnyObject,
+            "verificationCode": 0 as AnyObject
+        ]
+        Alamofire.request(url, method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+            .validate(statusCode: MultiRange(200..<300, 401..<402))
+            .validate(contentType: ["application/json"])
+            .responseJSON { [unowned self] response in
+
+                if let json = response.result.value as? Dictionary<String, Any>,
+                    let errorMessage = json["errorMessage"] as? String {
+                    print("error1")
+                    print("\(errorMessage) \(self)")
+                    completionHandler(false, errorMessage, id, self.name)
+                    return
+                }
+
+                switch response.result {
+                case .success:
+                    print(response.result.error.debugDescription)
+                    completionHandler(true, nil, id, self.name)
+                case .failure(let error):
+                    print("error")
+                    print("\(error) \(self)")
+                    completionHandler(false, nil, id, self.name)
+                }
+        }
+        
+    }
 
     func saveCardName(headers: HTTPHeaders, id: Double, newName: String, completionHandler: @escaping (Bool, String?, Double?, String?) -> Void) {
         let url = host.apiBaseURL + "rest/saveCardName"

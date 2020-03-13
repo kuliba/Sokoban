@@ -25,10 +25,11 @@ class Loan {
     let currentInterestRate: Double?
     let dateEnd: String?
     let isClosed: Bool?
+    let loanName: String?
     
     
     
-    init(Amount: Double? = nil, currencyCode: String? = nil, principalDebt: Double? = nil, userAnnual: Double? = nil, branchBrief: String? = nil, ownerAgentBrief: String? = nil, accountNumber: String? = nil, accountID: String? = nil, customName: String? = nil, accountList: String? = nil, number: String? = nil, blocked: Bool? = nil, DateValue: String? = nil, expirationDate: Date? = nil, availableBalance: Double? = nil, blockedMoney: Double? = nil, updatingDate: Date? = nil, tariff: String? = nil, loanID: Int! = nil, branch: String? = nil, maskedNumber: String? = nil, currentInterestRate: Double? = nil, dateEnd: String? = nil, isClosed: Bool? = nil) {
+    init(Amount: Double? = nil, currencyCode: String? = nil, principalDebt: Double? = nil, userAnnual: Double? = nil, branchBrief: String? = nil, ownerAgentBrief: String? = nil, accountNumber: String? = nil, accountID: String? = nil, customName: String? = nil, accountList: String? = nil, number: String? = nil, blocked: Bool? = nil, DateValue: String? = nil, expirationDate: Date? = nil, availableBalance: Double? = nil, blockedMoney: Double? = nil, updatingDate: Date? = nil, tariff: String? = nil, loanID: Int! = nil, branch: String? = nil, maskedNumber: String? = nil, currentInterestRate: Double? = nil, dateEnd: String? = nil, isClosed: Bool? = nil, loanName: String? = nil) {
         self.dateValue = DateValue
 
         self.userAnnual = userAnnual
@@ -49,7 +50,7 @@ class Loan {
         self.currencyCode = currencyCode
         self.dateEnd = dateEnd
         self.isClosed = isClosed
-        
+        self.loanName = loanName
     }
 
     func getProductAbout() -> Array<AboutItem> {

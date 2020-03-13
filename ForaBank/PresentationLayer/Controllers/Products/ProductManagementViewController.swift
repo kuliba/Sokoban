@@ -60,11 +60,6 @@ class ProductManagementViewController: UITableViewController, CustomAlertViewDel
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
         hero.isEnabled = true
         hero.modalAnimationType = .none
-        
-        print("account", account)
-        print("loan", loan)
-        print("deposits", deposits)
-        
     }
 
 
@@ -183,78 +178,48 @@ class ProductManagementViewController: UITableViewController, CustomAlertViewDel
             customAlert.definesPresentationContext = true
             customAlert.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
             customAlert.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
-            customAlert.delegate = self as! CustomAlertViewDelegate
-            let id = product?.id
+            customAlert.delegate = self as CustomAlertViewDelegate
+            //let id = product?.id
             customAlert.product = product
-            self.present(customAlert, animated: true, completion: nil)
-
-            
-         performSegue(withIdentifier: "changeNameCard", sender: product?.id)
-            
-            func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-                if segue.identifier == "changeNameCard" {
-                    let cards: CustomAlertView = segue.destination as! CustomAlertView
-                            cards.product = product
-
-                }
+            if card != nil{
+                customAlert.card = card
+            }else if account != nil{
+                customAlert.account = account
+            }else if loan != nil{
+                customAlert.loan = loan
+            }else if deposits != nil{
+                customAlert.deposit = deposits
             }
-            
-            
-//
-//            let alert = SCLAlertView()
-//            let txt = alert.addTextField("Введите название карты")
-//            alert.addButton("Сохранить") {
-//                let id = self.product?.id
-//                var newName:String = txt.text ?? "\(self.product!.name)"
-//                NetworkManager.shared().saveCardName(newName: newName, id:id ?? 123, completionHandler: { success, errorMessage, newName, id in })
-//                NetworkManager.shared().getCardList { [weak self] (success, cards) in
-//                        self?.cards = cards ?? []
-//                    var newName:String = txt.text ?? "\(self?.product!.name)"
-//                    if newName == ""{
-//                        newName = (self?.cards[indexPath.row].name)!
-//                    }
-//                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "customName"), object: newName)
-//
-//                }
-//            }
-//
-//
-//            alert.showEdit("Изменить название карты", subTitle: "Не более 15 символов", colorStyle: 0xF5534C)
-
+            self.present(customAlert, animated: true, completion: nil)
+         //performSegue(withIdentifier: "changeNameCard", sender: product?.id)
        }
         else {
             AlertService.shared.show(title: "Функционал недоступен", message: "Функционал временно недоступен", cancelButtonTitle: "Понятно", okButtonTitle: nil, cancelCompletion: nil, okCompletion: nil)
         }
     }
+}
 
-
-
-
-  
-    
-    /*
-     // Override to support rearranging the table view.
-     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-     
-     }
-     */
-
-    /*
-     // Override to support conditional rearranging of the table view.
-     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-     // Return false if you do not want the item to be re-orderable.
-     return true
-     }
-     */
-
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
-
+//MARK: Navigation
+extension ProductManagementViewController{
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if segue.identifier == "changeNameCard" {
+//            let cards: CustomAlertView = segue.destination as! CustomAlertView
+//            cards.product = product
+//            print(" ProductManagementViewController = ", loan, account, deposits)
+//            if card != nil{
+//                cards.card = card
+//            }else if account != nil{
+//                cards.account = account
+//            }else if loan != nil{
+//                cards.loan = loan
+//            }else if deposits != nil{
+//                cards.deposit = deposits
+//            }
+//
+////            print("card prepare", card)
+////            print("account prepare", account) //счет
+////            print("loan prepare", loan) //кредиты
+////            print("deposits prepare", deposits) //вклады
+//        }
+//    }
 }
