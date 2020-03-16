@@ -82,8 +82,10 @@ extension CustomAlertView{
     
     private func resetLoadName(id: Int, resetName: String){
         NetworkManager.shared().saveLoanName(newName: resetName, id: id) { (success, errorMessage, id, name) in
-            print("resetLoadName = " , success)
-            NetworkManager.shared().getLoans { (_, _) in
+            NetworkManager.shared().getLoans { (success, _) in
+                if success{
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateProductNameLoan"), object: resetName)
+                }
             }
         }
         self.dismiss(animated: true, completion: nil)

@@ -109,10 +109,7 @@ class LoansViewController: UIViewController {
 
         prepareUI()
         
-   
-
-        
-        
+        self.notifications() //ставим уведомления
     }
     
     
@@ -140,12 +137,15 @@ class LoansViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        getLoansVC()
+    }
+    
+    private func getLoansVC(){
         NetworkManager.shared().getLoans { (success, loans) in
             if success {
                 self.loan = loans ?? []
             }
         }
-
     }
  
 
@@ -187,7 +187,7 @@ extension LoansViewController: UITableViewDataSource, UITableViewDelegate {
             fatalError()
         }
 
-        cell.titleLabel.text = loan[indexPath.row].number
+        cell.titleLabel.text = (loan[indexPath.row].customName == nil) ? "\((loan[indexPath.row].number)!)":"\((loan[indexPath.row].customName)!)"
         cell.currently.text = loan[indexPath.row].currencyCode
         cell.subTitleLabel.text = maskSum(sum: loan[indexPath.row].userAnnual!)
         cell.descriptionLabel.text = maskSum(sum: loan[indexPath.row].principalDebt!)
@@ -260,5 +260,17 @@ extension LoansViewController: CustomTransitionOriginator, CustomTransitionDesti
         var views = [String: UIView]()
         views["tableView"] = tableView
         return views
+    }
+}
+
+//MARK: Notification
+private extension LoansViewController{
+    
+    @objc func updateTableViewLoans(notification: Notification){
+        getLoansVC()
+    }
+    
+    private func notifications(){
+        NotificationCenter.default.addObserver(self, selector: #selector(updateTableViewLoans), name: NSNotification.Name(rawValue: "updateProductNameLoan"), object: nil)
     }
 }

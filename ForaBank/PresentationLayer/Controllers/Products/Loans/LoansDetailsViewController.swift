@@ -52,6 +52,7 @@ class LoansDetailsViewController: UIViewController {
         }
     }
 
+    //MARK: View Did Load
     override func viewDidLoad() {
         let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductManagementViewController") as? ProductManagementViewController
         managementVC?.actionsType = "loan"
@@ -68,8 +69,9 @@ class LoansDetailsViewController: UIViewController {
 
         super.viewDidLoad()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(handleScroll(_:)), name: NSNotification.Name("TableViewScrolled"), object: nil)
-
+        self.notifications()
+        
+        
         carousel.delegate = self
         carousel.dataSource = self
         carousel.type = .wheel
@@ -84,9 +86,19 @@ class LoansDetailsViewController: UIViewController {
 
 }
 
+//MARK: Notification
 private extension LoansDetailsViewController {
 
-
+    @objc func updateProductNameLoan(notification: Notification){
+        let customNameVc = notification.object as! String
+        self.product.text = customNameVc
+    }
+    
+    private func notifications(){
+        NotificationCenter.default.addObserver(self, selector: #selector(handleScroll(_:)), name: NSNotification.Name("TableViewScrolled"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateProductNameLoan), name: NSNotification.Name(rawValue: "updateProductNameLoan"), object: nil)
+    }
+    
     @objc func handleScroll(_ notification: Notification?) {
         guard let tableScrollView = notification?.userInfo?["tableView"] as? UIScrollView else {
             return

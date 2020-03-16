@@ -60,11 +60,10 @@ class CardDetailsViewController: UIViewController {
     @objc func handlePopucclosing(notification: Notification){
         let customNameVc = notification.object as! String
         cardView.titleLabel.text = customNameVc
-      
-           }
+    }
     // MARK: - Lifecycle
     override func viewDidLoad() {   
-            NotificationCenter.default.addObserver(self, selector: #selector(handlePopucclosing), name: NSNotification.Name(rawValue: "customName"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handlePopucclosing), name: NSNotification.Name(rawValue: "customName"), object: nil)
         
         
         let vc = UIViewController()
