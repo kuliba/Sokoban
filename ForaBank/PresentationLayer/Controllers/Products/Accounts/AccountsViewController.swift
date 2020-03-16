@@ -74,11 +74,7 @@ class AccountsViewController: UIViewController {
         setUpTableView()
         LabelNoProduct.isHidden = true
         prepareUI()
-
-
-
-
-
+        self.notifications()
     }
 
     var accounts = [Account]() {
@@ -109,12 +105,17 @@ class AccountsViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        getAccounts()
+    }
+    
+    private func getAccounts(){
         NetworkManager.shared().getDepos { (success, accounts) in
             if success {
                 self.accounts = accounts ?? []
             }
         }
     }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let destination = segue.destination as? ProductDetailsViewController {
             destination.account = accounts[(tableView.indexPathForSelectedRow?.row)!]
@@ -154,7 +155,7 @@ extension AccountsViewController: UITableViewDataSource, UITableViewDelegate {
             fatalError()
         }
 
-        cell.titleLabel.text = accounts[indexPath.row].productName
+        cell.titleLabel.text = (accounts[indexPath.row].customName == nil) ? "\(accounts[indexPath.row].productName)":"\((accounts[indexPath.row].customName)!)"
         cell.subTitleLabel.text = maskedAccountNumber(number: accounts[indexPath.row].accountNumber, separator: " ")
         cell.amountLabel.text = maskSum(sum: accounts[indexPath.row].balance)
         cell.currently.text = accounts[indexPath.row].currencyCode
@@ -265,4 +266,16 @@ extension AccountsViewController: CustomTransitionOriginator, CustomTransitionDe
         views["tableView"] = tableView
         return views
     }
+}
+
+//MARK: Notification
+private extension AccountsViewController{
+    @objc func updateTableViewAccount(notification: Notification){
+        self.getAccounts()
+    }
+    
+    private func notifications(){
+        NotificationCenter.default.addObserver(self, selector: #selector(updateTableViewAccount), name: NSNotification.Name(rawValue: "updateProductNameAccaunt"), object: nil)
+    }
+    
 }

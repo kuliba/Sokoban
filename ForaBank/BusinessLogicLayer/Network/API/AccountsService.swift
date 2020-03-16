@@ -47,7 +47,7 @@ class AccountsService: AccountsServiceProtocol {
                             if let cardData = cardData as? Dictionary<String, Any>,
                                 var original = cardData["original"] as? Dictionary<String, Any> {
 
-                                var accountList: Array<Any> = original["accountList"] as! Array
+                                let accountList: Array<Any> = original["accountList"] as! Array
                                 let accountData = accountList[0] as? Dictionary<String , Any>
                                 guard let accountNumber = accountData?["accountNumber"] as? String,
                                     let currencyCode = accountData?["currencyCode"] as? String,
@@ -60,15 +60,21 @@ class AccountsService: AccountsServiceProtocol {
                                 original["accountNumber"] = accountNumber
                                 original["currencyCode"] = currencyCode
                                 original["balance"] = balance
-                                let dateStart = dayMonthYear(milisecond: Double((original["dateStart"] as? Double)!))
-                                let isClosed = original["isClosed"] as? Bool
+                                //let dateStart = dayMonthYear(milisecond: Double((original["dateStart"] as? Double)!))
+                                //let isClosed = original["isClosed"] as? Bool
 
-                                let depositProductName = original["depositProductName"] as? String
-                                let depositProductID = original["depositProductID"] as? Int
+                                //let depositProductName = original["depositProductName"] as? String
+                                //let depositProductID = original["depositProductID"] as? Int
                                 let account = Account.from(NSDictionary(dictionary: original))
-
+                                
+                                if let customNameJson = cardData["customName"] as? String{
+                                    account?.customName = customNameJson
+                                }
+                                
                                 guard let nonNilAccount = account, account?.productId == 10000000088 else { continue }
-
+                                
+                                
+                                
                                 accounts.append(nonNilAccount)
                             }
                         }

@@ -66,8 +66,10 @@ class ProductDetailsViewController: UIViewController {
         carousel.type = .wheel
         carousel.bounces = false
 
-        nameAccountLabel.text = "\((account?.productName)!)"
+        nameAccountLabel.text = (account?.customName == nil) ? "\((account?.productName)!)":"\((account?.customName)!)"
         amountAccount.text = "\(maskSum(sum: (account?.balance)!)) \((account?.currencyCode)!)"
+        
+        self.notifications()
     }
 
 }
@@ -340,4 +342,17 @@ extension ProductDetailsViewController: CustomTransitionOriginator, CustomTransi
 //        print("OneOneViewController views merged")
         return views
     }
+}
+
+//MARK: Notification
+private extension ProductDetailsViewController{
+    @objc func updateTableViewAccount(notification: Notification){
+        let customNameVc = notification.object as! String
+        self.nameAccountLabel.text = customNameVc
+    }
+    
+    private func notifications(){
+        NotificationCenter.default.addObserver(self, selector: #selector(updateTableViewAccount), name: NSNotification.Name(rawValue: "updateProductNameAccaunt"), object: nil)
+    }
+    
 }

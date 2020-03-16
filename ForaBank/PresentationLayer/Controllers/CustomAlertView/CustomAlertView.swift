@@ -68,7 +68,9 @@ class CustomAlertView: UIViewController {
         }else if deposit != nil{
             print("Меняем название вклада")
         }else if account != nil{
-            print("Меняем название счета")
+            guard let accountID = account?.id else {return}
+            resetCustomName(id: Int(accountID), resetName: newName, productType: .AccauntType)
+            print("Меняем название счета = ", accountID)
         }else{  //меняем название карты
             resetCartName()
         }
@@ -79,6 +81,24 @@ class CustomAlertView: UIViewController {
 
 
 extension CustomAlertView{
+    
+    private func resetCustomName(id: Int, resetName: String, productType: productTypes){
+        NetworkManager.shared().saveCustomName(newName: resetName, id: id, productType: productType) { (success, errorMessage, id, name) in
+            if success{
+                // определяем тип продукта и посылаем уведомление нужным контроллерам 
+                if productType == .AccauntType{
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateProductNameAccaunt"), object: resetName)
+                }else if productType == .LoanType{
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateProductNameLoan"), object: resetName)
+                }else if productType == .CardType{
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "customName"), object: resetName)
+                }else if productType == .DepositType{
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateProductNameDeposit"), object: resetName)
+                }
+            }
+        }
+        self.dismiss(animated: true, completion: nil)
+    }
     
     private func resetLoadName(id: Int, resetName: String){
         NetworkManager.shared().saveLoanName(newName: resetName, id: id) { (success, errorMessage, id, name) in

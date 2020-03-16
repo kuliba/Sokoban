@@ -54,7 +54,6 @@ class Account: Mappable, IProduct {
         try dateStart = map.from("dateStart")
         try isClosed = map.from("isClosed")
 
-
     }
 
     func getProductAbout() -> Array<AboutItem> {

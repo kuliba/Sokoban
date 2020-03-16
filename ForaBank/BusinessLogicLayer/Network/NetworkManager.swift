@@ -273,6 +273,24 @@ class NetworkManager {
         }
     }
     
+    func saveCustomName(newName: String, id: Int, productType: productTypes, completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ id: Int?, _ name: String?) -> Void){
+        authService.csrf(headers: headers) { [unowned self] (success, newHeaders) in
+            if success {
+                //self.regService.saveLoanName(headers: self.headers, id: id, newName: newName, completionHandler: completionHandler)
+//                self.regService.saveLoanName(headers: self.headers, id: id, newName: newName) { (successSLN, errorMessage, id, name) in
+//                    completionHandler(true, nil, nil, nil)
+//                }
+                self.regService.saveCustomName(headers: self.headers, id: id, newName: newName, productType: productType) { (successSLN, errorMessage, id, name)in
+                    completionHandler(true, nil, nil, nil)
+                }
+            }
+            else {
+                completionHandler(false, nil, nil, nil)
+            }
+        }
+        
+    }
+    
     func best2Pay(completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ id: Double?, _ name: String?) -> Void) {
         self.best2Pay(completionHandler: completionHandler)
 

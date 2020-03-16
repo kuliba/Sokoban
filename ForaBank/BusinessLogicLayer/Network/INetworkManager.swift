@@ -9,6 +9,14 @@
 import Foundation
 import Alamofire
 
+//Тип продукта
+public enum productTypes {
+    case AccauntType
+    case DepositType
+    case CardType
+    case LoanType
+}
+
 protocol AuthServiceProtocol {
     func isSignedIn(completionHandler: @escaping (_ success: Bool) -> Void)
     func csrf(headers: HTTPHeaders,
@@ -157,6 +165,8 @@ protocol RegServiceProtocol {
     func saveCardName(headers: HTTPHeaders, id: Double, newName: String,
                       completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ id: Double?, _ name: String?) -> Void)
     func saveLoanName(headers: HTTPHeaders, id: Int, newName: String,
+    completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ id: Int?, _ name: String?) -> Void)
+    func saveCustomName(headers: HTTPHeaders, id: Int, newName: String, productType: productTypes,
     completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ id: Int?, _ name: String?) -> Void)
 }
 
