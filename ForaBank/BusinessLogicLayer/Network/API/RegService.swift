@@ -28,7 +28,7 @@ class RegService: RegServiceProtocol {
 
     func saveCustomName(headers: HTTPHeaders, id: Int, newName: String, productType: productTypes, completionHandler: @escaping (Bool, String?, Int?, String?) -> Void) {
         var url = ""
-        if productType == .AccauntType{
+        if productType == .AccauntType || productType == .DepositType{
             url = host.apiBaseURL + "rest/saveDepositName"
         }else if productType == .LoanType{
             url = host.apiBaseURL + "rest/saveLoanName"

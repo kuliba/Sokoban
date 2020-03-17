@@ -32,6 +32,7 @@ class CustomAlertView: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         _ = alertTextField.becomeFirstResponder()
+        self.alertTextField.textColor = .black
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -64,13 +65,13 @@ class CustomAlertView: UIViewController {
         guard let newName = alertTextField.text else {return}
         if loan != nil{ //меняем название кредита
             guard let loanID = loan?.loanID else {return}
-            resetLoadName(id: loanID, resetName: newName)
+            resetCustomName(id: loanID, resetName: newName, productType: .LoanType)
         }else if deposit != nil{
-            print("Меняем название вклада")
+            guard let depositID = deposit?.id else {return}
+            resetCustomName(id: depositID, resetName: newName, productType: .DepositType)
         }else if account != nil{
             guard let accountID = account?.id else {return}
             resetCustomName(id: Int(accountID), resetName: newName, productType: .AccauntType)
-            print("Меняем название счета = ", accountID)
         }else{  //меняем название карты
             resetCartName()
         }

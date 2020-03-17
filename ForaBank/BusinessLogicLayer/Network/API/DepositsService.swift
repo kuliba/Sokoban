@@ -63,10 +63,12 @@ class DepositService: DepositsServiceProtocol {
                                 let isDebitOperationsAvailable  = accountData!["isDebitOperationsAvailable "] as? Bool
                                 let initialAmount  = original["initialAmount "] as? Double
                                 let interestRate = accountData!["interestRate"] as? Double
-                                
+                                let customName = cardData["customName"] as? String
+                                let depositId = original["depositID"] as? Int
                                 let deposit = Deposit(depositProductName: depositProductName,isCreditOperationsAvailable:isCreditOperationsAvailable,
                                                       currencyCode: currencyCode, balance: balance,
-                                                      accountNumber: accountNumber,minimumBalance:minimumBalance, interestRate: interestRate, isDebitOperationsAvailable:isDebitOperationsAvailable,creditMinimumAmount:creditMinimumAmount, initialAmount:initialAmount, dateEnd: dateEnd, dateStart:dateStart)
+                                                      accountNumber: accountNumber, customName: customName, id: depositId,
+                                                      minimumBalance:minimumBalance, interestRate: interestRate, isDebitOperationsAvailable:isDebitOperationsAvailable,creditMinimumAmount:creditMinimumAmount, initialAmount:initialAmount, dateEnd: dateEnd, dateStart:dateStart)
                                 deposits.append(deposit)
 
                             }

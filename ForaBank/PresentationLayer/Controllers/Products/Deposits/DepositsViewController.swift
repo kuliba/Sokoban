@@ -138,11 +138,15 @@ class DepositsViewController: UIViewController {
         prepareUI()
         tableView.backgroundColor = .white
         
-
+        self.notifications()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        self.getBondsVC()
+    }
+    
+    private func getBondsVC(){
         NetworkManager.shared().getBonds { (success, deposits) in
             if success {
                 self.deposits = deposits ?? []
@@ -178,7 +182,7 @@ extension DepositsViewController: UITableViewDataSource, UITableViewDelegate {
             fatalError()
         }
 
-        cell.titleLabel.text = deposits[indexPath.row].depositProductName
+        cell.titleLabel.text = (deposits[indexPath.row].customName == nil) ? "\((deposits[indexPath.row].depositProductName)!)":"\((deposits[indexPath.row].customName)!)"
         cell.subTitleLabel.text = maskedCardNumber(number: deposits[indexPath.row].accountNumber!, separator: " ")
         cell.descriptionLabel.text = maskSum(sum: deposits[indexPath.row].balance!)
         cell.currently.text = deposits[indexPath.row].currencyCode
@@ -276,3 +280,14 @@ private extension DepositsViewController {
     }
 }
 
+//MARK: Notification
+private extension DepositsViewController{
+    
+    @objc func updateTableViewLoans(notification: Notification){
+        self.getBondsVC()
+    }
+    
+    private func notifications(){
+        NotificationCenter.default.addObserver(self, selector: #selector(updateTableViewLoans), name: NSNotification.Name(rawValue: "updateProductNameDeposit"), object: nil)
+    }
+}

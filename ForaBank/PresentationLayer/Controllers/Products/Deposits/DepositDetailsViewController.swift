@@ -72,9 +72,12 @@ class DepositDetailsViewController: UIViewController {
         carousel.type = .wheel
         carousel.bounces = false
 
-
-        depositName.text = "\((deposit?.depositProductName)!)"
-        depositAmount.text = "\(maskSum(sum: (deposit?.balance)!)) \((deposit?.currencyCode)!)"
+        if deposit != nil{
+            depositName.text = (deposit?.customName == nil) ? "\((deposit?.depositProductName)!)" : "\((deposit?.customName)!)"
+            depositAmount.text = "\(maskSum(sum: (deposit?.balance)!)) \((deposit?.currencyCode)!)"
+        }
+        
+        self.notification()
     }
 }
 
@@ -347,5 +350,18 @@ extension DepositDetailsViewController: CustomTransitionOriginator, CustomTransi
         views.merge(c.toAnimatedSubviews, uniquingKeysWith: { (first, _) in first })
 //        print("OneOneViewController views merged")
         return views
+    }
+}
+
+//MARK: Notification
+private extension DepositDetailsViewController{
+    
+    @objc func updateProductNameDeposit(notification: Notification){
+        let customNameVc = notification.object as! String
+        self.depositName.text = "\(customNameVc)"
+    }
+    
+    func notification(){
+        NotificationCenter.default.addObserver(self, selector: #selector(updateProductNameDeposit), name: NSNotification.Name(rawValue: "updateProductNameDeposit"), object: nil)
     }
 }
