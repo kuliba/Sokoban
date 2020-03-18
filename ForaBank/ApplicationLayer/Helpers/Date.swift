@@ -27,3 +27,9 @@ func dayMonthYear(data: Date) -> String {
     dateFormatter.dateFormat = "dd-MM-yyyy"
     return dateFormatter.string(from: data)
 }
+
+func getDateCurrencys(data: Date) -> String{
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+    return dateFormatter.string(from: data)
+}

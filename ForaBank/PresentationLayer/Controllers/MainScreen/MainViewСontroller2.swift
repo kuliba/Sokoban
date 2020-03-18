@@ -14,6 +14,15 @@ class MainView_ontroller2: UIViewController, UICollectionViewDataSource, UIColle
 
     @IBOutlet weak var roundedEdge: RoundedEdgeView!
     @IBOutlet weak var containerViewController: UIView!
+    
+    @IBOutlet weak var buyUSD: UILabel!
+    @IBOutlet weak var saleUSD: UILabel!
+    @IBOutlet weak var rateCBUSD: UILabel!
+    
+    @IBOutlet weak var buyEUR: UILabel!
+    @IBOutlet weak var saleEUR: UILabel!
+    @IBOutlet weak var rateCBEUR: UILabel!
+    
     var arr: [String] = (0...3).map { return "\($0)" }
     var images: [String] = ["phone", "transfer", "cdpadding", "history"]
     
@@ -264,4 +273,12 @@ class MainView_ontroller2: UIViewController, UICollectionViewDataSource, UIColle
                super.init(coder: aDecoder)
            }
        }
+}
+
+
+//MARK: Rates
+private extension MainView_ontroller2{
+    func getRates(){
+        //будет запрос на предоставление курса валют 
+    }
 }

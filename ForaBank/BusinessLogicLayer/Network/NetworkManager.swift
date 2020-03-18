@@ -33,9 +33,10 @@ class NetworkManager {
         let statementService = StatementService(host: host)
         let loanPaymentSchedule = LoanPaymentSchedule(host: host)
         let productService = ProductsService(host: host)
+        let currentService = CurrencysService(host: host)
 
 
-        let networkManager = NetworkManager(host, authService, suggestBankService, suggestCompanyService, regService, cardService, cardInfoService, paymentServices, depositsService, accountsService, loanPaymentSchedule, historyService, loansService, statementService, productService: productService, mapService: mapService)
+        let networkManager = NetworkManager(host, authService, suggestBankService, suggestCompanyService, regService, cardService, cardInfoService, paymentServices, depositsService, accountsService, loanPaymentSchedule, historyService, loansService, statementService, productService: productService, mapService: mapService, currencyService: currentService)
         // Configuration
 
 
@@ -57,6 +58,7 @@ class NetworkManager {
     private let loansService: LoansServiceProtocol
     private let statementService: StatementServiceProtocol
     private let mapService: MapServiceProtocol
+    private let currencyService: CurrencysProtocol
     private let host: Host
     
     public var headers: HTTPHeaders = [
@@ -67,7 +69,7 @@ class NetworkManager {
     ]
 
 // Initialization
-    private init(_ host: Host, _ authService: AuthServiceProtocol, _ suggestBankService: SuggestBankService,_ suggestCompanyService: SuggestCompanyService, _ regService: RegServiceProtocol, _ cardService: CardServiceProtocol, _ cardInfoService: CardInfoServiceProtocol, _ paymentsServices: IPaymetsApi, _ depositsService: DepositsServiceProtocol, _ accountsService: AccountsServiceProtocol, _ LaonSchedules: LoanPaymentScheduleProtocol, _ historyService: HistoryServiceProtocol, _ loansService: LoansServiceProtocol, _ statementService: StatementServiceProtocol, productService: IProductService, mapService:MapServiceProtocol) {
+    private init(_ host: Host, _ authService: AuthServiceProtocol, _ suggestBankService: SuggestBankService,_ suggestCompanyService: SuggestCompanyService, _ regService: RegServiceProtocol, _ cardService: CardServiceProtocol, _ cardInfoService: CardInfoServiceProtocol, _ paymentsServices: IPaymetsApi, _ depositsService: DepositsServiceProtocol, _ accountsService: AccountsServiceProtocol, _ LaonSchedules: LoanPaymentScheduleProtocol, _ historyService: HistoryServiceProtocol, _ loansService: LoansServiceProtocol, _ statementService: StatementServiceProtocol, productService: IProductService, mapService:MapServiceProtocol, currencyService:CurrencysProtocol) {
         self.host = host
         self.authService = authService
         self.regService = regService
@@ -84,6 +86,7 @@ class NetworkManager {
         self.statementService = statementService
         self.productService = productService
         self.mapService = mapService
+        self.currencyService = currencyService
     }
 
 // MARK: - Accessors

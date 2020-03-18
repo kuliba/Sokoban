@@ -176,7 +176,11 @@ protocol StatementServiceProtocol {
 }
 
 //MARK: - Products
-
 protocol IProductsApi {
     func getProducts(completionHandler: @escaping (_ success: Bool, _ products: [Product]?) -> Void)
+}
+
+//MARK: Rates
+protocol CurrencysProtocol {
+    func getABSCurrencyRates(headers: HTTPHeaders, currencyOne: String, currencyTwo: String, rateTypeID: Int, completionHandler: @escaping (_ success: Bool, _ currencys: [Currency]?) -> Void)
 }
