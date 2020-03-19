@@ -7,13 +7,15 @@
 //
 
 class Currency{
-    let buyCurrency: Double?
-    let saleCurrency: Double?
-    let rateCBCurrency: Double?
+    var nameCurrency: String?
+    var buyCurrency: Double?
+    var saleCurrency: Double?
+    var rateCBCurrency: Double?
     
-    init(buyCurrency: Double? = nil, saleCurrency: Double? = nil, rateCBCurrency: Double? = nil) {
+    init(buyCurrency: Double? = nil, saleCurrency: Double? = nil, rateCBCurrency: Double? = nil, nameCurrency: String? = nil) {
         self.buyCurrency = buyCurrency
         self.saleCurrency = saleCurrency
         self.rateCBCurrency = rateCBCurrency
+        self.nameCurrency = nameCurrency
     }
 }

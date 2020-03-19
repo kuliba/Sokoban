@@ -365,6 +365,8 @@
 		BDB823A623842E5900030B5F /* ProductsModuleConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB823A523842E5900030B5F /* ProductsModuleConfigurator.swift */; };
 		BDB823A8238433B400030B5F /* ProductsNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB823A7238433B400030B5F /* ProductsNavigator.swift */; };
 		BDB823AA23852A7000030B5F /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB823A923852A7000030B5F /* BaseViewController.swift */; };
+		BDBB899F2423B4CF0058982D /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBB899E2423B4CF0058982D /* MainVC.swift */; };
+		BDBB89A22423B6D30058982D /* CardCVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBB89A12423B6D30058982D /* CardCVC.swift */; };
 		BDC019962360806F0022FC78 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDC019952360806F0022FC78 /* WelcomeViewController.swift */; };
 		BDC984B823916C1E0087304A /* CarouselViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDC984B723916C1E0087304A /* CarouselViewController.swift */; };
 		BDCCE9092350BB6E0087F5F2 /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCCE9082350BB6E0087F5F2 /* AlertService.swift */; };
@@ -769,6 +771,8 @@
 		BDB823A523842E5900030B5F /* ProductsModuleConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsModuleConfigurator.swift; sourceTree = "<group>"; };
 		BDB823A7238433B400030B5F /* ProductsNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsNavigator.swift; sourceTree = "<group>"; };
 		BDB823A923852A7000030B5F /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		BDBB899E2423B4CF0058982D /* MainVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
+		BDBB89A12423B6D30058982D /* CardCVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardCVC.swift; sourceTree = "<group>"; };
 		BDC019952360806F0022FC78 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		BDC984B723916C1E0087304A /* CarouselViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselViewController.swift; sourceTree = "<group>"; };
 		BDCCE9082350BB6E0087F5F2 /* AlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertService.swift; sourceTree = "<group>"; };
@@ -1231,6 +1235,7 @@
 		9605AC142383D58400652635 /* MainScreen */ = {
 			isa = PBXGroup;
 			children = (
+				BDBB89A02423B6950058982D /* CellAndItem */,
 				9605AC152383D5A200652635 /* MainViewController.swift */,
 				96FE29E7238416B80076656C /* DataItem.swift */,
 				96FE29E9238416D40076656C /* ColorCell.swift */,
@@ -1239,6 +1244,7 @@
 				96FE29EF238435080076656C /* Item.swift */,
 				963B5B7C2394FFD6000F3A38 /* MainViewСontroller2.swift */,
 				BD671AF2242240C4002DE082 /* RatesView.swift */,
+				BDBB899E2423B4CF0058982D /* MainVC.swift */,
 			);
 			path = MainScreen;
 			sourceTree = "<group>";
@@ -1809,6 +1815,14 @@
 			path = Configuration;
 			sourceTree = "<group>";
 		};
+		BDBB89A02423B6950058982D /* CellAndItem */ = {
+			isa = PBXGroup;
+			children = (
+				BDBB89A12423B6D30058982D /* CardCVC.swift */,
+			);
+			path = CellAndItem;
+			sourceTree = "<group>";
+		};
 		BDC019942360803B0022FC78 /* Authorized */ = {
 			isa = PBXGroup;
 			children = (
@@ -2189,6 +2203,7 @@
 				A568143021D0B9E3002C0899 /* Deposit.swift in Sources */,
 				BDFE1AC8233B95B900C49A5B /* ProductReducer.swift in Sources */,
 				BDC019962360806F0022FC78 /* WelcomeViewController.swift in Sources */,
+				BDBB899F2423B4CF0058982D /* MainVC.swift in Sources */,
 				BDFE5D982334C3300027A716 /* IProduct.swift in Sources */,
 				96B0E5E4238D16460045FE7A /* ServiceBest2Pay.swift in Sources */,
 				96094AF42319441600A80412 /* SettingsViewController.swift in Sources */,
@@ -2330,6 +2345,7 @@
 				09FC8FED215BB2B200A4694B /* ProfileMenuTableViewController.swift in Sources */,
 				96FE29EC238416E90076656C /* KDDragAndDropManager.swift in Sources */,
 				9697E29F2334C29700974505 /* OperatorsList.swift in Sources */,
+				BDBB89A22423B6D30058982D /* CardCVC.swift in Sources */,
 				BDDF9BAA238E972C0025E2E8 /* PaymentModuleInitializer.swift in Sources */,
 				A568142121CBCD03002C0899 /* BankBranchAnnotation.swift in Sources */,
 				0942B86D21625F7800370C71 /* Friend.swift in Sources */,

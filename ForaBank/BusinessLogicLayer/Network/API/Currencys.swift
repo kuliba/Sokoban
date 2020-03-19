@@ -36,10 +36,12 @@ class CurrencysService: CurrencysProtocol {
                     let data = json["data"] as? Dictionary<String, Any>{
                         let buyCurrency = data["rateBuy"] as? Double
                         let saleCurrency = data["rateSell"] as? Double
+                        let nameCurrency = data["currencyCodeAlpha"] as? String
                         //let rateCBCurrency = data[""]
                         let currencyData = Currency(buyCurrency: buyCurrency,
                                                     saleCurrency: saleCurrency,
-                                                    rateCBCurrency: nil)
+                                                    rateCBCurrency: nil,
+                                                    nameCurrency: nameCurrency)
                         completionHandler(true, currencyData)
                         return
                     }else{
