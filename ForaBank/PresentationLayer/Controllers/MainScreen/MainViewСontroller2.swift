@@ -55,6 +55,15 @@ class MainView_ontroller2: UIViewController, UICollectionViewDataSource, UIColle
        override func viewDidLoad() {
            super.viewDidLoad()
     
+        self.buyUSD.text = ""
+        self.buyEUR.text = ""
+        self.saleUSD.text = ""
+        self.saleEUR.text = ""
+        self.rateCBEUR.text = ""
+        self.rateCBUSD.text = ""
+        
+        self.getRates()
+        
         screenSize = UIScreen.main.bounds
         screenWidth = screenSize.width
         screenHeight = screenSize.height
@@ -279,6 +288,19 @@ class MainView_ontroller2: UIViewController, UICollectionViewDataSource, UIColle
 //MARK: Rates
 private extension MainView_ontroller2{
     func getRates(){
-        //будет запрос на предоставление курса валют 
+        //будет запрос на предоставление курса валют
+        print("ЗАпрос курсов валют ")
+        NetworkManager.shared().getExchangeCurrencyRates(currency: "USD") { [weak self](success, currency) in
+            if success{
+                guard let buy = currency?.buyCurrency  else {
+                    return
+                }
+                guard let sale = currency?.saleCurrency else {
+                    return
+                }
+                self?.buyUSD.text = "\(buy)"
+                self?.saleUSD.text = "\(sale)"
+            }
+        }
     }
 }

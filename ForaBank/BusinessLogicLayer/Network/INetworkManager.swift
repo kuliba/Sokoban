@@ -182,5 +182,6 @@ protocol IProductsApi {
 
 //MARK: Rates
 protocol CurrencysProtocol {
-    func getABSCurrencyRates(headers: HTTPHeaders, currencyOne: String, currencyTwo: String, rateTypeID: Int, completionHandler: @escaping (_ success: Bool, _ currencys: [Currency]?) -> Void)
+    func getABSCurrencyRates(headers: HTTPHeaders, currencyOne: String, currencyTwo: String, rateTypeID: Int, completionHandler: @escaping (_ success: Bool, _ currencysCB: Double?) -> Void)
+    func getExchangeCurrencyRates(headers: HTTPHeaders, currency: String, completionHandler: @escaping (_ success: Bool, _ currency: Currency?) -> Void)
 }

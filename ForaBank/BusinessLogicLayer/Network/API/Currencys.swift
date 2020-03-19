@@ -18,7 +18,43 @@ class CurrencysService: CurrencysProtocol {
         self.host = host
     }
     
-    func getABSCurrencyRates(headers: HTTPHeaders, currencyOne: String, currencyTwo: String, rateTypeID: Int, completionHandler: @escaping (Bool, [Currency]?) -> Void) {
+    func getExchangeCurrencyRates(headers: HTTPHeaders, currency: String, completionHandler: @escaping (Bool, Currency?) -> Void) {
+        let url = host.apiBaseURL + "rest/getExchangeCurrencyRates"
+        let parameters: [String: AnyObject] = [
+            "currencyCodeAlpha": currency as AnyObject,
+        ]
+        Alamofire.request(url, method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+            .validate(statusCode: MultiRange(200..<300, 401..<402))
+            .validate(contentType: ["application/json"])
+            .responseJSON { [unowned self] response in
+                
+                
+                switch response.result {
+                case .success:
+                    print("getABSCurrencyRates \(String(describing: response.result.value))")
+                    if let json = response.result.value as? Dictionary<String, Any>,
+                    let data = json["data"] as? Dictionary<String, Any>{
+                        let buyCurrency = data["rateBuy"] as? Double
+                        let saleCurrency = data["rateSell"] as? Double
+                        //let rateCBCurrency = data[""]
+                        let currencyData = Currency(buyCurrency: buyCurrency,
+                                                    saleCurrency: saleCurrency,
+                                                    rateCBCurrency: nil)
+                        completionHandler(true, currencyData)
+                        return
+                    }else{
+                        completionHandler(false, nil)
+                        return
+                    }
+                case .failure(let error):
+                    print("\(error) \(self)")
+                }
+        }
+        
+        
+    }
+    
+    func getABSCurrencyRates(headers: HTTPHeaders, currencyOne: String, currencyTwo: String, rateTypeID: Int, completionHandler: @escaping (Bool, Double?) -> Void) {
         var currencys = [Currency]()
         let url = host.apiBaseURL + "rest/getABSCurrencyRates"
         let date = getDateCurrencys(data: Date())
@@ -37,7 +73,18 @@ class CurrencysService: CurrencysProtocol {
                         switch response.result {
                         case .success:
                             print("getABSCurrencyRates \(String(describing: response.result.value))")
-                            
+                            if let json = response.result.value as? Dictionary<String, Any>, let data = json["data"] as? Dictionary<String, Any>{
+                                if let rateCB = data["rate"] as? Double{
+                                    completionHandler(true, rateCB)
+                                    return
+                                }else{
+                                    completionHandler(false, nil)
+                                    return
+                                }
+                            }else{
+                                completionHandler(false, nil)
+                                return
+                            }
                         case .failure(let error):
                             print("\(error) \(self)")
                         }

@@ -457,3 +457,18 @@ extension NetworkManager{
         }
     }
 }
+
+
+extension NetworkManager{
+    func getExchangeCurrencyRates(currency: String, completionHandler: @escaping (Bool, Currency?) -> Void){
+        currencyService.getExchangeCurrencyRates(headers: headers, currency: currency) { (success, currency) in
+            if success{
+                guard let currencyData = currency else {
+                    completionHandler(false, nil)
+                    return
+                }
+                completionHandler(true, currencyData)
+            }
+        }
+    }
+}
