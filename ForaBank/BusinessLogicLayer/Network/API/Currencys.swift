@@ -18,6 +18,7 @@ class CurrencysService: CurrencysProtocol {
         self.host = host
     }
     
+    //получаем курсы валюты
     func getExchangeCurrencyRates(headers: HTTPHeaders, currency: String, completionHandler: @escaping (Bool, Currency?) -> Void) {
         let url = host.apiBaseURL + "rest/getExchangeCurrencyRates"
         let parameters: [String: AnyObject] = [
@@ -54,8 +55,9 @@ class CurrencysService: CurrencysProtocol {
         
     }
     
+    //получаем курс валюты ЦБ
     func getABSCurrencyRates(headers: HTTPHeaders, currencyOne: String, currencyTwo: String, rateTypeID: Int, completionHandler: @escaping (Bool, Double?) -> Void) {
-        var currencys = [Currency]()
+        //var currencys = [Currency]()
         let url = host.apiBaseURL + "rest/getABSCurrencyRates"
         let date = getDateCurrencys(data: Date())
         let parameters: [String: AnyObject] = [
@@ -72,19 +74,24 @@ class CurrencysService: CurrencysProtocol {
                         
                         switch response.result {
                         case .success:
-                            print("getABSCurrencyRates \(String(describing: response.result.value))")
-                            if let json = response.result.value as? Dictionary<String, Any>, let data = json["data"] as? Dictionary<String, Any>{
-                                if let rateCB = data["rate"] as? Double{
-                                    completionHandler(true, rateCB)
-                                    return
-                                }else{
-                                    completionHandler(false, nil)
-                                    return
-                                }
-                            }else{
+                            
+                            guard let json = response.result.value as? Dictionary<String, Any> else {
                                 completionHandler(false, nil)
                                 return
                             }
+                            guard let data = json["data"] as? Array<Dictionary<String, Any>> else {
+                                completionHandler(false, nil)
+                                return
+                            }
+                            
+                            guard let rateCB = data[0]["rate"] as? Double else {
+                                completionHandler(false, nil)
+                                return
+                            }
+                            
+                            completionHandler(true, rateCB)
+                            return
+                            
                         case .failure(let error):
                             print("\(error) \(self)")
                         }
@@ -93,3 +100,5 @@ class CurrencysService: CurrencysProtocol {
     
     
 }
+
+

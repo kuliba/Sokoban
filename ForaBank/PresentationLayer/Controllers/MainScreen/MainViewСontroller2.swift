@@ -62,6 +62,7 @@ class MainView_ontroller2: UIViewController, UICollectionViewDataSource, UIColle
         self.rateCBEUR.text = ""
         self.rateCBUSD.text = ""
         
+        
         self.getRates()
         
         screenSize = UIScreen.main.bounds
@@ -287,19 +288,62 @@ class MainView_ontroller2: UIViewController, UICollectionViewDataSource, UIColle
 
 //MARK: Rates
 private extension MainView_ontroller2{
+    
+    //получаем курс валюты
+    func getExchangeCurrencyRates(currencyName: String, completionHandler: @escaping (Currency?) -> Void){
+        NetworkManager.shared().getExchangeCurrencyRates(currency: currencyName) {(success, currency) in
+            guard success, currency != nil else{
+                completionHandler(nil)
+                return
+            }
+            completionHandler(currency)
+            return
+        }
+    }
+    
+    //получаем курс ЦБ
+    func getABSCurrencyRates(nameCurrencyFrom: String, nameCurrencyTo: String , rateTypeID: Int, completionHandler: @escaping (Double?) -> Void){
+        NetworkManager.shared().getABSCurrencyRates(currencyOne: nameCurrencyFrom, currencyTwo: nameCurrencyTo, rateTypeID: rateTypeID) { (success, rateCB) in
+            guard success, rateCB != nil else{
+                completionHandler(nil)
+                return
+            }
+            completionHandler(rateCB)
+            return
+        }
+    }
+    
+    //заполняем данные по курсу
     func getRates(){
-        //будет запрос на предоставление курса валют
-        print("ЗАпрос курсов валют ")
-        NetworkManager.shared().getExchangeCurrencyRates(currency: "USD") { [weak self](success, currency) in
-            if success{
-                guard let buy = currency?.buyCurrency  else {
-                    return
-                }
-                guard let sale = currency?.saleCurrency else {
-                    return
-                }
-                self?.buyUSD.text = "\(buy)"
-                self?.saleUSD.text = "\(sale)"
+        // достаем инфу по USD
+        self.getExchangeCurrencyRates(currencyName: "USD") { (currency) in
+            if currency?.buyCurrency != nil{
+                self.buyUSD.text = "\(NSString(format:"%.2f", currency!.buyCurrency!))"
+            }
+            if currency?.saleCurrency != nil{
+                self.saleUSD.text = "\(NSString(format:"%.2f", currency!.saleCurrency!))"
+            }
+        }
+        
+        self.getABSCurrencyRates(nameCurrencyFrom: "RUB", nameCurrencyTo: "USD", rateTypeID: 95006809) { (rateCB) in
+            if rateCB != nil{
+                self.rateCBUSD.text = "\(NSString(format:"%.2f",rateCB!))"
+            }
+        }
+        
+        //достаем инфу по EUR
+        self.getExchangeCurrencyRates(currencyName: "EUR") { (currency) in
+            if currency?.buyCurrency != nil{
+                self.buyEUR.text = "\(NSString(format:"%.2f", currency!.buyCurrency!))"
+            }
+            if currency?.saleCurrency != nil{
+                self.saleEUR.text = "\(NSString(format:"%.2f", currency!.saleCurrency!))"
+            }
+        }
+        
+        self.getABSCurrencyRates(nameCurrencyFrom: "RUB", nameCurrencyTo: "EUR", rateTypeID: 95006809) { (rateCB) in
+            if rateCB != nil{
+                self.rateCBEUR.text = "\(NSString(format:"%.2f",rateCB!))"
             }
         }
     }

@@ -460,6 +460,7 @@ extension NetworkManager{
 
 
 extension NetworkManager{
+    
     func getExchangeCurrencyRates(currency: String, completionHandler: @escaping (Bool, Currency?) -> Void){
         currencyService.getExchangeCurrencyRates(headers: headers, currency: currency) { (success, currency) in
             if success{
@@ -468,6 +469,23 @@ extension NetworkManager{
                     return
                 }
                 completionHandler(true, currencyData)
+            }
+        }
+    }
+    
+    func getABSCurrencyRates(currencyOne: String, currencyTwo: String, rateTypeID: Int, completionHandler: @escaping (Bool, Double?) -> Void){
+        currencyService.getABSCurrencyRates(headers: headers, currencyOne: currencyOne, currencyTwo: currencyTwo, rateTypeID: rateTypeID) { (success, rateCB) in
+            if success{
+                if rateCB != nil{
+                    completionHandler(true, rateCB)
+                    return
+                }else{
+                    completionHandler(false, nil)
+                    return
+                }
+            }else{
+                completionHandler(false, nil)
+                return
             }
         }
     }
