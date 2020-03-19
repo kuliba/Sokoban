@@ -18,7 +18,8 @@ class SignInViewController: UIViewController, ContactsPickerDelegate {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var centralView: UIView!
-
+    @IBOutlet weak var buttonSignIn: ButtonRounded!
+    @IBOutlet weak var foraPreloader: RefreshView!
 
     var segueId: String? = nil
     var backSegueId: String? = nil
@@ -64,17 +65,24 @@ class SignInViewController: UIViewController, ContactsPickerDelegate {
     }
 
     @IBAction func signInButtonClicked() {
+        //foraPreloader.frame = buttonSignIn.frame
+        foraPreloader.startAnimation()
+        foraPreloader.isHidden = false
+        buttonSignIn.changeEnabled(isEnabled: false)
         NetworkManager.shared().login(login: self.loginTextField.text ?? "",
                                       password: self.passwordTextField.text ?? "",
                                       completionHandler: { [unowned self] success, errorMessage in
                                           if success {
+                                            self.foraPreloader.stopAnimating()
+                                            self.foraPreloader.isHidden = true
+                                            self.buttonSignIn.changeEnabled(isEnabled: true)
                                               self.performSegue(withIdentifier: "smsVerification", sender: self)
                                               store.dispatch(createCredentials(login: self.loginTextField.text ?? "", pwd: self.passwordTextField.text ?? ""))
-                                        
-
-                                            
                                           } else {
                                               AlertService.shared.show(title: "Неудача", message: errorMessage, cancelButtonTitle: "Ок", okButtonTitle: nil, cancelCompletion: nil, okCompletion: nil)
+                                            self.buttonSignIn.changeEnabled(isEnabled: true)
+                                            self.foraPreloader.stopAnimating()
+                                            self.foraPreloader.isHidden = true
                                           }
                                       })
     }
