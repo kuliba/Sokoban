@@ -10,12 +10,19 @@ import UIKit
 
 class MainVC: UIViewController {
 
+    var arrayCards = Array<Card>(){
+        didSet{
+            print("reloadData")
+            collectionViewCard.reloadData()
+        }
+    }
     var arrayCurrency = Array<Currency>(){
         didSet{
             collectionViewRates.reloadData()
         }
     }
     let arrayCurrencyName = ["EUR", "USD"]
+    
     
     @IBOutlet weak var collectionViewCard: UICollectionView!
     @IBOutlet weak var collectionViewRates: UICollectionView!
@@ -24,7 +31,8 @@ class MainVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
-        getAllRates()
+        getAllRates() // запрашиваем курс валют
+        getCards()
         activityDownlandRates.color = .white
         // Do any additional setup after loading the view.
     }
@@ -51,7 +59,7 @@ extension MainVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollec
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == collectionViewCard{
-            return 1
+            return arrayCards.count
         }else if collectionView == collectionViewRates{
             return arrayCurrency.count
         }else{
@@ -63,10 +71,14 @@ extension MainVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollec
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == collectionViewCard{
+            print("1")
             if let item = collectionViewCard.dequeueReusableCell(withReuseIdentifier: "cellCard", for: indexPath) as? CardCVC{
-                item.amountCard.text = "1"
-                item.nameCard.text = "2"
-                item.numberCard.text = "*0888"
+                print("2")
+                let card = arrayCards[indexPath.row]
+                item.amountCard.text = "\(card.balance)"
+                let nameCard = (card.name == nil) ? card.customName : card.name
+                item.nameCard.text = "\(nameCard ?? "NO")"
+                item.numberCard.text = "*\(card.number.prefix(4))"
                 return item
             }
         }else if collectionView == collectionViewRates{
@@ -151,6 +163,23 @@ private extension MainVC{
                 self!.activityDownlandRates.stopAnimating()
                 self!.activityDownlandRates.isHidden = true
                 self!.arrayCurrency.append(currencyR)
+            }
+        }
+    }
+}
+
+//MARK: Get Cards
+private extension MainVC{
+    func getCards(){
+        print("запрос ушел")
+        NetworkManager.shared().getCardList { [weak self](success, cards) in
+            if success{
+                print("Запрос пришел")
+                guard cards != nil else {
+                    return
+                }
+                self!.arrayCards.removeAll()
+                self!.arrayCards = cards!
             }
         }
     }
