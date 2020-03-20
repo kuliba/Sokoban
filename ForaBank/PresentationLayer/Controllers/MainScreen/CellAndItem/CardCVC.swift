@@ -21,3 +21,13 @@ class RateCVC: UICollectionViewCell{
     @IBOutlet weak var cbCarrency: UILabel!
     
 }
+
+class ActionCell: UITableViewCell{
+    @IBOutlet weak var nameCell: UILabel!
+    @IBOutlet weak var imageCell: UIImageView!
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.selectionStyle = .none
+    }
+}

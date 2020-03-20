@@ -469,6 +469,8 @@ extension NetworkManager{
                     return
                 }
                 completionHandler(true, currencyData)
+            }else{
+                completionHandler(false, nil)
             }
         }
     }
