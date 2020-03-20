@@ -146,6 +146,7 @@ private extension MainVC{
         self.activityDownlandRates.isHidden = false
         let currencyR = Currency()
         self.getExchangeCurrencyRates(currencyName: nameCurrency) { [weak self](currency) in
+            print("currency", currency)
             if currency?.buyCurrency != nil{
                 currencyR.buyCurrency = currency!.buyCurrency!
             }
@@ -157,6 +158,7 @@ private extension MainVC{
             }
             
             self!.getABSCurrencyRates(nameCurrencyFrom: "RUB", nameCurrencyTo: nameCurrency, rateTypeID: 95006809) { [weak self](rateCB) in
+                print("rateCB", rateCB)
                 if rateCB != nil{
                     currencyR.rateCBCurrency = rateCB!
                 }
@@ -175,6 +177,7 @@ private extension MainVC{
         NetworkManager.shared().getCardList { [weak self](success, cards) in
             if success{
                 print("Запрос пришел")
+                print("cards", cards)
                 guard cards != nil else {
                     return
                 }
