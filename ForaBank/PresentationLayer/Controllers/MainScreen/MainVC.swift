@@ -39,21 +39,29 @@ class MainVC: UIViewController {
     var arrayCurrency = Array<Currency>(){
         didSet{
             collectionViewRates.reloadData()
+            pageRates.numberOfPages = arrayCurrency.count
+            pageRates.currentPage = 0
         }
     }
     let arrayCurrencyName = ["EUR", "USD"] // курсы валют, которые нужнл загрузить на экран
-    var arraysectionTV = [SectionTV]()
+    var arraysectionTV = [SectionTV]() //секции и ячейки
     
     @IBOutlet weak var collectionViewCard: UICollectionView!
     @IBOutlet weak var collectionViewRates: UICollectionView!
     @IBOutlet weak var activityDownlandRates: UIActivityIndicatorView! //для обозначение загрузки курсов валют
     @IBOutlet weak var activityDownlandCards: UIActivityIndicatorView! //для обозначение загрузки курсов валют
     @IBOutlet weak var tableViewActions: UITableView!
+    @IBOutlet weak var pageRates: UIPageControl!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         getClassSection() //Создаем секции и ячейки
         setupCollectionView()
+        
+        pageRates.numberOfPages = 1
+        pageRates.currentPage = 0
+        
         getAllRates() // запрашиваем курс валют
         getCards() //запрашиваем данные о карте
         activityDownlandRates.color = .white
@@ -131,6 +139,15 @@ extension MainVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollec
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
         return collectionView.frame.size
     }
+
+    //MARK: Action Page Rates
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let visibleRect = CGRect(origin: self.collectionViewRates.contentOffset, size: self.collectionViewRates.bounds.size)
+        let visiblePoint = CGPoint(x: visibleRect.midX, y: visibleRect.midY)
+        if let visibleIndexPath = self.collectionViewRates.indexPathForItem(at: visiblePoint) {
+            self.pageRates.currentPage = visibleIndexPath.row
+        }
+    }
 }
 
 //MARK: Rates
@@ -146,6 +163,7 @@ private extension MainVC{
     func getExchangeCurrencyRates(currencyName: String, completionHandler: @escaping (Currency?) -> Void){
         NetworkManager.shared().getExchangeCurrencyRates(currency: currencyName) {(success, currency) in
             guard success, currency != nil else{
+                print("Не удалось получить курсы getExchangeCurrencyRates")
                 completionHandler(nil)
                 return
             }
@@ -158,6 +176,7 @@ private extension MainVC{
     func getABSCurrencyRates(nameCurrencyFrom: String, nameCurrencyTo: String , rateTypeID: Int, completionHandler: @escaping (Double?) -> Void){
         NetworkManager.shared().getABSCurrencyRates(currencyOne: nameCurrencyFrom, currencyTwo: nameCurrencyTo, rateTypeID: rateTypeID) { (success, rateCB) in
             guard success, rateCB != nil else{
+                print("Не удалось получить курсы getABSCurrencyRates")
                 completionHandler(nil)
                 return
             }
@@ -276,7 +295,87 @@ extension MainVC: UITableViewDelegate, UITableViewDataSource, ExpandableHeaderVi
         return header
     }
     
-    //обновляем  строки
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("id = ", indexPath)
+        if indexPath.section == 0{ //Частые действия
+            guard let paymentDetailsVC = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentDetailsViewController") as? PaymentsDetailsViewController else {
+                return
+            }
+            let sourceProvider = PaymentOptionCellProvider()
+            let destinationProvider = PaymentOptionCellProvider()
+            let destinationProviderCardNumber = CardNumberCellProvider()
+            let destinationProviderAccountNumber = AccountNumberCellProvider()
+            let destinationProviderPhoneNumber = PhoneNumberCellProvider()
+            
+            paymentDetailsVC.sourceConfigurations = [
+                PaymentOptionsPagerItem(provider: sourceProvider, delegate: paymentDetailsVC)
+            ]
+            switch indexPath.row {
+            case 0: //между своими счетами
+                paymentDetailsVC.destinationConfigurations = [
+                    PaymentOptionsPagerItem(provider: destinationProvider, delegate: paymentDetailsVC)
+                ]
+                paymentDetailsVC.messageRecipientIsHidden = true // убираем поле комментария при переводе между своими счетами
+                let rootVC = tableView.parentContainerViewController()
+                rootVC?.present(paymentDetailsVC, animated: true, completion: nil)
+                break
+            case 1: //клиенту фора банка
+                paymentDetailsVC.destinationConfigurations = [
+                    PhoneNumberPagerItem(provider: destinationProviderPhoneNumber, delegate: paymentDetailsVC),
+                    CardNumberPagerItem(provider: destinationProviderCardNumber, delegate: paymentDetailsVC),
+                    AccountNumberPagerItem(provider: destinationProviderAccountNumber, delegate: paymentDetailsVC),
+                ]
+                let rootVC = tableView.parentContainerViewController()
+                rootVC?.present(paymentDetailsVC, animated: true, completion: nil)
+                break
+            default:
+                print("Не удалось перейти 0!!!")
+            }
+        }else if indexPath.section == 1{ //Отделения и банки
+            switch indexPath.row {
+            case 0: //показать на карте
+                print("Переход к картам")
+//                guard let servicesVC = UIStoryboard(name: "Services", bundle: nil).instantiateViewController(withIdentifier: "ServiceViewController") as? ServicesViewController else {
+//                    print("Не удалось получить доступ к ServicesViewController")
+//                    return
+//                }
+//                let rootVC = tableView.parentContainerViewController()
+//                rootVC?.present(servicesVC, animated: true, completion: nil)
+            case 1:
+                print("Список отделений")
+            default:
+                print("Не удалось перейти 1!!!")
+            }
+        }else if indexPath.section == 2{ //связь с банком
+            switch indexPath.row {
+            case 0:
+                let numberPhone = arraysectionTV[indexPath.section].arrayCell[indexPath.row].nameCell
+                callNumber(numberPhone)
+            case 1:
+                let numberPhone = arraysectionTV[indexPath.section].arrayCell[indexPath.row].nameCell
+                callNumber(numberPhone)
+            case 2:
+                let email = arraysectionTV[indexPath.section].arrayCell[indexPath.row].nameCell
+                guard let url = URL(string: "mailto:\(email)") else{return}
+                
+                let alertMail = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                let alertActionMail = UIAlertAction(title: "Написать: " + email, style: .default) { (_) in
+                    if UIApplication.shared.canOpenURL(url) {
+                        UIApplication.shared.open(url)
+                    }
+                }
+                let alertCancel = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
+                alertMail.addAction(alertActionMail)
+                alertMail.addAction(alertCancel)
+                self.present(alertMail, animated: true, completion: nil)
+            default:
+                print("Почта")
+            }
+        }
+    }
+    
+    //MARK: toggleSection
+    //обновляем  строки (срабатываем при нажатии на секций)
     func toggleSection(header: ExpactableHeaderView, section: Int) {
         arraysectionTV[section].expanded = !arraysectionTV[section].expanded
         
@@ -299,14 +398,14 @@ extension MainVC: UITableViewDelegate, UITableViewDataSource, ExpandableHeaderVi
         let sectionOne = SectionTV(name: "Частые действия", arrayCell: arrayCellSection1, expanded: true)
         self.arraysectionTV.append(sectionOne)
         
-        var arrayCellSection2 = Array<CellTableView>()
-        let cell21 = CellTableView(nameCell: "Мой номер", nameImageCell: "bilane")
-        let cell22 = CellTableView(nameCell: "За аренду", nameImageCell: "sberBank")
-        arrayCellSection2.append(cell21)
-        arrayCellSection2.append(cell22)
-        
-        let sectionTwo = SectionTV(name: "Шаблоны и автоплатежи", arrayCell: arrayCellSection2, expanded: true)
-        self.arraysectionTV.append(sectionTwo)
+//        var arrayCellSection2 = Array<CellTableView>()
+//        let cell21 = CellTableView(nameCell: "Мой номер", nameImageCell: "bilane")
+//        let cell22 = CellTableView(nameCell: "За аренду", nameImageCell: "sberBank")
+//        arrayCellSection2.append(cell21)
+//        arrayCellSection2.append(cell22)
+//
+//        let sectionTwo = SectionTV(name: "Шаблоны и автоплатежи", arrayCell: arrayCellSection2, expanded: true)
+//        self.arraysectionTV.append(sectionTwo)
         
         var arrayCellSection3 = Array<CellTableView>()
         let cell31 = CellTableView(nameCell: "Показать на карте", nameImageCell: "map")

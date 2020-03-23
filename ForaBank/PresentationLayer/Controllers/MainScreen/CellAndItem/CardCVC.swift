@@ -28,6 +28,8 @@ class ActionCell: UITableViewCell{
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        
+        self.nameCell.textColor = .black
         self.selectionStyle = .none
     }
 }

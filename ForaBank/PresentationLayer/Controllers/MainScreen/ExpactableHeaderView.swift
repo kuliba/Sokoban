@@ -24,14 +24,34 @@ class ExpactableHeaderView: UITableViewHeaderFooterView {
         
     }
     
+    
     override func layoutSubviews() {
         super.layoutSubviews()
-        
+        print("layoutSubviews")
         self.backgroundView?.backgroundColor = .clear // цвет секции
         textLabel?.textColor = .black
-        textLabel?.font = UIFont(name: (textLabel?.font.fontName)!, size: 13)
+        textLabel?.font = UIFont(name: (textLabel?.font.fontName)!, size: 13)//UIFont.boldSystemFont(ofSize: 13)
+        UIFont.boldSystemFont(ofSize: 13)
         contentView.backgroundColor = .clear
-        //contentView.tintColor = .clear
+        
+        //self.backgroundView = UIImageView()
+        
+//        let imageSectionOn = UIImageView()
+//        imageSectionOn.contentMode = .scaleAspectFit
+//        imageSectionOn.image = UIImage(named: "hidden")
+//        let framImage = CGRect(x: 0, y: 0, width: 13, height: 13)
+//        imageSectionOn.frame = framImage
+//        //self.backgroundView = imageSectionOn
+//        self.addSubview(imageSectionOn)
+//
+//        imageSectionOn.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint(item: imageSectionOn, attribute: NSLayoutConstraint.Attribute.centerY, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.centerY, multiplier: 1, constant: 0).isActive = true
+//        NSLayoutConstraint(item: imageSectionOn, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: 13).isActive = true
+//        NSLayoutConstraint(item: imageSectionOn, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: 13).isActive = true
+//        NSLayoutConstraint(item: imageSectionOn, attribute: .trailing, relatedBy: .equal, toItem: self.backgroundView, attribute: .trailing, multiplier: 1, constant: -20).isActive = true
+        
+        
+
     }
     
     override init(reuseIdentifier: String?) {
