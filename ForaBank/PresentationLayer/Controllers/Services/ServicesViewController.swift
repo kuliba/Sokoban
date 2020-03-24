@@ -21,6 +21,11 @@ class ServicesViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var zoomInButton: OnMapButton!
     @IBOutlet weak var focusButton: OnMapButton!
     @IBOutlet weak var containerView: RoundedEdgeView!
+    @IBOutlet weak var buttonBack: UIButton!{
+        didSet{
+            buttonBack.isHidden = true
+        }
+    }
     @IBOutlet weak var scrollView: UIScrollView!
     var branches = [BankBranch]()
     var annotations = [BankBranchAnnotation]()
@@ -41,6 +46,9 @@ class ServicesViewController: UIViewController, UIScrollViewDelegate {
 
     }
 
+    @IBAction func actionBack(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
     
     let data_ = [
         [

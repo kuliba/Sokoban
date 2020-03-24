@@ -26,6 +26,7 @@ class AnnotationTableViewCell: UITableViewCell {
         buttonRoute.setTitleColor(UIColor.white, for: .normal)
         buttonRoute.layer.cornerRadius = buttonRoute.frame.height/3
         
+        //buttonCall.isHidden = true
         buttonCall.backgroundColor = UIColor(hexFromString: "EE433C")
         buttonCall.setTitle("вызов", for: .normal)
         buttonCall.setTitleColor(UIColor.white, for: .normal)
@@ -52,7 +53,7 @@ class AnnotationTableViewCell: UITableViewCell {
             phoneLabel.text = t
         }
         // нет телефона, нет кнопки
-        if phone == nil || phone == ""{
+        if phoneLabel.text == nil || phoneLabel.text == ""{
             buttonCall.isUserInteractionEnabled = false
             buttonCall.alpha = 0
         }else{

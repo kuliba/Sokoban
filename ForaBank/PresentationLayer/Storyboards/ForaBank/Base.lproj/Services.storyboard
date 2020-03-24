@@ -114,41 +114,42 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="41"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Карта" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="05D-Hx-0wR">
-                                        <rect key="frame" x="137.5" y="9" width="45" height="21"/>
+                                        <rect key="frame" x="137.5" y="10" width="45" height="21.5"/>
                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="telephone" translatesAutoresizingMaskIntoConstraints="NO" id="zRm-42-u6L">
-                                        <rect key="frame" x="283" y="15" width="20" height="26"/>
-                                        <accessibility key="accessibilityConfiguration">
-                                            <accessibilityTraits key="traits" button="YES" link="YES" image="YES"/>
-                                        </accessibility>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="20" id="OOE-rv-x5t"/>
-                                        </constraints>
-                                    </imageView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kd8-fi-bRT">
-                                        <rect key="frame" x="272" y="2" width="46" height="42"/>
-                                        <state key="normal" title="Button"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kd8-fi-bRT">
+                                        <rect key="frame" x="222.5" y="0.0" width="87.5" height="41"/>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" image="phone" catalog="system"/>
                                         <connections>
                                             <action selector="preparePopUp:" destination="qIQ-98-ugo" eventType="touchUpInside" id="xNu-HX-rWd"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xdo-us-NFZ">
+                                        <rect key="frame" x="10" y="0.0" width="87.5" height="41"/>
+                                        <state key="normal" image="button_back"/>
+                                        <connections>
+                                            <action selector="actionBack:" destination="qIQ-98-ugo" eventType="touchUpInside" id="uPp-lt-Ua0"/>
                                         </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="zRm-42-u6L" secondAttribute="trailing" constant="17" id="206-b0-oxj"/>
-                                    <constraint firstItem="kd8-fi-bRT" firstAttribute="top" secondItem="0Bm-Sd-95u" secondAttribute="top" constant="2" id="5r2-Zf-CRp"/>
-                                    <constraint firstAttribute="bottom" secondItem="kd8-fi-bRT" secondAttribute="bottom" constant="-3" id="7UE-Tj-90s"/>
-                                    <constraint firstAttribute="trailing" secondItem="kd8-fi-bRT" secondAttribute="trailing" constant="2" id="Eox-V1-YTB"/>
-                                    <constraint firstAttribute="bottom" secondItem="zRm-42-u6L" secondAttribute="bottom" id="GVM-Dj-pST"/>
+                                    <constraint firstItem="kd8-fi-bRT" firstAttribute="top" secondItem="0Bm-Sd-95u" secondAttribute="top" id="6fo-tY-bbK"/>
+                                    <constraint firstAttribute="bottom" secondItem="xdo-us-NFZ" secondAttribute="bottom" id="6sQ-0n-8nO"/>
+                                    <constraint firstItem="kd8-fi-bRT" firstAttribute="leading" secondItem="05D-Hx-0wR" secondAttribute="trailing" constant="40" id="9Ln-CL-2bS"/>
+                                    <constraint firstItem="05D-Hx-0wR" firstAttribute="centerX" secondItem="0Bm-Sd-95u" secondAttribute="centerX" id="IMC-jt-aep"/>
+                                    <constraint firstItem="kd8-fi-bRT" firstAttribute="centerY" secondItem="05D-Hx-0wR" secondAttribute="centerY" id="M9e-Wd-9ar"/>
+                                    <constraint firstItem="xdo-us-NFZ" firstAttribute="centerY" secondItem="05D-Hx-0wR" secondAttribute="centerY" id="QPV-xa-9dw"/>
                                     <constraint firstAttribute="height" constant="41" id="U42-WA-26c"/>
-                                    <constraint firstAttribute="bottom" secondItem="05D-Hx-0wR" secondAttribute="bottom" constant="11" id="cGj-N5-xyx"/>
-                                    <constraint firstItem="zRm-42-u6L" firstAttribute="centerY" secondItem="05D-Hx-0wR" secondAttribute="centerY" constant="8.5" id="eqA-cN-bHI"/>
-                                    <constraint firstItem="zRm-42-u6L" firstAttribute="top" secondItem="0Bm-Sd-95u" secondAttribute="top" constant="15" id="fn1-Wj-60n"/>
-                                    <constraint firstItem="kd8-fi-bRT" firstAttribute="leading" secondItem="05D-Hx-0wR" secondAttribute="trailing" constant="89.5" id="tvf-rr-VS4"/>
-                                    <constraint firstItem="05D-Hx-0wR" firstAttribute="centerX" secondItem="0Bm-Sd-95u" secondAttribute="centerX" id="yV9-VC-Ok6"/>
+                                    <constraint firstItem="xdo-us-NFZ" firstAttribute="top" secondItem="0Bm-Sd-95u" secondAttribute="top" id="VuN-Nd-Ubp"/>
+                                    <constraint firstAttribute="trailing" secondItem="kd8-fi-bRT" secondAttribute="trailing" constant="10" id="a1F-ky-vuz"/>
+                                    <constraint firstAttribute="bottom" secondItem="kd8-fi-bRT" secondAttribute="bottom" id="iYd-yA-bCK"/>
+                                    <constraint firstItem="xdo-us-NFZ" firstAttribute="leading" secondItem="0Bm-Sd-95u" secondAttribute="leading" constant="10" id="qoU-MV-wCY"/>
+                                    <constraint firstItem="05D-Hx-0wR" firstAttribute="leading" secondItem="xdo-us-NFZ" secondAttribute="trailing" constant="40" id="y0I-fS-Y3a"/>
+                                    <constraint firstItem="05D-Hx-0wR" firstAttribute="centerY" secondItem="0Bm-Sd-95u" secondAttribute="centerY" id="zHi-Lh-owJ"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -189,7 +190,7 @@
                     <connections>
                         <outlet property="annotationsInfoHeight" destination="nUW-Iw-BUI" id="cQc-fI-Xge"/>
                         <outlet property="annotationsInfoView" destination="wgf-Im-hTM" id="via-KI-68U"/>
-                        <outlet property="callIcon" destination="zRm-42-u6L" id="sWU-rx-wog"/>
+                        <outlet property="buttonBack" destination="xdo-us-NFZ" id="QPX-qx-Qt8"/>
                         <outlet property="containerView" destination="5VF-sr-6Ly" id="WRb-dH-y9V"/>
                         <outlet property="focusButton" destination="3xC-h5-F9E" id="KRG-w7-Eof"/>
                         <outlet property="mapView" destination="r2X-DS-9gL" id="mvD-Za-KId"/>
@@ -436,12 +437,13 @@
         </scene>
     </scenes>
     <resources>
+        <image name="button_back" width="8" height="14"/>
         <image name="callfrompopup.png" width="16" height="16"/>
         <image name="mailfrompopup.png" width="16" height="16"/>
         <image name="map_locate_on_me" width="16" height="16"/>
         <image name="map_zoom_minus" width="16" height="2"/>
         <image name="map_zoom_plus" width="16" height="16"/>
+        <image name="phone" catalog="system" width="64" height="56"/>
         <image name="tabbar_icon_services" width="33" height="30"/>
-        <image name="telephone" width="50" height="50"/>
     </resources>
 </document>

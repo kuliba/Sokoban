@@ -30,8 +30,7 @@ class ExpactableHeaderView: UITableViewHeaderFooterView {
         print("layoutSubviews")
         self.backgroundView?.backgroundColor = .clear // цвет секции
         textLabel?.textColor = .black
-        textLabel?.font = UIFont(name: (textLabel?.font.fontName)!, size: 13)//UIFont.boldSystemFont(ofSize: 13)
-        UIFont.boldSystemFont(ofSize: 13)
+        textLabel?.font = UIFont(name: "Roboto", size: 13)//UIFont.boldSystemFont(ofSize: 13)
         contentView.backgroundColor = .clear
         
         //self.backgroundView = UIImageView()

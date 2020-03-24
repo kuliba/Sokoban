@@ -335,14 +335,25 @@ extension MainVC: UITableViewDelegate, UITableViewDataSource, ExpandableHeaderVi
             switch indexPath.row {
             case 0: //показать на карте
                 print("Переход к картам")
-//                guard let servicesVC = UIStoryboard(name: "Services", bundle: nil).instantiateViewController(withIdentifier: "ServiceViewController") as? ServicesViewController else {
-//                    print("Не удалось получить доступ к ServicesViewController")
-//                    return
-//                }
-//                let rootVC = tableView.parentContainerViewController()
-//                rootVC?.present(servicesVC, animated: true, completion: nil)
-            case 1:
-                print("Список отделений")
+                guard let servicesVC = UIStoryboard(name: "Services", bundle: nil).instantiateViewController(withIdentifier: "ServiceViewController") as? ServicesViewController else {
+                    print("Не удалось получить доступ к ServicesViewController")
+                    return
+                }
+                servicesVC.modalPresentationStyle = .fullScreen
+                let rootVC = tableView.parentContainerViewController()
+                rootVC?.present(servicesVC, animated: true, completion: {
+                    servicesVC.buttonBack.isHidden = false
+                })
+                
+            case 1: //список отделений
+                guard let listBranchesVC = UIStoryboard(name: "MainScreen", bundle: nil).instantiateViewController(withIdentifier: "BankBranchesList") as? ListBankBranchesVC else {
+                    print("Не удалось получить доступ к BankBranchesList")
+                    return
+                }
+                listBranchesVC.modalPresentationStyle = .fullScreen
+                let rootVC = tableView.parentContainerViewController()
+                rootVC?.present(listBranchesVC, animated: true, completion: nil)
+                break
             default:
                 print("Не удалось перейти 1!!!")
             }

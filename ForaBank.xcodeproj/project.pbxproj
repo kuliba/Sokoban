@@ -344,6 +344,7 @@
 		BD8106A1234E1263004A43E9 /* PhoneNumberCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8106A0234E1262004A43E9 /* PhoneNumberCellProvider.swift */; };
 		BD82F97B2383E0AA00EB6C8C /* ProductListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD82F97A2383E0AA00EB6C8C /* ProductListViewController.swift */; };
 		BD94E09F231EA6E50006456E /* MasksFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD94E09E231EA6E50006456E /* MasksFormatting.swift */; };
+		BD9A6C11242A138A00E8C981 /* ListBankBranchesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD9A6C10242A138A00E8C981 /* ListBankBranchesVC.swift */; };
 		BDABE68323463D4A00CA0754 /* DropDownPagerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDABE68123463D4A00CA0754 /* DropDownPagerViewCell.swift */; };
 		BDABE68423463D4A00CA0754 /* DropDownPagerViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDABE68223463D4A00CA0754 /* DropDownPagerViewCell.xib */; };
 		BDABE688234640D000CA0754 /* PaymentOptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDABE687234640D000CA0754 /* PaymentOptionView.swift */; };
@@ -751,6 +752,7 @@
 		BD8106A0234E1262004A43E9 /* PhoneNumberCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberCellProvider.swift; sourceTree = "<group>"; };
 		BD82F97A2383E0AA00EB6C8C /* ProductListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListViewController.swift; sourceTree = "<group>"; };
 		BD94E09E231EA6E50006456E /* MasksFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasksFormatting.swift; sourceTree = "<group>"; };
+		BD9A6C10242A138A00E8C981 /* ListBankBranchesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ListBankBranchesVC.swift; path = ForaBank/PresentationLayer/Controllers/MainScreen/ListBankBranchesVC.swift; sourceTree = SOURCE_ROOT; };
 		BDABE68123463D4A00CA0754 /* DropDownPagerViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownPagerViewCell.swift; sourceTree = "<group>"; };
 		BDABE68223463D4A00CA0754 /* DropDownPagerViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DropDownPagerViewCell.xib; sourceTree = "<group>"; };
 		BDABE687234640D000CA0754 /* PaymentOptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentOptionView.swift; sourceTree = "<group>"; };
@@ -1247,6 +1249,7 @@
 				963B5B7C2394FFD6000F3A38 /* MainViewСontroller2.swift */,
 				BD671AF2242240C4002DE082 /* RatesView.swift */,
 				BDBB899E2423B4CF0058982D /* MainVC.swift */,
+				BD9A6C10242A138A00E8C981 /* ListBankBranchesVC.swift */,
 				BD4D09D224250401004FE61F /* ExpactableHeaderView.swift */,
 			);
 			path = MainScreen;
@@ -2170,6 +2173,7 @@
 				BDB6B0112326A9C10006A534 /* PasscodeSignUpActions.swift in Sources */,
 				961ACBFE23F1255000D2E9EC /* PaymentRedOptionView.swift in Sources */,
 				BDAEE0ED2399104C007690E7 /* ISettingsPresenter.swift in Sources */,
+				BD9A6C11242A138A00E8C981 /* ListBankBranchesVC.swift in Sources */,
 				9660EEE8234C7B1100AE0647 /* CollapsibleTableViewController.swift in Sources */,
 				9605AC162383D5A200652635 /* MainViewController.swift in Sources */,
 				96617C1123E2BFC8001F7C0D /* TransferConfirmation.swift in Sources */,
