@@ -253,14 +253,6 @@ extension MainVC: UITableViewDelegate, UITableViewDataSource, ExpandableHeaderVi
         return 44
     }
     
-//    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int){
-//        print("Меняем section")
-//        view.tintColor = .clear
-//        let header = view as! UITableViewHeaderFooterView
-//        header.textLabel?.font = UIFont(name: (header.textLabel?.font.fontName)!, size: 13)
-//        header.textLabel?.textColor = .black
-//    }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return arraysectionTV[section].arrayCell.count
     }
