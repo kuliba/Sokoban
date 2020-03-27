@@ -39,16 +39,29 @@ enum ProductType: String, Comparable {
     var localizedName: String {
         switch self {
         case .card:
-            return NSLocalizedString("Карта", comment: "")
+            return NSLocalizedString("Карта", comment: "123")
         case .account:
-            return NSLocalizedString("Счёт", comment: "")
+            return NSLocalizedString("Счёт", comment: "444")
         case .deposit:
-            return NSLocalizedString("Вклад", comment: "")
+            return NSLocalizedString("Вклад", comment: "555")
         case .loan:
-            return NSLocalizedString("Кредит", comment: "")
+            return NSLocalizedString("Кредит", comment: "666")
         }
     }
 
+    var commentProduct: String{
+        switch self {
+        case .card:
+            return "Comment Card"
+        case .account:
+            return "Comment Account"
+        case .deposit:
+            return "Comment Deposit"
+        case .loan:
+            return "Comment Loan"
+        }
+    }
+    
     var localizedListName: String {
         switch self {
         case .card:

@@ -333,6 +333,7 @@
 		BD671AF3242240C4002DE082 /* RatesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD671AF2242240C4002DE082 /* RatesView.swift */; };
 		BD671AF524224414002DE082 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD671AF424224414002DE082 /* Currency.swift */; };
 		BD671AF724225138002DE082 /* Currencys.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD671AF624225138002DE082 /* Currencys.swift */; };
+		BD6888A8242E31DE0051DF70 /* ItemProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6888A7242E31DE0051DF70 /* ItemProduct.swift */; };
 		BD6D5674233A0B9000B7CF4B /* UnauthorizedZoneTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6D5673233A0B9000B7CF4B /* UnauthorizedZoneTabBarController.swift */; };
 		BD6F59782334B74F002F4D4E /* StateActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6F59772334B74F002F4D4E /* StateActions.swift */; };
 		BD6F597A2334BAA4002F4D4E /* StateReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6F59792334BAA4002F4D4E /* StateReducer.swift */; };
@@ -741,6 +742,7 @@
 		BD671AF2242240C4002DE082 /* RatesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatesView.swift; sourceTree = "<group>"; };
 		BD671AF424224414002DE082 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
 		BD671AF624225138002DE082 /* Currencys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currencys.swift; sourceTree = "<group>"; };
+		BD6888A7242E31DE0051DF70 /* ItemProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemProduct.swift; sourceTree = "<group>"; };
 		BD6D5673233A0B9000B7CF4B /* UnauthorizedZoneTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnauthorizedZoneTabBarController.swift; sourceTree = "<group>"; };
 		BD6F59772334B74F002F4D4E /* StateActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateActions.swift; sourceTree = "<group>"; };
 		BD6F59792334BAA4002F4D4E /* StateReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateReducer.swift; sourceTree = "<group>"; };
@@ -987,6 +989,7 @@
 		09C7C30B2174727A000EE472 /* Products */ = {
 			isa = PBXGroup;
 			children = (
+				BD6888A6242E31930051DF70 /* ProductsList */,
 				BDC984B723916C1E0087304A /* CarouselViewController.swift */,
 				96E541142341656300770C06 /* ExpandingTableViewCell.swift */,
 				BDE4D07F232248420070BC3D /* ProductAboutViewController.swift */,
@@ -1668,6 +1671,14 @@
 				BD588AAD237D8D7400727056 /* ProductsList.swift */,
 			);
 			path = Placeholders;
+			sourceTree = "<group>";
+		};
+		BD6888A6242E31930051DF70 /* ProductsList */ = {
+			isa = PBXGroup;
+			children = (
+				BD6888A7242E31DE0051DF70 /* ItemProduct.swift */,
+			);
+			path = ProductsList;
 			sourceTree = "<group>";
 		};
 		BD6D5672233A0B2C00B7CF4B /* Zones */ = {
@@ -2392,6 +2403,7 @@
 				A568142621CBCD48002C0899 /* BankBranchClusterView.swift in Sources */,
 				BD6F597A2334BAA4002F4D4E /* StateReducer.swift in Sources */,
 				A5C5E6D621A2B3F7001D6250 /* DepositsCardsListOnholdBlockViewController.swift in Sources */,
+				BD6888A8242E31DE0051DF70 /* ItemProduct.swift in Sources */,
 				BDF4F94A23293A6B007C448F /* AuthenticationActions.swift in Sources */,
 				BDB6B0162326AAA60006A534 /* PasscodeSignUpState.swift in Sources */,
 				96D0F1C8230694CB0064CECA /* LoansDetailsViewController.swift in Sources */,
