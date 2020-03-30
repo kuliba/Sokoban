@@ -26,8 +26,8 @@ class ItemProduct: UICollectionViewCell{
         self.nameProduct.font = UIFont(name: "Roboto", size: 15)
         
         self.viewProduct.layer.cornerRadius = 5
-        self.buttonOpenProduct.layer.cornerRadius = buttonOpenProduct.frame.size.height
-        self.buttonOpenProduct.titleLabel?.font.withSize(15)
+        //self.buttonOpenProduct.layer.cornerRadius = buttonOpenProduct.frame.size.height / 2
+        //self.buttonOpenProduct.titleLabel?.font.withSize(15)
         
     }
 }

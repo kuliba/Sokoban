@@ -39,26 +39,39 @@ enum ProductType: String, Comparable {
     var localizedName: String {
         switch self {
         case .card:
-            return NSLocalizedString("Карта", comment: "123")
+            return NSLocalizedString("Карта", comment: "")
         case .account:
-            return NSLocalizedString("Счёт", comment: "444")
+            return NSLocalizedString("Счёт", comment: "")
         case .deposit:
-            return NSLocalizedString("Вклад", comment: "555")
+            return NSLocalizedString("Вклад", comment: "")
         case .loan:
-            return NSLocalizedString("Кредит", comment: "666")
+            return NSLocalizedString("Кредит", comment: "")
         }
     }
 
     var commentProduct: String{
         switch self {
         case .card:
-            return "Comment Card"
+            return ""
         case .account:
-            return "Comment Account"
+            return ""
         case .deposit:
-            return "Comment Deposit"
+            return "Все вклады застрахованы в Системе страхования вкладов. Дополнительная информация по страхованию вкладов здесь."
         case .loan:
-            return "Comment Loan"
+            return "АКБ "+"ФОРА-БАНК"+" (АО) предлагает доступные и выгодные для разных клиентских сегментов кредитные продукты."
+        }
+    }
+    
+    var urlProduct: String{
+        switch self {
+        case .card:
+            return "https://cashback-card.forabank.ru/?metka=mp"
+        case .account:
+            return ""
+        case .deposit:
+            return ""
+        case .loan:
+            return ""
         }
     }
     

@@ -12,7 +12,7 @@ class ProductListViewController: BaseViewController {
 
     @IBOutlet weak var collectionViewProducts: UICollectionView!
     
-    let arrayProducts = [ProductType.card, ProductType.account, ProductType.deposit, ProductType.loan]
+    let arrayProducts = [ProductType.deposit, ProductType.loan, ProductType.card, ProductType.account]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,45 +20,37 @@ class ProductListViewController: BaseViewController {
         // Do any additional setup after loading the view.
     }
 
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        // Get the new view controller using segue.destination.
-//        // Pass the selected object to the new view controller.
-//    }
-
+    //MARK: Action
+    @IBAction func openBrower(_ sender: UIButton) {
+        guard let indexPathSelected = indexPathForCellContaining(view: sender) else {return} //получаем индекс ячейки на экране
+        let productSelect = arrayProducts[indexPathSelected.row] //вытаскиваем нужных продукт
+        guard let url = URL(string: productSelect.urlProduct) else { return }
+        UIApplication.shared.open(url)
+        
+    }
+    
+    //получаем индекс элемента по координатам view
+    private func indexPathForCellContaining( view: UIView) -> IndexPath? {
+        let viewCenter = collectionViewProducts.convert(view.center, from: view.superview)
+        return collectionViewProducts.indexPathForItem(at: viewCenter)
+    }
 }
 
-
+// MARK: - Collection View
 extension ProductListViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
     
     private func setupCollectionView(){
-                
-        collectionViewProducts.isPagingEnabled = true
-        
+        let sizeItem = CGSize(width: collectionViewProducts.frame.size.width*0.8, height: collectionViewProducts.frame.size.height*0.8) //размер ячейки
+        let spacing = collectionViewProducts.frame.size.width*0.125 //расстояние между ячейками
+        let activeDistance = (collectionViewProducts.frame.size.width*0.8)/2 //дистанция анимации
+        let flowLayout = ZoomAndSnapFlowLayout()
+        flowLayout.setupFlowLayout(minimumLineSpacing: spacing, sizeItem: sizeItem, scrollDirection: .horizontal, activeDistance: activeDistance, zoomFactor: nil)
         collectionViewProducts.backgroundColor = .clear
-        let layout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        layout.minimumLineSpacing = 0
-        layout.minimumInteritemSpacing = 0
-        layout.scrollDirection = .horizontal
-        self.collectionViewProducts?.collectionViewLayout = layout
+        collectionViewProducts.collectionViewLayout = flowLayout
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return arrayProducts.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
-        let heightItem = collectionView.frame.size.height * 0.7
-        let widthItem = collectionView.frame.size.width * 0.7
-        return CGSize(width: widthItem, height: heightItem)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        let edgeInsets = (UIScreen.main.bounds.size.width - (CGFloat(arrayProducts.count) * 50) - (CGFloat(arrayProducts.count) * 10)) / 2
-        return UIEdgeInsets(top: 0, left: edgeInsets, bottom: 0, right: 0)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -71,7 +63,6 @@ extension ProductListViewController: UICollectionViewDelegate, UICollectionViewD
         item.setNeedsLayout()
         return item
     }
-    
     
 }
 
@@ -103,3 +94,4 @@ extension ProductListViewController: UICollectionViewDelegate, UICollectionViewD
 //        }
 //    }
 //}
+
