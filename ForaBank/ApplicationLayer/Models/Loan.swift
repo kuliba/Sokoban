@@ -54,7 +54,7 @@ class Loan {
     }
 
     func getProductAbout() -> Array<AboutItem> {
-        guard let dateV = dateValue, let userAnn = userAnnual, let num = number, let principalD = principalDebt, let currentInterestRate = currentInterestRate, let dateEnd = dateEnd, let amount = Amount, let isClosed = isClosed else {
+        guard let dateV = dateValue, let _ = userAnnual, let num = number, let principalD = principalDebt, let currentInterestRate = currentInterestRate, let dateEnd = dateEnd, let amount = Amount, let isClosed = isClosed else {
             return []
         }
         var status: String

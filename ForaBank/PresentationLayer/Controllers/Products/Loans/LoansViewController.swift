@@ -117,13 +117,10 @@ class LoansViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        if (loan == nil) {
+        
+        if (loan.count == 0) {
             foraPreloader.startAnimation()
-
         }
-
-
     }
 
 

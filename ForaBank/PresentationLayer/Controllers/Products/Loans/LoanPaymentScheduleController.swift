@@ -70,7 +70,7 @@ class LoanPaymentScheduleController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
-        let item = items?[indexPath.item]
+        //let item = items?[indexPath.item]
 
   
 

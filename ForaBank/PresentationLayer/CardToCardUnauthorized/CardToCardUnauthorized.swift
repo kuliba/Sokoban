@@ -118,7 +118,7 @@ class CardToCardUnauthorized: UIViewController {
                 case.failure(let error):
                     print("Not Success",error)
                 }
-                let data = response.request
+                //let _ = response.request
 
             }
        
@@ -189,7 +189,7 @@ class CardToCardUnauthorized: UIViewController {
                     case.failure(let error):
                         print("Not Success",error)
                     }
-                    let data = response.request
+                    //let data = response.request
 
                 }
         
@@ -785,7 +785,7 @@ extension CardToCardUnauthorized: UITextFieldDelegate {
         cardPayerLabel.isHidden = false
         bankLogoPayer.isHidden = true
         self.payarView.gradientLayer.opacity = 0
-        var textColor: UIColor = UIColor(hexFromString: "#9B9B9B")!
+        //var textColor: UIColor = UIColor(hexFromString: "#9B9B9B")!
         var scanButtonColor: UIColor = UIColor(hexFromString: "#B5B5B5")!
         var tintColor: UIColor = .black
         if let bank = identifiedBank {
@@ -808,7 +808,7 @@ extension CardToCardUnauthorized: UITextFieldDelegate {
                 bankLogoPayer.isHidden = false
             }
             if let tc = UIColor(hexFromString: bank.textColor ?? "") {
-                textColor = tc
+                //textColor = tc
                 tintColor = tc
                 scanButtonColor = tc
             }

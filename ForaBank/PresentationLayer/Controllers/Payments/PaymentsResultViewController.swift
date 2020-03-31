@@ -70,12 +70,9 @@ class PaymentsResultViewController: UIViewController, StoreSubscriber {
         //optionsTable.reloadData()
         //        setUpRemittanceViews()
 
-        guard let sourceOption = state.sourceOption, let destinationOption = state.destinationOption, let sum = state.paymentSum else {
+        guard let _ = state.sourceOption, let _ = state.destinationOption, let _ = state.paymentSum else {
             return
         }
-
-  
-
         sumLabel.text = "\(Int(sumString)! + 30) ₽"
     }
 

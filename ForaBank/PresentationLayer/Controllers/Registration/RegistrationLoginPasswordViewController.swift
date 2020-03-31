@@ -80,7 +80,7 @@ class RegistrationLoginPasswordViewController: UIViewController {
 
 
     @IBAction func linkPrivacyPolicy(_ sender: Any) {
-        UIApplication.shared.openURL(URL(string: "https://www.forabank.ru/private/dokumenty/UKBO_03-08-2019.pdf")!)
+        UIApplication.shared.open(URL(string: "https://www.forabank.ru/private/dokumenty/UKBO_03-08-2019.pdf")!)
     }
 
     var segueId: String? = nil
@@ -433,7 +433,7 @@ extension RegistrationLoginPasswordViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if textField == phoneTextField,
             let text = textField.text,
-            let textRange = Range(range, in: text) {
+            let _ = Range(range, in: text) {
 
 //            let updatedText = text.replacingCharacters(in: textRange,
 //                                                       with: string)

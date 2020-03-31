@@ -44,11 +44,11 @@ class WebC2CViewController: UIViewController {
                           case.failure(let error):
                               print("Not Success",error)
                           }
-                          let data = response.request
+                          //let data = response.request
                       }
         
-        let url = URL(string: "https://www.google.com")
-        let request = URLRequest(url: url!)
+        //let url = URL(string: "https://www.google.com")
+        //let request = URLRequest(url: url!)
         let urlP2P = URL(string: "https://pay.best2pay.net/webapi/P2PTransfer?sector=4324&code=643")
          let requestP2P = URLRequest(url: urlP2P!)
             

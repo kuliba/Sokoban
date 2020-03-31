@@ -84,7 +84,7 @@ class CustomTextField: UITextField {
         layer.cornerRadius = 5.0
         layer.masksToBounds = true
         layer.borderWidth = 1
-        super.becomeFirstResponder()
+        _ = super.becomeFirstResponder()
 
         return true
     }
@@ -92,7 +92,7 @@ class CustomTextField: UITextField {
 
     open override func resignFirstResponder() -> Bool {
         layer.customBorderColor = defaultBorderColor
-        super.resignFirstResponder()
+        _ = super.resignFirstResponder()
 
         return true
     }

@@ -22,6 +22,8 @@ class BiometricIDAuth {
             return .touchID
         case .faceID:
             return .faceID
+        default:
+            return .none
         }
     }
 

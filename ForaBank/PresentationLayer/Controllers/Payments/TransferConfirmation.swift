@@ -48,8 +48,8 @@ class TransferConfirmation: UIViewController    {
         numberAccountPayer.text = numberAccountText
         amount.text = ("\(amountText!)р (коммиссия \(commission!)р)")
         comment.text = commentText
-        print("Это комиссия \(commission)")
-        var sourceValue = "СоурсеВелью"
+        //print("Это комиссия \(commission)")
+        //var sourceValue = "СоурсеВелью"
         guard let amount = amountText else { return }
         let amountDouble = Double(amount)
         let commissionDouble = Double(commission!)

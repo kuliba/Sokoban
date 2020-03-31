@@ -45,7 +45,7 @@ class LoanPaymentSchedule: LoanPaymentScheduleProtocol {
                         let data = json["data"] as? Array<Any> {
                         for cardData in data {
                             if let cardData = cardData as? Dictionary<String, Any>,
-                                var paymentDate: String? = dayMonthYear(milisecond: (cardData["paymentDate"] as? Double ?? 1.00)),
+                                let paymentDate: String? = dayMonthYear(milisecond: (cardData["paymentDate"] as? Double ?? 1.00)),
                                 let actionEntryList = cardData["actionEntryList"] as? Array<Dictionary<String, Any>> {
                                 for dataAction in actionEntryList {
                                     let userAnnual = dataAction["userAnnual"] as? Double

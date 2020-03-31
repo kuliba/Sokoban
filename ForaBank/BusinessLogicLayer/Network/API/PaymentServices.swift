@@ -44,7 +44,7 @@ class PaymentServices: IPaymetsApi {
 
 
                                 let details = cardData["details"] as? Dictionary<String, Any>
-                                var code = details!["code"] as? String?
+                                let code = details!["code"] as? String?
 
 
 
@@ -59,10 +59,10 @@ class PaymentServices: IPaymetsApi {
 
                                         let value = nameList as? Dictionary<String , Any>
                                         let nameOperators = value?["value"] as? String
-                                        let codeOperators = operatorsList?["code"] as? String
+                                        _ = operatorsList?["code"] as? String
 
 
-                                        var payment = Operations(name: name!, details: [Details](), code: code!, nameOperators: nameOperators)
+                                        let payment = Operations(name: name!, details: [Details](), code: code!, nameOperators: nameOperators)
                                         payments.append(payment)
 
                                     }
@@ -365,7 +365,7 @@ class PaymentServices: IPaymetsApi {
 
                 switch response.result {
                 case .success:
-                    if let json = response.result.value as? Dictionary<String, Any>, let result = json["result"] as? String {
+                    if let json = response.result.value as? Dictionary<String, Any>, let _ = json["result"] as? String {
                         completionHandler(true)
                     } else {
                         print("rest/makeCard2Card cant parse json \(String(describing: response.result.value))")

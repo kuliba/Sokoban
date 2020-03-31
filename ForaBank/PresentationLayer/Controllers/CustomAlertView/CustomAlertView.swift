@@ -115,18 +115,18 @@ extension CustomAlertView{
     private func resetCartName(){
         let txt = alertTextField.text
         let id = self.product?.id
-        let newName:String = txt ?? "\(self.product!.name)"
-            NetworkManager.shared().saveCardName(newName: newName, id:id ?? 123, completionHandler: { success, errorMessage, newName, id in })
-            NetworkManager.shared().getCardList { [weak self] (success, cards) in
-            self?.cards = cards ?? []
-            var newName:String = txt ?? "\(self?.product!.name)"
-            if newName == ""{
-                    newName = (self?.product!.name)!
-                         }
-                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "customName"), object: newName)
-
+        let newName:String = txt ?? "\(self.product?.name ?? "")"
+        NetworkManager.shared().saveCardName(newName: newName, id:id ?? 123, completionHandler: { success, errorMessage, newName, id in })
+        NetworkManager.shared().getCardList { [weak self] (success, cards) in
+        self?.cards = cards ?? []
+        var newName:String = txt ?? "\(self?.product?.name ?? "")"
+        if newName == ""{
+                newName = (self?.product!.name)!
                      }
-          self.dismiss(animated: true, completion: nil)
+                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "customName"), object: newName)
+
+                 }
+      self.dismiss(animated: true, completion: nil)
     }
     
     

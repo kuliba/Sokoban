@@ -295,7 +295,7 @@ class NetworkManager {
     }
     
     func best2Pay(completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ id: Double?, _ name: String?) -> Void) {
-        self.best2Pay(completionHandler: completionHandler)
+        //self.best2Pay(completionHandler: completionHandler)
 
     }
     func verifyCode(verificationCode: Int,

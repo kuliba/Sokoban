@@ -45,35 +45,33 @@ class CardInfoService: CardInfoServiceProtocol {
                               if let json = response.result.value as? Dictionary<String, Any>,
                                                     let data = json["data"] as? Dictionary<String, Any>,
                                                      let original = data["original"] as? Dictionary<String, Any>,
-                                var startDate: String = dayMonthYear(milisecond: Double(original["dateStart"] as! Int)),
-                              var dateEnd: String = dayMonthYear(milisecond: Double(original["dateEnd"] as! Int))
-{
+                                //var startDate: String = dayMonthYear(milisecond: Double(original["dateStart"] as! Int)),
+                                let dateEnd: String = dayMonthYear(milisecond: Double(original["dateEnd"] as! Int)){
                                      for cardData in data {
-                                     if let cardData = cardData as? Dictionary<String, Any>,
-                                     let original = cardData["original"] as? Dictionary<String, Any> {
-                                         let startDate = original["dateStart"] as? Int
+                                         if let cardData = cardData as? Dictionary<String, Any>,
+                                         let original = cardData["original"] as? Dictionary<String, Any> {
+                                             let startDate = original["dateStart"] as? Int
 
-                                         let dateEnd = original["dateEnd"] as? Int
-                                         let customName = cardData["customName"] as? String
+                                             let dateEnd = original["dateEnd"] as? Int
+                                             //let customName = cardData["customName"] as? String
 
-                                                                         let title = original["name"] as? String
-                                                                         _ = original["account"] as? String
-                                                                         let number = original["number"] as? String
-                                                                         let maskedNumber = original["maskedNumber"] as? String
-                                         let availableBalance = original["balance"] as? Double
-                                         let branch = original["branch"] as? String
-                                         let id = original["cardID"] as? String
-                                         let product = (original["product"] as? String) ?? ""
-                                         var expirationDate: String? = dayMonthYear(milisecond: original["validThru"] as! Double)
+                                             //let title = original["name"] as? String
+                                             //_ = original["account"] as? String
+                                             //let number = original["number"] as? String
+                                             //let maskedNumber = original["maskedNumber"] as? String
+                                             //let availableBalance = original["balance"] as? Double
+                                             //let branch = original["branch"] as? String
+                                             //let id = original["cardID"] as? String
+                                             //let product = (original["product"] as? String) ?? ""
+                                             //var expirationDate: String? = dayMonthYear(milisecond: original["validThru"] as! Double)
 
-                                        let card = AboutItem(title: String(startDate!), value: String(dateEnd!))
-                                    
-                                         cards.append(card)
-                                     }
+                                            let card = AboutItem(title: String(startDate!), value: String(dateEnd!))
+                                        
+                                             cards.append(card)
+                                         }
                                  }
-                                let card = AboutItem(title: "Дата окончания действия карты", value: String(dateEnd))
-                                
-                                     cards.append(card)
+                                 let card = AboutItem(title: "Дата окончания действия карты", value: String(dateEnd))
+                                 cards.append(card)
                                  completionHandler(true, cards)
                              } else {
                                  print("rest/getCardList cant parse json \(String(describing: response.result.value))")

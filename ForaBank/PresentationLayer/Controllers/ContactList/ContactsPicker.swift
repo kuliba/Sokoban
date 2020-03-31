@@ -301,8 +301,10 @@ open class ContactsPicker: UIViewController, UITableViewDelegate, UITableViewDat
                 /// Catching exception as enumerateContactsWithFetchRequest can throw errors
                 print(error.localizedDescription)
             }
-            
+        default:
+            break
         }
+            
     }
     
     private func firstLetter(for contact: CNContact) -> String? {
@@ -419,7 +421,7 @@ open class ContactsPicker: UIViewController, UITableViewDelegate, UITableViewDat
     
     open func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
         if let searchText = searchBar.text, !searchText.isEmpty { return 0 }
-        return sortedContactKeys.index(of: title)!
+        return sortedContactKeys.firstIndex(of: title)!
     }
     
     open func sectionIndexTitles(for tableView: UITableView) -> [String]? {

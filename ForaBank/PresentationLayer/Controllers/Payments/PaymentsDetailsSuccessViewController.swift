@@ -115,7 +115,7 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
         //optionsTable.reloadData()
         //        setUpRemittanceViews()
 
-        guard let sourceOption = state.sourceOption, let destinationOption = state.destinationOption, let sum = state.paymentSum else {
+        guard let sourceOption = state.sourceOption, let destinationOption = state.destinationOption, let _ = state.paymentSum else {
             return
         }
 

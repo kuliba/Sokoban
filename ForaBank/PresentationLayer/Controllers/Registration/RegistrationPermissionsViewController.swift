@@ -104,6 +104,8 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
             return .touchID
         case .faceID:
             return .faceID
+        @unknown default:
+            fatalError()
         }
     }
 

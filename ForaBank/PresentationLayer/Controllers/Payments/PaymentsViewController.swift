@@ -134,9 +134,9 @@ extension PaymentsViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let s = (isSignedUp == true) ? indexPath.section : indexPath.section + 1
-        let section = payments[s]
-        let index = indexPath.row
+        //let s = (isSignedUp == true) ? indexPath.section : indexPath.section + 1
+//        let section = payments[s]
+//        let index = indexPath.row
 
         guard let serviceCell = tableView.dequeueReusableCell(withIdentifier: paymentCellId, for: indexPath) as? PaymentCell else {
             fatalError()

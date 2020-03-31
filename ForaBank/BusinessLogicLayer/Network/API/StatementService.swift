@@ -35,7 +35,8 @@ class StatementService: StatementServiceProtocol {
                     let decoder = JSONDecoder()
                     decoder.dateDecodingStrategy = .millisecondsSince1970
                     do {
-                        if let result = (try decoder.decode(BriginvestResponse<[TransactionStatement]>.self, from: response.data ?? Data())) as? BriginvestResponse<[TransactionStatement]> {
+                        if let result = (try decoder.decode(BriginvestResponse<[TransactionStatement]>.self,
+                                                            from: response.data ?? Data())) as? BriginvestResponse<[TransactionStatement]> {
                             let sortedTransations = DatedTransactionsStatement.sortByDays(transactions: result.data)
                             completionHandler(true, sortedTransations, nil)
                             return

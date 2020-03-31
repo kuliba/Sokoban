@@ -97,7 +97,7 @@ class DepositsHistoryViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if (sortedTransactionsStatement == nil) {
+        if (sortedTransactionsStatement.count == 0) {
             foraPreloader.startAnimation()
 
         }
@@ -127,7 +127,7 @@ class DepositsHistoryViewController: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        if let selectedRow = tableView.indexPathForSelectedRow {
+        if let _ = tableView.indexPathForSelectedRow {
             //tableView.deselectRow(at: selectedRow, animated: false)
             
         }

@@ -16,7 +16,7 @@ class GroupedBubblesStatsView: UIView {
     weak var delegate: BubblesDetailedStatsDelegate? = nil {
         didSet {
             addBubbleViews()
-            calculateFrame()
+            _ = calculateFrame()
             setBubblesFrames()
             setBubblesOrigins()
         }
@@ -126,7 +126,7 @@ class GroupedBubblesStatsView: UIView {
             let toSuperViewCenterWithOffset = toSuperViewCenter + Double( offset )
 //            print("toSuperViewCenterWithOffset \(toSuperViewCenterWithOffset)")
             
-            let diff : Double = fabs( toSuperViewCenterWithOffset - Double ( center ) )
+            let _ : Double = fabs( toSuperViewCenterWithOffset - Double ( center ) )
 //            print("diff \(diff)")
 
             var scale: Double = 1

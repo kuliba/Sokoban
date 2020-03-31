@@ -48,7 +48,7 @@ class HistoryService: HistoryServiceProtocol {
                             
                             let sortedTransations = DatedCardTransactionsStatement.sortByDays(transactions: result.data)
                             completionHandler(true, sortedTransations)
-                            print(sortedTransations)
+                            //print(sortedTransations)
                             return
                         }
                     } catch let error as NSError {

@@ -20,9 +20,10 @@ class SuggestCompanyService: SuggestCompanyServiceProtocol {
     }
 
    func getSuggestCompany(bicBank: String?, headers: HTTPHeaders, completionHandler: @escaping (Bool, [BankSuggest]?, String?) -> Void) {
+    
     var cards = [BankSuggest]()
-        let url =  "https://git.briginvest.ru/dbo/api/v2/rest/suggestCompany"
-        var parametrs: [String: Any] = ["query": bicBank as AnyObject,]
+    let url =  "https://git.briginvest.ru/dbo/api/v2/rest/suggestCompany"
+    let parametrs: [String: Any] = ["query": bicBank as AnyObject,]
         
         
         Alamofire.request(url, method: HTTPMethod.post, parameters: parametrs, encoding: JSONEncoding.default, headers: headers)
@@ -43,11 +44,11 @@ class SuggestCompanyService: SuggestCompanyServiceProtocol {
                         let data = json["data"] as? Array<Any>{
                             for cardData in data {
                             if let cardData = cardData as? Dictionary<String, Any>,
-                            let original = cardData["data"] as? Dictionary<String, Any> {
+                            let _ = cardData["data"] as? Dictionary<String, Any> {
                                 let value = cardData["value"] as? String
-                              let dataCompany =  cardData["data"] as? Dictionary<String, Any>
-                                let kpp = dataCompany!["kpp"] as? String?
-                                let card = BankSuggest(value: value, kpp: kpp as! String)
+                                let dataCompany =  cardData["data"] as? Dictionary<String, Any>
+                                let kpp = dataCompany!["kpp"] as? String
+                                let card = BankSuggest(value: value, kpp: kpp ?? "")
                                
                                 cards.append(card)
                             }

@@ -66,7 +66,7 @@ class BubblesDetailedStatsView: UIView {
     
     func calculateSize() -> CGSize {
         groupViewsFrames = [CGRect]()
-        for (i, g) in groupViews.enumerated() {
+        for (_, g) in groupViews.enumerated() {
             let gframe = g.calculateFrame()
             g.setBubblesOrigins()
             //            print("group \(i) frame \(gframe)")

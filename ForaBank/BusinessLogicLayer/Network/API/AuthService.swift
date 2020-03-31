@@ -96,8 +96,8 @@ class AuthService: AuthServiceProtocol {
                     print("login.do result: \(String(describing: response.result.value))")
                     self.login = login
                     self.password = password
-                    let dataCode = response.result.value as? Dictionary<String, Any>
-                    let json = dataCode!["data"] as? String
+                    //let dataCode = response.result.value as? Dictionary<String, Any>
+                    //let json = dataCode!["data"] as? String
                     completionHandler(true, nil)
                 case .failure(let error):
                     print("\(error) \(self)")

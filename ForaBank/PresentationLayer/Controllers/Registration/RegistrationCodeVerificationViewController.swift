@@ -448,12 +448,12 @@ extension RegistrationCodeVerificationViewController: UITextFieldDelegate {
         if (string.rangeOfCharacter(from: set.inverted) != nil) {
             return false
         }
-        guard var text = textField.text else { return true }
+        guard let text = textField.text else { return true }
         continueButton?.isEnabled = count >= 6
         continueButton?.alpha = (count >= 6) ? 1 : 0.25
         codeNumberTextField.text =  text
    
-        let textFeildMoy = String(codeNumberTextField.text!)
+        _ = String(codeNumberTextField.text!)
 
         let currentCharacterCount = textField.text?.count ?? 0
         if range.length + range.location > currentCharacterCount {
@@ -462,7 +462,7 @@ extension RegistrationCodeVerificationViewController: UITextFieldDelegate {
         let newLength = currentCharacterCount + string.count - range.length
         return newLength <= 6
 
-        return true
+        //return true
     }
     
     

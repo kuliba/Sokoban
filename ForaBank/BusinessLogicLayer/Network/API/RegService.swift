@@ -150,10 +150,10 @@ class RegService: RegServiceProtocol {
                         nameCompany: String,
                         commission: Double,
     completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ commission: Double?) -> Void) {
-        var commissions: Double?
+        //var commissions: Double?
            let url = "https://git.briginvest.ru/dbo/api/v2/rest/prepareExternal"
                  print(url)
-                 let date = NSDate()
+                 //let date = NSDate()
                  let parameters: [String: AnyObject] = [
                    "amount": amount as AnyObject,
                    "payeeKPP": kppBank as AnyObject,
@@ -191,7 +191,7 @@ class RegService: RegServiceProtocol {
                                     let commissions = cardData["amount"] as? Double
                                     let description = cardData["description"] as? String
                                     print(commission, description!)
-                                    var commission = commissions ?? 5000
+                                    let commission = commissions ?? 5000
                                     completionHandler(true, "Error", commission)
 
                                 }

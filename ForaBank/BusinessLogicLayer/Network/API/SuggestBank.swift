@@ -22,7 +22,7 @@ class SuggestBankService: SuggestBankServiceProtocol {
    func getSuggestBank(bicBank: String?, headers: HTTPHeaders, completionHandler: @escaping (Bool, [BankSuggest]?, String?) -> Void) {
     var cards = [BankSuggest]()
         let url =  "https://git.briginvest.ru/dbo/api/v2/rest/suggestBank"
-        var parametrs: [String: Any] = ["query": bicBank as AnyObject,]
+        let parametrs: [String: Any] = ["query": bicBank as AnyObject,]
         
         
         Alamofire.request(url, method: HTTPMethod.post, parameters: parametrs, encoding: JSONEncoding.default, headers: headers)
@@ -43,7 +43,7 @@ class SuggestBankService: SuggestBankServiceProtocol {
                         let data = json["data"] as? Array<Any>{
                             for cardData in data {
                             if let cardData = cardData as? Dictionary<String, Any>,
-                            let original = cardData["data"] as? Dictionary<String, Any> {
+                            let _ = cardData["data"] as? Dictionary<String, Any> {
                                 let value = cardData["value"] as? String
                               
 

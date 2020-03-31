@@ -120,7 +120,7 @@ class DepositsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if (deposits == nil) {
+        if (deposits.count == 0) {
             ForaIndicator.startAnimation()
         }
     }
@@ -163,9 +163,9 @@ class DepositsViewController: UIViewController {
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        if let selectedRow = tableView.indexPathForSelectedRow {
-            // tableView.deselectRow(at: selectedRow, animated: false)
-        }
+//        if let selectedRow = tableView.indexPathForSelectedRow {
+//            // tableView.deselectRow(at: selectedRow, animated: false)
+//        }
     }
 }
 

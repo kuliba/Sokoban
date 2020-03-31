@@ -94,7 +94,7 @@ class AccountsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if (accounts == nil) {
+        if (accounts.count == 0) {
             foraPreloader.startAnimation()
             LabelNoProduct.isHidden = false
         }
@@ -193,7 +193,7 @@ extension AccountsViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let account = accounts[indexPath.item]
 
-        let addToDepositAction = UITableViewRowAction(style: .normal, title: "Пополнить счет") { [weak self] action, indexPath in
+        let addToDepositAction = UITableViewRowAction(style: .normal, title: "Пополнить счет") {action, indexPath in
             store.dispatch(startPayment(sourceOption: nil, destionationOption: PaymentOption(product: account)))
         }
         addToDepositAction.backgroundColor = UIColor(red: 26 / 255, green: 188 / 255, blue: 156 / 255, alpha: 1)

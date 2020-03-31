@@ -117,7 +117,7 @@ class ProductAboutViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "productAboutCell", for: indexPath) as! PaymentTemplateCell
         let item = items![indexPath.row]
-        let cardInfo = numberCard
+        //let cardInfo = numberCard
         cell.textLabel?.numberOfLines = 3
         cell.textLabel?.adjustsFontSizeToFitWidth = true;
 
@@ -127,8 +127,8 @@ class ProductAboutViewController: UITableViewController {
 //        cell.textLabel?.text = item.title ?? cardInfo
 //        cell.textLabel?.font = UIFont(name: "Roboto-Light", size: 16.0)
         cell.textLabel?.numberOfLines = 0
-        cell.titleLabel.text = item.title ?? cardInfo
-        cell.descriptionLabel.text = item.value ?? "123"
+        cell.titleLabel.text = item.title //?? cardInfo
+        cell.descriptionLabel.text = item.value //?? "123"
 //        cell.detailTextLabel?.text = item.value ?? "123"
 //        cell.detailTextLabel?.font = UIFont(name: "Roboto", size: 18.0)
 //        cell.detailTextLabel?.textColor = UIColor(named: "black")

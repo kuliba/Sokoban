@@ -100,7 +100,7 @@ extension OperationList: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
   
-        let index = indexPath.row
+        //let index = indexPath.row
         
       guard let serviceCell = tableView.dequeueReusableCell(withIdentifier: paymentCellId, for: indexPath) as? PaymentCell  else {
         fatalError()

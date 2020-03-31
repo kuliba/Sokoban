@@ -53,7 +53,7 @@ class DepositsHistoryDetailsViewController: UIViewController {
         nameTransaction.text = "\((transaction?.comment)!)"
         datetransaction.text = "\((transaction?.operationDate)!)"
         amountPaT.text = "\((transaction?.amount)!)" + "\("₽")"
-        if var data = transaction?.operationType {
+        if let data = transaction?.operationType {
             if data == "CREDIT"{
                 view.backgroundColor = colorSucces
                 amountPaT.text = "\("+")" + "\(maskSum(sum:(transaction?.amount)!))" + "\("₽")"
@@ -88,8 +88,8 @@ extension DepositsHistoryDetailsViewController: UIScrollViewDelegate {
 //        print(scrollView.contentOffset.y)
         let offset = scrollView.contentOffset.y > defaultTopViewOffset ? defaultTopViewOffset : scrollView.contentOffset.y
         let percent = offset/defaultTopViewOffset
-        let zoomScale = 1 - percent/4
-        let alphaScale = 1 - percent/2
+        _ = 1 - percent/4
+        _ = 1 - percent/2
       
     }
 }

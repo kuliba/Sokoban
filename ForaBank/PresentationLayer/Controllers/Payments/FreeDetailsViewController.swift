@@ -96,11 +96,11 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
     @IBAction func amountTextFieldValueChanged(_ sender: Any) {
         delegate?.didChangeAmount(amount: Double(amountTextField.text!.replacingOccurrences(of: ",", with: ".")))
       
-        let dotString = "."
-        var maxLength = 9
-        if (amountTextField.text?.contains(dotString))! {
-                maxLength = 12
-            }
+//        let dotString = "."
+//        var maxLength = 9
+//        if (amountTextField.text?.contains(dotString))! {
+//                maxLength = 12
+//        }
         
         
        
@@ -136,13 +136,13 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
 
     @IBOutlet weak var bankName: UILabel!
     @IBAction func bikTextField(_ sender: Any) {
-        var bicBank: String = self.bikBank.text ?? "123"
+        let bicBank: String = self.bikBank.text ?? "123"
         if bikBank.text?.count == 9{
             NetworkManager.shared().getSuggestBank(bicBank: bicBank) { [weak self] (success, cards, bicBank) in
                 self?.cards = cards ?? []
                 self!.bankName.text = "Банк не найден"
                 if cards?.count != 0{
-                var bicBank: String = self?.bikBank.text ?? "123"
+                //let bicBank: String = self?.bikBank.text ?? "123"
                 self?.bankName.text = cards?[0].value
                 }
             }
@@ -308,7 +308,7 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
 
      func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
          let dotString = ","
-         let characters = ""
+         //let characters = ""
          var maxLength = 9
          if (textField.text?.contains(dotString))! {
              maxLength = 12

@@ -40,7 +40,7 @@ class DepositsCardsDetailsStatementViewController: UIViewController, TabCardDeta
        override func viewDidLoad() {
             super.viewDidLoad()
             setUpTableView()
-        let cardNumber = card as? CardDetailsViewController
+        //let cardNumber = card as? CardDetailsViewController
         NetworkManager.shared().getHistoryCard(cardNumber: "\(numberCard)") { [weak self] (success, error) in
                       print("CardHistory getCardHistory \(success)")
             if success{
@@ -52,10 +52,10 @@ class DepositsCardsDetailsStatementViewController: UIViewController, TabCardDeta
         
         override func viewDidDisappear(_ animated: Bool) {
             super.viewDidDisappear(animated)
-            if let selectedRow = tableView.indexPathForSelectedRow {
-                //tableView.deselectRow(at: selectedRow, animated: false)
-                
-            }
+//            if let selectedRow = tableView.indexPathForSelectedRow {
+//                //tableView.deselectRow(at: selectedRow, animated: false)
+//
+//            }
         }
         
         override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

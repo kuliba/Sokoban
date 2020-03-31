@@ -47,7 +47,7 @@ class ViewController: UIViewController, KDDragAndDropCollectionViewDataSource, U
         backgroundImage.image = UIImage(named: "mainscreen-1")
         backgroundImage.contentMode = UIView.ContentMode.scaleAspectFill
         self.view.insertSubview(backgroundImage, at: 0)
-        var j: Int
+        //var j: Int
         self.data = [(0...3).map({ j in DataItem("\(String(j))", "\(labeltext[j])", (UIImage(named: images[j])!)) })]
 
         self.dragAndDropManager = KDDragAndDropManager(

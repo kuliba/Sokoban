@@ -10,7 +10,7 @@ import Foundation
 import ReSwift
 
 func authenticationReducer(state: AuthenticationState?, action: Action) -> AuthenticationState {
-    var newState = state ?? initialAuthentication()
+    let newState = state ?? initialAuthentication()
 
     switch action {
     case _ as ReSwiftInit:

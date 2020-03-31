@@ -48,11 +48,11 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber, UITextFi
     @IBAction func amountTextFieldValueChanged(_ sender: Any) {
         delegate?.didChangeAmount(amount: Double(amountTextField.text!.replacingOccurrences(of: ",", with: ".")))
       
-        let dotString = "."
-        var maxLength = 9
-        if (amountTextField.text?.contains(dotString))! {
-                maxLength = 12
-            }
+//        let dotString = "."
+//        var maxLength = 9
+//        if (amountTextField.text?.contains(dotString))! {
+//                maxLength = 12
+//        }
     }
     
     @IBAction func sendButtonClicked(_ sender: Any) {
@@ -127,7 +127,7 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber, UITextFi
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let dotString = ","
-        let characters = ""
+        //let characters = ""
         var maxLength = 9
         if (textField.text?.contains(dotString))! {
             maxLength = 12
@@ -209,9 +209,9 @@ private extension PaymentsDetailsViewController {
 extension PaymentsDetailsViewController: OptionPickerDelegate {
     func setSelectedOption(option: String?) {
         // Set current option to selected one if not just dismissed
-        if let option = option {
-            //pickerLabel.text = option
-        }
+//        if let option = option {
+//            //pickerLabel.text = option
+//        }
         //pickerButton.isEnabled = true
     }
 }

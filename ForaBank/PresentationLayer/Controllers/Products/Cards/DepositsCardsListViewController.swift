@@ -318,7 +318,7 @@ class DepositsCardsListViewController: UIViewController {
             ]
         }
 
-        if (cards == nil) {
+        if (cards.count == 0) {
             activityIndicator.startAnimation()
 
         }
@@ -668,7 +668,7 @@ class DepositsCardsListViewController: UIViewController {
                 cards.sort(by: {$0.status < $1.status})
                 contentView.self.setNeedsLayout()
 //               contentView.isHidden = true
-                let countArray = cardViews.count
+                //let countArray = cardViews.count
                 view.reloadInputViews()
             }
             present(vc, animated: true, completion: nil)

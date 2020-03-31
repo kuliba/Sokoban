@@ -50,7 +50,7 @@ class DepositsCardsDetailsStatementDetailsViewController: UIViewController {
         nameTransaction.text = "\((transaction?.comment) ?? "1")"
         datetransaction.text = "\((transaction?.date)!)"
         amountPaT.text = "\(maskSum(sum:transaction?.amount ?? 11))" + "\("₽")"
-        if var data = transaction?.operationType {
+        if let data = transaction?.operationType {
             if data == "CREDIT"{
                 amountPaT.text = "\("+")" + "\(maskSum(sum:(transaction?.amount)!))" + "\("₽")"
             } else {
