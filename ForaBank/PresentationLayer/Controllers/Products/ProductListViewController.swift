@@ -41,7 +41,7 @@ extension ProductListViewController: UICollectionViewDelegate, UICollectionViewD
     
     private func setupCollectionView(){
         let sizeItem = CGSize(width: collectionViewProducts.frame.size.width*0.8, height: collectionViewProducts.frame.size.height*0.8) //размер ячейки
-        let spacing = collectionViewProducts.frame.size.width*0.125 //расстояние между ячейками
+        let spacing = collectionViewProducts.frame.size.width*0.15 //расстояние между ячейками
         let activeDistance = (collectionViewProducts.frame.size.width*0.8)/2 //дистанция анимации
         let flowLayout = ZoomAndSnapFlowLayout()
         flowLayout.setupFlowLayout(minimumLineSpacing: spacing, sizeItem: sizeItem, scrollDirection: .horizontal, activeDistance: activeDistance, zoomFactor: nil)
@@ -66,32 +66,4 @@ extension ProductListViewController: UICollectionViewDelegate, UICollectionViewD
     
 }
 
-//extension ProductListViewController: UITableViewDelegate, UITableViewDataSource {
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return products.count
-//    }
-//
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = UITableViewCell()
-//        cell.backgroundColor = .white
-//        cell.selectionStyle = .none
-//        cell.textLabel?.text = products[indexPath.item].localizedName
-//        cell.imageView?.image = UIImage(named: products[indexPath.item].coloredImageName)
-//
-//        return cell
-//    }
-//
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let product = products[indexPath.item]
-//
-//        switch product {
-//        case .card:
-//            guard let url = URL(string: "https://cashback-card.forabank.ru/?metka=mp") else { return }
-//            UIApplication.shared.open(url)
-//            break
-//        default:
-//            break
-//        }
-//    }
-//}
 

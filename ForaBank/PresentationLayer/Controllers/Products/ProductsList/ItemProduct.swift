@@ -20,14 +20,14 @@ class ItemProduct: UICollectionViewCell{
     override func awakeFromNib() {
         super.awakeFromNib()
         self.nameProduct.textColor = .black
-        self.nameProduct.font = UIFont(name: "Roboto", size: 20)
+        self.nameProduct.font = UIFont(name: "Roboto-Regular", size: 15)
         
         self.commentProduct.textColor = .black
-        self.nameProduct.font = UIFont(name: "Roboto", size: 15)
+        self.commentProduct.font = UIFont(name: "Roboto-light", size: 13)
         
-        self.viewProduct.layer.cornerRadius = 5
-        //self.buttonOpenProduct.layer.cornerRadius = buttonOpenProduct.frame.size.height / 2
-        //self.buttonOpenProduct.titleLabel?.font.withSize(15)
+        self.viewProduct.layer.cornerRadius = 10
+        
+        self.imageProduct.contentMode = .scaleAspectFit
         
     }
 }

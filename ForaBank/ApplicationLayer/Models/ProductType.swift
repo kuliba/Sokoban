@@ -49,12 +49,13 @@ enum ProductType: String, Comparable {
         }
     }
 
+    //описание продукта
     var commentProduct: String{
         switch self {
         case .card:
-            return ""
+            return "Если у вас нет карты, оформите ее на сайте или в любом офисе банка. Укажите реквизиты счета в заявлении на перечисление заработной платы и передайте его в бухгалтерию вашего работодателя."
         case .account:
-            return ""
+            return "Вы можете быть уверены в том, что Фора-Банк выполнит все поручения с должной степенью деловой ответственности и будет отстаивать Ваши интересы настолько, насколько это возможно в каждом конкретном случае."
         case .deposit:
             return "Все вклады застрахованы в Системе страхования вкладов. Дополнительная информация по страхованию вкладов здесь."
         case .loan:
@@ -62,16 +63,17 @@ enum ProductType: String, Comparable {
         }
     }
     
+    //ссылки на открытие
     var urlProduct: String{
         switch self {
         case .card:
             return "https://cashback-card.forabank.ru/?metka=mp"
         case .account:
-            return ""
+            return "https://www.forabank.ru/lendingi/rko/?from=kprst"
         case .deposit:
-            return ""
+            return "https://www.forabank.ru/private/deposits/"
         case .loan:
-            return ""
+            return "https://www.forabank.ru/private/credits/"
         }
     }
     
