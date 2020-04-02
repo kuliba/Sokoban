@@ -13,7 +13,6 @@ class ItemProduct: UICollectionViewCell{
     @IBOutlet weak var imageProduct: UIImageView!
     @IBOutlet weak var nameProduct: UILabel!
     @IBOutlet weak var commentProduct: UILabel!
-    @IBOutlet weak var buttonOpenProduct: UIButton!
     
     
     

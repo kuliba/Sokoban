@@ -201,7 +201,7 @@ class PaymentServices: IPaymetsApi {
             "payerCardNumber": sourceNumber as AnyObject,
             "amount": amount as AnyObject
         ]
-
+        print("parameters = ", parameters)
         Alamofire.request(Host.shared.apiBaseURL + "rest/prepareCard2Phone", method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])
