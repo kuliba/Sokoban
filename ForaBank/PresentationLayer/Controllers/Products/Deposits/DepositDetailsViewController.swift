@@ -149,6 +149,18 @@ private extension DepositDetailsViewController {
             managementVC?.actionsType = "deposit"
             managementVC?.deposits = deposit
             newViewController = managementVC
+            
+        case 1:
+            
+            let managementVC = storyboard?.instantiateViewController(withIdentifier: "feed\(index)") as? DepositsCardsDetailsStatementViewController
+            //managementVC?.requisite = card!.number
+            guard let idDepodit = deposit?.id else {
+                return
+            }
+            managementVC?.idProduct = idDepodit
+            managementVC?.typeProduct = .deposit
+            newViewController = managementVC
+            
         case 2:
             let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductAboutViewController") as? ProductAboutViewController
             managementVC?.items = deposit?.getProductAbout()

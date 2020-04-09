@@ -20,6 +20,11 @@ class DepositsCardsDetailsStatementViewController: UIViewController, TabCardDeta
             self.tableView.reloadData()
             }
     }
+    var arrayLaonSchedules = [LaonSchedules](){
+        didSet{
+            self.tableView.reloadData()
+            }
+    }
     var datedTransactions = [DatedTransactions]() {
         didSet{
             self.tableView.reloadData()
@@ -31,32 +36,61 @@ class DepositsCardsDetailsStatementViewController: UIViewController, TabCardDeta
         self.card = card
     }
  
-  let decoder = JSONDecoder()
-  var selectIndex: Int? = nil
-  var selectedSection: Int? = nil
-    var numberCard: String = ""
+    let decoder = JSONDecoder()
+    var selectIndex: Int? = nil
+    var selectedSection: Int? = nil
+    var requisite: String = "" //реквизит по которому нужно получить историю
+    var idProduct: Int = 0  //id выбранного продукта
+    var typeProduct = ProductType.card //тип продукта по которому нужно получить историю
 
     // MARK: - Lifecycle
-       override func viewDidLoad() {
-            super.viewDidLoad()
-            setUpTableView()
-        //let cardNumber = card as? CardDetailsViewController
-        NetworkManager.shared().getHistoryCard(cardNumber: "\(numberCard)") { [weak self] (success, error) in
-                      print("CardHistory getCardHistory \(success)")
-            if success{
-                self!.sortedTransactionsStatement = error ?? [DatedCardTransactionsStatement]()
-            }
-                   
-                  }
-        }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setUpTableView()
+        self.getHistoryProduct(typeProduct)
+    //let cardNumber = card as? CardDetailsViewController
         
-        override func viewDidDisappear(_ animated: Bool) {
-            super.viewDidDisappear(animated)
+    }
+    
+    //заполняем массив с историей по нужному продукту
+    private func getHistoryProduct(_ productType: ProductType){
+        if productType == .card{
+            NetworkManager.shared().getHistoryCard(cardNumber: "\(requisite)") { [weak self] (success, error) in
+                print("CardHistory getCardHistory \(success)")
+                if success{
+                    self!.sortedTransactionsStatement = error ?? [DatedCardTransactionsStatement]()
+                }
+            }
+        }else if productType == .deposit{
+            NetworkManager.shared().getHistoryDeposit(id: idProduct, name: "Depodit") { [weak self] (success, historyStatment) in
+                if success{
+                    self!.sortedTransactionsStatement = historyStatment ?? [DatedCardTransactionsStatement]()
+                }
+            }
+        }else if productType == .account{
+            NetworkManager.shared().getHistoryDeposit(id: idProduct, name: "Account") { [weak self] (success, historyStatment) in
+                if success{
+                    self!.sortedTransactionsStatement = historyStatment ?? [DatedCardTransactionsStatement]()
+                }
+            }
+        }else if productType == .loan{
+            NetworkManager.shared().getLoansPayment { [weak self] (success, arrayLoanSchedule) in
+                if success{
+                    print("arrayLoanSchedule = ", arrayLoanSchedule![0])
+                    guard arrayLoanSchedule != nil, arrayLoanSchedule?.count != 0 else {return}
+                    self!.arrayLaonSchedules = arrayLoanSchedule!
+                }
+            }
+        }
+    }
+        
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
 //            if let selectedRow = tableView.indexPathForSelectedRow {
 //                //tableView.deselectRow(at: selectedRow, animated: false)
 //
 //            }
-        }
+    }
         
         override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     //        print("prepare for segue \(segue.identifier ?? "nil")")
@@ -78,19 +112,25 @@ extension DepositsCardsDetailsStatementViewController: UITableViewDataSource, UI
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
+        if typeProduct == .loan{
+            return 1
+        }
         return sortedTransactionsStatement.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if typeProduct == .loan{
+            return arrayLaonSchedules.count
+        }
         return sortedTransactionsStatement[section].transactions.count
     }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-                   return sortedTransactionsStatement[indexPath.section].transactions.count
-        }
+//        func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+//                   return sortedTransactionsStatement[indexPath.section].transactions.count
+//        }
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? DepositsHistoryCell else {
             return UITableViewCell()
         }
@@ -140,18 +180,31 @@ extension DepositsCardsDetailsStatementViewController: UITableViewDataSource, UI
             return cell
         }
 
-        cell.titleLabel.text = sortedTransactionsStatement[indexPath.section].transactions[indexPath.row].comment
+        if sortedTransactionsStatement.count != 0{
+            cell.titleLabel.text = sortedTransactionsStatement[indexPath.section].transactions[indexPath.row].comment
             cell.commentLabel.text = sortedTransactionsStatement[indexPath.section].transactions[indexPath.row].accountNumber
+            cell.descriptionLabel.text = String( sortedTransactionsStatement[indexPath.section].transactions[indexPath.row].amount!)
+        }else if arrayLaonSchedules.count != 0{
+            cell.titleLabel.text = arrayLaonSchedules[indexPath.row].actionType
+            cell.commentLabel.text = arrayLaonSchedules[indexPath.row].actionTypeBrief
+            cell.descriptionLabel.text = "\(arrayLaonSchedules[indexPath.row].paymentAmount ?? 0)"
+            print(arrayLaonSchedules[indexPath.row].paymentDate)
+        }
         
-        cell.descriptionLabel.text = String( sortedTransactionsStatement[indexPath.section].transactions[indexPath.row].amount!)
+        
         cell.subTitleLabel.isHidden = true
         cell.subdescriptionLabel.isHidden = true
-         cell.commentLabel.isHidden = true
+        cell.commentLabel.isHidden = true
 
         return cell
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        if typeProduct == .loan{
+            return DepositsHistoryHeader()
+        }
+        
         let headerCell = UINib(nibName: "DepositsHistoryHeader", bundle: nil)
             .instantiate(withOwner: nil, options: nil)[0] as! DepositsHistoryHeader
         

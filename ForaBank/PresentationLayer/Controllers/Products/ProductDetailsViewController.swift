@@ -136,6 +136,18 @@ private extension ProductDetailsViewController {
             managementVC?.actionsType = "account"
                 managementVC?.account = account
             newViewController = managementVC
+            
+        case 1:
+        
+            let managementVC = storyboard?.instantiateViewController(withIdentifier: "feed\(index)") as? DepositsCardsDetailsStatementViewController
+            //managementVC?.requisite = card!.number
+            guard let idDepodit = account?.id else {
+                return
+            }
+            managementVC?.idProduct = Int(idDepodit)
+            managementVC?.typeProduct = .account
+            newViewController = managementVC
+            
         case 2:
             let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductAboutViewController") as? ProductAboutViewController
             NetworkManager.shared().getCardList { [weak self] (success, cards) in

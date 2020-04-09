@@ -13,6 +13,13 @@ import UIKit
 
 
 class HistoryService: HistoryServiceProtocol {
+    func getLoanPaymentSchedule(headers: HTTPHeaders, id: Int, name: String, completionHandler: @escaping (Bool, [DatedCardTransactionsStatement]?) -> Void) {
+        print("ss")
+    }
+    
+    
+    
+    
 
 
     private let host: Host
@@ -22,7 +29,45 @@ class HistoryService: HistoryServiceProtocol {
         self.host = host
     }
 
-
+    func getHistoryDeposit(headers: HTTPHeaders, id: Int, name: String, completionHandler: @escaping (Bool, [DatedCardTransactionsStatement]?) -> Void) {
+        let historycard = [DatedCardTransactionsStatement]()
+        let url = host.apiBaseURL + "/rest/getDepositStatement"
+        let parametrs: [String: Any] = ["id": id as AnyObject, "name": name as AnyObject]
+        Alamofire.request(url, method: HTTPMethod.post, parameters: parametrs, encoding: JSONEncoding.default, headers: headers)
+        .validate(statusCode: MultiRange(200..<300, 401..<402))
+        .validate(contentType: ["application/json"])
+            .responseJSON { [unowned self] response in
+                
+                if let json = response.result.value as? Dictionary<String, Any>, let errorMessage = json["errorMessage"] as? String {
+                    print("\(errorMessage) \(self)")
+                    completionHandler(false, historycard)
+                    return
+                }
+                
+                switch response.result {
+                case .success:
+                    let decoder = JSONDecoder()
+                    decoder.dateDecodingStrategy = .millisecondsSince1970
+                    do {
+                        if let result = (try decoder.decode(BriginvestResponse<[TransactionCardStatement]>.self, from: response.data ?? Data())) as? BriginvestResponse<[TransactionCardStatement]> {
+                            
+                            let sortedTransations = DatedCardTransactionsStatement.sortByDays(transactions: result.data)
+                            completionHandler(true, sortedTransations)
+                            print("sortedTransations", sortedTransations)
+                            return
+                        }
+                    } catch let error as NSError {
+                        print("rest/getFullStatement cant parse json \(error)")
+                    }
+                    completionHandler(false, nil)
+                case .failure(let error):
+                    print("\(error) \(self)")
+                    completionHandler(false, nil)
+                }
+                
+        }
+    }
+    
     func getHistoryCard(headers: HTTPHeaders, cardNumber: String, completionHandler: @escaping (Bool, [DatedCardTransactionsStatement]?) -> Void) {
         var historycard = [DatedCardTransactionsStatement]()
         let url = host.apiBaseURL + "/rest/getCardStatement"
@@ -32,8 +77,7 @@ class HistoryService: HistoryServiceProtocol {
             .validate(contentType: ["application/json"])
             .responseJSON { [unowned self] response in
 
-                if let json = response.result.value as? Dictionary<String, Any>,
-                    let errorMessage = json["errorMessage"] as? String {
+                if let json = response.result.value as? Dictionary<String, Any>, let errorMessage = json["errorMessage"] as? String {
                     print("\(errorMessage) \(self)")
                     completionHandler(false, historycard)
                     return

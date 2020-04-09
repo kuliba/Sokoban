@@ -159,6 +159,18 @@ private extension LoansDetailsViewController {
             managementVC?.actionsType = "account"
             managementVC?.loan = loan
             newViewController = managementVC
+            
+        case 1:
+        
+            let managementVC = storyboard?.instantiateViewController(withIdentifier: "feed\(index)") as? DepositsCardsDetailsStatementViewController
+            //managementVC?.requisite = card!.number
+            guard let id = loan?.loanID else {
+                return
+            }
+            managementVC?.idProduct = id
+            managementVC?.typeProduct = .loan
+            newViewController = managementVC
+        
         case 2:
             let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductAboutViewController") as? ProductAboutViewController
             managementVC?.items = loan?.getProductAbout()

@@ -99,3 +99,28 @@ struct TransactionCardStatement: Decodable {
         self.documentID = decodeToString(fromContainer: container, key: .documentID)
     }
 }
+
+//struct LoanPaymentSchedule: Decodable {
+////    "actionType": "string",
+////    "actionTypeBrief": "string",
+////    "actionTypeCode": 0,
+////    "paymentAmount": 0,
+////    "totalAmount": 0
+//    let actionType: String?
+//    let actionTypeBrief: String?
+//    let actionTypeCode: Int?
+//    let paymentAmount: Int?
+//    let totalAmount: Int?
+//    
+//    enum CodingKeys: String, CodingKey {
+//        case actionType
+//        case actionTypeBrief
+//        case actionTypeCode
+//        case paymentAmount
+//        case totalAmount
+//    }
+//    
+//    init(from decoder: Decoder) throws {
+//        let container = try decoder.container(keyedBy: CodingKeys.self)
+//    }
+//}

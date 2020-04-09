@@ -100,10 +100,18 @@ protocol LoanPaymentScheduleProtocol {
     func getLoansPayment(headers: HTTPHeaders,
                          completionHandler: @escaping (_ success: Bool, _ obligations: [LaonSchedules]?) -> Void)
 }
+
 protocol HistoryServiceProtocol {
     func getHistoryCard(headers: HTTPHeaders, cardNumber : String,
                         completionHandler: @escaping (_ success: Bool, _ obligations: [DatedCardTransactionsStatement]?) -> Void)
+    
+    func getHistoryDeposit(headers: HTTPHeaders, id : Int, name: String,
+                           completionHandler: @escaping (_ success: Bool, _ obligations: [DatedCardTransactionsStatement]?) -> Void)
+    
+    func getLoanPaymentSchedule(headers: HTTPHeaders, id : Int, name: String,
+                                completionHandler: @escaping (_ success: Bool, _ obligations: [DatedCardTransactionsStatement]?) -> Void)
 }
+
 protocol LoansServiceProtocol {
     func getLoans(headers: HTTPHeaders,
                   completionHandler: @escaping (_ success: Bool, _ obligations: [Loan]?) -> Void)

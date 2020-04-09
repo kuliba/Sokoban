@@ -378,6 +378,18 @@ class NetworkManager {
     func getHistoryCard(cardNumber: String, completionHandler: @escaping (_ success: Bool, _ obligations: [DatedCardTransactionsStatement]?) -> Void) {
         historyService.getHistoryCard(headers: headers, cardNumber: cardNumber, completionHandler: completionHandler)
     }
+    
+    func getHistoryDeposit(id: Int, name: String,completionHandler: @escaping (_ success: Bool, _ obligations: [DatedCardTransactionsStatement]?) -> Void) {
+        historyService.getHistoryDeposit(headers: headers, id: id, name: name) { (success, historyStatment) in
+            if success{
+                completionHandler(true, historyStatment)
+                return
+            }else{
+                completionHandler(false, nil)
+            }
+        }
+    }
+    
 //MARK: - deposits service
     func getDepos(completionHandler: @escaping (_ success: Bool, _ obligations: [Account]?) -> Void) {
         accountsService.getDepos(headers: headers, completionHandler: completionHandler)
