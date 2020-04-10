@@ -31,7 +31,8 @@ class DepositsCardsDetailsStatementDetailsViewController: UIViewController {
     var defaultTopViewOffset: CGFloat = 0
     var product: DatedTransactions?
     var sortedTransactionsStatement: DatedCardTransactionsStatement?
-     var transaction: TransactionCardStatement?
+    var transaction: TransactionCardStatement?
+    var laonSchedule: LaonSchedules?
     
 
       // MARK: - Actions
@@ -45,22 +46,28 @@ class DepositsCardsDetailsStatementDetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        print(scrollView.gestureRecognizers)
-       // recipient.text = "\((transaction?.comment)!)"
-        nameTransaction.text = "\((transaction?.comment) ?? "1")"
-        datetransaction.text = "\((transaction?.date)!)"
-        amountPaT.text = "\(maskSum(sum:transaction?.amount ?? 11))" + "\("₽")"
-        if let data = transaction?.operationType {
-            if data == "CREDIT"{
-                amountPaT.text = "\("+")" + "\(maskSum(sum:(transaction?.amount)!))" + "\("₽")"
-            } else {
-                view.backgroundColor = .red
-                amountPaT.text = "\("-")" + "\(maskSum(sum:(transaction?.amount)!))" + "\("₽")"
-            }
-        }
+        self.setupElement()
     }
     
-    
+    private func setupElement(){
+        if transaction != nil{
+            nameTransaction.text = "\((transaction?.comment) ?? "1")"
+            datetransaction.text = "\((transaction?.date)!)"
+            amountPaT.text = "\(maskSum(sum:transaction?.amount ?? 11))" + "\("₽")"
+            if let data = transaction?.operationType {
+                if data == "CREDIT"{
+                    amountPaT.text = "\("+")" + "\(maskSum(sum:(transaction?.amount)!))" + "\("₽")"
+                } else {
+                    view.backgroundColor = .red
+                    amountPaT.text = "\("-")" + "\(maskSum(sum:(transaction?.amount)!))" + "\("₽")"
+                }
+            }
+        }else if laonSchedule != nil{
+            self.nameTransaction.text = laonSchedule?.actionType
+            self.datetransaction.text = laonSchedule?.paymentDate
+            self.amountPaT.text = "+ \(maskSum(sum: laonSchedule?.paymentAmount ?? 00))"
+        }
+    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 //        print("prepare ofr segue \(segue.identifier ?? "nil")")

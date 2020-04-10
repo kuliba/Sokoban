@@ -33,3 +33,18 @@ func getDateCurrencys(data: Date) -> String{
     dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
     return dateFormatter.string(from: data)
 }
+
+func getDateToDateMonthYear(date: Date) -> String{
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "MM/YY"
+    return dateFormatter.string(from: date)
+}
+
+func getDateFromString(strTime: String?)-> Date?{
+    let formatter = DateFormatter()
+    formatter.dateFormat = "dd MM YYYY"
+    formatter.locale = Locale(identifier: "ru_RU")
+    guard strTime != nil else{return nil}
+    guard let date = formatter.date(from: strTime!) else{return nil}
+    return date
+}

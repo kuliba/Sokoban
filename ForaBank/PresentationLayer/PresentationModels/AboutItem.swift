@@ -21,41 +21,54 @@ class AboutItem: IAboutItem {
 
 
 
-    class LaonSchedules: Mappable {
-        let actionTypeBrief: String?
-        let actionType: String?
-        let paymentAmount: Double?
-        let userAnnual: Double?
-        let principalDebt: Double?
-        let loanID: String?
-        let items: [Item]
-        var collapsed: Bool
-        let paymentDate: String?
-        
-        required init(map: Mapper) throws {
-            try paymentAmount = map.from("paymentAmount")
-            try actionType = map.from("actionType")
-            try principalDebt = map.from("principalDebt")
-            try userAnnual = map.from("userAnnual")
-            try loanID = map.from("loanId")
-            try collapsed = map.from("collapsed")
-            try actionTypeBrief = map.from("actionTypeBrief")
-            try paymentDate = map.from("paymentDate")
-            try items = map.from("Item.name")
-        }
-        init( principalDebt: Double? = nil, userAnnual: Double? = nil,  loanID: String? = nil, collapsed: Bool = true, actionTypeBrief: String? = nil, paymentDate: String? = nil, items: [Item],actionType: String? = nil, paymentAmount:Double? = nil){
-            self.userAnnual = userAnnual
-            self.actionType = actionType
-            self.principalDebt = principalDebt
-            self.loanID = loanID
-            self.collapsed = collapsed
-            self.actionTypeBrief = actionTypeBrief
-            self.paymentDate = paymentDate
-            self.items = items
-            self.paymentAmount = paymentAmount
+class LaonSchedules: Mappable {
+    let actionTypeBrief: String?
+    let actionType: String?
+    let paymentAmount: Double?
+    let userAnnual: Double?
+    let principalDebt: Double?
+    let loanID: String?
+    let items: [Item]
+    var collapsed: Bool
+    let paymentDate: String?
+    
+    required init(map: Mapper) throws {
+        try paymentAmount = map.from("paymentAmount")
+        try actionType = map.from("actionType")
+        try principalDebt = map.from("principalDebt")
+        try userAnnual = map.from("userAnnual")
+        try loanID = map.from("loanId")
+        try collapsed = map.from("collapsed")
+        try actionTypeBrief = map.from("actionTypeBrief")
+        try paymentDate = map.from("paymentDate")
+        try items = map.from("Item.name")
+    }
+    init( principalDebt: Double? = nil, userAnnual: Double? = nil,  loanID: String? = nil, collapsed: Bool = true, actionTypeBrief: String? = nil, paymentDate: String? = nil, items: [Item],actionType: String? = nil, paymentAmount:Double? = nil){
+        self.userAnnual = userAnnual
+        self.actionType = actionType
+        self.principalDebt = principalDebt
+        self.loanID = loanID
+        self.collapsed = collapsed
+        self.actionTypeBrief = actionTypeBrief
+        self.paymentDate = paymentDate
+        self.items = items
+        self.paymentAmount = paymentAmount
 
 
-          }
+      }
+}
+
+//класс для вывода истории по кредиту
+struct ClassSectionAndItemLoan {
+    var sectionAmount: Double = 0.0
+    var sectionDate: String = ""
+    var arrayCellLoans = Array<LaonSchedules>()
+    
+    init(sectionAmount: Double, sectionDate: String?, arrayCellLoans: Array<LaonSchedules>) {
+        self.sectionAmount = sectionAmount
+        self.sectionDate = sectionDate ?? ""
+        self.arrayCellLoans = arrayCellLoans
+    }
 }
 
 class actionEntryList: Mappable{

@@ -20,11 +20,8 @@ class DepositsCardsDetailsStatementViewController: UIViewController, TabCardDeta
             self.tableView.reloadData()
             }
     }
-    var arrayLaonSchedules = [LaonSchedules](){
-        didSet{
-            self.tableView.reloadData()
-            }
-    }
+    //var arrayLaonSchedules = [LaonSchedules]()
+    var arraySectionAndCellLoans = [ClassSectionAndItemLoan]()
     var datedTransactions = [DatedTransactions]() {
         didSet{
             self.tableView.reloadData()
@@ -78,7 +75,9 @@ class DepositsCardsDetailsStatementViewController: UIViewController, TabCardDeta
                 if success{
                     print("arrayLoanSchedule = ", arrayLoanSchedule![0])
                     guard arrayLoanSchedule != nil, arrayLoanSchedule?.count != 0 else {return}
-                    self!.arrayLaonSchedules = arrayLoanSchedule!
+                    //self!.arrayLaonSchedules = arrayLoanSchedule!
+                    
+                    self!.getSectionAndCellLoanTB(arrayLoans: arrayLoanSchedule!)
                 }
             }
         }
@@ -92,11 +91,20 @@ class DepositsCardsDetailsStatementViewController: UIViewController, TabCardDeta
 //            }
     }
         
+    //MARK: Navigation
         override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     //        print("prepare for segue \(segue.identifier ?? "nil")")
             if let destination = segue.destination as? DepositsCardsDetailsStatementDetailsViewController {
-                destination.transaction = sortedTransactionsStatement[selectedSection!].transactions[selectIndex!]
-                   }
+                if typeProduct == .loan{
+                    guard let indexPathSelect = tableView.indexPathForSelectedRow else {
+                        print("No indexPathSelect")
+                        return
+                    }
+                    destination.laonSchedule = arraySectionAndCellLoans[indexPathSelect.section].arrayCellLoans[indexPathSelect.row]
+                }else{
+                    destination.transaction = sortedTransactionsStatement[selectedSection!].transactions[selectIndex!]
+                }
+            }
         }
 
     }
@@ -113,14 +121,14 @@ extension DepositsCardsDetailsStatementViewController: UITableViewDataSource, UI
     
     func numberOfSections(in tableView: UITableView) -> Int {
         if typeProduct == .loan{
-            return 1
+            return arraySectionAndCellLoans.count
         }
         return sortedTransactionsStatement.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if typeProduct == .loan{
-            return arrayLaonSchedules.count
+            return arraySectionAndCellLoans[section].arrayCellLoans.count
         }
         return sortedTransactionsStatement[section].transactions.count
     }
@@ -184,11 +192,12 @@ extension DepositsCardsDetailsStatementViewController: UITableViewDataSource, UI
             cell.titleLabel.text = sortedTransactionsStatement[indexPath.section].transactions[indexPath.row].comment
             cell.commentLabel.text = sortedTransactionsStatement[indexPath.section].transactions[indexPath.row].accountNumber
             cell.descriptionLabel.text = String( sortedTransactionsStatement[indexPath.section].transactions[indexPath.row].amount!)
-        }else if arrayLaonSchedules.count != 0{
-            cell.titleLabel.text = arrayLaonSchedules[indexPath.row].actionType
-            cell.commentLabel.text = arrayLaonSchedules[indexPath.row].actionTypeBrief
-            cell.descriptionLabel.text = "\(arrayLaonSchedules[indexPath.row].paymentAmount ?? 0)"
-            print(arrayLaonSchedules[indexPath.row].paymentDate)
+        }else if arraySectionAndCellLoans.count != 0{
+            let dataCell = arraySectionAndCellLoans[indexPath.section].arrayCellLoans[indexPath.row]
+            cell.titleLabel.text = dataCell.actionType
+            cell.commentLabel.text = dataCell.actionTypeBrief
+            cell.descriptionLabel.text = "\(dataCell.paymentAmount ?? 0)"
+            //print(dataCell.paymentDate)
         }
         
         
@@ -201,9 +210,9 @@ extension DepositsCardsDetailsStatementViewController: UITableViewDataSource, UI
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
-        if typeProduct == .loan{
-            return DepositsHistoryHeader()
-        }
+//        if typeProduct == .loan{
+//            return DepositsHistoryHeader()
+//        }
         
         let headerCell = UINib(nibName: "DepositsHistoryHeader", bundle: nil)
             .instantiate(withOwner: nil, options: nil)[0] as! DepositsHistoryHeader
@@ -213,23 +222,36 @@ extension DepositsCardsDetailsStatementViewController: UITableViewDataSource, UI
         headerView.backgroundColor = .clear
         //        headerCell.titleLabel.text = data_[section].date
         //        headerCell.subTitleLabel.text = data_[section].amountTotal
-        let date = sortedTransactionsStatement[section].date
-        let f = DateFormatter()
-        f.doesRelativeDateFormatting = true
-        f.locale = Locale(identifier: "ru_RU")
-        f.dateStyle = .full
-        let relativeDate = f.string(from: date)
-        let ff = DateFormatter()
-        ff.locale = Locale(identifier: "ru_RU")
-        ff.dateFormat = "dd MMMM"
-        let nonrelativeDate = ff.string(from: date)
-        //                    if relativeDate.rangeOfCharacter(from: CharacterSet.decimalDigits) != nil {
-        if relativeDate.count > 8 {
-            headerCell.titleLabel.text = nonrelativeDate
-        } else {
-            headerCell.titleLabel.text = "\(relativeDate), \(nonrelativeDate)"
+        var date = Date()
+        
+        if typeProduct == .loan{
+            headerCell.titleLabel.text = arraySectionAndCellLoans[section].sectionDate
+        }else{
+            date = sortedTransactionsStatement[section].date
+            let f = DateFormatter()
+            f.doesRelativeDateFormatting = true
+            f.locale = Locale(identifier: "ru_RU")
+            f.dateStyle = .full
+            let relativeDate = f.string(from: date)
+            let ff = DateFormatter()
+            ff.locale = Locale(identifier: "ru_RU")
+            ff.dateFormat = "dd MMMM"
+            let nonrelativeDate = ff.string(from: date)
+            //                    if relativeDate.rangeOfCharacter(from: CharacterSet.decimalDigits) != nil {
+            if relativeDate.count > 8 {
+                headerCell.titleLabel.text = nonrelativeDate
+            } else {
+                headerCell.titleLabel.text = "\(relativeDate), \(nonrelativeDate)"
+            }
         }
-        let amount = sortedTransactionsStatement[section].changeOfBalanse
+        
+        
+        var amount: Double = 0.0
+        if typeProduct == .loan{
+            amount = arraySectionAndCellLoans[section].sectionAmount
+        }else{
+            amount = sortedTransactionsStatement[section].changeOfBalanse
+        }
         let f2 = NumberFormatter()
         f2.numberStyle = .currency
         f2.locale = Locale(identifier: "ru_RU")
@@ -303,4 +325,37 @@ private extension DepositsCardsDetailsStatementViewController {
         searchView.addSubview(searchCell)
         tableView.tableHeaderView = searchView
     }
+    
+    func getSectionAndCellLoanTB(arrayLoans: Array<LaonSchedules>){
+        var arrayDateLoans = Array<String?>()
+        for iloan in arrayLoans{ //получаем все даты
+            arrayDateLoans.append(iloan.paymentDate)
+        }
+        let filteredArrayDateLoans = Array(Set(arrayDateLoans)) // убираем дублирующиеся даты
+        
+        for dateLoan in filteredArrayDateLoans{ //цмкл по датам
+            var arrayLoansSection = Array<LaonSchedules>()
+            var amountSection: Double = 0.0
+            for loan in arrayLoans{ // цикл по выплатам
+                if loan.paymentDate == dateLoan{ //если даты совпали
+                    arrayLoansSection.append(loan) //добавляем в выплату в массив
+                    amountSection += loan.paymentAmount ?? 0.0 //прибавляем в сумму для секций
+                }
+            }
+            //print("dateLoan = ", dateLoan)
+            let sectionAndCellLoan = ClassSectionAndItemLoan(sectionAmount: amountSection,
+                                                             sectionDate: dateLoan,
+                                                             arrayCellLoans: arrayLoansSection)
+            print("dateLoan = ", dateLoan!.replacingOccurrences(of: "-", with: " "))
+            let aaaa = getDateFromString(strTime: dateLoan!.replacingOccurrences(of: "-", with: " "))
+            print("dateLoanDate  = ", aaaa)
+            print("dateLoanDateStr  = ", getDateToDateMonthYear(date: aaaa!))
+            
+            self.arraySectionAndCellLoans.append(sectionAndCellLoan)
+        }
+        self.arraySectionAndCellLoans = self.arraySectionAndCellLoans.sorted(by: { $0.sectionDate > $1.sectionDate})
+        self.tableView.reloadData()
+    }
 }
+
+
