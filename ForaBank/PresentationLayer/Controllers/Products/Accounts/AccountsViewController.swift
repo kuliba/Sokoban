@@ -86,8 +86,10 @@ class AccountsViewController: UIViewController {
         }
     }
     func hiddenAccount() {
-        if accounts.count == (0) {
+        if accounts.count == 0 {
             LabelNoProduct.isHidden = false
+        }else{
+            LabelNoProduct.isHidden = true
         }
     }
 
@@ -96,7 +98,7 @@ class AccountsViewController: UIViewController {
 
         if (accounts.count == 0) {
             foraPreloader.startAnimation()
-            LabelNoProduct.isHidden = false
+            LabelNoProduct.isHidden = true
         }
     }
 

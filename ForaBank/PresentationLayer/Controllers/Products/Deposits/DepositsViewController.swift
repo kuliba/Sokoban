@@ -112,8 +112,10 @@ class DepositsViewController: UIViewController {
         }
     }
     func hiddenAccount() {
-        if deposits.count == (0) {
+        if deposits.count == 0 {
             LabelNoProduct.isHidden = false
+        }else{
+            LabelNoProduct.isHidden = true
         }
     }
 
