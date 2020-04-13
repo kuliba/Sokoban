@@ -68,19 +68,21 @@ class SignInViewController: UIViewController, ContactsPickerDelegate {
         //foraPreloader.frame = buttonSignIn.frame
         foraPreloader.startAnimation()
         foraPreloader.isHidden = false
-        buttonSignIn.changeEnabled(isEnabled: false)
+        buttonSignIn.isHidden = true
+        //buttonSignIn.changeEnabled(isEnabled: false)
         NetworkManager.shared().login(login: self.loginTextField.text ?? "",
                                       password: self.passwordTextField.text ?? "",
                                       completionHandler: { [unowned self] success, errorMessage in
                                           if success {
                                             self.foraPreloader.stopAnimating()
                                             self.foraPreloader.isHidden = true
-                                            self.buttonSignIn.changeEnabled(isEnabled: true)
+                                            self.buttonSignIn.isHidden = false
+                                            //self.buttonSignIn.changeEnabled(isEnabled: true)
                                               self.performSegue(withIdentifier: "smsVerification", sender: self)
                                               store.dispatch(createCredentials(login: self.loginTextField.text ?? "", pwd: self.passwordTextField.text ?? ""))
                                           } else {
                                               AlertService.shared.show(title: "Неудача", message: errorMessage, cancelButtonTitle: "Ок", okButtonTitle: nil, cancelCompletion: nil, okCompletion: nil)
-                                            self.buttonSignIn.changeEnabled(isEnabled: true)
+                                            self.buttonSignIn.isHidden = false
                                             self.foraPreloader.stopAnimating()
                                             self.foraPreloader.isHidden = true
                                           }
