@@ -61,12 +61,12 @@ class LaonSchedules: Mappable {
 //класс для вывода истории по кредиту
 struct ClassSectionAndItemLoan {
     var sectionAmount: Double = 0.0
-    var sectionDate: String = ""
+    var sectionDate: Date = Date()
     var arrayCellLoans = Array<LaonSchedules>()
     
-    init(sectionAmount: Double, sectionDate: String?, arrayCellLoans: Array<LaonSchedules>) {
+    init(sectionAmount: Double, sectionDate: Date, arrayCellLoans: Array<LaonSchedules>) {
         self.sectionAmount = sectionAmount
-        self.sectionDate = sectionDate ?? ""
+        self.sectionDate = sectionDate
         self.arrayCellLoans = arrayCellLoans
     }
 }

@@ -142,6 +142,7 @@ extension DepositsCardsDetailsStatementViewController: UITableViewDataSource, UI
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? DepositsHistoryCell else {
             return UITableViewCell()
         }
+        cell.selectionStyle = .none
         if card != nil {
             cell.imageView?.image = nil
             cell.titleLabel.text = nil
@@ -225,7 +226,7 @@ extension DepositsCardsDetailsStatementViewController: UITableViewDataSource, UI
         var date = Date()
         
         if typeProduct == .loan{
-            headerCell.titleLabel.text = arraySectionAndCellLoans[section].sectionDate
+            headerCell.titleLabel.text = getDateFromFormate(date: arraySectionAndCellLoans[section].sectionDate, format: "dd MMMM yyyy")
         }else{
             date = sortedTransactionsStatement[section].date
             let f = DateFormatter()
@@ -333,7 +334,7 @@ private extension DepositsCardsDetailsStatementViewController {
         }
         let filteredArrayDateLoans = Array(Set(arrayDateLoans)) // убираем дублирующиеся даты
         
-        for dateLoan in filteredArrayDateLoans{ //цмкл по датам
+        for dateLoan in filteredArrayDateLoans{ //цикл по датам
             var arrayLoansSection = Array<LaonSchedules>()
             var amountSection: Double = 0.0
             for loan in arrayLoans{ // цикл по выплатам
@@ -344,12 +345,12 @@ private extension DepositsCardsDetailsStatementViewController {
             }
             //print("dateLoan = ", dateLoan)
             let sectionAndCellLoan = ClassSectionAndItemLoan(sectionAmount: amountSection,
-                                                             sectionDate: dateLoan,
+                                                             sectionDate: getDateFromString(strTime: (dateLoan ?? "") + " 12:00"),
                                                              arrayCellLoans: arrayLoansSection)
-            print("dateLoan = ", dateLoan!.replacingOccurrences(of: "-", with: " "))
-            let aaaa = getDateFromString(strTime: dateLoan!.replacingOccurrences(of: "-", with: " "))
-            print("dateLoanDate  = ", aaaa)
-            print("dateLoanDateStr  = ", getDateToDateMonthYear(date: aaaa!))
+//            print("dateLoan = ", dateLoan!.replacingOccurrences(of: "-", with: " "))
+//            let aaaa = getDateFromString(strTime: dateLoan!.replacingOccurrences(of: "-", with: " "))
+//            print("dateLoanDate  = ", aaaa)
+//            print("dateLoanDateStr  = ", getDateToDateMonthYear(date: aaaa!))
             
             self.arraySectionAndCellLoans.append(sectionAndCellLoan)
         }
