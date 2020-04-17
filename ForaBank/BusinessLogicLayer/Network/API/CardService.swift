@@ -26,16 +26,17 @@ class CardService: CardServiceProtocol {
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])
             .responseJSON { [unowned self] response in
-
+                print("1 = ", response.result.value)
                 if let json = response.result.value as? Dictionary<String, Any>,
                     let errorMessage = json["errorMessage"] as? String {
                     print("\(errorMessage) \(self)")
                     completionHandler(false, cards)
                     return
                 }
-
+                print("2")
                 switch response.result {
                 case .success:
+                    print("3")
                     if let json = response.result.value as? Dictionary<String, Any>,
                         let data = json["data"] as? Array<Any> {
                     for cardData in data {
@@ -72,6 +73,7 @@ class CardService: CardServiceProtocol {
                     }
 
                 case .failure(let error):
+                    print("4")
                     print("rest/getCardList \(error) \(self)")
                     completionHandler(false, cards)
                 }
