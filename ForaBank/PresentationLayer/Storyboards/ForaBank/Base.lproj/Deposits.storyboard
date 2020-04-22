@@ -2842,7 +2842,6 @@
                         <constraints>
                             <constraint firstItem="w8N-od-haL" firstAttribute="centerY" secondItem="3RF-UH-e09" secondAttribute="centerY" id="45r-qM-Qmh"/>
                             <constraint firstItem="w8N-od-haL" firstAttribute="width" secondItem="3RF-UH-e09" secondAttribute="width" multiplier="0.917333" id="Geb-gd-8aM"/>
-                            <constraint firstItem="w8N-od-haL" firstAttribute="height" relation="greaterThanOrEqual" secondItem="3RF-UH-e09" secondAttribute="height" multiplier="0.341577" id="QCv-ma-Q3h"/>
                             <constraint firstItem="w8N-od-haL" firstAttribute="centerX" secondItem="3RF-UH-e09" secondAttribute="centerX" id="YrO-6e-M2H"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="0CV-V1-ycP"/>
