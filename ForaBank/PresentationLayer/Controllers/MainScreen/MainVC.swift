@@ -113,7 +113,13 @@ extension MainVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollec
             if let item = collectionViewCard.dequeueReusableCell(withReuseIdentifier: "cellCard", for: indexPath) as? CardCVC{
                 if arrayCards.count != 0{
                     let card = arrayCards[indexPath.row]
-                    item.amountCard.text = "\(card.balance)"
+                    var amountCardString = getStringAmountCurrency(card.balance, currency: "RUB") //получаем сумму со знаком
+                    let singAmount = amountCardString.remove(at: amountCardString.startIndex) //вытаскиваем знак
+                    if singAmount == "+" || singAmount == " "{ //если сумма положительная, то убираем знак
+                        item.amountCard.text = amountCardString
+                    }else{
+                        item.amountCard.text =  "-"+amountCardString
+                    }
                     let nameCard = card.name
                     item.nameCard.text = "\(nameCard ?? "NO")"
                     item.numberCard.text = "*\(card.number.prefix(4))"

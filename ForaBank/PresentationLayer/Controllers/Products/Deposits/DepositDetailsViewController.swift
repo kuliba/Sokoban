@@ -159,6 +159,7 @@ private extension DepositDetailsViewController {
             }
             managementVC?.idProduct = idDepodit
             managementVC?.typeProduct = .deposit
+            managementVC?.codeCurency = deposit?.currencyCode ?? ""
             newViewController = managementVC
             
         case 2:

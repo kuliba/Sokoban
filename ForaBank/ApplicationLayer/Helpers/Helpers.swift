@@ -408,3 +408,39 @@ extension UIViewController{
         print("Нет интернета")
     }
 }
+
+//MARK: Currency Code
+public func getStringAmountCurrency(_ amount: Double, currency: String)->String{
+    let f2 = NumberFormatter()
+    f2.numberStyle = .currency
+    
+    switch currency { //определяем валюту
+    case "RUB":
+        f2.locale = Locale(identifier: "ru_RU")
+    case "USD":
+        f2.locale = Locale(identifier: "en_US")
+    case "EUR":
+        f2.locale = Locale(identifier: "de_DE")
+    default: //если не нашли подходящую валюту
+        return singAmount(amount) + "\(amount)"
+    }
+
+    f2.usesGroupingSeparator = true
+    f2.currencyGroupingSeparator = " "
+    if let amountString = f2.string(from: NSNumber(value: amount)), amountString.count > 0{
+        return singAmount(amount) + amountString
+    }else{
+        return singAmount(amount) + "\(amount)"
+    }
+}
+
+//определяет знак числа
+public func singAmount(_ amount: Double)->String{
+    if amount == Double(0){ //определяем знак в зависимости от суммы
+        return ""
+    }else if amount > Double(0){
+        return "+"
+    }else{
+        return "-"
+    }
+}

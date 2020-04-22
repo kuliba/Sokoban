@@ -238,6 +238,7 @@ extension PaymentsDetailsViewController: RemittancePickerDelegate {
 extension PaymentsDetailsViewController: PaymentDetailsPresenterDelegate {
     
     func didFinishPreparation(success: Bool) {
+        activityIndicator.stopAnimating()
         if success {
             performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
         } else {

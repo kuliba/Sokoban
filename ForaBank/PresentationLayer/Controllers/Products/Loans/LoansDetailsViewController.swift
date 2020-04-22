@@ -169,6 +169,7 @@ private extension LoansDetailsViewController {
             }
             managementVC?.idProduct = id
             managementVC?.typeProduct = .loan
+            managementVC?.codeCurency = loan?.currencyCode ?? ""
             newViewController = managementVC
         
         case 2:

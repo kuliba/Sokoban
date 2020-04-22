@@ -39,6 +39,7 @@ class DepositsCardsDetailsStatementViewController: UIViewController, TabCardDeta
     var requisite: String = "" //реквизит по которому нужно получить историю
     var idProduct: Int = 0  //id выбранного продукта
     var typeProduct = ProductType.card //тип продукта по которому нужно получить историю
+    var codeCurency = String() //код валюты
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -253,15 +254,14 @@ extension DepositsCardsDetailsStatementViewController: UITableViewDataSource, UI
         }else{
             amount = sortedTransactionsStatement[section].changeOfBalanse
         }
-        let f2 = NumberFormatter()
-        f2.numberStyle = .currency
-        f2.locale = Locale(identifier: "ru_RU")
-        f2.usesGroupingSeparator = true
-        f2.currencyGroupingSeparator = " "
-        if let amountString = f2.string(from: NSNumber(value: amount)),
-            amountString.count > 0{
-            headerCell.subTitleLabel.text = (amount>0 ? "+":"") + amountString
+        
+        if codeCurency.isEmpty{
+            headerCell.subTitleLabel.text = singAmount(amount)+"\(amount)"
+        }else{
+            headerCell.subTitleLabel.text = getStringAmountCurrency(amount, currency: codeCurency)
         }
+        
+        
         if amount>0 {
             headerCell.subTitleLabel.textColor = UIColor(red: 4/255, green: 160/255, blue: 133/255, alpha: 1)
         } else {
