@@ -79,13 +79,20 @@ extension MainVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollec
         
         collectionViewCard.backgroundColor = .clear
         collectionViewRates.backgroundColor = .clear
-        let layout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        layout.minimumLineSpacing = 0
-        layout.minimumInteritemSpacing = 0
-        layout.scrollDirection = .horizontal
-        self.collectionViewCard?.collectionViewLayout = layout
-        self.collectionViewRates?.collectionViewLayout = layout
+        let layoutCard = UICollectionViewFlowLayout()
+        layoutCard.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        layoutCard.minimumLineSpacing = 0
+        layoutCard.minimumInteritemSpacing = 0
+        layoutCard.scrollDirection = .horizontal
+        self.collectionViewCard?.collectionViewLayout = layoutCard
+        
+        
+        let layoutRates = UICollectionViewFlowLayout()
+        layoutRates.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        layoutRates.minimumLineSpacing = 0
+        layoutRates.minimumInteritemSpacing = 0
+        layoutRates.scrollDirection = .horizontal
+        self.collectionViewRates?.collectionViewLayout = layoutRates
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -250,7 +257,7 @@ extension MainVC: UITableViewDelegate, UITableViewDataSource, ExpandableHeaderVi
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 44
+        return 30
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

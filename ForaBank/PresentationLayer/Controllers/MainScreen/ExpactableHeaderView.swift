@@ -31,7 +31,7 @@ class ExpactableHeaderView: UITableViewHeaderFooterView {
         self.backgroundView?.backgroundColor = .clear // цвет секции
         textLabel?.textColor = .black
         textLabel?.font = UIFont(name: "Roboto", size: 13)//UIFont.boldSystemFont(ofSize: 13)
-        contentView.backgroundColor = .clear
+        contentView.backgroundColor = .white
         
         //self.backgroundView = UIImageView()
         
