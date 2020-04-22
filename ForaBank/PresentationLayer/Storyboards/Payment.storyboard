@@ -1014,7 +1014,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yhq-KU-zzm" customClass="ButtonRounded" customModule="ForaBank_Beta" customModuleProvider="target">
-                                <rect key="frame" x="14" y="520" width="347" height="53"/>
+                                <rect key="frame" x="14" y="511" width="347" height="53"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="53" id="JTL-6t-Phb"/>
@@ -1037,7 +1037,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V48-Wh-DLl">
-                                <rect key="frame" x="14" y="385" width="347" height="120"/>
+                                <rect key="frame" x="14" y="376" width="347" height="120"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AxA-g6-n24">
                                         <rect key="frame" x="0.0" y="0.0" width="347" height="1"/>
@@ -1185,7 +1185,7 @@
                             <constraint firstAttribute="trailing" secondItem="V48-Wh-DLl" secondAttribute="trailing" constant="14" id="0wY-Md-tjh"/>
                             <constraint firstItem="aGd-R4-Z3w" firstAttribute="leading" secondItem="Gtw-UZ-fge" secondAttribute="leading" constant="34" id="1vX-oN-Ty4"/>
                             <constraint firstItem="Yhq-KU-zzm" firstAttribute="trailing" secondItem="V48-Wh-DLl" secondAttribute="trailing" id="D7b-eg-Iu6"/>
-                            <constraint firstItem="u46-KW-caT" firstAttribute="top" secondItem="Yhq-KU-zzm" secondAttribute="bottom" constant="1" id="DFQ-rf-khm"/>
+                            <constraint firstItem="u46-KW-caT" firstAttribute="top" secondItem="Yhq-KU-zzm" secondAttribute="bottom" constant="10" id="DFQ-rf-khm"/>
                             <constraint firstItem="Yhq-KU-zzm" firstAttribute="top" secondItem="V48-Wh-DLl" secondAttribute="bottom" constant="15" id="EHE-kT-yxG"/>
                             <constraint firstItem="V48-Wh-DLl" firstAttribute="top" secondItem="aGd-R4-Z3w" secondAttribute="bottom" constant="14" id="Ee0-Jf-41t"/>
                             <constraint firstItem="aGd-R4-Z3w" firstAttribute="top" secondItem="J5q-LI-SJd" secondAttribute="bottom" constant="8" id="L1C-2q-gY7"/>
