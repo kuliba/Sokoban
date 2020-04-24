@@ -16,6 +16,9 @@ class PasscodeViewController: TOPasscodeViewController {
     init(rightTitle: String, style: TOPasscodeViewStyle, passcodeType: TOPasscodeType) {
         self.rightTitle = rightTitle
         super.init(style: style, passcodeType: passcodeType)
+        self.backgroundView.backgroundColor = UIColor(hexFromString: "#EA4442")
+        self.passcodeView.backgroundColor = UIColor(hexFromString: "#EA4442")
+        
     }
 
     required init?(coder: NSCoder) {
@@ -45,3 +48,4 @@ class PasscodeViewController: TOPasscodeViewController {
         
     }
 }
+

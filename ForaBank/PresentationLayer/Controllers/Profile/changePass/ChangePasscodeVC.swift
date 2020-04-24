@@ -13,8 +13,10 @@ import ReSwift
 
 class ChangePasscodeVC: UIViewController, StoreSubscriber{
 
-    let passcodeVC = PasscodeViewController(rightTitle: NSLocalizedString("Logout", comment: "Logout"), style: .opaqueLight, passcodeType: .fourDigits)
+    let passcodeVC = PasscodeViewController(rightTitle: NSLocalizedString("Logout", comment: "Logout"), style: .opaqueDark, passcodeType: .fourDigits)
     typealias SignInState = (passcodeState: PasscodeSignInState, verificationState: VerificationCodeState)
+    
+    
     
     var stateChangePasscode = 0
     var newPasscode = String()
@@ -22,11 +24,7 @@ class ChangePasscodeVC: UIViewController, StoreSubscriber{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        passcodeVC.passcodeView.titleLabel.adjustsFontSizeToFitWidth = true
-//        passcodeVC.passcodeView.titleLabel.text = "Введите текущий код"
-//        passcodeVC.rightAccessoryButton?.titleLabel?.text = "Выход"
-
+        
         if keychainCredentialsPasscode() == nil{
             passcodeVC.passcodeView.titleLabel.text = "Установите новый код"
             stateChangePasscode = 1
@@ -36,24 +34,11 @@ class ChangePasscodeVC: UIViewController, StoreSubscriber{
         }
         
         passcodeVC.delegate = self
-        //passcodeVC.automaticallyPromptForBiometricValidation = true
-        //passcodeVC.allowBiometricValidation = true
-
-//        if BioMetricAuthenticator.shared.touchIDAvailable() && SettingsStorage.shared.allowedBiometricSignIn() {
-//            passcodeVC.biometryType = .touchID
-//        } else if BioMetricAuthenticator.shared.faceIDAvailable() && SettingsStorage.shared.allowedBiometricSignIn() {
-//            passcodeVC.biometryType = .faceID
-//        } else {
-//            passcodeVC.leftAccessoryButton = UIButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
-//            passcodeVC.allowBiometricValidation = false
-//        }
-        
-        
-        
         passcodeVC.willMove(toParent: self)
         self.view.addSubview(passcodeVC.view)
         self.addChild(passcodeVC)
         passcodeVC.didMove(toParent: self)
+        
         
     }
     

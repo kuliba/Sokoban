@@ -15,19 +15,19 @@ class PasscodeSignInViewController: UIViewController, StoreSubscriber {
 
     typealias SignInState = (passcodeState: PasscodeSignInState, verificationState: VerificationCodeState)
 
-    let passcodeVC = PasscodeViewController(rightTitle: NSLocalizedString("Logout", comment: "Logout"), style: .opaqueLight, passcodeType: .fourDigits)
+    let passcodeVC = PasscodeViewController(rightTitle: NSLocalizedString("Logout", comment: "Logout"), style: .opaqueDark, passcodeType: .fourDigits)
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        print("View = ", self.view.frame.size)
+        
         passcodeVC.passcodeView.titleLabel.adjustsFontSizeToFitWidth = true
         passcodeVC.passcodeView.titleLabel.text = "Введите код:"
         passcodeVC.rightAccessoryButton?.titleLabel?.text = "Выход"
-
         passcodeVC.delegate = self
         passcodeVC.automaticallyPromptForBiometricValidation = true
         passcodeVC.allowBiometricValidation = true
-
         if BioMetricAuthenticator.shared.touchIDAvailable() && SettingsStorage.shared.allowedBiometricSignIn() {
             passcodeVC.biometryType = .touchID
         } else if BioMetricAuthenticator.shared.faceIDAvailable() && SettingsStorage.shared.allowedBiometricSignIn() {
@@ -36,7 +36,7 @@ class PasscodeSignInViewController: UIViewController, StoreSubscriber {
             passcodeVC.leftAccessoryButton = UIButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
             passcodeVC.allowBiometricValidation = false
         }
-
+        passcodeVC.backgroundView.backgroundColor = UIColor(hexFromString: "#EA4442")
         passcodeVC.willMove(toParent: self)
         self.view.addSubview(passcodeVC.view)
         self.addChild(passcodeVC)

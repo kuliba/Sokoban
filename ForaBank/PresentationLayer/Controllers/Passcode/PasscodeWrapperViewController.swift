@@ -11,7 +11,7 @@ import TOPasscodeViewController
 
 class PasscodeWrapperViewController: UIViewController {
 
-    let passcodeVC = PasscodeViewController(rightTitle: NSLocalizedString("Cancel", comment: "Cancel"), style: .opaqueLight, passcodeType: .fourDigits)
+    let passcodeVC = PasscodeViewController(rightTitle: NSLocalizedString("Cancel", comment: "Cancel"), style: .opaqueDark, passcodeType: .fourDigits)
 
     override func viewDidLoad() {
         super.viewDidLoad()

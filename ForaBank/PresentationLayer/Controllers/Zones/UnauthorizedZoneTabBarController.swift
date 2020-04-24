@@ -55,7 +55,7 @@ class UnauthorizedZoneTabBarController: UITabBarController, StoreSubscriber {
         if state.isShown == true {
             let passcodeVC = PasscodeSignInViewController()
             passcodeVC.modalPresentationStyle = .overFullScreen
-            present(passcodeVC, animated: true, completion: nil)
+            self.present(passcodeVC, animated: true, completion: nil)
         }
     }
 }
