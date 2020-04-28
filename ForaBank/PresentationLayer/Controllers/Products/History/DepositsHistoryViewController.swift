@@ -28,10 +28,11 @@ class DepositsHistoryViewController: UIViewController {
     @IBOutlet weak var tableView: CustomTableView!
     
     let transitionAnimator = DepositsHistoryDetailsSegueAnimator()
-    
+    //private let searchController = UISearchController(searchResultsController: nil)
     let cellId = "DepositsHistoryCell"
     
     @IBOutlet weak var foraPreloader: RefreshView!
+    @IBOutlet weak var searchBar: UISearchBar!
     let decoder = JSONDecoder()
     var selectIndex: Int? = nil
     var selectedSection: Int? = nil
@@ -42,6 +43,8 @@ class DepositsHistoryViewController: UIViewController {
             self.tableView.reloadData()
         }
     }
+    
+    var sortedTransactionsStatementFull = [DatedTransactionsStatement]()
     
     
     var refreshView: RefreshView!
@@ -113,7 +116,8 @@ class DepositsHistoryViewController: UIViewController {
         NetworkManager.shared().getSortedFullStatement { [weak self] (success, fullStatement, error) in
             print("DepositsHistoryViewController getSortedFullStatement \(success)")
             if success {
-                self?.sortedTransactionsStatement = fullStatement ?? [DatedTransactionsStatement]()
+                self!.sortedTransactionsStatement = fullStatement ?? [DatedTransactionsStatement]()
+                self!.sortedTransactionsStatementFull = fullStatement ?? [DatedTransactionsStatement]()
             }
         }
         view.backgroundColor = .white
@@ -277,10 +281,11 @@ private extension DepositsHistoryViewController {
     
     func setUpTableView() {
         setTableViewDelegateAndDataSource()
-            setTableViewContentInsets()
+        setTableViewContentInsets()
         // setAutomaticRowHeight()
         registerNibCell()
         setSearchView()
+        //setupSearchBar()
     }
     
     func setTableViewContentInsets() {
@@ -303,12 +308,90 @@ private extension DepositsHistoryViewController {
     }
     
     func setSearchView() {
-        guard let searchCell = UINib(nibName: "DepositsSearchCell", bundle: nil)
-            .instantiate(withOwner: nil, options: nil)[0] as? UIView else {
-                return
-        }
-        let searchView = UIView(frame: searchCell.frame)
-        searchView.addSubview(searchCell)
-        tableView.tableHeaderView = searchView
+//        guard let searchCell = UINib(nibName: "DepositsSearchCell", bundle: nil)
+//            .instantiate(withOwner: nil, options: nil)[0] as? UIView else {
+//                return
+//        }
+//        let searchView = UIView(frame: searchCell.frame)
+//        searchView.addSubview(searchCell)
+//        tableView.tableHeaderView = searchView
+        //searchBar.delegate = self as! UISearchBarDelegate
+        searchBar.delegate = self
+        searchBar.searchTextField.textColor = .black
+        searchBar.searchTextField.inputAccessoryView = DoneButtonOnKeyboard()
+        searchBar.backgroundImage = UIImage()
     }
+    
+    func DoneButtonOnKeyboard() -> UIToolbar{
+        let doneToolbar: UIToolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 320, height: 50))
+        doneToolbar.barStyle = UIBarStyle.default
+        
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
+        let done: UIBarButtonItem = UIBarButtonItem(title: "Закрыть", style: UIBarButtonItem.Style.done, target: self, action: #selector(doneButtonAction))
+        
+        var items = [UIBarButtonItem]()
+        items.append(flexSpace)
+        items.append(done)
+        
+        doneToolbar.items = items
+        doneToolbar.sizeToFit()
+        
+        return doneToolbar
+        
+    }
+    
+    @objc func doneButtonAction(){
+        self.searchBar.endEditing(true)
+    }
+    
+}
+
+//MARK: SearchBar
+extension DepositsHistoryViewController: UISearchResultsUpdating, UISearchBarDelegate{
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        self.searchBar.endEditing(true)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        if searchText.isEmpty{
+            self.sortedTransactionsStatement = self.sortedTransactionsStatementFull
+            return
+        }
+        
+        self.sortedTransactionsStatement.removeAll()
+        for i in sortedTransactionsStatementFull{
+            let arrayI = i.transactions
+            var arraySortedTransactions = Array<TransactionStatement>()
+            for y in arrayI{
+                if String(y.accountNumber ?? "").contains("\(searchText)")
+                    || String(y.amount ?? 0.0).contains("\(searchText)")
+                    || String(y.comment ?? "").contains("\(searchText)"){
+                    arraySortedTransactions.append(y)
+                }
+            }
+            if arraySortedTransactions.count > 0{
+                let filterI = DatedTransactionsStatement(changeOfBalanse: i.changeOfBalanse, date: i.date, transactions: arraySortedTransactions)
+                self.sortedTransactionsStatement.append(filterI)
+            }
+            arraySortedTransactions.removeAll()
+        }
+        
+//        self.sortedTransactionsStatement = self.sortedTransactionsStatementFull.filter{
+//            //(String($0.changeOfBalanse).contains("\(searchText)"))
+//            $0.transactions.filter{
+//                (String($0.accountNumber ?? "").contains("\(searchText)"))
+//            }
+//
+//
+//        }
+        
+    }
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        print("updateSearchResults")
+    }
+    
+    
 }
