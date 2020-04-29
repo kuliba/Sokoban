@@ -271,6 +271,7 @@ private extension CardDetailsViewController {
             managementVC?.product = card
             newViewController = managementVC
         case 1:
+            print("instantiateViewController =", "feed\(index)")
             let managementVC = storyboard?.instantiateViewController(withIdentifier: "feed\(index)") as? DepositsCardsDetailsStatementViewController
             managementVC?.requisite = card!.number
             managementVC?.codeCurency = "RUB" //EUR,USD,RUB

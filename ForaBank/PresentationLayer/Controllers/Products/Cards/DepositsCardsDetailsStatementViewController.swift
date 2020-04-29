@@ -12,9 +12,12 @@ class DepositsCardsDetailsStatementViewController: UIViewController, TabCardDeta
     
     // MARK: - Properties
     @IBOutlet weak var tableView: CustomTableView!
+    @IBOutlet weak var searchBar: UISearchBar!
     
+    private let searchController = UISearchController(searchResultsController: nil)
     let cellId = "DepositsHistoryCell"
     var displayedPeriod: (Date, Date) = (Calendar.current.date(byAdding: .year, value: -5, to: Date())!, Date())
+    var sortedTransactionsStatementFull = [DatedCardTransactionsStatement]()
     var sortedTransactionsStatement = [DatedCardTransactionsStatement]() {
         didSet{
             self.tableView.reloadData()
@@ -44,11 +47,17 @@ class DepositsCardsDetailsStatementViewController: UIViewController, TabCardDeta
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        if typeProduct == .loan{
+            self.searchBar.isHidden = true
+        }
         setUpTableView()
         self.getHistoryProduct(typeProduct)
+        
     //let cardNumber = card as? CardDetailsViewController
         
     }
+    
+
     
     //заполняем массив с историей по нужному продукту
     private func getHistoryProduct(_ productType: ProductType){
@@ -57,18 +66,21 @@ class DepositsCardsDetailsStatementViewController: UIViewController, TabCardDeta
                 print("CardHistory getCardHistory \(success)")
                 if success{
                     self!.sortedTransactionsStatement = error ?? [DatedCardTransactionsStatement]()
+                    self!.sortedTransactionsStatementFull = error ?? [DatedCardTransactionsStatement]()
                 }
             }
         }else if productType == .deposit{
             NetworkManager.shared().getHistoryDeposit(id: idProduct, name: "Depodit") { [weak self] (success, historyStatment) in
                 if success{
                     self!.sortedTransactionsStatement = historyStatment ?? [DatedCardTransactionsStatement]()
+                    self!.sortedTransactionsStatementFull = historyStatment ?? [DatedCardTransactionsStatement]()
                 }
             }
         }else if productType == .account{
             NetworkManager.shared().getHistoryDeposit(id: idProduct, name: "Account") { [weak self] (success, historyStatment) in
                 if success{
                     self!.sortedTransactionsStatement = historyStatment ?? [DatedCardTransactionsStatement]()
+                    self!.sortedTransactionsStatementFull = historyStatment ?? [DatedCardTransactionsStatement]()
                 }
             }
         }else if productType == .loan{
@@ -317,14 +329,41 @@ private extension DepositsCardsDetailsStatementViewController {
     }
     
     func setSearchView() {
-        guard let searchCell = UINib(nibName: "DepositsSearchCell", bundle: nil)
-            .instantiate(withOwner: nil, options: nil)[0] as? DepositsSearchCell else {
-                return
-        }
-        searchCell.textField.placeholder = "Магазины, люди, суммы, даты"
-        let searchView = UIView(frame: searchCell.frame)
-        searchView.addSubview(searchCell)
-        tableView.tableHeaderView = searchView
+//        guard let searchCell = UINib(nibName: "DepositsSearchCell", bundle: nil)
+//            .instantiate(withOwner: nil, options: nil)[0] as? DepositsSearchCell else {
+//                return
+//        }
+//        searchCell.textField.placeholder = "Магазины, люди, суммы, даты"
+//        let searchView = UIView(frame: searchCell.frame)
+//        searchView.addSubview(searchCell)
+//        tableView.tableHeaderView = searchView
+        searchBar.delegate = self
+        searchBar.searchTextField.textColor = .black
+        searchBar.searchTextField.inputAccessoryView = DoneButtonOnKeyboard()
+        searchBar.backgroundImage = UIImage()
+        
+    }
+    
+    func DoneButtonOnKeyboard() -> UIToolbar{
+        let doneToolbar: UIToolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 320, height: 50))
+        doneToolbar.barStyle = UIBarStyle.default
+        
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
+        let done: UIBarButtonItem = UIBarButtonItem(title: "Закрыть", style: UIBarButtonItem.Style.done, target: self, action: #selector(doneButtonAction))
+        
+        var items = [UIBarButtonItem]()
+        items.append(flexSpace)
+        items.append(done)
+        
+        doneToolbar.items = items
+        doneToolbar.sizeToFit()
+        
+        return doneToolbar
+        
+    }
+    
+    @objc func doneButtonAction(){
+        self.searchBar.endEditing(true)
     }
     
     func getSectionAndCellLoanTB(arrayLoans: Array<LaonSchedules>){
@@ -358,5 +397,41 @@ private extension DepositsCardsDetailsStatementViewController {
         self.tableView.reloadData()
     }
 }
-
-
+extension DepositsCardsDetailsStatementViewController: UISearchBarDelegate, UISearchResultsUpdating{
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        self.searchBar.endEditing(true)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        if searchText.isEmpty{
+            self.sortedTransactionsStatement = self.sortedTransactionsStatementFull
+            return
+        }
+        
+        self.sortedTransactionsStatement.removeAll()
+        for i in sortedTransactionsStatementFull{
+            let arrayI = i.transactions
+            var arraySortedTransactions = Array<TransactionCardStatement>()
+            for y in arrayI{
+                if String(y.accountNumber ?? "").contains("\(searchText)")
+                    || String(y.amount ?? 0.0).contains("\(searchText)")
+                    || String(y.comment ?? "").contains("\(searchText)"){
+                    arraySortedTransactions.append(y)
+                }
+            }
+            if arraySortedTransactions.count > 0{
+                let filterI = DatedCardTransactionsStatement(changeOfBalanse: i.changeOfBalanse, date: i.date, transactions: arraySortedTransactions)
+                self.sortedTransactionsStatement.append(filterI)
+            }
+            arraySortedTransactions.removeAll()
+        }
+    }
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        print("updateSearchResults")
+    }
+    
+    
+}

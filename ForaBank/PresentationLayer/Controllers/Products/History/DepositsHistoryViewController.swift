@@ -377,21 +377,9 @@ extension DepositsHistoryViewController: UISearchResultsUpdating, UISearchBarDel
             }
             arraySortedTransactions.removeAll()
         }
-        
-//        self.sortedTransactionsStatement = self.sortedTransactionsStatementFull.filter{
-//            //(String($0.changeOfBalanse).contains("\(searchText)"))
-//            $0.transactions.filter{
-//                (String($0.accountNumber ?? "").contains("\(searchText)"))
-//            }
-//
-//
-//        }
-        
     }
     
     func updateSearchResults(for searchController: UISearchController) {
         print("updateSearchResults")
     }
-    
-    
 }
