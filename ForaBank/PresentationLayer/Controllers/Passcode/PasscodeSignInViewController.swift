@@ -16,7 +16,8 @@ class PasscodeSignInViewController: UIViewController, StoreSubscriber {
     typealias SignInState = (passcodeState: PasscodeSignInState, verificationState: VerificationCodeState)
 
     let passcodeVC = PasscodeViewController(rightTitle: NSLocalizedString("Logout", comment: "Logout"), style: .opaqueDark, passcodeType: .fourDigits)
-
+    let viewPlaceholder = UIActivityIndicatorView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -42,6 +43,7 @@ class PasscodeSignInViewController: UIViewController, StoreSubscriber {
         self.addChild(passcodeVC)
         passcodeVC.didMove(toParent: self)
 
+        setupPlaceHolder()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -66,15 +68,27 @@ class PasscodeSignInViewController: UIViewController, StoreSubscriber {
         if state.passcodeState.failCounter >= 1 {
             passcodeVC.passcodeView.titleLabel.text = "Осталось \(3 - state.passcodeState.failCounter) попыток"
             passcodeVC.passcodeView.resetPasscode(animated: true, playImpact: false)
+            viewPlaceholder.isHidden = true
         }
 
         if state.verificationState.isShown == true {
             let paymentStoryboard = UIStoryboard(name: "Registration", bundle: nil)
             let verifyVC = paymentStoryboard.instantiateViewController(withIdentifier: "smsVerification")
             verifyVC.modalTransitionStyle = .crossDissolve
-
+            viewPlaceholder.isHidden = true
             present(verifyVC, animated: true, completion: nil)
         }
+    }
+    
+    func setupPlaceHolder(){
+        viewPlaceholder.frame = self.view.frame
+        viewPlaceholder.center = self.view.center
+        let colorBGAIV = UIColor(hexFromString: "#EA4442")?.withAlphaComponent(0.8)
+        viewPlaceholder.backgroundColor = colorBGAIV
+        viewPlaceholder.color = .white
+        self.view.addSubview(viewPlaceholder)
+        viewPlaceholder.startAnimating()
+        viewPlaceholder.isHidden = true
     }
 }
 
@@ -83,6 +97,7 @@ class PasscodeSignInViewController: UIViewController, StoreSubscriber {
 extension PasscodeSignInViewController: TOPasscodeViewControllerDelegate {
 
     func passcodeViewController(_ passcodeViewController: TOPasscodeViewController, isCorrectCode code: String) -> Bool {
+        viewPlaceholder.isHidden = false
         store.dispatch(startSignInWith(passcode: code))
         return true
     }
