@@ -921,7 +921,6 @@
                                                 </state>
                                                 <connections>
                                                     <action selector="checkPaymentCode:" destination="Xda-th-p6I" eventType="touchUpInside" id="G58-eU-EaO"/>
-                                                    <segue destination="EQl-SA-zTp" kind="show" identifier="toSuccess" id="98t-KJ-Uyi"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -986,6 +985,7 @@
                         <outlet property="containerView" destination="8pP-cj-CYT" id="70X-h1-ZwF"/>
                         <outlet property="continueButton" destination="zFG-Bn-eR0" id="gWB-8o-ujM"/>
                         <outlet property="header" destination="wpl-La-b5G" id="PqY-iD-t60"/>
+                        <segue destination="EQl-SA-zTp" kind="show" identifier="toSuccess" id="EgO-Nm-Hgu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gjU-dn-lu1" sceneMemberID="firstResponder"/>

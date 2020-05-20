@@ -153,7 +153,7 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
             self?.continueButton.isHidden = false
             self?.activityIndicator?.isHidden = true
             if success {
-//                self?.performSegue(withIdentifier: "finish", sender: nil)
+                self?.performSegue(withIdentifier: "toSuccess", sender: nil)
             } else {
                 let alert = UIAlertController(title: "Неудача", message: "Неверный код", preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
