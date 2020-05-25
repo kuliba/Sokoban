@@ -488,7 +488,7 @@ extension RegistrationCodeVerificationViewController{
     
     @objc func updateTimer() {
         timeSecond -= 1
-        if timeSecond == 30{
+        if timeSecond == 0{
             self.continueButton.setTitle("Запросить код", for: .normal)
             timer!.invalidate()
             timer = nil
@@ -496,7 +496,13 @@ extension RegistrationCodeVerificationViewController{
             self.buttonGetSMSCode.isHidden = false
             self.continueButton.changeEnabled(isEnabled: true)
         }else{
-            let titleButton = "Запросить код \(timeSecond)"
+            var titleButton = ""
+            if timeSecond < 10{
+                titleButton = "Запросить код 00:0\(timeSecond)"
+            }else{
+                titleButton = "Запросить код 00:\(timeSecond)"
+            }
+             
             self.continueButton.setTitle(titleButton, for: .normal)
         }
     }
