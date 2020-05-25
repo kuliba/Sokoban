@@ -170,6 +170,11 @@ class NetworkManager {
                                completionHandler: @escaping (_ success: Bool) -> Void) {
         authService.checkVerificationCode(headers: self.headers, code: code, completionHandler: completionHandler)
     }
+    
+    func getVerificationCode(completionHandler: @escaping (_ success: Bool) -> Void){
+        authService.getVerificationCode(headers: self.headers, completionHandler: completionHandler)
+    }
+    
     func checkCodeResetPassword(code: String,
                                 completionHandler: @escaping (_ success: Bool) -> Void) {
         authService.checkCodeResetPassword(headers: self.headers, code: code, completionHandler: completionHandler)

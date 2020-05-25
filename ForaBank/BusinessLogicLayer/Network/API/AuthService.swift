@@ -210,6 +210,24 @@ class AuthService: AuthServiceProtocol {
                 }
         }
     }
+    
+    func getVerificationCode(headers: HTTPHeaders, completionHandler: @escaping (_ success: Bool) -> Void) {
+        let url = Host.shared.apiBaseURL + "verify/getVerificationCode"
+        Alamofire.request(url, method: HTTPMethod.post, encoding: JSONEncoding.default, headers: headers)
+        .validate(statusCode: MultiRange(200..<300, 401..<402))
+        .validate(contentType: ["application/json"])
+            .responseJSON { [unowned self] response in
+                switch response.result {
+                case .success:
+                    print("verify/getVerificationCode result: \(String(describing: response.result.value))")
+                    
+                    completionHandler(true)
+                case .failure(let error):
+                    print("\(error) \(self)")
+                    completionHandler(false)
+                }
+        }
+    }
 
     func checkVerificationCode(headers: HTTPHeaders, code: String, completionHandler: @escaping (_ success: Bool) -> Void) {
         let url = Host.shared.apiBaseURL + "verify/checkVerificationCode"

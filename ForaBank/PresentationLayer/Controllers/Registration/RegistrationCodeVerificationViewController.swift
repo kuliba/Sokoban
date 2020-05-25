@@ -23,6 +23,8 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
     @IBOutlet weak var centralView: UIView!
     @IBOutlet weak var header: UIView!
     @IBOutlet weak var activityIndicator: ActivityIndicatorView?
+    @IBOutlet weak var buttonGetSMSCode: UIButton!
+    
     var segueId: String? = nil
     var operationSum: String?
     var sourceConfigurations: [ICellConfigurator]?
@@ -42,6 +44,9 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
 //        }
 //    }
     var backSegueId: String? = nil
+    var timer: Timer?
+    var timeSecond = 60
+    
     // MARK: - Actions
     @IBAction func backButtonCLicked(_ sender: Any) {
         view.endEditing(true)
@@ -53,7 +58,13 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
     }
 
     
-    
+    @IBAction func getSMSCode(_ sender: Any) {
+        self.buttonGetSMSCode.isHidden = true
+        NetworkManager.shared().getVerificationCode(){ (sucusses) in
+        }
+        self.continueButton.changeEnabled(isEnabled: false)
+        createTimer()
+    }
     
     
     @IBAction func authContinue(_ sender: Any) {
@@ -183,6 +194,10 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.createTimer()
+        self.buttonGetSMSCode.isHidden = true
+        
         _ = codeNumberTextField.becomeFirstResponder()
 
         addGradientLayerView()
@@ -466,4 +481,35 @@ extension RegistrationCodeVerificationViewController: UITextFieldDelegate {
     }
     
     
+}
+
+//MARK: Timer
+extension RegistrationCodeVerificationViewController{
+    
+    @objc func updateTimer() {
+        timeSecond -= 1
+        if timeSecond == 30{
+            self.continueButton.setTitle("Запросить код", for: .normal)
+            timer!.invalidate()
+            timer = nil
+            timeSecond = 60
+            self.buttonGetSMSCode.isHidden = false
+            self.continueButton.changeEnabled(isEnabled: true)
+        }else{
+            let titleButton = "Запросить код \(timeSecond)"
+            self.continueButton.setTitle(titleButton, for: .normal)
+        }
+    }
+    
+    func createTimer() {
+      // 1
+      if timer == nil {
+        // 2
+        timer = Timer.scheduledTimer(timeInterval: 1.0,
+                                     target: self,
+                                     selector: #selector(updateTimer),
+                                     userInfo: nil,
+                                     repeats: true)
+      }
+    }
 }

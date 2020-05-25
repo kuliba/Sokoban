@@ -39,6 +39,7 @@ protocol AuthServiceProtocol {
     func checkVerificationCode(headers: HTTPHeaders,
                                code: String,
                                completionHandler: @escaping (_ success: Bool) -> Void)
+    func getVerificationCode(headers: HTTPHeaders, completionHandler: @escaping (_ success: Bool) -> Void)
     func checkCodeResetPassword(headers: HTTPHeaders,
                                 code: String,
                                 completionHandler: @escaping (_ success: Bool) -> Void)
