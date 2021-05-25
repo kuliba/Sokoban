@@ -1,10 +1,3 @@
-//
-//  AuthenticationService.swift
-//  ForaBank
-//
-//  Created by Бойко Владимир on 03.12.2019.
-//  Copyright © 2019 (C) 2017-2019 OОО "Бриг Инвест". All rights reserved.
-//
 
 import Foundation
 
@@ -50,6 +43,8 @@ class AuthenticationService: IAuthenticationService {
         store.dispatch(doLogout)
         store.dispatch(clearPasscodeData)
         refresher?.invalidateTimer()
+        UserDefaults.standard.removeObject(forKey: "sbpAgree")
+        
     }
 
     public func logoutWithoutClearUserData() {

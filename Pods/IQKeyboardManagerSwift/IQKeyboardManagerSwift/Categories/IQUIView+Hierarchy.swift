@@ -36,7 +36,7 @@ public extension UIView {
     /**
     Returns the UIViewController object that manages the receiver.
     */
-    @objc func viewContainingController()->UIViewController? {
+    @objc public func viewContainingController()->UIViewController? {
         
         var nextResponder: UIResponder? = self
         
@@ -55,7 +55,7 @@ public extension UIView {
     /**
     Returns the topMost UIViewController object in hierarchy.
     */
-    @objc func topMostController()->UIViewController? {
+    @objc public func topMostController()->UIViewController? {
         
         var controllersHierarchy = [UIViewController]()
 
@@ -89,7 +89,7 @@ public extension UIView {
     /**
      Returns the UIViewController object that is actually the parent of this object. Most of the time it's the viewController object which actually contains it, but result may be different if it's viewController is added as childViewController of another viewController.
      */
-    @objc func parentContainerViewController()->UIViewController? {
+    @objc public func parentContainerViewController()->UIViewController? {
         
         var matchController = viewContainingController()
         var parentContainerViewController : UIViewController?
@@ -148,7 +148,7 @@ public extension UIView {
     /**
     Returns the superView of provided class type.
     */
-    @objc func superviewOfClassType(_ classType:UIView.Type)->UIView? {
+    @objc public func superviewOfClassType(_ classType:UIView.Type)->UIView? {
 
         var superView = superview
         

@@ -72,6 +72,9 @@ struct TransactionCardStatement: Decodable {
     let amount: Double?
     let comment: String?
     let documentID: String?
+    let clientCurrencyCode: String?
+    let auditDate: String?
+    let currencyCodeNumeric: String?
     
     enum CodingKeys: String, CodingKey {
         case date
@@ -81,6 +84,9 @@ struct TransactionCardStatement: Decodable {
         case amount
         case comment
         case documentID
+        case clientCurrencyCode
+        case auditDate
+        case currencyCodeNumeric
     }
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -91,6 +97,9 @@ struct TransactionCardStatement: Decodable {
 //        } else {
 //            self.operationDate = nil
 //        }
+        self.currencyCodeNumeric = decodeToString(fromContainer: container, key: .currencyCodeNumeric)
+        self.auditDate = decodeToString(fromContainer: container, key: .auditDate)
+        self.clientCurrencyCode = decodeToString(fromContainer: container, key: .clientCurrencyCode)
         self.operationType = decodeToString(fromContainer: container, key: .operationType)
         self.accountID = decodeToString(fromContainer: container, key: .accountID)
         self.accountNumber = decodeToString(fromContainer: container, key: .accountNumber)

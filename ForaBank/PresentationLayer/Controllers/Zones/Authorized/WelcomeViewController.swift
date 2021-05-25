@@ -78,10 +78,10 @@ class WelcomeViewController: UIViewController, StoreSubscriber {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if segueId == "SignIn" || segueId == "Registration" || segueId == nil {
-            containerView.hero.modifiers = [
-                HeroModifier.duration(0.5),
-                HeroModifier.opacity(0)
-            ]
+//            containerView.hero.modifiers = [
+//                HeroModifier.duration(0.5),
+//                HeroModifier.opacity(0)
+//            ]
         }
     }
 

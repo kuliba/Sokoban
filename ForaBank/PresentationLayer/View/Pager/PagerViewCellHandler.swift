@@ -1,16 +1,13 @@
-//
-//  PagerViewCellConfigurator.swift
-//  ForaBank
-//
-//  Created by Бойко Владимир on 02/10/2019.
-//  Copyright © 2019 (C) 2017-2019 OОО "Бриг Инвест". All rights reserved.
-//
+
 
 import Foundation
 import FSPagerView
 
 protocol ICellConfigurator: NSObject {
     static var reuseId: String { get }
+
+    var currentBlock: Bool? { get set }
+    var currentValueBlock: Bool? { get set }
     var delegate: ICellConfiguratorDelegate? { get set }
     func configure(cell: UIView)
 }
@@ -20,6 +17,10 @@ protocol ICellConfiguratorDelegate: class {
 }
 
 class PagerViewCellHandler<CellType: IConfigurableCell, ProviderType: ICellProvider>: NSObject, ICellConfigurator where CellType.ICellProvider == ICellProvider, CellType: FSPagerViewCell {
+    var currentBlock: Bool?
+    
+    
+     var currentValueBlock: Bool?
 
     static var reuseId: String { return String(describing: CellType.self) }
 
@@ -27,6 +28,7 @@ class PagerViewCellHandler<CellType: IConfigurableCell, ProviderType: ICellProvi
 
     weak var delegate: ICellConfiguratorDelegate?
 
+    
     init(provider: ICellProvider, delegate: ICellConfiguratorDelegate) {
         self.provider = provider
         self.delegate = delegate
@@ -41,5 +43,6 @@ class PagerViewCellHandler<CellType: IConfigurableCell, ProviderType: ICellProvi
 extension PagerViewCellHandler: ConfigurableCellDelegate {
     func didInputPaymentValue(value: Any) {
         delegate?.didReciveNewValue(value: value, from: self)
+        
     }
 }

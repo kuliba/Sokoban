@@ -75,12 +75,13 @@ class RegistrationLoginPasswordViewController: UIViewController {
 
     @IBOutlet weak var foraPreloader: RefreshView!
     var headerSnapshot: UIView? = nil
+    private let manager = UserManager()
 
     var cardNumber: String? = nil
 
 
     @IBAction func linkPrivacyPolicy(_ sender: Any) {
-        UIApplication.shared.open(URL(string: "https://www.forabank.ru/private/dokumenty/UKBO_03-08-2019.pdf")!)
+        UIApplication.shared.open(Foundation.URL(string: "https://www.forabank.ru/dkbo/dkbo.pdf")!)
     }
 
     var segueId: String? = nil
@@ -115,13 +116,13 @@ class RegistrationLoginPasswordViewController: UIViewController {
                 return
         }
 
-        if self.loginTextField.text == "" {
-            let alert = UIAlertController(title: "Неудача", message: "Введите логин", preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-
-            return
-        }
+//        if self.loginTextField.text == "" {
+//            let alert = UIAlertController(title: "Неудача", message: "Введите логин", preferredStyle: UIAlertController.Style.alert)
+//            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+//            self.present(alert, animated: true, completion: nil)
+//
+//            return
+//        }
 
         if self.passwordTextField.text != self.confirmPasswordTextField.text && self.passwordTextField.text != "" {
             let alert = UIAlertController(title: "Неудача", message: "Пароли не совпадают", preferredStyle: UIAlertController.Style.alert)
@@ -131,18 +132,29 @@ class RegistrationLoginPasswordViewController: UIViewController {
             return
         }
 
-        guard let cardNum = cardNumber, let login = self.loginTextField.text, let pwd = self.passwordTextField.text else {
+        guard let cardNum = cardNumber, let pwd = self.passwordTextField.text else {
             return
         }
         foraPreloader.isHidden = false
         foraPreloader.startAnimation()
         continueButton.isHidden = true
-        NetworkManager.shared().checkClient(cardNumber: cardNum, login: login, password: pwd, phone: phone, verificationCode: 0, completionHandler: { [weak self] success, errorMessage in
+        NetworkManager.shared().checkClient(cardNumber: cardNum, login: phone, password: pwd, phone: phone, verificationCode: 0, completionHandler: { [weak self] success, errorMessage in
 
             self?.continueButton.isHidden = false
             self?.foraPreloader.isHidden = true
             if success {
-                store.dispatch(createdLoginPwd(login: login, pwd: pwd))
+                let user = ObjectUser()
+                user.name = ""
+                user.email = "\(phone)@forabank.ru"
+                user.password = pwd
+                user.profilePic = nil
+                self?.manager.register(user: user) { response in
+                  switch response {
+                    case .failure: print("Fail!")
+                    case .success: print("Success")
+                  }
+                }
+                store.dispatch(createdLoginPwd(login: phone, pwd: pwd))
                 self?.performSegue(withIdentifier: "regSmsVerification", sender: nil)
             } else {
                 let alert = UIAlertController(title: "Неудача", message: errorMessage, preferredStyle: UIAlertController.Style.alert)
@@ -157,10 +169,14 @@ class RegistrationLoginPasswordViewController: UIViewController {
             continueButton.isEnabled = false
             continueButton.alpha = 0.25
             agreementCheckbox.isSelected = false
-        } else {
+        } else if passwordTextField.text == confirmPasswordTextField.text {
             continueButton.isEnabled = true
             continueButton.alpha = 1
             agreementCheckbox.isSelected = true
+        } else {
+            continueButton.isEnabled = false
+            continueButton.alpha = 0.25
+            agreementCheckbox.isSelected = false
         }
     }
 
@@ -183,6 +199,11 @@ class RegistrationLoginPasswordViewController: UIViewController {
         }
     }
     @IBAction func passwordChanged(_ sender: Any) {
+//        if PasswordStrength.checkStrength(password: passwordTextField.text ?? "") == .None{
+//            continueButton.alpha = 0.3
+//        } else {
+//            continueButton.alpha = 1
+//        }
         if let textField = sender as? UITextField {
             var currentBorderColor: UIColor = .red
             var defaultBorderColor: UIColor = .red
@@ -192,21 +213,31 @@ class RegistrationLoginPasswordViewController: UIViewController {
                 inputPasswordLabel.textColor = UIColor(red: 0.61, green: 0.61, blue: 0.61, alpha: 1)
                 currentBorderColor = inputPasswordLabel.textColor
             defaultBorderColor = .clear
+                agreementCheckbox.isEnabled = false
+                continueButton.alpha = 0.3
+                continueButton.isEnabled = false
             case .Weak:
                 inputPasswordLabel.text = "Ненадежный"
                 inputPasswordLabel.textColor = UIColor(red: 0.92, green: 0.27, blue: 0.26, alpha: 1)
                 currentBorderColor = inputPasswordLabel.textColor
             defaultBorderColor = inputPasswordLabel.textColor
+                agreementCheckbox.isEnabled = false
+                continueButton.alpha = 0.3
+                continueButton.isEnabled = false
             case .Moderate:
                 inputPasswordLabel.text = "Средний"
                 inputPasswordLabel.textColor = UIColor(red: 0.95, green: 0.68, blue: 0.45, alpha: 1)
                 currentBorderColor = inputPasswordLabel.textColor
             defaultBorderColor = inputPasswordLabel.textColor
+                agreementCheckbox.isEnabled = true
+
             case .Strong:
                 inputPasswordLabel.text = "Надежный"
                 inputPasswordLabel.textColor = UIColor(red: 0.13, green: 0.76, blue: 0.51, alpha: 1)
                 currentBorderColor = inputPasswordLabel.textColor
             defaultBorderColor = inputPasswordLabel.textColor
+                agreementCheckbox.isEnabled = true
+
             }
             passwordTextField.defaultBorderColor = defaultBorderColor
             passwordTextField.selectedBorderColor = currentBorderColor
@@ -414,15 +445,15 @@ private extension RegistrationLoginPasswordViewController {
         pageControl.pageIndicatorTintColor = UIColor(red: 220 / 255, green: 220 / 255, blue: 220 / 255, alpha: 1)
         pageControl.currentPageIndicatorTintColor = UIColor(red: 234 / 255, green: 68 / 255, blue: 66 / 255, alpha: 1)
 
-        let config = FlexiblePageControl.Config(
+        /*let config = FlexiblePageControl.Config(
             displayCount: 4,
             dotSize: 7,
             dotSpace: 6,
             smallDotSizeRatio: 0.2,
             mediumDotSizeRatio: 0.5
-        )
+        )*/
 
-        pageControl.setConfig(config)
+        //pageControl.setConfig(config)
         pageControl.animateDuration = 0
         pageControl.setCurrentPage(at: 1)
     }

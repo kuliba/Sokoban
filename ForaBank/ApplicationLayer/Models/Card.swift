@@ -16,6 +16,8 @@ enum CardType: String {
 }
 
 class Card: Mappable, IProduct {
+    var accountNumber: String
+    
     var product: String
     var balance: Double
     var number: String
@@ -24,7 +26,7 @@ class Card: Mappable, IProduct {
     var status: String
     var blocked: Bool
     var holderName: String
-
+    var currencyCode: String
     var customName: String?
 
     var name: String?
@@ -39,7 +41,7 @@ class Card: Mappable, IProduct {
     var updatingDate: Date?
     var tariff: String?
     var branch: String?
-
+//    var accountNumber: String?
     func getProductAbout() -> Array<AboutItem> {
 //        guard let end = expirationDate else {
 //            return []
@@ -62,6 +64,8 @@ class Card: Mappable, IProduct {
         try status = map.from("status")
         try holderName = map.from("holderName")
         try validThru = map.from("validThru")
+        try currencyCode = map.from("currency")
+        try accountNumber = map.from("accountNumber")
 
         name = map.optionalFrom("name")
 

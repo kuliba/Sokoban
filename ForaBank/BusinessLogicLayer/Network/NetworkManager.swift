@@ -34,9 +34,21 @@ class NetworkManager {
         let loanPaymentSchedule = LoanPaymentSchedule(host: host)
         let productService = ProductsService(host: host)
         let currentService = CurrencysService(host: host)
+        let operationService = OperationListService(host: host)
+        let userService = UserSettingsService()
+        let blockUserService = BlockUserService(host: host)
+        let getOwnerPhoneNumberService = GetOwnerPhoneNumberService()
+        let anywayPayment = AnywayPaymentService(host: host)
+        let paymentBankListService = PaymentBankListService()
+        let personService = PersonService(host: host)
+        let pushNotificationService = PushNotificationService(host: host)
+        let getVerificationCodeService = GetVerificationService(host: host)
+
+        
+        
 
 
-        let networkManager = NetworkManager(host, authService, suggestBankService, suggestCompanyService, regService, cardService, cardInfoService, paymentServices, depositsService, accountsService, loanPaymentSchedule, historyService, loansService, statementService, productService: productService, mapService: mapService, currencyService: currentService)
+        let networkManager = NetworkManager(host, authService, suggestBankService, suggestCompanyService, regService, cardService, cardInfoService, paymentServices, depositsService, accountsService, loanPaymentSchedule, historyService, loansService, statementService, productService: productService, mapService: mapService, currencyService: currentService, operationService, userService, blockUserService, getOwnerPhoneNumberService, anywayPayment, paymentBankListService, personService, pushNotificationService, getVerificationCodeService)
         // Configuration
 
 
@@ -59,17 +71,33 @@ class NetworkManager {
     private let statementService: StatementServiceProtocol
     private let mapService: MapServiceProtocol
     private let currencyService: CurrencysProtocol
+    private let operationService: OperationProtocolService
+    private let userService: UserSettingsProtocolService
+    private let blockUserService: BlockUserProtocolService
+    private let getOwnerPhoneNumberService: GetOwnerPhoneNumberProtocol
     private let host: Host
+    private let anywayPaymentService: AnywayPaymentProtocol
+    private let paymentBankListService: paymentBankListProtocol
+    private let personService: PersonServiceProtocol
+    private let pushNotificationService: PushNotificationProtocol
+    private let getVerificationCode: getVerificationCodeProtocol
     
     public var headers: HTTPHeaders = [
         "Accept": "application/json",
         "Content-Type": "application/json",
-        "X-XSRF-TOKEN": "40e3a7ef-2a2d-48f4-9d1d-f024429aac3a",
+        "X-XSRF-TOKEN": "4022b0e6-e822-4b00-9d91-aacf9ae3b8c7",
         "JSESSIONID": "983F3FBC20F69C7A1A89B4DEAE690175"
     ]
+    
+//    let parametersForNotification = [
+//    "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
+//    "token": Messaging.messaging().fcmToken as Any,
+//    "model": UIDevice().model,
+//     "operationSystem": "IOS"
+//    ] as [String : Any]
 
 // Initialization
-    private init(_ host: Host, _ authService: AuthServiceProtocol, _ suggestBankService: SuggestBankService,_ suggestCompanyService: SuggestCompanyService, _ regService: RegServiceProtocol, _ cardService: CardServiceProtocol, _ cardInfoService: CardInfoServiceProtocol, _ paymentsServices: IPaymetsApi, _ depositsService: DepositsServiceProtocol, _ accountsService: AccountsServiceProtocol, _ LaonSchedules: LoanPaymentScheduleProtocol, _ historyService: HistoryServiceProtocol, _ loansService: LoansServiceProtocol, _ statementService: StatementServiceProtocol, productService: IProductService, mapService:MapServiceProtocol, currencyService:CurrencysProtocol) {
+    private init(_ host: Host, _ authService: AuthServiceProtocol, _ suggestBankService: SuggestBankService,_ suggestCompanyService: SuggestCompanyService, _ regService: RegServiceProtocol, _ cardService: CardServiceProtocol, _ cardInfoService: CardInfoServiceProtocol, _ paymentsServices: IPaymetsApi, _ depositsService: DepositsServiceProtocol, _ accountsService: AccountsServiceProtocol, _ LaonSchedules: LoanPaymentScheduleProtocol, _ historyService: HistoryServiceProtocol, _ loansService: LoansServiceProtocol, _ statementService: StatementServiceProtocol, productService: IProductService, mapService:MapServiceProtocol, currencyService:CurrencysProtocol, _ operationService: OperationProtocolService,_ userService: UserSettingsProtocolService,_ blockUserService: BlockUserProtocolService, _ getOwnerPhoneNumberService: GetOwnerPhoneNumberProtocol, _ anywayPayment: AnywayPaymentProtocol, _ paymentBankListSevice: paymentBankListProtocol, _ personService: PersonServiceProtocol, _ pushNotificationService: PushNotificationProtocol, _ getVerificationCodeService: getVerificationCodeProtocol) {
         self.host = host
         self.authService = authService
         self.regService = regService
@@ -87,6 +115,15 @@ class NetworkManager {
         self.productService = productService
         self.mapService = mapService
         self.currencyService = currencyService
+        self.operationService = operationService
+        self.userService = userService
+        self.blockUserService = blockUserService
+        self.getOwnerPhoneNumberService = getOwnerPhoneNumberService
+        self.anywayPaymentService = anywayPayment
+        self.paymentBankListService = paymentBankListSevice
+        self.personService = personService
+        self.pushNotificationService = pushNotificationService
+        self.getVerificationCode = getVerificationCodeService
     }
 
 // MARK: - Accessors
@@ -95,11 +132,79 @@ class NetworkManager {
         return sharedNetworkManager
     }
 
+    
+    func getAnywayPayment(completionHandler: @escaping (_ success: Bool?, [AnywayPaymentInputs?], String?) -> Void) {
+        anywayPaymentService.AnywayPayment(headers: headers, completionHandler: completionHandler)
+    }
+    
+    func getAnywayPaymentBegin(numberCard: String?, puref: String?, completionHandler: @escaping (_ success: Bool, AnywayPaymentBegin?, String?) -> Void) {
+        anywayPaymentService.anywayPaymentBegin(headers: headers, numberCard: numberCard, puref: puref, completionHandler: completionHandler)
+    }
+    func getAnywayPaymentFinal(memberId: String?,amount: String?, numberPhone: String?, parameters: [Additional]?, completionHandler: @escaping (_ success: Bool?, [AnywayPaymentInputs?], String?) -> Void) {
+        anywayPaymentService.AnywayPaymentFinal(memberId: memberId, amount: amount, numberPhone: numberPhone, parameters: parameters ?? [], headers: headers, completionHandler: completionHandler)
+    }
+    
+    func anywayPaymentMake(code: String, completionHandler: @escaping (Bool, String?) -> Void){
+        anywayPaymentService.anywayPaymentMake(code: code, completionHandler: completionHandler)
+    }
+//MARK: - fastPayment
+    func getFastPayment(completionHandler: @escaping (_ success: Bool, [BLBankList?],_ errorMessage: String?) -> Void){
+        paymentBankListService.getBankList(headers: headers) { (success, bankList, errorMessage) in
+        }
+    }
+    func findBankList(completionHandler: @escaping (_ success: Bool, BLBankList? ,_ errorMessage: String?) -> Void){
+        anywayPaymentService.findBankList(headers: headers, completionHandler: completionHandler)
+    }
+
+//MARK: - Person
+    func getPerson(completionHandler: @escaping (_ success: Bool?, FPerson,_ errorMassage: String?) -> Void){
+        personService.personService(header: headers, completionHandler: completionHandler)
+    }
+    func getVerificationCode(completionHandler: @escaping (_ success: Bool?,_ errorMassage: String?) -> Void){
+        getVerificationCode.getVerificationCode(headers: headers, completionHandler: completionHandler)
+    }
+    
 //MARK: - auth service
     func isSignedIn(completionHandler: @escaping (_ success: Bool) -> Void) {
         authService.isSignedIn(completionHandler: completionHandler)
     }
+    var work = true
+    func installPushDevice(parameters: [String : Any], auth: Bool, completionHandler: @escaping (_ success: Bool,_ errorMessage: String?) -> Void) {
+        if auth{
+            work = false
+            pushNotificationService.checkPushDevice(headers: self.headers, parameters: parameters, auth: auth) { [self] (success, errorMessage) in
+                        if success{
+                            pushNotificationService.installPushDevice(headers: self.headers, parameters: parameters, auth: auth, completionHandler: completionHandler)
+                        }
+                        work = true
+                    }
 
+        } else {
+            authService.csrf(headers: headers) { [unowned self] (success, newHeaders) in
+                if success {
+                    self.headers.merge(newHeaders ?? [:], uniquingKeysWith: { (_, k2) -> String in
+                        return k2
+                    })
+            pushNotificationService.checkPushDevice(headers: self.headers, parameters: parameters, auth: auth) { [self] (success, errorMessage) in
+                        if success{
+                            pushNotificationService.installPushDevice(headers: self.headers, parameters: parameters, auth: false, completionHandler: completionHandler)
+                        }
+                        work = true
+                    }
+                }
+             
+            }
+        }
+        }
+    func checkPushDevice(parameters: [String : Any], completionHandler: @escaping (_ success: Bool,_ errorMessage: String?) -> Void) {
+                pushNotificationService.checkPushDevice(headers: self.headers, parameters: parameters, auth: false, completionHandler: completionHandler)
+    
+
+        }
+    
+    func keyExchange(key: String,
+               completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void) {
+    }
     func login(login: String,
                password: String,
                completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void) {
@@ -108,7 +213,7 @@ class NetworkManager {
                 self.headers.merge(newHeaders ?? [:], uniquingKeysWith: { (_, k2) -> String in
                     return k2
                 })
-                self.authService.loginDo(headers: self.headers,
+                self.authService.loginDo(headers: headers,
                                          login: login,
                                          password: password,
                                          completionHandler: { (success, errorMessage) in
@@ -138,6 +243,8 @@ class NetworkManager {
             }
         }
     }
+    
+  
     
     func newPasswordReset(password: String,
                           completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void) {
@@ -170,20 +277,19 @@ class NetworkManager {
                                completionHandler: @escaping (_ success: Bool) -> Void) {
         authService.checkVerificationCode(headers: self.headers, code: code, completionHandler: completionHandler)
     }
-    
-    func getVerificationCode(completionHandler: @escaping (_ success: Bool) -> Void){
-        authService.getVerificationCode(headers: self.headers, completionHandler: completionHandler)
-    }
-    
     func checkCodeResetPassword(code: String,
                                 completionHandler: @escaping (_ success: Bool) -> Void) {
         authService.checkCodeResetPassword(headers: self.headers, code: code, completionHandler: completionHandler)
     }
 
     func logOut(completionHandler: ((_ success: Bool) -> Void)?) {
-        authService.logOut { (success) in
+        authService.logOut { [self] (success) in
             if completionHandler != nil {
                 completionHandler!(success)
+//                pushNotificationService.uninstallPushDevice(headers: headers) { (success, errorMessage) in
+//
+//                }
+                
             }
         }
     }
@@ -193,7 +299,7 @@ class NetworkManager {
             if self.checkForClosingSession(errorMessage) == false {
                 completionHandler(success, profile, errorMessage)
             } else {
-                completionHandler(false, profile, errorMessage)
+                completionHandler(success, profile, errorMessage)
             }
         }
     }
@@ -216,6 +322,10 @@ class NetworkManager {
                 completionHandler(false, nil)
             }
         }
+    }
+    
+    func getOwnerPhoneNumber(phoneNumber: String, completionHandler: @escaping (_ success: Bool?,_ errorMessage: String?) -> Void ) {
+        getOwnerPhoneNumberService.getOwnerPhoneNumber(headers: headers, phoneNumber: phoneNumber, completionHandler: completionHandler)
     }
     func paymentCompany(
     numberAcoount: String,
@@ -249,6 +359,7 @@ class NetworkManager {
                     return k2
                 })
                 self.regService.doRegistration(headers: self.headers, completionHandler: completionHandler)
+//                AppDelegate.application(AppDelegate)
             }
             else {
                 completionHandler(false, nil, nil, nil)
@@ -323,6 +434,7 @@ class NetworkManager {
     func getCardList(completionHandler: @escaping (_ success: Bool, _ cards: [Card]?) -> Void) {
         cardService.getCardList(headers: headers, completionHandler: completionHandler)
     }
+    
     func getCardInfo(cardNumber: String, completionHandler: @escaping (_ success: Bool, _ cardInfo: [AboutItem]?) -> Void) {
         cardInfoService.getCardInfo(cardNumber: cardNumber, headers: headers, completionHandler: completionHandler)
     }
@@ -377,13 +489,26 @@ class NetworkManager {
     func getLoans(completionHandler: @escaping (_ success: Bool, _ obligations: [Loan]?) -> Void) {
         loansService.getLoans(headers: headers, completionHandler: completionHandler)
     }
-    func getLoansPayment(completionHandler: @escaping (_ success: Bool, _ obligations: [LaonSchedules]?) -> Void) {
+    func getLoansPayment(completionHandler: @escaping (_ loanId: String?, _ success: Bool, _ obligations: [LaonSchedules]?) -> Void) {
         loanPaymentSchedule.getLoansPayment(headers: headers, completionHandler: completionHandler)
     }
     func getHistoryCard(cardNumber: String, completionHandler: @escaping (_ success: Bool, _ obligations: [DatedCardTransactionsStatement]?) -> Void) {
         historyService.getHistoryCard(headers: headers, cardNumber: cardNumber, completionHandler: completionHandler)
     }
-    
+    func getOperationService(completionHandler: @escaping (_ success: Bool, _ obligations: OperationsList?, String?) -> Void){
+        operationService.getOperations(headers: headers, completionHandler: completionHandler)
+    }
+    func setSetting(parameters: [String : Any], completionHandler: @escaping (_ success: Bool) -> Void){
+        userService.setSettings(parameters: parameters
+            , headers: headers, completionHandler: completionHandler)
+      }
+    func addSetting(parameters:[String : Any], completionHandler: @escaping (_ success: Bool) -> Void){
+        userService.addSettings(parameters: parameters, headers: headers, completionHandler: completionHandler)
+         }
+    func getSettings(completionHandler: @escaping (_ success: Bool, _ obligations: GetUserSettings?, String?) -> Void){
+        userService.getSettings(headers: headers, completionHandler: completionHandler)       }
+    func blockUser(completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void){
+        blockUserService.blockUser(headers: headers, completionHandler: completionHandler)   }
     func getHistoryDeposit(id: Int, name: String,completionHandler: @escaping (_ success: Bool, _ obligations: [DatedCardTransactionsStatement]?) -> Void) {
         historyService.getHistoryDeposit(headers: headers, id: id, name: name) { (success, historyStatment) in
             if success{
@@ -395,10 +520,12 @@ class NetworkManager {
         }
     }
     
+    
 //MARK: - deposits service
     func getDepos(completionHandler: @escaping (_ success: Bool, _ obligations: [Account]?) -> Void) {
         accountsService.getDepos(headers: headers, completionHandler: completionHandler)
     }
+
 //MARK: - check errorMessage for closing session
     func checkForClosingSession(_ errorMessage: String?) -> Bool {
         if let errorMessage = errorMessage,
@@ -420,22 +547,24 @@ extension NetworkManager: IProductsApi {
     }
 }
 
+
+
 //MARK: - Payments
 
 extension NetworkManager: IPaymetsApi {
-    func prepareCard2Account(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void) {
+    func prepareCard2Account(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?, DataClassPayment?) -> Void) {
         paymentServices.prepareCard2Account(from: sourceNumber, to: destinationNumber, amount: amount, completionHandler: completionHandler)
     }
     
-    func prepareAccount2Phone(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void) {
+    func prepareAccount2Phone(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?, DataClassPayment?) -> Void) {
         paymentServices.prepareAccount2Phone(from: sourceNumber, to: destinationNumber, amount: amount, completionHandler: completionHandler)
     }
     
-    func prepareAccount2Card(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void) {
+    func prepareAccount2Card(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?, DataClassPayment?) -> Void) {
         paymentServices.prepareAccount2Card(from: sourceNumber, to: destinationNumber, amount: amount, completionHandler: completionHandler)
     }
     
-    func prepareAccount2Account(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void) {
+    func prepareAccount2Account(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?, DataClassPayment?) -> Void) {
         paymentServices.prepareAccount2Account(from: sourceNumber, to: destinationNumber, amount: amount, completionHandler: completionHandler)
     }
     
@@ -443,11 +572,11 @@ extension NetworkManager: IPaymetsApi {
         paymentServices.allPaymentOptions(completionHandler: completionHandler)
     }
 
-    func prepareCard2Phone(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void) {
+    func prepareCard2Phone(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?, DataClassPayment?) -> Void) {
         paymentServices.prepareCard2Phone(from: sourceNumber, to: destinationNumber, amount: amount, completionHandler: completionHandler)
     }
 
-    func prepareCard2Card(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void) {
+    func prepareCard2Card(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?, DataClassPayment?) -> Void) {
         paymentServices.prepareCard2Card(from: sourceNumber, to: destinationNumber, amount: amount, completionHandler: completionHandler)
     }
 
@@ -479,7 +608,9 @@ extension NetworkManager{
 extension NetworkManager{
     
     func getExchangeCurrencyRates(currency: String, completionHandler: @escaping (Bool, Currency?) -> Void){
-        currencyService.getExchangeCurrencyRates(headers: headers, currency: currency) { (success, currency) in
+
+        self.currencyService.getExchangeCurrencyRates(headers: headers , currency: currency) { (success, currency) in
+
             if success{
                 guard let currencyData = currency else {
                     completionHandler(false, nil)
@@ -493,7 +624,9 @@ extension NetworkManager{
     }
     
     func getABSCurrencyRates(currencyOne: String, currencyTwo: String, rateTypeID: Int, completionHandler: @escaping (Bool, Double?) -> Void){
-        currencyService.getABSCurrencyRates(headers: headers, currencyOne: currencyOne, currencyTwo: currencyTwo, rateTypeID: rateTypeID) { (success, rateCB) in
+        
+
+            self.currencyService.getABSCurrencyRates(headers:  self.headers, currencyOne: currencyOne, currencyTwo: currencyTwo, rateTypeID: rateTypeID) { (success, rateCB) in
             if success{
                 if rateCB != nil{
                     completionHandler(true, rateCB)
@@ -507,5 +640,6 @@ extension NetworkManager{
                 return
             }
         }
+    
     }
 }

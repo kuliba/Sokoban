@@ -522,20 +522,20 @@ private extension CardToCardUnauthorized {
     }
 
     func setUpPageControl() {
-        pageControl.numberOfPages = 4
-        pageControl.pageIndicatorTintColor = UIColor(red: 220 / 255, green: 220 / 255, blue: 220 / 255, alpha: 1)
-        pageControl.currentPageIndicatorTintColor = UIColor(red: 234 / 255, green: 68 / 255, blue: 66 / 255, alpha: 1)
-
-        let config = FlexiblePageControl.Config(
-            displayCount: 4,
-            dotSize: 7,
-            dotSpace: 6,
-            smallDotSizeRatio: 0.2,
-            mediumDotSizeRatio: 0.5
-        )
-
-        pageControl.setConfig(config)
-        pageControl.setCurrentPage(at: 0)
+//        pageControl.numberOfPages = 4
+//        pageControl.pageIndicatorTintColor = UIColor(red: 220 / 255, green: 220 / 255, blue: 220 / 255, alpha: 1)
+//        pageControl.currentPageIndicatorTintColor = UIColor(red: 234 / 255, green: 68 / 255, blue: 66 / 255, alpha: 1)
+//
+//        let config = FlexiblePageControl.Config(
+//            displayCount: 4,
+//            dotSize: 7,
+//            dotSpace: 6,
+//            smallDotSizeRatio: 0.2,
+//            mediumDotSizeRatio: 0.5
+//        )
+//
+//        pageControl.setConfig(config)
+//        pageControl.setCurrentPage(at: 0)
     }
 
     func setUpCardNumberTextField() {

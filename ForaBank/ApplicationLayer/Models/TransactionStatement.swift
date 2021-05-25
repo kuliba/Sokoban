@@ -65,14 +65,15 @@ struct DatedTransactionsStatement {
 }
 
 struct TransactionStatement: Decodable {
-    let operationDate: Date?
-    let operationType: String?
-    let accountID: String?
-    let accountNumber: String?
-    let amount: Double?
-    let comment: String?
-    let documentID: String?
-    
+    var operationDate: Date?
+    var operationType: String?
+    var accountID: String?
+    var accountNumber: String?
+    var amount: Double?
+    var auditDate: String?
+    var comment: String?
+    var documentID: String?
+    var clientCurrencyCode: String?
     enum CodingKeys: String, CodingKey {
         case operationDate
         case operationType
@@ -81,11 +82,14 @@ struct TransactionStatement: Decodable {
         case amount
         case comment
         case documentID
+        case auditDate
+        case clientCurrencyCode
     }
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         self.operationDate = try container.decodeIfPresent(Date.self, forKey: .operationDate)
+        self.auditDate = decodeToString(fromContainer: container, key: .auditDate)
 //        if let time = (try? container.decodeIfPresent(TimeInterval.self, forKey: .operationDate)) as? Double {
 //            self.operationDate = Date(timeIntervalSince1970: time/1000)
 //        } else {
@@ -97,5 +101,47 @@ struct TransactionStatement: Decodable {
         self.amount = decodeToDouble(fromContainer: container, key: .amount)
         self.comment = decodeToString(fromContainer: container, key: .comment)
         self.documentID = decodeToString(fromContainer: container, key: .documentID)
+        self.clientCurrencyCode =  decodeToString(fromContainer: container, key: .clientCurrencyCode)
+//        self.auditDate = try container.decodeIfPresent(Date.self, forKey: .auditDate)
+//        self.auditDate = auditDate
+    }
+}
+struct AuditDateClass: Decodable {
+    let day, eon, eonAndYear, fractionalSecond: Int?
+    let hour, millisecond, minute, month: Int?
+    let second, timezone: Int?
+    let valid: Bool?
+    let xmlschemaType: XmlschemaType?
+    let year: Int?
+
+    init(day: Int?, eon: Int?, eonAndYear: Int?, fractionalSecond: Int?, hour: Int?, millisecond: Int?, minute: Int?, month: Int?, second: Int?, timezone: Int?, valid: Bool?, xmlschemaType: XmlschemaType?, year: Int?) {
+        self.day = day
+        self.eon = eon
+        self.eonAndYear = eonAndYear
+        self.fractionalSecond = fractionalSecond
+        self.hour = hour
+        self.millisecond = millisecond
+        self.minute = minute
+        self.month = month
+        self.second = second
+        self.timezone = timezone
+        self.valid = valid
+        self.xmlschemaType = xmlschemaType
+        self.year = year
+    }
+}
+
+// XmlschemaType.swift
+
+import Foundation
+
+// MARK: - XmlschemaType
+class XmlschemaType: Decodable{
+    let localPart, namespaceURI, xmlschemaTypePrefix: String?
+
+    init(localPart: String?, namespaceURI: String?, xmlschemaTypePrefix: String?) {
+        self.localPart = localPart
+        self.namespaceURI = namespaceURI
+        self.xmlschemaTypePrefix = xmlschemaTypePrefix
     }
 }

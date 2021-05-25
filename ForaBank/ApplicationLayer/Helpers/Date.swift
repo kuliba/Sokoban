@@ -34,9 +34,20 @@ func getDateCurrencys(data: Date) -> String{
     return dateFormatter.string(from: data)
 }
 
+func getDateToHours(_ data: Date) -> String{
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "HH:mm"
+    return dateFormatter.string(from: data)
+}
+
 func getDateToDateMonthYear(date: Date) -> String{
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "MM/YY"
+    return dateFormatter.string(from: date)
+}
+func getDateToDate(date: Date) -> String{
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "dd-MM-yyyy HH:mm"
     return dateFormatter.string(from: date)
 }
 
@@ -49,9 +60,39 @@ func getDateFromString(strTime: String?)-> Date{
     return date
 }
 
+
 func getDateFromFormate(date: Date, format: String)->String{
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = format
     dateFormatter.locale = Locale(identifier: "ru_RU")
     return dateFormatter.string(from: date)
+}
+
+
+func sortedCoverCard(numberCard: String?) -> UIImage{
+    if numberCard?.prefix(6) == "465626" {
+        let image = UIImage(named: "card_visa_gold")
+        return image ?? UIImage(named: "card_visa_infinity")!
+    }
+    if numberCard?.prefix(6) == "457825" {
+        let image  = UIImage(named: "card_visa_platinum")
+        return image ?? UIImage(named: "card_visa_infinity")!
+    }
+    if numberCard?.prefix(6) == "425690" {
+        let image = UIImage(named: "card_visa_debet")
+        return image ?? UIImage(named: "card_visa_infinity")!
+    }
+    if numberCard?.prefix(6) == "557986" {
+        let image = UIImage(named: "card_visa_standart")
+        return image ?? UIImage(named: "card_visa_infinity")!
+    }
+    if numberCard?.prefix(6) == "536466" {
+        let image = UIImage(named: "card_visa_virtual")
+        return image ?? UIImage(named: "card_visa_infinity")!
+    }
+    if numberCard?.prefix(6) == "470336" {
+        let image = UIImage(named: "card_visa_infinity")
+    return image ?? UIImage(named: "card_visa_infinity")!
+    }
+    return UIImage(named: "card_visa_debet")!
 }

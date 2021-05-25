@@ -39,13 +39,13 @@ func createCredentials(login: String, pwd: String) -> Thunk<State> {
 //            return
 //        }
 //        saveUserDataToKeychain(userData: encryptedUserData)
-        
+        guard let cleanNumber = cleanNumber(number: login) else {return}
         if let passcode = keychainCredentialsPasscode(){ //сохраняем данные через пас код, если он есть
-            if let encryptedUserData = encrypt(userData: UserData(login: login, pwd: pwd), withPasscode: passcode){
+            if let encryptedUserData = encrypt(userData: UserData(login: cleanNumber, pwd: pwd), withPasscode: passcode){
                 saveUserDataToKeychain(userData: encryptedUserData)
             }
         }else{ //если нет, то вресто паскода заклыдываем "passcode"
-            if let encryptedUserData = encrypt(userData: UserData(login: login, pwd: pwd), withPasscode: "passcode"){
+            if let encryptedUserData = encrypt(userData: UserData(login: cleanNumber, pwd: pwd), withPasscode: "passcode"){
                 print("Входи стандартно ")
                 saveUserDataToKeychain(userData: encryptedUserData)
             }

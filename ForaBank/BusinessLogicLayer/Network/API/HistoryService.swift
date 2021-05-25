@@ -13,7 +13,7 @@ import UIKit
 
 
 class HistoryService: HistoryServiceProtocol {
-    func getLoanPaymentSchedule(headers: HTTPHeaders, id: Int, name: String, completionHandler: @escaping (Bool, [DatedCardTransactionsStatement]?) -> Void) {
+    func getLoanPaymentSchedule(headers: HTTPHeaders, id: Int, name: String, completionHandler: @escaping (String, Bool, [DatedCardTransactionsStatement]?) -> Void) {
         print("ss")
     }
     
@@ -31,7 +31,7 @@ class HistoryService: HistoryServiceProtocol {
 
     func getHistoryDeposit(headers: HTTPHeaders, id: Int, name: String, completionHandler: @escaping (Bool, [DatedCardTransactionsStatement]?) -> Void) {
         let historycard = [DatedCardTransactionsStatement]()
-        let url = host.apiBaseURL + "/rest/getDepositStatement"
+        let url = host.apiBaseURL + "/rest/getAccountStatement"
         let parametrs: [String: Any] = ["id": id as AnyObject, "name": name as AnyObject]
         Alamofire.request(url, method: HTTPMethod.post, parameters: parametrs, encoding: JSONEncoding.default, headers: headers)
         .validate(statusCode: MultiRange(200..<300, 401..<402))
@@ -53,7 +53,6 @@ class HistoryService: HistoryServiceProtocol {
                             
                             let sortedTransations = DatedCardTransactionsStatement.sortByDays(transactions: result.data)
                             completionHandler(true, sortedTransations)
-                            print("sortedTransations", sortedTransations)
                             return
                         }
                     } catch let error as NSError {
@@ -69,9 +68,9 @@ class HistoryService: HistoryServiceProtocol {
     }
     
     func getHistoryCard(headers: HTTPHeaders, cardNumber: String, completionHandler: @escaping (Bool, [DatedCardTransactionsStatement]?) -> Void) {
-        var historycard = [DatedCardTransactionsStatement]()
+        let historycard = [DatedCardTransactionsStatement]()
         let url = host.apiBaseURL + "/rest/getCardStatement"
-         var parametrs: [String: Any] = ["cardNumber": cardNumber as AnyObject, "id": 0, "name": "string", "statementFormat": "CSV"]
+         let parametrs: [String: Any] = ["cardNumber": cardNumber as AnyObject, "id": 0, "name": "string", "statementFormat": "CSV"]
         Alamofire.request(url, method: HTTPMethod.post, parameters: parametrs, encoding: JSONEncoding.default, headers: headers)
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])

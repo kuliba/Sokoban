@@ -53,7 +53,7 @@ class Account: Mappable, IProduct {
         try id = map.from("depositID")
         try dateStart = map.from("dateStart")
         try isClosed = map.from("isClosed")
-
+        try currencyCode = map.from("currencyCode")
     }
 
     func getProductAbout() -> Array<AboutItem> {

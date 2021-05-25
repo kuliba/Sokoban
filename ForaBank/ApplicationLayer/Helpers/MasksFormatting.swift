@@ -68,6 +68,17 @@ func formattedPhoneNumber(number: String) -> String {
     }
     return result
 }
+func cleanNumber(number: String?) -> String?{
+  let cleanNumber = number?.removeWhitespace()
+        .replace(string: "+", replacement: "")
+        .replace(string: "(", replacement: "")
+        .replace(string: ")", replacement: "")
+        .replace(string: "-", replacement: "")
+    let dropFirstIndex = cleanNumber?.dropFirst() ?? ""
+    let addFirstIndex = "7" + dropFirstIndex
+    return addFirstIndex
+}
+
 func formattedNumberInPhoneContacts(number: String) -> String {
     let cleanPhoneNumber = number.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
     let mask = "+7 (XXX) XXX-XXXX"
@@ -117,6 +128,7 @@ func maskedCardNumber(number: String, separator: String) -> String {
     return dotMaskedString(string: number, mask: mask, separator: separator)
 }
 
+
 // Money
 
 func maskSum(sum: Double) -> String {
@@ -131,3 +143,6 @@ func maskSum(sum: Double) -> String {
     }
     return String(sum)
 }
+
+
+

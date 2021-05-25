@@ -240,7 +240,7 @@ extension ServicesViewController: UITableViewDataSource, UITableViewDelegate {
 
         cell.titleLabel.text = data_[indexPath.section][indexPath.row].name
         cell.additionalTitleLabel.text = data_[indexPath.section][indexPath.row].description
-        cell.logoImageView.image = UIImage(named: data_[indexPath.section][indexPath.row].iconName)
+        cell.logoImageView.image = UIImage(named: data_[indexPath.section][indexPath.row].iconName ?? "")
 
         return cell
     }

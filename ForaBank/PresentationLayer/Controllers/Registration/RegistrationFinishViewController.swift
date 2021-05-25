@@ -12,7 +12,7 @@ import Hero
 class RegistrationFinishViewController: UIViewController {
 
     var segueId: String? = nil
-
+    
     @IBAction func completeButtonClicked(_ sender: Any) {
         store.dispatch(userDidSignIn)
     }

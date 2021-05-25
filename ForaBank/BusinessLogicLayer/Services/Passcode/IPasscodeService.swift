@@ -11,7 +11,8 @@ import Foundation
 protocol IPasscodeService: class {
     var isPasscodeSetted: Bool { get }
     var allowedPasscode: Bool { get }
-
+    var isSetNonDisplayBlockProducts: Bool { get }
+    
     func showPasscodeScreen()
     func cancelPasscodeAuth()
 }

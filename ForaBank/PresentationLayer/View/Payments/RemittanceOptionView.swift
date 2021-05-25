@@ -223,12 +223,12 @@ class RemittanceOptionView: UIView {
     }
 
     override init(frame: CGRect) {
-        self.paymentOption = PaymentOption(id: 0, name: "", type: .paymentOption, sum: 0, number: "", maskedNumber: "", provider: "", productType: .card)
+        self.paymentOption = PaymentOption(id: 0, name: "", type: .paymentOption, sum: 0, number: "", maskedNumber: "", provider: "", productType: .card, maskSum: maskSum(sum: 0), currencyCode: "", accountNumber: "", productName: "")
         super.init(frame: frame)
     }
 
     required init?(coder aDecoder: NSCoder) {
-        self.paymentOption = PaymentOption(id: 0, name: "", type: .paymentOption, sum: 0, number: "", maskedNumber: "", provider: "", productType: .card)
+        self.paymentOption = PaymentOption(id: 0, name: "", type: .paymentOption, sum: 0, number: "", maskedNumber: "", provider: "", productType: .card, maskSum: maskSum(sum: 0), currencyCode: "", accountNumber: "", productName: "")
         super.init(coder: aDecoder)
     }
 
@@ -237,7 +237,7 @@ class RemittanceOptionView: UIView {
             return
         }
         title = option.name
-        subtitle = option.number
+        subtitle = option.maskedNumber.dropFirst(8).description
         cash = "\(maskSum(sum: option.sum)) ₽"
         titleImage = UIImage(named: "payments_template_sberbank")
         subtitleImage = UIImage(named: "visalogo")

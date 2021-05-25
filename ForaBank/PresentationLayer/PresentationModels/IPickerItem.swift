@@ -19,4 +19,9 @@ protocol IPickerItem {
     var subTitle: String { get }
     var value: Double { get }
     var provider: String? { get }
+    var currencyCode: String? { get }
+    var accountNumber: String? { get }
+
+    
+
 }

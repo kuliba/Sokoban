@@ -58,9 +58,9 @@ class ProductAboutViewController: UITableViewController {
         NetworkManager.shared().getCardInfo(cardNumber: numberCard) { [weak self] (success, cards) in
                   self?.aboutCard = cards ?? []
             self?.numberCard = self!.numberCard
-            if self!.aboutCard.count != 0{
-            self!.items?.append((self!.aboutCard[0]))
-            self!.tableView.reloadData()
+            if self?.aboutCard.count != 0{
+            self?.items?.append((self!.aboutCard[0]))
+            self?.tableView.reloadData()
             }
         }
      

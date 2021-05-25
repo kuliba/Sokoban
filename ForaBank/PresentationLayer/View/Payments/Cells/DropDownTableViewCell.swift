@@ -37,7 +37,7 @@ class DropDownTableViewCell: UITableViewCell {
 
         titleLabel.text = pickerItem.title
         numberLabel.text = pickerItem.subTitle
-        sumLabel.text = String(pickerItem.value)
+        sumLabel.text = maskSum(sum:pickerItem.value)
 
         updateConstraints()
     }

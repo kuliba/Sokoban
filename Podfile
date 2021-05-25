@@ -1,5 +1,7 @@
 # Uncomment the next line to define a global platform for your project
-platform :ios, '12.0'
+
+
+platform :ios, '11.0'
 
 target 'ForaBank' do
   # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
@@ -10,6 +12,7 @@ target 'ForaBank' do
   pod 'KeychainAccess'
   pod 'iCarousel', '1.8.3'
   pod 'DeviceKit'
+  pod 'UBottomSheet'
   pod 'FlexiblePageControl', '1.0.7'
   pod 'IQKeyboardManagerSwift', '6.2.0'
   pod 'Alamofire', '4.8.0'
@@ -17,7 +20,6 @@ target 'ForaBank' do
   pod 'CardIO', '5.4.1'
   pod 'NVActivityIndicatorView'
   pod 'ModelMapper'
-  pod "TKFormTextField"
   pod 'ReSwift'
   pod 'ReSwiftThunk'
   pod 'TOPasscodeViewController'
@@ -28,6 +30,22 @@ target 'ForaBank' do
   pod 'Firebase/Analytics'
   pod 'Firebase/Messaging'
   pod 'Firebase/Core'
-  pod 'SCLAlertView'
+  pod 'JSQMessagesViewController'
+  # pod 'LivetexCore'
+  pod 'Firebase/Auth'
+  pod 'Firebase/Storage'
+  pod 'Firebase/Firestore'
+  pod 'SwiftyRSA'
+  pod 'SkyFloatingLabelTextField', '~> 3.0'
+  # pod "FINNBottomSheet", git: "https://github.com/finn-no/BottomSheet.git"
+
+  post_install do |installer|
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['ONLY_ACTIVE_ARCH'] = 'YES'
+        config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+      end
+    end
+  end
 
 end

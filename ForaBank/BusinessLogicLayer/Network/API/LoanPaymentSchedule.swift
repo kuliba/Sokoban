@@ -20,7 +20,7 @@ class LoanPaymentSchedule: LoanPaymentScheduleProtocol {
         self.host = host
     }
 
-    func getLoansPayment(headers: HTTPHeaders, completionHandler: @escaping (Bool, [LaonSchedules]?) -> Void) {
+    func getLoansPayment(headers: HTTPHeaders, completionHandler: @escaping (String?, Bool, [LaonSchedules]?) -> Void) {
         var dataPayment = [LaonSchedules]()
         let url = host.apiBaseURL + "rest/getLoanPaymentSchedule"
         let parameters: [String: AnyObject] = [
@@ -35,7 +35,7 @@ class LoanPaymentSchedule: LoanPaymentScheduleProtocol {
                 if let json = response.result.value as? Dictionary<String, Any>,
                     let errorMessage = json["errorMessage"] as? String {
                     print("\(errorMessage) \(self)")
-                    completionHandler(false, dataPayment)
+                    completionHandler("string",false, dataPayment)
                     return
                 }
 
@@ -45,7 +45,7 @@ class LoanPaymentSchedule: LoanPaymentScheduleProtocol {
                         let data = json["data"] as? Array<Any> {
                         for cardData in data {
                             if let cardData = cardData as? Dictionary<String, Any>,
-                                let paymentDate: String? = dayMonthYear(milisecond: (cardData["paymentDate"] as? Double ?? 1.00)),
+                                let paymentDate: String = String?(dayMonthYear(milisecond: (cardData["paymentDate"] as? Double ?? 1.00))),
                                 let actionEntryList = cardData["actionEntryList"] as? Array<Dictionary<String, Any>> {
                                 for dataAction in actionEntryList {
                                     let userAnnual = dataAction["userAnnual"] as? Double
@@ -60,15 +60,15 @@ class LoanPaymentSchedule: LoanPaymentScheduleProtocol {
                                 }
                             }
                         }
-                        completionHandler(true, dataPayment)
+                        completionHandler("string", true, dataPayment)
                     } else {
                         print("rest/getDepositList cant parse json \(String(describing: response.result.value))")
-                        completionHandler(false, dataPayment)
+                        completionHandler("string", false, dataPayment)
                     }
 
                 case .failure(let error):
                     print("rest/getDepositList \(error) \(self)")
-                    completionHandler(false, dataPayment)
+                    completionHandler("string", false, dataPayment)
                 }
         }
     }

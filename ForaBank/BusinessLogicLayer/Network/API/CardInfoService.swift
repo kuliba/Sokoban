@@ -22,8 +22,8 @@ class CardInfoService: CardInfoServiceProtocol {
     
     func getCardInfo(cardNumber: String?, headers: HTTPHeaders, completionHandler: @escaping (Bool, [AboutItem]?) -> Void) {
         var cards = [AboutItem]()
-        let url =  "https://git.briginvest.ru/dbo/api/v2/rest/getCardInfo"
-
+//        let url =  "https://git.briginvest.ru/dbo/api/v2/rest/getCardInfo"
+        let url = host.apiBaseURL + "rest/getCardInfo"
         let parametrs: [String: Any] = ["cardNumber": cardNumber!]
         
         
@@ -46,10 +46,11 @@ class CardInfoService: CardInfoServiceProtocol {
                                                     let data = json["data"] as? Dictionary<String, Any>,
                                                      let original = data["original"] as? Dictionary<String, Any>,
                                 //var startDate: String = dayMonthYear(milisecond: Double(original["dateStart"] as! Int)),
-                                let dateEnd: String = dayMonthYear(milisecond: Double(original["dateEnd"] as! Int)){
+                                let dateEnd: String = String?(dayMonthYear(milisecond: Double(original["dateEnd"] as! Int))){
                                      for cardData in data {
-                                         if let cardData = cardData as? Dictionary<String, Any>,
+                                        if let cardData = cardData as? Dictionary<String, Any>,
                                          let original = cardData["original"] as? Dictionary<String, Any> {
+                                            
                                              let startDate = original["dateStart"] as? Int
 
                                              let dateEnd = original["dateEnd"] as? Int

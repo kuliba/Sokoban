@@ -12,15 +12,15 @@ class DepositsCardsDetailsStatementViewController: UIViewController, TabCardDeta
     
     // MARK: - Properties
     @IBOutlet weak var tableView: CustomTableView!
-    @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var activityIndicator: ActivityIndicatorView!
     
-    private let searchController = UISearchController(searchResultsController: nil)
     let cellId = "DepositsHistoryCell"
     var displayedPeriod: (Date, Date) = (Calendar.current.date(byAdding: .year, value: -5, to: Date())!, Date())
-    var sortedTransactionsStatementFull = [DatedCardTransactionsStatement]()
     var sortedTransactionsStatement = [DatedCardTransactionsStatement]() {
         didSet{
             self.tableView.reloadData()
+            activityIndicator.stopAnimating()
+            activityIndicator.isHidden = true
             }
     }
     //var arrayLaonSchedules = [LaonSchedules]()
@@ -28,6 +28,7 @@ class DepositsCardsDetailsStatementViewController: UIViewController, TabCardDeta
     var datedTransactions = [DatedTransactions]() {
         didSet{
             self.tableView.reloadData()
+          
         }
     }
     var cardHistory = [DatedCardTransactionsStatement]()
@@ -35,7 +36,7 @@ class DepositsCardsDetailsStatementViewController: UIViewController, TabCardDeta
     func set(card: Card?) {
         self.card = card
     }
- 
+    
     let decoder = JSONDecoder()
     var selectIndex: Int? = nil
     var selectedSection: Int? = nil
@@ -43,54 +44,50 @@ class DepositsCardsDetailsStatementViewController: UIViewController, TabCardDeta
     var idProduct: Int = 0  //id выбранного продукта
     var typeProduct = ProductType.card //тип продукта по которому нужно получить историю
     var codeCurency = String() //код валюты
-
+    
+    
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        if typeProduct == .loan{
-            self.searchBar.isHidden = true
-        }
+//        self.tabBarController?.tabBar.isHidden = true
         setUpTableView()
         self.getHistoryProduct(typeProduct)
-        
     //let cardNumber = card as? CardDetailsViewController
+        activityIndicator.startAnimation()
         
     }
-    
 
-    
+    let firstLoan: [LaonSchedules] = [LaonSchedules(principalDebt: 0, userAnnual: 0, loanID: "", collapsed: true, actionTypeBrief: "", paymentDate: "", items: [Item(name: "", detail: "", actionTypeBrief: "", paymentAmount: 0)], actionType: "", paymentAmount: 0)]
     //заполняем массив с историей по нужному продукту
     private func getHistoryProduct(_ productType: ProductType){
         if productType == .card{
             NetworkManager.shared().getHistoryCard(cardNumber: "\(requisite)") { [weak self] (success, error) in
                 print("CardHistory getCardHistory \(success)")
                 if success{
-                    self!.sortedTransactionsStatement = error ?? [DatedCardTransactionsStatement]()
-                    self!.sortedTransactionsStatementFull = error ?? [DatedCardTransactionsStatement]()
+                    self?.sortedTransactionsStatement = error ?? [DatedCardTransactionsStatement]()
                 }
             }
         }else if productType == .deposit{
             NetworkManager.shared().getHistoryDeposit(id: idProduct, name: "Depodit") { [weak self] (success, historyStatment) in
                 if success{
-                    self!.sortedTransactionsStatement = historyStatment ?? [DatedCardTransactionsStatement]()
-                    self!.sortedTransactionsStatementFull = historyStatment ?? [DatedCardTransactionsStatement]()
+                    self?.sortedTransactionsStatement = historyStatment ?? [DatedCardTransactionsStatement]()
                 }
             }
         }else if productType == .account{
             NetworkManager.shared().getHistoryDeposit(id: idProduct, name: "Account") { [weak self] (success, historyStatment) in
                 if success{
-                    self!.sortedTransactionsStatement = historyStatment ?? [DatedCardTransactionsStatement]()
-                    self!.sortedTransactionsStatementFull = historyStatment ?? [DatedCardTransactionsStatement]()
+                    self?.sortedTransactionsStatement = historyStatment ?? [DatedCardTransactionsStatement]()
                 }
             }
         }else if productType == .loan{
-            NetworkManager.shared().getLoansPayment { [weak self] (success, arrayLoanSchedule) in
+            NetworkManager.shared().getLoansPayment { [weak self] (loan, success, arrayLoanSchedule) in
                 if success{
                     print("arrayLoanSchedule = ", arrayLoanSchedule![0])
                     guard arrayLoanSchedule != nil, arrayLoanSchedule?.count != 0 else {return}
                     //self!.arrayLaonSchedules = arrayLoanSchedule!
-                    
-                    self!.getSectionAndCellLoanTB(arrayLoans: arrayLoanSchedule!)
+
+                    self?.getSectionAndCellLoanTB(arrayLoans: arrayLoanSchedule ?? [])
                 }
             }
         }
@@ -117,6 +114,16 @@ class DepositsCardsDetailsStatementViewController: UIViewController, TabCardDeta
                 }else{
                     destination.transaction = sortedTransactionsStatement[selectedSection!].transactions[selectIndex!]
                 }
+            }
+            if let destinationGeneralDetailHistory = segue.destination as? DepositsHistoryDetailsViewController{
+//                destinationGeneralDetailHistory.transactionCard = sortedTransactionsStatement[selectedSection!].transactions[selectIndex!]
+                destinationGeneralDetailHistory.transactionCard = sortedTransactionsStatement[selectedSection!].transactions[selectIndex!]
+                destinationGeneralDetailHistory.amountCard = String("\(sortedTransactionsStatement[selectedSection!].transactions[selectIndex!].amount ?? 0.0)")
+                destinationGeneralDetailHistory.commentCard = sortedTransactionsStatement[selectedSection!].transactions[selectIndex!].comment
+                destinationGeneralDetailHistory.transactionOperationTypeCard = sortedTransactionsStatement[selectedSection!].transactions[selectIndex!].operationType
+                destinationGeneralDetailHistory.auditDateCard = getDateToDate(date: sortedTransactionsStatement[selectedSection!].transactions[selectIndex!].date!)
+
+//                present(destinationGeneralDetailHistory, animated: true, completion: nil)
             }
         }
 
@@ -297,7 +304,18 @@ extension DepositsCardsDetailsStatementViewController: UITableViewDataSource, UI
      func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
           selectIndex = indexPath.item
           selectedSection = indexPath.section
-          performSegue(withIdentifier: "testtest", sender: self)
+        if typeProduct == .loan{
+            performSegue(withIdentifier: "testtest", sender: self)
+        } else {
+            let vc =  storyboard?.instantiateViewController(withIdentifier: "DepositsHistoryDetailsViewController") as! DepositsHistoryDetailsViewController
+            vc.transactionCard = sortedTransactionsStatement[selectedSection!].transactions[selectIndex!]
+            vc.amountCard = String("\(sortedTransactionsStatement[selectedSection!].transactions[selectIndex!].amount ?? 0.0)")
+            vc.commentCard = sortedTransactionsStatement[selectedSection!].transactions[selectIndex!].comment
+            vc.transactionOperationTypeCard = sortedTransactionsStatement[selectedSection!].transactions[selectIndex!].operationType
+            vc.auditDateCard = getDateToDate(date: sortedTransactionsStatement[selectedSection!].transactions[selectIndex!].date!) 
+//            present(vc, animated: true, completion: nil)
+            performSegue(withIdentifier: "generalHistory", sender: self)
+        }
           
           
       }
@@ -329,41 +347,14 @@ private extension DepositsCardsDetailsStatementViewController {
     }
     
     func setSearchView() {
-//        guard let searchCell = UINib(nibName: "DepositsSearchCell", bundle: nil)
-//            .instantiate(withOwner: nil, options: nil)[0] as? DepositsSearchCell else {
-//                return
-//        }
-//        searchCell.textField.placeholder = "Магазины, люди, суммы, даты"
-//        let searchView = UIView(frame: searchCell.frame)
-//        searchView.addSubview(searchCell)
-//        tableView.tableHeaderView = searchView
-        searchBar.delegate = self
-        searchBar.searchTextField.textColor = .black
-        searchBar.searchTextField.inputAccessoryView = DoneButtonOnKeyboard()
-        searchBar.backgroundImage = UIImage()
-        
-    }
-    
-    func DoneButtonOnKeyboard() -> UIToolbar{
-        let doneToolbar: UIToolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 320, height: 50))
-        doneToolbar.barStyle = UIBarStyle.default
-        
-        let flexSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
-        let done: UIBarButtonItem = UIBarButtonItem(title: "Закрыть", style: UIBarButtonItem.Style.done, target: self, action: #selector(doneButtonAction))
-        
-        var items = [UIBarButtonItem]()
-        items.append(flexSpace)
-        items.append(done)
-        
-        doneToolbar.items = items
-        doneToolbar.sizeToFit()
-        
-        return doneToolbar
-        
-    }
-    
-    @objc func doneButtonAction(){
-        self.searchBar.endEditing(true)
+        guard let searchCell = UINib(nibName: "DepositsSearchCell", bundle: nil)
+            .instantiate(withOwner: nil, options: nil)[0] as? DepositsSearchCell else {
+                return
+        }
+        searchCell.textField.placeholder = "Магазины, люди, суммы, даты"
+        let searchView = UIView(frame: searchCell.frame)
+        searchView.addSubview(searchCell)
+        tableView.tableHeaderView = searchView
     }
     
     func getSectionAndCellLoanTB(arrayLoans: Array<LaonSchedules>){
@@ -397,41 +388,5 @@ private extension DepositsCardsDetailsStatementViewController {
         self.tableView.reloadData()
     }
 }
-extension DepositsCardsDetailsStatementViewController: UISearchBarDelegate, UISearchResultsUpdating{
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        self.searchBar.endEditing(true)
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
-        if searchText.isEmpty{
-            self.sortedTransactionsStatement = self.sortedTransactionsStatementFull
-            return
-        }
-        
-        self.sortedTransactionsStatement.removeAll()
-        for i in sortedTransactionsStatementFull{
-            let arrayI = i.transactions
-            var arraySortedTransactions = Array<TransactionCardStatement>()
-            for y in arrayI{
-                if String(y.accountNumber ?? "").contains("\(searchText)")
-                    || String(y.amount ?? 0.0).contains("\(searchText)")
-                    || String(y.comment ?? "").contains("\(searchText)"){
-                    arraySortedTransactions.append(y)
-                }
-            }
-            if arraySortedTransactions.count > 0{
-                let filterI = DatedCardTransactionsStatement(changeOfBalanse: i.changeOfBalanse, date: i.date, transactions: arraySortedTransactions)
-                self.sortedTransactionsStatement.append(filterI)
-            }
-            arraySortedTransactions.removeAll()
-        }
-    }
-    
-    func updateSearchResults(for searchController: UISearchController) {
-        print("updateSearchResults")
-    }
-    
-    
-}
+
+

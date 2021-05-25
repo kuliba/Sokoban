@@ -3,7 +3,7 @@
 //  ReSwift
 //
 //  Created by Benjamin Encz on 11/27/15.
-//  Copyright © 2015 DigiTales. All rights reserved.
+//  Copyright © 2015 ReSwift Community. All rights reserved.
 //
 
 /**
@@ -19,16 +19,16 @@
 @discardableResult
 func withSpecificTypes<SpecificStateType, Action>(
         _ action: Action,
-        state genericStateType: StateType?,
+        state genericStateType: Any?,
         function: (_ action: Action, _ state: SpecificStateType?) -> SpecificStateType
-    ) -> StateType {
+    ) -> Any {
         guard let genericStateType = genericStateType else {
-            return function(action, nil) as! StateType
+            return function(action, nil) as Any
         }
 
         guard let specificStateType = genericStateType as? SpecificStateType else {
             return genericStateType
         }
 
-        return function(action, specificStateType) as! StateType
+        return function(action, specificStateType) as Any
 }

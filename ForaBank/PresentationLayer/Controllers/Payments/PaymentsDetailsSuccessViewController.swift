@@ -9,10 +9,17 @@
 import UIKit
 import ReSwift
 
-
+class TemplateOperation: Codable{
+    var templateName: String?
+    var destinationValue: String?
+    var amount: String?
+    
+}
 
 class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
 
+    @IBOutlet weak var alertView: UIView!
+    @IBOutlet weak var createTemplate: ButtonRounded!
     @IBOutlet weak var arrowImageView: UIImageView!
     @IBOutlet weak var returnButton: ButtonRounded!
 
@@ -25,7 +32,7 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
     @IBOutlet weak var destinationName: UILabel!
     @IBOutlet weak var destinationNumber: UILabel!
     @IBOutlet weak var destinationSum: UILabel!
-
+    var currentLabel: String?
     // MARK: - Actions
 
     @IBAction func returnButtonClicked(_ sender: Any) {
@@ -45,8 +52,14 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
     func setSource(config: Any?, value: Any?) {
         switch value {
         case let sourceOption as PaymentOption:
+            guard var currentUnwrapped = getSymbol(forCurrencyCode: currentLabel ?? "RUR") else {
+                break
+            }
+            if currentUnwrapped == "р."{
+                currentUnwrapped = "₽"
+            }
             cardNameLabel.text = sourceOption.name
-            cardSumLabel.text = "\(String(sourceOption.value)) ₽"
+            cardSumLabel.text = "\(maskSum(sum: sourceOption.value)) \(String(describing: currentUnwrapped ))"
             cardNumberLabel.text = sourceOption.maskedNumber
         default:
             break
@@ -67,6 +80,16 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
             destinationName.text = destinationOption
         case (is AccountNumberPagerItem, let destinationOption as String):
             destinationName.text = destinationOption
+        case (nil, let destinationOption as PaymentOption):
+            guard var currentUnwrapped = getSymbol(forCurrencyCode: destinationOption.currencyCode ?? "RUR") else {
+                return 
+            }
+            if currentUnwrapped == "р."{
+                currentUnwrapped = "₽"
+            }
+            destinationName.text = (destinationOption.name)
+            destinationSum.text = "\(String(destinationOption.sum)) \(currentUnwrapped)"
+            destinationNumber.text = destinationOption.number
         default:
             break
         }
@@ -83,8 +106,17 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
         returnButton.layer.borderColor = UIColor.white.cgColor
 
         setSource(config: sourceConfig, value: sourceValue)
+        print(sourceConfig)
+        
+        print(sourceValue)
+        
         setDestination(config: destinationConfig, value: destinationValue)
+        
         sumLabel.text = "\(String(describing: operationSum ?? "Нет соеденения")) ₽"
+        
+        
+        
+        
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -129,7 +161,6 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
 
 //        sumLabel.text = "\(sum) ₽"
     }
-
 // MARK: - Methods
 
     func dismissToRootViewController() {
@@ -139,7 +170,56 @@ class PaymentsDetailsSuccessViewController: UIViewController, StoreSubscriber {
 
             first.view.isHidden = true
             second.view.isHidden = true
-            third.dismiss(animated: false)
+            third.dismiss(animated: true)
         }
     }
+    
+    var textField = ""
+    
+    @IBAction func createTemplateButton(_ sender: Any) {
+        
+        let alertController = UIAlertController(title: "Создание шаблона", message: nil, preferredStyle: .alert)
+       alertController.addTextField { (textField : UITextField!) -> Void in
+                      textField.placeholder = "Введите название шаблона"
+                    textField.borderWidth = 0
+        textField.borderColor = .blue
+        textField.borderStyle = .none
+                  }
+        let saveAction = UIAlertAction(title: "Сохранить", style: .default, handler: { alert -> Void in
+            guard let operationSumUnwrapped = self.operationSum else {return}
+            guard let destinationValueUnwrapped = self.destinationValue else {return}
+
+            let parameters: [String: Any] = [
+                       "settingName": "\(alertController.textFields![0].text!)" as String,
+                       "settingSysName": "\(destinationValueUnwrapped)" as String,
+                       "settingValue": "\(operationSumUnwrapped)" as String
+                   ]
+            
+            NetworkManager.shared().addSetting(parameters: parameters) { (success) in
+                          if success{
+                            NetworkManager.shared().setSetting(parameters: parameters) { (success) in
+                                if success{
+                                    print(success)
+                            } else {
+                                print(Error.self)
+                                }
+                            }
+
+                            
+                      } else {
+                          print(Error.self)
+                          }
+                      }
+            
+           })
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel, handler: {
+               (action : UIAlertAction!) -> Void in })
+       
+
+           alertController.addAction(saveAction)
+           alertController.addAction(cancelAction)
+
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
 }

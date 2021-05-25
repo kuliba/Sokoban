@@ -10,6 +10,7 @@ import UIKit
 
 class ProductListViewController: BaseViewController {
 
+    @IBOutlet weak var tableView: UITableView!
     let arrayProducts = [ProductType.deposit, ProductType.loan, ProductType.card, ProductType.account]
     
     @IBOutlet weak var collectionViewProducts: UICollectionView!
@@ -28,7 +29,7 @@ class ProductListViewController: BaseViewController {
     @IBAction func openBrower(_ sender: UIButton) {
         guard let indexPathItemCenter = getIndexPathCenterColView() else {return}
         let productSelect = arrayProducts[indexPathItemCenter.row] //вытаскиваем нужных продукт
-        guard let url = URL(string: productSelect.urlProduct) else { return }
+        guard let url = Foundation.URL(string: productSelect.urlProduct) else { return }
         UIApplication.shared.open(url)
     }
 }

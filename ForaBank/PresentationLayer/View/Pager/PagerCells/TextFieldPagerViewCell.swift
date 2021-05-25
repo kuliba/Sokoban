@@ -1,29 +1,54 @@
 //
-//  TextFieldPagerViewCell.swift
-//  ForaBank
-//
-//  Created by Бойко Владимир on 01/10/2019.
-//  Copyright © 2019 (C) 2017-2019 OОО "Бриг Инвест". All rights reserved.
-//
 
 import UIKit
 import FSPagerView
 
-class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPickerDelegate {
+class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, EPPickerDelegate {
 
     @IBOutlet weak var rightButtonInTF: UIButton!
-    @IBOutlet weak var leftButton: UIButton!
+//    @IBOutlet weak var leftButton: UIButton!
+    @IBOutlet weak var leftIcon: UIImageView!
     @IBOutlet weak var textField: UITextField!
-    @IBOutlet weak var nameContact: UILabel!
+//    @IBOutlet weak var nameContact: UILabel!
     
+    var configurateCell: ParameterList? = nil
+    var delegateCell: updateDelegate?
+
     // действие для rightButtonInTF
     @IBAction func scanButtonClicked(_ sender: UIButton) {
         if recipientType == .byPhoneNumber{ // открываем контакты если реквизит номер телефона
-            contactsListPresent()
+            let contactPickerScene = EPContactsPicker(delegate: self, multiSelection:false, subtitleCellType: SubtitleCellValue.phoneNumber)
+            contactPickerScene.navigationController?.navigationBar.backgroundColor = .white
+            
+            
+            let navigationController = UINavigationController(rootViewController: contactPickerScene)
+            navigationController.navigationBar.backgroundColor = .white
+            navigationController.modalPresentationStyle = .fullScreen
+
+            
+            navigationController.topViewController?.title = "Контакты"
+            navigationController.title = "Контакты"
+            navigationController.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
+            navigationController.navigationBar.tintColor = .black
+            topMostVC()?.present(navigationController, animated: true, completion: nil)
         }else if recipientType == .byCartNumber{ // открываем скан если реквизит карта
             showScanCardController(delegate: self)
         }
     }
+    
+    
+    func epContactPicker(_: EPContactsPicker, didSelectContact contact: EPContact) {
+        if contact.phoneNumbers.count > 0 {
+            let strSearch = "\(String(cleanNumber(number: contact.phoneNumbers[0].phoneNumber) ?? "nil"))"
+            guard  let cleanNumeber = cleanNumber(number: strSearch) else {return}
+            let numberFormatted = formattedNumberInPhoneContacts(number: String(cleanNumeber.dropFirst()))
+                  textField.text = "\(numberFormatted)"
+                  delegate?.didInputPaymentValue(value: cleanNumberString(string: numberFormatted))
+        } else {
+            AlertService.shared.show(title: "Ошибка", message: "Нет номера телефона", cancelButtonTitle: "Отмена", okButtonTitle: "Ok", cancelCompletion: nil, okCompletion: nil)
+        }
+          }
+    
 
     weak var delegate: ConfigurableCellDelegate?
 
@@ -31,22 +56,10 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPicker
     var formattingFunc: ((String) -> (String))?
     var recipientType: RecipientType = .byNone
 
-    func contactPicker(_: ContactsPicker, didContactFetchFailed error: NSError) {
-        print("Failed with error \(error.description)")
-    }
-
-    func contactPicker(_: ContactsPicker, didSelectContact contact: Contact) {
-        print("Contact \(contact.displayName) has been selected")
-    }
-
-    func contactPickerDidCancel(_ picker: ContactsPicker) {
-        picker.dismiss(animated: true, completion: nil)
-        print("User canceled the selection")
-    }
 
     override func awakeFromNib() {
         super.awakeFromNib()
-
+        textField.backgroundColor = .white
         let placeholder = textField.placeholder
         textField.attributedPlaceholder = NSAttributedString(string: placeholder ?? ""
                                                              , attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray])
@@ -74,8 +87,8 @@ class TextFieldPagerViewCell: FSPagerViewCell, IConfigurableCell, ContactsPicker
 
         
         //leftButton.setImage(UIImage(named: textInputCellProvider.iconName), for: .normal)
-        leftButton.setBackgroundImage(UIImage(named: textInputCellProvider.iconName), for: .normal)
-
+        leftIcon.image = UIImage(named: textInputCellProvider.iconName)
+//        leftIcon.sizeToFit()
         textField.delegate = self
         textField.placeholder = textInputCellProvider.placeholder
         textField.addTarget(self, action: #selector(reformatAsCardNumber), for: .editingChanged)
@@ -118,26 +131,7 @@ extension TextFieldPagerViewCell: UITextFieldDelegate {
         delegate?.didInputPaymentValue(value: cleanNumberString(string: text))
     }
 
-    public func contactPicker(_ picker: ContactsPicker, didSelectMultipleContacts contacts: [Contact]) {
-        defer { picker.dismiss(animated: true, completion: nil) }
-        guard !contacts.isEmpty else { return }
-        print("The following contacts are selected")
-        for contact in contacts {
-            print("\(contact.displayName)", "\(contact.phoneNumbers)")
-            var number: String
-            nameContact.isHidden = true
-            number = "\(contact.phoneNumbers[0])"
-            if number[number.startIndex] == "+" {
-                number.removeFirst(2)
-            } else {
-                number.remove(at: number.startIndex)
-            }
-            print(number)
-            let numberFormatted = formattedNumberInPhoneContacts(number: String(number))
-            textField.text = "\(numberFormatted)"
-            delegate?.didInputPaymentValue(value: cleanNumberString(string: numberFormatted))
-        }
-    }
+
 }
 
 extension TextFieldPagerViewCell: CardIOPaymentViewControllerDelegate {
@@ -155,11 +149,3 @@ extension TextFieldPagerViewCell: CardIOPaymentViewControllerDelegate {
 }
 
 //MARK: Contacts List Present
-extension TextFieldPagerViewCell{
-    private func contactsListPresent(){
-        let contactPickerScene = ContactsPicker(delegate: self, multiSelection: true, subtitleCellType: SubtitleCellValue.phoneNumber)
-
-        let navigationController = UINavigationController(rootViewController: contactPickerScene)
-        topMostVC()?.present(navigationController, animated: true, completion: nil)
-    }
-}

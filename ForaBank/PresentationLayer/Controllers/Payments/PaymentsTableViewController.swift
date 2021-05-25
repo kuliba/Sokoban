@@ -18,15 +18,20 @@ class PaymentsTableViewController: UIViewController, UITableViewDelegate, UITabl
             dismiss(animated: true, completion: nil)
         }
     }
-
+    @IBOutlet weak var tableView: CustomTableView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.register(UINib(nibName: "PaymentCell", bundle: nil), forCellReuseIdentifier: "PaymentCell")
 
         if navigationController != nil || tabBarController != nil {
             backButton.isHidden = true
         } else if isModal {
             backButton.isHidden = false
         }
+        self.view.backgroundColor = .white
+        self.tableView.backgroundColor = UIColor.white
+
         
     }
 
@@ -37,19 +42,22 @@ class PaymentsTableViewController: UIViewController, UITableViewDelegate, UITabl
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return 4
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100.0
     }
+    let cellId = "PaymentCell"
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? PaymentCell else {
+                   fatalError()
+               }
         cell.backgroundColor = .white
         cell.selectionStyle = .none
         cell.textLabel?.textColor = .black
-    
+        cell.imageView?.isHighlighted = true
         
         tableView.separatorColor = .lightGray
         tableView.separatorStyle = .singleLine
@@ -57,21 +65,25 @@ class PaymentsTableViewController: UIViewController, UITableViewDelegate, UITabl
       
         switch indexPath.item {
         case 0:
-            cell.imageView?.image = UIImage(named: "cardscolor")
-            cell.textLabel?.text = "Между своими счетами"
+            cell.iconImageView?.image = UIImage(named: "cardscolor")
+            cell.titleLabel?.text = "Между своими счетами"
             break
         case 1:
-            cell.imageView?.image = UIImage(named: "towncolor")
-            cell.textLabel?.text = "Клиенту Фора-Банка"
+            cell.iconImageView?.image = UIImage(named: "towncolor")
+            cell.titleLabel?.text = "Клиенту Фора-Банка"
             break
 //        case 2:
 //            cell.imageView?.image = UIImage(named: "mobilecolorweight")
 //            cell.textLabel?.text = "По номеру телефона"
 //            break
         case 2:
-            cell.imageView?.image = UIImage(named: "freecolor")
-            cell.textLabel?.text = "По свободным реквизитам"
+            cell.iconImageView?.image = UIImage(named: "freecolor")
+            cell.titleLabel?.text = "По свободным реквизитам"
             break
+        case 3:
+            cell.iconImageView?.image = UIImage(named: "sbp-logo")
+            cell.titleLabel?.text = "По номеру телефона(СБП)"
+            break   
         default:
             break
         }
@@ -89,6 +101,10 @@ class PaymentsTableViewController: UIViewController, UITableViewDelegate, UITabl
         guard let freeDetailsVC = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "FreeDetailsController") as? FreeDetailsViewController else {
                    return
                }
+        guard let SBPVC = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "SBPViewController") as? SBPViewController else {
+                   return
+               }
+
 
         let sourceProvider = PaymentOptionCellProvider()
         let destinationProvider = PaymentOptionCellProvider()
@@ -102,6 +118,9 @@ class PaymentsTableViewController: UIViewController, UITableViewDelegate, UITabl
         freeDetailsVC.sourceConfigurations = [
                   PaymentOptionsPagerItem(provider: sourceProvider, delegate: freeDetailsVC)
               ]
+        SBPVC.sourceConfigurations = [
+                         PaymentOptionsPagerItem(provider: sourceProvider, delegate: SBPVC)
+                     ]
 
         switch indexPath.item {
         case 0:
@@ -135,6 +154,14 @@ class PaymentsTableViewController: UIViewController, UITableViewDelegate, UITabl
             //    let freeViewController = self.storyboard?.instantiateViewController(withIdentifier: "FreeDetailsController")
             //            self.present(freeViewController!, animated: true)
             break
+            case 3:
+                SBPVC.destinationConfigurations = [
+                    PhoneNumberPagerItem(provider: destinationProviderPhoneNumber, delegate: SBPVC)
+                ]
+                let rootVC = tableView.parentContainerViewController()
+                         rootVC?.present(SBPVC, animated: true, completion: nil)
+                break
+
         default:
             break
         }

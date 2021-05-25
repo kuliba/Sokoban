@@ -9,11 +9,15 @@
 import Foundation
 
 extension UserDefaults: ISettingsStorage {
+  
+    
+  
 
     private struct Constants {
         static let firstLaunchKey = "isFirstLaunch"
         static let isSetPasscodeKey = "isSetPasscode"
         static let allowedBiometricSignInKey = "allowedBiometricSignIn"
+        static let isSetNonDisplayBlockProducts = "isSetNonDisplayBlockProducts"
     }
 
     public func isFirstLaunch() -> Bool {
@@ -33,6 +37,13 @@ extension UserDefaults: ISettingsStorage {
         set(allowed, forKey: Constants.allowedBiometricSignInKey)
         synchronize()
     }
+    func isSetNonDisplayBlockProducts(_ allowed: Bool) -> Bool{
+        set(allowed, forKey: Constants.isSetNonDisplayBlockProducts)
+        synchronize()
+        return (value(forKey: Constants.isSetNonDisplayBlockProducts) != nil)
+
+    }
+    
 
     public func setIsSetPasscode(_ needs: Bool) {
         set(needs, forKey: Constants.isSetPasscodeKey)

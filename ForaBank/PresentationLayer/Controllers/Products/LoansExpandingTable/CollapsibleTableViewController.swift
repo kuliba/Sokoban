@@ -20,16 +20,58 @@ class CollapsibleTableViewController: UITableViewController {
         }
     }
     
+    var arraySectionAndCellLoans = [ClassSectionAndItemLoan]()
 
 
       override func viewDidAppear(_ animated: Bool) {
           super.viewDidAppear(animated)
-          NetworkManager.shared().getLoansPayment { (success, sectionLoans) in
+          NetworkManager.shared().getLoansPayment { (loan, success, sectionLoans) in
               if success {
                   self.sectionLoans = sectionLoans ?? []
               }
           }
+        NetworkManager.shared().getLoansPayment { [weak self] (loan, success, arrayLoanSchedule) in
+                     if success{
+                         print("arrayLoanSchedule = ", arrayLoanSchedule![0])
+                         guard arrayLoanSchedule != nil, arrayLoanSchedule?.count != 0 else {return}
+                         //self!.arrayLaonSchedules = arrayLoanSchedule!
+                      
+                         self!.getSectionAndCellLoanTB(arrayLoans: arrayLoanSchedule ?? [])
+                     }
+                 }
+        
       }
+    
+      func getSectionAndCellLoanTB(arrayLoans: Array<LaonSchedules>){
+            var arrayDateLoans = Array<String?>()
+            for iloan in arrayLoans{ //получаем все даты
+                arrayDateLoans.append(iloan.paymentDate)
+            }
+            let filteredArrayDateLoans = Array(Set(arrayDateLoans)) // убираем дублирующиеся даты
+            
+            for dateLoan in filteredArrayDateLoans{ //цикл по датам
+                var arrayLoansSection = Array<LaonSchedules>()
+                var amountSection: Double = 0.0
+                for loan in arrayLoans{ // цикл по выплатам
+                    if loan.paymentDate == dateLoan{ //если даты совпали
+                        arrayLoansSection.append(loan) //добавляем в выплату в массив
+                        amountSection += loan.paymentAmount ?? 0.0 //прибавляем в сумму для секций
+                    }
+                }
+                //print("dateLoan = ", dateLoan)
+                let sectionAndCellLoan = ClassSectionAndItemLoan(sectionAmount: amountSection,
+                                                                 sectionDate: getDateFromString(strTime: (dateLoan ?? "") + " 12:00"),
+                                                                 arrayCellLoans: arrayLoansSection)
+    //            print("dateLoan = ", dateLoan!.replacingOccurrences(of: "-", with: " "))
+    //            let aaaa = getDateFromString(strTime: dateLoan!.replacingOccurrences(of: "-", with: " "))
+    //            print("dateLoanDate  = ", aaaa)
+    //            print("dateLoanDateStr  = ", getDateToDateMonthYear(date: aaaa!))
+                
+                self.arraySectionAndCellLoans.append(sectionAndCellLoan)
+            }
+            self.arraySectionAndCellLoans = self.arraySectionAndCellLoans.sorted(by: { $0.sectionDate > $1.sectionDate})
+            self.tableView.reloadData()
+        }
     
     
     override func viewDidLoad() {
@@ -52,9 +94,9 @@ class CollapsibleTableViewController: UITableViewController {
 extension CollapsibleTableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return sectionLoans.count
+        return arraySectionAndCellLoans.count
     }
-    
+     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return sectionLoans[section].collapsed ? 0 : 1
     }
@@ -66,11 +108,10 @@ extension CollapsibleTableViewController {
          let cell: CollapsibleTableViewCell = tableView.dequeueReusableCell(withIdentifier: "cell") as? CollapsibleTableViewCell ??
              CollapsibleTableViewCell(style: .default, reuseIdentifier: "cell")
          
-        let item: LaonSchedules = sectionLoans[indexPath.section]
-         
-        cell.nameLabel.text = sectionLoans[indexPath.section].actionType
-        cell.detailLabel.text = String((item.paymentAmount)!)
-        cell.creditPayment.text = String((item.paymentDate)!)
+        let item: ClassSectionAndItemLoan = arraySectionAndCellLoans[indexPath.section]
+        cell.nameLabel.text = getDateFromFormate(date: arraySectionAndCellLoans[indexPath.row].sectionDate, format: "dd MMMM yyyy")
+        cell.detailLabel.text = String((item.sectionAmount))
+        cell.creditPayment.text = getDateFromFormate(date: arraySectionAndCellLoans[indexPath.row].sectionDate, format: "dd MMMM yyyy")
          
          return cell
      }
@@ -83,7 +124,7 @@ extension CollapsibleTableViewController {
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header") as? CollapsibleTableViewHeader ?? CollapsibleTableViewHeader(reuseIdentifier: "header")
         
-        header.titleLabel.text = sectionLoans[section].paymentDate
+        header.titleLabel.text = getDateFromFormate(date: arraySectionAndCellLoans[section].sectionDate, format: "dd MMMM yyyy")
         header.arrowLabel.text = ">"
         header.setCollapsed(sectionLoans[section].collapsed)
         

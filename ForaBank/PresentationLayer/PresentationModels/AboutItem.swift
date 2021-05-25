@@ -62,18 +62,22 @@ class LaonSchedules: Mappable {
 struct ClassSectionAndItemLoan {
     var sectionAmount: Double = 0.0
     var sectionDate: Date = Date()
+    var collapse: Bool?
     var arrayCellLoans = Array<LaonSchedules>()
     
-    init(sectionAmount: Double, sectionDate: Date, arrayCellLoans: Array<LaonSchedules>) {
+    init(sectionAmount: Double, sectionDate: Date, arrayCellLoans: Array<LaonSchedules>, collapse: Bool? = true) {
         self.sectionAmount = sectionAmount
         self.sectionDate = sectionDate
         self.arrayCellLoans = arrayCellLoans
+        self.collapse = collapse
     }
 }
 
 class actionEntryList: Mappable{
     required init(map: Mapper) throws {
         try paymentAmount = map.from("")
+       
+
     }
     
     let paymentAmount: Double?

@@ -59,4 +59,24 @@ class ChatMessagesOutgoingTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
     }
+    
+        let userID = UserManager().currentUserID() ?? ""
+
+        
+        func set(_ conversation: ObjectConversation) {
+          timeLabel.text = DateService.shared.format(Date(timeIntervalSince1970: TimeInterval(conversation.timestamp)))
+          messageLabel.text = conversation.lastMessage
+          guard let id = conversation.userIDs.filter({$0 != userID}).first else { return }
+          let isRead = conversation.isRead[userID] ?? true
+
+          ProfileManager.shared.userData(id: id) {[weak self] profile in
+//            self?.userNameLabel.text = profile?.name
+            guard let urlString = profile?.profilePicLink else {
+    //          self?.profilePic.image = UIImage(named: "profile pic")
+              return
+            }
+    //        self?.profilePic.setImage(url: URL(string: urlString))
+          }
+        }
+    
 }

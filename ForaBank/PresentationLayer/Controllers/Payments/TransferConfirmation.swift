@@ -22,7 +22,7 @@ class TransferConfirmation: UIViewController    {
     var innNumberText: String? = nil
     var kppNumberText: String? = nil
     var numberAccountText: String? = nil
-    var commission: Double? = 30.0
+    var commission: Double? = 0.0
     var amountText: String? = nil
     @IBOutlet weak var codeNumberTextField: UITextField!
     var commentText: String? = nil

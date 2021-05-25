@@ -13,7 +13,11 @@ class SettingsPresenterInitializer {
         let settingsPresenter = SettingsPresenter(options: [UserSettingType.changePassword,
                                                             UserSettingType.isPasscodeSettedDefault(),
                                                             UserSettingType.allowedBiometricSignInDefault(),
-                                                            UserSettingType.changePasscode], delegate: delegate)
+                                                            UserSettingType.changePasscode,
+                                                            UserSettingType.isNonBlockedProductDefault(),
+                                                            UserSettingType.bankSPBDefoult,
+//                                                            UserSettingType.setUpApplePay,
+                                                            UserSettingType.blockUser], delegate: delegate)
         return settingsPresenter
     }
 }

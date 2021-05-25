@@ -17,7 +17,11 @@ class RoundedEdgeView: UIView {
     override func awakeFromNib() {
         super.awakeFromNib()
         layer.mask = viewMask
+       
+        
     }
+        
+    
     
     override func draw(_ rect: CGRect) {
        setTopEdgeRounded(rect)

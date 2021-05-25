@@ -3,7 +3,7 @@
 //  ReSwift
 //
 //  Created by Benjamin Encz on 11/28/15.
-//  Copyright © 2015 DigiTales. All rights reserved.
+//  Copyright © 2015 ReSwift Community. All rights reserved.
 //
 
 /**
@@ -14,7 +14,7 @@
  */
 public protocol StoreType: DispatchingStoreType {
 
-    associatedtype State: StateType
+    associatedtype State
 
     /// The current state stored in the store.
     var state: State! { get }
@@ -48,6 +48,25 @@ public protocol StoreType: DispatchingStoreType {
      - note: Subscriptions are not ordered, so an order of state updates cannot be guaranteed.
      */
     func subscribe<SelectedState, S: StoreSubscriber>(
+        _ subscriber: S, transform: ((Subscription<State>) -> Subscription<SelectedState>)?
+    ) where S.StoreSubscriberStateType == SelectedState
+
+    /**
+     Subscribes the provided subscriber to this store.
+     Subscribers will receive a call to `newState` whenever the
+     state in this store changes and the subscription decides to forward
+     state update.
+
+     This variation is used when substate conforms to `Equatable` and
+     `automaticallySkipsRepeats` is enabled on the store.
+
+     - parameter subscriber: Subscriber that will receive store updates
+     - parameter transform: A closure that receives a simple subscription and can return a
+       transformed subscription. Subscriptions can be transformed to only select a subset of the
+       state, or to skip certain state updates.
+     - note: Subscriptions are not ordered, so an order of state updates cannot be guaranteed.
+     */
+    func subscribe<SelectedState: Equatable, S: StoreSubscriber>(
         _ subscriber: S, transform: ((Subscription<State>) -> Subscription<SelectedState>)?
     ) where S.StoreSubscriberStateType == SelectedState
 

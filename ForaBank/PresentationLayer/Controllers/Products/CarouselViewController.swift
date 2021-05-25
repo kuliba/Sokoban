@@ -388,6 +388,9 @@ private extension CarouselViewController {
                 newViewController = storyboard?.instantiateViewController(withIdentifier: "DepositsViewController")
             case .loan:
                 newViewController = storyboard?.instantiateViewController(withIdentifier: "LoansViewController")
+//            case .allProduct:
+//                newViewController = storyboard?.instantiateViewController(withIdentifier: "AllProductsViewController")
+
             }
         } else if let item = menuItems[index] as? String, item == "История" {
             newViewController = storyboard?.instantiateViewController(withIdentifier: "DepositsHistoryViewController")

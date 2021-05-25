@@ -52,8 +52,8 @@ class LoansService: LoansServiceProtocol {
                                 }
 
                                 let branchBrief = original["branchBrief"] as? String
-                                var dateValue: String? = dayMonthYear(milisecond: original["dateValue"] as! Double)
-                                var dateEnd: String? = dayMonthYear(milisecond: original["dateEnd"] as! Double)
+                                let dateValue: String? = dayMonthYear(milisecond: original["dateValue"] as! Double)
+                                let dateEnd: String? = dayMonthYear(milisecond: original["dateEnd"] as! Double)
 
                                 let number = original["number"] as? String
                                 let principalDebt = original["principalDebt"] as? Double

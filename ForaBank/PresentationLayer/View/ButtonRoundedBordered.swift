@@ -14,7 +14,7 @@ class ButtonRoundedBordered: UIButton {
         super.awakeFromNib()
         layer.cornerRadius = frame.height / 2
         layer.borderWidth = 1
-        layer.borderColor = titleColor(for: [])?.cgColor
+        layer.borderColor = UIColor(hexFromString: "#FF3636")?.cgColor
         backgroundColor = .clear
     }
 }

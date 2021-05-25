@@ -156,7 +156,7 @@ extension AccountsViewController: UITableViewDataSource, UITableViewDelegate {
         }
 
         cell.titleLabel.text = (accounts[indexPath.row].customName == nil) ? "\(accounts[indexPath.row].productName)":"\((accounts[indexPath.row].customName)!)"
-        cell.subTitleLabel.text = maskedAccountNumber(number: accounts[indexPath.row].accountNumber, separator: " ")
+        cell.subTitleLabel.text = maskedAccountNumber(number: accounts[indexPath.row].accountNumber, separator: ".")
         cell.amountLabel.text = maskSum(sum: accounts[indexPath.row].balance)
         cell.currently.text = accounts[indexPath.row].currencyCode
         cell.bottomSeparatorView.isHidden = indexPath.row == accounts.endIndex - 1

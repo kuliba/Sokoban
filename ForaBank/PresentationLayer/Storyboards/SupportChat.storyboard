@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Vip-lc-2UN">
+    <device id="retina4_0" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Roboto-Light.ttf">
+            <string>Roboto-Light</string>
+        </array>
+    </customFonts>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="wpx-F7-UP8">
+            <objects>
+                <navigationController id="Vip-lc-2UN" sceneMemberID="viewController">
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="5PZ-vR-PLU">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="Mmf-WH-6Pb" kind="relationship" relationship="rootViewController" id="cOl-ce-W58"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="evW-Qt-KrY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5119" y="1254"/>
+        </scene>
+        <!--Сообщения-->
+        <scene sceneID="CQY-Cm-tnx">
+            <objects>
+                <viewController id="Mmf-WH-6Pb" customClass="ChatDialogsViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="tJ5-ht-XvL" customClass="GradientView" customModule="ForaBank_Beta" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fiq-Rm-QVF" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="25" width="320" height="543"/>
+                                <subviews>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="70" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="361-fv-FTV" customClass="CustomTableView" customModule="ForaBank_Beta" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="543"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <inset key="separatorInset" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
+                                    </tableView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="361-fv-FTV" secondAttribute="bottom" id="0io-KK-5VL"/>
+                                    <constraint firstItem="361-fv-FTV" firstAttribute="leading" secondItem="fiq-Rm-QVF" secondAttribute="leading" id="9Qt-rf-UHx"/>
+                                    <constraint firstItem="361-fv-FTV" firstAttribute="top" secondItem="fiq-Rm-QVF" secondAttribute="top" id="nd6-x1-l5F"/>
+                                    <constraint firstAttribute="trailing" secondItem="361-fv-FTV" secondAttribute="trailing" id="wYi-0t-krc"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="0.77384895090000005" green="0.36048567300000001" blue="0.38817185160000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="fiq-Rm-QVF" secondAttribute="bottom" id="3m6-ft-PBo"/>
+                            <constraint firstItem="fiq-Rm-QVF" firstAttribute="leading" secondItem="ldW-LM-Bf8" secondAttribute="leading" id="Jud-MV-8cf"/>
+                            <constraint firstItem="fiq-Rm-QVF" firstAttribute="top" secondItem="ldW-LM-Bf8" secondAttribute="top" constant="-19" id="PbC-dS-cQn"/>
+                            <constraint firstItem="fiq-Rm-QVF" firstAttribute="trailing" secondItem="ldW-LM-Bf8" secondAttribute="trailing" id="kq0-Cw-j7P"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="ldW-LM-Bf8"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="color" keyPath="color1">
+                                <color key="value" red="0.93725490199999995" green="0.25490196079999999" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="color" keyPath="color2">
+                                <color key="value" red="0.93725490199999995" green="0.25490196079999999" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Чат" image="chatsupport" id="CrM-v2-oWh" customClass="CustomTabBarItem" customModule="ForaBank_Beta" customModuleProvider="target">
+                        <inset key="imageInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="-10"/>
+                        <inset key="largeContentSizeImageInsets" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
+                    </tabBarItem>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" title="Сообщения" id="btB-qK-oDY">
+                        <barButtonItem key="rightBarButtonItem" id="qRu-ls-AZv">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="gSg-1f-YOd">
+                                <rect key="frame" x="249" y="0.0" width="55" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="1"/>
+                                <inset key="imageEdgeInsets" minX="20" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <state key="normal" image="icon_profile_add">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="addFriendAction:" destination="Mmf-WH-6Pb" eventType="touchUpInside" id="UMI-sh-Myw"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="addFriend" destination="gSg-1f-YOd" id="kH9-Rm-EUA"/>
+                        <outlet property="tableView" destination="361-fv-FTV" id="i6C-QC-YZR"/>
+                        <segue destination="heR-PE-NWq" kind="show" identifier="ChatMessagesViewController" id="4ux-cH-tZN"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="OrZ-oJ-oCd" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="6005.625" y="1253.8732394366198"/>
+        </scene>
+        <!--Имя-->
+        <scene sceneID="bVk-It-mYN">
+            <objects>
+                <viewController storyboardIdentifier="ChatMessagesViewController" modalPresentationStyle="fullScreen" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="heR-PE-NWq" customClass="ChatMessagesViewController" customModule="ForaBank_Beta" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="iSY-rt-pKe" customClass="GradientView" customModule="ForaBank_Beta" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a60-C6-U3V" customClass="RoundedEdgeView" customModule="ForaBank_Beta" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="25" width="320" height="543"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kHo-WZ-WiD">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="543"/>
+                                        <subviews>
+                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" allowsSelection="NO" rowHeight="70" estimatedRowHeight="-1" sectionHeaderHeight="1" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="xXm-4X-8cC">
+                                                <rect key="frame" x="20" y="24" width="280" height="471"/>
+                                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                                <inset key="separatorInset" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
+                                            </tableView>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XG7-Wd-jAI">
+                                                <rect key="frame" x="0.0" y="495" width="320" height="48"/>
+                                                <subviews>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Ej-yq-jZU">
+                                                        <rect key="frame" x="0.0" y="0.0" width="320" height="1"/>
+                                                        <color key="backgroundColor" red="0.91764705879999997" green="0.91764705879999997" blue="0.91764705879999997" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="1" id="h75-Sb-mjr"/>
+                                                        </constraints>
+                                                    </view>
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Написать сообщение..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="yee-Fc-xbz">
+                                                        <rect key="frame" x="16" y="1" width="156" height="46"/>
+                                                        <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="14"/>
+                                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences" spellCheckingType="yes" returnKeyType="send"/>
+                                                        <connections>
+                                                            <action selector="changeTextMessage:" destination="heR-PE-NWq" eventType="editingChanged" id="exi-oS-EET"/>
+                                                            <action selector="hideSendButton:" destination="heR-PE-NWq" eventType="editingDidEnd" id="lj7-S2-WDz"/>
+                                                            <action selector="hideSendButton:" destination="heR-PE-NWq" eventType="touchDragOutside" id="nAS-z5-8xd"/>
+                                                            <action selector="showSendButton:" destination="heR-PE-NWq" eventType="touchDragInside" id="dXp-wc-UXe"/>
+                                                            <action selector="showSendButton:" destination="heR-PE-NWq" eventType="editingDidBegin" id="jYh-5D-yZI"/>
+                                                        </connections>
+                                                    </textField>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zhq-rd-OeB">
+                                                        <rect key="frame" x="180" y="1" width="140" height="47"/>
+                                                        <subviews>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="nJB-hM-OoP">
+                                                                <rect key="frame" x="0.0" y="0.0" width="140" height="47"/>
+                                                                <subviews>
+                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="s0v-nE-dHQ">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="45.5" height="47"/>
+                                                                        <state key="normal" image="icon_chat_money"/>
+                                                                        <connections>
+                                                                            <action selector="sendMoneyButtonClicked:" destination="heR-PE-NWq" eventType="touchUpInside" id="re1-ZJ-bfy"/>
+                                                                        </connections>
+                                                                    </button>
+                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hbu-Tw-dTs">
+                                                                        <rect key="frame" x="47.5" y="0.0" width="45" height="47"/>
+                                                                        <state key="normal" image="icon_chat_emoji"/>
+                                                                    </button>
+                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aa2-Va-TDb">
+                                                                        <rect key="frame" x="94.5" y="0.0" width="45.5" height="47"/>
+                                                                        <state key="normal" image="icon_chat_attach"/>
+                                                                    </button>
+                                                                </subviews>
+                                                            </stackView>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1xe-cZ-iX6">
+                                                                <rect key="frame" x="0.0" y="8.5" width="132" height="30"/>
+                                                                <state key="normal" title="Отправить">
+                                                                    <color key="titleColor" red="0.94005322459999996" green="0.36199110750000002" blue="0.32544776800000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                                </state>
+                                                                <connections>
+                                                                    <action selector="sendMessageButton:" destination="heR-PE-NWq" eventType="touchUpInside" id="oz5-Ku-gnH"/>
+                                                                </connections>
+                                                            </button>
+                                                        </subviews>
+                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstItem="1xe-cZ-iX6" firstAttribute="width" secondItem="nJB-hM-OoP" secondAttribute="width" multiplier="0.664286" constant="39" id="6QL-lh-pqy"/>
+                                                            <constraint firstItem="1xe-cZ-iX6" firstAttribute="height" secondItem="nJB-hM-OoP" secondAttribute="height" multiplier="0.638298" id="ArG-AA-q9D"/>
+                                                            <constraint firstItem="nJB-hM-OoP" firstAttribute="top" secondItem="zhq-rd-OeB" secondAttribute="top" id="TSQ-ne-2Mj"/>
+                                                            <constraint firstAttribute="trailing" secondItem="nJB-hM-OoP" secondAttribute="trailing" id="Ymt-fN-Pke"/>
+                                                            <constraint firstAttribute="bottom" secondItem="nJB-hM-OoP" secondAttribute="bottom" id="Zt9-YG-btb"/>
+                                                            <constraint firstItem="1xe-cZ-iX6" firstAttribute="leading" secondItem="nJB-hM-OoP" secondAttribute="leading" id="cnb-vv-0fG"/>
+                                                            <constraint firstItem="1xe-cZ-iX6" firstAttribute="centerY" secondItem="nJB-hM-OoP" secondAttribute="centerY" id="jen-gV-oQ7"/>
+                                                            <constraint firstItem="nJB-hM-OoP" firstAttribute="leading" secondItem="zhq-rd-OeB" secondAttribute="leading" id="klB-sw-sDF"/>
+                                                            <constraint firstAttribute="width" constant="140" id="vja-bq-nVb"/>
+                                                        </constraints>
+                                                    </view>
+                                                </subviews>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstItem="zhq-rd-OeB" firstAttribute="leading" secondItem="yee-Fc-xbz" secondAttribute="trailing" constant="8" id="3mE-Vj-kQD"/>
+                                                    <constraint firstItem="yee-Fc-xbz" firstAttribute="top" secondItem="XG7-Wd-jAI" secondAttribute="top" constant="1" id="6Y7-iI-qur"/>
+                                                    <constraint firstItem="8Ej-yq-jZU" firstAttribute="top" secondItem="XG7-Wd-jAI" secondAttribute="top" id="8Ye-Pp-2nd"/>
+                                                    <constraint firstItem="8Ej-yq-jZU" firstAttribute="leading" secondItem="XG7-Wd-jAI" secondAttribute="leading" id="H0d-ZZ-yE7"/>
+                                                    <constraint firstAttribute="trailing" secondItem="8Ej-yq-jZU" secondAttribute="trailing" id="Vt7-nl-h5d"/>
+                                                    <constraint firstItem="zhq-rd-OeB" firstAttribute="top" secondItem="XG7-Wd-jAI" secondAttribute="top" constant="1" id="caF-VN-22k"/>
+                                                    <constraint firstItem="yee-Fc-xbz" firstAttribute="leading" secondItem="XG7-Wd-jAI" secondAttribute="leading" constant="16" id="kek-Wc-S7n"/>
+                                                    <constraint firstAttribute="trailing" secondItem="zhq-rd-OeB" secondAttribute="trailing" id="kwd-ZE-Aaa"/>
+                                                    <constraint firstAttribute="bottom" secondItem="zhq-rd-OeB" secondAttribute="bottom" id="m3Z-jF-M20"/>
+                                                    <constraint firstAttribute="height" constant="48" id="wOf-3J-AsX"/>
+                                                    <constraint firstAttribute="bottom" secondItem="yee-Fc-xbz" secondAttribute="bottom" constant="1" id="yJ1-JW-hlp"/>
+                                                </constraints>
+                                            </view>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="XG7-Wd-jAI" secondAttribute="bottom" id="ETc-tw-GTe"/>
+                                            <constraint firstItem="XG7-Wd-jAI" firstAttribute="leading" secondItem="kHo-WZ-WiD" secondAttribute="leading" id="XOf-Rb-anu"/>
+                                            <constraint firstAttribute="trailing" secondItem="xXm-4X-8cC" secondAttribute="trailing" constant="20" id="f5o-nX-pIF"/>
+                                            <constraint firstItem="xXm-4X-8cC" firstAttribute="leading" secondItem="kHo-WZ-WiD" secondAttribute="leading" constant="20" id="ghg-Yg-ptA"/>
+                                            <constraint firstItem="xXm-4X-8cC" firstAttribute="top" secondItem="kHo-WZ-WiD" secondAttribute="top" constant="24" id="h12-Ka-aDM"/>
+                                            <constraint firstAttribute="trailing" secondItem="XG7-Wd-jAI" secondAttribute="trailing" id="p89-r8-vzh"/>
+                                            <constraint firstItem="XG7-Wd-jAI" firstAttribute="top" secondItem="xXm-4X-8cC" secondAttribute="bottom" id="ueb-zd-Ra9"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="kHo-WZ-WiD" secondAttribute="trailing" id="2ex-oC-cHp"/>
+                                    <constraint firstItem="kHo-WZ-WiD" firstAttribute="leading" secondItem="a60-C6-U3V" secondAttribute="leading" id="BFv-S2-8vb"/>
+                                    <constraint firstItem="kHo-WZ-WiD" firstAttribute="top" secondItem="a60-C6-U3V" secondAttribute="top" id="lfq-hl-4ra"/>
+                                    <constraint firstAttribute="bottom" secondItem="kHo-WZ-WiD" secondAttribute="bottom" id="qoc-xG-Hcb"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="a60-C6-U3V" firstAttribute="trailing" secondItem="DGO-Ah-Yda" secondAttribute="trailing" id="7o3-6x-W6b"/>
+                            <constraint firstItem="a60-C6-U3V" firstAttribute="bottom" secondItem="DGO-Ah-Yda" secondAttribute="bottom" id="HHN-Kf-Lfe"/>
+                            <constraint firstItem="a60-C6-U3V" firstAttribute="leading" secondItem="DGO-Ah-Yda" secondAttribute="leading" id="WV7-i0-7Vb"/>
+                            <constraint firstItem="a60-C6-U3V" firstAttribute="top" secondItem="DGO-Ah-Yda" secondAttribute="top" constant="-19" id="x6q-w1-rYn"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="DGO-Ah-Yda"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="color" keyPath="color1">
+                                <color key="value" red="0.93725490199999995" green="0.25490196079999999" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="color" keyPath="color2">
+                                <color key="value" red="0.93725490199999995" green="0.25490196079999999" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" title="Имя" id="Qfc-cH-2bX"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="chatContainerView" destination="kHo-WZ-WiD" id="Xcg-mc-Ida"/>
+                        <outlet property="iconStack" destination="nJB-hM-OoP" id="SPO-da-BAa"/>
+                        <outlet property="messageSendButton" destination="1xe-cZ-iX6" id="czr-3b-IwQ"/>
+                        <outlet property="messageTextField" destination="yee-Fc-xbz" id="I8N-Hy-9WV"/>
+                        <outlet property="navigationItem" destination="Qfc-cH-2bX" id="lfH-B7-7Ca"/>
+                        <outlet property="tableView" destination="xXm-4X-8cC" id="UUi-n7-b5b"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="AGf-01-lTO" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="6976.875" y="1253.8732394366198"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="chatsupport" width="22.5" height="22"/>
+        <image name="icon_chat_attach" width="13" height="19"/>
+        <image name="icon_chat_emoji" width="21" height="21"/>
+        <image name="icon_chat_money" width="28" height="21"/>
+        <image name="icon_profile_add" width="25" height="19"/>
+    </resources>
+</document>

@@ -11,9 +11,22 @@ import FlexiblePageControl
 import Hero
 import ReSwift
 import Alamofire
+import Security
+import UIKit
 
-class RegistrationCodeVerificationViewController: UIViewController, StoreSubscriber {
 
+class RegistrationCodeVerificationViewController: UIViewController, StoreSubscriber, PreparePaymentDelegate {
+    func preparePayment(_ preparePayment: DataClassPayment) {
+        print(preparePayment)
+    }
+    
+
+    @IBOutlet weak var maskNumberCardLabel: UILabel!
+    @IBOutlet weak var phoneLable: UILabel!
+    @IBOutlet weak var ownerLabel: UILabel!
+    @IBOutlet weak var sumLabel: UILabel!
+    @IBOutlet weak var comissionLabel: UILabel!
+    var currencyLable: String?
     // MARK: - Properties
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var containerView: UIView!
@@ -23,12 +36,46 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
     @IBOutlet weak var centralView: UIView!
     @IBOutlet weak var header: UIView!
     @IBOutlet weak var activityIndicator: ActivityIndicatorView?
-    @IBOutlet weak var buttonGetSMSCode: UIButton!
+    @IBAction func repeatCode(_ sender: Any) {
+//        guard let dataUserEncrypt = keychainCredentialsUserData() else { return  }
+//        let dataUser =  keychainCredentialsUserData()
+//        saveUserDataToKeychain(userData: dataUserEncrypt)
+        
+//        store.dispatch(createCredentials(login: self.login ?? "", pwd: self.password ?? ""))
+        guard let encryptedUserData = keychainCredentialsUserData() else {
+            return
+        }
+        var userData: UserData?
+        let passcode = keychainCredentialsPasscode()
+        userData = decryptUserData(userData: encryptedUserData, withPossiblePasscode: passcode ?? "")
+       
+        userData = decryptUserData(userData: encryptedUserData, withPossiblePasscode: passcode ?? "")
+        if userData != nil {
+            self.login = userData?.login
+            self.password = userData?.pwd
+            
+        }
+        NetworkManager.shared().login(login:  cleanNumber(number: self.login)!,
+                                      password: self.password!,
+                                        completionHandler: { [unowned self] success, errorMessage in
+                                            if success {
+                                                store.dispatch(createCredentials(login: self.login ?? "", pwd: self.password ?? ""))
+                                            } else {
+                                                AlertService.shared.show(title: "Ошибка", message: errorMessage ?? "Повторите позднее", cancelButtonTitle: "Ок", okButtonTitle: nil, cancelCompletion: nil, okCompletion: nil)
+                                            }
+                                        })
+
+    }
     
     var segueId: String? = nil
     var operationSum: String?
+    var ownerCard: String?
+    var commission: String?
     var sourceConfigurations: [ICellConfigurator]?
     var destinationConfigurations: [ICellConfigurator]?
+    var login: String?
+    var password: String?
+    
     @IBOutlet weak var authForaPreloader: RefreshView!
     @IBOutlet weak var foraPreloader: RefreshView!
     let gradientView = UIView()
@@ -44,9 +91,6 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
 //        }
 //    }
     var backSegueId: String? = nil
-    var timer: Timer?
-    var timeSecond = 60
-    
     // MARK: - Actions
     @IBAction func backButtonCLicked(_ sender: Any) {
         view.endEditing(true)
@@ -58,13 +102,7 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
     }
 
     
-    @IBAction func getSMSCode(_ sender: Any) {
-        self.buttonGetSMSCode.isHidden = true
-        NetworkManager.shared().getVerificationCode(){ (sucusses) in
-        }
-        self.continueButton.changeEnabled(isEnabled: false)
-        createTimer()
-    }
+    
     
     
     @IBAction func authContinue(_ sender: Any) {
@@ -77,7 +115,18 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
             self?.foraPreloader?.isHidden = false
             if success {
                 
-                store.dispatch(finishVerification)
+                if Core.shared.isNewUser(){
+                   let alert = UIAlertController.init(title: "hello", message: "message", preferredStyle: .alert)
+                    let okButton = UIAlertAction(title: "Done", style: .default, handler: { (action) -> Void in
+                           print("Ok button tapped")
+                       })
+                    alert.addAction(okButton)
+                    print("NewUser")
+                    self!.present(alert, animated: true, completion: nil)
+
+                } else {
+                        store.dispatch(finishVerification)
+                }
                 
             } else {
                 self?.foraPreloader?.isHidden = true
@@ -159,24 +208,87 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
     @IBAction func checkPaymentCode(_ sender: Any) {
         activityIndicator?.isHidden = false
         activityIndicator?.startAnimation()
+//        codeNumberTextField.addSubview(activityIndicator ?? view)
         continueButton.isHidden = true
-        NetworkManager.shared().makeCard2Card(code: self.codeNumberTextField.text ?? "") { [weak self] (success) in
-            self?.continueButton.isHidden = false
-            self?.activityIndicator?.isHidden = true
-            if success {
-                self?.performSegue(withIdentifier: "toSuccess", sender: nil)
-            } else {
-                let alert = UIAlertController(title: "Неудача", message: "Неверный код", preferredStyle: UIAlertController.Style.alert)
-                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-                alert.addAction(UIAlertAction(title: "Отменить", style: UIAlertAction.Style.default, handler: { (action) in
-                    let rootVC = self?.storyboard?.instantiateViewController(withIdentifier: "PaymentsFinishScreen") as! LoginOrSignupViewController
-                    self?.segueId = "dismiss"
-                    rootVC.segueId = "logout"
-                    self?.navigationController?.setViewControllers([rootVC], animated: true)
-                }))
-                self?.present(alert, animated: true, completion: nil)
+        if segueId == "serviceOperation"{
+            NetworkManager.shared().anywayPaymentMake(code: "\(self.codeNumberTextField.text ?? "")") { (success, errorMessage) in
+                if success {
+                    self.activityIndicator?.isHidden = true
+                    self.activityIndicator?.stopAnimating()
+//                    store.dispatch(finishPasscodeSingUp)
+                    self.performSegue(withIdentifier: "finish", sender: nil)
+//                    self?.performSegue(withIdentifier: "finish", sender: nil)
+                } else {
+                    let alert = UIAlertController(title: "Неудача", message: errorMessage, preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                    alert.addAction(UIAlertAction(title: "Отменить", style: UIAlertAction.Style.default, handler: { (action) in
+//                        let rootVC = self.storyboard?.instantiateViewController(withIdentifier: "PaymentsFinishScreen") as! LoginOrSignupViewController
+//                        self.segueId = "dismiss"
+//                        rootVC.segueId = "logout"
+//                        self.navigationController?.setViewControllers([rootVC], animated: true)
+                    }))
+                    self.present(alert, animated: true, completion: nil)
+                    self.continueButton.isHidden = false
+                    self.activityIndicator?.isHidden = true
+                    self.activityIndicator?.stopAnimating()
+                }
+            }
+        } else if segueId == "contactViewController"{
+            NetworkManager.shared().anywayPaymentMake(code: "\(self.codeNumberTextField.text ?? "")") { [self] (success, errorMessage) in
+                if success {
+                    self.activityIndicator?.isHidden = true
+                    self.activityIndicator?.stopAnimating()
+//                    store.dispatch(finishPasscodeSingUp)
+//                    self.performSegue(withIdentifier: "finish", sender: nil)
+//                    guard let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "PaymentsFinishScreen") as? PaymentsDetailsSuccessViewController else {
+//                                             return
+//                    }
+//                    guard let sumUnwrapped = Double(operationSum ?? "0.0") else {
+//                        return
+//                    }
+//                    vc.destinationValue = PaymentOption(id: 0.0, name: "Перевод по системе контакт", type: .paymentOption, sum: sumUnwrapped, number: ownerCard ?? "", maskedNumber: ownerCard ?? "", provider: "", productType: .card, maskSum: sumLabel.text ?? "", currencyCode: "", accountNumber: "", productName: "")
+//                    present(vc, animated: true, completion: nil)
+//
+                    self.performSegue(withIdentifier: "finish", sender: nil)
+                } else {
+                    let alert = UIAlertController(title: "Неудача", message: errorMessage, preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                    alert.addAction(UIAlertAction(title: "Отменить", style: UIAlertAction.Style.default, handler: { (action) in
+//                        let rootVC = self.storyboard?.instantiateViewController(withIdentifier: "PaymentsFinishScreen") as! LoginOrSignupViewController
+//                        self.segueId = "dismiss"
+//                        rootVC.segueId = "logout"
+//                        self.navigationController?.setViewControllers([rootVC], animated: true)
+                    }))
+                    self.present(alert, animated: true, completion: nil)
+                    self.continueButton.isHidden = false
+                    self.activityIndicator?.isHidden = true
+                    self.activityIndicator?.stopAnimating()
+                }
+            }
+        } else{
+            NetworkManager.shared().makeCard2Card(code: self.codeNumberTextField.text ?? "") { [weak self] (success) in
+                self?.continueButton.isHidden = false
+                self?.activityIndicator?.isHidden = true
+                if success {
+                    self?.performSegue(withIdentifier: "finish", sender: nil)
+                } else {
+                    let alert = UIAlertController(title: "Неудача", message: "Неверный код", preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                    alert.addAction(UIAlertAction(title: "Отменить", style: UIAlertAction.Style.default, handler: { (action) in
+//                        let rootVC = self?.storyboard?.instantiateViewController(withIdentifier: "PaymentsFinishScreen") as! LoginOrSignupViewController
+//                        self?.segueId = "dismiss"
+//                        rootVC.segueId = "logout"
+//                        self?.navigationController?.setViewControllers([rootVC], animated: true)
+                    }))
+                    self?.present(alert, animated: true, completion: nil)
+                    self?.continueButton.isHidden = true
+                    self?.activityIndicator?.isHidden = true
+                    self?.activityIndicator?.stopAnimating()
+                }
             }
         }
+        
+ 
     }
 
     var sourceConfig: Any?
@@ -191,26 +303,119 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
         backButton.isHidden = true
     }
 
+    func maskWithStars(_ number: String) {
+        let count = number.count
+        switch count {
+        case 20:
+            let cleanNumber = number.dropFirst(16)
+            self.maskNumberCardLabel.text = "**** \(cleanNumber )"
+        case 16:
+            let cleanNumber = number.dropFirst(12)
+            self.maskNumberCardLabel.text = "**** \(cleanNumber )"
+//        case 11:
+//            self.maskNumberCardLabel.text =
+        default:
+            break
+        }
+    }
+    @IBOutlet weak var recipient: UILabel!
+    @IBOutlet weak var sumTransferLabel: UILabel!
+    
+    var numberTransferValue: String?
+    var amountRurCurrently: String?
+    var countryValue: String?
+    @IBOutlet weak var numberTransferLabel: UILabel!
+    
+    @IBOutlet weak var numberTransferValueLabel: UILabel!
     // MARK: - Lifecycle
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.createTimer()
-        self.buttonGetSMSCode.isHidden = true
-        
         _ = codeNumberTextField.becomeFirstResponder()
-
         addGradientLayerView()
 //        addCircleView()
         if pageControl != nil {
             setUpPageControl()
-            
-          
-            
-            
         }
         
-   
+        codeNumberTextField.delegate = self
+        
+        view.clipsToBounds = true
+
+        if let head = header as? MaskedNavigationBar {
+            head.gradientLayer.startPoint = CGPoint(x: 0, y: 1)
+            head.gradientLayer.endPoint = CGPoint(x: 1, y: 1)
+            head.gradientLayer.colors = [UIColor(red: 239 / 255, green: 65 / 255, blue: 54 / 255, alpha: 1).cgColor, UIColor(red: 239 / 255, green: 65 / 255, blue: 54 / 255, alpha: 1).cgColor]
+        }
+//        messageLabel?.text = message
+
+        store.subscribe(self) {
+            return $0.select { $0.verificationCodeState }
+        }
+        switch segueId {
+        case "fromPaymentToPaymentVerification":
+            phoneLable.isHidden = true
+            numberTransferValueLabel.isHidden = true
+            numberTransferLabel.isHidden = true
+            self.ownerLabel.text = ownerCard
+            self.comissionLabel.text = "\(commission ?? "0") \(self.currencyLable ?? "₽")"
+            self.sumLabel.text = "\(operationSum!) \(self.currencyLable ?? "₽")"
+            guard let numberCard = (sourceValue as? PaymentOption)?.number else { return }
+            maskWithStars(numberCard)
+            if (destinationValue as? String)?.rangeOfCharacter(from: ["9"]) != nil{
+            if (destinationValue as? PaymentOption)?.number.count == 11{
+                self.phoneLable.text = formattedPhoneNumber(number: ((destinationValue as? String)!))
+            } else if (destinationValue as? String)?.count == 20 {
+                self.phoneLable.text = "**** \((destinationValue as? String)?.dropFirst(16) ?? "")"
+            } else if (destinationValue as? String)?.count == 16 {
+                self.phoneLable.text = "**** \((destinationValue as? String)?.dropFirst(12) ?? "")"
+            } else if (destinationValue as? String)?.count == 11 {
+                self.phoneLable.text = formattedPhoneNumber(number: ((destinationValue as? String)!))
+            } else if (destinationValue as? PaymentOption)?.number.count == 16{
+                self.phoneLable.text = "**** \((destinationValue as? PaymentOption)?.number.dropFirst(12) ?? "")"
+            } else if (destinationValue as? PaymentOption)?.number.count == 20{
+                self.phoneLable.text = "**** \((destinationValue as? PaymentOption)?.number.dropFirst(16) ?? "")"
+            }else if (destinationValue as? String)?.count == 17{
+                self.phoneLable.text = (destinationValue as? String)
+            } else {
+                self.phoneLable.text = "**** \((destinationValue as? String)?.dropFirst(12) ?? "")"
+            }
+            } else {
+                self.phoneLable.text = "\((destinationValue as? String) ?? "Получатель не найден")"
+            }
+        case "contactViewController","serviceOperation":
+            
+            guard let numberCard = (sourceValue as? PaymentOption)?.number else { break }
+            maskWithStars(numberCard)
+            recipient.text = "Получатель / Страна выдачи"
+            sumTransferLabel.text = "Сумма в валюте выдачи / списания"
+            self.ownerLabel.text = ownerCard
+            var currencyLabelParse = getSymbol(forCurrencyCode: self.currencyLable ?? "₽")
+            if currencyLabelParse == "р."{
+                currencyLabelParse = "₽"
+            }
+            self.comissionLabel.text = "\(commission ?? "0") \(currencyLabelParse ?? "₽")"
+          
+            self.sumLabel.text = "\(operationSum ?? "")  \(currencyLabelParse ?? "₽")" + " / " + "\(amountRurCurrently ?? "")₽ "
+            numberTransferValueLabel.text = numberTransferValue
+            guard let destinationRecipient = destinationValue else {
+                break
+            }
+            guard let countryUnwrapped = countryValue else {
+                break
+            }
+            phoneLable.text = "\(destinationRecipient)" + " / " + "\(countryUnwrapped)"
+            
+        default:
+            break
+        }
+        _ = codeNumberTextField.becomeFirstResponder()
+        addGradientLayerView()
+//        addCircleView()
+        if pageControl != nil {
+            setUpPageControl()
+        }
         
         codeNumberTextField.delegate = self
         
@@ -373,21 +578,32 @@ class RegistrationCodeVerificationViewController: UIViewController, StoreSubscri
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         view.endEditing(true)
-        segueId = nil
-        if let vc = segue.destination as? RegistrationPermissionsViewController {
+    if let vc = segue.destination as? RegistrationPermissionsViewController {
             segueId = "permissions"
             vc.segueId = segueId
             vc.backSegueId = segueId
-        }
-        if let vc = segue.destination as? RegistrationFinishViewController {
+        } else if let vc = segue.destination as? RegistrationFinishViewController {
             segueId = "finish"
             vc.segueId = segueId
-        }
-        if let destinationVC = segue.destination as? PaymentsDetailsSuccessViewController {
+        } else  if let destinationVC = segue.destination as? PaymentsDetailsSuccessViewController, segueId != "contactViewController" {
+            destinationVC.currentLabel = currencyLable
+            destinationVC.sourceConfig = sourceConfig
+            destinationVC.sourceValue = sourceValue
+            destinationVC.destinationConfig = nil
+            destinationVC.destinationValue = destinationValue
+            destinationVC.operationSum = operationSum
+            destinationVC.currentLabel = (sourceValue as? PaymentOption)?.currencyCode
+            destinationVC.destinationValue =  PaymentOption(id: 0.0, name: "Адресный перевод", type: .paymentOption, sum: 0.0, number: phoneLable.text ?? "", maskedNumber: ownerCard ?? "", provider: "", productType: .card, maskSum: sumLabel.text ?? "", currencyCode: currencyLable ?? "RUR", accountNumber: "", productName: "")
+        } else  if let destinationVC = segue.destination as? PaymentsDetailsSuccessViewController, segueId == "contactViewController" {
+//            guard let sumUnwrapped = Double(operationSum ?? "0.0")  else {
+//                return
+//            }
+            destinationVC.currentLabel = currencyLable
             destinationVC.sourceConfig = destinationConfig
             destinationVC.sourceValue = sourceValue
-            destinationVC.destinationConfig = destinationConfig
-            destinationVC.destinationValue = destinationValue
+            destinationVC.sourceConfig = sourceConfig
+            destinationVC.destinationConfig = nil
+            destinationVC.destinationValue =  PaymentOption(id: 0.0, name: "Безадресный перевод", type: .paymentOption, sum: 0.0, number: phoneLable.text ?? "", maskedNumber: ownerCard ?? "", provider: "", productType: .card, maskSum: sumLabel.text ?? "", currencyCode: currencyLable ?? "RUR", accountNumber: "", productName: "")
             destinationVC.operationSum = operationSum
         }
     }
@@ -431,15 +647,15 @@ extension RegistrationCodeVerificationViewController: UITextFieldDelegate {
         pageControl.pageIndicatorTintColor = UIColor(red: 220 / 255, green: 220 / 255, blue: 220 / 255, alpha: 1)
         pageControl.currentPageIndicatorTintColor = UIColor(red: 234 / 255, green: 68 / 255, blue: 66 / 255, alpha: 1)
 
-        let config = FlexiblePageControl.Config(
+        /*let config = FlexiblePageControl.Config(
             displayCount: 4,
             dotSize: 7,
             dotSpace: 6,
             smallDotSizeRatio: 0.2,
             mediumDotSizeRatio: 0.5
-        )
+        )*/
 
-        pageControl.setConfig(config)
+        //pageControl.setConfig(config)
         pageControl.animateDuration = 0
         pageControl.setCurrentPage(at: 2)
 //        pageControl.center.x = view.center.x
@@ -482,40 +698,9 @@ extension RegistrationCodeVerificationViewController: UITextFieldDelegate {
     
     
 }
-
-//MARK: Timer
-extension RegistrationCodeVerificationViewController{
-    
-    @objc func updateTimer() {
-        timeSecond -= 1
-        if timeSecond == 0{
-            self.continueButton.setTitle("Запросить код", for: .normal)
-            timer!.invalidate()
-            timer = nil
-            timeSecond = 60
-            self.buttonGetSMSCode.isHidden = false
-            self.continueButton.changeEnabled(isEnabled: true)
-        }else{
-            var titleButton = ""
-            if timeSecond < 10{
-                titleButton = "Запросить код 00:0\(timeSecond)"
-            }else{
-                titleButton = "Запросить код 00:\(timeSecond)"
-            }
-             
-            self.continueButton.setTitle(titleButton, for: .normal)
-        }
-    }
-    
-    func createTimer() {
-      // 1
-      if timer == nil {
-        // 2
-        timer = Timer.scheduledTimer(timeInterval: 1.0,
-                                     target: self,
-                                     selector: #selector(updateTimer),
-                                     userInfo: nil,
-                                     repeats: true)
-      }
+extension Data {
+    func hex(separator:String = "") -> String {
+        return (self.map { String(format: "%02X", $0) }).joined(separator: separator)
     }
 }
+

@@ -34,6 +34,9 @@ extension SettingsPresenter: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: FeedOptionCell.Constants.cellReuseIdentifier, for: indexPath) as? FeedOptionCell else {
             fatalError()
         }
+        if cell.titleLabel.numberOfLines > 0 {
+            cell.titleLabel.font = cell.titleLabel.font.withSize(15)
+        }
 
         let option = options[indexPath.item]
         cell.titleLabel.text = option.localizedName
@@ -55,6 +58,20 @@ extension SettingsPresenter: UITableViewDelegate, UITableViewDataSource {
                 cell.isUserInteractionEnabled = true
                 cell.switch.isOn = isToggleOn()
                 break
+            case .nonDisplayBlockProduct(let isToggleOn):
+                cell.contentView.alpha = 1
+                cell.isUserInteractionEnabled = true
+                if UserDefaults.standard.value(forKey: "mySwitchValue") != nil, cell.switch.isOn != UserDefaults.standard.bool(forKey: "mySwitchValue"){
+//                    UserDefaults.standard.set(cell.switch.isOn, forKey: "mySwitchValue")
+                    cell.switch.isOn = UserDefaults.standard.bool(forKey: "mySwitchValue")
+                } else if UserDefaults.standard.value(forKey: "mySwitchValue") == nil{
+                    UserDefaults.standard.set(cell.switch.isOn, forKey: "mySwitchValue")
+                    cell.switch.isOn = UserDefaults.standard.bool(forKey: "mySwitchValue")
+
+                }   
+                
+//                cell.switch.isOn = UserDefaults.standard.bool(forKey: "mySwitchValue")
+                break
             default:
                 break
             }
@@ -75,6 +92,18 @@ extension SettingsPresenter: UITableViewDelegate, UITableViewDataSource {
         case .allowedPasscode(_):
             delegate?.didSelectOption(option: option)
             break
+        case .bankSPBDefoult:
+            delegate?.didSelectOption(option: option)
+            break
+        case .nonDisplayBlockProduct:
+            
+            break
+        case .blockUser:
+            delegate?.didSelectOption(option: option)
+            break
+//        case .setUpApplePay:
+//            delegate?.didSelectOption(option: option)
+//            break
         default:
             break
         }
@@ -108,6 +137,12 @@ extension SettingsPresenter: FeedOptionCellDelegate {
             option.toggleValueIfPossiable()
             delegate?.didSelectOption(option: option)
             break
+        case .nonDisplayBlockProduct:
+//                       option.toggleValueIfPossiable()
+//                       delegate?.didSelectOption(option: option)
+//            UserDefaults.standard.setValue(false, forKey: "mySwitchValue")
+
+                       break
         default:
             break
         }

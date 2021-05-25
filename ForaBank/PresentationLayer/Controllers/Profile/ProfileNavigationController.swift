@@ -36,15 +36,15 @@ class ProfileNavigationController: UINavigationController {
         pageControl.pageIndicatorTintColor = UIColor(red: 220 / 255, green: 220 / 255, blue: 220 / 255, alpha: 1)
         pageControl.currentPageIndicatorTintColor = UIColor(red: 234 / 255, green: 68 / 255, blue: 66 / 255, alpha: 1)
         pageControl.translatesAutoresizingMaskIntoConstraints = false
-        let config = FlexiblePageControl.Config(
+        /*let config = FlexiblePageControl.Config(
             displayCount: 4,
             dotSize: 7,
             dotSpace: 6,
             smallDotSizeRatio: 0.2,
             mediumDotSizeRatio: 0.5
-        )
+        )*/
 //        pageControl.backgroundColor = .black
-        pageControl.setConfig(config)
+        //pageControl.setConfig(config)
         pageControl.animateDuration = 0
         pageControl.setCurrentPage(at: 0)
         view.addSubview(pageControl)

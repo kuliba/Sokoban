@@ -9,6 +9,7 @@
 import Foundation
 
 class PasscodeService: IPasscodeService {
+    
 
     static let shared: IPasscodeService = PasscodeServiceInitializer.createPasscodeService()
 
@@ -18,6 +19,9 @@ class PasscodeService: IPasscodeService {
 
     var allowedPasscode: Bool {
         return SettingsStorage.shared.isSetPasscode() ? true : false
+    }
+    var isSetNonDisplayBlockProducts: Bool {
+        return UserDefaults.standard.bool(forKey: "mySwitchValue")
     }
 
     init() {

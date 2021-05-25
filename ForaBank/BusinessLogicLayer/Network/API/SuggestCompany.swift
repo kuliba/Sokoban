@@ -22,7 +22,7 @@ class SuggestCompanyService: SuggestCompanyServiceProtocol {
    func getSuggestCompany(bicBank: String?, headers: HTTPHeaders, completionHandler: @escaping (Bool, [BankSuggest]?, String?) -> Void) {
     
     var cards = [BankSuggest]()
-    let url =  "https://git.briginvest.ru/dbo/api/v2/rest/suggestCompany"
+    let url = Host.shared.apiBaseURL + "rest/suggestCompany"
     let parametrs: [String: Any] = ["query": bicBank as AnyObject,]
         
         

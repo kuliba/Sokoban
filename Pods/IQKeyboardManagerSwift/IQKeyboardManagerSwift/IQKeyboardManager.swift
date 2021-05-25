@@ -459,7 +459,7 @@ public class IQKeyboardManager: NSObject, UIGestureRecognizerDelegate {
             if let  textFieldRetain = _textFieldView {
                 
                 //Getting index of current textField.
-                if let index = textFields.firstIndex(of: textFieldRetain) {
+                if let index = textFields.index(of: textFieldRetain) {
                     
                     //If it is not first textField. then it's previous object canBecomeFirstResponder.
                     if index > 0 {
@@ -479,7 +479,7 @@ public class IQKeyboardManager: NSObject, UIGestureRecognizerDelegate {
         if let textFields = responderViews() {
             if let  textFieldRetain = _textFieldView {
                 //Getting index of current textField.
-                if let index = textFields.firstIndex(of: textFieldRetain) {
+                if let index = textFields.index(of: textFieldRetain) {
                     
                     //If it is not first textField. then it's previous object canBecomeFirstResponder.
                     if index < textFields.count-1 {
@@ -500,7 +500,7 @@ public class IQKeyboardManager: NSObject, UIGestureRecognizerDelegate {
         if let  textFieldRetain = _textFieldView {
             if let textFields = responderViews() {
                 //Getting index of current textField.
-                if let index = textFields.firstIndex(of: textFieldRetain) {
+                if let index = textFields.index(of: textFieldRetain) {
                     
                     //If it is not first textField. then it's previous object becomeFirstResponder.
                     if index > 0 {
@@ -535,7 +535,7 @@ public class IQKeyboardManager: NSObject, UIGestureRecognizerDelegate {
         if let  textFieldRetain = _textFieldView {
             if let textFields = responderViews() {
                 //Getting index of current textField.
-                if let index = textFields.firstIndex(of: textFieldRetain) {
+                if let index = textFields.index(of: textFieldRetain) {
                     //If it is not last textField. then it's next object becomeFirstResponder.
                     if index < textFields.count-1 {
                         
@@ -758,7 +758,7 @@ public class IQKeyboardManager: NSObject, UIGestureRecognizerDelegate {
     
     @objc public func unregisterTextFieldViewClass(_ aClass: UIView.Type, didBeginEditingNotificationName : String, didEndEditingNotificationName : String) {
         
-        if let index = registeredClasses.firstIndex(where: { element in
+        if let index = registeredClasses.index(where: { element in
             return element == aClass.self
         }) {
             registeredClasses.remove(at: index)

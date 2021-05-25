@@ -13,6 +13,10 @@ enum UserSettingType {
     case changePasscode
     case allowedPasscode(() -> Bool)
     case allowedBiometricSignIn(() -> Bool)
+    case bankSPBDefoult
+    case setUpApplePay
+    case nonDisplayBlockProduct(() -> Bool)
+    case blockUser
 
     var localizedName: String {
         switch self {
@@ -24,6 +28,17 @@ enum UserSettingType {
             return NSLocalizedString("4-х значный код", comment: "")
         case .allowedBiometricSignIn:
             return NSLocalizedString("TouchID/FaceID", comment: "")
+        case .bankSPBDefoult:
+            if UserDefaults.standard.string(forKey: "SPBBankDefault") != nil{
+                return NSLocalizedString("Изменить банк в СБП по умолчанию", comment: "")
+            }
+            return NSLocalizedString("Установка банка в СБП по умолчанию", comment: "")
+        case .setUpApplePay:
+            return NSLocalizedString("Установка ApplePay", comment: "")
+        case .nonDisplayBlockProduct:
+            return NSLocalizedString("Отображать заблокированные продукты", comment: "")
+        case .blockUser:
+            return NSLocalizedString("Заблокировать аккаунт", comment: "")
         }
     }
 
@@ -37,7 +52,17 @@ enum UserSettingType {
             return "keypad"
         case .allowedBiometricSignIn:
             return "touch"
+        case .bankSPBDefoult:
+            return "sbp-logoDefault"
+        case .setUpApplePay:
+            return ""
+        case .nonDisplayBlockProduct:
+            return "lock"
+       case .blockUser:
+            return "trash"
         }
+       
+               
     }
 
     var isToggable: Bool {
@@ -50,7 +75,16 @@ enum UserSettingType {
             return true
         case .allowedBiometricSignIn:
             return true
+        case .bankSPBDefoult:
+            return false
+        case .setUpApplePay:
+            return false
+        case .nonDisplayBlockProduct:
+            return true
+        case .blockUser:
+            return false
         }
+        
     }
 
     var isActive: Bool {
@@ -63,6 +97,16 @@ enum UserSettingType {
             return PasscodeService.shared.isPasscodeSetted
         case .allowedBiometricSignIn:
             return PasscodeService.shared.isPasscodeSetted && SettingsStorage.shared.isSetPasscode()
+        case .bankSPBDefoult:
+            return true
+        case .setUpApplePay:
+            return true
+        case .nonDisplayBlockProduct:
+            return UserDefaults.standard.bool(forKey: "mySwitchValue")
+//
+//            return UserDefaults.standard.bool(forKey: "mySwitchValue")
+        case .blockUser:
+            return true
         }
     }
 
@@ -75,10 +119,18 @@ enum UserSettingType {
             return SettingsStorage.shared.isSetPasscode() && PasscodeService.shared.isPasscodeSetted
         }
     }
+    public static func isNonBlocketProduct() -> Void {
+       
+    }
 
     public static func allowedBiometricSignInDefault() -> UserSettingType {
         return UserSettingType.allowedBiometricSignIn { () -> Bool in
             return SettingsStorage.shared.allowedBiometricSignIn() && SettingsStorage.shared.isSetPasscode() && PasscodeService.shared.isPasscodeSetted
+        }
+    }
+    public static func isNonBlockedProductDefault() -> UserSettingType {
+        return UserSettingType.nonDisplayBlockProduct { () -> Bool in
+            return UserDefaults.standard.bool(forKey: "mySwitchValue")
         }
     }
 
@@ -95,6 +147,10 @@ enum UserSettingType {
             let currentValue = SettingsStorage.shared.isSetPasscode()
             SettingsStorage.shared.setIsSetPasscode(!currentValue)
             break
+//        case .nonDisplayBlockProduct(_):
+////            let currentValue = SettingsStorage.shared.isSetPasscode()
+////            SettingsStorage.shared.setIsSetPasscode(!currentValue)
+//            break
         default:
             break
         }

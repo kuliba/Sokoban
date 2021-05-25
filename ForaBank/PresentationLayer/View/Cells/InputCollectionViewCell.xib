@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="InputCollectionViewCell" reuseIdentifier="InputCollectionViewCell" id="gTV-IL-0wX" customClass="InputCollectionViewCell" customModule="ForaBank" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="317" height="60"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="317" height="60"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <view contentMode="scaleAspectFit" id="lPF-bs-aUQ">
+                        <rect key="frame" x="-1" y="0.0" width="317" height="60"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Имя" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qtH-Eh-T8T">
+                                <rect key="frame" x="8" y="2" width="301" height="13"/>
+                                <fontDescription key="fontDescription" type="system" weight="light" pointSize="15"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Placeholder" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="SBd-9N-WZB" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
+                                <rect key="frame" x="52" y="17" width="257" height="35"/>
+                                <color key="backgroundColor" red="0.90980392160000001" green="0.90980392160000001" blue="0.90980392160000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="yes" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="changeValue:" destination="gTV-IL-0wX" eventType="editingChanged" id="tZ0-Jr-xI1"/>
+                                </connections>
+                            </textField>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="aew-hQ-8n6">
+                                <rect key="frame" x="8" y="17" width="36" height="35"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="36" id="UCc-ia-0Nx"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ErJ-4u-3h3">
+                                <rect key="frame" x="276" y="23" width="23" height="23"/>
+                                <state key="normal" image="user-plus"/>
+                                <connections>
+                                    <action selector="rightButtonAction:" destination="gTV-IL-0wX" eventType="touchUpInside" id="sN1-vX-w4I"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="SBd-9N-WZB" firstAttribute="top" secondItem="lPF-bs-aUQ" secondAttribute="top" constant="17" id="0Ah-aa-3In"/>
+                            <constraint firstItem="ErJ-4u-3h3" firstAttribute="trailing" secondItem="SBd-9N-WZB" secondAttribute="trailing" constant="-10" id="6Xh-9x-yjQ"/>
+                            <constraint firstItem="qtH-Eh-T8T" firstAttribute="trailing" secondItem="SBd-9N-WZB" secondAttribute="trailing" id="Abp-yz-Mkj"/>
+                            <constraint firstItem="ErJ-4u-3h3" firstAttribute="centerY" secondItem="SBd-9N-WZB" secondAttribute="centerY" id="D7U-hS-iGJ"/>
+                            <constraint firstItem="qtH-Eh-T8T" firstAttribute="trailing" secondItem="lPF-bs-aUQ" secondAttribute="trailingMargin" id="J2K-x1-VpL"/>
+                            <constraint firstItem="SBd-9N-WZB" firstAttribute="leading" secondItem="aew-hQ-8n6" secondAttribute="trailing" constant="8" symbolic="YES" id="LpP-iP-PjR"/>
+                            <constraint firstItem="aew-hQ-8n6" firstAttribute="leading" secondItem="lPF-bs-aUQ" secondAttribute="leadingMargin" id="OHa-Uv-NbD"/>
+                            <constraint firstItem="qtH-Eh-T8T" firstAttribute="top" secondItem="lPF-bs-aUQ" secondAttribute="top" constant="2" id="Sdo-vq-0Fa"/>
+                            <constraint firstItem="SBd-9N-WZB" firstAttribute="top" secondItem="qtH-Eh-T8T" secondAttribute="bottom" constant="2" id="Xhh-SK-sdR"/>
+                            <constraint firstItem="SBd-9N-WZB" firstAttribute="bottom" secondItem="lPF-bs-aUQ" secondAttribute="bottomMargin" id="cdi-rM-Has"/>
+                            <constraint firstItem="SBd-9N-WZB" firstAttribute="top" secondItem="aew-hQ-8n6" secondAttribute="top" id="ean-oR-qgL"/>
+                            <constraint firstItem="SBd-9N-WZB" firstAttribute="bottom" secondItem="aew-hQ-8n6" secondAttribute="bottom" id="hPd-7C-9eb"/>
+                            <constraint firstItem="qtH-Eh-T8T" firstAttribute="centerX" secondItem="lPF-bs-aUQ" secondAttribute="centerX" id="iWh-N7-tw9"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstItem="lPF-bs-aUQ" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="R6O-sY-pVD"/>
+                <constraint firstItem="lPF-bs-aUQ" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="Whz-w4-jzj"/>
+            </constraints>
+            <size key="customSize" width="317" height="60"/>
+            <connections>
+                <outlet property="image" destination="aew-hQ-8n6" id="Ttt-hR-BeM"/>
+                <outlet property="label" destination="qtH-Eh-T8T" id="BLA-fI-wUM"/>
+                <outlet property="rightButton" destination="ErJ-4u-3h3" id="NUg-Kn-FPZ"/>
+                <outlet property="textField" destination="SBd-9N-WZB" id="0eZ-CZ-tSn"/>
+            </connections>
+            <point key="canvasLocation" x="331.15942028985512" y="86.383928571428569"/>
+        </collectionViewCell>
+    </objects>
+    <designables>
+        <designable name="SBd-9N-WZB">
+            <size key="intrinsicContentSize" width="257" height="42.80078125"/>
+        </designable>
+    </designables>
+    <resources>
+        <image name="user-plus" width="23" height="23"/>
+    </resources>
+</document>

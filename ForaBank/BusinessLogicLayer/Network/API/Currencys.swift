@@ -32,7 +32,6 @@ class CurrencysService: CurrencysProtocol {
                 
                 switch response.result {
                 case .success:
-                    
                     if let json = response.result.value as? Dictionary<String, Any>,
                     let data = json["data"] as? Dictionary<String, Any>{
                         let buyCurrency = data["rateBuy"] as? Double

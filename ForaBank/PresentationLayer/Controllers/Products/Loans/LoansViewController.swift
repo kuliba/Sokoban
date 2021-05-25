@@ -16,6 +16,7 @@ import UIKit
 class LoansViewController: UIViewController {
 
     
+    @IBOutlet weak var noLabelImage: UIImageView!
     
     var product: String?
     let transitionAnimator = LoansSegueAnimator()
@@ -28,6 +29,8 @@ class LoansViewController: UIViewController {
     
     @IBOutlet weak var foraPreloader: RefreshView!
     @IBOutlet weak var LabelNoProduct: UILabel!
+    let firstLoan: Loan = Loan(Amount: 100, currencyCode: "63", principalDebt: 100, userAnnual: 100, branchBrief: "BreanchBried", ownerAgentBrief: "Owner", accountNumber: "123", accountID: "123", customName: "123", accountList: "accountList", number: "number", blocked: false, DateValue: "DateValue", expirationDate: "expirationDate", availableBalance: 123, blockedMoney: 123, updatingDate: "updateDate", tariff: "tariff", loanID: 123, branch: "branch", maskedNumber: "maskNumber", currentInterestRate: 123, dateEnd: "dateEnd", isClosed: false, loanName: "loanName")
+     let secondLoan: Loan = Loan(Amount: 100, currencyCode: "63", principalDebt: 100, userAnnual: 100, branchBrief: "BreanchBried", ownerAgentBrief: "Owner", accountNumber: "123", accountID: "123", customName: "123", accountList: "accountList", number: "number", blocked: false, DateValue: "DateValue", expirationDate: "expirationDate", availableBalance: 123, blockedMoney: 123, updatingDate: "updateDate", tariff: "tariff", loanID: 123, branch: "branch", maskedNumber: "maskNumber", currentInterestRate: 123, dateEnd: "dateEnd", isClosed: false, loanName: "loanName")
     
   var refreshView: RefreshView!
      
@@ -87,6 +90,8 @@ class LoansViewController: UIViewController {
         
     var loan = [Loan]() {
         didSet {
+//            loan.append(firstLoan)
+//            loan.append(secondLoan)
             tableView.reloadData()
             foraPreloader.isHidden = true
             hiddenAccount()
@@ -106,7 +111,10 @@ class LoansViewController: UIViewController {
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.backgroundColor = .white
-
+        let blurEffect = UIBlurEffect(style: .light)
+        let blurredEffectView = UIVisualEffectView(effect: blurEffect)
+        blurredEffectView.frame = noLabelImage.bounds
+        noLabelImage.addSubview(blurredEffectView)
         prepareUI()
         
         self.notifications() //ставим уведомления

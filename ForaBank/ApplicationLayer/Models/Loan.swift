@@ -19,6 +19,7 @@ class Loan {
     let Amount: Double?
     let accountID: String?
     let availableBalance: Double?
+    let expirationDate: String?
     let loanID: Int!
     var currencyCode: String?
     let branch: String?
@@ -26,10 +27,11 @@ class Loan {
     let dateEnd: String?
     let isClosed: Bool?
     let loanName: String?
+    let updatingDate: String?
     
     
     
-    init(Amount: Double? = nil, currencyCode: String? = nil, principalDebt: Double? = nil, userAnnual: Double? = nil, branchBrief: String? = nil, ownerAgentBrief: String? = nil, accountNumber: String? = nil, accountID: String? = nil, customName: String? = nil, accountList: String? = nil, number: String? = nil, blocked: Bool? = nil, DateValue: String? = nil, expirationDate: Date? = nil, availableBalance: Double? = nil, blockedMoney: Double? = nil, updatingDate: Date? = nil, tariff: String? = nil, loanID: Int! = nil, branch: String? = nil, maskedNumber: String? = nil, currentInterestRate: Double? = nil, dateEnd: String? = nil, isClosed: Bool? = nil, loanName: String? = nil) {
+    init(Amount: Double? = nil, currencyCode: String? = nil, principalDebt: Double? = nil, userAnnual: Double? = nil, branchBrief: String? = nil, ownerAgentBrief: String? = nil, accountNumber: String? = nil, accountID: String? = nil, customName: String? = nil, accountList: String? = nil, number: String? = nil, blocked: Bool? = nil, DateValue: String? = nil, expirationDate: String? = nil, availableBalance: Double? = nil, blockedMoney: Double? = nil, updatingDate: String? = nil, tariff: String? = nil, loanID: Int! = nil, branch: String? = nil, maskedNumber: String? = nil, currentInterestRate: Double? = nil, dateEnd: String? = nil, isClosed: Bool? = nil, loanName: String? = nil) {
         self.dateValue = DateValue
 
         self.userAnnual = userAnnual
@@ -51,6 +53,8 @@ class Loan {
         self.dateEnd = dateEnd
         self.isClosed = isClosed
         self.loanName = loanName
+        self.expirationDate = expirationDate
+        self.updatingDate = updatingDate
     }
 
     func getProductAbout() -> Array<AboutItem> {

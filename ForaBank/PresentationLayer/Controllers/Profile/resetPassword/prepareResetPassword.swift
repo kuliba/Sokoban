@@ -30,9 +30,35 @@ class PrepareResetPassword: UIViewController {
         view.endEditing(true)
         segueId = backSegueId
         navigationController?.popViewController(animated: true)
+        dismiss(animated: true, completion: nil)
     }
    
 
+    @IBAction func changeValue(_ sender: UITextField) {
+        let updatedText = sender.text ?? ""
+        let cleanPhoneNumber = updatedText.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
+        let mask = "+X (XXX) XXX-XXXX"
+//        if string.count + range.location > mask.count {
+//            return false
+//        }
+
+        var result = ""
+        var index = cleanPhoneNumber.startIndex
+        for ch in mask {
+            if index == cleanPhoneNumber.endIndex {
+                break
+            }
+            if ch == "X" {
+                result.append(cleanPhoneNumber[index])
+                index = cleanPhoneNumber.index(after: index)
+            } else if ch == "+" || ch == "(" || ch == ")" || ch == "-" || ch == " " {
+                result.append(ch)
+            } else {
+                //                    return false
+            }
+        }
+        loginTextField.text = result
+    }
     @IBAction func preparePasswordReset() {
          NetworkManager.shared().prepareResetPassword(login: self.loginTextField.text ?? "",
                                        completionHandler: { [unowned self] success, errorMessage in

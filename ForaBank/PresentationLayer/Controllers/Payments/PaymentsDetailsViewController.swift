@@ -15,6 +15,7 @@ typealias CardNumberPagerItem = PagerViewCellHandler<TextFieldPagerViewCell, Car
 typealias PaymentOptionsPagerItem = PagerViewCellHandler<DropDownPagerViewCell, CardNumberCellProvider>
 typealias PhoneNumberPagerItem = PagerViewCellHandler<TextFieldPagerViewCell, PhoneNumberCellProvider>
 
+
 protocol PaymentsDetailsViewControllerDelegate {
 
     func didChangeSource(paymentOption: PaymentOptionType)
@@ -26,9 +27,14 @@ protocol PaymentsDetailsViewControllerDelegate {
     func didPressPaymentButton()
 }
 
-class PaymentsDetailsViewController: UIViewController, StoreSubscriber, UITextFieldDelegate {
+class PaymentsDetailsViewController: UIViewController, StoreSubscriber, UITextFieldDelegate, UINavigationControllerDelegate, UIGestureRecognizerDelegate {
 
-    
+    var parameters = [Additional]()
+    var commission: Double?
+    var segueId: String?
+    @IBOutlet weak var titleLabel: UILabel?
+    var textLabelValue: String?
+    var puref: String?
     // MARK: - Properties
     @IBOutlet weak var sourcePagerView: PagerView!
     @IBOutlet weak var destinationPagerView: PagerView!
@@ -42,21 +48,89 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber, UITextFi
     //@IBOutlet weak var messageRecipient: UITextField!
     @IBOutlet weak var messageRecipientView: UIView!
     @IBOutlet weak var messageRecipient: UITextView!
-    
-
+    var templateAmount: String?
+    var sendEnable: Bool?
+    var destinationTemplate: String?
+    var prepareData: DataClassPayment?
+    @IBOutlet weak var currencyLabel: UILabel!
     // MARK: - Actions
     @IBAction func amountTextFieldValueChanged(_ sender: Any) {
         delegate?.didChangeAmount(amount: Double(amountTextField.text!.replacingOccurrences(of: ",", with: ".")))
-      
+//        guard let amountTextDouble = amountTextField.text else {
+//            return
+//        }
+//        guard let sourceValueUnwrapped = (sourceValue as? PaymentOption?) else {
+//            return
+//        }
+        if let amountDoubleType = Double(amountTextField.text! + ".00") {
+            if amountDoubleType >  (sourceValue as? PaymentOption)?.value ?? 0.0{
+                sendButton.changeEnabled(isEnabled: false)
+        }
+        }
 //        let dotString = "."
 //        var maxLength = 9
 //        if (amountTextField.text?.contains(dotString))! {
 //                maxLength = 12
 //        }
     }
+    var item = 0
+    func setParameters(listInputs:[ListInput]) -> [Additional]{
+  //        var parametersList: [Additional] = []
+        self.parameters.removeAll()
+
+        for i in listInputs.filter({$0.id != "SumSTrs"}){
+            self.item += 1
+            let parameterItem = Additional(fieldid: item, fieldname: i.id!, fieldvalue: destinationValue as! String)
+            self.parameters.append(parameterItem)
+            parameters.append(contentsOf: parameters)
+            parameters.append(Additional(fieldid: 4, fieldname: "SumSTrs", fieldvalue: amountTextField.text))
+          }
+            self.item = 0
+          return parameters
+      }
     
     @IBAction func sendButtonClicked(_ sender: Any) {
-        delegate?.didPressPrepareButton()
+        if segueId == "ServiceListViewController"{
+            
+            
+            activityIndicator.startAnimating()
+            sendButton.isHidden = true
+//            sourcePagerView.isUserInteractionEnabled = false
+//            destinationPagerView.isUserInteractionEnabled = false
+            NetworkManager.shared().getAnywayPaymentBegin(numberCard: (sourceValue as? PaymentOption)?.number, puref: puref) { [self] (success, data, errorMessage) in
+                if success{
+                    NetworkManager.shared().getAnywayPayment { [self] (success, data, errorMessage) in
+                        if success ?? false{
+                            setParameters(listInputs: data[0]?.data?.listInputs ?? [])
+                            NetworkManager.shared().getAnywayPaymentFinal(memberId: "contactAdress", amount: self.amountTextField.text, numberPhone: self.sourceValue as? String, parameters: self.parameters) { (success, data, errorMessage) in
+                                if success ?? false{
+                                    
+                                    commission = data[0]?.data?.commission
+                                    didFinishPreparation(success: true, data: nil)
+                                    activityIndicator.stopAnimating()
+                                    sendButton.isHidden = false
+                                } else {
+                                    AlertService.shared.show(title: "\(errorMessage ?? "")", message: "", cancelButtonTitle: "Отмена", okButtonTitle: "Ok", cancelCompletion: nil, okCompletion: nil)
+                                    activityIndicator.stopAnimating()
+                                    sendButton.isHidden = false
+                                }
+                            }
+                        } else {
+                            AlertService.shared.show(title: "\(errorMessage ?? "")", message: "", cancelButtonTitle: "Отмена", okButtonTitle: "Ok", cancelCompletion: nil, okCompletion: nil)
+                            activityIndicator.stopAnimating()
+                            sendButton.isHidden = false
+                        }
+                    }
+                } else {
+                    AlertService.shared.show(title: "\(errorMessage ?? "")", message: "", cancelButtonTitle: "Отмена", okButtonTitle: "Ok", cancelCompletion: nil, okCompletion: nil)
+                    activityIndicator.stopAnimating()
+                    sendButton.isHidden = false
+                }
+            }
+            
+        } else {
+            delegate?.didPressPrepareButton()
+        }
     }
 
     @IBAction func backButtonClicked(_ sender: Any) {
@@ -100,6 +174,10 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber, UITextFi
        private let destinationProviderAccountNumber = AccountNumberCellProvider()
        private let destinationProviderPhoneNumber = PhoneNumberCellProvider()
     
+    
+    
+    
+    
 // MARK: - Lifecycle
 
 //    private let sourceProvider = PaymentOptionCellProvider()
@@ -111,15 +189,23 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber, UITextFi
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
         setUpLayout()
         setupTextView()
+        if textLabelValue != nil{
+            titleLabel?.text = textLabelValue
+        }
         amountTextField.delegate = self
-     
+        if templateAmount?.isEmpty == false{
+            amountTextField.text = templateAmount
+            destinationValue = destinationTemplate
+            destinationConfig = destinationTemplate
+            delegate?.didChangeDestination(paymentOption: .phoneNumber(templateAmount!))
+        }
         if let source = sourceConfigurations, let dest = destinationConfigurations {
             sourcePagerView.setConfig(config: source)
             destinationPagerView.setConfig(config: dest)
         }
-        
         self.messageRecipientView.isHidden = messageRecipientIsHidden
     }
   
@@ -157,6 +243,7 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber, UITextFi
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         store.unsubscribe(self)
     }
 
@@ -170,15 +257,7 @@ class PaymentsDetailsViewController: UIViewController, StoreSubscriber, UITextFi
 //        setUpRemittanceViews()
     }
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "fromPaymentToPaymentVerification", let destinationVC = segue.destination as? RegistrationCodeVerificationViewController {
-            destinationVC.sourceConfig = destinationConfig
-            destinationVC.sourceValue = sourceValue
-            destinationVC.destinationConfig = destinationConfig
-            destinationVC.destinationValue = destinationValue
-            destinationVC.operationSum = amountTextField.text
-        }
-    }
+ 
 }
 
 // - MARK: Private methods
@@ -199,7 +278,12 @@ private extension PaymentsDetailsViewController {
     }
 
     private func setUpLayout() {
-        sendButton.changeEnabled(isEnabled: false)
+        if sendEnable == true{
+            sendButton.changeEnabled(isEnabled: true)
+        } else {
+
+            sendButton.changeEnabled(isEnabled: false)
+        }
         activityIndicator.center = view.center
         view.addSubview(activityIndicator)
         setUpPicker()
@@ -236,11 +320,28 @@ extension PaymentsDetailsViewController: RemittancePickerDelegate {
 }
 
 extension PaymentsDetailsViewController: PaymentDetailsPresenterDelegate {
+    func didPrepareData(data: DataClassPayment?) {
+        self.prepareData = data
+    }
     
-    func didFinishPreparation(success: Bool) {
+    
+    func didFinishPreparation(success: Bool, data: DataClassPayment?) {
         activityIndicator.stopAnimating()
         if success {
-            performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
+            
+            if let vc = UIStoryboard(name: "Payment", bundle: nil).instantiateViewController(withIdentifier: "CodeVerificationStroyboard") as? RegistrationCodeVerificationViewController {
+                vc.sourceConfig = destinationConfig
+                vc.sourceValue = sourceValue
+                vc.destinationConfig = destinationConfig
+                vc.destinationValue = destinationValue
+                vc.operationSum = amountTextField.text
+                vc.ownerCard = destinationValue as? String
+                vc.commission = maskSum(sum: commission ?? 0.0)
+                vc.currencyLable = getSymbol(forCurrencyCode: data?.currencyAmount ?? "")
+                vc.segueId = "serviceOperation"
+                present(vc, animated: true, completion: nil)
+            }
+//            performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
         } else {
             AlertService.shared.show(title: "Ошибка", message: "При выполнении платежа произошла ошибка, попробуйте ещё раз позже", cancelButtonTitle: "Продолжить", okButtonTitle: nil, cancelCompletion: nil, okCompletion: nil)
         }
@@ -266,6 +367,18 @@ extension PaymentsDetailsViewController: ICellConfiguratorDelegate {
             }
             self.sourceConfig = sourceConfig
             self.sourceValue = value
+            if (sourceValue as? PaymentOption)?.currencyCode == "USD"{
+                currencyLabel.text = "$"
+            } else if (sourceValue as? PaymentOption)?.currencyCode == "EUR"{
+                currencyLabel.text = "€"
+            } else if (sourceValue as? PaymentOption)?.currencyCode == "RUB"{
+                currencyLabel.text = "₽"
+            } else if (sourceValue as? PaymentOption)?.currencyCode == "CHF"{
+                currencyLabel.text = "₣"
+            } else if (sourceValue as? PaymentOption)?.currencyCode == "GBP"{
+                currencyLabel.text = "£"
+            }
+       
         } else if let destinationConfig = destinationConfigurations?.filter({ $0 == configurator }).first {
             switch (destinationConfig, value) {
             case (is PaymentOptionsPagerItem, let destinationOption as PaymentOption):
@@ -275,8 +388,12 @@ extension PaymentsDetailsViewController: ICellConfiguratorDelegate {
                 delegate?.didChangeDestination(paymentOption: .cardNumber(destinationOption))
                 break
             case (is PhoneNumberPagerItem, let destinationOption as String):
+                if destinationTemplate?.isEmpty == false{
+                    destinationValue = destinationTemplate
+                } else {
                 delegate?.didChangeDestination(paymentOption: .phoneNumber(destinationOption))
                 break
+                }
             case (is AccountNumberPagerItem, let destinationOption as String):
                 delegate?.didChangeDestination(paymentOption: .accountNumber(destinationOption))
                 break

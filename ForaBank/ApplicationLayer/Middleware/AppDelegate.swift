@@ -14,8 +14,21 @@ import CryptoSwift
 import UserNotifications
 import Firebase
 import FirebaseMessaging
-//import Network
+//import FirebaseInstanceID
 
+//import Network
+struct FCMToken {
+    static var fcmToken: String?
+}
+struct KeyPair {
+    static var publicKey: SecKey?
+    static var privateKey: SecKey?
+}
+struct KeyFromServer {
+    static var publicKey: String?
+    static var publicKeyCert: String?
+    static var privateKeyCert: String?
+}
 func appReducer(action: Action, state: State?) -> State {
     return State(authenticationState: authenticationReducer(state: state?.authenticationState, action: action),
                  userState: userReducer(state: state?.userState, action: action),
@@ -27,19 +40,28 @@ func appReducer(action: Action, state: State?) -> State {
 }
 let thunkMiddleware: Middleware<State> = createThunkMiddleware()
 var store = Store<State>(reducer: appReducer, state: nil, middleware: [thunkMiddleware])
-
+var csrf: Bool?
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    
     var window: UIWindow?
     static var shared: AppDelegate { return UIApplication.shared.delegate as! AppDelegate }
+    
+
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        
+        let delegate = KeyPairGeneration()
+        let keyPair = delegate.createOwnKey()
+        print(keyPair)
 
+        Messaging.messaging().delegate = self
         setNavigationBarAppearance()
         setTextFieldAppearance()
         IQKeyboardManager.shared.enable = true
-        //        IQKeyboardManager.shared.layoutIfNeededOnUpdate = true
+        IQKeyboardManager.shared.layoutIfNeededOnUpdate = true
+        
         cleanKeychainIfNeeded()
 //        store.dispatch(checkAuthCredentials)
         AuthenticationService.shared.startSecurityCheckIfNeeded()
@@ -51,14 +73,54 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             NSLog("[RemoteNotification] applicationState: \(applicationStateString) didFinishLaunchingWithOptions for iOS9: \(userInfo)")
             //TODO: Handle background notification
         }
+        let parameters = [
+        "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
+        "pushFCMtoken": Messaging.messaging().fcmToken as Any,
+        "model": UIDevice().model,
+         "operationSystem": "IOS"
+        ] as [String : Any]
+        
+        func sendRequestToServer(actionCSRF: Bool){
+            NetworkManager.shared().isSignedIn { (isSignIn) in
+                    NetworkManager.shared().installPushDevice(parameters: parameters, auth: isSignIn) { (success, errorMessage) in
+                        if success{
+                            print("Это пуши \(success)")
+                        } else {
+                            print(errorMessage)
+                        }
+                }
+
+                }
+            }
+        sendRequestToServer(actionCSRF: false)
         checkInternetConnection()
         return true
     }
+    
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+      
+        
+        
+        print("Firebase registration token: \(String(describing: fcmToken))")
+
+      let dataDict:[String: String] = ["token": fcmToken ?? ""]
+      NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
+      // TODO: If necessary send token to application server.
+      // Note: This callback is fired at each app startup and whenever a new token is generated.
+    }
+    
+    func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {
+         if !application.isRegisteredForRemoteNotifications {
+             NotificationCenter.default.post(name: Notification.Name(rawValue: kApplicationDidRegisterWithDeviceToken), object: nil)
+         }
+     }
+    
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
 //        store.dispatch(checkAuthCredentials)
-        AuthenticationService.shared.startSecurityCheckIfNeeded()
+        
+//        AuthenticationService.shared.startSecurityCheckIfNeeded()
     }
 
     var applicationStateString: String {
@@ -69,6 +131,53 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } else {
             return "inactive"
         }
+    }
+    
+
+    // MARK: - MessagingDelegate
+
+    func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
+      
+    }
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        Messaging.messaging().apnsToken = deviceToken
+        
+        
+        
+        if #available(iOS 10.0, *) {
+          // For iOS 10 display notification (sent via APNS)
+          UNUserNotificationCenter.current().delegate = self
+
+          let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+          UNUserNotificationCenter.current().requestAuthorization(
+            options: authOptions,
+            completionHandler: {_, _ in })
+        } else {
+          let settings: UIUserNotificationSettings =
+          UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+          application.registerUserNotificationSettings(settings)
+        }
+
+        application.registerForRemoteNotifications()
+//        print(application.isRegisteredForRemoteNotifications)
+        
+        let token = Messaging.messaging().fcmToken
+//         print("FCM token: \(token ?? "")")
+        FCMToken.fcmToken = Messaging.messaging().fcmToken as String?
+
+//        sendRequestToServer(actionCSRF: false)
+        
+        let tokenChars = (deviceToken as NSData).bytes.bindMemory(to: CChar.self, capacity: deviceToken.count)
+        let tokenString = NSMutableString()
+        
+        for i in 0 ..< deviceToken.count {
+            tokenString.appendFormat("%02.2hhx", tokenChars[i])
+        }
+        
+        LivetexCoreManager.defaultManager.apnToken = tokenString as String
+        NotificationCenter.default.post(name: Notification.Name(rawValue: kApplicationDidRegisterWithDeviceToken), object: nil)
+//        print("tokenString: \(tokenString)")
     }
 
     func requestNotificationAuthorization(application: UIApplication) {
@@ -122,25 +231,45 @@ private extension AppDelegate {
 }
 
 @available(iOS 10, *)
-extension AppDelegate: UNUserNotificationCenterDelegate {
-    // iOS10+, called when presenting notification in foreground
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        let userInfo = notification.request.content.userInfo
-        NSLog("[UserNotificationCenter] applicationState: \(applicationStateString) willPresentNotification: \(userInfo)")
-        //TODO: Handle foreground notification
-        completionHandler([.alert])
-    }
+extension AppDelegate : UNUserNotificationCenterDelegate {
 
-    // iOS10+, called when received response (default open, dismiss or custom action) for a notification
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        let userInfo = response.notification.request.content.userInfo
-        NSLog("[UserNotificationCenter] applicationState: \(applicationStateString) didReceiveResponse: \(userInfo)")
-        //TODO: Handle background notification
-        completionHandler()
-    }
+  // Receive displayed notifications for iOS 10 devices.
+  func userNotificationCenter(_ center: UNUserNotificationCenter,
+                              willPresent notification: UNNotification,
+    withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    let userInfo = notification.request.content.userInfo
+
+    // With swizzling disabled you must let Messaging know about the message, for Analytics
+    // Messaging.messaging().appDidReceiveMessage(userInfo)
+
+    // ...
+
+    // Print full message.
+//    print(userInfo)
+
+    // Change this to your preferred presentation option
+    completionHandler([[.alert, .sound]])
+  }
+
+  func userNotificationCenter(_ center: UNUserNotificationCenter,
+                              didReceive response: UNNotificationResponse,
+                              withCompletionHandler completionHandler: @escaping () -> Void) {
+    let userInfo = response.notification.request.content.userInfo
+
+    // ...
+
+    // With swizzling disabled you must let Messaging know about the message, for Analytics
+    // Messaging.messaging().appDidReceiveMessage(userInfo)
+
+    // Print full message.
+    print(userInfo)
+
+    completionHandler()
+  }
 }
 
 extension AppDelegate: MessagingDelegate {
+ 
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
         NSLog("[RemoteNotification] didRefreshRegistrationToken: \(fcmToken)")
     }
@@ -229,4 +358,5 @@ extension AppDelegate{
         
         return viewStatus
     }
+
 }

@@ -33,7 +33,8 @@ class DepositsCardsListViewController: UIViewController {
     var selectedCardView: DetailedCardView? = nil
 //    var clickedCardView: DetailedCardView? = nil
     var selectedCard: Card? = nil
-
+    var disableBlockProduct = true
+    
     var cardViewsTopConstraints: [NSLayoutConstraint] = [NSLayoutConstraint]()
     var selectedCardViewCenterYConstraint: NSLayoutConstraint? = nil
     var contentViewHeightConstraint: NSLayoutConstraint? = nil
@@ -52,6 +53,8 @@ class DepositsCardsListViewController: UIViewController {
             activityIndicator.stopAnimating()
         }
     }
+    
+    
 
     var cardViews: [DetailedCardView] = [DetailedCardView]()
     var segueId: String? = nil
@@ -361,8 +364,10 @@ class DepositsCardsListViewController: UIViewController {
         NetworkManager.shared().getCardList { [weak self] (success, cards) in
             if success {
                 self?.cards = cards ?? []
+
                 if self?.cardViews.count == 0 {
                     //                    self.removeCardViews()
+     
                     self?.addCardViews()
                 } else {
                     self?.updateCardViews()

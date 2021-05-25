@@ -7,8 +7,8 @@
  */
 
 struct Service {
-    let name: String
-    let description: String
-    let iconName: String
-    let isPartner: Bool
+    let name: String?
+    let description: String?
+    let iconName: String?
+    let isPartner: Bool?
 }

@@ -51,6 +51,7 @@ class AccountsService: AccountsServiceProtocol {
                                 let accountData = accountList[0] as? Dictionary<String , Any>
                                 guard let accountNumber = accountData?["accountNumber"] as? String,
                                     let currencyCode = accountData?["currencyCode"] as? String,
+                                    let accountID = accountData?["accountID"] as? Int,
 
                                     
                                     let balance = accountData?["balance"] as? Double else {
@@ -60,13 +61,15 @@ class AccountsService: AccountsServiceProtocol {
                                 original["accountNumber"] = accountNumber
                                 original["currencyCode"] = currencyCode
                                 original["balance"] = balance
+                                original["accountID"] = String(accountID)
+
                                 //let dateStart = dayMonthYear(milisecond: Double((original["dateStart"] as? Double)!))
                                 //let isClosed = original["isClosed"] as? Bool
 
                                 //let depositProductName = original["depositProductName"] as? String
                                 //let depositProductID = original["depositProductID"] as? Int
                                 let account = Account.from(NSDictionary(dictionary: original))
-                                
+                                account?.id = Double(accountID)
                                 if let customNameJson = cardData["customName"] as? String{
                                     account?.customName = customNameJson
                                 }

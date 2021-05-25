@@ -1,11 +1,3 @@
-//
-//  PaymentDetailsPresenter.swift
-//  ForaBank
-//
-//  Created by Бойко Владимир on 26.11.2019.
-//  Copyright © 2019 (C) 2017-2019 OОО "Бриг Инвест". All rights reserved.
-//
-
 import Foundation
 
 class PaymentDetailsPresenter: IPaymentDetailsPresenter {
@@ -21,6 +13,12 @@ class PaymentDetailsPresenter: IPaymentDetailsPresenter {
             onSomeValueUpdated()
         }
     }
+    private var preparePaymentData: DataClassPayment? {
+        didSet {
+            onSomeValueUpdated()
+        }
+    }
+    
     private var amount: Double? {
         didSet {
             onSomeValueUpdated()
@@ -57,7 +55,7 @@ extension PaymentDetailsPresenter {
         case .option(_):
             return true
         case .accountNumber(let accountNumber):
-            return accountNumber.count == 20
+            return accountNumber.count >= 14
         case .cardNumber(let cardNumber):
             return cardNumber.count == 16
         case .phoneNumber(let phoneNumber):
@@ -99,15 +97,16 @@ private extension PaymentDetailsPresenter {
         }
         delegate?.didUpdate(isLoading: true, canAskFee: canAskFee, canMakePayment: canMakePayment)
 
-        let completion: (Bool, String?) -> Void = { [weak self] (success, token) in
+        let completion: (Bool, String?, DataClassPayment?) -> Void = { [weak self] (success, token, preparePaymentData) in
             guard let canAskFee = self?.canAskFee, let canMakePayment = self?.canMakePayment else {
                 return
             }
             self?.delegate?.didUpdate(isLoading: false, canAskFee: canAskFee, canMakePayment: canMakePayment)
-            self?.delegate?.didFinishPreparation(success: success)
+            self?.delegate?.didFinishPreparation(success: success,data: preparePaymentData)
+            self?.delegate?.didPrepareData(data: preparePaymentData)
         }
         
         let handler = PaymentRequestHandler(amount: amount, completion: completion)
-        handler.preparePayment(sourcePaymentOption: nonNilsourcePaymentOption, destinaionPaymentOption: nonNilDestinaionPaymentOption)
+        handler.preparePayment(sourcePaymentOption: nonNilsourcePaymentOption, destinaionPaymentOption: nonNilDestinaionPaymentOption, prepareData: preparePaymentData)
     }
 }

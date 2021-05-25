@@ -1,10 +1,4 @@
-//
-//  PaymentOption.swift
-//  ForaBank
-//
-//  Created by Бойко Владимир on 25/09/2019.
-//  Copyright © 2019 (C) 2017-2019 OОО "Бриг Инвест". All rights reserved.
-//
+
 
 import Foundation
 
@@ -12,13 +6,25 @@ struct PaymentOption: IPickerItem, IPresentationModel {
 
     var title: String {
         get {
-            return name
+//            if provider == "ACCOUNT"{
+//                return productName ?? ""
+//            } else {
+//            return name ?? ""
+//            }
+            return name ?? ""
+
         }
     }
 
     var subTitle: String {
         get {
-            return maskedNumber
+//            if provider == "ACCOUNT" || provider == "CARD"{
+//                return accountNumber ?? ""
+//            } else {
+//                return maskedNumber
+//            }
+//            return  maskedAccountNumber(number: self.accountNumber ?? "", separator: ".")
+            return maskedNumber.dropFirst(10).description.replace(string: "X", replacement: "·").replace(string: "-", replacement: " ")
         }
     }
 
@@ -27,18 +33,36 @@ struct PaymentOption: IPickerItem, IPresentationModel {
             return sum
         }
     }
-
+    
+    var accountNumberSBP: String{
+        get{
+            return accountNumber ?? ""
+        }
+//        set{
+//            return accountNumber
+//        }
+    }
+//    var currencyCode: String? {
+//        get{
+//            return currency
+//        }
+//
+//    }
+    var productName: String?
     var itemType: PickerItemType
     let id: Double
-    var name: String
+    var name: String?
     var type: RemittanceOptionViewType
-    let sum: Double
+    var sum: Double
     let number: String
+    let maskSum: String
     var maskedNumber: String
     let provider: String?
     let productType: ProductType
+    var currencyCode: String?
+    var accountNumber: String?
     
-    init(id: Double, name: String, type: PickerItemType, sum: Double, number: String, maskedNumber: String, provider: String, productType: ProductType) {
+    init(id: Double, name: String?, type: PickerItemType, sum: Double, number: String, maskedNumber: String, provider: String, productType: ProductType, maskSum: String, currencyCode: String, accountNumber: String?, productName: String?) {
         self.id = id
         self.name = name
         self.sum = sum
@@ -48,6 +72,10 @@ struct PaymentOption: IPickerItem, IPresentationModel {
         self.provider = provider
         self.itemType = type
         self.productType = productType
+        self.maskSum = maskSum
+        self.currencyCode = currencyCode
+        self.accountNumber = accountNumber
+        self.productName = productName
     }
 
     init(product: IProduct) {
@@ -58,10 +86,15 @@ struct PaymentOption: IPickerItem, IPresentationModel {
         maskedNumber = product.maskedNumber
         provider = nil
         type = .custom
+        maskSum = ForaBank.maskSum(sum: product.balance)
+        currencyCode = product.currencyCode
+        accountNumber = maskedAccountNumber(number: product.accountNumber, separator: ".")
+        productName = product.accountNumber
 
         switch product {
         case is Card, is Deposit, is Account:
             itemType = .paymentOption
+            maskedNumber = maskedAccountNumber(number: self.accountNumber ?? "", separator: ".")
             break
         default:
             itemType = .plain
@@ -71,6 +104,7 @@ struct PaymentOption: IPickerItem, IPresentationModel {
         switch product {
         case is Card:
             productType = .card
+            maskedNumber = self.accountNumber ?? ""
             break
         case is Deposit:
             productType = .deposit

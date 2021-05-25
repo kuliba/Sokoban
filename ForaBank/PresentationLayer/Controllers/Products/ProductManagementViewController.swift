@@ -8,7 +8,6 @@
 
 import UIKit
 import Hero
-import SCLAlertView
 
 
 class ProductManagementViewController: UITableViewController, CustomAlertViewDelegate {
@@ -38,7 +37,7 @@ class ProductManagementViewController: UITableViewController, CustomAlertViewDel
 
     override func viewDidLoad() {
         super.viewDidLoad()
-      
+        
         NetworkManager.shared().getProfile { [weak self] (success, profile, errorMessage) in
             if success {
                 self?.profile = profile 

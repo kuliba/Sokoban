@@ -11,9 +11,11 @@ import UIKit
 /// RefreshView
 open class RefreshView: UIView {
     
+    static let shared = RefreshView()
+    
     /// IBOutlets
-    @IBOutlet weak var imgVBG: UIImageView!
-    @IBOutlet weak var imgVLogo: UIImageView!
+    @IBOutlet weak var imgVBG: UIImageView?
+    @IBOutlet weak var imgVLogo: UIImageView?
     
     /// Variable Declarations
     var gradientView: UIView!
@@ -24,7 +26,8 @@ extension RefreshView {
     
     fileprivate func initializeGradientView() {
         gradientView = UIView(frame: CGRect(x: -30, y: 0, width: 100, height: 60))
-        imgVLogo.addSubview(gradientView)
+        imgVLogo?.image = UIImage(named: "foralogotype")
+        imgVLogo?.addSubview(gradientView)
         gradientView.layer.insertSublayer(gradientColor(frame: gradientView.bounds), at: 0)
         gradientView.backgroundColor = UIColor.clear
     }
@@ -51,7 +54,7 @@ extension RefreshView {
         
     }
     func stopAnimating(){
-        imgVLogo.isHidden = true
-        imgVBG.isHidden = true
+        imgVLogo?.isHidden = true
+        imgVBG?.isHidden = true
     }
 }

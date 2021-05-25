@@ -10,7 +10,6 @@ import Foundation
 import Alamofire
 
 class CardService: CardServiceProtocol {
-
     private let host: Host
     private var datedTransactions = [DatedTransactions]()
 
@@ -26,7 +25,6 @@ class CardService: CardServiceProtocol {
             .validate(statusCode: MultiRange(200..<300, 401..<402))
             .validate(contentType: ["application/json"])
             .responseJSON { [unowned self] response in
-                print("1 = ", response.result.value)
                 if let json = response.result.value as? Dictionary<String, Any>,
                     let errorMessage = json["errorMessage"] as? String {
                     print("\(errorMessage) \(self)")
@@ -52,13 +50,17 @@ class CardService: CardServiceProtocol {
 //                                let id = original["cardID"] as? String
 //                                let product = (original["product"] as? String) ?? ""
 //                                var expirationDate: String? = dayMonthYear(milisecond: original["validThru"] as! Double)
-
+                                
                                 guard let card = Card.from(NSDictionary(dictionary: original)) else { return }
                                 card.customName = customName ?? ""
 
-
+                                
+                                
                                 cards.append(card)
-
+                                let disableBlockProduct: Bool? = UserDefaults.standard.bool(forKey: "check")
+                                if disableBlockProduct!{
+                                cards = cards.filter({$0.blocked == false})
+                                }
                                 cards.sort(by: {$0.status > $1.status})
                                      
                                      for i in 0..<cards.count{

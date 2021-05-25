@@ -48,13 +48,13 @@ class DepositService: DepositsServiceProtocol {
                                 let depositProductID = original["depositProductID"] as? Int
                                 if depositProductID == 10000000088 { continue }
 
-                                var accountList: Array<Any> = original["accountList"] as! Array
+                                let accountList: Array<Any> = original["accountList"] as! Array
                                 let accountData = accountList[0] as? Dictionary<String , Any>
                                 let balance = accountData!["balance"] as? Double
                                 let accountNumber = accountData!["accountNumber"] as? String
                                 let currencyCode = accountData!["currencyCode"] as? String
-                                let ownerAgentBrief = original["ownerAgentBrief"] as? String
-                                let number = original["number"] as? String
+//                                let ownerAgentBrief = original["ownerAgentBrief"] as? String
+//                                let number = original["number"] as? String
                                 let dateStart =  dayMonthYear(milisecond: (original["dateStart"] as? Double)!)
                                 let dateEnd =  dayMonthYear(milisecond: (original["dateEnd"] as? Double)!)
                                 let minimumBalance = original["minimumBalance"] as? Double

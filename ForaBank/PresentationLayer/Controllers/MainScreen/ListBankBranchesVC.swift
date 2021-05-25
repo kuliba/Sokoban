@@ -17,6 +17,7 @@ class ListBankBranchesVC: UIViewController, CLLocationManagerDelegate {
     var coordinations = CLLocationCoordinate2D() //текущаяя геолокация
     var branches = [BankBranch](){ //список банков из json 
         didSet {
+            branches = branches.sorted{ $0.name?.lowercased() ?? "" < $1.name?.lowercased() ?? ""}
             tableViewBran.reloadData()
             tableViewBran.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true) //скролим вверх(чтобы ячейка не смещалась)
         }

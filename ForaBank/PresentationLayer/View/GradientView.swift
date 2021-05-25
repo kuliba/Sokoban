@@ -18,7 +18,6 @@ class GradientView: UIView {
     // MARK: - Lifecycle
     override func awakeFromNib() {
         super.awakeFromNib()
-        
     }
 
     override func layoutSubviews() {

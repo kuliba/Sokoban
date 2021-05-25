@@ -13,6 +13,7 @@ import Foundation
 class LoanPaymentScheduleController: UITableViewController {
 
     var items: [LaonSchedules]?
+    var arraySectionAndCellLoans = [ClassSectionAndItemLoan]()
 
 //    func set(card: Card?) {
 //        self.card = card
@@ -23,11 +24,17 @@ class LoanPaymentScheduleController: UITableViewController {
 
     override func viewDidAppear(_ animated: Bool) {
           super.viewDidAppear(animated)
-          NetworkManager.shared().getLoansPayment { (success, items) in
-              if success {
-                  self.items = items ?? []
-              }
-          }
+        
+           NetworkManager.shared().getLoansPayment { [weak self] (loan, success, arrayLoanSchedule) in
+                       if success{
+                           print("arrayLoanSchedule = ", arrayLoanSchedule![0])
+                           guard arrayLoanSchedule != nil, arrayLoanSchedule?.count != 0 else {return}
+                           //self!.arrayLaonSchedules = arrayLoanSchedule!
+                        
+                           self!.getSectionAndCellLoanTB(arrayLoans: arrayLoanSchedule ?? [])
+                       }
+                   }
+        
       }
     
     override func viewDidLoad() {
@@ -38,6 +45,7 @@ class LoanPaymentScheduleController: UITableViewController {
         tableView.contentInset.top = 35
         tableView.contentInset.bottom = 10
 
+       
         // Uncomment the following line to pre10
         //         serve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -59,6 +67,37 @@ class LoanPaymentScheduleController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    func getSectionAndCellLoanTB(arrayLoans: Array<LaonSchedules>){
+               var arrayDateLoans = Array<String?>()
+               for iloan in arrayLoans{ //получаем все даты
+                   arrayDateLoans.append(iloan.paymentDate)
+               }
+               let filteredArrayDateLoans = Array(Set(arrayDateLoans)) // убираем дублирующиеся даты
+               
+               for dateLoan in filteredArrayDateLoans{ //цикл по датам
+                   var arrayLoansSection = Array<LaonSchedules>()
+                   var amountSection: Double = 0.0
+                   for loan in arrayLoans{ // цикл по выплатам
+                       if loan.paymentDate == dateLoan{ //если даты совпали
+                           arrayLoansSection.append(loan) //добавляем в выплату в массив
+                           amountSection += loan.paymentAmount ?? 0.0 //прибавляем в сумму для секций
+                       }
+                   }
+                   //print("dateLoan = ", dateLoan)
+                   let sectionAndCellLoan = ClassSectionAndItemLoan(sectionAmount: amountSection,
+                                                                    sectionDate: getDateFromString(strTime: (dateLoan ?? "") + " 12:00"),
+                                                                    arrayCellLoans: arrayLoansSection)
+       //            print("dateLoan = ", dateLoan!.replacingOccurrences(of: "-", with: " "))
+       //            let aaaa = getDateFromString(strTime: dateLoan!.replacingOccurrences(of: "-", with: " "))
+       //            print("dateLoanDate  = ", aaaa)
+       //            print("dateLoanDateStr  = ", getDateToDateMonthYear(date: aaaa!))
+                   
+                   self.arraySectionAndCellLoans.append(sectionAndCellLoan)
+               }
+               self.arraySectionAndCellLoans = self.arraySectionAndCellLoans.sorted(by: { $0.sectionDate > $1.sectionDate})
+               self.tableView.reloadData()
+           }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1

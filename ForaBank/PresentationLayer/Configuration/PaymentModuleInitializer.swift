@@ -19,3 +19,14 @@ class PaymentModuleInitializer: NSObject {
     }
 
 }
+class PaymentModuleInitializer1: NSObject {
+
+    //Connect with object on storyboard
+    @IBOutlet private weak var paymentsDetailsViewController: SBPViewController!
+
+    override func awakeFromNib() {
+        let configurator = PaymentModuleConfigurator()
+        configurator.configureModuleForView(view: paymentsDetailsViewController)
+    }
+
+}

@@ -10,7 +10,7 @@ import UIKit
 import Hero
 import RMMapper
 
-class SignInViewController: UIViewController, ContactsPickerDelegate {
+class SignInViewController: UIViewController{
 
     @IBOutlet weak var loginTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
@@ -23,37 +23,36 @@ class SignInViewController: UIViewController, ContactsPickerDelegate {
 
     var segueId: String? = nil
     var backSegueId: String? = nil
+    private let manager = UserManager()
 
+    
+      @IBAction func phoneNumberChanged(_ sender: UITextField) {
+            let updatedText = sender.text ?? ""
+            let cleanPhoneNumber = updatedText.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
+            let mask = "+X (XXX) XXX-XXXX"
+    //        if string.count + range.location > mask.count {
+    //            return false
+    //        }
 
-    @IBAction func contactList(_ sender: Any) {
-        let contactPickerScene = ContactsPicker(delegate: self, multiSelection: true, subtitleCellType: SubtitleCellValue.email)
-        let navigationController = UINavigationController(rootViewController: contactPickerScene)
-        self.present(navigationController, animated: true, completion: nil)
-
-    }
-    func contactPicker(_: ContactsPicker, didContactFetchFailed error: NSError) {
-        print("Failed with error \(error.description)")
-    }
-
-    func contactPicker(_: ContactsPicker, didSelectContact contact: Contact) {
-        print("Contact \(contact.displayName) has been selected")
-    }
-
-    func contactPickerDidCancel(_ picker: ContactsPicker) {
-        picker.dismiss(animated: true, completion: nil)
-        print("User canceled the selection")
-    }
-
-    func contactPicker(_ picker: ContactsPicker, didSelectMultipleContacts contacts: [Contact]) {
-        defer { picker.dismiss(animated: true, completion: nil) }
-        guard !contacts.isEmpty else { return }
-        print("The following contacts are selected")
-        for contact in contacts {
-            print("\(contact.displayName)")
+            var result = ""
+            var index = cleanPhoneNumber.startIndex
+            for ch in mask {
+                if index == cleanPhoneNumber.endIndex {
+                    break
+                }
+                if ch == "X" {
+                    result.append(cleanPhoneNumber[index])
+                    index = cleanPhoneNumber.index(after: index)
+                } else if ch == "+" || ch == "(" || ch == ")" || ch == "-" || ch == " " {
+                    result.append(ch)
+                } else {
+                    //                    return false
+                }
+            }
+            loginTextField.text = result
+    //        return false
         }
-
-    }
-
+    
 
     // MARK: - Actions
     @IBAction func backButtonClicked() {
@@ -70,28 +69,42 @@ class SignInViewController: UIViewController, ContactsPickerDelegate {
         foraPreloader.isHidden = false
         buttonSignIn.isHidden = true
         //buttonSignIn.changeEnabled(isEnabled: false)
-        NetworkManager.shared().login(login: self.loginTextField.text ?? "",
+        NetworkManager.shared().login(login: cleanNumber(number:self.loginTextField.text) ?? "",
                                       password: self.passwordTextField.text ?? "",
                                       completionHandler: { [unowned self] success, errorMessage in
                                           if success {
+                                            let user = ObjectUser()
+                                            user.email = "\(String(describing: cleanNumber(number: self.loginTextField.text ?? "")))@forabank.ru"
+                                               user.password = self.passwordTextField.text ?? ""
+                                            self.manager.login(user: user) { response in
+                                                 switch response {
+                                                 case .failure: print("Fail")
+                                                 case .success: print("Success")
+                                                 }
+                                               }
                                             self.foraPreloader.stopAnimating()
                                             self.foraPreloader.isHidden = true
                                             self.buttonSignIn.isHidden = false
                                             //self.buttonSignIn.changeEnabled(isEnabled: true)
-                                              self.performSegue(withIdentifier: "smsVerification", sender: self)
-                                              store.dispatch(createCredentials(login: self.loginTextField.text ?? "", pwd: self.passwordTextField.text ?? ""))
+                                           
+                                                self.performSegue(withIdentifier: "smsVerification", sender: self)
+                                                store.dispatch(createCredentials(login: self.loginTextField.text ?? "", pwd: self.passwordTextField.text ?? ""))
+
                                           } else {
-                                              AlertService.shared.show(title: "Неудача", message: errorMessage, cancelButtonTitle: "Ок", okButtonTitle: nil, cancelCompletion: nil, okCompletion: nil)
+                                              AlertService.shared.show(title: "Ошибка", message: errorMessage ?? "Повторите позднее", cancelButtonTitle: "Ок", okButtonTitle: nil, cancelCompletion: nil, okCompletion: nil)
                                             self.buttonSignIn.isHidden = false
                                             self.foraPreloader.stopAnimating()
                                             self.foraPreloader.isHidden = true
                                           }
                                       })
+
     }
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+//        loginTextField.text = "79626129268"
+//        passwordTextField.text = "34011alleNm!"
         _ = loginTextField.becomeFirstResponder()
     }
 
@@ -179,6 +192,8 @@ class SignInViewController: UIViewController, ContactsPickerDelegate {
             segueId = segue.identifier
             vc.segueId = segueId
             vc.backSegueId = segueId
+            vc.login = loginTextField.text
+            vc.password = passwordTextField.text
         }
     }
 }
@@ -187,5 +202,23 @@ class SignInViewController: UIViewController, ContactsPickerDelegate {
 extension SignInViewController{
     private func saveLoginAndPassword(_ login: String, _ password:String){
         
+    }
+}
+
+
+extension UIApplication {
+    class func topViewController(viewController: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
+        if let nav = viewController as? UINavigationController {
+            return topViewController(viewController: nav.visibleViewController)
+        }
+        if let tab = viewController as? UITabBarController {
+            if let selected = tab.selectedViewController {
+                return topViewController(viewController: selected)
+            }
+        }
+        if let presented = viewController?.presentedViewController {
+            return topViewController(viewController: presented)
+        }
+        return viewController
     }
 }

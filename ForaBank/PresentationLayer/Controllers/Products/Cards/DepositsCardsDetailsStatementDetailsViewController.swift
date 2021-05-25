@@ -46,6 +46,7 @@ class DepositsCardsDetailsStatementDetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.setupElement()
     }
     

@@ -15,6 +15,7 @@ class CustomTableView: UITableView {
         super.awakeFromNib()
         setContentInset()
         removeExtraEmptyCells()
+        
     }
 }
 

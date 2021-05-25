@@ -64,12 +64,16 @@ class CustomAlertView: UIViewController {
     @IBAction func onTapOkButton(_ sender: Any) {
         guard let newName = alertTextField.text else {return}
         if loan != nil{ //меняем название кредита
+            titleLabel.text = "Изменить название кредита"
             guard let loanID = loan?.loanID else {return}
+            
             resetCustomName(id: loanID, resetName: newName, productType: .LoanType)
         }else if deposit != nil{
+            titleLabel.text = "Изменить название вклада"
             guard let depositID = deposit?.id else {return}
             resetCustomName(id: depositID, resetName: newName, productType: .DepositType)
         }else if account != nil{
+            titleLabel.text = "Изменить название счета"
             guard let accountID = account?.id else {return}
             resetCustomName(id: Int(accountID), resetName: newName, productType: .AccauntType)
         }else{  //меняем название карты

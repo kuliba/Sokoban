@@ -26,7 +26,12 @@ class RegistrationPermissionsViewController: UIViewController, CAAnimationDelega
     @IBOutlet weak var faceIdDevice: UIView!
     @IBOutlet var biometricSwitches: [UISwitch]!
     @IBOutlet weak var passcodeSwitch: UISwitch!
-
+    let pushNotificationParamets = [
+    "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
+    "pushFCMtoken": FCMToken.fcmToken as Any,
+    "model": UIDevice().model,
+     "operationSystem": "IOS"
+    ] as [String : Any]
     // MARK: - Actions
 
     @IBAction func backButtonCLicked(_ sender: Any) {
@@ -360,15 +365,15 @@ private extension RegistrationPermissionsViewController {
         pageControl.pageIndicatorTintColor = UIColor(red: 220 / 255, green: 220 / 255, blue: 220 / 255, alpha: 1)
         pageControl.currentPageIndicatorTintColor = UIColor(red: 234 / 255, green: 68 / 255, blue: 66 / 255, alpha: 1)
 
-        let config = FlexiblePageControl.Config(
+        /*let config = FlexiblePageControl.Config(
             displayCount: 4,
             dotSize: 7,
             dotSpace: 6,
             smallDotSizeRatio: 0.2,
             mediumDotSizeRatio: 0.5
-        )
+        )*/
 
-        pageControl.setConfig(config)
+        //pageControl.setConfig(config)
         pageControl.setCurrentPage(at: 3)
     }
 

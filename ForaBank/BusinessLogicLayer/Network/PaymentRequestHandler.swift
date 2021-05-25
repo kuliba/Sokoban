@@ -11,14 +11,14 @@ import Foundation
 class PaymentRequestHandler {
     
     var amount: Double?
-    var completion: ((Bool, String?) -> Void)?
+    var completion: ((Bool, String?, DataClassPayment?) -> Void)?
     
-    init(amount: Double, completion: @escaping (Bool, String?) -> Void) {
+    init(amount: Double, completion: @escaping (Bool, String?,DataClassPayment?) -> Void) {
         self.amount = amount
         self.completion = completion
     }
     
-    func preparePayment(sourcePaymentOption: PaymentOptionType, destinaionPaymentOption: PaymentOptionType) {
+    func preparePayment(sourcePaymentOption: PaymentOptionType, destinaionPaymentOption: PaymentOptionType, prepareData: DataClassPayment?) {
         
         switch (sourcePaymentOption, destinaionPaymentOption) {
         case (.option(let sourceOption), .option(let destinationOption)):

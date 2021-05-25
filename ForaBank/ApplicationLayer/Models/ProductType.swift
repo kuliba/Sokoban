@@ -1,15 +1,12 @@
 //
 //  ProductType.swift
 //  ForaBank
-//
-//  Created by Бойко Владимир on 15.11.2019.
-//  Copyright © 2019 (C) 2017-2019 OОО "Бриг Инвест". All rights reserved.
-//
 
 import Foundation
 import Mapper
 
 enum ProductType: String, Comparable {
+//    case allProduct = "ALLPRODUCT"
     case card = "CARD"
     case account = "ACCOUNT"
     case deposit = "DEPOSIT"
@@ -25,6 +22,8 @@ enum ProductType: String, Comparable {
             return 2
         case .loan:
             return 3
+//        case .allProduct:
+//            return 4
         }
     }
 
@@ -46,6 +45,8 @@ enum ProductType: String, Comparable {
             return NSLocalizedString("Вклад", comment: "")
         case .loan:
             return NSLocalizedString("Кредит", comment: "")
+//        case .allProduct:
+//            return NSLocalizedString("Все продукты", comment: "")
         }
     }
 
@@ -60,6 +61,8 @@ enum ProductType: String, Comparable {
             return "Все вклады застрахованы в Системе страхования вкладов. Дополнительная информация по страхованию вкладов здесь."
         case .loan:
             return "АКБ "+"ФОРА-БАНК"+" (АО) предлагает доступные и выгодные для разных клиентских сегментов кредитные продукты."
+//        case .allProduct:
+//            return "Все продукты"
         }
     }
     
@@ -74,6 +77,8 @@ enum ProductType: String, Comparable {
             return "https://www.forabank.ru/private/deposits/"
         case .loan:
             return "https://www.forabank.ru/private/credits/"
+//        case .allProduct:
+//            return "https://cashback-card.forabank.ru/?metka=mp"
         }
     }
     
@@ -87,6 +92,8 @@ enum ProductType: String, Comparable {
             return NSLocalizedString("Вклады", comment: "")
         case .loan:
             return NSLocalizedString("Кредиты", comment: "")
+//        case .allProduct:
+//            return NSLocalizedString("Продукты", comment: "")
         }
     }
 
@@ -100,6 +107,8 @@ enum ProductType: String, Comparable {
             return "deposit-colored"
         case .loan:
             return "loan-colored"
+//        case .allProduct:
+//            return "card-colored"
         }
     }
 }

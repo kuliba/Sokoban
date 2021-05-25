@@ -22,17 +22,16 @@ struct DepositHistoryTransaction: Codable {
     let subvalue: String
 }
 
-class DepositsHistoryViewController: UIViewController {
+class DepositsHistoryViewController: UIViewController, UISearchBarDelegate, UINavigationControllerDelegate {
 
     // MARK: - Properties
     @IBOutlet weak var tableView: CustomTableView!
     
     let transitionAnimator = DepositsHistoryDetailsSegueAnimator()
-    //private let searchController = UISearchController(searchResultsController: nil)
-    let cellId = "DepositsHistoryCell"
     
+    let cellId = "DepositsHistoryCell"
+    var backgroundColor: UIColor?
     @IBOutlet weak var foraPreloader: RefreshView!
-    @IBOutlet weak var searchBar: UISearchBar!
     let decoder = JSONDecoder()
     var selectIndex: Int? = nil
     var selectedSection: Int? = nil
@@ -43,10 +42,13 @@ class DepositsHistoryViewController: UIViewController {
             self.tableView.reloadData()
         }
     }
-    
-    var sortedTransactionsStatementFull = [DatedTransactionsStatement]()
-    
-    
+    var filteredCandies: [DatedTransactionsStatement] = []
+    var isSearchBarEmpty: Bool {
+      return  true
+    }
+    var isFiltering: Bool {
+      return !isSearchBarEmpty
+    }
     var refreshView: RefreshView!
     
     var tableViewRefreshControl: UIRefreshControl = {
@@ -56,44 +58,50 @@ class DepositsHistoryViewController: UIViewController {
         refreshControl.addTarget(self, action: #selector(refreshTableView), for: .valueChanged)
         return refreshControl
     }()
+//    @IBOutlet weak var searchBar: UISearchBar!
     
     
     func prepareUI() {
         // Adding 'tableViewRefreshControl' to tableView
         tableView.refreshControl = tableViewRefreshControl
         // Getting the nib from bundle
-        getRefereshView()
+//        getRefereshView()
     }
     
     @objc func refreshTableView() {
-          refreshView.startAnimation()
+//          refreshView.startAnimation()
       NetworkManager.shared().getSortedFullStatement { [weak self] (success, fullStatement, error) in
                    print("DepositsHistoryViewController getSortedFullStatement \(success)")
                    if success {
                        self?.sortedTransactionsStatement = fullStatement ?? [DatedTransactionsStatement]()
                    }
                
-            
-        self?.refreshView.stopAnimation()
+        
+//        self?.refreshView.stopAnimation()
         self?.tableViewRefreshControl.endRefreshing()
         }
-
-        
       }
     
-    func getRefereshView() {
-        if let objOfRefreshView = Bundle.main.loadNibNamed("RefreshView", owner: self, options: nil)?.first as? RefreshView {
-            // Initializing the 'refreshView'
-            refreshView = objOfRefreshView
-            // Giving the frame as per 'tableViewRefreshControl'
-            refreshView.frame = tableViewRefreshControl.frame
-            // Adding the 'refreshView' to 'tableViewRefreshControl'
-            tableViewRefreshControl.addSubview(refreshView)
-        }
+//    func getRefereshView() {
+//        if let objOfRefreshView = Bundle.main.loadNibNamed("RefreshView", owner: self, options: nil)?.first as? RefreshView {
+//            // Initializing the 'refreshView'
+//            refreshView = objOfRefreshView
+//            // Giving the frame as per 'tableViewRefreshControl'
+//            refreshView.frame = tableViewRefreshControl.frame
+//            // Adding the 'refreshView' to 'tableViewRefreshControl'
+//            tableViewRefreshControl.addSubview(refreshView)
+//        }
+//    }
+    
+    
+    func filterContentForSearchText(_ searchText: String,
+                                    category: DatedTransactionsStatement? = nil) {
+        filteredCandies = sortedTransactionsStatement.filter { (candy: DatedTransactionsStatement) -> Bool in
+            return (candy.transactions as AnyObject).contains(searchText.lowercased())
+      }
+      
+      tableView.reloadData()
     }
-    
-    
-    
 
   
     
@@ -108,26 +116,63 @@ class DepositsHistoryViewController: UIViewController {
 
     }
     
+    @IBOutlet weak var headerView: UIView!
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpTableView()
+//        searchBar.setBackgroundImage(UIImage(), for: .any, barMetrics: .default)
+          let searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 50))
+                 searchBar.delegate = self
+                 searchBar.placeholder = "Поиск"
+            searchBar.backgroundColor = .white
+                 tableView.tableHeaderView = searchBar
+//        headerView.backgroundColor = .red
+        view.backgroundColor = .white
+//            let searchController = UISearchController(searchResultsController: nil)
+//            searchController.searchResultsUpdater = self
+//            searchController.obscuresBackgroundDuringPresentation = false
+//            searchController.searchBar.placeholder = "Search Candies"
+//            navigationItem.searchController = searchController
+
+        
+     
+//        var firstOperation: [SBPModelPayment] = [SBPModelPayment(name: "Перевод через СБП", amount: 1000, payeeName: "Иванов Иван И.", resultOperation: "ok", status: "ok", date: "16.07.20", accountWriteOff: "-100", payeer: "+7 (926) 612-92-68", idNumber: "ПромсвязьБанк", bankPayeer: "ПромсвязьБанк", message: "Коле на др", idOperation: "xxxxxxxxx")]
+//        var secondOperation: DepositHistoryTransaction = DepositHistoryTransaction(imageName: "sbpLogo", title: "Перевод по СБП", subtitle: "Иванов Иван И.", value: "-1000", subvalue: "-100")
+//        let dateOperation: DatedTransactionsStatement = DatedTransactionsStatement(changeOfBalanse: -1000, date: Date(), transactions: [TransactionStatement(from: <#Decoder#>)])
+//        sortedTransactionsStatement.append(dateOperation)
         foraPreloader.startAnimation()
         NetworkManager.shared().getSortedFullStatement { [weak self] (success, fullStatement, error) in
             print("DepositsHistoryViewController getSortedFullStatement \(success)")
             if success {
-                self!.sortedTransactionsStatement = fullStatement ?? [DatedTransactionsStatement]()
-                self!.sortedTransactionsStatementFull = fullStatement ?? [DatedTransactionsStatement]()
+                self?.sortedTransactionsStatement = fullStatement ?? [DatedTransactionsStatement]()
             }
         }
-        view.backgroundColor = .white
+        
+        view.backgroundColor = backgroundColor
         
         
        if isModal == false {
                 prepareUI()
  }
-        
+     
+        definesPresentationContext = true
     }
+    
+
+
+
+
+
+    @IBAction func backButton(_ sender: UIButton) {
+        self.dismiss(animated: true, completion: nil )
+        navigationController?.popViewController(animated: true)
+        print("Hola")
+    }
+    
+    
+    
+
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
@@ -141,6 +186,7 @@ class DepositsHistoryViewController: UIViewController {
 //        print("prepare for segue \(segue.identifier ?? "nil")")
         if let destination = segue.destination as? DepositsHistoryDetailsViewController {
             destination.transaction = sortedTransactionsStatement[selectedSection!].transactions[selectIndex!]
+            
                }
     }
 
@@ -150,11 +196,20 @@ class DepositsHistoryViewController: UIViewController {
 extension DepositsHistoryViewController: UITableViewDataSource, UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
+        if isFiltering{
+        return filteredCandies.count
+        }
         return sortedTransactionsStatement.count
-    }
+        
+        }
+
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return sortedTransactionsStatement[section].transactions.count
+        if isFiltering{
+            return filteredCandies[section].transactions.count
+               }
+                return sortedTransactionsStatement[section].transactions.count
+               
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -162,10 +217,16 @@ extension DepositsHistoryViewController: UITableViewDataSource, UITableViewDeleg
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? DepositsHistoryCell else {
             fatalError()
         }
+        let transactonStatement: TransactionStatement
         
+        if isFiltering {
+            transactonStatement = filteredCandies[indexPath.section].transactions[indexPath.row]
+        } else {
+          transactonStatement = sortedTransactionsStatement[indexPath.section].transactions[indexPath.row]
+        }
 //        cell.imageView?.image = UIImage(named: data_[indexPath.section].transactions[indexPath.row].imageName)
 //
-        cell.titleLabel.text = sortedTransactionsStatement[indexPath.section].transactions[indexPath.row].comment
+        cell.titleLabel.text = transactonStatement.comment
 //        cell.subTitleLabel.text = data_[indexPath.section].transactions[indexPath.row].subtitle
 //
 //        cell.descriptionLabel.text = data_[indexPath.section].transactions[indexPath.row].value
@@ -175,9 +236,13 @@ extension DepositsHistoryViewController: UITableViewDataSource, UITableViewDeleg
         cell.iconImageView.layer.cornerRadius = cell.iconImageView.bounds.width/2
         cell.iconImageView.layer.masksToBounds = true
         if sortedTransactionsStatement[indexPath.section].transactions[indexPath.row].operationType?.compare("DEBIT", options: .caseInsensitive, range: nil, locale: nil) == ComparisonResult.orderedSame {
-            cell.iconImageView.backgroundColor = .red
+            cell.iconImageView.backgroundColor = UIColor(hexFromString: "ED433D")
+//            cell.iconImageView.image = UIImage(named: "feed_option_paymentstransactions")
+            cell.iconImageView.sizeToFit()
         } else if sortedTransactionsStatement[indexPath.section].transactions[indexPath.row].operationType?.compare("CREDIT", options: .caseInsensitive, range: nil, locale: nil) == ComparisonResult.orderedSame {
             cell.iconImageView.backgroundColor = UIColor(red: 4/255, green: 160/255, blue: 133/255, alpha: 1)
+//            cell.iconImageView.image = UIImage(named: "feed_option_exchangerate")
+            cell.iconImageView.sizeToFit()
         }
        
         cell.subTitleLabel.isHidden = true
@@ -186,18 +251,30 @@ extension DepositsHistoryViewController: UITableViewDataSource, UITableViewDeleg
         if let amount = sortedTransactionsStatement[indexPath.section].transactions[indexPath.row].amount {
             //                cell.descriptionLabel.text = String.init(format: "%.2d", amount)
             let f = NumberFormatter()
-            f.numberStyle = .currency
-            f.locale = Locale(identifier: "ru_RU")
+//            f.numberStyle = .currency
+//            switch transactonStatement.clientCurrencyCode { //определяем валюту
+//                    case "RUB":
+//                    f.locale = Locale(identifier: "ru_RU")
+//                    case "USD":
+//                    f.locale = Locale(identifier: "en_US")
+//                    case "EUR":
+//                    f.locale = Locale(identifier: "de_DE")
+//                    default: //если не нашли подходящую валюту
+//                    f.locale = Locale(identifier: "ru_RU")
+//
+//                    }
+            
+//            f.locale = Locale(identifier: "\(String(describing: getSymbol(forCurrencyCode: transactonStatement.clientCurrencyCode ?? "")))")
             f.usesGroupingSeparator = true
             f.currencyGroupingSeparator = " "
             if let amountString = f.string(from: NSNumber(value: amount)),
                 amountString.count > 0{
                 let splited = amountString.split(separator: ",")
-                let attributedStr = NSMutableAttributedString.init(string: (sortedTransactionsStatement[indexPath.section].transactions[indexPath.row].operationType?.compare("CREDIT", options: .caseInsensitive, range: nil, locale: nil) == ComparisonResult.orderedSame ? "+":"-") + amountString)
-                attributedStr.addAttributes([NSAttributedString.Key.font : UIFont.init(name: "Roboto-Regular", size: 13) ?? UIFont.systemFont(ofSize: 13)],
-                                            range:NSRange(location: 0, length: splited.first!.count))
-                attributedStr.addAttributes([NSAttributedString.Key.font : UIFont.init(name: "Roboto-Light", size: 13) ?? UIFont.systemFont(ofSize: 13)],
-                                            range:NSRange(location: splited.first!.count+1, length: splited.last!.count))
+                let attributedStr = NSMutableAttributedString.init(string: (sortedTransactionsStatement[indexPath.section].transactions[indexPath.row].operationType?.compare("CREDIT", options: .caseInsensitive, range: nil, locale: nil) == ComparisonResult.orderedSame ? "+":"-") + amountString + " " + getSymbol(forCurrencyCode: transactonStatement.clientCurrencyCode ?? "")!)
+//                attributedStr.addAttributes([NSAttributedString.Key.font : UIFont.init(name: "Roboto-Regular", size: 13) ?? UIFont.systemFont(ofSize: 13)],
+//                                            range:NSRange(location: 0, length: splited.first!.count))
+//                attributedStr.addAttributes([NSAttributedString.Key.font : UIFont.init(name: "Roboto-Light", size: 13) ?? UIFont.systemFont(ofSize: 13)],
+//                                            range:NSRange(location: splited.first!.count, length: splited.last!.count))
                 cell.descriptionLabel.attributedText = attributedStr
             }
             if sortedTransactionsStatement[indexPath.section].transactions[indexPath.row].operationType?.compare("CREDIT", options: .caseInsensitive, range: nil, locale: nil) == ComparisonResult.orderedSame {
@@ -217,6 +294,7 @@ extension DepositsHistoryViewController: UITableViewDataSource, UITableViewDeleg
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectIndex = indexPath.item
         selectedSection = indexPath.section
+//        performSegue(withIdentifier: "sbpDetails", sender: self)
         performSegue(withIdentifier: "DepositsHistoryDetailsViewController", sender: self)
         
         
@@ -281,11 +359,10 @@ private extension DepositsHistoryViewController {
     
     func setUpTableView() {
         setTableViewDelegateAndDataSource()
-        setTableViewContentInsets()
+            setTableViewContentInsets()
         // setAutomaticRowHeight()
         registerNibCell()
         setSearchView()
-        //setupSearchBar()
     }
     
     func setTableViewContentInsets() {
@@ -308,78 +385,15 @@ private extension DepositsHistoryViewController {
     }
     
     func setSearchView() {
-//        guard let searchCell = UINib(nibName: "DepositsSearchCell", bundle: nil)
-//            .instantiate(withOwner: nil, options: nil)[0] as? UIView else {
-//                return
-//        }
-//        let searchView = UIView(frame: searchCell.frame)
-//        searchView.addSubview(searchCell)
-//        tableView.tableHeaderView = searchView
-        //searchBar.delegate = self as! UISearchBarDelegate
-        searchBar.delegate = self
-        searchBar.searchTextField.textColor = .black
-        searchBar.searchTextField.inputAccessoryView = DoneButtonOnKeyboard()
-        searchBar.backgroundImage = UIImage()
+
     }
-    
-    func DoneButtonOnKeyboard() -> UIToolbar{
-        let doneToolbar: UIToolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 320, height: 50))
-        doneToolbar.barStyle = UIBarStyle.default
-        
-        let flexSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
-        let done: UIBarButtonItem = UIBarButtonItem(title: "Закрыть", style: UIBarButtonItem.Style.done, target: self, action: #selector(doneButtonAction))
-        
-        var items = [UIBarButtonItem]()
-        items.append(flexSpace)
-        items.append(done)
-        
-        doneToolbar.items = items
-        doneToolbar.sizeToFit()
-        
-        return doneToolbar
-        
-    }
-    
-    @objc func doneButtonAction(){
-        self.searchBar.endEditing(true)
-    }
-    
 }
 
-//MARK: SearchBar
-extension DepositsHistoryViewController: UISearchResultsUpdating, UISearchBarDelegate{
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        self.searchBar.endEditing(true)
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
-        if searchText.isEmpty{
-            self.sortedTransactionsStatement = self.sortedTransactionsStatementFull
-            return
-        }
-        
-        self.sortedTransactionsStatement.removeAll()
-        for i in sortedTransactionsStatementFull{
-            let arrayI = i.transactions
-            var arraySortedTransactions = Array<TransactionStatement>()
-            for y in arrayI{
-                if String(y.accountNumber ?? "").contains("\(searchText)")
-                    || String(y.amount ?? 0.0).contains("\(searchText)")
-                    || String(y.comment ?? "").contains("\(searchText)"){
-                    arraySortedTransactions.append(y)
-                }
-            }
-            if arraySortedTransactions.count > 0{
-                let filterI = DatedTransactionsStatement(changeOfBalanse: i.changeOfBalanse, date: i.date, transactions: arraySortedTransactions)
-                self.sortedTransactionsStatement.append(filterI)
-            }
-            arraySortedTransactions.removeAll()
-        }
-    }
-    
+
+extension DepositsHistoryViewController: UISearchResultsUpdating{
     func updateSearchResults(for searchController: UISearchController) {
-        print("updateSearchResults")
+        let searchBar = searchController.searchBar
+        filterContentForSearchText(searchBar.text!)
+    
     }
 }

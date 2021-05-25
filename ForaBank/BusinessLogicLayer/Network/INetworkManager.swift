@@ -19,7 +19,11 @@ public enum productTypes {
 
 protocol AuthServiceProtocol {
     func isSignedIn(completionHandler: @escaping (_ success: Bool) -> Void)
+    func activeCsrf(completionHandler: @escaping (_ success: Bool) -> Void)
+
     func csrf(headers: HTTPHeaders,
+              completionHandler: @escaping (_ success: Bool, _ headers: HTTPHeaders?) -> Void)
+    func keyExchange(headers: HTTPHeaders, key: String,
               completionHandler: @escaping (_ success: Bool, _ headers: HTTPHeaders?) -> Void)
     func loginDo(headers: HTTPHeaders,
                  login: String,
@@ -39,7 +43,6 @@ protocol AuthServiceProtocol {
     func checkVerificationCode(headers: HTTPHeaders,
                                code: String,
                                completionHandler: @escaping (_ success: Bool) -> Void)
-    func getVerificationCode(headers: HTTPHeaders, completionHandler: @escaping (_ success: Bool) -> Void)
     func checkCodeResetPassword(headers: HTTPHeaders,
                                 code: String,
                                 completionHandler: @escaping (_ success: Bool) -> Void)
@@ -84,13 +87,17 @@ protocol SaveCardNameProtocol {
 protocol IPaymetsApi {
     func getPaymentsList(completionHandler: @escaping (_ success: Bool, _ payments: [Operations]?) -> Void)
     func allPaymentOptions(completionHandler: @escaping (Bool, [PaymentOption]?) -> Void)
-    func prepareCard2Card(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void)
-    func prepareCard2Phone(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void)
-    func prepareCard2Account(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void)
-    func prepareAccount2Phone(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void)
-    func prepareAccount2Card(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void)
-    func prepareAccount2Account(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?) -> Void)
+    func prepareCard2Card(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?, DataClassPayment?) -> Void)
+    func prepareCard2Phone(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?, DataClassPayment?) -> Void)
+    func prepareCard2Account(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?, DataClassPayment?) -> Void)
+    func prepareAccount2Phone(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?, DataClassPayment?) -> Void)
+    func prepareAccount2Card(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?, DataClassPayment?) -> Void)
+    func prepareAccount2Account(from sourceNumber: String, to destinationNumber: String, amount: Double, completionHandler: @escaping (Bool, String?, DataClassPayment?) -> Void)
     func makeCard2Card(code: String, completionHandler: @escaping (Bool) -> Void)
+}
+
+protocol paymentBankListProtocol {
+    func getBankList(headers: HTTPHeaders, completionHandler: @escaping (_ success: Bool,_ bankList: [BLBankList], String?) -> Void)
 }
 
 protocol AccountsServiceProtocol {
@@ -99,7 +106,7 @@ protocol AccountsServiceProtocol {
 }
 protocol LoanPaymentScheduleProtocol {
     func getLoansPayment(headers: HTTPHeaders,
-                         completionHandler: @escaping (_ success: Bool, _ obligations: [LaonSchedules]?) -> Void)
+                         completionHandler: @escaping (_ loanId: String?, _ success: Bool, _ obligations: [LaonSchedules]?) -> Void)
 }
 
 protocol HistoryServiceProtocol {
@@ -110,7 +117,7 @@ protocol HistoryServiceProtocol {
                            completionHandler: @escaping (_ success: Bool, _ obligations: [DatedCardTransactionsStatement]?) -> Void)
     
     func getLoanPaymentSchedule(headers: HTTPHeaders, id : Int, name: String,
-                                completionHandler: @escaping (_ success: Bool, _ obligations: [DatedCardTransactionsStatement]?) -> Void)
+                                completionHandler: @escaping (_ loanId: String, _ success: Bool, _ obligations: [DatedCardTransactionsStatement]?) -> Void)
 }
 
 protocol LoansServiceProtocol {
@@ -144,6 +151,24 @@ protocol MapServiceProtocol {
 protocol best2PayProtocol {
     func best2Pay(headers: HTTPHeaders,
                   completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void)
+}
+protocol BlockUserProtocolService {
+    func blockUser(headers: HTTPHeaders,
+                  completionHandler: @escaping (_ success: Bool, _ errorMessage: String?) -> Void)
+}
+protocol GetOwnerPhoneNumberProtocol{
+    func getOwnerPhoneNumber(headers: HTTPHeaders,phoneNumber: String?, completionHandler: @escaping ( _ success: Bool?, _ errorMessage: String?) -> Void)
+}
+
+protocol AnywayPaymentProtocol {
+    func AnywayPayment(headers: HTTPHeaders, completionHandler: @escaping (_ success: Bool?,_ data: [AnywayPaymentInputs?],_ errorMessage: String?) -> Void)
+    func anywayPaymentBegin(headers: HTTPHeaders, numberCard: String?, puref: String?, completionHandler: @escaping (_ success: Bool,_ data: AnywayPaymentBegin?,_ errorMessage: String?) -> Void)
+    func AnywayPaymentFinal(memberId: String?, amount: String?, numberPhone: String?, parameters: [Additional]?, headers: HTTPHeaders, completionHandler: @escaping (Bool?, [AnywayPaymentInputs?], String?) -> Void)
+    func anywayPaymentMake(code: String, completionHandler: @escaping (Bool, String?) -> Void)
+    func findBankList(headers: HTTPHeaders, completionHandler: @escaping (Bool, BLBankList?, String) -> Void)}
+
+protocol PersonServiceProtocol {
+    func personService(header: HTTPHeaders, completionHandler: @escaping (_ success: Bool?, _ data:FPerson, _ errorMessage: String?) -> Void)
 }
 
 protocol RegServiceProtocol {
@@ -184,6 +209,21 @@ protocol StatementServiceProtocol {
                                 completionHandler: @escaping (_ success: Bool, _ obligations: [DatedTransactionsStatement]?, _ errorMessage: String?) -> Void)
 }
 
+protocol OperationProtocolService {
+    func getOperations(headers: HTTPHeaders,
+    completionHandler: @escaping (_ success: Bool, _ operations: OperationsList?, _ errorMessage: String?) -> Void)
+}
+
+protocol UserSettingsProtocolService {
+    
+    func addSettings(parameters: [String: Any], headers: HTTPHeaders,
+    completionHandler: @escaping (_ success: Bool) -> Void)
+    func setSettings(parameters: [String: Any], headers: HTTPHeaders,
+    completionHandler: @escaping (_ success: Bool) -> Void)
+    func getSettings(headers: HTTPHeaders,
+    completionHandler: @escaping (_ success: Bool, _ operations: GetUserSettings?, _ errorMessage: String?) -> Void)
+}
+
 //MARK: - Products
 protocol IProductsApi {
     func getProducts(completionHandler: @escaping (_ success: Bool, _ products: [Product]?) -> Void)
@@ -193,4 +233,15 @@ protocol IProductsApi {
 protocol CurrencysProtocol {
     func getABSCurrencyRates(headers: HTTPHeaders, currencyOne: String, currencyTwo: String, rateTypeID: Int, completionHandler: @escaping (_ success: Bool, _ currencysCB: Double?) -> Void)
     func getExchangeCurrencyRates(headers: HTTPHeaders, currency: String, completionHandler: @escaping (_ success: Bool, _ currency: Currency?) -> Void)
+}
+
+protocol PushNotificationProtocol {
+    func installPushDevice(headers: HTTPHeaders, parameters: [String : Any], auth: Bool, completionHandler: @escaping (_ success: Bool, _ errorMessage: String) -> Void)
+    func checkPushDevice(headers: HTTPHeaders, parameters: [String : Any], auth: Bool , completionHandler:  @escaping  (_ success: Bool, _ errorMessage: String) -> Void)
+    func uninstallPushDevice(headers: HTTPHeaders, completionHandler:  @escaping  (_ success: Bool, _ errorMessage: String) -> Void)
+    
+
+}
+protocol getVerificationCodeProtocol {
+    func getVerificationCode(headers: HTTPHeaders, completionHandler: @escaping (_ success: Bool, _ errorMessage: String) -> Void)
 }

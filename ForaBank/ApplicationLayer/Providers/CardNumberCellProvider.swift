@@ -1,16 +1,13 @@
-//
-//  CardNumberCellProvider.swift
-//  ForaBank
-//
-//  Created by Бойко Владимир on 03/10/2019.
-//  Copyright © 2019 (C) 2017-2019 OОО "Бриг Инвест". All rights reserved.
-//
+
 
 import Foundation
 
 class CardNumberCellProvider: NSObject, ITextInputCellProvider {
+    
+//    var segueId: String?
+    
     var recipientType: RecipientType = .byCartNumber
-    let iconName = "feed_option_cards"
+    let iconName = "card-colored"
     let placeholder = "По номеру карты"
     let charactersMaxCount = 19
     let keyboardType: UIKeyboardType = .numberPad

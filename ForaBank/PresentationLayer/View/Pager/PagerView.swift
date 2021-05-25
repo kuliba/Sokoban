@@ -1,10 +1,6 @@
 //
 //  PagerView.swift
-//  ForaBank
-//
-//  Created by Бойко Владимир on 01/10/2019.
-//  Copyright © 2019 (C) 2017-2019 OОО "Бриг Инвест". All rights reserved.
-//
+
 
 import UIKit
 import FSPagerView
@@ -23,7 +19,7 @@ class PagerView: UIView {
     }
     
 
-
+    var currentBlock: Bool?
     var configurations = [ICellConfigurator]()
     var currentIndex: Int {
         return pagerView.currentIndex
@@ -53,11 +49,16 @@ class PagerView: UIView {
 
         self.pagerView.itemSize = FSPagerView.automaticSize
     }
-
+    func cleanPager(){
+        
+    }
+    
     func setConfig(config: [ICellConfigurator]) {
+        config[0].currentBlock = currentBlock
         configurations = config
         pageControl.numberOfPages = configurations.count
         pagerView.reloadData()
+        
     }
 }
 

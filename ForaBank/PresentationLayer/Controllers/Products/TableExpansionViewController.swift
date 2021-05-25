@@ -23,7 +23,7 @@ class TableExpansionViewController: UIViewController {
 
         func viewDidAppear(_ animated: Bool) {
                   super.viewDidAppear(animated)
-            NetworkManager.shared().getLoansPayment { (success, items) in
+            NetworkManager.shared().getLoansPayment { (loan, success, items) in
                              if success {
                                  self.items = items ?? []
                              }

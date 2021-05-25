@@ -1,27 +1,20 @@
-//
-//  AccountNumberCellProvider.swift
-//  ForaBank
-//
-//  Created by Бойко Владимир on 08.10.2019.
-//  Copyright © 2019 (C) 2017-2019 OОО "Бриг Инвест". All rights reserved.
-//
+
 
 import Foundation
 
 class AccountNumberCellProvider: NSObject, ITextInputCellProvider {
     var recipientType: RecipientType = .byAccountNumber
-    
+//    var segueId: String?
     var textField: String = ""
     
 
-    let iconName = "feed_option_accounts"
+    let iconName = "feed_current_account_logo"
     let placeholder = "По номеру счёта"
     let charactersMaxCount = 24
     let keyboardType: UIKeyboardType = .numberPad
     let isActiveRigthTF = false
 
     var isLoading: Bool = false
-
     func getData(completion: ([IPresentationModel]) -> ()) {
 
     }

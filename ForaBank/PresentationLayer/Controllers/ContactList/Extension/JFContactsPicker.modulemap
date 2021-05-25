@@ -1,6 +1,0 @@
-framework module JFContactsPicker {
-  umbrella header "JFContactsPicker-umbrella.h"
-
-  export *
-  module * { export * }
-}

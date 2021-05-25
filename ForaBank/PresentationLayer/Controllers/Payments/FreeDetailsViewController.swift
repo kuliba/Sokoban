@@ -27,15 +27,28 @@ protocol FreeDetailsViewControllerDelegate {
 }
 
 
-class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellConfiguratorDelegate, FirstViewControllerDelegate {
+class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellConfiguratorDelegate, FirstViewControllerDelegate, DataEnteredDelegate {
+    
+    func userDidEnterInformation(array: [String]) {
+           arrayData = array
+       }
+    var arrayData = [String]()
+    
     func update(text: Double) {
         comissions = 30.0
     }
-    
+  
    
     
-
+    
+      @IBAction func scanButton(_ sender: Any) {
+         
+      performSegue(withIdentifier: "scanFromFreePayment", sender: nil)
+      }
  
+
+    
+    
     @IBOutlet weak var accountNumberNon: UILabel!
     
 
@@ -76,6 +89,7 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
        }
     
 
+    @IBOutlet weak var indicatorView: UIView!
     @IBOutlet weak var sourcePagerView: PagerView!
     @IBOutlet weak var numberAcoount: CustomTextField!
     @IBOutlet weak var kppBank: CustomTextField!
@@ -123,9 +137,9 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
     var destinationConfigurations: [ICellConfigurator]?
     var delegate: FreeDetailsViewControllerDelegate?
     var remittanceSourceView: RemittanceOptionView!
-     var remittanceDestinationView: RemittanceOptionView!
-     var selectedViewType: Bool = false //false - source; true - destination
-     var activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
+    var remittanceDestinationView: RemittanceOptionView!
+    var selectedViewType: Bool = false //false - source; true - destination
+    var activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
     var sourceConfig: Any?
     var destinationConfig: Any?
     var destinationValue: Any?
@@ -134,6 +148,32 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
     var newName: String? = nil
     var id: String? = nil
 
+    
+         override func viewDidAppear(_ animated: Bool) {
+                super.viewWillAppear(animated)
+        //        levelProgress = appDelegate.levelProgress
+                print("\(arrayData)")
+            if arrayData.isEmpty == false {
+                bikBank.text = self.arrayData[3]
+    //            innBank.text =
+    //            comment.text =
+    //            numberAcoount.text =
+                bankName.text = self.arrayData[2]
+    //            kppBank.text = self.arrayData[3]
+                guard var sum: String =  self.arrayData[6] as? String else {
+                    return
+                }
+                sum.removeLast(2)
+                amountTextField.text = sum
+                numberAcoount.text = self.arrayData[1]
+                comment.text = self.arrayData[0]
+                innBank.text = self.arrayData[5]
+                
+
+
+            }
+            }
+    
     @IBOutlet weak var bankName: UILabel!
     @IBAction func bikTextField(_ sender: Any) {
         let bicBank: String = self.bikBank.text ?? "123"
@@ -156,8 +196,15 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
     @IBOutlet weak var kppLabel: UILabel!
     @IBOutlet weak var innCompany: UILabel!
   
+    
     @IBAction func innCompany(_ sender: Any) {
-        let bicBank: String = self.innBank.text ?? "123"
+       
+        var bicBank: String = self.innBank.text ?? "123"
+
+        if arrayData.isEmpty == false {
+            bicBank = self.arrayData[2]
+        }
+       
        
         if innBank.text?.count == 10{
             NetworkManager.shared().getSuggestCompany(bicBank: bicBank) { [weak self] (success, cards, bicBank) in
@@ -166,7 +213,7 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
                 if cards?.count != 0{
                 self?.innCompany.text = cards?[0].value
                 self?.kppBank.text = cards?[0].kpp
-            }
+                }
             }
             innCompany.isHidden = false
             bankName.isHidden = false
@@ -208,22 +255,31 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
         }
     }
     
+    
+    @IBOutlet var continueButton: ButtonRounded!
     @IBAction func paymentCompany(_ sender: Any) {
-        
-        if bikBank.text == "" && innBank.text == "" &&  numberAcoount.text == "" && comment.text == ""{
+        indicatorView.isHidden = false
+        if bikBank.text!.isEmpty || innBank.text == "" ||  numberAcoount.text == "" || comment.text == "" || kppBank.text == ""{
             let alert = UIAlertController(title: "Заполните все поля", message: "", preferredStyle: UIAlertController.Style.alert)
              alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-            
+            indicatorView.isHidden = true
             self.present(alert, animated: true, completion: nil)
         } else {
                // either textfield 1 or 2's text is empty
            
         delegate?.didPressPrepareButton()
+            self.continueButton.isEnabled = false
+            self.continueButton.alpha = 0.5
         let numberCard = self.sourceValue as! PaymentOption
         let numberPayer = numberCard.number
         let comission = comissions
-    
-        NetworkManager.shared().paymentCompany( numberAcoount: numberAcoount.text! , amount: amountTextField.text!,  kppBank: kppBank.text!, payerCard: numberPayer, innBank: innBank.text!, bikBank: bikBank.text!, comment: comment.text!, nameCompany: cards[0].value ?? "Банк не определен",comission:comission, completionHandler: { [weak self] success, errorMessage,comissions  in
+            var nameCompany = String()
+            if cards.isEmpty == false{
+                nameCompany = cards[0].value!
+            } else {
+                nameCompany = "Банк не определен"
+            }
+            NetworkManager.shared().paymentCompany( numberAcoount: numberAcoount.text! , amount: amountTextField.text!,  kppBank: kppBank.text!, payerCard: numberPayer, innBank: innBank.text!, bikBank: bikBank.text!, comment: comment.text!, nameCompany: nameCompany ,comission:comission, completionHandler: { [weak self] success, errorMessage,comissions  in
                 if success {
               
                            let storyboard = UIStoryboard(name: "Payment", bundle: Bundle.main)
@@ -235,14 +291,19 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
                     self?.delegate?.didPressPaymentButton()
                     
                     self?.performSegue(withIdentifier: "regSmsVerification", sender: comissions)
-                    
+                    self?.continueButton.alpha = 1
+                    self?.continueButton.isEnabled = true
+                    self?.indicatorView.isHidden = true
                 } else {
                     let alert = UIAlertController(title: "Неудача", message: errorMessage, preferredStyle: UIAlertController.Style.alert)
                     alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
                    
                     self?.present(alert, animated: true, completion: nil)
+                    self?.continueButton.alpha = 1
+                    self?.continueButton.isEnabled = true
                     
                 }
+                self?.indicatorView.isHidden = true
             })
      
         }
@@ -250,6 +311,8 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
     
     
 
+    @IBOutlet weak var activityIndicatorView: ActivityIndicatorView!
+    
     
 
     
@@ -260,8 +323,9 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
   
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        indicatorView.isHidden = true
         amountTextField.delegate = self
+        activityIndicatorView.startAnimation()
   
         // Do any additional setup after loading the view.
   
@@ -277,10 +341,10 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
                       
                  }
 
-
-        
+        if arrayData.isEmpty == false{
+        comment.text = arrayData[2]
     
-        
+        }
         
     }
  
@@ -298,6 +362,9 @@ class FreeDetailsViewController: UIViewController, UITextFieldDelegate, ICellCon
                        dest.amountText = amountTextField.text
                         dest.commentText = comment.text ?? "Comment not found"
                      }
+                if segue.identifier == "scanFromFreePayment", let secondViewController = segue.destination as? ScannerViewController  {
+                          secondViewController.delegate = self
+                      }
                  }
 
     
@@ -374,7 +441,10 @@ private extension PaymentsDetailsViewController {
 
 
 extension FreeDetailsViewController: PaymentDetailsPresenterDelegate {
-    func didFinishPreparation(success: Bool) {
+    func didPrepareData(data: DataClassPayment?) {
+        
+    }
+    func didFinishPreparation(success: Bool, data: DataClassPayment?) {
         if success {
             performSegue(withIdentifier: "fromPaymentToPaymentVerification", sender: self)
             
@@ -397,30 +467,30 @@ extension FreeDetailsViewController: PaymentDetailsPresenterDelegate {
 
 
 
-extension UITextField {
-
-    @IBInspectable var paddingLeft: CGFloat {
-        get {
-            return leftView!.frame.size.width
-        }
-        set {
-            let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: newValue, height: frame.size.height))
-            leftView = paddingView
-            leftViewMode = .always
-        }
-    }
-
-    @IBInspectable var paddingRight: CGFloat {
-        get {
-            return rightView?.frame.size.width ?? UIScreen.main.bounds.size.width
-        }
-        set {
-            let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: newValue, height: frame.size.height))
-            rightView = paddingView
-            rightViewMode = .always
-        }
-    }
-}
+//extension UITextField {
+//
+//    @IBInspectable var paddingLeft: CGFloat {
+//        get {
+//            return leftView?.frame.size.width ?? 50
+//        }
+//        set {
+//            let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: newValue, height: frame.size.height))
+//            leftView = paddingView
+//            leftViewMode = .always
+//        }
+//    }
+//
+//    @IBInspectable var paddingRight: CGFloat {
+//        get {
+//            return rightView?.frame.size.width ?? UIScreen.main.bounds.size.width
+//        }
+//        set {
+//            let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: newValue, height: frame.size.height))
+//            rightView = paddingView
+//            rightViewMode = .always
+//        }
+//    }
+//}
 extension FreeDetailsViewController: OptionPickerDelegate {
     func setSelectedOption(option: String?) {
         // Set current option to selected one if not just dismissed

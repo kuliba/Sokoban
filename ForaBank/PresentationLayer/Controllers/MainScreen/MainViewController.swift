@@ -18,7 +18,7 @@ class DataItem: Equatable {
 }
 
 
-class ViewController: UIViewController, KDDragAndDropCollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class MainViewController: UIViewController, KDDragAndDropCollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 
     @IBOutlet weak var viewCollection: RoundedEdgeView!
     @IBOutlet weak var firstCollectionView: KDDragAndDropCollectionView!

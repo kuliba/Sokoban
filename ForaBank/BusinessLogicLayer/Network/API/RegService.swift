@@ -151,13 +151,21 @@ class RegService: RegServiceProtocol {
                         commission: Double,
     completionHandler: @escaping (_ success: Bool, _ errorMessage: String?, _ commission: Double?) -> Void) {
         //var commissions: Double?
-           let url = "https://git.briginvest.ru/dbo/api/v2/rest/prepareExternal"
+            let url = host.apiBaseURL + "/rest/prepareExternal"
                  print(url)
                  //let date = NSDate()
+                var compilerStatus = String()
+//               14
+//                    switch numberAcoount {
+//                    case numberAcoount.contains("40101") = true:
+//                        compilerStatus = "0"
+//                    default:
+//                        compilerStatus = ""
+//                    }
                  let parameters: [String: AnyObject] = [
                    "amount": amount as AnyObject,
                    "payeeKPP": kppBank as AnyObject,
-                   "compilerStatus": "00" as AnyObject,
+                   "compilerStatus": compilerStatus as AnyObject,
                    "payeeINN": innBank as AnyObject,
                    "payeeBankBIC": bikBank as AnyObject,
                    "date": "2020-01-28" as AnyObject,
@@ -167,6 +175,7 @@ class RegService: RegServiceProtocol {
                    "payerINN": "0" as AnyObject,
                     "comment": comment as AnyObject
                  ]
+                
 
                  Alamofire.request(url, method: HTTPMethod.post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
                      .validate(statusCode: MultiRange(200..<300, 401..<402))
@@ -184,22 +193,29 @@ class RegService: RegServiceProtocol {
 
                          switch response.result {
                          case .success:
-                            if let json = response.result.value as? Dictionary<String, Any>,
-                            let data = json["data"] as? Array<Any> {
-                            for cardData in data {
-                                if let cardData = cardData as? Dictionary<String, Any>{
-                                    let commissions = cardData["amount"] as? Double
-                                    let description = cardData["description"] as? String
-                                    print(commission, description!)
-                                    let commission = commissions ?? 5000
-                                    completionHandler(true, "Error", commission)
-
-                                }
-                                completionHandler(false, "Error", commission)
-
-                                }
                             
-                            }
+//                            let json = response.result.value as? Dictionary<String, Any>
+                            let json = response.data
+                            let decoder = JSONDecoder()
+                            let jsonData = try? decoder.decode(PrepareExternal.self, from: json!)
+                            print(jsonData)
+//                            self.makePayment = jsonData
+                            completionHandler(true, jsonData?.errorMessage, 10)
+//                            let data = json["data"] as? Array<Any> {
+//                            for cardData in data {
+//                                if let cardData = cardData as? Dictionary<String, Any>{
+//                                    let commissions = cardData["amount"] as? Double
+//                                    let description = cardData["description"] as? String
+//                                    print(commission, description!)
+//                                    let commission = commissions ?? 5000
+//                                    completionHandler(true, "Error", commission)
+//
+//                                }
+//                                completionHandler(false, "Error", commission)
+//
+//                                }
+//
+//                            }
                           
                             
                             
@@ -227,7 +243,8 @@ class RegService: RegServiceProtocol {
             "login": login as AnyObject,
             "password": password as AnyObject,
             "phone": phone as AnyObject,
-            "token": headers["X-XSRF-TOKEN"] as AnyObject,
+            "pushDeviceId" : UIDevice.current.identifierForVendor?.uuidString as AnyObject,
+            "token": FCMToken.fcmToken as AnyObject,
             "verificationCode": 0 as AnyObject
         ]
 
@@ -268,12 +285,14 @@ class RegService: RegServiceProtocol {
                         completionHandler: @escaping (Bool, String?, String?, String?) -> Void) {
         let url = host.apiBaseURL + "registration/doRegistration"
         print(url)
+        
         let parameters: [String: AnyObject] = [
             "cardNumber": cardNumber as AnyObject,
             "login": login as AnyObject,
             "password": password as AnyObject,
             "phone": phone as AnyObject,
-            "token": headers["X-XSRF-TOKEN"] as AnyObject,
+            "pushDeviceId" : UIDevice.current.identifierForVendor?.uuidString as AnyObject,
+            "token": FCMToken.fcmToken as AnyObject,
             "verificationCode": 0 as AnyObject
         ]
 
@@ -313,7 +332,8 @@ class RegService: RegServiceProtocol {
             "login": login as AnyObject,
             "password": password as AnyObject,
             "phone": phone as AnyObject,
-            "token": headers["X-XSRF-TOKEN"] as AnyObject,
+            "pushDeviceId" : UIDevice.current.identifierForVendor?.uuidString as AnyObject,
+            "pushFCMtoken": FCMToken.fcmToken as AnyObject,
             "verificationCode": verificationCode as AnyObject
         ]
 

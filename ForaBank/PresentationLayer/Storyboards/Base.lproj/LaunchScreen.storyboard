@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -12,11 +12,52 @@
         <scene sceneID="EHf-IW-A2E">
             <objects>
                 <viewController id="01J-lp-oVM" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
+                    <view key="view" contentMode="scaleToFill" id="Td1-Ro-vrk">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="fora logo" translatesAutoresizingMaskIntoConstraints="NO" id="0td-St-zTz">
+                                <rect key="frame" x="24" y="294" width="40" height="59.5"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="UsZ-gF-pnj"/>
+                                </constraints>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="fora logo 2" translatesAutoresizingMaskIntoConstraints="NO" id="ldk-pm-dDg">
+                                <rect key="frame" x="72" y="294" width="319" height="59.5"/>
+                            </imageView>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="#выигрываемвместе" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Rd-Jq-EKG">
+                                <rect key="frame" x="0.0" y="712" width="414" height="24"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
+                                <color key="textColor" red="0.90985363720000001" green="0.90573334689999996" blue="0.91372746230000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Выигрываем вместе!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fW4-2N-knu">
+                                <rect key="frame" x="24" y="361" width="367" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="7mg-eo-bvC"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="light" pointSize="19"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="kYa-c3-h0N"/>
+                        <color key="backgroundColor" red="0.93725490199999995" green="0.25490196079999999" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="ldk-pm-dDg" firstAttribute="leading" secondItem="0td-St-zTz" secondAttribute="trailing" constant="8" id="2cI-gU-dwE"/>
+                            <constraint firstItem="fW4-2N-knu" firstAttribute="leading" secondItem="0td-St-zTz" secondAttribute="leading" id="GGi-PQ-56U"/>
+                            <constraint firstItem="kYa-c3-h0N" firstAttribute="bottom" secondItem="2Rd-Jq-EKG" secondAttribute="bottom" constant="126" id="LVD-M5-yT5"/>
+                            <constraint firstItem="2Rd-Jq-EKG" firstAttribute="centerX" secondItem="Td1-Ro-vrk" secondAttribute="centerX" id="U87-sB-nvi"/>
+                            <constraint firstItem="2Rd-Jq-EKG" firstAttribute="leading" secondItem="kYa-c3-h0N" secondAttribute="leading" id="YqY-AS-Vhn"/>
+                            <constraint firstItem="fW4-2N-knu" firstAttribute="top" secondItem="0td-St-zTz" secondAttribute="bottom" constant="7.5" id="dZM-M4-Jx0"/>
+                            <constraint firstItem="2Rd-Jq-EKG" firstAttribute="centerX" secondItem="Td1-Ro-vrk" secondAttribute="centerX" id="hIK-hx-8ia"/>
+                            <constraint firstItem="0td-St-zTz" firstAttribute="leading" secondItem="kYa-c3-h0N" secondAttribute="leading" constant="24" id="jdd-lK-D40"/>
+                            <constraint firstItem="0td-St-zTz" firstAttribute="top" secondItem="kYa-c3-h0N" secondAttribute="top" constant="250" id="ntM-Ak-ka8"/>
+                            <constraint firstItem="0td-St-zTz" firstAttribute="bottom" secondItem="ldk-pm-dDg" secondAttribute="bottom" id="p4L-0X-0c5"/>
+                            <constraint firstItem="kYa-c3-h0N" firstAttribute="trailing" secondItem="ldk-pm-dDg" secondAttribute="trailing" constant="23" id="pB1-aa-G1f"/>
+                            <constraint firstItem="0td-St-zTz" firstAttribute="top" secondItem="ldk-pm-dDg" secondAttribute="top" id="x9e-RU-pUv"/>
+                            <constraint firstItem="fW4-2N-knu" firstAttribute="trailing" secondItem="ldk-pm-dDg" secondAttribute="trailing" id="yKV-MA-DS5"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -24,4 +65,8 @@
             <point key="canvasLocation" x="52.173913043478265" y="375"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="fora logo" width="32" height="32"/>
+        <image name="fora logo 2" width="430.5" height="59.5"/>
+    </resources>
 </document>

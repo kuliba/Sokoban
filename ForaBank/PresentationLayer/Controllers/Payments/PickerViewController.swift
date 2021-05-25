@@ -22,7 +22,7 @@ class PickerViewController: UIViewController {
         super.viewDidLoad()
 
         tableView.register(UINib(nibName: String(describing: DropDownTableViewCell.self), bundle: nil), forCellReuseIdentifier: String(describing: DropDownTableViewCell.self))
-        modalPresentationStyle = .overCurrentContext
+        modalPresentationStyle = .fullScreen
         view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
 
         let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))

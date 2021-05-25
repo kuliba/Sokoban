@@ -31,8 +31,10 @@ class CellTableView {
 
 class MainVC: UIViewController {
 
+    var generalSum = Double()
     var arrayCards = Array<Card>(){
         didSet{
+//            arrayCards.append(generalSum)
             collectionViewCard.reloadData()
         }
     }
@@ -48,32 +50,71 @@ class MainVC: UIViewController {
     
     @IBOutlet weak var collectionViewCard: UICollectionView!
     @IBOutlet weak var collectionViewRates: UICollectionView!
+    @IBOutlet weak var collectionViewStories: UICollectionView!
     @IBOutlet weak var activityDownlandRates: UIActivityIndicatorView! //для обозначение загрузки курсов валют
     @IBOutlet weak var activityDownlandCards: UIActivityIndicatorView! //для обозначение загрузки курсов валют
     @IBOutlet weak var tableViewActions: UITableView!
     @IBOutlet weak var pageRates: UIPageControl!
     
     
+    override func viewWillAppear(_ animated: Bool) {
+        collectionViewCard.reloadData()
+    }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        collectionViewCard.collectionViewLayout.invalidateLayout()
+        collectionViewCard.reloadData()
+    }
+    
+    
+    let offers: [FeedOffer]  = [
+        FeedOffer(bgImageName: "foolingchecken", logoImageName: "foolingchecken", description: "Кэшбэк 10% в Салонах оптики \("Слепая курица")", buttonTitle: "Перейти на сайт"),
+        FeedOffer(bgImageName: "airo", logoImageName: "airo", description: "Скидка 700 рублей на химчистку и уборку от AIRO", buttonTitle: "Показать магазины на карте"),
+        FeedOffer(bgImageName: "cultureinMask", logoImageName: "cultureinMask", description: "Сезонное предложение  \("Культура в масках")", buttonTitle: "Подробнее"),
+        FeedOffer(bgImageName: "transferMig2", logoImageName: "transferMig2", description: "", buttonTitle: "Подробное сравнение"),
+        FeedOffer(bgImageName: "panarama360", logoImageName: "panarama360", description: "Скидка 15% на билеты на смотровую площадку PANORAMA360", buttonTitle: "Подробнее"),
+        FeedOffer(bgImageName: "openAllClusive ", logoImageName: "openAllClusive", description: "Карта \("Все включено") со скидкой на обслуживание", buttonTitle: "Подробнее")
+        // FeedOfferCustom2()
+        ]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
         getClassSection() //Создаем секции и ячейки
         setupCollectionView()
         
         pageRates.numberOfPages = 1
         pageRates.currentPage = 0
+        self.tableViewActions.shouldGroupAccessibilityChildren = true
         
+
         getAllRates() // запрашиваем курс валют
         getCards() //запрашиваем данные о карте
         activityDownlandRates.color = .white
         activityDownlandCards.color = .white
     }
+    
+ 
+    
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//    if segue.identifier == "showStory" {
+//        if let indexPath = collectionViewStories.indexPathsForSelectedItems?[0] {
+//            let storyVC = segue.destination as! StoryViewController
+//            storyVC.imageCollection = offers
+//            storyVC.rowIndex = indexPath.item
+//            collectionViewStories.deselectItem(at: indexPath, animated: false)
+//
+//        }
+//    }
+//}
 }
 
 //MARK: CollectionView
 extension MainVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
     
     private func setupCollectionView(){
-                
+        
         collectionViewCard.isPagingEnabled = true
         collectionViewRates.isPagingEnabled = true
         
@@ -101,30 +142,47 @@ extension MainVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollec
         }
         if collectionView == collectionViewCard{
             print(arrayCards.count)
-            return  arrayCards.count
+            return  1
         }
+        if collectionView == collectionViewStories{
+            return offers.count
+               }
         print("collectionView не определен!!!")
         return 0
         
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == collectionViewCard{
             if let item = collectionViewCard.dequeueReusableCell(withReuseIdentifier: "cellCard", for: indexPath) as? CardCVC{
                 if arrayCards.count != 0{
                     let card = arrayCards[indexPath.row]
-                    var amountCardString = getStringAmountCurrency(card.balance, currency: "RUB") //получаем сумму со знаком
-                    let singAmount = amountCardString.remove(at: amountCardString.startIndex) //вытаскиваем знак
-                    if singAmount == "+" || singAmount == " "{ //если сумма положительная, то убираем знак
-                        item.amountCard.text = amountCardString
-                    }else{
-                        item.amountCard.text =  "-"+amountCardString
-                    }
+                    let amountCardString = maskSum(sum: card.balance)
+//                        getStringAmountCurrency(card.balance, currency: "RUB") //получаем сумму со знаком
+                    
+//                    let singAmount = amountCardString.remove(at: amountCardString.startIndex) //вытаскиваем знак
+//                    if singAmount == "+" || singAmount == " "{ //если сумма положительная, то убираем знак
+//                        item.amountCard.text = amountCardString
+//                    }else{
+//                        item.amountCard.text =  "-"+amountCardString
+//                    }
+//                    var generalSum = Double()
+//                    for i in arrayCards[0].balance{
+//                        generalSum += i
+//                    }
                     let nameCard = card.name
-                    item.nameCard.text = "\(nameCard ?? "NO")"
-                    item.numberCard.text = "*\(card.number.prefix(4))"
+                    item.amountCard.text = "\(maskSum(sum:generalSum) ) ₽"
+                    item.nameCard.text = "Всего доступно"
+//                    item.numberCard.text = "\(card.number.onlyLastCharacters(4))"
+//                    item.numberCard.text = ""
+
+//                    item.coverCard.image = UIImage(contentsOfFile: "credit-card")
+//                    item.coverCard.image = sortedCoverCard(numberCard: card.number)
+
+                    
                 }
                 return item
+               
             }
         }else if collectionView == collectionViewRates{
             if let item = collectionViewRates.dequeueReusableCell(withReuseIdentifier: "cellRate", for: indexPath) as? RateCVC{
@@ -144,13 +202,39 @@ extension MainVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollec
                 }
                 return item
             }
+        }else if collectionView == collectionViewStories{
+            if let item = collectionViewStories.dequeueReusableCell(withReuseIdentifier: "StoriesCellView", for: indexPath) as? StoriesCell{
+                item.image.image = UIImage(named: "\(offers[indexPath.item].logoImageName)")
+                item.backgroundImage.image = UIImage(named: "\(offers[indexPath.item].bgImageName)")
+//                item.image.image = UIImage(named: "\(offers[indexPath.row])")
+                item.backgroundColor = .clear
+                return item
+            }
         }
         
         return UICollectionViewCell()
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
+        if collectionView == collectionViewStories{
+            return CGSize(width: 80, height: 80)
+        } else {
         return collectionView.frame.size
+        }
+    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        let vc =  storyboard?.instantiateViewController(withIdentifier: "StoryViewController") as! StoryViewController
+//        vc.imageCollection  = [offers]
+//        navigationController?.pushViewController(vc, animated: true)
+        if collectionView == collectionViewRates{
+            print("Rates")
+        } else if collectionView == collectionViewStories {
+                    let vc =  storyboard?.instantiateViewController(withIdentifier: "StoryViewController") as! StoryViewController
+                    vc.imageCollection  = offers
+                    navigationController?.pushViewController(vc, animated: true)  //        performSegue(withIdentifier: "showStory", sender: self)
+        } else {
+            print("Don't tap")
+        }
     }
 
     //MARK: Action Page Rates
@@ -241,6 +325,9 @@ private extension MainVC{
                 self!.activityDownlandCards.stopAnimating()
                 self!.activityDownlandCards.isHidden = true
                 self!.arrayCards.removeAll()
+                for i in cards ?? []{
+                    self?.generalSum += i.balance
+                }
                 self!.arrayCards = cards!
             }else{
                 self!.activityDownlandCards.stopAnimating()
@@ -372,7 +459,7 @@ extension MainVC: UITableViewDelegate, UITableViewDataSource, ExpandableHeaderVi
                 callNumber(numberPhone)
             case 2:
                 let email = arraysectionTV[indexPath.section].arrayCell[indexPath.row].nameCell
-                guard let url = URL(string: "mailto:\(email)") else{return}
+                guard let url = Foundation.URL(string: "mailto:\(email)") else{return}
                 
                 let alertMail = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
                 let alertActionMail = UIAlertAction(title: "Написать: " + email, style: .default) { (_) in
@@ -406,10 +493,11 @@ extension MainVC: UITableViewDelegate, UITableViewDataSource, ExpandableHeaderVi
         var arrayCellSection1 = Array<CellTableView>()
         let cell11 = CellTableView(nameCell: "Между своими счетами", nameImageCell: "icon1")
         let cell12 = CellTableView(nameCell: "Клиенту Фора-Банка", nameImageCell: "icon2")
-        let cell13 = CellTableView(nameCell: "Мобильная связь", nameImageCell: "icon7")
+//        let cell13 = CellTableView(nameCell: "Мобильная связь", nameImageCell: "icon7")
         arrayCellSection1.append(cell11)
         arrayCellSection1.append(cell12)
-        arrayCellSection1.append(cell13)
+//        arrayCellSection1.append(cell13)
+
         
         let sectionOne = SectionTV(name: "Частые действия", arrayCell: arrayCellSection1, expanded: true)
         self.arraysectionTV.append(sectionOne)
@@ -440,7 +528,19 @@ extension MainVC: UITableViewDelegate, UITableViewDataSource, ExpandableHeaderVi
         arrayCellSection4.append(cell42)
         arrayCellSection4.append(cell43)
         
+      
+        
         let sectionFor = SectionTV(name: "Связаться с банком", arrayCell: arrayCellSection4, expanded: true)
         self.arraysectionTV.append(sectionFor)
+        
+//        var arrayCellSection5 = Array<CellTableView>()
+//              let cell15 = CellTableView(nameCell: "Кино", nameImageCell: "services_tv")
+//              let cell16 = CellTableView(nameCell: "Рестораны", nameImageCell: "services_tv")
+//              let cell17 = CellTableView(nameCell: "Концерты", nameImageCell: "services_tv")
+//              arrayCellSection5.append(cell15)
+//              arrayCellSection5.append(cell16)
+//              arrayCellSection5.append(cell17)
+//        let sectionFive = SectionTV(name: "Сервисы", arrayCell: arrayCellSection5, expanded: true)
+//               self.arraysectionTV.append(sectionFive)
     }
 }

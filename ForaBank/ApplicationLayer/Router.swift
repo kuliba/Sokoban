@@ -23,6 +23,13 @@ func setupAuthorizedZone() {
     setRootVC(newRootVC: viewController)
 }
 
+
+func setupMainVc() {
+    let mainStoryboard: UIStoryboard = UIStoryboard(name: "MainScreen", bundle: nil)
+    guard let viewController = mainStoryboard.instantiateInitialViewController() else { return }
+    setRootVC(newRootVC: viewController)
+}
+
 //MARK: - Sharing
 
 func showShareScreen(textToShare shareText: String) {

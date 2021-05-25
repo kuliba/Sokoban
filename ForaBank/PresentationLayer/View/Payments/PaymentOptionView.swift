@@ -20,7 +20,9 @@ class PaymentOptionView: UIView {
 
     @IBOutlet weak var leadingToArrowConstraint: NSLayoutConstraint!
     @IBOutlet weak var leadingToSuperviewConstraint: NSLayoutConstraint!
-
+    
+    var currency = String()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
@@ -43,13 +45,16 @@ class PaymentOptionView: UIView {
     }
 
     internal func setupLayout(withPickerItem pickerItem: IPickerItem, isDroppable: Bool) {
-        leadingToArrowConstraint.isActive = isDroppable
+//        leadingToArrowConstraint.isActive = isDroppable
         leadingToSuperviewConstraint.isActive = !isDroppable
         arrowsImageView.isHidden = !isDroppable
 
         optionNameLabel.text = pickerItem.title
         optionNumberLabel.text = pickerItem.subTitle
-        optionValueLabel.text = String(pickerItem.value)
+        guard let currentLabel = getSymbol(forCurrencyCode: pickerItem.currencyCode ?? "") else {
+            return
+        }
+        optionValueLabel.text = "\(maskSum(sum:pickerItem.value) + currentLabel)"
 
         updateConstraints()
     }

@@ -20,11 +20,13 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var userImageView: CircularImageView!
     @IBOutlet weak var buttonUpdateImage: UIButton!
     
+    let backgroundColor =  UIColor(hexFromString: "EF4136")
     var segueId: String? = nil
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        containerView.backgroundColor = .blue
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -78,11 +80,11 @@ class ProfileViewController: UIViewController {
                         self!.userImageView.image = imageUI
                     }else{
                         let imageDefault = UIImage(named: "photoAdd")
-                        self!.userImageView.image = imageDefault
+                        self?.userImageView.image = imageDefault
                     }
                 }else{
                     let imageDefault = UIImage(named: "photoAdd")
-                    self!.userImageView.image = imageDefault
+                    self?.userImageView.image = imageDefault
                 }
             }else {
                 print("ProfileViewController: \(errorMessage ?? "error without errorMessage")")
@@ -138,9 +140,22 @@ class ProfileViewController: UIViewController {
     }
 
 
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        
+//    }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "SettingsViewController" {
             segueId = nil
+        }
+        if let vc = segue.destination as? DepositsHistoryViewController{
+            vc.backgroundColor = UIColor(hexFromString: "EF4136")
+//            self.parent?.performSegue(withIdentifier: "History", sender: backgroundColor)
+        }
+        if segue.identifier == "History"{
+           let vc = segue.destination as? DepositsHistoryViewController
+            vc?.backgroundColor = UIColor(hexFromString: "EF4136")
+//            self.parent?.performSegue(withIdentifier: "History", sender: backgroundColor)
+
         }
     }
     

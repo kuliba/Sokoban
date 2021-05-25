@@ -44,10 +44,10 @@ extension UITextField {
     }
 
     open override func becomeFirstResponder() -> Bool {
-        layer.customBorderColor = .red
-        layer.cornerRadius = 5.0
-        layer.masksToBounds = true
-        layer.borderWidth = 1
+//        layer.customBorderColor = .red
+//        layer.cornerRadius = 5.0
+//        layer.masksToBounds = true
+//        layer.borderWidth = 1
         super.becomeFirstResponder()
 
         return true
@@ -72,13 +72,44 @@ extension CALayer {
     }
 }
 
-class CustomTextField: UITextField {
+class CustomTextField: UITextField, UITextFieldDelegate {
     var selectedBorderColor: UIColor = .red
     var defaultBorderColor: UIColor = .clear
     open override var canBecomeFirstResponder: Bool {
         return true
     }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
 
+            let formatter = NumberFormatter()
+            formatter.minimumFractionDigits = 2
+            formatter.maximumFractionDigits = 2
+
+            if string.count > 0 {
+                textField.text! += string
+                let decNumber = NSDecimalNumber(string: textField.text).multiplying(by: 0.01)
+                let newString = formatter.string(from: decNumber)!
+                textField.text = newString
+            } else {
+                textField.text = String(textField.text?.dropLast() ?? "")
+                if textField.text?.count ?? 0 > 0 {
+                    let decNumber = NSDecimalNumber(string: textField.text).multiplying(by: 0.01)
+                    let newString = "$" +  formatter.string(from: decNumber)!
+                    textField.text = newString
+                } else {
+                    textField.text = "$0.00"
+                }
+
+            }
+            return false
+
+        }
+
+        func textFieldShouldClear(_ textField: UITextField) -> Bool {
+            textField.text = ""
+            return true
+        }
+    
     open override func becomeFirstResponder() -> Bool {
         layer.customBorderColor = selectedBorderColor
         layer.cornerRadius = 5.0
@@ -89,11 +120,10 @@ class CustomTextField: UITextField {
         return true
     }
 
-
     open override func resignFirstResponder() -> Bool {
         layer.customBorderColor = defaultBorderColor
         _ = super.resignFirstResponder()
-
+        
         return true
     }
 }
@@ -355,7 +385,7 @@ func arrayWith(key: String, fromPlist name: String) -> Array<Dictionary<String, 
 // функция вызываем меню набора номера (number - номер телефона)
 func callNumber(_ number: String){
     let numberPhoneReplace  = number.replace(string: " ", replacement: "") // убираем пробелы
-    guard let url = URL(string: "tel://\(numberPhoneReplace)") else{return}
+    guard let url = Foundation.URL(string: "tel://\(numberPhoneReplace)") else{return}
     if UIApplication.shared.canOpenURL(url) {
         UIApplication.shared.open(url)
     }
@@ -433,6 +463,14 @@ public func getStringAmountCurrency(_ amount: Double, currency: String)->String{
         return singAmount(amount) + "\(amount)"
     }
 }
+func getSymbol(forCurrencyCode code: String) -> String? {
+    let locale = NSLocale(localeIdentifier: code)
+    if locale.displayName(forKey: .currencySymbol, value: code) == code {
+        let newlocale = NSLocale(localeIdentifier: code.dropLast() + "_en")
+        return newlocale.displayName(forKey: .currencySymbol, value: code)
+    }
+    return locale.displayName(forKey: .currencySymbol, value: code)
+}
 
 //определяет знак числа
 public func singAmount(_ amount: Double)->String{
@@ -444,3 +482,43 @@ public func singAmount(_ amount: Double)->String{
         return "-"
     }
 }
+
+extension UserDefaults {
+    func object<T: Codable>(_ type: T.Type, with key: String, usingDecoder decoder: JSONDecoder = JSONDecoder()) -> T? {
+        guard let data = self.value(forKey: key) as? Data else { return nil }
+        return try? decoder.decode(type.self, from: data)
+    }
+
+    func set<T: Codable>(object: T, forKey key: String, usingEncoder encoder: JSONEncoder = JSONEncoder()) {
+        let data = try? encoder.encode(object)
+        self.set(data, forKey: key)
+    }
+}
+
+
+extension String {
+    func onlyLastCharacters(_ count: Int) -> String { return String(suffix(count)) }
+    func onlyLastCharacters(_ count: Int, checkLength: Bool) -> String? {
+        if checkLength {
+            if self.count >= count { return onlyLastCharacters(count) }
+            return nil
+        }
+        return String(suffix(count))
+    }
+}
+
+extension UIView {
+    var parentViewController: UIViewController? {
+        var parentResponder: UIResponder? = self
+        while parentResponder != nil {
+            parentResponder = parentResponder!.next
+            if parentResponder is UIViewController {
+                return parentResponder as? UIViewController
+            }
+        }
+        return nil
+    }
+}
+
+
+

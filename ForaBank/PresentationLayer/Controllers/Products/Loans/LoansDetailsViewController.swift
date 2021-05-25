@@ -56,7 +56,7 @@ class LoansDetailsViewController: UIViewController {
     override func viewDidLoad() {
         let managementVC = storyboard?.instantiateViewController(withIdentifier: "ProductManagementViewController") as? ProductManagementViewController
         managementVC?.actionsType = "loan"
-        managementVC?.loan = loan 
+        managementVC?.loan = loan
         currentViewController = managementVC
         currentViewController!.view.translatesAutoresizingMaskIntoConstraints = false
         addChild(currentViewController!)

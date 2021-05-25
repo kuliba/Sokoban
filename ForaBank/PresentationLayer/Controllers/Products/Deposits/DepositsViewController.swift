@@ -55,7 +55,8 @@ class DepositsViewController: UIViewController {
 //        ]
 //    ]
     @IBOutlet weak var LabelNoProduct: UILabel!
-
+    let viewNoProduct = UIView()
+    
     
        var refreshView: RefreshView!
        
@@ -101,10 +102,14 @@ class DepositsViewController: UIViewController {
                tableViewRefreshControl.addSubview(refreshView)
            }
        }
-       
+    
+    let firstDeposit: [Deposit] = [Deposit(depositProductName: "depositProductName", isCreditOperationsAvailable: true, balanceCUR: 100, depositorBrief: "deposito", currencyCode: "currencyCode", ownerAgentBrief: "ownerAgentBrief", balance: 123, accountNumber: "", accountID: "accountID", customName: "customName", accountList: "accountList", number: "number", blocked: false, expirationDate: Date(timeIntervalSinceReferenceDate: -123456789.0), availableBalance: 100, blockedMoney: 10, updatingDate: Date(timeIntervalSinceReferenceDate: -123456789.0), tariff: "tariff", id: 123, branch: "branch", maskedNumber: "1010010101010", minimumBalance: 1, interestRate: 12, isDebitOperationsAvailable: true, creditMinimumAmount: 123, initialAmount: 123, dateEnd: "dateEnd", dateStart: "dateStart")]
+       let seconDeposit: [Deposit] = [Deposit(depositProductName: "depositProductName", isCreditOperationsAvailable: true, balanceCUR: 100, depositorBrief: "deposito", currencyCode: "currencyCode", ownerAgentBrief: "ownerAgentBrief", balance: 123, accountNumber: "", accountID: "accountID", customName: "customName", accountList: "accountList", number: "number", blocked: false, expirationDate: Date(timeIntervalSinceReferenceDate: -123456789.0), availableBalance: 100, blockedMoney: 10, updatingDate: Date(timeIntervalSinceReferenceDate: -123456789.0), tariff: "tariff", id: 123, branch: "branch", maskedNumber: "1010010101010", minimumBalance: 1, interestRate: 12, isDebitOperationsAvailable: true, creditMinimumAmount: 123, initialAmount: 123, dateEnd: "dateEnd", dateStart: "dateStart")]
     
     var deposits = [Deposit]() {
         didSet {
+//            deposits.append(contentsOf: firstDeposit)
+//            deposits.append(contentsOf: seconDeposit)
             tableView.reloadData()
             ForaIndicator.isHidden = true
             hiddenAccount()
@@ -114,6 +119,7 @@ class DepositsViewController: UIViewController {
     func hiddenAccount() {
         if deposits.count == 0 {
             LabelNoProduct.isHidden = false
+            
         }else{
             LabelNoProduct.isHidden = true
         }
@@ -139,7 +145,6 @@ class DepositsViewController: UIViewController {
         LabelNoProduct.isHidden = true
         prepareUI()
         tableView.backgroundColor = .white
-        
         self.notifications()
     }
 
