@@ -1,6 +1,0 @@
-framework module LivetexCore {
-  umbrella header "LivetexCore.h"
-
-  export *
-  module * { export * }
-}
