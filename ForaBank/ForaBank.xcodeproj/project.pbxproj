@@ -1,0 +1,664 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		EDB14381265FDA410028EF5A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14380265FDA410028EF5A /* AppDelegate.swift */; };
+		EDB14383265FDA410028EF5A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14382265FDA410028EF5A /* SceneDelegate.swift */; };
+		EDB14385265FDA410028EF5A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14384265FDA410028EF5A /* ViewController.swift */; };
+		EDB14388265FDA410028EF5A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDB14386265FDA410028EF5A /* Main.storyboard */; };
+		EDB14398265FDA430028EF5A /* ForaBankTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14397265FDA430028EF5A /* ForaBankTests.swift */; };
+		EDB143A3265FDA430028EF5A /* ForaBankUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB143A2265FDA430028EF5A /* ForaBankUITests.swift */; };
+		EDB143B2265FDDD50028EF5A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDB143B1265FDDD50028EF5A /* LaunchScreen.storyboard */; };
+		EDB143B5265FDE960028EF5A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EDB143B4265FDE960028EF5A /* Assets.xcassets */; };
+		EDB143C4265FDEC90028EF5A /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDB143B8265FDEC90028EF5A /* Roboto-Medium.ttf */; };
+		EDB143C5265FDEC90028EF5A /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDB143B9265FDEC90028EF5A /* Roboto-Light.ttf */; };
+		EDB143C6265FDEC90028EF5A /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDB143BA265FDEC90028EF5A /* Roboto-Regular.ttf */; };
+		EDB143C7265FDEC90028EF5A /* Roboto-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDB143BB265FDEC90028EF5A /* Roboto-MediumItalic.ttf */; };
+		EDB143C8265FDEC90028EF5A /* Roboto-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDB143BC265FDEC90028EF5A /* Roboto-ThinItalic.ttf */; };
+		EDB143C9265FDEC90028EF5A /* Roboto-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDB143BD265FDEC90028EF5A /* Roboto-BoldItalic.ttf */; };
+		EDB143CA265FDEC90028EF5A /* Roboto-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDB143BE265FDEC90028EF5A /* Roboto-LightItalic.ttf */; };
+		EDB143CB265FDEC90028EF5A /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDB143BF265FDEC90028EF5A /* Roboto-Italic.ttf */; };
+		EDB143CC265FDEC90028EF5A /* Roboto-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDB143C0265FDEC90028EF5A /* Roboto-BlackItalic.ttf */; };
+		EDB143CD265FDEC90028EF5A /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDB143C1265FDEC90028EF5A /* Roboto-Bold.ttf */; };
+		EDB143CE265FDEC90028EF5A /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDB143C2265FDEC90028EF5A /* Roboto-Thin.ttf */; };
+		EDB143CF265FDEC90028EF5A /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDB143C3265FDEC90028EF5A /* Roboto-Black.ttf */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		EDB14394265FDA430028EF5A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EDB14375265FDA410028EF5A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EDB1437C265FDA410028EF5A;
+			remoteInfo = ForaBank;
+		};
+		EDB1439F265FDA430028EF5A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EDB14375265FDA410028EF5A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EDB1437C265FDA410028EF5A;
+			remoteInfo = ForaBank;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		EDB1437D265FDA410028EF5A /* ForaBank.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ForaBank.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EDB14380265FDA410028EF5A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		EDB14382265FDA410028EF5A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		EDB14384265FDA410028EF5A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		EDB14387265FDA410028EF5A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		EDB1438E265FDA420028EF5A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EDB14393265FDA430028EF5A /* ForaBankTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ForaBankTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EDB14397265FDA430028EF5A /* ForaBankTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForaBankTests.swift; sourceTree = "<group>"; };
+		EDB14399265FDA430028EF5A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EDB1439E265FDA430028EF5A /* ForaBankUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ForaBankUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EDB143A2265FDA430028EF5A /* ForaBankUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForaBankUITests.swift; sourceTree = "<group>"; };
+		EDB143A4265FDA430028EF5A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EDB143B0265FDB380028EF5A /* ForaBank.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ForaBank.entitlements; sourceTree = "<group>"; };
+		EDB143B1265FDDD50028EF5A /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		EDB143B4265FDE960028EF5A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		EDB143B8265FDEC90028EF5A /* Roboto-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Medium.ttf"; sourceTree = "<group>"; };
+		EDB143B9265FDEC90028EF5A /* Roboto-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Light.ttf"; sourceTree = "<group>"; };
+		EDB143BA265FDEC90028EF5A /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Regular.ttf"; sourceTree = "<group>"; };
+		EDB143BB265FDEC90028EF5A /* Roboto-MediumItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-MediumItalic.ttf"; sourceTree = "<group>"; };
+		EDB143BC265FDEC90028EF5A /* Roboto-ThinItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-ThinItalic.ttf"; sourceTree = "<group>"; };
+		EDB143BD265FDEC90028EF5A /* Roboto-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-BoldItalic.ttf"; sourceTree = "<group>"; };
+		EDB143BE265FDEC90028EF5A /* Roboto-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-LightItalic.ttf"; sourceTree = "<group>"; };
+		EDB143BF265FDEC90028EF5A /* Roboto-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Italic.ttf"; sourceTree = "<group>"; };
+		EDB143C0265FDEC90028EF5A /* Roboto-BlackItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-BlackItalic.ttf"; sourceTree = "<group>"; };
+		EDB143C1265FDEC90028EF5A /* Roboto-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Bold.ttf"; sourceTree = "<group>"; };
+		EDB143C2265FDEC90028EF5A /* Roboto-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Thin.ttf"; sourceTree = "<group>"; };
+		EDB143C3265FDEC90028EF5A /* Roboto-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Black.ttf"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EDB1437A265FDA410028EF5A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EDB14390265FDA430028EF5A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EDB1439B265FDA430028EF5A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		EDB14374265FDA410028EF5A = {
+			isa = PBXGroup;
+			children = (
+				EDB1437F265FDA410028EF5A /* ForaBank */,
+				EDB14396265FDA430028EF5A /* ForaBankTests */,
+				EDB143A1265FDA430028EF5A /* ForaBankUITests */,
+				EDB1437E265FDA410028EF5A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		EDB1437E265FDA410028EF5A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EDB1437D265FDA410028EF5A /* ForaBank.app */,
+				EDB14393265FDA430028EF5A /* ForaBankTests.xctest */,
+				EDB1439E265FDA430028EF5A /* ForaBankUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EDB1437F265FDA410028EF5A /* ForaBank */ = {
+			isa = PBXGroup;
+			children = (
+				EDB143B6265FDEAD0028EF5A /* Resources */,
+				EDB143B0265FDB380028EF5A /* ForaBank.entitlements */,
+				EDB14380265FDA410028EF5A /* AppDelegate.swift */,
+				EDB14382265FDA410028EF5A /* SceneDelegate.swift */,
+				EDB14384265FDA410028EF5A /* ViewController.swift */,
+				EDB14386265FDA410028EF5A /* Main.storyboard */,
+				EDB143B4265FDE960028EF5A /* Assets.xcassets */,
+				EDB143B1265FDDD50028EF5A /* LaunchScreen.storyboard */,
+				EDB1438E265FDA420028EF5A /* Info.plist */,
+			);
+			path = ForaBank;
+			sourceTree = "<group>";
+		};
+		EDB14396265FDA430028EF5A /* ForaBankTests */ = {
+			isa = PBXGroup;
+			children = (
+				EDB14397265FDA430028EF5A /* ForaBankTests.swift */,
+				EDB14399265FDA430028EF5A /* Info.plist */,
+			);
+			path = ForaBankTests;
+			sourceTree = "<group>";
+		};
+		EDB143A1265FDA430028EF5A /* ForaBankUITests */ = {
+			isa = PBXGroup;
+			children = (
+				EDB143A2265FDA430028EF5A /* ForaBankUITests.swift */,
+				EDB143A4265FDA430028EF5A /* Info.plist */,
+			);
+			path = ForaBankUITests;
+			sourceTree = "<group>";
+		};
+		EDB143B6265FDEAD0028EF5A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				EDB143B7265FDEC90028EF5A /* Fonts */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		EDB143B7265FDEC90028EF5A /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				EDB143B8265FDEC90028EF5A /* Roboto-Medium.ttf */,
+				EDB143B9265FDEC90028EF5A /* Roboto-Light.ttf */,
+				EDB143BA265FDEC90028EF5A /* Roboto-Regular.ttf */,
+				EDB143BB265FDEC90028EF5A /* Roboto-MediumItalic.ttf */,
+				EDB143BC265FDEC90028EF5A /* Roboto-ThinItalic.ttf */,
+				EDB143BD265FDEC90028EF5A /* Roboto-BoldItalic.ttf */,
+				EDB143BE265FDEC90028EF5A /* Roboto-LightItalic.ttf */,
+				EDB143BF265FDEC90028EF5A /* Roboto-Italic.ttf */,
+				EDB143C0265FDEC90028EF5A /* Roboto-BlackItalic.ttf */,
+				EDB143C1265FDEC90028EF5A /* Roboto-Bold.ttf */,
+				EDB143C2265FDEC90028EF5A /* Roboto-Thin.ttf */,
+				EDB143C3265FDEC90028EF5A /* Roboto-Black.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		EDB1437C265FDA410028EF5A /* ForaBank */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EDB143A7265FDA430028EF5A /* Build configuration list for PBXNativeTarget "ForaBank" */;
+			buildPhases = (
+				EDB14379265FDA410028EF5A /* Sources */,
+				EDB1437A265FDA410028EF5A /* Frameworks */,
+				EDB1437B265FDA410028EF5A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ForaBank;
+			productName = ForaBank;
+			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
+			productType = "com.apple.product-type.application";
+		};
+		EDB14392265FDA430028EF5A /* ForaBankTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EDB143AA265FDA430028EF5A /* Build configuration list for PBXNativeTarget "ForaBankTests" */;
+			buildPhases = (
+				EDB1438F265FDA430028EF5A /* Sources */,
+				EDB14390265FDA430028EF5A /* Frameworks */,
+				EDB14391265FDA430028EF5A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EDB14395265FDA430028EF5A /* PBXTargetDependency */,
+			);
+			name = ForaBankTests;
+			productName = ForaBankTests;
+			productReference = EDB14393265FDA430028EF5A /* ForaBankTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		EDB1439D265FDA430028EF5A /* ForaBankUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EDB143AD265FDA430028EF5A /* Build configuration list for PBXNativeTarget "ForaBankUITests" */;
+			buildPhases = (
+				EDB1439A265FDA430028EF5A /* Sources */,
+				EDB1439B265FDA430028EF5A /* Frameworks */,
+				EDB1439C265FDA430028EF5A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EDB143A0265FDA430028EF5A /* PBXTargetDependency */,
+			);
+			name = ForaBankUITests;
+			productName = ForaBankUITests;
+			productReference = EDB1439E265FDA430028EF5A /* ForaBankUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EDB14375265FDA410028EF5A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1250;
+				LastUpgradeCheck = 1250;
+				TargetAttributes = {
+					EDB1437C265FDA410028EF5A = {
+						CreatedOnToolsVersion = 12.5;
+					};
+					EDB14392265FDA430028EF5A = {
+						CreatedOnToolsVersion = 12.5;
+						TestTargetID = EDB1437C265FDA410028EF5A;
+					};
+					EDB1439D265FDA430028EF5A = {
+						CreatedOnToolsVersion = 12.5;
+						TestTargetID = EDB1437C265FDA410028EF5A;
+					};
+				};
+			};
+			buildConfigurationList = EDB14378265FDA410028EF5A /* Build configuration list for PBXProject "ForaBank" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = EDB14374265FDA410028EF5A;
+			productRefGroup = EDB1437E265FDA410028EF5A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EDB1437C265FDA410028EF5A /* ForaBank */,
+				EDB14392265FDA430028EF5A /* ForaBankTests */,
+				EDB1439D265FDA430028EF5A /* ForaBankUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EDB1437B265FDA410028EF5A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EDB143CE265FDEC90028EF5A /* Roboto-Thin.ttf in Resources */,
+				EDB143C9265FDEC90028EF5A /* Roboto-BoldItalic.ttf in Resources */,
+				EDB143CF265FDEC90028EF5A /* Roboto-Black.ttf in Resources */,
+				EDB143CD265FDEC90028EF5A /* Roboto-Bold.ttf in Resources */,
+				EDB143C6265FDEC90028EF5A /* Roboto-Regular.ttf in Resources */,
+				EDB143CA265FDEC90028EF5A /* Roboto-LightItalic.ttf in Resources */,
+				EDB143C4265FDEC90028EF5A /* Roboto-Medium.ttf in Resources */,
+				EDB143B2265FDDD50028EF5A /* LaunchScreen.storyboard in Resources */,
+				EDB143C5265FDEC90028EF5A /* Roboto-Light.ttf in Resources */,
+				EDB143C8265FDEC90028EF5A /* Roboto-ThinItalic.ttf in Resources */,
+				EDB143CC265FDEC90028EF5A /* Roboto-BlackItalic.ttf in Resources */,
+				EDB143C7265FDEC90028EF5A /* Roboto-MediumItalic.ttf in Resources */,
+				EDB143B5265FDE960028EF5A /* Assets.xcassets in Resources */,
+				EDB143CB265FDEC90028EF5A /* Roboto-Italic.ttf in Resources */,
+				EDB14388265FDA410028EF5A /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EDB14391265FDA430028EF5A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EDB1439C265FDA430028EF5A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EDB14379265FDA410028EF5A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EDB14385265FDA410028EF5A /* ViewController.swift in Sources */,
+				EDB14381265FDA410028EF5A /* AppDelegate.swift in Sources */,
+				EDB14383265FDA410028EF5A /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EDB1438F265FDA430028EF5A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EDB14398265FDA430028EF5A /* ForaBankTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EDB1439A265FDA430028EF5A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EDB143A3265FDA430028EF5A /* ForaBankUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		EDB14395265FDA430028EF5A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EDB1437C265FDA410028EF5A /* ForaBank */;
+			targetProxy = EDB14394265FDA430028EF5A /* PBXContainerItemProxy */;
+		};
+		EDB143A0265FDA430028EF5A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EDB1437C265FDA410028EF5A /* ForaBank */;
+			targetProxy = EDB1439F265FDA430028EF5A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		EDB14386265FDA410028EF5A /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EDB14387265FDA410028EF5A /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		EDB143A5265FDA430028EF5A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		EDB143A6265FDA430028EF5A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		EDB143A8265FDA430028EF5A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 50;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				INFOPLIST_FILE = ForaBank/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 7.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		EDB143A9265FDA430028EF5A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 50;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				INFOPLIST_FILE = ForaBank/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 7.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		EDB143AB265FDA430028EF5A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				INFOPLIST_FILE = ForaBankTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.ForaBankTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ForaBank.app/ForaBank";
+			};
+			name = Debug;
+		};
+		EDB143AC265FDA430028EF5A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				INFOPLIST_FILE = ForaBankTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.ForaBankTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ForaBank.app/ForaBank";
+			};
+			name = Release;
+		};
+		EDB143AE265FDA430028EF5A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				INFOPLIST_FILE = ForaBankUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.ForaBankUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = ForaBank;
+			};
+			name = Debug;
+		};
+		EDB143AF265FDA430028EF5A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				INFOPLIST_FILE = ForaBankUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.ForaBankUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = ForaBank;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EDB14378265FDA410028EF5A /* Build configuration list for PBXProject "ForaBank" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EDB143A5265FDA430028EF5A /* Debug */,
+				EDB143A6265FDA430028EF5A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EDB143A7265FDA430028EF5A /* Build configuration list for PBXNativeTarget "ForaBank" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EDB143A8265FDA430028EF5A /* Debug */,
+				EDB143A9265FDA430028EF5A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EDB143AA265FDA430028EF5A /* Build configuration list for PBXNativeTarget "ForaBankTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EDB143AB265FDA430028EF5A /* Debug */,
+				EDB143AC265FDA430028EF5A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EDB143AD265FDA430028EF5A /* Build configuration list for PBXNativeTarget "ForaBankUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EDB143AE265FDA430028EF5A /* Debug */,
+				EDB143AF265FDA430028EF5A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EDB14375265FDA410028EF5A /* Project object */;
+}
