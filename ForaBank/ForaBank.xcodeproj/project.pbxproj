@@ -27,6 +27,7 @@
 		EDB143CD265FDEC90028EF5A /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDB143C1265FDEC90028EF5A /* Roboto-Bold.ttf */; };
 		EDB143CE265FDEC90028EF5A /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDB143C2265FDEC90028EF5A /* Roboto-Thin.ttf */; };
 		EDB143CF265FDEC90028EF5A /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDB143C3265FDEC90028EF5A /* Roboto-Black.ttf */; };
+		EDB145112664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDB145102664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +75,7 @@
 		EDB143C1265FDEC90028EF5A /* Roboto-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		EDB143C2265FDEC90028EF5A /* Roboto-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Thin.ttf"; sourceTree = "<group>"; };
 		EDB143C3265FDEC90028EF5A /* Roboto-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Black.ttf"; sourceTree = "<group>"; };
+		EDB145102664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-VariableFont_slnt,wght.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,6 +168,7 @@
 		EDB143B7265FDEC90028EF5A /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				EDB145102664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf */,
 				EDB143B8265FDEC90028EF5A /* Roboto-Medium.ttf */,
 				EDB143B9265FDEC90028EF5A /* Roboto-Light.ttf */,
 				EDB143BA265FDEC90028EF5A /* Roboto-Regular.ttf */,
@@ -297,6 +300,7 @@
 				EDB143C8265FDEC90028EF5A /* Roboto-ThinItalic.ttf in Resources */,
 				EDB143CC265FDEC90028EF5A /* Roboto-BlackItalic.ttf in Resources */,
 				EDB143C7265FDEC90028EF5A /* Roboto-MediumItalic.ttf in Resources */,
+				EDB145112664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf in Resources */,
 				EDB143B5265FDE960028EF5A /* Assets.xcassets in Resources */,
 				EDB143CB265FDEC90028EF5A /* Roboto-Italic.ttf in Resources */,
 				EDB14388265FDA410028EF5A /* Main.storyboard in Resources */,
@@ -424,7 +428,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -479,7 +483,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
