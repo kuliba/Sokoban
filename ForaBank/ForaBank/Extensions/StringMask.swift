@@ -7,11 +7,6 @@
 
 import Foundation
 
-fileprivate struct Constants {
-    static let letterMaskCharacter: Character = "A"
-    static let numberMaskCharacter: Character = "0"
-    static let alphanumericMaskCharacter: Character = "*"
-}
 
 public struct StringMask: Equatable {
     

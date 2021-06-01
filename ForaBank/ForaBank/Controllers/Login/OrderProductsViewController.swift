@@ -7,11 +7,9 @@
 
 import UIKit
 
-private let reuseIdentifier = "OrderProductsCollectionViewCell"
-
-
 class OrderProductsViewController: UICollectionViewController {
-
+    
+    private let reuseIdentifier = "OrderProductsCollectionViewCell"
     var products = [OrderProductModel]()
     
     //MARK: - ViewLifeCycle
@@ -34,14 +32,13 @@ class OrderProductsViewController: UICollectionViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = false
-        navigationController?.navigationBar.topItem?.title = ""
-        navigationController?.navigationBar.tintColor = .black
     }
 
     //TODO: отрефакторить если будем получать с бэка
+    //MARK: - API
     private func setupData() {
-        self.products = MockItems.orderProducts()
-        self.collectionView.reloadData()
+        products = MockItems.orderProducts()
+        collectionView.reloadData()
     }
 
     // MARK: UICollectionViewDataSource
@@ -56,29 +53,9 @@ class OrderProductsViewController: UICollectionViewController {
     }
 
     // MARK: UICollectionViewDelegate
-
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("Выбор продукта: " + products[indexPath.row].title)
         guard let url = products[indexPath.row].orderURL else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 
-
-}
-
-// MARK: UICollectionViewFlowLayout
-extension OrderProductsViewController: UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 28
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.bounds.width - 40, height: collectionView.bounds.height/4.3)
-    }
-    
 }

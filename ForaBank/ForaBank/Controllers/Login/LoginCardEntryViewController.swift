@@ -21,12 +21,8 @@ class LoginCardEntryViewController: UIViewController {
         setupUI()
         hideKeyboardWhenTappedAround()
         creditCardView.cardNumberTextField.delegate = self
-        creditCardView.orderCardTapped = { () in
-            self.scanCardTapped()
-        }
-        orderCardView.orderCardTapped = { () in
-            self.orderCardTapped()
-        }
+        creditCardView.orderCardTapped = { self.scanCardTapped() }
+        orderCardView.orderCardTapped = { self.orderCardTapped() }
     }
     
     override func viewWillAppear(_ animated: Bool) {

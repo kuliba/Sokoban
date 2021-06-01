@@ -42,6 +42,9 @@
 		EDB14533266667140028EF5A /* OrderProductsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14531266667140028EF5A /* OrderProductsCollectionViewCell.swift */; };
 		EDB14535266671580028EF5A /* MockItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14534266671580028EF5A /* MockItems.swift */; };
 		EDB145382666770A0028EF5A /* OrderProductModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB145372666770A0028EF5A /* OrderProductModel.swift */; };
+		EDB1453C2666AEB90028EF5A /* AppDelegate UI extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1453B2666AEB90028EF5A /* AppDelegate UI extension.swift */; };
+		EDB1453E2666AF260028EF5A /* OrderProductsViewController FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1453D2666AF260028EF5A /* OrderProductsViewController FlowLayout.swift */; };
+		EDB145402666AFD70028EF5A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1453F2666AFD70028EF5A /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,6 +107,9 @@
 		EDB14531266667140028EF5A /* OrderProductsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderProductsCollectionViewCell.swift; sourceTree = "<group>"; };
 		EDB14534266671580028EF5A /* MockItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockItems.swift; sourceTree = "<group>"; };
 		EDB145372666770A0028EF5A /* OrderProductModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderProductModel.swift; sourceTree = "<group>"; };
+		EDB1453B2666AEB90028EF5A /* AppDelegate UI extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AppDelegate UI extension.swift"; sourceTree = "<group>"; };
+		EDB1453D2666AF260028EF5A /* OrderProductsViewController FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OrderProductsViewController FlowLayout.swift"; sourceTree = "<group>"; };
+		EDB1453F2666AFD70028EF5A /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,7 +167,9 @@
 				EDB1452926663BD90028EF5A /* Controllers */,
 				EDB143B0265FDB380028EF5A /* ForaBank.entitlements */,
 				EDB14380265FDA410028EF5A /* AppDelegate.swift */,
+				EDB1453B2666AEB90028EF5A /* AppDelegate UI extension.swift */,
 				EDB14382265FDA410028EF5A /* SceneDelegate.swift */,
+				EDB1453F2666AFD70028EF5A /* Constants.swift */,
 				EDB143B4265FDE960028EF5A /* Assets.xcassets */,
 				EDB143B1265FDDD50028EF5A /* LaunchScreen.storyboard */,
 				EDB1452B26663C9D0028EF5A /* GoogleService-Info.plist */,
@@ -262,6 +270,7 @@
 			children = (
 				EDB14384265FDA410028EF5A /* LoginCardEntryViewController.swift */,
 				EDB1452D26665AD50028EF5A /* OrderProductsViewController.swift */,
+				EDB1453D2666AF260028EF5A /* OrderProductsViewController FlowLayout.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -430,16 +439,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				EDB1451C26652D370028EF5A /* UILabel.swift in Sources */,
+				EDB145402666AFD70028EF5A /* Constants.swift in Sources */,
 				EDB1452026661B030028EF5A /* StringMask.swift in Sources */,
 				EDB14524266624460028EF5A /* UIViewController.swift in Sources */,
 				EDB14533266667140028EF5A /* OrderProductsCollectionViewCell.swift in Sources */,
 				EDB14385265FDA410028EF5A /* LoginCardEntryViewController.swift in Sources */,
+				EDB1453C2666AEB90028EF5A /* AppDelegate UI extension.swift in Sources */,
 				EDB14381265FDA410028EF5A /* AppDelegate.swift in Sources */,
 				EDB14516266526B10028EF5A /* CreditCardEntryView.swift in Sources */,
 				EDB1451E26652F170028EF5A /* UIView.swift in Sources */,
 				EDB145382666770A0028EF5A /* OrderProductModel.swift in Sources */,
 				EDB1452226661C3F0028EF5A /* MaskedTextField.swift in Sources */,
 				EDB14383265FDA410028EF5A /* SceneDelegate.swift in Sources */,
+				EDB1453E2666AF260028EF5A /* OrderProductsViewController FlowLayout.swift in Sources */,
 				EDB1452E26665AD50028EF5A /* OrderProductsViewController.swift in Sources */,
 				EDB14535266671580028EF5A /* MockItems.swift in Sources */,
 				EDB14528266624EE0028EF5A /* OrderCardView.swift in Sources */,

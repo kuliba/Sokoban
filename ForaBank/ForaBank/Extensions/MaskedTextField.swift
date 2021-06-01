@@ -54,19 +54,7 @@ class MaskedTextField: UITextField {
     }
     
     func commonInit() {
-        addEditingChangedObserver()
         super.delegate = self
-        
-    }
-    
-    fileprivate func addEditingChangedObserver() {
-        self.addTarget(self, action: #selector(MaskedTextField.editingChanged), for: .editingChanged)
-    }
-    
-    @objc open func editingChanged() {
-//        updateControl(true)
-//        updateTitleLabel(true)
-        print(#function)
     }
     
 }

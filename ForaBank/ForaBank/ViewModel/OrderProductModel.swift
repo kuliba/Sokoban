@@ -20,7 +20,11 @@ class OrderProductModel {
     }
 
     
-    init(image: String, title: String, subtitle: String, url: String ,color: UIColor = #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1)) {
+    init(image: String,
+         title: String,
+         subtitle: String,
+         url: String,
+         color: UIColor = #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1)) {
         self.backgroundName = image
         self.title = title
         self.subtitle = subtitle
