@@ -9,8 +9,7 @@
 /* Begin PBXBuildFile section */
 		EDB14381265FDA410028EF5A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14380265FDA410028EF5A /* AppDelegate.swift */; };
 		EDB14383265FDA410028EF5A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14382265FDA410028EF5A /* SceneDelegate.swift */; };
-		EDB14385265FDA410028EF5A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14384265FDA410028EF5A /* ViewController.swift */; };
-		EDB14388265FDA410028EF5A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDB14386265FDA410028EF5A /* Main.storyboard */; };
+		EDB14385265FDA410028EF5A /* LoginCardEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14384265FDA410028EF5A /* LoginCardEntryViewController.swift */; };
 		EDB14398265FDA430028EF5A /* ForaBankTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14397265FDA430028EF5A /* ForaBankTests.swift */; };
 		EDB143A3265FDA430028EF5A /* ForaBankUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB143A2265FDA430028EF5A /* ForaBankUITests.swift */; };
 		EDB143B2265FDDD50028EF5A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDB143B1265FDDD50028EF5A /* LaunchScreen.storyboard */; };
@@ -28,6 +27,21 @@
 		EDB143CE265FDEC90028EF5A /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDB143C2265FDEC90028EF5A /* Roboto-Thin.ttf */; };
 		EDB143CF265FDEC90028EF5A /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDB143C3265FDEC90028EF5A /* Roboto-Black.ttf */; };
 		EDB145112664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDB145102664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf */; };
+		EDB14516266526B10028EF5A /* CreditCardEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14515266526B10028EF5A /* CreditCardEntryView.swift */; };
+		EDB14518266526BD0028EF5A /* CreditCardEntryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDB14517266526BD0028EF5A /* CreditCardEntryView.xib */; };
+		EDB1451C26652D370028EF5A /* UILabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1451B26652D370028EF5A /* UILabel.swift */; };
+		EDB1451E26652F170028EF5A /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1451D26652F170028EF5A /* UIView.swift */; };
+		EDB1452026661B030028EF5A /* StringMask.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1451F26661B030028EF5A /* StringMask.swift */; };
+		EDB1452226661C3F0028EF5A /* MaskedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1452126661C3F0028EF5A /* MaskedTextField.swift */; };
+		EDB14524266624460028EF5A /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14523266624460028EF5A /* UIViewController.swift */; };
+		EDB14526266624DC0028EF5A /* OrderCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDB14525266624DC0028EF5A /* OrderCardView.xib */; };
+		EDB14528266624EE0028EF5A /* OrderCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14527266624EE0028EF5A /* OrderCardView.swift */; };
+		EDB1452C26663C9D0028EF5A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EDB1452B26663C9D0028EF5A /* GoogleService-Info.plist */; };
+		EDB1452E26665AD50028EF5A /* OrderProductsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1452D26665AD50028EF5A /* OrderProductsViewController.swift */; };
+		EDB14532266667140028EF5A /* OrderProductsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDB14530266667140028EF5A /* OrderProductsCollectionViewCell.xib */; };
+		EDB14533266667140028EF5A /* OrderProductsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14531266667140028EF5A /* OrderProductsCollectionViewCell.swift */; };
+		EDB14535266671580028EF5A /* MockItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14534266671580028EF5A /* MockItems.swift */; };
+		EDB145382666770A0028EF5A /* OrderProductModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB145372666770A0028EF5A /* OrderProductModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,8 +65,7 @@
 		EDB1437D265FDA410028EF5A /* ForaBank.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ForaBank.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDB14380265FDA410028EF5A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EDB14382265FDA410028EF5A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		EDB14384265FDA410028EF5A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		EDB14387265FDA410028EF5A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		EDB14384265FDA410028EF5A /* LoginCardEntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginCardEntryViewController.swift; sourceTree = "<group>"; };
 		EDB1438E265FDA420028EF5A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EDB14393265FDA430028EF5A /* ForaBankTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ForaBankTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDB14397265FDA430028EF5A /* ForaBankTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForaBankTests.swift; sourceTree = "<group>"; };
@@ -76,6 +89,21 @@
 		EDB143C2265FDEC90028EF5A /* Roboto-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Thin.ttf"; sourceTree = "<group>"; };
 		EDB143C3265FDEC90028EF5A /* Roboto-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Black.ttf"; sourceTree = "<group>"; };
 		EDB145102664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-VariableFont_slnt,wght.ttf"; sourceTree = "<group>"; };
+		EDB14515266526B10028EF5A /* CreditCardEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditCardEntryView.swift; sourceTree = "<group>"; };
+		EDB14517266526BD0028EF5A /* CreditCardEntryView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CreditCardEntryView.xib; sourceTree = "<group>"; };
+		EDB1451B26652D370028EF5A /* UILabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabel.swift; sourceTree = "<group>"; };
+		EDB1451D26652F170028EF5A /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
+		EDB1451F26661B030028EF5A /* StringMask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringMask.swift; sourceTree = "<group>"; };
+		EDB1452126661C3F0028EF5A /* MaskedTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaskedTextField.swift; sourceTree = "<group>"; };
+		EDB14523266624460028EF5A /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
+		EDB14525266624DC0028EF5A /* OrderCardView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OrderCardView.xib; sourceTree = "<group>"; };
+		EDB14527266624EE0028EF5A /* OrderCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCardView.swift; sourceTree = "<group>"; };
+		EDB1452B26663C9D0028EF5A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		EDB1452D26665AD50028EF5A /* OrderProductsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderProductsViewController.swift; sourceTree = "<group>"; };
+		EDB14530266667140028EF5A /* OrderProductsCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OrderProductsCollectionViewCell.xib; sourceTree = "<group>"; };
+		EDB14531266667140028EF5A /* OrderProductsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderProductsCollectionViewCell.swift; sourceTree = "<group>"; };
+		EDB14534266671580028EF5A /* MockItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockItems.swift; sourceTree = "<group>"; };
+		EDB145372666770A0028EF5A /* OrderProductModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderProductModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,14 +154,17 @@
 		EDB1437F265FDA410028EF5A /* ForaBank */ = {
 			isa = PBXGroup;
 			children = (
+				EDB14536266676FD0028EF5A /* ViewModel */,
+				EDB1451926652D090028EF5A /* Extensions */,
+				EDB14514266526670028EF5A /* Views */,
 				EDB143B6265FDEAD0028EF5A /* Resources */,
+				EDB1452926663BD90028EF5A /* Controllers */,
 				EDB143B0265FDB380028EF5A /* ForaBank.entitlements */,
 				EDB14380265FDA410028EF5A /* AppDelegate.swift */,
 				EDB14382265FDA410028EF5A /* SceneDelegate.swift */,
-				EDB14384265FDA410028EF5A /* ViewController.swift */,
-				EDB14386265FDA410028EF5A /* Main.storyboard */,
 				EDB143B4265FDE960028EF5A /* Assets.xcassets */,
 				EDB143B1265FDDD50028EF5A /* LaunchScreen.storyboard */,
+				EDB1452B26663C9D0028EF5A /* GoogleService-Info.plist */,
 				EDB1438E265FDA420028EF5A /* Info.plist */,
 			);
 			path = ForaBank;
@@ -161,6 +192,7 @@
 			isa = PBXGroup;
 			children = (
 				EDB143B7265FDEC90028EF5A /* Fonts */,
+				EDB14534266671580028EF5A /* MockItems.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -183,6 +215,72 @@
 				EDB143C3265FDEC90028EF5A /* Roboto-Black.ttf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		EDB14514266526670028EF5A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				EDB1452F266667140028EF5A /* ProductsCell */,
+				EDB14515266526B10028EF5A /* CreditCardEntryView.swift */,
+				EDB14517266526BD0028EF5A /* CreditCardEntryView.xib */,
+				EDB14527266624EE0028EF5A /* OrderCardView.swift */,
+				EDB14525266624DC0028EF5A /* OrderCardView.xib */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		EDB1451926652D090028EF5A /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				EDB1451A26652D1A0028EF5A /* UIKit */,
+				EDB1451F26661B030028EF5A /* StringMask.swift */,
+				EDB1452126661C3F0028EF5A /* MaskedTextField.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		EDB1451A26652D1A0028EF5A /* UIKit */ = {
+			isa = PBXGroup;
+			children = (
+				EDB1451B26652D370028EF5A /* UILabel.swift */,
+				EDB1451D26652F170028EF5A /* UIView.swift */,
+				EDB14523266624460028EF5A /* UIViewController.swift */,
+			);
+			path = UIKit;
+			sourceTree = "<group>";
+		};
+		EDB1452926663BD90028EF5A /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				EDB1452A26663BF40028EF5A /* Login */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		EDB1452A26663BF40028EF5A /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				EDB14384265FDA410028EF5A /* LoginCardEntryViewController.swift */,
+				EDB1452D26665AD50028EF5A /* OrderProductsViewController.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		EDB1452F266667140028EF5A /* ProductsCell */ = {
+			isa = PBXGroup;
+			children = (
+				EDB14530266667140028EF5A /* OrderProductsCollectionViewCell.xib */,
+				EDB14531266667140028EF5A /* OrderProductsCollectionViewCell.swift */,
+			);
+			path = ProductsCell;
+			sourceTree = "<group>";
+		};
+		EDB14536266676FD0028EF5A /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EDB145372666770A0028EF5A /* OrderProductModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -298,12 +396,15 @@
 				EDB143B2265FDDD50028EF5A /* LaunchScreen.storyboard in Resources */,
 				EDB143C5265FDEC90028EF5A /* Roboto-Light.ttf in Resources */,
 				EDB143C8265FDEC90028EF5A /* Roboto-ThinItalic.ttf in Resources */,
+				EDB14518266526BD0028EF5A /* CreditCardEntryView.xib in Resources */,
+				EDB1452C26663C9D0028EF5A /* GoogleService-Info.plist in Resources */,
+				EDB14526266624DC0028EF5A /* OrderCardView.xib in Resources */,
 				EDB143CC265FDEC90028EF5A /* Roboto-BlackItalic.ttf in Resources */,
 				EDB143C7265FDEC90028EF5A /* Roboto-MediumItalic.ttf in Resources */,
 				EDB145112664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf in Resources */,
 				EDB143B5265FDE960028EF5A /* Assets.xcassets in Resources */,
 				EDB143CB265FDEC90028EF5A /* Roboto-Italic.ttf in Resources */,
-				EDB14388265FDA410028EF5A /* Main.storyboard in Resources */,
+				EDB14532266667140028EF5A /* OrderProductsCollectionViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -328,9 +429,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EDB14385265FDA410028EF5A /* ViewController.swift in Sources */,
+				EDB1451C26652D370028EF5A /* UILabel.swift in Sources */,
+				EDB1452026661B030028EF5A /* StringMask.swift in Sources */,
+				EDB14524266624460028EF5A /* UIViewController.swift in Sources */,
+				EDB14533266667140028EF5A /* OrderProductsCollectionViewCell.swift in Sources */,
+				EDB14385265FDA410028EF5A /* LoginCardEntryViewController.swift in Sources */,
 				EDB14381265FDA410028EF5A /* AppDelegate.swift in Sources */,
+				EDB14516266526B10028EF5A /* CreditCardEntryView.swift in Sources */,
+				EDB1451E26652F170028EF5A /* UIView.swift in Sources */,
+				EDB145382666770A0028EF5A /* OrderProductModel.swift in Sources */,
+				EDB1452226661C3F0028EF5A /* MaskedTextField.swift in Sources */,
 				EDB14383265FDA410028EF5A /* SceneDelegate.swift in Sources */,
+				EDB1452E26665AD50028EF5A /* OrderProductsViewController.swift in Sources */,
+				EDB14535266671580028EF5A /* MockItems.swift in Sources */,
+				EDB14528266624EE0028EF5A /* OrderCardView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -364,17 +476,6 @@
 			targetProxy = EDB1439F265FDA430028EF5A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		EDB14386265FDA410028EF5A /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				EDB14387265FDA410028EF5A /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		EDB143A5265FDA430028EF5A /* Debug */ = {
