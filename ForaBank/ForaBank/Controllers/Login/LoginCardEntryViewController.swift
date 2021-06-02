@@ -21,7 +21,7 @@ class LoginCardEntryViewController: UIViewController {
         setupUI()
         hideKeyboardWhenTappedAround()
         creditCardView.cardNumberTextField.delegate = self
-        creditCardView.orderCardTapped = { self.scanCardTapped() }
+        creditCardView.scanerCardTapped = { self.scanCardTapped() }
         orderCardView.orderCardTapped = { self.orderCardTapped() }
     }
     
@@ -83,6 +83,8 @@ extension LoginCardEntryViewController: UITextFieldDelegate {
         guard let cardNumber = textField.unmaskedText else { return }
         if cardNumber.count == 16 {
             print("Открываем экран СМС, карта№: " + cardNumber)
+            let vc = CodeVerificationViewController()
+            navigationController?.pushViewController(vc, animated: true)
         }
     }
 }

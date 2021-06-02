@@ -11,7 +11,7 @@ class CreditCardEntryView: UIView {
 
     //MARK: - Property
     let kContentXibName = "CreditCardEntryView"
-    var orderCardTapped: (() -> Void)?
+    var scanerCardTapped: (() -> Void)?
     @IBOutlet var contentView: UIView!
     @IBOutlet weak var cardNumberTextField: MaskedTextField! {
         didSet {
@@ -48,7 +48,7 @@ class CreditCardEntryView: UIView {
     }
     
     @IBAction func scanerButtonTapped(_ sender: Any) {
-        orderCardTapped?()
+        scanerCardTapped?()
     }
     
 
