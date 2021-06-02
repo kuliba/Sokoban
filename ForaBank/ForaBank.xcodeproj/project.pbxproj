@@ -48,6 +48,7 @@
 		EDB1654B26676F20007E6030 /* UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1654A26676F20007E6030 /* UIButton.swift */; };
 		EDB1654D26678E87007E6030 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDB1654C26678E87007E6030 /* LaunchScreen.storyboard */; };
 		EDB1655226679332007E6030 /* AsunBasicAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1655126679332007E6030 /* AsunBasicAttributes.swift */; };
+		EDB1655826679C74007E6030 /* SmsCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1655726679C74007E6030 /* SmsCodeView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -116,6 +117,7 @@
 		EDB1654A26676F20007E6030 /* UIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButton.swift; sourceTree = "<group>"; };
 		EDB1654C26678E87007E6030 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EDB1655126679332007E6030 /* AsunBasicAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsunBasicAttributes.swift; sourceTree = "<group>"; };
+		EDB1655726679C74007E6030 /* SmsCodeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmsCodeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -239,6 +241,7 @@
 				EDB14515266526B10028EF5A /* CreditCardEntryView.swift */,
 				EDB14527266624EE0028EF5A /* OrderCardView.swift */,
 				EDB1655126679332007E6030 /* AsunBasicAttributes.swift */,
+				EDB1655726679C74007E6030 /* SmsCodeView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -464,6 +467,7 @@
 				EDB14385265FDA410028EF5A /* LoginCardEntryViewController.swift in Sources */,
 				EDB1654B26676F20007E6030 /* UIButton.swift in Sources */,
 				EDB1453C2666AEB90028EF5A /* AppDelegate UI extension.swift in Sources */,
+				EDB1655826679C74007E6030 /* SmsCodeView.swift in Sources */,
 				EDB14381265FDA410028EF5A /* AppDelegate.swift in Sources */,
 				EDB14516266526B10028EF5A /* CreditCardEntryView.swift in Sources */,
 				EDB1451E26652F170028EF5A /* UIView.swift in Sources */,
