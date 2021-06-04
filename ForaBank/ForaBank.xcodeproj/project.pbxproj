@@ -49,6 +49,29 @@
 		EDB1654D26678E87007E6030 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDB1654C26678E87007E6030 /* LaunchScreen.storyboard */; };
 		EDB1655226679332007E6030 /* AsunBasicAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1655126679332007E6030 /* AsunBasicAttributes.swift */; };
 		EDB1655826679C74007E6030 /* SmsCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1655726679C74007E6030 /* SmsCodeView.swift */; };
+		EDB1655A2667A220007E6030 /* CodeVerificationViewController UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB165592667A220007E6030 /* CodeVerificationViewController UI.swift */; };
+		EDB1655C2667A2C8007E6030 /* LoginCardEntryViewController UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1655B2667A2C8007E6030 /* LoginCardEntryViewController UI.swift */; };
+		EDB1655E2667A55F007E6030 /* ForaInput.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDB1655D2667A55F007E6030 /* ForaInput.xib */; };
+		EDB165602667A569007E6030 /* ForaInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1655F2667A569007E6030 /* ForaInput.swift */; };
+		EDB165622667A571007E6030 /* ForaInputModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB165612667A571007E6030 /* ForaInputModel.swift */; };
+		EDB165652667A741007E6030 /* ContactConfurmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB165632667A741007E6030 /* ContactConfurmViewController.swift */; };
+		EDB165662667A741007E6030 /* ContactInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB165642667A741007E6030 /* ContactInputViewController.swift */; };
+		EDB1656C26681F0E007E6030 /* MainTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1656B26681F0E007E6030 /* MainTabBarViewController.swift */; };
+		EDB1656E266827A8007E6030 /* PaymentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1656D266827A8007E6030 /* PaymentsViewController.swift */; };
+		EDB165712668C480007E6030 /* SectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB165702668C480007E6030 /* SectionHeader.swift */; };
+		EDB165762668C5BE007E6030 /* PaymentsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB165752668C5BE007E6030 /* PaymentsCell.swift */; };
+		EDB165782668C76A007E6030 /* SelfConfiguringCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB165772668C76A007E6030 /* SelfConfiguringCell.swift */; };
+		EDB1657A2668C7F2007E6030 /* TransferCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB165792668C7F2007E6030 /* TransferCell.swift */; };
+		EDB1657C2668C8D5007E6030 /* PayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1657B2668C8D5007E6030 /* PayCell.swift */; };
+		EDB1658026694676007E6030 /* PaymentsViewControllerLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1657F26694676007E6030 /* PaymentsViewControllerLayout.swift */; };
+		EDB16586266A0883007E6030 /* NSDirectionalEdgeInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB16585266A0883007E6030 /* NSDirectionalEdgeInsets.swift */; };
+		EDB16588266A14F9007E6030 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB16587266A14F9007E6030 /* String.swift */; };
+		EDB1658A266A181C007E6030 /* PaymentsViewControllerDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB16589266A181C007E6030 /* PaymentsViewControllerDataSource.swift */; };
+		EDB1658C266A18C3007E6030 /* PaymentsViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1658B266A18C3007E6030 /* PaymentsViewControllerDelegate.swift */; };
+		EDB1658F266A1942007E6030 /* PaymentsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1658E266A1942007E6030 /* PaymentsModel.swift */; };
+		EDB16592266A19DA007E6030 /* PaymentsViewControllerSearchBarDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB16591266A19DA007E6030 /* PaymentsViewControllerSearchBarDelegate.swift */; };
+		EDB16595266A4438007E6030 /* DevelopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB16594266A4438007E6030 /* DevelopViewController.swift */; };
+		EDB16597266A576A007E6030 /* CardScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB16596266A576A007E6030 /* CardScanner.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -118,6 +141,29 @@
 		EDB1654C26678E87007E6030 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EDB1655126679332007E6030 /* AsunBasicAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsunBasicAttributes.swift; sourceTree = "<group>"; };
 		EDB1655726679C74007E6030 /* SmsCodeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmsCodeView.swift; sourceTree = "<group>"; };
+		EDB165592667A220007E6030 /* CodeVerificationViewController UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CodeVerificationViewController UI.swift"; sourceTree = "<group>"; };
+		EDB1655B2667A2C8007E6030 /* LoginCardEntryViewController UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoginCardEntryViewController UI.swift"; sourceTree = "<group>"; };
+		EDB1655D2667A55F007E6030 /* ForaInput.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ForaInput.xib; sourceTree = "<group>"; };
+		EDB1655F2667A569007E6030 /* ForaInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForaInput.swift; sourceTree = "<group>"; };
+		EDB165612667A571007E6030 /* ForaInputModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForaInputModel.swift; sourceTree = "<group>"; };
+		EDB165632667A741007E6030 /* ContactConfurmViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactConfurmViewController.swift; sourceTree = "<group>"; };
+		EDB165642667A741007E6030 /* ContactInputViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactInputViewController.swift; sourceTree = "<group>"; };
+		EDB1656B26681F0E007E6030 /* MainTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarViewController.swift; sourceTree = "<group>"; };
+		EDB1656D266827A8007E6030 /* PaymentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsViewController.swift; sourceTree = "<group>"; };
+		EDB165702668C480007E6030 /* SectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeader.swift; sourceTree = "<group>"; };
+		EDB165752668C5BE007E6030 /* PaymentsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsCell.swift; sourceTree = "<group>"; };
+		EDB165772668C76A007E6030 /* SelfConfiguringCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfConfiguringCell.swift; sourceTree = "<group>"; };
+		EDB165792668C7F2007E6030 /* TransferCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferCell.swift; sourceTree = "<group>"; };
+		EDB1657B2668C8D5007E6030 /* PayCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayCell.swift; sourceTree = "<group>"; };
+		EDB1657F26694676007E6030 /* PaymentsViewControllerLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsViewControllerLayout.swift; sourceTree = "<group>"; };
+		EDB16585266A0883007E6030 /* NSDirectionalEdgeInsets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSDirectionalEdgeInsets.swift; sourceTree = "<group>"; };
+		EDB16587266A14F9007E6030 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		EDB16589266A181C007E6030 /* PaymentsViewControllerDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsViewControllerDataSource.swift; sourceTree = "<group>"; };
+		EDB1658B266A18C3007E6030 /* PaymentsViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsViewControllerDelegate.swift; sourceTree = "<group>"; };
+		EDB1658E266A1942007E6030 /* PaymentsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsModel.swift; sourceTree = "<group>"; };
+		EDB16591266A19DA007E6030 /* PaymentsViewControllerSearchBarDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsViewControllerSearchBarDelegate.swift; sourceTree = "<group>"; };
+		EDB16594266A4438007E6030 /* DevelopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopViewController.swift; sourceTree = "<group>"; };
+		EDB16596266A576A007E6030 /* CardScanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardScanner.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -242,6 +288,7 @@
 				EDB14527266624EE0028EF5A /* OrderCardView.swift */,
 				EDB1655126679332007E6030 /* AsunBasicAttributes.swift */,
 				EDB1655726679C74007E6030 /* SmsCodeView.swift */,
+				EDB1655F2667A569007E6030 /* ForaInput.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -263,6 +310,8 @@
 				EDB1451B26652D370028EF5A /* UILabel.swift */,
 				EDB1451D26652F170028EF5A /* UIView.swift */,
 				EDB14523266624460028EF5A /* UIViewController.swift */,
+				EDB16585266A0883007E6030 /* NSDirectionalEdgeInsets.swift */,
+				EDB16587266A14F9007E6030 /* String.swift */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";
@@ -270,7 +319,10 @@
 		EDB1452926663BD90028EF5A /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				EDB16593266A4317007E6030 /* SecondaryControllers */,
+				EDB165722668C51A007E6030 /* MainControllers */,
 				EDB1452A26663BF40028EF5A /* Login */,
+				EDB16594266A4438007E6030 /* DevelopViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -279,9 +331,11 @@
 			isa = PBXGroup;
 			children = (
 				EDB14384265FDA410028EF5A /* LoginCardEntryViewController.swift */,
+				EDB1655B2667A2C8007E6030 /* LoginCardEntryViewController UI.swift */,
 				EDB1452D26665AD50028EF5A /* OrderProductsViewController.swift */,
 				EDB1453D2666AF260028EF5A /* OrderProductsViewController FlowLayout.swift */,
 				EDB16548266766FD007E6030 /* CodeVerificationViewController.swift */,
+				EDB165592667A220007E6030 /* CodeVerificationViewController UI.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -299,6 +353,7 @@
 			isa = PBXGroup;
 			children = (
 				EDB145372666770A0028EF5A /* OrderProductModel.swift */,
+				EDB165612667A571007E6030 /* ForaInputModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -308,8 +363,78 @@
 			children = (
 				EDB14517266526BD0028EF5A /* CreditCardEntryView.xib */,
 				EDB14525266624DC0028EF5A /* OrderCardView.xib */,
+				EDB1655D2667A55F007E6030 /* ForaInput.xib */,
 			);
 			path = Xib;
+			sourceTree = "<group>";
+		};
+		EDB1656F2668C45D007E6030 /* Header */ = {
+			isa = PBXGroup;
+			children = (
+				EDB165702668C480007E6030 /* SectionHeader.swift */,
+			);
+			path = Header;
+			sourceTree = "<group>";
+		};
+		EDB165722668C51A007E6030 /* MainControllers */ = {
+			isa = PBXGroup;
+			children = (
+				EDB165732668C53A007E6030 /* PaymentsController */,
+				EDB1656B26681F0E007E6030 /* MainTabBarViewController.swift */,
+			);
+			path = MainControllers;
+			sourceTree = "<group>";
+		};
+		EDB165732668C53A007E6030 /* PaymentsController */ = {
+			isa = PBXGroup;
+			children = (
+				EDB16590266A1978007E6030 /* Protocol */,
+				EDB1658D266A1933007E6030 /* ViewModel */,
+				EDB165742668C54B007E6030 /* Cell */,
+				EDB1656F2668C45D007E6030 /* Header */,
+				EDB1656D266827A8007E6030 /* PaymentsViewController.swift */,
+				EDB1657F26694676007E6030 /* PaymentsViewControllerLayout.swift */,
+				EDB16589266A181C007E6030 /* PaymentsViewControllerDataSource.swift */,
+				EDB1658B266A18C3007E6030 /* PaymentsViewControllerDelegate.swift */,
+				EDB16591266A19DA007E6030 /* PaymentsViewControllerSearchBarDelegate.swift */,
+			);
+			path = PaymentsController;
+			sourceTree = "<group>";
+		};
+		EDB165742668C54B007E6030 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				EDB165752668C5BE007E6030 /* PaymentsCell.swift */,
+				EDB165792668C7F2007E6030 /* TransferCell.swift */,
+				EDB1657B2668C8D5007E6030 /* PayCell.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		EDB1658D266A1933007E6030 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EDB1658E266A1942007E6030 /* PaymentsModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		EDB16590266A1978007E6030 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				EDB165772668C76A007E6030 /* SelfConfiguringCell.swift */,
+			);
+			path = Protocol;
+			sourceTree = "<group>";
+		};
+		EDB16593266A4317007E6030 /* SecondaryControllers */ = {
+			isa = PBXGroup;
+			children = (
+				EDB16596266A576A007E6030 /* CardScanner.swift */,
+				EDB165632667A741007E6030 /* ContactConfurmViewController.swift */,
+				EDB165642667A741007E6030 /* ContactInputViewController.swift */,
+			);
+			path = SecondaryControllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -433,6 +558,7 @@
 				EDB145112664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf in Resources */,
 				EDB143B5265FDE960028EF5A /* Assets.xcassets in Resources */,
 				EDB143CB265FDEC90028EF5A /* Roboto-Italic.ttf in Resources */,
+				EDB1655E2667A55F007E6030 /* ForaInput.xib in Resources */,
 				EDB14532266667140028EF5A /* OrderProductsCollectionViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -460,20 +586,42 @@
 			files = (
 				EDB1451C26652D370028EF5A /* UILabel.swift in Sources */,
 				EDB145402666AFD70028EF5A /* Constants.swift in Sources */,
+				EDB165712668C480007E6030 /* SectionHeader.swift in Sources */,
+				EDB165602667A569007E6030 /* ForaInput.swift in Sources */,
+				EDB1657C2668C8D5007E6030 /* PayCell.swift in Sources */,
 				EDB1452026661B030028EF5A /* StringMask.swift in Sources */,
+				EDB16586266A0883007E6030 /* NSDirectionalEdgeInsets.swift in Sources */,
 				EDB14524266624460028EF5A /* UIViewController.swift in Sources */,
+				EDB16597266A576A007E6030 /* CardScanner.swift in Sources */,
+				EDB165662667A741007E6030 /* ContactInputViewController.swift in Sources */,
 				EDB14533266667140028EF5A /* OrderProductsCollectionViewCell.swift in Sources */,
+				EDB16595266A4438007E6030 /* DevelopViewController.swift in Sources */,
+				EDB165652667A741007E6030 /* ContactConfurmViewController.swift in Sources */,
 				EDB1655226679332007E6030 /* AsunBasicAttributes.swift in Sources */,
+				EDB16592266A19DA007E6030 /* PaymentsViewControllerSearchBarDelegate.swift in Sources */,
 				EDB14385265FDA410028EF5A /* LoginCardEntryViewController.swift in Sources */,
+				EDB1656E266827A8007E6030 /* PaymentsViewController.swift in Sources */,
 				EDB1654B26676F20007E6030 /* UIButton.swift in Sources */,
 				EDB1453C2666AEB90028EF5A /* AppDelegate UI extension.swift in Sources */,
 				EDB1655826679C74007E6030 /* SmsCodeView.swift in Sources */,
 				EDB14381265FDA410028EF5A /* AppDelegate.swift in Sources */,
+				EDB1658C266A18C3007E6030 /* PaymentsViewControllerDelegate.swift in Sources */,
+				EDB1658A266A181C007E6030 /* PaymentsViewControllerDataSource.swift in Sources */,
 				EDB14516266526B10028EF5A /* CreditCardEntryView.swift in Sources */,
+				EDB1655C2667A2C8007E6030 /* LoginCardEntryViewController UI.swift in Sources */,
 				EDB1451E26652F170028EF5A /* UIView.swift in Sources */,
+				EDB1656C26681F0E007E6030 /* MainTabBarViewController.swift in Sources */,
+				EDB1658026694676007E6030 /* PaymentsViewControllerLayout.swift in Sources */,
+				EDB1655A2667A220007E6030 /* CodeVerificationViewController UI.swift in Sources */,
+				EDB1657A2668C7F2007E6030 /* TransferCell.swift in Sources */,
 				EDB145382666770A0028EF5A /* OrderProductModel.swift in Sources */,
 				EDB1452226661C3F0028EF5A /* MaskedTextField.swift in Sources */,
+				EDB16588266A14F9007E6030 /* String.swift in Sources */,
+				EDB165762668C5BE007E6030 /* PaymentsCell.swift in Sources */,
 				EDB14383265FDA410028EF5A /* SceneDelegate.swift in Sources */,
+				EDB1658F266A1942007E6030 /* PaymentsModel.swift in Sources */,
+				EDB165782668C76A007E6030 /* SelfConfiguringCell.swift in Sources */,
+				EDB165622667A571007E6030 /* ForaInputModel.swift in Sources */,
 				EDB1453E2666AF260028EF5A /* OrderProductsViewController FlowLayout.swift in Sources */,
 				EDB1452E26665AD50028EF5A /* OrderProductsViewController.swift in Sources */,
 				EDB14535266671580028EF5A /* MockItems.swift in Sources */,
@@ -636,6 +784,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 50;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
@@ -648,6 +797,7 @@
 				MARKETING_VERSION = 7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -659,6 +809,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 50;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
@@ -671,6 +822,7 @@
 				MARKETING_VERSION = 7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

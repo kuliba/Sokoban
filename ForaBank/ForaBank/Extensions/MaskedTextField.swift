@@ -8,7 +8,10 @@
 import UIKit
 
 class MaskedTextField: UITextField {
+    
     //MARK: - Properties
+    var tintedClearImage: UIImage?
+    
     override var text: String? {
         didSet {
             guard let text = text else { return }
@@ -57,8 +60,48 @@ class MaskedTextField: UITextField {
         super.delegate = self
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.tintClearImage()
+    }
+    
+    //MARK: - Change Clear Image
+    private func tintClearImage() {
+        for view in subviews {
+            if view is UIButton {
+                let button = view as! UIButton
+                if self.tintedClearImage == nil {
+                    tintedClearImage = self.tintImage(image: #imageLiteral(resourceName: "Frame 572"), color: #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1))
+                }
+                button.setImage(self.tintedClearImage, for: .normal)
+                button.setImage(self.tintedClearImage, for: .highlighted)
+            }
+        }
+    }
+    
+    private func tintImage(image: UIImage, color: UIColor) -> UIImage {
+        let size = image.size
+        
+        UIGraphicsBeginImageContextWithOptions(size, false, image.scale)
+        let context = UIGraphicsGetCurrentContext()
+        image.draw(at: .zero, blendMode: CGBlendMode.normal, alpha: 1.0)
+        
+        context?.setFillColor(color.cgColor)
+        context?.setBlendMode(CGBlendMode.sourceIn)
+        context?.setAlpha(1.0)
+        
+        let rect = CGRect(x: CGPoint.zero.x, y: CGPoint.zero.y,
+                          width: image.size.width, height: image.size.height)
+        UIGraphicsGetCurrentContext()?.fill(rect)
+        let tintedImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return tintedImage ?? UIImage()
+    }
+    
 }
 
+//MARK: - UITextFieldDelegate
 extension MaskedTextField: UITextFieldDelegate {
     
     public func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {

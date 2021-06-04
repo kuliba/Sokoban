@@ -20,7 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
         let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
-        window?.rootViewController = navVC //OrderProductsViewController()
+        window?.rootViewController = navVC //MainTabBarViewController()
         window?.makeKeyAndVisible()
         
     }

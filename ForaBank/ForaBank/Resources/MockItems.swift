@@ -25,4 +25,116 @@ class MockItems {
                                   url: "https://www.forabank.ru/lendingi/premialnoe-obsluzhivanie/")]
     }
     
+    class func returnPayments() -> [PaymentsModel] {
+        return [
+            PaymentsModel(id: 1, name: "Оплата \nпо QR",
+                          iconName: "PaymentsIconBarcode-scanner",
+                          avatarImageName: nil,
+                          controllerName: "DevelopViewController",
+                          description: "QR"),
+            
+            PaymentsModel(id: 2, name: "Шаблоны и\nавтоплатежи",
+                          iconName: "PaymentsIconFavorites",
+                          controllerName: "DevelopViewController",
+                          description: "Что то"),
+            
+            PaymentsModel(id: 3, name: "Перевод по\nтелефону",
+                          iconName: "PaymentsIconPhone",
+                          controllerName: "DevelopViewController",
+                          description: "Что то"),
+            
+            PaymentsModel(id: 4, name: "Любимая Beeline",
+//                          iconName: "bilane",
+                          avatarImageName: "bilane",
+                          controllerName: "DevelopViewController",
+                          description: "Что то"),
+            
+            PaymentsModel(id: 5, name: "Обмен валют",
+                          iconName: "PaymentsIconCarancy",
+                          controllerName: "DevelopViewController",
+                          description: "Что то"),
+            
+        ]
+    }
+    class func returnTransfers() -> [PaymentsModel] {
+        return [
+            PaymentsModel(id: 6, name: "Между своими",
+                          iconName: "PaymentsIconMyPay",
+                          controllerName: "DevelopViewController",
+                          description: "Что то"),
+            
+            PaymentsModel(id: 7, name: "По номеру телефона",
+                          iconName: "PaymentsIconPhonePay",
+                          controllerName: "DevelopViewController",
+                          description: "Что то"),
+            
+            PaymentsModel(id: 8, name: "За рубеж",
+                          iconName: "PaymentsIconWarldPay",
+                          controllerName: "ContactInputViewController",
+                          description: "Что то"),
+            
+            PaymentsModel(id: 9, name: "На другую карту",
+                          iconName: "PaymentsIconCardPay",
+                          controllerName: "DevelopViewController",
+                          description: "Что то"),
+            
+            PaymentsModel(id: 10, name: "По реквизитaм",
+                          iconName: "PaymentsIconReqPay",
+                          controllerName: "DevelopViewController",
+                          description: "Что то")
+            
+        ]
+    }
+    
+    
+    class func returnPay() -> [PaymentsModel] {
+        return [
+            PaymentsModel(id: 11, name: "Оплата по QR",
+                          iconName: "PaymentsIconBarcode-scanner",
+                          controllerName: "DevelopViewController",
+                          description: "QR"),
+            
+            PaymentsModel(id: 12, name: "Мобильная связь",
+                          iconName: "PaymentsIconPhone",
+                          controllerName: "DevelopViewController",
+                          description: "Что то"),
+            
+            PaymentsModel(id: 13, name: "Коммунальные услуги ЖКХ",
+                          iconName: "PaymentsIconLamp",
+                          controllerName: "DevelopViewController",
+                          description: "Что то"),
+            
+            PaymentsModel(id: 14, name: "Интернет, телевидение, телефон",
+                          iconName: "PaymentsIconComputer",
+                          controllerName: "DevelopViewController",
+                          description: "Что то"),
+            
+            PaymentsModel(id: 15, name: "Штрафы, налоги и государственные услуги",
+                          iconName: "PaymentsIconCourt",
+                          controllerName: "DevelopViewController",
+                          description: "Что то"),
+            
+            PaymentsModel(id: 16, name: "Социальные сети, онлайн игры карты",
+                          iconName: "PaymentsIconGamepad",
+                          controllerName: "DevelopViewController",
+                          description: "Что то"),
+            
+            PaymentsModel(id: 17, name: "В бюджет РФ",
+                          iconName: "PaymentsIconBlazon",
+                          controllerName: "DevelopViewController",
+                          description: "Что то"),
+            
+            PaymentsModel(id: 18, name: "Охранные системы",
+                          iconName: "PaymentsIconKey",
+                          controllerName: "DevelopViewController",
+                          description: "Что то"),
+            
+            PaymentsModel(id: 19, name: "Прочее",
+                          iconName: "PaymentsIconShop",
+                          controllerName: "DevelopViewController",
+                          description: "Что то")
+        ]
+    }
+    
+    
 }

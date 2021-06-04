@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Inter-VariableFont_slnt,wght.ttf">
+            <string>Inter-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ForaInput" customModule="ForaBank" customModuleProvider="target">
+            <connections>
+                <outlet property="bottomLabel" destination="pfW-ba-vr8" id="Yb8-1T-0FB"/>
+                <outlet property="chooseButton" destination="LwO-GA-gxL" id="9g9-RF-GMa"/>
+                <outlet property="chooseTapGesture" destination="l2C-rY-ZiF" id="VvO-sY-tzR"/>
+                <outlet property="contentView" destination="iN0-l3-epB" id="ZXg-hh-t0c"/>
+                <outlet property="errorLabel" destination="9j8-9E-t6u" id="a3Y-5z-fkv"/>
+                <outlet property="imageView" destination="Ip6-4H-Tgh" id="KMY-j9-v2w"/>
+                <outlet property="lineView" destination="hwE-GR-wdf" id="Noc-fj-sSm"/>
+                <outlet property="placeHolder" destination="utL-gx-Bml" id="l7C-uu-adb"/>
+                <outlet property="rubButton" destination="Lst-2H-VkR" id="ehq-jM-Xyr"/>
+                <outlet property="textField" destination="7i2-ba-gMx" id="STM-TM-hZT"/>
+                <outlet property="usdButton" destination="EXU-dM-Jff" id="F2x-xf-MrZ"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" userLabel="contentView">
+            <rect key="frame" x="0.0" y="0.0" width="468" height="107"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="g8J-wa-4aD">
+                    <rect key="frame" x="64" y="0.0" width="384" height="56"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="HZg-ri-lqR">
+                            <rect key="frame" x="0.0" y="4" width="240" height="48"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="По номеру телефона" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="utL-gx-Bml">
+                                    <rect key="frame" x="0.0" y="0.0" width="240" height="12"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="12" id="2pH-0C-fBz"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
+                                    <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="По номеру телефона" minimumFontSize="17" clearButtonMode="unlessEditing" translatesAutoresizingMaskIntoConstraints="NO" id="7i2-ba-gMx" customClass="MaskedTextField" customModule="ForaBank" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="12" width="240" height="24"/>
+                                    <color key="tintColor" red="0.10980392156862745" green="0.10980392156862745" blue="0.10980392156862745" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="24" id="QPw-el-EhM"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="14"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                </textField>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="**** 3678" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pfW-ba-vr8">
+                                    <rect key="frame" x="0.0" y="36" width="240" height="12"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="12" id="SR6-bu-yT4"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
+                                    <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="7i2-ba-gMx" secondAttribute="trailing" id="9tB-nR-hr6"/>
+                                <constraint firstAttribute="trailing" secondItem="pfW-ba-vr8" secondAttribute="trailing" id="TVj-wB-dXT"/>
+                                <constraint firstItem="7i2-ba-gMx" firstAttribute="leading" secondItem="HZg-ri-lqR" secondAttribute="leading" id="YeS-Tq-sS0"/>
+                                <constraint firstItem="utL-gx-Bml" firstAttribute="leading" secondItem="HZg-ri-lqR" secondAttribute="leading" id="dti-bp-ybJ"/>
+                                <constraint firstAttribute="trailing" secondItem="utL-gx-Bml" secondAttribute="trailing" id="jl2-lI-uhV"/>
+                                <constraint firstItem="pfW-ba-vr8" firstAttribute="leading" secondItem="HZg-ri-lqR" secondAttribute="leading" id="nfV-Du-FRq"/>
+                            </constraints>
+                        </stackView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lst-2H-VkR">
+                            <rect key="frame" x="256" y="12" width="32" height="32"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="32" id="3bt-IA-Pfw"/>
+                                <constraint firstAttribute="height" constant="32" id="aea-Md-ekx"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="14"/>
+                            <state key="normal" title="₽">
+                                <color key="titleColor" red="0.10980392156862745" green="0.10980392156862745" blue="0.10980392156862745" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="rubButtonTapped:" destination="-1" eventType="touchUpInside" id="c0d-aq-dqg"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EXU-dM-Jff">
+                            <rect key="frame" x="304" y="12" width="32" height="32"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="32" id="1Cb-M9-49n"/>
+                                <constraint firstAttribute="width" constant="32" id="20x-7Q-k3w"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="14"/>
+                            <state key="normal" title="$">
+                                <color key="titleColor" red="0.82745098039215681" green="0.82745098039215681" blue="0.82745098039215681" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="usdButtonTapped:" destination="-1" eventType="touchUpInside" id="xSk-3F-QMW"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LwO-GA-gxL">
+                            <rect key="frame" x="352" y="12" width="32" height="32"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="32" id="YaA-V8-ZL1"/>
+                                <constraint firstAttribute="width" constant="32" id="v0f-Xx-dam"/>
+                            </constraints>
+                            <state key="normal" image="chooseIcon">
+                                <color key="titleColor" red="0.82745098039999998" green="0.82745098039999998" blue="0.82745098039999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="chooseButtonTapped:" destination="-1" eventType="touchUpInside" id="lqa-D2-tZL"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <gestureRecognizers/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="56" id="cPT-M1-3SQ"/>
+                        <constraint firstItem="Lst-2H-VkR" firstAttribute="centerY" secondItem="g8J-wa-4aD" secondAttribute="centerY" id="dFS-ur-sAl"/>
+                        <constraint firstItem="HZg-ri-lqR" firstAttribute="centerY" secondItem="g8J-wa-4aD" secondAttribute="centerY" id="oIE-hJ-U5q"/>
+                        <constraint firstItem="EXU-dM-Jff" firstAttribute="centerY" secondItem="g8J-wa-4aD" secondAttribute="centerY" id="xhP-rz-YWt"/>
+                    </constraints>
+                    <connections>
+                        <outletCollection property="gestureRecognizers" destination="l2C-rY-ZiF" appends="YES" id="W0M-mE-o2a"/>
+                    </connections>
+                </stackView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hwE-GR-wdf">
+                    <rect key="frame" x="64" y="56" width="384" height="1"/>
+                    <color key="backgroundColor" systemColor="systemGray3Color"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="l0G-jI-kpr"/>
+                    </constraints>
+                </view>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Phone" translatesAutoresizingMaskIntoConstraints="NO" id="Ip6-4H-Tgh">
+                    <rect key="frame" x="16" y="12" width="32" height="32"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="32" id="XKA-iR-Nsh"/>
+                        <constraint firstAttribute="width" constant="32" id="aZc-Bf-iPi"/>
+                    </constraints>
+                </imageView>
+                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Номер телефона указан неверно" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9j8-9E-t6u">
+                    <rect key="frame" x="64" y="57" width="384" height="16"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="16" id="ekJ-hk-NkD"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
+                    <color key="textColor" red="0.8901960784313725" green="0.0039215686274509803" blue="0.10588235294117647" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="g8J-wa-4aD" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="7x2-wX-JUS"/>
+                <constraint firstItem="hwE-GR-wdf" firstAttribute="trailing" secondItem="g8J-wa-4aD" secondAttribute="trailing" id="Bi9-Hv-ws7"/>
+                <constraint firstItem="Ip6-4H-Tgh" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="16" id="EQB-UN-QhR"/>
+                <constraint firstItem="Ip6-4H-Tgh" firstAttribute="centerY" secondItem="HZg-ri-lqR" secondAttribute="centerY" id="Hhj-Tu-RVp"/>
+                <constraint firstItem="g8J-wa-4aD" firstAttribute="leading" secondItem="Ip6-4H-Tgh" secondAttribute="trailing" constant="16" id="IoV-vd-eH8"/>
+                <constraint firstItem="hwE-GR-wdf" firstAttribute="leading" secondItem="g8J-wa-4aD" secondAttribute="leading" id="PF4-J6-Y1y"/>
+                <constraint firstAttribute="trailing" secondItem="hwE-GR-wdf" secondAttribute="trailing" constant="20" id="ZxY-nN-yjd"/>
+                <constraint firstAttribute="trailing" secondItem="g8J-wa-4aD" secondAttribute="trailing" constant="20" id="fK4-LW-CaG"/>
+                <constraint firstItem="hwE-GR-wdf" firstAttribute="top" secondItem="g8J-wa-4aD" secondAttribute="bottom" id="g61-Nf-cJ9"/>
+                <constraint firstItem="9j8-9E-t6u" firstAttribute="trailing" secondItem="hwE-GR-wdf" secondAttribute="trailing" id="gPo-gO-ytW"/>
+                <constraint firstItem="9j8-9E-t6u" firstAttribute="leading" secondItem="hwE-GR-wdf" secondAttribute="leading" id="lam-Uy-ict"/>
+                <constraint firstItem="9j8-9E-t6u" firstAttribute="top" secondItem="hwE-GR-wdf" secondAttribute="bottom" id="tgR-rL-zoP"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="175.36231884057972" y="-196.54017857142856"/>
+        </view>
+        <tapGestureRecognizer id="l2C-rY-ZiF">
+            <connections>
+                <action selector="chooseButtonTapped:" destination="-1" id="rdE-x4-NJu"/>
+            </connections>
+        </tapGestureRecognizer>
+    </objects>
+    <resources>
+        <image name="Phone" width="32" height="32"/>
+        <image name="chooseIcon" width="32" height="32"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGray3Color">
+            <color red="0.7803921568627451" green="0.7803921568627451" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

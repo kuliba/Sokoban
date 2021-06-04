@@ -17,7 +17,6 @@ class LoginCardEntryViewController: UIViewController {
     //MARK: - Viewlifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupBackground()
         setupUI()
         hideKeyboardWhenTappedAround()
         creditCardView.cardNumberTextField.delegate = self
@@ -30,40 +29,6 @@ class LoginCardEntryViewController: UIViewController {
         navigationController?.navigationBar.isHidden = true
     }
     
-    //MARK: - Helpers
-    fileprivate func setupBackground() {
-        view.backgroundColor = .white
-        let imageView = UIImageView(image: UIImage(named: "BackgroundLine"))
-        view.addSubview(imageView)
-        imageView.anchor(top: view.topAnchor, left: view.leftAnchor,
-                         bottom: view.bottomAnchor ,right: view.rightAnchor,
-                         paddingBottom: 160)
-    }
-    
-    fileprivate func setupUI() {
-        view.addSubview(titleLabel)
-        view.addSubview(subTitleLabel)
-        view.addSubview(creditCardView)
-        view.addSubview(orderCardView)
-        
-        titleLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor,
-                          paddingTop: 54, paddingLeft: 20)
-        subTitleLabel.anchor(top: titleLabel.bottomAnchor, left: view.leftAnchor,
-                             paddingTop: 8, paddingLeft: 20)
-        creditCardView.anchor(top: subTitleLabel.bottomAnchor, left: view.leftAnchor,
-                              right: view.rightAnchor, paddingTop: 50,
-                              paddingLeft: 20, paddingRight: 20, height: 204)
-        orderCardView.anchor(left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor,
-                             paddingLeft: 20, paddingBottom: 50, paddingRight: 20, height: 72)
-        
-        let image = UIImage(systemName: "arrow.down")?.withRenderingMode(.alwaysOriginal)
-        let arrowImage = UIImageView(image: image)
-        view.addSubview(arrowImage)
-        arrowImage.setDimensions(height: 15, width: 15)
-        arrowImage.centerY(inView: titleLabel, leftAnchor: titleLabel.rightAnchor, paddingLeft: 8)
-        
-    }
-    
     //MARK: - Actions
     fileprivate func orderCardTapped() {
         let vc = OrderProductsViewController()
@@ -72,6 +37,11 @@ class LoginCardEntryViewController: UIViewController {
 
     fileprivate func scanCardTapped() {
         print(#function + " Открываем экран сканера")
+        let scannerView = CardScanner.getScanner { card in
+            guard let cardNumder = card else { return }
+            self.creditCardView.cardNumberTextField.text = "\(cardNumder)"
+        }
+        present(scannerView, animated: true, completion: nil)
     }
         
 }
@@ -82,7 +52,7 @@ extension LoginCardEntryViewController: UITextFieldDelegate {
         guard let textField = textField as? MaskedTextField else { return }
         guard let cardNumber = textField.unmaskedText else { return }
         if cardNumber.count == 16 {
-            print("Открываем экран СМС, карта№: " + cardNumber)
+            print("DEBUG: " + #function + " карта№: " + cardNumber)
             let vc = CodeVerificationViewController()
             navigationController?.pushViewController(vc, animated: true)
         }
