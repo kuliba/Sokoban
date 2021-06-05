@@ -7,6 +7,7 @@
 
 import UIKit
 
+/// Модель для управлением ForaInputView.
 class ForaInputModel {
     let title: String
     let image: UIImage
@@ -28,7 +29,18 @@ class ForaInputModel {
     var isEditable: Bool
     var activeCurrency: ButtonСurrency? 
     
-    init(title: String, text: String = "" ,image: UIImage = UIImage(), type: FieldType = FieldType.text, needValidate: Bool = false, errorText: String = "", isEditable: Bool = true, showChooseButton: Bool = false) {
+    /// Инициализирует `ForaInputModel` заданными данными
+    ///
+    /// - Parameters:
+    ///   - title: Обязательный параметр, это Имя в `Placeholder`.
+    ///   - text: Текст записывается в `TextField`, по умолчанию пустой
+    ///   - image: Не обязательный параметр, Иконка слева от `TextField`
+    ///   - type: Обязательный параметр, он конфигуриует View в зависимости от типа `FieldType`
+    ///   - needValidate: Не обязательный параметр,  указывает на то, будет ли TextField обрабатывать ошибки ввода. По умолчанию `false`
+    ///   - errorText: Не обязательный параметр, Текст выводимой ошибки
+    ///   - isEditable: Не обязательный параметр, указывает будет ли поле редактируемым. По умолчанию `true`
+    ///   - showChooseButton: Не обязательный параметр, указывает будет ли отображаться иконка выбора, и по нажатию на view вызывается тот же метод. По умолчанию `false`
+    init(title: String, text: String = "", image: UIImage = UIImage(), type: FieldType = FieldType.text, needValidate: Bool = false, errorText: String = "", isEditable: Bool = true, showChooseButton: Bool = false) {
         
         self.isEditable = isEditable
         self.needValidate = isEditable
@@ -80,17 +92,13 @@ class ForaInputModel {
         
         var keyboardType: UIKeyboardType {
             switch self {
-            case .text:
-                return UIKeyboardType.default
             case .phone:
                 return UIKeyboardType.phonePad
             case .mail:
                 return UIKeyboardType.emailAddress
-            case .number:
+            case .number, .amountOfTransfer:
                 return UIKeyboardType.numberPad
-            case .amountOfTransfer:
-                return UIKeyboardType.numberPad
-            case .credidCard:
+            default:
                 return UIKeyboardType.default
             }
         }

@@ -1,5 +1,5 @@
 //
-//  AsunBasicAttributes.swift
+//  .swift
 //  ForaBank
 //
 //  Created by Дмитрий on 25.05.2021.
@@ -9,13 +9,13 @@
 import Foundation
 import UIKit
 
-typealias AsunText = UITextField
-typealias AsunFloct = CGFloat
+typealias SmsCodeText = UITextField
+typealias SmsCodeFloct = CGFloat
 
-protocol AsunCodeProtocol {
-    var textFiled:AsunText {get}
+protocol SmsCodeProtocol {
+    var textFiled:SmsCodeText {get}
     
-    var codeNum:AsunFloct {get set}
+    var codeNum:SmsCodeFloct {get set}
     
     var lineColor:UIColor {get set}
     
@@ -32,15 +32,15 @@ protocol AsunCodeProtocol {
     
     mutating func changeViewBasicAttributes(lineColor:UIColor,lineInputColor:UIColor,cursorColor:UIColor,errorColor:UIColor,fontNum:UIFont,textColor:UIColor)
     
-    mutating func changeInputNum(num:AsunFloct)
+    mutating func changeInputNum(num:SmsCodeFloct)
 }
 
 //Значение свойства по умолчанию
-struct AsunBasicAttributes:AsunCodeProtocol {
-    var textFiled: AsunText = UITextField()
+struct SmsCodeBasicAttributes: SmsCodeProtocol {
+    var textFiled: SmsCodeText = UITextField()
     
     /// длинна кода
-    var codeNum: AsunFloct = 0
+    var codeNum: SmsCodeFloct = 0
     
     /// цвет линии под полем не введеный
     var lineColor: UIColor = #colorLiteral(red: 0.5921568627, green: 0.5921568627, blue: 0.5921568627, alpha: 1)
@@ -61,7 +61,7 @@ struct AsunBasicAttributes:AsunCodeProtocol {
     var textColor: UIColor = #colorLiteral(red: 0.5921568627, green: 0.5921568627, blue: 0.5921568627, alpha: 1)
 }
 
-extension AsunBasicAttributes {
+extension SmsCodeBasicAttributes {
    mutating func changeViewBasicAttributes( lineColor: UIColor, lineInputColor: UIColor, cursorColor: UIColor, errorColor: UIColor, fontNum: UIFont, textColor: UIColor) {
         self.lineColor = lineColor
         self.lineInputColor = lineInputColor
@@ -70,19 +70,8 @@ extension AsunBasicAttributes {
         self.textColor = textColor
         self.errorlineViewColor = errorColor
     }
-    mutating func changeInputNum(num: AsunFloct) {
+    mutating func changeInputNum(num: SmsCodeFloct) {
         self.codeNum = num
     }
 }
 
-extension String {
-    func subString(start:Int, length:Int = -1) -> String {
-        var len = length
-        if len == -1 {
-            len = self.count - start
-        }
-        let st = self.index(startIndex, offsetBy:start)
-        let en = self.index(st, offsetBy:len)
-        return String(self[st ..< en])
-    }
-}

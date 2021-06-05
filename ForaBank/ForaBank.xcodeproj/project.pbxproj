@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		ED4FC5EC266AD98E0092B4AB /* NSCollectionLayoutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EB266AD98E0092B4AB /* NSCollectionLayoutItem.swift */; };
 		ED4FC5EF266B70A00092B4AB /* PartialTransparentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EE266B70A00092B4AB /* PartialTransparentView.swift */; };
+		ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5F9266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift */; };
 		EDB14381265FDA410028EF5A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14380265FDA410028EF5A /* AppDelegate.swift */; };
 		EDB14383265FDA410028EF5A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14382265FDA410028EF5A /* SceneDelegate.swift */; };
 		EDB14385265FDA410028EF5A /* LoginCardEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14384265FDA410028EF5A /* LoginCardEntryViewController.swift */; };
@@ -49,7 +50,6 @@
 		EDB16549266766FD007E6030 /* CodeVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB16548266766FD007E6030 /* CodeVerificationViewController.swift */; };
 		EDB1654B26676F20007E6030 /* UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1654A26676F20007E6030 /* UIButton.swift */; };
 		EDB1654D26678E87007E6030 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDB1654C26678E87007E6030 /* LaunchScreen.storyboard */; };
-		EDB1655226679332007E6030 /* AsunBasicAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1655126679332007E6030 /* AsunBasicAttributes.swift */; };
 		EDB1655826679C74007E6030 /* SmsCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1655726679C74007E6030 /* SmsCodeView.swift */; };
 		EDB1655A2667A220007E6030 /* CodeVerificationViewController UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB165592667A220007E6030 /* CodeVerificationViewController UI.swift */; };
 		EDB1655C2667A2C8007E6030 /* LoginCardEntryViewController UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1655B2667A2C8007E6030 /* LoginCardEntryViewController UI.swift */; };
@@ -96,6 +96,7 @@
 /* Begin PBXFileReference section */
 		ED4FC5EB266AD98E0092B4AB /* NSCollectionLayoutItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSCollectionLayoutItem.swift; sourceTree = "<group>"; };
 		ED4FC5EE266B70A00092B4AB /* PartialTransparentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartialTransparentView.swift; sourceTree = "<group>"; };
+		ED4FC5F9266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmsCodeBasicAttributes.swift; sourceTree = "<group>"; };
 		EDB1437D265FDA410028EF5A /* ForaBank.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ForaBank.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDB14380265FDA410028EF5A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EDB14382265FDA410028EF5A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -143,7 +144,6 @@
 		EDB16548266766FD007E6030 /* CodeVerificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeVerificationViewController.swift; sourceTree = "<group>"; };
 		EDB1654A26676F20007E6030 /* UIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButton.swift; sourceTree = "<group>"; };
 		EDB1654C26678E87007E6030 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		EDB1655126679332007E6030 /* AsunBasicAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsunBasicAttributes.swift; sourceTree = "<group>"; };
 		EDB1655726679C74007E6030 /* SmsCodeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmsCodeView.swift; sourceTree = "<group>"; };
 		EDB165592667A220007E6030 /* CodeVerificationViewController UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CodeVerificationViewController UI.swift"; sourceTree = "<group>"; };
 		EDB1655B2667A2C8007E6030 /* LoginCardEntryViewController UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoginCardEntryViewController UI.swift"; sourceTree = "<group>"; };
@@ -204,6 +204,127 @@
 			path = CardScannerController;
 			sourceTree = "<group>";
 		};
+		ED4FC5F0266B8AA60092B4AB /* ForaInputView */ = {
+			isa = PBXGroup;
+			children = (
+				ED4FC5F2266B8ADE0092B4AB /* ViewModel */,
+				ED4FC5F1266B8AD00092B4AB /* Xib */,
+				EDB1655F2667A569007E6030 /* ForaInput.swift */,
+			);
+			path = ForaInputView;
+			sourceTree = "<group>";
+		};
+		ED4FC5F1266B8AD00092B4AB /* Xib */ = {
+			isa = PBXGroup;
+			children = (
+				EDB1655D2667A55F007E6030 /* ForaInput.xib */,
+			);
+			path = Xib;
+			sourceTree = "<group>";
+		};
+		ED4FC5F2266B8ADE0092B4AB /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EDB165612667A571007E6030 /* ForaInputModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		ED4FC5F3266B8B1D0092B4AB /* OrderProducts */ = {
+			isa = PBXGroup;
+			children = (
+				ED4FC5FC266B8FE90092B4AB /* OrderProductsViewController */,
+				EDB1452F266667140028EF5A /* OrderProductsCell */,
+				EDB14536266676FD0028EF5A /* OrderProductsViewModel */,
+			);
+			path = OrderProducts;
+			sourceTree = "<group>";
+		};
+		ED4FC5F4266B8B2F0092B4AB /* LoginCardEntry */ = {
+			isa = PBXGroup;
+			children = (
+				ED4FC5FB266B8FAC0092B4AB /* LoginCardEntryViews */,
+				EDB14384265FDA410028EF5A /* LoginCardEntryViewController.swift */,
+				EDB1655B2667A2C8007E6030 /* LoginCardEntryViewController UI.swift */,
+			);
+			path = LoginCardEntry;
+			sourceTree = "<group>";
+		};
+		ED4FC5F5266B8B3B0092B4AB /* CodeVerification */ = {
+			isa = PBXGroup;
+			children = (
+				EDB14514266526670028EF5A /* CodeVerificationViews */,
+				EDB16548266766FD007E6030 /* CodeVerificationViewController.swift */,
+				EDB165592667A220007E6030 /* CodeVerificationViewController UI.swift */,
+			);
+			path = CodeVerification;
+			sourceTree = "<group>";
+		};
+		ED4FC5F6266B8B610092B4AB /* OrderCardView */ = {
+			isa = PBXGroup;
+			children = (
+				EDB14525266624DC0028EF5A /* OrderCardView.xib */,
+				EDB14527266624EE0028EF5A /* OrderCardView.swift */,
+			);
+			path = OrderCardView;
+			sourceTree = "<group>";
+		};
+		ED4FC5F7266B8BAD0092B4AB /* CreditCardEntryView */ = {
+			isa = PBXGroup;
+			children = (
+				EDB14517266526BD0028EF5A /* CreditCardEntryView.xib */,
+				EDB14515266526B10028EF5A /* CreditCardEntryView.swift */,
+			);
+			path = CreditCardEntryView;
+			sourceTree = "<group>";
+		};
+		ED4FC5F8266B8BD70092B4AB /* MainTabBar */ = {
+			isa = PBXGroup;
+			children = (
+				EDB1656B26681F0E007E6030 /* MainTabBarViewController.swift */,
+			);
+			path = MainTabBar;
+			sourceTree = "<group>";
+		};
+		ED4FC5FB266B8FAC0092B4AB /* LoginCardEntryViews */ = {
+			isa = PBXGroup;
+			children = (
+				ED4FC5F7266B8BAD0092B4AB /* CreditCardEntryView */,
+				ED4FC5F6266B8B610092B4AB /* OrderCardView */,
+			);
+			path = LoginCardEntryViews;
+			sourceTree = "<group>";
+		};
+		ED4FC5FC266B8FE90092B4AB /* OrderProductsViewController */ = {
+			isa = PBXGroup;
+			children = (
+				EDB1452D26665AD50028EF5A /* OrderProductsViewController.swift */,
+				EDB1453D2666AF260028EF5A /* OrderProductsViewController FlowLayout.swift */,
+			);
+			path = OrderProductsViewController;
+			sourceTree = "<group>";
+		};
+		ED4FC5FD266B90FB0092B4AB /* AppAndSceneDelegate */ = {
+			isa = PBXGroup;
+			children = (
+				EDB14380265FDA410028EF5A /* AppDelegate.swift */,
+				EDB1453B2666AEB90028EF5A /* AppDelegate UI extension.swift */,
+				EDB14382265FDA410028EF5A /* SceneDelegate.swift */,
+			);
+			path = AppAndSceneDelegate;
+			sourceTree = "<group>";
+		};
+		ED4FC5FE266B91360092B4AB /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				EDB1453F2666AFD70028EF5A /* Constants.swift */,
+				EDB14534266671580028EF5A /* MockItems.swift */,
+				EDB1451F26661B030028EF5A /* StringMask.swift */,
+				EDB1452126661C3F0028EF5A /* MaskedTextField.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		EDB14374265FDA410028EF5A = {
 			isa = PBXGroup;
 			children = (
@@ -227,14 +348,9 @@
 		EDB1437F265FDA410028EF5A /* ForaBank */ = {
 			isa = PBXGroup;
 			children = (
-				EDB14514266526670028EF5A /* Views */,
-				EDB143B6265FDEAD0028EF5A /* Resources */,
+				EDB143B6265FDEAD0028EF5A /* Resours */,
 				EDB1452926663BD90028EF5A /* Controllers */,
 				EDB143B0265FDB380028EF5A /* ForaBank.entitlements */,
-				EDB14380265FDA410028EF5A /* AppDelegate.swift */,
-				EDB1453B2666AEB90028EF5A /* AppDelegate UI extension.swift */,
-				EDB14382265FDA410028EF5A /* SceneDelegate.swift */,
-				EDB1453F2666AFD70028EF5A /* Constants.swift */,
 				EDB143B4265FDE960028EF5A /* Assets.xcassets */,
 				EDB1654C26678E87007E6030 /* LaunchScreen.storyboard */,
 				EDB1452B26663C9D0028EF5A /* GoogleService-Info.plist */,
@@ -261,14 +377,15 @@
 			path = ForaBankUITests;
 			sourceTree = "<group>";
 		};
-		EDB143B6265FDEAD0028EF5A /* Resources */ = {
+		EDB143B6265FDEAD0028EF5A /* Resours */ = {
 			isa = PBXGroup;
 			children = (
+				ED4FC5FE266B91360092B4AB /* Helpers */,
+				ED4FC5FD266B90FB0092B4AB /* AppAndSceneDelegate */,
 				EDB1451926652D090028EF5A /* Extensions */,
 				EDB143B7265FDEC90028EF5A /* Fonts */,
-				EDB14534266671580028EF5A /* MockItems.swift */,
 			);
-			path = Resources;
+			path = Resours;
 			sourceTree = "<group>";
 		};
 		EDB143B7265FDEC90028EF5A /* Fonts */ = {
@@ -291,27 +408,19 @@
 			path = Fonts;
 			sourceTree = "<group>";
 		};
-		EDB14514266526670028EF5A /* Views */ = {
+		EDB14514266526670028EF5A /* CodeVerificationViews */ = {
 			isa = PBXGroup;
 			children = (
-				EDB14536266676FD0028EF5A /* ViewModel */,
-				EDB1654E266792D8007E6030 /* Xib */,
-				EDB1452F266667140028EF5A /* ProductsCell */,
-				EDB14515266526B10028EF5A /* CreditCardEntryView.swift */,
-				EDB14527266624EE0028EF5A /* OrderCardView.swift */,
-				EDB1655126679332007E6030 /* AsunBasicAttributes.swift */,
 				EDB1655726679C74007E6030 /* SmsCodeView.swift */,
-				EDB1655F2667A569007E6030 /* ForaInput.swift */,
+				ED4FC5F9266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift */,
 			);
-			path = Views;
+			path = CodeVerificationViews;
 			sourceTree = "<group>";
 		};
 		EDB1451926652D090028EF5A /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
 				EDB1451A26652D1A0028EF5A /* UIKit */,
-				EDB1451F26661B030028EF5A /* StringMask.swift */,
-				EDB1452126661C3F0028EF5A /* MaskedTextField.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -333,9 +442,9 @@
 		EDB1452926663BD90028EF5A /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				EDB16593266A4317007E6030 /* SecondaryControllers */,
-				EDB165722668C51A007E6030 /* MainControllers */,
 				EDB1452A26663BF40028EF5A /* Login */,
+				EDB165722668C51A007E6030 /* MainControllers */,
+				EDB16593266A4317007E6030 /* SecondaryControllers */,
 				EDB16594266A4438007E6030 /* DevelopViewController.swift */,
 			);
 			path = Controllers;
@@ -344,42 +453,28 @@
 		EDB1452A26663BF40028EF5A /* Login */ = {
 			isa = PBXGroup;
 			children = (
-				EDB14384265FDA410028EF5A /* LoginCardEntryViewController.swift */,
-				EDB1655B2667A2C8007E6030 /* LoginCardEntryViewController UI.swift */,
-				EDB1452D26665AD50028EF5A /* OrderProductsViewController.swift */,
-				EDB1453D2666AF260028EF5A /* OrderProductsViewController FlowLayout.swift */,
-				EDB16548266766FD007E6030 /* CodeVerificationViewController.swift */,
-				EDB165592667A220007E6030 /* CodeVerificationViewController UI.swift */,
+				ED4FC5F4266B8B2F0092B4AB /* LoginCardEntry */,
+				ED4FC5F5266B8B3B0092B4AB /* CodeVerification */,
+				ED4FC5F3266B8B1D0092B4AB /* OrderProducts */,
 			);
 			path = Login;
 			sourceTree = "<group>";
 		};
-		EDB1452F266667140028EF5A /* ProductsCell */ = {
+		EDB1452F266667140028EF5A /* OrderProductsCell */ = {
 			isa = PBXGroup;
 			children = (
 				EDB14530266667140028EF5A /* OrderProductsCollectionViewCell.xib */,
 				EDB14531266667140028EF5A /* OrderProductsCollectionViewCell.swift */,
 			);
-			path = ProductsCell;
+			path = OrderProductsCell;
 			sourceTree = "<group>";
 		};
-		EDB14536266676FD0028EF5A /* ViewModel */ = {
+		EDB14536266676FD0028EF5A /* OrderProductsViewModel */ = {
 			isa = PBXGroup;
 			children = (
 				EDB145372666770A0028EF5A /* OrderProductModel.swift */,
-				EDB165612667A571007E6030 /* ForaInputModel.swift */,
 			);
-			path = ViewModel;
-			sourceTree = "<group>";
-		};
-		EDB1654E266792D8007E6030 /* Xib */ = {
-			isa = PBXGroup;
-			children = (
-				EDB14517266526BD0028EF5A /* CreditCardEntryView.xib */,
-				EDB14525266624DC0028EF5A /* OrderCardView.xib */,
-				EDB1655D2667A55F007E6030 /* ForaInput.xib */,
-			);
-			path = Xib;
+			path = OrderProductsViewModel;
 			sourceTree = "<group>";
 		};
 		EDB1656F2668C45D007E6030 /* Header */ = {
@@ -393,8 +488,8 @@
 		EDB165722668C51A007E6030 /* MainControllers */ = {
 			isa = PBXGroup;
 			children = (
+				ED4FC5F8266B8BD70092B4AB /* MainTabBar */,
 				EDB165732668C53A007E6030 /* PaymentsController */,
-				EDB1656B26681F0E007E6030 /* MainTabBarViewController.swift */,
 			);
 			path = MainControllers;
 			sourceTree = "<group>";
@@ -444,6 +539,7 @@
 		EDB16593266A4317007E6030 /* SecondaryControllers */ = {
 			isa = PBXGroup;
 			children = (
+				ED4FC5F0266B8AA60092B4AB /* ForaInputView */,
 				ED4FC5ED266B707F0092B4AB /* CardScannerController */,
 				EDB165632667A741007E6030 /* ContactConfurmViewController.swift */,
 				EDB165642667A741007E6030 /* ContactInputViewController.swift */,
@@ -611,7 +707,6 @@
 				EDB14533266667140028EF5A /* OrderProductsCollectionViewCell.swift in Sources */,
 				EDB16595266A4438007E6030 /* DevelopViewController.swift in Sources */,
 				EDB165652667A741007E6030 /* ContactConfurmViewController.swift in Sources */,
-				EDB1655226679332007E6030 /* AsunBasicAttributes.swift in Sources */,
 				EDB16592266A19DA007E6030 /* PaymentsViewControllerSearchBarDelegate.swift in Sources */,
 				EDB14385265FDA410028EF5A /* LoginCardEntryViewController.swift in Sources */,
 				EDB1656E266827A8007E6030 /* PaymentsViewController.swift in Sources */,
@@ -626,6 +721,7 @@
 				EDB1451E26652F170028EF5A /* UIView.swift in Sources */,
 				EDB1656C26681F0E007E6030 /* MainTabBarViewController.swift in Sources */,
 				EDB1658026694676007E6030 /* PaymentsViewControllerLayout.swift in Sources */,
+				ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */,
 				EDB1655A2667A220007E6030 /* CodeVerificationViewController UI.swift in Sources */,
 				ED4FC5EC266AD98E0092B4AB /* NSCollectionLayoutItem.swift in Sources */,
 				EDB1657A2668C7F2007E6030 /* TransferCell.swift in Sources */,

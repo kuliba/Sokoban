@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-enum Length: AsunFloct {
+enum Length: SmsCodeFloct {
     case onceWidth  = 40 
     case onceHeight = 1
 }
@@ -18,9 +18,9 @@ class SmsCodeView: UIView {
     
     var callBacktext:((String)->())?
     
-    lazy var Base:AsunBasicAttributes = AsunBasicAttributes()
+    lazy var Base:SmsCodeBasicAttributes = SmsCodeBasicAttributes()
     
-    lazy var textFiled = AsunText()
+    lazy var textFiled = SmsCodeText()
     
     lazy var lineArr:[UIView] = []
     
@@ -106,7 +106,7 @@ extension SmsCodeView {
 
 //MARK: Action
 extension SmsCodeView {
-    @objc fileprivate func textFieldDidChange(filed:AsunText) {
+    @objc fileprivate func textFieldDidChange(filed:SmsCodeText) {
         labelArr.forEach {
             $0.text = nil
         }
@@ -214,5 +214,17 @@ extension SmsCodeView {
         animation.duration = 0.1
         animation.repeatCount = 1
         layer.add(animation, forKey: nil)
+    }
+}
+
+extension String {
+    fileprivate func subString(start:Int, length:Int = -1) -> String {
+        var len = length
+        if len == -1 {
+            len = self.count - start
+        }
+        let st = self.index(startIndex, offsetBy:start)
+        let en = self.index(st, offsetBy:len)
+        return String(self[st ..< en])
     }
 }
