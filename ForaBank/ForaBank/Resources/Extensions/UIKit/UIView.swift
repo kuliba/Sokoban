@@ -8,6 +8,9 @@
 import UIKit
 
 extension UIView {
+    
+    /// Расширение которое добавляет констрайнты с 4х сторон,
+    /// поддерживает отступы, есть возможность задавать высоту и ширину
     func anchor(top: NSLayoutYAxisAnchor? = nil,
                 left: NSLayoutXAxisAnchor? = nil,
                 bottom: NSLayoutYAxisAnchor? = nil,
@@ -72,22 +75,26 @@ extension UIView {
         }
     }
     
+    /// Расширение которое добавляет констрайнты  высоты и ширины
     func setDimensions(height: CGFloat, width: CGFloat) {
         translatesAutoresizingMaskIntoConstraints = false
         heightAnchor.constraint(equalToConstant: height).isActive = true
         widthAnchor.constraint(equalToConstant: width).isActive = true
     }
     
+    /// Расширение которое добавляет констрайнт высоты
     func setHeight(_ height: CGFloat) {
         translatesAutoresizingMaskIntoConstraints = false
         heightAnchor.constraint(equalToConstant: height).isActive = true
     }
     
+    /// Расширение которое добавляет констрайнт ширины
     func setWidth(_ width: CGFloat) {
         translatesAutoresizingMaskIntoConstraints = false
         widthAnchor.constraint(equalToConstant: width).isActive = true
     }
     
+    /// Расширение которое добавляет констрайнт равные по 4м сторонам view родителя
     func fillSuperview() {
         translatesAutoresizingMaskIntoConstraints = false
         guard let view = superview else { return }
@@ -95,7 +102,9 @@ extension UIView {
                bottom: view.bottomAnchor, right: view.rightAnchor)
     }
     
-    func fixInView(_ container: UIView!) -> Void{
+    /// Расширение которое добавляет констрайнт равные по 4м сторонам view родителя container
+    /// используется для инициализации xib у view
+    func fixInView(_ container: UIView!) -> Void {
         self.translatesAutoresizingMaskIntoConstraints = false;
         self.frame = container.frame;
         container.addSubview(self);

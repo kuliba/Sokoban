@@ -8,6 +8,8 @@
 import UIKit
 
 extension UILabel {
+    
+    /// Инициализатор с дополнительными параметрами
     convenience init(text: String,
                      font: UIFont? = .systemFont(ofSize: 14),
                      color: UIColor? = UIColor.init(named: "textColorFora")) {

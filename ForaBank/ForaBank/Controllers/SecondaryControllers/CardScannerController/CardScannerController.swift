@@ -1,6 +1,6 @@
 //
-//  CardScanner.swift
-//  CardScanner
+//  CardScannerController.swift
+//  CardScannerController
 //
 //  Created by Mikhail on 03.06.2021.
 //
@@ -11,7 +11,7 @@ import UIKit
 import Vision
 
 @available(iOS 13.0, *)
-public class CardScanner: UIViewController {
+public class CardScannerController: UIViewController {
     // MARK: - Private Properties
 
     private let captureSession = AVCaptureSession()
@@ -57,7 +57,7 @@ public class CardScanner: UIViewController {
     }
 
     public class func getScanner(resultsHandler: @escaping (_ number: String?) -> Void) -> UINavigationController {
-        let viewScanner = CardScanner(resultsHandler: resultsHandler)
+        let viewScanner = CardScannerController(resultsHandler: resultsHandler)
         let navigation = UINavigationController(rootViewController: viewScanner)
         return navigation
     }
@@ -81,7 +81,7 @@ public class CardScanner: UIViewController {
         title = viewTitle
 
         let buttomItem = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(scanCompleted))
-        buttomItem.tintColor = .white
+        buttomItem.tintColor = .black
         navigationItem.leftBarButtonItem = buttomItem
     }
 
@@ -147,6 +147,35 @@ public class CardScanner: UIViewController {
                                 paddingTop: labelCardNumberY, paddingLeft: labelCardNumberX)
         
 
+        let labelCardCVVX = viewX + 200
+        let labelCardCVVY = bottomY - 90
+        
+        let labelHintTopY = viewY - 40
+        labelHintTop = UILabel(frame: CGRect(x: labelCardCVVX, y: labelCardCVVY, width: widht, height: 30))
+        view.addSubview(labelHintTop!)
+        labelHintTop?.translatesAutoresizingMaskIntoConstraints = false
+        labelHintTop?.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
+        labelHintTop?.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
+        labelHintTop?.topAnchor.constraint(equalTo: view.topAnchor, constant: labelHintTopY).isActive = true
+        labelHintTop?.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+        labelHintTop?.text = hintTopText
+        labelHintTop?.numberOfLines = 0
+        labelHintTop?.textAlignment = .center
+        labelHintTop?.textColor = .white
+
+        let labelHintBottomY = bottomY + 30
+        labelHintBottom = UILabel(frame: CGRect(x: labelCardCVVX, y: labelCardCVVY, width: widht, height: 30))
+        view.addSubview(labelHintBottom!)
+        labelHintBottom?.translatesAutoresizingMaskIntoConstraints = false
+        labelHintBottom?.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
+        labelHintBottom?.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
+        labelHintBottom?.topAnchor.constraint(equalTo: view.topAnchor, constant: labelHintBottomY).isActive = true
+        labelHintBottom?.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+        labelHintBottom?.text = hintBottomText
+        labelHintBottom?.numberOfLines = 0
+        labelHintBottom?.textAlignment = .center
+        labelHintBottom?.textColor = .white
+        
         let buttonCompleteX = viewX
         let buttonCompleteY = UIScreen.main.bounds.height - 90
         buttonComplete = UIButton(frame: CGRect(x: buttonCompleteX, y: buttonCompleteY, width: 100, height: 50))
@@ -261,7 +290,7 @@ public class CardScanner: UIViewController {
 
 // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
 
-extension CardScanner: AVCaptureVideoDataOutputSampleBufferDelegate {
+extension CardScannerController: AVCaptureVideoDataOutputSampleBufferDelegate {
     public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         guard let frame = CMSampleBufferGetImageBuffer(sampleBuffer) else {
             debugPrint("unable to get image from sample buffer")
@@ -286,38 +315,3 @@ private extension String {
     
 }
 
-// MARK: - Class PartialTransparentView
-
-class PartialTransparentView: UIView {
-    var rectsArray: [CGRect]?
-
-    convenience init(rectsArray: [CGRect]) {
-        self.init()
-
-        self.rectsArray = rectsArray
-
-        backgroundColor = UIColor.black.withAlphaComponent(0.6)
-        isOpaque = false
-    }
-
-    override func draw(_ rect: CGRect) {
-        backgroundColor?.setFill()
-        UIRectFill(rect)
-
-        guard let rectsArray = rectsArray else {
-            return
-        }
-
-        for holeRect in rectsArray {
-            let path = UIBezierPath(roundedRect: holeRect, cornerRadius: 10)
-
-            let holeRectIntersection = rect.intersection(holeRect)
-
-            UIRectFill(holeRectIntersection)
-
-            UIColor.clear.setFill()
-            UIGraphicsGetCurrentContext()?.setBlendMode(CGBlendMode.copy)
-            path.fill()
-        }
-    }
-}

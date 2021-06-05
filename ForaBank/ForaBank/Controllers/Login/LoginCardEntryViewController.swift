@@ -37,7 +37,7 @@ class LoginCardEntryViewController: UIViewController {
 
     fileprivate func scanCardTapped() {
         print(#function + " Открываем экран сканера")
-        let scannerView = CardScanner.getScanner { card in
+        let scannerView = CardScannerController.getScanner { card in
             guard let cardNumder = card else { return }
             self.creditCardView.cardNumberTextField.text = "\(cardNumder)"
         }

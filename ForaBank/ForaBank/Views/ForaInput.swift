@@ -91,10 +91,10 @@ class ForaInput: UIView {
     
     //MARK: - Helpers
     private func configure() {
+        
+        
         imageView.image = viewModel.image
-        placeHolder.text = viewModel.title
-        placeHolder.isHidden = text.isEmpty
-        placeHolder.alpha = text.isEmpty ? 0 : 1
+        
         textField.placeholder = viewModel.title
         textField.keyboardType = viewModel.fieldType.keyboardType
         textField.isUserInteractionEnabled = viewModel.isEditable
@@ -107,6 +107,20 @@ class ForaInput: UIView {
         errorLabel.alpha = 0
         bottomLabel.isHidden = !viewModel.showBottomLabel
         viewModel.isError ? showError() : nil
+        
+        let viewType = viewModel.fieldType.self
+        switch viewType {
+        case .credidCard:
+            errorLabel.isHidden = true
+            placeHolder.isHidden = false
+        case .amountOfTransfer:
+            errorLabel.isHidden = true
+        default:
+            placeHolder.text = viewModel.title
+            placeHolder.isHidden = text.isEmpty
+            placeHolder.alpha = text.isEmpty ? 0 : 1
+        }
+        
     }
     
     private func showError() {

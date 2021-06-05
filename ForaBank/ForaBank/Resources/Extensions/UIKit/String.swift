@@ -9,6 +9,7 @@ import UIKit
 
 extension String {
 
+    /// конвертирует имя контролева из String значения в UIViewController
     func getViewController() -> UIViewController? {
         if let appName = Bundle.main.infoDictionary?["CFBundleName"] as? String {
             print("CFBundleName - \(appName)")

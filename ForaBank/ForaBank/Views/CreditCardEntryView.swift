@@ -11,6 +11,8 @@ class CreditCardEntryView: UIView {
 
     //MARK: - Property
     let kContentXibName = "CreditCardEntryView"
+    
+    /// Замыкание для действия по нажатию кнопки сканера
     var scanerCardTapped: (() -> Void)?
     @IBOutlet var contentView: UIView!
     @IBOutlet weak var cardNumberTextField: MaskedTextField! {

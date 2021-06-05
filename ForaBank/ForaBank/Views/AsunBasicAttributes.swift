@@ -34,16 +34,31 @@ protocol AsunCodeProtocol {
     
     mutating func changeInputNum(num:AsunFloct)
 }
-//属性默认值
+
+//Значение свойства по умолчанию
 struct AsunBasicAttributes:AsunCodeProtocol {
     var textFiled: AsunText = UITextField()
+    
+    /// длинна кода
     var codeNum: AsunFloct = 0
-    var lineColor: UIColor = UIColor.gray
-    var lineInputColor: UIColor = UIColor.blue
+    
+    /// цвет линии под полем не введеный
+    var lineColor: UIColor = #colorLiteral(red: 0.5921568627, green: 0.5921568627, blue: 0.5921568627, alpha: 1)
+    
+    /// цвет линии под полем введеный
+    var lineInputColor: UIColor = #colorLiteral(red: 0.5921568627, green: 0.5921568627, blue: 0.5921568627, alpha: 1)
+    
+    /// цвет линии под полем с ошибкой
     var errorlineViewColor: UIColor = UIColor.red
+    
+    /// цвет курсора
     var cursorColor: UIColor = UIColor.black
-    var fontNum: UIFont = UIFont.systemFont(ofSize: 17)
-    var textColor: UIColor = UIColor.black
+    
+    /// шрифт
+    var fontNum: UIFont = UIFont.systemFont(ofSize: 32)
+    
+    /// цвет шрифта
+    var textColor: UIColor = #colorLiteral(red: 0.5921568627, green: 0.5921568627, blue: 0.5921568627, alpha: 1)
 }
 
 extension AsunBasicAttributes {

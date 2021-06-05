@@ -8,6 +8,9 @@
 import UIKit
 
 extension UIButton {
+    
+    /// Инициализатор с дополнительными параметрами
+    /// по умолчанию возвращает UIButton согласно основного дизайна
     convenience init(title: String,
                      titleColor: UIColor = .white,
                      backgroundColor: UIColor = #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1),

@@ -9,6 +9,7 @@ import UIKit
 
 class MockItems {
 
+    /// Данные для заполнения экрана OrderProductsViewController
     class func orderProducts() -> [OrderProductModel] {
         return [OrderProductModel(image: "cover1",
                                   title: "Карта «Миг»",
@@ -25,6 +26,11 @@ class MockItems {
                                   url: "https://www.forabank.ru/lendingi/premialnoe-obsluzhivanie/")]
     }
     
+    /// Данные для заполнения экрана PaymentsController,
+    /// каждый элемент имеет имя для отображения, ссылку на иконку,
+    /// имя контроллера для перехода, описание или коючевые слова для поиска по элементам меню
+    
+    /// Данные для заполнения экрана PaymentsController в верхней секции
     class func returnPayments() -> [PaymentsModel] {
         return [
             PaymentsModel(id: 1, name: "Оплата \nпо QR",
@@ -56,6 +62,8 @@ class MockItems {
             
         ]
     }
+    
+    /// Данные для заполнения экрана PaymentsController в средней секции
     class func returnTransfers() -> [PaymentsModel] {
         return [
             PaymentsModel(id: 6, name: "Между своими",
@@ -86,7 +94,7 @@ class MockItems {
         ]
     }
     
-    
+    /// Данные для заполнения экрана PaymentsController в нижней секции
     class func returnPay() -> [PaymentsModel] {
         return [
             PaymentsModel(id: 11, name: "Оплата по QR",
