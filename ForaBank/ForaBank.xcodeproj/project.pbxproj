@@ -3,13 +3,23 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		ED4FC5EC266AD98E0092B4AB /* NSCollectionLayoutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EB266AD98E0092B4AB /* NSCollectionLayoutItem.swift */; };
 		ED4FC5EF266B70A00092B4AB /* PartialTransparentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EE266B70A00092B4AB /* PartialTransparentView.swift */; };
 		ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5F9266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift */; };
+		ED4FC602266C0AB50092B4AB /* ChooseCountryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC601266C0AB50092B4AB /* ChooseCountryTableViewController.swift */; };
+		ED4FC605266CCE3D0092B4AB /* country.json in Resources */ = {isa = PBXBuildFile; fileRef = ED4FC604266CCE3D0092B4AB /* country.json */; };
+		ED4FC60B266CD1020092B4AB /* СountryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC609266CD1020092B4AB /* СountryCell.swift */; };
+		ED4FC60C266CD1020092B4AB /* СountryCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED4FC60A266CD1020092B4AB /* СountryCell.xib */; };
+		ED4FC610266CD66F0092B4AB /* СountryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC60F266CD66F0092B4AB /* СountryModel.swift */; };
+		ED4FC612266CD9660092B4AB /* ChooseCountryLoadFromJson.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC611266CD9660092B4AB /* ChooseCountryLoadFromJson.swift */; };
+		ED4FC619266EA42E0092B4AB /* AppLocker.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED4FC616266EA42E0092B4AB /* AppLocker.xib */; };
+		ED4FC61A266EA42E0092B4AB /* AppLocker.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC617266EA42E0092B4AB /* AppLocker.swift */; };
+		ED4FC61B266EA42E0092B4AB /* UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC618266EA42E0092B4AB /* UI.swift */; };
+		ED4FC621266EA5CD0092B4AB /* Valet in Frameworks */ = {isa = PBXBuildFile; productRef = ED4FC620266EA5CD0092B4AB /* Valet */; };
 		EDB14381265FDA410028EF5A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14380265FDA410028EF5A /* AppDelegate.swift */; };
 		EDB14383265FDA410028EF5A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14382265FDA410028EF5A /* SceneDelegate.swift */; };
 		EDB14385265FDA410028EF5A /* LoginCardEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14384265FDA410028EF5A /* LoginCardEntryViewController.swift */; };
@@ -74,6 +84,20 @@
 		EDB16592266A19DA007E6030 /* PaymentsViewControllerSearchBarDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB16591266A19DA007E6030 /* PaymentsViewControllerSearchBarDelegate.swift */; };
 		EDB16595266A4438007E6030 /* DevelopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB16594266A4438007E6030 /* DevelopViewController.swift */; };
 		EDB16597266A576A007E6030 /* CardScannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB16596266A576A007E6030 /* CardScannerController.swift */; };
+		EDF6820D266F9EC800FD5C07 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681F3266F9EC800FD5C07 /* NetworkManager.swift */; };
+		EDF6820E266F9EC800FD5C07 /* NetworkModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681F6266F9EC800FD5C07 /* NetworkModelProtocol.swift */; };
+		EDF6820F266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681F7266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift */; };
+		EDF68210266F9EC800FD5C07 /* LoginDoCodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681F8266F9EC800FD5C07 /* LoginDoCodableModel.swift */; };
+		EDF68211266F9EC800FD5C07 /* RequestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681FC266F9EC800FD5C07 /* RequestError.swift */; };
+		EDF68212266F9EC800FD5C07 /* RequestMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681FE266F9EC800FD5C07 /* RequestMethod.swift */; };
+		EDF68213266F9EC800FD5C07 /* URLHostType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF68200266F9EC800FD5C07 /* URLHostType.swift */; };
+		EDF68214266F9EC800FD5C07 /* URLSchemeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF68201266F9EC800FD5C07 /* URLSchemeType.swift */; };
+		EDF68215266F9EC800FD5C07 /* URLConstruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF68202266F9EC800FD5C07 /* URLConstruct.swift */; };
+		EDF68216266F9EC800FD5C07 /* RouterError.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF68205266F9EC800FD5C07 /* RouterError.swift */; };
+		EDF68217266F9EC800FD5C07 /* RouterSassionConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF68207266F9EC800FD5C07 /* RouterSassionConfiguration.swift */; };
+		EDF68218266F9EC800FD5C07 /* RouterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF68209266F9EC800FD5C07 /* RouterManager.swift */; };
+		EDF68219266F9EC800FD5C07 /* RouterBaseUrlList.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF6820B266F9EC800FD5C07 /* RouterBaseUrlList.swift */; };
+		EDF6821A266F9EC800FD5C07 /* RouterUrlList.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF6820C266F9EC800FD5C07 /* RouterUrlList.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +121,15 @@
 		ED4FC5EB266AD98E0092B4AB /* NSCollectionLayoutItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSCollectionLayoutItem.swift; sourceTree = "<group>"; };
 		ED4FC5EE266B70A00092B4AB /* PartialTransparentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartialTransparentView.swift; sourceTree = "<group>"; };
 		ED4FC5F9266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmsCodeBasicAttributes.swift; sourceTree = "<group>"; };
+		ED4FC601266C0AB50092B4AB /* ChooseCountryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseCountryTableViewController.swift; sourceTree = "<group>"; };
+		ED4FC604266CCE3D0092B4AB /* country.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = country.json; sourceTree = "<group>"; };
+		ED4FC609266CD1020092B4AB /* СountryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "СountryCell.swift"; sourceTree = "<group>"; };
+		ED4FC60A266CD1020092B4AB /* СountryCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "СountryCell.xib"; sourceTree = "<group>"; };
+		ED4FC60F266CD66F0092B4AB /* СountryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "СountryModel.swift"; sourceTree = "<group>"; };
+		ED4FC611266CD9660092B4AB /* ChooseCountryLoadFromJson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseCountryLoadFromJson.swift; sourceTree = "<group>"; };
+		ED4FC616266EA42E0092B4AB /* AppLocker.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AppLocker.xib; sourceTree = "<group>"; };
+		ED4FC617266EA42E0092B4AB /* AppLocker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppLocker.swift; sourceTree = "<group>"; };
+		ED4FC618266EA42E0092B4AB /* UI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UI.swift; sourceTree = "<group>"; };
 		EDB1437D265FDA410028EF5A /* ForaBank.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ForaBank.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDB14380265FDA410028EF5A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EDB14382265FDA410028EF5A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -168,6 +201,20 @@
 		EDB16591266A19DA007E6030 /* PaymentsViewControllerSearchBarDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsViewControllerSearchBarDelegate.swift; sourceTree = "<group>"; };
 		EDB16594266A4438007E6030 /* DevelopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopViewController.swift; sourceTree = "<group>"; };
 		EDB16596266A576A007E6030 /* CardScannerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardScannerController.swift; sourceTree = "<group>"; };
+		EDF681F3266F9EC800FD5C07 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		EDF681F6266F9EC800FD5C07 /* NetworkModelProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkModelProtocol.swift; sourceTree = "<group>"; };
+		EDF681F7266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetDeviceSettingDecodbleModel.swift; sourceTree = "<group>"; };
+		EDF681F8266F9EC800FD5C07 /* LoginDoCodableModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginDoCodableModel.swift; sourceTree = "<group>"; };
+		EDF681FC266F9EC800FD5C07 /* RequestError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestError.swift; sourceTree = "<group>"; };
+		EDF681FE266F9EC800FD5C07 /* RequestMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestMethod.swift; sourceTree = "<group>"; };
+		EDF68200266F9EC800FD5C07 /* URLHostType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLHostType.swift; sourceTree = "<group>"; };
+		EDF68201266F9EC800FD5C07 /* URLSchemeType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSchemeType.swift; sourceTree = "<group>"; };
+		EDF68202266F9EC800FD5C07 /* URLConstruct.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLConstruct.swift; sourceTree = "<group>"; };
+		EDF68205266F9EC800FD5C07 /* RouterError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouterError.swift; sourceTree = "<group>"; };
+		EDF68207266F9EC800FD5C07 /* RouterSassionConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouterSassionConfiguration.swift; sourceTree = "<group>"; };
+		EDF68209266F9EC800FD5C07 /* RouterManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouterManager.swift; sourceTree = "<group>"; };
+		EDF6820B266F9EC800FD5C07 /* RouterBaseUrlList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouterBaseUrlList.swift; sourceTree = "<group>"; };
+		EDF6820C266F9EC800FD5C07 /* RouterUrlList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouterUrlList.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -175,6 +222,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED4FC621266EA5CD0092B4AB /* Valet in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -325,6 +373,70 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		ED4FC603266CCD0F0092B4AB /* ChooseCountry */ = {
+			isa = PBXGroup;
+			children = (
+				ED4FC60E266CD6600092B4AB /* ViewModel */,
+				ED4FC60D266CD58B0092B4AB /* Data */,
+				ED4FC608266CD1020092B4AB /* Cell */,
+				ED4FC601266C0AB50092B4AB /* ChooseCountryTableViewController.swift */,
+			);
+			path = ChooseCountry;
+			sourceTree = "<group>";
+		};
+		ED4FC608266CD1020092B4AB /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				ED4FC609266CD1020092B4AB /* СountryCell.swift */,
+				ED4FC60A266CD1020092B4AB /* СountryCell.xib */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		ED4FC60D266CD58B0092B4AB /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				ED4FC611266CD9660092B4AB /* ChooseCountryLoadFromJson.swift */,
+				ED4FC604266CCE3D0092B4AB /* country.json */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		ED4FC60E266CD6600092B4AB /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				ED4FC60F266CD66F0092B4AB /* СountryModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		ED4FC613266CDB9C0092B4AB /* СountryPayments */ = {
+			isa = PBXGroup;
+			children = (
+				EDB165642667A741007E6030 /* ContactInputViewController.swift */,
+				EDB165632667A741007E6030 /* ContactConfurmViewController.swift */,
+			);
+			path = "СountryPayments";
+			sourceTree = "<group>";
+		};
+		ED4FC614266EA4180092B4AB /* PassCode */ = {
+			isa = PBXGroup;
+			children = (
+				ED4FC615266EA42E0092B4AB /* AppLocker */,
+				ED4FC618266EA42E0092B4AB /* UI.swift */,
+			);
+			path = PassCode;
+			sourceTree = "<group>";
+		};
+		ED4FC615266EA42E0092B4AB /* AppLocker */ = {
+			isa = PBXGroup;
+			children = (
+				ED4FC616266EA42E0092B4AB /* AppLocker.xib */,
+				ED4FC617266EA42E0092B4AB /* AppLocker.swift */,
+			);
+			path = AppLocker;
+			sourceTree = "<group>";
+		};
 		EDB14374265FDA410028EF5A = {
 			isa = PBXGroup;
 			children = (
@@ -348,6 +460,7 @@
 		EDB1437F265FDA410028EF5A /* ForaBank */ = {
 			isa = PBXGroup;
 			children = (
+				EDF681F0266F9EC800FD5C07 /* Service */,
 				EDB143B6265FDEAD0028EF5A /* Resours */,
 				EDB1452926663BD90028EF5A /* Controllers */,
 				EDB143B0265FDB380028EF5A /* ForaBank.entitlements */,
@@ -453,6 +566,7 @@
 		EDB1452A26663BF40028EF5A /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				ED4FC614266EA4180092B4AB /* PassCode */,
 				ED4FC5F4266B8B2F0092B4AB /* LoginCardEntry */,
 				ED4FC5F5266B8B3B0092B4AB /* CodeVerification */,
 				ED4FC5F3266B8B1D0092B4AB /* OrderProducts */,
@@ -539,12 +653,145 @@
 		EDB16593266A4317007E6030 /* SecondaryControllers */ = {
 			isa = PBXGroup;
 			children = (
+				ED4FC613266CDB9C0092B4AB /* СountryPayments */,
+				ED4FC603266CCD0F0092B4AB /* ChooseCountry */,
 				ED4FC5F0266B8AA60092B4AB /* ForaInputView */,
 				ED4FC5ED266B707F0092B4AB /* CardScannerController */,
-				EDB165632667A741007E6030 /* ContactConfurmViewController.swift */,
-				EDB165642667A741007E6030 /* ContactInputViewController.swift */,
 			);
 			path = SecondaryControllers;
+			sourceTree = "<group>";
+		};
+		EDF681F0266F9EC800FD5C07 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				EDF681F1266F9EC800FD5C07 /* Networking */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		EDF681F1266F9EC800FD5C07 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				EDF681F2266F9EC800FD5C07 /* NetworkManager */,
+				EDF681F4266F9EC800FD5C07 /* NetworkingModel */,
+				EDF681F9266F9EC800FD5C07 /* AbstractNetworking */,
+				EDF68203266F9EC800FD5C07 /* NetworkRouter */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		EDF681F2266F9EC800FD5C07 /* NetworkManager */ = {
+			isa = PBXGroup;
+			children = (
+				EDF681F3266F9EC800FD5C07 /* NetworkManager.swift */,
+			);
+			path = NetworkManager;
+			sourceTree = "<group>";
+		};
+		EDF681F4266F9EC800FD5C07 /* NetworkingModel */ = {
+			isa = PBXGroup;
+			children = (
+				EDF681F5266F9EC800FD5C07 /* NetworkingModelProtocol */,
+				EDF681F7266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift */,
+				EDF681F8266F9EC800FD5C07 /* LoginDoCodableModel.swift */,
+			);
+			path = NetworkingModel;
+			sourceTree = "<group>";
+		};
+		EDF681F5266F9EC800FD5C07 /* NetworkingModelProtocol */ = {
+			isa = PBXGroup;
+			children = (
+				EDF681F6266F9EC800FD5C07 /* NetworkModelProtocol.swift */,
+			);
+			path = NetworkingModelProtocol;
+			sourceTree = "<group>";
+		};
+		EDF681F9266F9EC800FD5C07 /* AbstractNetworking */ = {
+			isa = PBXGroup;
+			children = (
+				EDF681FA266F9EC800FD5C07 /* RequestConstruct */,
+				EDF681FF266F9EC800FD5C07 /* URLConstruct */,
+			);
+			path = AbstractNetworking;
+			sourceTree = "<group>";
+		};
+		EDF681FA266F9EC800FD5C07 /* RequestConstruct */ = {
+			isa = PBXGroup;
+			children = (
+				EDF681FB266F9EC800FD5C07 /* RequestErrors */,
+				EDF681FD266F9EC800FD5C07 /* RequestMethod */,
+			);
+			path = RequestConstruct;
+			sourceTree = "<group>";
+		};
+		EDF681FB266F9EC800FD5C07 /* RequestErrors */ = {
+			isa = PBXGroup;
+			children = (
+				EDF681FC266F9EC800FD5C07 /* RequestError.swift */,
+			);
+			path = RequestErrors;
+			sourceTree = "<group>";
+		};
+		EDF681FD266F9EC800FD5C07 /* RequestMethod */ = {
+			isa = PBXGroup;
+			children = (
+				EDF681FE266F9EC800FD5C07 /* RequestMethod.swift */,
+			);
+			path = RequestMethod;
+			sourceTree = "<group>";
+		};
+		EDF681FF266F9EC800FD5C07 /* URLConstruct */ = {
+			isa = PBXGroup;
+			children = (
+				EDF68200266F9EC800FD5C07 /* URLHostType.swift */,
+				EDF68201266F9EC800FD5C07 /* URLSchemeType.swift */,
+				EDF68202266F9EC800FD5C07 /* URLConstruct.swift */,
+			);
+			path = URLConstruct;
+			sourceTree = "<group>";
+		};
+		EDF68203266F9EC800FD5C07 /* NetworkRouter */ = {
+			isa = PBXGroup;
+			children = (
+				EDF68204266F9EC800FD5C07 /* RouterErrors */,
+				EDF68206266F9EC800FD5C07 /* RouterSession */,
+				EDF68208266F9EC800FD5C07 /* RouterManager */,
+				EDF6820A266F9EC800FD5C07 /* RouterUtlConfig */,
+			);
+			path = NetworkRouter;
+			sourceTree = "<group>";
+		};
+		EDF68204266F9EC800FD5C07 /* RouterErrors */ = {
+			isa = PBXGroup;
+			children = (
+				EDF68205266F9EC800FD5C07 /* RouterError.swift */,
+			);
+			path = RouterErrors;
+			sourceTree = "<group>";
+		};
+		EDF68206266F9EC800FD5C07 /* RouterSession */ = {
+			isa = PBXGroup;
+			children = (
+				EDF68207266F9EC800FD5C07 /* RouterSassionConfiguration.swift */,
+			);
+			path = RouterSession;
+			sourceTree = "<group>";
+		};
+		EDF68208266F9EC800FD5C07 /* RouterManager */ = {
+			isa = PBXGroup;
+			children = (
+				EDF68209266F9EC800FD5C07 /* RouterManager.swift */,
+			);
+			path = RouterManager;
+			sourceTree = "<group>";
+		};
+		EDF6820A266F9EC800FD5C07 /* RouterUtlConfig */ = {
+			isa = PBXGroup;
+			children = (
+				EDF6820B266F9EC800FD5C07 /* RouterBaseUrlList.swift */,
+				EDF6820C266F9EC800FD5C07 /* RouterUrlList.swift */,
+			);
+			path = RouterUtlConfig;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -563,6 +810,9 @@
 			dependencies = (
 			);
 			name = ForaBank;
+			packageProductDependencies = (
+				ED4FC620266EA5CD0092B4AB /* Valet */,
+			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
 			productType = "com.apple.product-type.application";
@@ -634,6 +884,9 @@
 				Base,
 			);
 			mainGroup = EDB14374265FDA410028EF5A;
+			packageReferences = (
+				ED4FC61F266EA5CD0092B4AB /* XCRemoteSwiftPackageReference "Valet" */,
+			);
 			productRefGroup = EDB1437E265FDA410028EF5A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -651,12 +904,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				EDB143CE265FDEC90028EF5A /* Roboto-Thin.ttf in Resources */,
+				ED4FC60C266CD1020092B4AB /* СountryCell.xib in Resources */,
 				EDB143C9265FDEC90028EF5A /* Roboto-BoldItalic.ttf in Resources */,
 				EDB143CF265FDEC90028EF5A /* Roboto-Black.ttf in Resources */,
 				EDB143CD265FDEC90028EF5A /* Roboto-Bold.ttf in Resources */,
 				EDB143C6265FDEC90028EF5A /* Roboto-Regular.ttf in Resources */,
 				EDB143CA265FDEC90028EF5A /* Roboto-LightItalic.ttf in Resources */,
 				EDB1654D26678E87007E6030 /* LaunchScreen.storyboard in Resources */,
+				ED4FC619266EA42E0092B4AB /* AppLocker.xib in Resources */,
 				EDB143C4265FDEC90028EF5A /* Roboto-Medium.ttf in Resources */,
 				EDB143C5265FDEC90028EF5A /* Roboto-Light.ttf in Resources */,
 				EDB143C8265FDEC90028EF5A /* Roboto-ThinItalic.ttf in Resources */,
@@ -670,6 +925,7 @@
 				EDB143CB265FDEC90028EF5A /* Roboto-Italic.ttf in Resources */,
 				EDB1655E2667A55F007E6030 /* ForaInput.xib in Resources */,
 				EDB14532266667140028EF5A /* OrderProductsCollectionViewCell.xib in Resources */,
+				ED4FC605266CCE3D0092B4AB /* country.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -694,11 +950,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EDF68211266F9EC800FD5C07 /* RequestError.swift in Sources */,
 				EDB1451C26652D370028EF5A /* UILabel.swift in Sources */,
 				EDB145402666AFD70028EF5A /* Constants.swift in Sources */,
 				EDB165712668C480007E6030 /* SectionHeader.swift in Sources */,
 				EDB165602667A569007E6030 /* ForaInput.swift in Sources */,
+				EDF68216266F9EC800FD5C07 /* RouterError.swift in Sources */,
 				EDB1657C2668C8D5007E6030 /* PayCell.swift in Sources */,
+				ED4FC602266C0AB50092B4AB /* ChooseCountryTableViewController.swift in Sources */,
+				EDF6821A266F9EC800FD5C07 /* RouterUrlList.swift in Sources */,
 				EDB1452026661B030028EF5A /* StringMask.swift in Sources */,
 				EDB16586266A0883007E6030 /* NSDirectionalEdgeInsets.swift in Sources */,
 				EDB14524266624460028EF5A /* UIViewController.swift in Sources */,
@@ -709,23 +969,34 @@
 				EDB165652667A741007E6030 /* ContactConfurmViewController.swift in Sources */,
 				EDB16592266A19DA007E6030 /* PaymentsViewControllerSearchBarDelegate.swift in Sources */,
 				EDB14385265FDA410028EF5A /* LoginCardEntryViewController.swift in Sources */,
+				EDF6820D266F9EC800FD5C07 /* NetworkManager.swift in Sources */,
+				EDF6820F266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift in Sources */,
 				EDB1656E266827A8007E6030 /* PaymentsViewController.swift in Sources */,
 				EDB1654B26676F20007E6030 /* UIButton.swift in Sources */,
 				EDB1453C2666AEB90028EF5A /* AppDelegate UI extension.swift in Sources */,
 				EDB1655826679C74007E6030 /* SmsCodeView.swift in Sources */,
 				EDB14381265FDA410028EF5A /* AppDelegate.swift in Sources */,
 				EDB1658C266A18C3007E6030 /* PaymentsViewControllerDelegate.swift in Sources */,
+				EDF68215266F9EC800FD5C07 /* URLConstruct.swift in Sources */,
+				EDF68210266F9EC800FD5C07 /* LoginDoCodableModel.swift in Sources */,
 				EDB1658A266A181C007E6030 /* PaymentsViewControllerDataSource.swift in Sources */,
+				ED4FC61B266EA42E0092B4AB /* UI.swift in Sources */,
+				EDF6820E266F9EC800FD5C07 /* NetworkModelProtocol.swift in Sources */,
 				EDB14516266526B10028EF5A /* CreditCardEntryView.swift in Sources */,
 				EDB1655C2667A2C8007E6030 /* LoginCardEntryViewController UI.swift in Sources */,
 				EDB1451E26652F170028EF5A /* UIView.swift in Sources */,
+				ED4FC610266CD66F0092B4AB /* СountryModel.swift in Sources */,
+				EDF68213266F9EC800FD5C07 /* URLHostType.swift in Sources */,
 				EDB1656C26681F0E007E6030 /* MainTabBarViewController.swift in Sources */,
+				EDF68218266F9EC800FD5C07 /* RouterManager.swift in Sources */,
 				EDB1658026694676007E6030 /* PaymentsViewControllerLayout.swift in Sources */,
 				ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */,
 				EDB1655A2667A220007E6030 /* CodeVerificationViewController UI.swift in Sources */,
 				ED4FC5EC266AD98E0092B4AB /* NSCollectionLayoutItem.swift in Sources */,
 				EDB1657A2668C7F2007E6030 /* TransferCell.swift in Sources */,
+				ED4FC612266CD9660092B4AB /* ChooseCountryLoadFromJson.swift in Sources */,
 				EDB145382666770A0028EF5A /* OrderProductModel.swift in Sources */,
+				EDF68217266F9EC800FD5C07 /* RouterSassionConfiguration.swift in Sources */,
 				EDB1452226661C3F0028EF5A /* MaskedTextField.swift in Sources */,
 				ED4FC5EF266B70A00092B4AB /* PartialTransparentView.swift in Sources */,
 				EDB16588266A14F9007E6030 /* String.swift in Sources */,
@@ -737,8 +1008,13 @@
 				EDB1453E2666AF260028EF5A /* OrderProductsViewController FlowLayout.swift in Sources */,
 				EDB1452E26665AD50028EF5A /* OrderProductsViewController.swift in Sources */,
 				EDB14535266671580028EF5A /* MockItems.swift in Sources */,
+				EDF68212266F9EC800FD5C07 /* RequestMethod.swift in Sources */,
+				EDF68214266F9EC800FD5C07 /* URLSchemeType.swift in Sources */,
 				EDB16549266766FD007E6030 /* CodeVerificationViewController.swift in Sources */,
 				EDB14528266624EE0028EF5A /* OrderCardView.swift in Sources */,
+				EDF68219266F9EC800FD5C07 /* RouterBaseUrlList.swift in Sources */,
+				ED4FC60B266CD1020092B4AB /* СountryCell.swift in Sources */,
+				ED4FC61A266EA42E0092B4AB /* AppLocker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1064,6 +1340,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		ED4FC61F266EA5CD0092B4AB /* XCRemoteSwiftPackageReference "Valet" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Square/Valet";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.1.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		ED4FC620266EA5CD0092B4AB /* Valet */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ED4FC61F266EA5CD0092B4AB /* XCRemoteSwiftPackageReference "Valet" */;
+			productName = Valet;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = EDB14375265FDA410028EF5A /* Project object */;
 }

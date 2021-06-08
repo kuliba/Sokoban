@@ -117,6 +117,7 @@ class ContactConfurmViewController: UIViewController {
     
     @objc func doneButtonTapped() {
         print(#function)
+        self.navigationController?.popToRootViewController(animated: true)
     }
     
 

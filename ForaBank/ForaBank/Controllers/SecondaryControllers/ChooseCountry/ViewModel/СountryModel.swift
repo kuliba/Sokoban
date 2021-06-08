@@ -1,0 +1,22 @@
+//
+//  СountryModel.swift
+//  ForaBank
+//
+//  Created by Mikhail on 06.06.2021.
+//
+
+import Foundation
+
+
+public struct Сountry : Decodable {
+
+    public let name : String?
+    public let dialCode : String?
+    public let code : String?
+    
+    enum CodingKeys: String, CodingKey {
+        case name
+        case code
+        case dialCode = "dial_code"
+    }
+}

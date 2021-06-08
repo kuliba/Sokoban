@@ -9,6 +9,19 @@ import UIKit
 
 class ContactInputViewController: UIViewController {
 
+    var country: Сountry? {
+        didSet {
+            guard let country = country else { return }
+            if country.code == "AM" {
+                title = "Денежные переводы Миг"
+            } else {
+                title = "Денежные переводы Contact"
+            }
+            guard let countryName = country.name else { return }
+            countryField.textField.text = countryName
+            countryField.text = countryName
+        }
+    }
     
     var surnameField = ForaInput(
         viewModel: ForaInputModel(
@@ -31,6 +44,7 @@ class ContactInputViewController: UIViewController {
         viewModel: ForaInputModel(
             title: "Страна",
             image: #imageLiteral(resourceName: "map-pin"),
+            isEditable: false,
             showChooseButton: true))
     
     var summTransctionField = ForaInput(
@@ -67,7 +81,7 @@ class ContactInputViewController: UIViewController {
     }
 
     fileprivate func setupUI() {
-        title = "Денежные переводы Contact"
+        
         let customViewItem = UIBarButtonItem(customView: UIImageView(image: #imageLiteral(resourceName: "Vector")))
         self.navigationItem.rightBarButtonItem = customViewItem
         view.backgroundColor = .white

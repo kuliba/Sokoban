@@ -31,10 +31,35 @@ class CodeVerificationViewController: UIViewController {
     //TODO: BUG: Можно ввести в поле больше символов чем есть полей
     func sendSmsCode(code: String) {
         print("DEBUG: " + #function + ": " + code)
-        let vc = MainTabBarViewController()
-        vc.modalPresentationStyle = .fullScreen
-        self.present(vc, animated: true)
+        pin(.create)
+//        pin(.change)
+//        pin(.deactive)
+//        pin(.validate)
 //        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func pin(_ mode: ALMode) {
+        
+        var options = ALOptions()
+        
+//        options.image = UIImage(named: "face")!
+//        options.title = "Михаил Колотилин"
+        options.isSensorsEnabled = true
+        options.color = .white
+        options.onSuccessfulDismiss = { (mode: ALMode?) in
+            if let mode = mode {
+                print("Password \(String(describing: mode))d successfully")
+                let vc = MainTabBarViewController()
+                vc.modalPresentationStyle = .fullScreen
+                self.present(vc, animated: true)
+            } else {
+                print("User Cancelled")
+            }
+        }
+        options.onFailedAttempt = { (mode: ALMode?) in
+            print("Failed to \(String(describing: mode))")
+        }
+        AppLocker.present(with: mode, and: options, over: self)
     }
 
 }

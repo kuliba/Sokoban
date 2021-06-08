@@ -78,7 +78,7 @@ class MockItems {
             
             PaymentsModel(id: 8, name: "За рубеж",
                           iconName: "PaymentsIconWarldPay",
-                          controllerName: "ContactInputViewController",
+                          controllerName: "ChooseCountryTableViewController",
                           description: "Что то"),
             
             PaymentsModel(id: 9, name: "На другую карту",
