@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B8BE08F266FBE0500E96CAA /* CSRFDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE08E266FBE0500E96CAA /* CSRFDecodableModel.swift */; };
 		ED4FC5EC266AD98E0092B4AB /* NSCollectionLayoutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EB266AD98E0092B4AB /* NSCollectionLayoutItem.swift */; };
 		ED4FC5EF266B70A00092B4AB /* PartialTransparentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EE266B70A00092B4AB /* PartialTransparentView.swift */; };
 		ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5F9266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift */; };
@@ -118,6 +119,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0B8BE08E266FBE0500E96CAA /* CSRFDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFDecodableModel.swift; sourceTree = "<group>"; };
 		ED4FC5EB266AD98E0092B4AB /* NSCollectionLayoutItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSCollectionLayoutItem.swift; sourceTree = "<group>"; };
 		ED4FC5EE266B70A00092B4AB /* PartialTransparentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartialTransparentView.swift; sourceTree = "<group>"; };
 		ED4FC5F9266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmsCodeBasicAttributes.swift; sourceTree = "<group>"; };
@@ -672,9 +674,9 @@
 		EDF681F1266F9EC800FD5C07 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
+				EDF681F9266F9EC800FD5C07 /* AbstractNetworking */,
 				EDF681F2266F9EC800FD5C07 /* NetworkManager */,
 				EDF681F4266F9EC800FD5C07 /* NetworkingModel */,
-				EDF681F9266F9EC800FD5C07 /* AbstractNetworking */,
 				EDF68203266F9EC800FD5C07 /* NetworkRouter */,
 			);
 			path = Networking;
@@ -694,6 +696,7 @@
 				EDF681F5266F9EC800FD5C07 /* NetworkingModelProtocol */,
 				EDF681F7266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift */,
 				EDF681F8266F9EC800FD5C07 /* LoginDoCodableModel.swift */,
+				0B8BE08E266FBE0500E96CAA /* CSRFDecodableModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -1007,6 +1010,7 @@
 				EDB165622667A571007E6030 /* ForaInputModel.swift in Sources */,
 				EDB1453E2666AF260028EF5A /* OrderProductsViewController FlowLayout.swift in Sources */,
 				EDB1452E26665AD50028EF5A /* OrderProductsViewController.swift in Sources */,
+				0B8BE08F266FBE0500E96CAA /* CSRFDecodableModel.swift in Sources */,
 				EDB14535266671580028EF5A /* MockItems.swift in Sources */,
 				EDF68212266F9EC800FD5C07 /* RequestMethod.swift in Sources */,
 				EDF68214266F9EC800FD5C07 /* URLSchemeType.swift in Sources */,

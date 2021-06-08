@@ -10,6 +10,7 @@ import Foundation
 enum RouterManager {
     case login
     case setDeviceSetting
+    case csrf
 }
 
 extension RouterManager {
@@ -32,7 +33,7 @@ extension RouterManager {
             return request
         
         case .setDeviceSetting:
-            let baseUrl = RouterUrlList.setDeviceSettting.returnUrl()
+            let baseUrl = RouterUrlList.setDeviceSetting.returnUrl()
             switch baseUrl {
             case .success(let url):
                 resultUrl = url.absoluteURL
@@ -44,6 +45,21 @@ extension RouterManager {
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.post.rawValue
+            return request
+        
+        case .csrf:
+            let baseUrl = RouterUrlList.csrf.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.get.rawValue
             return request
         }
     }
