@@ -98,6 +98,7 @@
 		EDF68218266F9EC800FD5C07 /* RouterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF68209266F9EC800FD5C07 /* RouterManager.swift */; };
 		EDF68219266F9EC800FD5C07 /* RouterBaseUrlList.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF6820B266F9EC800FD5C07 /* RouterBaseUrlList.swift */; };
 		EDF6821A266F9EC800FD5C07 /* RouterUrlList.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF6820C266F9EC800FD5C07 /* RouterUrlList.swift */; };
+		EDF6821D266FC37F00FD5C07 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = EDF6821C266FC37F00FD5C07 /* FirebaseMessaging */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -222,6 +223,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EDF6821D266FC37F00FD5C07 /* FirebaseMessaging in Frameworks */,
 				ED4FC621266EA5CD0092B4AB /* Valet in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -812,6 +814,7 @@
 			name = ForaBank;
 			packageProductDependencies = (
 				ED4FC620266EA5CD0092B4AB /* Valet */,
+				EDF6821C266FC37F00FD5C07 /* FirebaseMessaging */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -886,6 +889,7 @@
 			mainGroup = EDB14374265FDA410028EF5A;
 			packageReferences = (
 				ED4FC61F266EA5CD0092B4AB /* XCRemoteSwiftPackageReference "Valet" */,
+				EDF6821B266FC37F00FD5C07 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = EDB1437E265FDA410028EF5A /* Products */;
 			projectDirPath = "";
@@ -1350,6 +1354,14 @@
 				minimumVersion = 4.1.2;
 			};
 		};
+		EDF6821B266FC37F00FD5C07 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.1.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1357,6 +1369,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = ED4FC61F266EA5CD0092B4AB /* XCRemoteSwiftPackageReference "Valet" */;
 			productName = Valet;
+		};
+		EDF6821C266FC37F00FD5C07 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EDF6821B266FC37F00FD5C07 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

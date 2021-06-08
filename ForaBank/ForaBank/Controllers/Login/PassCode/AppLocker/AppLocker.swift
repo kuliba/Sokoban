@@ -53,9 +53,7 @@ public class AppLocker: UIViewController {
     @IBOutlet var pinIndicators: [Indicator]! {
         didSet {
             pinIndicators.forEach { pinIndicator in
-                pinIndicator.layer.cornerRadius = pinIndicator.layer.bounds.height / 2
-                print("DEBUG: ", pinIndicator.layer.bounds.height)
-                print("DEBUG: ", pinIndicator.layer.bounds.height / 2)
+                pinIndicator.layer.cornerRadius = 6
             }
         }
     }
@@ -64,19 +62,13 @@ public class AppLocker: UIViewController {
         didSet {
             buttons.forEach { button in
                 button.layer.cornerRadius = button.layer.bounds.height / 2
-                print("DEBUG: ", button.layer.bounds.height)
-                print("DEBUG: ", button.layer.bounds.height / 2)
             }
         }
     }
     
     @IBOutlet weak var cancelButton: UIButton! {
         didSet {
-//            pinIndicators.forEach { pinIndicator in
             cancelButton.layer.cornerRadius = cancelButton.layer.bounds.height / 2
-                print("DEBUG: ", cancelButton.layer.bounds.height)
-                print("DEBUG: ", cancelButton.layer.bounds.height / 2)
-//            }
         }
     }
     
@@ -222,7 +214,9 @@ public class AppLocker: UIViewController {
     private func incorrectPinAnimation() {
         pinIndicators.forEach { view in
             view.shake(delegate: self)
-            view.backgroundColor = .clear
+//            view.backgroundColor = .clear
+            view.backgroundColor = #colorLiteral(red: 0.8666666667, green: 0.8666666667, blue: 0.8666666667, alpha: 1)
+            
         }
         AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
     }
@@ -232,7 +226,7 @@ public class AppLocker: UIViewController {
         pinIndicators.forEach { view in
             view.isNeedClear = false
             UIView.animate(withDuration: ALConstants.duration, animations: {
-                view.backgroundColor = .clear
+                view.backgroundColor = #colorLiteral(red: 0.8666666667, green: 0.8666666667, blue: 0.8666666667, alpha: 1)
             })
         }
     }
