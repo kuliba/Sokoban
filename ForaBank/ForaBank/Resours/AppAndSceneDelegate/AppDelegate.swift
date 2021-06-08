@@ -16,6 +16,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         customizeNavBar()
+        
+        let parameters = [
+        "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
+        "pushFCMtoken": "",
+        "model": UIDevice().model,
+         "operationSystem": "IOS"
+        ]
+        
+        NetworkManager<CSRFDecodableModel>.addRequest(.csrf, [:], parameters) { request, error in
+            
+            print(request?.data?.token as Any)
+            
+        }
+        
         return true
     }
 

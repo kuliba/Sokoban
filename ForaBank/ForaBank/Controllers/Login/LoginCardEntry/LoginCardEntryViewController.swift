@@ -22,6 +22,7 @@ class LoginCardEntryViewController: UIViewController {
         creditCardView.cardNumberTextField.delegate = self
         creditCardView.scanerCardTapped = { self.scanCardTapped() }
         orderCardView.orderCardTapped = { self.orderCardTapped() }
+
     }
     
     override func viewWillAppear(_ animated: Bool) {

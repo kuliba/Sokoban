@@ -19,4 +19,8 @@ enum RouterBaseUrlList: String {
     /// "setDeviceSettting"
     case setDeviceSettting = "/registration/setDeviceSettings"
     
+    /// Получение токена при запуске приложения
+    /// "/csrf/"
+    case csrf = "/csrf"
+    
 }

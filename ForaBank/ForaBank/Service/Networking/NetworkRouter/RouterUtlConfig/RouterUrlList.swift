@@ -14,7 +14,9 @@ enum RouterUrlList: String {
     /// Авторизация
     case login
     /// Авторизация приложения
-    case setDeviceSettting
+    case setDeviceSetting
+    /// Получение токена при запуске приложения
+    case csrf
     
     func returnUrl () -> URLValue {
         switch self {
@@ -31,8 +33,20 @@ enum RouterUrlList: String {
             }
 
         /// Авторизация приложения
-        case .setDeviceSettting:
+        case .setDeviceSetting:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.setDeviceSettting.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        /// Получение токена при запуске приложения
+        case .csrf:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.csrf.rawValue)
             
             switch result {
             case .success(let url):
