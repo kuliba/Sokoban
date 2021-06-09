@@ -14,12 +14,12 @@ class CreditCardEntryView: UIView {
     
     /// Замыкание для действия по нажатию кнопки сканера
     var scanerCardTapped: (() -> Void)?
+    /// Замыкание для действия по нажатию кнопки готово
+    var enterCardNumberTapped: ((String) -> Void)?
+    
+    @IBOutlet weak var doneButton: UIButton!
     @IBOutlet var contentView: UIView!
-    @IBOutlet weak var cardNumberTextField: MaskedTextField! {
-        didSet {
-            cardNumberTextField.maskString = "0000 0000 0000 0000"
-        }
-    }
+    @IBOutlet weak var cardNumberTextField: MaskedTextField! 
     
     //MARK: - Lifecycle
     override init(frame: CGRect) {
@@ -36,13 +36,6 @@ class CreditCardEntryView: UIView {
     func commonInit() {
         Bundle.main.loadNibNamed(kContentXibName, owner: self, options: nil)
         contentView.fixInView(self)
-        let lineView = UIView()
-        cardNumberTextField.addSubview(lineView)
-        lineView.backgroundColor = .white
-        lineView.anchor(top: cardNumberTextField.bottomAnchor,
-                        left: cardNumberTextField.leftAnchor,
-                        right: cardNumberTextField.rightAnchor,
-                        paddingTop: 5 ,height: 1)
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowRadius = 8
         layer.shadowOpacity = 0.4
@@ -53,5 +46,9 @@ class CreditCardEntryView: UIView {
         scanerCardTapped?()
     }
     
-
+    @IBAction func doneButtonTapped(_ sender: Any) {
+        guard let text = cardNumberTextField.unmaskedText else { return }
+        enterCardNumberTapped?(text)
+    }
+    
 }
