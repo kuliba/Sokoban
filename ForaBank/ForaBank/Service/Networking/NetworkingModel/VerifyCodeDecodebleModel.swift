@@ -14,12 +14,9 @@ import Foundation
 
 // MARK: - VerifyCodeDecodebleModel
 struct VerifyCodeDecodebleModel: Codable, NetworkModelProtocol {
-    let appID, verificationCode: String?
-
-    enum CodingKeys: String, CodingKey {
-        case appID 
-        case verificationCode
-    }
+    let statusCode: Int?
+    let errorMessage: String?
+    let data: VerifyDataClass?
 }
 
 // MARK: VerifyCodeDecodebleModel convenience initializers and mutators
@@ -41,12 +38,63 @@ extension VerifyCodeDecodebleModel {
     }
 
     func with(
-        appID: String?? = nil,
-        verificationCode: String?? = nil
+        statusCode: Int?? = nil,
+        errorMessage: String?? = nil,
+        data: VerifyDataClass?? = nil
     ) -> VerifyCodeDecodebleModel {
         return VerifyCodeDecodebleModel(
-            appID: appID ?? self.appID,
-            verificationCode: verificationCode ?? self.verificationCode
+            statusCode: statusCode ?? self.statusCode,
+            errorMessage: errorMessage ?? self.errorMessage,
+            data: data ?? self.data
+        )
+    }
+
+    func jsonData() throws -> Data {
+        return try newJSONEncoder().encode(self)
+    }
+
+    func jsonString(encoding: String.Encoding = .utf8) throws -> String? {
+        return String(data: try self.jsonData(), encoding: encoding)
+    }
+}
+
+// DataClass.swift
+
+// This file was generated from JSON Schema using quicktype, do not modify it directly.
+// To parse the JSON, add this file to your project and do:
+//
+//   let dataClass = try DataClass(json)
+
+import Foundation
+
+// MARK: - DataClass
+struct VerifyDataClass: Codable {
+    let verifyOTPCount: Int?
+}
+
+// MARK: DataClass convenience initializers and mutators
+
+extension VerifyDataClass {
+    init(data: Data) throws {
+        self = try newJSONDecoder().decode(VerifyDataClass.self, from: data)
+    }
+
+    init(_ json: String, using encoding: String.Encoding = .utf8) throws {
+        guard let data = json.data(using: encoding) else {
+            throw NSError(domain: "JSONDecoding", code: 0, userInfo: nil)
+        }
+        try self.init(data: data)
+    }
+
+    init(fromURL url: URL) throws {
+        try self.init(data: try Data(contentsOf: url))
+    }
+
+    func with(
+        verifyOTPCount: Int?? = nil
+    ) -> VerifyDataClass {
+        return VerifyDataClass(
+            verifyOTPCount: verifyOTPCount ?? self.verifyOTPCount
         )
     }
 

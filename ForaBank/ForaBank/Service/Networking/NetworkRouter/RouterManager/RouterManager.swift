@@ -14,6 +14,7 @@ enum RouterManager {
     case checkCkient
     case verifyCode
     case doRegistration
+    case getCode
 }
 
 extension RouterManager {
@@ -97,6 +98,21 @@ extension RouterManager {
             
         case .doRegistration:
             let baseUrl = RouterUrlList.doRegistration.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .getCode:
+            let baseUrl = RouterUrlList.getCode.returnUrl()
             switch baseUrl {
             case .success(let url):
                 resultUrl = url.absoluteURL

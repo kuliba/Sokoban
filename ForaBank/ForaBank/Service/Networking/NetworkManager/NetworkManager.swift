@@ -18,6 +18,8 @@ final class NetworkManager<T: NetworkModelProtocol>{
  
         let session = RouterSassionConfiguration.returnSession()
         
+     //   request.allHTTPHeaderFields = addHeader    +++++++++Singlton
+        
         if request.httpMethod != "GET" {
         
         /// URL Parameters
