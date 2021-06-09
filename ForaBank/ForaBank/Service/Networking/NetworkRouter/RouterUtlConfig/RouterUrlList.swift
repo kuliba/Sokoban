@@ -18,6 +18,12 @@ enum RouterUrlList: String {
     /// Получение токена при запуске приложения
     case csrf
     
+    case chackClient
+    
+    case verifyCode
+    
+    case doRegistration
+    
     func returnUrl () -> URLValue {
         switch self {
         /// Авторизация
@@ -47,6 +53,39 @@ enum RouterUrlList: String {
         /// Получение токена при запуске приложения
         case .csrf:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.csrf.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .chackClient:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.chackClient.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .verifyCode:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.verifyCode.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .doRegistration:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.doRegistration.rawValue)
             
             switch result {
             case .success(let url):
