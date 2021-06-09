@@ -31,4 +31,15 @@ extension UIViewController {
         return cell
     }
     
+    func showAlert(with title: String, and message: String, completion: @escaping () -> Void = { }) {
+        DispatchQueue.main.async {
+            let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default) { (_) in
+                completion()
+            }
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
+    
 }

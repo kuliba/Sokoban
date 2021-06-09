@@ -58,11 +58,10 @@ class LoginCardEntryViewController: UIViewController {
     fileprivate func checkCardNumber(with number: String) {
         
         let body = ["cardNumber": "\(number)"]
-        print(body)
         NetworkManager<CheckClientDecodebleModel>.addRequest(.checkCkient, [:], body) { (model, error) in
             if error != nil {
-                //TODO: alert controller
-                print(error ?? "")
+                guard let error = error else { return }
+                self.showAlert(with: "Ошибка", and: error)
             }
             guard let phone = model?.data?.phone else { return }
             DispatchQueue.main.async { [weak self] in
