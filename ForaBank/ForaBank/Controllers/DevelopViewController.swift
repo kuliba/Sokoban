@@ -26,6 +26,7 @@ class DevelopViewController: UIViewController {
     
     func setupUI() {
         view.backgroundColor = .white
+        navigationController?.navigationBar.backgroundColor = .white
         view.addSubview(imageView)
         view.addSubview(titleLabel)
         view.addSubview(subTitleLabel)

@@ -19,6 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
+        // if is register pin.validate
         let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
         window?.rootViewController = navVC //MainTabBarViewController()
         window?.makeKeyAndVisible()

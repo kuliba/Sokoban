@@ -24,20 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         getCSRF()
         
         customizeNavBar()
-        
-        let parameters = [
-        "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-        "pushFCMtoken": "",
-        "model": UIDevice().model,
-         "operationSystem": "IOS"
-        ] as [String: AnyObject]
-        
-        NetworkManager<CSRFDecodableModel>.addRequest(.csrf, [:], parameters) { request, error in
-            
-            print(request?.data?.token as Any)
-            
-        }
-        
+
         return true
     }
 
@@ -74,15 +61,18 @@ extension AppDelegate {
             "pushFCMtoken": Messaging.messaging().fcmToken! as String,
             "model": UIDevice().model,
             "operationSystem": "IOS"
-        ]
+        ] as [String : AnyObject]
 //        print("DEBUG: Parameters = ", parameters)
         
         NetworkManager<CSRFDecodableModel>.addRequest(.csrf, [:], parameters) { request, error in
             guard let token = request?.data?.token else { return }
-            print("DEBUG: Token = ", token)
+            
             
             // TODO: пределать на сингл тон
             UserDefaults.standard.set(token, forKey: "sessionToken")
+            
+            let tok = UserDefaults.standard.object(forKey: "sessionToken")
+            print("DEBUG: Token = ", tok)
         }
     }
 }

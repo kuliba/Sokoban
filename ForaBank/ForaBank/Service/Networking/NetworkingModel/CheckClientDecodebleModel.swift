@@ -15,7 +15,7 @@ import Foundation
 // MARK: - CheckClientDecodebleModel
 struct CheckClientDecodebleModel: Codable, NetworkModelProtocol {
     let statusCode: Int?
-    let errorMessage: JSONNull?
+    let errorMessage: String?
     let data: CheckDataClass?
 }
 
@@ -39,7 +39,7 @@ extension CheckClientDecodebleModel {
 
     func with(
         statusCode: Int?? = nil,
-        errorMessage: JSONNull?? = nil,
+        errorMessage: String?? = nil,
         data: CheckDataClass?? = nil
     ) -> CheckClientDecodebleModel {
         return CheckClientDecodebleModel(

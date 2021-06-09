@@ -47,7 +47,7 @@ class CodeVerificationViewController: UIViewController {
         let body = [
             "appId": "iOS",
             "verificationCode": "\(code)"
-        ]
+        ] as [String : AnyObject]
         
         NetworkManager<VerifyCodeDecodebleModel>.addRequest(.verifyCode, [:], body) { [weak self] model, error in
             if error != nil {
@@ -57,10 +57,12 @@ class CodeVerificationViewController: UIViewController {
             guard let model = model else { return }
             if model.statusCode == 0 {
                 
-                let body = ["model": UIDevice().model,
-                            "operationSystem": "iOS",
-                            "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-                            "pushFcmToken": Messaging.messaging().fcmToken! as String]
+                let body = [
+                    "model": UIDevice().model,
+                    "operationSystem": "iOS",
+                    "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
+                    "pushFcmToken": Messaging.messaging().fcmToken! as String
+                ] as [String : AnyObject]
                 
                 NetworkManager<DoRegistrationDecodebleModel>.addRequest(.doRegistration, [:], body) { [weak self] model, error in
                     if error != nil {
@@ -71,31 +73,95 @@ class CodeVerificationViewController: UIViewController {
                     
                     if model.statusCode == 0 {
                         guard let serverDeviceGUID = model.data else { return }
+                        // TODO сохранить serverDeviceGUID
                         
-                        DispatchQueue.main.async { [weak self] in
-                            self?.pin(.create)
-                        }
                         
+                        // TODO: перенести в AppLoker
                         let data = [
                             "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
                             "pushFcmToken": Messaging.messaging().fcmToken! as String,
                             "serverDeviceGUID" : serverDeviceGUID,
+                            "settings": [
+                                    [
+                                        "type" : "pin",
+                                        "isActive": true,
+                                        "value": "5555"
+                                        ],
+                                    [
+                                        "type" : "touchId",
+                                        "isActive": true,
+                                        "value": "finger"
+                                    ],
+                                    [
+                                        "type" : "faceId",
+                                        "isActive": true,
+                                        "value": "face"
+                                    ]
+                                ]
+                        ] as [String : AnyObject]
 
-                        ]
-//
-//                        NetworkManager<SetDeviceSettingDecodbleModel>.addRequest(.setDeviceSetting, [:], data) { model, error in
-//
-//                            if error != nil {
-//                                // TODO: Alert
-//                                print("DEBUG: ", error)
-//                            }
-//                            guard let model = model else { return }
-//
-//                            if model.statusCode == 0 {
-                                
-                                
-//                            }
-//                        }
+                        NetworkManager<SetDeviceSettingDecodbleModel>.addRequest(.setDeviceSetting, [:], data) { [weak self] model, error in
+                            if error != nil {
+                                guard let error = error else { return }
+                                self?.showAlert(with: "Ошибка", and: error)
+                            } else {
+                                guard let statusCode = model?.statusCode else { return }
+                                if statusCode == 0 {
+                                    
+                                    
+                                    
+                                    //TODO: go to app
+                                    DispatchQueue.main.async { [weak self] in
+                                        self?.pin(.create)
+                                    }
+                                    
+                                    
+                                    // TODO: перенести в AppLoker
+                                    let data = [
+                                        "appId": "iOS",
+                                        "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
+                                        "pushFcmToken": Messaging.messaging().fcmToken! as String,
+                                        "serverDeviceGUID": serverDeviceGUID,
+                                        "loginValue": "5555", // TODO: from success pin
+                                        "type": "pin"
+                                    ] as [String : AnyObject]
+                                    NetworkManager<LoginDoCodableModel>.addRequest(.login, [:], data) { model, error in
+                                        if error != nil {
+                                            guard let error = error else { return }
+                                            self?.showAlert(with: "Ошибка", and: error)
+                                        } else {
+                                            guard let statusCode = model?.statusCode else { return }
+                                            if statusCode == 0 {
+                                        
+                                                
+                                                //TODO: go to app
+                                                DispatchQueue.main.async { [weak self] in
+                                                    self?.pin(.create)
+                                                }
+                                                
+                                                
+                                            } else {
+                                                guard let error = model?.errorMessage else { return }
+                                                self?.showAlert(with: "Ошибка", and: error)
+                                            }
+                                        }
+                                    }
+                                    
+                                    
+                                    
+                                    
+//                                    print("DEBUG: setDeviceSetting Succsess")
+                                    
+                                    
+                                    
+                                    
+                                    
+                                } else {
+                                    guard let error = model?.errorMessage else { return }
+                                    self?.showAlert(with: "Ошибка", and: error)
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -128,6 +194,7 @@ class CodeVerificationViewController: UIViewController {
         options.onFailedAttempt = { (mode: ALMode?) in
             print("Failed to \(String(describing: mode))")
         }
+        // LOGIN DO
         AppLocker.present(with: mode, and: options, over: self)
     }
 

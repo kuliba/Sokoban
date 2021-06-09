@@ -51,6 +51,7 @@ class PaymentsViewController: UIViewController {
     
     private func setupSearchBar() {
         navigationController?.navigationBar.barTintColor = .white
+        navigationController?.navigationBar.backgroundColor = .white
         navigationController?.navigationBar.shadowImage = UIImage()
         let searchController = UISearchController(searchResultsController: nil)
         navigationItem.searchController = searchController

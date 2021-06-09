@@ -34,7 +34,7 @@ class LoginCardEntryViewController: UIViewController {
                         "serverDeviceGUID": "63881613-bb24-4048-9a7e-299a6eb10922",
                         "type": "pin",
                         "loginValue": ""]
-        let body = ["":""]
+        let body = ["":""] as [String : AnyObject]
         
         
         NetworkManager<SetDeviceSettingDecodbleModel>.addRequest(.setDeviceSetting, paremers, body) { (model, error) in
@@ -57,18 +57,24 @@ class LoginCardEntryViewController: UIViewController {
     
     fileprivate func checkCardNumber(with number: String) {
         
-        let body = ["cardNumber": "\(number)"]
+        let body = ["cardNumber": "\(number)"] as [String : AnyObject]
         NetworkManager<CheckClientDecodebleModel>.addRequest(.checkCkient, [:], body) { (model, error) in
             if error != nil {
                 guard let error = error else { return }
                 self.showAlert(with: "Ошибка", and: error)
+            } else {
+                guard let statusCode = model?.statusCode else { return }
+                if statusCode == 0 {
+                    guard let phone = model?.data?.phone else { return }
+                    DispatchQueue.main.async { [weak self] in
+                        let vc = CodeVerificationViewController(phone: phone)
+                        self?.navigationController?.pushViewController(vc, animated: true)
+                    }
+                } else {
+                    guard let error = model?.errorMessage else { return }
+                    self.showAlert(with: "Ошибка", and: error)
+                }
             }
-            guard let phone = model?.data?.phone else { return }
-            DispatchQueue.main.async { [weak self] in
-                let vc = CodeVerificationViewController(phone: phone)
-                self?.navigationController?.pushViewController(vc, animated: true)
-            }
-            
         }
     }
 

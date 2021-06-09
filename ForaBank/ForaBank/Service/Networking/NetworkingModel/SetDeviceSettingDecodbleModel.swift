@@ -15,7 +15,7 @@ import Foundation
 // MARK: - SetDeviceSettingDecodbleModel
 struct SetDeviceSettingDecodbleModel: Codable, NetworkModelProtocol {
     let statusCode: Int?
-    let errorMessage: JSONNull?
+    let errorMessage: String?
     let data: String?
 }
 
@@ -39,7 +39,7 @@ extension SetDeviceSettingDecodbleModel {
 
     func with(
         statusCode: Int?? = nil,
-        errorMessage: JSONNull?? = nil,
+        errorMessage: String?? = nil,
         data: String?? = nil
     ) -> SetDeviceSettingDecodbleModel {
         return SetDeviceSettingDecodbleModel(
