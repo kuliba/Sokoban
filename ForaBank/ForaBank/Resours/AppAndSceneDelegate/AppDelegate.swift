@@ -24,6 +24,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         getCSRF()
         
         customizeNavBar()
+        
+        let parameters = [
+        "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
+        "pushFCMtoken": "",
+        "model": UIDevice().model,
+         "operationSystem": "IOS"
+        ] as [String: AnyObject]
+        
+        NetworkManager<CSRFDecodableModel>.addRequest(.csrf, [:], parameters) { request, error in
+            
+            print(request?.data?.token as Any)
+            
+        }
+        
         return true
     }
 
