@@ -96,6 +96,11 @@ public class AppLocker: UIViewController {
         modalPresentationStyle = .fullScreen
     }
     
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.isHidden = true
+    }
+    
     fileprivate var mode: ALMode = .validate {
         didSet {
             switch mode {
@@ -310,6 +315,7 @@ public extension AppLocker {
         } else {
             locker.photoImageView.isHidden = true
         }
-        root.present(locker, animated: true, completion: nil)
+        root.navigationController?.pushViewController(locker, animated: true)
+//        root.present(locker, animated: true, completion: nil)
     }
 }

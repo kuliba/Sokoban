@@ -47,7 +47,7 @@ class CreditCardEntryView: UIView {
     }
     
     @IBAction func doneButtonTapped(_ sender: Any) {
-        guard let text = cardNumberTextField.text else { return }
+        guard let text = cardNumberTextField.unmaskedText else { return }
         enterCardNumberTapped?(text)
     }
     
