@@ -1,29 +1,29 @@
 //
-//  CheckClientDecodebleModel.swift
+//  GetCodeDecodebleModel.swift
 //  ForaBank
 //
-//  Created by Константин Савялов on 08.06.2021.
+//  Created by Константин Савялов on 09.06.2021.
 //
 
 // This file was generated from JSON Schema using quicktype, do not modify it directly.
 // To parse the JSON, add this file to your project and do:
 //
-//   let checkClientDecodebleModel = try CheckClientDecodebleModel(json)
+//   let getCodeDecodebleModel = try GetCodeDecodebleModel(json)
 
 import Foundation
 
-// MARK: - CheckClientDecodebleModel
-struct CheckClientDecodebleModel: Codable, NetworkModelProtocol {
+// MARK: - GetCodeDecodebleModel
+struct GetCodeDecodebleModel: Codable, NetworkModelProtocol {
     let statusCode: Int?
     let errorMessage: JSONNull?
-    let data: CheckDataClass?
+    let data: GetCodeDataClass?
 }
 
-// MARK: CheckClientDecodebleModel convenience initializers and mutators
+// MARK: GetCodeDecodebleModel convenience initializers and mutators
 
-extension CheckClientDecodebleModel {
+extension GetCodeDecodebleModel {
     init(data: Data) throws {
-        self = try newJSONDecoder().decode(CheckClientDecodebleModel.self, from: data)
+        self = try newJSONDecoder().decode(GetCodeDecodebleModel.self, from: data)
     }
 
     init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -40,9 +40,9 @@ extension CheckClientDecodebleModel {
     func with(
         statusCode: Int?? = nil,
         errorMessage: JSONNull?? = nil,
-        data: CheckDataClass?? = nil
-    ) -> CheckClientDecodebleModel {
-        return CheckClientDecodebleModel(
+        data: GetCodeDataClass?? = nil
+    ) -> GetCodeDecodebleModel {
+        return GetCodeDecodebleModel(
             statusCode: statusCode ?? self.statusCode,
             errorMessage: errorMessage ?? self.errorMessage,
             data: data ?? self.data
@@ -67,16 +67,16 @@ extension CheckClientDecodebleModel {
 
 import Foundation
 
-// MARK: - CheckDataClass
-struct CheckDataClass: Codable {
-    let phone: String?
+// MARK: - DataClass
+struct GetCodeDataClass: Codable {
+    let resendOTPCount: Int?
 }
 
 // MARK: DataClass convenience initializers and mutators
 
-extension CheckDataClass {
+extension GetCodeDataClass {
     init(data: Data) throws {
-        self = try newJSONDecoder().decode(CheckDataClass.self, from: data)
+        self = try newJSONDecoder().decode(GetCodeDataClass.self, from: data)
     }
 
     init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -91,10 +91,10 @@ extension CheckDataClass {
     }
 
     func with(
-        phone: String?? = nil
-    ) -> CheckDataClass {
-        return CheckDataClass(
-            phone: phone ?? self.phone
+        resendOTPCount: Int?? = nil
+    ) -> GetCodeDataClass {
+        return GetCodeDataClass(
+            resendOTPCount: resendOTPCount ?? self.resendOTPCount
         )
     }
 
