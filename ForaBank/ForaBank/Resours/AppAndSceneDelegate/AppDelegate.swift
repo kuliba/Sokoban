@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         "pushFCMtoken": "",
         "model": UIDevice().model,
          "operationSystem": "IOS"
-        ]
+        ] as [String: AnyObject]
         
         NetworkManager<CSRFDecodableModel>.addRequest(.csrf, [:], parameters) { request, error in
             
