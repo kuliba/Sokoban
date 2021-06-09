@@ -9,6 +9,8 @@ import UIKit
 
 class CodeVerificationViewController: UIViewController {
     
+    var phoneNumber: String?
+    
     lazy var titleLabel = UILabel(text: "Введите код из сообщения",
                                            font: .boldSystemFont(ofSize: 18))
     lazy var smsCodeView: SmsCodeView = SmsCodeView()
@@ -26,6 +28,15 @@ class CodeVerificationViewController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = false
     }
+        
+    init(phone: String) {
+        phoneNumber = phone
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     //MARK: - API
     //TODO: BUG: Можно ввести в поле больше символов чем есть полей
@@ -41,14 +52,11 @@ class CodeVerificationViewController: UIViewController {
     func pin(_ mode: ALMode) {
         
         var options = ALOptions()
-        
-//        options.image = UIImage(named: "face")!
-//        options.title = "Михаил Колотилин"
         options.isSensorsEnabled = true
         options.color = .white
         options.onSuccessfulDismiss = { (mode: ALMode?) in
             if let mode = mode {
-                print("Password \(String(describing: mode))d successfully")
+                print("Password \(String(describing: mode)) successfully")
                 let vc = MainTabBarViewController()
                 vc.modalPresentationStyle = .fullScreen
                 self.present(vc, animated: true)

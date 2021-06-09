@@ -21,10 +21,12 @@ class LoginCardEntryViewController: UIViewController {
         hideKeyboardWhenTappedAround()
         creditCardView.cardNumberTextField.delegate = self
         creditCardView.scanerCardTapped = { self.scanCardTapped() }
-        creditCardView.enterCardNumberTapped = { self.checkCardNumber() }
+        creditCardView.enterCardNumberTapped = { [weak self] (cardNumber) in
+            self?.checkCardNumber(with: cardNumber)
+        }
+        
         orderCardView.orderCardTapped = { self.orderCardTapped() }
 
-        
         
         let paremers = ["appId": "IOS",
                         "pushDeviceId": "kav",
@@ -37,7 +39,6 @@ class LoginCardEntryViewController: UIViewController {
         
         NetworkManager<SetDeviceSettingDecodbleModel>.addRequest(.setDeviceSetting, paremers, body) { (model, error) in
         }
-        
         
         
         
@@ -54,15 +55,25 @@ class LoginCardEntryViewController: UIViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    fileprivate func checkCardNumber() {
+    fileprivate func checkCardNumber(with number: String) {
+//        let paremers = ["appId": "IOS",
+//                        "pushDeviceId": "kav",
+//                        "token": "fBI-TdJQQ6KgQYMVC8Slu4:APA91bFwJFXlS5SNNfEKJctlTBpk1e5GwacyG1vEwoVMwxRND8JjYphGjIc7CmOd0BHgCFR4wcunDQHdCrZGMizEOyug_TpAzHzftZdwIsBtg0hg3v1BpNj4vJxIj4VcuFnFk4d35eCy",
+//                        "serverDeviceGUID": "63881613-bb24-4048-9a7e-299a6eb10922",
+//                        "type": "pin",
+//                        "loginValue": ""]
         
-//        NetworkManager<SetDeviceSettingDecodbleModel>.addRequest(.setDeviceSetting, paremers, body) { (model, error) in
-            
-            let vc = CodeVerificationViewController()
-    //        vc.phone = ""
-            navigationController?.pushViewController(vc, animated: true)
-//        }
+        let body = ["cardNumber": "\(number)"]
         
+        NetworkManager<CheckClientDecodebleModel>.addRequest(.checkCkient, [:], body) { (model, error) in
+            if error != nil {
+                //TODO: alert controller
+                print(error)
+            }
+            guard let phone = model?.data?.phone else { return }
+            let vc = CodeVerificationViewController(phone: phone)
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
     }
 
     fileprivate func scanCardTapped() {
@@ -83,5 +94,7 @@ extension LoginCardEntryViewController: UITextFieldDelegate {
         guard let cardNumber = textField.unmaskedText else { return }
         creditCardView.doneButton.isHidden = cardNumber.count >= 16 ? false : true
         creditCardView.cardNumberTextField.maskString = cardNumber.count >= 16 ? "00000000000000000000" : "0000 0000 0000 0000"
+        let newPosition = textField.endOfDocument
+        creditCardView.cardNumberTextField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition)
     }
 }

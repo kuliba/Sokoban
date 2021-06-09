@@ -25,9 +25,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         ]
         
         NetworkManager<CSRFDecodableModel>.addRequest(.csrf, [:], parameters) { request, error in
-            
-            print(request?.data?.token as Any)
-            
+            guard let token = request?.data?.token else { return }
+            print("DEBUG: Token = ", token)
+            UserDefaults.standard.set(token, forKey: "sessionToken")
         }
         
         return true
