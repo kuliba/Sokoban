@@ -5,8 +5,6 @@
 //  Created by Константин Савялов on 08.06.2021.
 //
 
-import Foundation
-
 // This file was generated from JSON Schema using quicktype, do not modify it directly.
 // To parse the JSON, add this file to your project and do:
 //
@@ -17,7 +15,7 @@ import Foundation
 // MARK: - LoginDoCodableModel
 struct LoginDoCodableModel: Codable, NetworkModelProtocol {
     let statusCode: Int?
-    let errorMessage: JSONNull?
+    let errorMessage: String?
     let data: DataClass?
 }
 
@@ -41,7 +39,7 @@ extension LoginDoCodableModel {
 
     func with(
         statusCode: Int?? = nil,
-        errorMessage: JSONNull?? = nil,
+        errorMessage: String?? = nil,
         data: DataClass?? = nil
     ) -> LoginDoCodableModel {
         return LoginDoCodableModel(
@@ -71,8 +69,7 @@ import Foundation
 
 // MARK: - DataClass
 struct DataClass: Codable {
-    let headerName, token, pk, sign: String?
-    let cert: String?
+    let entryCount: Int?
 }
 
 // MARK: DataClass convenience initializers and mutators
@@ -94,18 +91,10 @@ extension DataClass {
     }
 
     func with(
-        headerName: String?? = nil,
-        token: String?? = nil,
-        pk: String?? = nil,
-        sign: String?? = nil,
-        cert: String?? = nil
+        entryCount: Int?? = nil
     ) -> DataClass {
         return DataClass(
-            headerName: headerName ?? self.headerName,
-            token: token ?? self.token,
-            pk: pk ?? self.pk,
-            sign: sign ?? self.sign,
-            cert: cert ?? self.cert
+            entryCount: entryCount ?? self.entryCount
         )
     }
 
@@ -139,6 +128,8 @@ func newJSONEncoder() -> JSONEncoder {
     }
     return encoder
 }
+
+// JSONSchemaSupport.swift
 
 // MARK: - Encode/decode helpers
 

@@ -1,29 +1,29 @@
 //
-//  SetDeviceSettingDecodbleModel.swift
+//  DoRegistrationDecodebleModel.swift
 //  ForaBank
 //
-//  Created by Константин Савялов on 08.06.2021.
+//  Created by Константин Савялов on 09.06.2021.
 //
 
 // This file was generated from JSON Schema using quicktype, do not modify it directly.
 // To parse the JSON, add this file to your project and do:
 //
-//   let setDeviceSettingDecodbleModel = try SetDeviceSettingDecodbleModel(json)
+//   let doRegistrationDecodebleModel = try DoRegistrationDecodebleModel(json)
 
 import Foundation
 
-// MARK: - SetDeviceSettingDecodbleModel
-struct SetDeviceSettingDecodbleModel: Codable, NetworkModelProtocol {
+// MARK: - DoRegistrationDecodebleModel
+struct DoRegistrationDecodebleModel: Codable, NetworkModelProtocol {
     let statusCode: Int?
     let errorMessage: JSONNull?
     let data: String?
 }
 
-// MARK: SetDeviceSettingDecodbleModel convenience initializers and mutators
+// MARK: DoRegistrationDecodebleModel convenience initializers and mutators
 
-extension SetDeviceSettingDecodbleModel {
+extension DoRegistrationDecodebleModel {
     init(data: Data) throws {
-        self = try newJSONDecoder().decode(SetDeviceSettingDecodbleModel.self, from: data)
+        self = try newJSONDecoder().decode(DoRegistrationDecodebleModel.self, from: data)
     }
 
     init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -41,8 +41,8 @@ extension SetDeviceSettingDecodbleModel {
         statusCode: Int?? = nil,
         errorMessage: JSONNull?? = nil,
         data: String?? = nil
-    ) -> SetDeviceSettingDecodbleModel {
-        return SetDeviceSettingDecodbleModel(
+    ) -> DoRegistrationDecodebleModel {
+        return DoRegistrationDecodebleModel(
             statusCode: statusCode ?? self.statusCode,
             errorMessage: errorMessage ?? self.errorMessage,
             data: data ?? self.data
@@ -57,3 +57,4 @@ extension SetDeviceSettingDecodbleModel {
         return String(data: try self.jsonData(), encoding: encoding)
     }
 }
+

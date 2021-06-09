@@ -24,6 +24,8 @@ enum RouterUrlList: String {
     
     case doRegistration
     
+    case getCode
+    
     func returnUrl () -> URLValue {
         switch self {
         /// Авторизация
@@ -63,7 +65,7 @@ enum RouterUrlList: String {
             }
             
         case .chackClient:
-            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.chackClient.rawValue)
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.checkClient.rawValue)
             
             switch result {
             case .success(let url):
@@ -86,6 +88,17 @@ enum RouterUrlList: String {
             
         case .doRegistration:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.doRegistration.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .getCode:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getCode.rawValue)
             
             switch result {
             case .success(let url):

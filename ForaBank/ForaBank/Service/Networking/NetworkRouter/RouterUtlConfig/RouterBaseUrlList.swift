@@ -25,11 +25,12 @@ enum RouterBaseUrlList: String {
     
     /// Получение токена при запуске приложения
     /// "/registration/checkClient"
-    case chackClient = "/registration/checkClient"
+    case checkClient = "/registration/checkClient"
     
     case verifyCode = "/registration/verifyCode"
     
     case doRegistration = "/registration/doRegistration"
     
+    case getCode = "/registration/getCode"
     
 }
