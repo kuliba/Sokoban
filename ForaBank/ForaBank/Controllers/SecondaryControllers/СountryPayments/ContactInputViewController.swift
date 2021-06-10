@@ -76,8 +76,7 @@ class ContactInputViewController: UIViewController {
         countryField.didChooseButtonTapped = { () in
             print("countryField didChooseButtonTapped")
         }
-
-
+        getCard()
     }
 
     fileprivate func setupUI() {
@@ -124,6 +123,17 @@ class ContactInputViewController: UIViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
     
-
+        func getCard() {
+            
+            NetworkManager<GetCardListDecodebleModel>.addRequest(.getCardList, [:], [:]) { model, error in
+                print("DEBUG: Error: ", error)
+                print("DEBUG: Card list: ", model)
+            }
+            
+            
+            
+        }
+    
+    
 }
 
