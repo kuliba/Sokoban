@@ -20,43 +20,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
         
-        // if is register pin.validate
-        
-        //TODO: go to app
-//        DispatchQueue.main.async { [weak self] in
-//        pin(.validate)
-//        }
-        
-        
-        let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
-        window?.rootViewController = navVC //MainTabBarViewController()
-        window?.makeKeyAndVisible()
-        
-    }
-    
-    func pin(_ mode: ALMode) {
-        
-        var options = ALOptions()
-        options.isSensorsEnabled = true
-//        options.color = .white
-        options.onSuccessfulDismiss = { (mode: ALMode?) in
-            if let mode = mode {
-                print("Password \(String(describing: mode)) successfully")
-                let vc = MainTabBarViewController()
-                vc.modalPresentationStyle = .fullScreen
-                self.window?.rootViewController = vc //MainTabBarViewController()
-                self.window?.makeKeyAndVisible()
-//                self.present(vc, animated: true)
+        let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
+        if let userIsRegister = userIsRegister {
+            if userIsRegister {
+                goToPinVC(.validate)
             } else {
-                print("User Cancelled")
+                goToRegisterVC()
             }
+        } else {
+            goToRegisterVC()
         }
-        options.onFailedAttempt = { (mode: ALMode?) in
-            print("Failed to \(String(describing: mode))")
-        }
-        // LOGIN DO
-        AppLocker.rootViewController(with: mode, and: options, window: window)
-//        AppLocker.present(with: mode, and: options, over: self)
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -90,3 +63,33 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 }
 
+extension SceneDelegate {
+    
+    func goToRegisterVC() {
+        let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
+        window?.rootViewController = navVC
+        window?.makeKeyAndVisible()
+    }
+    
+    func goToPinVC(_ mode: ALMode) {
+        var options = ALOptions()
+        options.isSensorsEnabled = true
+        options.onSuccessfulDismiss = { (mode: ALMode?) in
+            if let mode = mode {
+                DispatchQueue.main.async { [weak self] in
+                    print("Password \(String(describing: mode)) successfully")
+                    let vc = MainTabBarViewController()
+                    vc.modalPresentationStyle = .fullScreen
+                    self?.window?.rootViewController = vc //MainTabBarViewController()
+                    self?.window?.makeKeyAndVisible()
+                }
+            } else {
+                print("User Cancelled")
+            }
+        }
+        options.onFailedAttempt = { (mode: ALMode?) in
+            print("Failed to \(String(describing: mode))")
+        }
+        AppLocker.rootViewController(with: mode, and: options, window: window)
+    }
+}

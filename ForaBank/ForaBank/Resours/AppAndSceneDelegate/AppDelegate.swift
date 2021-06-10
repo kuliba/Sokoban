@@ -93,12 +93,12 @@ extension AppDelegate {
 extension AppDelegate: MessagingDelegate {
  
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        NSLog("[RemoteNotification] didRefreshRegistrationToken: \(fcmToken ?? "nil")")
+//        NSLog("[RemoteNotification] didRefreshRegistrationToken: \(fcmToken ?? "nil")")
     }
 
     // iOS9, called when presenting notification in foreground
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
-        NSLog("[RemoteNotification] applicationState: \(applicationStateString) didReceiveRemoteNotification for iOS9: \(userInfo)")
+//        NSLog("[RemoteNotification] applicationState: \(applicationStateString) didReceiveRemoteNotification for iOS9: \(userInfo)")
         if UIApplication.shared.applicationState == .active {
             //TODO: Handle foreground notification
         } else {

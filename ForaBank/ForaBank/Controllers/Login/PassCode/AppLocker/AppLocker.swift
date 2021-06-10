@@ -199,9 +199,18 @@ public class AppLocker: UIViewController {
     
     private func validateModeAction() {
         if pin == savedPin {
-            dismiss(animated: true) {
-                self.onSuccessfulDismiss?(self.mode)
+            guard let pin = savedPin else { return }
+            login(with: pin, type: .pin) { error in
+                if let error = error {
+                    print(error)
+                } else {
+                    self.onSuccessfulDismiss?(self.mode)
+                }
             }
+            
+//            dismiss(animated: true) {
+//                self.onSuccessfulDismiss?(self.mode)
+//            }
         } else {
             onFailedAttempt?(mode)
             incorrectPinAnimation()
@@ -221,14 +230,23 @@ public class AppLocker: UIViewController {
             switch mode {
             case .create:
                 guard let pin = savedPin else { return }
-                sendMyPin(with: pin) { error in
+                registerMyPin(with: pin) { error in
                     if let error = error {
                         print(error)
                     } else {
                         self.onSuccessfulDismiss?(self.mode)
                     }
                 }
-            case .change, .deactive, .validate:
+            case .validate:
+                guard let pin = savedPin else { return }
+                login(with: pin, type: .pin) { error in
+                    if let error = error {
+                        print(error)
+                    } else {
+                        self.onSuccessfulDismiss?(self.mode)
+                    }
+                }
+            case .change, .deactive:
                 self.onSuccessfulDismiss?(self.mode)
             }
         } else {
@@ -260,7 +278,8 @@ public class AppLocker: UIViewController {
     // MARK: - Touch ID / Face ID
     fileprivate func checkSensors() {
         if case .validate = mode {} else { return }
-        
+        guard let pin = try? AppLocker.valet.string(forKey: ALConstants.kPincode) else { return }
+
         var policy: LAPolicy = .deviceOwnerAuthenticationWithBiometrics // iOS 8+ users with Biometric and Custom (Fallback button) verification
         
         // Depending the iOS version we'll need to choose the policy we are able to use
@@ -271,16 +290,23 @@ public class AppLocker: UIViewController {
         var err: NSError?
         // Check if the user is able to use the policy we've selected previously
         guard context.canEvaluatePolicy(policy, error: &err) else {return}
-        
+        let biometricType = biometricType()
         // The user is able to use his/her Touch ID / Face ID 👍
         context.evaluatePolicy(policy, localizedReason: ALConstants.kLocalizedReason, reply: {  success, error in
             if success {
-                DispatchQueue.main.async { [weak self] in
-                    guard let `self` = self else { return }
-                    self.dismiss(animated: true) {
-                        self.onSuccessfulDismiss?(self.mode)
+                self.login(with: pin, type: biometricType) { error in
+                    if let error = error {
+                        print(error)
+                    } else {
+                        DispatchQueue.main.async { [weak self] in
+                            guard let `self` = self else { return }
+                            self.dismiss(animated: true) {
+                                self.onSuccessfulDismiss?(self.mode)
+                            }
+                        }
                     }
                 }
+                
             }
         })
     }
@@ -304,23 +330,25 @@ public class AppLocker: UIViewController {
 
 extension AppLocker {
     //MARK: - API
-    func sendMyPin(with code: String, completion: @escaping (_ error: String?) ->() ) {
+    func registerMyPin(with code: String, completion: @escaping (_ error: String?) ->() ) {
         
         let serverDeviceGUID = UserDefaults.standard.object(forKey: "serverDeviceGUID")
+        let biometricType = biometricType()
+        
         let data = [
             "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
             "pushFcmToken": Messaging.messaging().fcmToken! as String,
             "serverDeviceGUID" : serverDeviceGUID,
             "settings": [ ["type" : "pin",
                            "isActive": true,
-                           "value": code ],
+                           "value": code],
                           ["type" : "touchId",
-                           "isActive": true,
-                           "value": "finger"],
+                           "isActive": biometricType == BiometricType.touchId ? true : false,
+                           "value": code],
                           ["type" : "faceId",
-                           "isActive": true,
-                           "value": "face"] ] ] as [String : AnyObject]
-
+                           "isActive": biometricType == BiometricType.faceId ? true : false,
+                           "value": code] ] ] as [String : AnyObject]
+//        print("DEBUG: data: ", data)
         NetworkManager<SetDeviceSettingDecodbleModel>.addRequest(.setDeviceSetting, [:], data) { model, error in
             if error != nil {
                 guard let error = error else { return }
@@ -328,33 +356,17 @@ extension AppLocker {
             } else {
                 guard let statusCode = model?.statusCode else { return }
                 if statusCode == 0 {
-                    
+                    UserDefaults.standard.set(true, forKey: "UserIsRegister")
                     AppDelegate.shared.getCSRF { error in
                         if error != nil {
                             print("DEBUG: Error getCSRF: ", error!)
                         } else {
-                            
-                            let data = [
-                                "appId": "IOS",
-                                "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-                                "pushFcmToken": Messaging.messaging().fcmToken! as String,
-                                "serverDeviceGUID": serverDeviceGUID,
-                                "loginValue": code,
-                                "type": "pin"
-                            ] as [String : AnyObject]
-                            
-                            NetworkManager<LoginDoCodableModel>.addRequest(.login, [:], data) { model, error in
+                            self.login(with: code, type: .pin) { error in
                                 if error != nil {
-                                    guard let error = error else { return }
-                                    completion(error)
+                                    completion(error!)
+                                    print("DEBUG: Error getCSRF: ", error!)
                                 } else {
-                                    guard let statusCode = model?.statusCode else { return }
-                                    if statusCode == 0 {
-                                        completion(nil)
-                                    } else {
-                                        guard let error = model?.errorMessage else { return }
-                                        completion(error)
-                                    }
+                                    completion(nil)
                                 }
                             }
                         }
@@ -365,6 +377,56 @@ extension AppLocker {
                 }
             }
         }
+    }
+    
+    func login(with code: String, type: BiometricType, completion: @escaping (_ error: String?) ->() ) {
+        let serverDeviceGUID = UserDefaults.standard.object(forKey: "serverDeviceGUID")
+        let data = [
+            "appId": "IOS",
+            "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
+            "pushFcmToken": Messaging.messaging().fcmToken! as String,
+            "serverDeviceGUID": serverDeviceGUID,
+            "loginValue": code,
+            "type": type.rawValue
+        ] as [String : AnyObject]
+
+        NetworkManager<LoginDoCodableModel>.addRequest(.login, [:], data) { model, error in
+            if error != nil {
+                guard let error = error else { return }
+                completion(error)
+            } else {
+                guard let statusCode = model?.statusCode else { return }
+                if statusCode == 0 {
+                    print("DEBUG: You are LOGGIN!!!")
+                    completion(nil)
+                } else {
+                    guard let error = model?.errorMessage else { return }
+                    completion(error)
+                }
+            }
+        }
+    }
+    
+    func biometricType() -> BiometricType {
+        let _ = context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: nil)
+        
+        switch context.biometryType {
+        case .none:
+            return .pin
+        case .faceID:
+            return .faceId
+        case .touchID:
+            return .touchId
+        @unknown default:
+            return .pin
+        }
+    }
+    
+    
+    enum BiometricType: String {
+        case pin
+        case touchId
+        case faceId
     }
 }
 
