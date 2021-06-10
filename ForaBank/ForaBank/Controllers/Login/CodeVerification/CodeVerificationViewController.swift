@@ -111,41 +111,67 @@ class CodeVerificationViewController: UIViewController {
                                     
                                     
                                     //TODO: go to app
-                                    DispatchQueue.main.async { [weak self] in
-                                        self?.pin(.create)
-                                    }
+//                                    DispatchQueue.main.async { [weak self] in
+//                                        self?.pin(.create)
+//                                    }
                                     
                                     
-                                    // TODO: перенести в AppLoker
-                                    let data = [
-                                        "appId": "iOS",
+                                    
+                                    let parameters = [
                                         "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-                                        "pushFcmToken": Messaging.messaging().fcmToken! as String,
-                                        "serverDeviceGUID": serverDeviceGUID,
-                                        "loginValue": "5555", // TODO: from success pin
-                                        "type": "pin"
+                                        "pushFCMtoken": Messaging.messaging().fcmToken! as String,
+                                        "model": UIDevice().model,
+                                        "operationSystem": "IOS"
                                     ] as [String : AnyObject]
-                                    NetworkManager<LoginDoCodableModel>.addRequest(.login, [:], data) { model, error in
-                                        if error != nil {
-                                            guard let error = error else { return }
-                                            self?.showAlert(with: "Ошибка", and: error)
-                                        } else {
-                                            guard let statusCode = model?.statusCode else { return }
-                                            if statusCode == 0 {
+                            //        print("DEBUG: Parameters = ", parameters)
+                                    
+                                    NetworkManager<CSRFDecodableModel>.addRequest(.csrf, [:], parameters) { request, error in
+                                        guard let token = request?.data?.token else { return }
                                         
-                                                
-                                                //TODO: go to app
-                                                DispatchQueue.main.async { [weak self] in
-                                                    self?.pin(.create)
-                                                }
-                                                
-                                                
-                                            } else {
-                                                guard let error = model?.errorMessage else { return }
+                                        
+                                        // TODO: пределать на сингл тон
+                                        UserDefaults.standard.set(token, forKey: "sessionToken")
+                                        
+                                        let tok = UserDefaults.standard.object(forKey: "sessionToken")
+                                        print("DEBUG: Token = ", tok)
+                                        
+                                        
+                                        // TODO: перенести в AppLoker
+                                        let data = [
+                                            "appId": "iOS",
+                                            "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
+                                            "pushFcmToken": Messaging.messaging().fcmToken! as String,
+                                            "serverDeviceGUID": serverDeviceGUID,
+                                            "loginValue": "5555", // TODO: from success pin
+                                            "type": "pin"
+                                        ] as [String : AnyObject]
+                                        NetworkManager<LoginDoCodableModel>.addRequest(.login, [:], data) { model, error in
+                                            if error != nil {
+                                                guard let error = error else { return }
                                                 self?.showAlert(with: "Ошибка", and: error)
+                                            } else {
+                                                guard let statusCode = model?.statusCode else { return }
+                                                if statusCode == 0 {
+                                            
+                                                    
+                                                    //TODO: go to app
+                                                    DispatchQueue.main.async { [weak self] in
+                                                        self?.pin(.create)
+                                                    }
+                                                    
+                                                    
+                                                } else {
+                                                    guard let error = model?.errorMessage else { return }
+                                                    self?.showAlert(with: "Ошибка", and: error)
+                                                }
                                             }
                                         }
+                                        
+                                        
+                                        
                                     }
+                                    
+                                    
                                     
                                     
                                     
