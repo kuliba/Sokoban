@@ -26,6 +26,12 @@ enum RouterUrlList: String {
     
     case getCode
     
+    case installPushDevice
+    
+    case registerPushDeviceForUser
+    
+    case uninstallPushDevice
+    
     func returnUrl () -> URLValue {
         switch self {
         /// Авторизация
@@ -99,6 +105,37 @@ enum RouterUrlList: String {
             
         case .getCode:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getCode.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+        case .installPushDevice:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.installPushDevice.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .registerPushDeviceForUser:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.registerPushDeviceForUser.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+        case .uninstallPushDevice:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.uninstallPushDevice.rawValue)
             
             switch result {
             case .success(let url):

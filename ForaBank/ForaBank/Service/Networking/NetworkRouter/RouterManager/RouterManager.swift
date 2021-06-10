@@ -15,6 +15,9 @@ enum RouterManager {
     case verifyCode
     case doRegistration
     case getCode
+    case installPushDevice
+    case registerPushDeviceForUser
+    case uninstallPushDevice
 }
 
 extension RouterManager {
@@ -113,6 +116,50 @@ extension RouterManager {
             
         case .getCode:
             let baseUrl = RouterUrlList.getCode.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+        case .installPushDevice:
+            let baseUrl = RouterUrlList.installPushDevice.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .registerPushDeviceForUser:
+            let baseUrl = RouterUrlList.registerPushDeviceForUser.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .uninstallPushDevice:
+            let baseUrl = RouterUrlList.uninstallPushDevice.returnUrl()
             switch baseUrl {
             case .success(let url):
                 resultUrl = url.absoluteURL
