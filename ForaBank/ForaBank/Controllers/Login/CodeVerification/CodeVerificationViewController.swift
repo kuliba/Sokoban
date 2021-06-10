@@ -45,7 +45,7 @@ class CodeVerificationViewController: UIViewController {
         print("DEBUG: " + #function + ": " + code)
         
         let body = [
-            "appId": "iOS",
+            "appId": "IOS",
             "verificationCode": "\(code)"
         ] as [String : AnyObject]
         
@@ -59,7 +59,7 @@ class CodeVerificationViewController: UIViewController {
                 
                 let body = [
                     "model": UIDevice().model,
-                    "operationSystem": "iOS",
+                    "operationSystem": "IOS",
                     "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
                     "pushFcmToken": Messaging.messaging().fcmToken! as String
                 ] as [String : AnyObject]
@@ -73,121 +73,19 @@ class CodeVerificationViewController: UIViewController {
                     
                     if model.statusCode == 0 {
                         guard let serverDeviceGUID = model.data else { return }
-                        // TODO сохранить serverDeviceGUID
+                        UserDefaults.standard.set(serverDeviceGUID, forKey: "serverDeviceGUID")
                         
+                       
                         
-                        // TODO: перенести в AppLoker
-                        let data = [
-                            "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-                            "pushFcmToken": Messaging.messaging().fcmToken! as String,
-                            "serverDeviceGUID" : serverDeviceGUID,
-                            "settings": [
-                                    [
-                                        "type" : "pin",
-                                        "isActive": true,
-                                        "value": "5555"
-                                        ],
-                                    [
-                                        "type" : "touchId",
-                                        "isActive": true,
-                                        "value": "finger"
-                                    ],
-                                    [
-                                        "type" : "faceId",
-                                        "isActive": true,
-                                        "value": "face"
-                                    ]
-                                ]
-                        ] as [String : AnyObject]
-
-                        NetworkManager<SetDeviceSettingDecodbleModel>.addRequest(.setDeviceSetting, [:], data) { [weak self] model, error in
-                            if error != nil {
-                                guard let error = error else { return }
-                                self?.showAlert(with: "Ошибка", and: error)
-                            } else {
-                                guard let statusCode = model?.statusCode else { return }
-                                if statusCode == 0 {
-                                    
-                                    
-                                    
-                                    //TODO: go to app
-//                                    DispatchQueue.main.async { [weak self] in
-//                                        self?.pin(.create)
-//                                    }
-                                    
-                                    
-                                    
-                                    let parameters = [
-                                        "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-                                        "pushFCMtoken": Messaging.messaging().fcmToken! as String,
-                                        "model": UIDevice().model,
-                                        "operationSystem": "IOS"
-                                    ] as [String : AnyObject]
-                            //        print("DEBUG: Parameters = ", parameters)
-                                    
-                                    NetworkManager<CSRFDecodableModel>.addRequest(.csrf, [:], parameters) { request, error in
-                                        guard let token = request?.data?.token else { return }
-                                        
-                                        
-                                        // TODO: пределать на сингл тон
-                                        UserDefaults.standard.set(token, forKey: "sessionToken")
-                                        
-                                        let tok = UserDefaults.standard.object(forKey: "sessionToken")
-                                        print("DEBUG: Token = ", tok)
-                                        
-                                        
-                                        // TODO: перенести в AppLoker
-                                        let data = [
-                                            "appId": "iOS",
-                                            "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-                                            "pushFcmToken": Messaging.messaging().fcmToken! as String,
-                                            "serverDeviceGUID": serverDeviceGUID,
-                                            "loginValue": "5555", // TODO: from success pin
-                                            "type": "pin"
-                                        ] as [String : AnyObject]
-                                        NetworkManager<LoginDoCodableModel>.addRequest(.login, [:], data) { model, error in
-                                            if error != nil {
-                                                guard let error = error else { return }
-                                                self?.showAlert(with: "Ошибка", and: error)
-                                            } else {
-                                                guard let statusCode = model?.statusCode else { return }
-                                                if statusCode == 0 {
-                                            
-                                                    
-                                                    //TODO: go to app
-                                                    DispatchQueue.main.async { [weak self] in
-                                                        self?.pin(.create)
-                                                    }
-                                                    
-                                                    
-                                                } else {
-                                                    guard let error = model?.errorMessage else { return }
-                                                    self?.showAlert(with: "Ошибка", and: error)
-                                                }
-                                            }
-                                        }
-                                        
-                                        
-                                        
-                                    }
-                                    
-                                    
-                                    
-                                    
-                                    
-                                    
-//                                    print("DEBUG: setDeviceSetting Succsess")
-                                    
-                                    
-                                    
-                                    
-                                    
-                                } else {
-                                    guard let error = model?.errorMessage else { return }
-                                    self?.showAlert(with: "Ошибка", and: error)
-                                }
-                            }
+                                
+                        //TODO: go to app
+                        DispatchQueue.main.async { [weak self] in
+                            self?.pin(.create)
                         }
+                        
+                        
+                        
+                        
                     }
                 }
             }
@@ -209,10 +107,12 @@ class CodeVerificationViewController: UIViewController {
         options.color = .white
         options.onSuccessfulDismiss = { (mode: ALMode?) in
             if let mode = mode {
-                print("Password \(String(describing: mode)) successfully")
-                let vc = MainTabBarViewController()
-                vc.modalPresentationStyle = .fullScreen
-                self.present(vc, animated: true)
+                DispatchQueue.main.async { [weak self] in
+                    print("Password \(String(describing: mode)) successfully")
+                    let vc = MainTabBarViewController()
+                    vc.modalPresentationStyle = .fullScreen
+                    self?.present(vc, animated: true)
+                }
             } else {
                 print("User Cancelled")
             }
