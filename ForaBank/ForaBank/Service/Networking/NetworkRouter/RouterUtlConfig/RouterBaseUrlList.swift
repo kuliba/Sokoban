@@ -38,4 +38,6 @@ enum RouterBaseUrlList: String {
     case registerPushDeviceForUser = "push_device_user/registerPushDeviceForUser"
     
     case uninstallPushDevice = "push_device/uninstallPushDevice"
+    
+    case getCardList = "rest/getCardList"
 }

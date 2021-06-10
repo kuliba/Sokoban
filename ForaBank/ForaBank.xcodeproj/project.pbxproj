@@ -14,6 +14,7 @@
 		0B8BE0972670D53600E96CAA /* DoRegistrationDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE0962670D53600E96CAA /* DoRegistrationDecodebleModel.swift */; };
 		0BEC8939267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC8938267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift */; };
 		0BEC893B2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC893A2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift */; };
+		0BEC893D2672591A00D8BD22 /* GetCardListDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC893C2672591A00D8BD22 /* GetCardListDecodebleModel.swift */; };
 		ED4FC5EC266AD98E0092B4AB /* NSCollectionLayoutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EB266AD98E0092B4AB /* NSCollectionLayoutItem.swift */; };
 		ED4FC5EF266B70A00092B4AB /* PartialTransparentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EE266B70A00092B4AB /* PartialTransparentView.swift */; };
 		ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5F9266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift */; };
@@ -133,6 +134,7 @@
 		0B8BE0962670D53600E96CAA /* DoRegistrationDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoRegistrationDecodebleModel.swift; sourceTree = "<group>"; };
 		0BEC8938267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallPushDeviceDecodebleModel.swift; sourceTree = "<group>"; };
 		0BEC893A2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistredPushDeviceTorUserDecodebleModel.swift; sourceTree = "<group>"; };
+		0BEC893C2672591A00D8BD22 /* GetCardListDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCardListDecodebleModel.swift; sourceTree = "<group>"; };
 		ED4FC5EB266AD98E0092B4AB /* NSCollectionLayoutItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSCollectionLayoutItem.swift; sourceTree = "<group>"; };
 		ED4FC5EE266B70A00092B4AB /* PartialTransparentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartialTransparentView.swift; sourceTree = "<group>"; };
 		ED4FC5F9266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmsCodeBasicAttributes.swift; sourceTree = "<group>"; };
@@ -725,6 +727,7 @@
 				0BEC89372672305600D8BD22 /* NetworkingLoginModel */,
 				0BEC8938267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift */,
 				0BEC893A2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift */,
+				0BEC893C2672591A00D8BD22 /* GetCardListDecodebleModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -983,6 +986,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0BEC893D2672591A00D8BD22 /* GetCardListDecodebleModel.swift in Sources */,
 				EDF68211266F9EC800FD5C07 /* RequestError.swift in Sources */,
 				EDB1451C26652D370028EF5A /* UILabel.swift in Sources */,
 				EDB145402666AFD70028EF5A /* Constants.swift in Sources */,
