@@ -10,6 +10,7 @@ import UIKit
 import AudioToolbox
 import LocalAuthentication
 import Valet
+import FirebaseMessaging
 
 public enum ALConstants {
     static let nibName = "AppLocker"
@@ -77,7 +78,11 @@ public class AppLocker: UIViewController {
     private var onSuccessfulDismiss: onSuccessfulDismissCallback?
     private var onFailedAttempt: onFailedAttemptCallback?
     private let context = LAContext()
-    private var pin = "" // Entered pincode
+    private var pin = "" { // Entered pincode
+        didSet {
+//            print("DEBUG: det my pin is: ", pin)
+        }
+    }
     private var reservedPin = "" // Reserve pincode for confirm
     private var isFirstCreationStep = true
     private var savedPin: String? {
@@ -86,6 +91,8 @@ public class AppLocker: UIViewController {
         }
         set {
             guard let newValue = newValue else { return }
+            
+//            sendMyPin(with: newValue)
             try? AppLocker.valet.setString(newValue, forKey: ALConstants.kPincode)
         }
     }
@@ -107,16 +114,20 @@ public class AppLocker: UIViewController {
             case .create:
                 cancelButton.isHidden = true
                 submessageLabel.text = "Придумайте код из 4х цифр" // Your submessage for create mode
+                print("DEBUG: API создать пароль")
             case .change:
                 cancelButton.isHidden = true
                 submessageLabel.text = "Введите код" // Your submessage for change mode
+                print("DEBUG: API изменить пароль")
             case .deactive:
                 cancelButton.isHidden = true
                 submessageLabel.text = "Введите код" // Your submessage for deactive mode
+            
             case .validate:
                 submessageLabel.text = "Введите код" // Your submessage for validate mode
                 cancelButton.isHidden = true
                 isFirstCreationStep = false
+                print("DEBUG: API проверить пароль и войти")
             }
         }
     }
@@ -207,7 +218,17 @@ public class AppLocker: UIViewController {
     private func confirmPin() {
         if pin == reservedPin {
             savedPin = pin
-            dismiss(animated: true) {
+            switch mode {
+            case .create:
+                guard let pin = savedPin else { return }
+                sendMyPin(with: pin) { error in
+                    if let error = error {
+                        print(error)
+                    } else {
+                        self.onSuccessfulDismiss?(self.mode)
+                    }
+                }
+            case .change, .deactive, .validate:
                 self.onSuccessfulDismiss?(self.mode)
             }
         } else {
@@ -243,10 +264,9 @@ public class AppLocker: UIViewController {
         var policy: LAPolicy = .deviceOwnerAuthenticationWithBiometrics // iOS 8+ users with Biometric and Custom (Fallback button) verification
         
         // Depending the iOS version we'll need to choose the policy we are able to use
-        if #available(iOS 9.0, *) {
-            // iOS 9+ users with Biometric and Passcode verification
-            policy = .deviceOwnerAuthentication
-        }
+        
+        // iOS 9+ users with Biometric and Passcode verification
+        policy = .deviceOwnerAuthentication
         
         var err: NSError?
         // Check if the user is able to use the policy we've selected previously
@@ -281,6 +301,73 @@ public class AppLocker: UIViewController {
     }
     
 }
+
+extension AppLocker {
+    //MARK: - API
+    func sendMyPin(with code: String, completion: @escaping (_ error: String?) ->() ) {
+        
+        let serverDeviceGUID = UserDefaults.standard.object(forKey: "serverDeviceGUID")
+        let data = [
+            "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
+            "pushFcmToken": Messaging.messaging().fcmToken! as String,
+            "serverDeviceGUID" : serverDeviceGUID,
+            "settings": [ ["type" : "pin",
+                           "isActive": true,
+                           "value": code ],
+                          ["type" : "touchId",
+                           "isActive": true,
+                           "value": "finger"],
+                          ["type" : "faceId",
+                           "isActive": true,
+                           "value": "face"] ] ] as [String : AnyObject]
+
+        NetworkManager<SetDeviceSettingDecodbleModel>.addRequest(.setDeviceSetting, [:], data) { model, error in
+            if error != nil {
+                guard let error = error else { return }
+                completion(error)
+            } else {
+                guard let statusCode = model?.statusCode else { return }
+                if statusCode == 0 {
+                    
+                    AppDelegate.shared.getCSRF { error in
+                        if error != nil {
+                            print("DEBUG: Error getCSRF: ", error!)
+                        } else {
+                            
+                            let data = [
+                                "appId": "IOS",
+                                "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
+                                "pushFcmToken": Messaging.messaging().fcmToken! as String,
+                                "serverDeviceGUID": serverDeviceGUID,
+                                "loginValue": code,
+                                "type": "pin"
+                            ] as [String : AnyObject]
+                            
+                            NetworkManager<LoginDoCodableModel>.addRequest(.login, [:], data) { model, error in
+                                if error != nil {
+                                    guard let error = error else { return }
+                                    completion(error)
+                                } else {
+                                    guard let statusCode = model?.statusCode else { return }
+                                    if statusCode == 0 {
+                                        completion(nil)
+                                    } else {
+                                        guard let error = model?.errorMessage else { return }
+                                        completion(error)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    guard let error = model?.errorMessage else { return }
+                    completion(error)
+                }
+            }
+        }
+    }
+}
+
 
 // MARK: - CAAnimationDelegate
 extension AppLocker: CAAnimationDelegate {
@@ -317,5 +404,33 @@ public extension AppLocker {
         }
         root.navigationController?.pushViewController(locker, animated: true)
 //        root.present(locker, animated: true, completion: nil)
+    }
+    
+    class func rootViewController(with mode: ALMode, and config: ALOptions? = nil, window: UIWindow?) {
+//        let vc = viewController ?? UIApplication.shared.keyWindow?.rootViewController
+        guard //let root = vc,
+            
+            let locker = Bundle(for: self.classForCoder()).loadNibNamed(ALConstants.nibName, owner: self, options: nil)?.first as? AppLocker  else {
+                return
+        }
+        locker.messageLabel.text = config?.title ?? ""
+        locker.submessageLabel.text = config?.subtitle ?? ""
+        locker.view.backgroundColor = config?.color ?? .white
+        locker.mode = mode
+        locker.onSuccessfulDismiss = config?.onSuccessfulDismiss
+        locker.onFailedAttempt = config?.onFailedAttempt
+        
+        if config?.isSensorsEnabled ?? false {
+            locker.checkSensors()
+        }
+        
+        if let image = config?.image {
+            locker.photoImageView.image = image
+        } else {
+            locker.photoImageView.isHidden = true
+        }
+        window?.rootViewController = locker //MainTabBarViewController()
+        window?.makeKeyAndVisible()
+//        root.navigationController?.pushViewController(locker, animated: true)
     }
 }
