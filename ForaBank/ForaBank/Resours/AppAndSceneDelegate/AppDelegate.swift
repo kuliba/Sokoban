@@ -21,11 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         Messaging.messaging().delegate = self
         
-        getCSRF { error in
-            if error != nil {
-                print("DEBUG: Error getCSRF: ", error!)
-            }
-        }
+
         
         customizeNavBar()
 
@@ -56,37 +52,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
-}
-
-extension AppDelegate {
-    func getCSRF(completion: @escaping (_ error: String?) ->()) {
-        let parameters = [
-            "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-            "pushFCMtoken": Messaging.messaging().fcmToken! as String,
-            "model": UIDevice().model,
-            "operationSystem": "IOS"
-        ] as [String : AnyObject]
-//        print("DEBUG: Parameters = ", parameters)
-        
-        NetworkManager<CSRFDecodableModel>.addRequest(.csrf, [:], parameters) { request, error in
-            if error != nil {
-                completion(error)
-            }
-            guard let token = request?.data?.token else {
-                completion("error")
-                return
-                
-            }
-            
-            // TODO: пределать на сингл тон
-            UserDefaults.standard.set(token, forKey: "sessionToken")
-            
-//            let tok = UserDefaults.standard.object(forKey: "sessionToken")
-//            print("DEBUG: Token = ", tok)
-            
-            completion(nil)
-        }
-    }
 }
 
 

@@ -6,12 +6,14 @@
 //
 
 import UIKit
+import FirebaseMessaging
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-
+    static var shared: SceneDelegate { return UIApplication.shared.delegate as! SceneDelegate }
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
@@ -19,17 +21,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        
-        let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
-        if let userIsRegister = userIsRegister {
-            if userIsRegister {
-                goToPinVC(.validate)
-            } else {
-                goToRegisterVC()
+        getCSRF { error in
+            if error != nil {
+                print("DEBUG: Error getCSRF: ", error!)
             }
-        } else {
-            goToRegisterVC()
+            var userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
+    //        userIsRegister = false
+            if let userIsRegister = userIsRegister {
+                if userIsRegister {
+                    self.goToPinVC(.validate)
+                } else {
+                    self.goToRegisterVC()
+                }
+            } else {
+                self.goToRegisterVC()
+            }
         }
+        window?.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -66,30 +74,66 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 extension SceneDelegate {
     
     func goToRegisterVC() {
-        let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
-        window?.rootViewController = navVC
-        window?.makeKeyAndVisible()
+        DispatchQueue.main.async { [weak self] in
+            let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
+            self?.window?.rootViewController = navVC
+        }
+        
     }
     
     func goToPinVC(_ mode: ALMode) {
-        var options = ALOptions()
-        options.isSensorsEnabled = true
-        options.onSuccessfulDismiss = { (mode: ALMode?) in
-            if let mode = mode {
-                DispatchQueue.main.async { [weak self] in
+        DispatchQueue.main.async { [weak self] in
+            var options = ALOptions()
+            options.isSensorsEnabled = true
+            options.onSuccessfulDismiss = { (mode: ALMode?) in
+                if let mode = mode {
+                    
                     print("Password \(String(describing: mode)) successfully")
                     let vc = MainTabBarViewController()
                     vc.modalPresentationStyle = .fullScreen
                     self?.window?.rootViewController = vc //MainTabBarViewController()
-                    self?.window?.makeKeyAndVisible()
+                    //                    self?.window?.makeKeyAndVisible()
+                    
+                } else {
+                    print("User Cancelled")
                 }
-            } else {
-                print("User Cancelled")
             }
+            options.onFailedAttempt = { (mode: ALMode?) in
+                print("Failed to \(String(describing: mode))")
+            }
+            AppLocker.rootViewController(with: mode, and: options, window: self?.window)
         }
-        options.onFailedAttempt = { (mode: ALMode?) in
-            print("Failed to \(String(describing: mode))")
+    }
+}
+
+
+extension SceneDelegate {
+    func getCSRF(completion: @escaping (_ error: String?) ->()) {
+        let parameters = [
+            "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
+            "pushFCMtoken": Messaging.messaging().fcmToken! as String,
+            "model": UIDevice().model,
+            "operationSystem": "IOS"
+        ] as [String : AnyObject]
+//        print("DEBUG: Parameters = ", parameters)
+        
+        NetworkManager<CSRFDecodableModel>.addRequest(.csrf, [:], parameters) { request, error in
+            if error != nil {
+                completion(error)
+            }
+            guard let token = request?.data?.token else {
+                completion("error")
+                return
+                
+            }
+            
+            // TODO: пределать на сингл тон
+            UserDefaults.standard.set(token, forKey: "sessionToken")
+            
+            let tok = UserDefaults.standard.object(forKey: "sessionToken")
+            print("DEBUG: Token = ", tok)
+            
+            completion(nil)
         }
-        AppLocker.rootViewController(with: mode, and: options, window: window)
     }
 }
