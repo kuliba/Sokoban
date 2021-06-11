@@ -219,9 +219,9 @@ public class AppLocker: UIViewController {
     
     private func removePin() {
         try? AppLocker.valet.removeObject(forKey: ALConstants.kPincode)
-        dismiss(animated: true) {
+//        dismiss(animated: true) {
             self.onSuccessfulDismiss?(self.mode)
-        }
+//        }
     }
     
     private func confirmPin() {
@@ -233,6 +233,7 @@ public class AppLocker: UIViewController {
                 registerMyPin(with: pin) { error in
                     if let error = error {
                         print(error)
+                        self.showAlert(with: "Ошибка", and: error)
                     } else {
                         self.onSuccessfulDismiss?(self.mode)
                     }
@@ -297,12 +298,13 @@ public class AppLocker: UIViewController {
                 self.login(with: pin, type: biometricType) { error in
                     if let error = error {
                         print(error)
+                        self.showAlert(with: "Ошибка", and: error)
                     } else {
                         DispatchQueue.main.async { [weak self] in
                             guard let `self` = self else { return }
-                            self.dismiss(animated: true) {
+//                            self.dismiss(animated: true) {
                                 self.onSuccessfulDismiss?(self.mode)
-                            }
+//                            }
                         }
                     }
                 }
@@ -318,9 +320,9 @@ public class AppLocker: UIViewController {
             drawing(isNeedClear: true)
         case ALConstants.button.cancel.rawValue:
             clearView()
-            dismiss(animated: true) {
+//            dismiss(animated: true) {
                 self.onSuccessfulDismiss?(nil)
-            }
+//            }
         default:
             drawing(isNeedClear: false, tag: sender.tag)
         }
@@ -357,16 +359,18 @@ extension AppLocker {
                 guard let statusCode = model?.statusCode else { return }
                 if statusCode == 0 {
                     UserDefaults.standard.set(true, forKey: "UserIsRegister")
-                    AppDelegate.shared.getCSRF { error in
-                        if error != nil {
-                            print("DEBUG: Error getCSRF: ", error!)
-                        } else {
-                            self.login(with: code, type: .pin) { error in
-                                if error != nil {
-                                    completion(error!)
-                                    print("DEBUG: Error getCSRF: ", error!)
-                                } else {
-                                    completion(nil)
+                    DispatchQueue.main.async {
+                        AppDelegate.shared.getCSRF { error in
+                            if error != nil {
+                                print("DEBUG: Error getCSRF: ", error!)
+                            } else {
+                                self.login(with: code, type: .pin) { error in
+                                    if error != nil {
+                                        completion(error!)
+                                        print("DEBUG: Error getCSRF: ", error!)
+                                    } else {
+                                        completion(nil)
+                                    }
                                 }
                             }
                         }
@@ -397,8 +401,28 @@ extension AppLocker {
             } else {
                 guard let statusCode = model?.statusCode else { return }
                 if statusCode == 0 {
-                    print("DEBUG: You are LOGGIN!!!")
-                    completion(nil)
+                    
+                    
+                    let bodyRegisterPush = [
+                        "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
+                        "pushFcmToken": Messaging.messaging().fcmToken! as String
+                    ] as [String : AnyObject]
+
+
+                    NetworkManager<RegisterPushDeviceDecodebleModel>.addRequest(.registerPushDeviceForUser, [:], bodyRegisterPush) { model, error in
+                        if error != nil {
+                            guard let error = error else { return }
+                            self.showAlert(with: "Ошибка", and: error)
+                        }
+                        guard let model = model else { return }
+                        if model.statusCode == 0 {
+                            print("DEBUG: You are LOGGIN!!!")
+                            completion(nil)
+                        }
+                    }
+                    
+                    
+                    
                 } else {
                     guard let error = model?.errorMessage else { return }
                     completion(error)

@@ -73,7 +73,7 @@ class MockItems {
             
             PaymentsModel(id: 7, name: "По номеру телефона",
                           iconName: "PaymentsIconPhonePay",
-                          controllerName: "DevelopViewController",
+                          controllerName: "PaymentByPhoneViewController",
                           description: "Что то"),
             
             PaymentsModel(id: 8, name: "За рубеж",
