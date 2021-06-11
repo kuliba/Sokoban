@@ -90,6 +90,33 @@ class ContactInputViewController: UIViewController {
                           right: view.rightAnchor, paddingLeft: 20, paddingBottom: 20,
                           paddingRight: 20, height: 44)
         
+        let topView = UIView()
+        topView.backgroundColor = #colorLiteral(red: 0.9647058824, green: 0.9647058824, blue: 0.968627451, alpha: 1)
+        
+        let topViewSwitch = UISwitch()
+        topViewSwitch.isOn = true
+        topViewSwitch.isUserInteractionEnabled = true
+        
+        let topViewLabel = UILabel(text: "Я знаю номер телефона и банк получателя",
+                                   font: .systemFont(ofSize: 12), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
+        topViewLabel.adjustsFontSizeToFitWidth = true
+        
+        
+        topView.addSubview(topViewSwitch)
+        topViewSwitch.centerY(inView: topView)
+        topViewSwitch.anchor(right: topViewSwitch.leftAnchor, paddingRight: 20)
+        
+        topView.addSubview(topViewLabel)
+        topViewLabel.centerY(inView: topView, leftAnchor: topView.leftAnchor, paddingLeft: 20)
+        topViewLabel.anchor(right: topViewSwitch.leftAnchor, paddingRight: 27)
+        
+        
+        
+        view.addSubview(topView)
+        topView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 48)
+        
+        
+        
         
         //TODO: добавить скроллвью что бы избежать проблем на маленьких экранах
         // let scroll
@@ -104,7 +131,7 @@ class ContactInputViewController: UIViewController {
         stackView.distribution = .equalSpacing
         stackView.spacing = 20
         view.addSubview(stackView)
-        stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor,
+        stackView.anchor(top: topView.bottomAnchor, left: view.leftAnchor,
                          right: view.rightAnchor, paddingTop: 20)
         
     }

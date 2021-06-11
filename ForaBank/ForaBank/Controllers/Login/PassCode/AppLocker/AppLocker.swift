@@ -78,11 +78,7 @@ public class AppLocker: UIViewController {
     private var onSuccessfulDismiss: onSuccessfulDismissCallback?
     private var onFailedAttempt: onFailedAttemptCallback?
     private let context = LAContext()
-    private var pin = "" { // Entered pincode
-        didSet {
-//            print("DEBUG: det my pin is: ", pin)
-        }
-    }
+    private var pin = "" // Entered pincode
     private var reservedPin = "" // Reserve pincode for confirm
     private var isFirstCreationStep = true
     private var savedPin: String? {
@@ -91,8 +87,6 @@ public class AppLocker: UIViewController {
         }
         set {
             guard let newValue = newValue else { return }
-            
-//            sendMyPin(with: newValue)
             try? AppLocker.valet.setString(newValue, forKey: ALConstants.kPincode)
         }
     }
@@ -114,20 +108,16 @@ public class AppLocker: UIViewController {
             case .create:
                 cancelButton.isHidden = true
                 submessageLabel.text = "Придумайте код из 4х цифр" // Your submessage for create mode
-                print("DEBUG: API создать пароль")
             case .change:
                 cancelButton.isHidden = true
                 submessageLabel.text = "Введите код" // Your submessage for change mode
-                print("DEBUG: API изменить пароль")
             case .deactive:
                 cancelButton.isHidden = true
                 submessageLabel.text = "Введите код" // Your submessage for deactive mode
-            
             case .validate:
                 submessageLabel.text = "Введите код" // Your submessage for validate mode
                 cancelButton.isHidden = true
                 isFirstCreationStep = false
-                print("DEBUG: API проверить пароль и войти")
             }
         }
     }
@@ -207,10 +197,6 @@ public class AppLocker: UIViewController {
                     self.onSuccessfulDismiss?(self.mode)
                 }
             }
-            
-//            dismiss(animated: true) {
-//                self.onSuccessfulDismiss?(self.mode)
-//            }
         } else {
             onFailedAttempt?(mode)
             incorrectPinAnimation()
@@ -219,9 +205,7 @@ public class AppLocker: UIViewController {
     
     private func removePin() {
         try? AppLocker.valet.removeObject(forKey: ALConstants.kPincode)
-//        dismiss(animated: true) {
             self.onSuccessfulDismiss?(self.mode)
-//        }
     }
     
     private func confirmPin() {

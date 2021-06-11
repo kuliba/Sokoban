@@ -87,12 +87,12 @@ extension SceneDelegate {
             options.isSensorsEnabled = true
             options.onSuccessfulDismiss = { (mode: ALMode?) in
                 if let mode = mode {
-                    
-                    print("Password \(String(describing: mode)) successfully")
-                    let vc = MainTabBarViewController()
-                    vc.modalPresentationStyle = .fullScreen
-                    self?.window?.rootViewController = vc //MainTabBarViewController()
-                    
+                    DispatchQueue.main.async { [weak self] in
+                        print("Password \(String(describing: mode)) successfully")
+                        let vc = MainTabBarViewController()
+                        vc.modalPresentationStyle = .fullScreen
+                        self?.window?.rootViewController = vc //MainTabBarViewController()
+                    }
                 } else {
                     print("User Cancelled")
                 }

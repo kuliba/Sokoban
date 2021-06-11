@@ -31,9 +31,11 @@ class ChooseCountryTableViewController: UITableViewController {
     }
 
     //MARK: - API
-    private func getAdress(adress: String) {
+    private func loadCountries() {
         
-        
+//        NetworkManager.addRequest(.csrf, [:], [:]) { model, error in
+//
+//        }
         
     }
     

@@ -32,6 +32,7 @@ class MainTabBarViewController: UITabBarController {
             generateNavController(rootViewController: chatVC,
                                   title: "Чат", image: #imageLiteral(resourceName: "message-circle")),
         ]
+        selectedIndex = 1
     }
     
     private func generateNavController(rootViewController: UIViewController, title: String, image: UIImage) -> UIViewController {
