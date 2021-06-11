@@ -359,16 +359,18 @@ extension AppLocker {
                 guard let statusCode = model?.statusCode else { return }
                 if statusCode == 0 {
                     UserDefaults.standard.set(true, forKey: "UserIsRegister")
-                    SceneDelegate.shared.getCSRF { error in
-                        if error != nil {
-                            print("DEBUG: Error getCSRF: ", error!)
-                        } else {
-                            self.login(with: code, type: .pin) { error in
-                                if error != nil {
-                                    completion(error!)
-                                    print("DEBUG: Error getCSRF: ", error!)
-                                } else {
-                                    completion(nil)
+                    DispatchQueue.main.async {
+                        AppDelegate.shared.getCSRF { error in
+                            if error != nil {
+                                print("DEBUG: Error getCSRF: ", error!)
+                            } else {
+                                self.login(with: code, type: .pin) { error in
+                                    if error != nil {
+                                        completion(error!)
+                                        print("DEBUG: Error getCSRF: ", error!)
+                                    } else {
+                                        completion(nil)
+                                    }
                                 }
                             }
                         }
@@ -399,8 +401,28 @@ extension AppLocker {
             } else {
                 guard let statusCode = model?.statusCode else { return }
                 if statusCode == 0 {
-                    print("DEBUG: You are LOGGIN!!!")
-                    completion(nil)
+                    
+                    
+                    let bodyRegisterPush = [
+                        "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
+                        "pushFcmToken": Messaging.messaging().fcmToken! as String
+                    ] as [String : AnyObject]
+
+
+                    NetworkManager<RegisterPushDeviceDecodebleModel>.addRequest(.registerPushDeviceForUser, [:], bodyRegisterPush) { model, error in
+                        if error != nil {
+                            guard let error = error else { return }
+                            self.showAlert(with: "Ошибка", and: error)
+                        }
+                        guard let model = model else { return }
+                        if model.statusCode == 0 {
+                            print("DEBUG: You are LOGGIN!!!")
+                            completion(nil)
+                        }
+                    }
+                    
+                    
+                    
                 } else {
                     guard let error = model?.errorMessage else { return }
                     completion(error)

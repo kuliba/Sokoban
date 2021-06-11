@@ -57,6 +57,10 @@ class CodeVerificationViewController: UIViewController {
             guard let model = model else { return }
             if model.statusCode == 0 {
                 
+               
+                
+                
+                
                 let body = [
                     "model": UIDevice().model,
                     "operationSystem": "IOS",
@@ -75,19 +79,19 @@ class CodeVerificationViewController: UIViewController {
                         guard let serverDeviceGUID = model.data else { return }
                         UserDefaults.standard.set(serverDeviceGUID, forKey: "serverDeviceGUID")
                         
-                       
                         
-                                
                         //TODO: go to app
                         DispatchQueue.main.async { [weak self] in
                             self?.pin(.create)
                         }
                         
-                        
-                        
-                        
                     }
                 }
+                
+                    
+                
+                
+                
             }
         }
         

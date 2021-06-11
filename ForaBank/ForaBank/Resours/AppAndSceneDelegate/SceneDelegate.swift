@@ -12,7 +12,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-    static var shared: SceneDelegate { return UIApplication.shared.delegate as! SceneDelegate }
+//    static var shared: SceneDelegate { return UIApplication.shared.delegate as? SceneDelegate }
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -21,12 +21,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        getCSRF { error in
+        AppDelegate.shared.getCSRF { error in
             if error != nil {
                 print("DEBUG: Error getCSRF: ", error!)
             }
-            var userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
-    //        userIsRegister = false
+            let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
+//            userIsRegister = false
             if let userIsRegister = userIsRegister {
                 if userIsRegister {
                     self.goToPinVC(.validate)
@@ -92,7 +92,6 @@ extension SceneDelegate {
                     let vc = MainTabBarViewController()
                     vc.modalPresentationStyle = .fullScreen
                     self?.window?.rootViewController = vc //MainTabBarViewController()
-                    //                    self?.window?.makeKeyAndVisible()
                     
                 } else {
                     print("User Cancelled")
@@ -107,15 +106,14 @@ extension SceneDelegate {
 }
 
 
-extension SceneDelegate {
+extension AppDelegate {
     func getCSRF(completion: @escaping (_ error: String?) ->()) {
         let parameters = [
             "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-            "pushFCMtoken": Messaging.messaging().fcmToken! as String,
+            "pushFcmToken": Messaging.messaging().fcmToken! as String,
             "model": UIDevice().model,
             "operationSystem": "IOS"
         ] as [String : AnyObject]
-//        print("DEBUG: Parameters = ", parameters)
         
         NetworkManager<CSRFDecodableModel>.addRequest(.csrf, [:], parameters) { request, error in
             if error != nil {
@@ -124,16 +122,24 @@ extension SceneDelegate {
             guard let token = request?.data?.token else {
                 completion("error")
                 return
-                
             }
             
             // TODO: пределать на сингл тон
             UserDefaults.standard.set(token, forKey: "sessionToken")
             
             let tok = UserDefaults.standard.object(forKey: "sessionToken")
-            print("DEBUG: Token = ", tok)
+            print("DEBUG: Token = ", tok ?? "nil")
             
-            completion(nil)
+            NetworkManager<InstallPushDeviceDecodebleModel>.addRequest(.installPushDevice, [:], parameters) { model, error in
+                if error != nil {
+                    print("DEBUG: installPushDevice error", error ?? "nil")
+                    completion(error)
+                }
+                
+                print("DEBUG: installPushDevice model", model ?? "nil")
+                completion(nil)
+            }
+            
         }
     }
 }
