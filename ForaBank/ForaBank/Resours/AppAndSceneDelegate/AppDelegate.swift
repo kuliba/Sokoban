@@ -13,7 +13,8 @@ import FirebaseMessaging
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
+    var delegate: Encription?
+    
     static var shared: AppDelegate { return UIApplication.shared.delegate as! AppDelegate }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -60,6 +61,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 extension AppDelegate {
+   
     func getCSRF(completion: @escaping (_ error: String?) ->()) {
         let parameters = [
             "cryptoVersion": "2.0",
@@ -70,7 +72,7 @@ extension AppDelegate {
         ] as [String : AnyObject]
 //        print("DEBUG: Parameters = ", parameters)
         
-        NetworkManager<CSRFDecodableModel>.addRequest(.csrf, [:], parameters) { request, error in
+        NetworkManager<CSRFDecodableModel>.addRequest(.csrf, [:], parameters) { [self] request, error in
             if error != nil {
                 completion(error)
             }
@@ -84,10 +86,12 @@ extension AppDelegate {
             KeyFromServer.publicKeyCert = certSeparator?[0].replacingOccurrences(of: "-----BEGIN CERTIFICATE-----", with: "")
             KeyFromServer.privateKeyCert = certSeparator?[1].replacingOccurrences(of: "-----END CERTIFICATE-----", with: "")
             KeyFromServer.publicKey = request?.data?.pk
-                                                          
+              
+//            let ourKeys = delegate?.createOwnKey()
+            
             let pubkeyFromCert = Encription().encryptedPublicKey()
                                    
-            let shared = Encription().computeSharedSecret(ownPrivateKey: KeyPair.privateKey!, otherPublicKey: Encription().pubFromServ!)
+            let shared = Encription().computeSharedSecret(ownPrivateKey: KeyPair.privateKey!, otherPublicKey: KeyFromServer.pubFromServ!)
                                    
                                
             let ectoRsa = SecKeyCreateEncryptedData(KeyPair.publicKey!, .rsaEncryptionRaw, Data(base64Encoded: KeyFromServer.publicKey!)! as CFData, nil)

@@ -15,6 +15,7 @@ struct KeyFromServer {
     static var publicKey: String?
     static var publicKeyCert: String?
     static var privateKeyCert: String?
+    static var pubFromServ: SecKey?
 }
 
 class Encription {
@@ -24,6 +25,24 @@ class Encription {
     var sendBase64ToServ: String?
     var error: Unmanaged<CFError>?
     var secretKey: Data?
+    
+    func createOwnKey() -> SecKey? {
+        
+        var publicKeySec, privateKeySec: SecKey?
+        let keyattribute = [kSecAttrKeySizeInBits as String: 384,
+                            SecKeyKeyExchangeParameter.requestedSize.rawValue as String: 32,
+                            kSecAttrKeyType as String: kSecAttrKeyTypeEC,
+                            
+                            kSecPrivateKeyAttrs as String: [kSecAttrIsPermanent as String: false],
+                            kSecPublicKeyAttrs as String:[kSecAttrIsPermanent as String: false]] as [String : Any]
+        
+        SecKeyGeneratePair(keyattribute as CFDictionary, &publicKeySec, &privateKeySec)
+//        addPemToKey(publicKeySec: publicKeySec!)
+//        addPemToKey(publicKeySec: privateKeySec!)
+        KeyPair.privateKey = privateKeySec
+        KeyPair.publicKey = publicKeySec
+        return privateKeySec
+    }
     
     func otherPublicSecKey(data: Data?) -> SecKey? {
            var error: Unmanaged<CFError>? = nil
@@ -45,7 +64,7 @@ class Encription {
 
                let pubKey = SecKeyCreateWithData(CFPrivData1!, attributes as CFDictionary, &error)
                pubFromServ = pubKey!
-            
+            KeyFromServer.pubFromServ = pubKey
 //                bytes = SecKeyCopyExternalRepresentation(pubKey!, &error) as Data?
                if let publicKey = SecKeyCreateWithData(CFPrivData1!, attributes, &error) {
                    return publicKey
@@ -187,7 +206,7 @@ class Encription {
         }
         
     func publicKey(for certificate: SecCertificate) -> SecKey? {
-                
+            createOwnKey()
                 pubFromCert = SecCertificateCopyKey(certificate)
                 let str = KeyFromServer.publicKey!
                 let lastKey: CFData?
