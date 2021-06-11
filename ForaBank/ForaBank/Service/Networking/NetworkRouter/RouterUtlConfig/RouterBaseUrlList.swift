@@ -42,4 +42,6 @@ enum RouterBaseUrlList: String {
     case getCardList = "/rest/getCardList"
     
     case keyExchange = "/keyExchange"
+    
+    case getCountries = "/rest/getCountries"
 }

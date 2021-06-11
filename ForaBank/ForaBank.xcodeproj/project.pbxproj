@@ -13,6 +13,7 @@
 		0B8BE093266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE092266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift */; };
 		0B8BE0952670D4A300E96CAA /* GetCodeDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE0942670D4A300E96CAA /* GetCodeDecodebleModel.swift */; };
 		0B8BE0972670D53600E96CAA /* DoRegistrationDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE0962670D53600E96CAA /* DoRegistrationDecodebleModel.swift */; };
+		0B9EC85D26739C0000D86EB2 /* GetCountriesDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EC85C26739C0000D86EB2 /* GetCountriesDecodebleModel.swift */; };
 		0BEC8939267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC8938267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift */; };
 		0BEC893B2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC893A2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift */; };
 		0BEC893D2672591A00D8BD22 /* GetCardListDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC893C2672591A00D8BD22 /* GetCardListDecodebleModel.swift */; };
@@ -135,6 +136,7 @@
 		0B8BE092266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyCodeDecodebleModel.swift; sourceTree = "<group>"; };
 		0B8BE0942670D4A300E96CAA /* GetCodeDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCodeDecodebleModel.swift; sourceTree = "<group>"; };
 		0B8BE0962670D53600E96CAA /* DoRegistrationDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoRegistrationDecodebleModel.swift; sourceTree = "<group>"; };
+		0B9EC85C26739C0000D86EB2 /* GetCountriesDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCountriesDecodebleModel.swift; sourceTree = "<group>"; };
 		0BEC8938267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallPushDeviceDecodebleModel.swift; sourceTree = "<group>"; };
 		0BEC893A2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistredPushDeviceTorUserDecodebleModel.swift; sourceTree = "<group>"; };
 		0BEC893C2672591A00D8BD22 /* GetCardListDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCardListDecodebleModel.swift; sourceTree = "<group>"; };
@@ -742,6 +744,7 @@
 				0BEC893A2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift */,
 				0BEC893C2672591A00D8BD22 /* GetCardListDecodebleModel.swift */,
 				0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */,
+				0B9EC85C26739C0000D86EB2 /* GetCountriesDecodebleModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -1009,6 +1012,7 @@
 				EDB165602667A569007E6030 /* ForaInput.swift in Sources */,
 				EDF68216266F9EC800FD5C07 /* RouterError.swift in Sources */,
 				EDB1657C2668C8D5007E6030 /* PayCell.swift in Sources */,
+				0B9EC85D26739C0000D86EB2 /* GetCountriesDecodebleModel.swift in Sources */,
 				ED4FC602266C0AB50092B4AB /* ChooseCountryTableViewController.swift in Sources */,
 				EDF6821A266F9EC800FD5C07 /* RouterUrlList.swift in Sources */,
 				EDB1452026661B030028EF5A /* StringMask.swift in Sources */,
