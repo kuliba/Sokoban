@@ -19,6 +19,7 @@ enum RouterManager {
     case registerPushDeviceForUser
     case uninstallPushDevice
     case getCardList
+    case keyExchange
 }
 
 extension RouterManager {
@@ -176,6 +177,21 @@ extension RouterManager {
             
         case .getCardList:
             let baseUrl = RouterUrlList.getCardList.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .keyExchange:
+            let baseUrl = RouterUrlList.keyExchange.returnUrl()
             switch baseUrl {
             case .success(let url):
                 resultUrl = url.absoluteURL
