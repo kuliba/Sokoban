@@ -36,6 +36,8 @@ enum RouterUrlList: String {
     
     case keyExchange
     
+    case getCountries
+    
     func returnUrl () -> URLValue {
         switch self {
         /// Авторизация
@@ -162,6 +164,17 @@ enum RouterUrlList: String {
             
         case .keyExchange:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.keyExchange.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .getCountries:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getCountries.rawValue)
             
             switch result {
             case .success(let url):
