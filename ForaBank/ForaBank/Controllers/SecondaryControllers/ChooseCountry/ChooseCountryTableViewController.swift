@@ -13,7 +13,11 @@ class ChooseCountryTableViewController: UITableViewController {
     private let searchController = UISearchController(searchResultsController: nil)
 //    private var timer: Timer?
     private var countries = [Сountry]() {
-        didSet { tableView.reloadData() }
+        didSet {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
     }
     
     //MARK: - View LifeCycle
@@ -23,19 +27,31 @@ class ChooseCountryTableViewController: UITableViewController {
         
         let nib = UINib(nibName: "СountryCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: СountryCell.reuseId)
-
-        if let localData = self.readLocalFile(forName: "country") {
-            self.countries = self.parse(jsonData: localData)
-        }
         
+        loadCountries()
     }
 
     //MARK: - API
     private func loadCountries() {
         
-//        NetworkManager.addRequest(.csrf, [:], [:]) { model, error in
-//
-//        }
+        NetworkManager<GetCountriesDecodebleModel>.addRequest(.getCountries, [:], [:]) { model, error in
+            if error != nil {
+                guard let error = error else { return }
+                print("DEBUG: ", #function, error)
+            } else {
+                guard let statusCode = model?.statusCode else { return }
+                if statusCode == 0 {
+                    guard let countries = model?.data else { return }
+                    for country in countries {
+                        let name = country.name?.capitalizingFirstLetter()
+                        let count = Сountry(name: name, dialCode: "", code: country.code)
+                        self.countries.append(count)
+                    }
+                } else {
+                    print("DEBUG: ", #function, model?.errorMessage ?? "nil")
+                }
+            }
+        }
         
     }
     

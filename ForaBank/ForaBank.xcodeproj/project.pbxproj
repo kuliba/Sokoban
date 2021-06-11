@@ -21,11 +21,9 @@
 		ED4FC5EF266B70A00092B4AB /* PartialTransparentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EE266B70A00092B4AB /* PartialTransparentView.swift */; };
 		ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5F9266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift */; };
 		ED4FC602266C0AB50092B4AB /* ChooseCountryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC601266C0AB50092B4AB /* ChooseCountryTableViewController.swift */; };
-		ED4FC605266CCE3D0092B4AB /* country.json in Resources */ = {isa = PBXBuildFile; fileRef = ED4FC604266CCE3D0092B4AB /* country.json */; };
 		ED4FC60B266CD1020092B4AB /* СountryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC609266CD1020092B4AB /* СountryCell.swift */; };
 		ED4FC60C266CD1020092B4AB /* СountryCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED4FC60A266CD1020092B4AB /* СountryCell.xib */; };
 		ED4FC610266CD66F0092B4AB /* СountryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC60F266CD66F0092B4AB /* СountryModel.swift */; };
-		ED4FC612266CD9660092B4AB /* ChooseCountryLoadFromJson.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC611266CD9660092B4AB /* ChooseCountryLoadFromJson.swift */; };
 		ED4FC619266EA42E0092B4AB /* AppLocker.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED4FC616266EA42E0092B4AB /* AppLocker.xib */; };
 		ED4FC61A266EA42E0092B4AB /* AppLocker.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC617266EA42E0092B4AB /* AppLocker.swift */; };
 		ED4FC61B266EA42E0092B4AB /* UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC618266EA42E0092B4AB /* UI.swift */; };
@@ -144,11 +142,9 @@
 		ED4FC5EE266B70A00092B4AB /* PartialTransparentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartialTransparentView.swift; sourceTree = "<group>"; };
 		ED4FC5F9266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmsCodeBasicAttributes.swift; sourceTree = "<group>"; };
 		ED4FC601266C0AB50092B4AB /* ChooseCountryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseCountryTableViewController.swift; sourceTree = "<group>"; };
-		ED4FC604266CCE3D0092B4AB /* country.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = country.json; sourceTree = "<group>"; };
 		ED4FC609266CD1020092B4AB /* СountryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "СountryCell.swift"; sourceTree = "<group>"; };
 		ED4FC60A266CD1020092B4AB /* СountryCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "СountryCell.xib"; sourceTree = "<group>"; };
 		ED4FC60F266CD66F0092B4AB /* СountryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "СountryModel.swift"; sourceTree = "<group>"; };
-		ED4FC611266CD9660092B4AB /* ChooseCountryLoadFromJson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseCountryLoadFromJson.swift; sourceTree = "<group>"; };
 		ED4FC616266EA42E0092B4AB /* AppLocker.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AppLocker.xib; sourceTree = "<group>"; };
 		ED4FC617266EA42E0092B4AB /* AppLocker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppLocker.swift; sourceTree = "<group>"; };
 		ED4FC618266EA42E0092B4AB /* UI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UI.swift; sourceTree = "<group>"; };
@@ -415,7 +411,6 @@
 			isa = PBXGroup;
 			children = (
 				ED4FC60E266CD6600092B4AB /* ViewModel */,
-				ED4FC60D266CD58B0092B4AB /* Data */,
 				ED4FC608266CD1020092B4AB /* Cell */,
 				ED4FC601266C0AB50092B4AB /* ChooseCountryTableViewController.swift */,
 			);
@@ -429,15 +424,6 @@
 				ED4FC60A266CD1020092B4AB /* СountryCell.xib */,
 			);
 			path = Cell;
-			sourceTree = "<group>";
-		};
-		ED4FC60D266CD58B0092B4AB /* Data */ = {
-			isa = PBXGroup;
-			children = (
-				ED4FC611266CD9660092B4AB /* ChooseCountryLoadFromJson.swift */,
-				ED4FC604266CCE3D0092B4AB /* country.json */,
-			);
-			path = Data;
 			sourceTree = "<group>";
 		};
 		ED4FC60E266CD6600092B4AB /* ViewModel */ = {
@@ -978,7 +964,6 @@
 				EDB143CB265FDEC90028EF5A /* Roboto-Italic.ttf in Resources */,
 				EDB1655E2667A55F007E6030 /* ForaInput.xib in Resources */,
 				EDB14532266667140028EF5A /* OrderProductsCollectionViewCell.xib in Resources */,
-				ED4FC605266CCE3D0092B4AB /* country.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1054,7 +1039,6 @@
 				EDB1655A2667A220007E6030 /* CodeVerificationViewController UI.swift in Sources */,
 				ED4FC5EC266AD98E0092B4AB /* NSCollectionLayoutItem.swift in Sources */,
 				EDB1657A2668C7F2007E6030 /* TransferCell.swift in Sources */,
-				ED4FC612266CD9660092B4AB /* ChooseCountryLoadFromJson.swift in Sources */,
 				EDB145382666770A0028EF5A /* OrderProductModel.swift in Sources */,
 				EDF68217266F9EC800FD5C07 /* RouterSassionConfiguration.swift in Sources */,
 				0B8BE0952670D4A300E96CAA /* GetCodeDecodebleModel.swift in Sources */,
