@@ -7,15 +7,15 @@
 
 import Foundation
 
-struct KeyFromServer {
-    var publicKey: SecKey?
-    var publicKeyCert: SecKey?
-    
-}
 struct KeyPair {
-    var publicKey: String?
+    static var publicKey: SecKey?
+    static var privateKey: SecKey?
 }
-
+struct KeyFromServer {
+    static var publicKey: String?
+    static var publicKeyCert: String?
+    static var privateKeyCert: String?
+}
 
 class Encription {
     
@@ -187,25 +187,22 @@ class Encription {
         }
         
     func publicKey(for certificate: SecCertificate) -> SecKey? {
-    //                let otherPublicKey = otherPublicSecKey(data:  Data(base64Encoded: otherKey)!)!
-            if #available(iOS 12.0, *) {
                 
                 pubFromCert = SecCertificateCopyKey(certificate)
                 let str = KeyFromServer.publicKey!
                 let lastKey: CFData?
                 let keyWithPem = addPemToKey(publicKeySec: KeyPair.publicKey!)
 
-                lastKey = SecKeyCreateDecryptedData(pubFromCert!, .rsaEncryptionRaw,  Data(base64Encoded: str) as CFData, &error)
-                let newData = SecKeyCreateEncryptedData(pubFromCert!, .rsaEncryptionPKCS1, keyWithPem as! CFData, &error)
-                let b64Data = (newData as? Data)?.base64EncodedString()
-                sendBase64ToServ = (newData as? Data)?.base64EncodedString()
+        lastKey = SecKeyCreateDecryptedData(pubFromCert!, .rsaEncryptionRaw,  Data(base64Encoded: str)! as CFData, &error)
+        let newData = SecKeyCreateEncryptedData(pubFromCert!, .rsaEncryptionPKCS1, keyWithPem as CFData, &error)
+            sendBase64ToServ = (newData as Data?)?.base64EncodedString()
                 let data = (lastKey as Data?)?.advanced(by: 136)
              
                 otherPublicSecKey(data: data)
 
                 return SecCertificateCopyKey(certificate)
-            }
-        }
+            
+    }
 
     func encryptedPublicKey() -> SecKey? {
         
@@ -213,11 +210,6 @@ class Encription {
 
         let certInDer = Data(base64Encoded: pubicKeyPem!, options: .ignoreUnknownCharacters)
         let secCert = SecCertificateCreateWithData(nil, certInDer! as CFData) // certInDer is Certificate(.der) data
-                   var keychainQueryDictionary = [String : Any]()
-                var serialNumber: Int?
-                   if let tempSecCert = secCert {
-                    keychainQueryDictionary = [kSecClass as String : kSecClassCertificate, kSecValueRef as String : tempSecCert, kSecAttrLabel as String: "My Certificate", kSecAttrSerialNumber as String: serialNumber ?? 0]
-                   }
 
             return  publicKey(for: secCert!)
        }
