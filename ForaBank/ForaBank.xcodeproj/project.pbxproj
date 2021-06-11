@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B747890267343B400C44F79 /* KeyExchangeDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */; };
 		0B8BE08F266FBE0500E96CAA /* CSRFDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE08E266FBE0500E96CAA /* CSRFDecodableModel.swift */; };
 		0B8BE091266FDA1B00E96CAA /* CheckClientDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE090266FDA1B00E96CAA /* CheckClientDecodebleModel.swift */; };
 		0B8BE093266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE092266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift */; };
@@ -127,6 +128,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyExchangeDecodebleModel.swift; sourceTree = "<group>"; };
 		0B8BE08E266FBE0500E96CAA /* CSRFDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFDecodableModel.swift; sourceTree = "<group>"; };
 		0B8BE090266FDA1B00E96CAA /* CheckClientDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckClientDecodebleModel.swift; sourceTree = "<group>"; };
 		0B8BE092266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyCodeDecodebleModel.swift; sourceTree = "<group>"; };
@@ -728,6 +730,7 @@
 				0BEC8938267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift */,
 				0BEC893A2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift */,
 				0BEC893C2672591A00D8BD22 /* GetCardListDecodebleModel.swift */,
+				0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -1054,6 +1057,7 @@
 				EDF68212266F9EC800FD5C07 /* RequestMethod.swift in Sources */,
 				EDF68214266F9EC800FD5C07 /* URLSchemeType.swift in Sources */,
 				EDB16549266766FD007E6030 /* CodeVerificationViewController.swift in Sources */,
+				0B747890267343B400C44F79 /* KeyExchangeDecodebleModel.swift in Sources */,
 				EDB14528266624EE0028EF5A /* OrderCardView.swift in Sources */,
 				EDF68219266F9EC800FD5C07 /* RouterBaseUrlList.swift in Sources */,
 				0B8BE093266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift in Sources */,
