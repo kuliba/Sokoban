@@ -43,9 +43,9 @@ class TransferCell: UICollectionViewCell, SelfConfiguringCell {
         addSubview(transferLabel)
         
         transferImage.contentMode = .scaleAspectFit
-        transferImage.setDimensions(height: 46, width: 46)
-        transferImage.centerX(inView: self, topAnchor: self.topAnchor, paddingTop: 12)
-        transferLabel.anchor(left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor, paddingLeft: 12, paddingBottom: 8, paddingRight: 20)
+        transferImage.setDimensions(height: 48, width: 48)
+        transferImage.centerX(inView: self, topAnchor: self.topAnchor, paddingTop: 16)
+        transferLabel.anchor(left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor, paddingLeft: 12, paddingBottom: 8, paddingRight: 12)
         
     }
 }

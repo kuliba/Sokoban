@@ -53,7 +53,7 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
         
         titleLabel.anchor(left: self.leftAnchor, right: self.rightAnchor)
         titleLabel.centerX(inView: avatarImageView,
-                           topAnchor: avatarImageView.bottomAnchor, paddingTop: 4)
+                           topAnchor: avatarImageView.bottomAnchor, paddingTop: 8)
         
         avatarImageView.backgroundColor = #colorLiteral(red: 0.9647058824, green: 0.9647058824, blue: 0.968627451, alpha: 1)
         avatarImageView.layer.cornerRadius = 28

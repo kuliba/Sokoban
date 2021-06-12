@@ -44,7 +44,7 @@ extension PaymentsViewController {
         
         let item = NSCollectionLayoutItem.withEntireSize()
         let groupSize = NSCollectionLayoutSize(
-            widthDimension: .absolute(80),
+            widthDimension: .absolute(88),
 //            heightDimension: .fractionalHeight(0.12))
             heightDimension: .absolute(88))
         
