@@ -289,6 +289,13 @@
 			path = NetworkingLoginModel;
 			sourceTree = "<group>";
 		};
+		ED46C1642678DCA500D1A9A5 /* OfferAgreement */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = OfferAgreement;
+			sourceTree = "<group>";
+		};
 		ED4FC5ED266B707F0092B4AB /* CardScannerController */ = {
 			isa = PBXGroup;
 			children = (
@@ -484,6 +491,7 @@
 		EDAA99AC2673AB6D00435484 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				ED46C1642678DCA500D1A9A5 /* OfferAgreement */,
 				EDAA99AD2673AB7700435484 /* Switch */,
 			);
 			path = Views;

@@ -41,6 +41,7 @@ class ForaInput: UIView {
     @IBOutlet weak var lineView: UIView!
     @IBOutlet weak var errorLabel: UILabel!
     @IBOutlet weak var bottomLabel: UILabel!
+    @IBOutlet weak var balanceLabel: UILabel!
     @IBOutlet weak var chooseButton: UIButton!
     @IBOutlet weak var rubButton: UIButton! {
         didSet {
@@ -94,13 +95,13 @@ class ForaInput: UIView {
         
         
         imageView.image = viewModel.image
-        
+        balanceLabel.isHidden = true
         textField.placeholder = viewModel.title
         textField.keyboardType = viewModel.fieldType.keyboardType
         textField.isUserInteractionEnabled = viewModel.isEditable
         textField.clearButtonMode = viewModel.needCleanButton ? .unlessEditing : .never
         rubButton.isHidden = !viewModel.showCurrencyButton
-        usdButton.isHidden = !viewModel.showCurrencyButton
+        usdButton.isHidden = true //!viewModel.showCurrencyButton
         chooseButton.isHidden = !viewModel.showChooseButton
         errorLabel.text = viewModel.errorText
         errorLabel.isHidden = !viewModel.needValidate
@@ -111,10 +112,16 @@ class ForaInput: UIView {
         let viewType = viewModel.fieldType.self
         switch viewType {
         case .credidCard:
+            placeHolder.text = viewModel.title
             errorLabel.isHidden = true
             placeHolder.isHidden = false
+            balanceLabel.isHidden = false
+            placeHolder.alpha = text.isEmpty ? 0 : 1
         case .amountOfTransfer:
+            placeHolder.text = viewModel.title
+            placeHolder.isHidden = false
             errorLabel.isHidden = true
+            placeHolder.alpha = text.isEmpty ? 0 : 1
         default:
             placeHolder.text = viewModel.title
             placeHolder.isHidden = text.isEmpty
