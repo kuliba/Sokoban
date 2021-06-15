@@ -31,6 +31,7 @@
 		ED92D3A226735A0A006D47B3 /* PaymentByPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED92D3A126735A0A006D47B3 /* PaymentByPhoneViewController.swift */; };
 		EDAA99AF2673AB9200435484 /* ForaSwitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAA99AE2673AB9200435484 /* ForaSwitchView.swift */; };
 		EDAA99B12673ABF200435484 /* ForaSwitchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDAA99B02673ABF200435484 /* ForaSwitchView.xib */; };
+		EDAA99B42674C38900435484 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = EDAA99B32674C38900435484 /* ProgressHUD */; };
 		EDB14381265FDA410028EF5A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14380265FDA410028EF5A /* AppDelegate.swift */; };
 		EDB14383265FDA410028EF5A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14382265FDA410028EF5A /* SceneDelegate.swift */; };
 		EDB14385265FDA410028EF5A /* LoginCardEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14384265FDA410028EF5A /* LoginCardEntryViewController.swift */; };
@@ -245,6 +246,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EDAA99B42674C38900435484 /* ProgressHUD in Frameworks */,
 				EDF6821D266FC37F00FD5C07 /* FirebaseMessaging in Frameworks */,
 				ED4FC621266EA5CD0092B4AB /* Valet in Frameworks */,
 			);
@@ -872,6 +874,7 @@
 			packageProductDependencies = (
 				ED4FC620266EA5CD0092B4AB /* Valet */,
 				EDF6821C266FC37F00FD5C07 /* FirebaseMessaging */,
+				EDAA99B32674C38900435484 /* ProgressHUD */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -947,6 +950,7 @@
 			packageReferences = (
 				ED4FC61F266EA5CD0092B4AB /* XCRemoteSwiftPackageReference "Valet" */,
 				EDF6821B266FC37F00FD5C07 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD" */,
 			);
 			productRefGroup = EDB1437E265FDA410028EF5A /* Products */;
 			projectDirPath = "";
@@ -1422,6 +1426,14 @@
 				minimumVersion = 4.1.2;
 			};
 		};
+		EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/relatedcode/ProgressHUD.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		EDF6821B266FC37F00FD5C07 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -1437,6 +1449,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = ED4FC61F266EA5CD0092B4AB /* XCRemoteSwiftPackageReference "Valet" */;
 			productName = Valet;
+		};
+		EDAA99B32674C38900435484 /* ProgressHUD */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD" */;
+			productName = ProgressHUD;
 		};
 		EDF6821C266FC37F00FD5C07 /* FirebaseMessaging */ = {
 			isa = XCSwiftPackageProductDependency;

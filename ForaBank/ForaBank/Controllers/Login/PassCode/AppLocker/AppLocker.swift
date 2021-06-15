@@ -317,7 +317,7 @@ public class AppLocker: UIViewController {
 extension AppLocker {
     //MARK: - API
     func registerMyPin(with code: String, completion: @escaping (_ error: String?) ->() ) {
-        
+        showActivity()
         let serverDeviceGUID = UserDefaults.standard.object(forKey: "serverDeviceGUID")
         let biometricType = biometricType()
         
@@ -353,6 +353,7 @@ extension AppLocker {
                                         completion(error!)
                                         print("DEBUG: Error getCSRF: ", error!)
                                     } else {
+                                        self.dismissActivity()
                                         completion(nil)
                                     }
                                 }
@@ -368,6 +369,7 @@ extension AppLocker {
     }
     
     func login(with code: String, type: BiometricType, completion: @escaping (_ error: String?) ->() ) {
+        showActivity()
         let serverDeviceGUID = UserDefaults.standard.object(forKey: "serverDeviceGUID")
         let data = [
             "appId": "IOS",
@@ -401,6 +403,7 @@ extension AppLocker {
                         guard let model = model else { return }
                         if model.statusCode == 0 {
                             print("DEBUG: You are LOGGIN!!!")
+                            self.dismissActivity()
                             completion(nil)
                         }
                     }

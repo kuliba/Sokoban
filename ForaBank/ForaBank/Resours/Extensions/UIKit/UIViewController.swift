@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ProgressHUD
 
 extension UIViewController {
     
@@ -40,6 +41,14 @@ extension UIViewController {
             alertController.addAction(okAction)
             self.present(alertController, animated: true, completion: nil)
         }
+    }
+    
+    func showActivity() {
+        ProgressHUD.show()
+    }
+
+    func dismissActivity() {
+        ProgressHUD.dismiss()
     }
     
 }

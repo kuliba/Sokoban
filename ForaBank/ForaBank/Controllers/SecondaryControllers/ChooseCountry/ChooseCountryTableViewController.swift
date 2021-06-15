@@ -33,8 +33,9 @@ class ChooseCountryTableViewController: UITableViewController {
 
     //MARK: - API
     private func loadCountries() {
-        
+        showActivity()
         NetworkManager<GetCountriesDecodebleModel>.addRequest(.getCountries, [:], [:]) { model, error in
+            self.dismissActivity()
             if error != nil {
                 guard let error = error else { return }
                 print("DEBUG: ", #function, error)
