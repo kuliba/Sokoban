@@ -10,8 +10,9 @@ import UIKit
 class ForaSwitchView: UIView {
     
     //MARK: - Property
-    let kContentXibName = "ForaInput"
+    let kContentXibName = "ForaSwitchView"
 
+    @IBOutlet weak var bankByPhoneSwitch: UISwitch!
     @IBOutlet var contentView: UIView!
     
     
@@ -41,6 +42,11 @@ class ForaSwitchView: UIView {
 //        textField.delegate = self
 //        self.translatesAutoresizingMaskIntoConstraints = false
 //        self.heightAnchor.constraint(equalToConstant: 54).isActive = true
+    }
+    
+    
+    @IBAction func bankByPhoneSwitchTapped(_ sender: Any) {
+        print(#function)
     }
     
 }

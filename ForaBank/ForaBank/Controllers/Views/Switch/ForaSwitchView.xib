@@ -10,6 +10,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ForaSwitchView" customModule="ForaBank" customModuleProvider="target">
             <connections>
+                <outlet property="bankByPhoneSwitch" destination="qhZ-K0-6YD" id="Hj9-LE-286"/>
                 <outlet property="contentView" destination="iN0-l3-epB" id="dBC-LL-zJy"/>
             </connections>
         </placeholder>
@@ -24,6 +25,9 @@
                     <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <color key="onTintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <color key="thumbTintColor" red="0.13333333333333333" green="0.75686274509803919" blue="0.51372549019607838" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <connections>
+                        <action selector="bankByPhoneSwitchTapped:" destination="-1" eventType="valueChanged" id="mQZ-e6-Icm"/>
+                    </connections>
                 </switch>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Я знаю номер телефона и банк получателя" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="wIe-8i-nUB">
                     <rect key="frame" x="20" y="32" width="338" height="14.5"/>
