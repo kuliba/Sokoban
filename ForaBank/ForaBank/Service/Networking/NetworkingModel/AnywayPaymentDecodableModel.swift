@@ -16,7 +16,7 @@ import Foundation
 struct AnywayPaymentDecodableModel: Codable, NetworkModelProtocol {
     let statusCode: Int?
     let errorMessage: JSONNull?
-    let data: AnywayPaymentDataClass?
+    let data: AnywayPayment?
 }
 
 // MARK: AnywayPaymentDecodableModel convenience initializers and mutators
@@ -40,7 +40,7 @@ extension AnywayPaymentDecodableModel {
     func with(
         statusCode: Int?? = nil,
         errorMessage: JSONNull?? = nil,
-        data: AnywayPaymentDataClass?? = nil
+        data: AnywayPayment?? = nil
     ) -> AnywayPaymentDecodableModel {
         return AnywayPaymentDecodableModel(
             statusCode: statusCode ?? self.statusCode,
@@ -68,7 +68,7 @@ extension AnywayPaymentDecodableModel {
 import Foundation
 
 // MARK: - DataClass
-struct AnywayPaymentDataClass: Codable {
+struct AnywayPayment: Codable {
     let paymentOperationDetailID: JSONNull?
     let listInputs: [ListInput]?
     let error: String?
@@ -86,9 +86,9 @@ struct AnywayPaymentDataClass: Codable {
 
 // MARK: DataClass convenience initializers and mutators
 
-extension AnywayPaymentDataClass {
+extension AnywayPayment {
     init(data: Data) throws {
-        self = try newJSONDecoder().decode(AnywayPaymentDataClass.self, from: data)
+        self = try newJSONDecoder().decode(AnywayPayment.self, from: data)
     }
 
     init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -112,8 +112,8 @@ extension AnywayPaymentDataClass {
         amount: JSONNull?? = nil,
         commission: JSONNull?? = nil,
         nextStep: Int?? = nil
-    ) -> AnywayPaymentDataClass {
-        return AnywayPaymentDataClass (
+    ) -> AnywayPayment {
+        return AnywayPayment(
             paymentOperationDetailID: paymentOperationDetailID ?? self.paymentOperationDetailID,
             listInputs: listInputs ?? self.listInputs,
             error: error ?? self.error,
@@ -142,17 +142,19 @@ extension AnywayPaymentDataClass {
 //
 //   let listInput = try ListInput(json)
 
+import Foundation
+
 // MARK: - ListInput
 struct ListInput: Codable {
-    let content: [String]?
+    let content: [JSONAny]?
     let id: String?
     let order: Int?
     let paramGroup: JSONNull?
-    let name: String?
-    let type: TypeEnum?
-    let dataType: String?
-    let hint, mask, regExp, min: JSONNull?
-    let max, sum: JSONNull?
+    let name, type, dataType: String?
+    let hint: String?
+    let mask, regExp: JSONNull?
+    let min, max: Int?
+    let sum: Bool?
     let rightNum: Int?
     let note: JSONNull?
     let print, readOnly, visible, req: Bool?
@@ -179,19 +181,19 @@ extension ListInput {
     }
 
     func with(
-        content: [String]?? = nil,
+        content: [JSONAny]?? = nil,
         id: String?? = nil,
         order: Int?? = nil,
         paramGroup: JSONNull?? = nil,
         name: String?? = nil,
-        type: TypeEnum?? = nil,
+        type: String?? = nil,
         dataType: String?? = nil,
-        hint: JSONNull?? = nil,
+        hint: String?? = nil,
         mask: JSONNull?? = nil,
         regExp: JSONNull?? = nil,
-        min: JSONNull?? = nil,
-        max: JSONNull?? = nil,
-        sum: JSONNull?? = nil,
+        min: Int?? = nil,
+        max: Int?? = nil,
+        sum: Bool?? = nil,
         rightNum: Int?? = nil,
         note: JSONNull?? = nil,
         print: Bool?? = nil,
@@ -234,11 +236,3 @@ extension ListInput {
         return String(data: try self.jsonData(), encoding: encoding)
     }
 }
-
-// TypeEnum.swift
-
-enum TypeEnum: String, Codable {
-    case input = "Input"
-    case select = "Select"
-}
-
