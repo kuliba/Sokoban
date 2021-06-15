@@ -78,7 +78,7 @@ class ContactInputViewController: UIViewController {
         countryField.didChooseButtonTapped = { () in
             print("countryField didChooseButtonTapped")
         }
-        getCard()
+        getCardList()
     }
 
     fileprivate func setupUI() {
@@ -91,33 +91,7 @@ class ContactInputViewController: UIViewController {
         doneButton.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
                           right: view.rightAnchor, paddingLeft: 20, paddingBottom: 20,
                           paddingRight: 20, height: 44)
-        
-//        let topView = UIView()
-//        topView.backgroundColor = #colorLiteral(red: 0.9647058824, green: 0.9647058824, blue: 0.968627451, alpha: 1)
-//
-//        let topViewSwitch = UISwitch()
-//        topViewSwitch.isOn = true
-//        topViewSwitch.isUserInteractionEnabled = true
-//
-//        let topViewLabel = UILabel(text: "Я знаю номер телефона и банк получателя",
-//                                   font: .systemFont(ofSize: 12), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
-//        topViewLabel.adjustsFontSizeToFitWidth = true
-//
-//
-//        topView.addSubview(topViewSwitch)
-//        topViewSwitch.centerY(inView: topView)
-//        topViewSwitch.anchor(right: topViewSwitch.leftAnchor, paddingRight: 20)
-//
-//        topView.addSubview(topViewLabel)
-//        topViewLabel.centerY(inView: topView, leftAnchor: topView.leftAnchor, paddingLeft: 20)
-//        topViewLabel.anchor(right: topViewSwitch.leftAnchor, paddingRight: 27)
-//
-//
-//
-//        view.addSubview(topView)
-//        topView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 48)
-        
-        
+                
         
         
         //TODO: добавить скроллвью что бы избежать проблем на маленьких экранах
@@ -140,20 +114,18 @@ class ContactInputViewController: UIViewController {
     }
     
     @objc func doneButtonTapped() {
-        let vc = ContactConfurmViewController()
-        let model = ConfurmViewControllerModel(
-            name: surnameField.viewModel.text + " " + nameField.viewModel.text + " " + secondNameField.viewModel.text,
-            country: countryField.viewModel.text,
-            numberTransction: "1235634790",
-            summTransction: summTransctionField.viewModel.text,
-            taxTransction: "100.00 ₽ ",
-            currancyTransction: "Наличные")
-        
-        vc.confurmVCModel = model
-        navigationController?.pushViewController(vc, animated: true)
+        endContactPayment(surname: surnameField.textField.text ?? "", name: nameField.textField.text ?? "", secondName: secondNameField.textField.text ?? "", amount: summTransctionField.textField.text ?? "")
     }
     
-    func getCard() {
+    func goToConfurmVC(with model: ConfurmViewControllerModel) {
+        DispatchQueue.main.async {
+            let vc = ContactConfurmViewController()
+            vc.confurmVCModel = model
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+    
+    func getCardList() {
         showActivity()
         NetworkManager<GetCardListDecodebleModel>.addRequest(.getCardList, [:], [:]) { model, error in
             self.dismissActivity()
@@ -164,6 +136,8 @@ class ContactInputViewController: UIViewController {
             print("DEBUG: Card list: ", model)
             if model.statusCode == 0 {
                 guard let data  = model.data else { return }
+                guard let cardNumber  = model.data?.first?.original?.number else { return }
+                self.startContactPayment(with: cardNumber)
                 DispatchQueue.main.async {
                     self.cardField.text = data.first?.original?.name ?? ""
                     self.cardField.balanceLabel.text = "\(data.first?.original?.balance ?? 0) ₽"
@@ -174,8 +148,107 @@ class ContactInputViewController: UIViewController {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
             }
         }
+        
     }
     
+    func startContactPayment(with card: String) {
+        showActivity()
+        let body = ["accountID": nil,
+                    "cardID": nil,
+                    "cardNumber": card,
+                    "provider": nil,
+                    "puref": "iFora||Addressless"] as [String: AnyObject]
+        
+        NetworkManager<AnywayPaymentBeginDecodebleModel>.addRequest(.anywayPaymentBegin, [:], body, completion: { model, error in
+            if error != nil {
+                print("DEBUG: Error: ", error ?? "")
+            }
+            guard let model = model else { return }
+            if model.statusCode == 0 {
+                NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], [:]) { model, error in
+                    if error != nil {
+                        print("DEBUG: Error: ", error ?? "")
+                    }
+                    guard let model = model else { return }
+                    if model.statusCode == 0 {
+                        print("DEBUG: Success ")
+                        self.dismissActivity()
+                        
+                    } else {
+                        print("DEBUG: Error: ", model.errorMessage ?? "")
+                    }
+                }
+            } else {
+                print("DEBUG: Error: ", model.errorMessage ?? "")
+            }
+        })
+    }
+    
+    func endContactPayment(surname: String, name: String, secondName: String, amount: String) {
+        showActivity()
+        let dataName = [ "additional": [
+            ["fieldid": 1,
+             "fieldname": "bName",
+             "fieldvalue": surname ],
+            ["fieldid": 2,
+             "fieldname": "bLastName",
+             "fieldvalue": name ],
+            [ "fieldid": 3,
+              "fieldname": "bSurName",
+              "fieldvalue": secondName ],
+            [ "fieldid": 4,
+              "fieldname": "trnPickupPoint",
+              "fieldvalue": "BTOC" ]
+        ] ] as [String: AnyObject]
+        print("DEBUG: ", dataName)
+        NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataName) { model, error in
+            if error != nil {
+                print("DEBUG: Error: ", error ?? "")
+            }
+            
+            print("DEBUG: amount ", amount)
+            guard let model = model else { return }
+            if model.statusCode == 0 {
+                print("DEBUG: Success send Name")
+                let dataAmount = [ "additional": [
+                    [ "fieldid": 1,
+                      "fieldname": "A",
+                      "fieldvalue": amount ],
+                    [ "fieldid": 2,
+                      "fieldname": "CURR",
+                      "fieldvalue": "RUR" ]
+                ] ] as [String: AnyObject]
+                
+                NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataAmount) { model, error in
+                    if error != nil {
+                        print("DEBUG: Error: ", error ?? "")
+                    }
+                    guard let model = model else { return }
+                    if model.statusCode == 0 {
+                        print("DEBUG: Success send sms code")
+                        self.dismissActivity()
+                        
+                        let model = ConfurmViewControllerModel(
+                            name: surname + " " + name + " " + secondName,
+                            country: self.countryField.viewModel.text,
+                            numberTransction: model.data?.listInputs?[0].content?[0] ?? "",
+                            summTransction: amount + "\(model.data?.listInputs?[1].content?[0] ?? "") ₽",
+                            taxTransction: "\(model.data?.commission ?? 0) ₽",
+                            currancyTransction: "Наличные")
+                        
+                        self.goToConfurmVC(with: model)
+                        
+                    } else {
+                        print("DEBUG: Error: ", model.errorMessage ?? "")
+                    }
+                }
+            } else {
+                print("DEBUG: Error: ", model.errorMessage ?? "")
+            }
+        }
+        
+        
+    }
     
 }
 

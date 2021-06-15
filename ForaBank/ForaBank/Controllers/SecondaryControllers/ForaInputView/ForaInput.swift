@@ -122,6 +122,13 @@ class ForaInput: UIView {
             placeHolder.isHidden = false
             errorLabel.isHidden = true
             placeHolder.alpha = text.isEmpty ? 0 : 1
+        case .smsCode:
+            placeHolder.text = viewModel.title
+            placeHolder.isHidden = false
+            placeHolder.alpha = 1
+            placeHolder.textColor = #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
+            errorLabel.isHidden = true
+            
         default:
             placeHolder.text = viewModel.title
             placeHolder.isHidden = text.isEmpty

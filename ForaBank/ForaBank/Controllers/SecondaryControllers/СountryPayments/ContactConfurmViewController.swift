@@ -63,11 +63,17 @@ class ContactConfurmViewController: UIViewController {
             image: #imageLiteral(resourceName: "Frame 579"),
             isEditable: false))
     
+    var smsCodeField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "Введите код из СМС",
+            image: #imageLiteral(resourceName: "message-square"),
+            type: .smsCode))
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        hideKeyboardWhenTappedAround()
     }
     
     func setupData(with model: ConfurmViewControllerModel) {
@@ -99,7 +105,7 @@ class ContactConfurmViewController: UIViewController {
         button.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
         
         
-        let stackView = UIStackView(arrangedSubviews: [nameField, countryField, numberTransctionField, summTransctionField, taxTransctionField, currancyTransctionField])
+        let stackView = UIStackView(arrangedSubviews: [nameField, countryField, numberTransctionField, summTransctionField, taxTransctionField, currancyTransctionField, smsCodeField])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
@@ -117,7 +123,29 @@ class ContactConfurmViewController: UIViewController {
     
     @objc func doneButtonTapped() {
         print(#function)
-        self.navigationController?.popToRootViewController(animated: true)
+        
+        guard let code = smsCodeField.textField.text else { return }
+        let body = ["verificationCode": code] as [String: AnyObject]
+        showActivity()
+        NetworkManager<AnywayPaymentMakeDecodableModel>.addRequest(.anywayPaymentMake, [:], body) { model, error in
+            if error != nil {
+                print("DEBUG: Error: ", error ?? "")
+            }
+            guard let model = model else { return }
+            if model.statusCode == 0 {
+                print("DEBUG: Success payment")
+                self.dismissActivity()
+                DispatchQueue.main.async {
+                    self.showAlert(with: "Поздравляю", and: "Перевод совершен успешно") {
+                        self.navigationController?.popToRootViewController(animated: true)
+                    }
+                }
+            } else {
+                print("DEBUG: Error: ", model.errorMessage ?? "")
+            }
+        }
+        
+        
     }
     
 

@@ -89,6 +89,7 @@ class ForaInputModel {
         case number
         case amountOfTransfer
         case credidCard
+        case smsCode
         
         var keyboardType: UIKeyboardType {
             switch self {
@@ -96,7 +97,7 @@ class ForaInputModel {
                 return UIKeyboardType.phonePad
             case .mail:
                 return UIKeyboardType.emailAddress
-            case .number, .amountOfTransfer:
+            case .number, .amountOfTransfer, .smsCode:
                 return UIKeyboardType.numberPad
             default:
                 return UIKeyboardType.default

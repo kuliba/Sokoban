@@ -75,7 +75,8 @@ struct AnywayPaymentDataClass: Codable {
     let errorMessage: JSONNull?
     let finalStep: Int?
     let id: String?
-    let amount, commission: JSONNull?
+    let amount: Int?
+    let commission: Double?
     let nextStep: Int?
 
     enum CodingKeys: String, CodingKey {
@@ -109,8 +110,8 @@ extension AnywayPaymentDataClass {
         errorMessage: JSONNull?? = nil,
         finalStep: Int?? = nil,
         id: String?? = nil,
-        amount: JSONNull?? = nil,
-        commission: JSONNull?? = nil,
+        amount: Int?? = nil,
+        commission: Double?? = nil,
         nextStep: Int?? = nil
     ) -> AnywayPaymentDataClass {
         return AnywayPaymentDataClass (
@@ -151,8 +152,11 @@ struct ListInput: Codable {
     let name: String?
     let type: TypeEnum?
     let dataType: String?
-    let hint, mask, regExp, min: JSONNull?
-    let max, sum: JSONNull?
+    let hint: String?
+    let mask, regExp: JSONNull?
+    let min: Int?
+    let max: Int?
+    let sum: Bool?
     let rightNum: Int?
     let note: JSONNull?
     let print, readOnly, visible, req: Bool?
@@ -186,12 +190,12 @@ extension ListInput {
         name: String?? = nil,
         type: TypeEnum?? = nil,
         dataType: String?? = nil,
-        hint: JSONNull?? = nil,
+        hint: String?? = nil,
         mask: JSONNull?? = nil,
         regExp: JSONNull?? = nil,
-        min: JSONNull?? = nil,
-        max: JSONNull?? = nil,
-        sum: JSONNull?? = nil,
+        min: Int?? = nil,
+        max: Int?? = nil,
+        sum: Bool?? = nil,
         rightNum: Int?? = nil,
         note: JSONNull?? = nil,
         print: Bool?? = nil,
