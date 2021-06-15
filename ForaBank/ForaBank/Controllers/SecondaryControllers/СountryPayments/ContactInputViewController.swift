@@ -227,12 +227,12 @@ class ContactInputViewController: UIViewController {
                     if model.statusCode == 0 {
                         print("DEBUG: Success send sms code")
                         self.dismissActivity()
-                        
+                    
                         let model = ConfurmViewControllerModel(
                             name: surname + " " + name + " " + secondName,
                             country: self.countryField.viewModel.text,
-                            numberTransction: model.data?.listInputs?[0].content?[0] ?? "",
-                            summTransction: amount + "\(model.data?.listInputs?[1].content?[0] ?? "") ₽",
+                            numberTransction: "\(model.data?.listInputs?[0].content?.first ?? "")",
+                            summTransction: "\(model.data?.listInputs?[1].content?[0] ?? "") ₽",
                             taxTransction: "\(model.data?.commission ?? 0) ₽",
                             currancyTransction: "Наличные")
                         

@@ -147,7 +147,7 @@ import Foundation
 
 // MARK: - ListInput
 struct ListInput: Codable {
-    let content: [JSONAny]?
+    let content: [String]?
     let id: String?
     let order: Int?
     let paramGroup: JSONNull?
@@ -182,7 +182,7 @@ extension ListInput {
     }
 
     func with(
-        content: [JSONAny]?? = nil,
+        content: [String]?? = nil,
         id: String?? = nil,
         order: Int?? = nil,
         paramGroup: JSONNull?? = nil,
