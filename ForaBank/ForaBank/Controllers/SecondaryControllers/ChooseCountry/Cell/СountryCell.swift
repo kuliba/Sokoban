@@ -24,7 +24,7 @@ class СountryCell: UITableViewCell {
         countryImageView.image = nil
     }
     
-    func set(viewModel: Сountry) {
+    func set(viewModel: Country) {
         countryNameLabel.text = viewModel.name
     }
 }

@@ -10,12 +10,51 @@ import UIKit
 
 //TODO: отрефакторить под сетевые запросы, вынести в отдельный файл
 struct ConfurmViewControllerModel {
+    var phone: String?
     var name: String
-    var country: String
-    var numberTransction: String
+    var country: Country
+    var numberTransction: String?
     var summTransction: String
     var taxTransction: String
     var currancyTransction: String
+    
+    
+    init(country: Country, model: AnywayPaymentDecodableModel?, fullName: String? = nil) {
+        
+        var name = ""
+        var surname = ""
+        var secondName = ""
+        var phone = ""
+        var transctionNum = ""
+        if let listInputs = model?.data?.listInputs {
+            for item in listInputs {
+                if item.id == "RECF" {
+                    surname = item.content?.first ?? ""
+                } else if item.id == "RECI" {
+                    name = item.content?.first ?? ""
+                } else if item.id == "RECO" {
+                    secondName = item.content?.first ?? ""
+                } else if item.id == "RECP" {
+                    phone = item.content?.first ?? ""
+                } else if item.id == "trnReference" {
+                    transctionNum = item.content?.first ?? ""
+                }
+            }
+        }
+        if let fullName = fullName {
+            self.name = fullName
+        } else {
+            self.name = surname + " " + name + " " + secondName
+        }
+        
+        self.phone = phone
+        self.summTransction = "\(model?.data?.amount ?? 0) ₽"
+        self.taxTransction = "\(model?.data?.commission ?? 0) ₽"
+        self.numberTransction = transctionNum
+        self.currancyTransction = "Наличные"
+        self.country = country
+    }
+    
 }
 
 class ContactConfurmViewController: UIViewController {
@@ -26,7 +65,13 @@ class ContactConfurmViewController: UIViewController {
             setupData(with: model)
         }
     }
-
+    
+    var phoneField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "По номеру телефона",
+            image: #imageLiteral(resourceName: "Phone"),
+            isEditable: false))
+    
     var nameField = ForaInput(
         viewModel: ForaInputModel(
             title: "ФИО получателя",
@@ -78,11 +123,22 @@ class ContactConfurmViewController: UIViewController {
     
     func setupData(with model: ConfurmViewControllerModel) {
         nameField.text =  model.name //"Колотилин Михаил Алексеевич"
-        countryField.text = model.country // "Армения"
-        numberTransctionField.text = model.numberTransction //"1235634790"
+        countryField.text = model.country.name ?? "" // "Армения"
+        numberTransctionField.text = model.numberTransction ?? "" //"1235634790"
         summTransctionField.text = model.summTransction //"10 000.00 ₽ "
         taxTransctionField.text = model.taxTransction //"100.00 ₽ "
         currancyTransctionField.text = model.currancyTransction //"Наличные"
+        
+        if model.country.code == "AM" {
+            phoneField.isHidden = false
+            phoneField.text = model.phone ?? ""
+            let customViewItem = UIBarButtonItem(customView: UIImageView(image: #imageLiteral(resourceName: "MigAvatar")))
+            self.navigationItem.rightBarButtonItem = customViewItem
+        } else {
+            phoneField.isHidden = true
+            let customViewItem = UIBarButtonItem(customView: UIImageView(image: #imageLiteral(resourceName: "Vector")))
+            self.navigationItem.rightBarButtonItem = customViewItem
+        }
     }
     
     fileprivate func setupUI() {
@@ -105,7 +161,7 @@ class ContactConfurmViewController: UIViewController {
         button.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
         
         
-        let stackView = UIStackView(arrangedSubviews: [nameField, countryField, numberTransctionField, summTransctionField, taxTransctionField, currancyTransctionField, smsCodeField])
+        let stackView = UIStackView(arrangedSubviews: [phoneField, nameField, countryField, numberTransctionField, summTransctionField, taxTransctionField, currancyTransctionField, smsCodeField])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
@@ -116,9 +172,6 @@ class ContactConfurmViewController: UIViewController {
         stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
         
-        let customView = UIImageView(image: #imageLiteral(resourceName: "Vector"))
-        let customViewItem = UIBarButtonItem(customView: customView)
-        self.navigationItem.rightBarButtonItem = customViewItem
     }
     
     @objc func doneButtonTapped() {
