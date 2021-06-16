@@ -12,7 +12,7 @@ class ChooseCountryTableViewController: UITableViewController {
     //MARK: - Vars
     private let searchController = UISearchController(searchResultsController: nil)
 //    private var timer: Timer?
-    private var countries = [Сountry]() {
+    private var countries = [Country]() {
         didSet {
             DispatchQueue.main.async {
                 self.tableView.reloadData()
@@ -45,7 +45,7 @@ class ChooseCountryTableViewController: UITableViewController {
                     guard let countries = model?.data else { return }
                     for country in countries {
                         let name = country.name?.capitalizingFirstLetter()
-                        let count = Сountry(name: name, dialCode: "", code: country.code)
+                        let count = Country(name: name, dialCode: "", code: country.code)
                         self.countries.append(count)
                     }
                 } else {

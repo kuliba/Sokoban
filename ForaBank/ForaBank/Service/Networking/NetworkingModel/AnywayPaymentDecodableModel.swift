@@ -72,7 +72,7 @@ struct AnywayPayment: Codable {
     let paymentOperationDetailID: JSONNull?
     let listInputs: [ListInput]?
     let error: String?
-    let errorMessage: JSONNull?
+    let errorMessage: String?
     let finalStep: Int?
     let id: String?
     let amount: Int?
@@ -107,7 +107,7 @@ extension AnywayPayment {
         paymentOperationDetailID: JSONNull?? = nil,
         listInputs: [ListInput]?? = nil,
         error: String?? = nil,
-        errorMessage: JSONNull?? = nil,
+        errorMessage: String?? = nil,
         finalStep: Int?? = nil,
         id: String?? = nil,
         amount: Int?? = nil,
@@ -153,7 +153,7 @@ struct ListInput: Codable {
     let paramGroup: JSONNull?
     let name, type, dataType: String?
     let hint: String?
-    let mask, regExp: JSONNull?
+    let mask, regExp: String?
     let min, max: Int?
     let sum: Bool?
     let rightNum: Int?
@@ -190,8 +190,8 @@ extension ListInput {
         type: String?? = nil,
         dataType: String?? = nil,
         hint: String?? = nil,
-        mask: JSONNull?? = nil,
-        regExp: JSONNull?? = nil,
+        mask: String?? = nil,
+        regExp: String?? = nil,
         min: Int?? = nil,
         max: Int?? = nil,
         sum: Bool?? = nil,

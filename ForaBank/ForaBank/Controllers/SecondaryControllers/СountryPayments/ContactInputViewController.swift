@@ -8,18 +8,11 @@
 import UIKit
 
 class ContactInputViewController: UIViewController {
-
-    var country: Сountry? {
+    
+    var selectedCardNumber = ""
+    var country: Country? {
         didSet {
-            guard let country = country else { return }
-            if country.code == "AM" {
-                title = "Денежные переводы Миг"
-            } else {
-                title = "Денежные переводы Contact"
-            }
-            guard let countryName = country.name else { return }
-            countryField.textField.text = countryName
-            countryField.text = countryName
+            self.configure(with: country)
         }
     }
     var foraSwitchView = ForaSwitchView()
@@ -40,6 +33,18 @@ class ContactInputViewController: UIViewController {
     var secondNameField = ForaInput(
         viewModel: ForaInputModel(
             title: "Отчество получателя (если есть)"))
+    
+    var phoneField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "По номеру телефона",
+            image: #imageLiteral(resourceName: "Phone")))
+    
+    var bankField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "Банк получателя",
+            image: #imageLiteral(resourceName: "BankIcon"),
+            isEditable: false,
+            showChooseButton: true))
     
     var countryField = ForaInput(
         viewModel: ForaInputModel(
@@ -77,14 +82,20 @@ class ContactInputViewController: UIViewController {
         }
         countryField.didChooseButtonTapped = { () in
             print("countryField didChooseButtonTapped")
+            
+        }
+        bankField.didChooseButtonTapped = { () in
+            print("bankField didChooseButtonTapped")
+            
         }
         getCardList()
     }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+//        self.startContactPayment(with: selectedCardNumber)
+    }
 
     fileprivate func setupUI() {
-        
-        let customViewItem = UIBarButtonItem(customView: UIImageView(image: #imageLiteral(resourceName: "Vector")))
-        self.navigationItem.rightBarButtonItem = customViewItem
         view.backgroundColor = .white
         
         view.addSubview(doneButton)
@@ -101,7 +112,7 @@ class ContactInputViewController: UIViewController {
         // scroll add view1
         
         
-        let stackView = UIStackView(arrangedSubviews: [foraSwitchView, surnameField, nameField, secondNameField, countryField ,summTransctionField, cardField])
+        let stackView = UIStackView(arrangedSubviews: [foraSwitchView, surnameField, nameField, secondNameField, phoneField, countryField, bankField, cardField ,summTransctionField])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
@@ -113,8 +124,39 @@ class ContactInputViewController: UIViewController {
         
     }
     
+    private func configure(with: Country?) {
+        guard let country = country else { return }
+        if country.code == "AM" {
+            title = "Денежные переводы Миг"
+            surnameField.isHidden = true
+            nameField.isHidden = true
+            secondNameField.isHidden = true
+            phoneField.isHidden = false
+            bankField.isHidden = false
+            let customViewItem = UIBarButtonItem(customView: UIImageView(image: #imageLiteral(resourceName: "MigAvatar")))
+            self.navigationItem.rightBarButtonItem = customViewItem
+        } else {
+            title = "Денежные переводы Contact"
+            phoneField.isHidden = true
+            bankField.isHidden = true
+            surnameField.isHidden = false
+            nameField.isHidden = false
+            secondNameField.isHidden = false
+            let customViewItem = UIBarButtonItem(customView: UIImageView(image: #imageLiteral(resourceName: "Vector")))
+            self.navigationItem.rightBarButtonItem = customViewItem
+        }
+        guard let countryName = country.name else { return }
+        countryField.textField.text = countryName
+        countryField.text = countryName
+    }
+    
     @objc func doneButtonTapped() {
-        endContactPayment(surname: surnameField.textField.text ?? "", name: nameField.textField.text ?? "", secondName: secondNameField.textField.text ?? "", amount: summTransctionField.textField.text ?? "")
+        guard let country = country else { return }
+        if country.code == "AM" {
+            endMigPayment(phone: phoneField.textField.text ?? "", amount: summTransctionField.textField.text ?? "")
+        } else {
+            endContactPayment(surname: surnameField.textField.text ?? "", name: nameField.textField.text ?? "", secondName: secondNameField.textField.text ?? "", amount: summTransctionField.textField.text ?? "")
+        }
     }
     
     func goToConfurmVC(with model: ConfurmViewControllerModel) {
@@ -137,6 +179,7 @@ class ContactInputViewController: UIViewController {
             if model.statusCode == 0 {
                 guard let data  = model.data else { return }
                 guard let cardNumber  = model.data?.first?.original?.number else { return }
+                self.selectedCardNumber = cardNumber
                 self.startContactPayment(with: cardNumber)
                 DispatchQueue.main.async {
                     self.cardField.text = data.first?.original?.name ?? ""
@@ -153,11 +196,18 @@ class ContactInputViewController: UIViewController {
     
     func startContactPayment(with card: String) {
         showActivity()
+        var puref = ""
+        guard let country = country else { return }
+        if country.code == "AM" {
+            puref = "iSimpleDirect||TransferIDClient11P"
+        } else {
+            puref = "iFora||Addressless"
+        }
         let body = ["accountID": nil,
                     "cardID": nil,
                     "cardNumber": card,
                     "provider": nil,
-                    "puref": "iFora||Addressless"] as [String: AnyObject]
+                    "puref": puref] as [String: AnyObject]
         
         NetworkManager<AnywayPaymentBeginDecodebleModel>.addRequest(.anywayPaymentBegin, [:], body, completion: { model, error in
             if error != nil {
@@ -184,6 +234,41 @@ class ContactInputViewController: UIViewController {
         })
     }
     
+    func endMigPayment(phone: String, amount: String) {
+        showActivity()
+//        37477404102
+        let dataName = ["additional": [
+            [ "fieldid": 1,
+              "fieldname": "RECP",
+              "fieldvalue": phone ],
+            [ "fieldid": 1,
+              "fieldname": "SumSTrs",
+              "fieldvalue": amount ]
+        ]] as [String: AnyObject]
+        
+        NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataName) { model, error in
+            if error != nil {
+                print("DEBUG: Error: ", error ?? "")
+            }
+//            print("DEBUG: amount ", amount)
+            guard let model = model else { return }
+            if model.statusCode == 0 {
+                print("DEBUG: Success send Phone")
+                self.dismissActivity()
+                
+                guard let country = self.country else { return }
+                let model = ConfurmViewControllerModel(
+                    country: country,
+                    model: model)
+                self.goToConfurmVC(with: model)
+                
+            } else {
+                print("DEBUG: Error: ", model.errorMessage ?? "")
+            }
+        }
+        
+    }
+    
     func endContactPayment(surname: String, name: String, secondName: String, amount: String) {
         showActivity()
         let dataName = [ "additional": [
@@ -200,7 +285,7 @@ class ContactInputViewController: UIViewController {
               "fieldname": "trnPickupPoint",
               "fieldvalue": "BTOC" ]
         ] ] as [String: AnyObject]
-        print("DEBUG: ", dataName)
+//        print("DEBUG: ", dataName)
         NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataName) { model, error in
             if error != nil {
                 print("DEBUG: Error: ", error ?? "")
@@ -227,15 +312,14 @@ class ContactInputViewController: UIViewController {
                     if model.statusCode == 0 {
                         print("DEBUG: Success send sms code")
                         self.dismissActivity()
-                    
-                        let model = ConfurmViewControllerModel(
-                            name: surname + " " + name + " " + secondName,
-                            country: self.countryField.viewModel.text,
-                            numberTransction: "\(model.data?.listInputs?[0].content?.first ?? "")",
-                            summTransction: "\(model.data?.listInputs?[1].content?[0] ?? "") ₽",
-                            taxTransction: "\(model.data?.commission ?? 0) ₽",
-                            currancyTransction: "Наличные")
                         
+                        guard let country = self.country else { return }
+                        let fullName = surname + " " + name + " " + secondName
+                        let model = ConfurmViewControllerModel(
+                            country: country,
+                            model: model,
+                            fullName: fullName)
+                                                
                         self.goToConfurmVC(with: model)
                         
                     } else {
