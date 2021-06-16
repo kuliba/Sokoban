@@ -20,6 +20,9 @@ class ChooseCountryTableViewController: UITableViewController {
         }
     }
     
+    var modalPresent: Bool? = false
+    var didChooseCountryTapped: ((Country) -> Void)?
+    
     //MARK: - View LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,6 +70,7 @@ class ChooseCountryTableViewController: UITableViewController {
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Поиск"
         searchController.searchResultsUpdater = self
+        searchController.hidesNavigationBarDuringPresentation = false
         searchController.automaticallyShowsCancelButton = false
         definesPresentationContext = true
     }
@@ -92,9 +96,15 @@ class ChooseCountryTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let vc = ContactInputViewController()
-        vc.country = countries[indexPath.row]
-        self.navigationController?.pushViewController(vc, animated: true)
+        if modalPresent! {
+            let country = countries[indexPath.row]
+            didChooseCountryTapped?(country)
+            self.dismiss(animated: true, completion: nil)
+        } else {
+            let vc = ContactInputViewController()
+            vc.country = countries[indexPath.row]
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
     }
 
     

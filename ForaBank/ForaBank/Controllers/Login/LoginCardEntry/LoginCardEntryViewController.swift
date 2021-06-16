@@ -28,20 +28,6 @@ class LoginCardEntryViewController: UIViewController {
         orderCardView.orderCardTapped = { self.orderCardTapped() }
 
         
-        let paremers = ["appId": "IOS",
-                        "pushDeviceId": "kav",
-                        "token": "fBI-TdJQQ6KgQYMVC8Slu4:APA91bFwJFXlS5SNNfEKJctlTBpk1e5GwacyG1vEwoVMwxRND8JjYphGjIc7CmOd0BHgCFR4wcunDQHdCrZGMizEOyug_TpAzHzftZdwIsBtg0hg3v1BpNj4vJxIj4VcuFnFk4d35eCy",
-                        "serverDeviceGUID": "63881613-bb24-4048-9a7e-299a6eb10922",
-                        "type": "pin",
-                        "loginValue": ""]
-        let body = ["":""] as [String : AnyObject]
-        
-        
-        NetworkManager<SetDeviceSettingDecodbleModel>.addRequest(.setDeviceSetting, paremers, body) { (model, error) in
-        }
-        
-        
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {

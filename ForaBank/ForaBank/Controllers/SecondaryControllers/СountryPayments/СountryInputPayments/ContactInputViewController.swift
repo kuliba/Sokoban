@@ -93,7 +93,13 @@ class ContactInputViewController: UIViewController {
         }
         countryField.didChooseButtonTapped = { () in
             print("countryField didChooseButtonTapped")
-            
+            let vc = ChooseCountryTableViewController()
+            vc.modalPresent = true
+            vc.didChooseCountryTapped = { (country) in
+                self.country = country
+            }
+            let navVc = UINavigationController(rootViewController: vc)
+            self.present(navVc, animated: true, completion: nil)
         }
         bankField.didChooseButtonTapped = { () in
             print("bankField didChooseButtonTapped")
@@ -149,25 +155,21 @@ class ContactInputViewController: UIViewController {
     
     private func configure(with: Country?) {
         guard let country = country else { return }
-        if country.code == "AM" {
-            title = "Денежные переводы Миг"
-            surnameField.isHidden = true
-            nameField.isHidden = true
-            secondNameField.isHidden = true
-            phoneField.isHidden = false
-            bankField.isHidden = false
-            let customViewItem = UIBarButtonItem(customView: UIImageView(image: #imageLiteral(resourceName: "MigAvatar")))
-            self.navigationItem.rightBarButtonItem = customViewItem
-        } else {
-            title = "Денежные переводы Contact"
-            phoneField.isHidden = true
-            bankField.isHidden = true
-            surnameField.isHidden = false
-            nameField.isHidden = false
-            secondNameField.isHidden = false
-            let customViewItem = UIBarButtonItem(customView: UIImageView(image: #imageLiteral(resourceName: "Vector")))
-            self.navigationItem.rightBarButtonItem = customViewItem
-        }
+        foraSwitchView.isHidden = country.code == "AM" ? false : true
+        phoneField.isHidden = country.code == "AM" ? false : true
+        bankField.isHidden = country.code == "AM" ? false : true
+        surnameField.isHidden = country.code == "AM" ? true : false
+        nameField.isHidden = country.code == "AM" ? true : false
+        secondNameField.isHidden = country.code == "AM" ? true : false
+        
+        title = country.code == "AM"
+            ? "Денежные переводы Миг"
+            : "Денежные переводы Contact"
+        
+        let navImage = country.code == "AM" ? #imageLiteral(resourceName: "MigAvatar") : #imageLiteral(resourceName: "Vector")
+        let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
+        self.navigationItem.rightBarButtonItem = customViewItem
+        
         guard let countryName = country.name else { return }
         countryField.textField.text = countryName
         countryField.text = countryName

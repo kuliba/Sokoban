@@ -300,6 +300,22 @@
 			path = OfferAgreement;
 			sourceTree = "<group>";
 		};
+		ED46C165267A9C0C00D1A9A5 /* СountryInputPayments */ = {
+			isa = PBXGroup;
+			children = (
+				EDB165642667A741007E6030 /* ContactInputViewController.swift */,
+			);
+			path = "СountryInputPayments";
+			sourceTree = "<group>";
+		};
+		ED46C166267A9C4000D1A9A5 /* СountryConfurmPayments */ = {
+			isa = PBXGroup;
+			children = (
+				EDB165632667A741007E6030 /* ContactConfurmViewController.swift */,
+			);
+			path = "СountryConfurmPayments";
+			sourceTree = "<group>";
+		};
 		ED4FC5ED266B707F0092B4AB /* CardScannerController */ = {
 			isa = PBXGroup;
 			children = (
@@ -460,8 +476,8 @@
 		ED4FC613266CDB9C0092B4AB /* СountryPayments */ = {
 			isa = PBXGroup;
 			children = (
-				EDB165642667A741007E6030 /* ContactInputViewController.swift */,
-				EDB165632667A741007E6030 /* ContactConfurmViewController.swift */,
+				ED46C165267A9C0C00D1A9A5 /* СountryInputPayments */,
+				ED46C166267A9C4000D1A9A5 /* СountryConfurmPayments */,
 			);
 			path = "СountryPayments";
 			sourceTree = "<group>";
