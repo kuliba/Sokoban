@@ -12,6 +12,8 @@
 		0B37F97C2678EC69007728FC /* AnywayPaymentDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F97B2678EC69007728FC /* AnywayPaymentDecodableModel.swift */; };
 		0B37F97E267A10E4007728FC /* PrepareCard2PhoneDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F97D267A10E4007728FC /* PrepareCard2PhoneDecodableModel.swift */; };
 		0B37F980267A11FB007728FC /* GetOwnerPhoneNumberPhoneDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F97F267A11FB007728FC /* GetOwnerPhoneNumberPhoneDecodableModel.swift */; };
+		0B37F982267A1814007728FC /* FastPaymentBanksListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F981267A1814007728FC /* FastPaymentBanksListDecodableModel.swift */; };
+		0B37F984267A18AC007728FC /* MakeCard2CardDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F983267A18AC007728FC /* MakeCard2CardDecodableModel.swift */; };
 		0B747890267343B400C44F79 /* KeyExchangeDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */; };
 		0B8BE08F266FBE0500E96CAA /* CSRFDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE08E266FBE0500E96CAA /* CSRFDecodableModel.swift */; };
 		0B8BE091266FDA1B00E96CAA /* CheckClientDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE090266FDA1B00E96CAA /* CheckClientDecodebleModel.swift */; };
@@ -141,6 +143,8 @@
 		0B37F97B2678EC69007728FC /* AnywayPaymentDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentDecodableModel.swift; sourceTree = "<group>"; };
 		0B37F97D267A10E4007728FC /* PrepareCard2PhoneDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrepareCard2PhoneDecodableModel.swift; sourceTree = "<group>"; };
 		0B37F97F267A11FB007728FC /* GetOwnerPhoneNumberPhoneDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetOwnerPhoneNumberPhoneDecodableModel.swift; sourceTree = "<group>"; };
+		0B37F981267A1814007728FC /* FastPaymentBanksListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentBanksListDecodableModel.swift; sourceTree = "<group>"; };
+		0B37F983267A18AC007728FC /* MakeCard2CardDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeCard2CardDecodableModel.swift; sourceTree = "<group>"; };
 		0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyExchangeDecodebleModel.swift; sourceTree = "<group>"; };
 		0B8BE08E266FBE0500E96CAA /* CSRFDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFDecodableModel.swift; sourceTree = "<group>"; };
 		0B8BE090266FDA1B00E96CAA /* CheckClientDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckClientDecodebleModel.swift; sourceTree = "<group>"; };
@@ -794,6 +798,8 @@
 				0B37F97B2678EC69007728FC /* AnywayPaymentDecodableModel.swift */,
 				0B37F97D267A10E4007728FC /* PrepareCard2PhoneDecodableModel.swift */,
 				0B37F97F267A11FB007728FC /* GetOwnerPhoneNumberPhoneDecodableModel.swift */,
+				0B37F981267A1814007728FC /* FastPaymentBanksListDecodableModel.swift */,
+				0B37F983267A18AC007728FC /* MakeCard2CardDecodableModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -1084,6 +1090,7 @@
 				EDF6820F266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift in Sources */,
 				EDB1656E266827A8007E6030 /* PaymentsViewController.swift in Sources */,
 				0B37F980267A11FB007728FC /* GetOwnerPhoneNumberPhoneDecodableModel.swift in Sources */,
+				0B37F982267A1814007728FC /* FastPaymentBanksListDecodableModel.swift in Sources */,
 				EDB1654B26676F20007E6030 /* UIButton.swift in Sources */,
 				0B37F9782678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift in Sources */,
 				EDB1453C2666AEB90028EF5A /* AppDelegate UI extension.swift in Sources */,
@@ -1098,6 +1105,7 @@
 				ED4FC61B266EA42E0092B4AB /* UI.swift in Sources */,
 				EDF6820E266F9EC800FD5C07 /* NetworkModelProtocol.swift in Sources */,
 				EDB14516266526B10028EF5A /* CreditCardEntryView.swift in Sources */,
+				0B37F984267A18AC007728FC /* MakeCard2CardDecodableModel.swift in Sources */,
 				0BEC8939267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift in Sources */,
 				EDB1655C2667A2C8007E6030 /* LoginCardEntryViewController UI.swift in Sources */,
 				EDB1451E26652F170028EF5A /* UIView.swift in Sources */,
