@@ -44,6 +44,10 @@ enum RouterUrlList: String {
     
     case anywayPayment
     
+    case prepareCard2Phone
+    
+    case getOwnerPhoneNumber
+    
     func returnUrl () -> URLValue {
         switch self {
         /// Авторизация
@@ -214,6 +218,28 @@ enum RouterUrlList: String {
             
         case .anywayPayment:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.anywayPayment.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .prepareCard2Phone:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.prepareCard2Phone.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .getOwnerPhoneNumber:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getOwnerPhoneNumber.rawValue)
             
             switch result {
             case .success(let url):
