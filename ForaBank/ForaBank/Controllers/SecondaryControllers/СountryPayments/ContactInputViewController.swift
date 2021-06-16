@@ -9,6 +9,7 @@ import UIKit
 
 class ContactInputViewController: UIViewController {
     
+    var selectedCardNumber = ""
     var country: Country? {
         didSet {
             self.configure(with: country)
@@ -88,6 +89,10 @@ class ContactInputViewController: UIViewController {
             
         }
         getCardList()
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+//        self.startContactPayment(with: selectedCardNumber)
     }
 
     fileprivate func setupUI() {
@@ -174,6 +179,7 @@ class ContactInputViewController: UIViewController {
             if model.statusCode == 0 {
                 guard let data  = model.data else { return }
                 guard let cardNumber  = model.data?.first?.original?.number else { return }
+                self.selectedCardNumber = cardNumber
                 self.startContactPayment(with: cardNumber)
                 DispatchQueue.main.async {
                     self.cardField.text = data.first?.original?.name ?? ""

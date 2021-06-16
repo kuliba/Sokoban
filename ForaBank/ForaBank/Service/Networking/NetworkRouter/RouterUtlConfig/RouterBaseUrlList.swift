@@ -43,7 +43,7 @@ enum RouterBaseUrlList: String {
     
     case keyExchange = "/keyExchange"
     
-    case getCountries = "/rest/getCountries"
+    case getCountries = "/rest/dict/getCounties"
     
     case anywayPaymentBegin = "/rest/anywayPaymentBegin"
     
