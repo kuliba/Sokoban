@@ -57,12 +57,6 @@ class ContactInputViewController: UIViewController {
             isEditable: false,
             showChooseButton: true))
     
-    var countryField = ForaInput(
-        viewModel: ForaInputModel(
-            title: "Страна",
-            image: #imageLiteral(resourceName: "map-pin"),
-            isEditable: false,
-            showChooseButton: true))
     
     var summTransctionField = ForaInput(
         viewModel: ForaInputModel(
@@ -91,16 +85,7 @@ class ContactInputViewController: UIViewController {
             print("cardField didChooseButtonTapped")
             
         }
-        countryField.didChooseButtonTapped = { () in
-            print("countryField didChooseButtonTapped")
-            let vc = ChooseCountryTableViewController()
-            vc.modalPresent = true
-            vc.didChooseCountryTapped = { (country) in
-                self.country = country
-            }
-            let navVc = UINavigationController(rootViewController: vc)
-            self.present(navVc, animated: true, completion: nil)
-        }
+        
         bankField.didChooseButtonTapped = { () in
             print("bankField didChooseButtonTapped")
             
@@ -112,6 +97,7 @@ class ContactInputViewController: UIViewController {
             }
         }
     }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if !isFirstStartPayment {
@@ -141,7 +127,7 @@ class ContactInputViewController: UIViewController {
         // scroll add view1
         
         
-        let stackView = UIStackView(arrangedSubviews: [foraSwitchView, surnameField, nameField, secondNameField, phoneField, countryField, bankField, cardField ,summTransctionField])
+        let stackView = UIStackView(arrangedSubviews: [foraSwitchView, surnameField, nameField, secondNameField, phoneField, bankField, cardField ,summTransctionField])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
@@ -162,17 +148,64 @@ class ContactInputViewController: UIViewController {
         nameField.isHidden = country.code == "AM" ? true : false
         secondNameField.isHidden = country.code == "AM" ? true : false
         
-        title = country.code == "AM"
-            ? "Денежные переводы Миг"
-            : "Денежные переводы Contact"
+        
         
         let navImage = country.code == "AM" ? #imageLiteral(resourceName: "MigAvatar") : #imageLiteral(resourceName: "Vector")
         let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
         self.navigationItem.rightBarButtonItem = customViewItem
         
         guard let countryName = country.name else { return }
-        countryField.textField.text = countryName
-        countryField.text = countryName
+        
+        let subtitle = country.code == "AM"
+            ? "Денежные переводы МИГ"
+            : "Денежные переводы Contact"
+        
+        self.navigationItem.titleView = setTitle(title: "В " + countryName, subtitle: subtitle)
+    }
+    
+    func setTitle(title:String, subtitle:String) -> UIView {
+        let titleLabel = UILabel(frame: CGRect(x: 0, y: -2, width: 0, height: 0))
+
+        titleLabel.backgroundColor = .clear
+        titleLabel.textColor = .black
+        titleLabel.font = .boldSystemFont(ofSize: 17)
+        titleLabel.text = title
+        titleLabel.sizeToFit()
+
+        let subtitleLabel = UILabel(frame: CGRect(x: 0, y: 18, width: 0, height: 0))
+        subtitleLabel.backgroundColor = .clear
+        subtitleLabel.textColor = .gray
+        subtitleLabel.font = .systemFont(ofSize: 12)
+        subtitleLabel.text = subtitle
+        subtitleLabel.sizeToFit()
+        
+        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: max(titleLabel.frame.size.width, subtitleLabel.frame.size.width), height: 30))
+        titleView.addSubview(titleLabel)
+        titleView.addSubview(subtitleLabel)
+        
+        let widthDiff = subtitleLabel.frame.size.width - titleLabel.frame.size.width
+
+        if widthDiff < 0 {
+            let newX = widthDiff / 2
+            subtitleLabel.frame.origin.x = abs(newX)
+        } else {
+            let newX = widthDiff / 2
+            titleLabel.frame.origin.x = newX
+        }
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(self.titleDidTaped))
+        titleView.addGestureRecognizer(gesture)
+        return titleView
+    }
+    
+    @objc func titleDidTaped() {
+        print("countryField didChooseButtonTapped")
+        let vc = ChooseCountryTableViewController()
+        vc.modalPresent = true
+        vc.didChooseCountryTapped = { (country) in
+            self.country = country
+        }
+        let navVc = UINavigationController(rootViewController: vc)
+        self.present(navVc, animated: true, completion: nil)
     }
     
     @objc func doneButtonTapped() {
