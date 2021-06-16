@@ -54,4 +54,8 @@ enum RouterBaseUrlList: String {
     case prepareCard2Phone = "/rest/prepareCard2Phone"
     
     case getOwnerPhoneNumber = "/rest/getOwnerPhoneNumber"
+    
+    case fastPaymentBanksList = "/rest/fastPaymentBanksList"
+    
+    case makeCard2Card = "/rest/makeCard2Card"
 }
