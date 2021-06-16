@@ -15,7 +15,7 @@ import Foundation
 // MARK: - AnywayPaymentDecodableModel
 struct AnywayPaymentDecodableModel: Codable, NetworkModelProtocol {
     let statusCode: Int?
-    let errorMessage: JSONNull?
+    let errorMessage: String?
     let data: AnywayPayment?
 }
 
@@ -39,7 +39,7 @@ extension AnywayPaymentDecodableModel {
 
     func with(
         statusCode: Int?? = nil,
-        errorMessage: JSONNull?? = nil,
+        errorMessage: String?? = nil,
         data: AnywayPayment?? = nil
     ) -> AnywayPaymentDecodableModel {
         return AnywayPaymentDecodableModel(

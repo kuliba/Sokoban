@@ -9,7 +9,18 @@ import UIKit
 
 class ContactInputViewController: UIViewController {
     
-    var selectedCardNumber = ""
+    var selectedCardNumber = "" {
+        didSet {
+            self.isFirstStartPayment = false
+            self.startContactPayment(with: selectedCardNumber) { error in
+                self.dismissActivity()
+                if error != nil {
+                    self.showAlert(with: "Ошибка", and: error!)
+                }
+            }
+        }
+    }
+    var isFirstStartPayment = true
     var country: Country? {
         didSet {
             self.configure(with: country)
@@ -88,11 +99,23 @@ class ContactInputViewController: UIViewController {
             print("bankField didChooseButtonTapped")
             
         }
-        getCardList()
+        getCardList { error in
+            self.dismissActivity()
+            if error != nil {
+                self.showAlert(with: "Ошибка", and: error!)
+            }
+        }
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-//        self.startContactPayment(with: selectedCardNumber)
+        if !isFirstStartPayment {
+            self.startContactPayment(with: selectedCardNumber) { error in
+                self.dismissActivity()
+                if error != nil {
+                    self.showAlert(with: "Ошибка", and: error!)
+                }
+            }
+        }
     }
 
     fileprivate func setupUI() {
@@ -153,9 +176,30 @@ class ContactInputViewController: UIViewController {
     @objc func doneButtonTapped() {
         guard let country = country else { return }
         if country.code == "AM" {
-            endMigPayment(phone: phoneField.textField.text ?? "", amount: summTransctionField.textField.text ?? "")
+            let phone = phoneField.textField.text ?? ""
+            let amount = summTransctionField.textField.text ?? ""
+            
+            endMigPayment(phone: phone, amount: amount) { error in
+                self.dismissActivity()
+                if error != nil {
+                    self.showAlert(with: "Ошибка", and: error!)
+                }
+            }
         } else {
-            endContactPayment(surname: surnameField.textField.text ?? "", name: nameField.textField.text ?? "", secondName: secondNameField.textField.text ?? "", amount: summTransctionField.textField.text ?? "")
+            let surname = surnameField.textField.text ?? ""
+            let name = nameField.textField.text ?? ""
+            let secondName = secondNameField.textField.text ?? ""
+            let amount = summTransctionField.textField.text ?? ""
+            
+            endContactPayment(surname: surname,
+                              name: name,
+                              secondName: secondName,
+                              amount: amount) { error in
+                self.dismissActivity()
+                if error != nil {
+                    self.showAlert(with: "Ошибка", and: error!)
+                }
+            }
         }
     }
     
@@ -167,39 +211,51 @@ class ContactInputViewController: UIViewController {
         }
     }
     
-    func getCardList() {
+    func getCardList(completion: @escaping (_ error: String?)->()) {
         showActivity()
+        
         NetworkManager<GetCardListDecodebleModel>.addRequest(.getCardList, [:], [:]) { model, error in
-            self.dismissActivity()
             if error != nil {
                 print("DEBUG: Error: ", error ?? "")
+                completion(error)
             }
             guard let model = model else { return }
             print("DEBUG: Card list: ", model)
             if model.statusCode == 0 {
+                completion(nil)
                 guard let data  = model.data else { return }
                 guard let cardNumber  = model.data?.first?.original?.number else { return }
                 self.selectedCardNumber = cardNumber
-                self.startContactPayment(with: cardNumber)
                 DispatchQueue.main.async {
                     self.cardField.text = data.first?.original?.name ?? ""
                     self.cardField.balanceLabel.text = "\(data.first?.original?.balance ?? 0) ₽"
                     guard let maskCard = data.first?.original?.numberMasked else { return }
                     self.cardField.bottomLabel.text = "•••• " + String(maskCard.suffix(4))
+                    
+                    //TODO: ------------ замокано для показа
+                    self.bankField.text = "АйДиБанк"
+                    self.bankField.imageView.image = #imageLiteral(resourceName: "IdBank")
                 }
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
+                completion(model.errorMessage)
             }
         }
         
     }
     
-    func startContactPayment(with card: String) {
+    func startContactPayment(with card: String, completion: @escaping (_ error: String?)->()) {
         showActivity()
         var puref = ""
         guard let country = country else { return }
         if country.code == "AM" {
             puref = "iSimpleDirect||TransferIDClient11P"
+            
+//            iSimpleDirect||TransferIDClient11P    Перевод в АйДиБанк
+//            iSimpleDirect||TransferEvocaClientP   Перевод в ЭвокаБанк
+//            iSimpleDirect||TransferArmBBClientP   Перевод в АрмББ
+//            iSimpleDirect||TransferArdshinClientP Перевод в АрдшинБанк
+            
         } else {
             puref = "iFora||Addressless"
         }
@@ -212,29 +268,33 @@ class ContactInputViewController: UIViewController {
         NetworkManager<AnywayPaymentBeginDecodebleModel>.addRequest(.anywayPaymentBegin, [:], body, completion: { model, error in
             if error != nil {
                 print("DEBUG: Error: ", error ?? "")
+                completion(error!)
             }
             guard let model = model else { return }
             if model.statusCode == 0 {
+                completion(nil)
                 NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], [:]) { model, error in
                     if error != nil {
                         print("DEBUG: Error: ", error ?? "")
+                        completion(error!)
                     }
                     guard let model = model else { return }
                     if model.statusCode == 0 {
                         print("DEBUG: Success ")
-                        self.dismissActivity()
-                        
+                        completion(nil)
                     } else {
                         print("DEBUG: Error: ", model.errorMessage ?? "")
+                        completion(model.errorMessage)
                     }
                 }
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
+                completion(model.errorMessage)
             }
         })
     }
     
-    func endMigPayment(phone: String, amount: String) {
+    func endMigPayment(phone: String, amount: String, completion: @escaping (_ error: String?)->()) {
         showActivity()
 //        37477404102
         let dataName = ["additional": [
@@ -249,13 +309,13 @@ class ContactInputViewController: UIViewController {
         NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataName) { model, error in
             if error != nil {
                 print("DEBUG: Error: ", error ?? "")
+                completion(error!)
             }
 //            print("DEBUG: amount ", amount)
             guard let model = model else { return }
             if model.statusCode == 0 {
                 print("DEBUG: Success send Phone")
                 self.dismissActivity()
-                
                 guard let country = self.country else { return }
                 let model = ConfurmViewControllerModel(
                     country: country,
@@ -264,12 +324,13 @@ class ContactInputViewController: UIViewController {
                 
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
+                completion(model.errorMessage)
             }
         }
         
     }
     
-    func endContactPayment(surname: String, name: String, secondName: String, amount: String) {
+    func endContactPayment(surname: String, name: String, secondName: String, amount: String, completion: @escaping (_ error: String?)->()) {
         showActivity()
         let dataName = [ "additional": [
             ["fieldid": 1,
@@ -289,9 +350,10 @@ class ContactInputViewController: UIViewController {
         NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataName) { model, error in
             if error != nil {
                 print("DEBUG: Error: ", error ?? "")
+                completion(error!)
             }
             
-            print("DEBUG: amount ", amount)
+            print("DEBUG: amount", amount)
             guard let model = model else { return }
             if model.statusCode == 0 {
                 print("DEBUG: Success send Name")
@@ -324,10 +386,12 @@ class ContactInputViewController: UIViewController {
                         
                     } else {
                         print("DEBUG: Error: ", model.errorMessage ?? "")
+                        completion(model.errorMessage)
                     }
                 }
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
+                completion(model.errorMessage)
             }
         }
         

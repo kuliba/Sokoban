@@ -78,6 +78,12 @@ class ContactConfurmViewController: UIViewController {
             image: #imageLiteral(resourceName: "accountImage"),
             isEditable: false))
     
+    var bankField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "Банк получателя",
+            image: #imageLiteral(resourceName: "BankIcon"),
+            isEditable: false))
+    
     var countryField = ForaInput(
         viewModel: ForaInputModel(
             title: "Страна",
@@ -130,15 +136,22 @@ class ContactConfurmViewController: UIViewController {
         currancyTransctionField.text = model.currancyTransction //"Наличные"
         
         if model.country.code == "AM" {
+            numberTransctionField.isHidden = true
             phoneField.isHidden = false
             phoneField.text = model.phone ?? ""
+            bankField.isHidden = false
+            bankField.text = "АйДиБанк"
+            bankField.imageView.image = #imageLiteral(resourceName: "IdBank")
             let customViewItem = UIBarButtonItem(customView: UIImageView(image: #imageLiteral(resourceName: "MigAvatar")))
             self.navigationItem.rightBarButtonItem = customViewItem
         } else {
             phoneField.isHidden = true
+            bankField.isHidden = true
+            numberTransctionField.isHidden = false
             let customViewItem = UIBarButtonItem(customView: UIImageView(image: #imageLiteral(resourceName: "Vector")))
             self.navigationItem.rightBarButtonItem = customViewItem
         }
+        
     }
     
     fileprivate func setupUI() {
@@ -150,18 +163,10 @@ class ContactConfurmViewController: UIViewController {
         button.setTitleColor(#colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), for: .normal)
         button.backgroundColor = #colorLiteral(red: 0.8901960784, green: 0.003921568627, blue: 0.1058823529, alpha: 1)
         button.layer.cornerRadius = 22
-        
-        
-        button.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(button)
-        button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
-        button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
-        button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20).isActive = true
-        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
         button.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
         
         
-        let stackView = UIStackView(arrangedSubviews: [phoneField, nameField, countryField, numberTransctionField, summTransctionField, taxTransctionField, currancyTransctionField, smsCodeField])
+        let stackView = UIStackView(arrangedSubviews: [phoneField, nameField, bankField, countryField, numberTransctionField, summTransctionField, taxTransctionField, currancyTransctionField, smsCodeField, button])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
@@ -171,6 +176,14 @@ class ContactConfurmViewController: UIViewController {
         stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
+        
+        
+        button.translatesAutoresizingMaskIntoConstraints = false
+//        view.addSubview(button)
+        button.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 20).isActive = true
+        button.trailingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: -20).isActive = true
+//        button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
     }
     
