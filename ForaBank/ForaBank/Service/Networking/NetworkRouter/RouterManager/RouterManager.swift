@@ -24,6 +24,8 @@ enum RouterManager {
     case anywayPaymentBegin
     case anywayPaymentMake
     case anywayPayment
+    case prepareCard2Phone
+    case getOwnerPhoneNumber
 }
 
 extension RouterManager {
@@ -256,6 +258,36 @@ extension RouterManager {
             
         case .anywayPayment:
             let baseUrl = RouterUrlList.anywayPayment.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .prepareCard2Phone:
+            let baseUrl = RouterUrlList.prepareCard2Phone.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .getOwnerPhoneNumber:
+            let baseUrl = RouterUrlList.getOwnerPhoneNumber.returnUrl()
             switch baseUrl {
             case .success(let url):
                 resultUrl = url.absoluteURL
