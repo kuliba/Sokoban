@@ -263,7 +263,8 @@ class ContactInputViewController: UIViewController {
                 self.selectedCardNumber = cardNumber
                 DispatchQueue.main.async {
                     self.cardField.text = data.first?.original?.name ?? ""
-                    self.cardField.balanceLabel.text = "\(data.first?.original?.balance ?? 0) ₽"
+                    let balance = data.first?.original?.balance ?? 0
+                    self.cardField.balanceLabel.text = balance.currencyFormatter()
                     guard let maskCard = data.first?.original?.numberMasked else { return }
                     self.cardField.bottomLabel.text = "•••• " + String(maskCard.suffix(4))
                     
@@ -278,6 +279,19 @@ class ContactInputViewController: UIViewController {
         }
         
     }
+    
+//    func currencyFormatter(from: Int) -> String {
+//
+//        let currencyFormatter = NumberFormatter()
+//        currencyFormatter.usesGroupingSeparator = true
+//        currencyFormatter.numberStyle = .currency
+//        currencyFormatter.locale = Locale(identifier: "ru_RU")
+//        currencyFormatter.currencySymbol = "₽"
+//
+//        let balance = NSNumber(value: from)
+//        let priceString = currencyFormatter.string(from: balance)!
+//        return priceString
+//    }
     
     func startContactPayment(with card: String, completion: @escaping (_ error: String?)->()) {
         showActivity()
