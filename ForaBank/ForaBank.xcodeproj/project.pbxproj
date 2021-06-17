@@ -26,6 +26,7 @@
 		0BEC893D2672591A00D8BD22 /* GetCardListDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC893C2672591A00D8BD22 /* GetCardListDecodebleModel.swift */; };
 		ED0B4892267B4CDD0037EA06 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = ED0B4891267B4CDD0037EA06 /* IQKeyboardManagerSwift */; };
 		ED0B4894267B50F50037EA06 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B4893267B50F50037EA06 /* Int.swift */; };
+		ED0B4896267B97C60037EA06 /* ContactInputViewController + UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B4895267B97C60037EA06 /* ContactInputViewController + UI.swift */; };
 		ED4FC5EC266AD98E0092B4AB /* NSCollectionLayoutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EB266AD98E0092B4AB /* NSCollectionLayoutItem.swift */; };
 		ED4FC5EF266B70A00092B4AB /* PartialTransparentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EE266B70A00092B4AB /* PartialTransparentView.swift */; };
 		ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5F9266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift */; };
@@ -158,6 +159,7 @@
 		0BEC893A2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistredPushDeviceTorUserDecodebleModel.swift; sourceTree = "<group>"; };
 		0BEC893C2672591A00D8BD22 /* GetCardListDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCardListDecodebleModel.swift; sourceTree = "<group>"; };
 		ED0B4893267B50F50037EA06 /* Int.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
+		ED0B4895267B97C60037EA06 /* ContactInputViewController + UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContactInputViewController + UI.swift"; sourceTree = "<group>"; };
 		ED4FC5EB266AD98E0092B4AB /* NSCollectionLayoutItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSCollectionLayoutItem.swift; sourceTree = "<group>"; };
 		ED4FC5EE266B70A00092B4AB /* PartialTransparentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartialTransparentView.swift; sourceTree = "<group>"; };
 		ED4FC5F9266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmsCodeBasicAttributes.swift; sourceTree = "<group>"; };
@@ -312,6 +314,7 @@
 			isa = PBXGroup;
 			children = (
 				EDB165642667A741007E6030 /* ContactInputViewController.swift */,
+				ED0B4895267B97C60037EA06 /* ContactInputViewController + UI.swift */,
 			);
 			path = "СountryInputPayments";
 			sourceTree = "<group>";
@@ -1120,6 +1123,7 @@
 				ED4FC610266CD66F0092B4AB /* СountryModel.swift in Sources */,
 				EDF68213266F9EC800FD5C07 /* URLHostType.swift in Sources */,
 				EDB1656C26681F0E007E6030 /* MainTabBarViewController.swift in Sources */,
+				ED0B4896267B97C60037EA06 /* ContactInputViewController + UI.swift in Sources */,
 				EDF68218266F9EC800FD5C07 /* RouterManager.swift in Sources */,
 				EDB1658026694676007E6030 /* PaymentsViewControllerLayout.swift in Sources */,
 				ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */,
