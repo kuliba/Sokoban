@@ -160,7 +160,7 @@ class ContactInputViewController: UIViewController {
             ? "Денежные переводы МИГ"
             : "Денежные переводы Contact"
         
-        self.navigationItem.titleView = setTitle(title: "В " + countryName, subtitle: subtitle)
+        self.navigationItem.titleView = setTitle(title: countryName, subtitle: subtitle)
     }
     
     func setTitle(title:String, subtitle:String) -> UIView {
@@ -168,8 +168,18 @@ class ContactInputViewController: UIViewController {
 
         titleLabel.backgroundColor = .clear
         titleLabel.textColor = .black
-        titleLabel.font = .boldSystemFont(ofSize: 17)
-        titleLabel.text = title
+        
+        let imageAttachment = NSTextAttachment()
+        imageAttachment.image = UIImage(systemName: "chevron.down")
+        imageAttachment.bounds = CGRect(x: 0, y: 0, width: imageAttachment.image!.size.width, height: imageAttachment.image!.size.height)
+
+        let attachmentString = NSAttributedString(attachment: imageAttachment)
+        let completeText = NSMutableAttributedString(string: "")
+        let text = NSAttributedString(string: "В " + title + " ", attributes: [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 16)])
+        completeText.append(text)
+        completeText.append(attachmentString)
+        
+        titleLabel.attributedText = completeText
         titleLabel.sizeToFit()
 
         let subtitleLabel = UILabel(frame: CGRect(x: 0, y: 18, width: 0, height: 0))
