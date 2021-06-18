@@ -48,8 +48,8 @@ struct ConfurmViewControllerModel {
         }
         
         self.phone = phone
-        self.summTransction = "\(model?.data?.amount ?? 0) ₽"
-        self.taxTransction = "\(model?.data?.commission ?? 0) ₽"
+        self.summTransction = Double(model?.data?.amount ?? 0).currencyFormatter()
+        self.taxTransction = (model?.data?.commission ?? 0).currencyFormatter()
         self.numberTransction = transctionNum
         self.currancyTransction = "Наличные"
         self.country = country
@@ -158,11 +158,7 @@ class ContactConfurmViewController: UIViewController {
         title = "Подтвердите реквизиты"
         view.backgroundColor = .white
         
-        let button = UIButton(type: .system)
-        button.setTitle("Оплатить", for: .normal)
-        button.setTitleColor(#colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), for: .normal)
-        button.backgroundColor = #colorLiteral(red: 0.8901960784, green: 0.003921568627, blue: 0.1058823529, alpha: 1)
-        button.layer.cornerRadius = 22
+        let button = UIButton(title: "Оплатить")
         button.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
         
         
@@ -190,28 +186,36 @@ class ContactConfurmViewController: UIViewController {
     @objc func doneButtonTapped() {
         print(#function)
         
-        guard let code = smsCodeField.textField.text else { return }
-        let body = ["verificationCode": code] as [String: AnyObject]
-        showActivity()
-        NetworkManager<AnywayPaymentMakeDecodableModel>.addRequest(.anywayPaymentMake, [:], body) { model, error in
-            if error != nil {
-                print("DEBUG: Error: ", error ?? "")
-            }
-            guard let model = model else { return }
-            if model.statusCode == 0 {
-                print("DEBUG: Success payment")
-                self.dismissActivity()
-                DispatchQueue.main.async {
-                    self.showAlert(with: "Поздравляю", and: "Перевод совершен успешно") {
-                        self.navigationController?.popToRootViewController(animated: true)
-                    }
-                }
-            } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
-            }
-        }
+        let vc = ConfurmPaymentsViewController()
+        vc.modalPresentationStyle = .fullScreen
+        self.present(vc, animated: true, completion: nil)
         
-        
+//        guard let code = smsCodeField.textField.text else { return }
+//        let body = ["verificationCode": code] as [String: AnyObject]
+//        showActivity()
+//        NetworkManager<AnywayPaymentMakeDecodableModel>.addRequest(.anywayPaymentMake, [:], body) { model, error in
+//            if error != nil {
+//                self.dismissActivity()
+//                print("DEBUG: Error: ", error ?? "")
+//                self.showAlert(with: "Ошибка", and: error ?? "")
+//            }
+//            guard let model = model else { return }
+//            if model.statusCode == 0 {
+//                print("DEBUG: Success payment")
+//                self.dismissActivity()
+//                DispatchQueue.main.async {
+//                    self.showAlert(with: "Поздравляю", and: "Перевод совершен успешно") {
+//                        self.navigationController?.popToRootViewController(animated: true)
+//                    }
+//                }
+//            } else {
+//                self.dismissActivity()
+//                print("DEBUG: Error: ", model.errorMessage ?? "")
+//                self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+//            }
+//        }
+//
+//
     }
     
 

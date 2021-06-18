@@ -46,7 +46,8 @@ class ContactInputViewController: UIViewController {
     var phoneField = ForaInput(
         viewModel: ForaInputModel(
             title: "По номеру телефона",
-            image: #imageLiteral(resourceName: "Phone")))
+            image: #imageLiteral(resourceName: "Phone"),
+            type: .phone))
     
     var bankField = ForaInput(
         viewModel: ForaInputModel(
@@ -94,6 +95,7 @@ class ContactInputViewController: UIViewController {
                 self.showAlert(with: "Ошибка", and: error!)
             }
         }
+        
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -121,11 +123,15 @@ class ContactInputViewController: UIViewController {
     
     @objc func doneButtonTapped() {
         guard let country = country else { return }
+        let amount = summTransctionField.textField.text ?? ""
+        let doubelAmount = amount.replacingOccurrences(of: ",", with: ".", options: .literal, range: nil)
+
+        
         if country.code == "AM" {
             let phone = phoneField.textField.text ?? ""
-            let amount = summTransctionField.textField.text ?? ""
             
-            endMigPayment(phone: phone, amount: amount) { error in
+            
+            endMigPayment(phone: phone, amount: doubelAmount) { error in
                 self.dismissActivity()
                 if error != nil {
                     self.showAlert(with: "Ошибка", and: error!)
@@ -135,12 +141,11 @@ class ContactInputViewController: UIViewController {
             let surname = surnameField.textField.text ?? ""
             let name = nameField.textField.text ?? ""
             let secondName = secondNameField.textField.text ?? ""
-            let amount = summTransctionField.textField.text ?? ""
             
             endContactPayment(surname: surname,
                               name: name,
                               secondName: secondName,
-                              amount: amount) { error in
+                              amount: doubelAmount) { error in
                 self.dismissActivity()
                 if error != nil {
                     self.showAlert(with: "Ошибка", and: error!)
@@ -174,10 +179,9 @@ class ContactInputViewController: UIViewController {
                 self.selectedCardNumber = cardNumber
                 DispatchQueue.main.async {
                     self.cardField.text = data.first?.original?.name ?? ""
-                    let balance = data.first?.original?.balance ?? 0
+                    let balance = Double(data.first?.original?.balance ?? 0) 
                     self.cardField.balanceLabel.text = balance.currencyFormatter()
-                    guard let maskCard = data.first?.original?.numberMasked else { return }
-                    self.cardField.bottomLabel.text = "•••• " + String(maskCard.suffix(4))
+                    self.cardField.bottomLabelText = data.first?.original?.numberMasked
                     
                     //TODO: ------------ замокано для показа
                     self.bankField.text = "АйДиБанк"

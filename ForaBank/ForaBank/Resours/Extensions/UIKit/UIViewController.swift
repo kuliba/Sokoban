@@ -44,11 +44,29 @@ extension UIViewController {
     }
     
     func showActivity() {
-        ProgressHUD.show()
+        DispatchQueue.main.async {
+            ProgressHUD.colorAnimation = #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
+            ProgressHUD.show()
+        }
     }
 
     func dismissActivity() {
-        ProgressHUD.dismiss()
+        DispatchQueue.main.async {
+            ProgressHUD.dismiss()
+        }
     }
+    
+    func addCloseButton() {
+        let button = UIBarButtonItem(image: UIImage(systemName: "xmark"),
+                                     landscapeImagePhone: nil,
+                                     style: .done,
+                                     target: self,
+                                     action: #selector(onClose))
+            navigationItem.leftBarButtonItem = button
+        }
+
+        @objc func onClose(){
+            self.dismiss(animated: true, completion: nil)
+        }
     
 }

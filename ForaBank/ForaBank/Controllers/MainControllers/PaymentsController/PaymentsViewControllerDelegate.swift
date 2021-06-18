@@ -22,7 +22,10 @@ extension PaymentsViewController: UICollectionViewDelegate {
         case .transfers:
             print("DEBUG: " + #function + transfers[indexPath.row].name)
             if let viewController = transfers[indexPath.row].controllerName.getViewController() {
-                navigationController?.pushViewController(viewController, animated: true)
+                let navController = UINavigationController(rootViewController: viewController)
+                navController.modalPresentationStyle = .fullScreen
+                present(navController, animated: true, completion: nil)
+//                navigationController?.pushViewController(viewController, animated: true)
             }
         case .pay:
             print("DEBUG: " + #function + pay[indexPath.row].name)

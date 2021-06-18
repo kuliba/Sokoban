@@ -97,8 +97,10 @@ class ForaInputModel {
                 return UIKeyboardType.phonePad
             case .mail:
                 return UIKeyboardType.emailAddress
-            case .number, .amountOfTransfer, .smsCode:
+            case .number, .smsCode:
                 return UIKeyboardType.numberPad
+            case .amountOfTransfer:
+                return UIKeyboardType.decimalPad
             default:
                 return UIKeyboardType.default
             }

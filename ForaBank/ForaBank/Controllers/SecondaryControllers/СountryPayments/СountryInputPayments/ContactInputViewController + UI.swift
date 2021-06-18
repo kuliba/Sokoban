@@ -41,6 +41,7 @@ extension ContactInputViewController {
         guard let country = country else { return }
         foraSwitchView.isHidden = country.code == "AM" ? false : true
         phoneField.isHidden = country.code == "AM" ? false : true
+        phoneField.textField.maskString = "+0000-000-00-00"
         bankField.isHidden = country.code == "AM" ? false : true
         surnameField.isHidden = country.code == "AM" ? true : false
         nameField.isHidden = country.code == "AM" ? true : false
