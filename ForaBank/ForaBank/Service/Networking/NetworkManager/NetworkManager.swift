@@ -18,7 +18,7 @@ final class NetworkManager<T: NetworkModelProtocol>{
  
         let session = RouterSassionConfiguration.returnSession()
         
-        if let token = UserDefaults.standard.object(forKey: "sessionToken") as? String {
+        if let token = CSRFToken.token {
             request.allHTTPHeaderFields = ["X-XSRF-TOKEN": token]
         }
         //   request.allHTTPHeaderFields = addHeader    +++++++++Singlton

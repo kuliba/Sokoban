@@ -15,7 +15,7 @@ import Foundation
 // MARK: - DoRegistrationDecodebleModel
 struct DoRegistrationDecodebleModel: Codable, NetworkModelProtocol {
     let statusCode: Int?
-    let errorMessage: JSONNull?
+    let errorMessage: String?
     let data: String?
 }
 
@@ -39,7 +39,7 @@ extension DoRegistrationDecodebleModel {
 
     func with(
         statusCode: Int?? = nil,
-        errorMessage: JSONNull?? = nil,
+        errorMessage: String?? = nil,
         data: String?? = nil
     ) -> DoRegistrationDecodebleModel {
         return DoRegistrationDecodebleModel(

@@ -15,7 +15,7 @@ import Foundation
 // MARK: - GetCodeDecodebleModel
 struct GetCodeDecodebleModel: Codable, NetworkModelProtocol {
     let statusCode: Int?
-    let errorMessage: JSONNull?
+    let errorMessage: String?
     let data: GetCodeDataClass?
 }
 
@@ -39,7 +39,7 @@ extension GetCodeDecodebleModel {
 
     func with(
         statusCode: Int?? = nil,
-        errorMessage: JSONNull?? = nil,
+        errorMessage: String?? = nil,
         data: GetCodeDataClass?? = nil
     ) -> GetCodeDecodebleModel {
         return GetCodeDecodebleModel(

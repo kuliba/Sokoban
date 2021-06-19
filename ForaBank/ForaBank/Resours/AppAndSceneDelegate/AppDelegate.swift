@@ -8,7 +8,6 @@
 import UIKit
 import Firebase
 import FirebaseMessaging
-import IQKeyboardManagerSwift
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -24,12 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         application.registerForRemoteNotifications()
         requestNotificationAuthorization(application: application)
         
-        IQKeyboardManager.shared.enable = true
-        IQKeyboardManager.shared.toolbarDoneBarButtonItemText = "Готово"
-        IQKeyboardManager.shared.toolbarTintColor = .black
-        IQKeyboardManager.shared.layoutIfNeededOnUpdate = true
-        
-        customizeNavBar()
+        customizeUiInApp()
 
         return true
     }
@@ -114,9 +108,6 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             completionHandler: {_, _ in })
         
         application.registerForRemoteNotifications()
-        
-        //TODO: обновить везде !!!!!!!
-        FCMToken.fcmToken = Messaging.messaging().fcmToken as String?
 
         
         let tokenChars = (deviceToken as NSData).bytes.bindMemory(to: CChar.self, capacity: deviceToken.count)
@@ -154,6 +145,3 @@ extension AppDelegate: MessagingDelegate {
     }
 }
 
-struct FCMToken {
-    static var fcmToken: String?
-}

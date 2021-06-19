@@ -74,7 +74,7 @@ struct AnywayPaymentMake: Codable {
     let error, errorMessage: String?
     let finalStep: Int?
     let id: String?
-    let amount, commission: Int?
+    let amount, commission: Double?
     let nextStep: JSONNull?
 
     enum CodingKeys: String, CodingKey {
@@ -108,8 +108,8 @@ extension AnywayPaymentMake {
         errorMessage: String?? = nil,
         finalStep: Int?? = nil,
         id: String?? = nil,
-        amount: Int?? = nil,
-        commission: Int?? = nil,
+        amount: Double?? = nil,
+        commission: Double?? = nil,
         nextStep: JSONNull?? = nil
     ) -> AnywayPaymentMake {
         return AnywayPaymentMake (
