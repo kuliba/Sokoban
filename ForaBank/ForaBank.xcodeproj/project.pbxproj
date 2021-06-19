@@ -28,6 +28,8 @@
 		ED0B4894267B50F50037EA06 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B4893267B50F50037EA06 /* Int.swift */; };
 		ED0B4896267B97C60037EA06 /* ContactInputViewController + UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B4895267B97C60037EA06 /* ContactInputViewController + UI.swift */; };
 		ED0B4899267CF9840037EA06 /* ConfurmPaymentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B4898267CF9840037EA06 /* ConfurmPaymentsViewController.swift */; };
+		ED0B489C267D41A60037EA06 /* ConfurmPaymentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B489B267D41A60037EA06 /* ConfurmPaymentsView.swift */; };
+		ED0B489E267D41B10037EA06 /* ConfurmPaymentsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED0B489D267D41B10037EA06 /* ConfurmPaymentsView.xib */; };
 		ED4FC5EC266AD98E0092B4AB /* NSCollectionLayoutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EB266AD98E0092B4AB /* NSCollectionLayoutItem.swift */; };
 		ED4FC5EF266B70A00092B4AB /* PartialTransparentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EE266B70A00092B4AB /* PartialTransparentView.swift */; };
 		ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5F9266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift */; };
@@ -162,6 +164,8 @@
 		ED0B4893267B50F50037EA06 /* Int.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
 		ED0B4895267B97C60037EA06 /* ContactInputViewController + UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContactInputViewController + UI.swift"; sourceTree = "<group>"; };
 		ED0B4898267CF9840037EA06 /* ConfurmPaymentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfurmPaymentsViewController.swift; sourceTree = "<group>"; };
+		ED0B489B267D41A60037EA06 /* ConfurmPaymentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfurmPaymentsView.swift; sourceTree = "<group>"; };
+		ED0B489D267D41B10037EA06 /* ConfurmPaymentsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConfurmPaymentsView.xib; sourceTree = "<group>"; };
 		ED4FC5EB266AD98E0092B4AB /* NSCollectionLayoutItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSCollectionLayoutItem.swift; sourceTree = "<group>"; };
 		ED4FC5EE266B70A00092B4AB /* PartialTransparentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartialTransparentView.swift; sourceTree = "<group>"; };
 		ED4FC5F9266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmsCodeBasicAttributes.swift; sourceTree = "<group>"; };
@@ -308,9 +312,19 @@
 		ED0B4897267CF9490037EA06 /* ConfurmPayments */ = {
 			isa = PBXGroup;
 			children = (
+				ED0B489A267D419B0037EA06 /* ConfurmPaymentsView */,
 				ED0B4898267CF9840037EA06 /* ConfurmPaymentsViewController.swift */,
 			);
 			path = ConfurmPayments;
+			sourceTree = "<group>";
+		};
+		ED0B489A267D419B0037EA06 /* ConfurmPaymentsView */ = {
+			isa = PBXGroup;
+			children = (
+				ED0B489B267D41A60037EA06 /* ConfurmPaymentsView.swift */,
+				ED0B489D267D41B10037EA06 /* ConfurmPaymentsView.xib */,
+			);
+			path = ConfurmPaymentsView;
 			sourceTree = "<group>";
 		};
 		ED46C1642678DCA500D1A9A5 /* OfferAgreement */ = {
@@ -1056,6 +1070,7 @@
 				EDB143B5265FDE960028EF5A /* Assets.xcassets in Resources */,
 				EDB143CB265FDEC90028EF5A /* Roboto-Italic.ttf in Resources */,
 				EDB1655E2667A55F007E6030 /* ForaInput.xib in Resources */,
+				ED0B489E267D41B10037EA06 /* ConfurmPaymentsView.xib in Resources */,
 				EDB14532266667140028EF5A /* OrderProductsCollectionViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1094,6 +1109,7 @@
 				EDAA99AF2673AB9200435484 /* ForaSwitchView.swift in Sources */,
 				EDB1657C2668C8D5007E6030 /* PayCell.swift in Sources */,
 				0B9EC85D26739C0000D86EB2 /* GetCountriesDecodebleModel.swift in Sources */,
+				ED0B489C267D41A60037EA06 /* ConfurmPaymentsView.swift in Sources */,
 				ED4FC602266C0AB50092B4AB /* ChooseCountryTableViewController.swift in Sources */,
 				EDF6821A266F9EC800FD5C07 /* RouterUrlList.swift in Sources */,
 				EDB1452026661B030028EF5A /* StringMask.swift in Sources */,

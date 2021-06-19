@@ -12,11 +12,14 @@ extension ContactInputViewController {
         view.backgroundColor = .white
         
         view.addSubview(doneButton)
+        view.addSubview(foraSwitchView)
+        
         doneButton.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
                           right: view.rightAnchor, paddingLeft: 20, paddingBottom: 20,
                           paddingRight: 20, height: 44)
                 
-        
+        foraSwitchView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor)
+        foraSwitchView.anchor(height: needShowSwitchView ? 48 : 0)
         
         //TODO: добавить скроллвью что бы избежать проблем на маленьких экранах
         // let scroll
@@ -25,14 +28,14 @@ extension ContactInputViewController {
         // scroll add view1
         
         
-        let stackView = UIStackView(arrangedSubviews: [foraSwitchView, surnameField, nameField, secondNameField, phoneField, bankField, cardField ,summTransctionField])
+        let stackView = UIStackView(arrangedSubviews: [surnameField, nameField, secondNameField, phoneField, bankField, cardField ,summTransctionField])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
         stackView.spacing = 20
         stackView.isUserInteractionEnabled = true
         view.addSubview(stackView)
-        stackView.anchor(top: view.topAnchor, left: view.leftAnchor,
+        stackView.anchor(top: foraSwitchView.bottomAnchor, left: view.leftAnchor,
                          right: view.rightAnchor, paddingTop: 20)
         
     }
@@ -40,6 +43,7 @@ extension ContactInputViewController {
     func configure(with: Country?) {
         guard let country = country else { return }
         foraSwitchView.isHidden = country.code == "AM" ? false : true
+        needShowSwitchView = country.code == "AM" ? true : false
         phoneField.isHidden = country.code == "AM" ? false : true
         phoneField.textField.maskString = "+0000-000-00-00"
         bankField.isHidden = country.code == "AM" ? false : true
@@ -58,6 +62,8 @@ extension ContactInputViewController {
             : "Денежные переводы Contact"
         
         self.navigationItem.titleView = setTitle(title: countryName, subtitle: subtitle)
+        setupUI()
+        self.view.layoutIfNeeded()
     }
     
     func setTitle(title:String, subtitle:String) -> UIView {

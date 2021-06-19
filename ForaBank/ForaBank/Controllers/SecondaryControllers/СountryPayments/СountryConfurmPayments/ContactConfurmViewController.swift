@@ -138,6 +138,7 @@ class ContactConfurmViewController: UIViewController {
         if model.country.code == "AM" {
             numberTransctionField.isHidden = true
             phoneField.isHidden = false
+            phoneField.textField.maskString = "+0000-000-00-00"
             phoneField.text = model.phone ?? ""
             bankField.isHidden = false
             bankField.text = "АйДиБанк"

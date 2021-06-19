@@ -21,6 +21,7 @@ class ContactInputViewController: UIViewController {
         }
     }
     var isFirstStartPayment = true
+    var needShowSwitchView: Bool = false
     var country: Country? {
         didSet {
             self.configure(with: country)
@@ -128,7 +129,7 @@ class ContactInputViewController: UIViewController {
 
         
         if country.code == "AM" {
-            let phone = phoneField.textField.text ?? ""
+            let phone = phoneField.textField.unmaskedText ?? ""
             
             
             endMigPayment(phone: phone, amount: doubelAmount) { error in
