@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension Int {
+extension Double {
     func currencyFormatter() -> String {
         
         let currencyFormatter = NumberFormatter()

@@ -23,7 +23,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.windowScene = windowScene
         window?.rootViewController = UIStoryboard(name: "LaunchScreen", bundle: nil).instantiateInitialViewController()
         window?.makeKeyAndVisible()
-        
+        FCMToken.fcmToken = Messaging.messaging().fcmToken as String?
         AppDelegate.shared.getCSRF { error in
             if error != nil {
                 print("DEBUG: Error getCSRF: ", error!)
@@ -113,7 +113,7 @@ extension AppDelegate {
     func getCSRF(completion: @escaping (_ error: String?) ->()) {
         let parameters = [
             "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-            "pushFcmToken": Messaging.messaging().fcmToken! as String,
+            "pushFcmToken": FCMToken.fcmToken,
             "model": UIDevice().model,
             "operationSystem": "IOS"
         ] as [String : AnyObject]
@@ -127,11 +127,7 @@ extension AppDelegate {
                 return
             }
             
-            // TODO: пределать на сингл тон
-            UserDefaults.standard.set(token, forKey: "sessionToken")
-            
-            let tok = UserDefaults.standard.object(forKey: "sessionToken")
-            print("DEBUG: Token = ", tok ?? "nil")
+            CSRFToken.token = token
             
             NetworkManager<InstallPushDeviceDecodebleModel>.addRequest(.installPushDevice, [:], parameters) { model, error in
                 if error != nil {

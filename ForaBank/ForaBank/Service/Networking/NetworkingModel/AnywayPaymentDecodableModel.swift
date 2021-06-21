@@ -75,7 +75,7 @@ struct AnywayPayment: Codable {
     let errorMessage: String?
     let finalStep: Int?
     let id: String?
-    let amount: Int?
+    let amount: Double?
     let commission: Double?
     let nextStep: Int?
 
@@ -110,7 +110,7 @@ extension AnywayPayment {
         errorMessage: String?? = nil,
         finalStep: Int?? = nil,
         id: String?? = nil,
-        amount: Int?? = nil,
+        amount: Double?? = nil,
         commission: Double?? = nil,
         nextStep: Int?? = nil
     ) -> AnywayPayment {

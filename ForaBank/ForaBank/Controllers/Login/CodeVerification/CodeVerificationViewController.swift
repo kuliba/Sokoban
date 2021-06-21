@@ -65,7 +65,7 @@ class CodeVerificationViewController: UIViewController {
                     "model": UIDevice().model,
                     "operationSystem": "IOS",
                     "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-                    "pushFcmToken": Messaging.messaging().fcmToken! as String
+                    "pushFcmToken": FCMToken.fcmToken
                 ] as [String : AnyObject]
                 
                 NetworkManager<DoRegistrationDecodebleModel>.addRequest(.doRegistration, [:], body) { [weak self] model, error in

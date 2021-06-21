@@ -33,6 +33,13 @@ class ForaInput: UIView {
         }
     }
     
+    var bottomLabelText: String? {
+        didSet {
+            guard let text = bottomLabelText else { return }
+            configureBottomLabel(with: text)
+        }
+    }
+    
     //MARK: - IBOutlets
     @IBOutlet var contentView: UIView!
     @IBOutlet weak var imageView: UIImageView!
@@ -137,6 +144,37 @@ class ForaInput: UIView {
         
     }
     
+    private func configureBottomLabel(with text: String) {
+        let viewType = viewModel.fieldType.self
+        switch viewType {
+        case .credidCard:
+            let imageAttachment = NSTextAttachment()
+            let firstSimb = text.first
+            switch firstSimb {
+            case "1":
+                imageAttachment.image = #imageLiteral(resourceName: "mir-colored")
+            case "4":
+                imageAttachment.image = #imageLiteral(resourceName: "card_visa_logo")
+            case "5":
+                imageAttachment.image = #imageLiteral(resourceName: "card_mastercard_logo")
+            default:
+                imageAttachment.image = UIImage()
+            }
+            imageAttachment.bounds = CGRect(x: 0, y: 0, width: 16, height: 10)
+
+            let attachmentString = NSAttributedString(attachment: imageAttachment)
+            let completeText = NSMutableAttributedString(string: "")
+            let text = NSAttributedString(string: "  *" + String(text.suffix(4)), attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 12)])
+            
+            completeText.append(attachmentString)
+            completeText.append(text)
+            
+            bottomLabel.attributedText = completeText
+        default:
+            break
+        }
+    }
+    
     private func showError() {
         UIView.animate(withDuration: TimeInterval(0.2)) {
             self.errorLabel.alpha = !self.viewModel.text.isEmpty ? 0 : 1
@@ -152,7 +190,6 @@ class ForaInput: UIView {
 //            self.errorLabel.alpha = 0
             self.placeHolder.alpha = text.isEmpty ? 0 : 1
             self.placeHolder.isHidden = text.isEmpty// ? true : false
-            self.lineView.backgroundColor = text.isEmpty ? #colorLiteral(red: 0.9176470588, green: 0.9215686275, blue: 0.9215686275, alpha: 1) : #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1)
         }
     }
     
@@ -194,6 +231,15 @@ extension ForaInput: UITextFieldDelegate {
                 self.lineView.backgroundColor = !self.viewModel.text.isEmpty ? #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1) : #colorLiteral(red: 0.8901960784, green: 0.003921568627, blue: 0.1058823529, alpha: 1)
             }
         }
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        self.lineView.backgroundColor = #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1)
+    }
+    
+    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+        self.lineView.backgroundColor = #colorLiteral(red: 0.9176470588, green: 0.9215686275, blue: 0.9215686275, alpha: 1)
+        return true
     }
 }
 

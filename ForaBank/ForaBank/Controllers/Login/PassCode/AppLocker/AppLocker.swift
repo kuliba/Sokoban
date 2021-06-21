@@ -323,7 +323,7 @@ extension AppLocker {
         
         let data = [
             "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-            "pushFcmToken": Messaging.messaging().fcmToken! as String,
+            "pushFcmToken": FCMToken.fcmToken,
             "serverDeviceGUID" : serverDeviceGUID,
             "settings": [ ["type" : "pin",
                            "isActive": true,
@@ -374,7 +374,7 @@ extension AppLocker {
         let data = [
             "appId": "IOS",
             "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-            "pushFcmToken": Messaging.messaging().fcmToken! as String,
+            "pushFcmToken": FCMToken.fcmToken,
             "serverDeviceGUID": serverDeviceGUID,
             "loginValue": code,
             "type": type.rawValue
@@ -391,7 +391,7 @@ extension AppLocker {
                     
                     let bodyRegisterPush = [
                         "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-                        "pushFcmToken": Messaging.messaging().fcmToken! as String
+                        "pushFcmToken": FCMToken.fcmToken
                     ] as [String : AnyObject]
 
 

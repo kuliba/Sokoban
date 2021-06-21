@@ -73,6 +73,7 @@ class ChooseCountryTableViewController: UITableViewController {
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.automaticallyShowsCancelButton = false
         definesPresentationContext = true
+        addCloseButton()
     }
 
 

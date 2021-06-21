@@ -6,19 +6,34 @@
 //
 
 import UIKit
+import IQKeyboardManagerSwift
 
 extension AppDelegate {
-    func customizeNavBar() {
+    func customizeUiInApp() {
+        
+        // Настройка клавиатуры
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.toolbarDoneBarButtonItemText = "Готово"
+        IQKeyboardManager.shared.toolbarTintColor = .black
+        IQKeyboardManager.shared.layoutIfNeededOnUpdate = true
+        
+        // Настройка NavigationBar
         UINavigationBar.appearance().barTintColor = .white
         UINavigationBar.appearance().tintColor = .black
         UINavigationBar.appearance().shadowImage = UIImage()
         UINavigationBar.appearance().backgroundColor = .white
         UINavigationBar.appearance().titleTextAttributes =
-            [NSAttributedString.Key.foregroundColor: UIColor.black]
+            [.foregroundColor: UIColor.black]
         UINavigationBar.appearance().isTranslucent = false
         
-        let BarButtonItemAppearance = UIBarButtonItem.appearance()
-        BarButtonItemAppearance.setTitleTextAttributes([.foregroundColor: UIColor.clear], for: .normal)
-        BarButtonItemAppearance.setTitleTextAttributes([.foregroundColor: UIColor.clear], for: .highlighted)
+        // Убираем надписи у кнопок NavigationBar
+        UIBarButtonItem.appearance().setTitleTextAttributes(
+            [.foregroundColor: UIColor.clear], for: .normal)
+        UIBarButtonItem.appearance().setTitleTextAttributes(
+            [.foregroundColor: UIColor.clear], for: .highlighted)
+        
+        // Настройка TabBar
+        UITabBarItem.appearance().setTitleTextAttributes(
+            [.foregroundColor: UIColor.black ], for: .selected)
     }
 }

@@ -1,0 +1,76 @@
+//
+//  ConfurmPaymentsView.swift
+//  ForaBank
+//
+//  Created by Mikhail on 19.06.2021.
+//
+
+import UIKit
+
+class ConfurmPaymentsView: UIView {
+
+    //MARK: - Property
+    let kContentXibName = "ConfurmPaymentsView"
+    
+    /// Замыкание для действия по нажатию кнопки "Сохранить чек"
+    var saveTapped: (() -> Void)?
+    /// Замыкание для действия по нажатию кнопки "Детали операции"
+    var detailTapped: (() -> Void)?
+    
+    @IBOutlet var contentView: UIView!
+    
+    @IBOutlet weak var statusImageView: UIImageView!
+    @IBOutlet weak var operatorImageView: UIImageView!
+    @IBOutlet weak var statusLabel: UILabel!
+    @IBOutlet weak var summLabel: UILabel!
+    @IBOutlet weak var infoLabel: UILabel!
+    @IBOutlet weak var buttonView: UIStackView!
+    
+    var confurmVCModel: ConfurmViewControllerModel? {
+        didSet {
+            guard let model = confurmVCModel else { return }
+            setupData(with: model)
+        }
+    }
+    
+    //MARK: - Lifecycle
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        commonInit()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        commonInit()
+    }
+    
+    
+    func commonInit() {
+        Bundle.main.loadNibNamed(kContentXibName, owner: self, options: nil)
+        contentView.fixInView(self)
+        
+        layer.shadowRadius = 16
+        
+    }
+    
+    @IBAction func saveButtonTapped(_ sender: Any) {
+        print(#function)
+        saveTapped?()
+    }
+    
+    @IBAction func detailBattonTapped(_ sender: Any) {
+        print(#function)
+        detailTapped?()
+    }
+    
+    
+    func setupData(with model: ConfurmViewControllerModel) {
+        buttonView.isHidden = !model.statusIsSuccses
+        statusImageView.image = model.statusIsSuccses ? #imageLiteral(resourceName: "success") : #imageLiteral(resourceName: "errorIcon")
+        statusLabel.text = model.statusIsSuccses
+            ? "Успешный \nперевод" : "Операция \nнеуспешна!"
+        summLabel.text = model.summTransction
+        
+    }
+    
+}
