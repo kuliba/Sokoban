@@ -28,6 +28,7 @@ enum RouterManager {
     case getOwnerPhoneNumber
     case fastPaymentBanksList
     case makeCard2Card
+    case getLatestPayments
 }
 
 extension RouterManager {
@@ -331,6 +332,21 @@ extension RouterManager {
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .getLatestPayments:
+            let baseUrl = RouterUrlList.getLatestPayments.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.get.rawValue
             return request
         }
     }

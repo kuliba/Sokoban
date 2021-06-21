@@ -14,6 +14,8 @@
 		0B37F980267A11FB007728FC /* GetOwnerPhoneNumberPhoneDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F97F267A11FB007728FC /* GetOwnerPhoneNumberPhoneDecodableModel.swift */; };
 		0B37F982267A1814007728FC /* FastPaymentBanksListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F981267A1814007728FC /* FastPaymentBanksListDecodableModel.swift */; };
 		0B37F984267A18AC007728FC /* MakeCard2CardDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F983267A18AC007728FC /* MakeCard2CardDecodableModel.swift */; };
+		0B37F98626807620007728FC /* NetworkHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F98526807620007728FC /* NetworkHelper.swift */; };
+		0B37F9882680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F9872680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift */; };
 		0B747890267343B400C44F79 /* KeyExchangeDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */; };
 		0B8BE08F266FBE0500E96CAA /* CSRFDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE08E266FBE0500E96CAA /* CSRFDecodableModel.swift */; };
 		0B8BE091266FDA1B00E96CAA /* CheckClientDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE090266FDA1B00E96CAA /* CheckClientDecodebleModel.swift */; };
@@ -153,6 +155,8 @@
 		0B37F97F267A11FB007728FC /* GetOwnerPhoneNumberPhoneDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetOwnerPhoneNumberPhoneDecodableModel.swift; sourceTree = "<group>"; };
 		0B37F981267A1814007728FC /* FastPaymentBanksListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentBanksListDecodableModel.swift; sourceTree = "<group>"; };
 		0B37F983267A18AC007728FC /* MakeCard2CardDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeCard2CardDecodableModel.swift; sourceTree = "<group>"; };
+		0B37F98526807620007728FC /* NetworkHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkHelper.swift; sourceTree = "<group>"; };
+		0B37F9872680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLatestPaymentsDecodableModel.swift; sourceTree = "<group>"; };
 		0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyExchangeDecodebleModel.swift; sourceTree = "<group>"; };
 		0B8BE08E266FBE0500E96CAA /* CSRFDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFDecodableModel.swift; sourceTree = "<group>"; };
 		0B8BE090266FDA1B00E96CAA /* CheckClientDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckClientDecodebleModel.swift; sourceTree = "<group>"; };
@@ -826,6 +830,7 @@
 			isa = PBXGroup;
 			children = (
 				EDF681F3266F9EC800FD5C07 /* NetworkManager.swift */,
+				0B37F98526807620007728FC /* NetworkHelper.swift */,
 			);
 			path = NetworkManager;
 			sourceTree = "<group>";
@@ -847,6 +852,7 @@
 				0B37F97F267A11FB007728FC /* GetOwnerPhoneNumberPhoneDecodableModel.swift */,
 				0B37F981267A1814007728FC /* FastPaymentBanksListDecodableModel.swift */,
 				0B37F983267A18AC007728FC /* MakeCard2CardDecodableModel.swift */,
+				0B37F9872680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -1113,6 +1119,7 @@
 				ED0B48A3267E71DC0037EA06 /* FCMToken.swift in Sources */,
 				0BEC893D2672591A00D8BD22 /* GetCardListDecodebleModel.swift in Sources */,
 				EDF68211266F9EC800FD5C07 /* RequestError.swift in Sources */,
+				0B37F9882680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift in Sources */,
 				EDB1451C26652D370028EF5A /* UILabel.swift in Sources */,
 				ED0B4894267B50F50037EA06 /* Int.swift in Sources */,
 				EDB145402666AFD70028EF5A /* Constants.swift in Sources */,
@@ -1140,6 +1147,7 @@
 				0B37F97A2678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift in Sources */,
 				ED0B48A0267E1A2D0037EA06 /* ConfurmPaymentsVC.swift in Sources */,
 				EDB14385265FDA410028EF5A /* LoginCardEntryViewController.swift in Sources */,
+				0B37F98626807620007728FC /* NetworkHelper.swift in Sources */,
 				EDF6820D266F9EC800FD5C07 /* NetworkManager.swift in Sources */,
 				EDF6820F266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift in Sources */,
 				EDB1656E266827A8007E6030 /* PaymentsViewController.swift in Sources */,
