@@ -95,7 +95,7 @@
 		EDB1655E2667A55F007E6030 /* ForaInput.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDB1655D2667A55F007E6030 /* ForaInput.xib */; };
 		EDB165602667A569007E6030 /* ForaInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1655F2667A569007E6030 /* ForaInput.swift */; };
 		EDB165622667A571007E6030 /* ForaInputModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB165612667A571007E6030 /* ForaInputModel.swift */; };
-		EDB165652667A741007E6030 /* ContactConfurmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB165632667A741007E6030 /* ContactConfurmViewController.swift */; };
+		EDB165652667A741007E6030 /* ContactConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB165632667A741007E6030 /* ContactConfirmViewController.swift */; };
 		EDB165662667A741007E6030 /* ContactInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB165642667A741007E6030 /* ContactInputViewController.swift */; };
 		EDB1656C26681F0E007E6030 /* MainTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1656B26681F0E007E6030 /* MainTabBarViewController.swift */; };
 		EDB1656E266827A8007E6030 /* PaymentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1656D266827A8007E6030 /* PaymentsViewController.swift */; };
@@ -240,7 +240,7 @@
 		EDB1655D2667A55F007E6030 /* ForaInput.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ForaInput.xib; sourceTree = "<group>"; };
 		EDB1655F2667A569007E6030 /* ForaInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForaInput.swift; sourceTree = "<group>"; };
 		EDB165612667A571007E6030 /* ForaInputModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForaInputModel.swift; sourceTree = "<group>"; };
-		EDB165632667A741007E6030 /* ContactConfurmViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactConfurmViewController.swift; sourceTree = "<group>"; };
+		EDB165632667A741007E6030 /* ContactConfirmViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactConfirmViewController.swift; sourceTree = "<group>"; };
 		EDB165642667A741007E6030 /* ContactInputViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactInputViewController.swift; sourceTree = "<group>"; };
 		EDB1656B26681F0E007E6030 /* MainTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarViewController.swift; sourceTree = "<group>"; };
 		EDB1656D266827A8007E6030 /* PaymentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsViewController.swift; sourceTree = "<group>"; };
@@ -363,7 +363,7 @@
 		ED46C166267A9C4000D1A9A5 /* СountryConfirmPayments */ = {
 			isa = PBXGroup;
 			children = (
-				EDB165632667A741007E6030 /* ContactConfurmViewController.swift */,
+				EDB165632667A741007E6030 /* ContactConfirmViewController.swift */,
 			);
 			path = "СountryConfirmPayments";
 			sourceTree = "<group>";
@@ -1142,7 +1142,7 @@
 				EDB14533266667140028EF5A /* OrderProductsCollectionViewCell.swift in Sources */,
 				0B8BE091266FDA1B00E96CAA /* CheckClientDecodebleModel.swift in Sources */,
 				EDB16595266A4438007E6030 /* DevelopViewController.swift in Sources */,
-				EDB165652667A741007E6030 /* ContactConfurmViewController.swift in Sources */,
+				EDB165652667A741007E6030 /* ContactConfirmViewController.swift in Sources */,
 				EDB16592266A19DA007E6030 /* PaymentsViewControllerSearchBarDelegate.swift in Sources */,
 				0B37F97A2678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift in Sources */,
 				ED0B48A0267E1A2D0037EA06 /* PaymentsDetailsSuccessViewController.swift in Sources */,
