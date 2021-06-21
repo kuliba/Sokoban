@@ -22,6 +22,7 @@
 		0B8BE093266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE092266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift */; };
 		0B8BE0952670D4A300E96CAA /* GetCodeDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE0942670D4A300E96CAA /* GetCodeDecodebleModel.swift */; };
 		0B8BE0972670D53600E96CAA /* DoRegistrationDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE0962670D53600E96CAA /* DoRegistrationDecodebleModel.swift */; };
+		0B8CB0882680CAE3006A39C3 /* ExtensionNetworkHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8CB0872680CAE3006A39C3 /* ExtensionNetworkHelper.swift */; };
 		0B9EC85D26739C0000D86EB2 /* GetCountriesDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EC85C26739C0000D86EB2 /* GetCountriesDecodebleModel.swift */; };
 		0BEC8939267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC8938267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift */; };
 		0BEC893B2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC893A2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift */; };
@@ -96,7 +97,7 @@
 		EDB1655E2667A55F007E6030 /* ForaInput.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDB1655D2667A55F007E6030 /* ForaInput.xib */; };
 		EDB165602667A569007E6030 /* ForaInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1655F2667A569007E6030 /* ForaInput.swift */; };
 		EDB165622667A571007E6030 /* ForaInputModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB165612667A571007E6030 /* ForaInputModel.swift */; };
-		EDB165652667A741007E6030 /* ContactConfurmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB165632667A741007E6030 /* ContactConfurmViewController.swift */; };
+		EDB165652667A741007E6030 /* ContactConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB165632667A741007E6030 /* ContactConfirmViewController.swift */; };
 		EDB165662667A741007E6030 /* ContactInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB165642667A741007E6030 /* ContactInputViewController.swift */; };
 		EDB1656C26681F0E007E6030 /* MainTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1656B26681F0E007E6030 /* MainTabBarViewController.swift */; };
 		EDB1656E266827A8007E6030 /* PaymentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1656D266827A8007E6030 /* PaymentsViewController.swift */; };
@@ -164,6 +165,7 @@
 		0B8BE092266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyCodeDecodebleModel.swift; sourceTree = "<group>"; };
 		0B8BE0942670D4A300E96CAA /* GetCodeDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCodeDecodebleModel.swift; sourceTree = "<group>"; };
 		0B8BE0962670D53600E96CAA /* DoRegistrationDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoRegistrationDecodebleModel.swift; sourceTree = "<group>"; };
+		0B8CB0872680CAE3006A39C3 /* ExtensionNetworkHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionNetworkHelper.swift; sourceTree = "<group>"; };
 		0B9EC85C26739C0000D86EB2 /* GetCountriesDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCountriesDecodebleModel.swift; sourceTree = "<group>"; };
 		0BEC8938267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallPushDeviceDecodebleModel.swift; sourceTree = "<group>"; };
 		0BEC893A2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistredPushDeviceTorUserDecodebleModel.swift; sourceTree = "<group>"; };
@@ -241,7 +243,7 @@
 		EDB1655D2667A55F007E6030 /* ForaInput.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ForaInput.xib; sourceTree = "<group>"; };
 		EDB1655F2667A569007E6030 /* ForaInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForaInput.swift; sourceTree = "<group>"; };
 		EDB165612667A571007E6030 /* ForaInputModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForaInputModel.swift; sourceTree = "<group>"; };
-		EDB165632667A741007E6030 /* ContactConfurmViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactConfurmViewController.swift; sourceTree = "<group>"; };
+		EDB165632667A741007E6030 /* ContactConfirmViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactConfirmViewController.swift; sourceTree = "<group>"; };
 		EDB165642667A741007E6030 /* ContactInputViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactInputViewController.swift; sourceTree = "<group>"; };
 		EDB1656B26681F0E007E6030 /* MainTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarViewController.swift; sourceTree = "<group>"; };
 		EDB1656D266827A8007E6030 /* PaymentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsViewController.swift; sourceTree = "<group>"; };
@@ -365,7 +367,7 @@
 		ED46C166267A9C4000D1A9A5 /* СountryConfirmPayments */ = {
 			isa = PBXGroup;
 			children = (
-				EDB165632667A741007E6030 /* ContactConfurmViewController.swift */,
+				EDB165632667A741007E6030 /* ContactConfirmViewController.swift */,
 			);
 			path = "СountryConfirmPayments";
 			sourceTree = "<group>";
@@ -833,6 +835,7 @@
 			children = (
 				EDF681F3266F9EC800FD5C07 /* NetworkManager.swift */,
 				0B37F98526807620007728FC /* NetworkHelper.swift */,
+				0B8CB0872680CAE3006A39C3 /* ExtensionNetworkHelper.swift */,
 			);
 			path = NetworkManager;
 			sourceTree = "<group>";
@@ -1146,9 +1149,11 @@
 				EDB14533266667140028EF5A /* OrderProductsCollectionViewCell.swift in Sources */,
 				0B8BE091266FDA1B00E96CAA /* CheckClientDecodebleModel.swift in Sources */,
 				EDB16595266A4438007E6030 /* DevelopViewController.swift in Sources */,
-				EDB165652667A741007E6030 /* ContactConfurmViewController.swift in Sources */,
+				EDB165652667A741007E6030 /* ContactConfirmViewController.swift in Sources */,
 				EDB16592266A19DA007E6030 /* PaymentsViewControllerSearchBarDelegate.swift in Sources */,
 				0B37F97A2678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift in Sources */,
+				ED0B48A0267E1A2D0037EA06 /* ConfurmPaymentsVC.swift in Sources */,
+				0B8CB0882680CAE3006A39C3 /* ExtensionNetworkHelper.swift in Sources */,
 				ED0B48A0267E1A2D0037EA06 /* PaymentsDetailsSuccessViewController.swift in Sources */,
 				EDB14385265FDA410028EF5A /* LoginCardEntryViewController.swift in Sources */,
 				0B37F98626807620007728FC /* NetworkHelper.swift in Sources */,

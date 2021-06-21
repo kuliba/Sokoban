@@ -45,6 +45,7 @@ class LoginCardEntryViewController: UIViewController {
     fileprivate func checkCardNumber(with number: String) {
         
         let body = ["cardNumber": "\(number)"] as [String : AnyObject]
+        
         NetworkManager<CheckClientDecodebleModel>.addRequest(.checkCkient, [:], body) { (model, error) in
             self.dismissActivity()
             if error != nil {
