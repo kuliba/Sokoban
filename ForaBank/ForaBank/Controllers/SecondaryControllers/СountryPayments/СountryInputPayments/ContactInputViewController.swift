@@ -155,7 +155,7 @@ class ContactInputViewController: UIViewController {
         }
     }
     
-    func goToConfurmVC(with model: ConfurmViewControllerModel) {
+    func goToConfurmVC(with model: ConfirmViewControllerModel) {
         DispatchQueue.main.async {
             let vc = ContactConfurmViewController()
             vc.confurmVCModel = model
@@ -269,7 +269,7 @@ class ContactInputViewController: UIViewController {
                 print("DEBUG: Success send Phone")
                 self.dismissActivity()
                 guard let country = self.country else { return }
-                let model = ConfurmViewControllerModel(
+                let model = ConfirmViewControllerModel(
                     country: country,
                     model: model)
                 self.goToConfurmVC(with: model)
@@ -329,7 +329,7 @@ class ContactInputViewController: UIViewController {
                         
                         guard let country = self.country else { return }
                         let fullName = surname + " " + name + " " + secondName
-                        let model = ConfurmViewControllerModel(
+                        let model = ConfirmViewControllerModel(
                             country: country,
                             model: model,
                             fullName: fullName)

@@ -7,10 +7,10 @@
 
 import UIKit
 
-class ConfurmPaymentsView: UIView {
+class PaymentsDetailsView: UIView {
 
     //MARK: - Property
-    let kContentXibName = "ConfurmPaymentsView"
+    let kContentXibName = "PaymentsDetailsView"
     
     /// Замыкание для действия по нажатию кнопки "Сохранить чек"
     var saveTapped: (() -> Void)?
@@ -26,7 +26,7 @@ class ConfurmPaymentsView: UIView {
     @IBOutlet weak var infoLabel: UILabel!
     @IBOutlet weak var buttonView: UIStackView!
     
-    var confurmVCModel: ConfurmViewControllerModel? {
+    var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
             guard let model = confurmVCModel else { return }
             setupData(with: model)
@@ -64,7 +64,7 @@ class ConfurmPaymentsView: UIView {
     }
     
     
-    func setupData(with model: ConfurmViewControllerModel) {
+    func setupData(with model: ConfirmViewControllerModel) {
         buttonView.isHidden = !model.statusIsSuccses
         statusImageView.image = model.statusIsSuccses ? #imageLiteral(resourceName: "success") : #imageLiteral(resourceName: "errorIcon")
         statusLabel.text = model.statusIsSuccses

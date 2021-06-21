@@ -30,9 +30,9 @@
 		ED0B4892267B4CDD0037EA06 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = ED0B4891267B4CDD0037EA06 /* IQKeyboardManagerSwift */; };
 		ED0B4894267B50F50037EA06 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B4893267B50F50037EA06 /* Int.swift */; };
 		ED0B4896267B97C60037EA06 /* ContactInputViewController + UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B4895267B97C60037EA06 /* ContactInputViewController + UI.swift */; };
-		ED0B489C267D41A60037EA06 /* ConfurmPaymentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B489B267D41A60037EA06 /* ConfurmPaymentsView.swift */; };
-		ED0B489E267D41B10037EA06 /* ConfurmPaymentsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED0B489D267D41B10037EA06 /* ConfurmPaymentsView.xib */; };
-		ED0B48A0267E1A2D0037EA06 /* ConfurmPaymentsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B489F267E1A2D0037EA06 /* ConfurmPaymentsVC.swift */; };
+		ED0B489C267D41A60037EA06 /* PaymentsDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B489B267D41A60037EA06 /* PaymentsDetailsView.swift */; };
+		ED0B489E267D41B10037EA06 /* PaymentsDetailsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED0B489D267D41B10037EA06 /* PaymentsDetailsView.xib */; };
+		ED0B48A0267E1A2D0037EA06 /* PaymentsDetailsSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B489F267E1A2D0037EA06 /* PaymentsDetailsSuccessViewController.swift */; };
 		ED0B48A3267E71DC0037EA06 /* FCMToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B48A2267E71DC0037EA06 /* FCMToken.swift */; };
 		ED0B48A5267E72130037EA06 /* CSRFToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B48A4267E72130037EA06 /* CSRFToken.swift */; };
 		ED4FC5EC266AD98E0092B4AB /* NSCollectionLayoutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EB266AD98E0092B4AB /* NSCollectionLayoutItem.swift */; };
@@ -96,7 +96,7 @@
 		EDB1655E2667A55F007E6030 /* ForaInput.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDB1655D2667A55F007E6030 /* ForaInput.xib */; };
 		EDB165602667A569007E6030 /* ForaInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1655F2667A569007E6030 /* ForaInput.swift */; };
 		EDB165622667A571007E6030 /* ForaInputModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB165612667A571007E6030 /* ForaInputModel.swift */; };
-		EDB165652667A741007E6030 /* ContactConfurmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB165632667A741007E6030 /* ContactConfurmViewController.swift */; };
+		EDB165652667A741007E6030 /* ContactConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB165632667A741007E6030 /* ContactConfirmViewController.swift */; };
 		EDB165662667A741007E6030 /* ContactInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB165642667A741007E6030 /* ContactInputViewController.swift */; };
 		EDB1656C26681F0E007E6030 /* MainTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1656B26681F0E007E6030 /* MainTabBarViewController.swift */; };
 		EDB1656E266827A8007E6030 /* PaymentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1656D266827A8007E6030 /* PaymentsViewController.swift */; };
@@ -171,9 +171,9 @@
 		0BEC893C2672591A00D8BD22 /* GetCardListDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCardListDecodebleModel.swift; sourceTree = "<group>"; };
 		ED0B4893267B50F50037EA06 /* Int.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
 		ED0B4895267B97C60037EA06 /* ContactInputViewController + UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContactInputViewController + UI.swift"; sourceTree = "<group>"; };
-		ED0B489B267D41A60037EA06 /* ConfurmPaymentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfurmPaymentsView.swift; sourceTree = "<group>"; };
-		ED0B489D267D41B10037EA06 /* ConfurmPaymentsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConfurmPaymentsView.xib; sourceTree = "<group>"; };
-		ED0B489F267E1A2D0037EA06 /* ConfurmPaymentsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfurmPaymentsVC.swift; sourceTree = "<group>"; };
+		ED0B489B267D41A60037EA06 /* PaymentsDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsDetailsView.swift; sourceTree = "<group>"; };
+		ED0B489D267D41B10037EA06 /* PaymentsDetailsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentsDetailsView.xib; sourceTree = "<group>"; };
+		ED0B489F267E1A2D0037EA06 /* PaymentsDetailsSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsDetailsSuccessViewController.swift; sourceTree = "<group>"; };
 		ED0B48A2267E71DC0037EA06 /* FCMToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCMToken.swift; sourceTree = "<group>"; };
 		ED0B48A4267E72130037EA06 /* CSRFToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFToken.swift; sourceTree = "<group>"; };
 		ED4FC5EB266AD98E0092B4AB /* NSCollectionLayoutItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSCollectionLayoutItem.swift; sourceTree = "<group>"; };
@@ -242,7 +242,7 @@
 		EDB1655D2667A55F007E6030 /* ForaInput.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ForaInput.xib; sourceTree = "<group>"; };
 		EDB1655F2667A569007E6030 /* ForaInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForaInput.swift; sourceTree = "<group>"; };
 		EDB165612667A571007E6030 /* ForaInputModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForaInputModel.swift; sourceTree = "<group>"; };
-		EDB165632667A741007E6030 /* ContactConfurmViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactConfurmViewController.swift; sourceTree = "<group>"; };
+		EDB165632667A741007E6030 /* ContactConfirmViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactConfirmViewController.swift; sourceTree = "<group>"; };
 		EDB165642667A741007E6030 /* ContactInputViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactInputViewController.swift; sourceTree = "<group>"; };
 		EDB1656B26681F0E007E6030 /* MainTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarViewController.swift; sourceTree = "<group>"; };
 		EDB1656D266827A8007E6030 /* PaymentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsViewController.swift; sourceTree = "<group>"; };
@@ -319,22 +319,22 @@
 			path = NetworkingLoginModel;
 			sourceTree = "<group>";
 		};
-		ED0B4897267CF9490037EA06 /* ConfurmPayments */ = {
+		ED0B4897267CF9490037EA06 /* PaymentsDetailsSuccess */ = {
 			isa = PBXGroup;
 			children = (
-				ED0B489A267D419B0037EA06 /* ConfurmPaymentsView */,
-				ED0B489F267E1A2D0037EA06 /* ConfurmPaymentsVC.swift */,
+				ED0B489A267D419B0037EA06 /* PaymentsDetailsView */,
+				ED0B489F267E1A2D0037EA06 /* PaymentsDetailsSuccessViewController.swift */,
 			);
-			path = ConfurmPayments;
+			path = PaymentsDetailsSuccess;
 			sourceTree = "<group>";
 		};
-		ED0B489A267D419B0037EA06 /* ConfurmPaymentsView */ = {
+		ED0B489A267D419B0037EA06 /* PaymentsDetailsView */ = {
 			isa = PBXGroup;
 			children = (
-				ED0B489B267D41A60037EA06 /* ConfurmPaymentsView.swift */,
-				ED0B489D267D41B10037EA06 /* ConfurmPaymentsView.xib */,
+				ED0B489B267D41A60037EA06 /* PaymentsDetailsView.swift */,
+				ED0B489D267D41B10037EA06 /* PaymentsDetailsView.xib */,
 			);
-			path = ConfurmPaymentsView;
+			path = PaymentsDetailsView;
 			sourceTree = "<group>";
 		};
 		ED0B48A1267E71C80037EA06 /* Helpers */ = {
@@ -362,12 +362,12 @@
 			path = "СountryInputPayments";
 			sourceTree = "<group>";
 		};
-		ED46C166267A9C4000D1A9A5 /* СountryConfurmPayments */ = {
+		ED46C166267A9C4000D1A9A5 /* СountryConfirmPayments */ = {
 			isa = PBXGroup;
 			children = (
-				EDB165632667A741007E6030 /* ContactConfurmViewController.swift */,
+				EDB165632667A741007E6030 /* ContactConfirmViewController.swift */,
 			);
-			path = "СountryConfurmPayments";
+			path = "СountryConfirmPayments";
 			sourceTree = "<group>";
 		};
 		ED4FC5ED266B707F0092B4AB /* CardScannerController */ = {
@@ -531,8 +531,8 @@
 			isa = PBXGroup;
 			children = (
 				ED46C165267A9C0C00D1A9A5 /* СountryInputPayments */,
-				ED46C166267A9C4000D1A9A5 /* СountryConfurmPayments */,
-				ED0B4897267CF9490037EA06 /* ConfurmPayments */,
+				ED46C166267A9C4000D1A9A5 /* СountryConfirmPayments */,
+				ED0B4897267CF9490037EA06 /* PaymentsDetailsSuccess */,
 			);
 			path = "СountryPayments";
 			sourceTree = "<group>";
@@ -1093,7 +1093,7 @@
 				EDB143B5265FDE960028EF5A /* Assets.xcassets in Resources */,
 				EDB143CB265FDEC90028EF5A /* Roboto-Italic.ttf in Resources */,
 				EDB1655E2667A55F007E6030 /* ForaInput.xib in Resources */,
-				ED0B489E267D41B10037EA06 /* ConfurmPaymentsView.xib in Resources */,
+				ED0B489E267D41B10037EA06 /* PaymentsDetailsView.xib in Resources */,
 				EDB14532266667140028EF5A /* OrderProductsCollectionViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1134,7 +1134,7 @@
 				EDAA99AF2673AB9200435484 /* ForaSwitchView.swift in Sources */,
 				EDB1657C2668C8D5007E6030 /* PayCell.swift in Sources */,
 				0B9EC85D26739C0000D86EB2 /* GetCountriesDecodebleModel.swift in Sources */,
-				ED0B489C267D41A60037EA06 /* ConfurmPaymentsView.swift in Sources */,
+				ED0B489C267D41A60037EA06 /* PaymentsDetailsView.swift in Sources */,
 				ED4FC602266C0AB50092B4AB /* ChooseCountryTableViewController.swift in Sources */,
 				EDF6821A266F9EC800FD5C07 /* RouterUrlList.swift in Sources */,
 				EDB1452026661B030028EF5A /* StringMask.swift in Sources */,
@@ -1145,11 +1145,12 @@
 				EDB14533266667140028EF5A /* OrderProductsCollectionViewCell.swift in Sources */,
 				0B8BE091266FDA1B00E96CAA /* CheckClientDecodebleModel.swift in Sources */,
 				EDB16595266A4438007E6030 /* DevelopViewController.swift in Sources */,
-				EDB165652667A741007E6030 /* ContactConfurmViewController.swift in Sources */,
+				EDB165652667A741007E6030 /* ContactConfirmViewController.swift in Sources */,
 				EDB16592266A19DA007E6030 /* PaymentsViewControllerSearchBarDelegate.swift in Sources */,
 				0B37F97A2678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift in Sources */,
 				ED0B48A0267E1A2D0037EA06 /* ConfurmPaymentsVC.swift in Sources */,
 				0B8CB0882680CAE3006A39C3 /* ExtensionNetworkHelper.swift in Sources */,
+				ED0B48A0267E1A2D0037EA06 /* PaymentsDetailsSuccessViewController.swift in Sources */,
 				EDB14385265FDA410028EF5A /* LoginCardEntryViewController.swift in Sources */,
 				0B37F98626807620007728FC /* NetworkHelper.swift in Sources */,
 				EDF6820D266F9EC800FD5C07 /* NetworkManager.swift in Sources */,

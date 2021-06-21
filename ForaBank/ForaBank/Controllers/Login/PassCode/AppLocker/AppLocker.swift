@@ -347,6 +347,7 @@ extension AppLocker {
                         AppDelegate.shared.getCSRF { error in
                             if error != nil {
                                 print("DEBUG: Error getCSRF: ", error!)
+                                completion(error!)
                             } else {
                                 self.login(with: code, type: .pin) { error in
                                     if error != nil {

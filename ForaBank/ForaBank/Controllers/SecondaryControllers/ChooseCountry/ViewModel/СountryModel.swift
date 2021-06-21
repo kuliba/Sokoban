@@ -10,6 +10,8 @@ import Foundation
 
 public struct Country : Decodable {
 
+    static var countries: [GetCountryDatum]?
+    
     public let name : String?
     public let dialCode : String?
     public let code : String?

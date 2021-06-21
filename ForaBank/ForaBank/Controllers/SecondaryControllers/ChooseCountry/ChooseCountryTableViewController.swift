@@ -36,29 +36,36 @@ class ChooseCountryTableViewController: UITableViewController {
 
     //MARK: - API
     private func loadCountries() {
-        showActivity()
-        NetworkManager<GetCountriesDecodebleModel>.addRequest(.getCountries, [:], [:]) { model, error in
-            self.dismissActivity()
-            if error != nil {
-                guard let error = error else { return }
-                print("DEBUG: ", #function, error)
-            } else {
-                guard let statusCode = model?.statusCode else { return }
-                if statusCode == 0 {
-                    guard let countries = model?.data else { return }
-                    for country in countries {
-                        let name = country.name?.capitalizingFirstLetter()
-                        let count = Country(name: name, dialCode: "", code: country.code)
-                        self.countries.append(count)
-                    }
+        if let countries = Country.countries {
+            self.configureVC(with: countries)
+        } else {
+            showActivity()
+            NetworkManager<GetCountriesDecodebleModel>.addRequest(.getCountries, [:], [:]) { model, error in
+                self.dismissActivity()
+                if error != nil {
+                    guard let error = error else { return }
+                    print("DEBUG: ", #function, error)
                 } else {
-                    print("DEBUG: ", #function, model?.errorMessage ?? "nil")
+                    guard let statusCode = model?.statusCode else { return }
+                    if statusCode == 0 {
+                        guard let countries = model?.data else { return }
+                        Country.countries = countries
+                        self.configureVC(with: countries)
+                    } else {
+                        print("DEBUG: ", #function, model?.errorMessage ?? "nil")
+                    }
                 }
             }
         }
-        
     }
     
+    private func configureVC(with countries: [GetCountryDatum]) {
+        for country in countries {
+            let name = country.name?.capitalizingFirstLetter()
+            let countryViewModel = Country(name: name, dialCode: "", code: country.code)
+            self.countries.append(countryViewModel)
+        }
+    }
     //MARK: - SetupUI
     private func setupUI() {
         tableView.tableFooterView = UIView()
