@@ -7,15 +7,15 @@
 
 import UIKit
 
-class ConfurmPaymentsVC: UIViewController {
+class PaymentsDetailsSuccessViewController: UIViewController {
     
-    let confurmView = ConfurmPaymentsView()
+    let confurmView = PaymentsDetailsView()
     let button = UIButton(title: "На главную",
                           titleColor: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1),
                           backgroundColor: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1),
                           isBorder: true)
     
-    var confurmVCModel: ConfurmViewControllerModel? {
+    var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
             guard let model = confurmVCModel else { return }
             confurmView.confurmVCModel = model

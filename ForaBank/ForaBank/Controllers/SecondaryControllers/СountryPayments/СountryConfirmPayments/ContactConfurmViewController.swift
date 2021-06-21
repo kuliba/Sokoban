@@ -9,7 +9,7 @@ import UIKit
 
 
 //TODO: отрефакторить под сетевые запросы, вынести в отдельный файл
-struct ConfurmViewControllerModel {
+struct ConfirmViewControllerModel {
     var phone: String?
     var name: String
     var country: Country?
@@ -59,7 +59,7 @@ struct ConfurmViewControllerModel {
 
 class ContactConfurmViewController: UIViewController {
     
-    var confurmVCModel: ConfurmViewControllerModel? {
+    var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
             guard let model = confurmVCModel else { return }
             setupData(with: model)
@@ -130,7 +130,7 @@ class ContactConfurmViewController: UIViewController {
         hideKeyboardWhenTappedAround()
     }
     
-    func setupData(with model: ConfurmViewControllerModel) {
+    func setupData(with model: ConfirmViewControllerModel) {
         nameField.text =  model.name //"Колотилин Михаил Алексеевич"
         countryField.text = model.country?.name ?? "" // "Армения"
         numberTransctionField.text = model.numberTransction ?? "" //"1235634790"
@@ -193,7 +193,7 @@ class ContactConfurmViewController: UIViewController {
                 print("DEBUG: Success payment")
                 self.dismissActivity()
                 DispatchQueue.main.async {
-                    let vc = ConfurmPaymentsVC()
+                    let vc = PaymentsDetailsSuccessViewController()
                     vc.confurmVCModel = self.confurmVCModel
                     vc.modalPresentationStyle = .fullScreen
                     self.present(vc, animated: true, completion: nil)
