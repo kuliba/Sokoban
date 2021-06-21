@@ -22,6 +22,7 @@ class LoginCardEntryViewController: UIViewController {
         creditCardView.cardNumberTextField.delegate = self
         creditCardView.scanerCardTapped = { self.scanCardTapped() }
         creditCardView.enterCardNumberTapped = { [weak self] (cardNumber) in
+            self?.showActivity()
             self?.checkCardNumber(with: cardNumber)
         }
         
@@ -45,6 +46,7 @@ class LoginCardEntryViewController: UIViewController {
         
         let body = ["cardNumber": "\(number)"] as [String : AnyObject]
         NetworkManager<CheckClientDecodebleModel>.addRequest(.checkCkient, [:], body) { (model, error) in
+            self.dismissActivity()
             if error != nil {
                 guard let error = error else { return }
                 self.showAlert(with: "Ошибка", and: error)

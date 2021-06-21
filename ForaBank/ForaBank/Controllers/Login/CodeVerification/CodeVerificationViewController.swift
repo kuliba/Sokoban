@@ -13,9 +13,10 @@ class CodeVerificationViewController: UIViewController {
     var phoneNumber: String?
     
     lazy var titleLabel = UILabel(text: "Введите код из сообщения",
-                                           font: .boldSystemFont(ofSize: 18))
+                                  font: .boldSystemFont(ofSize: 18))
     lazy var smsCodeView: SmsCodeView = SmsCodeView()
     lazy var subTitleLabel = UILabel(text: "Код отправлен на +7 ... ... .. ..\nЗапросить повторно можно через")
+    lazy var timerLabel = UILabel(text: "01:00", font: .systemFont(ofSize: 18), color: .black)
     lazy var button = UIButton(title: "done")
     
     //MARK: - Viewlifecycle
@@ -57,10 +58,6 @@ class CodeVerificationViewController: UIViewController {
             guard let model = model else { return }
             if model.statusCode == 0 {
                 
-               
-                
-                
-                
                 let body = [
                     "model": UIDevice().model,
                     "operationSystem": "IOS",
@@ -87,21 +84,13 @@ class CodeVerificationViewController: UIViewController {
                         
                     }
                 }
-                
-                    
-                
-                
-                
             }
         }
-        
-        
-        
         
 //        pin(.change)
 //        pin(.deactive)
 //        pin(.validate)
-//        navigationController?.pushViewController(vc, animated: true)
+
     }
     
     func pin(_ mode: ALMode) {
