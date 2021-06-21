@@ -14,12 +14,15 @@ extension CodeVerificationViewController {
         subTitleLabel.textAlignment = .center
         subTitleLabel.text = "Код отправлен на \(phoneNumber ?? "+7 ... ... ..")\nЗапросить повторно можно через"
         smsCodeView.Base.changeInputNum(num: 6)
+//        timerLabel.isHidden = true
+        repeatCodeButton.isHidden = true
         
         view.backgroundColor = .white
         view.addSubview(titleLabel)
         view.addSubview(subTitleLabel)
         view.addSubview(smsCodeView)
         view.addSubview(timerLabel)
+        view.addSubview(repeatCodeButton)
         
         titleLabel.centerX(inView: view, topAnchor: view.topAnchor,
                            paddingTop: 30)
@@ -31,6 +34,7 @@ extension CodeVerificationViewController {
                               paddingTop: 20)
         timerLabel.centerX(inView: subTitleLabel, topAnchor: subTitleLabel.bottomAnchor,
                            paddingTop: 32)
-        
+        repeatCodeButton.centerX(inView: subTitleLabel, topAnchor: subTitleLabel.bottomAnchor,
+                                 paddingTop: 32)
     }
 }

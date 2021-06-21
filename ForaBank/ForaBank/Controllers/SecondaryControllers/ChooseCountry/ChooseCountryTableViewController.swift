@@ -48,7 +48,8 @@ class ChooseCountryTableViewController: UITableViewController {
                 } else {
                     guard let statusCode = model?.statusCode else { return }
                     if statusCode == 0 {
-                        guard let countries = model?.data else { return }
+                        guard let countries = model?.data?.countriesList else { return }
+                        
                         Country.countries = countries
                         self.configureVC(with: countries)
                     } else {
@@ -59,10 +60,11 @@ class ChooseCountryTableViewController: UITableViewController {
         }
     }
     
-    private func configureVC(with countries: [GetCountryDatum]) {
+    private func configureVC(with countries: [CountriesListDatum]) {
         for country in countries {
             let name = country.name?.capitalizingFirstLetter()
-            let countryViewModel = Country(name: name, dialCode: "", code: country.code)
+            let countryViewModel = Country(name: name, dialCode: "", code: country.code, imageSVGString: country.svgImage)
+            
             self.countries.append(countryViewModel)
         }
     }

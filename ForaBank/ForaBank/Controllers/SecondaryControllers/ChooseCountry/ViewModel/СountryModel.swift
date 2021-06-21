@@ -9,16 +9,18 @@ import Foundation
 
 
 public struct Country : Decodable {
-
-    static var countries: [GetCountryDatum]?
+    
+    static var countries: [CountriesListDatum]?
     
     public let name : String?
     public let dialCode : String?
     public let code : String?
+    public let imageSVGString : String?
     
     enum CodingKeys: String, CodingKey {
         case name
         case code
+        case imageSVGString
         case dialCode = "dial_code"
     }
 }

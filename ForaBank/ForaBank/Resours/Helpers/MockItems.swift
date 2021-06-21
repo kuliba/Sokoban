@@ -60,6 +60,32 @@ class MockItems {
                           controllerName: "DevelopViewController",
                           description: "Что то"),
             
+            PaymentsModel(id: 20, name: "Оплата \nпо QR",
+                          iconName: "PaymentsIconBarcode-scanner",
+                          avatarImageName: nil,
+                          controllerName: "DevelopViewController",
+                          description: "QR"),
+            
+            PaymentsModel(id: 21, name: "Шаблоны и\nавтоплатежи",
+                          iconName: "PaymentsIconFavorites",
+                          controllerName: "DevelopViewController",
+                          description: "Что то"),
+            
+            PaymentsModel(id: 22, name: "Перевод по\nтелефону",
+                          iconName: "PaymentsIconPhone",
+                          controllerName: "DevelopViewController",
+                          description: "Что то"),
+            
+            PaymentsModel(id: 23, name: "Любимая Beeline",
+//                          iconName: "bilane",
+                          avatarImageName: "bilane",
+                          controllerName: "DevelopViewController",
+                          description: "Что то"),
+            
+            PaymentsModel(id: 24, name: "Обмен валют",
+                          iconName: "PaymentsIconCarancy",
+                          controllerName: "DevelopViewController",
+                          description: "Что то"),
         ]
     }
     

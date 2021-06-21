@@ -11,19 +11,29 @@ import FirebaseMessaging
 class CodeVerificationViewController: UIViewController {
     
     var phoneNumber: String?
+    var count = 60  // 60sec if you want
+    var resendTimer = Timer()
     
     lazy var titleLabel = UILabel(text: "Введите код из сообщения",
                                   font: .boldSystemFont(ofSize: 18))
     lazy var smsCodeView: SmsCodeView = SmsCodeView()
     lazy var subTitleLabel = UILabel(text: "Код отправлен на +7 ... ... .. ..\nЗапросить повторно можно через")
     lazy var timerLabel = UILabel(text: "01:00", font: .systemFont(ofSize: 18), color: .black)
-    lazy var button = UIButton(title: "done")
+    lazy var repeatCodeButton: UIButton = {
+        let button = UIButton(title: "Отправить повторно", titleColor: #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1), backgroundColor: #colorLiteral(red: 0.9647058824, green: 0.9647058824, blue: 0.968627451, alpha: 1))
+        button.setDimensions(height: 32, width: 180)
+        button.addTarget(self, action: #selector(repeatCodeButtonTapped), for: .touchUpInside)
+        return button
+    }()
+
     
     //MARK: - Viewlifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         smsCodeView.callBacktext = { str in self.sendSmsCode(code: str) }
+//        updateTimer()
+        resendTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -91,6 +101,50 @@ class CodeVerificationViewController: UIViewController {
 //        pin(.deactive)
 //        pin(.validate)
 
+    }
+    
+    //MARK: - Actions
+    @objc func updateTimer() {
+        if(count > 0) {
+            count = count - 1
+            print(count)
+            if count < 10 {
+                timerLabel.text = "00:0\(count)"
+            } else {
+                timerLabel.text = "00:\(count)"
+            }
+        }
+        else {
+            resendTimer.invalidate()
+            print("call your api")
+            repeatCodeButton.isHidden = false
+            timerLabel.isHidden = true
+            
+            // if you want to reset the time make count = 60 and resendTime.fire()
+        }
+    }
+    
+    @objc func repeatCodeButtonTapped() {
+        NetworkManager<GetCodeDecodebleModel>.addRequest(.getCode, [:], [:]) { model, error in
+            if error != nil {
+                guard let error = error else { return }
+                self.showAlert(with: "Ошибка", and: error)
+            } else {
+                guard let statusCode = model?.statusCode else { return }
+                if statusCode == 0 {
+                    DispatchQueue.main.async {
+                        self.count = 60
+                        self.resendTimer.fire()
+                        self.repeatCodeButton.isHidden = true
+                        self.timerLabel.isHidden = false
+                    }
+                } else {
+                    guard let error = model?.errorMessage else { return }
+                    self.showAlert(with: "Ошибка", and: error)
+                }
+            }
+            
+        }
     }
     
     func pin(_ mode: ALMode) {

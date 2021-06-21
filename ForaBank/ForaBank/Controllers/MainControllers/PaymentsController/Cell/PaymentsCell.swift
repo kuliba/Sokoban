@@ -12,7 +12,7 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
     static var reuseId: String = "PaymentsCell"
     
     let iconImageView = UIImageView()
-    let avatarImageView = UIImageView()
+//    let avatarImageView = UIImageView()
     let titleLabel = UILabel(text: "", font: .systemFont(ofSize: 11, weight: .regular), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
     
     
@@ -27,7 +27,7 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
         
         guard let avatarImageName = payment.avatarImageName else { return }
         guard let avatarImage = UIImage(named: avatarImageName) else { return }
-        avatarImageView.image = avatarImage
+        iconImageView.image = avatarImage
     }
     
     
@@ -41,22 +41,32 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
     }
     
     private func setupUI() {
-        addSubview(avatarImageView)
+//        addSubview(avatarImageView)
+        
+        let view = UIView()
+        addSubview(view)
+        view.setDimensions(height: 56, width: 56)
+        view.centerX(inView: self, topAnchor: self.topAnchor)
+        view.layer.cornerRadius = 56 / 2
+        view.backgroundColor = #colorLiteral(red: 0.9647058824, green: 0.9647058824, blue: 0.968627451, alpha: 1)
+        
+        
         addSubview(titleLabel)
         addSubview(iconImageView)
         
-        avatarImageView.centerX(inView: self, topAnchor: self.topAnchor)
-        avatarImageView.setDimensions(height: 56, width: 56)
         
-        iconImageView.center(inView: avatarImageView)
+        //        avatarImageView.centerX(inView: self, topAnchor: self.topAnchor)
+//        avatarImageView.setDimensions(height: 56, width: 56)
+        
+        iconImageView.center(inView: view)
         iconImageView.setDimensions(height: 32, width: 32)
         
         titleLabel.anchor(left: self.leftAnchor, right: self.rightAnchor)
-        titleLabel.centerX(inView: avatarImageView,
-                           topAnchor: avatarImageView.bottomAnchor, paddingTop: 8)
+        titleLabel.centerX(inView: view,
+                           topAnchor: view.bottomAnchor, paddingTop: 8)
         
-        avatarImageView.backgroundColor = #colorLiteral(red: 0.9647058824, green: 0.9647058824, blue: 0.968627451, alpha: 1)
-        avatarImageView.layer.cornerRadius = 28
+//        avatarImageView.backgroundColor = #colorLiteral(red: 0.9647058824, green: 0.9647058824, blue: 0.968627451, alpha: 1)
+//        avatarImageView.layer.cornerRadius = 28
         
         titleLabel.numberOfLines = 2
         titleLabel.textAlignment = .center
