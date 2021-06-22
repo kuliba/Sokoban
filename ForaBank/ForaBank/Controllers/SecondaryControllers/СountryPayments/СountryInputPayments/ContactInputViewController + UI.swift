@@ -28,7 +28,7 @@ extension ContactInputViewController {
         // scroll add view1
         
         //, cardListView
-        let stackView = UIStackView(arrangedSubviews: [surnameField, nameField, secondNameField, phoneField, bankField, cardField, summTransctionField])
+        let stackView = UIStackView(arrangedSubviews: [surnameField, nameField, secondNameField, phoneField, bankField, cardField, cardListView, summTransctionField])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
