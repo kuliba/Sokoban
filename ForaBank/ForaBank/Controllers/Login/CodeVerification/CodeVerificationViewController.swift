@@ -89,6 +89,7 @@ class CodeVerificationViewController: UIViewController {
                         
                         //TODO: go to app
                         DispatchQueue.main.async { [weak self] in
+                            self?.resendTimer.invalidate()
                             self?.pin(.create)
                         }
                         
@@ -107,7 +108,7 @@ class CodeVerificationViewController: UIViewController {
     @objc func updateTimer() {
         if(count > 0) {
             count = count - 1
-            print(count)
+//            print(count)
             if count < 10 {
                 timerLabel.text = "00:0\(count)"
             } else {
@@ -116,34 +117,25 @@ class CodeVerificationViewController: UIViewController {
         }
         else {
             resendTimer.invalidate()
-            print("call your api")
+//            print("call your api")
             repeatCodeButton.isHidden = false
             timerLabel.isHidden = true
-            
-            // if you want to reset the time make count = 60 and resendTime.fire()
         }
     }
     
     @objc func repeatCodeButtonTapped() {
-        NetworkManager<GetCodeDecodebleModel>.addRequest(.getCode, [:], [:]) { model, error in
+        CodeVerificationViewModel().getCode { error in
             if error != nil {
                 guard let error = error else { return }
                 self.showAlert(with: "Ошибка", and: error)
             } else {
-                guard let statusCode = model?.statusCode else { return }
-                if statusCode == 0 {
-                    DispatchQueue.main.async {
-                        self.count = 60
-                        self.resendTimer.fire()
-                        self.repeatCodeButton.isHidden = true
-                        self.timerLabel.isHidden = false
-                    }
-                } else {
-                    guard let error = model?.errorMessage else { return }
-                    self.showAlert(with: "Ошибка", and: error)
+                DispatchQueue.main.async {
+                    self.count = 60
+                    self.resendTimer.fire()
+                    self.repeatCodeButton.isHidden = true
+                    self.timerLabel.isHidden = false
                 }
             }
-            
         }
     }
     

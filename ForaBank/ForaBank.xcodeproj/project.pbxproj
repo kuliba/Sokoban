@@ -36,6 +36,8 @@
 		ED0B48A3267E71DC0037EA06 /* FCMToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B48A2267E71DC0037EA06 /* FCMToken.swift */; };
 		ED0B48A5267E72130037EA06 /* CSRFToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B48A4267E72130037EA06 /* CSRFToken.swift */; };
 		ED0B48A8268117DD0037EA06 /* SVGKitSwift in Frameworks */ = {isa = PBXBuildFile; productRef = ED0B48A7268117DD0037EA06 /* SVGKitSwift */; };
+		ED0B48AC26812F450037EA06 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B48AB26812F450037EA06 /* LoginViewModel.swift */; };
+		ED0B48AF2681CC6D0037EA06 /* CodeVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B48AE2681CC6D0037EA06 /* CodeVerificationViewModel.swift */; };
 		ED4FC5EC266AD98E0092B4AB /* NSCollectionLayoutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EB266AD98E0092B4AB /* NSCollectionLayoutItem.swift */; };
 		ED4FC5EF266B70A00092B4AB /* PartialTransparentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EE266B70A00092B4AB /* PartialTransparentView.swift */; };
 		ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5F9266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift */; };
@@ -130,6 +132,7 @@
 		EDF68219266F9EC800FD5C07 /* RouterBaseUrlList.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF6820B266F9EC800FD5C07 /* RouterBaseUrlList.swift */; };
 		EDF6821A266F9EC800FD5C07 /* RouterUrlList.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF6820C266F9EC800FD5C07 /* RouterUrlList.swift */; };
 		EDF6821D266FC37F00FD5C07 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = EDF6821C266FC37F00FD5C07 /* FirebaseMessaging */; };
+		EDFFCACD2681F975004EE095 /* CardListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFFCACC2681F975004EE095 /* CardListView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -177,6 +180,8 @@
 		ED0B489F267E1A2D0037EA06 /* PaymentsDetailsSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsDetailsSuccessViewController.swift; sourceTree = "<group>"; };
 		ED0B48A2267E71DC0037EA06 /* FCMToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCMToken.swift; sourceTree = "<group>"; };
 		ED0B48A4267E72130037EA06 /* CSRFToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFToken.swift; sourceTree = "<group>"; };
+		ED0B48AB26812F450037EA06 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		ED0B48AE2681CC6D0037EA06 /* CodeVerificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeVerificationViewModel.swift; sourceTree = "<group>"; };
 		ED4FC5EB266AD98E0092B4AB /* NSCollectionLayoutItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSCollectionLayoutItem.swift; sourceTree = "<group>"; };
 		ED4FC5EE266B70A00092B4AB /* PartialTransparentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartialTransparentView.swift; sourceTree = "<group>"; };
 		ED4FC5F9266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmsCodeBasicAttributes.swift; sourceTree = "<group>"; };
@@ -275,6 +280,7 @@
 		EDF68209266F9EC800FD5C07 /* RouterManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouterManager.swift; sourceTree = "<group>"; };
 		EDF6820B266F9EC800FD5C07 /* RouterBaseUrlList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouterBaseUrlList.swift; sourceTree = "<group>"; };
 		EDF6820C266F9EC800FD5C07 /* RouterUrlList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouterUrlList.swift; sourceTree = "<group>"; };
+		EDFFCACC2681F975004EE095 /* CardListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardListView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -346,6 +352,22 @@
 				ED0B48A4267E72130037EA06 /* CSRFToken.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		ED0B48AA26812F240037EA06 /* LoginViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				ED0B48AB26812F450037EA06 /* LoginViewModel.swift */,
+			);
+			path = LoginViewModel;
+			sourceTree = "<group>";
+		};
+		ED0B48AD2681CBD10037EA06 /* CodeVerificationViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				ED0B48AE2681CC6D0037EA06 /* CodeVerificationViewModel.swift */,
+			);
+			path = CodeVerificationViewModel;
 			sourceTree = "<group>";
 		};
 		ED46C1642678DCA500D1A9A5 /* OfferAgreement */ = {
@@ -420,6 +442,7 @@
 		ED4FC5F4266B8B2F0092B4AB /* LoginCardEntry */ = {
 			isa = PBXGroup;
 			children = (
+				ED0B48AA26812F240037EA06 /* LoginViewModel */,
 				ED4FC5FB266B8FAC0092B4AB /* LoginCardEntryViews */,
 				EDB14384265FDA410028EF5A /* LoginCardEntryViewController.swift */,
 				EDB1655B2667A2C8007E6030 /* LoginCardEntryViewController UI.swift */,
@@ -430,6 +453,7 @@
 		ED4FC5F5266B8B3B0092B4AB /* CodeVerification */ = {
 			isa = PBXGroup;
 			children = (
+				ED0B48AD2681CBD10037EA06 /* CodeVerificationViewModel */,
 				EDB14514266526670028EF5A /* CodeVerificationViews */,
 				EDB16548266766FD007E6030 /* CodeVerificationViewController.swift */,
 				EDB165592667A220007E6030 /* CodeVerificationViewController UI.swift */,
@@ -568,6 +592,7 @@
 		EDAA99AC2673AB6D00435484 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				EDFFCACB2681F950004EE095 /* CardListView */,
 				ED46C1642678DCA500D1A9A5 /* OfferAgreement */,
 				EDAA99AD2673AB7700435484 /* Switch */,
 			);
@@ -958,6 +983,14 @@
 			path = RouterUtlConfig;
 			sourceTree = "<group>";
 		};
+		EDFFCACB2681F950004EE095 /* CardListView */ = {
+			isa = PBXGroup;
+			children = (
+				EDFFCACC2681F975004EE095 /* CardListView.swift */,
+			);
+			path = CardListView;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1152,7 +1185,7 @@
 				EDB165652667A741007E6030 /* ContactConfirmViewController.swift in Sources */,
 				EDB16592266A19DA007E6030 /* PaymentsViewControllerSearchBarDelegate.swift in Sources */,
 				0B37F97A2678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift in Sources */,
-				ED0B48A0267E1A2D0037EA06 /* ConfurmPaymentsVC.swift in Sources */,
+				ED0B48A0267E1A2D0037EA06 /* PaymentsDetailsSuccessViewController.swift in Sources */,
 				0B8CB0882680CAE3006A39C3 /* ExtensionNetworkHelper.swift in Sources */,
 				ED0B48A0267E1A2D0037EA06 /* PaymentsDetailsSuccessViewController.swift in Sources */,
 				EDB14385265FDA410028EF5A /* LoginCardEntryViewController.swift in Sources */,
@@ -1179,6 +1212,7 @@
 				0B37F984267A18AC007728FC /* MakeCard2CardDecodableModel.swift in Sources */,
 				0BEC8939267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift in Sources */,
 				EDB1655C2667A2C8007E6030 /* LoginCardEntryViewController UI.swift in Sources */,
+				ED0B48AF2681CC6D0037EA06 /* CodeVerificationViewModel.swift in Sources */,
 				EDB1451E26652F170028EF5A /* UIView.swift in Sources */,
 				ED4FC610266CD66F0092B4AB /* СountryModel.swift in Sources */,
 				EDF68213266F9EC800FD5C07 /* URLHostType.swift in Sources */,
@@ -1197,6 +1231,7 @@
 				0B8BE0952670D4A300E96CAA /* GetCodeDecodebleModel.swift in Sources */,
 				EDB1452226661C3F0028EF5A /* MaskedTextField.swift in Sources */,
 				ED4FC5EF266B70A00092B4AB /* PartialTransparentView.swift in Sources */,
+				ED0B48AC26812F450037EA06 /* LoginViewModel.swift in Sources */,
 				EDB16588266A14F9007E6030 /* String.swift in Sources */,
 				EDB165762668C5BE007E6030 /* PaymentsCell.swift in Sources */,
 				EDB14383265FDA410028EF5A /* SceneDelegate.swift in Sources */,
@@ -1215,6 +1250,7 @@
 				EDF68219266F9EC800FD5C07 /* RouterBaseUrlList.swift in Sources */,
 				0B8BE093266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift in Sources */,
 				ED4FC60B266CD1020092B4AB /* СountryCell.swift in Sources */,
+				EDFFCACD2681F975004EE095 /* CardListView.swift in Sources */,
 				ED4FC61A266EA42E0092B4AB /* AppLocker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

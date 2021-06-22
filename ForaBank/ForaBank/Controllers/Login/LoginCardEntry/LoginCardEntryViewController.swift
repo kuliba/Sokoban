@@ -23,9 +23,18 @@ class LoginCardEntryViewController: UIViewController {
         creditCardView.scanerCardTapped = { self.scanCardTapped() }
         creditCardView.enterCardNumberTapped = { [weak self] (cardNumber) in
             self?.showActivity()
-            self?.checkCardNumber(with: cardNumber)
+            LoginViewModel().checkCardNumber(with: cardNumber) { model, error in
+                self?.dismissActivity()
+                if error != nil {
+                    self?.showAlert(with: "Ошибка", and: error ?? "")
+                } else {
+                    DispatchQueue.main.async { [weak self] in
+                        let vc = CodeVerificationViewController(phone: model ?? "")
+                        self?.navigationController?.pushViewController(vc, animated: true)
+                    }
+                }
+            }
         }
-        
         orderCardView.orderCardTapped = { self.orderCardTapped() }
 
         
@@ -42,30 +51,6 @@ class LoginCardEntryViewController: UIViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    fileprivate func checkCardNumber(with number: String) {
-        
-        let body = ["cardNumber": "\(number)"] as [String : AnyObject]
-        
-        NetworkManager<CheckClientDecodebleModel>.addRequest(.checkCkient, [:], body) { (model, error) in
-            self.dismissActivity()
-            if error != nil {
-                guard let error = error else { return }
-                self.showAlert(with: "Ошибка", and: error)
-            } else {
-                guard let statusCode = model?.statusCode else { return }
-                if statusCode == 0 {
-                    guard let phone = model?.data?.phone else { return }
-                    DispatchQueue.main.async { [weak self] in
-                        let vc = CodeVerificationViewController(phone: phone)
-                        self?.navigationController?.pushViewController(vc, animated: true)
-                    }
-                } else {
-                    guard let error = model?.errorMessage else { return }
-                    self.showAlert(with: "Ошибка", and: error)
-                }
-            }
-        }
-    }
 
     fileprivate func scanCardTapped() {
         print(#function + " Открываем экран сканера")
