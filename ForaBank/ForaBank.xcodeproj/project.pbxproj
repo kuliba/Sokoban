@@ -32,6 +32,9 @@
 		68FFA52D2682AF62002DADFA /* ContactCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68FFA52B2682AF62002DADFA /* ContactCollectionViewCell.xib */; };
 		68FFA5402682C6CF002DADFA /* LastPaymentsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA53E2682C6CF002DADFA /* LastPaymentsCollectionViewCell.swift */; };
 		68FFA5412682C6CF002DADFA /* LastPaymentsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68FFA53F2682C6CF002DADFA /* LastPaymentsCollectionViewCell.xib */; };
+		68FFA5432682DC95002DADFA /* PhoneConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA5422682DC95002DADFA /* PhoneConfirmViewController.swift */; };
+		68FFA5452682F48C002DADFA /* SearchContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA5442682F48C002DADFA /* SearchContact.swift */; };
+		68FFA5472682F49A002DADFA /* SearchContact.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68FFA5462682F49A002DADFA /* SearchContact.xib */; };
 		ED0B4892267B4CDD0037EA06 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = ED0B4891267B4CDD0037EA06 /* IQKeyboardManagerSwift */; };
 		ED0B4894267B50F50037EA06 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B4893267B50F50037EA06 /* Int.swift */; };
 		ED0B4896267B97C60037EA06 /* ContactInputViewController + UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B4895267B97C60037EA06 /* ContactInputViewController + UI.swift */; };
@@ -185,6 +188,9 @@
 		68FFA52B2682AF62002DADFA /* ContactCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ContactCollectionViewCell.xib; sourceTree = "<group>"; };
 		68FFA53E2682C6CF002DADFA /* LastPaymentsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LastPaymentsCollectionViewCell.swift; sourceTree = "<group>"; };
 		68FFA53F2682C6CF002DADFA /* LastPaymentsCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LastPaymentsCollectionViewCell.xib; sourceTree = "<group>"; };
+		68FFA5422682DC95002DADFA /* PhoneConfirmViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneConfirmViewController.swift; sourceTree = "<group>"; };
+		68FFA5442682F48C002DADFA /* SearchContact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchContact.swift; sourceTree = "<group>"; };
+		68FFA5462682F49A002DADFA /* SearchContact.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchContact.xib; sourceTree = "<group>"; };
 		ED0B4893267B50F50037EA06 /* Int.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
 		ED0B4895267B97C60037EA06 /* ContactInputViewController + UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContactInputViewController + UI.swift"; sourceTree = "<group>"; };
 		ED0B489B267D41A60037EA06 /* PaymentsDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsDetailsView.swift; sourceTree = "<group>"; };
@@ -364,6 +370,8 @@
 		68FFA52E2682B057002DADFA /* SearchNumberPhone */ = {
 			isa = PBXGroup;
 			children = (
+				68FFA5442682F48C002DADFA /* SearchContact.swift */,
+				68FFA5462682F49A002DADFA /* SearchContact.xib */,
 			);
 			path = SearchNumberPhone;
 			sourceTree = "<group>";
@@ -636,6 +644,7 @@
 			children = (
 				68FFA5262682AEE1002DADFA /* ContactsViewController */,
 				ED92D3A126735A0A006D47B3 /* PaymentByPhoneViewController.swift */,
+				68FFA5422682DC95002DADFA /* PhoneConfirmViewController.swift */,
 			);
 			path = PaymentsByPhone;
 			sourceTree = "<group>";
@@ -1178,6 +1187,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EDB143CE265FDEC90028EF5A /* Roboto-Thin.ttf in Resources */,
+				68FFA5472682F49A002DADFA /* SearchContact.xib in Resources */,
 				ED4FC60C266CD1020092B4AB /* СountryCell.xib in Resources */,
 				EDB143C9265FDEC90028EF5A /* Roboto-BoldItalic.ttf in Resources */,
 				68FFA5412682C6CF002DADFA /* LastPaymentsCollectionViewCell.xib in Resources */,
@@ -1265,6 +1275,7 @@
 				EDB14385265FDA410028EF5A /* LoginCardEntryViewController.swift in Sources */,
 				0B37F98626807620007728FC /* NetworkHelper.swift in Sources */,
 				EDF6820D266F9EC800FD5C07 /* NetworkManager.swift in Sources */,
+				68FFA5432682DC95002DADFA /* PhoneConfirmViewController.swift in Sources */,
 				EDF6820F266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift in Sources */,
 				EDB1656E266827A8007E6030 /* PaymentsViewController.swift in Sources */,
 				0B37F980267A11FB007728FC /* GetOwnerPhoneNumberPhoneDecodableModel.swift in Sources */,
@@ -1324,6 +1335,7 @@
 				0B747890267343B400C44F79 /* KeyExchangeDecodebleModel.swift in Sources */,
 				EDB14528266624EE0028EF5A /* OrderCardView.swift in Sources */,
 				EDF68219266F9EC800FD5C07 /* RouterBaseUrlList.swift in Sources */,
+				68FFA5452682F48C002DADFA /* SearchContact.swift in Sources */,
 				0B8BE093266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift in Sources */,
 				ED4FC60B266CD1020092B4AB /* СountryCell.swift in Sources */,
 				EDFFCACD2681F975004EE095 /* CardListView.swift in Sources */,

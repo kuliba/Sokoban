@@ -14,6 +14,7 @@ class LastPaymentsCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var contactImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var bankNameLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
