@@ -82,13 +82,11 @@ class ContactInputViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupUI()
         hideKeyboardWhenTappedAround()
         cardField.didChooseButtonTapped = { () in
             print("cardField didChooseButtonTapped")
             self.popView.showAlert()
-            
         }
         
         bankField.didChooseButtonTapped = { () in

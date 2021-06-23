@@ -18,7 +18,7 @@ struct CastomPopUpView {
         let view = UIView()
  //       let h = T().layer.bounds.height
         view.backgroundColor = .green
-        view.layer.frame.size = CGSize(width: 200, height: 400)
+        view.frame = CGRect(x: 0, y: 0, width: 200, height: 400)
         
         var attributes = EKAttributes.centerFloat
         attributes.displayDuration = .infinity
@@ -26,13 +26,13 @@ struct CastomPopUpView {
         attributes.windowLevel = .normal
         attributes.position = .bottom
         
-        attributes.screenInteraction = .absorbTouches
-        attributes.entryInteraction = .absorbTouches
+        attributes.screenInteraction = .dismiss
+        attributes.entryInteraction = .dismiss
         attributes.shadow = .active(with: .init(color: .black, opacity: 0.2, radius: 10, offset: .zero))
         attributes.roundCorners = .all(radius: 10)
         
-        let widthConstraint = EKAttributes.PositionConstraints.Edge.ratio(value: 0.9)
-        let heightConstraint = EKAttributes.PositionConstraints.Edge.constant(value: view.layer.bounds.height)
+        let widthConstraint = EKAttributes.PositionConstraints.Edge.ratio(value: 0.1)
+        let heightConstraint = EKAttributes.PositionConstraints.Edge.intrinsic
         attributes.positionConstraints.size = .init(width: widthConstraint, height: heightConstraint)
         attributes.positionConstraints.safeArea = .empty(fillSafeArea: false)
         
@@ -40,6 +40,10 @@ struct CastomPopUpView {
         let keyboardRelation = EKAttributes.PositionConstraints.KeyboardRelation.bind(offset: offset)
         attributes.positionConstraints.keyboardRelation = keyboardRelation
         
+         attributes.entranceAnimation = .init(
+                     translate: .init(duration: 0.7, anchorPosition: .top, spring: .init(damping: 1, initialVelocity: 0)),
+                     scale: .init(from: 0.6, to: 1, duration: 0.7),
+                     fade: .init(from: 0.8, to: 1, duration: 0.3))
         return attributes
     }
     
