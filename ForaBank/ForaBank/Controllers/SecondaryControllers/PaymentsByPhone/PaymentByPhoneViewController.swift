@@ -39,6 +39,8 @@ class PaymentByPhoneViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         hideKeyboardWhenTappedAround()
+        title = "Подтвердите реквизиты"
+
         // Do any additional setup after loading the view.
     }
     
