@@ -103,7 +103,6 @@ class ContactInputViewController: UIViewController {
     //MARK: - Viewlifecicle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupUI()
         hideKeyboardWhenTappedAround()
         setupActions()

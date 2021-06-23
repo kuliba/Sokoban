@@ -19,6 +19,10 @@
 		0B747890267343B400C44F79 /* KeyExchangeDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */; };
 		0B7A18AB2681CED70007CC75 /* SwiftEntryKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0B7A18AA2681CED70007CC75 /* SwiftEntryKit */; };
 		0B7A18AD2681CF160007CC75 /* CastomPopUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18AC2681CF160007CC75 /* CastomPopUpView.swift */; };
+		0B7A18AF268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18AE268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift */; };
+		0B7A18B226836A400007CC75 /* NetworkPDFManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18B126836A400007CC75 /* NetworkPDFManager.swift */; };
+		0B7A18B4268372240007CC75 /* NetworkPDFModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18B3268372240007CC75 /* NetworkPDFModelProtocol.swift */; };
+		0B7A18B6268373890007CC75 /* NetworkPDFManagerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18B5268373890007CC75 /* NetworkPDFManagerExtension.swift */; };
 		0B8BE08F266FBE0500E96CAA /* CSRFDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE08E266FBE0500E96CAA /* CSRFDecodableModel.swift */; };
 		0B8BE091266FDA1B00E96CAA /* CheckClientDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE090266FDA1B00E96CAA /* CheckClientDecodebleModel.swift */; };
 		0B8BE093266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE092266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift */; };
@@ -169,6 +173,10 @@
 		0B37F9872680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLatestPaymentsDecodableModel.swift; sourceTree = "<group>"; };
 		0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyExchangeDecodebleModel.swift; sourceTree = "<group>"; };
 		0B7A18AC2681CF160007CC75 /* CastomPopUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastomPopUpView.swift; sourceTree = "<group>"; };
+		0B7A18AE268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLatestPhonePaymentsDecodableModel.swift; sourceTree = "<group>"; };
+		0B7A18B126836A400007CC75 /* NetworkPDFManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkPDFManager.swift; sourceTree = "<group>"; };
+		0B7A18B3268372240007CC75 /* NetworkPDFModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkPDFModelProtocol.swift; sourceTree = "<group>"; };
+		0B7A18B5268373890007CC75 /* NetworkPDFManagerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkPDFManagerExtension.swift; sourceTree = "<group>"; };
 		0B8BE08E266FBE0500E96CAA /* CSRFDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFDecodableModel.swift; sourceTree = "<group>"; };
 		0B8BE090266FDA1B00E96CAA /* CheckClientDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckClientDecodebleModel.swift; sourceTree = "<group>"; };
 		0B8BE092266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyCodeDecodebleModel.swift; sourceTree = "<group>"; };
@@ -323,6 +331,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0B7A18B026836A040007CC75 /* NetworkPDFManager */ = {
+			isa = PBXGroup;
+			children = (
+				0B7A18B126836A400007CC75 /* NetworkPDFManager.swift */,
+				0B7A18B5268373890007CC75 /* NetworkPDFManagerExtension.swift */,
+				0B7A18B3268372240007CC75 /* NetworkPDFModelProtocol.swift */,
+			);
+			path = NetworkPDFManager;
+			sourceTree = "<group>";
+		};
 		0BEC89372672305600D8BD22 /* NetworkingLoginModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -870,6 +888,7 @@
 		EDF681F2266F9EC800FD5C07 /* NetworkManager */ = {
 			isa = PBXGroup;
 			children = (
+				0B7A18B026836A040007CC75 /* NetworkPDFManager */,
 				EDF681F3266F9EC800FD5C07 /* NetworkManager.swift */,
 				0B37F98526807620007728FC /* NetworkHelper.swift */,
 				0B8CB0872680CAE3006A39C3 /* ExtensionNetworkHelper.swift */,
@@ -895,6 +914,7 @@
 				0B37F981267A1814007728FC /* FastPaymentBanksListDecodableModel.swift */,
 				0B37F983267A18AC007728FC /* MakeCard2CardDecodableModel.swift */,
 				0B37F9872680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift */,
+				0B7A18AE268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -1212,6 +1232,7 @@
 				EDB1452026661B030028EF5A /* StringMask.swift in Sources */,
 				EDB16586266A0883007E6030 /* NSDirectionalEdgeInsets.swift in Sources */,
 				EDFFCAF32682461F004EE095 /* CardCell.swift in Sources */,
+				0B7A18B4268372240007CC75 /* NetworkPDFModelProtocol.swift in Sources */,
 				EDB14524266624460028EF5A /* UIViewController.swift in Sources */,
 				EDB16597266A576A007E6030 /* CardScannerController.swift in Sources */,
 				EDB165662667A741007E6030 /* ContactInputViewController.swift in Sources */,
@@ -1229,15 +1250,18 @@
 				EDF6820D266F9EC800FD5C07 /* NetworkManager.swift in Sources */,
 				EDF6820F266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift in Sources */,
 				EDB1656E266827A8007E6030 /* PaymentsViewController.swift in Sources */,
+				0B7A18AF268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift in Sources */,
 				0B37F980267A11FB007728FC /* GetOwnerPhoneNumberPhoneDecodableModel.swift in Sources */,
 				0B37F982267A1814007728FC /* FastPaymentBanksListDecodableModel.swift in Sources */,
 				EDB1654B26676F20007E6030 /* UIButton.swift in Sources */,
 				0B37F9782678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift in Sources */,
 				EDB1453C2666AEB90028EF5A /* AppDelegate UI extension.swift in Sources */,
 				ED92D3A226735A0A006D47B3 /* PaymentByPhoneViewController.swift in Sources */,
+				0B7A18B226836A400007CC75 /* NetworkPDFManager.swift in Sources */,
 				EDB1655826679C74007E6030 /* SmsCodeView.swift in Sources */,
 				EDB14381265FDA410028EF5A /* AppDelegate.swift in Sources */,
 				EDB1658C266A18C3007E6030 /* PaymentsViewControllerDelegate.swift in Sources */,
+				0B7A18B6268373890007CC75 /* NetworkPDFManagerExtension.swift in Sources */,
 				EDF68215266F9EC800FD5C07 /* URLConstruct.swift in Sources */,
 				0BEC893B2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift in Sources */,
 				EDF68210266F9EC800FD5C07 /* LoginDoCodableModel.swift in Sources */,

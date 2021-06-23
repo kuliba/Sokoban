@@ -17,42 +17,26 @@ enum RouterUrlList: String {
     case setDeviceSetting
     /// Получение токена при запуске приложения
     case csrf
-    
     case chackClient
-    
     case verifyCode
-    
     case doRegistration
-    
     case getCode
-    
     case installPushDevice
-    
     case registerPushDeviceForUser
-    
     case uninstallPushDevice
-    
     case getCardList
-    
     case keyExchange
-    
     case getCountries
-    
     case anywayPaymentBegin
-    
     case anywayPaymentMake
-    
     case anywayPayment
-    
     case prepareCard2Phone
-    
     case getOwnerPhoneNumber
-    
     case fastPaymentBanksList
-    
     case makeCard2Card
-    
     case getLatestPayments
+    case getPrintForm
+    case getLatestPhonePayments
     
     func returnUrl () -> URLValue {
         switch self {
@@ -279,6 +263,28 @@ enum RouterUrlList: String {
             
         case .getLatestPayments:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getLatestPayments.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .getPrintForm:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getPrintForm.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .getLatestPhonePayments:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getLatestPhonePayments.rawValue)
             
             switch result {
             case .success(let url):

@@ -13,51 +13,55 @@ enum RouterBaseUrlList: String {
     
     /// Авторизация
     /// "login.do"
-    case login = "/login.do"
+    case login                     = "/login.do"
     
     /// Авторизация приложения
     /// "setDeviceSettting"
-    case setDeviceSettting = "/registration/setDeviceSettings"
+    case setDeviceSettting         = "/registration/setDeviceSettings"
     
     /// Получение токена при запуске приложения
     /// "/csrf/"
-    case csrf = "/csrf"
+    case csrf                      = "/csrf"
     
     /// Получение токена при запуске приложения
     /// "/registration/checkClient"
-    case checkClient = "/registration/checkClient"
+    case checkClient               = "/registration/checkClient"
     
-    case verifyCode = "/registration/verifyCode"
+    case verifyCode                = "/registration/verifyCode"
     
-    case doRegistration = "/registration/doRegistration"
+    case doRegistration            = "/registration/doRegistration"
     
-    case getCode = "/registration/getCode"
+    case getCode                   = "/registration/getCode"
     
-    case installPushDevice = "/push_device/installPushDevice"
+    case installPushDevice         = "/push_device/installPushDevice"
     
     case registerPushDeviceForUser = "/push_device_user/registerPushDeviceForUser"
     
-    case uninstallPushDevice = "/push_device/uninstallPushDevice"
+    case uninstallPushDevice       = "/push_device/uninstallPushDevice"
     
-    case getCardList = "/rest/getCardList"
+    case getCardList               = "/rest/getCardList"
     
-    case keyExchange = "/keyExchange"
+    case keyExchange               = "/keyExchange"
     
-    case getCountries = "/rest/dict/getCountries"
+    case getCountries              = "/rest/dict/getCountries"
     
-    case anywayPaymentBegin = "/rest/anywayPaymentBegin"
+    case anywayPaymentBegin        = "/rest/anywayPaymentBegin"
     
-    case anywayPaymentMake = "/rest/anywayPaymentMake"
+    case anywayPaymentMake         = "/rest/anywayPaymentMake"
     
-    case anywayPayment = "/rest/anywayPayment"
+    case anywayPayment             = "/rest/anywayPayment"
     
-    case prepareCard2Phone = "/rest/prepareCard2Phone"
+    case prepareCard2Phone         = "/rest/prepareCard2Phone"
     
-    case getOwnerPhoneNumber = "/rest/getOwnerPhoneNumber"
+    case getOwnerPhoneNumber       = "/rest/getOwnerPhoneNumber"
     
-    case fastPaymentBanksList = "/rest/fastPaymentBanksList"
+    case fastPaymentBanksList      = "/rest/fastPaymentBanksList"
     
-    case makeCard2Card = "/rest/makeCard2Card"
+    case makeCard2Card             = "/rest/makeCard2Card"
     
-    case getLatestPayments = "/rest/getLatestPayments"
+    case getLatestPayments         = "/rest/getLatestPayments"
+    
+    case getPrintForm              = "/rest/getPrintForm"
+    
+    case getLatestPhonePayments    = "/rest/getLatestPhonePayments"
 }
