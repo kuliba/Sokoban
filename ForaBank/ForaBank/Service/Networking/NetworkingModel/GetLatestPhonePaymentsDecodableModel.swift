@@ -13,7 +13,7 @@
 import Foundation
 
 // MARK: - GetLatestPhonePaymentsDecodableModel
-struct GetLatestPhonePaymentsDecodableModel: Codable {
+struct GetLatestPhonePaymentsDecodableModel: Codable, NetworkModelProtocol {
     let statusCode: Int?
     let errorMessage: String?
     let data: [GetLatestPhone]?
