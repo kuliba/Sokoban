@@ -70,6 +70,7 @@ class ContactInputViewController: UIViewController {
             image: #imageLiteral(resourceName: "credit-card"),
             type: .credidCard,
             isEditable: false))
+
     
     lazy var doneButton: UIButton = {
         let button = UIButton(title: "Продолжить")
@@ -79,6 +80,7 @@ class ContactInputViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupUI()
         hideKeyboardWhenTappedAround()
         cardField.didChooseButtonTapped = { () in

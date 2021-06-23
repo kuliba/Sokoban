@@ -10,6 +10,7 @@ import UIKit
 
 //TODO: отрефакторить под сетевые запросы, вынести в отдельный файл
 struct ConfirmViewControllerModel {
+    
     var phone: String?
     var name: String
     var country: Country?
