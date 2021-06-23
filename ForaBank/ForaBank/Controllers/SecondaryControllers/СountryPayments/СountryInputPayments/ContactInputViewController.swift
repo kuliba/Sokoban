@@ -10,11 +10,20 @@ import UIKit
 class ContactInputViewController: UIViewController {
     
     let popView = CastomPopUpView()
-    
+    var typeOfPay: PaymentType = .contact {
+        didSet {
+            self.startPayment(with: selectedCardNumber, type: typeOfPay) { error in
+                self.dismissActivity()
+                if error != nil {
+                    self.showAlert(with: "Ошибка", and: error!)
+                }
+            }
+        }
+    }
     var selectedCardNumber = "" {
         didSet {
             self.isFirstStartPayment = false
-            self.startContactPayment(with: selectedCardNumber) { error in
+            self.startPayment(with: selectedCardNumber, type: typeOfPay) { error in
                 self.dismissActivity()
                 if error != nil {
                     self.showAlert(with: "Ошибка", and: error!)
@@ -23,10 +32,21 @@ class ContactInputViewController: UIViewController {
         }
     }
     var isFirstStartPayment = true
-    var needShowSwitchView: Bool = false
+    var needShowSwitchView: Bool = false {
+        didSet {
+            foraSwitchView.isHidden = needShowSwitchView ? false : true
+        }
+    }
+    
     var country: Country? {
         didSet {
-            self.configure(with: country)
+            if country?.code == "AM" {
+                self.typeOfPay = .migAIbank
+                self.configure(with: country, byPhone: true)
+            } else {
+                self.typeOfPay = .contact
+                self.configure(with: country, byPhone: false)
+            }
         }
     }
     var foraSwitchView = ForaSwitchView()
@@ -59,7 +79,6 @@ class ContactInputViewController: UIViewController {
             isEditable: false,
             showChooseButton: true))
     
-    
     var summTransctionField = ForaInput(
         viewModel: ForaInputModel(
             title: "Сумма перевода",
@@ -72,42 +91,29 @@ class ContactInputViewController: UIViewController {
             image: #imageLiteral(resourceName: "credit-card"),
             type: .credidCard,
             isEditable: false))
-    var cardListView = CardListView()
     
+    var cardListView = CardListView()
+    var stackView = UIStackView(arrangedSubviews: [])
     lazy var doneButton: UIButton = {
         let button = UIButton(title: "Продолжить")
         button.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
         return button
     }()
     
+    //MARK: - Viewlifecicle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupUI()
         hideKeyboardWhenTappedAround()
-        cardField.didChooseButtonTapped = { () in
-            print("cardField didChooseButtonTapped")
-            self.popView.showAlert()
-            
-        }
-        
-        bankField.didChooseButtonTapped = { () in
-            print("bankField didChooseButtonTapped")
-            
-        }
-        getCardList { error in
-            self.dismissActivity()
-            if error != nil {
-                self.showAlert(with: "Ошибка", and: error!)
-            }
-        }
+        setupActions()
         
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if !isFirstStartPayment {
-            self.startContactPayment(with: selectedCardNumber) { error in
+            self.startPayment(with: selectedCardNumber, type: typeOfPay) { error in
                 self.dismissActivity()
                 if error != nil {
                     self.showAlert(with: "Ошибка", and: error!)
@@ -116,6 +122,7 @@ class ContactInputViewController: UIViewController {
         }
     }
     
+    //MARK: - Actions
     @objc func titleDidTaped() {
         print("countryField didChooseButtonTapped")
         let vc = ChooseCountryTableViewController()
@@ -127,15 +134,63 @@ class ContactInputViewController: UIViewController {
         self.present(navVc, animated: true, completion: nil)
     }
     
+    func setupActions() {
+        getCardList {data ,error in
+            DispatchQueue.main.async {
+                
+                //TODO: ------------ замокано для показа
+                self.bankField.text = "АйДиБанк"
+                self.bankField.imageView.image = #imageLiteral(resourceName: "IdBank")
+                
+                
+                if error != nil {
+                    self.showAlert(with: "Ошибка", and: error!)
+                }
+                guard let data = data else { return }
+                self.cardListView.cardList = data
+                
+                if data.count > 0 {
+                    self.cardField.configCardView(data.first!)
+                    guard let cardNumber  = data.first?.original?.number else { return }
+                    self.selectedCardNumber = cardNumber
+                }
+            }
+        }
+        
+        foraSwitchView.switchIsChanged = { (switchView) in
+            self.typeOfPay = switchView.isOn ? .migAIbank : .contact
+            self.configure(with: self.country, byPhone: switchView.isOn)
+        }
+        
+        cardField.didChooseButtonTapped = { () in
+            print("cardField didChooseButtonTapped")
+//            self.popView.showAlert()
+            UIView.animate(withDuration: 0.2) {
+                self.cardListView.isHidden.toggle()
+            }
+        }
+        
+        bankField.didChooseButtonTapped = { () in
+            print("bankField didChooseButtonTapped")
+            
+        }
+        
+        cardListView.didCardTapped = { card in
+            self.cardField.configCardView(card)
+            self.selectedCardNumber = card.original?.number ?? ""
+            UIView.animate(withDuration: 0.2) {
+                self.cardListView.isHidden.toggle()
+            }
+        }
+    }
+    
     @objc func doneButtonTapped() {
-        guard let country = country else { return }
         let amount = summTransctionField.textField.text ?? ""
         let doubelAmount = amount.replacingOccurrences(of: ",", with: ".", options: .literal, range: nil)
-
         
-        if country.code == "AM" {
+        switch typeOfPay {
+        case .migAIbank:
             let phone = phoneField.textField.unmaskedText ?? ""
-            
             
             endMigPayment(phone: phone, amount: doubelAmount) { error in
                 self.dismissActivity()
@@ -143,7 +198,7 @@ class ContactInputViewController: UIViewController {
                     self.showAlert(with: "Ошибка", and: error!)
                 }
             }
-        } else {
+        default:
             let surname = surnameField.textField.text ?? ""
             let name = nameField.textField.text ?? ""
             let secondName = secondNameField.textField.text ?? ""
@@ -160,6 +215,7 @@ class ContactInputViewController: UIViewController {
         }
     }
     
+    //MARK: - Helpers
     func goToConfurmVC(with model: ConfirmViewControllerModel) {
         DispatchQueue.main.async {
             let vc = ContactConfurmViewController()
@@ -168,55 +224,36 @@ class ContactInputViewController: UIViewController {
         }
     }
     
-    func getCardList(completion: @escaping (_ error: String?)->()) {
+    //MARK: - API
+    func getCardList(completion: @escaping (_ cardList: [Datum]?,_ error: String?)->()) {
         showActivity()
         
         NetworkManager<GetCardListDecodebleModel>.addRequest(.getCardList, [:], [:]) { model, error in
+            self.dismissActivity()
             if error != nil {
                 print("DEBUG: Error: ", error ?? "")
-                completion(error)
+                completion(nil,error)
             }
             guard let model = model else { return }
             print("DEBUG: Card list: ", model)
             if model.statusCode == 0 {
-                completion(nil)
                 guard let data  = model.data else { return }
-                guard let cardNumber  = model.data?.first?.original?.number else { return }
-                self.selectedCardNumber = cardNumber
-                DispatchQueue.main.async {
-                    self.cardListView.cardList = data
-                    self.cardField.text = data.first?.original?.name ?? ""
-                    let balance = Double(data.first?.original?.balance ?? 0) 
-                    self.cardField.balanceLabel.text = balance.currencyFormatter()
-                    self.cardField.bottomLabelText = data.first?.original?.numberMasked
-                    
-                    //TODO: ------------ замокано для показа
-                    self.bankField.text = "АйДиБанк"
-                    self.bankField.imageView.image = #imageLiteral(resourceName: "IdBank")
-                }
+                completion(data, nil)
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-                completion(model.errorMessage)
+                completion(nil ,model.errorMessage)
             }
         }
         
     }
     
-    func startContactPayment(with card: String, completion: @escaping (_ error: String?)->()) {
+    
+    func startPayment(with card: String, type: PaymentType,
+                             completion: @escaping (_ error: String?)->()) {
         showActivity()
-        var puref = ""
-        guard let country = country else { return }
-        if country.code == "AM" {
-            puref = "iSimpleDirect||TransferIDClient11P"
-            
-//            iSimpleDirect||TransferIDClient11P    Перевод в АйДиБанк
-//            iSimpleDirect||TransferEvocaClientP   Перевод в ЭвокаБанк
-//            iSimpleDirect||TransferArmBBClientP   Перевод в АрмББ
-//            iSimpleDirect||TransferArdshinClientP Перевод в АрдшинБанк
-            
-        } else {
-            puref = "iFora||Addressless"
-        }
+        let puref = type.puref
+        
+        print("DEBUG: Puref: ", puref)
         let body = ["accountID": nil,
                     "cardID": nil,
                     "cardNumber": card,
@@ -355,6 +392,37 @@ class ContactInputViewController: UIViewController {
         
         
     }
+    
+    
+    enum PaymentType {
+        case contact
+        case migAIbank
+        case migEvoka
+        case migArmBB
+        case migArdshin
+        
+        var puref: String {
+            switch self {
+            case .contact:
+                return "iSimpleDirect||TransferIDClient11P"
+            case .migAIbank:
+                return "iSimpleDirect||TransferIDClient11P"
+            case .migEvoka:
+                return "iSimpleDirect||TransferEvocaClientP"
+            case .migArmBB:
+                return "iSimpleDirect||TransferArmBBClientP"
+            case .migArdshin:
+                return "iSimpleDirect||TransferArdshinClientP"
+            }
+        }
+    }
+    
+    
+//          "iSimpleDirect||TransferIDClient11P"
+//            iSimpleDirect||TransferIDClient11P    Перевод в АйДиБанк
+//            iSimpleDirect||TransferEvocaClientP   Перевод в ЭвокаБанк
+//            iSimpleDirect||TransferArmBBClientP   Перевод в АрмББ
+//            iSimpleDirect||TransferArdshinClientP Перевод в АрдшинБанк
     
 }
 

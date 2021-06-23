@@ -137,6 +137,7 @@
 		EDFFCACD2681F975004EE095 /* CardListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFFCACC2681F975004EE095 /* CardListView.swift */; };
 		EDFFCAF0268245EC004EE095 /* CardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFFCAEF268245EC004EE095 /* CardViewModel.swift */; };
 		EDFFCAF32682461F004EE095 /* CardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFFCAF22682461F004EE095 /* CardCell.swift */; };
+		EDFFCAF82683943A004EE095 /* UISwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFFCAF72683943A004EE095 /* UISwitch.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -288,6 +289,7 @@
 		EDFFCACC2681F975004EE095 /* CardListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardListView.swift; sourceTree = "<group>"; };
 		EDFFCAEF268245EC004EE095 /* CardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewModel.swift; sourceTree = "<group>"; };
 		EDFFCAF22682461F004EE095 /* CardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardCell.swift; sourceTree = "<group>"; };
+		EDFFCAF72683943A004EE095 /* UISwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISwitch.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -729,6 +731,7 @@
 				ED4FC5EB266AD98E0092B4AB /* NSCollectionLayoutItem.swift */,
 				EDB16587266A14F9007E6030 /* String.swift */,
 				ED0B4893267B50F50037EA06 /* Int.swift */,
+				EDFFCAF72683943A004EE095 /* UISwitch.swift */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";
@@ -1186,6 +1189,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ED0B48A3267E71DC0037EA06 /* FCMToken.swift in Sources */,
+				EDFFCAF82683943A004EE095 /* UISwitch.swift in Sources */,
 				0BEC893D2672591A00D8BD22 /* GetCardListDecodebleModel.swift in Sources */,
 				EDF68211266F9EC800FD5C07 /* RequestError.swift in Sources */,
 				0B37F9882680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift in Sources */,

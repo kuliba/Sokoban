@@ -100,7 +100,6 @@ class ForaInput: UIView {
     //MARK: - Helpers
     private func configure() {
         
-        
         imageView.image = viewModel.image
         balanceLabel.isHidden = true
         textField.placeholder = viewModel.title
@@ -141,6 +140,15 @@ class ForaInput: UIView {
             placeHolder.isHidden = text.isEmpty
             placeHolder.alpha = text.isEmpty ? 0 : 1
         }
+        
+    }
+    
+    func configCardView(_ with: Datum) {
+        
+        self.text = with.original?.name ?? ""
+        let balance = Double(with.original?.balance ?? 0)
+        self.balanceLabel.text = balance.currencyFormatter()
+        self.bottomLabelText = with.original?.numberMasked
         
     }
     
