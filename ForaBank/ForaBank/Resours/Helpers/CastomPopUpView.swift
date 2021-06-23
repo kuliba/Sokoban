@@ -13,7 +13,7 @@ struct CastomPopUpView {
     
     let view = UIView()
     
-   static func setupAttributs () -> EKAttributes {
+   func setupAttributs () -> EKAttributes {
         
         let view = UIView()
  //       let h = T().layer.bounds.height
@@ -46,7 +46,7 @@ struct CastomPopUpView {
     
     func showAlert () {
 
-        SwiftEntryKit.display(entry: view, using: CastomPopUpView.setupAttributs())
+        SwiftEntryKit.display(entry: view, using: setupAttributs())
 
     }
     
