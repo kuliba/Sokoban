@@ -9,6 +9,8 @@ import UIKit
 
 class ContactInputViewController: UIViewController {
     
+    let popView = CastomPopUpView()
+    
     var selectedCardNumber = "" {
         didSet {
             self.isFirstStartPayment = false
@@ -80,10 +82,12 @@ class ContactInputViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupUI()
         hideKeyboardWhenTappedAround()
         cardField.didChooseButtonTapped = { () in
             print("cardField didChooseButtonTapped")
+            self.popView.showAlert()
             
         }
         

@@ -17,6 +17,8 @@
 		0B37F98626807620007728FC /* NetworkHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F98526807620007728FC /* NetworkHelper.swift */; };
 		0B37F9882680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F9872680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift */; };
 		0B747890267343B400C44F79 /* KeyExchangeDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */; };
+		0B7A18AB2681CED70007CC75 /* SwiftEntryKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0B7A18AA2681CED70007CC75 /* SwiftEntryKit */; };
+		0B7A18AD2681CF160007CC75 /* CastomPopUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18AC2681CF160007CC75 /* CastomPopUpView.swift */; };
 		0B8BE08F266FBE0500E96CAA /* CSRFDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE08E266FBE0500E96CAA /* CSRFDecodableModel.swift */; };
 		0B8BE091266FDA1B00E96CAA /* CheckClientDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE090266FDA1B00E96CAA /* CheckClientDecodebleModel.swift */; };
 		0B8BE093266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE092266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift */; };
@@ -173,6 +175,7 @@
 		0B37F98526807620007728FC /* NetworkHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkHelper.swift; sourceTree = "<group>"; };
 		0B37F9872680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLatestPaymentsDecodableModel.swift; sourceTree = "<group>"; };
 		0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyExchangeDecodebleModel.swift; sourceTree = "<group>"; };
+		0B7A18AC2681CF160007CC75 /* CastomPopUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastomPopUpView.swift; sourceTree = "<group>"; };
 		0B8BE08E266FBE0500E96CAA /* CSRFDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFDecodableModel.swift; sourceTree = "<group>"; };
 		0B8BE090266FDA1B00E96CAA /* CheckClientDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckClientDecodebleModel.swift; sourceTree = "<group>"; };
 		0B8BE092266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyCodeDecodebleModel.swift; sourceTree = "<group>"; };
@@ -310,6 +313,7 @@
 			files = (
 				EDAA99B42674C38900435484 /* ProgressHUD in Frameworks */,
 				ED0B4892267B4CDD0037EA06 /* IQKeyboardManagerSwift in Frameworks */,
+				0B7A18AB2681CED70007CC75 /* SwiftEntryKit in Frameworks */,
 				ED0B48A8268117DD0037EA06 /* SVGKitSwift in Frameworks */,
 				EDF6821D266FC37F00FD5C07 /* FirebaseMessaging in Frameworks */,
 				ED4FC621266EA5CD0092B4AB /* Valet in Frameworks */,
@@ -580,6 +584,7 @@
 				EDB14534266671580028EF5A /* MockItems.swift */,
 				EDB1451F26661B030028EF5A /* StringMask.swift */,
 				EDB1452126661C3F0028EF5A /* MaskedTextField.swift */,
+				0B7A18AC2681CF160007CC75 /* CastomPopUpView.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1090,6 +1095,7 @@
 				EDF6821C266FC37F00FD5C07 /* FirebaseMessaging */,
 				EDAA99B32674C38900435484 /* ProgressHUD */,
 				ED0B4891267B4CDD0037EA06 /* IQKeyboardManagerSwift */,
+				0B7A18AA2681CED70007CC75 /* SwiftEntryKit */,
 				ED0B48A7268117DD0037EA06 /* SVGKitSwift */,
 			);
 			productName = ForaBank;
@@ -1168,6 +1174,7 @@
 				EDF6821B266FC37F00FD5C07 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD" */,
 				ED0B4890267B4CDD0037EA06 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
+				0B7A18A92681CED70007CC75 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */,
 				ED0B48A6268117DD0037EA06 /* XCRemoteSwiftPackageReference "SVGKit" */,
 			);
 			productRefGroup = EDB1437E265FDA410028EF5A /* Products */;
@@ -1249,6 +1256,7 @@
 				EDB165602667A569007E6030 /* ForaInput.swift in Sources */,
 				EDF68216266F9EC800FD5C07 /* RouterError.swift in Sources */,
 				0B37F97C2678EC69007728FC /* AnywayPaymentDecodableModel.swift in Sources */,
+				0B7A18AD2681CF160007CC75 /* CastomPopUpView.swift in Sources */,
 				EDAA99AF2673AB9200435484 /* ForaSwitchView.swift in Sources */,
 				EDB1657C2668C8D5007E6030 /* PayCell.swift in Sources */,
 				EDFFCAF0268245EC004EE095 /* CardViewModel.swift in Sources */,
@@ -1667,6 +1675,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		0B7A18A92681CED70007CC75 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/huri000/SwiftEntryKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.7;
+			};
+		};
 		ED0B4890267B4CDD0037EA06 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
@@ -1710,6 +1726,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0B7A18AA2681CED70007CC75 /* SwiftEntryKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0B7A18A92681CED70007CC75 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */;
+			productName = SwiftEntryKit;
+		};
 		ED0B4891267B4CDD0037EA06 /* IQKeyboardManagerSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = ED0B4890267B4CDD0037EA06 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;

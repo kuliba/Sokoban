@@ -155,6 +155,15 @@
         }
       },
       {
+        "package": "SwiftEntryKit",
+        "repositoryURL": "https://github.com/huri000/SwiftEntryKit",
+        "state": {
+          "branch": null,
+          "revision": "c2d42574e4fe4e1f9719843f35add7922942a16b",
+          "version": "1.2.7"
+        }
+      },
+      {
         "package": "Valet",
         "repositoryURL": "https://github.com/Square/Valet",
         "state": {
