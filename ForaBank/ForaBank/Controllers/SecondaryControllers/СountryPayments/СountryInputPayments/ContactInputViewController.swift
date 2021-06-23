@@ -9,7 +9,7 @@ import UIKit
 
 class ContactInputViewController: UIViewController {
     
-    let popView = CastomPopUpView()
+    let popView = CastomPopUpView<View_1>()
     
     var selectedCardNumber = "" {
         didSet {
