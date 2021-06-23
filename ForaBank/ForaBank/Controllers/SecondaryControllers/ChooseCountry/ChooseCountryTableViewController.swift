@@ -19,6 +19,14 @@ class ChooseCountryTableViewController: UITableViewController {
             }
         }
     }
+    var searchedCountry = [Country]() {
+        didSet {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+    var searching = false
     
     var modalPresent: Bool? = false
     var didChooseCountryTapped: ((Country) -> Void)?
@@ -48,7 +56,8 @@ class ChooseCountryTableViewController: UITableViewController {
                 } else {
                     guard let statusCode = model?.statusCode else { return }
                     if statusCode == 0 {
-                        guard let countries = model?.data else { return }
+                        guard let countries = model?.data?.countriesList else { return }
+                        
                         Country.countries = countries
                         self.configureVC(with: countries)
                     } else {
@@ -59,10 +68,11 @@ class ChooseCountryTableViewController: UITableViewController {
         }
     }
     
-    private func configureVC(with countries: [GetCountryDatum]) {
+    private func configureVC(with countries: [CountriesListDatum]) {
         for country in countries {
             let name = country.name?.capitalizingFirstLetter()
-            let countryViewModel = Country(name: name, dialCode: "", code: country.code)
+            let countryViewModel = Country(name: name, dialCode: "", code: country.code, imageSVGString: country.svgImage)
+            
             self.countries.append(countryViewModel)
         }
     }
@@ -79,6 +89,7 @@ class ChooseCountryTableViewController: UITableViewController {
         searchController.searchResultsUpdater = self
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.automaticallyShowsCancelButton = false
+        searchController.searchBar.delegate = self
         definesPresentationContext = true
         addCloseButton()
     }
@@ -87,8 +98,13 @@ class ChooseCountryTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        return countries.count
+        if searching {
+            return searchedCountry.count
+        } else {
             return countries.count
         }
+    }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 64
@@ -96,21 +112,36 @@ class ChooseCountryTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: СountryCell.reuseId, for: indexPath) as! СountryCell
-        
-        let model = countries[indexPath.row]
-        cell.set(viewModel: model)
+        if searching {
+            let model = searchedCountry[indexPath.row]
+            cell.set(viewModel: model)
+        } else {
+            let model = countries[indexPath.row]
+            cell.set(viewModel: model)
+        }
         return cell
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        let selectedCountry: Country
+        if searching {
+            selectedCountry = searchedCountry[indexPath.row]
+            print(selectedCountry)
+        } else {
+            selectedCountry = countries[indexPath.row]
+            print(selectedCountry)
+        }
+
+        self.searchController.searchBar.searchTextField.endEditing(true)
+        
         if modalPresent! {
-            let country = countries[indexPath.row]
-            didChooseCountryTapped?(country)
+//            let country = countries[indexPath.row]
+            didChooseCountryTapped?(selectedCountry)
             self.dismiss(animated: true, completion: nil)
         } else {
             let vc = ContactInputViewController()
-            vc.country = countries[indexPath.row]
+            vc.country = selectedCountry
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }
@@ -129,8 +160,16 @@ extension ChooseCountryTableViewController: UISearchResultsUpdating {
 
 //MARK: - UISearchBarDelegate
 extension ChooseCountryTableViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        searchedCountry = countries.filter { $0.name?.lowercased().prefix(searchText.count) ?? "" == searchText.lowercased() }
+        searching = true
+        tableView.reloadData()
+    }
+    
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-//        countries = []
+        searching = false
+        searchBar.text = ""
+        tableView.reloadData()
     }
 }
 

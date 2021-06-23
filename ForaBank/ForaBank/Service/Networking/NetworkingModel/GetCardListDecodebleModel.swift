@@ -118,7 +118,7 @@ extension Datum {
 // MARK: - Original
 struct Original: Codable {
     let number, numberMasked: String?
-    let balance: Int?
+    let balance: Double?
     let currency, productType: String?
     let productName: String?
     let ownerID: Int?
@@ -154,7 +154,7 @@ extension Original {
     func with(
         number: String?? = nil,
         numberMasked: String?? = nil,
-        balance: Int?? = nil,
+        balance: Double?? = nil,
         currency: String?? = nil,
         productType: String?? = nil,
         productName: String?? = nil,

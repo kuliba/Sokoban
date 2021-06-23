@@ -380,7 +380,7 @@ extension AppLocker {
             "loginValue": code,
             "type": type.rawValue
         ] as [String : AnyObject]
-
+        print(data)
         NetworkManager<LoginDoCodableModel>.addRequest(.login, [:], data) { model, error in
             if error != nil {
                 guard let error = error else { return }
@@ -389,12 +389,10 @@ extension AppLocker {
                 guard let statusCode = model?.statusCode else { return }
                 if statusCode == 0 {
                     
-                    
                     let bodyRegisterPush = [
                         "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
                         "pushFcmToken": FCMToken.fcmToken
                     ] as [String : AnyObject]
-
 
                     NetworkManager<RegisterPushDeviceDecodebleModel>.addRequest(.registerPushDeviceForUser, [:], bodyRegisterPush) { model, error in
                         if error != nil {
@@ -408,9 +406,6 @@ extension AppLocker {
                             completion(nil)
                         }
                     }
-                    
-                    
-                    
                 } else {
                     guard let error = model?.errorMessage else { return }
                     completion(error)

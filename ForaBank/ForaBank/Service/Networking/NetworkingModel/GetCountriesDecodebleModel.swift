@@ -16,7 +16,7 @@ import Foundation
 struct GetCountriesDecodebleModel: Codable, NetworkModelProtocol {
     let statusCode: Int?
     let errorMessage: String?
-    let data: [GetCountryDatum]?
+    let data: GetCountryDatum?
 }
 
 // MARK: GetCountriesDecodebleModel convenience initializers and mutators
@@ -40,7 +40,7 @@ extension GetCountriesDecodebleModel {
     func with(
         statusCode: Int?? = nil,
         errorMessage: String?? = nil,
-        data: [GetCountryDatum]?? = nil
+        data: GetCountryDatum?? = nil
     ) -> GetCountriesDecodebleModel {
         return GetCountriesDecodebleModel(
             statusCode: statusCode ?? self.statusCode,
@@ -58,6 +58,10 @@ extension GetCountriesDecodebleModel {
     }
 }
 
+
+
+
+
 // Datum.swift
 
 // This file was generated from JSON Schema using quicktype, do not modify it directly.
@@ -67,8 +71,8 @@ extension GetCountriesDecodebleModel {
 
 // MARK: - GetCountryDatum
 struct GetCountryDatum: Codable {
-    let code, name: String?
-    let sendCurr: SendCurr?
+    let serial: String?
+    let countriesList: [CountriesListDatum]?
 }
 
 // MARK: Datum convenience initializers and mutators
@@ -90,12 +94,60 @@ extension GetCountryDatum {
     }
 
     func with(
-        code: String?? = nil,
-        name: String?? = nil,
-        sendCurr: SendCurr?? = nil
+        serial: String?? = nil,
+        countriesList: [CountriesListDatum]?? = nil
     ) -> GetCountryDatum {
         return GetCountryDatum(
+            serial: serial ?? self.serial,
+            countriesList: countriesList ?? self.countriesList
+        )
+    }
+
+    func jsonData() throws -> Data {
+        return try newJSONEncoder().encode(self)
+    }
+
+    func jsonString(encoding: String.Encoding = .utf8) throws -> String? {
+        return String(data: try self.jsonData(), encoding: encoding)
+    }
+}
+
+
+// MARK: - CountriesListDatum
+struct CountriesListDatum: Codable {
+    let code, svgImage, md5hash, name: String?
+    let sendCurr: SendCurr?
+}
+
+// MARK: Datum convenience initializers and mutators
+
+extension CountriesListDatum {
+    init(data: Data) throws {
+        self = try newJSONDecoder().decode(CountriesListDatum.self, from: data)
+    }
+
+    init(_ json: String, using encoding: String.Encoding = .utf8) throws {
+        guard let data = json.data(using: encoding) else {
+            throw NSError(domain: "JSONDecoding", code: 0, userInfo: nil)
+        }
+        try self.init(data: data)
+    }
+
+    init(fromURL url: URL) throws {
+        try self.init(data: try Data(contentsOf: url))
+    }
+
+    func with(
+        code: String?? = nil,
+        name: String?? = nil,
+        md5hash: String?? = nil,
+        svgImage: String?? = nil,
+        sendCurr: SendCurr?? = nil
+    ) -> CountriesListDatum {
+        return CountriesListDatum(
             code: code ?? self.code,
+            svgImage: svgImage ?? self.svgImage,
+            md5hash: md5hash ?? self.md5hash,
             name: name ?? self.name,
             sendCurr: sendCurr ?? self.sendCurr
         )
@@ -109,6 +161,7 @@ extension GetCountryDatum {
         return String(data: try self.jsonData(), encoding: encoding)
     }
 }
+
 
 // SendCurr.swift
 

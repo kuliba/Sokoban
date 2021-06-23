@@ -72,7 +72,7 @@ class ContactInputViewController: UIViewController {
             image: #imageLiteral(resourceName: "credit-card"),
             type: .credidCard,
             isEditable: false))
-
+    var cardListView = CardListView()
     
     lazy var doneButton: UIButton = {
         let button = UIButton(title: "Продолжить")
@@ -184,6 +184,7 @@ class ContactInputViewController: UIViewController {
                 guard let cardNumber  = model.data?.first?.original?.number else { return }
                 self.selectedCardNumber = cardNumber
                 DispatchQueue.main.async {
+                    self.cardListView.cardList = data
                     self.cardField.text = data.first?.original?.name ?? ""
                     let balance = Double(data.first?.original?.balance ?? 0) 
                     self.cardField.balanceLabel.text = balance.currencyFormatter()
