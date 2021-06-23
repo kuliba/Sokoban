@@ -58,7 +58,7 @@ final class NetworkPDFManager: NSObject {
         
         }
         
-        let task = session.downloadTask (with: request) { data, response, error in
+        let task = session.downloadTask(with: request) { data, response, error in
             if error != nil {
                 print(error?.localizedDescription ?? "")
             }
