@@ -8,35 +8,45 @@
 import UIKit
 import SwiftEntryKit
 
-struct CastomPopUpView< T: UIView > {
+struct CastomPopUpView {
     
     
     let view = UIView()
     
-    func setupAttributs () -> EKAttributes {
+   static func setupAttributs () -> EKAttributes {
         
-        let h = T().layer.bounds.height
+        let view = UIView()
+ //       let h = T().layer.bounds.height
+        view.backgroundColor = .green
+        view.layer.frame.size = CGSize(width: 200, height: 400)
         
         var attributes = EKAttributes.centerFloat
         attributes.displayDuration = .infinity
         attributes.screenBackground = .color(color: .init(light: UIColor(red: 0, green: 0, blue: 0, alpha: 0.2), dark: UIColor(red: 1, green: 1, blue: 1, alpha: 0.2)))
-        
-        attributes.entranceAnimation = .init(
-            translate: .init(duration: 0.7, anchorPosition: .automatic, spring: .init(damping: 1, initialVelocity: 0)),
-                         scale: .init(from: 0.2, to: 1, duration: 0.7),
-                         fade: .init(from: 0.2, to: 1, duration: 0.3))
+        attributes.windowLevel = .normal
+        attributes.position = .bottom
         
         attributes.screenInteraction = .absorbTouches
         attributes.entryInteraction = .absorbTouches
         attributes.shadow = .active(with: .init(color: .black, opacity: 0.2, radius: 10, offset: .zero))
         attributes.roundCorners = .all(radius: 10)
+        
+        let widthConstraint = EKAttributes.PositionConstraints.Edge.ratio(value: 0.9)
+        let heightConstraint = EKAttributes.PositionConstraints.Edge.constant(value: view.layer.bounds.height)
+        attributes.positionConstraints.size = .init(width: widthConstraint, height: heightConstraint)
+        attributes.positionConstraints.safeArea = .empty(fillSafeArea: false)
+        
+        let offset = EKAttributes.PositionConstraints.KeyboardRelation.Offset(bottom: 10, screenEdgeResistance: 20)
+        let keyboardRelation = EKAttributes.PositionConstraints.KeyboardRelation.bind(offset: offset)
+        attributes.positionConstraints.keyboardRelation = keyboardRelation
+        
         return attributes
     }
     
     
     func showAlert () {
 
-        SwiftEntryKit.display(entry: T(), using: setupAttributs())
+        SwiftEntryKit.display(entry: view, using: CastomPopUpView.setupAttributs())
 
     }
     
