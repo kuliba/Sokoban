@@ -16,7 +16,7 @@ final class NetworkPDFManager: NSObject {
         let r = RouterManager.getPrintForm
         
         guard var request = r.request() else { return }
- 
+        
         let session = RouterSassionConfiguration.returnSession()
         
         if let token = CSRFToken.token {

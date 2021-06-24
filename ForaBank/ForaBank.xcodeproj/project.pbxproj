@@ -42,6 +42,7 @@
 		68FFA5432682DC95002DADFA /* PhoneConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA5422682DC95002DADFA /* PhoneConfirmViewController.swift */; };
 		68FFA5452682F48C002DADFA /* SearchContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA5442682F48C002DADFA /* SearchContact.swift */; };
 		68FFA5472682F49A002DADFA /* SearchContact.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68FFA5462682F49A002DADFA /* SearchContact.xib */; };
+		68FFA54C2684C854002DADFA /* PDFViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA54B2684C854002DADFA /* PDFViewerViewController.swift */; };
 		ED0B4892267B4CDD0037EA06 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = ED0B4891267B4CDD0037EA06 /* IQKeyboardManagerSwift */; };
 		ED0B4894267B50F50037EA06 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B4893267B50F50037EA06 /* Int.swift */; };
 		ED0B4896267B97C60037EA06 /* ContactInputViewController + UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B4895267B97C60037EA06 /* ContactInputViewController + UI.swift */; };
@@ -207,6 +208,7 @@
 		68FFA5422682DC95002DADFA /* PhoneConfirmViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneConfirmViewController.swift; sourceTree = "<group>"; };
 		68FFA5442682F48C002DADFA /* SearchContact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchContact.swift; sourceTree = "<group>"; };
 		68FFA5462682F49A002DADFA /* SearchContact.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchContact.xib; sourceTree = "<group>"; };
+		68FFA54B2684C854002DADFA /* PDFViewerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFViewerViewController.swift; sourceTree = "<group>"; };
 		ED0B4893267B50F50037EA06 /* Int.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
 		ED0B4895267B97C60037EA06 /* ContactInputViewController + UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContactInputViewController + UI.swift"; sourceTree = "<group>"; };
 		ED0B489B267D41A60037EA06 /* PaymentsDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsDetailsView.swift; sourceTree = "<group>"; };
@@ -412,6 +414,14 @@
 				68FFA53F2682C6CF002DADFA /* LastPaymentsCollectionViewCell.xib */,
 			);
 			path = LastPaymetsCell;
+			sourceTree = "<group>";
+		};
+		68FFA54A2684C837002DADFA /* PDFViewer */ = {
+			isa = PBXGroup;
+			children = (
+				68FFA54B2684C854002DADFA /* PDFViewerViewController.swift */,
+			);
+			path = PDFViewer;
 			sourceTree = "<group>";
 		};
 		ED0B4897267CF9490037EA06 /* PaymentsDetailsSuccess */ = {
@@ -826,6 +836,7 @@
 				EDB1452A26663BF40028EF5A /* Login */,
 				EDB165722668C51A007E6030 /* MainControllers */,
 				EDB16593266A4317007E6030 /* SecondaryControllers */,
+				68FFA54A2684C837002DADFA /* PDFViewer */,
 				EDB16594266A4438007E6030 /* DevelopViewController.swift */,
 			);
 			path = Controllers;
@@ -1302,6 +1313,7 @@
 				EDB1657C2668C8D5007E6030 /* PayCell.swift in Sources */,
 				EDFFCAF0268245EC004EE095 /* CardViewModel.swift in Sources */,
 				0B9EC85D26739C0000D86EB2 /* GetCountriesDecodebleModel.swift in Sources */,
+				68FFA54C2684C854002DADFA /* PDFViewerViewController.swift in Sources */,
 				ED0B489C267D41A60037EA06 /* PaymentsDetailsView.swift in Sources */,
 				ED4FC602266C0AB50092B4AB /* ChooseCountryTableViewController.swift in Sources */,
 				EDF6821A266F9EC800FD5C07 /* RouterUrlList.swift in Sources */,

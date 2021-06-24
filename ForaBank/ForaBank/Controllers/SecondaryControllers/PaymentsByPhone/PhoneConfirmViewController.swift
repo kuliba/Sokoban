@@ -119,7 +119,9 @@ class PhoneConfirmViewController: UIViewController {
                     self.dismissActivity()
                     DispatchQueue.main.async {
                         let vc = PaymentsDetailsSuccessViewController()
+                        vc.id = model.data?.paymentOperationDetailID
                         vc.modalPresentationStyle = .fullScreen
+                        
                         self.present(vc, animated: true, completion: nil)
                     }
                 } else {
