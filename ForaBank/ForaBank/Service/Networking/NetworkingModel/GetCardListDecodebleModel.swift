@@ -67,6 +67,8 @@ extension GetCardListDecodebleModel {
 
 // MARK: - Datum
 struct Datum: Codable {
+    static var cardList: [Datum]?
+    
     let original: Original?
     let customName: String?
 }

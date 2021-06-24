@@ -11,6 +11,11 @@ extension ContactInputViewController {
     
     func startPayment(with card: String, type: PaymentType,
                       completion: @escaping (_ error: String?)->()) {
+        let amount = self.summTransctionField.textField.text ?? ""
+        let phone = self.phoneField.textField.unmaskedText ?? ""
+        let surname = self.surnameField.textField.text ?? ""
+        let name = self.nameField.textField.text ?? ""
+        let secondName = self.secondNameField.textField.text ?? ""
         
         let puref = type.puref
         
@@ -37,12 +42,12 @@ extension ContactInputViewController {
                     if model.statusCode == 0 {
                         print("DEBUG: Success ")
 //                        completion(nil)
-                        let amount = self.summTransctionField.textField.text ?? ""
+                        
                         let doubelAmount = amount.replacingOccurrences(of: ",", with: ".", options: .literal, range: nil)
                         
                         switch self.typeOfPay {
                         case .migAIbank:
-                            let phone = self.phoneField.textField.unmaskedText ?? ""
+                            
                             
                             self.endMigPayment(phone: phone, amount: doubelAmount) { error in
                                 self.dismissActivity()
@@ -52,9 +57,7 @@ extension ContactInputViewController {
                                 }
                             }
                         default:
-                            let surname = self.surnameField.textField.text ?? ""
-                            let name = self.nameField.textField.text ?? ""
-                            let secondName = self.secondNameField.textField.text ?? ""
+                            
                             
                             self.endContactPayment(surname: surname, name: name, secondName: secondName, amount: doubelAmount) { error in
                                 self.dismissActivity()

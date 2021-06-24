@@ -207,32 +207,43 @@ class ContactInputViewController: UIViewController {
     
     //MARK: - API
     func getCardList(completion: @escaping (_ cardList: [Datum]?,_ error: String?)->()) {
-        showActivity()
         
-        NetworkManager<GetCardListDecodebleModel>.addRequest(.getCardList, [:], [:]) { model, error in
-            self.dismissActivity()
+        NetworkHelper.request(.getCardList) { cardList , error in
             if error != nil {
-                print("DEBUG: Error: ", error ?? "")
-                completion(nil,error)
+                completion(nil, error)
             }
-            guard let model = model else { return }
-            print("DEBUG: Card list: ", model)
-            if model.statusCode == 0 {
-                guard let data  = model.data else { return }
-                completion(data, nil)
-            } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
-                completion(nil ,model.errorMessage)
-            }
+            guard let cardList = cardList as? [Datum] else { return }
+            completion(cardList, nil)
+            print("DEBUG: Load card list... Count is: ", cardList.count)
         }
         
+        
+        
+        
+        
+//        if let cardList = Datum.cardList {
+//            completion(cardList, nil)
+//        }
+//
+//        NetworkManager<GetCardListDecodebleModel>.addRequest(.getCardList, [:], [:]) { model, error in
+//            if error != nil {
+//                print("DEBUG: Error: ", error ?? "")
+//                completion(nil, error)
+//            }
+//            guard let model = model else { return }
+//
+//            print("DEBUG: Card list: ", model)
+//            if model.statusCode == 0 {
+//                guard let data  = model.data else { return }
+//                Datum.cardList = data
+//                completion(data, nil)
+//            } else {
+//                print("DEBUG: Error: ", model.errorMessage ?? "")
+//                completion(nil, model.errorMessage)
+//            }
+//        }
+        
     }
-    
-//            iFora||Addressless                    Перевод Contact
-//            iSimpleDirect||TransferIDClient11P    Перевод в АйДиБанк
-//            iSimpleDirect||TransferEvocaClientP   Перевод в ЭвокаБанк
-//            iSimpleDirect||TransferArmBBClientP   Перевод в АрмББ
-//            iSimpleDirect||TransferArdshinClientP Перевод в АрдшинБанк
     
 }
 
