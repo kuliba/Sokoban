@@ -100,7 +100,7 @@ class PhoneConfirmViewController: UIViewController {
         button.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
             
         title = "Перевод по номеру телефона"
-        let stackView = UIStackView(arrangedSubviews: [phoneField, bankPayeer,cardField, summTransctionField])
+        let stackView = UIStackView(arrangedSubviews: [phoneField, bankPayeer,cardField, summTransctionField, smsCodeField])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
@@ -121,7 +121,10 @@ class PhoneConfirmViewController: UIViewController {
     
     @objc func doneButtonTapped() {
         print(#function)
-        
+        switch sbp {
+        case true:
+            makeCard2Card()
+        default:
         guard let code = smsCodeField.textField.text else { return }
         let body = ["verificationCode": code] as [String: AnyObject]
         showActivity()
@@ -143,7 +146,32 @@ class PhoneConfirmViewController: UIViewController {
             }
         }
         
-        
+        }
     }
 
+    func makeCard2Card(){
+           showActivity()
+           guard let code = smsCodeField.textField.text else { return }
+           let body = [ "verificationCode": code
+                       ] as [String: AnyObject]
+           NetworkManager<MakeCard2CardDecodableModel>.addRequest(.makeCard2Card, [:], body) { model, error in
+               self.dismissActivity()
+               if error != nil {
+                   print("DEBUG: Error: ", error ?? "")
+               }
+               guard let model = model else { return }
+               print("DEBUG: Card list: ", model)
+               if model.statusCode == 0 {
+                   guard let data  = model.data else { return }
+             
+                   
+                   DispatchQueue.main.async {
+                     
+                   }
+               } else {
+                   print("DEBUG: Error: ", model.errorMessage ?? "")
+               }
+           }
+       }
+    
 }

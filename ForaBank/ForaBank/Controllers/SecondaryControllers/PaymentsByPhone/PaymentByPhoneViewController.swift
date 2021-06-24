@@ -219,9 +219,11 @@ class PaymentByPhoneViewController: UIViewController {
                 self.dismissActivity()
 
 //                guard let data  = model.data else { return }
-                let vc = PhoneConfirmViewController()
-                vc.sbp = self.sbp
-                self.navigationController?.pushViewController(vc, animated: true)
+                DispatchQueue.main.async {
+                    let vc = PhoneConfirmViewController()
+                    vc.sbp = self.sbp
+                    self.present(vc, animated: true, completion: nil)
+                }
             } else {
                 self.dismissActivity()
 

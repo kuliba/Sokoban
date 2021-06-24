@@ -128,6 +128,15 @@
         }
       },
       {
+        "package": "QuickLayout",
+        "repositoryURL": "https://github.com/huri000/QuickLayout",
+        "state": {
+          "branch": null,
+          "revision": "6be62decbe508d8fc8f9dbafc349d05bab03c38b",
+          "version": "3.0.1"
+        }
+      },
+      {
         "package": "SVGKit",
         "repositoryURL": "https://github.com/SVGKit/SVGKit.git",
         "state": {
