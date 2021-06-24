@@ -24,11 +24,11 @@ struct CastomPopUpView  {
         attributes.screenBackground = .color(color: .init(light: UIColor(red: 0, green: 0, blue: 0, alpha: 0.2), dark: UIColor(red: 1, green: 1, blue: 1, alpha: 0.2)))
         attributes.windowLevel = .normal
         attributes.position = .bottom
-        
+        attributes.roundCorners = .top(radius: 16)
         attributes.screenInteraction = .dismiss
-        attributes.entryInteraction = .dismiss
+        attributes.entryInteraction = .absorbTouches
         attributes.shadow = .active(with: .init(color: .black, opacity: 0.2, radius: 10, offset: .zero))
-        attributes.roundCorners = .all(radius: 10)
+//        attributes.roundCorners = .all(radius: 10)
         
         let widthConstraint = EKAttributes.PositionConstraints.Edge.ratio(value: 1)
         let heightConstraint = EKAttributes.PositionConstraints.Edge.fill
@@ -60,19 +60,133 @@ struct CastomPopUpView  {
 
 class MainPopUpView <T: UIView>: UIView {
     
+    let topLabel = UILabel(text: "Между своими", font: .boldSystemFont(ofSize: 16))
+    var cardFromField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "Откуда",
+            image: #imageLiteral(resourceName: "credit-card"),
+            type: .credidCard,
+            isEditable: false))
+    
+    var cardFromListView = CardListView()
+    
+    var cardToField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "Куда",
+            image: #imageLiteral(resourceName: "credit-card"),
+            type: .credidCard,
+            isEditable: false))
+    
+    var cardToListView = CardListView()
+
+    var summTransctionField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "Сумма перевода",
+            image: #imageLiteral(resourceName: "coins"),
+            type: .amountOfTransfer))
+    
+    lazy var doneButton: UIButton = {
+        let button = UIButton(title: "Продолжить")
+        button.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    var stackView = UIStackView(arrangedSubviews: [])
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         add()
-        self.backgroundColor = .red
+        self.backgroundColor = .white
+        cardFromField.didChooseButtonTapped = { [weak self]  () in
+            UIView.animate(withDuration: 0.2) {
+                self?.cardFromListView.isHidden.toggle()
+            }
+        }
+        cardFromListView.didCardTapped = { [weak self] (card) in
+            self?.cardFromField.configCardView(card)
+            UIView.animate(withDuration: 0.2) {
+                self?.cardFromListView.isHidden.toggle()
+            }
+        }
+        cardToField.didChooseButtonTapped = { [weak self]  () in
+            UIView.animate(withDuration: 0.2) {
+                self?.cardToListView.isHidden.toggle()
+            }
+        }
+        cardToListView.didCardTapped = { [weak self] (card) in
+            self?.cardToField.configCardView(card)
+            UIView.animate(withDuration: 0.2) {
+                self?.cardToListView.isHidden.toggle()
+            }
+        }
     }
     
     func add() {
         self.addSubview(T())
-        heightAnchor.constraint(equalToConstant: 500).isActive = true
+        heightAnchor.constraint(equalToConstant: 488).isActive = true
+        
+        stackView = UIStackView(arrangedSubviews: [topLabel, cardFromField, cardFromListView, cardToField, cardToListView, summTransctionField])
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.distribution = .equalSpacing
+        stackView.spacing = 20
+        stackView.isUserInteractionEnabled = true
+        addSubview(stackView)
+        addSubview(doneButton)
+        
+        setupConstraint()
+        setupActions()
     }
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
+    
+    private func setupConstraint() {
+        stackView.anchor(top: topAnchor, left: leftAnchor,
+                         right: rightAnchor, paddingTop: 28)
+//        topLabel.anchor(left: stackView.leftAnchor, paddingLeft: 20)
+        doneButton.anchor(left: leftAnchor, bottom: bottomAnchor,
+                          right: rightAnchor, paddingLeft: 20,
+                          paddingBottom: 40, paddingRight: 20, height: 44)
+    }
+    
+    //MARK: - API
+    func getCardList(completion: @escaping (_ cardList: [Datum]?,_ error: String?)->()) {
+        
+        NetworkHelper.request(.getCardList) { cardList , error in
+            if error != nil {
+                completion(nil, error)
+            }
+            guard let cardList = cardList as? [Datum] else { return }
+            completion(cardList, nil)
+            print("DEBUG: Load card list... Count is: ", cardList.count)
+        }
+    }
+    
+    func setupActions() {
+        getCardList { [weak self] data ,error in
+            DispatchQueue.main.async {
+                
+                if error != nil {
+                    print("Ошибка", error!)
+                }
+                guard let data = data else { return }
+                self?.cardFromListView.cardList = data
+                self?.cardToListView.cardList = data
+                if data.count > 0 {
+                    self?.cardFromField.configCardView(data.first!)
+                    self?.cardToField.configCardView(data.first!)
+                }
+            }
+        }
+    }
+    
+    @objc func doneButtonTapped() {
+        
+        print(#function)
+        
+    }
+    
 }
 
 
