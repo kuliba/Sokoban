@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class NetworkPDFManager: NSObject {
+final class NetworkPDFManager {
     
     static func addRequest( //_ requestType: RouterManager,
                            _ urlParametrs: [String: String],

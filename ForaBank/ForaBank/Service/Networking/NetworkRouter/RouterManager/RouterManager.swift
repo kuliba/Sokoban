@@ -363,7 +363,7 @@ extension RouterManager {
             
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
-            request.httpMethod = RequestMethod.get.rawValue
+            request.httpMethod = RequestMethod.post.rawValue
             return request
             
         case .getLatestPhonePayments:
