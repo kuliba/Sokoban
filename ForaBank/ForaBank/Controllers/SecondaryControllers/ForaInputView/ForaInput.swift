@@ -143,8 +143,8 @@ class ForaInput: UIView {
         
     }
     
-    func configCardView(_ with: Datum) {
-        
+    func configCardView(_ with: CardModel) {
+        viewModel.cardModel = with
         self.text = with.original?.name ?? ""
         let balance = Double(with.original?.balance ?? 0)
         self.balanceLabel.text = balance.currencyFormatter()

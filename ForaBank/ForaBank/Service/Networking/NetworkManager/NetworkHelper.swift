@@ -83,8 +83,8 @@ struct NetworkHelper {
             
             }
         case .getCardList:
-            if Datum.cardList != nil {
-                completion(Datum.cardList, nil)
+            if CardModel.cardList != nil {
+                completion(CardModel.cardList, nil)
             }
             NetworkManager<GetCardListDecodebleModel>.addRequest(.getCardList, tempParameters, body) { model, error in
                 if error != nil {
@@ -95,7 +95,7 @@ struct NetworkHelper {
                 
                 if model.statusCode == 0 {
                     guard let data = model.data else { return }
-                    Datum.cardList = data
+                    CardModel.cardList = data
                     
                     completion(data, nil)
                     

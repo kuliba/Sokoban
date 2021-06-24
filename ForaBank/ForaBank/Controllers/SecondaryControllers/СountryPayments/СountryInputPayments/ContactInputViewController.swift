@@ -206,13 +206,13 @@ class ContactInputViewController: UIViewController {
     }
     
     //MARK: - API
-    func getCardList(completion: @escaping (_ cardList: [Datum]?,_ error: String?)->()) {
+    func getCardList(completion: @escaping (_ cardList: [CardModel]?,_ error: String?)->()) {
         
         NetworkHelper.request(.getCardList) { cardList , error in
             if error != nil {
                 completion(nil, error)
             }
-            guard let cardList = cardList as? [Datum] else { return }
+            guard let cardList = cardList as? [CardModel] else { return }
             completion(cardList, nil)
             print("DEBUG: Load card list... Count is: ", cardList.count)
         }

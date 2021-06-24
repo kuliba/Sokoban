@@ -51,7 +51,7 @@ class MainTabBarViewController: UITabBarController {
             if error != nil {
                 self.showAlert(with: "Ошибка", and: error!)
             }
-            guard let cardList = cardList as? [Datum] else { return }
+            guard let cardList = cardList as? [CardModel] else { return }
             print("DEBUG: Load card list... Count is: ", cardList.count)
         }
         

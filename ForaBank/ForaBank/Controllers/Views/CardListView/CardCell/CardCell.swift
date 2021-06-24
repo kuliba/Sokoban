@@ -11,7 +11,7 @@ import UIKit
 class CardCell: UICollectionViewCell {
     
     //MARK: - Properties
-    var card: Datum? {
+    var card: CardModel? {
         didSet { configure() }
     }
     
