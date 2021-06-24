@@ -41,7 +41,7 @@ extension NetworkPDFManager:  URLSessionDownloadDelegate {
     }
     
             
-    //       1. NetworkPDFManager.addRequest(.getPrintForm, parameters, body)
+    //       1. NetworkPDFManager.addRequest(parameters, body)
     
     //       2.     override func viewDidLayoutSubviews() {
     //                pdfView.frame = view.frame

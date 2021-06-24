@@ -9,11 +9,13 @@ import Foundation
 
 final class NetworkPDFManager: NSObject {
     
-    static func addRequest(_ requestType: RouterManager,
+    static func addRequest( //_ requestType: RouterManager,
                            _ urlParametrs: [String: String],
                             _ requestBody: [String: AnyObject] ) {
         
-        guard var request = requestType.request() else { return }
+        let r = RouterManager.getPrintForm
+        
+        guard var request = r.request() else { return }
  
         let session = RouterSassionConfiguration.returnSession()
         
