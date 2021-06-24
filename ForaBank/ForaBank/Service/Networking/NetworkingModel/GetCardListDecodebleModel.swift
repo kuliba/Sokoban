@@ -16,7 +16,7 @@ import Foundation
 struct GetCardListDecodebleModel: Codable, NetworkModelProtocol {
     let statusCode: Int?
     let errorMessage: String?
-    let data: [Datum]?
+    let data: [CardModel]?
 }
 
 // MARK: GetCardListDecodebleModel convenience initializers and mutators
@@ -40,7 +40,7 @@ extension GetCardListDecodebleModel {
     func with(
         statusCode: Int?? = nil,
         errorMessage: String?? = nil,
-        data: [Datum]?? = nil
+        data: [CardModel]?? = nil
     ) -> GetCardListDecodebleModel {
         return GetCardListDecodebleModel(
             statusCode: statusCode ?? self.statusCode,
@@ -66,16 +66,18 @@ extension GetCardListDecodebleModel {
 //   let datum = try Datum(json)
 
 // MARK: - Datum
-struct Datum: Codable {
+struct CardModel: Codable {
+    static var cardList: [CardModel]?
+    
     let original: Original?
     let customName: String?
 }
 
 // MARK: Datum convenience initializers and mutators
 
-extension Datum {
+extension CardModel {
     init(data: Data) throws {
-        self = try newJSONDecoder().decode(Datum.self, from: data)
+        self = try newJSONDecoder().decode(CardModel.self, from: data)
     }
 
     init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -92,8 +94,8 @@ extension Datum {
     func with(
         original: Original?? = nil,
         customName: String?? = nil
-    ) -> Datum {
-        return Datum(
+    ) -> CardModel {
+        return CardModel(
             original: original ?? self.original,
             customName: customName ?? self.customName
         )

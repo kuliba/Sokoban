@@ -20,18 +20,23 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 navigationController?.pushViewController(viewController, animated: true)
             }
         case .transfers:
-            print("DEBUG: " + #function + transfers[indexPath.row].name)
-            if let viewController = transfers[indexPath.row].controllerName.getViewController() {
-                let navController = UINavigationController(rootViewController: viewController)
-                if transfers[indexPath.row].name == "По номеру телефона"{
-                    navController.modalPresentationStyle = .formSheet
-                } else {
-                    navController.modalPresentationStyle = .fullScreen
+            if indexPath.row == 0 {
+                let popView = CastomPopUpView()
+                popView.showAlert()
+            } else {
+                print("DEBUG: " + #function + transfers[indexPath.row].name)
+                if let viewController = transfers[indexPath.row].controllerName.getViewController() {
+                    let navController = UINavigationController(rootViewController: viewController)
+                    if transfers[indexPath.row].name == "По номеру телефона"{
+                        navController.modalPresentationStyle = .formSheet
+                    } else {
+                        navController.modalPresentationStyle = .fullScreen
 
+                    }
+                    present(navController, animated: true, completion: nil)
+                    
+    //                navigationController?.pushViewController(viewController, animated: true)
                 }
-                present(navController, animated: true, completion: nil)
-                
-//                navigationController?.pushViewController(viewController, animated: true)
             }
         case .pay:
             print("DEBUG: " + #function + pay[indexPath.row].name)

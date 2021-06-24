@@ -33,6 +33,9 @@ class MainTabBarViewController: UITabBarController {
                                   title: "Чат", image: #imageLiteral(resourceName: "message-circle")),
         ]
         selectedIndex = 1
+        
+        loadCatalog()
+        
     }
     
     private func generateNavController(rootViewController: UIViewController, title: String, image: UIImage) -> UIViewController {
@@ -42,5 +45,16 @@ class MainTabBarViewController: UITabBarController {
         return navigationVC
     }
 
+    private func loadCatalog() {
+        
+        NetworkHelper.request(.getCardList) { cardList , error in
+            if error != nil {
+                self.showAlert(with: "Ошибка", and: error!)
+            }
+            guard let cardList = cardList as? [CardModel] else { return }
+            print("DEBUG: Load card list... Count is: ", cardList.count)
+        }
+        
+    }
 
 }

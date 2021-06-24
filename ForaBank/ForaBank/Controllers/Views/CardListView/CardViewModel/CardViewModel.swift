@@ -10,7 +10,7 @@ import UIKit
 
 struct CardViewModel {
     
-    let card: Datum
+    let card: CardModel
     
     var cardNumber: String? {
         return card.original?.number
@@ -39,7 +39,7 @@ struct CardViewModel {
         }
     }
     
-    init(card: Datum) {
+    init(card: CardModel) {
         self.card = card
     }
     
