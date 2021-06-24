@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class RouterSassionConfiguration: NSObject, URLSessionDownloadDelegate {
+final class RouterSassionConfiguration: NSObject, URLSessionDelegate, URLSessionDownloadDelegate {
     
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         print("downloadLocation:", location)
@@ -22,7 +22,6 @@ final class RouterSassionConfiguration: NSObject, URLSessionDownloadDelegate {
             return
         }
     }
-    
     
     var session: URLSession?
     
