@@ -1,29 +1,29 @@
 //
-//  GetLatestPaymentsDecodableModel.swift
+//  GetPrintFormDecodableModel.swift
 //  ForaBank
 //
-//  Created by Константин Савялов on 21.06.2021.
+//  Created by Константин Савялов on 23.06.2021.
 //
 
 // This file was generated from JSON Schema using quicktype, do not modify it directly.
 // To parse the JSON, add this file to your project and do:
 //
-//   let getLatestPaymentsDecodableModel = try GetLatestPaymentsDecodableModel(json)
+//   let getLatestPhonePaymentsDecodableModel = try GetLatestPhonePaymentsDecodableModel(json)
 
 import Foundation
 
-// MARK: - GetLatestPaymentsDecodableModel
-struct GetLatestPaymentsDecodableModel: Codable, NetworkModelProtocol {
+// MARK: - GetLatestPhonePaymentsDecodableModel
+struct GetLatestPhonePaymentsDecodableModel: Codable, NetworkModelProtocol {
     let statusCode: Int?
     let errorMessage: String?
-    let data: [String: GetLatestPaymentsDatum]?
+    let data: [GetLatestPhone]?
 }
 
-// MARK: GetLatestPaymentsDecodableModel convenience initializers and mutators
+// MARK: GetLatestPhonePaymentsDecodableModel convenience initializers and mutators
 
-extension GetLatestPaymentsDecodableModel {
+extension GetLatestPhonePaymentsDecodableModel {
     init(data: Data) throws {
-        self = try newJSONDecoder().decode(GetLatestPaymentsDecodableModel.self, from: data)
+        self = try newJSONDecoder().decode(GetLatestPhonePaymentsDecodableModel.self, from: data)
     }
 
     init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -40,9 +40,9 @@ extension GetLatestPaymentsDecodableModel {
     func with(
         statusCode: Int?? = nil,
         errorMessage: String?? = nil,
-        data: [String: GetLatestPaymentsDatum]?? = nil
-    ) -> GetLatestPaymentsDecodableModel {
-        return GetLatestPaymentsDecodableModel(
+        data: [GetLatestPhone]?? = nil
+    ) -> GetLatestPhonePaymentsDecodableModel {
+        return GetLatestPhonePaymentsDecodableModel(
             statusCode: statusCode ?? self.statusCode,
             errorMessage: errorMessage ?? self.errorMessage,
             data: data ?? self.data
@@ -65,22 +65,22 @@ extension GetLatestPaymentsDecodableModel {
 //
 //   let datum = try Datum(json)
 
-// MARK: - GetLatestPaymentsDatum
-struct GetLatestPaymentsDatum: Codable {
-    let bankName, bankID, phoneNumber, amount: String?
+
+// MARK: - GetLatestPhone
+struct GetLatestPhone: Codable {
+    let bankName, bankID: String?
 
     enum CodingKeys: String, CodingKey {
         case bankName
         case bankID = "bankId"
-        case phoneNumber, amount
     }
 }
 
 // MARK: Datum convenience initializers and mutators
 
-extension GetLatestPaymentsDatum {
+extension GetLatestPhone {
     init(data: Data) throws {
-        self = try newJSONDecoder().decode(GetLatestPaymentsDatum.self, from: data)
+        self = try newJSONDecoder().decode(GetLatestPhone.self, from: data)
     }
 
     init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -96,15 +96,11 @@ extension GetLatestPaymentsDatum {
 
     func with(
         bankName: String?? = nil,
-        bankID: String?? = nil,
-        phoneNumber: String?? = nil,
-        amount: String?? = nil
-    ) -> GetLatestPaymentsDatum {
-        return GetLatestPaymentsDatum(
+        bankID: String?? = nil
+    ) -> GetLatestPhone {
+        return GetLatestPhone(
             bankName: bankName ?? self.bankName,
-            bankID: bankID ?? self.bankID,
-            phoneNumber: phoneNumber ?? self.phoneNumber,
-            amount: amount ?? self.amount
+            bankID: bankID ?? self.bankID
         )
     }
 
