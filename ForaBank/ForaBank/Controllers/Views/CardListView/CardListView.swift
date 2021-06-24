@@ -16,6 +16,9 @@ class CardListView: UIView {
             self.collectionView.reloadData()
         }
     }
+    
+    var didCardTapped: ((Datum) -> Void)?
+    
     let collectionView : UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -42,7 +45,7 @@ class CardListView: UIView {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.heightAnchor.constraint(equalToConstant: 60).isActive = true
         setupCollectionView()
-        
+        isHidden = true
     }
     
     //MARK: - Helpers
@@ -85,6 +88,9 @@ extension CardListView: UICollectionViewDelegateFlowLayout {
 
 //MARK: - CollectionView Delegate
 extension CardListView: UICollectionViewDelegate {
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let card = cardList[indexPath.item]
+        didCardTapped?(card)
+    }
 }
 

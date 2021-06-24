@@ -9,6 +9,8 @@ import UIKit
 
 class PaymentsDetailsSuccessViewController: UIViewController {
     
+    var id: Int?
+    
     let confurmView = PaymentsDetailsView()
     let button = UIButton(title: "На главную",
                           titleColor: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1),
@@ -22,14 +24,20 @@ class PaymentsDetailsSuccessViewController: UIViewController {
         }
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         
+        
         button.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
         confurmView.detailTapped = { () in
             self.openDetailVC()
+        }
+        
+        confurmView.saveTapped = { [weak self] () in
+            let vc = PDFViewerViewController()
+            vc.id = self?.id
+            self?.present(vc, animated: true, completion: nil)
         }
     }
     
@@ -71,5 +79,7 @@ class PaymentsDetailsSuccessViewController: UIViewController {
     func dismissViewControllers() {
         self.view.window?.rootViewController?.dismiss(animated: true)
     }
+
+  
     
 }

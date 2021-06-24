@@ -11,7 +11,8 @@ class ForaSwitchView: UIView {
     
     //MARK: - Property
     let kContentXibName = "ForaSwitchView"
-
+    var switchIsChanged: ((UISwitch) -> Void)?
+    
     @IBOutlet weak var bankByPhoneSwitch: UISwitch!
     @IBOutlet var contentView: UIView!
     
@@ -36,17 +37,24 @@ class ForaSwitchView: UIView {
     func commonInit(viewModel: ForaInputModel) {
         Bundle.main.loadNibNamed(kContentXibName, owner: self, options: nil)
         contentView.fixInView(self)
-//        self.viewModel = viewModel
-//
-//        textField.addTarget(self, action: #selector(setupValue), for: .editingChanged)
-//        textField.delegate = self
-//        self.translatesAutoresizingMaskIntoConstraints = false
-//        self.heightAnchor.constraint(equalToConstant: 54).isActive = true
+        self.heightAnchor.constraint(equalToConstant: 48).isActive = true
+        
+        bankByPhoneSwitch.layer.cornerRadius = 31 / 2
+        bankByPhoneSwitch.layer.borderWidth = 1
+        bankByPhoneSwitch.layer.borderColor = #colorLiteral(red: 0.1333333333, green: 0.7568627451, blue: 0.5137254902, alpha: 1)
+        bankByPhoneSwitch.increaseThumb()
+        
     }
     
     
-    @IBAction func bankByPhoneSwitchTapped(_ sender: Any) {
-        print(#function)
+    @IBAction func bankByPhoneSwitchTapped(_ sender: UISwitch) {
+        switchDidChange(sender)
+        switchIsChanged?(sender)
     }
     
+    private func switchDidChange(_ sender: UISwitch) {
+        bankByPhoneSwitch.layer.borderColor = sender.isOn ? #colorLiteral(red: 0.1333333333, green: 0.7568627451, blue: 0.5137254902, alpha: 1) : #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        bankByPhoneSwitch.thumbTintColor = sender.isOn ? #colorLiteral(red: 0.1333333333, green: 0.7568627451, blue: 0.5137254902, alpha: 1) : #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        
+    }
 }

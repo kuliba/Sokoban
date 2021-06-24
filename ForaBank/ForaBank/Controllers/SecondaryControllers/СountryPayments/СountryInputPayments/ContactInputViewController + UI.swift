@@ -12,14 +12,10 @@ extension ContactInputViewController {
         view.backgroundColor = .white
         
         view.addSubview(doneButton)
-        view.addSubview(foraSwitchView)
+//        view.addSubview(foraSwitchView)
         
-        doneButton.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
-                          right: view.rightAnchor, paddingLeft: 20, paddingBottom: 20,
-                          paddingRight: 20, height: 44)
-                
-        foraSwitchView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor)
-        foraSwitchView.anchor(height: needShowSwitchView ? 48 : 0)
+        
+//        foraSwitchView.heightAnchor.constraint(equalToConstant: heightSwitchView).isActive = true
         
         //TODO: добавить скроллвью что бы избежать проблем на маленьких экранах
         // let scroll
@@ -27,43 +23,52 @@ extension ContactInputViewController {
         //  view1.addSubview(stackView)
         // scroll add view1
         
-        //, cardListView
-        let stackView = UIStackView(arrangedSubviews: [surnameField, nameField, secondNameField, phoneField, bankField, cardField, cardListView, summTransctionField])
+        stackView = UIStackView(arrangedSubviews: [foraSwitchView, surnameField, nameField, secondNameField, phoneField, bankField, cardField, cardListView, summTransctionField])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
         stackView.spacing = 20
         stackView.isUserInteractionEnabled = true
         view.addSubview(stackView)
-        stackView.anchor(top: foraSwitchView.bottomAnchor, left: view.leftAnchor,
-                         right: view.rightAnchor, paddingTop: 20)
         
+        setupConstraint()
     }
     
-    func configure(with: Country?) {
+    func configure(with: Country?, byPhone: Bool) {
         guard let country = country else { return }
-        foraSwitchView.isHidden = country.code == "AM" ? false : true
-        needShowSwitchView = country.code == "AM" ? true : false
-        phoneField.isHidden = country.code == "AM" ? false : true
-        phoneField.textField.maskString = "+0000-000-00-00"
-        bankField.isHidden = country.code == "AM" ? false : true
-        surnameField.isHidden = country.code == "AM" ? true : false
-        nameField.isHidden = country.code == "AM" ? true : false
-        secondNameField.isHidden = country.code == "AM" ? true : false
+        UIView.animate(withDuration: 0.1) {
+            self.needShowSwitchView = country.code == "AM" ? true : false
+            self.phoneField.isHidden = byPhone ? false : true
+            self.phoneField.textField.maskString = "+000-0000-00-00"
+            self.bankField.isHidden = byPhone ? false : true
+            self.surnameField.isHidden = byPhone ? true : false
+            self.nameField.isHidden = byPhone ? true : false
+            self.secondNameField.isHidden = byPhone ? true : false
+        }
         
-        let navImage = country.code == "AM" ? #imageLiteral(resourceName: "MigAvatar") : #imageLiteral(resourceName: "Vector")
+        let navImage = byPhone ? #imageLiteral(resourceName: "MigAvatar") : #imageLiteral(resourceName: "Vector")
         let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
         self.navigationItem.rightBarButtonItem = customViewItem
         
         guard let countryName = country.name else { return }
         
-        let subtitle = country.code == "AM"
+        let subtitle = byPhone
             ? "Денежные переводы МИГ"
             : "Денежные переводы Contact"
         
-        self.navigationItem.titleView = setTitle(title: countryName, subtitle: subtitle)
-        setupUI()
-        self.view.layoutIfNeeded()
+        self.navigationItem.titleView = self.setTitle(title: countryName, subtitle: subtitle)
+        
+    }
+    
+    func setupConstraint() {
+        doneButton.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
+                          right: view.rightAnchor, paddingLeft: 20, paddingBottom: 20,
+                          paddingRight: 20, height: 44)
+        
+        stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
+                         left: view.leftAnchor, right: view.rightAnchor,
+                         paddingTop: 20)
+        
     }
     
     func setTitle(title:String, subtitle:String) -> UIView {

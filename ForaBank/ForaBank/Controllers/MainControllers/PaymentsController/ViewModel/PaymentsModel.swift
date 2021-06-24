@@ -19,3 +19,16 @@ struct PaymentsModel: Hashable {
         hasher.combine(id)
     }
 }
+
+struct ContactsModel: Hashable {
+    var id: Int
+    var name: String
+    var iconName: String?
+    var avatarImageName: String?
+    var controllerName: String
+    var description: String?
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
