@@ -17,7 +17,8 @@ final class NetworkPDFManager {
         
         guard var request = r.request() else { return }
         
-        let session = RouterSassionConfiguration.returnSession()
+        let s = RouterSassionConfiguration()
+        let session = s.returnSession()
         
         if let token = CSRFToken.token {
             request.allHTTPHeaderFields = ["X-XSRF-TOKEN": token]

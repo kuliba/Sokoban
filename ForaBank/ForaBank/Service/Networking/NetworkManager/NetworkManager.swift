@@ -16,7 +16,8 @@ final class NetworkManager<T: NetworkModelProtocol>{
         
         guard var request = requestType.request() else { return }
  
-        let session = RouterSassionConfiguration.returnSession()
+        let s = RouterSassionConfiguration()
+        let session = s.returnSession()
         
         if let token = CSRFToken.token {
             request.allHTTPHeaderFields = ["X-XSRF-TOKEN": token]

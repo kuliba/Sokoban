@@ -24,6 +24,8 @@
 		0B7A18B6268373890007CC75 /* NetworkPDFManagerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18B5268373890007CC75 /* NetworkPDFManagerExtension.swift */; };
 		0B7A18B82683A9940007CC75 /* FileManagerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18B72683A9940007CC75 /* FileManagerHelper.swift */; };
 		0B7A18BA2683AC880007CC75 /* NotificationName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18B92683AC880007CC75 /* NotificationName.swift */; };
+		0B7A18C326852D6B0007CC75 /* CreatTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18C226852D6B0007CC75 /* CreatTransferDecodableModel.swift */; };
+		0B7A18C526852EFC0007CC75 /* MakeTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18C426852EFC0007CC75 /* MakeTransferDecodableModel.swift */; };
 		0B8BE08F266FBE0500E96CAA /* CSRFDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE08E266FBE0500E96CAA /* CSRFDecodableModel.swift */; };
 		0B8BE091266FDA1B00E96CAA /* CheckClientDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE090266FDA1B00E96CAA /* CheckClientDecodebleModel.swift */; };
 		0B8BE093266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE092266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift */; };
@@ -190,6 +192,8 @@
 		0B7A18B5268373890007CC75 /* NetworkPDFManagerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkPDFManagerExtension.swift; sourceTree = "<group>"; };
 		0B7A18B72683A9940007CC75 /* FileManagerHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerHelper.swift; sourceTree = "<group>"; };
 		0B7A18B92683AC880007CC75 /* NotificationName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationName.swift; sourceTree = "<group>"; };
+		0B7A18C226852D6B0007CC75 /* CreatTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatTransferDecodableModel.swift; sourceTree = "<group>"; };
+		0B7A18C426852EFC0007CC75 /* MakeTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeTransferDecodableModel.swift; sourceTree = "<group>"; };
 		0B8BE08E266FBE0500E96CAA /* CSRFDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFDecodableModel.swift; sourceTree = "<group>"; };
 		0B8BE090266FDA1B00E96CAA /* CheckClientDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckClientDecodebleModel.swift; sourceTree = "<group>"; };
 		0B8BE092266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyCodeDecodebleModel.swift; sourceTree = "<group>"; };
@@ -991,6 +995,8 @@
 				0B37F983267A18AC007728FC /* MakeCard2CardDecodableModel.swift */,
 				0B37F9872680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift */,
 				0B7A18AE268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift */,
+				0B7A18C226852D6B0007CC75 /* CreatTransferDecodableModel.swift */,
+				0B7A18C426852EFC0007CC75 /* MakeTransferDecodableModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -1379,6 +1385,7 @@
 				ED4FC5EC266AD98E0092B4AB /* NSCollectionLayoutItem.swift in Sources */,
 				EDB1657A2668C7F2007E6030 /* TransferCell.swift in Sources */,
 				EDB145382666770A0028EF5A /* OrderProductModel.swift in Sources */,
+				0B7A18C326852D6B0007CC75 /* CreatTransferDecodableModel.swift in Sources */,
 				ED0B48A5267E72130037EA06 /* CSRFToken.swift in Sources */,
 				EDF68217266F9EC800FD5C07 /* RouterSassionConfiguration.swift in Sources */,
 				0B37F97E267A10E4007728FC /* PrepareCard2PhoneDecodableModel.swift in Sources */,
@@ -1400,6 +1407,7 @@
 				EDF68214266F9EC800FD5C07 /* URLSchemeType.swift in Sources */,
 				EDB16549266766FD007E6030 /* CodeVerificationViewController.swift in Sources */,
 				0B747890267343B400C44F79 /* KeyExchangeDecodebleModel.swift in Sources */,
+				0B7A18C526852EFC0007CC75 /* MakeTransferDecodableModel.swift in Sources */,
 				EDB14528266624EE0028EF5A /* OrderCardView.swift in Sources */,
 				EDF68219266F9EC800FD5C07 /* RouterBaseUrlList.swift in Sources */,
 				68FFA5452682F48C002DADFA /* SearchContact.swift in Sources */,

@@ -64,4 +64,8 @@ enum RouterBaseUrlList: String {
     case getPrintForm              = "/rest/getPrintForm"
     
     case getLatestPhonePayments    = "/rest/getLatestPhonePayments"
+    
+    case createTransfer            = "/rest/transfer/createTransfer"
+    
+    case makeTransfer              = "/rest/transfer/makeTransfer"
 }

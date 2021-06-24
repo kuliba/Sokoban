@@ -31,6 +31,8 @@ enum RouterManager {
     case getLatestPayments
     case getPrintForm
     case getLatestPhonePayments
+    case createTransfer
+    case makeTransfer
 }
 
 extension RouterManager {
@@ -368,6 +370,36 @@ extension RouterManager {
             
         case .getLatestPhonePayments:
             let baseUrl = RouterUrlList.getLatestPhonePayments.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .createTransfer:
+            let baseUrl = RouterUrlList.createTransfer.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .makeTransfer:
+            let baseUrl = RouterUrlList.makeTransfer.returnUrl()
             switch baseUrl {
             case .success(let url):
                 resultUrl = url.absoluteURL
