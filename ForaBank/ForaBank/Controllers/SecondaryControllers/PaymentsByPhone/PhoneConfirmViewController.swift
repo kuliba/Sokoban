@@ -31,18 +31,7 @@ class PhoneConfirmViewController: UIViewController {
             type: .credidCard)
             )
     
-    var nameField = ForaInput(
-        viewModel: ForaInputModel(
-            title: "ФИО получателя",
-            image: #imageLiteral(resourceName: "accountImage"),
-            isEditable: true))
-    
-    var countryField = ForaInput(
-        viewModel: ForaInputModel(
-            title: "Страна",
-            image: #imageLiteral(resourceName: "map-pin"),
-            isEditable: false))
-    
+
     var numberTransctionField = ForaInput(
         viewModel: ForaInputModel(
             title: "Номер перевода",
@@ -60,13 +49,7 @@ class PhoneConfirmViewController: UIViewController {
             title: "Комиссия",
             image: #imageLiteral(resourceName: "Frame 580"),
             isEditable: false))
-    
-    var currancyTransctionField = ForaInput(
-        viewModel: ForaInputModel(
-            title: "Способ выплаты",
-            image: #imageLiteral(resourceName: "Frame 579"),
-            isEditable: false))
-    
+  
     var smsCodeField = ForaInput(
         viewModel: ForaInputModel(
             title: "Введите код из СМС",
@@ -112,39 +95,39 @@ class PhoneConfirmViewController: UIViewController {
         stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
         
         
-        if sbp ?? false {
-            let customView = UIImageView(image: #imageLiteral(resourceName: "sbp-logoDefault"))
-            let customViewItem = UIBarButtonItem(customView: customView)
-            self.navigationItem.rightBarButtonItem = customViewItem
-        }
+//        if sbp ?? false {
+//            let customView = UIImageView(image: #imageLiteral(resourceName: "sbp-logoDefault"))
+//            let customViewItem = UIBarButtonItem(customView: customView)
+//            self.navigationItem.rightBarButtonItem = customViewItem
+//        }
     }
     
     @objc func doneButtonTapped() {
         print(#function)
         switch sbp {
         case true:
-            makeCard2Card()
-        default:
-        guard let code = smsCodeField.textField.text else { return }
-        let body = ["verificationCode": code] as [String: AnyObject]
-        showActivity()
-        NetworkManager<AnywayPaymentMakeDecodableModel>.addRequest(.anywayPaymentMake, [:], body) { model, error in
-            if error != nil {
-                print("DEBUG: Error: ", error ?? "")
-            }
-            guard let model = model else { return }
-            if model.statusCode == 0 {
-                print("DEBUG: Success payment")
-                self.dismissActivity()
-                DispatchQueue.main.async {
-                    self.showAlert(with: "Поздравляю", and: "Перевод совершен успешно") {
-                        self.navigationController?.popToRootViewController(animated: true)
-                    }
+            guard let code = smsCodeField.textField.text else { return }
+            let body = ["verificationCode": code] as [String: AnyObject]
+            showActivity()
+            NetworkManager<AnywayPaymentMakeDecodableModel>.addRequest(.anywayPaymentMake, [:], body) { model, error in
+                if error != nil {
+                    print("DEBUG: Error: ", error ?? "")
                 }
-            } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
+                guard let model = model else { return }
+                if model.statusCode == 0 {
+                    print("DEBUG: Success payment")
+                    self.dismissActivity()
+                    DispatchQueue.main.async {
+                        let vc = PaymentsDetailsSuccessViewController()
+                        vc.modalPresentationStyle = .fullScreen
+                        self.present(vc, animated: true, completion: nil)
+                    }
+                } else {
+                    print("DEBUG: Error: ", model.errorMessage ?? "")
+                }
             }
-        }
+        default:
+            makeCard2Card()
         
         }
     }
@@ -166,7 +149,8 @@ class PhoneConfirmViewController: UIViewController {
              
                    
                    DispatchQueue.main.async {
-                     
+                    let vc = PaymentsDetailsSuccessViewController()
+                    self.navigationController?.pushViewController(vc, animated: true)
                    }
                } else {
                    print("DEBUG: Error: ", model.errorMessage ?? "")

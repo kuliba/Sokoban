@@ -12,9 +12,9 @@ protocol CutomViewProtocol: UIView {
     
 }
 
-struct CastomPopUpView <T: CutomViewProtocol>  {
+struct CastomPopUpView  {
     
-    let v = MainPopUpView<T>()
+    let v = MainPopUpView()
     
     func setupAttributs () -> EKAttributes {
         

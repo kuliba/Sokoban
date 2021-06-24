@@ -20,7 +20,7 @@ class ContactsViewController: UIViewController, UISearchBarDelegate {
         }
     }
     
-    var lastPayment = [GetLatestDatum(bankName: "Фора - Банк", bankID: "000121221", phoneNumber: "000517217", amount: "10")]{
+    var lastPayment = [GetLatestPaymentsDatum(bankName: "Фора - Банк", bankID: "000121221", phoneNumber: "000517217", amount: "10")]{
         didSet{
             setupCollectionView()
         }
@@ -239,6 +239,9 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
 //            vc.confurmVCModel = self.confurmVCModel
             vc.modalPresentationStyle = .fullScreen
             vc.selectBank = banks?[indexPath.row].memberNameRus
+            if banks?[indexPath.item].memberNameRus != "ФОРА - Банк"{
+                vc.sbp = true
+            }
             self.present(vc, animated: true, completion: nil)
             } else if collectionView == lastPaymentsCollectionView{
                 let vc = PaymentByPhoneViewController()
@@ -322,7 +325,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
 //                self.selectedCardNumber = cardNumber
                 DispatchQueue.main.async {
                     
-                    self.lastPayment = [GetLatestDatum(bankName: "Фора - Банк", bankID: "00072121", phoneNumber: "9626129268", amount: "Александр К."),GetLatestDatum(bankName: "Альфа - Банк", bankID: "100000000008", phoneNumber: "9626129268", amount: "Александр К."), GetLatestDatum(bankName: "Сбербанк", bankID: "sberBank", phoneNumber: "9626129268", amount: "Александр К."), GetLatestDatum(bankName: "Райфайзен б.", bankID: "raiffei1test", phoneNumber: "9626129268", amount: "Александр К."), GetLatestDatum(bankName: "ВТБ", bankID: "100000000005", phoneNumber: "9626129268", amount: "Александр К.")]
+                    self.lastPayment = [GetLatestPaymentsDatum(bankName: "Фора - Банк", bankID: "00072121", phoneNumber: "9626129268", amount: "Александр К."),GetLatestPaymentsDatum(bankName: "Альфа - Банк", bankID: "100000000008", phoneNumber: "9626129268", amount: "Александр К."), GetLatestPaymentsDatum(bankName: "Сбербанк", bankID: "sberBank", phoneNumber: "9626129268", amount: "Александр К."), GetLatestPaymentsDatum(bankName: "Райфайзен б.", bankID: "raiffei1test", phoneNumber: "9626129268", amount: "Александр К."), GetLatestPaymentsDatum(bankName: "ВТБ", bankID: "100000000005", phoneNumber: "9626129268", amount: "Александр К.")]
                     self.lastPaymentsCollectionView.reloadData()
 
                 }

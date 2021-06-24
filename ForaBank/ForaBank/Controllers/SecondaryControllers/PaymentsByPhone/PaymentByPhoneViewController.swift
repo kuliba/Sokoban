@@ -11,16 +11,7 @@ class PaymentByPhoneViewController: UIViewController {
     var sbp: Bool?
     var selectBank: String?
     var confirm: Bool?
-    var selectedCardNumber = "" {
-        didSet {
-            self.startContactPayment(with: selectedCardNumber) { error in
-                self.dismissActivity()
-                if error != nil {
-                    self.showAlert(with: "Ошибка", and: error!)
-                }
-            }
-        }
-    }
+    var selectedCardNumber = ""
     var phoneField = ForaInput(
         viewModel: ForaInputModel(
             title: "По номеру телефона",
@@ -97,6 +88,8 @@ class PaymentByPhoneViewController: UIViewController {
         hideKeyboardWhenTappedAround()
         getCardList()
         
+        
+        
         self.tabBarController?.tabBar.isHidden = true
         navigationController?.title = "Перевод по номеру телефона"
         navigationController?.navigationBar.items = [UINavigationItem(title: "123")]
@@ -115,11 +108,10 @@ class PaymentByPhoneViewController: UIViewController {
         case true:
             self.startContactPayment(with: selectedCardNumber) { [self] error in
                 self.dismissActivity()
-                let vc = PhoneConfirmViewController()
-                vc.sbp = sbp
-                self.navigationController?.pushViewController(vc, animated: true)
-                endSBPPayment(selectBank: selectBank!, amount: summTransctionField.textField.text!) { error in
-                    print(error)
+                DispatchQueue.main.async {
+                    endSBPPayment(selectBank: selectBank!, amount: summTransctionField.textField.text!) { error in
+                        print(error)
+                    }
                 }
                 if error != nil {
                     self.showAlert(with: "Ошибка", and: error!)
@@ -278,7 +270,7 @@ class PaymentByPhoneViewController: UIViewController {
         let dataName = ["additional": [
             [ "fieldid": 1,
               "fieldname": "RecipientID",
-              "fieldvalue": "0005310217" ],
+              "fieldvalue": "0115110217" ],
             [ "fieldid": 1,
               "fieldname": "SumSTrs",
               "fieldvalue": amount ]
@@ -293,14 +285,15 @@ class PaymentByPhoneViewController: UIViewController {
             guard let model = model else { return }
             if model.statusCode == 0 {
                 print("DEBUG: Success send Phone")
-                self.dismissActivity()
-                
+                DispatchQueue.main.async {
+                    self.dismissActivity()
+                    self.endSBPPayment2()
+
+                }
 //                let model = ConfurmViewControllerModel(
 //                    country: country,
 //                    model: model)
 //                self.goToConfurmVC(with: model)
-                self.endSBPPayment2()
-                
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
                 completion(model.errorMessage)
@@ -315,7 +308,7 @@ class PaymentByPhoneViewController: UIViewController {
         let dataName = ["additional": [
             [ "fieldid": 1,
               "fieldname": "BankRecipientID",
-              "fieldvalue": "100000000240"]
+              "fieldvalue": "1crt88888881"]
         ]] as [String: AnyObject]
         
         NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataName) { model, error in
@@ -329,7 +322,14 @@ class PaymentByPhoneViewController: UIViewController {
                 print("DEBUG: Success send Phone")
                 self.dismissActivity()
                 self.confirm = true
-                self.setupUI()
+//                self.setupUI()
+                DispatchQueue.main.async {
+                    let vc = PhoneConfirmViewController()
+                    vc.sbp = self.sbp
+                    vc.modalPresentationStyle = .fullScreen
+                    self.present(vc, animated: true, completion: nil)
+                    
+                }
 //                let model = ConfurmViewControllerModel(
 //                    country: country,
 //                    model: model)
