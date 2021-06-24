@@ -12,26 +12,27 @@ class ContactInputViewController: UIViewController {
     let popView = CastomPopUpView()
     var typeOfPay: PaymentType = .contact {
         didSet {
-            self.startPayment(with: selectedCardNumber, type: typeOfPay) { error in
-                self.dismissActivity()
-                if error != nil {
-                    self.showAlert(with: "Ошибка", and: error!)
-                }
-            }
+            print("DEBUG: Puref: ", typeOfPay.puref)
+//            self.startPayment(with: selectedCardNumber, type: typeOfPay) { error in
+//                self.dismissActivity()
+//                if error != nil {
+//                    self.showAlert(with: "Ошибка", and: error!)
+//                }
+//            }
         }
     }
     var selectedCardNumber = "" {
         didSet {
-            self.isFirstStartPayment = false
-            self.startPayment(with: selectedCardNumber, type: typeOfPay) { error in
-                self.dismissActivity()
-                if error != nil {
-                    self.showAlert(with: "Ошибка", and: error!)
-                }
-            }
+//            self.isFirstStartPayment = false
+//            self.startPayment(with: selectedCardNumber, type: typeOfPay) { error in
+//                self.dismissActivity()
+//                if error != nil {
+//                    self.showAlert(with: "Ошибка", and: error!)
+//                }
+//            }
         }
     }
-    var isFirstStartPayment = true
+//    var isFirstStartPayment = true
     var needShowSwitchView: Bool = false {
         didSet {
             foraSwitchView.isHidden = needShowSwitchView ? false : true
@@ -109,17 +110,17 @@ class ContactInputViewController: UIViewController {
         
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        if !isFirstStartPayment {
-            self.startPayment(with: selectedCardNumber, type: typeOfPay) { error in
-                self.dismissActivity()
-                if error != nil {
-                    self.showAlert(with: "Ошибка", and: error!)
-                }
-            }
-        }
-    }
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//        if !isFirstStartPayment {
+//            self.startPayment(with: selectedCardNumber, type: typeOfPay) { error in
+//                self.dismissActivity()
+//                if error != nil {
+//                    self.showAlert(with: "Ошибка", and: error!)
+//                }
+//            }
+//        }
+//    }
     
     //MARK: - Actions
     @objc func titleDidTaped() {
@@ -184,34 +185,15 @@ class ContactInputViewController: UIViewController {
     }
     
     @objc func doneButtonTapped() {
-        let amount = summTransctionField.textField.text ?? ""
-        let doubelAmount = amount.replacingOccurrences(of: ",", with: ".", options: .literal, range: nil)
-        
-        switch typeOfPay {
-        case .migAIbank:
-            let phone = phoneField.textField.unmaskedText ?? ""
-            
-            endMigPayment(phone: phone, amount: doubelAmount) { error in
-                self.dismissActivity()
-                if error != nil {
-                    self.showAlert(with: "Ошибка", and: error!)
-                }
-            }
-        default:
-            let surname = surnameField.textField.text ?? ""
-            let name = nameField.textField.text ?? ""
-            let secondName = secondNameField.textField.text ?? ""
-            
-            endContactPayment(surname: surname,
-                              name: name,
-                              secondName: secondName,
-                              amount: doubelAmount) { error in
-                self.dismissActivity()
-                if error != nil {
-                    self.showAlert(with: "Ошибка", and: error!)
-                }
+        // TODO : Нужна проверка данных на не пустые Имя, Телефон, Сумма
+        showActivity()
+        startPayment(with: selectedCardNumber, type: typeOfPay) { error in
+            self.dismissActivity()
+            if error != nil {
+                self.showAlert(with: "Ошибка", and: error!)
             }
         }
+        
     }
     
     //MARK: - Helpers
@@ -246,178 +228,7 @@ class ContactInputViewController: UIViewController {
         
     }
     
-    
-    func startPayment(with card: String, type: PaymentType,
-                             completion: @escaping (_ error: String?)->()) {
-        showActivity()
-        let puref = type.puref
-        
-        print("DEBUG: Puref: ", puref)
-        let body = ["accountID": nil,
-                    "cardID": nil,
-                    "cardNumber": card,
-                    "provider": nil,
-                    "puref": puref] as [String: AnyObject]
-        
-        NetworkManager<AnywayPaymentBeginDecodebleModel>.addRequest(.anywayPaymentBegin, [:], body, completion: { model, error in
-            if error != nil {
-                print("DEBUG: Error: ", error ?? "")
-                completion(error!)
-            }
-            guard let model = model else { return }
-            if model.statusCode == 0 {
-                completion(nil)
-                NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], [:]) { model, error in
-                    if error != nil {
-                        print("DEBUG: Error: ", error ?? "")
-                        completion(error!)
-                    }
-                    guard let model = model else { return }
-                    if model.statusCode == 0 {
-                        print("DEBUG: Success ")
-                        completion(nil)
-                    } else {
-                        print("DEBUG: Error: ", model.errorMessage ?? "")
-                        completion(model.errorMessage)
-                    }
-                }
-            } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
-                completion(model.errorMessage)
-            }
-        })
-    }
-    
-    func endMigPayment(phone: String, amount: String, completion: @escaping (_ error: String?)->()) {
-        showActivity()
-//        37477404102
-        let dataName = ["additional": [
-            [ "fieldid": 1,
-              "fieldname": "RECP",
-              "fieldvalue": phone ],
-            [ "fieldid": 1,
-              "fieldname": "SumSTrs",
-              "fieldvalue": amount ]
-        ]] as [String: AnyObject]
-        
-        NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataName) { model, error in
-            if error != nil {
-                print("DEBUG: Error: ", error ?? "")
-                completion(error!)
-            }
-//            print("DEBUG: amount ", amount)
-            guard let model = model else { return }
-            if model.statusCode == 0 {
-                print("DEBUG: Success send Phone")
-                self.dismissActivity()
-                guard let country = self.country else { return }
-                let model = ConfirmViewControllerModel(
-                    country: country,
-                    model: model)
-                self.goToConfurmVC(with: model)
-                
-            } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
-                completion(model.errorMessage)
-            }
-        }
-        
-    }
-    
-    func endContactPayment(surname: String, name: String, secondName: String, amount: String, completion: @escaping (_ error: String?)->()) {
-        showActivity()
-        let dataName = [ "additional": [
-            ["fieldid": 1,
-             "fieldname": "bName",
-             "fieldvalue": surname ],
-            ["fieldid": 2,
-             "fieldname": "bLastName",
-             "fieldvalue": name ],
-            [ "fieldid": 3,
-              "fieldname": "bSurName",
-              "fieldvalue": secondName ],
-            [ "fieldid": 4,
-              "fieldname": "trnPickupPoint",
-              "fieldvalue": "BTOC" ]
-        ] ] as [String: AnyObject]
-//        print("DEBUG: ", dataName)
-        NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataName) { model, error in
-            if error != nil {
-                print("DEBUG: Error: ", error ?? "")
-                completion(error!)
-            }
-            
-            print("DEBUG: amount", amount)
-            guard let model = model else { return }
-            if model.statusCode == 0 {
-                print("DEBUG: Success send Name")
-                let dataAmount = [ "additional": [
-                    [ "fieldid": 1,
-                      "fieldname": "A",
-                      "fieldvalue": amount ],
-                    [ "fieldid": 2,
-                      "fieldname": "CURR",
-                      "fieldvalue": "RUR" ]
-                ] ] as [String: AnyObject]
-                
-                NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataAmount) { model, error in
-                    if error != nil {
-                        print("DEBUG: Error: ", error ?? "")
-                    }
-                    guard let model = model else { return }
-                    if model.statusCode == 0 {
-                        print("DEBUG: Success send sms code")
-                        self.dismissActivity()
-                        
-                        guard let country = self.country else { return }
-                        let fullName = surname + " " + name + " " + secondName
-                        let model = ConfirmViewControllerModel(
-                            country: country,
-                            model: model,
-                            fullName: fullName)
-                                                
-                        self.goToConfurmVC(with: model)
-                        
-                    } else {
-                        print("DEBUG: Error: ", model.errorMessage ?? "")
-                        completion(model.errorMessage)
-                    }
-                }
-            } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
-                completion(model.errorMessage)
-            }
-        }
-        
-        
-    }
-    
-    
-    enum PaymentType {
-        case contact
-        case migAIbank
-        case migEvoka
-        case migArmBB
-        case migArdshin
-        
-        var puref: String {
-            switch self {
-            case .contact:
-                return "iSimpleDirect||TransferIDClient11P"
-            case .migAIbank:
-                return "iSimpleDirect||TransferIDClient11P"
-            case .migEvoka:
-                return "iSimpleDirect||TransferEvocaClientP"
-            case .migArmBB:
-                return "iSimpleDirect||TransferArmBBClientP"
-            case .migArdshin:
-                return "iSimpleDirect||TransferArdshinClientP"
-            }
-        }
-    }
-    
-    
-//          "iSimpleDirect||TransferIDClient11P"
+//            iFora||Addressless                    Перевод Contact
 //            iSimpleDirect||TransferIDClient11P    Перевод в АйДиБанк
 //            iSimpleDirect||TransferEvocaClientP   Перевод в ЭвокаБанк
 //            iSimpleDirect||TransferArmBBClientP   Перевод в АрмББ

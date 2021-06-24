@@ -143,6 +143,8 @@
 		EDFFCAF0268245EC004EE095 /* CardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFFCAEF268245EC004EE095 /* CardViewModel.swift */; };
 		EDFFCAF32682461F004EE095 /* CardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFFCAF22682461F004EE095 /* CardCell.swift */; };
 		EDFFCAF82683943A004EE095 /* UISwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFFCAF72683943A004EE095 /* UISwitch.swift */; };
+		EDFFCAFB2683C135004EE095 /* PaymentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFFCAFA2683C135004EE095 /* PaymentType.swift */; };
+		EDFFCAFD2683C18B004EE095 /* ContactInputViewController API.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFFCAFC2683C18B004EE095 /* ContactInputViewController API.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -300,6 +302,8 @@
 		EDFFCAEF268245EC004EE095 /* CardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewModel.swift; sourceTree = "<group>"; };
 		EDFFCAF22682461F004EE095 /* CardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardCell.swift; sourceTree = "<group>"; };
 		EDFFCAF72683943A004EE095 /* UISwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISwitch.swift; sourceTree = "<group>"; };
+		EDFFCAFA2683C135004EE095 /* PaymentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentType.swift; sourceTree = "<group>"; };
+		EDFFCAFC2683C18B004EE095 /* ContactInputViewController API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContactInputViewController API.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -411,6 +415,7 @@
 			children = (
 				EDB165642667A741007E6030 /* ContactInputViewController.swift */,
 				ED0B4895267B97C60037EA06 /* ContactInputViewController + UI.swift */,
+				EDFFCAFC2683C18B004EE095 /* ContactInputViewController API.swift */,
 			);
 			path = "СountryInputPayments";
 			sourceTree = "<group>";
@@ -588,6 +593,7 @@
 		ED4FC613266CDB9C0092B4AB /* СountryPayments */ = {
 			isa = PBXGroup;
 			children = (
+				EDFFCAF92683C123004EE095 /* PaymentType */,
 				ED46C165267A9C0C00D1A9A5 /* СountryInputPayments */,
 				ED46C166267A9C4000D1A9A5 /* СountryConfirmPayments */,
 				ED0B4897267CF9490037EA06 /* PaymentsDetailsSuccess */,
@@ -1044,6 +1050,14 @@
 			path = CardCell;
 			sourceTree = "<group>";
 		};
+		EDFFCAF92683C123004EE095 /* PaymentType */ = {
+			isa = PBXGroup;
+			children = (
+				EDFFCAFA2683C135004EE095 /* PaymentType.swift */,
+			);
+			path = PaymentType;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1267,6 +1281,7 @@
 				EDF68215266F9EC800FD5C07 /* URLConstruct.swift in Sources */,
 				0BEC893B2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift in Sources */,
 				EDF68210266F9EC800FD5C07 /* LoginDoCodableModel.swift in Sources */,
+				EDFFCAFB2683C135004EE095 /* PaymentType.swift in Sources */,
 				EDB1658A266A181C007E6030 /* PaymentsViewControllerDataSource.swift in Sources */,
 				ED4FC61B266EA42E0092B4AB /* UI.swift in Sources */,
 				EDF6820E266F9EC800FD5C07 /* NetworkModelProtocol.swift in Sources */,
@@ -1275,6 +1290,7 @@
 				0BEC8939267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift in Sources */,
 				EDB1655C2667A2C8007E6030 /* LoginCardEntryViewController UI.swift in Sources */,
 				ED0B48AF2681CC6D0037EA06 /* CodeVerificationViewModel.swift in Sources */,
+				EDFFCAFD2683C18B004EE095 /* ContactInputViewController API.swift in Sources */,
 				EDB1451E26652F170028EF5A /* UIView.swift in Sources */,
 				ED4FC610266CD66F0092B4AB /* СountryModel.swift in Sources */,
 				EDF68213266F9EC800FD5C07 /* URLHostType.swift in Sources */,
