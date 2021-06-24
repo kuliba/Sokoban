@@ -23,8 +23,14 @@ extension PaymentsViewController: UICollectionViewDelegate {
             print("DEBUG: " + #function + transfers[indexPath.row].name)
             if let viewController = transfers[indexPath.row].controllerName.getViewController() {
                 let navController = UINavigationController(rootViewController: viewController)
-                navController.modalPresentationStyle = .fullScreen
+                if transfers[indexPath.row].name == "По номеру телефона"{
+                    navController.modalPresentationStyle = .formSheet
+                } else {
+                    navController.modalPresentationStyle = .fullScreen
+
+                }
                 present(navController, animated: true, completion: nil)
+                
 //                navigationController?.pushViewController(viewController, animated: true)
             }
         case .pay:

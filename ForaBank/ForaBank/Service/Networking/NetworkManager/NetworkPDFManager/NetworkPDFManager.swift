@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class NetworkPDFManager: NSObject {
+final class NetworkPDFManager {
     
     static func addRequest( //_ requestType: RouterManager,
                            _ urlParametrs: [String: String],
@@ -16,7 +16,7 @@ final class NetworkPDFManager: NSObject {
         let r = RouterManager.getPrintForm
         
         guard var request = r.request() else { return }
- 
+        
         let session = RouterSassionConfiguration.returnSession()
         
         if let token = CSRFToken.token {

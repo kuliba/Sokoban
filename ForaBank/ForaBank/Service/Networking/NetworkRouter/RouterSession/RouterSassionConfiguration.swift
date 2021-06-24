@@ -7,7 +7,23 @@
 
 import Foundation
 
-final class RouterSassionConfiguration {
+final class RouterSassionConfiguration: NSObject, URLSessionDelegate, URLSessionDownloadDelegate {
+    
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+        print("downloadLocation:", location)
+        let fileManager = FileManagerHandler()
+        fileManager.fileSave("pdf", fileText: location.absoluteString)
+        NotificationCenter.default.post(name: .pdf, object: nil)
+    }
+    
+    final public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        guard error == nil else {
+            debugPrint("PDFTask completed: \(task), error: \(String(describing: error))")
+            return
+        }
+    }
+    
+    var session: URLSession?
     
     static public func returnSession () -> URLSession {
         
@@ -53,4 +69,10 @@ final class RouterSassionConfiguration {
             }
         return session
         }
+    
+    override init() {
+        super.init()
+        let configuration = URLSessionConfiguration.default
+        session = URLSession(configuration: configuration, delegate: self, delegateQueue: .main)
+    }
 }
