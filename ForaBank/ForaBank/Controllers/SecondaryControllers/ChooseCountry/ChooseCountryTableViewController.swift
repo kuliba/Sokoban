@@ -68,12 +68,14 @@ class ChooseCountryTableViewController: UITableViewController {
         }
     }
     
-    private func configureVC(with countries: [CountriesListDatum]) {
+    private func configureVC(with countries: [CountriesList]) {
         for country in countries {
-            let name = country.name?.capitalizingFirstLetter()
-            let countryViewModel = Country(name: name, dialCode: "", code: country.code, imageSVGString: country.svgImage)
-            
-            self.countries.append(countryViewModel)
+            if !(country.paymentSystemIDList?.isEmpty ?? true) {
+                let name = country.name?.capitalizingFirstLetter()
+                let countryViewModel = Country(name: name, dialCode: "", code: country.code, imageSVGString: country.svgImage)
+                
+                self.countries.append(countryViewModel)
+            }
         }
     }
     //MARK: - SetupUI

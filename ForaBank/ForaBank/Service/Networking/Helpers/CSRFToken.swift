@@ -8,5 +8,9 @@
 import Foundation
 
 struct CSRFToken {
-    static var token: String?
+    static var token: String? {
+        didSet {
+            print("DEBUG: CSRFToken установлен")
+        }
+    }
 }

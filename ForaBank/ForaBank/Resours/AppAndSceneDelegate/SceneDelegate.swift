@@ -23,7 +23,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.windowScene = windowScene
         window?.rootViewController = UIStoryboard(name: "LaunchScreen", bundle: nil).instantiateInitialViewController()
         window?.makeKeyAndVisible()
-        FCMToken.fcmToken = Messaging.messaging().fcmToken as String?
+        
         AppDelegate.shared.getCSRF { error in
             if error != nil {
                 print("DEBUG: Error getCSRF: ", error!)
@@ -113,7 +113,7 @@ extension AppDelegate {
     func getCSRF(completion: @escaping (_ error: String?) ->()) {
         let parameters = [
             "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-            "pushFcmToken": FCMToken.fcmToken,
+            "pushFcmToken": Messaging.messaging().fcmToken as String?,
             "model": UIDevice().model,
             "operationSystem": "IOS"
         ] as [String : AnyObject]
@@ -126,7 +126,7 @@ extension AppDelegate {
                 completion("error")
                 return
             }
-            
+            print("DEBUG: CSRF DONE!")
             CSRFToken.token = token
             
             NetworkManager<InstallPushDeviceDecodebleModel>.addRequest(.installPushDevice, [:], parameters) { model, error in
@@ -134,8 +134,8 @@ extension AppDelegate {
                     print("DEBUG: installPushDevice error", error ?? "nil")
                     completion(error)
                 }
-                
-                print("DEBUG: installPushDevice model", model ?? "nil")
+                print("DEBUG: CSRF DONE!")
+//                print("DEBUG: installPushDevice model", model ?? "nil")
                 completion(nil)
             }
             

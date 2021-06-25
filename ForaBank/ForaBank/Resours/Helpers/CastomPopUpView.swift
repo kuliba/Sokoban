@@ -185,11 +185,46 @@ class MainPopUpView <T: UIView>: UIView {
         
         print(#function)
         
-        let cardFrom = cardFromField.viewModel.cardModel?.original?.number
-        let cardto = cardToField.viewModel.cardModel?.original?.number
-        let amaunt = summTransctionField.textField.text
+        guard let cardFrom = cardFromField.viewModel.cardModel?.original?.number else { return }
+        guard let cardto = cardToField.viewModel.cardModel?.original?.number else { return }
+        guard let amaunt = summTransctionField.textField.text else { return }
         
+        let body = ["check" : false,
+                    "amount" : amaunt,
+                    "payer" : [  "cardId" : "",
+                                 "cardNumber" : cardFrom,
+                                 "carExpireDate" : "",
+                                 "cardCVV" : "",
+                                 "accountId" : "",
+                                 "accountNumber" : "",
+                                 "phoneNumber" : ""
+                    ],
+                    "payee" : [ "cardId" : "",
+                                "cardNumber" : cardto,
+                                "accountId" : "",
+                                "accountNumber" : "",
+                                "phoneNumber" : ""
+                    ]
         
+        ] as [String : AnyObject]
+        
+        NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer, [:], body) { model, error in
+            
+            if error != nil {
+                guard let error = error else { return }
+                print("DEBUG: ", #function, error)
+            } else {
+                guard let statusCode = model?.statusCode else { return }
+                if statusCode == 0 {
+                    
+                    print("DEBUG: ", #function, model)
+                    
+                } else {
+                    print("DEBUG: ", #function, model?.errorMessage ?? "nil")
+                }
+                
+            }
+        }
     }
     
 }

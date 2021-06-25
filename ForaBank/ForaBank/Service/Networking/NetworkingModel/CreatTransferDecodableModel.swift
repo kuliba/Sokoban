@@ -67,7 +67,7 @@ extension CreatTransferDecodableModel {
 
 // MARK: - CreatTransferDataClass
 struct CreatTransferDataClass: Codable {
-    let fee: String?
+    let fee: Double?
     let needMake: Bool?
 }
 
@@ -90,7 +90,7 @@ extension CreatTransferDataClass {
     }
 
     func with(
-        fee: String?? = nil,
+        fee: Double?? = nil,
         needMake: Bool?? = nil
     ) -> CreatTransferDataClass {
         return CreatTransferDataClass(

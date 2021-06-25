@@ -10,7 +10,7 @@ import Foundation
 
 public struct Country : Decodable {
     
-    static var countries: [CountriesListDatum]?
+    static var countries: [CountriesList]?
     
     public let name : String?
     public let dialCode : String?
