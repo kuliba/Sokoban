@@ -39,6 +39,8 @@ enum RouterUrlList: String {
     case getLatestPhonePayments
     case createTransfer
     case makeTransfer
+    case getBanks
+    case getPaymentSystemList
     
     func returnUrl () -> URLValue {
         switch self {
@@ -309,6 +311,28 @@ enum RouterUrlList: String {
             
         case .makeTransfer:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.makeTransfer.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .getBanks:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getBanks.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .getPaymentSystemList:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getPaymentSystemList.rawValue)
             
             switch result {
             case .success(let url):

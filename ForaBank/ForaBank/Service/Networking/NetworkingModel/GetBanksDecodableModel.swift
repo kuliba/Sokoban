@@ -1,29 +1,29 @@
 //
-//  GetCountriesDecodebleModel.swift
+//  GetBanksDecodableModel.swift
 //  ForaBank
 //
-//  Created by Константин Савялов on 11.06.2021.
+//  Created by Константин Савялов on 25.06.2021.
 //
 
 // This file was generated from JSON Schema using quicktype, do not modify it directly.
 // To parse the JSON, add this file to your project and do:
 //
-//   let getCountriesDecodebleModel = try GetCountriesDecodebleModel(json)
+//   let getBanksDecodableModel = try GetBanksDecodableModel(json)
 
 import Foundation
 
-// MARK: - GetCountriesDecodebleModel
-struct GetCountriesDecodebleModel: Codable, NetworkModelProtocol {
+// MARK: - GetBanksDecodableModel
+struct GetBanksDecodableModel: Codable, NetworkModelProtocol {
     let statusCode: Int?
     let errorMessage: String?
-    let data: GetCountriesDataClass?
+    let data: GetBanksDataClass?
 }
 
-// MARK: GetCountriesDecodebleModel convenience initializers and mutators
+// MARK: GetBanksDecodableModel convenience initializers and mutators
 
-extension GetCountriesDecodebleModel {
+extension GetBanksDecodableModel {
     init(data: Data) throws {
-        self = try newJSONDecoder().decode(GetCountriesDecodebleModel.self, from: data)
+        self = try newJSONDecoder().decode(GetBanksDecodableModel.self, from: data)
     }
 
     init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -40,9 +40,9 @@ extension GetCountriesDecodebleModel {
     func with(
         statusCode: Int?? = nil,
         errorMessage: String?? = nil,
-        data: GetCountriesDataClass?? = nil
-    ) -> GetCountriesDecodebleModel {
-        return GetCountriesDecodebleModel(
+        data: GetBanksDataClass?? = nil
+    ) -> GetBanksDecodableModel {
+        return GetBanksDecodableModel(
             statusCode: statusCode ?? self.statusCode,
             errorMessage: errorMessage ?? self.errorMessage,
             data: data ?? self.data
@@ -65,17 +65,17 @@ extension GetCountriesDecodebleModel {
 //
 //   let dataClass = try DataClass(json)
 
-// MARK: - GetCountriesDataClass
-struct GetCountriesDataClass: Codable {
-    let countriesList: [CountriesList]?
+// MARK: - GetBanksDataClass
+struct GetBanksDataClass: Codable {
+    let banksList: [BanksList]?
     let serial: String?
 }
 
 // MARK: DataClass convenience initializers and mutators
 
-extension GetCountriesDataClass {
+extension GetBanksDataClass {
     init(data: Data) throws {
-        self = try newJSONDecoder().decode(GetCountriesDataClass.self, from: data)
+        self = try newJSONDecoder().decode(GetBanksDataClass.self, from: data)
     }
 
     init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -90,11 +90,11 @@ extension GetCountriesDataClass {
     }
 
     func with(
-        countriesList: [CountriesList]?? = nil,
+        banksList: [BanksList]?? = nil,
         serial: String?? = nil
-    ) -> GetCountriesDataClass {
-        return GetCountriesDataClass(
-            countriesList: countriesList ?? self.countriesList,
+    ) -> GetBanksDataClass {
+        return GetBanksDataClass(
+            banksList: banksList ?? self.banksList,
             serial: serial ?? self.serial
         )
     }
@@ -108,32 +108,32 @@ extension GetCountriesDataClass {
     }
 }
 
-// CountriesList.swift
+// BanksList.swift
 
 // This file was generated from JSON Schema using quicktype, do not modify it directly.
 // To parse the JSON, add this file to your project and do:
 //
-//   let countriesList = try CountriesList(json)
-// MARK: - CountriesList
-struct CountriesList: Codable {
-    let code, name: String?
-    let sendCurr: SendCurr?
+//   let banksList = try BanksList(json)
+
+// MARK: - BanksList
+struct BanksList: Codable {
+    let memberID, memberName, memberNameRus: String?
     let md5Hash, svgImage: String?
-    let paymentSystemIDList: [PaymentSystemIDList]?
+    let paymentSystemCodeList: [PaymentSystemCodeList]?
 
     enum CodingKeys: String, CodingKey {
-        case code, name, sendCurr
+        case memberID = "memberId"
+        case memberName, memberNameRus
         case md5Hash = "md5hash"
-        case svgImage
-        case paymentSystemIDList = "paymentSystemIdList"
+        case svgImage, paymentSystemCodeList
     }
 }
 
-// MARK: CountriesList convenience initializers and mutators
+// MARK: BanksList convenience initializers and mutators
 
-extension CountriesList {
+extension BanksList {
     init(data: Data) throws {
-        self = try newJSONDecoder().decode(CountriesList.self, from: data)
+        self = try newJSONDecoder().decode(BanksList.self, from: data)
     }
 
     init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -148,20 +148,20 @@ extension CountriesList {
     }
 
     func with(
-        code: String?? = nil,
-        name: String?? = nil,
-        sendCurr: SendCurr?? = nil,
+        memberID: String?? = nil,
+        memberName: String?? = nil,
+        memberNameRus: String?? = nil,
         md5Hash: String?? = nil,
         svgImage: String?? = nil,
-        paymentSystemIDList: [PaymentSystemIDList]?? = nil
-    ) -> CountriesList {
-        return CountriesList(
-            code: code ?? self.code,
-            name: name ?? self.name,
-            sendCurr: sendCurr ?? self.sendCurr,
+        paymentSystemCodeList: [PaymentSystemCodeList]?? = nil
+    ) -> BanksList {
+        return BanksList(
+            memberID: memberID ?? self.memberID,
+            memberName: memberName ?? self.memberName,
+            memberNameRus: memberNameRus ?? self.memberNameRus,
             md5Hash: md5Hash ?? self.md5Hash,
             svgImage: svgImage ?? self.svgImage,
-            paymentSystemIDList: paymentSystemIDList ?? self.paymentSystemIDList
+            paymentSystemCodeList: paymentSystemCodeList ?? self.paymentSystemCodeList
         )
     }
 
@@ -174,24 +174,9 @@ extension CountriesList {
     }
 }
 
-// PaymentSystemIDList.swift
+// PaymentSystemCodeList.swift
 
-import Foundation
-
-enum PaymentSystemIDList: String, Codable {
-    case contact = "CONTACT"
+enum PaymentSystemCodeList: String, Codable {
     case direct = "DIRECT"
+    case sfp = "SFP"
 }
-
-// SendCurr.swift
-
-import Foundation
-
-enum SendCurr: String, Codable {
-    case empty = ""
-    case eur = "EUR;"
-    case rurUsdEur = "RUR;USD;EUR;"
-    case usd = "USD;"
-    case usdEur = "USD;EUR;"
-}
-
