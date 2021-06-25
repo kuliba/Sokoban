@@ -17,6 +17,10 @@ final class NetworkPDFManager {
         
         guard var request = r.request() else { return }
         
+        let a = request.url
+        let b = request.httpBody
+        let c = request.httpMethod
+        
         let s = RouterSassionConfiguration()
         let session = s.returnSession()
         

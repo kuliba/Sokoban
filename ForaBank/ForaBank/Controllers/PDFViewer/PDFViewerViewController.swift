@@ -17,11 +17,15 @@ class PDFViewerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.view.backgroundColor = .black
 
-        let body = [
-                "paymentOperationDetailId": id ?? 0,
-                "printFormType": "sbp"
-        ] as [String: AnyObject]
+        let body = ([
+            "paymentOperationDetailId": id ?? 0,
+            "printFormType": "sbp"
+        ] as? [String: AnyObject])!
+        
+        print(body)
         
         NetworkPDFManager.addRequest([:], body)
 
