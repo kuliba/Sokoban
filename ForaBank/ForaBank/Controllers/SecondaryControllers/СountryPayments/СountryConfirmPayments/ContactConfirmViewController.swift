@@ -196,6 +196,7 @@ class ContactConfurmViewController: UIViewController {
                 DispatchQueue.main.async {
                     let vc = PaymentsDetailsSuccessViewController()
                     vc.confurmVCModel = self.confurmVCModel
+                    vc.id = model.data?.paymentOperationDetailID
                     vc.modalPresentationStyle = .fullScreen
                     self.present(vc, animated: true, completion: nil)
                 }
