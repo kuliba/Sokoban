@@ -16,6 +16,8 @@ struct CastomPopUpView  {
     
     let v = MainPopUpView()
     
+    let a = MemeDetailVC()
+    
     func setupAttributs () -> EKAttributes {
         
         
@@ -46,7 +48,7 @@ struct CastomPopUpView  {
     
     func showAlert () {
         
-        SwiftEntryKit.display(entry: v , using: setupAttributs())
+        SwiftEntryKit.display(entry: a , using: setupAttributs())
         
     }
     
@@ -55,6 +57,16 @@ struct CastomPopUpView  {
         SwiftEntryKit.dismiss()
         
     }
+}
+
+class MemeDetailVC : UIViewController {
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.view.heightAnchor.constraint(equalToConstant: 300).isActive = true
+        self.view.backgroundColor = .green
+    }
+
 }
 
 
