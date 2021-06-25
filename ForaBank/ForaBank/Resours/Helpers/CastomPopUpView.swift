@@ -103,6 +103,8 @@ class MainPopUpView <T: UIView>: UIView {
         return button
     }()
     
+    var bottomView = BottomInputView()
+    
     var stackView = UIStackView(arrangedSubviews: [])
     
     override init(frame: CGRect) {
@@ -137,14 +139,14 @@ class MainPopUpView <T: UIView>: UIView {
         self.addSubview(T())
         heightAnchor.constraint(equalToConstant: 488).isActive = true
         
-        stackView = UIStackView(arrangedSubviews: [topLabel, cardFromField, cardFromListView, cardToField, cardToListView, summTransctionField])
+        stackView = UIStackView(arrangedSubviews: [topLabel, cardFromField, cardFromListView, cardToField, cardToListView, bottomView])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
         stackView.spacing = 20
         stackView.isUserInteractionEnabled = true
         addSubview(stackView)
-        addSubview(doneButton)
+//        addSubview(doneButton)
         
         setupConstraint()
         setupActions()
@@ -154,12 +156,12 @@ class MainPopUpView <T: UIView>: UIView {
     }
     
     private func setupConstraint() {
-        stackView.anchor(top: topAnchor, left: leftAnchor,
+        stackView.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor,
                          right: rightAnchor, paddingTop: 28)
 //        topLabel.anchor(left: stackView.leftAnchor, paddingLeft: 20)
-        doneButton.anchor(left: leftAnchor, bottom: bottomAnchor,
-                          right: rightAnchor, paddingLeft: 20,
-                          paddingBottom: 40, paddingRight: 20, height: 44)
+//        doneButton.anchor(left: leftAnchor, bottom: bottomAnchor,
+//                          right: rightAnchor, paddingLeft: 20,
+//                          paddingBottom: 40, paddingRight: 20, height: 44)
     }
     
     //MARK: - API
