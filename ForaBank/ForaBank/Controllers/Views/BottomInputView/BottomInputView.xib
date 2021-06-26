@@ -34,14 +34,14 @@
                     <rect key="frame" x="20" y="66.5" width="392" height="40"/>
                     <subviews>
                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="1 000 ₽" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Att-bb-GzQ">
-                            <rect key="frame" x="0.0" y="5" width="170" height="30.5"/>
+                            <rect key="frame" x="0.0" y="5" width="252" height="30.5"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <fontDescription key="fontDescription" type="system" pointSize="24"/>
                             <textInputTraits key="textInputTraits"/>
                         </textField>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ENw-6q-luf">
-                            <rect key="frame" x="196" y="8" width="56" height="24"/>
+                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ENw-6q-luf">
+                            <rect key="frame" x="265" y="8" width="56" height="24"/>
                             <color key="backgroundColor" red="0.31411021950000001" green="0.31349042059999999" blue="0.34343308210000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="24" id="aw3-e5-r5h"/>
@@ -59,7 +59,7 @@
                                 <action selector="currencyButtonTapped:" destination="-1" eventType="touchUpInside" id="dCg-11-TZR"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MeI-1d-qwn">
+                        <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MeI-1d-qwn">
                             <rect key="frame" x="278" y="0.0" width="114" height="40"/>
                             <color key="backgroundColor" name="redColorFora"/>
                             <constraints>
