@@ -165,13 +165,13 @@ class MainPopUpView <T: UIView>: UIView {
     }
     
     //MARK: - API
-    func getCardList(completion: @escaping (_ cardList: [CardModel]?,_ error: String?)->()) {
+    func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?,_ error: String?)->()) {
         
-        NetworkHelper.request(.getCardList) { cardList , error in
+        NetworkHelper.request(.getProductList) { cardList , error in
             if error != nil {
                 completion(nil, error)
             }
-            guard let cardList = cardList as? [CardModel] else { return }
+            guard let cardList = cardList as? [GetProductListDatum] else { return }
             completion(cardList, nil)
             print("DEBUG: Load card list... Count is: ", cardList.count)
         }
@@ -199,8 +199,8 @@ class MainPopUpView <T: UIView>: UIView {
         
         print(#function)
         
-        guard let cardFrom = cardFromField.viewModel.cardModel?.original?.number else { return }
-        guard let cardto = cardToField.viewModel.cardModel?.original?.number else { return }
+        guard let cardFrom = cardFromField.viewModel.cardModel?.number else { return }
+        guard let cardto = cardToField.viewModel.cardModel?.number else { return }
         guard let amaunt = summTransctionField.textField.text else { return }
         
         let body = ["check" : false,

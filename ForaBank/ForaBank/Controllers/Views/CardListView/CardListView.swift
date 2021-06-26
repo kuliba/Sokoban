@@ -11,13 +11,13 @@ class CardListView: UIView {
     
     //MARK: - Property
     let reuseIdentifier = "CardCell"
-    var cardList = [CardModel]() {
+    var cardList = [GetProductListDatum]() {
         didSet {
             self.collectionView.reloadData()
         }
     }
     
-    var didCardTapped: ((CardModel) -> Void)?
+    var didCardTapped: ((GetProductListDatum) -> Void)?
     
     let collectionView : UICollectionView = {
         let layout = UICollectionViewFlowLayout()
