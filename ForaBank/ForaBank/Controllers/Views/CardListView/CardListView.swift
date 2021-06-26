@@ -43,7 +43,7 @@ class CardListView: UIView {
     func commonInit() {
         
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        self.heightAnchor.constraint(equalToConstant: 72).isActive = true
         setupCollectionView()
         isHidden = true
     }
@@ -81,7 +81,7 @@ extension CardListView: UICollectionViewDataSource {
 extension CardListView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        return CGSize(width: 108, height: 60)
+        return CGSize(width: 108, height: 72)
     }
     
 }

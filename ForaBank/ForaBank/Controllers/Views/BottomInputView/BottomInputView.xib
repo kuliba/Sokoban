@@ -59,7 +59,7 @@
                                 <action selector="currencyButtonTapped:" destination="-1" eventType="touchUpInside" id="dCg-11-TZR"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MeI-1d-qwn">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MeI-1d-qwn">
                             <rect key="frame" x="278" y="0.0" width="114" height="40"/>
                             <color key="backgroundColor" name="redColorFora"/>
                             <constraints>
