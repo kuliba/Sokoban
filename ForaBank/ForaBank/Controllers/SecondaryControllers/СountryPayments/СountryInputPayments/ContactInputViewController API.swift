@@ -11,7 +11,7 @@ extension ContactInputViewController {
     
     func startPayment(with card: String, type: PaymentType,
                       completion: @escaping (_ error: String?)->()) {
-        let amount = self.summTransctionField.textField.text ?? ""
+        let amount = self.bottomView.amountTextField.text ?? ""
         let phone = self.phoneField.textField.unmaskedText ?? ""
         let surname = self.surnameField.textField.text ?? ""
         let name = self.nameField.textField.text ?? ""

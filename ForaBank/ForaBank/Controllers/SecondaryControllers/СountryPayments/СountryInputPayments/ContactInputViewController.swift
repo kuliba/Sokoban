@@ -80,11 +80,11 @@ class ContactInputViewController: UIViewController {
             isEditable: false,
             showChooseButton: true))
     
-    var summTransctionField = ForaInput(
-        viewModel: ForaInputModel(
-            title: "Сумма перевода",
-            image: #imageLiteral(resourceName: "coins"),
-            type: .amountOfTransfer))
+//    var summTransctionField = ForaInput(
+//        viewModel: ForaInputModel(
+//            title: "Сумма перевода",
+//            image: #imageLiteral(resourceName: "coins"),
+//            type: .amountOfTransfer))
     
     var cardField = ForaInput(
         viewModel: ForaInputModel(
@@ -94,6 +94,9 @@ class ContactInputViewController: UIViewController {
             isEditable: false))
     
     var cardListView = CardListView()
+    
+    var bottomView = BottomInputView()
+    
     var stackView = UIStackView(arrangedSubviews: [])
     lazy var doneButton: UIButton = {
         let button = UIButton(title: "Продолжить")
@@ -127,46 +130,46 @@ class ContactInputViewController: UIViewController {
         print("countryField didChooseButtonTapped")
         let vc = ChooseCountryTableViewController()
         vc.modalPresent = true
-        vc.didChooseCountryTapped = { (country) in
-            self.country = country
+        vc.didChooseCountryTapped = { [weak self]  (country) in
+            self?.country = country
         }
         let navVc = UINavigationController(rootViewController: vc)
         self.present(navVc, animated: true, completion: nil)
     }
     
     func setupActions() {
-        getCardList {data ,error in
+        getCardList { [weak self] data ,error in
             DispatchQueue.main.async {
                 
                 //TODO: ------------ замокано для показа
-                self.bankField.text = "АйДиБанк"
-                self.bankField.imageView.image = #imageLiteral(resourceName: "IdBank")
+                self?.bankField.text = "АйДиБанк"
+                self?.bankField.imageView.image = #imageLiteral(resourceName: "IdBank")
                 
                 
                 if error != nil {
-                    self.showAlert(with: "Ошибка", and: error!)
+                    self?.showAlert(with: "Ошибка", and: error!)
                 }
                 guard let data = data else { return }
-                self.cardListView.cardList = data
+                self?.cardListView.cardList = data
                 
                 if data.count > 0 {
-                    self.cardField.configCardView(data.first!)
+                    self?.cardField.configCardView(data.first!)
                     guard let cardNumber  = data.first?.number else { return }
-                    self.selectedCardNumber = cardNumber
+                    self?.selectedCardNumber = cardNumber
                 }
             }
         }
         
-        foraSwitchView.switchIsChanged = { (switchView) in
-            self.typeOfPay = switchView.isOn ? .migAIbank : .contact
-            self.configure(with: self.country, byPhone: switchView.isOn)
+        foraSwitchView.switchIsChanged = { [weak self] (switchView) in
+            self?.typeOfPay = switchView.isOn ? .migAIbank : .contact
+            self?.configure(with: self?.country, byPhone: switchView.isOn)
         }
         
-        cardField.didChooseButtonTapped = { () in
+        cardField.didChooseButtonTapped = { [weak self] () in
             print("cardField didChooseButtonTapped")
 //            self.popView.showAlert()
             UIView.animate(withDuration: 0.2) {
-                self.cardListView.isHidden.toggle()
+                self?.cardListView.isHidden.toggle()
             }
         }
         
@@ -175,12 +178,16 @@ class ContactInputViewController: UIViewController {
             
         }
         
-        cardListView.didCardTapped = { card in
-            self.cardField.configCardView(card)
-            self.selectedCardNumber = card.number ?? ""
+        cardListView.didCardTapped = { [weak self] card in
+            self?.cardField.configCardView(card)
+            self?.selectedCardNumber = card.number ?? ""
             UIView.animate(withDuration: 0.2) {
-                self.cardListView.isHidden.toggle()
+                self?.cardListView.isHidden.toggle()
             }
+        }
+        
+        bottomView.didDoneButtonTapped = { [weak self] () in
+            self?.doneButtonTapped()
         }
     }
     

@@ -31,7 +31,7 @@ struct CastomPopUpView  {
         attributes.entryInteraction = .absorbTouches
         attributes.shadow = .active(with: .init(color: .black, opacity: 0.2, radius: 10, offset: .zero))
 //        attributes.roundCorners = .all(radius: 10)
-        
+        attributes.scroll = .enabled(swipeable: true, pullbackAnimation: .easeOut)
         let widthConstraint = EKAttributes.PositionConstraints.Edge.ratio(value: 1)
         let heightConstraint = EKAttributes.PositionConstraints.Edge.fill
         attributes.positionConstraints.size = .init(width: widthConstraint, height: heightConstraint)
@@ -61,6 +61,8 @@ struct CastomPopUpView  {
 
 class MemeDetailVC : UIViewController {
 
+    var titleLabel = UILabel(text: "Между своими", font: .boldSystemFont(ofSize: 16), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
+    
     var cardFromField = ForaInput(
         viewModel: ForaInputModel(
             title: "Откуда",
@@ -86,9 +88,10 @@ class MemeDetailVC : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         addCloseButton()
-        title = "Между своими"
-        self.view.heightAnchor.constraint(equalToConstant: 412).isActive = true
+        
+        self.view.heightAnchor.constraint(equalToConstant: 480).isActive = true
         self.view.backgroundColor = .white
+        
         
         cardFromField.didChooseButtonTapped = { [weak self]  () in
             UIView.animate(withDuration: 0.2) {
@@ -98,7 +101,8 @@ class MemeDetailVC : UIViewController {
         cardFromListView.didCardTapped = { [weak self] (card) in
             self?.cardFromField.configCardView(card)
             UIView.animate(withDuration: 0.2) {
-                self?.cardFromListView.isHidden.toggle()
+                self?.cardFromListView.isHidden = true
+                self?.cardToListView.isHidden = true
             }
         }
         cardToField.didChooseButtonTapped = { [weak self]  () in
@@ -109,15 +113,16 @@ class MemeDetailVC : UIViewController {
         cardToListView.didCardTapped = { [weak self] (card) in
             self?.cardToField.configCardView(card)
             UIView.animate(withDuration: 0.2) {
-                self?.cardToListView.isHidden.toggle()
+                self?.cardFromListView.isHidden = true
+                self?.cardToListView.isHidden = true
             }
         }
         
-        stackView = UIStackView(arrangedSubviews: [cardFromField, cardFromListView, cardToField, cardToListView, bottomView])
+        stackView = UIStackView(arrangedSubviews: [cardFromField, cardFromListView, cardToField, cardToListView])
         stackView.axis = .vertical
         stackView.alignment = .fill
-        stackView.distribution = .equalSpacing
-        stackView.spacing = 20
+        stackView.distribution = .fillProportionally
+        stackView.spacing = 10
         stackView.isUserInteractionEnabled = true
         view.addSubview(stackView)
 //        addSubview(doneButton)
@@ -127,8 +132,21 @@ class MemeDetailVC : UIViewController {
     }
 
     private func setupConstraint() {
-        stackView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor,
-                         right: view.rightAnchor, paddingTop: 28, height: 412)
+        view.addSubview(titleLabel)
+        titleLabel.anchor(top: view.topAnchor, left: view.leftAnchor, paddingTop: 28, paddingLeft: 20)
+        
+        
+        view.addSubview(bottomView)
+        bottomView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
+                          right: view.rightAnchor)
+        let saveAreaView = UIView()
+        saveAreaView.backgroundColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1)
+        view.addSubview(saveAreaView)
+        saveAreaView.anchor(top: view.safeAreaLayoutGuide.bottomAnchor, left: view.leftAnchor,
+                            bottom: view.bottomAnchor, right: view.rightAnchor)
+        
+        stackView.anchor(top: titleLabel.bottomAnchor, left: view.leftAnchor,
+                         right: view.rightAnchor, paddingTop: 20)
 //        topLabel.anchor(left: stackView.leftAnchor, paddingLeft: 20)
 //        doneButton.anchor(left: leftAnchor, bottom: bottomAnchor,
 //                          right: rightAnchor, paddingLeft: 20,

@@ -84,6 +84,10 @@ extension CardListView: UICollectionViewDelegateFlowLayout {
         return CGSize(width: 108, height: 72)
     }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 8, left: 20, bottom: 8, right: 8)
+    }
+    
 }
 
 //MARK: - CollectionView Delegate

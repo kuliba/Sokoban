@@ -10,8 +10,12 @@ import UIKit
 extension ContactInputViewController {
     func setupUI() {
         view.backgroundColor = .white
-        
-        view.addSubview(doneButton)
+        let saveAreaView = UIView()
+        saveAreaView.backgroundColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1)
+        view.addSubview(saveAreaView)
+        saveAreaView.anchor(top: view.safeAreaLayoutGuide.bottomAnchor, left: view.leftAnchor,
+                            bottom: view.bottomAnchor, right: view.rightAnchor)
+        view.addSubview(bottomView)
 //        view.addSubview(foraSwitchView)
         
         
@@ -23,7 +27,7 @@ extension ContactInputViewController {
         //  view1.addSubview(stackView)
         // scroll add view1
         
-        stackView = UIStackView(arrangedSubviews: [foraSwitchView, surnameField, nameField, secondNameField, phoneField, bankField, cardField, cardListView, summTransctionField])
+        stackView = UIStackView(arrangedSubviews: [foraSwitchView, surnameField, nameField, secondNameField, phoneField, bankField, cardField, cardListView])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
@@ -61,9 +65,8 @@ extension ContactInputViewController {
     }
     
     func setupConstraint() {
-        doneButton.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
-                          right: view.rightAnchor, paddingLeft: 20, paddingBottom: 20,
-                          paddingRight: 20, height: 44)
+        bottomView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
+                          right: view.rightAnchor)
         
         stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
                          left: view.leftAnchor, right: view.rightAnchor,
