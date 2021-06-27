@@ -31,7 +31,10 @@ struct CastomPopUpView  {
         attributes.entryInteraction = .absorbTouches
         attributes.shadow = .active(with: .init(color: .black, opacity: 0.2, radius: 10, offset: .zero))
 //        attributes.roundCorners = .all(radius: 10)
-        attributes.scroll = .enabled(swipeable: true, pullbackAnimation: .easeOut)
+        
+        attributes.screenBackground = .clear
+        attributes.scroll = .enabled(swipeable: true, pullbackAnimation: .jolt)
+        
         let widthConstraint = EKAttributes.PositionConstraints.Edge.ratio(value: 1)
         let heightConstraint = EKAttributes.PositionConstraints.Edge.fill
         attributes.positionConstraints.size = .init(width: widthConstraint, height: heightConstraint)
@@ -87,6 +90,8 @@ class MemeDetailVC : UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.layer.cornerRadius = 20
+        self.view.clipsToBounds = true
         addCloseButton()
         
         self.view.heightAnchor.constraint(equalToConstant: 480).isActive = true

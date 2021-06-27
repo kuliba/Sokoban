@@ -17,14 +17,15 @@ class PDFViewerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.view.backgroundColor = .black
 
         let body = [
-                "paymentOperationDetailId": id ?? 0,
-                "printFormType": "sbp"
+            "paymentOperationDetailId": id ?? 0 ,
+            "printFormType" : "contactAddressless"
         ] as [String: AnyObject]
         
         NetworkPDFManager.addRequest([:], body)
-
         
         let customView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
         self.view.addSubview(customView)
