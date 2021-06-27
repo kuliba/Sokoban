@@ -70,6 +70,8 @@
 		ED4FC61A266EA42E0092B4AB /* AppLocker.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC617266EA42E0092B4AB /* AppLocker.swift */; };
 		ED4FC61B266EA42E0092B4AB /* UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC618266EA42E0092B4AB /* UI.swift */; };
 		ED4FC621266EA5CD0092B4AB /* Valet in Frameworks */ = {isa = PBXBuildFile; productRef = ED4FC620266EA5CD0092B4AB /* Valet */; };
+		ED51D66E2688B27E005FD655 /* SeparatorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED51D66D2688B27E005FD655 /* SeparatorView.xib */; };
+		ED51D6702688B287005FD655 /* SeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED51D66F2688B287005FD655 /* SeparatorView.swift */; };
 		ED92D3A226735A0A006D47B3 /* PaymentByPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED92D3A126735A0A006D47B3 /* PaymentByPhoneViewController.swift */; };
 		EDAA99AF2673AB9200435484 /* ForaSwitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAA99AE2673AB9200435484 /* ForaSwitchView.swift */; };
 		EDAA99B12673ABF200435484 /* ForaSwitchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDAA99B02673ABF200435484 /* ForaSwitchView.xib */; };
@@ -240,6 +242,8 @@
 		ED4FC616266EA42E0092B4AB /* AppLocker.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AppLocker.xib; sourceTree = "<group>"; };
 		ED4FC617266EA42E0092B4AB /* AppLocker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppLocker.swift; sourceTree = "<group>"; };
 		ED4FC618266EA42E0092B4AB /* UI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UI.swift; sourceTree = "<group>"; };
+		ED51D66D2688B27E005FD655 /* SeparatorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SeparatorView.xib; sourceTree = "<group>"; };
+		ED51D66F2688B287005FD655 /* SeparatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorView.swift; sourceTree = "<group>"; };
 		ED92D3A126735A0A006D47B3 /* PaymentByPhoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentByPhoneViewController.swift; sourceTree = "<group>"; };
 		EDAA99AE2673AB9200435484 /* ForaSwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForaSwitchView.swift; sourceTree = "<group>"; };
 		EDAA99B02673ABF200435484 /* ForaSwitchView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ForaSwitchView.xib; sourceTree = "<group>"; };
@@ -697,6 +701,15 @@
 			path = AppLocker;
 			sourceTree = "<group>";
 		};
+		ED51D66C2688B25D005FD655 /* SeparatorView */ = {
+			isa = PBXGroup;
+			children = (
+				ED51D66D2688B27E005FD655 /* SeparatorView.xib */,
+				ED51D66F2688B287005FD655 /* SeparatorView.swift */,
+			);
+			path = SeparatorView;
+			sourceTree = "<group>";
+		};
 		ED92D3A0267359CD006D47B3 /* PaymentsByPhone */ = {
 			isa = PBXGroup;
 			children = (
@@ -710,6 +723,7 @@
 		EDAA99AC2673AB6D00435484 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				ED51D66C2688B25D005FD655 /* SeparatorView */,
 				EDC3419F26864BF100FFFEF8 /* BottomInputView */,
 				EDFFCACB2681F950004EE095 /* CardListView */,
 				ED46C1642678DCA500D1A9A5 /* OfferAgreement */,
@@ -1291,6 +1305,7 @@
 				EDB1452C26663C9D0028EF5A /* GoogleService-Info.plist in Resources */,
 				EDC341A426864C4900FFFEF8 /* BottomInputView.xib in Resources */,
 				EDB14526266624DC0028EF5A /* OrderCardView.xib in Resources */,
+				ED51D66E2688B27E005FD655 /* SeparatorView.xib in Resources */,
 				EDB143CC265FDEC90028EF5A /* Roboto-BlackItalic.ttf in Resources */,
 				EDB143C7265FDEC90028EF5A /* Roboto-MediumItalic.ttf in Resources */,
 				EDAA99B12673ABF200435484 /* ForaSwitchView.xib in Resources */,
@@ -1367,6 +1382,7 @@
 				0B37F98626807620007728FC /* NetworkHelper.swift in Sources */,
 				EDF6820D266F9EC800FD5C07 /* NetworkManager.swift in Sources */,
 				68FFA5432682DC95002DADFA /* PhoneConfirmViewController.swift in Sources */,
+				ED51D6702688B287005FD655 /* SeparatorView.swift in Sources */,
 				EDF6820F266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift in Sources */,
 				EDB1656E266827A8007E6030 /* PaymentsViewController.swift in Sources */,
 				0B7A18AF268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift in Sources */,
