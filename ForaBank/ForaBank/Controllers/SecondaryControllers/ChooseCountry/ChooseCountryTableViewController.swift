@@ -47,23 +47,22 @@ class ChooseCountryTableViewController: UITableViewController {
         if let countries = Country.countries {
             self.configureVC(with: countries)
         } else {
-            showActivity()
-            NetworkManager<GetCountriesDecodebleModel>.addRequest(.getCountries, [:], [:]) { model, error in
-                self.dismissActivity()
-                if error != nil {
-                    guard let error = error else { return }
-                    print("DEBUG: ", #function, error)
-                } else {
-                    guard let statusCode = model?.statusCode else { return }
-                    if statusCode == 0 {
-                        guard let countries = model?.data?.countriesList else { return }
-                        
-                        Country.countries = countries
-                        self.configureVC(with: countries)
-                    } else {
-                        print("DEBUG: ", #function, model?.errorMessage ?? "nil")
-                    }
-                }
+            
+            guard let documentsDirectoryUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+            let filePath = documentsDirectoryUrl.appendingPathComponent("CountriesList.json")
+            
+            // Read data from .json file and transform data into an array
+            do {
+                let data = try Data(contentsOf: filePath, options: [])
+                
+                let list = try JSONDecoder().decode(GetCountriesDataClass.self, from: data)
+                
+                guard let countries = list.countriesList else { return }
+                Country.countries = countries
+                self.configureVC(with: countries)
+                
+            } catch {
+                print(error)
             }
         }
     }
@@ -72,7 +71,7 @@ class ChooseCountryTableViewController: UITableViewController {
         for country in countries {
             if !(country.paymentSystemIDList?.isEmpty ?? true) {
                 let name = country.name?.capitalizingFirstLetter()
-                let countryViewModel = Country(name: name, dialCode: "", code: country.code, imageSVGString: country.svgImage)
+                let countryViewModel = Country(name: name, code: country.code, imageSVGString: country.svgImage)
                 
                 self.countries.append(countryViewModel)
             }

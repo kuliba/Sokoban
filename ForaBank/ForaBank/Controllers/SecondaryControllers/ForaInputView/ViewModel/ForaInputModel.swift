@@ -28,7 +28,7 @@ class ForaInputModel {
     var showBottomLabel = false
     var isEditable: Bool
     var activeCurrency: ButtonСurrency? 
-    var cardModel: CardModel?
+    var cardModel: GetProductListDatum?
     /// Инициализирует `ForaInputModel` заданными данными
     ///
     /// - Parameters:

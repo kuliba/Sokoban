@@ -61,12 +61,112 @@ struct CastomPopUpView  {
 
 class MemeDetailVC : UIViewController {
 
+    var cardFromField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "Откуда",
+            image: #imageLiteral(resourceName: "credit-card"),
+            type: .credidCard,
+            isEditable: false))
+    
+    var cardFromListView = CardListView()
+    
+    var cardToField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "Куда",
+            image: #imageLiteral(resourceName: "credit-card"),
+            type: .credidCard,
+            isEditable: false))
+    
+    var cardToListView = CardListView()
+    
+    var bottomView = BottomInputView()
+    
+    var stackView = UIStackView(arrangedSubviews: [])
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.heightAnchor.constraint(equalToConstant: 300).isActive = true
-        self.view.backgroundColor = .green
+        addCloseButton()
+        title = "Между своими"
+        self.view.heightAnchor.constraint(equalToConstant: 412).isActive = true
+        self.view.backgroundColor = .white
+        
+        cardFromField.didChooseButtonTapped = { [weak self]  () in
+            UIView.animate(withDuration: 0.2) {
+                self?.cardFromListView.isHidden.toggle()
+            }
+        }
+        cardFromListView.didCardTapped = { [weak self] (card) in
+            self?.cardFromField.configCardView(card)
+            UIView.animate(withDuration: 0.2) {
+                self?.cardFromListView.isHidden.toggle()
+            }
+        }
+        cardToField.didChooseButtonTapped = { [weak self]  () in
+            UIView.animate(withDuration: 0.2) {
+                self?.cardToListView.isHidden.toggle()
+            }
+        }
+        cardToListView.didCardTapped = { [weak self] (card) in
+            self?.cardToField.configCardView(card)
+            UIView.animate(withDuration: 0.2) {
+                self?.cardToListView.isHidden.toggle()
+            }
+        }
+        
+        stackView = UIStackView(arrangedSubviews: [cardFromField, cardFromListView, cardToField, cardToListView, bottomView])
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.distribution = .equalSpacing
+        stackView.spacing = 20
+        stackView.isUserInteractionEnabled = true
+        view.addSubview(stackView)
+//        addSubview(doneButton)
+        
+        setupConstraint()
+        setupActions()
     }
 
+    private func setupConstraint() {
+        stackView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor,
+                         right: view.rightAnchor, paddingTop: 28, height: 412)
+//        topLabel.anchor(left: stackView.leftAnchor, paddingLeft: 20)
+//        doneButton.anchor(left: leftAnchor, bottom: bottomAnchor,
+//                          right: rightAnchor, paddingLeft: 20,
+//                          paddingBottom: 40, paddingRight: 20, height: 44)
+    }
+    
+    func setupActions() {
+        getCardList { [weak self] data ,error in
+            DispatchQueue.main.async {
+                
+                if error != nil {
+                    print("Ошибка", error!)
+                }
+                guard let data = data else { return }
+                self?.cardFromListView.cardList = data
+                self?.cardToListView.cardList = data
+                if data.count > 0 {
+                    self?.cardFromField.configCardView(data.first!)
+                    self?.cardToField.configCardView(data.first!)
+                }
+            }
+        }
+    }
+    
+    //MARK: - API
+    func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?,_ error: String?)->()) {
+        
+        NetworkHelper.request(.getProductList) { cardList , error in
+            if error != nil {
+                completion(nil, error)
+            }
+            guard let cardList = cardList as? [GetProductListDatum] else { return }
+            completion(cardList, nil)
+            print("DEBUG: Load card list... Count is: ", cardList.count)
+        }
+    }
+    
+    
 }
 
 
@@ -165,13 +265,13 @@ class MainPopUpView <T: UIView>: UIView {
     }
     
     //MARK: - API
-    func getCardList(completion: @escaping (_ cardList: [CardModel]?,_ error: String?)->()) {
+    func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?,_ error: String?)->()) {
         
-        NetworkHelper.request(.getCardList) { cardList , error in
+        NetworkHelper.request(.getProductList) { cardList , error in
             if error != nil {
                 completion(nil, error)
             }
-            guard let cardList = cardList as? [CardModel] else { return }
+            guard let cardList = cardList as? [GetProductListDatum] else { return }
             completion(cardList, nil)
             print("DEBUG: Load card list... Count is: ", cardList.count)
         }
@@ -199,8 +299,8 @@ class MainPopUpView <T: UIView>: UIView {
         
         print(#function)
         
-        guard let cardFrom = cardFromField.viewModel.cardModel?.original?.number else { return }
-        guard let cardto = cardToField.viewModel.cardModel?.original?.number else { return }
+        guard let cardFrom = cardFromField.viewModel.cardModel?.number else { return }
+        guard let cardto = cardToField.viewModel.cardModel?.number else { return }
         guard let amaunt = summTransctionField.textField.text else { return }
         
         let body = ["check" : false,

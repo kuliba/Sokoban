@@ -82,6 +82,30 @@ struct NetworkHelper {
             NetworkManager<InstallPushDeviceDecodebleModel>.addRequest(.uninstallPushDevice, tempParameters, body) { model, error in
             
             }
+            
+        case .getProductList:
+            if ProductList.shared.productList != nil {
+                completion(ProductList.shared.productList, nil)
+            }
+            
+            NetworkManager<GetProductListDecodableModel>.addRequest(.getProductList, tempParameters, body) { model, error in
+                if error != nil {
+                    print("DEBUG: Error: ", error ?? "")
+                    completion(nil, error)
+                }
+                guard let model = model else { return }
+                
+                if model.statusCode == 0 {
+                    guard let data = model.data else { return }
+
+                    ProductList.shared.productList = data
+                    completion(data, nil)
+                    
+                } else {
+                    completion(nil ,model.errorMessage)
+                }
+            }
+            
         case .getCardList:
             if CardModel.cardList != nil {
                 completion(CardModel.cardList, nil)
@@ -108,9 +132,71 @@ struct NetworkHelper {
             
             }
         case .getCountries:
-            NetworkManager<GetCountriesDecodebleModel>.addRequest(.getCountries, tempParameters, body) { model, error in
-            
+            if let countriesListSerial = UserDefaults().object(forKey: "CountriesListSerial") as? String {
+
+                guard let documentsDirectoryUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+                let filePath = documentsDirectoryUrl.appendingPathComponent("CountriesList.json")
+                
+                // Read data from .json file and transform data into an array
+                do {
+                    let data = try Data(contentsOf: filePath, options: [])
+                    
+                    let list = try JSONDecoder().decode(GetCountriesDataClass.self, from: data)
+                    
+                    completion(list.countriesList, nil)
+                } catch {
+                    print(error)
+                }
+                
+                getCountries(withId: countriesListSerial)
+                
+            } else {
+                getCountries()
             }
+            
+            func getCountries(withId: String? = nil) {
+                
+                NetworkManager<GetCountriesDecodebleModel>.addRequest(.getCountries, tempParameters, body) { model, error in
+                    if error != nil {
+                        guard let error = error else { return }
+                        print("DEBUG: ", #function, error)
+                        completion(nil, error)
+                    } else {
+                        guard let statusCode = model?.statusCode else { return }
+                        if statusCode == 0 {
+                            if model?.data?.serial != withId {
+                                
+                                guard let data = model?.data else { return }
+                                
+                                let pathDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                                try? FileManager().createDirectory(at: pathDirectory, withIntermediateDirectories: true)
+                                let filePath = pathDirectory.appendingPathComponent("CountriesList.json")
+
+                                let json = try? JSONEncoder().encode(data)
+
+                                do {
+                                     try json!.write(to: filePath)
+                                } catch {
+                                    print("Failed to write JSON data: \(error.localizedDescription)")
+                                }
+                                
+                                UserDefaults().set(data.serial, forKey: "CountriesListSerial")
+                                
+                                guard let countries = model?.data?.countriesList else { return }
+                                completion(countries, nil)
+                            } else {
+                                print("DEBUG: Модель уже есть в UserDefaults")
+                            }
+                            
+                        } else {
+                            let error = model?.errorMessage ?? "nil"
+                            print("DEBUG: ", #function, error)
+                            completion(nil, error)
+                        }
+                    }
+                }
+            }
+            
         case .anywayPaymentBegin:
             NetworkManager<AnywayPaymentBeginDecodebleModel>.addRequest(.anywayPaymentBegin, tempParameters, body) { model, error in
             

@@ -65,10 +65,17 @@ extension GetProductListDecodableModel {
 //
 //   let datum = try Datum(json)
 
+struct ProductList {
+    static var shared = ProductList()
+    var productList: [GetProductListDatum]?
+    
+    private init() { }
+}
+
 // MARK: - GetProductListDatum
 struct GetProductListDatum: Codable {
     let number, numberMasked: String?
-    let balance: Int?
+    let balance: Double?
     let currency, productType, productName: String?
     let ownerID: Int?
     let accountNumber: String?
@@ -103,7 +110,7 @@ extension GetProductListDatum {
     func with(
         number: String?? = nil,
         numberMasked: String?? = nil,
-        balance: Int?? = nil,
+        balance: Double?? = nil,
         currency: String?? = nil,
         productType: String?? = nil,
         productName: String?? = nil,
