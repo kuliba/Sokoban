@@ -38,7 +38,7 @@
                     <color key="tintColor" red="0.91764705882352937" green="0.92156862745098034" blue="0.92156862745098034" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <inset key="imageEdgeInsets" minX="4" minY="6" maxX="4" maxY="6"/>
                     <state key="normal">
-                        <imageReference key="image" image="arrow.triangle.2.circlepath" catalog="system" symbolScale="large" renderingMode="template"/>
+                        <imageReference key="image" image="arrowTriangle" symbolScale="large" renderingMode="template"/>
                         <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="default"/>
                     </state>
                     <userDefinedRuntimeAttributes>
@@ -62,7 +62,7 @@
         </view>
     </objects>
     <resources>
-        <image name="arrow.triangle.2.circlepath" catalog="system" width="128" height="101"/>
+        <image name="arrowTriangle" width="20" height="16"/>
         <image name="separatorLine" width="336" height="10"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

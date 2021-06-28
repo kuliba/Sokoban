@@ -106,7 +106,7 @@ extension ContactInputViewController {
                 let model = ConfirmViewControllerModel(
                     country: country,
                     model: model)
-                self.goToConfurmVC(with: model)
+                self.goToConfurmVC(with: model!)
                 
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
@@ -168,7 +168,7 @@ extension ContactInputViewController {
                             model: model,
                             fullName: fullName)
                                                 
-                        self.goToConfurmVC(with: model)
+                        self.goToConfurmVC(with: model!)
                         
                     } else {
                         print("DEBUG: Error: ", model.errorMessage ?? "")

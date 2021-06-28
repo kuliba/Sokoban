@@ -110,7 +110,7 @@ class PaymentByPhoneViewController: UIViewController {
                 self.dismissActivity()
                 DispatchQueue.main.async {
                     endSBPPayment(selectBank: selectBank!, amount: summTransctionField.textField.text!) { error in
-                        print(error)
+                        print(error ?? "")
                     }
                 }
                 if error != nil {

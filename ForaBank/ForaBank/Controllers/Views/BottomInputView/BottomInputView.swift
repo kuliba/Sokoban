@@ -37,7 +37,7 @@ class BottomInputView: UIView {
         }
     }
     
-    var didDoneButtonTapped: (() -> Void)?
+    var didDoneButtonTapped: ((_ amaunt: String) -> Void)?
     
     //MARK: - Viewlifecicle
     override init(frame: CGRect) {
@@ -66,7 +66,10 @@ class BottomInputView: UIView {
     
     @IBAction func doneButtonTapped(_ sender: Any) {
         print(#function)
-        didDoneButtonTapped?()
+        guard let amaunt = amountTextField.text else { return }
+        if !amaunt.isEmpty {
+            didDoneButtonTapped?(amaunt)
+        }
     }
     
     private func setupTextFIeld() {

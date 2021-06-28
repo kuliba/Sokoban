@@ -11,17 +11,51 @@ import UIKit
 //TODO: отрефакторить под сетевые запросы, вынести в отдельный файл
 struct ConfirmViewControllerModel {
     
-    var phone: String?
-    var name: String
-    var country: Country?
-    var numberTransction: String?
-    var summTransction: String
-    var taxTransction: String
-    var currancyTransction: String
-    var statusIsSuccses: Bool
+    var type: PaymentType
+    var cardFrom: GetProductListDatum? {
+        didSet {
+            guard let cardFrom = cardFrom else { return }
+            if let cardID = cardFrom.id {
+                cardFromCardId = "\(cardID)"
+            }
+        }
+    }
+    var cardFromCardId = ""
+    var cardFromCardNumber = ""
+    var cardFromExpireDate = ""
+    var cardFromCardCVV = ""
+    var cardFromAccountId = ""
+    var cardFromAccountNumber = ""
     
-    init(country: Country, model: AnywayPaymentDecodableModel?, fullName: String? = nil) {
-        
+    var cardTo: GetProductListDatum? {
+        didSet {
+            guard let cardTo = cardTo else { return }
+            if let cardID = cardTo.id {
+                cardToCardId = "\(cardID)"
+            }
+        }
+    }
+    var cardToCardId = ""
+    var cardToCardNumber = ""
+    var cardToAccountNumber = ""
+    var cardToAccountId = ""
+    
+    var phone: String?
+    var fullName: String? = ""
+    var country: Country?
+    var numberTransction: String = ""
+    var summTransction: String = ""
+    var taxTransction: String = ""
+    var currancyTransction: String = ""
+    var statusIsSuccses: Bool = false
+    
+    
+    init(type: PaymentType) {
+        self.type = type
+    }
+    
+    init?(country: Country, model: AnywayPaymentDecodableModel?, fullName: String? = nil) {
+        self.type = .contact
         var name = ""
         var surname = ""
         var secondName = ""
@@ -43,9 +77,9 @@ struct ConfirmViewControllerModel {
             }
         }
         if let fullName = fullName {
-            self.name = fullName
+            self.fullName = fullName
         } else {
-            self.name = surname + " " + name + " " + secondName
+            self.fullName = surname + " " + name + " " + secondName
         }
         self.statusIsSuccses = model?.statusCode == 0 ? true : false
         self.phone = phone
@@ -54,6 +88,12 @@ struct ConfirmViewControllerModel {
         self.numberTransction = transctionNum
         self.currancyTransction = "Наличные"
         self.country = country
+    }
+    
+    enum PaymentType {
+        case card2card
+        case contact
+        case mig
     }
     
 }
@@ -132,12 +172,13 @@ class ContactConfurmViewController: UIViewController {
     }
     
     func setupData(with model: ConfirmViewControllerModel) {
-        nameField.text =  model.name //"Колотилин Михаил Алексеевич"
+        nameField.text =  model.fullName ?? "" //"Колотилин Михаил Алексеевич"
         countryField.text = model.country?.name ?? "" // "Армения"
-        numberTransctionField.text = model.numberTransction ?? "" //"1235634790"
-        summTransctionField.text = model.summTransction //"10 000.00 ₽ "
+        numberTransctionField.text = model.numberTransction  //"1235634790"
+        summTransctionField.text = model.summTransction  //"10 000.00 ₽ "
         taxTransctionField.text = model.taxTransction //"100.00 ₽ "
         currancyTransctionField.text = model.currancyTransction //"Наличные"
+        smsCodeField.textField.textContentType = .oneTimeCode
         
         if model.country?.code == "AM" {
             numberTransctionField.isHidden = true
