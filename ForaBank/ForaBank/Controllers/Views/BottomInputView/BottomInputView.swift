@@ -79,14 +79,23 @@ class BottomInputView: UIView {
         ])
     }
     
+    func doneButtonIsEnabled(_ isEnabled: Bool) {
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.2) {
+                self.doneButton.backgroundColor = isEnabled ? #colorLiteral(red: 0.8274509804, green: 0.8274509804, blue: 0.8274509804, alpha: 1) : #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
+                self.doneButton.isEnabled = isEnabled ? false : true
+            }
+        }
+    }
+    
+    
 }
 
 extension BottomInputView: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
         guard let text = textField.text else { return }
+        self.doneButtonIsEnabled(text.isEmpty)
         UIView.animate(withDuration: 0.2) {
-            self.doneButton.backgroundColor = text.isEmpty ? #colorLiteral(red: 0.8274509804, green: 0.8274509804, blue: 0.8274509804, alpha: 1) : #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
-            self.doneButton.isEnabled = text.isEmpty ? false : true
             self.topLabel.alpha = text.isEmpty ? 0 : 1
             self.buttomLabel.alpha = text.isEmpty ? 0 : 1
         }

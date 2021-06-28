@@ -129,7 +129,7 @@ class MemeDetailVC : AddHeaderImageViewController {
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fillProportionally
-        stackView.spacing = 0
+        stackView.spacing = 6
         stackView.isUserInteractionEnabled = true
         view.addSubview(stackView)
 //        addSubview(doneButton)
@@ -176,6 +176,9 @@ class MemeDetailVC : AddHeaderImageViewController {
                 }
             }
         }
+        bottomView.didDoneButtonTapped = { [weak self] () in
+            self?.doneButtonTapped()
+        }
     }
     
     //MARK: - API
@@ -191,6 +194,58 @@ class MemeDetailVC : AddHeaderImageViewController {
         }
     }
     
+    func doneButtonTapped() {
+        
+        print(#function)
+        
+        guard let cardFrom = cardFromField.viewModel.cardModel?.number else { return }
+        guard let cardto = cardToField.viewModel.cardModel?.number else { return }
+        guard let amaunt = bottomView.amountTextField.text else { return }
+        
+        DispatchQueue.main.async {
+            self.showActivity()
+        }
+        bottomView.doneButtonIsEnabled(true)
+        let body = ["check" : false,
+                    "amount" : amaunt,
+                    "payer" : [ "cardId" : "",
+                                "cardNumber" : cardFrom,
+                                "carExpireDate" : "",
+                                "cardCVV" : "",
+                                "accountId" : "",
+                                "accountNumber" : "",
+                                "phoneNumber" : ""
+                    ],
+                    "payee" : [ "cardId" : "",
+                                "cardNumber" : cardto,
+                                "accountId" : "",
+                                "accountNumber" : "",
+                                "phoneNumber" : ""
+                    ]
+                    
+        ] as [String : AnyObject]
+        
+        NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer, [:], body) { [weak self] model, error in
+            
+            self?.dismissActivity()
+            self?.bottomView.doneButtonIsEnabled(false)
+            if error != nil {
+                guard let error = error else { return }
+                print("DEBUG: ", #function, error)
+            } else {
+                guard let statusCode = model?.statusCode else { return }
+                if statusCode == 0 {
+                    
+                    print("DEBUG: ", #function, model)
+                    
+                    
+                } else {
+                    print("DEBUG: ", #function, model?.errorMessage ?? "nil")
+                }
+                
+            }
+        }
+    }
     
 }
 
