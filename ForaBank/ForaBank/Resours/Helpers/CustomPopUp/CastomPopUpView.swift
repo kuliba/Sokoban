@@ -73,6 +73,7 @@ class MemeDetailVC : AddHeaderImageViewController {
             type: .credidCard,
             isEditable: false))
     
+    var seporatorView = SeparatorView()
     var cardFromListView = CardListView()
     
     var cardToField = ForaInput(
@@ -124,11 +125,11 @@ class MemeDetailVC : AddHeaderImageViewController {
             }
         }
         
-        stackView = UIStackView(arrangedSubviews: [cardFromField, cardFromListView, cardToField, cardToListView])
+        stackView = UIStackView(arrangedSubviews: [cardFromField, seporatorView, cardFromListView, cardToField, cardToListView])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fillProportionally
-        stackView.spacing = 10
+        stackView.spacing = 0
         stackView.isUserInteractionEnabled = true
         view.addSubview(stackView)
 //        addSubview(doneButton)
