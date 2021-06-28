@@ -9,6 +9,8 @@ import UIKit
 
 class AllCardView: UIView {
     
+    var complition: ((Int) -> ())?
+    
     @IBOutlet weak var button_1: UIButton!
     @IBOutlet weak var button_2: UIButton!
     @IBOutlet weak var button_3: UIButton!
@@ -29,7 +31,7 @@ class AllCardView: UIView {
         sender.setImage(UIImage(named: "redCircle"), for: .normal)
         sender.tintColor = .red
         sender.setTitleColor(.black, for: .normal)
-        print(select)
+        complition!(select)
     }
     
     override init(frame: CGRect) {

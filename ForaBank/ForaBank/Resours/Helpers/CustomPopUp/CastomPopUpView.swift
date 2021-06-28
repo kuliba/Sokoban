@@ -93,6 +93,12 @@ class MemeDetailVC : AddHeaderImageViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        /// Получаем номер кнопки выбора карт
+        self.changeCardButtonCollection.complition = { tag in
+            print(tag)
+        }
+        
+        
         self.addHeaderImage()
         self.view.layer.cornerRadius = 20
         self.view.clipsToBounds = true
