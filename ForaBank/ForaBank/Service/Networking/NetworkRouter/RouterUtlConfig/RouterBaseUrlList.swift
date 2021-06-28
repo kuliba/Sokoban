@@ -74,4 +74,6 @@ enum RouterBaseUrlList: String {
     case getPaymentSystemList      = "/rest/dict/getPaymentSystemList"
     
     case getProductList            = "/rest/getProductList"
+    
+    case getVerificationCode       = "/rest/transfer/getVerificationCode"
 }

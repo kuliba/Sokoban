@@ -36,6 +36,7 @@ enum RouterManager {
     case getBanks
     case getPaymentSystemList
     case getProductList
+    case getVerificationCode
 }
 
 extension RouterManager {
@@ -459,6 +460,21 @@ extension RouterManager {
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .getVerificationCode:
+            let baseUrl = RouterUrlList.getVerificationCode.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.get.rawValue
             return request
         }
     }

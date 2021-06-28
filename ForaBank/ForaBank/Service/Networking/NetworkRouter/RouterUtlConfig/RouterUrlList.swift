@@ -42,6 +42,7 @@ enum RouterUrlList: String {
     case getBanks
     case getPaymentSystemList
     case getProductList
+    case getVerificationCode
     
     func returnUrl () -> URLValue {
         switch self {
@@ -345,6 +346,17 @@ enum RouterUrlList: String {
             
         case .getProductList:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getProductList.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .getVerificationCode:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getVerificationCode.rawValue)
             
             switch result {
             case .success(let url):
