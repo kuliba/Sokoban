@@ -127,7 +127,7 @@ class MemeDetailVC : AddHeaderImageViewController {
             }
         }
         
-        stackView = UIStackView(arrangedSubviews: [cardFromField, seporatorView, cardFromListView, cardToField, cardToListView, changeCardButtonCollection])
+        stackView = UIStackView(arrangedSubviews: [cardFromField, seporatorView, changeCardButtonCollection, cardFromListView, cardToField, cardToListView])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fillProportionally

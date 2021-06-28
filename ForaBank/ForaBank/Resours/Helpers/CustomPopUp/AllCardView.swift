@@ -20,17 +20,21 @@ class AllCardView: UIView {
     @IBAction func selectButton(_ sender: UIButton) {
         buttonCollection.forEach{
                     $0.isSelected = false
+                    $0.setImage(UIImage(named: "greyCircle"), for: .normal)
+                    $0.tintColor = .lightGray
+                    $0.setTitleColor(.lightGray, for: .normal)
                 }
 
-        let select = buttonCollection[sender.tag].tag
-        buttonCollection[sender.tag].isSelected = true
-        
+        let select = sender.tag
+        sender.setImage(UIImage(named: "redCircle"), for: .normal)
+        sender.tintColor = .red
+        sender.setTitleColor(.black, for: .normal)
         print(select)
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-    //    commonInit()
+        commonInit()
     }
     
     required init?(coder: NSCoder) {
@@ -40,7 +44,15 @@ class AllCardView: UIView {
     
     func commonInit() {
         Bundle.main.loadNibNamed("AllCardView", owner: self, options: nil)
-        self.fixView(mainView)
+        mainView.fixView(self)
+        self.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        buttonCollection.forEach{
+                    $0.isSelected = false
+                    $0.setImage(UIImage(named: "greyCircle"), for: .normal)
+                    $0.tintColor = .lightGray
+                    $0.setTitleColor(.lightGray, for: .normal)
+                    $0.centerTextAndImage(spacing: 6)
+                }
     }
 }
 
@@ -60,4 +72,13 @@ extension UIView {
         
     }
     
+}
+
+extension UIButton {
+    func centerTextAndImage(spacing: CGFloat) {
+        let insetAmount = spacing / 2
+        imageEdgeInsets = UIEdgeInsets(top: 0, left: -insetAmount, bottom: 0, right: insetAmount)
+        titleEdgeInsets = UIEdgeInsets(top: 0, left: insetAmount, bottom: 0, right: -insetAmount)
+        contentEdgeInsets = UIEdgeInsets(top: 0, left: insetAmount, bottom: 0, right: insetAmount)
+    }
 }
