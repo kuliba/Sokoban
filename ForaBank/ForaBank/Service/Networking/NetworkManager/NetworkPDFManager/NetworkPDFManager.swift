@@ -52,7 +52,7 @@ final class NetworkPDFManager {
         do {
             let jsonAsData = try JSONSerialization.data(withJSONObject: requestBody, options: [])
             request.httpBody = jsonAsData
-            request.setValue("application/pdf", forHTTPHeaderField: "Content-Type")
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         } catch {
             debugPrint(NetworkError.encodingFailed)
         }
