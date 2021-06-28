@@ -11,10 +11,11 @@ class AddHeaderImageViewController: UIViewController, AppHeaderProtocol {
     
     func addHeaderImage() {
         
-        let imageView = UIImageView(frame: CGRect(x: 0, y: 80, width: 80, height: 30))
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 80, width: 80, height: 10))
         imageView.image = UIImage(named: "headerView")
         self.view.addSubview(imageView)
-        imageView.center.x = view.center.x
+        imageView.centerX(inView: self.view, topAnchor: self.view.topAnchor, paddingTop: 8)
+//        imageView.center.x = view.center.x
         
     }
 }
