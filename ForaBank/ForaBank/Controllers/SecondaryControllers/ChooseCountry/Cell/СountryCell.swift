@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import SVGKit
+//import SVGKit
 
 class СountryCell: UITableViewCell {
     
@@ -26,14 +26,14 @@ class СountryCell: UITableViewCell {
     
     func set(viewModel: Country) {
         countryNameLabel.text = viewModel.name
-        countryImageView.image = convertSVGStringToImage(viewModel.imageSVGString ?? "")
+//        countryImageView.image = convertSVGStringToImage(viewModel.imageSVGString ?? "")
     }
     
-    func convertSVGStringToImage(_ string: String) -> UIImage {
-        let imageData = Data(string.utf8)
-        let imageSVG = SVGKImage(data: imageData)
-        let image = imageSVG?.uiImage ?? UIImage()
-        return image
-    }
+//    func convertSVGStringToImage(_ string: String) -> UIImage {
+//        let imageData = Data(string.utf8)
+//        let imageSVG = SVGKImage(data: imageData)
+//        let image = imageSVG?.uiImage ?? UIImage()
+//        return image
+//    }
     
 }

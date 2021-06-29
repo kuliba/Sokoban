@@ -67,9 +67,9 @@
 		ED0B48A0267E1A2D0037EA06 /* PaymentsDetailsSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B489F267E1A2D0037EA06 /* PaymentsDetailsSuccessViewController.swift */; };
 		ED0B48A3267E71DC0037EA06 /* FCMToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B48A2267E71DC0037EA06 /* FCMToken.swift */; };
 		ED0B48A5267E72130037EA06 /* CSRFToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B48A4267E72130037EA06 /* CSRFToken.swift */; };
-		ED0B48A8268117DD0037EA06 /* SVGKitSwift in Frameworks */ = {isa = PBXBuildFile; productRef = ED0B48A7268117DD0037EA06 /* SVGKitSwift */; };
 		ED0B48AC26812F450037EA06 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B48AB26812F450037EA06 /* LoginViewModel.swift */; };
 		ED0B48AF2681CC6D0037EA06 /* CodeVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B48AE2681CC6D0037EA06 /* CodeVerificationViewModel.swift */; };
+		ED39EC88268B308800158E46 /* SDWebImageSVGCoder in Frameworks */ = {isa = PBXBuildFile; productRef = ED39EC87268B308800158E46 /* SDWebImageSVGCoder */; };
 		ED4FC5EC266AD98E0092B4AB /* NSCollectionLayoutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EB266AD98E0092B4AB /* NSCollectionLayoutItem.swift */; };
 		ED4FC5EF266B70A00092B4AB /* PartialTransparentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EE266B70A00092B4AB /* PartialTransparentView.swift */; };
 		ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5F9266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift */; };
@@ -372,7 +372,7 @@
 				EDAA99B42674C38900435484 /* ProgressHUD in Frameworks */,
 				ED0B4892267B4CDD0037EA06 /* IQKeyboardManagerSwift in Frameworks */,
 				0B7A18AB2681CED70007CC75 /* SwiftEntryKit in Frameworks */,
-				ED0B48A8268117DD0037EA06 /* SVGKitSwift in Frameworks */,
+				ED39EC88268B308800158E46 /* SDWebImageSVGCoder in Frameworks */,
 				EDF6821D266FC37F00FD5C07 /* FirebaseMessaging in Frameworks */,
 				ED4FC621266EA5CD0092B4AB /* Valet in Frameworks */,
 			);
@@ -1247,7 +1247,7 @@
 				EDAA99B32674C38900435484 /* ProgressHUD */,
 				ED0B4891267B4CDD0037EA06 /* IQKeyboardManagerSwift */,
 				0B7A18AA2681CED70007CC75 /* SwiftEntryKit */,
-				ED0B48A7268117DD0037EA06 /* SVGKitSwift */,
+				ED39EC87268B308800158E46 /* SDWebImageSVGCoder */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -1326,7 +1326,7 @@
 				EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD" */,
 				ED0B4890267B4CDD0037EA06 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				0B7A18A92681CED70007CC75 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */,
-				ED0B48A6268117DD0037EA06 /* XCRemoteSwiftPackageReference "SVGKit" */,
+				ED39EC86268B308800158E46 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */,
 			);
 			productRefGroup = EDB1437E265FDA410028EF5A /* Products */;
 			projectDirPath = "";
@@ -1687,7 +1687,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 50;
+				CURRENT_PROJECT_VERSION = 52;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1712,7 +1712,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 50;
+				CURRENT_PROJECT_VERSION = 52;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1871,12 +1871,12 @@
 				minimumVersion = 6.5.6;
 			};
 		};
-		ED0B48A6268117DD0037EA06 /* XCRemoteSwiftPackageReference "SVGKit" */ = {
+		ED39EC86268B308800158E46 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SVGKit/SVGKit.git";
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSVGCoder.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 3.0.0;
+				minimumVersion = 1.6.0;
 			};
 		};
 		ED4FC61F266EA5CD0092B4AB /* XCRemoteSwiftPackageReference "Valet" */ = {
@@ -1916,10 +1916,10 @@
 			package = ED0B4890267B4CDD0037EA06 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
 			productName = IQKeyboardManagerSwift;
 		};
-		ED0B48A7268117DD0037EA06 /* SVGKitSwift */ = {
+		ED39EC87268B308800158E46 /* SDWebImageSVGCoder */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = ED0B48A6268117DD0037EA06 /* XCRemoteSwiftPackageReference "SVGKit" */;
-			productName = SVGKitSwift;
+			package = ED39EC86268B308800158E46 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */;
+			productName = SDWebImageSVGCoder;
 		};
 		ED4FC620266EA5CD0092B4AB /* Valet */ = {
 			isa = XCSwiftPackageProductDependency;
