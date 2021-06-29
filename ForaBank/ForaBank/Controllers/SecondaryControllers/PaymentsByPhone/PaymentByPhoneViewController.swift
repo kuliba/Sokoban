@@ -186,7 +186,7 @@ class PaymentByPhoneViewController: UIViewController {
     
     func getCardList() {
         showActivity()
-        NetworkManager<GetCardListDecodebleModel>.addRequest(.getCardList, [:], [:]) { model, error in
+        NetworkManager<GetProductListDecodableModel>.addRequest(.getProductList, [:], [:]) { model, error in
             self.dismissActivity()
             if error != nil {
                 print("DEBUG: Error: ", error ?? "")
@@ -195,12 +195,12 @@ class PaymentByPhoneViewController: UIViewController {
             print("DEBUG: Card list: ", model)
             if model.statusCode == 0 {
                 guard let data  = model.data else { return }
-                guard let cardNumber  = model.data?.first?.original?.number else { return }
+                guard let cardNumber  = model.data?.first?.number else { return }
                 self.selectedCardNumber = cardNumber
                 DispatchQueue.main.async {
-                    self.cardField.text = data.first?.original?.name ?? ""
-                    self.cardField.balanceLabel.text = "\(data.first?.original?.balance ?? 0) ₽"
-                    guard let maskCard = data.first?.original?.numberMasked else { return }
+                    self.cardField.text = data.first?.name ?? ""
+                    self.cardField.balanceLabel.text = "\(data.first?.balance ?? 0) ₽"
+                    guard let maskCard = data.first?.numberMasked else { return }
                     self.cardField.bottomLabel.text = "•••• " + String(maskCard.suffix(4))
                 }
             } else {

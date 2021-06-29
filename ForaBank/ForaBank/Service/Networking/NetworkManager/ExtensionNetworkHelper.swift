@@ -53,6 +53,8 @@ extension NetworkHelper {
         case makeCard2Card
 
         case getLatestPayments
+        
+        case getProductList
     }
     
 }

@@ -10,14 +10,14 @@ import UIKit
 
 struct CardViewModel {
     
-    let card: Datum
+    let card: GetProductListDatum
     
     var cardNumber: String? {
-        return card.original?.number
+        return card.number
     }
     
     var balance: String {
-        let cardBal: Double = card.original?.balance ?? 0
+        let cardBal: Double = card.balance ?? 0
         return cardBal.currencyFormatter()
     }
     
@@ -39,7 +39,7 @@ struct CardViewModel {
         }
     }
     
-    init(card: Datum) {
+    init(card: GetProductListDatum) {
         self.card = card
     }
     

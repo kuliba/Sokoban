@@ -321,9 +321,12 @@ extension AppLocker {
         let serverDeviceGUID = UserDefaults.standard.object(forKey: "serverDeviceGUID")
         let biometricType = biometricType()
         
+        
+        
+        
         let data = [
             "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-            "pushFcmToken": FCMToken.fcmToken,
+            "pushFcmToken": Messaging.messaging().fcmToken as String?,
             "serverDeviceGUID" : serverDeviceGUID,
             "settings": [ ["type" : "pin",
                            "isActive": true,
@@ -334,7 +337,9 @@ extension AppLocker {
                           ["type" : "faceId",
                            "isActive": biometricType == BiometricType.faceId ? true : false,
                            "value": code] ] ] as [String : AnyObject]
-//        print("DEBUG: data: ", data)
+        
+        print("DEBUG: Start setDeviceSetting with body: ", data)
+        
         NetworkManager<SetDeviceSettingDecodbleModel>.addRequest(.setDeviceSetting, [:], data) { model, error in
             if error != nil {
                 guard let error = error else { return }
@@ -375,12 +380,13 @@ extension AppLocker {
         let data = [
             "appId": "IOS",
             "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-            "pushFcmToken": FCMToken.fcmToken,
+            "pushFcmToken": Messaging.messaging().fcmToken as String?,
             "serverDeviceGUID": serverDeviceGUID,
             "loginValue": code,
             "type": type.rawValue
         ] as [String : AnyObject]
-        print(data)
+//        print(data)
+        print("DEBUG: Start login with body: ", data)
         NetworkManager<LoginDoCodableModel>.addRequest(.login, [:], data) { model, error in
             if error != nil {
                 guard let error = error else { return }
@@ -391,9 +397,9 @@ extension AppLocker {
                     
                     let bodyRegisterPush = [
                         "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-                        "pushFcmToken": FCMToken.fcmToken
+                        "pushFcmToken": Messaging.messaging().fcmToken as String?
                     ] as [String : AnyObject]
-
+                    print("DEBUG: Start registerPushDeviceForUser with body: ", bodyRegisterPush)
                     NetworkManager<RegisterPushDeviceDecodebleModel>.addRequest(.registerPushDeviceForUser, [:], bodyRegisterPush) { model, error in
                         if error != nil {
                             guard let error = error else { return }

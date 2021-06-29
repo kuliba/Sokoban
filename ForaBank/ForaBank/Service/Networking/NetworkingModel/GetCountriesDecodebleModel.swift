@@ -16,7 +16,7 @@ import Foundation
 struct GetCountriesDecodebleModel: Codable, NetworkModelProtocol {
     let statusCode: Int?
     let errorMessage: String?
-    let data: GetCountryDatum?
+    let data: GetCountriesDataClass?
 }
 
 // MARK: GetCountriesDecodebleModel convenience initializers and mutators
@@ -40,7 +40,7 @@ extension GetCountriesDecodebleModel {
     func with(
         statusCode: Int?? = nil,
         errorMessage: String?? = nil,
-        data: GetCountryDatum?? = nil
+        data: GetCountriesDataClass?? = nil
     ) -> GetCountriesDecodebleModel {
         return GetCountriesDecodebleModel(
             statusCode: statusCode ?? self.statusCode,
@@ -58,28 +58,24 @@ extension GetCountriesDecodebleModel {
     }
 }
 
-
-
-
-
-// Datum.swift
+// DataClass.swift
 
 // This file was generated from JSON Schema using quicktype, do not modify it directly.
 // To parse the JSON, add this file to your project and do:
 //
-//   let datum = try Datum(json)
+//   let dataClass = try DataClass(json)
 
-// MARK: - GetCountryDatum
-struct GetCountryDatum: Codable {
+// MARK: - GetCountriesDataClass
+struct GetCountriesDataClass: Codable {
+    let countriesList: [CountriesList]?
     let serial: String?
-    let countriesList: [CountriesListDatum]?
 }
 
-// MARK: Datum convenience initializers and mutators
+// MARK: DataClass convenience initializers and mutators
 
-extension GetCountryDatum {
+extension GetCountriesDataClass {
     init(data: Data) throws {
-        self = try newJSONDecoder().decode(GetCountryDatum.self, from: data)
+        self = try newJSONDecoder().decode(GetCountriesDataClass.self, from: data)
     }
 
     init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -94,12 +90,12 @@ extension GetCountryDatum {
     }
 
     func with(
-        serial: String?? = nil,
-        countriesList: [CountriesListDatum]?? = nil
-    ) -> GetCountryDatum {
-        return GetCountryDatum(
-            serial: serial ?? self.serial,
-            countriesList: countriesList ?? self.countriesList
+        countriesList: [CountriesList]?? = nil,
+        serial: String?? = nil
+    ) -> GetCountriesDataClass {
+        return GetCountriesDataClass(
+            countriesList: countriesList ?? self.countriesList,
+            serial: serial ?? self.serial
         )
     }
 
@@ -112,18 +108,32 @@ extension GetCountryDatum {
     }
 }
 
+// CountriesList.swift
 
-// MARK: - CountriesListDatum
-struct CountriesListDatum: Codable {
-    let code, svgImage, md5hash, name: String?
+// This file was generated from JSON Schema using quicktype, do not modify it directly.
+// To parse the JSON, add this file to your project and do:
+//
+//   let countriesList = try CountriesList(json)
+// MARK: - CountriesList
+struct CountriesList: Codable {
+    let code, name: String?
     let sendCurr: SendCurr?
+    let md5Hash, svgImage: String?
+    let paymentSystemIDList: [PaymentSystemIDList]?
+
+    enum CodingKeys: String, CodingKey {
+        case code, name, sendCurr
+        case md5Hash = "md5hash"
+        case svgImage
+        case paymentSystemIDList = "paymentSystemIdList"
+    }
 }
 
-// MARK: Datum convenience initializers and mutators
+// MARK: CountriesList convenience initializers and mutators
 
-extension CountriesListDatum {
+extension CountriesList {
     init(data: Data) throws {
-        self = try newJSONDecoder().decode(CountriesListDatum.self, from: data)
+        self = try newJSONDecoder().decode(CountriesList.self, from: data)
     }
 
     init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -140,16 +150,18 @@ extension CountriesListDatum {
     func with(
         code: String?? = nil,
         name: String?? = nil,
-        md5hash: String?? = nil,
+        sendCurr: SendCurr?? = nil,
+        md5Hash: String?? = nil,
         svgImage: String?? = nil,
-        sendCurr: SendCurr?? = nil
-    ) -> CountriesListDatum {
-        return CountriesListDatum(
+        paymentSystemIDList: [PaymentSystemIDList]?? = nil
+    ) -> CountriesList {
+        return CountriesList(
             code: code ?? self.code,
-            svgImage: svgImage ?? self.svgImage,
-            md5hash: md5hash ?? self.md5hash,
             name: name ?? self.name,
-            sendCurr: sendCurr ?? self.sendCurr
+            sendCurr: sendCurr ?? self.sendCurr,
+            md5Hash: md5Hash ?? self.md5Hash,
+            svgImage: svgImage ?? self.svgImage,
+            paymentSystemIDList: paymentSystemIDList ?? self.paymentSystemIDList
         )
     }
 
@@ -162,8 +174,18 @@ extension CountriesListDatum {
     }
 }
 
+// PaymentSystemIDList.swift
+
+import Foundation
+
+enum PaymentSystemIDList: String, Codable {
+    case contact = "CONTACT"
+    case direct = "DIRECT"
+}
 
 // SendCurr.swift
+
+import Foundation
 
 enum SendCurr: String, Codable {
     case empty = ""

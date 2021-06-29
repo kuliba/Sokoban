@@ -37,6 +37,12 @@ enum RouterUrlList: String {
     case getLatestPayments
     case getPrintForm
     case getLatestPhonePayments
+    case createTransfer
+    case makeTransfer
+    case getBanks
+    case getPaymentSystemList
+    case getProductList
+    case getVerificationCode
     
     func returnUrl () -> URLValue {
         switch self {
@@ -285,6 +291,72 @@ enum RouterUrlList: String {
             
         case .getLatestPhonePayments:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getLatestPhonePayments.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .createTransfer:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.createTransfer.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .makeTransfer:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.makeTransfer.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .getBanks:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getBanks.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .getPaymentSystemList:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getPaymentSystemList.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .getProductList:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getProductList.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .getVerificationCode:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getVerificationCode.rawValue)
             
             switch result {
             case .success(let url):

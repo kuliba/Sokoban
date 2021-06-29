@@ -11,7 +11,7 @@ import UIKit
 class CardCell: UICollectionViewCell {
     
     //MARK: - Properties
-    var card: Datum? {
+    var card: GetProductListDatum? {
         didSet { configure() }
     }
     
@@ -36,6 +36,13 @@ class CardCell: UICollectionViewCell {
         return label
     }()
 
+    private let cardNameLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 11 )
+        label.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
+        label.text = "Зарплатная"
+        return label
+    }()
     
     //MARK: - Lifecycle
     override init(frame: CGRect) {
@@ -71,6 +78,7 @@ class CardCell: UICollectionViewCell {
         clipsToBounds = true
         addSubview(logoImageView)
         addSubview(maskCardLabel)
+        addSubview(cardNameLabel)
         addSubview(balanceLabel)
         
         logoImageView.anchor(top: self.topAnchor, left: self.leftAnchor,
@@ -79,6 +87,9 @@ class CardCell: UICollectionViewCell {
         maskCardLabel.anchor(right: self.rightAnchor, paddingRight: 12)
         maskCardLabel.centerY(inView: logoImageView, leftAnchor: logoImageView.rightAnchor,
                               paddingLeft: 8)
+        
+        cardNameLabel.anchor(top: maskCardLabel.bottomAnchor, left: self.leftAnchor, right: self.rightAnchor,
+                             paddingTop: 4, paddingLeft: 12, paddingRight: 12)
         
         balanceLabel.anchor(left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor,
                             paddingLeft: 12, paddingBottom: 8, paddingRight: 12)

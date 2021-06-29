@@ -49,6 +49,7 @@ class DevelopViewController: UIViewController {
                            topAnchor: titleLabel.bottomAnchor, paddingTop: 16)
         subTitleLabel.anchor(left: view.leftAnchor, right: view.rightAnchor,
                              paddingLeft: 20, paddingRight: 20)
+        addCloseButton()
     }
 
 }

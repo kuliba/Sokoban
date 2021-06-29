@@ -31,6 +31,12 @@ enum RouterManager {
     case getLatestPayments
     case getPrintForm
     case getLatestPhonePayments
+    case createTransfer
+    case makeTransfer
+    case getBanks
+    case getPaymentSystemList
+    case getProductList
+    case getVerificationCode
 }
 
 extension RouterManager {
@@ -379,6 +385,96 @@ extension RouterManager {
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .createTransfer:
+            let baseUrl = RouterUrlList.createTransfer.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .makeTransfer:
+            let baseUrl = RouterUrlList.makeTransfer.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .getBanks:
+            let baseUrl = RouterUrlList.getBanks.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.get.rawValue
+            return request
+            
+        case .getPaymentSystemList:
+            let baseUrl = RouterUrlList.getPaymentSystemList.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.get.rawValue
+            return request
+            
+        case .getProductList:
+            let baseUrl = RouterUrlList.getProductList.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .getVerificationCode:
+            let baseUrl = RouterUrlList.getVerificationCode.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.get.rawValue
             return request
         }
     }

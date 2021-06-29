@@ -8,5 +8,9 @@
 import Foundation
 
 struct FCMToken {
-    static var fcmToken: String?
+    static var fcmToken: String? {
+        didSet {
+            print("DEBUG: FCMToken установлен: ", fcmToken)
+        }
+    }
 }

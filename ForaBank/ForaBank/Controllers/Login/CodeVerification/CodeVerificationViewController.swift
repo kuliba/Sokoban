@@ -53,13 +53,14 @@ class CodeVerificationViewController: UIViewController {
     //MARK: - API
     //TODO: BUG: Можно ввести в поле больше символов чем есть полей
     func sendSmsCode(code: String) {
-        print("DEBUG: " + #function + ": " + code)
+//        print("DEBUG: " + #function + ": " + code)
         
         let body = [
             "appId": "IOS",
             "verificationCode": "\(code)"
         ] as [String : AnyObject]
         
+        print("DEBUG: Start verifyCode with body: ", body)
         NetworkManager<VerifyCodeDecodebleModel>.addRequest(.verifyCode, [:], body) { [weak self] model, error in
             if error != nil {
                 guard let error = error else { return }
@@ -72,9 +73,10 @@ class CodeVerificationViewController: UIViewController {
                     "model": UIDevice().model,
                     "operationSystem": "IOS",
                     "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-                    "pushFcmToken": FCMToken.fcmToken
+                    "pushFcmToken": Messaging.messaging().fcmToken as String?
                 ] as [String : AnyObject]
                 
+                print("DEBUG: Start doRegistration with body:", body)
                 NetworkManager<DoRegistrationDecodebleModel>.addRequest(.doRegistration, [:], body) { [weak self] model, error in
                     if error != nil {
                         guard let error = error else { return }

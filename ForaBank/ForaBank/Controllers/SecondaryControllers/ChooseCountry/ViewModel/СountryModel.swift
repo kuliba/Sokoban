@@ -10,10 +10,9 @@ import Foundation
 
 public struct Country : Decodable {
     
-    static var countries: [CountriesListDatum]?
+    static var countries: [CountriesList]?
     
     public let name : String?
-    public let dialCode : String?
     public let code : String?
     public let imageSVGString : String?
     
@@ -21,6 +20,5 @@ public struct Country : Decodable {
         case name
         case code
         case imageSVGString
-        case dialCode = "dial_code"
     }
 }

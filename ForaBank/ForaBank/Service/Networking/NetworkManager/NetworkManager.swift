@@ -16,7 +16,8 @@ final class NetworkManager<T: NetworkModelProtocol>{
         
         guard var request = requestType.request() else { return }
  
-        let session = RouterSassionConfiguration.returnSession()
+        let s = RouterSassionConfiguration()
+        let session = s.returnSession()
         
         if let token = CSRFToken.token {
             request.allHTTPHeaderFields = ["X-XSRF-TOKEN": token]
@@ -72,7 +73,7 @@ final class NetworkManager<T: NetworkModelProtocol>{
                         completion(nil, NetworkResponse.noData.rawValue)
                         return
                     }
-                    print(String(data: data ?? Data(), encoding: .utf8) ?? "null")
+//                    print(String(data: data ?? Data(), encoding: .utf8) ?? "null")
                     do {
                         let returnValue = try T (data: data!)
                         completion(returnValue, nil)
