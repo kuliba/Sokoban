@@ -18,7 +18,7 @@ class LastPaymentsCollectionViewCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        contactImageView.layer.cornerRadius = contactImageView.frame.height/2
     }
 
 }
