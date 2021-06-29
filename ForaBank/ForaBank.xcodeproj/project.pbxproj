@@ -54,6 +54,11 @@
 		68FFA5452682F48C002DADFA /* SearchContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA5442682F48C002DADFA /* SearchContact.swift */; };
 		68FFA5472682F49A002DADFA /* SearchContact.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68FFA5462682F49A002DADFA /* SearchContact.xib */; };
 		68FFA54C2684C854002DADFA /* PDFViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA54B2684C854002DADFA /* PDFViewerViewController.swift */; };
+		68FFA54F26853897002DADFA /* PhoneContacts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA54E26853897002DADFA /* PhoneContacts.swift */; };
+		68FFA551268538CF002DADFA /* PhoneContactModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA550268538CF002DADFA /* PhoneContactModel.swift */; };
+		68FFA55326857530002DADFA /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA55226857530002DADFA /* Extension.swift */; };
+		68FFA55B268586D3002DADFA /* HeaderBanksCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA559268586D3002DADFA /* HeaderBanksCollectionReusableView.swift */; };
+		68FFA55C268586D3002DADFA /* HeaderBanksCollectionReusableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68FFA55A268586D3002DADFA /* HeaderBanksCollectionReusableView.xib */; };
 		ED0B4892267B4CDD0037EA06 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = ED0B4891267B4CDD0037EA06 /* IQKeyboardManagerSwift */; };
 		ED0B4894267B50F50037EA06 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B4893267B50F50037EA06 /* Int.swift */; };
 		ED0B4896267B97C60037EA06 /* ContactInputViewController + UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B4895267B97C60037EA06 /* ContactInputViewController + UI.swift */; };
@@ -235,6 +240,11 @@
 		68FFA5442682F48C002DADFA /* SearchContact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchContact.swift; sourceTree = "<group>"; };
 		68FFA5462682F49A002DADFA /* SearchContact.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchContact.xib; sourceTree = "<group>"; };
 		68FFA54B2684C854002DADFA /* PDFViewerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFViewerViewController.swift; sourceTree = "<group>"; };
+		68FFA54E26853897002DADFA /* PhoneContacts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneContacts.swift; sourceTree = "<group>"; };
+		68FFA550268538CF002DADFA /* PhoneContactModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneContactModel.swift; sourceTree = "<group>"; };
+		68FFA55226857530002DADFA /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		68FFA559268586D3002DADFA /* HeaderBanksCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderBanksCollectionReusableView.swift; sourceTree = "<group>"; };
+		68FFA55A268586D3002DADFA /* HeaderBanksCollectionReusableView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HeaderBanksCollectionReusableView.xib; sourceTree = "<group>"; };
 		ED0B4893267B50F50037EA06 /* Int.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
 		ED0B4895267B97C60037EA06 /* ContactInputViewController + UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContactInputViewController + UI.swift"; sourceTree = "<group>"; };
 		ED0B489B267D41A60037EA06 /* PaymentsDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsDetailsView.swift; sourceTree = "<group>"; };
@@ -423,6 +433,7 @@
 		68FFA5262682AEE1002DADFA /* ContactsViewController */ = {
 			isa = PBXGroup;
 			children = (
+				68FFA54D26853883002DADFA /* PhoneContacts */,
 				68FFA52E2682B057002DADFA /* SearchNumberPhone */,
 				68FFA5292682AF43002DADFA /* ContactCell */,
 				68FFA5272682AF2C002DADFA /* ContactsViewController.swift */,
@@ -433,6 +444,7 @@
 		68FFA5292682AF43002DADFA /* ContactCell */ = {
 			isa = PBXGroup;
 			children = (
+				68FFA5542685856E002DADFA /* HeaderBanks */,
 				68FFA53D2682C6AE002DADFA /* LastPaymetsCell */,
 				68FFA52A2682AF62002DADFA /* ContactCollectionViewCell.swift */,
 				68FFA52B2682AF62002DADFA /* ContactCollectionViewCell.xib */,
@@ -464,6 +476,24 @@
 				68FFA54B2684C854002DADFA /* PDFViewerViewController.swift */,
 			);
 			path = PDFViewer;
+			sourceTree = "<group>";
+		};
+		68FFA54D26853883002DADFA /* PhoneContacts */ = {
+			isa = PBXGroup;
+			children = (
+				68FFA54E26853897002DADFA /* PhoneContacts.swift */,
+				68FFA550268538CF002DADFA /* PhoneContactModel.swift */,
+			);
+			path = PhoneContacts;
+			sourceTree = "<group>";
+		};
+		68FFA5542685856E002DADFA /* HeaderBanks */ = {
+			isa = PBXGroup;
+			children = (
+				68FFA559268586D3002DADFA /* HeaderBanksCollectionReusableView.swift */,
+				68FFA55A268586D3002DADFA /* HeaderBanksCollectionReusableView.xib */,
+			);
+			path = HeaderBanks;
 			sourceTree = "<group>";
 		};
 		ED0B4897267CF9490037EA06 /* PaymentsDetailsSuccess */ = {
@@ -869,6 +899,7 @@
 		EDB1451A26652D1A0028EF5A /* UIKit */ = {
 			isa = PBXGroup;
 			children = (
+				68FFA55226857530002DADFA /* Extension.swift */,
 				EDB1654A26676F20007E6030 /* UIButton.swift */,
 				EDB1451B26652D370028EF5A /* UILabel.swift */,
 				EDB1451D26652F170028EF5A /* UIView.swift */,
@@ -1333,6 +1364,7 @@
 				EDB14526266624DC0028EF5A /* OrderCardView.xib in Resources */,
 				ED51D66E2688B27E005FD655 /* SeparatorView.xib in Resources */,
 				EDB143CC265FDEC90028EF5A /* Roboto-BlackItalic.ttf in Resources */,
+				68FFA55C268586D3002DADFA /* HeaderBanksCollectionReusableView.xib in Resources */,
 				EDB143C7265FDEC90028EF5A /* Roboto-MediumItalic.ttf in Resources */,
 				EDAA99B12673ABF200435484 /* ForaSwitchView.xib in Resources */,
 				0BF3484E268A455C005138A8 /* AllCardView.xib in Resources */,
@@ -1396,6 +1428,7 @@
 				EDFFCAF32682461F004EE095 /* CardCell.swift in Sources */,
 				EDB14524266624460028EF5A /* UIViewController.swift in Sources */,
 				68FFA5282682AF2C002DADFA /* ContactsViewController.swift in Sources */,
+				68FFA55326857530002DADFA /* Extension.swift in Sources */,
 				EDB16597266A576A007E6030 /* CardScannerController.swift in Sources */,
 				EDB165662667A741007E6030 /* ContactInputViewController.swift in Sources */,
 				EDB14533266667140028EF5A /* OrderProductsCollectionViewCell.swift in Sources */,
@@ -1415,6 +1448,7 @@
 				ED51D6702688B287005FD655 /* SeparatorView.swift in Sources */,
 				EDF6820F266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift in Sources */,
 				EDB1656E266827A8007E6030 /* PaymentsViewController.swift in Sources */,
+				68FFA55B268586D3002DADFA /* HeaderBanksCollectionReusableView.swift in Sources */,
 				0B7A18AF268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift in Sources */,
 				0B37F980267A11FB007728FC /* GetOwnerPhoneNumberPhoneDecodableModel.swift in Sources */,
 				68FFA52C2682AF62002DADFA /* ContactCollectionViewCell.swift in Sources */,
@@ -1448,6 +1482,7 @@
 				EDF68213266F9EC800FD5C07 /* URLHostType.swift in Sources */,
 				EDB1656C26681F0E007E6030 /* MainTabBarViewController.swift in Sources */,
 				ED0B4896267B97C60037EA06 /* ContactInputViewController + UI.swift in Sources */,
+				68FFA551268538CF002DADFA /* PhoneContactModel.swift in Sources */,
 				EDF68218266F9EC800FD5C07 /* RouterManager.swift in Sources */,
 				EDB1658026694676007E6030 /* PaymentsViewControllerLayout.swift in Sources */,
 				ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */,
@@ -1492,6 +1527,7 @@
 				EDFFCACD2681F975004EE095 /* CardListView.swift in Sources */,
 				ED4FC61A266EA42E0092B4AB /* AppLocker.swift in Sources */,
 				0BF34854268B2699005138A8 /* PrepareExternalDecodableModel.swift in Sources */,
+				68FFA54F26853897002DADFA /* PhoneContacts.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

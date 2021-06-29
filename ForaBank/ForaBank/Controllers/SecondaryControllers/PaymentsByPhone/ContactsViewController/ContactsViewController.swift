@@ -6,38 +6,159 @@
 //
 
 import UIKit
-import Contacts
+import ContactsUI
+protocol DisplayViewControllerDelegate : NSObjectProtocol{
+    func doSomethingWith(data: String)
+}
+protocol PassSectionDelegate: AnyObject {
+  func passDataFromSectionUp(sectionController: String)
+}
 
-class ContactsViewController: UIViewController, UISearchBarDelegate {
+protocol UpdateDataDelegate: class {
+  func passUpdateData(data: String);
+}
 
+class ContactsViewController: UIViewController, MyPickerDelegate{
     
+    
+    var numberPhone: String?
+    func didSelectSomething(some: String) {
+        numberPhone = some
+    }
+    weak var delegate: UpdateDataDelegate? = nil
+    
+
+    weak var delegate1 : DisplayViewControllerDelegate?
+
     var banks: [FastPayment]?
 
+    var selectPhoneNumber: String?
+
+    let searchContact: SearchContact = UIView.fromNib()
     
-    var contacts = [CNContact](){
-        didSet{
-            setupCollectionView()
-        }
-    }
     
+
     var lastPayment = [GetLatestPaymentsDatum(bankName: "Фора - Банк", bankID: "000121221", phoneNumber: "000517217", amount: "10")]{
         didSet{
-            setupCollectionView()
+            lastPaymentsCollectionView.reloadData()
         }
     }
+    var lastPhonePayment = [GetLatestPhone(bankName: "ФОРА-БАНК123", bankID: "100000000217")]{
+        didSet{
+            lastPaymentsCollectionView.reloadData()
+        }
+    }
+    var contacts = [PhoneContact]() {
+        didSet{
+    //            setupCollectionView()
+        }
+    }// array of PhoneContact(It is model find it below)
+    var filter: ContactsFilter = .none
+
+
+       fileprivate func loadContacts(filter: ContactsFilter) {
+        contacts.removeAll()
+            var allContacts = [PhoneContact]()
+            for contact in PhoneContacts.getContacts(filter: filter) {
+                allContacts.append(PhoneContact(contact: contact))
+            }
+
+            var filterdArray = [PhoneContact]()
+            if self.filter == .mail {
+                filterdArray = allContacts.filter({ $0.email.count > 0 }) // getting all email
+            } else if self.filter == .message {
+                filterdArray = allContacts.filter({ $0.phoneNumber.count > 0 })
+            } else {
+                filterdArray = allContacts
+            }
+        contacts.append(contentsOf: filterdArray)
+    }
+    
 //    let lastPaymentsCollectionView: UICollectionView!
 
 //    var collectionView: UICollectionView!
     var lastPaymentsCollectionView: UICollectionView!
     var contactCollectionView: UICollectionView!
+
+    var myDelegate: MyPickerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+
+        delegate?.passUpdateData(data: "test")
+        
+            let layout = UICollectionViewFlowLayout()
+
+                layout.itemSize = CGSize(width: 80, height: 120)
+                layout.scrollDirection = .horizontal
+      
+            let flowLayout = UICollectionViewFlowLayout()
+            
+            lastPaymentsCollectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+            contactCollectionView = UICollectionView(frame: view.bounds, collectionViewLayout: flowLayout)
+
+          
+        
+            let viewLastPayments = UIView()
+            viewLastPayments.backgroundColor = .clear
+            lastPaymentsCollectionView.backgroundColor = .clear
+            viewLastPayments.addSubview(lastPaymentsCollectionView)
+            let contactView = UIView()
+            viewLastPayments.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 120)
+            contactView.addSubview(contactCollectionView)
+            
+            
+      
+        
+            contactCollectionView.register(UINib(nibName: "HeaderBanksCollectionReusableView", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderBanksCollectionReusableView")
+        
+//            lastPaymentsCollectionView.register(UINib(nibName: "HeaderBanksCollectionReusableView", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderBanksCollectionReusableView")
+            
+            lastPaymentsCollectionView.backgroundColor = UIColor.white
+            lastPaymentsCollectionView.backgroundColor = .white
+            
+            contactCollectionView.register(UINib(nibName: "ContactCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ContactCollectionViewCell")
+            
+            
+            let stackView = UIStackView(arrangedSubviews: [searchContact, contactCollectionView])
+
+            stackView.axis = .vertical
+            stackView.alignment = .fill
+            stackView.distribution = .fill
+            stackView.spacing = 10
+            stackView.backgroundColor = .white
+            
+           
+            view.addSubview(contactView)
+            view.addSubview(stackView)
+            
+
+            stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0)
+
+            
+        
+        
+        
         setupUI()
-        fetchContacts()
+//        fetchContacts()
+        phoneNumberWithContryCode()
+        self.loadContacts(filter: filter) // Calling loadContacts methods
+
         getLastPayments()
-        setupCollectionView()
+//        setupCollectionView()
+  
+        
+        
+        contactCollectionView.delegate = self
+        contactCollectionView.dataSource = self
+        lastPaymentsCollectionView?.dataSource = self
+        lastPaymentsCollectionView?.delegate = self
+        contactCollectionView.backgroundColor = .clear
+        lastPaymentsCollectionView.register(UINib(nibName: "LastPaymentsCollectionViewCell", bundle:nil), forCellWithReuseIdentifier: "LastPaymentsCollectionViewCell")
+        lastPaymentsCollectionView.register(LastPaymentsCollectionViewCell.self, forCellWithReuseIdentifier: "LastPaymentsCollectionViewCell")
         setupSearchBar()
+        
         
     }
     
@@ -54,84 +175,84 @@ class ContactsViewController: UIViewController, UISearchBarDelegate {
         
     }
     
-    func fetchContacts(){
-       let keys = [CNContactFormatter.descriptorForRequiredKeys(for: .fullName)]
-       let request = CNContactFetchRequest(keysToFetch: keys)
-       
-       let contactStore = CNContactStore()
-       do {
-           try contactStore.enumerateContacts(with: request) {
-               (contact, stop) in
+    func phoneNumberWithContryCode() -> [String] {
 
-            self.contacts.append(contact)
-           }
-       }
-       catch {
-           print("unable to fetch contacts")
-       }
+        let contacts = PhoneContacts.getContacts() // here calling the getContacts methods
+        var arrPhoneNumbers = [String]()
+        for contact in contacts {
+            for ContctNumVar: CNLabeledValue in contact.phoneNumbers {
+                if let fulMobNumVar  = ContctNumVar.value as? CNPhoneNumber {
+                    //let countryCode = fulMobNumVar.value(forKey: "countryCode") get country code
+                       if let MccNamVar = fulMobNumVar.value(forKey: "digits") as? String {
+                            arrPhoneNumbers.append(MccNamVar)
+                    }
+                }
+            }
+        }
+        return arrPhoneNumbers // here array has all contact numbers.
     }
     
     
     private func setupSearchBar() {
-        navigationController?.navigationBar.barTintColor = .white
-        navigationController?.navigationBar.backgroundColor = .white
-        navigationController?.navigationBar.shadowImage = UIImage()
-        let searchController = UISearchController(searchResultsController: nil)
-        navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = false
-        searchController.hidesNavigationBarDuringPresentation = true
-        searchController.obscuresBackgroundDuringPresentation = false
-        searchController.automaticallyShowsCancelButton = false
-        searchController.searchBar.delegate = self
-        searchController.searchBar.placeholder = "Номер телефона"
-        searchController.searchBar.backgroundColor = .white
-        searchController.searchBar.showsBookmarkButton = true
-//        let view = UINib(nibName: "SearchContact", bundle: .main).instantiate(withOwner: nil, options: nil).first as! UIView
-//        // let view = Bundle.main.loadNibNamed("CustomView", owner: nil, options: nil)!.first as! UIView // does the same as above
-//        view.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width - 40, height: 44)
-////        view.centerXAnchor. = self.view.centerXAnchor
-//        self.view.addSubview(view)
-        
+
+
         
     }
     
-    private func setupCollectionView() {
-        
-
-        let layout = UICollectionViewFlowLayout()
-            layout.sectionInset = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
-            layout.itemSize = CGSize(width: 80, height: 120)
-            layout.scrollDirection = .horizontal
-    
-        
-        lastPaymentsCollectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 125), collectionViewLayout: layout)
-     
-
-        lastPaymentsCollectionView.backgroundColor = UIColor.white
-        let flowLayout = UICollectionViewFlowLayout()
-        contactCollectionView = UICollectionView(frame: view.bounds, collectionViewLayout: flowLayout)
-        contactCollectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.reuseId)
-        
-       
-        lastPaymentsCollectionView.register(UINib(nibName: "LastPaymentsCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "LastPaymentsCollectionViewCell")
-        contactCollectionView.register(UINib(nibName: "ContactCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ContactCollectionViewCell")
-//        lastPaymentsCollectionView?.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-//        lastPaymentsCollectionView?.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 100).isActive = true
-        contactCollectionView.backgroundColor = .white
-        contactCollectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        
-//        collectionView.backgroundColor = .white
-        view.backgroundColor = .white
-        view.addSubview(contactCollectionView)
-        view.addSubview(lastPaymentsCollectionView)
-        
-        
-        contactCollectionView.delegate = self
-        contactCollectionView.dataSource = self
-        lastPaymentsCollectionView?.dataSource = self
-        lastPaymentsCollectionView?.delegate = self
-        
-    }
+//    private func setupCollectionView() {
+//
+//
+//
+//
+//        let layout = UICollectionViewFlowLayout()
+//
+//            layout.itemSize = CGSize(width: 80, height: 120)
+//            layout.scrollDirection = .horizontal
+//
+//        let flowLayout = UICollectionViewFlowLayout()
+//
+//        lastPaymentsCollectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+//        contactCollectionView = UICollectionView(frame: view.bounds, collectionViewLayout: flowLayout)
+//
+//
+//        let viewLastPayments = UIView()
+//        viewLastPayments.backgroundColor = .clear
+//        lastPaymentsCollectionView.backgroundColor = .clear
+//        viewLastPayments.addSubview(lastPaymentsCollectionView)
+//        let contactView = UIView()
+//        viewLastPayments.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 120)
+//        contactView.addSubview(contactCollectionView)
+//
+//
+//        lastPaymentsCollectionView.register(LastPaymentsCollectionViewCell.self, forCellWithReuseIdentifier: "LastPaymentsCollectionViewCell")
+//        let nib = UINib(nibName: "LastPaymentsCollectionViewCell", bundle:nil)
+//        self.lastPaymentsCollectionView.register(nib, forCellWithReuseIdentifier: "LastPaymentsCollectionViewCell")
+//        contactCollectionView.register(UINib(nibName: "HeaderBanksCollectionReusableView", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderBanksCollectionReusableView")
+//
+//        lastPaymentsCollectionView.register(UINib(nibName: "HeaderBanksCollectionReusableView", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderBanksCollectionReusableView")
+//
+//        lastPaymentsCollectionView.backgroundColor = UIColor.white
+//        lastPaymentsCollectionView.backgroundColor = .white
+//
+//        contactCollectionView.register(UINib(nibName: "ContactCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ContactCollectionViewCell")
+//
+//        let stackView = UIStackView(arrangedSubviews: [searchContact, viewLastPayments, contactCollectionView])
+//
+//        stackView.axis = .vertical
+//        stackView.alignment = .fill
+//        stackView.distribution = .fill
+//        stackView.spacing = 10
+//        stackView.backgroundColor = .white
+//
+//
+//        view.addSubview(contactView)
+//        view.addSubview(stackView)
+//
+//
+//        stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0)
+//
+//
+//    }
 }
 
 extension ContactsViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
@@ -145,23 +266,35 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                 return contacts.count
             }
         case lastPaymentsCollectionView:
-            return lastPayment.count
+            if lastPhonePayment.count > 1{
+                return lastPhonePayment.count
+            } else {
+                return lastPayment.count
+            }
+            
         default:
             return 0
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-       
-        switch collectionView {
-        case contactCollectionView:
-            let item = collectionView.dequeueReusableCell(withReuseIdentifier: "ContactCollectionViewCell", for: indexPath) as! ContactCollectionViewCell
+//        lastPaymentsCollectionView.register(UINib(nibName: "LastPaymentsCollectionViewCell", bundle:nil), forCellWithReuseIdentifier: "LastPaymentsCollectionViewCell")
+//        lastPaymentsCollectionView.register(LastPaymentsCollectionViewCell.self, forCellWithReuseIdentifier: "LastPaymentsCollectionViewCell")
+  
+        if collectionView == contactCollectionView{
+            let item = contactCollectionView.dequeueReusableCell(withReuseIdentifier: "ContactCollectionViewCell", for: indexPath) as! ContactCollectionViewCell
             
             if ((banks?.isEmpty) == nil){
-                item.contactLabel.text = "\(contacts[indexPath.item].givenName) " + " " + " \(contacts[indexPath.item].familyName)"
-                checkOwner(number: "79626129268")
-
-    //            item.phoneLabel.text = (contacts[indexPath.item].phoneNumbers[0].value ).value(forKey: "digits") as? String
+                item.contactLabel.text = contacts[indexPath.item].name
+                item.phoneLabel.text = contacts[indexPath.item].phoneNumber.first
+                if contacts[indexPath.item].avatarData?.isEmpty != nil{
+                item.contactImageView.image =  UIImage(data: (contacts[indexPath.item].avatarData)!)
+                }
+                DispatchQueue.main.async{
+//                    if self.checkOwner(number: self.contacts[indexPath.item].phoneNumber.first) ?? false {
+//                        item.contactImageView.isHidden = false
+//                    }
+                }
             } else {
                 
                 
@@ -173,85 +306,226 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                 item.contactImageView.image = UIImage(named: imageBank)
             }
             return item
-        case lastPaymentsCollectionView:
-            let item = collectionView.dequeueReusableCell(withReuseIdentifier: "LastPaymentsCollectionViewCell", for: indexPath) as! LastPaymentsCollectionViewCell
-            item.nameLabel.text = lastPayment[indexPath.item].phoneNumber
-            if lastPayment.count > 3{
-                item.contactImageView.image = UIImage(named: lastPayment[indexPath.item].bankID ?? "")
-                item.bankNameLabel.isHidden = true
-                item.bankNameLabel.text = lastPayment[indexPath.item].bankName
-                item.nameLabel.text = lastPayment[indexPath.item].amount
-                
-            }
-            
-            return item
-            
-        default: 
-//            if collectionView == contactCollectionView {
-//                let item = collectionView.dequeueReusableCell(withReuseIdentifier: "ContactCollectionViewCell", for: indexPath) as! ContactCollectionViewCell
-//                return item
-//            } else if collectionView == lastPaymentsCollectionView {
-//                let item = collectionView.dequeueReusableCell(withReuseIdentifier: "LastPaymentsCollectionViewCell", for: indexPath) as! LastPaymentsCollectionViewCell
-////                item.nameLabel.text = lastPayment[indexPath.item].phoneNumber
-//                return item
-//            }
-            if collectionView == lastPaymentsCollectionView{
-                let item = collectionView.dequeueReusableCell(withReuseIdentifier: "LastPaymentsCollectionViewCell", for: indexPath) as! LastPaymentsCollectionViewCell
-                item.nameLabel.text = lastPayment[indexPath.item].phoneNumber
-                return item
-            } else if collectionView == contactCollectionView{
-                let item = collectionView.dequeueReusableCell(withReuseIdentifier: "ContactCollectionViewCell", for: indexPath) as! ContactCollectionViewCell
-                
-                if ((banks?.isEmpty) == nil){
-                    item.contactLabel.text = "\(contacts[indexPath.item].givenName) " + " " + " \(contacts[indexPath.item].familyName)"
-                    checkOwner(number: "79626129268")
-
-        //            item.phoneLabel.text = (contacts[indexPath.item].phoneNumbers[0].value ).value(forKey: "digits") as? String
-                } else {
-                    
-                    item.phoneLabel.isHidden = true
-                    item.contactLabel.text = banks?[indexPath.item].memberNameRus
-                    guard let imageBank = banks?[indexPath.item].id else {
-                        return item
-                    }
-                    item.contactImageView.image = UIImage(named: imageBank)
-                }
+        } else if collectionView == lastPaymentsCollectionView{
+            if lastPhonePayment.count > 1{
+                let item = contactCollectionView.dequeueReusableCell(withReuseIdentifier: "LastPaymentsCollectionViewCell", for: indexPath) as! LastPaymentsCollectionViewCell
+                item.nameLabel.text = lastPhonePayment[indexPath.item].bankName
+                item.contactImageView.image = UIImage(named: "\(lastPhonePayment[indexPath.item].bankID!)")
+                item.bankNameLabel.isHidden = false
+                item.bankNameLabel.text = lastPhonePayment[indexPath.item].bankName
                 return item
             } else {
-                return UICollectionViewCell.init(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+                
+                let item = contactCollectionView.dequeueReusableCell(withReuseIdentifier: "LastPaymentsCollectionViewCell", for: indexPath) as! LastPaymentsCollectionViewCell
+                item.nameLabel.text = lastPayment[indexPath.item].phoneNumber
+                if lastPayment.count > 3{
+                    item.contactImageView.image = UIImage(named: lastPayment[indexPath.item].bankID ?? "")
+                    item.bankNameLabel.isHidden = true
+                    item.bankNameLabel.text = lastPayment[indexPath.item].bankName
+                    item.nameLabel.text = lastPayment[indexPath.item].amount
+                    
+                }
+                return item
+            }
+        } else {
+            if lastPhonePayment.count > 1{
+                let item = contactCollectionView.dequeueReusableCell(withReuseIdentifier: "LastPaymentsCollectionViewCell", for: indexPath) as! LastPaymentsCollectionViewCell
+                item.nameLabel.text = lastPhonePayment[indexPath.item].bankName
+                item.contactImageView.image = UIImage(named: "\(lastPhonePayment[indexPath.item].bankID!)")
+                item.bankNameLabel.isHidden = false
+                item.bankNameLabel.text = lastPhonePayment[indexPath.item].bankName
+                return item
+            } else {
+                
+                let item = contactCollectionView.dequeueReusableCell(withReuseIdentifier: "LastPaymentsCollectionViewCell", for: indexPath) as! LastPaymentsCollectionViewCell
+                item.nameLabel.text = lastPayment[indexPath.item].phoneNumber
+                if lastPayment.count > 3{
+                    item.contactImageView.image = UIImage(named: lastPayment[indexPath.item].bankID ?? "")
+                    item.bankNameLabel.isHidden = true
+                    item.bankNameLabel.text = lastPayment[indexPath.item].bankName
+                    item.nameLabel.text = lastPayment[indexPath.item].amount
+                    
+                }
+                return item
             }
         }
+        
+//        switch collectionView {
+//        case contactCollectionView:
+//            let item = contactCollectionView.dequeueReusableCell(withReuseIdentifier: "ContactCollectionViewCell", for: indexPath) as! ContactCollectionViewCell
+//
+//            if ((banks?.isEmpty) == nil){
+//                item.contactLabel.text = contacts[indexPath.item].name
+//                item.phoneLabel.text = contacts[indexPath.item].phoneNumber.first
+//                if contacts[indexPath.item].avatarData?.isEmpty != nil{
+//                item.contactImageView.image =  UIImage(data: (contacts[indexPath.item].avatarData)!)
+//                }
+//                DispatchQueue.main.async{
+////                    if self.checkOwner(number: self.contacts[indexPath.item].phoneNumber.first) ?? false {
+////                        item.contactImageView.isHidden = false
+////                    }
+//                }
+//            } else {
+//
+//
+//                item.phoneLabel.isHidden = true
+//                item.contactLabel.text = banks?[indexPath.item].memberNameRus
+//                guard let imageBank = banks?[indexPath.item].id else {
+//                    return item
+//                }
+//                item.contactImageView.image = UIImage(named: imageBank)
+//            }
+//            return item
+//        case lastPaymentsCollectionView:
+//            if lastPhonePayment.count > 1{
+//                let item = contactCollectionView.dequeueReusableCell(withReuseIdentifier: "LastPaymentsCollectionViewCell", for: indexPath) as! LastPaymentsCollectionViewCell
+//                item.nameLabel.text = lastPhonePayment[indexPath.item].bankName
+//                item.contactImageView.image = UIImage(named: "\( lastPhonePayment[indexPath.item].bankID!)")
+//                item.bankNameLabel.isHidden = false
+//                item.bankNameLabel.text = lastPhonePayment[indexPath.item].bankName
+//                return item
+//            } else {
+//                let item = lastPaymentsCollectionView.dequeueReusableCell(withReuseIdentifier: "LastPaymentsCollectionViewCell", for: indexPath) as! LastPaymentsCollectionViewCell
+//                item.nameLabel.text = lastPayment[indexPath.item].phoneNumber
+//                if lastPayment.count > 3{
+//                    item.contactImageView.image = UIImage(named: lastPayment[indexPath.item].bankID ?? "")
+//                    item.bankNameLabel.isHidden = true
+//                    item.bankNameLabel.text = lastPayment[indexPath.item].bankName
+//                    item.nameLabel.text = lastPayment[indexPath.item].amount
+//
+//                }
+//
+//                return item
+//            }
+//
+//        default:
+//            var item  = UICollectionViewCell()
+//            if collectionView == contactCollectionView{
+//                 item = contactCollectionView.dequeueReusableCell(withReuseIdentifier: "ContactCollectionViewCell", for: indexPath) as! ContactCollectionViewCell
+//            } else {
+//                 item = lastPaymentsCollectionView.dequeueReusableCell(withReuseIdentifier: "LastPaymentsCollectionViewCell", for: indexPath) as! LastPaymentsCollectionViewCell
+//            }
+//            return item
+//        }
     }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+      
+        if collectionView == contactCollectionView{
+            let reusableview = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderBanksCollectionReusableView", for: indexPath) as! HeaderBanksCollectionReusableView
+            if banks?.count ?? 0 > 0{
+                reusableview.frame = CGRect(x: 0 , y: 0, width: self.view.frame.width, height: 40)
+            } else {
+                reusableview.frame = CGRect(x: 0 , y: 0, width: 0, height: 40)
+            }
+             //do other header related calls or settups
+                return reusableview
+        } else {
+            let reusableview = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderBanksCollectionReusableView", for: indexPath) as! HeaderBanksCollectionReusableView
+
+            reusableview.frame = CGRect(x: 0 , y: 0, width: 0, height: 0)
+             //do other header related calls or settups
+          
+            return  reusableview
+        }
+        
+//        switch collectionView {
+//        case contactCollectionView:
+//            lastPaymentsCollectionView.register(UINib(nibName: "HeaderBanksCollectionReusableView", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderBanksCollectionReusableView")
+//            let reusableview = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderBanksCollectionReusableView", for: indexPath) as! HeaderBanksCollectionReusableView
+//            if banks?.count ?? 0 > 0{
+//                reusableview.frame = CGRect(x: 0 , y: 0, width: self.view.frame.width, height: 40)
+//            } else {
+//                reusableview.frame = CGRect(x: 0 , y: 0, width: 0, height: 40)
+//
+//            }
+//             //do other header related calls or settups
+//                return reusableview
+//
+//        case lastPaymentsCollectionView:
+//
+//            let reusableview = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderBanksCollectionReusableView", for: indexPath) as! HeaderBanksCollectionReusableView
+//
+//            reusableview.frame = CGRect(x: 0 , y: 0, width: 0, height: 0)
+//             //do other header related calls or settups
+//
+//            return  reusableview
+//        default:
+//
+//            let reusableview = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderBanksCollectionReusableView", for: indexPath) as! HeaderBanksCollectionReusableView
+//
+//            if banks?.count ?? 0 > 0{
+//                reusableview.frame = CGRect(x: 0 , y: 0, width: self.view.frame.width, height: 40)
+//            } else {
+//                reusableview.frame = CGRect(x: 0 , y: 0, width: 0, height: 0)
+//
+//            }
+//                         //do other header related calls or settups
+//                return reusableview
+//
+//        }
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        if collectionView == contactCollectionView, banks?.count ?? 0 > 0{
+            return CGSize(width: collectionView.frame.width, height: 40) //add your height here
+        } else {
+            return CGSize(width: 0, height: 0) //add your height here
+
+        }
+       }
+    
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         switch collectionView {
         case contactCollectionView:
             return CGSize(width: UIScreen.main.bounds.width, height: 60)
         default:
-            return CGSize(width: 120, height: 120)
+            return CGSize(width: 80, height: 120)
 
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if banks?.count ?? 0 > 0 {
+        if banks?.count ?? 0 > 0, collectionView == contactCollectionView {
             let vc = PaymentByPhoneViewController()
 //            vc.confurmVCModel = self.confurmVCModel
             vc.modalPresentationStyle = .fullScreen
+            
             vc.selectBank = banks?[indexPath.row].memberNameRus
-            if banks?[indexPath.item].memberNameRus != "ФОРА - Банк"{
+            vc.bankImage = UIImage(named: "\(banks?[indexPath.row].id ?? "")")
+            if banks?[indexPath.item].memberNameRus != "ФОРА-БАНК"{
                 vc.sbp = true
             }
-            self.present(vc, animated: true, completion: nil)
+            vc.phoneField.text = selectPhoneNumber ?? ""
+            self.myDelegate?.didSelectSomething(some: "\(searchContact.numberTextField.text)")
+            vc.addCloseButton()
+            let navController = UINavigationController(rootViewController: vc)
+            navController.modalPresentationStyle = .fullScreen
+            self.present(navController, animated: true, completion: nil)
             } else if collectionView == lastPaymentsCollectionView{
                 let vc = PaymentByPhoneViewController()
     //            vc.confurmVCModel = self.confurmVCModel
                 vc.modalPresentationStyle = .fullScreen
                 vc.selectBank = lastPayment[indexPath.row].bankName
-                self.present(vc, animated: true, completion: nil)
+                vc.bankImage = UIImage(named: "\(lastPayment[indexPath.row].bankID ?? "")")
+                
+                vc.phoneField.text = selectPhoneNumber ?? ""
+                vc.addCloseButton()
+                self.myDelegate?.didSelectSomething(some: "\(searchContact.numberTextField.text)")
+
+                let navController = UINavigationController(rootViewController: vc)
+                navController.modalPresentationStyle = .fullScreen
+                self.present(navController, animated: true, completion: nil)
+                
             } else {
+                self.myDelegate?.didSelectSomething(some: "\(searchContact.numberTextField.text)")
+                self.delegate?.passUpdateData(data: selectPhoneNumber ?? "123")
+                self.delegate1?.doSomethingWith(data: "12232")
+                selectPhoneNumber = contacts[indexPath.item].phoneNumber.first
                 getBankList()
-                collectionView.reloadData()
+                getLastPhonePayments()
+                
             }
     
     }
@@ -307,12 +581,54 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
         }
         
     }
-    func checkOwner(number: String?){
+    
+    func getLastPhonePayments() {
         showActivity()
         
-        NetworkManager<GetOwnerPhoneNumberPhoneDecodableModel>.addRequest(.getOwnerPhoneNumber, [:], [:]) { model, error in
-            if error != nil {
+        let body = [
+            "phoneNumber": selectPhoneNumber
+        ] as [String: AnyObject]
+        
+        NetworkManager<GetLatestPhonePaymentsDecodableModel>.addRequest(.getLatestPhonePayments, [:], body) { model, error in
+//            if error != nil {
+//                self.dismissActivity()
+//                print("DEBUG: Error: ", error ?? "")
+//            }
+            guard let model = model else { return }
+            print("DEBUG: Card list: ", model)
+            if model.statusCode == 0 {
                 self.dismissActivity()
+                guard let data  = model.data else { return }
+//                self.selectedCardNumber = cardNumber
+                DispatchQueue.main.async {
+                    self.lastPhonePayment = data
+                        if self.lastPhonePayment.count < 1{
+                        self.lastPaymentsCollectionView.isHidden = true
+                            self.lastPaymentsCollectionView.reloadData()
+                        }
+                    
+                    
+                }
+            } else {
+                self.dismissActivity()
+                print("DEBUG: Error: ", model.errorMessage ?? "")
+            }
+        }
+        
+    }
+    
+    func checkOwner(number: String?) -> Bool?{
+//        showActivity()
+        let body = [
+            "phoneNumber": number
+        ] as [String: AnyObject]
+        
+        var checkOwner: Bool?
+        
+        NetworkManager<GetOwnerPhoneNumberPhoneDecodableModel>.addRequest(.getOwnerPhoneNumber, [:], body) { model, error in
+            if error != nil {
+                
+                checkOwner = false
                 print("DEBUG: Error: ", error ?? "")
             }
             guard let model = model else { return }
@@ -320,22 +636,25 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
          
 
             if model.statusCode == 0 {
-                self.dismissActivity()
-                guard let data  = model.data else { return }
+                
 //                self.selectedCardNumber = cardNumber
-                DispatchQueue.main.async {
-                    
-                    self.lastPayment = [GetLatestPaymentsDatum(bankName: "Фора - Банк", bankID: "00072121", phoneNumber: "9626129268", amount: "Александр К."),GetLatestPaymentsDatum(bankName: "Альфа - Банк", bankID: "100000000008", phoneNumber: "9626129268", amount: "Александр К."), GetLatestPaymentsDatum(bankName: "Сбербанк", bankID: "sberBank", phoneNumber: "9626129268", amount: "Александр К."), GetLatestPaymentsDatum(bankName: "Райфайзен б.", bankID: "raiffei1test", phoneNumber: "9626129268", amount: "Александр К."), GetLatestPaymentsDatum(bankName: "ВТБ", bankID: "100000000005", phoneNumber: "9626129268", amount: "Александр К.")]
-                    self.lastPaymentsCollectionView.reloadData()
-
+                DispatchQueue.main.sync {
+                    checkOwner = true
                 }
             } else {
-                self.dismissActivity()
                 
+                checkOwner = false
                 print("DEBUG: Error: ", model.errorMessage ?? "")
             }
         }
+        return checkOwner
     }
     
+}
+
+extension UIView {
+    class func fromNib<T: UIView>() -> T {
+        return Bundle(for: T.self).loadNibNamed(String(describing: T.self), owner: nil, options: nil)![0] as! T
+    }
 }
 

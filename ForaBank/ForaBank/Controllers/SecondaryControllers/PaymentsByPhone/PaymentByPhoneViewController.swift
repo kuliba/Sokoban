@@ -12,10 +12,12 @@ class PaymentByPhoneViewController: UIViewController {
     var selectBank: String?
     var confirm: Bool?
     var selectedCardNumber = ""
+    var bankImage: UIImage?
+    
     var phoneField = ForaInput(
         viewModel: ForaInputModel(
             title: "По номеру телефона",
-            image: #imageLiteral(resourceName: "accountImage")))
+            image: #imageLiteral(resourceName: "Phone")))
     
     
     var cardField = ForaInput(
@@ -38,11 +40,6 @@ class PaymentByPhoneViewController: UIViewController {
             image: #imageLiteral(resourceName: "accountImage"),
             isEditable: true))
     
-    var countryField = ForaInput(
-        viewModel: ForaInputModel(
-            title: "Страна",
-            image: #imageLiteral(resourceName: "map-pin"),
-            isEditable: false))
     
     var numberTransctionField = ForaInput(
         viewModel: ForaInputModel(
@@ -84,24 +81,26 @@ class PaymentByPhoneViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupUI()
         hideKeyboardWhenTappedAround()
         getCardList()
         
-        
-        
-        self.tabBarController?.tabBar.isHidden = true
-        navigationController?.title = "Перевод по номеру телефона"
-        navigationController?.navigationBar.items = [UINavigationItem(title: "123")]
-        let menuButton = UIButton(type: UIButton.ButtonType.system)
-               menuButton.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-        menuButton.setImage(UIImage(named: "icon_search"), for: UIControl.State())
-               let menuBarButtonItem = UIBarButtonItem(customView: menuButton)
+        bankPayeer.imageView.image = bankImage
+        setNavigationBar()
 
-               navigationItem.leftBarButtonItems = [menuBarButtonItem]
         // Do any additional setup after loading the view.
     }
     
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.isHidden = false
+    }
+    func setNavigationBar() {
+        
+        
+        }
     
     @objc func doneButtonTapped() {
         switch sbp{
@@ -122,6 +121,24 @@ class PaymentByPhoneViewController: UIViewController {
         }
     }
     
+//    override func viewWillLayoutSubviews() {
+//          let width = self.view.frame.width
+//          let navigationBar: UINavigationBar = UINavigationBar(frame: CGRect(x: 0, y: 40, width: width, height: 44))
+//          self.view.addSubview(navigationBar)
+//          let navigationItem = UINavigationItem(title: "Перевод по номеру телефона")
+////          let doneBtn = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.done, target: nil, action: nil)
+//
+//            let customView = UIImageView(image: #imageLiteral(resourceName: "sbp-logoDefault"))
+//            let customViewItem = UIBarButtonItem(customView: customView)
+//            navigationItem.rightBarButtonItem = customViewItem
+//
+//            let xmark = UIImageView(image: #imageLiteral(resourceName: "xmark"))
+//            let xmarkItem = UIBarButtonItem(customView: xmark)
+//            navigationItem.leftBarButtonItem = xmarkItem
+//
+//          navigationBar.setItems([navigationItem], animated: false)
+//
+//       }
     
     fileprivate func setupUI() {
         
@@ -162,6 +179,8 @@ class PaymentByPhoneViewController: UIViewController {
             let customViewItem = UIBarButtonItem(customView: customView)
             self.navigationItem.rightBarButtonItem = customViewItem
         }
+        
+        
     }
     
     
@@ -214,8 +233,15 @@ class PaymentByPhoneViewController: UIViewController {
                 DispatchQueue.main.async {
                     let vc = PhoneConfirmViewController()
                     vc.sbp = self.sbp
-                    self.present(vc, animated: true, completion: nil)
-                }
+                    vc.bankPayeer.text = self.selectBank ?? ""
+                    vc.phoneField.text = self.phoneField.text
+                    vc.cardField.text = self.cardField.text
+                    vc.cardField.imageView.image = self.cardField.imageView.image
+                    vc.summTransctionField.textField.text = self.summTransctionField.textField.text
+                    vc.addCloseButton()
+                    let navController = UINavigationController(rootViewController: vc)
+                    navController.modalPresentationStyle = .fullScreen
+                    self.present(navController, animated: true, completion: nil)                }
             } else {
                 self.dismissActivity()
 
@@ -326,8 +352,16 @@ class PaymentByPhoneViewController: UIViewController {
                 DispatchQueue.main.async {
                     let vc = PhoneConfirmViewController()
                     vc.sbp = self.sbp
-                    vc.modalPresentationStyle = .fullScreen
-                    self.present(vc, animated: true, completion: nil)
+                    
+                    vc.bankPayeer.text = self.selectBank ?? ""
+                    vc.phoneField.text = self.phoneField.text
+                    vc.cardField.text = self.cardField.text
+                    vc.bankPayeer.imageView.image = self.bankPayeer.imageView.image
+                    vc.summTransctionField.text = self.summTransctionField.text
+                    vc.addCloseButton()
+                    let navController = UINavigationController(rootViewController: vc)
+                    navController.modalPresentationStyle = .fullScreen
+                    self.present(navController, animated: true, completion: nil)
                     
                 }
 //                let model = ConfurmViewControllerModel(

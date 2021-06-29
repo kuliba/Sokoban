@@ -12,12 +12,14 @@ class ContactCollectionViewCell: UICollectionViewCell{
     
     static var reuseId: String = "ContactCollectionViewCell"
 
+    @IBOutlet weak var bankImage: UIImageView!
     @IBOutlet weak var contactImageView: UIImageView!
     @IBOutlet weak var contactLabel: UILabel!
     @IBOutlet weak var phoneLabel: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        contactImageView.layer.cornerRadius = contactImageView.frame.height/2
+
     }
 
 }
