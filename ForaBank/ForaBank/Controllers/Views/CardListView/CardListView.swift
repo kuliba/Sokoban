@@ -13,12 +13,23 @@ class CardListView: UIView {
     let reuseIdentifier = "CardCell"
     var cardList = [GetProductListDatum]() {
         didSet {
-            self.collectionView.reloadData()
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
         }
     }
     
-    var didCardTapped: ((GetProductListDatum) -> Void)?
+    var filteredCardList = [GetProductListDatum]() {
+        didSet {
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+        }
+    }
+    var isFiltered = false
     
+    var didCardTapped: ((GetProductListDatum) -> Void)?
+    let changeCardButtonCollection = AllCardView()
     let collectionView : UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -43,15 +54,30 @@ class CardListView: UIView {
     func commonInit() {
         
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.heightAnchor.constraint(equalToConstant: 72).isActive = true
+        self.heightAnchor.constraint(equalToConstant: 110).isActive = true
         setupCollectionView()
         isHidden = true
+        changeCardButtonCollection.complition = { (select) in
+            switch select {
+            case 1:
+                self.isFiltered = true
+                self.filteredCardList = self.cardList.filter { $0.productType == "CARD" }
+            case 2:
+                self.isFiltered = true
+                self.filteredCardList = self.cardList.filter { $0.productType == "ACCOUNT" }
+            default:
+                self.isFiltered = false
+            }
+        }
     }
     
     //MARK: - Helpers
     private func setupCollectionView() {
+        addSubview(changeCardButtonCollection)
         addSubview(collectionView)
-        collectionView.fillSuperview()
+        changeCardButtonCollection.anchor(top: self.topAnchor, left: self.leftAnchor,
+                                          right: self.rightAnchor, height: 30)
+        collectionView.anchor(top: changeCardButtonCollection.bottomAnchor, left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor)
         
         collectionView.backgroundColor = .white
         collectionView.delegate = self
@@ -64,14 +90,22 @@ class CardListView: UIView {
 //MARK: - CollectionView DataSource
 extension CardListView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return cardList.count
+        if isFiltered {
+            return filteredCardList.count
+        } else {
+            return cardList.count
+        }
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CardCell
         
-        cell.card = cardList[indexPath.item]
-
+        if isFiltered {
+            cell.card = filteredCardList[indexPath.item]
+        } else {
+            cell.card = cardList[indexPath.item]
+        }
         return cell
     }
     

@@ -14,6 +14,8 @@
             <connections>
                 <outlet property="changeAccountButton" destination="fTd-tt-HLd" id="V4k-NN-COy"/>
                 <outlet property="contentView" destination="iN0-l3-epB" id="tUg-sQ-Ua8"/>
+                <outlet property="curvedLineView" destination="Pmd-yV-NyQ" id="Pfo-3x-P4S"/>
+                <outlet property="straightLineView" destination="wPI-p3-GGe" id="8Iq-Cv-FCN"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -21,6 +23,13 @@
             <rect key="frame" x="0.0" y="0.0" width="487" height="88"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wPI-p3-GGe">
+                    <rect key="frame" x="20" y="43.5" width="447" height="1"/>
+                    <color key="backgroundColor" red="0.91764705882352937" green="0.92156862745098034" blue="0.92156862745098034" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="oXb-op-HUi"/>
+                    </constraints>
+                </view>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="separatorLine" translatesAutoresizingMaskIntoConstraints="NO" id="Pmd-yV-NyQ">
                     <rect key="frame" x="20" y="44" width="447" height="8"/>
                     <color key="tintColor" red="0.91764705882352937" green="0.92156862745098034" blue="0.92156862745098034" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -46,11 +55,17 @@
                             <integer key="value" value="16"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="buttonTapped:" destination="-1" eventType="touchUpInside" id="vdj-TH-mjw"/>
+                    </connections>
                 </button>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
+                <constraint firstAttribute="trailing" secondItem="wPI-p3-GGe" secondAttribute="trailing" constant="20" id="EDf-MT-aCQ"/>
+                <constraint firstItem="wPI-p3-GGe" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="JsD-oG-LCW"/>
+                <constraint firstItem="wPI-p3-GGe" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="PIc-tw-TwM"/>
                 <constraint firstItem="Pmd-yV-NyQ" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" constant="4" id="QP8-VW-gOo"/>
                 <constraint firstItem="fTd-tt-HLd" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="X9O-QS-KkH"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="fTd-tt-HLd" secondAttribute="trailing" constant="20" id="bf6-GP-tN8"/>
