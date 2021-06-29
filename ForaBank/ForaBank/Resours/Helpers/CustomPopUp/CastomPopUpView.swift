@@ -93,6 +93,12 @@ class MemeDetailVC : AddHeaderImageViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        /// Получаем номер кнопки выбора карт
+        self.changeCardButtonCollection.complition = { tag in
+            print(tag)
+        }
+        
+        
         self.addHeaderImage()
         self.view.layer.cornerRadius = 20
         self.view.clipsToBounds = true
@@ -129,7 +135,7 @@ class MemeDetailVC : AddHeaderImageViewController {
             }
         }
         
-        stackView = UIStackView(arrangedSubviews: [cardFromField, seporatorView, cardFromListView, cardToField, cardToListView, changeCardButtonCollection])
+        stackView = UIStackView(arrangedSubviews: [cardFromField, seporatorView, changeCardButtonCollection, cardFromListView, cardToField, cardToListView])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fillProportionally
