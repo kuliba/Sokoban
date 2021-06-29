@@ -153,7 +153,7 @@ class ChooseCountryTableViewController: UITableViewController {
 //MARK: - UISearchResultsUpdating
 extension ChooseCountryTableViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        guard let text = searchController.searchBar.text else { return }
+//        guard let text = searchController.searchBar.text else { return }
 
 
     }

@@ -11,17 +11,51 @@ import UIKit
 //TODO: отрефакторить под сетевые запросы, вынести в отдельный файл
 struct ConfirmViewControllerModel {
     
-    var phone: String?
-    var name: String
-    var country: Country?
-    var numberTransction: String?
-    var summTransction: String
-    var taxTransction: String
-    var currancyTransction: String
-    var statusIsSuccses: Bool
+    var type: PaymentType
+    var cardFrom: GetProductListDatum? {
+        didSet {
+            guard let cardFrom = cardFrom else { return }
+            if let cardID = cardFrom.id {
+                cardFromCardId = "\(cardID)"
+            }
+        }
+    }
+    var cardFromCardId = ""
+    var cardFromCardNumber = ""
+    var cardFromExpireDate = ""
+    var cardFromCardCVV = ""
+    var cardFromAccountId = ""
+    var cardFromAccountNumber = ""
     
-    init(country: Country, model: AnywayPaymentDecodableModel?, fullName: String? = nil) {
-        
+    var cardTo: GetProductListDatum? {
+        didSet {
+            guard let cardTo = cardTo else { return }
+            if let cardID = cardTo.id {
+                cardToCardId = "\(cardID)"
+            }
+        }
+    }
+    var cardToCardId = ""
+    var cardToCardNumber = ""
+    var cardToAccountNumber = ""
+    var cardToAccountId = ""
+    
+    var phone: String?
+    var fullName: String? = ""
+    var country: Country?
+    var numberTransction: String = ""
+    var summTransction: String = ""
+    var taxTransction: String = ""
+    var currancyTransction: String = ""
+    var statusIsSuccses: Bool = false
+    
+    
+    init(type: PaymentType) {
+        self.type = type
+    }
+    
+    init?(country: Country, model: AnywayPaymentDecodableModel?, fullName: String? = nil) {
+        self.type = .contact
         var name = ""
         var surname = ""
         var secondName = ""
@@ -43,9 +77,9 @@ struct ConfirmViewControllerModel {
             }
         }
         if let fullName = fullName {
-            self.name = fullName
+            self.fullName = fullName
         } else {
-            self.name = surname + " " + name + " " + secondName
+            self.fullName = surname + " " + name + " " + secondName
         }
         self.statusIsSuccses = model?.statusCode == 0 ? true : false
         self.phone = phone
@@ -54,6 +88,12 @@ struct ConfirmViewControllerModel {
         self.numberTransction = transctionNum
         self.currancyTransction = "Наличные"
         self.country = country
+    }
+    
+    enum PaymentType {
+        case card2card
+        case contact
+        case mig
     }
     
 }
@@ -132,30 +172,43 @@ class ContactConfurmViewController: UIViewController {
     }
     
     func setupData(with model: ConfirmViewControllerModel) {
-        nameField.text =  model.name //"Колотилин Михаил Алексеевич"
-        countryField.text = model.country?.name ?? "" // "Армения"
-        numberTransctionField.text = model.numberTransction ?? "" //"1235634790"
-        summTransctionField.text = model.summTransction //"10 000.00 ₽ "
-        taxTransctionField.text = model.taxTransction //"100.00 ₽ "
-        currancyTransctionField.text = model.currancyTransction //"Наличные"
-        
-        if model.country?.code == "AM" {
+        switch model.type {
+        case .card2card:
+            nameField.isHidden = true
             numberTransctionField.isHidden = true
-            phoneField.isHidden = false
-            phoneField.textField.maskString = "+000-0000-00-00"
-            phoneField.text = model.phone ?? ""
-            bankField.isHidden = false
-            bankField.text = "АйДиБанк"
-            bankField.imageView.image = #imageLiteral(resourceName: "IdBank")
-            let customViewItem = UIBarButtonItem(customView: UIImageView(image: #imageLiteral(resourceName: "MigAvatar")))
-            self.navigationItem.rightBarButtonItem = customViewItem
-        } else {
             phoneField.isHidden = true
             bankField.isHidden = true
-            numberTransctionField.isHidden = false
-            let customViewItem = UIBarButtonItem(customView: UIImageView(image: #imageLiteral(resourceName: "Vector")))
-            self.navigationItem.rightBarButtonItem = customViewItem
+            summTransctionField.text = model.summTransction  //"10 000.00 ₽ "
+            taxTransctionField.text = model.taxTransction //"100.00 ₽ "
+        default:
+            nameField.text =  model.fullName ?? "" //"Колотилин Михаил Алексеевич"
+            countryField.text = model.country?.name ?? "" // "Армения"
+            numberTransctionField.text = model.numberTransction  //"1235634790"
+            summTransctionField.text = model.summTransction  //"10 000.00 ₽ "
+            taxTransctionField.text = model.taxTransction //"100.00 ₽ "
+            currancyTransctionField.text = model.currancyTransction //"Наличные"
+            
+            
+            if model.country?.code == "AM" {
+                numberTransctionField.isHidden = true
+                phoneField.isHidden = false
+                phoneField.textField.maskString = "+000-0000-00-00"
+                phoneField.text = model.phone ?? ""
+                bankField.isHidden = false
+                bankField.text = "АйДиБанк"
+                bankField.imageView.image = #imageLiteral(resourceName: "IdBank")
+                let customViewItem = UIBarButtonItem(customView: UIImageView(image: #imageLiteral(resourceName: "MigAvatar")))
+                self.navigationItem.rightBarButtonItem = customViewItem
+            } else {
+                phoneField.isHidden = true
+                bankField.isHidden = true
+                numberTransctionField.isHidden = false
+                let customViewItem = UIBarButtonItem(customView: UIImageView(image: #imageLiteral(resourceName: "Vector")))
+                self.navigationItem.rightBarButtonItem = customViewItem
+            }
         }
+        
+        smsCodeField.textField.textContentType = .oneTimeCode
         
     }
     
@@ -182,30 +235,63 @@ class ContactConfurmViewController: UIViewController {
         guard let code = smsCodeField.textField.text else { return }
         let body = ["verificationCode": code] as [String: AnyObject]
         showActivity()
-        NetworkManager<AnywayPaymentMakeDecodableModel>.addRequest(.anywayPaymentMake, [:], body) { model, error in
-            if error != nil {
-                self.dismissActivity()
-                print("DEBUG: Error: ", error ?? "")
-                self.showAlert(with: "Ошибка", and: error ?? "")
-            }
-            guard let model = model else { return }
-            
-            if model.statusCode == 0 {
-                print("DEBUG: Success payment")
-                self.dismissActivity()
-                DispatchQueue.main.async {
-                    let vc = PaymentsDetailsSuccessViewController()
-                    vc.confurmVCModel = self.confurmVCModel
-                    vc.id = model.data?.paymentOperationDetailID
-                    vc.modalPresentationStyle = .fullScreen
-                    self.present(vc, animated: true, completion: nil)
+        
+        switch confurmVCModel?.type {
+        
+        case .card2card:
+            print(#function)
+            NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { respons, error in
+                if error != nil {
+                    self.dismissActivity()
+                    print("DEBUG: Error: ", error ?? "")
+                    self.showAlert(with: "Ошибка", and: error ?? "")
                 }
-            } else {
-                self.dismissActivity()
-                print("DEBUG: Error: ", model.errorMessage ?? "")
-                self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+                guard let model = respons else { return }
+                
+                if model.statusCode == 0 {
+                    print("DEBUG: Success payment")
+                    self.dismissActivity()
+                    DispatchQueue.main.async {
+                        let vc = PaymentsDetailsSuccessViewController()
+                        vc.confurmVCModel = self.confurmVCModel
+//                        vc.id = model.data?.paymentOperationDetailID
+                        vc.modalPresentationStyle = .fullScreen
+                        self.present(vc, animated: true, completion: nil)
+                    }
+                } else {
+                    self.dismissActivity()
+                    print("DEBUG: Error: ", model.errorMessage ?? "")
+                    self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+                }
+            }
+            
+        default:
+            NetworkManager<AnywayPaymentMakeDecodableModel>.addRequest(.anywayPaymentMake, [:], body) { model, error in
+                if error != nil {
+                    self.dismissActivity()
+                    print("DEBUG: Error: ", error ?? "")
+                    self.showAlert(with: "Ошибка", and: error ?? "")
+                }
+                guard let model = model else { return }
+                
+                if model.statusCode == 0 {
+                    print("DEBUG: Success payment")
+                    self.dismissActivity()
+                    DispatchQueue.main.async {
+                        let vc = PaymentsDetailsSuccessViewController()
+                        vc.confurmVCModel = self.confurmVCModel
+                        vc.id = model.data?.paymentOperationDetailID
+                        vc.modalPresentationStyle = .fullScreen
+                        self.present(vc, animated: true, completion: nil)
+                    }
+                } else {
+                    self.dismissActivity()
+                    print("DEBUG: Error: ", model.errorMessage ?? "")
+                    self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+                }
             }
         }
+        
 
 
     }

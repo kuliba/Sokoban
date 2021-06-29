@@ -15,7 +15,8 @@ import Foundation
 // MARK: - MakeTransferDecodableModel
 struct MakeTransferDecodableModel: Codable, NetworkModelProtocol {
     let statusCode: Int?
-    let errorMessage, data: JSONNull?
+    let errorMessage: String?
+    let data: JSONNull?
 }
 
 // MARK: MakeTransferDecodableModel convenience initializers and mutators
@@ -38,7 +39,7 @@ extension MakeTransferDecodableModel {
 
     func with(
         statusCode: Int?? = nil,
-        errorMessage: JSONNull?? = nil,
+        errorMessage: String?? = nil,
         data: JSONNull?? = nil
     ) -> MakeTransferDecodableModel {
         return MakeTransferDecodableModel(

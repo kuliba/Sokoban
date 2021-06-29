@@ -9,21 +9,36 @@ import Foundation
 
 struct CodeVerificationViewModel {
     
+    var phone: String?
+    var type : CodeVerificationType
+    
+    enum CodeVerificationType {
+        case register
+        case createTransfer
+    }
+    
     func getCode(completion: @escaping( _ error: String?) -> ()) {
-        NetworkManager<GetCodeDecodebleModel>.addRequest(.getCode, [:], [:]) { model, error in
-            if error != nil {
-                guard let error = error else { return }
-                completion(error)
-            } else {
-                guard let statusCode = model?.statusCode else { return }
-                if statusCode == 0 {
-                    completion(nil)
-                } else {
-                    guard let error = model?.errorMessage else { return }
+        switch type {
+        case .register:
+            NetworkManager<GetCodeDecodebleModel>.addRequest(.getCode, [:], [:]) { model, error in
+                if error != nil {
+                    guard let error = error else { return }
                     completion(error)
+                } else {
+                    guard let statusCode = model?.statusCode else { return }
+                    if statusCode == 0 {
+                        completion(nil)
+                    } else {
+                        guard let error = model?.errorMessage else { return }
+                        completion(error)
+                    }
                 }
             }
+        case .createTransfer:
+            print("DEBUG: get code for ", type)
         }
+        
+        
     }
     
     

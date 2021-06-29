@@ -10,7 +10,7 @@ import Foundation
 struct FCMToken {
     static var fcmToken: String? {
         didSet {
-            print("DEBUG: FCMToken установлен: ", fcmToken)
+            print("DEBUG: FCMToken установлен: ", fcmToken ?? "nil")
         }
     }
 }

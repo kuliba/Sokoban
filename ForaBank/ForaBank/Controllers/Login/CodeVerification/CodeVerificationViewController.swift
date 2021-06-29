@@ -10,9 +10,11 @@ import FirebaseMessaging
 
 class CodeVerificationViewController: UIViewController {
     
-    var phoneNumber: String?
+//    var phoneNumber: String?
+    var viewModel: CodeVerificationViewModel
     var count = 60  // 60sec if you want
     var resendTimer = Timer()
+//    var verificationType: CodeVerificationViewModel.CodeVerificationType? = .register
     
     lazy var titleLabel = UILabel(text: "Введите код из сообщения",
                                   font: .boldSystemFont(ofSize: 18))
@@ -31,7 +33,11 @@ class CodeVerificationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        smsCodeView.callBacktext = { str in self.sendSmsCode(code: str) }
+        smsCodeView.callBacktext = { str in
+            
+            self.sendSmsCode(code: str)
+            
+        }
 //        updateTimer()
         resendTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
     }
@@ -41,8 +47,9 @@ class CodeVerificationViewController: UIViewController {
         navigationController?.navigationBar.isHidden = false
     }
         
-    init(phone: String) {
-        phoneNumber = phone
+    init(model: CodeVerificationViewModel) {
+        self.viewModel = model
+//        phoneNumber = phone
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -126,7 +133,7 @@ class CodeVerificationViewController: UIViewController {
     }
     
     @objc func repeatCodeButtonTapped() {
-        CodeVerificationViewModel().getCode { error in
+        viewModel.getCode { error in
             if error != nil {
                 guard let error = error else { return }
                 self.showAlert(with: "Ошибка", and: error)

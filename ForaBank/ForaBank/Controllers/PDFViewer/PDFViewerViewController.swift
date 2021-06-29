@@ -21,7 +21,7 @@ class PDFViewerViewController: UIViewController {
         self.view.backgroundColor = .black
 
         let body = [
-            "paymentOperationDetailId": id ?? 0 ,
+            "paymentOperationDetailId": id ?? 0,
             "printFormType" : "contactAddressless"
         ] as [String: AnyObject]
         

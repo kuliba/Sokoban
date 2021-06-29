@@ -14,7 +14,7 @@ protocol PassSectionDelegate: AnyObject {
   func passDataFromSectionUp(sectionController: String)
 }
 
-protocol UpdateDataDelegate: class {
+protocol UpdateDataDelegate: AnyObject {
   func passUpdateData(data: String);
 }
 

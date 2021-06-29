@@ -12,7 +12,7 @@ extension CodeVerificationViewController {
         title = "Вход"
         subTitleLabel.numberOfLines = 2
         subTitleLabel.textAlignment = .center
-        subTitleLabel.text = "Код отправлен на \(phoneNumber ?? "+7 ... ... ..")\nЗапросить повторно можно через"
+        subTitleLabel.text = "Код отправлен на \(viewModel.phone ?? "+7 ... ... ..")\nЗапросить повторно можно через"
         smsCodeView.Base.changeInputNum(num: 6)
 //        timerLabel.isHidden = true
         repeatCodeButton.isHidden = true

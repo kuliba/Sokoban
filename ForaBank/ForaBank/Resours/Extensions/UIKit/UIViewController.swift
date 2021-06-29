@@ -70,3 +70,70 @@ extension UIViewController {
         }
     
 }
+
+extension UIWindow {
+    private static let association = ObjectAssociation<UIActivityIndicatorView>()
+    
+    var activityIndicator: UIActivityIndicatorView {
+        set { UIWindow.association[self] = newValue }
+        get {
+            if let indicator = UIWindow.association[self] {
+                return indicator
+            } else {
+                UIWindow.association[self] = UIActivityIndicatorView.customIndicator(at: self.center)
+                return UIWindow.association[self]!
+            }
+        }
+    }
+    
+    // MARK: - Activity Indicator
+    public func startIndicatingActivity(_ ignoringEvents: Bool? = true) {
+        DispatchQueue.main.async {
+            self.addSubview(self.activityIndicator)
+            self.activityIndicator.startAnimating()
+            if ignoringEvents! {
+                UIApplication.shared.beginIgnoringInteractionEvents()
+            }
+        }
+    }
+    
+    public func stopIndicatingActivity() {
+        DispatchQueue.main.async {
+            self.activityIndicator.removeFromSuperview()
+            self.activityIndicator.stopAnimating()
+            UIApplication.shared.endIgnoringInteractionEvents()
+        }
+    }
+    
+}
+
+public final class ObjectAssociation<T: AnyObject> {
+    
+    private let policy: objc_AssociationPolicy
+    
+    /// - Parameter policy: An association policy that will be used when linking objects.
+    public init(policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
+        
+        self.policy = policy
+    }
+    
+    /// Accesses associated object.
+    /// - Parameter index: An object whose associated object is to be accessed.
+    public subscript(index: AnyObject) -> T? {
+        
+        get { return objc_getAssociatedObject(index, Unmanaged.passUnretained(self).toOpaque()) as! T? }
+        set { objc_setAssociatedObject(index, Unmanaged.passUnretained(self).toOpaque(), newValue, policy) }
+    }
+}
+
+extension UIActivityIndicatorView {
+    public static func customIndicator(at center: CGPoint) -> UIActivityIndicatorView {
+        let indicator = UIActivityIndicatorView(frame: CGRect(x: 0.0, y: 0.0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
+        indicator.layer.cornerRadius = 0
+        indicator.color = UIColor.black
+        indicator.center = center
+        indicator.backgroundColor = UIColor(red: 1/255, green: 1/255, blue: 1/255, alpha: 0.5)
+        indicator.hidesWhenStopped = true
+        return indicator
+    }
+}

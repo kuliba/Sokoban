@@ -65,7 +65,7 @@ struct CastomPopUpView  {
 class MemeDetailVC : AddHeaderImageViewController {
 
     var titleLabel = UILabel(text: "Между своими", font: .boldSystemFont(ofSize: 16), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
-    
+    var viewModel = ConfirmViewControllerModel(type: .card2card)
     var cardFromField = ForaInput(
         viewModel: ForaInputModel(
             title: "Откуда",
@@ -114,6 +114,7 @@ class MemeDetailVC : AddHeaderImageViewController {
             }
         }
         cardFromListView.didCardTapped = { [weak self] (card) in
+            self?.viewModel.cardFrom = card
             self?.cardFromField.configCardView(card)
             UIView.animate(withDuration: 0.2) {
                 self?.cardFromListView.isHidden = true
@@ -126,6 +127,7 @@ class MemeDetailVC : AddHeaderImageViewController {
             }
         }
         cardToListView.didCardTapped = { [weak self] (card) in
+            self?.viewModel.cardTo = card
             self?.cardToField.configCardView(card)
             UIView.animate(withDuration: 0.2) {
                 self?.cardFromListView.isHidden = true
@@ -177,16 +179,23 @@ class MemeDetailVC : AddHeaderImageViewController {
                 }
                 guard let data = data else { return }
                 self?.cardFromListView.cardList = data
+                
                 self?.cardToListView.cardList = data
                 if data.count > 0 {
                     self?.cardFromField.configCardView(data.first!)
+                    self?.viewModel.cardFrom = data.first!
+                    
                     self?.cardToField.configCardView(data.first!)
+                    self?.viewModel.cardFrom = data.first!
                 }
             }
         }
-        bottomView.didDoneButtonTapped = { [weak self] () in
-            self?.doneButtonTapped()
+        
+        bottomView.didDoneButtonTapped = { [weak self] (amaunt) in
+            self?.viewModel.summTransction = amaunt
+            self?.doneButtonTapped(with: self!.viewModel)
         }
+        
     }
     
     //MARK: - API
@@ -202,37 +211,32 @@ class MemeDetailVC : AddHeaderImageViewController {
         }
     }
     
-    func doneButtonTapped() {
+    func doneButtonTapped(with viewModel: ConfirmViewControllerModel) {
         
-        print(#function)
+        var viewModel = viewModel
         
-        guard let cardFrom = cardFromField.viewModel.cardModel?.number else { return }
-        guard let cardto = cardToField.viewModel.cardModel?.number else { return }
-        guard let amaunt = bottomView.amountTextField.text else { return }
         
         DispatchQueue.main.async {
             self.showActivity()
         }
         bottomView.doneButtonIsEnabled(true)
         let body = ["check" : false,
-                    "amount" : amaunt,
-                    "payer" : [ "cardId" : "",
-                                "cardNumber" : cardFrom,
-                                "carExpireDate" : "",
-                                "cardCVV" : "",
-                                "accountId" : "",
-                                "accountNumber" : "",
+                    "amount" : viewModel.summTransction,
+                    "payer" : [ "cardId" : viewModel.cardFromCardId,
+                                "cardNumber" : viewModel.cardFromCardNumber,
+                                "carExpireDate" : viewModel.cardFromExpireDate,
+                                "cardCVV" : viewModel.cardFromCardCVV,
+                                "accountId" : viewModel.cardFromAccountId,
+                                "accountNumber" : viewModel.cardFromAccountNumber,
                                 "phoneNumber" : ""
                     ],
-                    "payee" : [ "cardId" : "",
-                                "cardNumber" : cardto,
-                                "accountId" : "",
-                                "accountNumber" : "",
-                                "phoneNumber" : ""
-                    ]
-                    
-        ] as [String : AnyObject]
-        
+                    "payee" : [ "cardId" : viewModel.cardToCardId,
+                                "cardNumber" : viewModel.cardToCardNumber,
+                                "accountId" : viewModel.cardToAccountId,
+                                "accountNumber" : viewModel.cardToAccountNumber,
+                                "phoneNumber" : viewModel.phone
+                    ] ] as [String : AnyObject]
+        print("DEBUG: ", #function, body)
         NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer, [:], body) { [weak self] model, error in
             
             self?.dismissActivity()
@@ -243,10 +247,16 @@ class MemeDetailVC : AddHeaderImageViewController {
             } else {
                 guard let statusCode = model?.statusCode else { return }
                 if statusCode == 0 {
-                    
-                    print("DEBUG: ", #function, model)
-                    
-                    
+                    viewModel.taxTransction = "\(model?.data?.fee ?? 0)"
+                    viewModel.statusIsSuccses = true
+                    print("DEBUG: cardToCard payment Succses", #function, model ?? "nil")
+                    DispatchQueue.main.async {
+                        let vc = ContactConfurmViewController()
+                        vc.confurmVCModel = viewModel
+                        vc.title = "Подтвердите реквизиты"
+                        let navVC = UINavigationController(rootViewController: vc)
+                        self?.present(navVC, animated: true)
+                    }
                 } else {
                     print("DEBUG: ", #function, model?.errorMessage ?? "nil")
                 }

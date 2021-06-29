@@ -186,7 +186,7 @@ class ContactInputViewController: UIViewController {
             }
         }
         
-        bottomView.didDoneButtonTapped = { [weak self] () in
+        bottomView.didDoneButtonTapped = { [weak self] (_) in
             self?.doneButtonTapped()
         }
     }
