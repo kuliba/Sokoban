@@ -95,11 +95,13 @@ class PhoneConfirmViewController: UIViewController {
         stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
         
         
-//        if sbp ?? false {
-//            let customView = UIImageView(image: #imageLiteral(resourceName: "sbp-logoDefault"))
-//            let customViewItem = UIBarButtonItem(customView: customView)
-//            self.navigationItem.rightBarButtonItem = customViewItem
-//        }
+        if sbp ?? false {
+            let customView = UIImageView(image: #imageLiteral(resourceName: "sbp-logoDefault"))
+            let customViewItem = UIBarButtonItem(customView: customView)
+            self.navigationItem.rightBarButtonItem = customViewItem
+        }
+        navigationController?.addCloseButton()
+        
     }
     
     @objc func doneButtonTapped() {
