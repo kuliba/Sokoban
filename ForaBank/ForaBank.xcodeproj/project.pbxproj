@@ -44,6 +44,7 @@
 		0BF3484E268A455C005138A8 /* AllCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0BF3484D268A455C005138A8 /* AllCardView.xib */; };
 		0BF34850268A52CD005138A8 /* AllCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF3484F268A52CD005138A8 /* AllCardView.swift */; };
 		0BF34852268A5F54005138A8 /* GetVerificationCodeDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF34851268A5F54005138A8 /* GetVerificationCodeDecodableModel.swift */; };
+		0BF34854268B2699005138A8 /* PrepareExternalDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF34853268B2699005138A8 /* PrepareExternalDecodableModel.swift */; };
 		68FFA5282682AF2C002DADFA /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA5272682AF2C002DADFA /* ContactsViewController.swift */; };
 		68FFA52C2682AF62002DADFA /* ContactCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA52A2682AF62002DADFA /* ContactCollectionViewCell.swift */; };
 		68FFA52D2682AF62002DADFA /* ContactCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68FFA52B2682AF62002DADFA /* ContactCollectionViewCell.xib */; };
@@ -224,6 +225,7 @@
 		0BF3484D268A455C005138A8 /* AllCardView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AllCardView.xib; sourceTree = "<group>"; };
 		0BF3484F268A52CD005138A8 /* AllCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllCardView.swift; sourceTree = "<group>"; };
 		0BF34851268A5F54005138A8 /* GetVerificationCodeDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetVerificationCodeDecodableModel.swift; sourceTree = "<group>"; };
+		0BF34853268B2699005138A8 /* PrepareExternalDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrepareExternalDecodableModel.swift; sourceTree = "<group>"; };
 		68FFA5272682AF2C002DADFA /* ContactsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
 		68FFA52A2682AF62002DADFA /* ContactCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactCollectionViewCell.swift; sourceTree = "<group>"; };
 		68FFA52B2682AF62002DADFA /* ContactCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ContactCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -1057,6 +1059,7 @@
 				0B7A18C82685BF700007CC75 /* GetPaymentSystemListDecodableModel.swift */,
 				0B7A18CA268648030007CC75 /* GetProductListDecodableModel.swift */,
 				0BF34851268A5F54005138A8 /* GetVerificationCodeDecodableModel.swift */,
+				0BF34853268B2699005138A8 /* PrepareExternalDecodableModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -1488,6 +1491,7 @@
 				0B7A18B82683A9940007CC75 /* FileManagerHelper.swift in Sources */,
 				EDFFCACD2681F975004EE095 /* CardListView.swift in Sources */,
 				ED4FC61A266EA42E0092B4AB /* AppLocker.swift in Sources */,
+				0BF34854268B2699005138A8 /* PrepareExternalDecodableModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
