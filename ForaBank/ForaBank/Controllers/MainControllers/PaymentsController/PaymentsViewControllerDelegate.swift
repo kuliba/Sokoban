@@ -23,6 +23,10 @@ extension PaymentsViewController: UICollectionViewDelegate {
             if indexPath.row == 0 {
                 let popView = CastomPopUpView()
                 popView.showAlert()
+            } else if indexPath.row == 3 {
+                let popView = CastomPopUpView()
+                popView.a.onlyMy = false
+                popView.showAlert()
             } else {
                 print("DEBUG: " + #function + transfers[indexPath.row].name)
                 if let viewController = transfers[indexPath.row].controllerName.getViewController() {

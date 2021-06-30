@@ -93,7 +93,7 @@ class ContactInputViewController: UIViewController {
             type: .credidCard,
             isEditable: false))
     
-    var cardListView = CardListView()
+    var cardListView = CardListView(onlyMy: false)
     
     var bottomView = BottomInputView()
     

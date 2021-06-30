@@ -65,6 +65,14 @@ struct CastomPopUpView  {
 class MemeDetailVC : AddHeaderImageViewController {
 
     var titleLabel = UILabel(text: "Между своими", font: .boldSystemFont(ofSize: 16), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
+    
+    var onlyMy = true {
+        didSet {
+//            cardFromListView.onlyMy = onlyMy
+//            cardToListView.onlyMy = onlyMy
+        }
+    }
+    
     var viewModel = ConfirmViewControllerModel(type: .card2card) {
         didSet {
             checkModel(with: viewModel)
@@ -73,22 +81,25 @@ class MemeDetailVC : AddHeaderImageViewController {
     
     var cardFromField = CardChooseView()
     var seporatorView = SeparatorView()
-    var cardFromListView = CardListView()
+    var cardFromListView: CardListView!
     var cardToField = CardChooseView()
-    var cardToListView = CardListView()
+    var cardToListView: CardListView!
     var bottomView = BottomInputView()
     
     var stackView = UIStackView(arrangedSubviews: [])
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupUI()
         setupConstraint()
         setupActions()
+        
+        print("GEBUG: only:", onlyMy)
     }
     
     private func setupUI() {
+        cardFromListView = CardListView(onlyMy: onlyMy)
+        cardToListView = CardListView(onlyMy: onlyMy)
         self.addHeaderImage()
         self.view.layer.cornerRadius = 20
         self.view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
