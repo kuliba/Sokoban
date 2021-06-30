@@ -59,6 +59,7 @@
 		68FFA55326857530002DADFA /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA55226857530002DADFA /* Extension.swift */; };
 		68FFA55B268586D3002DADFA /* HeaderBanksCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA559268586D3002DADFA /* HeaderBanksCollectionReusableView.swift */; };
 		68FFA55C268586D3002DADFA /* HeaderBanksCollectionReusableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68FFA55A268586D3002DADFA /* HeaderBanksCollectionReusableView.xib */; };
+		68FFA55F268BF2D2002DADFA /* TransferByRequisitesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA55E268BF2D2002DADFA /* TransferByRequisitesViewController.swift */; };
 		ED0B4892267B4CDD0037EA06 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = ED0B4891267B4CDD0037EA06 /* IQKeyboardManagerSwift */; };
 		ED0B4894267B50F50037EA06 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B4893267B50F50037EA06 /* Int.swift */; };
 		ED0B4896267B97C60037EA06 /* ContactInputViewController + UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B4895267B97C60037EA06 /* ContactInputViewController + UI.swift */; };
@@ -70,6 +71,8 @@
 		ED0B48AC26812F450037EA06 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B48AB26812F450037EA06 /* LoginViewModel.swift */; };
 		ED0B48AF2681CC6D0037EA06 /* CodeVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B48AE2681CC6D0037EA06 /* CodeVerificationViewModel.swift */; };
 		ED39EC88268B308800158E46 /* SDWebImageSVGCoder in Frameworks */ = {isa = PBXBuildFile; productRef = ED39EC87268B308800158E46 /* SDWebImageSVGCoder */; };
+		ED39EC8C268B4F0800158E46 /* CardChooseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED39EC8B268B4F0800158E46 /* CardChooseView.swift */; };
+		ED39EC8E268B4F4C00158E46 /* CardChooseView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED39EC8D268B4F4C00158E46 /* CardChooseView.xib */; };
 		ED4FC5EC266AD98E0092B4AB /* NSCollectionLayoutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EB266AD98E0092B4AB /* NSCollectionLayoutItem.swift */; };
 		ED4FC5EF266B70A00092B4AB /* PartialTransparentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EE266B70A00092B4AB /* PartialTransparentView.swift */; };
 		ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5F9266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift */; };
@@ -245,6 +248,7 @@
 		68FFA55226857530002DADFA /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		68FFA559268586D3002DADFA /* HeaderBanksCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderBanksCollectionReusableView.swift; sourceTree = "<group>"; };
 		68FFA55A268586D3002DADFA /* HeaderBanksCollectionReusableView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HeaderBanksCollectionReusableView.xib; sourceTree = "<group>"; };
+		68FFA55E268BF2D2002DADFA /* TransferByRequisitesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferByRequisitesViewController.swift; sourceTree = "<group>"; };
 		ED0B4893267B50F50037EA06 /* Int.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
 		ED0B4895267B97C60037EA06 /* ContactInputViewController + UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContactInputViewController + UI.swift"; sourceTree = "<group>"; };
 		ED0B489B267D41A60037EA06 /* PaymentsDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsDetailsView.swift; sourceTree = "<group>"; };
@@ -254,6 +258,8 @@
 		ED0B48A4267E72130037EA06 /* CSRFToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFToken.swift; sourceTree = "<group>"; };
 		ED0B48AB26812F450037EA06 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		ED0B48AE2681CC6D0037EA06 /* CodeVerificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeVerificationViewModel.swift; sourceTree = "<group>"; };
+		ED39EC8B268B4F0800158E46 /* CardChooseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardChooseView.swift; sourceTree = "<group>"; };
+		ED39EC8D268B4F4C00158E46 /* CardChooseView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CardChooseView.xib; sourceTree = "<group>"; };
 		ED4FC5EB266AD98E0092B4AB /* NSCollectionLayoutItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSCollectionLayoutItem.swift; sourceTree = "<group>"; };
 		ED4FC5EE266B70A00092B4AB /* PartialTransparentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartialTransparentView.swift; sourceTree = "<group>"; };
 		ED4FC5F9266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmsCodeBasicAttributes.swift; sourceTree = "<group>"; };
@@ -410,8 +416,6 @@
 				0B7A18AC2681CF160007CC75 /* CastomPopUpView.swift */,
 				0B7A18CD2689C4ED0007CC75 /* AddHeaderImageViewController.swift */,
 				0B7A18CF2689C51A0007CC75 /* AppHeaderProtocol.swift */,
-				0BF3484D268A455C005138A8 /* AllCardView.xib */,
-				0BF3484F268A52CD005138A8 /* AllCardView.swift */,
 			);
 			path = CustomPopUp;
 			sourceTree = "<group>";
@@ -496,6 +500,14 @@
 			path = HeaderBanks;
 			sourceTree = "<group>";
 		};
+		68FFA55D268BF252002DADFA /* TransferByRequisites  */ = {
+			isa = PBXGroup;
+			children = (
+				68FFA55E268BF2D2002DADFA /* TransferByRequisitesViewController.swift */,
+			);
+			path = "TransferByRequisites ";
+			sourceTree = "<group>";
+		};
 		ED0B4897267CF9490037EA06 /* PaymentsDetailsSuccess */ = {
 			isa = PBXGroup;
 			children = (
@@ -537,6 +549,24 @@
 				ED0B48AE2681CC6D0037EA06 /* CodeVerificationViewModel.swift */,
 			);
 			path = CodeVerificationViewModel;
+			sourceTree = "<group>";
+		};
+		ED39EC89268B3AA300158E46 /* Header */ = {
+			isa = PBXGroup;
+			children = (
+				0BF3484D268A455C005138A8 /* AllCardView.xib */,
+				0BF3484F268A52CD005138A8 /* AllCardView.swift */,
+			);
+			path = Header;
+			sourceTree = "<group>";
+		};
+		ED39EC8A268B4EF000158E46 /* CardChooseView */ = {
+			isa = PBXGroup;
+			children = (
+				ED39EC8B268B4F0800158E46 /* CardChooseView.swift */,
+				ED39EC8D268B4F4C00158E46 /* CardChooseView.xib */,
+			);
+			path = CardChooseView;
 			sourceTree = "<group>";
 		};
 		ED46C1642678DCA500D1A9A5 /* OfferAgreement */ = {
@@ -777,6 +807,8 @@
 		EDAA99AC2673AB6D00435484 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				ED39EC8A268B4EF000158E46 /* CardChooseView */,
+				ED4FC5F0266B8AA60092B4AB /* ForaInputView */,
 				ED51D66C2688B25D005FD655 /* SeparatorView */,
 				EDC3419F26864BF100FFFEF8 /* BottomInputView */,
 				EDFFCACB2681F950004EE095 /* CardListView */,
@@ -1016,10 +1048,10 @@
 		EDB16593266A4317007E6030 /* SecondaryControllers */ = {
 			isa = PBXGroup;
 			children = (
+				68FFA55D268BF252002DADFA /* TransferByRequisites  */,
 				ED92D3A0267359CD006D47B3 /* PaymentsByPhone */,
 				ED4FC613266CDB9C0092B4AB /* СountryPayments */,
 				ED4FC603266CCD0F0092B4AB /* ChooseCountry */,
-				ED4FC5F0266B8AA60092B4AB /* ForaInputView */,
 				ED4FC5ED266B707F0092B4AB /* CardScannerController */,
 			);
 			path = SecondaryControllers;
@@ -1194,6 +1226,7 @@
 		EDFFCACB2681F950004EE095 /* CardListView */ = {
 			isa = PBXGroup;
 			children = (
+				ED39EC89268B3AA300158E46 /* Header */,
 				EDFFCAF126824617004EE095 /* CardCell */,
 				EDFFCAEE268245E1004EE095 /* CardViewModel */,
 				EDFFCACC2681F975004EE095 /* CardListView.swift */,
@@ -1369,6 +1402,7 @@
 				EDAA99B12673ABF200435484 /* ForaSwitchView.xib in Resources */,
 				0BF3484E268A455C005138A8 /* AllCardView.xib in Resources */,
 				EDB145112664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf in Resources */,
+				ED39EC8E268B4F4C00158E46 /* CardChooseView.xib in Resources */,
 				EDB143B5265FDE960028EF5A /* Assets.xcassets in Resources */,
 				68FFA52D2682AF62002DADFA /* ContactCollectionViewCell.xib in Resources */,
 				EDB143CB265FDEC90028EF5A /* Roboto-Italic.ttf in Resources */,
@@ -1416,6 +1450,7 @@
 				0B7A18AD2681CF160007CC75 /* CastomPopUpView.swift in Sources */,
 				EDAA99AF2673AB9200435484 /* ForaSwitchView.swift in Sources */,
 				0BF34850268A52CD005138A8 /* AllCardView.swift in Sources */,
+				ED39EC8C268B4F0800158E46 /* CardChooseView.swift in Sources */,
 				EDB1657C2668C8D5007E6030 /* PayCell.swift in Sources */,
 				EDFFCAF0268245EC004EE095 /* CardViewModel.swift in Sources */,
 				0B9EC85D26739C0000D86EB2 /* GetCountriesDecodebleModel.swift in Sources */,
@@ -1480,6 +1515,7 @@
 				ED4FC610266CD66F0092B4AB /* СountryModel.swift in Sources */,
 				EDF68213266F9EC800FD5C07 /* URLHostType.swift in Sources */,
 				EDB1656C26681F0E007E6030 /* MainTabBarViewController.swift in Sources */,
+				68FFA55F268BF2D2002DADFA /* TransferByRequisitesViewController.swift in Sources */,
 				ED0B4896267B97C60037EA06 /* ContactInputViewController + UI.swift in Sources */,
 				68FFA551268538CF002DADFA /* PhoneContactModel.swift in Sources */,
 				EDF68218266F9EC800FD5C07 /* RouterManager.swift in Sources */,

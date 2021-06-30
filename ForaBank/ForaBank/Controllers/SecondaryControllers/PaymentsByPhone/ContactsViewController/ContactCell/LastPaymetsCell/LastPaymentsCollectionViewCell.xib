@@ -25,7 +25,7 @@
                             <constraint firstAttribute="width" constant="56" id="zQV-tP-zmd"/>
                         </constraints>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Андрей Брат" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pw5-r3-fdj">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Андрей Брат" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pw5-r3-fdj">
                         <rect key="frame" x="5" y="69" width="70" height="26"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="26" id="12W-QQ-Ccl"/>
@@ -34,7 +34,7 @@
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Фора - Банк" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LYN-u9-OOJ">
+                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Фора - Банк" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LYN-u9-OOJ">
                         <rect key="frame" x="6.5" y="92" width="67" height="14"/>
                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
                         <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
@@ -50,6 +50,7 @@
                 <constraint firstItem="LYN-u9-OOJ" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="bri-WI-wQ9"/>
                 <constraint firstItem="LYN-u9-OOJ" firstAttribute="top" secondItem="pw5-r3-fdj" secondAttribute="bottom" constant="-3" id="hcq-IL-1LO"/>
                 <constraint firstItem="pw5-r3-fdj" firstAttribute="centerX" secondItem="NSS-Mw-wuz" secondAttribute="centerX" id="oQ2-lw-YDE"/>
+                <constraint firstItem="LYN-u9-OOJ" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="uJ3-ea-PID"/>
                 <constraint firstItem="ZTg-uK-7eu" firstAttribute="trailing" secondItem="LYN-u9-OOJ" secondAttribute="trailing" constant="6.5" id="wbU-Pf-V3h"/>
                 <constraint firstItem="pw5-r3-fdj" firstAttribute="top" secondItem="NSS-Mw-wuz" secondAttribute="bottom" constant="1.5" id="xeh-rj-tza"/>
             </constraints>

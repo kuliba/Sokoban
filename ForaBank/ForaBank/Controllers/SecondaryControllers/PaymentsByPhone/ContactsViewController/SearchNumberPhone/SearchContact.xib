@@ -15,7 +15,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Yj2-Ty-eEn">
-                    <rect key="frame" x="0.0" y="0.0" width="420" height="45"/>
+                    <rect key="frame" x="10" y="0.0" width="400" height="45"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LgE-h8-3ay">
                             <rect key="frame" x="0.0" y="0.0" width="0.0" height="45"/>
@@ -35,9 +35,8 @@
                             </state>
                         </button>
                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Номер телефона или имя" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uBl-9R-atN" customClass="MaskedTextField" customModule="ForaBank" customModuleProvider="target">
-                            <rect key="frame" x="98.5" y="0.0" width="321.5" height="45"/>
+                            <rect key="frame" x="98.5" y="0.0" width="301.5" height="45"/>
                             <constraints>
-                                <constraint firstAttribute="width" constant="321.5" id="SZf-yy-NAU"/>
                                 <constraint firstAttribute="height" constant="45" id="ZGx-xV-knr"/>
                             </constraints>
                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
@@ -52,8 +51,8 @@
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
                 <constraint firstItem="Yj2-Ty-eEn" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="HqS-qK-X2B"/>
-                <constraint firstItem="Yj2-Ty-eEn" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="jkc-IG-Xhq"/>
-                <constraint firstAttribute="trailing" secondItem="Yj2-Ty-eEn" secondAttribute="trailing" id="wCO-O1-YIY"/>
+                <constraint firstItem="Yj2-Ty-eEn" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="jkc-IG-Xhq"/>
+                <constraint firstAttribute="trailing" secondItem="Yj2-Ty-eEn" secondAttribute="trailing" constant="10" id="wCO-O1-YIY"/>
                 <constraint firstItem="Yj2-Ty-eEn" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" id="wgR-ro-5Gx"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

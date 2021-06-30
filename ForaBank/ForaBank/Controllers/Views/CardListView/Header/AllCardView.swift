@@ -61,6 +61,7 @@ class AllCardView: UIView {
             }
         }
     }
+    
 }
 
 extension UIView {
