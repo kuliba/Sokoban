@@ -55,6 +55,7 @@ class SearchContact: UIView{
     
     @IBAction func changeValue(_ sender: UITextField) {
 //        myDelegate?.didSelectSomething(some: numberTextField.text ?? "")
+        print(numberTextField.text)
         
     }
     

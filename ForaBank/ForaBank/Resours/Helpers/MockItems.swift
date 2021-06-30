@@ -114,7 +114,7 @@ class MockItems {
             
             PaymentsModel(id: 10, name: "По реквизитaм",
                           iconName: "PaymentsIconReqPay",
-                          controllerName: "DevelopViewController",
+                          controllerName: "TransferByRequisitesViewController",
                           description: "Что то")
             
         ]

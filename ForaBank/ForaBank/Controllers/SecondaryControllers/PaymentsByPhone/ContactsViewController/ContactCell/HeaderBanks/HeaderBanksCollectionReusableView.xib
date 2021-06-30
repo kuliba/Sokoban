@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -15,33 +16,36 @@
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sbp-logo" translatesAutoresizingMaskIntoConstraints="NO" id="5Fv-SC-AFZ">
-                    <rect key="frame" x="16" y="-12.5" width="24" height="75"/>
+                    <rect key="frame" x="20" y="15" width="16" height="20"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="24" id="7z1-1f-dIw"/>
+                        <constraint firstAttribute="width" constant="16" id="7z1-1f-dIw"/>
+                        <constraint firstAttribute="height" constant="20" id="bE5-nZ-q8r"/>
                     </constraints>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="В другой банк" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DCJ-M4-piY">
-                    <rect key="frame" x="55" y="14.5" width="115.5" height="21"/>
+                    <rect key="frame" x="51" y="14.5" width="115.5" height="21"/>
                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="chevron.down" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="dpr-Ea-NRy">
-                    <rect key="frame" x="272" y="5.5" width="32" height="40"/>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dpr-Ea-NRy">
+                    <rect key="frame" x="288" y="10.5" width="32" height="29"/>
                     <color key="tintColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="49.5" id="RhC-0f-jVV"/>
+                        <constraint firstAttribute="height" constant="40" id="RhC-0f-jVV"/>
                         <constraint firstAttribute="width" constant="32" id="x7B-QG-S61"/>
                     </constraints>
+                    <imageReference key="image" image="chevron.down" catalog="system" symbolScale="small"/>
+                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small"/>
                 </imageView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="VXr-Tz-HHm"/>
             <constraints>
-                <constraint firstItem="5Fv-SC-AFZ" firstAttribute="leading" secondItem="U6b-Vx-4bR" secondAttribute="leadingMargin" id="0XR-hb-KUl"/>
-                <constraint firstItem="dpr-Ea-NRy" firstAttribute="trailing" secondItem="U6b-Vx-4bR" secondAttribute="trailingMargin" id="N0g-Ck-VbX"/>
+                <constraint firstItem="5Fv-SC-AFZ" firstAttribute="leading" secondItem="VXr-Tz-HHm" secondAttribute="leading" constant="20" id="BRV-0Z-t6C"/>
                 <constraint firstItem="dpr-Ea-NRy" firstAttribute="centerY" secondItem="5Fv-SC-AFZ" secondAttribute="centerY" id="Smv-Ry-PnH"/>
                 <constraint firstItem="dpr-Ea-NRy" firstAttribute="centerY" secondItem="U6b-Vx-4bR" secondAttribute="centerY" id="Syx-FM-8ZY"/>
                 <constraint firstItem="DCJ-M4-piY" firstAttribute="leading" secondItem="5Fv-SC-AFZ" secondAttribute="trailing" constant="15" id="kO0-pa-hJZ"/>
+                <constraint firstItem="dpr-Ea-NRy" firstAttribute="trailing" secondItem="VXr-Tz-HHm" secondAttribute="trailing" id="q2w-yy-NDM"/>
                 <constraint firstItem="dpr-Ea-NRy" firstAttribute="centerY" secondItem="DCJ-M4-piY" secondAttribute="centerY" id="uiM-Bw-Fr6"/>
             </constraints>
             <point key="canvasLocation" x="83" y="40"/>

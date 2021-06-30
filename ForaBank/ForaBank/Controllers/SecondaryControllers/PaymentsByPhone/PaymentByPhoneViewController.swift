@@ -31,7 +31,8 @@ class PaymentByPhoneViewController: UIViewController {
         viewModel: ForaInputModel(
             title: "Банк получателя",
             image: UIImage(),
-            type: .credidCard)
+            type: .credidCard,
+            isEditable: false)
             )
     
     var nameField = ForaInput(
@@ -53,16 +54,16 @@ class PaymentByPhoneViewController: UIViewController {
             image: #imageLiteral(resourceName: "coins"),
             isEditable: true))
     
+    var commentField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "Сообщение получателю",
+            image: #imageLiteral(resourceName: "message"),
+            isEditable: true))
+    
     var taxTransctionField = ForaInput(
         viewModel: ForaInputModel(
             title: "Комиссия",
             image: #imageLiteral(resourceName: "Frame 580"),
-            isEditable: false))
-    
-    var currancyTransctionField = ForaInput(
-        viewModel: ForaInputModel(
-            title: "Способ выплаты",
-            image: #imageLiteral(resourceName: "Frame 579"),
             isEditable: false))
     
     var smsCodeField = ForaInput(
@@ -162,7 +163,7 @@ class PaymentByPhoneViewController: UIViewController {
         button.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
             
         title = "Перевод по номеру телефона"
-        let stackView = UIStackView(arrangedSubviews: [phoneField, bankPayeer,cardField, summTransctionField])
+        let stackView = UIStackView(arrangedSubviews: [phoneField, bankPayeer,cardField, summTransctionField, commentField])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
@@ -175,9 +176,14 @@ class PaymentByPhoneViewController: UIViewController {
         
         
         if sbp ?? false {
-            let customView = UIImageView(image: #imageLiteral(resourceName: "sbp-logoDefault"))
-            let customViewItem = UIBarButtonItem(customView: customView)
-            self.navigationItem.rightBarButtonItem = customViewItem
+            title = "Перевод через СБП"
+            
+            let imageView = UIImageView(image: UIImage(named: "sbp-logoDefault"))
+            let item = UIBarButtonItem(customView: imageView)
+            imageView.contentMode = .scaleAspectFit
+            imageView.frame = CGRect(origin: .zero, size: CGSize(width: 10, height: 10))
+            self.navigationItem.rightBarButtonItem = item
+            
         }
         
         
@@ -238,6 +244,11 @@ class PaymentByPhoneViewController: UIViewController {
                     vc.cardField.text = self.cardField.text
                     vc.cardField.imageView.image = self.cardField.imageView.image
                     vc.summTransctionField.textField.text = self.summTransctionField.textField.text
+                    vc.taxTransctionField.isHidden = ((model.data?.commission?.isEmpty) != nil)
+                    vc.bankPayeer.chooseButton.isHidden = true
+                    vc.bankPayeer.imageView.image = self.bankPayeer.imageView.image
+                    vc.cardField.chooseButton.isHidden = true
+                    vc.payeerField.textField.text = model.data?.payeeName
                     vc.addCloseButton()
                     let navController = UINavigationController(rootViewController: vc)
                     navController.modalPresentationStyle = .fullScreen
@@ -263,6 +274,7 @@ class PaymentByPhoneViewController: UIViewController {
         
         NetworkManager<AnywayPaymentBeginDecodebleModel>.addRequest(.anywayPaymentBegin, [:], body, completion: { model, error in
             if error != nil {
+                self.dismissActivity()
                 print("DEBUG: Error: ", error ?? "")
                 completion(error!)
             }
@@ -271,6 +283,7 @@ class PaymentByPhoneViewController: UIViewController {
                 completion(nil)
                 NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], [:]) { model, error in
                     if error != nil {
+                        self.dismissActivity()
                         print("DEBUG: Error: ", error ?? "")
                         completion(error!)
                     }
@@ -284,6 +297,7 @@ class PaymentByPhoneViewController: UIViewController {
                     }
                 }
             } else {
+                self.dismissActivity()
                 print("DEBUG: Error: ", model.errorMessage ?? "")
                 completion(model.errorMessage)
             }
@@ -304,6 +318,7 @@ class PaymentByPhoneViewController: UIViewController {
         
         NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataName) { model, error in
             if error != nil {
+                self.dismissActivity()
                 print("DEBUG: Error: ", error ?? "")
                 completion(error!)
             }
@@ -311,7 +326,7 @@ class PaymentByPhoneViewController: UIViewController {
             guard let model = model else { return }
             if model.statusCode == 0 {
                 print("DEBUG: Success send Phone")
-                DispatchQueue.main.async {
+                DispatchQueue.main.sync {
                     self.dismissActivity()
                     self.endSBPPayment2()
 
@@ -321,6 +336,7 @@ class PaymentByPhoneViewController: UIViewController {
 //                    model: model)
 //                self.goToConfurmVC(with: model)
             } else {
+                self.dismissActivity()
                 print("DEBUG: Error: ", model.errorMessage ?? "")
                 completion(model.errorMessage)
             }
@@ -339,6 +355,7 @@ class PaymentByPhoneViewController: UIViewController {
         
         NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataName) { model, error in
             if error != nil {
+                self.dismissActivity()
                 print("DEBUG: Error: ", error ?? "")
                 
             }
@@ -357,7 +374,15 @@ class PaymentByPhoneViewController: UIViewController {
                     vc.phoneField.text = self.phoneField.text
                     vc.cardField.text = self.cardField.text
                     vc.bankPayeer.imageView.image = self.bankPayeer.imageView.image
-                    vc.summTransctionField.text = self.summTransctionField.text
+                    vc.summTransctionField.text = self.summTransctionField.textField.text ?? ""
+                    vc.bankPayeer.chooseButton.isHidden = true
+                    vc.cardField.chooseButton.isHidden = true
+                    vc.payeerField.textField.text = model.data?.listInputs?[5].content?[0]
+                    if model.data?.commission == 0.0 {
+                        vc.taxTransctionField.textField.text = "Комиссия не взимается"
+                    } else {
+                        vc.taxTransctionField.textField.text = model.data?.commission?.description
+                    }
                     vc.addCloseButton()
                     let navController = UINavigationController(rootViewController: vc)
                     navController.modalPresentationStyle = .fullScreen
@@ -370,6 +395,7 @@ class PaymentByPhoneViewController: UIViewController {
 //                self.goToConfurmVC(with: model)
                 
             } else {
+                self.dismissActivity()
                 print("DEBUG: Error: ", model.errorMessage ?? "")
                 
             }

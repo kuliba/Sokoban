@@ -14,21 +14,30 @@ class PhoneConfirmViewController: UIViewController {
     var phoneField = ForaInput(
         viewModel: ForaInputModel(
             title: "По номеру телефона",
-            image: #imageLiteral(resourceName: "accountImage")))
+            image: #imageLiteral(resourceName: "Phone"),
+            isEditable: false))
     
+    var payeerField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "Получатель",
+            image: #imageLiteral(resourceName: "accountImage"),
+            isEditable: false))
     
     var cardField = ForaInput(
         viewModel: ForaInputModel(
             title: "Счет списания",
             image: #imageLiteral(resourceName: "credit-card"),
             type: .credidCard,
-            isEditable: false))
+            isEditable: false,
+            showChooseButton: false))
     
     var bankPayeer = ForaInput(
         viewModel: ForaInputModel(
             title: "Банк получателя",
             image: UIImage(),
-            type: .credidCard)
+            type: .credidCard,
+            isEditable: false,
+            showChooseButton: false)
             )
     
 
@@ -42,7 +51,7 @@ class PhoneConfirmViewController: UIViewController {
         viewModel: ForaInputModel(
             title: "Сумма перевода",
             image: #imageLiteral(resourceName: "coins"),
-            isEditable: true))
+            isEditable: false))
     
     var taxTransctionField = ForaInput(
         viewModel: ForaInputModel(
@@ -82,8 +91,8 @@ class PhoneConfirmViewController: UIViewController {
         button.heightAnchor.constraint(equalToConstant: 44).isActive = true
         button.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
             
-        title = "Перевод по номеру телефона"
-        let stackView = UIStackView(arrangedSubviews: [phoneField, bankPayeer,cardField, summTransctionField, smsCodeField])
+        title = "Подтвердите реквизиты"
+        let stackView = UIStackView(arrangedSubviews: [phoneField, payeerField, bankPayeer,cardField, summTransctionField, taxTransctionField, smsCodeField])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
@@ -122,6 +131,7 @@ class PhoneConfirmViewController: UIViewController {
                     DispatchQueue.main.async {
                         let vc = PaymentsDetailsSuccessViewController()
                         vc.id = model.data?.paymentOperationDetailID
+                        
                         vc.modalPresentationStyle = .fullScreen
                         
                         self.present(vc, animated: true, completion: nil)
@@ -149,8 +159,6 @@ class PhoneConfirmViewController: UIViewController {
                guard let model = model else { return }
                print("DEBUG: Card list: ", model)
                if model.statusCode == 0 {
-                   guard let data  = model.data else { return }
-             
                    
                    DispatchQueue.main.async {
                     let vc = PaymentsDetailsSuccessViewController()
