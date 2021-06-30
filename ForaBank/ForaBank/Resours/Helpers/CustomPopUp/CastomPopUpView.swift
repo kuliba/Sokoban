@@ -232,9 +232,9 @@ class MemeDetailVC : AddHeaderImageViewController {
     func doneButtonTapped(with viewModel: ConfirmViewControllerModel) {
         
         var viewModel = viewModel
-        
+        self.dismissKeyboard()
         DispatchQueue.main.async {
-            self.showActivity()
+            UIApplication.shared.keyWindow?.startIndicatingActivity()
         }
         bottomView.doneButtonIsEnabled(true)
         let body = ["check" : false,
@@ -252,12 +252,13 @@ class MemeDetailVC : AddHeaderImageViewController {
                                 "cardNumber" : viewModel.cardToCardNumber,
                                 "accountId" : viewModel.cardToAccountId,
                                 "accountNumber" : viewModel.cardToAccountNumber,
-                                "phoneNumber" : viewModel.phone
+                                "phoneNumber" : ""
                     ] ] as [String : AnyObject]
         print("DEBUG: ", #function, body)
         NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer, [:], body) { [weak self] model, error in
-            
-            self?.dismissActivity()
+            DispatchQueue.main.async {
+                UIApplication.shared.keyWindow?.stopIndicatingActivity()
+            }
             self?.bottomView.doneButtonIsEnabled(false)
             if error != nil {
                 guard let error = error else { return }
@@ -270,7 +271,9 @@ class MemeDetailVC : AddHeaderImageViewController {
                     print("DEBUG: cardToCard payment Succses", #function, model ?? "nil")
                     DispatchQueue.main.async {
                         let vc = ContactConfurmViewController()
+                        vc.modalPresentationStyle = .fullScreen
                         vc.confurmVCModel = viewModel
+                        vc.addCloseButton()
                         vc.title = "Подтвердите реквизиты"
                         let navVC = UINavigationController(rootViewController: vc)
                         self?.present(navVC, animated: true)

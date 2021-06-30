@@ -73,6 +73,7 @@
 		ED39EC88268B308800158E46 /* SDWebImageSVGCoder in Frameworks */ = {isa = PBXBuildFile; productRef = ED39EC87268B308800158E46 /* SDWebImageSVGCoder */; };
 		ED39EC8C268B4F0800158E46 /* CardChooseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED39EC8B268B4F0800158E46 /* CardChooseView.swift */; };
 		ED39EC8E268B4F4C00158E46 /* CardChooseView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED39EC8D268B4F4C00158E46 /* CardChooseView.xib */; };
+		ED39EC91268C8FA800158E46 /* SVGKit in Frameworks */ = {isa = PBXBuildFile; productRef = ED39EC90268C8FA800158E46 /* SVGKit */; };
 		ED4FC5EC266AD98E0092B4AB /* NSCollectionLayoutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EB266AD98E0092B4AB /* NSCollectionLayoutItem.swift */; };
 		ED4FC5EF266B70A00092B4AB /* PartialTransparentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EE266B70A00092B4AB /* PartialTransparentView.swift */; };
 		ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5F9266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift */; };
@@ -376,6 +377,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EDAA99B42674C38900435484 /* ProgressHUD in Frameworks */,
+				ED39EC91268C8FA800158E46 /* SVGKit in Frameworks */,
 				ED0B4892267B4CDD0037EA06 /* IQKeyboardManagerSwift in Frameworks */,
 				0B7A18AB2681CED70007CC75 /* SwiftEntryKit in Frameworks */,
 				ED39EC88268B308800158E46 /* SDWebImageSVGCoder in Frameworks */,
@@ -1281,6 +1283,7 @@
 				ED0B4891267B4CDD0037EA06 /* IQKeyboardManagerSwift */,
 				0B7A18AA2681CED70007CC75 /* SwiftEntryKit */,
 				ED39EC87268B308800158E46 /* SDWebImageSVGCoder */,
+				ED39EC90268C8FA800158E46 /* SVGKit */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -1360,6 +1363,7 @@
 				ED0B4890267B4CDD0037EA06 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				0B7A18A92681CED70007CC75 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */,
 				ED39EC86268B308800158E46 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */,
+				ED39EC8F268C8FA700158E46 /* XCRemoteSwiftPackageReference "SVGKit" */,
 			);
 			productRefGroup = EDB1437E265FDA410028EF5A /* Products */;
 			projectDirPath = "";
@@ -1914,6 +1918,14 @@
 				minimumVersion = 1.6.0;
 			};
 		};
+		ED39EC8F268C8FA700158E46 /* XCRemoteSwiftPackageReference "SVGKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SVGKit/SVGKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
 		ED4FC61F266EA5CD0092B4AB /* XCRemoteSwiftPackageReference "Valet" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Square/Valet";
@@ -1955,6 +1967,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = ED39EC86268B308800158E46 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */;
 			productName = SDWebImageSVGCoder;
+		};
+		ED39EC90268C8FA800158E46 /* SVGKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ED39EC8F268C8FA700158E46 /* XCRemoteSwiftPackageReference "SVGKit" */;
+			productName = SVGKit;
 		};
 		ED4FC620266EA5CD0092B4AB /* Valet */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -73,7 +73,7 @@ final class NetworkManager<T: NetworkModelProtocol>{
                         completion(nil, NetworkResponse.noData.rawValue)
                         return
                     }
-//                    print(String(data: data ?? Data(), encoding: .utf8) ?? "null")
+                    print(String(data: data ?? Data(), encoding: .utf8) ?? "null")
                     do {
                         let returnValue = try T (data: data!)
                         completion(returnValue, nil)
