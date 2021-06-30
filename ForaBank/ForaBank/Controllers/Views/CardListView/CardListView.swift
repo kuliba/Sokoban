@@ -139,8 +139,15 @@ extension CardListView: UICollectionViewDelegateFlowLayout {
 //MARK: - CollectionView Delegate
 extension CardListView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let card = cardList[indexPath.item]
-        didCardTapped?(card)
+        
+        if isFiltered {
+            let card = filteredCardList[indexPath.item]
+            didCardTapped?(card)
+        } else {
+            let card = cardList[indexPath.item]
+            didCardTapped?(card)
+        }
+        
     }
 }
 
