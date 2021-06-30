@@ -49,13 +49,19 @@ class AllCardView: UIView {
         mainView.fixView(self)
         self.heightAnchor.constraint(equalToConstant: 30).isActive = true
         buttonCollection.forEach{
-                    $0.isSelected = false
-                    $0.setImage(UIImage(named: "greyCircle"), for: .normal)
-                    $0.tintColor = .lightGray
-                    $0.setTitleColor(.lightGray, for: .normal)
-                    $0.centerTextAndImage(spacing: 6)
-                }
+            $0.isSelected = false
+            $0.setImage(UIImage(named: "greyCircle"), for: .normal)
+            $0.tintColor = .lightGray
+            $0.setTitleColor(.lightGray, for: .normal)
+            $0.centerTextAndImage(spacing: 6)
+            if $0.tag == 0 {
+                $0.setImage(UIImage(named: "redCircle"), for: .normal)
+                $0.tintColor = .red
+                $0.setTitleColor(.label, for: .normal)
+            }
+        }
     }
+    
 }
 
 extension UIView {

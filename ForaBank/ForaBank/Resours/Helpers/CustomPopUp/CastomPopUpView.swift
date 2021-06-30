@@ -65,93 +65,53 @@ struct CastomPopUpView  {
 class MemeDetailVC : AddHeaderImageViewController {
 
     var titleLabel = UILabel(text: "Между своими", font: .boldSystemFont(ofSize: 16), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
-    var viewModel = ConfirmViewControllerModel(type: .card2card)
-    var cardFromField = ForaInput(
-        viewModel: ForaInputModel(
-            title: "Откуда",
-            image: #imageLiteral(resourceName: "credit-card"),
-            type: .credidCard,
-            isEditable: false))
+    var viewModel = ConfirmViewControllerModel(type: .card2card) {
+        didSet {
+            checkModel(with: viewModel)
+        }
+    }
     
+    var cardFromField = CardChooseView()
     var seporatorView = SeparatorView()
     var cardFromListView = CardListView()
-    
-    var cardToField = ForaInput(
-        viewModel: ForaInputModel(
-            title: "Куда",
-            image: #imageLiteral(resourceName: "credit-card"),
-            type: .credidCard,
-            isEditable: false))
-    
+    var cardToField = CardChooseView()
     var cardToListView = CardListView()
-    
     var bottomView = BottomInputView()
-    
-    let changeCardButtonCollection = AllCardView()
     
     var stackView = UIStackView(arrangedSubviews: [])
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        /// Получаем номер кнопки выбора карт
-        self.changeCardButtonCollection.complition = { tag in
-            print(tag)
-        }
         
-        
-        self.addHeaderImage()
-        self.view.layer.cornerRadius = 20
-        self.view.clipsToBounds = true
-        addCloseButton()
-        
-        self.view.heightAnchor.constraint(equalToConstant: 480).isActive = true
-        self.view.backgroundColor = .white
-        
-        
-        cardFromField.didChooseButtonTapped = { [weak self]  () in
-            UIView.animate(withDuration: 0.2) {
-                self?.cardFromListView.isHidden.toggle()
-            }
-        }
-        cardFromListView.didCardTapped = { [weak self] (card) in
-            self?.viewModel.cardFrom = card
-            self?.cardFromField.configCardView(card)
-            UIView.animate(withDuration: 0.2) {
-                self?.cardFromListView.isHidden = true
-                self?.cardToListView.isHidden = true
-            }
-        }
-        cardToField.didChooseButtonTapped = { [weak self]  () in
-            UIView.animate(withDuration: 0.2) {
-                self?.cardToListView.isHidden.toggle()
-            }
-        }
-        cardToListView.didCardTapped = { [weak self] (card) in
-            self?.viewModel.cardTo = card
-            self?.cardToField.configCardView(card)
-            UIView.animate(withDuration: 0.2) {
-                self?.cardFromListView.isHidden = true
-                self?.cardToListView.isHidden = true
-            }
-        }
-        
-        stackView = UIStackView(arrangedSubviews: [cardFromField, seporatorView, changeCardButtonCollection, cardFromListView, cardToField, cardToListView])
-        stackView.axis = .vertical
-        stackView.alignment = .fill
-        stackView.distribution = .fillProportionally
-        stackView.spacing = 6
-        stackView.isUserInteractionEnabled = true
-        view.addSubview(stackView)
-//        addSubview(doneButton)
-        
+        setupUI()
         setupConstraint()
         setupActions()
     }
-
+    
+    private func setupUI() {
+        self.addHeaderImage()
+        self.view.layer.cornerRadius = 20
+        self.view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        self.view.clipsToBounds = true
+        self.view.backgroundColor = .white
+        self.view.anchor(height: 480)
+        
+        let fromTitleLabel = createTopLabel(title: "Откуда")
+        let toTitleLabel = createTopLabel(title: "Куда")
+        
+        stackView = UIStackView(arrangedSubviews: [fromTitleLabel, cardFromField, seporatorView, cardFromListView, toTitleLabel, cardToField, cardToListView])
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.distribution = .fillProportionally
+        stackView.spacing = 0
+        stackView.isUserInteractionEnabled = true
+        view.addSubview(stackView)
+    }
+    
     private func setupConstraint() {
         view.addSubview(titleLabel)
-        titleLabel.anchor(top: view.topAnchor, left: view.leftAnchor, paddingTop: 28, paddingLeft: 20)
-        
+        titleLabel.anchor(top: view.topAnchor, left: view.leftAnchor,
+                          paddingTop: 28, paddingLeft: 20)
         
         view.addSubview(bottomView)
         bottomView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
@@ -163,39 +123,97 @@ class MemeDetailVC : AddHeaderImageViewController {
                             bottom: view.bottomAnchor, right: view.rightAnchor)
         
         stackView.anchor(top: titleLabel.bottomAnchor, left: view.leftAnchor,
-                         right: view.rightAnchor, paddingTop: 20)
-//        topLabel.anchor(left: stackView.leftAnchor, paddingLeft: 20)
-//        doneButton.anchor(left: leftAnchor, bottom: bottomAnchor,
-//                          right: rightAnchor, paddingLeft: 20,
-//                          paddingBottom: 40, paddingRight: 20, height: 44)
+                         right: view.rightAnchor, paddingTop: 16)
+    }
+    
+    private func createTopLabel(title: String) -> UIView {
+        let view = UIView()
+        let label = UILabel(text: title, font: .systemFont(ofSize: 12), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
+        
+        view.addSubview(label)
+        label.centerY(inView: view, leftAnchor: view.leftAnchor, paddingLeft: 20)
+        view.anchor(height: 20)
+        
+        return view
     }
     
     func setupActions() {
         getCardList { [weak self] data ,error in
             DispatchQueue.main.async {
-                
                 if error != nil {
                     print("Ошибка", error!)
                 }
                 guard let data = data else { return }
                 self?.cardFromListView.cardList = data
-                
                 self?.cardToListView.cardList = data
-                if data.count > 0 {
-                    self?.cardFromField.configCardView(data.first!)
-                    self?.viewModel.cardFrom = data.first!
-                    
-                    self?.cardToField.configCardView(data.first!)
-                    self?.viewModel.cardFrom = data.first!
+            }
+        }
+        
+        cardFromField.didChooseButtonTapped = { [weak self]  () in
+            UIView.animate(withDuration: 0.2) {
+                self?.cardFromListView.isHidden.toggle()
+                
+                self?.seporatorView.curvedLineView.isHidden.toggle()
+                self?.seporatorView.straightLineView.isHidden.toggle()
+                
+                if self?.cardToListView.isHidden == false {
+                    self?.cardToListView.isHidden.toggle()
                 }
             }
+        }
+        
+        cardFromListView.didCardTapped = { [weak self] (card) in
+            self?.viewModel.cardFrom = card
+            self?.cardFromField.cardModel = card
+            UIView.animate(withDuration: 0.2) {
+                self?.cardFromListView.isHidden = true
+                self?.cardToListView.isHidden = true
+                
+                self?.seporatorView.curvedLineView.isHidden = false
+                self?.seporatorView.straightLineView.isHidden = true
+            }
+        }
+        
+        cardToField.didChooseButtonTapped = { [weak self]  () in
+            UIView.animate(withDuration: 0.2) {
+                self?.cardToListView.isHidden.toggle()
+                if self?.cardFromListView.isHidden == false {
+                    
+                    self?.cardFromListView.isHidden = true
+                    
+                    self?.seporatorView.curvedLineView.isHidden = false
+                    self?.seporatorView.straightLineView.isHidden = true
+                }
+            }
+        }
+        
+        cardToListView.didCardTapped = { [weak self] (card) in
+            self?.viewModel.cardTo = card
+            self?.cardToField.cardModel = card
+            UIView.animate(withDuration: 0.2) {
+                self?.cardFromListView.isHidden = true
+                self?.cardToListView.isHidden = true
+            }
+        }
+        
+        seporatorView.buttonSwitchCardTapped = { () in
+            guard let tmpModelFrom = self.cardFromField.cardModel else { return }
+            guard let tmpModelTo = self.cardToField.cardModel else { return }
+            self.cardFromField.cardModel = tmpModelTo
+            self.cardToField.cardModel = tmpModelFrom
         }
         
         bottomView.didDoneButtonTapped = { [weak self] (amaunt) in
             self?.viewModel.summTransction = amaunt
             self?.doneButtonTapped(with: self!.viewModel)
         }
-        
+    }
+    
+    private func checkModel(with model: ConfirmViewControllerModel) {
+        //     curvedLineView straightLineView changeAccountButton
+        guard model.cardFrom != nil, model.cardTo != nil else { return }
+        // TODO: какие условия для смены местами: счет - счет, карта - карта?
+        self.seporatorView.changeAccountButton.isHidden = false
     }
     
     //MARK: - API
@@ -215,13 +233,13 @@ class MemeDetailVC : AddHeaderImageViewController {
         
         var viewModel = viewModel
         
-        
         DispatchQueue.main.async {
             self.showActivity()
         }
         bottomView.doneButtonIsEnabled(true)
         let body = ["check" : false,
                     "amount" : viewModel.summTransction,
+                    "currencyAmount" : "RUB",
                     "payer" : [ "cardId" : viewModel.cardFromCardId,
                                 "cardNumber" : viewModel.cardFromCardNumber,
                                 "carExpireDate" : viewModel.cardFromExpireDate,
