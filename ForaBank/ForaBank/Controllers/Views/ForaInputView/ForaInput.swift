@@ -123,6 +123,7 @@ class ForaInput: UIView {
             placeHolder.isHidden = false
             balanceLabel.isHidden = false
             placeHolder.alpha = text.isEmpty ? 0 : 1
+            
         case .amountOfTransfer:
             placeHolder.text = viewModel.title
             placeHolder.isHidden = false
@@ -145,7 +146,7 @@ class ForaInput: UIView {
     
     func configCardView(_ with: GetProductListDatum) {
         viewModel.cardModel = with
-        self.text = with.name ?? ""
+        self.text = with.product ?? ""
         let balance = Double(with.balance ?? 0)
         self.balanceLabel.text = balance.currencyFormatter()
         self.bottomLabelText = with.numberMasked

@@ -130,10 +130,12 @@ extension UIActivityIndicatorView {
     public static func customIndicator(at center: CGPoint) -> UIActivityIndicatorView {
         let indicator = UIActivityIndicatorView(frame: CGRect(x: 0.0, y: 0.0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
         indicator.layer.cornerRadius = 0
-        indicator.color = UIColor.black
+        indicator.color = .white // #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
         indicator.center = center
         indicator.backgroundColor = UIColor(red: 1/255, green: 1/255, blue: 1/255, alpha: 0.5)
         indicator.hidesWhenStopped = true
+        let transfrom = CGAffineTransform.init(scaleX: 2.0, y: 2.0)
+        indicator.transform = transfrom
         return indicator
     }
 }
