@@ -106,8 +106,8 @@ class MemeDetailVC : AddHeaderImageViewController {
         self.view.backgroundColor = .white
         self.view.anchor(height: 480)
         
-        let fromTitleLabel = createTopLabel(title: "Откуда")
-        let toTitleLabel = createTopLabel(title: "Куда")
+        let fromTitleLabel = createTopLabel(title: "С")
+        let toTitleLabel = createTopLabel(title: "На")
         
         stackView = UIStackView(arrangedSubviews: [fromTitleLabel, cardFromField, seporatorView, cardFromListView, toTitleLabel, cardToField, cardToListView])
         stackView.axis = .vertical
