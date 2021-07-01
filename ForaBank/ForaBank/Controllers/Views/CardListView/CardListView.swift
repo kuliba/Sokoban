@@ -68,6 +68,7 @@ class CardListView: UIView {
         self.heightAnchor.constraint(equalToConstant: self.onlyMy ? 110 : 80).isActive = true
         setupCollectionView()
         isHidden = true
+        alpha = 0
         changeCardButtonCollection.complition = { (select) in
             switch select {
             case 1:
@@ -139,8 +140,15 @@ extension CardListView: UICollectionViewDelegateFlowLayout {
 //MARK: - CollectionView Delegate
 extension CardListView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let card = cardList[indexPath.item]
-        didCardTapped?(card)
+        
+        if isFiltered {
+            let card = filteredCardList[indexPath.item]
+            didCardTapped?(card)
+        } else {
+            let card = cardList[indexPath.item]
+            didCardTapped?(card)
+        }
+        
     }
 }
 

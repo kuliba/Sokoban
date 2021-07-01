@@ -94,7 +94,6 @@ class MemeDetailVC : AddHeaderImageViewController {
         setupConstraint()
         setupActions()
         
-        print("GEBUG: only:", onlyMy)
     }
     
     private func setupUI() {
@@ -107,8 +106,8 @@ class MemeDetailVC : AddHeaderImageViewController {
         self.view.backgroundColor = .white
         self.view.anchor(height: 480)
         
-        let fromTitleLabel = createTopLabel(title: "Откуда")
-        let toTitleLabel = createTopLabel(title: "Куда")
+        let fromTitleLabel = createTopLabel(title: "С")
+        let toTitleLabel = createTopLabel(title: "На")
         
         stackView = UIStackView(arrangedSubviews: [fromTitleLabel, cardFromField, seporatorView, cardFromListView, toTitleLabel, cardToField, cardToListView])
         stackView.axis = .vertical
@@ -162,13 +161,20 @@ class MemeDetailVC : AddHeaderImageViewController {
         
         cardFromField.didChooseButtonTapped = { [weak self]  () in
             UIView.animate(withDuration: 0.2) {
-                self?.cardFromListView.isHidden.toggle()
+                if self?.cardFromListView.isHidden == true {
+                    self?.cardFromListView.alpha = 1
+                    self?.cardFromListView.isHidden = false
+                } else {
+                    self?.cardFromListView.alpha = 0
+                    self?.cardFromListView.isHidden = true
+                }
                 
                 self?.seporatorView.curvedLineView.isHidden.toggle()
                 self?.seporatorView.straightLineView.isHidden.toggle()
                 
                 if self?.cardToListView.isHidden == false {
-                    self?.cardToListView.isHidden.toggle()
+                    self?.cardToListView.isHidden = true
+                    self?.cardToListView.alpha = 0
                 }
             }
         }
@@ -178,7 +184,9 @@ class MemeDetailVC : AddHeaderImageViewController {
             self?.cardFromField.cardModel = card
             UIView.animate(withDuration: 0.2) {
                 self?.cardFromListView.isHidden = true
+                
                 self?.cardToListView.isHidden = true
+                self?.cardFromListView.alpha = 0
                 
                 self?.seporatorView.curvedLineView.isHidden = false
                 self?.seporatorView.straightLineView.isHidden = true
@@ -187,10 +195,18 @@ class MemeDetailVC : AddHeaderImageViewController {
         
         cardToField.didChooseButtonTapped = { [weak self]  () in
             UIView.animate(withDuration: 0.2) {
-                self?.cardToListView.isHidden.toggle()
+                if self?.cardToListView.isHidden == true {
+                    self?.cardToListView.alpha = 1
+                    self?.cardToListView.isHidden = false
+                } else {
+                    self?.cardToListView.alpha = 0
+                    self?.cardToListView.isHidden = true
+                }
+                
                 if self?.cardFromListView.isHidden == false {
                     
                     self?.cardFromListView.isHidden = true
+                    self?.cardFromListView.alpha = 0
                     
                     self?.seporatorView.curvedLineView.isHidden = false
                     self?.seporatorView.straightLineView.isHidden = true
@@ -203,7 +219,10 @@ class MemeDetailVC : AddHeaderImageViewController {
             self?.cardToField.cardModel = card
             UIView.animate(withDuration: 0.2) {
                 self?.cardFromListView.isHidden = true
+                self?.cardFromListView.alpha = 0
+                
                 self?.cardToListView.isHidden = true
+                self?.cardToListView.alpha = 0
             }
         }
         
