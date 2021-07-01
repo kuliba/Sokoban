@@ -68,6 +68,7 @@ class CardListView: UIView {
         self.heightAnchor.constraint(equalToConstant: self.onlyMy ? 110 : 80).isActive = true
         setupCollectionView()
         isHidden = true
+        alpha = 0
         changeCardButtonCollection.complition = { (select) in
             switch select {
             case 1:
