@@ -26,6 +26,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
             } else if indexPath.row == 3 {
                 let popView = CastomPopUpView()
                 popView.a.onlyMy = false
+                popView.a.titleLabel.text = "На другую карту"
                 popView.showAlert()
             } else {
                 print("DEBUG: " + #function + transfers[indexPath.row].name)
