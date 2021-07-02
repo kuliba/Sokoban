@@ -16,7 +16,8 @@ import Foundation
 struct GetLatestPaymentsDecodableModel: Codable, NetworkModelProtocol {
     let statusCode: Int?
     let errorMessage: String?
-    let data: [GetLatestPaymentsDatum]?
+    var data: [GetLatestPaymentsDatum]?
+    
 }
 
 // MARK: GetLatestPaymentsDecodableModel convenience initializers and mutators

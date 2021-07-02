@@ -68,6 +68,7 @@ class ForaInput: UIView {
     }
     
     var didChooseButtonTapped: (() -> Void)?
+    var didChangeValueField: ((_ field: UITextField) -> Void)?
     
     //MARK: - Viewlifecicle
     override init(frame: CGRect) {
@@ -248,6 +249,9 @@ extension ForaInput: UITextFieldDelegate {
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
         self.lineView.backgroundColor = #colorLiteral(red: 0.9176470588, green: 0.9215686275, blue: 0.9215686275, alpha: 1)
         return true
+    }
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        didChangeValueField?(textField)
     }
 }
 

@@ -7,28 +7,31 @@
 
 import UIKit
 import ContactsUI
-protocol DisplayViewControllerDelegate : NSObjectProtocol{
-    func doSomethingWith(data: String)
-}
-protocol PassSectionDelegate: AnyObject {
-  func passDataFromSectionUp(sectionController: String)
-}
 
-protocol UpdateDataDelegate: AnyObject {
-  func passUpdateData(data: String);
-}
 
-class ContactsViewController: UIViewController, MyPickerDelegate{
-    
-    
-    var numberPhone: String?
-    func didSelectSomething(some: String) {
-        numberPhone = some
+class ContactsViewController: UIViewController,SelectImageDelegate{
+    func didSelectImage(image: String) {
+        if !reserveContacts.isEmpty{
+            loadContacts(filter: .none)
+        }
+        let filteredContacts = contacts.filter({$0.name?.lowercased().prefix(image.count) ?? "" == image.lowercased()})
+        reserveContacts = contacts
+        if image.count != 0{
+            contactCollectionView.reloadData()
+            contacts = filteredContacts
+        }
+        if image.count == 10, (image.firstIndex(of: "9") != nil){
+            selectPhoneNumber = image
+            getBankList()
+            getLastPhonePayments()
+        }
     }
-    weak var delegate: UpdateDataDelegate? = nil
+    
+    
+    var reserveContacts = [PhoneContact]()
+    var numberPhone: String?
     
 
-    weak var delegate1 : DisplayViewControllerDelegate?
 
     var banks: [FastPayment]?
 
@@ -39,16 +42,14 @@ class ContactsViewController: UIViewController, MyPickerDelegate{
     var checkOwnerFetch: Bool?
     
 
-    var lastPayment = [GetLatestPaymentsDatum(bankName: "Фора - Банк", bankID: "000121221", phoneNumber: "000517217", amount: "10"), GetLatestPaymentsDatum(bankName: "Фора - Банк", bankID: "000121221", phoneNumber: "000517217", amount: "10")]{
+    var lastPayment = [GetLatestPaymentsDatum]()
+    
+    var lastPhonePayment = [GetLatestPhone](){
         didSet{
             lastPaymentsCollectionView.reloadData()
         }
     }
-    var lastPhonePayment = [GetLatestPhone(bankName: "ФОРА-БАНК123", bankID: "100000000217")]{
-        didSet{
-            lastPaymentsCollectionView.reloadData()
-        }
-    }
+    
     var contacts = [PhoneContact]() {
         didSet{
             contactCollectionView.reloadData()
@@ -59,7 +60,7 @@ class ContactsViewController: UIViewController, MyPickerDelegate{
         }
     }// array of PhoneContact(It is model find it below)
     var filter: ContactsFilter = .none
-
+   
 
        fileprivate func loadContacts(filter: ContactsFilter) {
         contacts.removeAll()
@@ -86,12 +87,11 @@ class ContactsViewController: UIViewController, MyPickerDelegate{
 //    var collectionView: UICollectionView!
     var lastPaymentsCollectionView: UICollectionView!
     var contactCollectionView: UICollectionView!
-
-    var myDelegate: MyPickerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+       
+        searchContact.delegate = self
         
         let layout = UICollectionViewFlowLayout()
 
@@ -166,7 +166,8 @@ class ContactsViewController: UIViewController, MyPickerDelegate{
         
     }
     
-
+    
+    
     func setupUI(){
         let label = UILabel()
         label.textColor = UIColor.black
@@ -223,8 +224,8 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
   
         if collectionView == contactCollectionView{
             let item = contactCollectionView.dequeueReusableCell(withReuseIdentifier: "ContactCollectionViewCell", for: indexPath) as! ContactCollectionViewCell
-            
-            if ((banks?.isEmpty) == nil){
+            DispatchQueue.main.async{ [self] in
+                if ((self.banks?.isEmpty) == nil){
                 item.contactLabel.text = contacts[indexPath.item].name
                 item.phoneLabel.text = contacts[indexPath.item].phoneNumber.first
                
@@ -244,17 +245,20 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                 if contacts[indexPath.item].bankImage == true{
                     item.bankImage.isHidden = false
                 }
+            
             } else {
                 
                 item.bankImage.isHidden = true
                 item.phoneLabel.isHidden = true
                 item.contactLabel.text = banks?[indexPath.item].memberNameRus
                 guard let imageBank = banks?[indexPath.item].id else {
-                    return item
+                    return
                 }
                 item.contactImageView.image = UIImage(named: imageBank)
             }
+            }
             return item
+                
         } else if collectionView == lastPaymentsCollectionView{
             if lastPhonePayment.count > 1{
                 let item = lastPaymentsCollectionView.dequeueReusableCell(withReuseIdentifier: "LastPaymentsCollectionViewCell", for: indexPath) as! LastPaymentsCollectionViewCell
@@ -267,6 +271,10 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                 
                 let item = lastPaymentsCollectionView.dequeueReusableCell(withReuseIdentifier: "LastPaymentsCollectionViewCell", for: indexPath) as! LastPaymentsCollectionViewCell
                 item.nameLabel.text = lastPayment[indexPath.item].phoneNumber
+//                for cell in contacts {
+//                    cell.phoneNumber[0] = lastPayment[indexPath.item].phoneNumber ?? ""
+//                    item.nameLabel.text = cell.name
+//                }
                 if lastPayment.count > 3{
                     item.contactImageView.image = UIImage(named: lastPayment[indexPath.item].bankID ?? "")
                     item.bankNameLabel.isHidden = true
@@ -371,6 +379,8 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                         vc.sbp = true
                     }
                 } else {
+                    vc.selectNumber = lastPayment[indexPath.item].phoneNumber ?? ""
+                    vc.summTransctionField.textField.text = lastPayment[indexPath.item].amount
                     vc.selectBank = lastPayment[indexPath.row].bankName
                     vc.bankImage = UIImage(named: "\(lastPayment[indexPath.row].bankID ?? "")")
                     if lastPayment[indexPath.row].bankName == "ФОРА-БАНК"{
@@ -394,7 +404,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                 guard let numberPhone = contacts[indexPath.item].phoneNumber.first else {
                     return
                 }
-                searchContact.numberTextField.text = numberPhone.dropFirst().description
+//                searchContact.numberTextField[0].text = numberPhone.dropFirst().description
                 getBankList()
                 getLastPhonePayments()
                 

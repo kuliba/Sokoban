@@ -60,6 +60,8 @@
 		68FFA55B268586D3002DADFA /* HeaderBanksCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA559268586D3002DADFA /* HeaderBanksCollectionReusableView.swift */; };
 		68FFA55C268586D3002DADFA /* HeaderBanksCollectionReusableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68FFA55A268586D3002DADFA /* HeaderBanksCollectionReusableView.xib */; };
 		68FFA55F268BF2D2002DADFA /* TransferByRequisitesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA55E268BF2D2002DADFA /* TransferByRequisitesViewController.swift */; };
+		68FFA561268DD2CF002DADFA /* CountriesCodeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA560268DD2CE002DADFA /* CountriesCodeButton.swift */; };
+		68FFA563268DDFCB002DADFA /* SearchContactView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA562268DDFCA002DADFA /* SearchContactView.swift */; };
 		ED0B4892267B4CDD0037EA06 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = ED0B4891267B4CDD0037EA06 /* IQKeyboardManagerSwift */; };
 		ED0B4894267B50F50037EA06 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B4893267B50F50037EA06 /* Int.swift */; };
 		ED0B4896267B97C60037EA06 /* ContactInputViewController + UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B4895267B97C60037EA06 /* ContactInputViewController + UI.swift */; };
@@ -249,6 +251,8 @@
 		68FFA559268586D3002DADFA /* HeaderBanksCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderBanksCollectionReusableView.swift; sourceTree = "<group>"; };
 		68FFA55A268586D3002DADFA /* HeaderBanksCollectionReusableView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HeaderBanksCollectionReusableView.xib; sourceTree = "<group>"; };
 		68FFA55E268BF2D2002DADFA /* TransferByRequisitesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferByRequisitesViewController.swift; sourceTree = "<group>"; };
+		68FFA560268DD2CE002DADFA /* CountriesCodeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesCodeButton.swift; sourceTree = "<group>"; };
+		68FFA562268DDFCA002DADFA /* SearchContactView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchContactView.swift; sourceTree = "<group>"; };
 		ED0B4893267B50F50037EA06 /* Int.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
 		ED0B4895267B97C60037EA06 /* ContactInputViewController + UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContactInputViewController + UI.swift"; sourceTree = "<group>"; };
 		ED0B489B267D41A60037EA06 /* PaymentsDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsDetailsView.swift; sourceTree = "<group>"; };
@@ -461,6 +465,8 @@
 			children = (
 				68FFA5442682F48C002DADFA /* SearchContact.swift */,
 				68FFA5462682F49A002DADFA /* SearchContact.xib */,
+				68FFA560268DD2CE002DADFA /* CountriesCodeButton.swift */,
+				68FFA562268DDFCA002DADFA /* SearchContactView.swift */,
 			);
 			path = SearchNumberPhone;
 			sourceTree = "<group>";
@@ -1555,11 +1561,13 @@
 				0B7A18C526852EFC0007CC75 /* MakeTransferDecodableModel.swift in Sources */,
 				EDB14528266624EE0028EF5A /* OrderCardView.swift in Sources */,
 				EDF68219266F9EC800FD5C07 /* RouterBaseUrlList.swift in Sources */,
+				68FFA563268DDFCB002DADFA /* SearchContactView.swift in Sources */,
 				68FFA5452682F48C002DADFA /* SearchContact.swift in Sources */,
 				0B7A18C72685BD130007CC75 /* GetBanksDecodableModel.swift in Sources */,
 				0B8BE093266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift in Sources */,
 				ED4FC60B266CD1020092B4AB /* СountryCell.swift in Sources */,
 				0B7A18B82683A9940007CC75 /* FileManagerHelper.swift in Sources */,
+				68FFA561268DD2CF002DADFA /* CountriesCodeButton.swift in Sources */,
 				EDFFCACD2681F975004EE095 /* CardListView.swift in Sources */,
 				ED4FC61A266EA42E0092B4AB /* AppLocker.swift in Sources */,
 				0BF34854268B2699005138A8 /* PrepareExternalDecodableModel.swift in Sources */,

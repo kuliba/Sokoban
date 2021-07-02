@@ -7,44 +7,34 @@
 
 import UIKit
 
-protocol MyPickerDelegate: NSObjectProtocol {
-    func didSelectSomething(some: String)
-}
-protocol PizzaDelegate {
-    func onPizzaReady(type: String)
+protocol SelectImageDelegate {
+    func didSelectImage(image: String)
 }
 
-class SearchContact: UIView{
-    func doSomethingWith(data: String) {
-        numberTextField.text = data
-    }
-    
-    func passUpdateData(data: String) {
-        numberTextField.text = data
-    }
-    
-    func onPizzaReady(type: String) {
-         numberTextField.text = type
-    }
-    
-    func didSelectSomething(some: String) {
-        numberTextField.text = some
-    }
+class SearchContact: UIView, UITextFieldDelegate{
     
 
-   
-    weak var myDelegate: MyPickerDelegate?
-    var searchText: String?
- 
-    // this is going to be our container object
-      
-     //This Boolean, you can choose whatever you want.
-
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+//        let stringMatch = string.rangeOfString(numberTextField.text)
+//        delegate?.didSelectImage(image: numberTextField[0].text ?? "nil")
+        return true
+    }
     @IBOutlet weak var numberTextField: UITextField!
+    
+    @IBOutlet weak var searchView: SearchContact!
+    @IBAction func valueChanged(_ sender: UITextField) {
+        print("123")
+    }
+    
+    //    @IBOutlet weak var numberTextField2: UITextField!
+    var delegate: SelectImageDelegate? = nil
+    var searchText: String?
+    
+    
     
     override func layoutSubviews() {
         super.layoutSubviews()
-    
+       
 //        self.delegate = self
         roundCorners(corners: .allCorners, radius: 10)
         self.layer.borderWidth = 1
@@ -52,17 +42,8 @@ class SearchContact: UIView{
         
         
     }
-    
-    @IBAction func changeValue(_ sender: UITextField) {
-//        myDelegate?.didSelectSomething(some: numberTextField.text ?? "")
-        print(numberTextField.text)
-        
-    }
-    
-    override class func awakeFromNib() {
-    }
-    
-      // other usual outlets
+
+    // other usual outlets
 
 //       func initialize() {
 //
