@@ -11,6 +11,8 @@ class CardListView: UIView {
     
     //MARK: - Property
     let reuseIdentifier = "CardCell"
+    let newReuseIdentifier = "NewCardCell"
+    
     var cardList = [GetProductListDatum]() {
         didSet {
             DispatchQueue.main.async {
@@ -18,7 +20,7 @@ class CardListView: UIView {
             }
         }
     }
-    
+    var onlyMy: Bool = true
     var filteredCardList = [GetProductListDatum]() {
         didSet {
             DispatchQueue.main.async {
@@ -26,7 +28,13 @@ class CardListView: UIView {
             }
         }
     }
-    var isFiltered = false
+    var isFiltered = false {
+        didSet {
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+        }
+    }
     
     var didCardTapped: ((GetProductListDatum) -> Void)?
     let changeCardButtonCollection = AllCardView()
@@ -42,21 +50,31 @@ class CardListView: UIView {
     //MARK: - Viewlifecicle
     override init(frame: CGRect) {
         super.init(frame: frame)
-        commonInit()
+        commonInit(onlyMy: true)
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        commonInit()
+        commonInit(onlyMy: true)
+    }
+    
+    required init(frame: CGRect = .zero, onlyMy: Bool) {
+        super.init(frame: frame)
+        commonInit(onlyMy: onlyMy)
     }
     
 
-    func commonInit() {
+    func commonInit(onlyMy: Bool) {
+        self.onlyMy = onlyMy
+        print("GEBUG: only:", self.onlyMy)
         
+//        let height: CGFloat = self.onlyMy ? 110 : 80
+        changeCardButtonCollection.isHidden = !self.onlyMy
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.heightAnchor.constraint(equalToConstant: 110).isActive = true
+        self.heightAnchor.constraint(equalToConstant: self.onlyMy ? 110 : 80).isActive = true
         setupCollectionView()
         isHidden = true
+        alpha = 0
         changeCardButtonCollection.complition = { (select) in
             switch select {
             case 1:
@@ -76,13 +94,14 @@ class CardListView: UIView {
         addSubview(changeCardButtonCollection)
         addSubview(collectionView)
         changeCardButtonCollection.anchor(top: self.topAnchor, left: self.leftAnchor,
-                                          right: self.rightAnchor, height: 30)
+                                          right: self.rightAnchor, height: self.onlyMy ? 30 : 0)
         collectionView.anchor(top: changeCardButtonCollection.bottomAnchor, left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor)
         
         collectionView.backgroundColor = .white
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(CardCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView.register(NewCardCell.self, forCellWithReuseIdentifier: newReuseIdentifier)
     }
     
 }
@@ -127,8 +146,15 @@ extension CardListView: UICollectionViewDelegateFlowLayout {
 //MARK: - CollectionView Delegate
 extension CardListView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let card = cardList[indexPath.item]
-        didCardTapped?(card)
+        
+        if isFiltered {
+            let card = filteredCardList[indexPath.item]
+            didCardTapped?(card)
+        } else {
+            let card = cardList[indexPath.item]
+            didCardTapped?(card)
+        }
+        
     }
 }
 

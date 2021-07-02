@@ -138,6 +138,22 @@ class ContactConfurmViewController: UIViewController {
             image: #imageLiteral(resourceName: "hash"),
             isEditable: false))
     
+    var cardFromField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "С карты",
+            image: #imageLiteral(resourceName: "credit-card"),
+            type: .credidCard,
+            isEditable: false,
+            showChooseButton: true))
+    
+    var cardToField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "На карту",
+            image: #imageLiteral(resourceName: "credit-card"),
+            type: .credidCard,
+            isEditable: false,
+            showChooseButton: false))
+    
     var summTransctionField = ForaInput(
         viewModel: ForaInputModel(
             title: "Сумма перевода",
@@ -178,9 +194,31 @@ class ContactConfurmViewController: UIViewController {
             numberTransctionField.isHidden = true
             phoneField.isHidden = true
             bankField.isHidden = true
-            summTransctionField.text = model.summTransction  //"10 000.00 ₽ "
-            taxTransctionField.text = model.taxTransction //"100.00 ₽ "
+            countryField.isHidden = true
+            currancyTransctionField.isHidden = true
+            
+            let amount = Double(model.summTransction)?.currencyFormatter()
+            summTransctionField.text = amount ?? "" // .currencyFormatter()
+            let tax = Double(model.taxTransction)?.currencyFormatter()
+            taxTransctionField.text = tax ?? ""
+            
+            guard let cardModelFrom = model.cardFrom else { return }
+            guard let cardModelTo = model.cardTo else { return }
+            cardFromField.configCardView(cardModelFrom)
+            cardToField.configCardView(cardModelTo)
+            
+            cardFromField.isHidden = false
+            cardFromField.viewModel.showChooseButton = false
+            cardFromField.chooseButton.isHidden = true
+            cardFromField.balanceLabel.isHidden = true
+            
+            cardToField.isHidden = false
+            cardToField.viewModel.showChooseButton = false
+            cardToField.chooseButton.isHidden = true
+            cardToField.balanceLabel.isHidden = true
         default:
+            cardFromField.isHidden = true
+            cardToField.isHidden = true
             nameField.text =  model.fullName ?? "" //"Колотилин Михаил Алексеевич"
             countryField.text = model.country?.name ?? "" // "Армения"
             numberTransctionField.text = model.numberTransction  //"1235634790"
@@ -216,7 +254,7 @@ class ContactConfurmViewController: UIViewController {
         title = "Подтвердите реквизиты"
         view.backgroundColor = .white
         
-        let stackView = UIStackView(arrangedSubviews: [phoneField, nameField, bankField, countryField, numberTransctionField, summTransctionField, taxTransctionField, currancyTransctionField, smsCodeField, doneButton])
+        let stackView = UIStackView(arrangedSubviews: [phoneField, nameField, bankField, countryField, numberTransctionField, cardFromField, cardToField, summTransctionField, taxTransctionField, currancyTransctionField, smsCodeField, doneButton])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing

@@ -65,6 +65,14 @@ struct CastomPopUpView  {
 class MemeDetailVC : AddHeaderImageViewController {
 
     var titleLabel = UILabel(text: "Между своими", font: .boldSystemFont(ofSize: 16), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
+    
+    var onlyMy = true {
+        didSet {
+//            cardFromListView.onlyMy = onlyMy
+//            cardToListView.onlyMy = onlyMy
+        }
+    }
+    
     var viewModel = ConfirmViewControllerModel(type: .card2card) {
         didSet {
             checkModel(with: viewModel)
@@ -73,22 +81,24 @@ class MemeDetailVC : AddHeaderImageViewController {
     
     var cardFromField = CardChooseView()
     var seporatorView = SeparatorView()
-    var cardFromListView = CardListView()
+    var cardFromListView: CardListView!
     var cardToField = CardChooseView()
-    var cardToListView = CardListView()
+    var cardToListView: CardListView!
     var bottomView = BottomInputView()
     
     var stackView = UIStackView(arrangedSubviews: [])
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupUI()
         setupConstraint()
         setupActions()
+        
     }
     
     private func setupUI() {
+        cardFromListView = CardListView(onlyMy: onlyMy)
+        cardToListView = CardListView(onlyMy: onlyMy)
         self.addHeaderImage()
         self.view.layer.cornerRadius = 20
         self.view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
@@ -96,10 +106,9 @@ class MemeDetailVC : AddHeaderImageViewController {
         self.view.backgroundColor = .white
         self.view.anchor(height: 480)
         
-        let fromTitleLabel = createTopLabel(title: "Откуда")
-        let toTitleLabel = createTopLabel(title: "Куда")
-        
-        stackView = UIStackView(arrangedSubviews: [fromTitleLabel, cardFromField, seporatorView, cardFromListView, toTitleLabel, cardToField, cardToListView])
+        cardFromField.titleLabel.text = "Откуда"
+        cardToField.titleLabel.text = "Куда"
+        stackView = UIStackView(arrangedSubviews: [cardFromField, seporatorView, cardFromListView, cardToField, cardToListView])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fillProportionally
@@ -151,14 +160,22 @@ class MemeDetailVC : AddHeaderImageViewController {
         
         cardFromField.didChooseButtonTapped = { [weak self]  () in
             UIView.animate(withDuration: 0.2) {
-                self?.cardFromListView.isHidden.toggle()
+                if self?.cardFromListView.isHidden == true {
+                    self?.cardFromListView.alpha = 1
+                    self?.cardFromListView.isHidden = false
+                } else {
+                    self?.cardFromListView.alpha = 0
+                    self?.cardFromListView.isHidden = true
+                }
                 
                 self?.seporatorView.curvedLineView.isHidden.toggle()
                 self?.seporatorView.straightLineView.isHidden.toggle()
                 
                 if self?.cardToListView.isHidden == false {
-                    self?.cardToListView.isHidden.toggle()
+                    self?.cardToListView.isHidden = true
+                    self?.cardToListView.alpha = 0
                 }
+                self?.stackView.layoutIfNeeded()
             }
         }
         
@@ -167,23 +184,36 @@ class MemeDetailVC : AddHeaderImageViewController {
             self?.cardFromField.cardModel = card
             UIView.animate(withDuration: 0.2) {
                 self?.cardFromListView.isHidden = true
+                
                 self?.cardToListView.isHidden = true
+                self?.cardFromListView.alpha = 0
                 
                 self?.seporatorView.curvedLineView.isHidden = false
                 self?.seporatorView.straightLineView.isHidden = true
+                
+                self?.stackView.layoutIfNeeded()
             }
         }
         
         cardToField.didChooseButtonTapped = { [weak self]  () in
             UIView.animate(withDuration: 0.2) {
-                self?.cardToListView.isHidden.toggle()
+                if self?.cardToListView.isHidden == true {
+                    self?.cardToListView.alpha = 1
+                    self?.cardToListView.isHidden = false
+                } else {
+                    self?.cardToListView.alpha = 0
+                    self?.cardToListView.isHidden = true
+                }
+                
                 if self?.cardFromListView.isHidden == false {
                     
                     self?.cardFromListView.isHidden = true
+                    self?.cardFromListView.alpha = 0
                     
                     self?.seporatorView.curvedLineView.isHidden = false
                     self?.seporatorView.straightLineView.isHidden = true
                 }
+                self?.stackView.layoutIfNeeded()
             }
         }
         
@@ -192,7 +222,12 @@ class MemeDetailVC : AddHeaderImageViewController {
             self?.cardToField.cardModel = card
             UIView.animate(withDuration: 0.2) {
                 self?.cardFromListView.isHidden = true
+                self?.cardFromListView.alpha = 0
+                
                 self?.cardToListView.isHidden = true
+                self?.cardToListView.alpha = 0
+                
+                self?.stackView.layoutIfNeeded()
             }
         }
         
@@ -214,6 +249,10 @@ class MemeDetailVC : AddHeaderImageViewController {
         guard model.cardFrom != nil, model.cardTo != nil else { return }
         // TODO: какие условия для смены местами: счет - счет, карта - карта?
         self.seporatorView.changeAccountButton.isHidden = false
+        self.bottomView.currencySwitchButton.isHidden = (model.cardFrom?.currency! == model.cardTo?.currency!) ? false : false // Правильно true : false сейчас для теста
+        
+        
+        
     }
     
     //MARK: - API
@@ -232,9 +271,9 @@ class MemeDetailVC : AddHeaderImageViewController {
     func doneButtonTapped(with viewModel: ConfirmViewControllerModel) {
         
         var viewModel = viewModel
-        
+        self.dismissKeyboard()
         DispatchQueue.main.async {
-            self.showActivity()
+            UIApplication.shared.keyWindow?.startIndicatingActivity()
         }
         bottomView.doneButtonIsEnabled(true)
         let body = ["check" : false,
@@ -252,12 +291,13 @@ class MemeDetailVC : AddHeaderImageViewController {
                                 "cardNumber" : viewModel.cardToCardNumber,
                                 "accountId" : viewModel.cardToAccountId,
                                 "accountNumber" : viewModel.cardToAccountNumber,
-                                "phoneNumber" : viewModel.phone
+                                "phoneNumber" : ""
                     ] ] as [String : AnyObject]
         print("DEBUG: ", #function, body)
         NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer, [:], body) { [weak self] model, error in
-            
-            self?.dismissActivity()
+            DispatchQueue.main.async {
+                UIApplication.shared.keyWindow?.stopIndicatingActivity()
+            }
             self?.bottomView.doneButtonIsEnabled(false)
             if error != nil {
                 guard let error = error else { return }
@@ -270,7 +310,9 @@ class MemeDetailVC : AddHeaderImageViewController {
                     print("DEBUG: cardToCard payment Succses", #function, model ?? "nil")
                     DispatchQueue.main.async {
                         let vc = ContactConfurmViewController()
+                        vc.modalPresentationStyle = .fullScreen
                         vc.confurmVCModel = viewModel
+                        vc.addCloseButton()
                         vc.title = "Подтвердите реквизиты"
                         let navVC = UINavigationController(rootViewController: vc)
                         self?.present(navVC, animated: true)
