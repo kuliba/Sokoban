@@ -106,10 +106,9 @@ class MemeDetailVC : AddHeaderImageViewController {
         self.view.backgroundColor = .white
         self.view.anchor(height: 480)
         
-        let fromTitleLabel = createTopLabel(title: "Откуда")
-        let toTitleLabel = createTopLabel(title: "Куда")
-        
-        stackView = UIStackView(arrangedSubviews: [fromTitleLabel, cardFromField, seporatorView, cardFromListView, toTitleLabel, cardToField, cardToListView])
+        cardFromField.titleLabel.text = "Откуда"
+        cardToField.titleLabel.text = "Куда"
+        stackView = UIStackView(arrangedSubviews: [cardFromField, seporatorView, cardFromListView, cardToField, cardToListView])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fillProportionally
@@ -176,6 +175,7 @@ class MemeDetailVC : AddHeaderImageViewController {
                     self?.cardToListView.isHidden = true
                     self?.cardToListView.alpha = 0
                 }
+                self?.stackView.layoutIfNeeded()
             }
         }
         
@@ -190,6 +190,8 @@ class MemeDetailVC : AddHeaderImageViewController {
                 
                 self?.seporatorView.curvedLineView.isHidden = false
                 self?.seporatorView.straightLineView.isHidden = true
+                
+                self?.stackView.layoutIfNeeded()
             }
         }
         
@@ -211,6 +213,7 @@ class MemeDetailVC : AddHeaderImageViewController {
                     self?.seporatorView.curvedLineView.isHidden = false
                     self?.seporatorView.straightLineView.isHidden = true
                 }
+                self?.stackView.layoutIfNeeded()
             }
         }
         
@@ -223,6 +226,8 @@ class MemeDetailVC : AddHeaderImageViewController {
                 
                 self?.cardToListView.isHidden = true
                 self?.cardToListView.alpha = 0
+                
+                self?.stackView.layoutIfNeeded()
             }
         }
         

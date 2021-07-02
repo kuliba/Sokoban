@@ -13,6 +13,7 @@ class CardChooseView: UIView {
     let kContentXibName = "CardChooseView"
     
     @IBOutlet var contentView: UIView!
+    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var cardTypeImage: UIImageView!
     @IBOutlet weak var balanceLabel: UILabel!
@@ -44,7 +45,7 @@ class CardChooseView: UIView {
     func commonInit() {
         Bundle.main.loadNibNamed(kContentXibName, owner: self, options: nil)
         contentView.fixInView(self)
-        self.anchor(height: 44)
+        self.anchor(height: 64)
         hideAll(true)
         
     }
@@ -56,7 +57,10 @@ class CardChooseView: UIView {
         hideAll(false)
         let balance = Double(model.balance ?? 0)
         self.balanceLabel.text = balance.currencyFormatter()
-        self.numberCardLabel.text = model.productName
+        let text = NSAttributedString(string: model.productName ?? "",
+                                      attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14),
+                                                   NSAttributedString.Key.foregroundColor : UIColor.black])
+        self.numberCardLabel.attributedText = text
         self.maskNumberLabel.text = "• \(model.number?.suffix(4) ?? "")"
         self.nameLabel.text = model.customName ?? model.name ?? ""
         self.setupCardImage(with: model.number ?? "")

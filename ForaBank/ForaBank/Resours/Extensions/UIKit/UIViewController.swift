@@ -74,6 +74,8 @@ extension UIViewController {
 extension UIWindow {
     private static let association = ObjectAssociation<UIActivityIndicatorView>()
     
+    private static var visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
+    
     var activityIndicator: UIActivityIndicatorView {
         set { UIWindow.association[self] = newValue }
         get {
@@ -104,6 +106,25 @@ extension UIWindow {
             UIApplication.shared.endIgnoringInteractionEvents()
         }
     }
+    
+    public func addBlure() {
+        DispatchQueue.main.async {
+            UIWindow.visualEffectView.alpha = 0.97
+            UIWindow.visualEffectView.frame =
+                CGRect(x: 0.0, y: 0.0,
+                       width: UIScreen.main.bounds.size.width,
+                       height: UIScreen.main.bounds.size.height)
+            self.addSubview(UIWindow.visualEffectView)
+            
+        }
+    }
+    
+    public func deleteBlure() {
+        DispatchQueue.main.async {
+            UIWindow.visualEffectView.removeFromSuperview()
+        }
+    }
+    
     
 }
 

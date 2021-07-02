@@ -28,7 +28,13 @@ class CardListView: UIView {
             }
         }
     }
-    var isFiltered = false
+    var isFiltered = false {
+        didSet {
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+        }
+    }
     
     var didCardTapped: ((GetProductListDatum) -> Void)?
     let changeCardButtonCollection = AllCardView()
