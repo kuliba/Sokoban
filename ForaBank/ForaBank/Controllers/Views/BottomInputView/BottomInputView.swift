@@ -37,6 +37,8 @@ class BottomInputView: UIView {
         }
     }
     
+    private let currencyFormatter = CurrencyFormatter(maximumFractionDigits: 2)
+    
     var didDoneButtonTapped: ((_ amaunt: String) -> Void)?
     
     //MARK: - Viewlifecicle
@@ -85,7 +87,7 @@ class BottomInputView: UIView {
     func doneButtonIsEnabled(_ isEnabled: Bool) {
         DispatchQueue.main.async {
             UIView.animate(withDuration: 0.2) {
-                self.doneButton.backgroundColor = isEnabled ? #colorLiteral(red: 0.8274509804, green: 0.8274509804, blue: 0.8274509804, alpha: 1) : #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
+                self.doneButton.backgroundColor = isEnabled ? #colorLiteral(red: 0.2980068028, green: 0.2980631888, blue: 0.3279978037, alpha: 1) : #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
                 self.doneButton.isEnabled = isEnabled ? false : true
             }
         }
@@ -104,4 +106,71 @@ extension BottomInputView: UITextFieldDelegate {
         }
         
     }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        let newText = (textField.text! as NSString).replacingCharacters(in: range, with: string)
+        guard !newText.isEmpty, textField.keyboardType == .decimalPad else { return true }
+        
+        let separator = self.currencyFormatter.decimalSeparator!
+        let components = newText.components(separatedBy: separator)
+        
+        // Stop exceeding maximumFractionDigits
+        if components.count > 1 && components[1].count > self.currencyFormatter.maximumFractionDigits {
+            return false
+        }
+        
+        guard let cleaned = components.first?.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression) else { return true }
+        
+        var doubleValue: Double?
+        if (components.count > 1) {
+            doubleValue = Double(cleaned + "." + components[1])
+        }
+        
+        if let value = doubleValue ?? Double(cleaned) {
+            var formatted = self.currencyFormatter.beautify(value)
+            if (components.count > 1 && (components[1].isEmpty || components[1].range(of: "^0*$", options: .regularExpression) != nil)) {
+                formatted += separator + components[1]
+            }
+            textField.text = formatted
+        }
+        
+        return false
+        
+    }
+    
+}
+
+
+class CurrencyFormatter: NumberFormatter {
+
+    override init() {
+        super.init()
+
+        self.currencySymbol = ""
+        self.minimumFractionDigits = 0
+        self.numberStyle = .currency
+    }
+
+    convenience init(locale: String) {
+        self.init()
+        self.locale = Locale(identifier: locale)
+    }
+
+    convenience init(maximumFractionDigits: Int) {
+        self.init()
+        self.maximumFractionDigits = maximumFractionDigits
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    func beautify(_ price: Double) -> String {
+        let formatted = self.string(from: NSNumber(value: price))!
+
+        // Fixes an extra space that is left sometimes at the end of the string
+        return formatted.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+    }
+
 }

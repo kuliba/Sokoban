@@ -249,6 +249,10 @@ class MemeDetailVC : AddHeaderImageViewController {
         guard model.cardFrom != nil, model.cardTo != nil else { return }
         // TODO: какие условия для смены местами: счет - счет, карта - карта?
         self.seporatorView.changeAccountButton.isHidden = false
+        self.bottomView.currencySwitchButton.isHidden = (model.cardFrom?.currency! == model.cardTo?.currency!) ? false : false // Правильно true : false сейчас для теста
+        
+        
+        
     }
     
     //MARK: - API

@@ -67,7 +67,7 @@ extension CreatTransferDecodableModel {
 
 // MARK: - CreatTransferDataClass
 struct CreatTransferDataClass: Codable {
-    let creditAmount, currencyRate, debitAmount, fee: Double?
+    let amount, creditAmount, currencyRate, debitAmount, fee: Double?
     let needMake: Bool?
     let currencyAmount, currencyPayer, currencyPayee: String?
 }
@@ -91,6 +91,7 @@ extension CreatTransferDataClass {
     }
 
     func with(
+        amount: Double?? = nil,
         creditAmount: Double?? = nil,
         currencyRate: Double?? = nil,
         debitAmount: Double?? = nil,
@@ -101,6 +102,7 @@ extension CreatTransferDataClass {
         currencyPayee: String?? = nil
     ) -> CreatTransferDataClass {
         return CreatTransferDataClass(
+            amount: amount ?? self.amount,
             creditAmount: creditAmount ?? self.creditAmount,
             currencyRate: currencyRate ?? self.currencyRate,
             debitAmount: debitAmount ?? self.debitAmount,
