@@ -37,6 +37,8 @@ extension NetworkHelper {
         case keyExchange
 
         case getCountries
+        
+        case getBanks
 
         case anywayPaymentBegin
 

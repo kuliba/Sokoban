@@ -21,8 +21,11 @@ extension PaymentsViewController: UICollectionViewDelegate {
             }
         case .transfers:
             if indexPath.row == 0 {
-                let popView = CastomPopUpView()
-                popView.showAlert()
+                let popView = MemeDetailVC()
+                popView.modalPresentationStyle = .custom
+                popView.transitioningDelegate = self
+                self.present(popView, animated: true, completion: nil)
+                
             } else if indexPath.row == 3 {
                 let popView = CastomPopUpView()
                 popView.a.onlyMy = false
@@ -52,3 +55,10 @@ extension PaymentsViewController: UICollectionViewDelegate {
     }
     
 }
+
+extension PaymentsViewController: UIViewControllerTransitioningDelegate {
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        PresentationController(presentedViewController: presented, presenting: presenting)
+    }
+}
+

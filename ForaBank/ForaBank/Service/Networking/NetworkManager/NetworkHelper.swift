@@ -185,7 +185,76 @@ struct NetworkHelper {
                                 guard let countries = model?.data?.countriesList else { return }
                                 completion(countries, nil)
                             } else {
-                                print("DEBUG: Модель уже есть в UserDefaults")
+                                print("DEBUG: CountriesList уже есть")
+                            }
+                            
+                        } else {
+                            let error = model?.errorMessage ?? "nil"
+                            print("DEBUG: ", #function, error)
+                            completion(nil, error)
+                        }
+                    }
+                }
+            }
+            
+        case .getBanks:
+                        
+            if let countriesListSerial = UserDefaults().object(forKey: "CountriesListSerial") as? String {
+
+                guard let documentsDirectoryUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+                let filePath = documentsDirectoryUrl.appendingPathComponent("BanksList.json")
+                
+                // Read data from .json file and transform data into an array
+                do {
+                    let data = try Data(contentsOf: filePath, options: [])
+                    
+                    let list = try JSONDecoder().decode(GetBanksDataClass.self, from: data)
+                    
+                    completion(list.banksList, nil)
+                } catch {
+                    print(error)
+                }
+                
+                getBanks(withId: countriesListSerial)
+                
+            } else {
+                getBanks()
+            }
+            
+            func getBanks(withId: String? = nil) {
+                
+                let param = ["serial" : withId ?? ""]
+                print("DEBUG: getBanks param", param)
+                NetworkManager<GetBanksDecodableModel>.addRequest(.getBanks, param, body) { model, error in
+                    if error != nil {
+                        guard let error = error else { return }
+                        print("DEBUG: ", #function, error)
+                        completion(nil, error)
+                    } else {
+                        guard let statusCode = model?.statusCode else { return }
+                        if statusCode == 0 {
+                            if model?.data?.serial != withId {
+                                
+                                guard let data = model?.data else { return }
+                                
+                                let pathDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                                try? FileManager().createDirectory(at: pathDirectory, withIntermediateDirectories: true)
+                                let filePath = pathDirectory.appendingPathComponent("BanksList.json")
+
+                                let json = try? JSONEncoder().encode(data)
+
+                                do {
+                                     try json!.write(to: filePath)
+                                } catch {
+                                    print("Failed to write JSON data: \(error.localizedDescription)")
+                                }
+                                
+                                UserDefaults().set(data.serial, forKey: "BanksListSerial")
+                                
+                                guard let banks = model?.data?.banksList else { return }
+                                completion(banks, nil)
+                            } else {
+                                print("DEBUG: BanksList уже есть")
                             }
                             
                         } else {

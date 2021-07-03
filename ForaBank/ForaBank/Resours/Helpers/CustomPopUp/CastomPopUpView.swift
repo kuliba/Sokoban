@@ -97,18 +97,24 @@ class MemeDetailVC : AddHeaderImageViewController {
     }
     
     private func setupUI() {
+        cardFromField.titleLabel.text = "Откуда"
         cardFromListView = CardListView(onlyMy: onlyMy)
+        
+        cardToField.titleLabel.text = "Куда"
         cardToListView = CardListView(onlyMy: onlyMy)
+        
         self.addHeaderImage()
         self.view.layer.cornerRadius = 20
         self.view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         self.view.clipsToBounds = true
         self.view.backgroundColor = .white
-        self.view.anchor(height: 480)
+        self.view.anchor(width: UIScreen.main.bounds.width, height: 450)
         
-        cardFromField.titleLabel.text = "Откуда"
-        cardToField.titleLabel.text = "Куда"
-        stackView = UIStackView(arrangedSubviews: [cardFromField, seporatorView, cardFromListView, cardToField, cardToListView])
+        stackView = UIStackView(arrangedSubviews: [cardFromField,
+                                                   seporatorView,
+                                                   cardFromListView,
+                                                   cardToField,
+                                                   cardToListView])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fillProportionally

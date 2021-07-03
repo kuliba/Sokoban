@@ -77,6 +77,7 @@
 		ED39EC8E268B4F4C00158E46 /* CardChooseView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED39EC8D268B4F4C00158E46 /* CardChooseView.xib */; };
 		ED39EC91268C8FA800158E46 /* SVGKit in Frameworks */ = {isa = PBXBuildFile; productRef = ED39EC90268C8FA800158E46 /* SVGKit */; };
 		ED39EC93268C9AE900158E46 /* NewCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED39EC92268C9AE900158E46 /* NewCardCell.swift */; };
+		ED3A966E2690A80B00252857 /* PresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3A966D2690A80B00252857 /* PresentationController.swift */; };
 		ED4FC5EC266AD98E0092B4AB /* NSCollectionLayoutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EB266AD98E0092B4AB /* NSCollectionLayoutItem.swift */; };
 		ED4FC5EF266B70A00092B4AB /* PartialTransparentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EE266B70A00092B4AB /* PartialTransparentView.swift */; };
 		ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5F9266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift */; };
@@ -267,6 +268,7 @@
 		ED39EC8B268B4F0800158E46 /* CardChooseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardChooseView.swift; sourceTree = "<group>"; };
 		ED39EC8D268B4F4C00158E46 /* CardChooseView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CardChooseView.xib; sourceTree = "<group>"; };
 		ED39EC92268C9AE900158E46 /* NewCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCardCell.swift; sourceTree = "<group>"; };
+		ED3A966D2690A80B00252857 /* PresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationController.swift; sourceTree = "<group>"; };
 		ED4FC5EB266AD98E0092B4AB /* NSCollectionLayoutItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSCollectionLayoutItem.swift; sourceTree = "<group>"; };
 		ED4FC5EE266B70A00092B4AB /* PartialTransparentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartialTransparentView.swift; sourceTree = "<group>"; };
 		ED4FC5F9266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmsCodeBasicAttributes.swift; sourceTree = "<group>"; };
@@ -741,6 +743,7 @@
 				0B7A18CC2689C4B60007CC75 /* CustomPopUp */,
 				0B7A18B72683A9940007CC75 /* FileManagerHelper.swift */,
 				0B7A18B92683AC880007CC75 /* NotificationName.swift */,
+				ED3A966D2690A80B00252857 /* PresentationController.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1478,6 +1481,7 @@
 				EDFFCAF0268245EC004EE095 /* CardViewModel.swift in Sources */,
 				0B9EC85D26739C0000D86EB2 /* GetCountriesDecodebleModel.swift in Sources */,
 				68FFA54C2684C854002DADFA /* PDFViewerViewController.swift in Sources */,
+				ED3A966E2690A80B00252857 /* PresentationController.swift in Sources */,
 				ED0B489C267D41A60037EA06 /* PaymentsDetailsView.swift in Sources */,
 				ED4FC602266C0AB50092B4AB /* ChooseCountryTableViewController.swift in Sources */,
 				EDF6821A266F9EC800FD5C07 /* RouterUrlList.swift in Sources */,

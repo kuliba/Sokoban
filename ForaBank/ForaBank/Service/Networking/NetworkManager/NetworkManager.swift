@@ -38,6 +38,7 @@ final class NetworkManager<T: NetworkModelProtocol>{
                 urlComponents.queryItems?.append(queryItem)
             })
 
+            print("DEBUG: URLrequest:", urlComponents.url ?? "")
             request.url = urlComponents.url
         }
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
