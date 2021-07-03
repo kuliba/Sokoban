@@ -25,14 +25,15 @@ class PaymentByPhoneViewController: UIViewController {
             title: "Счет списания",
             image: #imageLiteral(resourceName: "credit-card"),
             type: .credidCard,
-            isEditable: false))
+            isEditable: false
+            ))
     
     var bankPayeer = ForaInput(
         viewModel: ForaInputModel(
             title: "Банк получателя",
             image: UIImage(),
-            type: .credidCard,
-            isEditable: false)
+            isEditable: false,
+            showChooseButton: true)
             )
     
     var nameField = ForaInput(
@@ -79,10 +80,13 @@ class PaymentByPhoneViewController: UIViewController {
         return button
     }()
     
+    var selectNumber: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        if selectNumber != nil{
+            phoneField.textField.text = selectNumber
+        }
         setupUI()
         hideKeyboardWhenTappedAround()
         getCardList()
@@ -222,9 +226,12 @@ class PaymentByPhoneViewController: UIViewController {
         guard let number = phoneField.textField.text else {
             return
         }
+        guard let sum = summTransctionField.textField.text else {
+            return
+        }
         let body = ["payerCardNumber": "4656260150230695",
-                    "payeePhone": "9260537633",
-                    "amount": 10
+                    "payeePhone": "\(number)",
+                    "amount": sum
                     ] as [String: AnyObject]
         NetworkManager<PrepareCard2PhoneDecodableModel>.addRequest(.prepareCard2Phone, [:], body) { model, error in
             if error != nil {
@@ -326,11 +333,8 @@ class PaymentByPhoneViewController: UIViewController {
             guard let model = model else { return }
             if model.statusCode == 0 {
                 print("DEBUG: Success send Phone")
-                DispatchQueue.main.sync {
                     self.dismissActivity()
                     self.endSBPPayment2()
-
-                }
 //                let model = ConfurmViewControllerModel(
 //                    country: country,
 //                    model: model)

@@ -8,7 +8,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SearchContact" customModule="ForaBank" customModuleProvider="target"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="SearchContact" customModule="ForaBank" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="420" height="45"/>
@@ -34,7 +34,7 @@
                                 </preferredSymbolConfiguration>
                             </state>
                         </button>
-                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Номер телефона или имя" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uBl-9R-atN" customClass="MaskedTextField" customModule="ForaBank" customModuleProvider="target">
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Номер телефона или имя" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uBl-9R-atN">
                             <rect key="frame" x="98.5" y="0.0" width="301.5" height="45"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="45" id="ZGx-xV-knr"/>
@@ -42,7 +42,8 @@
                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                             <textInputTraits key="textInputTraits"/>
                             <connections>
-                                <action selector="changeValue:" destination="iN0-l3-epB" eventType="valueChanged" id="CNu-Ip-FZz"/>
+                                <action selector="valueChanged:" destination="-1" eventType="valueChanged" id="sKW-Mx-T81"/>
+                                <outlet property="delegate" destination="-1" id="g5T-yP-NHE"/>
                             </connections>
                         </textField>
                     </subviews>
@@ -57,7 +58,8 @@
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
-                <outlet property="numberTextField" destination="uBl-9R-atN" id="bDx-op-ZsV"/>
+                <outlet property="numberTextField" destination="uBl-9R-atN" id="ObP-9l-1dM"/>
+                <outlet property="searchView" destination="-1" id="6QA-jO-6Em"/>
             </connections>
             <point key="canvasLocation" x="-186.95652173913044" y="-74.665178571428569"/>
         </view>

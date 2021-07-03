@@ -35,7 +35,6 @@ class PhoneConfirmViewController: UIViewController {
         viewModel: ForaInputModel(
             title: "Банк получателя",
             image: UIImage(),
-            type: .credidCard,
             isEditable: false,
             showChooseButton: false)
             )

@@ -44,7 +44,7 @@
                             </label>
                         </subviews>
                     </stackView>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="contactBankImage" translatesAutoresizingMaskIntoConstraints="NO" id="XSC-1l-tTp">
+                    <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="contactBankImage" translatesAutoresizingMaskIntoConstraints="NO" id="XSC-1l-tTp">
                         <rect key="frame" x="253" y="18" width="24" height="24"/>
                         <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small" weight="ultraLight"/>
                     </imageView>
