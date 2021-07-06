@@ -6,9 +6,38 @@
 //
 
 import UIKit
+import SVGKit
 
 class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate {
 
+    
+    
+    var selectedBank: BanksList? {
+        didSet {
+            guard let bank = selectedBank else { return }
+            setupBankField(bank: bank)
+        }
+    }
+    var banks: [BanksList]? {
+        didSet {
+            guard let banks = banks else { return }
+            bankListView.bankList = banks
+        }
+    }
+    var bankListView = BankListView()
+
+    private func setupBankField(bank: BanksList) {
+        self.bikBankField.text = bank.memberNameRus ?? "" //"АйДиБанк"
+        self.bikBankField.imageView.image = convertSVGStringToImage(bank.svgImage ?? "")
+    }
+    func convertSVGStringToImage(_ string: String) -> UIImage {
+        let stringImage = string.replacingOccurrences(of: "\\", with: "")
+        let imageData = Data(stringImage.utf8)
+        let imageSVG = SVGKImage(data: imageData)
+        let image = imageSVG?.uiImage ?? UIImage()
+        return image
+    }
+    
     var selectedCardNumber: String?
     var payerINN = "0"
     
@@ -79,7 +108,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+         
         
         getCardList { [weak self] data ,error in
             DispatchQueue.main.async {
@@ -165,12 +194,97 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     func setupActions() {
         getCardList { [weak self] data ,error in
             DispatchQueue.main.async {
+                
                 if error != nil {
-                    print("Ошибка", error!)
+                    self?.showAlert(with: "Ошибка", and: error!)
                 }
                 guard let data = data else { return }
                 self?.cardListView.cardList = data
+                
+                if data.count > 0 {
+                    self?.cardField.configCardView(data.first!)
+                    guard let cardNumber  = data.first?.number else { return }
+                    self?.selectedCardNumber = cardNumber
+                }
             }
+        }
+        
+        getBankList { [weak self]  banksList, error in
+            DispatchQueue.main.async {
+                if error != nil {
+                    self?.showAlert(with: "Ошибка", and: error!)
+                }
+                
+                guard let banksList = banksList else { return }
+                var filteredbanksList : [BanksList] = []
+                
+                banksList.forEach { bank in
+                    guard let codeList = bank.paymentSystemCodeList else { return }
+//                    guard let countrylist = self?.country?.paymentSystemCodeList else { return }
+//                    countrylist.forEach { code in
+//                        if codeList.contains(code) {
+//                            filteredbanksList.append(bank)
+//                        }
+//                    }
+                }
+                self?.banks = filteredbanksList
+            }
+        }
+        
+        bankListView.didBankTapped = { (bank) in
+            self.selectedBank = bank
+//            self.openOrHideView(self.bankListView)
+            self.hideView(self.bankListView, needHide: true)
+            self.hideView(self.cardListView, needHide: true)
+        }
+        
+     
+        
+        cardField.didChooseButtonTapped = { () in
+            print("cardField didChooseButtonTapped")
+            self.openOrHideView(self.cardListView)
+            self.hideView(self.bankListView, needHide: true)
+        }
+        
+        bikBankField.didChooseButtonTapped = { () in
+            print("bankField didChooseButtonTapped")
+            self.openOrHideView(self.bankListView)
+            self.hideView(self.cardListView, needHide: true)
+        }
+        
+        cardListView.didCardTapped = { card in
+            self.cardField.configCardView(card)
+            self.selectedCardNumber = card.number ?? ""
+            
+            self.hideView(self.cardListView, needHide: true)
+            self.hideView(self.bankListView, needHide: true)
+            
+        }
+        
+        bottomView.didDoneButtonTapped = { [weak self] (_) in
+            self?.doneButtonTapped()
+        }
+    }
+    
+    private func openOrHideView(_ view: UIView) {
+        UIView.animate(withDuration: 0.2) {
+            if view.isHidden == true {
+                view.alpha = 1
+                view.isHidden = false
+            } else {
+                view.alpha = 0
+                view.isHidden = true
+            }
+            self.stackView.layoutIfNeeded()
+        }
+    }
+    
+
+    private func hideView(_ view: UIView, needHide: Bool) {
+        UIView.animate(withDuration: 0.2) {
+            view.alpha = needHide ? 0 : 1
+            view.isHidden = needHide
+            self.stackView.layoutIfNeeded()
         }
     }
     
@@ -404,5 +518,16 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         }
     }
     
+    func getBankList(completion: @escaping (_ banksList: [BanksList]?, _ error: String?)->()) {
+        
+        NetworkHelper.request(.getBanks) { banksList , error in
+            if error != nil {
+                completion(nil, error)
+            }
+            guard let banksList = banksList as? [BanksList] else { return }
+            completion(banksList, nil)
+            print("DEBUG: Load Banks List... Count is: ", banksList.count)
+        }
+    }
     
 }
