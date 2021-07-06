@@ -152,14 +152,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         
         bikBankField.didChooseButtonTapped = { () in
             UIView.animate(withDuration: 0.2) {
-//                self.openOrHideView(self.bankListView) // TODO: как нибудь переделать
-                if self.bankListView.isHidden == true {
-                    self.bankListView.isHidden = false
-                    self.bankListView.alpha = 1
-                } else {
-                    self.bankListView.isHidden = true
-                    self.bankListView.alpha = 0
-                }
+                self.openOrHideView(self.bankListView) 
             }
         }
                 
