@@ -8,17 +8,19 @@
 import Foundation
 
 
-public struct Country : Decodable {
-    
-    static var countries: [CountriesList]?
-    
-    public let name : String?
-    public let code : String?
-    public let imageSVGString : String?
-    
-    enum CodingKeys: String, CodingKey {
-        case name
-        case code
-        case imageSVGString
-    }
-}
+//public struct Country : Codable {
+//
+//    static var countries: [CountriesList]?
+//
+//    public let name : String?
+//    public let code : String?
+//    public let imageSVGString : String?
+//    public let paymentSystemIdList : [PaymentSystemIDList]?
+//
+//    enum CodingKeys: String, CodingKey {
+//        case name
+//        case code
+//        case imageSVGString
+//        case paymentSystemIdList
+//    }
+//}

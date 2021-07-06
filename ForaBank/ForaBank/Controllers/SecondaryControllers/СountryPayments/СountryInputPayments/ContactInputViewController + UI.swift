@@ -27,18 +27,18 @@ extension ContactInputViewController {
         //  view1.addSubview(stackView)
         // scroll add view1
         
-        stackView = UIStackView(arrangedSubviews: [foraSwitchView, surnameField, nameField, secondNameField, phoneField, bankField, cardField, cardListView])
+        stackView = UIStackView(arrangedSubviews: [foraSwitchView, surnameField, nameField, secondNameField, phoneField, bankField, bankListView, cardField, cardListView])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
-        stackView.spacing = 20
+        stackView.spacing = 16
         stackView.isUserInteractionEnabled = true
         view.addSubview(stackView)
         
         setupConstraint()
     }
     
-    func configure(with: Country?, byPhone: Bool) {
+    func configure(with: CountriesList?, byPhone: Bool) {
         guard let country = country else { return }
         UIView.animate(withDuration: 0.1) {
             self.needShowSwitchView = country.code == "AM" ? true : false
@@ -48,6 +48,7 @@ extension ContactInputViewController {
             self.surnameField.isHidden = byPhone ? true : false
             self.nameField.isHidden = byPhone ? true : false
             self.secondNameField.isHidden = byPhone ? true : false
+            self.stackView.layoutIfNeeded()
         }
         
         let navImage = byPhone ? #imageLiteral(resourceName: "MigAvatar") : #imageLiteral(resourceName: "Vector")
@@ -60,7 +61,7 @@ extension ContactInputViewController {
             ? "Денежные переводы МИГ"
             : "Денежные переводы Contact"
         
-        self.navigationItem.titleView = self.setTitle(title: countryName, subtitle: subtitle)
+        self.navigationItem.titleView = self.setTitle(title: countryName.capitalizingFirstLetter(), subtitle: subtitle)
         
     }
     

@@ -119,7 +119,7 @@ extension GetBanksDataClass {
 struct BanksList: Codable {
     let memberID, memberName, memberNameRus: String?
     let md5Hash, svgImage: String?
-    let paymentSystemCodeList: [PaymentSystemCodeList]?
+    let paymentSystemCodeList: [String]?
 
     enum CodingKeys: String, CodingKey {
         case memberID = "memberId"
@@ -153,7 +153,7 @@ extension BanksList {
         memberNameRus: String?? = nil,
         md5Hash: String?? = nil,
         svgImage: String?? = nil,
-        paymentSystemCodeList: [PaymentSystemCodeList]?? = nil
+        paymentSystemCodeList: [String]?? = nil
     ) -> BanksList {
         return BanksList(
             memberID: memberID ?? self.memberID,
@@ -176,7 +176,7 @@ extension BanksList {
 
 // PaymentSystemCodeList.swift
 
-enum PaymentSystemCodeList: String, Codable {
+enum PaymentSystemCodeList: String, Codable, CaseIterable {
     case direct = "DIRECT"
     case sfp = "SFP"
 }
