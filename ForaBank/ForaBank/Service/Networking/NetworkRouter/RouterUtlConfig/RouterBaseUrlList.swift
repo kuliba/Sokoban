@@ -77,7 +77,7 @@ enum RouterBaseUrlList: String {
     
     case getVerificationCode       = "/rest/transfer/getVerificationCode"
     
-    case prepareExternal           = "/rest/prepareExterna"
+    case prepareExternal           = "/rest/prepareExternal"
     
     case getExchangeCurrencyRates  = "/rest/getExchangeCurrencyRates"
     

@@ -100,7 +100,6 @@ class ForaInput: UIView {
     
     //MARK: - Helpers
     private func configure() {
-        
         imageView.image = viewModel.image
         balanceLabel.isHidden = true
         textField.placeholder = viewModel.title
