@@ -9,7 +9,24 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CastomCardView" customModule="ForaBank" customModuleProvider="target"/>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CastomCardView" customModule="ForaBank" customModuleProvider="target">
+            <connections>
+                <outlet property="contentView" destination="iN0-l3-epB" id="55N-Mk-KQN"/>
+                <outlet property="cvcLable" destination="k1Q-0i-ZtY" id="SBX-Mw-LlD"/>
+                <outlet property="cvcLineView" destination="gPD-2N-lsa" id="KDz-K8-iT6"/>
+                <outlet property="cvcTextField" destination="Coq-qa-rfT" id="YHV-jL-3ZX"/>
+                <outlet property="dateLable" destination="MsS-QM-e80" id="97B-C7-kvW"/>
+                <outlet property="dateLineView" destination="3ma-wV-Mb0" id="D4l-oC-UVs"/>
+                <outlet property="dateStackView" destination="1Jg-nT-CjW" id="zlg-cF-QQw"/>
+                <outlet property="dateTaxtField" destination="ur9-Ik-KDQ" id="Xoe-i5-PAe"/>
+                <outlet property="goBackButton" destination="Na7-yF-Cow" id="abK-na-b58"/>
+                <outlet property="lineView" destination="WRu-Vx-LFG" id="IZ6-SE-zFo"/>
+                <outlet property="mainStackView" destination="AJ7-IC-tUG" id="T86-om-QQm"/>
+                <outlet property="nameLineView" destination="f9f-bk-byQ" id="XBg-Hl-JDS"/>
+                <outlet property="nameTextField" destination="6J2-cz-aMU" id="nNc-3D-yvc"/>
+                <outlet property="qrButton" destination="t4a-8L-QJj" id="6xG-lm-iaC"/>
+            </connections>
+        </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="iN0-l3-epB">
             <rect key="frame" x="0.0" y="0.0" width="414" height="250"/>
@@ -45,7 +62,7 @@
                                             </constraints>
                                             <state key="normal" image="card_scan"/>
                                             <connections>
-                                                <action selector="qrButton:" destination="iN0-l3-epB" eventType="touchUpInside" id="qLT-wO-st0"/>
+                                                <action selector="qrButton:" destination="-1" eventType="touchUpInside" id="z8O-TG-xlL"/>
                                             </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Na7-yF-Cow">
@@ -58,7 +75,7 @@
                                                 <imageReference key="image" image="xmark" catalog="system" renderingMode="template"/>
                                             </state>
                                             <connections>
-                                                <action selector="goBackButton:" destination="iN0-l3-epB" eventType="touchUpInside" id="llo-A2-eFW"/>
+                                                <action selector="goBackButton:" destination="-1" eventType="touchUpInside" id="etm-lG-3aC"/>
                                             </connections>
                                         </button>
                                     </subviews>
@@ -95,7 +112,7 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <textInputTraits key="textInputTraits"/>
                                             <connections>
-                                                <action selector="dateTaxtField:" destination="iN0-l3-epB" eventType="editingDidEnd" id="48g-c6-NGS"/>
+                                                <action selector="dateTaxtField:" destination="-1" eventType="editingDidEnd" id="XR0-Ut-jMS"/>
                                             </connections>
                                         </textField>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3ma-wV-Mb0">
@@ -131,7 +148,7 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <textInputTraits key="textInputTraits"/>
                                             <connections>
-                                                <action selector="cvcTextField:" destination="iN0-l3-epB" eventType="editingDidEnd" id="inN-c7-eU8"/>
+                                                <action selector="cvcTextField:" destination="-1" eventType="editingDidEnd" id="XWC-t2-mcd"/>
                                             </connections>
                                         </textField>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gPD-2N-lsa">
@@ -173,7 +190,7 @@
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                     <textInputTraits key="textInputTraits"/>
                                     <connections>
-                                        <action selector="nameTextField:" destination="iN0-l3-epB" eventType="editingDidEnd" id="FLW-NX-GyE"/>
+                                        <action selector="nameTextField:" destination="-1" eventType="editingDidEnd" id="X2d-vf-NOR"/>
                                     </connections>
                                 </textField>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f9f-bk-byQ">
@@ -204,21 +221,6 @@
                 <constraint firstAttribute="trailing" secondItem="AJ7-IC-tUG" secondAttribute="trailing" constant="10" id="enY-We-6jF"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <connections>
-                <outlet property="cvcLable" destination="k1Q-0i-ZtY" id="spR-BU-9Mx"/>
-                <outlet property="cvcLineView" destination="gPD-2N-lsa" id="fWq-VB-ccs"/>
-                <outlet property="cvcTextField" destination="Coq-qa-rfT" id="OdC-Xg-Ad4"/>
-                <outlet property="dateLable" destination="MsS-QM-e80" id="RMA-J9-PSI"/>
-                <outlet property="dateLineView" destination="3ma-wV-Mb0" id="wis-f4-Tqa"/>
-                <outlet property="dateStackView" destination="1Jg-nT-CjW" id="aaP-Pj-HCa"/>
-                <outlet property="dateTaxtField" destination="ur9-Ik-KDQ" id="Ezz-a4-7R6"/>
-                <outlet property="goBackButton" destination="Na7-yF-Cow" id="hQd-aj-z57"/>
-                <outlet property="lineView" destination="WRu-Vx-LFG" id="T1B-gg-s29"/>
-                <outlet property="mainStackView" destination="AJ7-IC-tUG" id="gca-UP-aOs"/>
-                <outlet property="nameLineView" destination="f9f-bk-byQ" id="dID-QX-cYv"/>
-                <outlet property="nameTextField" destination="6J2-cz-aMU" id="R7o-th-FqF"/>
-                <outlet property="qrButton" destination="t4a-8L-QJj" id="LKw-Jv-wuk"/>
-            </connections>
             <point key="canvasLocation" x="-184.05797101449278" y="19.419642857142858"/>
         </view>
     </objects>

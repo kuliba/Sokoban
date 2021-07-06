@@ -11,7 +11,8 @@ class CastomCardView: UIView {
     
     @IBOutlet weak var mainStackView: UIStackView!
     @IBOutlet weak var dateStackView: UIStackView!
-   
+    @IBOutlet var contentView: UIView!
+    
    
     @IBOutlet weak var dateTaxtField: UITextField!
     @IBOutlet weak var cvcTextField: UITextField!
@@ -39,7 +40,7 @@ class CastomCardView: UIView {
     
     func commonInit() {
         Bundle.main.loadNibNamed("CastomCardXIB", owner: self, options: nil)
-        mainStackView.fixView(self)
+        contentView.fixView(self)
     }
     
     
