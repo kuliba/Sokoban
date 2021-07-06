@@ -14,9 +14,9 @@ import Foundation
 
 // MARK: - PrepareExternalDecodableModel
 struct PrepareExternalDecodableModel: Codable, NetworkModelProtocol {
-    let data: PrepareExternalDataClass?
-    let errorMessage: String?
     let statusCode: Int?
+    let errorMessage: String?
+    let data: PrepareExternalDataClass?
 }
 
 // MARK: PrepareExternalDecodableModel convenience initializers and mutators
@@ -38,14 +38,14 @@ extension PrepareExternalDecodableModel {
     }
 
     func with(
-        data: PrepareExternalDataClass?? = nil,
+        statusCode: Int?? = nil,
         errorMessage: String?? = nil,
-        statusCode: Int?? = nil
+        data: PrepareExternalDataClass?? = nil
     ) -> PrepareExternalDecodableModel {
         return PrepareExternalDecodableModel(
-            data: data ?? self.data,
+            statusCode: statusCode ?? self.statusCode,
             errorMessage: errorMessage ?? self.errorMessage,
-            statusCode: statusCode ?? self.statusCode
+            data: data ?? self.data
         )
     }
 
@@ -58,30 +58,17 @@ extension PrepareExternalDecodableModel {
     }
 }
 
-// DataClass.swift
-
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse the JSON, add this file to your project and do:
-//
-//   let dataClass = try DataClass(json)
-
-// MARK: - PrepareExternalDataClass
+// MARK: - DataClass
 struct PrepareExternalDataClass: Codable {
-    let amount: Int?
-    let bcc, comment, compilerStatus, date: String?
-    let oktmo: String?
-    let payeeAccountID: Int?
-    let payeeAccountNumber, payeeBankBIC, payeeCardNumber: String?
-    let payeeCardNumberID: Int?
-    let payeeINN, payeeKPP, payeeName: String?
-    let payerAccountID: Int?
-    let payerCardNumber: String?
-    let payerCardNumberID: Int?
-    let payerINN, taxDate, taxDocumentNumber, taxDocumentType: String?
-    let taxPeriod, taxReason, uin: String?
+    let payerCardNumber, payerAccountNumber, payeeCardNumber, payeeAccountNumber: String?
+    let payeePhone, payeeName: String?
+    let amount, debitAmount: Int?
+    let currencyAmount, currencyPayer, currencyPayee: String?
+    let currencyRate, creditAmount: Int?
+    let commission: [PrepareExternalCommission]?
 }
 
-// MARK: DataClass convenience initializers and mutators
+// MARK: PrepareExternal convenience initializers and mutators
 
 extension PrepareExternalDataClass {
     init(data: Data) throws {
@@ -100,56 +87,87 @@ extension PrepareExternalDataClass {
     }
 
     func with(
-        amount: Int?? = nil,
-        bcc: String?? = nil,
-        comment: String?? = nil,
-        compilerStatus: String?? = nil,
-        date: String?? = nil,
-        oktmo: String?? = nil,
-        payeeAccountID: Int?? = nil,
-        payeeAccountNumber: String?? = nil,
-        payeeBankBIC: String?? = nil,
-        payeeCardNumber: String?? = nil,
-        payeeCardNumberID: Int?? = nil,
-        payeeINN: String?? = nil,
-        payeeKPP: String?? = nil,
-        payeeName: String?? = nil,
-        payerAccountID: Int?? = nil,
         payerCardNumber: String?? = nil,
-        payerCardNumberID: Int?? = nil,
-        payerINN: String?? = nil,
-        taxDate: String?? = nil,
-        taxDocumentNumber: String?? = nil,
-        taxDocumentType: String?? = nil,
-        taxPeriod: String?? = nil,
-        taxReason: String?? = nil,
-        uin: String?? = nil
+        payerAccountNumber: String?? = nil,
+        payeeCardNumber: String?? = nil,
+        payeeAccountNumber: String?? = nil,
+        payeePhone: String?? = nil,
+        payeeName: String?? = nil,
+        amount: Int?? = nil,
+        debitAmount: Int?? = nil,
+        currencyAmount: String?? = nil,
+        currencyPayer: String?? = nil,
+        currencyPayee: String?? = nil,
+        currencyRate: Int?? = nil,
+        creditAmount: Int?? = nil,
+        commission: [PrepareExternalCommission]?? = nil
     ) -> PrepareExternalDataClass {
         return PrepareExternalDataClass(
-            amount: amount ?? self.amount,
-            bcc: bcc ?? self.bcc,
-            comment: comment ?? self.comment,
-            compilerStatus: compilerStatus ?? self.compilerStatus,
-            date: date ?? self.date,
-            oktmo: oktmo ?? self.oktmo,
-            payeeAccountID: payeeAccountID ?? self.payeeAccountID,
-            payeeAccountNumber: payeeAccountNumber ?? self.payeeAccountNumber,
-            payeeBankBIC: payeeBankBIC ?? self.payeeBankBIC,
-            payeeCardNumber: payeeCardNumber ?? self.payeeCardNumber,
-            payeeCardNumberID: payeeCardNumberID ?? self.payeeCardNumberID,
-            payeeINN: payeeINN ?? self.payeeINN,
-            payeeKPP: payeeKPP ?? self.payeeKPP,
-            payeeName: payeeName ?? self.payeeName,
-            payerAccountID: payerAccountID ?? self.payerAccountID,
             payerCardNumber: payerCardNumber ?? self.payerCardNumber,
-            payerCardNumberID: payerCardNumberID ?? self.payerCardNumberID,
-            payerINN: payerINN ?? self.payerINN,
-            taxDate: taxDate ?? self.taxDate,
-            taxDocumentNumber: taxDocumentNumber ?? self.taxDocumentNumber,
-            taxDocumentType: taxDocumentType ?? self.taxDocumentType,
-            taxPeriod: taxPeriod ?? self.taxPeriod,
-            taxReason: taxReason ?? self.taxReason,
-            uin: uin ?? self.uin
+            payerAccountNumber: payerAccountNumber ?? self.payerAccountNumber,
+            payeeCardNumber: payeeCardNumber ?? self.payeeCardNumber,
+            payeeAccountNumber: payeeAccountNumber ?? self.payeeAccountNumber,
+            payeePhone: payeePhone ?? self.payeePhone,
+            payeeName: payeeName ?? self.payeeName,
+            amount: amount ?? self.amount,
+            debitAmount: debitAmount ?? self.debitAmount,
+            currencyAmount: currencyAmount ?? self.currencyAmount,
+            currencyPayer: currencyPayer ?? self.currencyPayer,
+            currencyPayee: currencyPayee ?? self.currencyPayee,
+            currencyRate: currencyRate ?? self.currencyRate,
+            creditAmount: creditAmount ?? self.creditAmount,
+            commission: commission ?? self.commission
+        )
+    }
+
+    func jsonData() throws -> Data {
+        return try newJSONEncoder().encode(self)
+    }
+
+    func jsonString(encoding: String.Encoding = .utf8) throws -> String? {
+        return String(data: try self.jsonData(), encoding: encoding)
+    }
+}
+
+
+// MARK: - PrepareExternalCommission
+struct PrepareExternalCommission: Codable {
+    let amount, rate: Int?
+    let commissionDescription: String?
+
+    enum CodingKeys: String, CodingKey {
+        case amount, rate
+        case commissionDescription = "description"
+    }
+}
+
+// MARK: Commission convenience initializers and mutators
+
+extension PrepareExternalCommission {
+    init(data: Data) throws {
+        self = try newJSONDecoder().decode(PrepareExternalCommission.self, from: data)
+    }
+
+    init(_ json: String, using encoding: String.Encoding = .utf8) throws {
+        guard let data = json.data(using: encoding) else {
+            throw NSError(domain: "JSONDecoding", code: 0, userInfo: nil)
+        }
+        try self.init(data: data)
+    }
+
+    init(fromURL url: URL) throws {
+        try self.init(data: try Data(contentsOf: url))
+    }
+
+    func with(
+        amount: Int?? = nil,
+        rate: Int?? = nil,
+        commissionDescription: String?? = nil
+    ) -> PrepareExternalCommission {
+        return PrepareExternalCommission(
+            amount: amount ?? self.amount,
+            rate: rate ?? self.rate,
+            commissionDescription: commissionDescription ?? self.commissionDescription
         )
     }
 
