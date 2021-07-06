@@ -59,7 +59,7 @@ class AllCardCell: UICollectionViewCell {
         addSubview(logoImageView)
         addSubview(nameLabel)
         
-        logoImageView.centerX(inView: self, topAnchor: self.topAnchor, paddingTop: 10)
+        logoImageView.centerX(inView: self, topAnchor: self.topAnchor, paddingTop: 15)
         
         nameLabel.centerX(inView: logoImageView, topAnchor: logoImageView.bottomAnchor, paddingTop: 2)
     }

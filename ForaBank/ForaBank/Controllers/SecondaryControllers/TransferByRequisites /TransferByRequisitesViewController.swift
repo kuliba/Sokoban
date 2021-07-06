@@ -498,7 +498,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
                         vc.summTransctionField.textField.text = self.bottomView.amountTextField.text
                     }
                     if data.commission?.count != 0 {
-                        vc.taxTransctionField.text = data.commission?[0] ?? "Возможна комиссия"
+                      //  vc.taxTransctionField.text = data.commission?[0] ?? "Возможна комиссия"
                     } else {
                         vc.taxTransctionField.isHidden = true
                     }
