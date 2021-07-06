@@ -9,11 +9,6 @@ import UIKit
 
 class AllCardCell: UICollectionViewCell {
     
-    //MARK: - Properties
-//    var card: GetProductListDatum? {
-//        didSet { configure() }
-//    }
-    
     private let logoImageView: UIImageView = {
         let imageView = UIImageView(image: #imageLiteral(resourceName: "passcodeChange"))
         imageView.contentMode = .scaleAspectFit

@@ -424,7 +424,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
             print("DEBUG: Card list: ", model)
             if model.statusCode == 0 {
                 self.dismissActivity()
-                guard let data  = model.data else { return }
+                guard let data = model.data else { return }
 //                self.selectedCardNumber = cardNumber
                 DispatchQueue.main.async {
                     self.bikBankField.imageView.image = UIImage(imageLiteralResourceName: "100000000013")

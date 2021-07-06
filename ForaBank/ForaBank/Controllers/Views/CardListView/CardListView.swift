@@ -12,6 +12,7 @@ class CardListView: UIView {
     //MARK: - Property
     let reuseIdentifier = "CardCell"
     let newReuseIdentifier = "NewCardCell"
+    let allReuseIdentifier = "AllCardCell"
     
     var cardList = [GetProductListDatum]() {
         didSet {
@@ -102,6 +103,7 @@ class CardListView: UIView {
         collectionView.dataSource = self
         collectionView.register(CardCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         collectionView.register(NewCardCell.self, forCellWithReuseIdentifier: newReuseIdentifier)
+        collectionView.register(AllCardCell.self, forCellWithReuseIdentifier: allReuseIdentifier)
     }
     
 }
@@ -110,9 +112,9 @@ class CardListView: UIView {
 extension CardListView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if isFiltered {
-            return filteredCardList.count
+            return filteredCardList.count + 2
         } else {
-            return cardList.count
+            return cardList.count + 2
         }
         
     }
