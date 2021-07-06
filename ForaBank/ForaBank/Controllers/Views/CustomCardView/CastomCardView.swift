@@ -14,6 +14,7 @@ class CastomCardView: UIView {
     @IBOutlet var contentView: UIView!
     
    
+    @IBOutlet weak var cardTextField: MaskedTextField!
     @IBOutlet weak var dateTaxtField: UITextField!
     @IBOutlet weak var cvcTextField: UITextField!
     @IBOutlet weak var nameTextField: UITextField!
@@ -41,12 +42,15 @@ class CastomCardView: UIView {
     func commonInit() {
         Bundle.main.loadNibNamed("CastomCardXIB", owner: self, options: nil)
         contentView.fixView(self)
+        cardTextField.maskString = "0000 0000 0000 0000"
     }
     
     
     @IBAction func qrButton(_ sender: UIButton) {
     }
     @IBAction func goBackButton(_ sender: UIButton) {
+    }
+    @IBAction func cardTextField(_ sender: Any) {
     }
     @IBAction func dateTaxtField(_ sender: UITextField) {
     }

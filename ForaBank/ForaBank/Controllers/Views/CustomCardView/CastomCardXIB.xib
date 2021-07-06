@@ -11,6 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CastomCardView" customModule="ForaBank" customModuleProvider="target">
             <connections>
+                <outlet property="cardTextField" destination="kWb-pj-4mS" id="Gjy-d8-vsA"/>
                 <outlet property="contentView" destination="iN0-l3-epB" id="55N-Mk-KQN"/>
                 <outlet property="cvcLable" destination="k1Q-0i-ZtY" id="SBX-Mw-LlD"/>
                 <outlet property="cvcLineView" destination="gPD-2N-lsa" id="KDz-K8-iT6"/>
@@ -47,13 +48,16 @@
                                 <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="11" translatesAutoresizingMaskIntoConstraints="NO" id="nDh-bc-ly1" userLabel="CardNumberStackView">
                                     <rect key="frame" x="0.0" y="39" width="394" height="30"/>
                                     <subviews>
-                                        <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kWb-pj-4mS">
+                                        <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kWb-pj-4mS" customClass="MaskedTextField" customModule="ForaBank" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="0.0" width="312" height="30"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="30" id="NmY-nF-S90"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <textInputTraits key="textInputTraits"/>
+                                            <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                            <connections>
+                                                <action selector="cardTextField:" destination="-1" eventType="editingDidEnd" id="8FZ-UH-9Uu"/>
+                                            </connections>
                                         </textField>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t4a-8L-QJj">
                                             <rect key="frame" x="323" y="0.0" width="30" height="30"/>
@@ -146,7 +150,7 @@
                                                 <constraint firstAttribute="height" constant="30" id="LW0-b7-f6m"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <textInputTraits key="textInputTraits"/>
+                                            <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                             <connections>
                                                 <action selector="cvcTextField:" destination="-1" eventType="editingDidEnd" id="XWC-t2-mcd"/>
                                             </connections>
