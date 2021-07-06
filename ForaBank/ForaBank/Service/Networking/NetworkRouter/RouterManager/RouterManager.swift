@@ -40,6 +40,7 @@ enum RouterManager {
     case prepareExternal
     case getExchangeCurrencyRates
     case suggestBank
+    case suggestCompany
 }
 
 extension RouterManager {
@@ -512,6 +513,21 @@ extension RouterManager {
             
         case .suggestBank:
             let baseUrl = RouterUrlList.suggestBank.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .suggestCompany:
+            let baseUrl = RouterUrlList.suggestCompany.returnUrl()
             switch baseUrl {
             case .success(let url):
                 resultUrl = url.absoluteURL
