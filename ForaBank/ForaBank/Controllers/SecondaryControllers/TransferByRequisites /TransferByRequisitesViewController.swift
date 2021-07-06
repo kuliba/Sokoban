@@ -149,6 +149,12 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
                 self.suggestBank()
             }
         }
+        
+        bikBankField.didChooseButtonTapped = { () in
+            UIView.animate(withDuration: 0.2) {
+                self.openOrHideView(self.bankListView) 
+            }
+        }
                 
         innField.didChangeValueField = {(field) in
             if self.innField.textField.text?.count == 10{
@@ -162,7 +168,9 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         
         
         self.fioField.didChooseButtonTapped = { () in
+
             self.fioField.placeHolder.text = "Фамилия"
+
             self.stackView.addArrangedSubview(self.nameField)
             self.stackView.addArrangedSubview(self.surField)
         }
@@ -227,7 +235,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
 //                        }
 //                    }
                 }
-                self?.banks = filteredbanksList
+                self?.banks = banksList
             }
         }
         
@@ -246,11 +254,6 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
             self.hideView(self.bankListView, needHide: true)
         }
         
-        bikBankField.didChooseButtonTapped = { () in
-            print("bankField didChooseButtonTapped")
-            self.openOrHideView(self.bankListView)
-            self.hideView(self.cardListView, needHide: true)
-        }
         
         cardListView.didCardTapped = { card in
             self.cardField.configCardView(card)
@@ -269,11 +272,13 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     private func openOrHideView(_ view: UIView) {
         UIView.animate(withDuration: 0.2) {
             if view.isHidden == true {
-                view.alpha = 1
                 view.isHidden = false
+                view.alpha = 1
+                
             } else {
-                view.alpha = 0
                 view.isHidden = true
+                view.alpha = 0
+                
             }
             self.stackView.layoutIfNeeded()
         }
@@ -303,15 +308,15 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         cardListView.didCardTapped = {[weak self] (card) in
             print(card)
         }
-        cardField.didChooseButtonTapped = {(
+        cardField.didChooseButtonTapped = { () in
             UIView.animate(withDuration: 0.2, animations: {
                 self.cardListView.isHidden.toggle()
             })
-        )}
+        }
         
         
         
-        stackView = UIStackView(arrangedSubviews: [bikBankField,accountNumber, cardField])
+        stackView = UIStackView(arrangedSubviews: [bikBankField, bankListView, accountNumber, cardField, cardListView])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing

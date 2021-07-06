@@ -13,7 +13,7 @@ class BankListView: UIView {
     let reuseIdentifier = "BankCell"
     
     var bankList = [BanksList]() {
-        didSet {
+        didSet { 
             DispatchQueue.main.async {
                 self.collectionView.reloadData()
             }
