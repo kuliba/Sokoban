@@ -5,11 +5,6 @@
 //  Created by Константин Савялов on 06.07.2021.
 //
 
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse the JSON, add this file to your project and do:
-//
-//   let suggestCompanyDecodableModel = try SuggestCompanyDecodableModel(json)
-
 import Foundation
 
 // MARK: - SuggestCompanyDecodableModel
@@ -58,13 +53,6 @@ extension SuggestCompanyDecodableModel {
     }
 }
 
-// Datum.swift
-
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse the JSON, add this file to your project and do:
-//
-//   let datum = try Datum(json)
-
 // MARK: - SuggestCompanyDatum
 struct SuggestCompanyDatum: Codable {
     let data: SuggestCompanyDatumData?
@@ -110,12 +98,6 @@ extension SuggestCompanyDatum {
     }
 }
 
-// DatumData.swift
-
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse the JSON, add this file to your project and do:
-//
-//   let datumData = try DatumData(json)
 
 // MARK: - SuggestCompanyDatumData
 struct SuggestCompanyDatumData: Codable {
@@ -227,12 +209,6 @@ extension SuggestCompanyDatumData {
     }
 }
 
-// Address.swift
-
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse the JSON, add this file to your project and do:
-//
-//   let address = try Address(json)
 
 // MARK: - SuggestCompany
 struct SuggestCompanyAddress: Codable {
@@ -278,13 +254,6 @@ extension SuggestCompanyAddress {
         return String(data: try self.jsonData(), encoding: encoding)
     }
 }
-
-// AddressData.swift
-
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse the JSON, add this file to your project and do:
-//
-//   let addressData = try AddressData(json)
 
 import Foundation
 
@@ -543,13 +512,6 @@ extension SuggestCompanyAddressData {
     }
 }
 
-// Metro.swift
-
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse the JSON, add this file to your project and do:
-//
-//   let metro = try Metro(json)
-
 // MARK: - Metro
 struct SuggestCompanyMetro: Codable {
     let distance, line, name: String?
@@ -593,13 +555,6 @@ extension SuggestCompanyMetro {
         return String(data: try self.jsonData(), encoding: encoding)
     }
 }
-
-// Finance.swift
-
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse the JSON, add this file to your project and do:
-//
-//   let finance = try Finance(json)
 
 import Foundation
 
@@ -652,13 +607,6 @@ extension SuggestCompanyFinance {
     }
 }
 
-// Management.swift
-
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse the JSON, add this file to your project and do:
-//
-//   let management = try Management(json)
-
 // MARK: - SuggestCompanyManagement
 struct SuggestCompanyManagement: Codable {
     let disqualified, name, post: String?
@@ -702,13 +650,6 @@ extension SuggestCompanyManagement {
         return String(data: try self.jsonData(), encoding: encoding)
     }
 }
-
-// Name.swift
-
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse the JSON, add this file to your project and do:
-//
-//   let name = try Name(json)
 
 // MARK: - SuggestCompanyName
 struct SuggestCompanyName: Codable {
@@ -759,13 +700,6 @@ extension SuggestCompanyName {
     }
 }
 
-// Opf.swift
-
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse the JSON, add this file to your project and do:
-//
-//   let opf = try Opf(json)
-
 // MARK: - SuggestCompanyOpf
 struct SuggestCompanyOpf: Codable {
     let code, full, short, type: String?
@@ -811,13 +745,6 @@ extension SuggestCompanyOpf {
         return String(data: try self.jsonData(), encoding: encoding)
     }
 }
-
-// State.swift
-
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse the JSON, add this file to your project and do:
-//
-//   let state = try State(json)
 
 // MARK: - SuggestCompanyState
 struct SuggestCompanyState: Codable {

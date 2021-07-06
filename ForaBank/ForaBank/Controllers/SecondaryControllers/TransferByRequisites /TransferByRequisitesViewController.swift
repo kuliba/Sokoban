@@ -110,6 +110,9 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         super.viewDidLoad()
          
         
+        
+        commentField.errorLabel.text  = "123"
+        commentField.errorLabel.isHidden = true
         getCardList { [weak self] data ,error in
             DispatchQueue.main.async {
                 
@@ -147,6 +150,8 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         bikBankField.didChangeValueField = {(field) in
             if self.bikBankField.textField.text?.count == 9 {
                 self.suggestBank()
+            } else {
+                self.bikBankField.imageView.image = UIImage(imageLiteralResourceName: "bikbank")
             }
         }
         
@@ -169,17 +174,27 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         
         self.fioField.didChooseButtonTapped = { () in
             
+            self.fioField.placeHolder.text = "Фамилия"
+            self.nameField.isHidden.toggle()
+            self.surField.isHidden.toggle()
             self.stackView.addArrangedSubview(self.nameField)
             self.stackView.addArrangedSubview(self.surField)
-        }
+            
+            
+            if self.nameField.isHidden || self.nameField.textField.text == "" {
+                
+                self.fioField.textField.text = "\(self.fioField.textField.text ?? "")" + " " + "\(self.nameField.textField.text ?? "")" + " " + "\(self.surField.textField.text ?? "")"
+                self.stackView.addArrangedSubview(self.commentField)
+
+            }
+            
+//            self.fioField.textField.text = "\(fioField.textField.text  nameField.textField.text surField.textField.text)"
+         }
         
         accountNumber.didChangeValueField = {(field) in
-            if self.accountNumber.textField.text?.count == 20, self.accountNumber.textField.text?.prefix(5) == "40817" || self.accountNumber.textField.text?.prefix(5) == "40820" || self.accountNumber.textField.text?.prefix(3) == "423" || self.accountNumber.textField.text?.prefix(3) == "426" {
+            if self.accountNumber.textField.text?.count == 19, self.accountNumber.textField.text?.prefix(5) == "40817" || self.accountNumber.textField.text?.prefix(5) == "40820" || self.accountNumber.textField.text?.prefix(3) == "423" || self.accountNumber.textField.text?.prefix(3) == "426" {
                 self.stackView.addArrangedSubview(self.fioField)
-                
-                
-                
-            } else if self.accountNumber.textField.text?.count == 20 {
+            } else if self.accountNumber.textField.text?.count == 19 {
                 self.stackView.addArrangedSubview(self.innField)
             } else {
                 self.stackView.removeArrangedSubview(self.innField)
@@ -236,6 +251,10 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
                 self?.banks = banksList
             }
         }
+        commentField.didChangeValueField = {(field) in
+            self.commentField.errorLabel.text  = "123"
+            self.commentField.errorLabel.isHidden = true
+        }
         
         bankListView.didBankTapped = { (bank) in
             self.selectedBank = bank
@@ -256,7 +275,6 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         cardListView.didCardTapped = { card in
             self.cardField.configCardView(card)
             self.selectedCardNumber = card.number ?? ""
-            
             self.hideView(self.cardListView, needHide: true)
             self.hideView(self.bankListView, needHide: true)
             
@@ -267,15 +285,19 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         }
     }
     
+    
+    
+    
     private func openOrHideView(_ view: UIView) {
         UIView.animate(withDuration: 0.2) {
             if view.isHidden == true {
-                view.isHidden = false
                 view.alpha = 1
+                view.isHidden = false
                 
             } else {
-                view.isHidden = true
                 view.alpha = 0
+                view.isHidden = true
+              
                 
             }
             self.stackView.layoutIfNeeded()
@@ -326,7 +348,11 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     }
     
     func updateUI(){
-   
+        
+    }
+    
+    func setuoUIByCompany(){
+        
     }
     
     func setupConstraint() {
@@ -398,7 +424,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
             print("DEBUG: Card list: ", model)
             if model.statusCode == 0 {
                 self.dismissActivity()
-                guard let data  = model.data else { return }
+                guard let data = model.data else { return }
 //                self.selectedCardNumber = cardNumber
                 DispatchQueue.main.async {
                     self.bikBankField.imageView.image = UIImage(imageLiteralResourceName: "100000000013")
@@ -426,14 +452,21 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         }
         
         let body = [
+//            "payerCardNumber": "4656260150230695",
+//            "payerINN": payerINN,
+//            "payeeName": "\(self.fioField.textField.text ?? "")" + " " + "\(self.nameField.textField.text ?? "")" + " " + "\(self.surField.textField.text ?? "")",
+//            "amount": 100,
+//            "payeeAccountNumber": accountNumber,
+//            "payeeBankBIC": bikBank,
             "payerCardNumber": "4656260150230695",
-            "payerINN": payerINN,
             "amount": 100,
-            "payeeAccountNumber": accountNumber,
-            "payeeBankBIC": bikBank,
-            "comment": comment,
-            "compilerStatus": "0",
-            "date": "2020-01-27"
+            "comment": "Оплата за мебель.Без НДdsjkfbksjdfС",
+            "date": "2020-01-27",
+            "payeeAccountNumber": "40702810638110103994",
+            "payeeBankBIC": "044525225",
+            "payeeINN": "7718164343",
+            "payeeKPP": "771801001",
+            "payeeName": "ООО ДИК-мебель"
         ] as [String: AnyObject]
         
         NetworkManager<PrepareExternalDecodableModel>.addRequest(.prepareExternal , [:], body) { model, error in
@@ -448,17 +481,29 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
                 guard let data  = model.data else { return }
 //                self.selectedCardNumber = cardNumber
                 DispatchQueue.main.async {
-                    let vc = PhoneConfirmViewController()
-                    vc.sbp = false
+                    let vc = TransferByRequisitesConfirmViewController()
+                    vc.addCloseButton()
+                    if self.fioField.textField.text == ""{
+                        vc.byCompany = true
+                        vc.fioField.placeHolder.text = "Наименование получателя"
+                        vc.fioField.textField.text = self.nameCompanyField.textField.text
+                        vc.commentField.textField.text = self.commentField.textField.text ?? ""
+                        vc.accountNumber.textField.text = self.accountNumber.textField.text ?? ""
+                        vc.summTransctionField.textField.text = self.bottomView.amountTextField.text
+
+                    } else{
+                        vc.accountNumber.textField.text = self.accountNumber.textField.text ?? ""
+                        vc.fioField.textField.text = "\(self.fioField.textField.text ?? "")" + " " + "\(self.nameField.textField.text ?? "")" + " " + "\(self.surField.textField.text ?? "")"
+                        vc.commentField.textField.text = self.commentField.textField.text ?? ""
+                        vc.summTransctionField.textField.text = self.bottomView.amountTextField.text
+                    }
+                    if data.commission?.count != 0 {
+                      //  vc.taxTransctionField.text = data.commission?[0] ?? "Возможна комиссия"
+                    } else {
+                        vc.taxTransctionField.isHidden = true
+                    }
                     
-//                    vc.phoneField.imageView.image = UIImage(imageLiteralResourceName: "externalButton")
-                    vc.bankPayeer.chooseButton.isHidden = true
-                    vc.cardField.chooseButton.isHidden = true
-//                    if model.data?.commission == 0.0 {
-//                        vc.taxTransctionField.textField.text = "Комиссия не взимается"
-//                    } else {
-//                        vc.taxTransctionField.textField.text = model.data?.commission?.description
-//                    }
+
                     let navController = UINavigationController(rootViewController: vc)
                     navController.modalPresentationStyle = .fullScreen
                     self.present(navController, animated: true, completion: nil)

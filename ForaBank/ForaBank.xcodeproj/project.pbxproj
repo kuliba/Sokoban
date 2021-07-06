@@ -49,6 +49,9 @@
 		0BF3485B268E5907005138A8 /* GetExchangeCurrencyRatesDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF3485A268E5907005138A8 /* GetExchangeCurrencyRatesDecodableModel.swift */; };
 		0BF3485D26931254005138A8 /* SuggestBankDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF3485C26931254005138A8 /* SuggestBankDecodableModel.swift */; };
 		0BF3486426943DFB005138A8 /* SuggestCompanyDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF3486326943DFB005138A8 /* SuggestCompanyDecodableModel.swift */; };
+		0BF34866269444D9005138A8 /* AllCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF34865269444D9005138A8 /* AllCardCell.swift */; };
+		0BF348682694AA71005138A8 /* CastomCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF348672694AA71005138A8 /* CastomCardView.swift */; };
+		0BF3486A2694CEBA005138A8 /* GetCurrencyListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF348692694CEBA005138A8 /* GetCurrencyListDecodableModel.swift */; };
 		68FFA5282682AF2C002DADFA /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA5272682AF2C002DADFA /* ContactsViewController.swift */; };
 		68FFA52C2682AF62002DADFA /* ContactCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA52A2682AF62002DADFA /* ContactCollectionViewCell.swift */; };
 		68FFA52D2682AF62002DADFA /* ContactCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68FFA52B2682AF62002DADFA /* ContactCollectionViewCell.xib */; };
@@ -66,6 +69,7 @@
 		68FFA55F268BF2D2002DADFA /* TransferByRequisitesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA55E268BF2D2002DADFA /* TransferByRequisitesViewController.swift */; };
 		68FFA561268DD2CF002DADFA /* CountriesCodeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA560268DD2CE002DADFA /* CountriesCodeButton.swift */; };
 		68FFA563268DDFCB002DADFA /* SearchContactView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA562268DDFCA002DADFA /* SearchContactView.swift */; };
+		68FFA565269464FF002DADFA /* TransferByRequisitesConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA564269464FF002DADFA /* TransferByRequisitesConfirmViewController.swift */; };
 		ED0B4892267B4CDD0037EA06 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = ED0B4891267B4CDD0037EA06 /* IQKeyboardManagerSwift */; };
 		ED0B4894267B50F50037EA06 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B4893267B50F50037EA06 /* Int.swift */; };
 		ED0B4896267B97C60037EA06 /* ContactInputViewController + UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B4895267B97C60037EA06 /* ContactInputViewController + UI.swift */; };
@@ -250,6 +254,9 @@
 		0BF3485A268E5907005138A8 /* GetExchangeCurrencyRatesDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetExchangeCurrencyRatesDecodableModel.swift; sourceTree = "<group>"; };
 		0BF3485C26931254005138A8 /* SuggestBankDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestBankDecodableModel.swift; sourceTree = "<group>"; };
 		0BF3486326943DFB005138A8 /* SuggestCompanyDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestCompanyDecodableModel.swift; sourceTree = "<group>"; };
+		0BF34865269444D9005138A8 /* AllCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllCardCell.swift; sourceTree = "<group>"; };
+		0BF348672694AA71005138A8 /* CastomCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastomCardView.swift; sourceTree = "<group>"; };
+		0BF348692694CEBA005138A8 /* GetCurrencyListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCurrencyListDecodableModel.swift; sourceTree = "<group>"; };
 		68FFA5272682AF2C002DADFA /* ContactsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
 		68FFA52A2682AF62002DADFA /* ContactCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactCollectionViewCell.swift; sourceTree = "<group>"; };
 		68FFA52B2682AF62002DADFA /* ContactCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ContactCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -267,6 +274,7 @@
 		68FFA55E268BF2D2002DADFA /* TransferByRequisitesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferByRequisitesViewController.swift; sourceTree = "<group>"; };
 		68FFA560268DD2CE002DADFA /* CountriesCodeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesCodeButton.swift; sourceTree = "<group>"; };
 		68FFA562268DDFCA002DADFA /* SearchContactView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchContactView.swift; sourceTree = "<group>"; };
+		68FFA564269464FF002DADFA /* TransferByRequisitesConfirmViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferByRequisitesConfirmViewController.swift; sourceTree = "<group>"; };
 		ED0B4893267B50F50037EA06 /* Int.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
 		ED0B4895267B97C60037EA06 /* ContactInputViewController + UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContactInputViewController + UI.swift"; sourceTree = "<group>"; };
 		ED0B489B267D41A60037EA06 /* PaymentsDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsDetailsView.swift; sourceTree = "<group>"; };
@@ -429,6 +437,7 @@
 			isa = PBXGroup;
 			children = (
 				0B6081FF268DDD2A00FDB8AD /* CustomCardView.xib */,
+				0BF348672694AA71005138A8 /* CastomCardView.swift */,
 			);
 			path = CustomCardView;
 			sourceTree = "<group>";
@@ -538,6 +547,7 @@
 			isa = PBXGroup;
 			children = (
 				68FFA55E268BF2D2002DADFA /* TransferByRequisitesViewController.swift */,
+				68FFA564269464FF002DADFA /* TransferByRequisitesConfirmViewController.swift */,
 			);
 			path = "TransferByRequisites ";
 			sourceTree = "<group>";
@@ -1189,6 +1199,7 @@
 				0BF3485A268E5907005138A8 /* GetExchangeCurrencyRatesDecodableModel.swift */,
 				0BF3485C26931254005138A8 /* SuggestBankDecodableModel.swift */,
 				0BF3486326943DFB005138A8 /* SuggestCompanyDecodableModel.swift */,
+				0BF348692694CEBA005138A8 /* GetCurrencyListDecodableModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -1313,6 +1324,7 @@
 			children = (
 				EDFFCAF22682461F004EE095 /* CardCell.swift */,
 				ED39EC92268C9AE900158E46 /* NewCardCell.swift */,
+				0BF34865269444D9005138A8 /* AllCardCell.swift */,
 			);
 			path = CardCell;
 			sourceTree = "<group>";
@@ -1555,6 +1567,7 @@
 				ED51D6702688B287005FD655 /* SeparatorView.swift in Sources */,
 				EDF6820F266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift in Sources */,
 				EDB1656E266827A8007E6030 /* PaymentsViewController.swift in Sources */,
+				0BF348682694AA71005138A8 /* CastomCardView.swift in Sources */,
 				68FFA55B268586D3002DADFA /* HeaderBanksCollectionReusableView.swift in Sources */,
 				0B7A18AF268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift in Sources */,
 				0B37F980267A11FB007728FC /* GetOwnerPhoneNumberPhoneDecodableModel.swift in Sources */,
@@ -1586,6 +1599,7 @@
 				ED0B48AF2681CC6D0037EA06 /* CodeVerificationViewModel.swift in Sources */,
 				EDFFCAFD2683C18B004EE095 /* ContactInputViewController API.swift in Sources */,
 				EDB1451E26652F170028EF5A /* UIView.swift in Sources */,
+				68FFA565269464FF002DADFA /* TransferByRequisitesConfirmViewController.swift in Sources */,
 				ED39EC93268C9AE900158E46 /* NewCardCell.swift in Sources */,
 				ED4FC610266CD66F0092B4AB /* СountryModel.swift in Sources */,
 				EDF68213266F9EC800FD5C07 /* URLHostType.swift in Sources */,
@@ -1598,6 +1612,7 @@
 				EDB1658026694676007E6030 /* PaymentsViewControllerLayout.swift in Sources */,
 				ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */,
 				EDB1655A2667A220007E6030 /* CodeVerificationViewController UI.swift in Sources */,
+				0BF3486A2694CEBA005138A8 /* GetCurrencyListDecodableModel.swift in Sources */,
 				0B7A18BA2683AC880007CC75 /* NotificationName.swift in Sources */,
 				ED4FC5EC266AD98E0092B4AB /* NSCollectionLayoutItem.swift in Sources */,
 				EDB1657A2668C7F2007E6030 /* TransferCell.swift in Sources */,
@@ -1618,6 +1633,7 @@
 				EDB165782668C76A007E6030 /* SelfConfiguringCell.swift in Sources */,
 				EDB165622667A571007E6030 /* ForaInputModel.swift in Sources */,
 				EDB1453E2666AF260028EF5A /* OrderProductsViewController FlowLayout.swift in Sources */,
+				0BF34866269444D9005138A8 /* AllCardCell.swift in Sources */,
 				EDB1452E26665AD50028EF5A /* OrderProductsViewController.swift in Sources */,
 				0B8BE08F266FBE0500E96CAA /* CSRFDecodableModel.swift in Sources */,
 				EDB14535266671580028EF5A /* MockItems.swift in Sources */,

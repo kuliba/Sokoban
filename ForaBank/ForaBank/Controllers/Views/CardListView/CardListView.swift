@@ -12,6 +12,7 @@ class CardListView: UIView {
     //MARK: - Property
     let reuseIdentifier = "CardCell"
     let newReuseIdentifier = "NewCardCell"
+    let allReuseIdentifier = "AllCardCell"
     
     var cardList = [GetProductListDatum]() {
         didSet {
@@ -36,7 +37,12 @@ class CardListView: UIView {
         }
     }
     
+    
     var didCardTapped: ((GetProductListDatum) -> Void)?
+    
+    var firstItemTap: (() -> Void)?
+    var lastItemTap: (() -> Void)?
+    
     let changeCardButtonCollection = AllCardView()
     let collectionView : UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -102,6 +108,7 @@ class CardListView: UIView {
         collectionView.dataSource = self
         collectionView.register(CardCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         collectionView.register(NewCardCell.self, forCellWithReuseIdentifier: newReuseIdentifier)
+        collectionView.register(AllCardCell.self, forCellWithReuseIdentifier: allReuseIdentifier)
     }
     
 }
@@ -110,22 +117,32 @@ class CardListView: UIView {
 extension CardListView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if isFiltered {
-            return filteredCardList.count
+            return filteredCardList.count + 2
         } else {
-            return cardList.count
+            return cardList.count + 2
         }
         
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CardCell
         
-        if isFiltered {
-            cell.card = filteredCardList[indexPath.item]
-        } else {
-            cell.card = cardList[indexPath.item]
+        if indexPath.item == 0 {
+            let cellFirst = collectionView.dequeueReusableCell(withReuseIdentifier: newReuseIdentifier, for: indexPath) as! NewCardCell
+            return cellFirst
+        } else if indexPath.item == cardList.count + 1 {
+            let cellLast = collectionView.dequeueReusableCell(withReuseIdentifier: allReuseIdentifier, for: indexPath) as! AllCardCell
+            return cellLast
+        }  else {
+    
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CardCell
+            
+            if isFiltered {
+                cell.card = filteredCardList[indexPath.item - 1]
+            } else {
+                cell.card = cardList[indexPath.item - 1]
+            }
+            return cell
         }
-        return cell
     }
     
 }
@@ -134,7 +151,13 @@ extension CardListView: UICollectionViewDataSource {
 extension CardListView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        return CGSize(width: 108, height: 72)
+        if indexPath.item == 0 {
+            return CGSize(width: 72, height: 72)
+        } else if indexPath.item == cardList.count + 1 {
+            return CGSize(width: 72, height: 72)
+        }  else {
+            return CGSize(width: 108, height: 72)
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
@@ -147,14 +170,21 @@ extension CardListView: UICollectionViewDelegateFlowLayout {
 extension CardListView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        if isFiltered {
-            let card = filteredCardList[indexPath.item]
-            didCardTapped?(card)
-        } else {
-            let card = cardList[indexPath.item]
-            didCardTapped?(card)
+        if indexPath.item == 0 {
+            firstItemTap?()
+            print("GoNew")
+        } else if indexPath.item == cardList.count + 1 {
+            lastItemTap?()
+            print("GoAll")
+        }  else {
+            if isFiltered {
+                let card = filteredCardList[indexPath.item - 1]
+                didCardTapped?(card)
+            } else {
+                let card = cardList[indexPath.item - 1]
+                didCardTapped?(card)
+            }
         }
-        
     }
 }
 

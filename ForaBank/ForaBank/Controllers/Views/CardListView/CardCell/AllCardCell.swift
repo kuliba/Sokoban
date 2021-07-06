@@ -1,21 +1,16 @@
 //
-//  NewCardCell.swift
+//  AllCardCell.swift
 //  ForaBank
 //
-//  Created by Mikhail on 30.06.2021.
+//  Created by Константин Савялов on 06.07.2021.
 //
 
 import UIKit
 
-class NewCardCell: UICollectionViewCell {
-    
-    //MARK: - Properties
-//    var card: GetProductListDatum? {
-//        didSet { configure() }
-//    }
+class AllCardCell: UICollectionViewCell {
     
     private let logoImageView: UIImageView = {
-        let imageView = UIImageView(image: #imageLiteral(resourceName: "addCard"))
+        let imageView = UIImageView(image: #imageLiteral(resourceName: "passcodeChange"))
         imageView.contentMode = .scaleAspectFit
         imageView.setDimensions(height: 24, width: 24)
         return imageView
@@ -24,7 +19,7 @@ class NewCardCell: UICollectionViewCell {
     private let nameLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 11 )
-        label.text = "Новая"
+        label.text = "См.все"
         return label
     }()
 

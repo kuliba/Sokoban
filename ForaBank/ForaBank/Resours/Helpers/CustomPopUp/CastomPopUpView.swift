@@ -99,9 +99,24 @@ class MemeDetailVC : AddHeaderImageViewController {
     private func setupUI() {
         cardFromField.titleLabel.text = "Откуда"
         cardFromListView = CardListView(onlyMy: onlyMy)
+        cardFromListView.lastItemTap = {
+            print("Открывать все карты ")
+        }
+        
         
         cardToField.titleLabel.text = "Куда"
         cardToListView = CardListView(onlyMy: onlyMy)
+        
+        cardToListView.lastItemTap = {
+            print("Открывать все карты ")
+        }
+        
+        cardToListView.firstItemTap = { [weak self] in
+            let cardView = CastomCardView()
+            self?.view.addSubview(cardView)
+            print("Показываем окно новой карты ")
+            self?.stackView.isHidden = true
+        }
         
         self.addHeaderImage()
         self.view.layer.cornerRadius = 20
