@@ -94,13 +94,11 @@ class ForaInput: UIView {
         
         textField.addTarget(self, action: #selector(setupValue), for: .editingChanged)
         textField.delegate = self
-        self.translatesAutoresizingMaskIntoConstraints = false
-        self.heightAnchor.constraint(equalToConstant: 54).isActive = true
+        self.anchor(height: 58)
     }
     
     //MARK: - Helpers
     private func configure() {
-        
         imageView.image = viewModel.image
         balanceLabel.isHidden = true
         textField.placeholder = viewModel.title

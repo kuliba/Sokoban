@@ -51,6 +51,8 @@ class MainTabBarViewController: UITabBarController {
             if error != nil {
                 self.showAlert(with: "Ошибка", and: error!)
             }
+            guard let countries = model as? [CountriesList] else { return }
+            Dict.shared.countries = countries
             print("DEBUG: Load Countries")
         }
         
@@ -58,9 +60,19 @@ class MainTabBarViewController: UITabBarController {
             if error != nil {
                 self.showAlert(with: "Ошибка", and: error!)
             }
+            guard let banks = model as? [BanksList] else { return }
+            Dict.shared.banks = banks
             print("DEBUG: Load Banks")
         }
         
+        NetworkHelper.request(.getPaymentSystemList) { model, error in
+            if error != nil {
+                self.showAlert(with: "Ошибка", and: error!)
+            }
+            guard let paymentSystem = model as? [PaymentSystemList] else { return }
+            Dict.shared.paymentList = paymentSystem
+            print("DEBUG: Load Payments")
+        }
         
         NetworkHelper.request(.getProductList) { cardList , error in
             if error != nil {

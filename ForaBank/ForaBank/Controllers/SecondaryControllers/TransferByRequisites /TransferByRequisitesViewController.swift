@@ -6,9 +6,40 @@
 //
 
 import UIKit
+import SVGKit
 
 class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate {
 
+    
+    
+    var selectedBank: BanksList? {
+        didSet {
+            guard let bank = selectedBank else { return }
+            setupBankField(bank: bank)
+        }
+    }
+    var banks: [BanksList]? {
+        didSet {
+            guard let banks = banks else { return }
+            bankListView.bankList = banks
+        }
+    }
+    var bankListView = BankListView()
+
+    private func setupBankField(bank: BanksList) {
+        self.bikBankField.text = bank.memberNameRus ?? "" //"АйДиБанк"
+        self.bikBankField.imageView.image = convertSVGStringToImage(bank.svgImage ?? "")
+    }
+    func convertSVGStringToImage(_ string: String) -> UIImage {
+        let stringImage = string.replacingOccurrences(of: "\\", with: "")
+        let imageData = Data(stringImage.utf8)
+        let imageSVG = SVGKImage(data: imageData)
+        let image = imageSVG?.uiImage ?? UIImage()
+        return image
+    }
+    
+    var selectedCardNumber: String?
+    var payerINN = "0"
     
     var bottomView = BottomInputView()
     
@@ -26,7 +57,8 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     var fioField = ForaInput(
         viewModel: ForaInputModel(
             title: "ФИО получателя",
-            image: #imageLiteral(resourceName: "Phone")))
+            image: #imageLiteral(resourceName: "person"),
+            showChooseButton: true))
     
     var nameField = ForaInput(
         viewModel: ForaInputModel(
@@ -35,6 +67,32 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     var surField = ForaInput(
         viewModel: ForaInputModel(
             title: "Отчество"))
+    
+    var commentField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "Назначение платежа",
+            image: #imageLiteral(resourceName: "comment")))
+    
+    var innField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "ИНН получателя"))
+    
+    var nameCompanyField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "Наименование получателя"))
+    
+    var kppField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "КПП получателя"))
+    
+    
+    var cardField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "Счет списания",
+            image: #imageLiteral(resourceName: "credit-card"),
+            type: .credidCard,
+            isEditable: false
+            ))
     
     var cardListView = CardListView()
     
@@ -50,13 +108,92 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        bikBankField.textField.delegate = self
+         
+        
+        getCardList { [weak self] data ,error in
+            DispatchQueue.main.async {
+                
+                
+                if error != nil {
+                    self?.showAlert(with: "Ошибка", and: error!)
+                }
+                guard let data = data else { return }
+                self?.cardListView.cardList = data
+                
+                if data.count > 0 {
+                    self?.cardField.configCardView(data.first!)
+                    guard let cardNumber  = data.first?.number else { return }
+                    self?.selectedCardNumber = cardNumber
+                }
+            }
+        }
+        
+//        commentField.errorLabel.text = "Укажите дополнительную информацию"
+//        commentField.errorLabel.isHidden = false
+////        commentField.errorLabel.textColor =
+//        kppField.errorLabel.isHidden = false
+//        kppField.errorLabel.text = "Необязательное поле"
+//        nameField.errorLabel.isHidden = false
+//        nameField.errorLabel.text = "Укажите название организации"
+        
+        
+        fioField.chooseButton.setImage(UIImage(imageLiteralResourceName: "extensionButton"), for: .normal)
+        
+        bottomView.didDoneButtonTapped = {(amount) in
+            self.prepareExternal()
+        }
+        
+
         bikBankField.didChangeValueField = {(field) in
-            print(field.text)
+            if self.bikBankField.textField.text?.count == 9 {
+                self.suggestBank()
+            }
         }
+        
+        bikBankField.didChooseButtonTapped = { () in
+            UIView.animate(withDuration: 0.2) {
+                self.openOrHideView(self.bankListView) 
+            }
+        }
+                
+        innField.didChangeValueField = {(field) in
+            if self.innField.textField.text?.count == 10{
+                self.suggestCompany()
+            }
+        }
+//        nameField.didChangeValueField = {(field) in
+//            self.nameField.errorLabel.isHidden = false
+//            self.nameField.errorLabel.text = "Укажите название организации"
+//        }
+        
+        
+        self.fioField.didChooseButtonTapped = { () in
+
+            self.fioField.placeHolder.text = "Фамилия"
+
+            self.stackView.addArrangedSubview(self.nameField)
+            self.stackView.addArrangedSubview(self.surField)
+        }
+        
         accountNumber.didChangeValueField = {(field) in
-            print(field.text)
+            if self.accountNumber.textField.text?.count == 20, self.accountNumber.textField.text?.prefix(5) == "40817" || self.accountNumber.textField.text?.prefix(5) == "40820" || self.accountNumber.textField.text?.prefix(3) == "423" || self.accountNumber.textField.text?.prefix(3) == "426" {
+                self.stackView.addArrangedSubview(self.fioField)
+                
+                
+                
+            } else if self.accountNumber.textField.text?.count == 20 {
+                self.stackView.addArrangedSubview(self.innField)
+            } else {
+                self.stackView.removeArrangedSubview(self.innField)
+                self.stackView.removeArrangedSubview(self.nameCompanyField)
+                self.stackView.removeArrangedSubview(self.kppField)
+                self.stackView.removeArrangedSubview(self.fioField)
+                self.stackView.removeArrangedSubview(self.nameField)
+                self.stackView.removeArrangedSubview(self.surField)
+                self.stackView.removeArrangedSubview(self.commentField)
+            }
         }
+        
         setupUI()
         setupActions()
         
@@ -65,24 +202,94 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     func setupActions() {
         getCardList { [weak self] data ,error in
             DispatchQueue.main.async {
+                
                 if error != nil {
-                    print("Ошибка", error!)
+                    self?.showAlert(with: "Ошибка", and: error!)
                 }
                 guard let data = data else { return }
                 self?.cardListView.cardList = data
+                
+                if data.count > 0 {
+                    self?.cardField.configCardView(data.first!)
+                    guard let cardNumber  = data.first?.number else { return }
+                    self?.selectedCardNumber = cardNumber
+                }
             }
+        }
+        
+        getBankList { [weak self]  banksList, error in
+            DispatchQueue.main.async {
+                if error != nil {
+                    self?.showAlert(with: "Ошибка", and: error!)
+                }
+                
+                guard let banksList = banksList else { return }
+                var filteredbanksList : [BanksList] = []
+                
+                banksList.forEach { bank in
+                    guard let codeList = bank.paymentSystemCodeList else { return }
+//                    guard let countrylist = self?.country?.paymentSystemCodeList else { return }
+//                    countrylist.forEach { code in
+//                        if codeList.contains(code) {
+//                            filteredbanksList.append(bank)
+//                        }
+//                    }
+                }
+                self?.banks = banksList
+            }
+        }
+        
+        bankListView.didBankTapped = { (bank) in
+            self.selectedBank = bank
+//            self.openOrHideView(self.bankListView)
+            self.hideView(self.bankListView, needHide: true)
+            self.hideView(self.cardListView, needHide: true)
+        }
+        
+     
+        
+        cardField.didChooseButtonTapped = { () in
+            print("cardField didChooseButtonTapped")
+            self.openOrHideView(self.cardListView)
+            self.hideView(self.bankListView, needHide: true)
+        }
+        
+        
+        cardListView.didCardTapped = { card in
+            self.cardField.configCardView(card)
+            self.selectedCardNumber = card.number ?? ""
+            
+            self.hideView(self.cardListView, needHide: true)
+            self.hideView(self.bankListView, needHide: true)
+            
+        }
+        
+        bottomView.didDoneButtonTapped = { [weak self] (_) in
+            self?.doneButtonTapped()
         }
     }
     
-    func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?,_ error: String?)->()) {
-        
-        NetworkHelper.request(.getProductList) { cardList , error in
-            if error != nil {
-                completion(nil, error)
+    private func openOrHideView(_ view: UIView) {
+        UIView.animate(withDuration: 0.2) {
+            if view.isHidden == true {
+                view.isHidden = false
+                view.alpha = 1
+                
+            } else {
+                view.isHidden = true
+                view.alpha = 0
+                
             }
-            guard let cardList = cardList as? [GetProductListDatum] else { return }
-            completion(cardList, nil)
-            print("DEBUG: Load card list... Count is: ", cardList.count)
+            self.stackView.layoutIfNeeded()
+        }
+    }
+    
+
+    private func hideView(_ view: UIView, needHide: Bool) {
+        UIView.animate(withDuration: 0.2) {
+            view.alpha = needHide ? 0 : 1
+            view.isHidden = needHide
+            self.stackView.layoutIfNeeded()
         }
     }
     
@@ -101,9 +308,15 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         cardListView.didCardTapped = {[weak self] (card) in
             print(card)
         }
+        cardField.didChooseButtonTapped = { () in
+            UIView.animate(withDuration: 0.2, animations: {
+                self.cardListView.isHidden.toggle()
+            })
+        }
         
         
-        stackView = UIStackView(arrangedSubviews: [bikBankField,accountNumber, cardListView])
+        
+        stackView = UIStackView(arrangedSubviews: [bikBankField, bankListView, accountNumber, cardField, cardListView])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
@@ -115,7 +328,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     }
     
     func updateUI(){
-        stackView = UIStackView(arrangedSubviews: [bikBankField,accountNumber, cardListView, fioField])
+   
     }
     
     func setupConstraint() {
@@ -129,8 +342,9 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     }
     
     @objc func doneButtonTapped() {
-//        prepareCard2Phone()
+        prepareExternal()
     }
+    
     
   
     func setTitle(title:String, subtitle:String) -> UIView {
@@ -169,4 +383,154 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         return titleView
     }
 
+    
+    func suggestBank() {
+        showActivity()
+        
+        let body = [
+            "query": bikBankField.textField.text
+        ] as [String: AnyObject]
+        
+        NetworkManager<SuggestBankDecodableModel>.addRequest(.suggestBank , [:], body) { model, error in
+//            if error != nil {
+//                self.dismissActivity()
+//                print("DEBUG: Error: ", error ?? "")
+//            }
+            guard let model = model else { return }
+            print("DEBUG: Card list: ", model)
+            if model.statusCode == 0 {
+                self.dismissActivity()
+                guard let data  = model.data else { return }
+//                self.selectedCardNumber = cardNumber
+                DispatchQueue.main.async {
+                    self.bikBankField.imageView.image = UIImage(imageLiteralResourceName: "100000000013")
+                }
+            } else {
+                self.dismissActivity()
+                print("DEBUG: Error: ", model.errorMessage ?? "")
+            }
+        }
+        
+    }
+    
+    func prepareExternal(){
+        
+        showActivity()
+
+        guard let accountNumber = accountNumber.textField.text else {
+            return
+        }
+        guard let bikBank = bikBankField.textField.text else {
+            return
+        }
+        guard let comment = commentField.textField.text else {
+            return
+        }
+        
+        let body = [
+            "payerCardNumber": "4656260150230695",
+            "payerINN": payerINN,
+            "PayeeName": "Фио",
+            "amount": 100,
+            "payeeAccountNumber": accountNumber,
+            "payeeBankBIC": bikBank,
+            "comment": comment,
+            "compilerStatus": "0",
+            "date": "2020-01-27"
+        ] as [String: AnyObject]
+        
+        NetworkManager<PrepareExternalDecodableModel>.addRequest(.prepareExternal , [:], body) { model, error in
+//            if error != nil {
+//                self.dismissActivity()
+//                print("DEBUG: Error: ", error ?? "")
+//            }
+            guard let model = model else { return }
+            print("DEBUG: Card list: ", model)
+            if model.statusCode == 0 {
+                self.dismissActivity()
+                guard let data  = model.data else { return }
+//                self.selectedCardNumber = cardNumber
+                DispatchQueue.main.async {
+                    let vc = TransferByRequisitesConfirmViewController()
+                    
+                    vc.accountNumber.textField.text = self.accountNumber.textField.text ?? ""
+                    vc.fioField.textField.text = self.fioField.textField.text ?? ""
+                    vc.commentField.textField.text = self.commentField.textField.text ?? ""
+                    vc.summTransctionField.textField.text = self.bottomView.amountTextField.text
+                    
+
+                    let navController = UINavigationController(rootViewController: vc)
+                    navController.modalPresentationStyle = .fullScreen
+                    self.present(navController, animated: true, completion: nil)
+                    
+                }
+            } else {
+                self.dismissActivity()
+                print("DEBUG: Error: ", model.errorMessage ?? "")
+            }
+        }
+
+    }
+    
+    func suggestCompany(){
+        showActivity()
+        
+        let body = [
+            "query": innField.textField.text
+        ] as [String: AnyObject]
+        
+        NetworkManager<SuggestCompanyDecodableModel>.addRequest(.suggestCompany , [:], body) { model, error in
+//            if error != nil {
+//                self.dismissActivity()
+//                print("DEBUG: Error: ", error ?? "")
+//            }
+            DispatchQueue.main.async {
+                self.stackView.addArrangedSubview(self.nameCompanyField)
+                self.stackView.addArrangedSubview(self.kppField)
+                self.stackView.addArrangedSubview(self.commentField)
+            }
+            guard let model = model else { return }
+            print("DEBUG: Card list: ", model)
+            if model.statusCode == 0 {
+                self.dismissActivity()
+                guard let data  = model.data else { return }
+//                self.selectedCardNumber = cardNumber
+                DispatchQueue.main.async {
+                    if data.count > 0 {
+                        self.kppField.textField.text = data[0].data?.kpp
+                        self.nameCompanyField.textField.text = data[0].value
+                    }
+                    
+                }
+            } else {
+                self.dismissActivity()
+                print("DEBUG: Error: ", model.errorMessage ?? "")
+            }
+        }
+    }
+    
+    func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?,_ error: String?)->()) {
+        
+        NetworkHelper.request(.getProductList) { cardList , error in
+            if error != nil {
+                completion(nil, error)
+            }
+            guard let cardList = cardList as? [GetProductListDatum] else { return }
+            completion(cardList, nil)
+            print("DEBUG: Load card list... Count is: ", cardList.count)
+        }
+    }
+    
+    func getBankList(completion: @escaping (_ banksList: [BanksList]?, _ error: String?)->()) {
+        
+        NetworkHelper.request(.getBanks) { banksList , error in
+            if error != nil {
+                completion(nil, error)
+            }
+            guard let banksList = banksList as? [BanksList] else { return }
+            completion(banksList, nil)
+            print("DEBUG: Load Banks List... Count is: ", banksList.count)
+        }
+    }
+    
 }

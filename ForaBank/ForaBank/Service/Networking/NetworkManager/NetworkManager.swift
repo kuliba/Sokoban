@@ -11,8 +11,8 @@ final class NetworkManager<T: NetworkModelProtocol>{
     
     static func addRequest(_ requestType: RouterManager,
                            _ urlParametrs: [String: String],
-                            _ requestBody: [String: AnyObject],
-                            completion: @escaping (_ movie: T?,_ error: String?)->()) {
+                           _ requestBody: [String: AnyObject],
+                           completion: @escaping (_ movie: T?, _ error: String?)->()) {
         
         guard var request = requestType.request() else { return }
  
@@ -23,44 +23,60 @@ final class NetworkManager<T: NetworkModelProtocol>{
             request.allHTTPHeaderFields = ["X-XSRF-TOKEN": token]
         }
         //   request.allHTTPHeaderFields = addHeader    +++++++++Singlton
-        
+        print("DEBUG: urlParametrs count",urlParametrs.count)
         if request.httpMethod != "GET" {
-        
-        /// URL Parameters
-        if var urlComponents = URLComponents(url: request.url!,
-                                             resolvingAgainstBaseURL: false), !urlParametrs.isEmpty {
-
-            urlComponents.queryItems = [URLQueryItem]()
-
-            urlParametrs.forEach({ (key, value) in
-                let queryItem = URLQueryItem(name: key,
-                                             value: "\(value)".addingPercentEncoding(withAllowedCharacters: .urlHostAllowed))
-                urlComponents.queryItems?.append(queryItem)
-            })
-
-            print("DEBUG: URLrequest:", urlComponents.url ?? "")
-            request.url = urlComponents.url
-        }
-        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-
-        if request.value(forHTTPHeaderField: "Content-Type") == nil {
+            /// URL Parameters
+            if var urlComponents = URLComponents(url: request.url!,
+                                                 resolvingAgainstBaseURL: false), !urlParametrs.isEmpty {
+                
+                urlComponents.queryItems = [URLQueryItem]()
+                
+                urlParametrs.forEach({ (key, value) in
+                    let queryItem = URLQueryItem(name: key,
+                                                 value: "\(value)".addingPercentEncoding(withAllowedCharacters: .urlHostAllowed))
+                    urlComponents.queryItems?.append(queryItem)
+                })
+                
+                print("DEBUG: URLrequest:", urlComponents.url ?? "")
+                request.url = urlComponents.url
+            }
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        }
-
-        /// Request Body
-        do {
-            let jsonAsData = try JSONSerialization.data(withJSONObject: requestBody, options: [])
-            request.httpBody = jsonAsData
             
             if request.value(forHTTPHeaderField: "Content-Type") == nil {
-                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
             }
-        } catch {
-            debugPrint(NetworkError.encodingFailed)
+            
+            /// Request Body
+            do {
+                let jsonAsData = try JSONSerialization.data(withJSONObject: requestBody, options: [])
+                request.httpBody = jsonAsData
+                
+                if request.value(forHTTPHeaderField: "Content-Type") == nil {
+                    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                }
+            } catch {
+                debugPrint(NetworkError.encodingFailed)
+            }
+            
         }
         
+        if request.httpMethod == "GET" {
+            if var urlComponents = URLComponents(url: request.url!,
+                                                 resolvingAgainstBaseURL: false), !urlParametrs.isEmpty {
+                
+                urlComponents.queryItems = [URLQueryItem]()
+                
+                urlParametrs.forEach({ (key, value) in
+                    let queryItem = URLQueryItem(name: key,
+                                                 value: "\(value)".addingPercentEncoding(withAllowedCharacters: .urlHostAllowed))
+                    urlComponents.queryItems?.append(queryItem)
+                })
+                
+                print("DEBUG: URLrequest:", urlComponents.url ?? "")
+                request.url = urlComponents.url
+            }
         }
-        
+        debugPrint("DEBUG: request url", request.url?.absoluteString ?? "")
         let task = session.dataTask(with: request) { data, response, error in
             if error != nil {
                 completion(nil, "Пожалуйста, проверьте ваше сетевое соединение.")
@@ -74,7 +90,7 @@ final class NetworkManager<T: NetworkModelProtocol>{
                         completion(nil, NetworkResponse.noData.rawValue)
                         return
                     }
-                    print(String(data: data ?? Data(), encoding: .utf8) ?? "null")
+                    debugPrint(String(data: data ?? Data(), encoding: .utf8) ?? "null")
                     do {
                         let returnValue = try T (data: data!)
                         completion(returnValue, nil)

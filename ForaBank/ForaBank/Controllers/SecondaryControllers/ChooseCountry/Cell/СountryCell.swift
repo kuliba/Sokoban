@@ -24,9 +24,9 @@ class СountryCell: UITableViewCell {
         countryImageView.image = nil
     }
     
-    func set(viewModel: Country) {
-        countryNameLabel.text = viewModel.name
-        countryImageView.image = convertSVGStringToImage(viewModel.imageSVGString ?? "")
+    func set(viewModel: CountriesList) {
+        countryNameLabel.text = viewModel.name?.capitalizingFirstLetter()
+        countryImageView.image = convertSVGStringToImage(viewModel.svgImage ?? "")
     }
     
     func convertSVGStringToImage(_ string: String) -> UIImage {

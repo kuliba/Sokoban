@@ -119,13 +119,13 @@ struct CountriesList: Codable {
     let code, name: String?
     let sendCurr: SendCurr?
     let md5Hash, svgImage: String?
-    let paymentSystemIDList: [PaymentSystemIDList]?
+    let paymentSystemCodeList: [String]?
 
     enum CodingKeys: String, CodingKey {
         case code, name, sendCurr
         case md5Hash = "md5hash"
         case svgImage
-        case paymentSystemIDList = "paymentSystemIdList"
+        case paymentSystemCodeList = "paymentSystemIdList"
     }
 }
 
@@ -153,7 +153,7 @@ extension CountriesList {
         sendCurr: SendCurr?? = nil,
         md5Hash: String?? = nil,
         svgImage: String?? = nil,
-        paymentSystemIDList: [PaymentSystemIDList]?? = nil
+        paymentSystemCodeList: [String]?? = nil
     ) -> CountriesList {
         return CountriesList(
             code: code ?? self.code,
@@ -161,7 +161,7 @@ extension CountriesList {
             sendCurr: sendCurr ?? self.sendCurr,
             md5Hash: md5Hash ?? self.md5Hash,
             svgImage: svgImage ?? self.svgImage,
-            paymentSystemIDList: paymentSystemIDList ?? self.paymentSystemIDList
+            paymentSystemCodeList: paymentSystemCodeList ?? self.paymentSystemCodeList
         )
     }
 
@@ -176,12 +176,12 @@ extension CountriesList {
 
 // PaymentSystemIDList.swift
 
-import Foundation
-
-enum PaymentSystemIDList: String, Codable {
-    case contact = "CONTACT"
-    case direct = "DIRECT"
-}
+//import Foundation
+//
+//enum PaymentSystemIDList: String, Codable, CaseIterable {
+//    case contact = "CONTACT"
+//    case direct = "DIRECT"
+//}
 
 // SendCurr.swift
 

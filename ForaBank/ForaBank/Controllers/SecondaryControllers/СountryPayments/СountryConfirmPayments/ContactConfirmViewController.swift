@@ -42,7 +42,7 @@ struct ConfirmViewControllerModel {
     
     var phone: String?
     var fullName: String? = ""
-    var country: Country?
+    var country: CountriesList?
     var numberTransction: String = ""
     var summTransction: String = ""
     var taxTransction: String = ""
@@ -54,7 +54,7 @@ struct ConfirmViewControllerModel {
         self.type = type
     }
     
-    init?(country: Country, model: AnywayPaymentDecodableModel?, fullName: String? = nil) {
+    init?(country: CountriesList, model: AnywayPaymentDecodableModel?, fullName: String? = nil) {
         self.type = .contact
         var name = ""
         var surname = ""

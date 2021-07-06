@@ -12,14 +12,14 @@ class ChooseCountryTableViewController: UITableViewController {
     //MARK: - Vars
     private let searchController = UISearchController(searchResultsController: nil)
 //    private var timer: Timer?
-    private var countries = [Country]() {
+    private var countries = [CountriesList]() {
         didSet {
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
         }
     }
-    var searchedCountry = [Country]() {
+    var searchedCountry = [CountriesList]() {
         didSet {
             DispatchQueue.main.async {
                 self.tableView.reloadData()
@@ -29,7 +29,7 @@ class ChooseCountryTableViewController: UITableViewController {
     var searching = false
     
     var modalPresent: Bool? = false
-    var didChooseCountryTapped: ((Country) -> Void)?
+    var didChooseCountryTapped: ((CountriesList) -> Void)?
     
     //MARK: - View LifeCycle
     override func viewDidLoad() {
@@ -44,7 +44,7 @@ class ChooseCountryTableViewController: UITableViewController {
 
     //MARK: - API
     private func loadCountries() {
-        if let countries = Country.countries {
+        if let countries = Dict.shared.countries {
             self.configureVC(with: countries)
         } else {
             
@@ -58,7 +58,7 @@ class ChooseCountryTableViewController: UITableViewController {
                 let list = try JSONDecoder().decode(GetCountriesDataClass.self, from: data)
                 
                 guard let countries = list.countriesList else { return }
-                Country.countries = countries
+//                Country.countries = countries
                 self.configureVC(with: countries)
                 
             } catch {
@@ -69,11 +69,11 @@ class ChooseCountryTableViewController: UITableViewController {
     
     private func configureVC(with countries: [CountriesList]) {
         for country in countries {
-            if !(country.paymentSystemIDList?.isEmpty ?? true) {
+            if !(country.paymentSystemCodeList?.isEmpty ?? true) {
                 let name = country.name?.capitalizingFirstLetter()
-                let countryViewModel = Country(name: name, code: country.code, imageSVGString: country.svgImage)
-                
-                self.countries.append(countryViewModel)
+//                let countryViewModel = Country(name: name, code: country.code, imageSVGString: country.svgImage, paymentSystemIdList: <#String?#>)
+//                country.paymentSystemIDList
+                self.countries.append(country)
             }
         }
     }
@@ -125,7 +125,7 @@ class ChooseCountryTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let selectedCountry: Country
+        let selectedCountry: CountriesList
         if searching {
             selectedCountry = searchedCountry[indexPath.row]
             print(selectedCountry)
