@@ -85,6 +85,7 @@ class MemeDetailVC : AddHeaderImageViewController {
     var cardToField = CardChooseView()
     var cardToListView: CardListView!
     var bottomView = BottomInputView()
+    lazy var cardView = CastomCardView()
     
     var stackView = UIStackView(arrangedSubviews: [])
     
@@ -112,8 +113,9 @@ class MemeDetailVC : AddHeaderImageViewController {
         }
         
         cardToListView.firstItemTap = { [weak self] in
-            let cardView = CastomCardView()
-            self?.view.addSubview(cardView)
+            self?.view.addSubview(self?.cardView ?? UIView())
+            self?.cardView.frame = (self?.view.bounds)!
+            self?.cardView.autoresizingMask = [.flexibleHeight,.flexibleWidth]
             print("Показываем окно новой карты ")
             self?.stackView.isHidden = true
         }

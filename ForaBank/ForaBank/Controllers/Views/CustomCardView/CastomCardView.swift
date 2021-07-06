@@ -11,7 +11,8 @@ class CastomCardView: UIView {
     
     @IBOutlet weak var mainStackView: UIStackView!
     @IBOutlet weak var dateStackView: UIStackView!
-    @IBOutlet weak var cardNumberTextField: UITextField!
+   
+   
     @IBOutlet weak var dateTaxtField: UITextField!
     @IBOutlet weak var cvcTextField: UITextField!
     @IBOutlet weak var nameTextField: UITextField!
@@ -25,23 +26,22 @@ class CastomCardView: UIView {
     @IBOutlet weak var nameLineView: UIView!
     
 
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        commonInit()
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
     }
     
-    required override init(frame: CGRect) {
-        super.init(frame: frame)
-        commonInit()
-    }
-    
     
     func commonInit() {
-        Bundle.main.loadNibNamed("CustomCardView", owner: self, options: nil)
+        Bundle.main.loadNibNamed("CastomCardXIB", owner: self, options: nil)
         mainStackView.fixView(self)
     }
-    @IBAction func cardNamberTextField(_ sender: UITextField) {
-    }
+    
     
     @IBAction func qrButton(_ sender: UIButton) {
     }

@@ -37,10 +37,6 @@
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <textInputTraits key="textInputTraits"/>
-                                            <connections>
-                                                <action selector="CardNumberTextField:" destination="iN0-l3-epB" eventType="editingDidEnd" id="6LG-Yl-s0x"/>
-                                                <action selector="cardNamberTextField:" destination="-1" eventType="editingDidEnd" id="afF-ln-4vq"/>
-                                            </connections>
                                         </textField>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t4a-8L-QJj">
                                             <rect key="frame" x="323" y="0.0" width="30" height="30"/>
@@ -209,7 +205,6 @@
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
-                <outlet property="cardNumberTextField" destination="kWb-pj-4mS" id="8l9-FW-aSA"/>
                 <outlet property="cvcLable" destination="k1Q-0i-ZtY" id="spR-BU-9Mx"/>
                 <outlet property="cvcLineView" destination="gPD-2N-lsa" id="fWq-VB-ccs"/>
                 <outlet property="cvcTextField" destination="Coq-qa-rfT" id="OdC-Xg-Ad4"/>
