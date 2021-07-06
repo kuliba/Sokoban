@@ -49,6 +49,7 @@
 		0BF3485B268E5907005138A8 /* GetExchangeCurrencyRatesDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF3485A268E5907005138A8 /* GetExchangeCurrencyRatesDecodableModel.swift */; };
 		0BF3485D26931254005138A8 /* SuggestBankDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF3485C26931254005138A8 /* SuggestBankDecodableModel.swift */; };
 		0BF3486426943DFB005138A8 /* SuggestCompanyDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF3486326943DFB005138A8 /* SuggestCompanyDecodableModel.swift */; };
+		0BF34866269444D9005138A8 /* AllCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF34865269444D9005138A8 /* AllCardCell.swift */; };
 		68FFA5282682AF2C002DADFA /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA5272682AF2C002DADFA /* ContactsViewController.swift */; };
 		68FFA52C2682AF62002DADFA /* ContactCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA52A2682AF62002DADFA /* ContactCollectionViewCell.swift */; };
 		68FFA52D2682AF62002DADFA /* ContactCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68FFA52B2682AF62002DADFA /* ContactCollectionViewCell.xib */; };
@@ -247,6 +248,7 @@
 		0BF3485A268E5907005138A8 /* GetExchangeCurrencyRatesDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetExchangeCurrencyRatesDecodableModel.swift; sourceTree = "<group>"; };
 		0BF3485C26931254005138A8 /* SuggestBankDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestBankDecodableModel.swift; sourceTree = "<group>"; };
 		0BF3486326943DFB005138A8 /* SuggestCompanyDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestCompanyDecodableModel.swift; sourceTree = "<group>"; };
+		0BF34865269444D9005138A8 /* AllCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllCardCell.swift; sourceTree = "<group>"; };
 		68FFA5272682AF2C002DADFA /* ContactsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
 		68FFA52A2682AF62002DADFA /* ContactCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactCollectionViewCell.swift; sourceTree = "<group>"; };
 		68FFA52B2682AF62002DADFA /* ContactCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ContactCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -1280,6 +1282,7 @@
 			children = (
 				EDFFCAF22682461F004EE095 /* CardCell.swift */,
 				ED39EC92268C9AE900158E46 /* NewCardCell.swift */,
+				0BF34865269444D9005138A8 /* AllCardCell.swift */,
 			);
 			path = CardCell;
 			sourceTree = "<group>";
@@ -1583,6 +1586,7 @@
 				EDB165782668C76A007E6030 /* SelfConfiguringCell.swift in Sources */,
 				EDB165622667A571007E6030 /* ForaInputModel.swift in Sources */,
 				EDB1453E2666AF260028EF5A /* OrderProductsViewController FlowLayout.swift in Sources */,
+				0BF34866269444D9005138A8 /* AllCardCell.swift in Sources */,
 				EDB1452E26665AD50028EF5A /* OrderProductsViewController.swift in Sources */,
 				0B8BE08F266FBE0500E96CAA /* CSRFDecodableModel.swift in Sources */,
 				EDB14535266671580028EF5A /* MockItems.swift in Sources */,

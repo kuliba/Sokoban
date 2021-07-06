@@ -14,9 +14,9 @@ import Foundation
 
 // MARK: - PrepareExternalDecodableModel
 struct PrepareExternalDecodableModel: Codable, NetworkModelProtocol {
-    let statusCode: Int?
-    let errorMessage: String?
     let data: PrepareExternalDataClass?
+    let errorMessage: String?
+    let statusCode: Int?
 }
 
 // MARK: PrepareExternalDecodableModel convenience initializers and mutators
@@ -38,14 +38,14 @@ extension PrepareExternalDecodableModel {
     }
 
     func with(
-        statusCode: Int?? = nil,
+        data: PrepareExternalDataClass?? = nil,
         errorMessage: String?? = nil,
-        data: PrepareExternalDataClass?? = nil
+        statusCode: Int?? = nil
     ) -> PrepareExternalDecodableModel {
         return PrepareExternalDecodableModel(
-            statusCode: statusCode ?? self.statusCode,
+            data: data ?? self.data,
             errorMessage: errorMessage ?? self.errorMessage,
-            data: data ?? self.data
+            statusCode: statusCode ?? self.statusCode
         )
     }
 
@@ -58,8 +58,6 @@ extension PrepareExternalDecodableModel {
     }
 }
 
-
-
 // DataClass.swift
 
 // This file was generated from JSON Schema using quicktype, do not modify it directly.
@@ -69,14 +67,21 @@ extension PrepareExternalDecodableModel {
 
 // MARK: - PrepareExternalDataClass
 struct PrepareExternalDataClass: Codable {
-    let payerCardNumber, payerAccountNumber, payeeCardNumber, payeeAccountNumber: String?
-    let payeePhone, payeeName: String?
     let amount: Int?
-    let currencyAmount: String?
-    let commission: [String]?
+    let bcc, comment, compilerStatus, date: String?
+    let oktmo: String?
+    let payeeAccountID: Int?
+    let payeeAccountNumber, payeeBankBIC, payeeCardNumber: String?
+    let payeeCardNumberID: Int?
+    let payeeINN, payeeKPP, payeeName: String?
+    let payerAccountID: Int?
+    let payerCardNumber: String?
+    let payerCardNumberID: Int?
+    let payerINN, taxDate, taxDocumentNumber, taxDocumentType: String?
+    let taxPeriod, taxReason, uin: String?
 }
 
-// MARK: PrepareExternalDataClass convenience initializers and mutators
+// MARK: DataClass convenience initializers and mutators
 
 extension PrepareExternalDataClass {
     init(data: Data) throws {
@@ -95,26 +100,56 @@ extension PrepareExternalDataClass {
     }
 
     func with(
-        payerCardNumber: String?? = nil,
-        payerAccountNumber: String?? = nil,
-        payeeCardNumber: String?? = nil,
-        payeeAccountNumber: String?? = nil,
-        payeePhone: String?? = nil,
-        payeeName: String?? = nil,
         amount: Int?? = nil,
-        currencyAmount: String?? = nil,
-        commission: [String]?? = nil
+        bcc: String?? = nil,
+        comment: String?? = nil,
+        compilerStatus: String?? = nil,
+        date: String?? = nil,
+        oktmo: String?? = nil,
+        payeeAccountID: Int?? = nil,
+        payeeAccountNumber: String?? = nil,
+        payeeBankBIC: String?? = nil,
+        payeeCardNumber: String?? = nil,
+        payeeCardNumberID: Int?? = nil,
+        payeeINN: String?? = nil,
+        payeeKPP: String?? = nil,
+        payeeName: String?? = nil,
+        payerAccountID: Int?? = nil,
+        payerCardNumber: String?? = nil,
+        payerCardNumberID: Int?? = nil,
+        payerINN: String?? = nil,
+        taxDate: String?? = nil,
+        taxDocumentNumber: String?? = nil,
+        taxDocumentType: String?? = nil,
+        taxPeriod: String?? = nil,
+        taxReason: String?? = nil,
+        uin: String?? = nil
     ) -> PrepareExternalDataClass {
         return PrepareExternalDataClass(
-            payerCardNumber: payerCardNumber ?? self.payerCardNumber,
-            payerAccountNumber: payerAccountNumber ?? self.payerAccountNumber,
-            payeeCardNumber: payeeCardNumber ?? self.payeeCardNumber,
-            payeeAccountNumber: payeeAccountNumber ?? self.payeeAccountNumber,
-            payeePhone: payeePhone ?? self.payeePhone,
-            payeeName: payeeName ?? self.payeeName,
             amount: amount ?? self.amount,
-            currencyAmount: currencyAmount ?? self.currencyAmount,
-            commission: commission ?? self.commission
+            bcc: bcc ?? self.bcc,
+            comment: comment ?? self.comment,
+            compilerStatus: compilerStatus ?? self.compilerStatus,
+            date: date ?? self.date,
+            oktmo: oktmo ?? self.oktmo,
+            payeeAccountID: payeeAccountID ?? self.payeeAccountID,
+            payeeAccountNumber: payeeAccountNumber ?? self.payeeAccountNumber,
+            payeeBankBIC: payeeBankBIC ?? self.payeeBankBIC,
+            payeeCardNumber: payeeCardNumber ?? self.payeeCardNumber,
+            payeeCardNumberID: payeeCardNumberID ?? self.payeeCardNumberID,
+            payeeINN: payeeINN ?? self.payeeINN,
+            payeeKPP: payeeKPP ?? self.payeeKPP,
+            payeeName: payeeName ?? self.payeeName,
+            payerAccountID: payerAccountID ?? self.payerAccountID,
+            payerCardNumber: payerCardNumber ?? self.payerCardNumber,
+            payerCardNumberID: payerCardNumberID ?? self.payerCardNumberID,
+            payerINN: payerINN ?? self.payerINN,
+            taxDate: taxDate ?? self.taxDate,
+            taxDocumentNumber: taxDocumentNumber ?? self.taxDocumentNumber,
+            taxDocumentType: taxDocumentType ?? self.taxDocumentType,
+            taxPeriod: taxPeriod ?? self.taxPeriod,
+            taxReason: taxReason ?? self.taxReason,
+            uin: uin ?? self.uin
         )
     }
 
