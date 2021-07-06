@@ -57,6 +57,8 @@ extension NetworkHelper {
         case getLatestPayments
         
         case getProductList
+        
+        case getPaymentSystemList
     }
     
 }

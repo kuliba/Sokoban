@@ -184,7 +184,7 @@ import Foundation
 // MARK: - PurefList
 struct PurefList: Codable {
     let puref: String?
-    let type: TypeEnum?
+    let type: String?
 }
 
 // MARK: PurefList convenience initializers and mutators
@@ -207,7 +207,7 @@ extension PurefList {
 
     func with(
         puref: String?? = nil,
-        type: TypeEnum?? = nil
+        type: String?? = nil
     ) -> PurefList {
         return PurefList(
             puref: puref ?? self.puref,

@@ -7,6 +7,17 @@
 
 import Foundation
 
+final class Dict {
+    private init() { }
+    
+    static let shared = Dict()
+    
+    var countries : [CountriesList]?
+    var banks : [BanksList]?
+    var paymentList: [PaymentSystemList]?
+    
+}
+
 struct NetworkHelper {
     
     static func request(_ requestType: RequestType,
@@ -142,7 +153,7 @@ struct NetworkHelper {
                     let data = try Data(contentsOf: filePath, options: [])
                     
                     let list = try JSONDecoder().decode(GetCountriesDataClass.self, from: data)
-                    
+                    Dict.shared.countries = list.countriesList
                     completion(list.countriesList, nil)
                 } catch {
                     print(error)
@@ -156,7 +167,8 @@ struct NetworkHelper {
             
             func getCountries(withId: String? = nil) {
                 
-                NetworkManager<GetCountriesDecodebleModel>.addRequest(.getCountries, tempParameters, body) { model, error in
+                let param = ["serial" : withId ?? ""]
+                NetworkManager<GetCountriesDecodebleModel>.addRequest(.getCountries, param, body) { model, error in
                     if error != nil {
                         guard let error = error else { return }
                         print("DEBUG: ", #function, error)
@@ -183,6 +195,7 @@ struct NetworkHelper {
                                 UserDefaults().set(data.serial, forKey: "CountriesListSerial")
                                 
                                 guard let countries = model?.data?.countriesList else { return }
+                                Dict.shared.countries = countries
                                 completion(countries, nil)
                             } else {
                                 print("DEBUG: CountriesList уже есть")
@@ -199,7 +212,7 @@ struct NetworkHelper {
             
         case .getBanks:
                         
-            if let countriesListSerial = UserDefaults().object(forKey: "CountriesListSerial") as? String {
+            if let banksListSerial = UserDefaults().object(forKey: "BanksListSerial") as? String {
 
                 guard let documentsDirectoryUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
                 let filePath = documentsDirectoryUrl.appendingPathComponent("BanksList.json")
@@ -209,13 +222,13 @@ struct NetworkHelper {
                     let data = try Data(contentsOf: filePath, options: [])
                     
                     let list = try JSONDecoder().decode(GetBanksDataClass.self, from: data)
-                    
+                    Dict.shared.banks = list.banksList
                     completion(list.banksList, nil)
                 } catch {
                     print(error)
                 }
                 
-                getBanks(withId: countriesListSerial)
+                getBanks(withId: banksListSerial)
                 
             } else {
                 getBanks()
@@ -252,7 +265,73 @@ struct NetworkHelper {
                                 UserDefaults().set(data.serial, forKey: "BanksListSerial")
                                 
                                 guard let banks = model?.data?.banksList else { return }
+                                Dict.shared.banks = banks
                                 completion(banks, nil)
+                            } else {
+                                print("DEBUG: BanksList уже есть")
+                            }
+                            
+                        } else {
+                            let error = model?.errorMessage ?? "nil"
+                            print("DEBUG: ", #function, error)
+                            completion(nil, error)
+                        }
+                    }
+                }
+            }
+            
+        case .getPaymentSystemList:
+            
+            if let banksListSerial = UserDefaults().object(forKey: "PaymentListSerial") as? String {
+
+                guard let documentsDirectoryUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+                let filePath = documentsDirectoryUrl.appendingPathComponent("PaymentsList.json")
+                
+                // Read data from .json file and transform data into an array
+                do {
+                    let data = try Data(contentsOf: filePath, options: [])
+                    
+                    let list = try JSONDecoder().decode(GetPaymentSystemListDataClass.self, from: data)
+                    Dict.shared.paymentList = list.paymentSystemList
+                    completion(list.paymentSystemList, nil)
+                } catch {
+                    print(error)
+                }
+                getPayments(withId: banksListSerial)
+            } else {
+                getPayments()
+            }
+            
+            func getPayments(withId: String? = nil) {
+                
+                let param = ["serial" : withId ?? ""]
+                print("DEBUG: getPayments param", param)
+                NetworkManager<GetPaymentSystemListDecodableModel>.addRequest(.getPaymentSystemList, param, body) { model, error in
+                    if error != nil {
+                        guard let error = error else { return }
+                        print("DEBUG: ", #function, error)
+                        completion(nil, error)
+                    } else {
+                        guard let statusCode = model?.statusCode else { return }
+                        if statusCode == 0 {
+                            if model?.data?.serial != withId {
+                                
+                                guard let data = model?.data else { return }
+                                
+                                let pathDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                                try? FileManager().createDirectory(at: pathDirectory, withIntermediateDirectories: true)
+                                let filePath = pathDirectory.appendingPathComponent("PaymentsList.json")
+
+                                let json = try? JSONEncoder().encode(data)
+
+                                do { try json!.write(to: filePath) }
+                                catch { print("Failed to write JSON: \(error.localizedDescription)") }
+                                
+                                UserDefaults().set(data.serial, forKey: "PaymentListSerial")
+                                
+                                guard let payments = model?.data?.paymentSystemList else { return }
+                                Dict.shared.paymentList = payments
+                                completion(payments, nil)
                             } else {
                                 print("DEBUG: BanksList уже есть")
                             }

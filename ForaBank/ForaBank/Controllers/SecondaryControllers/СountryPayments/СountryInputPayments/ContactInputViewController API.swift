@@ -9,6 +9,35 @@ import UIKit
 
 extension ContactInputViewController {
     
+    
+    private func loadBanks() {
+        
+        
+        if let banks = Dict.shared.banks {
+            self.banks = banks
+//            self.configureVC(with: countries)
+        } else {
+            
+            guard let documentsDirectoryUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+            let filePath = documentsDirectoryUrl.appendingPathComponent("BanksList.json")
+            
+            // Read data from .json file and transform data into an array
+            do {
+                let data = try Data(contentsOf: filePath, options: [])
+                
+                let list = try JSONDecoder().decode(GetBanksDataClass.self, from: data)
+                
+                guard let banks = list.banksList else { return }
+                
+                Dict.shared.banks = banks
+//                self.configureVC(with: countries)
+                self.banks = banks
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
     func startPayment(with card: String, type: PaymentType,
                       completion: @escaping (_ error: String?)->()) {
         let amount = self.bottomView.amountTextField.text ?? ""
