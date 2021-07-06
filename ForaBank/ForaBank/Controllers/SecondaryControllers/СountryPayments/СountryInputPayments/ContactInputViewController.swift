@@ -267,11 +267,11 @@ class ContactInputViewController: UIViewController {
     private func openOrHideView(_ view: UIView) {
         UIView.animate(withDuration: 0.2) {
             if view.isHidden == true {
-                view.alpha = 1
                 view.isHidden = false
+                view.alpha = 1
             } else {
-                view.alpha = 0
                 view.isHidden = true
+                view.alpha = 0
             }
             self.stackView.layoutIfNeeded()
         }
@@ -279,8 +279,8 @@ class ContactInputViewController: UIViewController {
     
     private func hideView(_ view: UIView, needHide: Bool) {
         UIView.animate(withDuration: 0.2) {
-            view.alpha = needHide ? 0 : 1
             view.isHidden = needHide
+            view.alpha = needHide ? 0 : 1
             self.stackView.layoutIfNeeded()
         }
     }
