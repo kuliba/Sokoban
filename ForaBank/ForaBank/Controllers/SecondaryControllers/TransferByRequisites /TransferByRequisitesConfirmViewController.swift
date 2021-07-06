@@ -1,0 +1,108 @@
+//
+//  TransferByRequisitesConfirmViewController.swift
+//  ForaBank
+//
+//  Created by Дмитрий on 06.07.2021.
+//
+
+import UIKit
+
+class TransferByRequisitesConfirmViewController: UIViewController {
+
+    var fioField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "ФИО получателя",
+            image: #imageLiteral(resourceName: "person"),
+            isEditable: false, showChooseButton: false))
+    
+    var accountNumber = ForaInput(
+        viewModel: ForaInputModel(
+            title: "Номер счета получателя",
+            image: #imageLiteral(resourceName: "accountIcon"),
+            isEditable: false))
+    
+    var commentField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "Назначение платежа",
+            image: #imageLiteral(resourceName: "comment"),
+            isEditable: false))
+    
+    var summTransctionField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "Сумма перевода",
+            image: #imageLiteral(resourceName: "coins"),
+            isEditable: false))
+    
+    var taxTransctionField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "Комиссия",
+            image: #imageLiteral(resourceName: "Frame 580"),
+            isEditable: false))
+  
+    var smsCodeField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "Введите код из СМС",
+            image: #imageLiteral(resourceName: "message-square"),
+            type: .smsCode))
+    
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        setupUI()
+    }
+    
+    
+    
+    fileprivate func setupUI() {
+        
+        view.backgroundColor = .white
+        
+        let button = UIButton(type: .system)
+        button.setTitle("Перевести", for: .normal)
+        button.setTitleColor(#colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), for: .normal)
+        button.backgroundColor = #colorLiteral(red: 0.8901960784, green: 0.003921568627, blue: 0.1058823529, alpha: 1)
+        button.layer.cornerRadius = 22
+        
+        
+        button.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(button)
+        button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+        button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
+        button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        button.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
+            
+        title = "Подтвердите реквизиты"
+        let stackView = UIStackView(arrangedSubviews: [fioField, accountNumber, commentField,summTransctionField, taxTransctionField, smsCodeField])
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.distribution = .equalSpacing
+        stackView.spacing = 20
+        view.addSubview(stackView)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
+        
+        
+        
+        
+    }
+    
+    @objc func doneButtonTapped() {
+        print("Success")
+    }
+
+    /*
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destination.
+        // Pass the selected object to the new view controller.
+    }
+    */
+
+}

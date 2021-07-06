@@ -161,11 +161,11 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
 //        }
         
         
-        self.fioField.didChooseButtonTapped = {(
-            
-            self.stackView.addArrangedSubview(self.nameField),
+        self.fioField.didChooseButtonTapped = { () in
+            self.fioField.placeHolder.text = "Фамилия"
+            self.stackView.addArrangedSubview(self.nameField)
             self.stackView.addArrangedSubview(self.surField)
-        )}
+        }
         
         accountNumber.didChangeValueField = {(field) in
             if self.accountNumber.textField.text?.count == 20, self.accountNumber.textField.text?.prefix(5) == "40817" || self.accountNumber.textField.text?.prefix(5) == "40820" || self.accountNumber.textField.text?.prefix(3) == "423" || self.accountNumber.textField.text?.prefix(3) == "426" {
@@ -425,6 +425,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         let body = [
             "payerCardNumber": "4656260150230695",
             "payerINN": payerINN,
+            "PayeeName": "Фио",
             "amount": 100,
             "payeeAccountNumber": accountNumber,
             "payeeBankBIC": bikBank,
@@ -445,17 +446,14 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
                 guard let data  = model.data else { return }
 //                self.selectedCardNumber = cardNumber
                 DispatchQueue.main.async {
-                    let vc = PhoneConfirmViewController()
-                    vc.sbp = false
+                    let vc = TransferByRequisitesConfirmViewController()
                     
-//                    vc.phoneField.imageView.image = UIImage(imageLiteralResourceName: "externalButton")
-                    vc.bankPayeer.chooseButton.isHidden = true
-                    vc.cardField.chooseButton.isHidden = true
-//                    if model.data?.commission == 0.0 {
-//                        vc.taxTransctionField.textField.text = "Комиссия не взимается"
-//                    } else {
-//                        vc.taxTransctionField.textField.text = model.data?.commission?.description
-//                    }
+                    vc.accountNumber.textField.text = self.accountNumber.textField.text ?? ""
+                    vc.fioField.textField.text = self.fioField.textField.text ?? ""
+                    vc.commentField.textField.text = self.commentField.textField.text ?? ""
+                    vc.summTransctionField.textField.text = self.bottomView.amountTextField.text
+                    
+
                     let navController = UINavigationController(rootViewController: vc)
                     navController.modalPresentationStyle = .fullScreen
                     self.present(navController, animated: true, completion: nil)
