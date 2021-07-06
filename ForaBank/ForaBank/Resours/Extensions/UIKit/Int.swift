@@ -8,13 +8,13 @@
 import UIKit
 
 extension Double {
-    func currencyFormatter() -> String {
+    func currencyFormatter(symbol: String = "₽") -> String {
         
         let currencyFormatter = NumberFormatter()
         currencyFormatter.usesGroupingSeparator = true
         currencyFormatter.numberStyle = .currency
         currencyFormatter.locale = Locale(identifier: "ru_RU")
-        currencyFormatter.currencySymbol = "₽"
+        currencyFormatter.currencySymbol = symbol
 
         if let priceString = currencyFormatter.string(from: NSNumber(value: self)) {
             return priceString
