@@ -27,16 +27,24 @@
                     <rect key="frame" x="20" y="66.5" width="392" height="40"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="yjB-Uc-1xh">
-                            <rect key="frame" x="0.0" y="9" width="182" height="22"/>
+                            <rect key="frame" x="0.0" y="10" width="182" height="20.5"/>
                             <subviews>
                                 <textField opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="749" contentHorizontalAlignment="left" contentVerticalAlignment="center" usesAttributedText="YES" placeholder="Сумма перевода" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Att-bb-GzQ">
-                                    <rect key="frame" x="0.0" y="0.0" width="171.5" height="22"/>
+                                    <rect key="frame" x="0.0" y="2.5" width="171.5" height="15"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <attributedString key="attributedText"/>
+                                    <attributedString key="attributedText">
+                                        <fragment content="$">
+                                            <attributes>
+                                                <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                                <font key="NSFont" metaFont="smallSystem"/>
+                                                <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                            </attributes>
+                                        </fragment>
+                                    </attributedString>
                                     <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="decimalPad" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                                 </textField>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lDh-YM-4Lj">
-                                    <rect key="frame" x="171.5" y="1" width="10.5" height="20.5"/>
+                                    <rect key="frame" x="171.5" y="0.0" width="10.5" height="20.5"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
