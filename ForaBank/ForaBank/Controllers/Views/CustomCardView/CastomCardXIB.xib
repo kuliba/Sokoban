@@ -11,6 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CastomCardView" customModule="ForaBank" customModuleProvider="target">
             <connections>
+                <outlet property="bottomStackView" destination="L3c-ah-Ffm" id="Qvg-fU-q33"/>
                 <outlet property="cardTextField" destination="kWb-pj-4mS" id="Gjy-d8-vsA"/>
                 <outlet property="contentView" destination="iN0-l3-epB" id="55N-Mk-KQN"/>
                 <outlet property="cvcLable" destination="k1Q-0i-ZtY" id="SBX-Mw-LlD"/>
@@ -64,6 +65,7 @@
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="30" id="btk-5q-5aA"/>
                                             </constraints>
+                                            <color key="tintColor" systemColor="systemGray3Color"/>
                                             <state key="normal" image="card_scan"/>
                                             <connections>
                                                 <action selector="qrButton:" destination="-1" eventType="touchUpInside" id="z8O-TG-xlL"/>
@@ -236,6 +238,9 @@
         </systemColor>
         <systemColor name="systemGray2Color">
             <color red="0.68235294117647061" green="0.68235294117647061" blue="0.69803921568627447" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemGray3Color">
+            <color red="0.7803921568627451" green="0.7803921568627451" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGray6Color">
             <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

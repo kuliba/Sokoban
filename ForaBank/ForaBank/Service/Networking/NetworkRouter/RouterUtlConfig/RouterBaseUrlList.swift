@@ -86,4 +86,6 @@ enum RouterBaseUrlList: String {
     case suggestCompany            = "/rest/suggestCompany"
     
     case getCurrencyList           = "/rest/dict/getCurrencyList"
+    
+    case getProductTemplateList    = "/rest/getProductTemplateList"
 }
