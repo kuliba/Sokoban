@@ -72,12 +72,12 @@ class CardListView: UIView {
 
     func commonInit(onlyMy: Bool) {
         self.onlyMy = onlyMy
-        print("GEBUG: only:", self.onlyMy)
+//        print("GEBUG: only:", self.onlyMy)
         
 //        let height: CGFloat = self.onlyMy ? 110 : 80
         changeCardButtonCollection.isHidden = !self.onlyMy
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.heightAnchor.constraint(equalToConstant: self.onlyMy ? 110 : 80).isActive = true
+        self.heightAnchor.constraint(equalToConstant: self.onlyMy ? 120 : 90).isActive = true
         setupCollectionView()
         isHidden = true
         alpha = 0

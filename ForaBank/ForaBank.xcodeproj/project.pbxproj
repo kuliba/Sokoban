@@ -89,6 +89,7 @@
 		ED3A96712690FADD00252857 /* BankListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3A96702690FADD00252857 /* BankListView.swift */; };
 		ED3A96742690FC8300252857 /* BankCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3A96732690FC8300252857 /* BankCell.swift */; };
 		ED3A96772690FCD700252857 /* BankViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3A96762690FCD700252857 /* BankViewModel.swift */; };
+		ED3A9679269644E300252857 /* CurrencyTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3A9678269644E300252857 /* CurrencyTextField.swift */; };
 		ED4FC5EC266AD98E0092B4AB /* NSCollectionLayoutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EB266AD98E0092B4AB /* NSCollectionLayoutItem.swift */; };
 		ED4FC5EF266B70A00092B4AB /* PartialTransparentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EE266B70A00092B4AB /* PartialTransparentView.swift */; };
 		ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5F9266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift */; };
@@ -291,6 +292,7 @@
 		ED3A96702690FADD00252857 /* BankListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankListView.swift; sourceTree = "<group>"; };
 		ED3A96732690FC8300252857 /* BankCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankCell.swift; sourceTree = "<group>"; };
 		ED3A96762690FCD700252857 /* BankViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankViewModel.swift; sourceTree = "<group>"; };
+		ED3A9678269644E300252857 /* CurrencyTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyTextField.swift; sourceTree = "<group>"; };
 		ED4FC5EB266AD98E0092B4AB /* NSCollectionLayoutItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSCollectionLayoutItem.swift; sourceTree = "<group>"; };
 		ED4FC5EE266B70A00092B4AB /* PartialTransparentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartialTransparentView.swift; sourceTree = "<group>"; };
 		ED4FC5F9266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmsCodeBasicAttributes.swift; sourceTree = "<group>"; };
@@ -796,6 +798,7 @@
 				0B7A18B72683A9940007CC75 /* FileManagerHelper.swift */,
 				0B7A18B92683AC880007CC75 /* NotificationName.swift */,
 				ED3A966D2690A80B00252857 /* PresentationController.swift */,
+				ED3A9678269644E300252857 /* CurrencyTextField.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1543,6 +1546,7 @@
 				ED4FC602266C0AB50092B4AB /* ChooseCountryTableViewController.swift in Sources */,
 				EDF6821A266F9EC800FD5C07 /* RouterUrlList.swift in Sources */,
 				0BF3486426943DFB005138A8 /* SuggestCompanyDecodableModel.swift in Sources */,
+				ED3A9679269644E300252857 /* CurrencyTextField.swift in Sources */,
 				EDB1452026661B030028EF5A /* StringMask.swift in Sources */,
 				EDB16586266A0883007E6030 /* NSDirectionalEdgeInsets.swift in Sources */,
 				EDFFCAF32682461F004EE095 /* CardCell.swift in Sources */,

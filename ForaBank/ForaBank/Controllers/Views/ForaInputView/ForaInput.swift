@@ -147,7 +147,7 @@ class ForaInput: UIView {
         viewModel.cardModel = with
         self.text = with.product ?? ""
         let balance = Double(with.balance ?? 0)
-        self.balanceLabel.text = balance.currencyFormatter()
+        self.balanceLabel.text = balance.currencyFormatter(code: with.currency ?? "")
         self.bottomLabelText = with.numberMasked
         
     }

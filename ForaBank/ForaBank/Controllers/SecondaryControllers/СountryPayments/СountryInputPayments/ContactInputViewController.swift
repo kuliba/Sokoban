@@ -23,6 +23,11 @@ class ContactInputViewController: UIViewController {
         }
     }
     var selectedCardNumber = ""
+    var puref = "" {
+        didSet {
+            print("DEBUG: Puref string: ", puref)
+        }
+    }
     var selectedBank: BanksList? {
         didSet {
             guard let bank = selectedBank else { return }
@@ -38,10 +43,10 @@ class ContactInputViewController: UIViewController {
     var country: CountriesList? {
         didSet {
             if country?.code == "AM" {
-                self.typeOfPay = .migAIbank
+//                self.typeOfPay = .migAIbank
                 self.configure(with: country, byPhone: true)
             } else {
-                self.typeOfPay = .contact
+//                self.typeOfPay = .contact
                 self.configure(with: country, byPhone: false)
             }
         }
@@ -51,6 +56,14 @@ class ContactInputViewController: UIViewController {
         didSet {
             guard let banks = banks else { return }
             bankListView.bankList = banks
+        }
+    }
+    
+    var paymentSystem: PaymentSystemList? {
+        didSet {
+            guard let paymentSystem = paymentSystem else { return }
+            setupPaymentsUI(system: paymentSystem)
+            print("DEBUG: payment system: ", paymentSystem.name)
         }
     }
     
@@ -85,13 +98,8 @@ class ContactInputViewController: UIViewController {
             showChooseButton: true))
     
     var bankListView = BankListView()
-        
-    var cardField = ForaInput(
-        viewModel: ForaInputModel(
-            title: "Счет списания",
-            image: #imageLiteral(resourceName: "credit-card"),
-            type: .credidCard,
-            isEditable: false))
+            
+    var cardFromField = CardChooseView() 
     
     var cardListView = CardListView(onlyMy: false)
     
@@ -133,11 +141,19 @@ class ContactInputViewController: UIViewController {
                     self?.showAlert(with: "Ошибка", and: error!)
                 }
                 guard let data = data else { return }
-                self?.cardListView.cardList = data
+                var filterProduct: [GetProductListDatum] = []
+                data.forEach { product in
+                    if (product.productType == "CARD" || product.productType == "ACCOUNT") && product.currency == "RUB" {
+                        filterProduct.append(product)
+                    }
+                }
                 
-                if data.count > 0 {
-                    self?.cardField.configCardView(data.first!)
-                    guard let cardNumber  = data.first?.number else { return }
+                self?.cardListView.cardList = filterProduct
+                
+                if filterProduct.count > 0 {
+                    self?.cardFromField.cardModel = filterProduct.first
+//                    self?.cardField.configCardView(data.first!)
+                    guard let cardNumber  = filterProduct.first?.number else { return }
                     self?.selectedCardNumber = cardNumber
                 }
             }
@@ -177,7 +193,7 @@ class ContactInputViewController: UIViewController {
             self?.configure(with: self?.country, byPhone: switchView.isOn)
         }
         
-        cardField.didChooseButtonTapped = { () in
+        cardFromField.didChooseButtonTapped = { () in
             print("cardField didChooseButtonTapped")
             self.openOrHideView(self.cardListView)
             self.hideView(self.bankListView, needHide: true)
@@ -190,7 +206,7 @@ class ContactInputViewController: UIViewController {
         }
         
         cardListView.didCardTapped = { card in
-            self.cardField.configCardView(card)
+            self.cardFromField.cardModel = card
             self.selectedCardNumber = card.number ?? ""
             
             self.hideView(self.cardListView, needHide: true)
@@ -226,6 +242,21 @@ class ContactInputViewController: UIViewController {
     private func setupBankField(bank: BanksList) {
         self.bankField.text = bank.memberNameRus ?? "" //"АйДиБанк"
         self.bankField.imageView.image = convertSVGStringToImage(bank.svgImage ?? "")
+        
+        guard let paymentSystem = self.paymentSystem else { return }
+        paymentSystem.purefList?.forEach({ dictArr in
+            dictArr.keys.forEach { key in
+                if key == bank.memberID {
+                    let dict = dictArr[key]
+                    dict?.forEach { purefList in
+                        if purefList.type == "phone" {
+                            self.puref = purefList.puref ?? ""
+                        }
+                    }
+                }
+            }
+        })
+        
     }
     
     func convertSVGStringToImage(_ string: String) -> UIImage {

@@ -18,10 +18,7 @@ struct CardViewModel {
     
     var balance: String {
         let cardBal: Double = card.balance ?? 0
-        let tmpSym = "\\0042\\0072"
-        let tmpSymbol = tmpSym.replacingOccurrences(of: "\\", with: " ")
-        
-        return cardBal.currencyFormatter(symbol: "\u{043b}" )
+        return cardBal.currencyFormatter(code: card.currency ?? "")
     }
     
     var maskedcardNumber: String {

@@ -20,6 +20,7 @@ class CardChooseView: UIView {
     @IBOutlet weak var maskNumberLabel: UILabel!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var numberCardLabel: UILabel!
+    @IBOutlet weak var leftTitleAncor: NSLayoutConstraint!
     
     var didChooseButtonTapped: (() -> Void)?
     
@@ -56,15 +57,27 @@ class CardChooseView: UIView {
     private func setupData(with model: GetProductListDatum) {
         hideAll(false)
         let balance = Double(model.balance ?? 0)
-        self.balanceLabel.text = balance.currencyFormatter()
-        let text = NSAttributedString(string: model.productName ?? "",
-                                      attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14),
-                                                   NSAttributedString.Key.foregroundColor : UIColor.black])
+//        var tmpSym = "\\20BD"
+//        if let currList = Dict.shared.currencyList {
+//            currList.forEach { curr in
+//                if curr.code == model.currency {
+//                    tmpSym = curr.cssCode ?? ""
+//                    let sss = model.currency!.getSymbol()
+//                    print(sss)
+//                }
+//            }
+//        }
+        self.balanceLabel.text = balance.currencyFormatter(code: model.currency ?? "")
+        let text = NSAttributedString(
+            string: model.productName ?? "",
+            attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14),
+                         NSAttributedString.Key.foregroundColor : UIColor.black])
         self.numberCardLabel.attributedText = text
         self.maskNumberLabel.text = "• \(model.number?.suffix(4) ?? "")"
         self.nameLabel.text = model.customName ?? model.name ?? ""
         self.setupCardImage(with: model.number ?? "")
     }
+
     
     func hideAll(_ need: Bool) {
         imageView.isHidden = need
