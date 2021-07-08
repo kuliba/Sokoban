@@ -102,6 +102,8 @@ class MemeDetailVC : AddHeaderImageViewController {
         cardFromListView = CardListView(onlyMy: onlyMy)
         cardFromListView.lastItemTap = {
             print("Открывать все карты ")
+            let vc = CustomCardListViewController()
+            self.present(vc, animated: true, completion: nil)
         }
         
         
