@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CardTableCell: UITableViewCell{
+class CardTableCell: UITableViewCell {
     
     let cardView = CardChooseView()
     
@@ -20,8 +20,6 @@ class CardTableCell: UITableViewCell{
         super.init(coder: aDecoder)
         comonInit()
     }
-    
-    
     
     func comonInit() {
         self.addSubview(cardView)
@@ -41,16 +39,15 @@ class AllCardListViewController: UITableViewController {
     let saveIdentifier = "SaveCell"
     
     var cardModel: [GetProductListDatum] = [] {
-        didSet {
-            tableView.reloadData()
-        }
-    }
-    var saveCardModel: [GetProductListDatum] = []
+        didSet { tableView.reloadData() } }
+    
+    var saveCardModel: [GetProductTemplateDatum] = [] {
+        didSet { tableView.reloadData() } }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
-        navigationItem.title = "Выберете страну"
+        navigationItem.title = "Выберете карту"
         addCloseButton()
         
 //        let nib = UINib(nibName: "СountryCell", bundle: nil)
@@ -67,13 +64,9 @@ class AllCardListViewController: UITableViewController {
                 guard let data = data else { return }
                 self?.cardModel = data
                 
-//                if data.count > 0 {
-//                    self?.cardField.configCardView(data.first!)
-//                    guard let cardNumber  = data.first?.number else { return }
-//                    self?.selectedCardNumber = cardNumber
-//                }
             }
         }
+        getProductTemplate()
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -90,7 +83,7 @@ class AllCardListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
+        return 70
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -100,14 +93,14 @@ class AllCardListViewController: UITableViewController {
             cell.cardView.cardModel = cardModel[indexPath.row]
             return cell
         default:
-            let cell = tableView.dequeueReusableCell(withIdentifier: СountryCell.reuseId, for: indexPath) as! СountryCell
-            cell.countryNameLabel.text = "123456432345"
+            let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! CardTableCell
+            cell.cardView.tempCardModel = saveCardModel[indexPath.row]
             return cell
         }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+        tableView.deselectRow(at: indexPath, animated: false)
         switch indexPath.section {
         case 0:
             let model = cardModel[indexPath.row]
@@ -117,12 +110,12 @@ class AllCardListViewController: UITableViewController {
         
         
         
-        self.dismiss(animated: true, completion: nil)
+//        self.dismiss(animated: true, completion: nil)
         
     }
     
     //MARK: - API
-    func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?)->()) {
+    private func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?) ->() ) {
         
         NetworkHelper.request(.getProductList) { cardList , error in
             if error != nil {
@@ -133,4 +126,28 @@ class AllCardListViewController: UITableViewController {
             print("DEBUG: Load card list... Count is: ", cardList.count)
         }
     }
+    
+    private func getProductTemplate() {
+        NetworkManager<GetProductTemplateListDecodableModel>.addRequest(.getProductTemplateList, [:], [:]) { model, error in
+            if error != nil {
+                guard let error = error else { return }
+                print("DEBUG: ", #function, error)
+//                completion(nil, error)
+            } else {
+                guard let model = model else { return }
+                guard let statusCode = model.statusCode else { return }
+                if statusCode == 0 {
+                    guard let tempList = model.data else { return }
+                    print("DEBUG: template List:", tempList)
+                    self.saveCardModel = tempList
+                } else {
+                    let error = model.errorMessage ?? "nil"
+                    print("DEBUG: ", #function, error)
+//                    completion(nil, error)
+                }
+            }
+        }
+    }
+    
+    
 }
