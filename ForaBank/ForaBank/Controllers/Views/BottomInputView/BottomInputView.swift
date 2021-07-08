@@ -135,21 +135,21 @@ extension BottomInputView: UITextFieldDelegate {
             }
             
             
-            textField.text =  formatted.currencyInputFormatting()
+            textField.text =  formatted
         }
         
         return false
         
     }
     
-    func getSymbol(forCurrencyCode code: String) -> String? {
-        let locale = NSLocale(localeIdentifier: code)
-        if locale.displayName(forKey: .currencySymbol, value: code) == code {
-            let newlocale = NSLocale(localeIdentifier: code.dropLast() + "_en")
-            return newlocale.displayName(forKey: .currencySymbol, value: code)
-        }
-        return locale.displayName(forKey: .currencySymbol, value: code)
-    }
+    
+    
+//    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+//        textField.invalidateIntrinsicContentSize()
+//        return true
+//    }
+    
+    
     
 }
 
@@ -160,7 +160,7 @@ class CurrencyFormatter: NumberFormatter {
     override init() {
         super.init()
 
-        self.currencySymbol = "$"
+        self.currencySymbol = ""
         self.minimumFractionDigits = 0
         self.numberStyle = .currency
     }

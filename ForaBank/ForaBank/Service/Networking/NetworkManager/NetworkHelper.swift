@@ -15,7 +15,7 @@ final class Dict {
     var countries : [CountriesList]?
     var banks : [BanksList]?
     var paymentList: [PaymentSystemList]?
-    
+    var currencyList: [CurrencyList]?
 }
 
 struct NetworkHelper {
@@ -377,8 +377,71 @@ struct NetworkHelper {
             NetworkManager<GetLatestPaymentsDecodableModel>.addRequest(.getLatestPayments, tempParameters, body) { model, error in
             
             }
+        case .getCurrencyList:
+            
+            if let banksListSerial = UserDefaults().object(forKey: "CurrencyListSerial") as? String {
+
+                guard let documentsDirectoryUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+                let filePath = documentsDirectoryUrl.appendingPathComponent("CurrencyList.json")
+                
+                // Read data from .json file and transform data into an array
+                do {
+                    let data = try Data(contentsOf: filePath, options: [])
+                    
+                    let list = try JSONDecoder().decode(GetCurrencyListDataClass.self, from: data)
+                    Dict.shared.currencyList = list.currencyList
+                    completion(list.currencyList, nil)
+                } catch {
+                    print(error)
+                }
+                getCurrency(withId: banksListSerial)
+            } else {
+                getCurrency()
+            }
+            
+            func getCurrency(withId: String? = nil) {
+                
+                let param = ["serial" : withId ?? ""]
+                print("DEBUG: getPayments param", param)
+                NetworkManager<GetCurrencyListDecodableModel>.addRequest(.getCurrencyList, param, body) { model, error in
+                    if error != nil {
+                        guard let error = error else { return }
+                        print("DEBUG: ", #function, error)
+                        completion(nil, error)
+                    } else {
+                        guard let statusCode = model?.statusCode else { return }
+                        if statusCode == 0 {
+                            if model?.data?.serial != withId {
+                                //17d41a8646c2a644b6db321888e00469
+                                guard let data = model?.data else { return }
+                                
+                                let pathDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                                try? FileManager().createDirectory(at: pathDirectory, withIntermediateDirectories: true)
+                                let filePath = pathDirectory.appendingPathComponent("CurrencyList.json")
+
+                                let json = try? JSONEncoder().encode(data)
+
+                                do { try json!.write(to: filePath) }
+                                catch { print("Failed to write JSON: \(error.localizedDescription)") }
+                                
+                                UserDefaults().set(data.serial, forKey: "CurrencyListSerial")
+                                
+                                guard let payments = model?.data?.currencyList else { return }
+                                Dict.shared.currencyList = payments
+                                completion(payments, nil)
+                            } else {
+                                print("DEBUG: CurrencyList уже есть")
+                            }
+                            
+                        } else {
+                            let error = model?.errorMessage ?? "nil"
+                            print("DEBUG: ", #function, error)
+                            completion(nil, error)
+                        }
+                    }
+                }
+            }
         }
-        
     }
     
     
