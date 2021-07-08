@@ -25,7 +25,7 @@ extension ContactInputViewController {
                     "cardNumber": card,
                     "provider": nil,
                     "puref": puref] as [String: AnyObject]
-        
+        print("DEBUG: Error: anywayPaymentBegin with body:",body)
         NetworkManager<AnywayPaymentBeginDecodebleModel>.addRequest(.anywayPaymentBegin, [:], body, completion: { model, error in
             if error != nil {
                 print("DEBUG: Error: anywayPaymentBegin ", error ?? "")

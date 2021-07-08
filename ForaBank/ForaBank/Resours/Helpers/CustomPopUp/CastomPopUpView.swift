@@ -301,23 +301,22 @@ class MemeDetailVC : AddHeaderImageViewController {
             UIApplication.shared.keyWindow?.startIndicatingActivity()
         }
         bottomView.doneButtonIsEnabled(true)
-        let body = ["check" : false,
-                    "amount" : viewModel.summTransction,
-                    "currencyAmount" : "RUB",
-                    "payer" : [ "cardId" : viewModel.cardFromCardId,
-                                "cardNumber" : viewModel.cardFromCardNumber,
-                                "carExpireDate" : viewModel.cardFromExpireDate,
-                                "cardCVV" : viewModel.cardFromCardCVV,
-                                "accountId" : viewModel.cardFromAccountId,
-                                "accountNumber" : viewModel.cardFromAccountNumber,
-                                "phoneNumber" : ""
-                    ],
-                    "payee" : [ "cardId" : viewModel.cardToCardId,
-                                "cardNumber" : viewModel.cardToCardNumber,
-                                "accountId" : viewModel.cardToAccountId,
-                                "accountNumber" : viewModel.cardToAccountNumber,
-                                "phoneNumber" : ""
-                    ] ] as [String : AnyObject]
+        let body = [ "check" : false,
+                     "amount" : viewModel.summTransction,
+                     "currencyAmount" : "RUB",
+                     "payer" : [
+                        "cardId" : viewModel.cardFromCardId,
+                        "cardNumber" : viewModel.cardFromCardNumber,
+                        "accountId" : viewModel.cardFromAccountId,
+                        "accountNumber" : viewModel.cardFromAccountNumber
+                     ],
+                     "payeeInternal" : [
+                        "cardId" : viewModel.cardToCardId,
+                        "cardNumber" : viewModel.cardToCardNumber,
+                        "accountId" : viewModel.cardToAccountId,
+                        "accountNumber" : viewModel.cardToAccountNumber,
+                        "productCustomName" : ""
+                     ] ] as [String : AnyObject]
         print("DEBUG: ", #function, body)
         NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer, [:], body) { [weak self] model, error in
             DispatchQueue.main.async {

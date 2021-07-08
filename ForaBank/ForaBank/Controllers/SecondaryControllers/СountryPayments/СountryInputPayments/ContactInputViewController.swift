@@ -13,7 +13,7 @@ class ContactInputViewController: UIViewController {
     let popView = CastomPopUpView()
     var typeOfPay: PaymentType = .contact {
         didSet {
-            print("DEBUG: Puref: ", typeOfPay.puref)
+            print("DEBUG: typeOfPay: ", typeOfPay)
 //            self.startPayment(with: selectedCardNumber, type: typeOfPay) { error in
 //                self.dismissActivity()
 //                if error != nil {
@@ -43,10 +43,10 @@ class ContactInputViewController: UIViewController {
     var country: CountriesList? {
         didSet {
             if country?.code == "AM" {
-//                self.typeOfPay = .migAIbank
+                self.typeOfPay = .migAIbank
                 self.configure(with: country, byPhone: true)
             } else {
-//                self.typeOfPay = .contact
+                self.typeOfPay = .contact
                 self.configure(with: country, byPhone: false)
             }
         }
