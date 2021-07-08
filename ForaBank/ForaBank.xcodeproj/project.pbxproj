@@ -58,6 +58,7 @@
 		0BF3487526965B45005138A8 /* AllCardListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF3487426965B45005138A8 /* AllCardListCell.swift */; };
 		0BF3487726965B6D005138A8 /* AllCardListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0BF3487626965B6D005138A8 /* AllCardListCell.xib */; };
 		0BF3487926976FAE005138A8 /* GetProductTemplateListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF3487826976FAE005138A8 /* GetProductTemplateListDecodableModel.swift */; };
+		0BF3487B2697717E005138A8 /* DeleteProductTemplateDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF3487A2697717E005138A8 /* DeleteProductTemplateDecodableModel.swift */; };
 		68FFA5282682AF2C002DADFA /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA5272682AF2C002DADFA /* ContactsViewController.swift */; };
 		68FFA52C2682AF62002DADFA /* ContactCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA52A2682AF62002DADFA /* ContactCollectionViewCell.swift */; };
 		68FFA52D2682AF62002DADFA /* ContactCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68FFA52B2682AF62002DADFA /* ContactCollectionViewCell.xib */; };
@@ -270,6 +271,7 @@
 		0BF3487426965B45005138A8 /* AllCardListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllCardListCell.swift; sourceTree = "<group>"; };
 		0BF3487626965B6D005138A8 /* AllCardListCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AllCardListCell.xib; sourceTree = "<group>"; };
 		0BF3487826976FAE005138A8 /* GetProductTemplateListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetProductTemplateListDecodableModel.swift; sourceTree = "<group>"; };
+		0BF3487A2697717E005138A8 /* DeleteProductTemplateDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteProductTemplateDecodableModel.swift; sourceTree = "<group>"; };
 		68FFA5272682AF2C002DADFA /* ContactsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
 		68FFA52A2682AF62002DADFA /* ContactCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactCollectionViewCell.swift; sourceTree = "<group>"; };
 		68FFA52B2682AF62002DADFA /* ContactCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ContactCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -1221,6 +1223,7 @@
 				0BF3486326943DFB005138A8 /* SuggestCompanyDecodableModel.swift */,
 				0BF348692694CEBA005138A8 /* GetCurrencyListDecodableModel.swift */,
 				0BF3487826976FAE005138A8 /* GetProductTemplateListDecodableModel.swift */,
+				0BF3487A2697717E005138A8 /* DeleteProductTemplateDecodableModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -1544,6 +1547,7 @@
 				EDF68211266F9EC800FD5C07 /* RequestError.swift in Sources */,
 				0BF3485B268E5907005138A8 /* GetExchangeCurrencyRatesDecodableModel.swift in Sources */,
 				0B37F9882680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift in Sources */,
+				0BF3487B2697717E005138A8 /* DeleteProductTemplateDecodableModel.swift in Sources */,
 				EDB1451C26652D370028EF5A /* UILabel.swift in Sources */,
 				ED0B4894267B50F50037EA06 /* Int.swift in Sources */,
 				EDB145402666AFD70028EF5A /* Constants.swift in Sources */,
