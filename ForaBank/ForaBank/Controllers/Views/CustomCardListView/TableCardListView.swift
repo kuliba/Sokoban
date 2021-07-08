@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CustomCardListView: UIView {
+class TableCardListView: UIView {
     
     @IBOutlet var contentView: UIView!
     @IBOutlet weak var tableView: UITableView!
@@ -24,10 +24,12 @@ class CustomCardListView: UIView {
     
     
     func commonInit() {
-        Bundle.main.loadNibNamed("CustomCardListView", owner: self, options: nil)
+        Bundle.main.loadNibNamed("TableCardListXib", owner: self, options: nil)
         contentView.fixView(self)
         tableView.delegate = self
         tableView.dataSource = self
+        let nib = UINib(nibName: "AllCardListCell", bundle: nil)
+        tableView.register(nib, forCellReuseIdentifier: "cell")
         
     }
     @IBAction func closeButton(_ sender: UIButton) {
@@ -35,7 +37,7 @@ class CustomCardListView: UIView {
     
 }
 
-extension CustomCardListView: UITableViewDataSource, UITableViewDelegate {
+extension TableCardListView: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
@@ -62,7 +64,7 @@ extension CustomCardListView: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "", for: indexPath) as! CustomCardListCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! AllCardListCell
         return cell
     }
     

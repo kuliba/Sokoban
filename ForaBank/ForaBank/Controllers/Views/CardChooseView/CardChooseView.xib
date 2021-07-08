@@ -14,6 +14,7 @@
             <connections>
                 <outlet property="balanceLabel" destination="8wu-aP-WKo" id="Fb2-ts-qfW"/>
                 <outlet property="cardTypeImage" destination="bik-6d-zbI" id="d6c-Oj-ghU"/>
+                <outlet property="choseButton" destination="Hyn-zu-fVo" id="T3v-tM-awH"/>
                 <outlet property="contentView" destination="iN0-l3-epB" id="ooR-ga-dRp"/>
                 <outlet property="imageView" destination="C5e-li-LSY" id="0lp-7M-iUa"/>
                 <outlet property="leftTitleAncor" destination="u0Y-Pl-xat" id="m6v-5K-Q8F"/>

@@ -7,10 +7,11 @@
 
 import UIKit
 
-class CastomCardView: UIView {
+class CastomCardView: UIView, UITextFieldDelegate {
     
     @IBOutlet weak var mainStackView: UIStackView!
     @IBOutlet weak var dateStackView: UIStackView!
+    @IBOutlet weak var bottomStackView: UIStackView!
     @IBOutlet var contentView: UIView!
     
    
@@ -43,6 +44,16 @@ class CastomCardView: UIView {
         Bundle.main.loadNibNamed("CastomCardXIB", owner: self, options: nil)
         contentView.fixView(self)
         cardTextField.maskString = "0000 0000 0000 0000"
+        dateStackView.isHidden = true
+        bottomStackView.isHidden = true
+        cardTextField.delegate = self
+    }
+    
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        self.lineView.backgroundColor = .black
+        self.qrButton.tintColor = .black
+        self.goBackButton.tintColor = .black
+        return true
     }
     
     
@@ -60,3 +71,23 @@ class CastomCardView: UIView {
     }
 }
 
+extension UIButton {
+
+    private func image(withColor color: UIColor) -> UIImage? {
+        let rect = CGRect(x: 0.0, y: 0.0, width: 1.0, height: 1.0)
+        UIGraphicsBeginImageContext(rect.size)
+        let context = UIGraphicsGetCurrentContext()
+
+        context?.setFillColor(color.cgColor)
+        context?.fill(rect)
+
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+
+        return image
+    }
+
+    func setBackgroundColor(_ color: UIColor, for state: UIControl.State) {
+        self.setBackgroundImage(image(withColor: color), for: state)
+    }
+}

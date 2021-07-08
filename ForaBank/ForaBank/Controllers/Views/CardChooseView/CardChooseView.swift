@@ -21,6 +21,8 @@ class CardChooseView: UIView {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var numberCardLabel: UILabel!
     @IBOutlet weak var leftTitleAncor: NSLayoutConstraint!
+    @IBOutlet weak var choseButton: UIButton!
+    
     
     var didChooseButtonTapped: (() -> Void)?
     

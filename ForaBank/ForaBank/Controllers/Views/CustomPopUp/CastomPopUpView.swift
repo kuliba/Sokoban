@@ -102,8 +102,12 @@ class MemeDetailVC : AddHeaderImageViewController {
         cardFromListView = CardListView(onlyMy: onlyMy)
         cardFromListView.lastItemTap = {
             print("Открывать все карты ")
-            let vc = CustomCardListViewController()
-            self.present(vc, animated: true, completion: nil)
+            let vc = AllCardListViewController()
+            let navVc = UINavigationController(rootViewController: vc)
+//            navVc.title = "Выберите карту"
+//            navVc.addCloseButton()
+            navVc.modalPresentationStyle = .fullScreen
+            self.present(navVc, animated: true, completion: nil)
         }
         
         
@@ -120,6 +124,8 @@ class MemeDetailVC : AddHeaderImageViewController {
             self?.cardView.autoresizingMask = [.flexibleHeight,.flexibleWidth]
             print("Показываем окно новой карты ")
             self?.stackView.isHidden = true
+            self?.titleLabel.isHidden = true
+            self?.bottomView.isHidden = true
         }
         
         self.addHeaderImage()
