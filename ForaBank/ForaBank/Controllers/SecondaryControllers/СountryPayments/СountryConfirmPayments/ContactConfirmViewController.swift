@@ -15,8 +15,14 @@ struct ConfirmViewControllerModel {
     var cardFrom: GetProductListDatum? {
         didSet {
             guard let cardFrom = cardFrom else { return }
-            if let cardID = cardFrom.id {
-                cardFromCardId = "\(cardID)"
+            if cardFrom.productType == "CARD" {
+                if let cardID = cardFrom.id {
+                    cardFromCardId = "\(cardID)"
+                }
+            } else if cardFrom.productType == "ACCOUNT" {
+                if let accountID = cardFrom.id {
+                    cardFromAccountId = "\(accountID)"
+                }
             }
         }
     }
@@ -30,8 +36,14 @@ struct ConfirmViewControllerModel {
     var cardTo: GetProductListDatum? {
         didSet {
             guard let cardTo = cardTo else { return }
-            if let cardID = cardTo.id {
-                cardToCardId = "\(cardID)"
+            if cardTo.productType == "CARD" {
+                if let cardID = cardTo.id {
+                    cardToCardId = "\(cardID)"
+                }
+            } else if cardTo.productType == "ACCOUNT" {
+                if let accountID = cardTo.id {
+                    cardToAccountId = "\(accountID)"
+                }
             }
         }
     }

@@ -12,7 +12,7 @@ extension ContactInputViewController {
     
     func startPayment(with card: String, type: PaymentType,
                       completion: @escaping (_ error: String?)->()) {
-        let amount = self.bottomView.amountTextField.text ?? ""
+        guard let amount = self.bottomView.amountTextField.text else { return }
         let phone = self.phoneField.textField.unmaskedText ?? ""
         let surname = self.surnameField.textField.text ?? ""
         let name = self.nameField.textField.text ?? ""
@@ -25,7 +25,7 @@ extension ContactInputViewController {
                     "cardNumber": card,
                     "provider": nil,
                     "puref": puref] as [String: AnyObject]
-        
+        print("DEBUG: Error: anywayPaymentBegin with body:",body)
         NetworkManager<AnywayPaymentBeginDecodebleModel>.addRequest(.anywayPaymentBegin, [:], body, completion: { model, error in
             if error != nil {
                 print("DEBUG: Error: anywayPaymentBegin ", error ?? "")
@@ -43,8 +43,8 @@ extension ContactInputViewController {
                     if model.statusCode == 0 {
                         print("DEBUG: Success ")
 //                        completion(nil)
-                        
-                        let doubelAmount = amount.replacingOccurrences(of: ",", with: ".", options: .literal, range: nil)
+                        let amountString = amount.replacingOccurrences(of: " ", with: "")
+                        let doubelAmount = amountString.replacingOccurrences(of: ",", with: ".", options: .literal, range: nil)
                         
                         switch self.typeOfPay {
                         case .migAIbank:
