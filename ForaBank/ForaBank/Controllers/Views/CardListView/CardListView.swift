@@ -137,8 +137,11 @@ extension CardListView: UICollectionViewDataSource {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CardCell
             
             if isFiltered {
+                print("DEBUG:", #function, filteredCardList.count, indexPath)
+                
                 cell.card = filteredCardList[indexPath.item - 1]
             } else {
+                print("DEBUG:", #function, cardList.count, indexPath)
                 cell.card = cardList[indexPath.item - 1]
             }
             return cell

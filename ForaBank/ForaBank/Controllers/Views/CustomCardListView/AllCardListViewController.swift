@@ -27,6 +27,7 @@ class CardTableCell: UITableViewCell {
         cardView.anchor(left: self.leftAnchor, right: self.rightAnchor)
         cardView.titleLabel.text = ""
         cardView.choseButton.isHidden = true
+        cardView.backgroundColor = .clear
     }
     
     
@@ -39,10 +40,12 @@ class AllCardListViewController: UITableViewController {
     let saveIdentifier = "SaveCell"
     
     var cardModel: [GetProductListDatum] = [] {
-        didSet { tableView.reloadData() } }
+        didSet { DispatchQueue.main.async {
+            self.tableView.reloadData() } } }
     
     var saveCardModel: [GetProductTemplateDatum] = [] {
-        didSet { tableView.reloadData() } }
+        didSet { DispatchQueue.main.async {
+            self.tableView.reloadData() } } }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,7 +53,8 @@ class AllCardListViewController: UITableViewController {
         navigationItem.title = "Выберете карту"
         addCloseButton()
         
-//        let nib = UINib(nibName: "СountryCell", bundle: nil)
+        tableView = UITableView(frame: .zero, style: .grouped)
+        tableView.backgroundColor = .white
         tableView.register(CardTableCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.tableFooterView = UIView()
 //        tableView.separatorStyle = .none
@@ -70,7 +74,11 @@ class AllCardListViewController: UITableViewController {
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        if saveCardModel.isEmpty {
+            return 1
+        } else {
+            return 2
+        }
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -80,6 +88,22 @@ class AllCardListViewController: UITableViewController {
         default:
             return saveCardModel.count
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = UIView()
+        view.backgroundColor = .white
+        let titleLabel = UILabel(text: "Свои", font: .systemFont(ofSize: 14), color: #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1))
+        if section == 1 {
+            titleLabel.text = "Сохраненные"
+        }
+        view.addSubview(titleLabel)
+        titleLabel.centerY(inView: view, leftAnchor: view.leftAnchor, paddingLeft: 20)
+        return view
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 30
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
