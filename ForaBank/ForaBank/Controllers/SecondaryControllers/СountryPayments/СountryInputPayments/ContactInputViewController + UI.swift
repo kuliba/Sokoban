@@ -49,6 +49,7 @@ extension ContactInputViewController {
     
     func configure(with: CountriesList?, byPhone: Bool) {
         guard let country = country else { return }
+        
         var filterPaymentList: [PaymentSystemList] = []
         guard let paymentList = Dict.shared.paymentList else { return }
         paymentList.forEach({ payment in

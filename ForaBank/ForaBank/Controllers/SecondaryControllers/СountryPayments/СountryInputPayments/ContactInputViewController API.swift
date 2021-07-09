@@ -104,9 +104,10 @@ extension ContactInputViewController {
                 print("DEBUG: Success send Phone")
                 self.dismissActivity()
                 guard let country = self.country else { return }
-                let model = ConfirmViewControllerModel(
+                var model = ConfirmViewControllerModel(
                     country: country,
                     model: model)
+                model?.bank = self.selectedBank
                 self.goToConfurmVC(with: model!)
                 
             } else {

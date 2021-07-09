@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import IQKeyboardManagerSwift
 
 class CastomCardView: UIView, UITextFieldDelegate {
     
@@ -28,6 +29,8 @@ class CastomCardView: UIView, UITextFieldDelegate {
     @IBOutlet weak var cvcLineView: UIView!
     @IBOutlet weak var nameLineView: UIView!
     
+    
+    var closeView: (() -> Void)?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -47,19 +50,71 @@ class CastomCardView: UIView, UITextFieldDelegate {
         dateStackView.isHidden = true
         bottomStackView.isHidden = true
         cardTextField.delegate = self
+        nameTextField.delegate = self
+//        IQKeyboardManager.shared.toolbarDoneBarButtonItemText = "Продолжить"
+
+        let config = IQBarButtonItemConfiguration(title: "Продолжить", action: #selector(doneButtonClicked))
+        
+        nameTextField.addKeyboardToolbarWithTarget(target: self, titleText: "Продолжить", rightBarButtonConfiguration: config)
+//        nameTextField.addKeyboardToolbar(withTarget: self, titleText: "Продолжить" , rightBarButtonConfiguration: config, previousBarButtonConfiguration: nil, nextBarButtonConfiguration: nil)
+
+        //  any color you like
+        nameTextField.keyboardToolbar.doneBarButton.setTitleTextAttributes(
+            [NSAttributedString.Key.foregroundColor: UIColor.red], for: UIControl.State.normal)
+        
+    }
+    
+    @objc func doneButtonClicked() {
+        print("DEBUG Done button tapped")
+    }
+    
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        switch textField {
+        case cardTextField:
+            if cardTextField.unmaskedText?.count == 16 {
+                guard let card = cardTextField.unmaskedText else { return }
+                chekClient(with: card)
+                self.qrButton.isHidden = true
+            } else {
+                self.qrButton.isHidden = false
+            }
+        case nameTextField:
+            print(nameTextField.text)
+        default:
+            break
+        }
     }
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        self.lineView.backgroundColor = .black
-        self.qrButton.tintColor = .black
-        self.goBackButton.tintColor = .black
+        let selelectColor = #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1)
+        switch textField {
+        case cardTextField:
+            self.lineView.backgroundColor = selelectColor
+        case nameTextField:
+            self.nameLineView.backgroundColor = selelectColor
+        default:
+            break
+        }
         return true
     }
     
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        let unSelelectColor = #colorLiteral(red: 0.9176470588, green: 0.9215686275, blue: 0.9215686275, alpha: 1)
+        switch textField {
+        case cardTextField:
+            self.lineView.backgroundColor = unSelelectColor
+        case nameTextField:
+            self.nameLineView.backgroundColor = unSelelectColor
+        default:
+            break
+        }
+    }
     
+    // MARK: - IBActions
     @IBAction func qrButton(_ sender: UIButton) {
     }
     @IBAction func goBackButton(_ sender: UIButton) {
+        closeView?()
     }
     @IBAction func cardTextField(_ sender: Any) {
     }
@@ -67,8 +122,32 @@ class CastomCardView: UIView, UITextFieldDelegate {
     }
     @IBAction func cvcTextField(_ sender: UITextField) {
     }
-    @IBAction func nameTextField(_ sender: UITextField) {
+    
+    
+    // MARK: - API
+
+    private func chekClient(with number: String) {
+        let body = [ "cardNumber" : number ] as [String : AnyObject]
+        NetworkManager<CheckCardDecodableModel>.addRequest(.checkCard, [:], body) { model, error in
+            if error != nil {
+                guard let error = error else { return }
+                print("DEBUG: ", #function, error)
+            } else {
+                guard let model = model else { return }
+                guard let statusCode = model.statusCode else { return }
+                if statusCode == 0 {
+                    if model.data?.check ?? false {
+                        
+                        self.bottomStackView.isHidden = false
+                    }
+                } else {
+                    let error = model.errorMessage ?? "nil"
+                    print("DEBUG: ", #function, error)
+                }
+            }
+        }
     }
+    
 }
 
 extension UIButton {
