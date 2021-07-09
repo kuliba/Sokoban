@@ -110,9 +110,9 @@ extension BottomInputView: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         var newText = (textField.text! as NSString).replacingCharacters(in: range, with: string)
-        if newText.count > 1 {
-            newText.removeLast()
-        }
+//        if newText.count > 1 {
+//            newText.removeLast()
+//        }
 
         guard !newText.isEmpty, textField.keyboardType == .decimalPad else { return true }
         
@@ -142,15 +142,15 @@ extension BottomInputView: UITextFieldDelegate {
             textField.text =  formatted
             
             
-            if let selectedRange = textField.selectedTextRange {
-                
-                // and only if the new position is valid
-                if let newPosition = textField.position(from: selectedRange.start, offset: -1) {
-                    
-                    // set the new position
-                    textField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition)
-                }
-            }
+//            if let selectedRange = textField.selectedTextRange {
+//
+//                // and only if the new position is valid
+//                if let newPosition = textField.position(from: selectedRange.start, offset: -1) {
+//
+//                    // set the new position
+//                    textField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition)
+//                }
+//            }
         }
         
         return false
@@ -175,7 +175,7 @@ class CurrencyFormatter: NumberFormatter {
     override init() {
         super.init()
 
-        self.currencySymbol = "$"
+        self.currencySymbol = ""
         self.minimumFractionDigits = 0
         self.numberStyle = .currency
     }

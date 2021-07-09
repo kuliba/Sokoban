@@ -46,6 +46,7 @@ extension UIViewController {
     func showActivity() {
         DispatchQueue.main.async {
             ProgressHUD.colorAnimation = #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
+            ProgressHUD.animationType = .circleRotateChase
             ProgressHUD.show()
         }
     }

@@ -10,7 +10,7 @@ import SVGKit
 
 class ContactInputViewController: UIViewController {
     
-    let popView = CastomPopUpView()
+//    let popView = CastomPopUpView()
     var typeOfPay: PaymentType = .contact {
         didSet {
             print("DEBUG: typeOfPay: ", typeOfPay)

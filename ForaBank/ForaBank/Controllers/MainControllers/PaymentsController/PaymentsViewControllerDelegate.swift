@@ -27,10 +27,13 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 self.present(popView, animated: true, completion: nil)
                 
             } else if indexPath.row == 3 {
-                let popView = CastomPopUpView()
-                popView.a.onlyMy = false
-                popView.a.titleLabel.text = "На другую карту"
-                popView.showAlert()
+                let popView = MemeDetailVC()
+                popView.onlyMy = false
+                popView.titleLabel.text = "На другую карту"
+                popView.modalPresentationStyle = .custom
+                popView.transitioningDelegate = self
+                self.present(popView, animated: true, completion: nil)
+//                popView.showAlert()
             } else {
                 print("DEBUG: " + #function + transfers[indexPath.row].name)
                 if let viewController = transfers[indexPath.row].controllerName.getViewController() {
