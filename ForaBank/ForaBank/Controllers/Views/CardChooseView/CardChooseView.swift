@@ -27,12 +27,16 @@ class CardChooseView: UIView {
     var didChooseButtonTapped: (() -> Void)?
     
     var cardModel: GetProductListDatum? {
-        didSet {
-            guard let model = cardModel else { return }
+        didSet { guard let model = cardModel else { return }
             setupData(with: model)
         }
     }
     
+    var tempCardModel: GetProductTemplateDatum? {
+        didSet { guard let model = tempCardModel else { return }
+            setupTempData(with: model)
+        }
+    }
     
     //MARK: - Viewlifecicle
     override init(frame: CGRect) {
@@ -58,17 +62,14 @@ class CardChooseView: UIView {
     
     private func setupData(with model: GetProductListDatum) {
         hideAll(false)
+        if model.productType == "ACCOUNT" {
+            imageView.image = #imageLiteral(resourceName: "AccImage")
+            cardTypeImage.isHidden = true
+        } else if model.productType == "CARD" {
+            imageView.image = #imageLiteral(resourceName: "credit-card")
+        }
+        
         let balance = Double(model.balance ?? 0)
-//        var tmpSym = "\\20BD"
-//        if let currList = Dict.shared.currencyList {
-//            currList.forEach { curr in
-//                if curr.code == model.currency {
-//                    tmpSym = curr.cssCode ?? ""
-//                    let sss = model.currency!.getSymbol()
-//                    print(sss)
-//                }
-//            }
-//        }
         self.balanceLabel.text = balance.currencyFormatter(code: model.currency ?? "")
         let text = NSAttributedString(
             string: model.productName ?? "",
@@ -78,8 +79,24 @@ class CardChooseView: UIView {
         self.maskNumberLabel.text = "• \(model.number?.suffix(4) ?? "")"
         self.nameLabel.text = model.customName ?? model.name ?? ""
         self.setupCardImage(with: model.number ?? "")
-    }
 
+    }
+    
+    private func setupTempData(with model: GetProductTemplateDatum) {
+        hideAll(false)
+        imageView.image = #imageLiteral(resourceName: "credit-card")
+        let text = NSAttributedString(
+            string: model.customName ?? "",
+            attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14),
+                         NSAttributedString.Key.foregroundColor : UIColor.black])
+        self.numberCardLabel.attributedText = text
+        self.maskNumberLabel.text = "• \(model.numberMask?.suffix(4) ?? "")"
+        self.setupCardImage(with: model.numberMask ?? "")
+        self.choseButton.setImage(UIImage(systemName: "xmark"), for: .normal)
+        
+        self.balanceLabel.isHidden = true
+        self.nameLabel.isHidden = true
+    }
     
     func hideAll(_ need: Bool) {
         imageView.isHidden = need

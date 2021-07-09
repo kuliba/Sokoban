@@ -267,6 +267,9 @@ class MemeDetailVC : AddHeaderImageViewController {
             guard let tmpModelTo = self.cardToField.cardModel else { return }
             self.cardFromField.cardModel = tmpModelTo
             self.cardToField.cardModel = tmpModelFrom
+            self.viewModel.cardFrom = tmpModelTo
+            self.viewModel.cardTo = tmpModelFrom
+            self.checkModel(with: self.viewModel)
         }
         
         bottomView.didDoneButtonTapped = { [weak self] (amaunt) in
@@ -280,10 +283,13 @@ class MemeDetailVC : AddHeaderImageViewController {
         guard model.cardFrom != nil, model.cardTo != nil else { return }
         // TODO: какие условия для смены местами: счет - счет, карта - карта?
         self.seporatorView.changeAccountButton.isHidden = false
-        self.bottomView.currencySwitchButton.isHidden = (model.cardFrom?.currency! == model.cardTo?.currency!) ? false : false // Правильно true : false сейчас для теста
+        self.bottomView.currencySwitchButton.isHidden = (model.cardFrom?.currency! == model.cardTo?.currency!) ? true : false // Правильно true : false сейчас для теста
+        self.bottomView.currencySwitchButton.setTitle((model.cardFrom?.currency?.getSymbol() ?? "") + " ⇆ " + (model.cardTo?.currency?.getSymbol() ?? ""), for: .normal)
         
-        
-        
+        // Запрос на курс валют и после отображение bottomView.currencySwitchButton
+//        Запрос курса валют:
+//        POST /rest/getExchangeCurrencyRates
+//        В телеге описание запроса
     }
     
     //MARK: - API
