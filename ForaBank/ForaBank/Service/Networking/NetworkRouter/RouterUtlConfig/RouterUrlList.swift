@@ -52,6 +52,7 @@ enum RouterUrlList: String {
     case deleteProductTemplate
     case checkCard
     
+    
     func returnUrl () -> URLValue {
         switch self {
         /// Авторизация

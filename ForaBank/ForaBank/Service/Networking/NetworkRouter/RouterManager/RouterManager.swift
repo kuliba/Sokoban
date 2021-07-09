@@ -45,6 +45,7 @@ enum RouterManager {
     case getProductTemplateList
     case deleteProductTemplate
     case checkCard
+    
 }
 
 extension RouterManager {
