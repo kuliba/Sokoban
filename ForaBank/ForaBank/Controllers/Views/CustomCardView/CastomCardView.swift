@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import IQKeyboardManagerSwift
 
 class CastomCardView: UIView, UITextFieldDelegate {
     
@@ -47,9 +48,24 @@ class CastomCardView: UIView, UITextFieldDelegate {
         contentView.fixView(self)
         cardTextField.maskString = "0000 0000 0000 0000"
         dateStackView.isHidden = true
-//        bottomStackView.isHidden = true
+        bottomStackView.isHidden = true
         cardTextField.delegate = self
         nameTextField.delegate = self
+//        IQKeyboardManager.shared.toolbarDoneBarButtonItemText = "Продолжить"
+
+        let config = IQBarButtonItemConfiguration(title: "Продолжить", action: #selector(doneButtonClicked))
+        
+        nameTextField.addKeyboardToolbarWithTarget(target: self, titleText: "Продолжить", rightBarButtonConfiguration: config)
+//        nameTextField.addKeyboardToolbar(withTarget: self, titleText: "Продолжить" , rightBarButtonConfiguration: config, previousBarButtonConfiguration: nil, nextBarButtonConfiguration: nil)
+
+        //  any color you like
+        nameTextField.keyboardToolbar.doneBarButton.setTitleTextAttributes(
+            [NSAttributedString.Key.foregroundColor: UIColor.red], for: UIControl.State.normal)
+        
+    }
+    
+    @objc func doneButtonClicked() {
+        print("DEBUG Done button tapped")
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
@@ -111,7 +127,25 @@ class CastomCardView: UIView, UITextFieldDelegate {
     // MARK: - API
 
     private func chekClient(with number: String) {
-//        NetworkManager<CheckClientDecodebleModel>
+        let body = [ "cardNumber" : number ] as [String : AnyObject]
+        NetworkManager<CheckCardDecodableModel>.addRequest(.checkCard, [:], body) { model, error in
+            if error != nil {
+                guard let error = error else { return }
+                print("DEBUG: ", #function, error)
+            } else {
+                guard let model = model else { return }
+                guard let statusCode = model.statusCode else { return }
+                if statusCode == 0 {
+                    if model.data?.check ?? false {
+                        
+                        self.bottomStackView.isHidden = false
+                    }
+                } else {
+                    let error = model.errorMessage ?? "nil"
+                    print("DEBUG: ", #function, error)
+                }
+            }
+        }
     }
     
 }

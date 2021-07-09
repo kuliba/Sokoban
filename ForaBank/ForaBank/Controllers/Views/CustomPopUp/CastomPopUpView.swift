@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import SwiftEntryKit
+//import SwiftEntryKit
 
 protocol CutomViewProtocol: UIView {
     
