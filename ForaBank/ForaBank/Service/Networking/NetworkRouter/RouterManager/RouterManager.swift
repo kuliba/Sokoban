@@ -44,6 +44,7 @@ enum RouterManager {
     case getCurrencyList
     case getProductTemplateList
     case deleteProductTemplate
+    case checkCard
 }
 
 extension RouterManager {
@@ -587,6 +588,21 @@ extension RouterManager {
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.delete.rawValue
+            return request
+            
+        case .checkCard:
+            let baseUrl = RouterUrlList.checkCard.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
             return request
         }
     }

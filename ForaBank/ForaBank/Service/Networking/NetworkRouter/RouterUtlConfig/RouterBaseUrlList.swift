@@ -90,4 +90,6 @@ enum RouterBaseUrlList: String {
     case getProductTemplateList    = "/rest/getProductTemplateList"
     
     case deleteProductTemplate     = "/rest/deleteProductTemplate"
+    
+    case checkCard                 = "/rest/transfer/checkCard"
 }
