@@ -60,6 +60,8 @@ class MemeDetailVC : AddHeaderImageViewController {
             self.present(navVc, animated: true, completion: nil)
         }
         
+        bottomView.currency = "₽"
+        
         
         cardToField.titleLabel.text = "Куда"
         cardToListView = CardListView(onlyMy: onlyMy)
@@ -164,6 +166,7 @@ class MemeDetailVC : AddHeaderImageViewController {
         cardFromListView.didCardTapped = { [weak self] (card) in
             self?.viewModel.cardFrom = card
             self?.cardFromField.cardModel = card
+            self?.bottomView.currency = card.currency?.getSymbol() ?? ""
             UIView.animate(withDuration: 0.2) {
                 self?.cardFromListView.isHidden = true
                 

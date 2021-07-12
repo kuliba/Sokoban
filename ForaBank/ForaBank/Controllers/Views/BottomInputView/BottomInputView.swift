@@ -11,9 +11,9 @@ import AnyFormatKit
 class BottomInputView: UIView {
     
     let moneyInputController = TextFieldStartInputController()
-    
+    var currency = "₽"
     // MARK: - Formatters
-    let moneyFormatter = SumTextInputFormatter(textPattern: "# ###,## $")
+    var moneyFormatter: SumTextInputFormatter!
     
     //MARK: - Property
     let kContentXibName = "BottomInputView"
@@ -61,10 +61,20 @@ class BottomInputView: UIView {
     func commonInit() {
         Bundle.main.loadNibNamed(kContentXibName, owner: self, options: nil)
         contentView.fixInView(self)
-        amountTextField.delegate = self
         self.heightAnchor.constraint(equalToConstant: 88).isActive = true
         setupTextFIeld()
-        setup()
+        setupMoneyController()
+        
+        NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: amountTextField, queue: .main) { _ in
+            guard let text = self.amountTextField.text else { return }
+            guard let unformatText = self.moneyFormatter.unformat(text) else { return }
+            self.doneButtonIsEnabled(unformatText.isEmpty)
+            UIView.animate(withDuration: 0.2) {
+                self.topLabel.alpha = unformatText.isEmpty ? 0 : 1
+                self.buttomLabel.alpha = unformatText.isEmpty ? 0 : 1
+            }
+        }
+        
     }
     
     
@@ -76,8 +86,10 @@ class BottomInputView: UIView {
     @IBAction func doneButtonTapped(_ sender: Any) {
         print(#function)
         guard let amaunt = amountTextField.text else { return }
-        if !amaunt.isEmpty {
-            didDoneButtonTapped?(amaunt)
+        let unformatText = moneyFormatter.unformat(amaunt)
+        let text = unformatText?.replacingOccurrences(of: ",", with: ".")
+        if !(text?.isEmpty ?? true) {
+            didDoneButtonTapped?(text ?? "")
         }
     }
     
@@ -100,29 +112,25 @@ class BottomInputView: UIView {
         }
     }
     
-    private func setup() {
-        setupMoneyController()
-    }
-    
-    
     private func setupMoneyController() {
+        moneyFormatter = SumTextInputFormatter(textPattern: "# ###,## \(self.currency)")
         moneyInputController.formatter = moneyFormatter
         amountTextField.delegate = moneyInputController
     }
  
 }
 
-extension BottomInputView: UITextFieldDelegate {
-    func textFieldDidChangeSelection(_ textField: UITextField) {
-        guard let text = textField.text else { return }
-        self.doneButtonIsEnabled(text.isEmpty)
-        UIView.animate(withDuration: 0.2) {
-            self.topLabel.alpha = text.isEmpty ? 0 : 1
-            self.buttomLabel.alpha = text.isEmpty ? 0 : 1
-        }
-        
-    }
-    
-    
-}
+//extension BottomInputView: TextFieldStartInputController {
+//    func textFieldDidChangeSelection(_ textField: UITextField) {
+//        guard let text = textField.text else { return }
+//        self.doneButtonIsEnabled(text.isEmpty)
+//        UIView.animate(withDuration: 0.2) {
+//            self.topLabel.alpha = text.isEmpty ? 0 : 1
+//            self.buttomLabel.alpha = text.isEmpty ? 0 : 1
+//        }
+//
+//    }
+//
+//
+//}
 
