@@ -22,7 +22,6 @@
 		0B7A18AD2681CF160007CC75 /* CastomPopUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18AC2681CF160007CC75 /* CastomPopUpView.swift */; };
 		0B7A18AF268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18AE268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift */; };
 		0B7A18B226836A400007CC75 /* NetworkPDFManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18B126836A400007CC75 /* NetworkPDFManager.swift */; };
-		0B7A18B6268373890007CC75 /* NetworkPDFManagerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18B5268373890007CC75 /* NetworkPDFManagerExtension.swift */; };
 		0B7A18B82683A9940007CC75 /* FileManagerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18B72683A9940007CC75 /* FileManagerHelper.swift */; };
 		0B7A18BA2683AC880007CC75 /* NotificationName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18B92683AC880007CC75 /* NotificationName.swift */; };
 		0B7A18C326852D6B0007CC75 /* CreatTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18C226852D6B0007CC75 /* CreatTransferDecodableModel.swift */; };
@@ -233,7 +232,6 @@
 		0B7A18AC2681CF160007CC75 /* CastomPopUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastomPopUpView.swift; sourceTree = "<group>"; };
 		0B7A18AE268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLatestPhonePaymentsDecodableModel.swift; sourceTree = "<group>"; };
 		0B7A18B126836A400007CC75 /* NetworkPDFManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkPDFManager.swift; sourceTree = "<group>"; };
-		0B7A18B5268373890007CC75 /* NetworkPDFManagerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkPDFManagerExtension.swift; sourceTree = "<group>"; };
 		0B7A18B72683A9940007CC75 /* FileManagerHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerHelper.swift; sourceTree = "<group>"; };
 		0B7A18B92683AC880007CC75 /* NotificationName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationName.swift; sourceTree = "<group>"; };
 		0B7A18C226852D6B0007CC75 /* CreatTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatTransferDecodableModel.swift; sourceTree = "<group>"; };
@@ -458,7 +456,6 @@
 			isa = PBXGroup;
 			children = (
 				0B7A18B126836A400007CC75 /* NetworkPDFManager.swift */,
-				0B7A18B5268373890007CC75 /* NetworkPDFManagerExtension.swift */,
 			);
 			path = NetworkPDFManager;
 			sourceTree = "<group>";
@@ -1605,7 +1602,6 @@
 				EDB1655826679C74007E6030 /* SmsCodeView.swift in Sources */,
 				EDB14381265FDA410028EF5A /* AppDelegate.swift in Sources */,
 				EDB1658C266A18C3007E6030 /* PaymentsViewControllerDelegate.swift in Sources */,
-				0B7A18B6268373890007CC75 /* NetworkPDFManagerExtension.swift in Sources */,
 				EDF68215266F9EC800FD5C07 /* URLConstruct.swift in Sources */,
 				68FFA5402682C6CF002DADFA /* LastPaymentsCollectionViewCell.swift in Sources */,
 				0BEC893B2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift in Sources */,
