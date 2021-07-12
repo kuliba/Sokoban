@@ -32,6 +32,12 @@ class CardChooseView: UIView {
         }
     }
     
+    var customCardModel: CastomCardViewModel? {
+        didSet { guard let model = customCardModel else { return }
+            setupCustomData(with: model)
+        }
+    }
+    
     var tempCardModel: GetProductTemplateDatum? {
         didSet { guard let model = tempCardModel else { return }
             setupTempData(with: model)
@@ -79,6 +85,22 @@ class CardChooseView: UIView {
         self.maskNumberLabel.text = "• \(model.number?.suffix(4) ?? "")"
         self.nameLabel.text = model.customName ?? model.name ?? ""
         self.setupCardImage(with: model.number ?? "")
+
+    }
+    
+    private func setupCustomData(with model: CastomCardViewModel) {
+        hideAll(false)
+        imageView.image = #imageLiteral(resourceName: "credit-card")
+        
+        self.nameLabel.isHidden = true
+        self.balanceLabel.isHidden = true
+        let text = NSAttributedString(
+            string: model.cardName ?? "",
+            attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14),
+                         NSAttributedString.Key.foregroundColor : UIColor.black])
+        self.numberCardLabel.attributedText = text
+        self.maskNumberLabel.text = "• \(model.cardNumber.suffix(4))"
+        self.setupCardImage(with: model.cardNumber)
 
     }
     

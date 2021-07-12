@@ -66,8 +66,8 @@ extension GetProductTemplateListDecodableModel {
 
 // MARK: - GetProductTemplateDatum
 struct GetProductTemplateDatum: Codable {
-    let id, numberMask, customName, currency: String?
-    let type: String?
+    let id: Int?
+    let numberMask, customName, currency, type: String?
 }
 
 extension GetProductTemplateDatum {
@@ -87,7 +87,7 @@ extension GetProductTemplateDatum {
     }
 
     func with(
-        id: String?? = nil,
+        id: Int?? = nil,
         numberMask: String?? = nil,
         customName: String?? = nil,
         currency: String?? = nil,

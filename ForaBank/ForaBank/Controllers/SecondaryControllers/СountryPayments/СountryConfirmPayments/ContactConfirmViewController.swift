@@ -36,6 +36,7 @@ struct ConfirmViewControllerModel {
     var cardTo: GetProductListDatum? {
         didSet {
             guard let cardTo = cardTo else { return }
+            self.customCardTo = nil
             if cardTo.productType == "CARD" {
                 if let cardID = cardTo.id {
                     cardToCardId = "\(cardID)"
@@ -47,10 +48,20 @@ struct ConfirmViewControllerModel {
             }
         }
     }
+    var customCardTo: CastomCardViewModel? {
+        didSet {
+            guard let cardTo = customCardTo else { return }
+            self.cardTo = nil
+            cardToCardNumber = cardTo.cardNumber
+            cardToCastomName = cardTo.cardName ?? ""
+        }
+    }
+    
     var cardToCardId = ""
     var cardToCardNumber = ""
     var cardToAccountNumber = ""
     var cardToAccountId = ""
+    var cardToCastomName = ""
     
     var bank : BanksList?
     

@@ -76,6 +76,7 @@ class MemeDetailVC : AddHeaderImageViewController {
             self?.stackView.isHidden = true
             self?.titleLabel.isHidden = true
             self?.bottomView.isHidden = true
+            self?.hideAllCardList()
         }
         
         self.addHeaderImage()
@@ -201,15 +202,7 @@ class MemeDetailVC : AddHeaderImageViewController {
         cardToListView.didCardTapped = { [weak self] (card) in
             self?.viewModel.cardTo = card
             self?.cardToField.cardModel = card
-            UIView.animate(withDuration: 0.2) {
-                self?.cardFromListView.isHidden = true
-                self?.cardFromListView.alpha = 0
-                
-                self?.cardToListView.isHidden = true
-                self?.cardToListView.alpha = 0
-                
-                self?.stackView.layoutIfNeeded()
-            }
+            self?.hideAllCardList()
         }
         
         seporatorView.buttonSwitchCardTapped = { () in
@@ -244,6 +237,7 @@ class MemeDetailVC : AddHeaderImageViewController {
     
     private func setupCardViewActions() {
         cardView.closeView = { [weak self] () in
+//            self?.hideCustomCardView()
             UIView.animate(withDuration: 0.1) {
                 self?.cardView.alpha = 0
                 self?.stackView.isHidden = false
@@ -254,6 +248,53 @@ class MemeDetailVC : AddHeaderImageViewController {
                     self?.cardView.removeFromSuperview()
                     self?.cardView.alpha = 1
                 }
+            }
+        }
+        cardView.finishAndCloseView = { [weak self]  (model) in
+//            self?.hideCustomCardView()
+            UIView.animate(withDuration: 0.1) {
+                self?.cardView.alpha = 0
+                self?.stackView.isHidden = false
+                self?.titleLabel.isHidden = false
+                self?.bottomView.isHidden = false
+            } completion: { finish in
+                if finish {
+                    self?.cardView.removeFromSuperview()
+                    self?.cardView.alpha = 1
+                }
+                self?.viewModel.customCardTo = model
+                self?.cardToField.customCardModel = model
+            }
+            
+        }
+    }
+    
+    private func hideCustomCardView() {
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.1) {
+                self.cardView.alpha = 0
+                self.stackView.isHidden = false
+                self.titleLabel.isHidden = false
+                self.bottomView.isHidden = false
+            } completion: { finish in
+                if finish {
+                    self.cardView.removeFromSuperview()
+                    self.cardView.alpha = 1
+                }
+            }
+        }
+    }
+    
+    private func hideAllCardList() {
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.2) {
+                self.cardFromListView.isHidden = true
+                self.cardFromListView.alpha = 0
+                
+                self.cardToListView.isHidden = true
+                self.cardToListView.alpha = 0
+                
+                self.stackView.layoutIfNeeded()
             }
         }
     }
@@ -294,7 +335,7 @@ class MemeDetailVC : AddHeaderImageViewController {
                         "cardNumber" : viewModel.cardToCardNumber,
                         "accountId" : viewModel.cardToAccountId,
                         "accountNumber" : viewModel.cardToAccountNumber,
-                        "productCustomName" : ""
+                        "productCustomName" : viewModel.cardToCastomName
                      ] ] as [String : AnyObject]
         print("DEBUG: ", #function, body)
         NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer, [:], body) { [weak self] model, error in
@@ -305,6 +346,7 @@ class MemeDetailVC : AddHeaderImageViewController {
                 if error != nil {
                     guard let error = error else { return }
                     print("DEBUG: ", #function, error)
+                    self?.showAlert(with: "Ошибка", and: error)
                 } else {
                     guard let model = model else { return }
                     guard let statusCode = model.statusCode else { return }
@@ -313,7 +355,7 @@ class MemeDetailVC : AddHeaderImageViewController {
                             if needMake {
                                 viewModel.taxTransction = "\(model.data?.fee ?? 0)"
                                 viewModel.statusIsSuccses = true
-                                print("DEBUG: cardToCard payment Succses", #function, model ?? "nil")
+                                print("DEBUG: cardToCard payment Succses", #function, model)
                                 let vc = ContactConfurmViewController()
                                 vc.modalPresentationStyle = .fullScreen
                                 vc.confurmVCModel = viewModel
@@ -338,6 +380,7 @@ class MemeDetailVC : AddHeaderImageViewController {
                         }
                     } else {
                         print("DEBUG: ", #function, model.errorMessage ?? "nil")
+                        self?.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
                     }
                 }
             }

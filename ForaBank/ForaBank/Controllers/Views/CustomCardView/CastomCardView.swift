@@ -8,6 +8,13 @@
 import UIKit
 import IQKeyboardManagerSwift
 
+struct CastomCardViewModel {
+    var cardNumber: String = ""
+    var cardName: String?
+    var dateCard: String?
+    var cardCVC: String?
+}
+
 class CastomCardView: UIView, UITextFieldDelegate {
     
     @IBOutlet weak var mainStackView: UIStackView!
@@ -31,6 +38,7 @@ class CastomCardView: UIView, UITextFieldDelegate {
     
     
     var closeView: (() -> Void)?
+    var finishAndCloseView: ((CastomCardViewModel?) -> Void)?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -54,18 +62,29 @@ class CastomCardView: UIView, UITextFieldDelegate {
 //        IQKeyboardManager.shared.toolbarDoneBarButtonItemText = "Продолжить"
 
         let config = IQBarButtonItemConfiguration(title: "Продолжить", action: #selector(doneButtonClicked))
-        
+        cardTextField.addKeyboardToolbarWithTarget(target: self, titleText: "Продолжить", rightBarButtonConfiguration: config)
         nameTextField.addKeyboardToolbarWithTarget(target: self, titleText: "Продолжить", rightBarButtonConfiguration: config)
 //        nameTextField.addKeyboardToolbar(withTarget: self, titleText: "Продолжить" , rightBarButtonConfiguration: config, previousBarButtonConfiguration: nil, nextBarButtonConfiguration: nil)
 
         //  any color you like
+        cardTextField.keyboardToolbar.doneBarButton.setTitleTextAttributes(
+            [NSAttributedString.Key.foregroundColor: UIColor.black], for: UIControl.State.normal)
         nameTextField.keyboardToolbar.doneBarButton.setTitleTextAttributes(
-            [NSAttributedString.Key.foregroundColor: UIColor.red], for: UIControl.State.normal)
+            [NSAttributedString.Key.foregroundColor: UIColor.black], for: UIControl.State.normal)
         
     }
     
     @objc func doneButtonClicked() {
+        guard let number = cardTextField.unmaskedText else { return }
+        let model = CastomCardViewModel(cardNumber: number, cardName: nameTextField.text)
+        
+        finishAndCloseView?(model)
         print("DEBUG Done button tapped")
+        
+        
+        bottomStackView.isHidden = true
+        cardTextField.delegate = self
+        nameTextField.delegate = self
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
@@ -74,9 +93,13 @@ class CastomCardView: UIView, UITextFieldDelegate {
             if cardTextField.unmaskedText?.count == 16 {
                 guard let card = cardTextField.unmaskedText else { return }
                 chekClient(with: card)
-                self.qrButton.isHidden = true
+                UIView.animate(withDuration: 0.2) {
+                    self.qrButton.alpha = 0
+                }
             } else {
-                self.qrButton.isHidden = false
+                UIView.animate(withDuration: 0.2) {
+                    self.qrButton.alpha = 1
+                }
             }
         case nameTextField:
             print(nameTextField.text)
@@ -112,15 +135,28 @@ class CastomCardView: UIView, UITextFieldDelegate {
     
     // MARK: - IBActions
     @IBAction func qrButton(_ sender: UIButton) {
+        print(#function + " Открываем экран сканера")
+        let scannerView = CardScannerController.getScanner { card in
+            guard let cardNumder = card else { return }
+            self.cardTextField.text = "\(cardNumder)"
+        }
+        let top = topMostController()
+        top?.present(scannerView, animated: true, completion: nil)
     }
+    
     @IBAction func goBackButton(_ sender: UIButton) {
         closeView?()
     }
     @IBAction func cardTextField(_ sender: Any) {
+        
     }
+    
     @IBAction func dateTaxtField(_ sender: UITextField) {
+        
     }
+    
     @IBAction func cvcTextField(_ sender: UITextField) {
+        
     }
     
     
@@ -128,21 +164,27 @@ class CastomCardView: UIView, UITextFieldDelegate {
 
     private func chekClient(with number: String) {
         let body = [ "cardNumber" : number ] as [String : AnyObject]
+        
         NetworkManager<CheckCardDecodableModel>.addRequest(.checkCard, [:], body) { model, error in
-            if error != nil {
-                guard let error = error else { return }
-                print("DEBUG: ", #function, error)
-            } else {
-                guard let model = model else { return }
-                guard let statusCode = model.statusCode else { return }
-                if statusCode == 0 {
-                    if model.data?.check ?? false {
-                        
-                        self.bottomStackView.isHidden = false
-                    }
-                } else {
-                    let error = model.errorMessage ?? "nil"
+            DispatchQueue.main.async {
+                if error != nil {
+                    guard let error = error else { return }
                     print("DEBUG: ", #function, error)
+                } else {
+                    guard let model = model else { return }
+                    guard let statusCode = model.statusCode else { return }
+                    if statusCode == 0 {
+                        if model.data?.check ?? false {
+                            UIView.animate(withDuration: 0.2) {
+                                self.bottomStackView.isHidden = false
+                                self.mainStackView.layoutIfNeeded()
+                            }
+                            
+                        }
+                    } else {
+                        let error = model.errorMessage ?? "nil"
+                        print("DEBUG: ", #function, error)
+                    }
                 }
             }
         }
