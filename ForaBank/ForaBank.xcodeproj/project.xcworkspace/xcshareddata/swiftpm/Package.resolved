@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "AnyFormatKit",
+        "repositoryURL": "https://github.com/luximetr/AnyFormatKit.git",
+        "state": {
+          "branch": null,
+          "revision": "27b35c984c1c81e74c8be5273f7b2dc5250cb5cc",
+          "version": "2.5.1"
+        }
+      },
+      {
         "package": "BoringSSL-GRPC",
         "repositoryURL": "https://github.com/firebase/boringssl-SwiftPM.git",
         "state": {
