@@ -529,7 +529,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                     checkOwner = true
                     self.checkOwnerFetch = true
                     self.contacts[index].bankImage = true
-                    self.contactCollectionView.reloadItems(at: [IndexPath(index: index)])
+//                    self.contactCollectionView.reloadItems(at: [IndexPath(index: index)])
                     
                 }
             } else {

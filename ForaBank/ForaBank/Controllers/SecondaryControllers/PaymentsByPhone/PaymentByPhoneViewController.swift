@@ -155,7 +155,7 @@ class PaymentByPhoneViewController: UIViewController {
         button.backgroundColor = #colorLiteral(red: 0.8901960784, green: 0.003921568627, blue: 0.1058823529, alpha: 1)
         button.layer.cornerRadius = 22
         
-        bankPayeer.textField.text = selectBank
+        bankPayeer.text = selectBank ?? ""
         
         
         button.translatesAutoresizingMaskIntoConstraints = false

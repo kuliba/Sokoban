@@ -11,9 +11,15 @@ import AnyFormatKit
 class BottomInputView: UIView {
     
     let moneyInputController = TextFieldStartInputController()
-    var currency = "₽"
+    var currency = "" {
+        didSet {
+            amountTextField.text = ""
+            setupMoneyController()
+            amountTextField.text = "111"
+        }
+    }
     // MARK: - Formatters
-    var moneyFormatter: SumTextInputFormatter!
+    var moneyFormatter: SumTextInputFormatter?
     
     //MARK: - Property
     let kContentXibName = "BottomInputView"
@@ -63,11 +69,11 @@ class BottomInputView: UIView {
         contentView.fixInView(self)
         self.heightAnchor.constraint(equalToConstant: 88).isActive = true
         setupTextFIeld()
-        setupMoneyController()
+//        setupMoneyController()
         
         NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: amountTextField, queue: .main) { _ in
             guard let text = self.amountTextField.text else { return }
-            guard let unformatText = self.moneyFormatter.unformat(text) else { return }
+            guard let unformatText = self.moneyFormatter?.unformat(text) else { return }
             self.doneButtonIsEnabled(unformatText.isEmpty)
             UIView.animate(withDuration: 0.2) {
                 self.topLabel.alpha = unformatText.isEmpty ? 0 : 1
@@ -86,7 +92,7 @@ class BottomInputView: UIView {
     @IBAction func doneButtonTapped(_ sender: Any) {
         print(#function)
         guard let amaunt = amountTextField.text else { return }
-        let unformatText = moneyFormatter.unformat(amaunt)
+        let unformatText = moneyFormatter?.unformat(amaunt)
         let text = unformatText?.replacingOccurrences(of: ",", with: ".")
         if !(text?.isEmpty ?? true) {
             didDoneButtonTapped?(text ?? "")
