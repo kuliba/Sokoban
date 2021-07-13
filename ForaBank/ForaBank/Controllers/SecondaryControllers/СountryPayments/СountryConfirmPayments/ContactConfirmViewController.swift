@@ -66,7 +66,11 @@ struct ConfirmViewControllerModel {
     var bank : BanksList?
     
     var phone: String?
-    var fullName: String? = ""
+    var fullName: String? = "" {
+        didSet {
+            print("DEBUG: fullName", fullName)
+        }
+    }
     var country: CountriesList?
     var numberTransction: String = ""
     var summTransction: String = ""
@@ -81,6 +85,7 @@ struct ConfirmViewControllerModel {
     
     init?(country: CountriesList, model: AnywayPaymentDecodableModel?, fullName: String? = nil) {
         self.type = .contact
+        print("DEBUG:", model)
         var name = ""
         var surname = ""
         var secondName = ""
@@ -113,6 +118,10 @@ struct ConfirmViewControllerModel {
                 } else if item.id == "RECAMOUNT" {
                     self.type = .mig
                     currAmount = item.content?.first ?? ""
+                } else if item.id == "A" {
+                    currAmount = item.content?.first ?? ""
+                } else if item.id == "CURR" {
+                    curr = item.content?.first ?? ""
                 }
                 
                 
@@ -122,6 +131,8 @@ struct ConfirmViewControllerModel {
 //            self.fullName = fullName
 //        } else {
             self.fullName = surname + " " + name + " " + secondName
+        } else {
+            self.fullName = fullName
         }
         self.summInCurrency = Double(currAmount)?.currencyFormatter(code: curr) ?? ""
         self.statusIsSuccses = model?.statusCode == 0 ? true : false
@@ -181,21 +192,25 @@ class ContactConfurmViewController: UIViewController {
             image: #imageLiteral(resourceName: "hash"),
             isEditable: false))
     
-    var cardFromField = ForaInput(
-        viewModel: ForaInputModel(
-            title: "С карты",
-            image: #imageLiteral(resourceName: "credit-card"),
-            type: .credidCard,
-            isEditable: false,
-            showChooseButton: true))
+    var cardFromField = CardChooseView()
     
-    var cardToField = ForaInput(
-        viewModel: ForaInputModel(
-            title: "На карту",
-            image: #imageLiteral(resourceName: "credit-card"),
-            type: .credidCard,
-            isEditable: false,
-            showChooseButton: false))
+//    var cardFromField = ForaInput(
+//        viewModel: ForaInputModel(
+//            title: "С карты",
+//            image: #imageLiteral(resourceName: "credit-card"),
+//            type: .credidCard,
+//            isEditable: false,
+//            showChooseButton: true))
+    
+    var cardToField = CardChooseView()
+    
+//    var cardToField = ForaInput(
+//        viewModel: ForaInputModel(
+//            title: "На карту",
+//            image: #imageLiteral(resourceName: "credit-card"),
+//            type: .credidCard,
+//            isEditable: false,
+//            showChooseButton: false))
     
     var summTransctionField = ForaInput(
         viewModel: ForaInputModel(
@@ -240,6 +255,10 @@ class ContactConfurmViewController: UIViewController {
         
         let amount = Double(model.summTransction)?.currencyFormatter(code: "RUB")
         summTransctionField.text = amount ?? ""
+        
+        if model.taxTransction.isEmpty {
+            taxTransctionField.isHidden = true
+        }
         let tax = Double(model.taxTransction)?.currencyFormatter(code: "RUB")
         taxTransctionField.text = tax ?? ""
         
@@ -259,18 +278,40 @@ class ContactConfurmViewController: UIViewController {
 //            taxTransctionField.text = tax ?? ""
             
             guard let cardModelFrom = model.cardFrom else { return }
-            guard let cardModelTo = model.cardTo else { return }
-            cardFromField.configCardView(cardModelFrom)
-            cardToField.configCardView(cardModelTo)
+            cardFromField.cardModel = cardModelFrom
+            
+            let cardModelTo = model.cardTo
+            let cardModelTemp = model.customCardTo
+            
+            if cardModelTo != nil {
+                cardToField.cardModel = cardModelTo
+            } else if cardModelTemp != nil {
+                cardToField.customCardModel = cardModelTemp
+            }
+            
+            
+            var fromTitle = "Откуда"
+            if cardModelFrom.productType == "CARD" {
+                fromTitle = "С карты"
+            } else if cardModelFrom.productType == "ACCOUNT" {
+                fromTitle = "Со счета"
+            }
+            cardFromField.titleLabel.text = fromTitle
+            
+            var toTitle = "Куда"
+            if cardModelTo?.productType == "CARD" {
+                toTitle = "На карту"
+            } else if cardModelTo?.productType == "ACCOUNT" {
+                toTitle = "На счет"
+            }
+            cardToField.titleLabel.text = toTitle
             
             cardFromField.isHidden = false
-            cardFromField.viewModel.showChooseButton = false
-            cardFromField.chooseButton.isHidden = true
+            cardFromField.choseButton.isHidden = true
             cardFromField.balanceLabel.isHidden = true
             
             cardToField.isHidden = false
-            cardToField.viewModel.showChooseButton = false
-            cardToField.chooseButton.isHidden = true
+            cardToField.choseButton.isHidden = true
             cardToField.balanceLabel.isHidden = true
         case .mig:
             cardFromField.isHidden = true
@@ -281,14 +322,13 @@ class ContactConfurmViewController: UIViewController {
             numberTransctionField.text = model.numberTransction  //"1235634790"
             
 
-            
             if !model.summInCurrency.isEmpty {
                 currTransctionField.isHidden = false
             }
             
             cardFromField.isHidden = false
-            cardFromField.viewModel.showChooseButton = false
-            cardFromField.chooseButton.isHidden = true
+//            cardFromField.viewModel.showChooseButton = false
+            cardFromField.choseButton.isHidden = true
             cardFromField.balanceLabel.isHidden = true
         default:
             cardFromField.isHidden = true
@@ -326,7 +366,6 @@ class ContactConfurmViewController: UIViewController {
     }
     
     fileprivate func setupUI() {
-        title = "Подтвердите реквизиты"
         view.backgroundColor = .white
         
         let stackView = UIStackView(

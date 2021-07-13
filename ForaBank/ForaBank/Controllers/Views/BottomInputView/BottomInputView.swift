@@ -11,7 +11,7 @@ import AnyFormatKit
 class BottomInputView: UIView {
     
     let moneyInputController = TextFieldStartInputController()
-    var currency = "" {
+    var currency = "₽" {
         didSet {
 //            amountTextField.text = ""
             setupMoneyController()

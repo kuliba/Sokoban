@@ -10,9 +10,9 @@ import UIKit
 extension ContactInputViewController {
     
     
-    func startPayment(with card: String, type: PaymentType,
+    func startPayment(with card: String, amount: String ,type: PaymentType,
                       completion: @escaping (_ error: String?)->()) {
-        guard let amount = self.bottomView.amountTextField.text else { return }
+        let amount = amount
         let phone = self.phoneField.textField.unmaskedText ?? ""
         let surname = self.surnameField.textField.text ?? ""
         let name = self.nameField.textField.text ?? ""
@@ -43,14 +43,14 @@ extension ContactInputViewController {
                     if model.statusCode == 0 {
                         print("DEBUG: Success ")
 //                        completion(nil)
-                        let amountString = amount.replacingOccurrences(of: " ", with: "")
-                        let doubelAmount = amountString.replacingOccurrences(of: ",", with: ".", options: .literal, range: nil)
+//                        let amountString = amount.replacingOccurrences(of: " ", with: "")
+//                        let doubelAmount = amountString.replacingOccurrences(of: ",", with: ".", options: .literal, range: nil)
                         
                         switch self.typeOfPay {
                         case .migAIbank:
                             
                             
-                            self.endMigPayment(phone: phone, amount: doubelAmount) { error in
+                            self.endMigPayment(phone: phone, amount: amount) { error in
                                 self.dismissActivity()
                                 if error != nil {
                                     print("DEBUG: Error: endMigPayment ", error ?? "")
@@ -60,7 +60,7 @@ extension ContactInputViewController {
                         default:
                             
                             
-                            self.endContactPayment(surname: surname, name: name, secondName: secondName, amount: doubelAmount) { error in
+                            self.endContactPayment(surname: surname, name: name, secondName: secondName, amount: amount) { error in
                                 self.dismissActivity()
                                 if error != nil {
                                     print("DEBUG: Error: endContactPayment ", error ?? "")

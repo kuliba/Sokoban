@@ -106,11 +106,11 @@ class ContactInputViewController: UIViewController {
     var bottomView = BottomInputView()
     
     var stackView = UIStackView(arrangedSubviews: [])
-    lazy var doneButton: UIButton = {
-        let button = UIButton(title: "Продолжить")
-        button.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
-        return button
-    }()
+//    lazy var doneButton: UIButton = {
+//        let button = UIButton(title: "Продолжить")
+//        button.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
+//        return button
+//    }()
     
     //MARK: - Viewlifecicle
     override func viewDidLoad() {
@@ -214,26 +214,33 @@ class ContactInputViewController: UIViewController {
             
         }
         
-        bottomView.didDoneButtonTapped = { [weak self] (_) in
-            self?.doneButtonTapped()
+        bottomView.didDoneButtonTapped = { (amount) in
+//            self?.doneButtonTapped()
+            self.startPayment(with: self.selectedCardNumber, amount: amount, type: self.typeOfPay) { error in
+                self.dismissActivity()
+                if error != nil {
+                    self.showAlert(with: "Ошибка", and: error!)
+                }
+            }
         }
     }
     
     @objc func doneButtonTapped() {
         // TODO : Нужна проверка данных на не пустые Имя, Телефон, Сумма
-        showActivity()
-        startPayment(with: selectedCardNumber, type: typeOfPay) { error in
-            self.dismissActivity()
-            if error != nil {
-                self.showAlert(with: "Ошибка", and: error!)
-            }
-        }
+//        showActivity()
+//        startPayment(with: selectedCardNumber, type: typeOfPay) { error in
+//            self.dismissActivity()
+//            if error != nil {
+//                self.showAlert(with: "Ошибка", and: error!)
+//            }
+//        }
     }
     
     //MARK: - Helpers
     func goToConfurmVC(with model: ConfirmViewControllerModel) {
         DispatchQueue.main.async {
             let vc = ContactConfurmViewController()
+            vc.title = "Подтвердите реквизиты"
             vc.confurmVCModel = model
             self.navigationController?.pushViewController(vc, animated: true)
         }
