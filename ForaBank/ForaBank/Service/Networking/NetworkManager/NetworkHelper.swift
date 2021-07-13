@@ -377,6 +377,12 @@ struct NetworkHelper {
             NetworkManager<GetLatestPaymentsDecodableModel>.addRequest(.getLatestPayments, tempParameters, body) { model, error in
             
             }
+        case .getExchangeCurrencyRates:
+            NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, tempParameters, body) { model, error in
+                
+                
+                
+            }
         case .getCurrencyList:
             
             if let banksListSerial = UserDefaults().object(forKey: "CurrencyListSerial") as? String {
