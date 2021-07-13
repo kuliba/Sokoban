@@ -126,17 +126,23 @@ struct ConfirmViewControllerModel {
             }
         }
         if fullName.isEmpty {
-//            self.fullName = fullName
-//        } else {
             self.fullName = surname + " " + name + " " + secondName
         } else {
             self.fullName = fullName
         }
-        self.summInCurrency = Double(currAmount)?.currencyFormatter(code: curr) ?? ""
+        
+//        let currArr = Dict.shared.currencyList
+//        currArr?.forEach({ currency in
+//            if currency.code == curr {
+//                print("DEBUG: currency", currency)
+//            }
+//        })
+        self.summInCurrency = Double(currAmount)?.currencyFormatter(symbol: curr) ?? ""
+
         self.statusIsSuccses = model?.statusCode == 0 ? true : false
         self.phone = phone
-        self.summTransction = Double(model?.data?.amount ?? 0).currencyFormatter(code: "RUR")
-        self.taxTransction = Double(model?.data?.commission ?? 0).currencyFormatter(code: "RUR")
+        self.summTransction = Double(model?.data?.amount ?? 0).currencyFormatter(symbol: "RUB")
+        self.taxTransction = Double(model?.data?.commission ?? 0).currencyFormatter(symbol: "RUB")
         self.numberTransction = transctionNum
         self.currancyTransction = "Наличные"
         self.country = country
