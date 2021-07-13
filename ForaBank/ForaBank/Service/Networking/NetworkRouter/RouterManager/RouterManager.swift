@@ -41,6 +41,11 @@ enum RouterManager {
     case getExchangeCurrencyRates
     case suggestBank
     case suggestCompany
+    case getCurrencyList
+    case getProductTemplateList
+    case deleteProductTemplate
+    case checkCard
+    
 }
 
 extension RouterManager {
@@ -528,6 +533,66 @@ extension RouterManager {
             
         case .suggestCompany:
             let baseUrl = RouterUrlList.suggestCompany.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .getCurrencyList:
+            let baseUrl = RouterUrlList.getCurrencyList.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.get.rawValue
+            return request
+            
+        case .getProductTemplateList:
+            let baseUrl = RouterUrlList.getProductTemplateList.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.get.rawValue
+            return request
+            
+        case .deleteProductTemplate:
+            let baseUrl = RouterUrlList.deleteProductTemplate.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.delete.rawValue
+            return request
+            
+        case .checkCard:
+            let baseUrl = RouterUrlList.checkCard.returnUrl()
             switch baseUrl {
             case .success(let url):
                 resultUrl = url.absoluteURL

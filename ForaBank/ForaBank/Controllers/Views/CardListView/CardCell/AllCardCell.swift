@@ -9,11 +9,6 @@ import UIKit
 
 class AllCardCell: UICollectionViewCell {
     
-    //MARK: - Properties
-//    var card: GetProductListDatum? {
-//        didSet { configure() }
-//    }
-    
     private let logoImageView: UIImageView = {
         let imageView = UIImageView(image: #imageLiteral(resourceName: "passcodeChange"))
         imageView.contentMode = .scaleAspectFit
@@ -64,7 +59,7 @@ class AllCardCell: UICollectionViewCell {
         addSubview(logoImageView)
         addSubview(nameLabel)
         
-        logoImageView.centerX(inView: self, topAnchor: self.topAnchor, paddingTop: 10)
+        logoImageView.centerX(inView: self, topAnchor: self.topAnchor, paddingTop: 15)
         
         nameLabel.centerX(inView: logoImageView, topAnchor: logoImageView.bottomAnchor, paddingTop: 2)
     }

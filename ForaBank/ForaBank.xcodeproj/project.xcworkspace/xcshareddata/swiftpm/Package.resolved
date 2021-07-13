@@ -2,7 +2,7 @@
   "object": {
     "pins": [
       {
-        "package": "abseil",
+        "package": "abseil-cpp-SwiftPM",
         "repositoryURL": "https://github.com/firebase/abseil-cpp-SwiftPM.git",
         "state": {
           "branch": null,
@@ -11,7 +11,16 @@
         }
       },
       {
-        "package": "BoringSSL-GRPC",
+        "package": "AnyFormatKit",
+        "repositoryURL": "https://github.com/luximetr/AnyFormatKit.git",
+        "state": {
+          "branch": null,
+          "revision": "27b35c984c1c81e74c8be5273f7b2dc5250cb5cc",
+          "version": "2.5.1"
+        }
+      },
+      {
+        "package": "boringssl-SwiftPM",
         "repositoryURL": "https://github.com/firebase/boringssl-SwiftPM.git",
         "state": {
           "branch": null,
@@ -29,7 +38,7 @@
         }
       },
       {
-        "package": "Firebase",
+        "package": "firebase-ios-sdk",
         "repositoryURL": "https://github.com/firebase/firebase-ios-sdk",
         "state": {
           "branch": null,
@@ -65,7 +74,7 @@
         }
       },
       {
-        "package": "gRPC",
+        "package": "grpc-SwiftPM",
         "repositoryURL": "https://github.com/firebase/grpc-SwiftPM.git",
         "state": {
           "branch": null,
@@ -74,7 +83,7 @@
         }
       },
       {
-        "package": "GTMSessionFetcher",
+        "package": "gtm-session-fetcher",
         "repositoryURL": "https://github.com/google/gtm-session-fetcher.git",
         "state": {
           "branch": null,
@@ -83,7 +92,7 @@
         }
       },
       {
-        "package": "IQKeyboardManagerSwift",
+        "package": "IQKeyboardManager",
         "repositoryURL": "https://github.com/hackiftekhar/IQKeyboardManager.git",
         "state": {
           "branch": null,
@@ -119,7 +128,7 @@
         }
       },
       {
-        "package": "Promises",
+        "package": "promises",
         "repositoryURL": "https://github.com/google/promises.git",
         "state": {
           "branch": null,
@@ -182,7 +191,7 @@
         }
       },
       {
-        "package": "SwiftProtobuf",
+        "package": "swift-protobuf",
         "repositoryURL": "https://github.com/apple/swift-protobuf.git",
         "state": {
           "branch": null,

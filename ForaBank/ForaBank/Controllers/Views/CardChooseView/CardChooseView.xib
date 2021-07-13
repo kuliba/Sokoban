@@ -14,8 +14,10 @@
             <connections>
                 <outlet property="balanceLabel" destination="8wu-aP-WKo" id="Fb2-ts-qfW"/>
                 <outlet property="cardTypeImage" destination="bik-6d-zbI" id="d6c-Oj-ghU"/>
+                <outlet property="choseButton" destination="Hyn-zu-fVo" id="T3v-tM-awH"/>
                 <outlet property="contentView" destination="iN0-l3-epB" id="ooR-ga-dRp"/>
                 <outlet property="imageView" destination="C5e-li-LSY" id="0lp-7M-iUa"/>
+                <outlet property="leftTitleAncor" destination="u0Y-Pl-xat" id="m6v-5K-Q8F"/>
                 <outlet property="maskNumberLabel" destination="3Jz-ex-sC7" id="YEo-4O-ck6"/>
                 <outlet property="nameLabel" destination="Ufg-JA-tkv" id="4vf-UJ-nx7"/>
                 <outlet property="numberCardLabel" destination="qJY-fF-p2h" id="f7O-fa-fFv"/>
@@ -27,7 +29,7 @@
             <rect key="frame" x="0.0" y="0.0" width="522" height="138"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="top" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="PjJ-7r-NQj">
+                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="top" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="PjJ-7r-NQj">
                     <rect key="frame" x="20" y="62.5" width="482" height="44"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="credit-card" translatesAutoresizingMaskIntoConstraints="NO" id="C5e-li-LSY">
@@ -38,10 +40,10 @@
                             </constraints>
                         </imageView>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="lvw-oW-bnK">
-                            <rect key="frame" x="48" y="0.0" width="386" height="43"/>
+                            <rect key="frame" x="44" y="0.0" width="394" height="43"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="uy2-Uk-I3X">
-                                    <rect key="frame" x="0.0" y="0.0" width="386" height="24"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="394" height="24"/>
                                     <subviews>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="card_mastercard_logo" translatesAutoresizingMaskIntoConstraints="NO" id="bik-6d-zbI">
                                             <rect key="frame" x="0.0" y="0.0" width="24" height="24"/>
@@ -51,13 +53,13 @@
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Номер карты или счета" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qJY-fF-p2h">
-                                            <rect key="frame" x="32" y="0.0" width="256" height="24"/>
+                                            <rect key="frame" x="32" y="0.0" width="264" height="24"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="307 279 ₽" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="7" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8wu-aP-WKo">
-                                            <rect key="frame" x="296" y="0.0" width="90" height="24"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 ₽" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="7" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8wu-aP-WKo">
+                                            <rect key="frame" x="304" y="0.0" width="90" height="24"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="90" id="QhH-4Z-v0J"/>
                                             </constraints>
@@ -71,7 +73,7 @@
                                     </constraints>
                                 </stackView>
                                 <stackView opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceLeftToRight" distribution="fillProportionally" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="0jp-9X-cHc">
-                                    <rect key="frame" x="0.0" y="27" width="386" height="16"/>
+                                    <rect key="frame" x="0.0" y="27" width="394" height="16"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="• 3678" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Jz-ex-sC7">
                                             <rect key="frame" x="0.0" y="1" width="50" height="14.5"/>
@@ -83,7 +85,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="• Зарплатная" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ufg-JA-tkv">
-                                            <rect key="frame" x="50" y="1" width="336" height="14.5"/>
+                                            <rect key="frame" x="50" y="1" width="344" height="14.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
