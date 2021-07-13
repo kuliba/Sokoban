@@ -212,6 +212,7 @@ class MemeDetailVC : AddHeaderImageViewController {
             guard let tmpModelFrom = self.cardFromField.cardModel else { return }
             guard let tmpModelTo = self.cardToField.cardModel else { return }
             self.cardFromField.cardModel = tmpModelTo
+            self.bottomView.currency = tmpModelTo.currency?.getSymbol() ?? ""
             self.cardToField.cardModel = tmpModelFrom
             self.viewModel.cardFrom = tmpModelTo
             self.viewModel.cardTo = tmpModelFrom

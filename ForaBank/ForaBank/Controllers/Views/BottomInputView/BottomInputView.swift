@@ -13,9 +13,9 @@ class BottomInputView: UIView {
     let moneyInputController = TextFieldStartInputController()
     var currency = "" {
         didSet {
-            amountTextField.text = ""
+//            amountTextField.text = ""
             setupMoneyController()
-            amountTextField.text = "111"
+//            amountTextField.text = "111"
         }
     }
     // MARK: - Formatters
@@ -119,9 +119,18 @@ class BottomInputView: UIView {
     }
     
     private func setupMoneyController() {
+        var amount = ""
+        if let text = amountTextField.text {
+            let unformatText = moneyFormatter?.unformat(text)
+            amount = unformatText ?? ""
+        }
+        
         moneyFormatter = SumTextInputFormatter(textPattern: "# ###,## \(self.currency)")
         moneyInputController.formatter = moneyFormatter
         amountTextField.delegate = moneyInputController
+        
+        let newText = moneyFormatter?.format(amount)
+        amountTextField.text = newText
     }
  
 }
