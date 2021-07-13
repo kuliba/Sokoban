@@ -68,6 +68,7 @@
 		68FFA561268DD2CF002DADFA /* CountriesCodeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA560268DD2CE002DADFA /* CountriesCodeButton.swift */; };
 		68FFA563268DDFCB002DADFA /* SearchContactView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA562268DDFCA002DADFA /* SearchContactView.swift */; };
 		68FFA565269464FF002DADFA /* TransferByRequisitesConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA564269464FF002DADFA /* TransferByRequisitesConfirmViewController.swift */; };
+		68FFA5682695921E002DADFA /* QRScanner in Frameworks */ = {isa = PBXBuildFile; productRef = 68FFA5672695921E002DADFA /* QRScanner */; };
 		ED0B4892267B4CDD0037EA06 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = ED0B4891267B4CDD0037EA06 /* IQKeyboardManagerSwift */; };
 		ED0B4894267B50F50037EA06 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B4893267B50F50037EA06 /* Int.swift */; };
 		ED0B4896267B97C60037EA06 /* ContactInputViewController + UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B4895267B97C60037EA06 /* ContactInputViewController + UI.swift */; };
@@ -408,6 +409,7 @@
 				0B7A18AB2681CED70007CC75 /* SwiftEntryKit in Frameworks */,
 				ED39EC88268B308800158E46 /* SDWebImageSVGCoder in Frameworks */,
 				EDF6821D266FC37F00FD5C07 /* FirebaseMessaging in Frameworks */,
+				68FFA5682695921E002DADFA /* QRScanner in Frameworks */,
 				ED4FC621266EA5CD0092B4AB /* Valet in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1355,6 +1357,7 @@
 				0B7A18AA2681CED70007CC75 /* SwiftEntryKit */,
 				ED39EC87268B308800158E46 /* SDWebImageSVGCoder */,
 				ED39EC90268C8FA800158E46 /* SVGKit */,
+				68FFA5672695921E002DADFA /* QRScanner */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -1435,6 +1438,7 @@
 				0B7A18A92681CED70007CC75 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */,
 				ED39EC86268B308800158E46 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */,
 				ED39EC8F268C8FA700158E46 /* XCRemoteSwiftPackageReference "SVGKit" */,
+				68FFA5662695921D002DADFA /* XCRemoteSwiftPackageReference "QRScanner" */,
 			);
 			productRefGroup = EDB1437E265FDA410028EF5A /* Products */;
 			projectDirPath = "";
@@ -1986,6 +1990,14 @@
 				minimumVersion = 1.2.7;
 			};
 		};
+		68FFA5662695921D002DADFA /* XCRemoteSwiftPackageReference "QRScanner" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mercari/QRScanner";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.8.0;
+			};
+		};
 		ED0B4890267B4CDD0037EA06 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
@@ -2041,6 +2053,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0B7A18A92681CED70007CC75 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */;
 			productName = SwiftEntryKit;
+		};
+		68FFA5672695921E002DADFA /* QRScanner */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 68FFA5662695921D002DADFA /* XCRemoteSwiftPackageReference "QRScanner" */;
+			productName = QRScanner;
 		};
 		ED0B4891267B4CDD0037EA06 /* IQKeyboardManagerSwift */ = {
 			isa = XCSwiftPackageProductDependency;

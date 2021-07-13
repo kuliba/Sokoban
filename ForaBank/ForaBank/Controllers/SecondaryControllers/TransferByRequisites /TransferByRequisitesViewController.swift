@@ -71,7 +71,8 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     var commentField = ForaInput(
         viewModel: ForaInputModel(
             title: "Назначение платежа",
-            image: #imageLiteral(resourceName: "comment")))
+            image: #imageLiteral(resourceName: "comment"),
+            errorText: "Укажите дополнительную информацию. Не менее 25 символов"))
     
     var innField = ForaInput(
         viewModel: ForaInputModel(
@@ -79,11 +80,13 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     
     var nameCompanyField = ForaInput(
         viewModel: ForaInputModel(
-            title: "Наименование получателя"))
+            title: "Наименование получателя",
+            errorText: "Укажите название организации"))
     
     var kppField = ForaInput(
         viewModel: ForaInputModel(
-            title: "КПП получателя"))
+            title: "КПП получателя",
+            errorText: "Необязательное поле"))
     
     
     var cardField = ForaInput(
@@ -108,11 +111,26 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-         
+
+        let item = UIBarButtonItem(image: UIImage.init(imageLiteralResourceName: "scanner"), style: .plain, target: .none, action: .none)
+        self.navigationItem.setRightBarButton(item, animated: false)
         
+        nameCompanyField.errorLabel.sizeToFit()
+        kppField.errorLabel.sizeToFit()
+        nameCompanyField.errorLabel.isHidden = false
+        nameCompanyField.errorLabel.alpha = 1
+        nameCompanyField.errorLabel.textColor = UIColor.gray
+        kppField.errorLabel.isHidden = false
+        kppField.errorLabel.alpha = 1
+        kppField.errorLabel.textColor = UIColor.gray
+
+        commentField.errorLabel.alpha = 1
+        commentField.errorLabel.isHidden = false
+        commentField.errorLabel.textColor = UIColor.gray
         
-        commentField.errorLabel.text  = "123"
-        commentField.errorLabel.isHidden = true
+        innField.errorLabel.isHidden = true
+        innField.errorLabel.alpha = 0
+
         getCardList { [weak self] data ,error in
             DispatchQueue.main.async {
                 
@@ -250,10 +268,6 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
                 }
                 self?.banks = banksList
             }
-        }
-        commentField.didChangeValueField = {(field) in
-            self.commentField.errorLabel.text  = "123"
-            self.commentField.errorLabel.isHidden = true
         }
         
         bankListView.didBankTapped = { (bank) in
@@ -498,7 +512,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
                         vc.summTransctionField.textField.text = self.bottomView.amountTextField.text
                     }
                     if data.commission?.count != 0 {
-                        vc.taxTransctionField.text = data.commission?[0] ?? "Возможна комиссия"
+                        vc.taxTransctionField.text = "\(data.commission?[0].amount ?? 0)"
                     } else {
                         vc.taxTransctionField.isHidden = true
                     }

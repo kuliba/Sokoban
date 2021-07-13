@@ -128,6 +128,15 @@
         }
       },
       {
+        "package": "QRScanner",
+        "repositoryURL": "https://github.com/mercari/QRScanner",
+        "state": {
+          "branch": null,
+          "revision": "9c81351f4cb90742ab89dd8e685fde4e89dc0718",
+          "version": "1.8.0"
+        }
+      },
+      {
         "package": "QuickLayout",
         "repositoryURL": "https://github.com/huri000/QuickLayout",
         "state": {

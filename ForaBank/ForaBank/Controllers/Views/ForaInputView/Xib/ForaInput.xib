@@ -157,10 +157,10 @@
                         <constraint firstAttribute="width" constant="32" id="aZc-Bf-iPi"/>
                     </constraints>
                 </imageView>
-                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Номер телефона указан неверно" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9j8-9E-t6u">
-                    <rect key="frame" x="64" y="57" width="384" height="16"/>
+                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Укажите дополнительную информацию. Не менее 25 символов. " lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="none" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9j8-9E-t6u">
+                    <rect key="frame" x="64" y="57" width="384" height="32"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="16" id="ekJ-hk-NkD"/>
+                        <constraint firstAttribute="height" constant="32" id="ekJ-hk-NkD"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
                     <color key="textColor" red="0.8901960784313725" green="0.0039215686274509803" blue="0.10588235294117647" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
