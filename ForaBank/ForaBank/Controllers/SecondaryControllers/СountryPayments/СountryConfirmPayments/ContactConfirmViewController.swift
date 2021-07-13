@@ -138,7 +138,7 @@ struct ConfirmViewControllerModel {
         self.statusIsSuccses = model?.statusCode == 0 ? true : false
         self.phone = phone
         self.summTransction = Double(model?.data?.amount ?? 0).currencyFormatter()
-        self.taxTransction = (model?.data?.commission ?? 0).currencyFormatter()
+        self.taxTransction = Double(model?.data?.commission ?? 0).currencyFormatter(code: curr)
         self.numberTransction = transctionNum
         self.currancyTransction = "Наличные"
         self.country = country
@@ -163,7 +163,7 @@ class ContactConfurmViewController: UIViewController {
     
     var phoneField = ForaInput(
         viewModel: ForaInputModel(
-            title: "По номеру телефона",
+            title: "Номер телефона получателя",
             image: #imageLiteral(resourceName: "Phone"),
             type: .phone,
             isEditable: false))
@@ -253,14 +253,14 @@ class ContactConfurmViewController: UIViewController {
     func setupData(with model: ConfirmViewControllerModel) {
         currTransctionField.isHidden = true
         
-        let amount = Double(model.summTransction)?.currencyFormatter(code: "RUB")
-        summTransctionField.text = amount ?? ""
+//        let amount = Double(model.summTransction)?.currencyFormatter(code: "RUB")
+        summTransctionField.text = model.summInCurrency
         
         if model.taxTransction.isEmpty {
             taxTransctionField.isHidden = true
         }
         let tax = Double(model.taxTransction)?.currencyFormatter(code: "RUB")
-        taxTransctionField.text = tax ?? ""
+        taxTransctionField.text = model.taxTransction
         
         
         switch model.type {
