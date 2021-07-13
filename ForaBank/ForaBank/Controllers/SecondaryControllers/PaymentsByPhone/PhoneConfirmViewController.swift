@@ -99,8 +99,25 @@ class PhoneConfirmViewController: UIViewController {
         stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
         
         
+        var sbpimage = UIImage()
+//        let navImage: UIImage = system.svgImage?.convertSVGStringToImage() ?? UIImage()
+//
+//        let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
+//        self.navigationItem.rightBarButtonItem = customViewItem
+        
+        
+        if let paymentSystems = Dict.shared.paymentList{
+        
+            for system in paymentSystems{
+                if system.code == "SFP"{
+                    sbpimage = system.svgImage?.convertSVGStringToImage() ?? UIImage()
+                }
+            }
+            
+        }
+        
         if sbp ?? false {
-            let customView = UIImageView(image: #imageLiteral(resourceName: "sbp-logoDefault"))
+            let customView = UIImageView(image: sbpimage)
             let customViewItem = UIBarButtonItem(customView: customView)
             self.navigationItem.rightBarButtonItem = customViewItem
         }

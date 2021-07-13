@@ -91,10 +91,12 @@ class ContactsViewController: UIViewController, SelectImageDelegate, UITextField
 //    var collectionView: UICollectionView!
     var lastPaymentsCollectionView: UICollectionView!
     var contactCollectionView: UICollectionView!
-    
+    var delegate: SelectImageDelegate? = nil
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.delegate = self
+//        searchContact.delegate?.didSelectImage(image: "123")
         searchContact.delegate = self
         searchContact.numberTextField.delegate = self
         

@@ -16,14 +16,14 @@
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sbp-logo" translatesAutoresizingMaskIntoConstraints="NO" id="5Fv-SC-AFZ">
-                    <rect key="frame" x="20" y="15" width="16" height="20"/>
+                    <rect key="frame" x="6" y="15" width="16" height="20"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="16" id="7z1-1f-dIw"/>
                         <constraint firstAttribute="height" constant="20" id="bE5-nZ-q8r"/>
                     </constraints>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="В другой банк" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DCJ-M4-piY">
-                    <rect key="frame" x="46" y="14.5" width="115.5" height="21"/>
+                    <rect key="frame" x="32" y="14.5" width="115.5" height="21"/>
                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
@@ -41,7 +41,7 @@
             </subviews>
             <viewLayoutGuide key="safeArea" id="VXr-Tz-HHm"/>
             <constraints>
-                <constraint firstItem="5Fv-SC-AFZ" firstAttribute="leading" secondItem="VXr-Tz-HHm" secondAttribute="leading" constant="20" id="BRV-0Z-t6C"/>
+                <constraint firstItem="5Fv-SC-AFZ" firstAttribute="leading" secondItem="VXr-Tz-HHm" secondAttribute="leading" constant="6" id="BRV-0Z-t6C"/>
                 <constraint firstItem="dpr-Ea-NRy" firstAttribute="centerY" secondItem="5Fv-SC-AFZ" secondAttribute="centerY" id="Smv-Ry-PnH"/>
                 <constraint firstItem="dpr-Ea-NRy" firstAttribute="centerY" secondItem="U6b-Vx-4bR" secondAttribute="centerY" id="Syx-FM-8ZY"/>
                 <constraint firstItem="DCJ-M4-piY" firstAttribute="leading" secondItem="5Fv-SC-AFZ" secondAttribute="trailing" constant="10" id="kO0-pa-hJZ"/>

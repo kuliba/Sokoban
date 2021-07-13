@@ -109,24 +109,30 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         return button
     }()
     
+    @objc func presentScanner(){
+        let vc = QRScannerViewController()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true, completion: nil)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let item = UIBarButtonItem(image: UIImage.init(imageLiteralResourceName: "scanner"), style: .plain, target: .none, action: .none)
+        let item = UIBarButtonItem(image: UIImage.init(imageLiteralResourceName: "scanner"), style: .plain, target: self, action: #selector(presentScanner))
         self.navigationItem.setRightBarButton(item, animated: false)
-        
+//        navigationItem.rightBarButtonItem?.action = #selector(doneButtonTapped)
         nameCompanyField.errorLabel.sizeToFit()
         kppField.errorLabel.sizeToFit()
         nameCompanyField.errorLabel.isHidden = false
         nameCompanyField.errorLabel.alpha = 1
-        nameCompanyField.errorLabel.textColor = UIColor.gray
+        nameCompanyField.errorLabel.textColor = UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
         kppField.errorLabel.isHidden = false
         kppField.errorLabel.alpha = 1
-        kppField.errorLabel.textColor = UIColor.gray
+        kppField.errorLabel.textColor = UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
 
         commentField.errorLabel.alpha = 1
         commentField.errorLabel.isHidden = false
-        commentField.errorLabel.textColor = UIColor.gray
+        commentField.errorLabel.textColor = UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
         
         innField.errorLabel.isHidden = true
         innField.errorLabel.alpha = 0
@@ -182,6 +188,10 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         innField.didChangeValueField = {(field) in
             if self.innField.textField.text?.count == 10{
                 self.suggestCompany()
+            } else {
+                    self.nameField.isHidden = true
+                    self.kppField.isHidden = true
+                    self.nameCompanyField.isHidden = true
             }
         }
 //        nameField.didChangeValueField = {(field) in
@@ -189,8 +199,12 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
 //            self.nameField.errorLabel.text = "Укажите название организации"
 //        }
         
+
+            var name = String()
+            var surname = String()
+            var fio = String()
         
-        self.fioField.didChooseButtonTapped = { () in
+            self.fioField.didChooseButtonTapped = { () in
             
             self.fioField.placeHolder.text = "Фамилия"
             self.nameField.isHidden.toggle()
@@ -199,8 +213,8 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
             self.stackView.addArrangedSubview(self.surField)
             
             
+            
             if self.nameField.isHidden || self.nameField.textField.text == "" {
-                
                 self.fioField.textField.text = "\(self.fioField.textField.text ?? "")" + " " + "\(self.nameField.textField.text ?? "")" + " " + "\(self.surField.textField.text ?? "")"
                 self.stackView.addArrangedSubview(self.commentField)
 
@@ -210,18 +224,14 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
          }
         
         accountNumber.didChangeValueField = {(field) in
-            if self.accountNumber.textField.text?.count == 19, self.accountNumber.textField.text?.prefix(5) == "40817" || self.accountNumber.textField.text?.prefix(5) == "40820" || self.accountNumber.textField.text?.prefix(3) == "423" || self.accountNumber.textField.text?.prefix(3) == "426" {
+            if self.accountNumber.textField.text?.count == 19, self.accountNumber.textField.text?.prefix(5) == "40817" || self.accountNumber.textField.text?.prefix(5) == "40820" || self.accountNumber.textField.text?.prefix(3) == "423" || self.accountNumber.textField.text?.prefix(3) == "426"  && self.bikBankField.textField.text != ""{
                 self.stackView.addArrangedSubview(self.fioField)
-            } else if self.accountNumber.textField.text?.count == 19 {
-                self.stackView.addArrangedSubview(self.innField)
-            } else {
-                self.stackView.removeArrangedSubview(self.innField)
-                self.stackView.removeArrangedSubview(self.nameCompanyField)
-                self.stackView.removeArrangedSubview(self.kppField)
-                self.stackView.removeArrangedSubview(self.fioField)
-                self.stackView.removeArrangedSubview(self.nameField)
-                self.stackView.removeArrangedSubview(self.surField)
-                self.stackView.removeArrangedSubview(self.commentField)
+            } else if self.accountNumber.textField.text?.count == 19 && self.bikBankField.textField.text != "" {
+                self.setuoUIByCompany()
+                self.innField.isHidden = false
+            } else if self.bikBankField.textField.text?.count ?? 0 < 11 && self.accountNumber.textField.text?.count ?? 0 < 19{
+                self.innField.isHidden = true
+
             }
         }
         
@@ -230,6 +240,9 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         
         // Do any additional setup after loading the view.
     }
+    
+
+    
     func setupActions() {
         getCardList { [weak self] data ,error in
             DispatchQueue.main.async {
@@ -347,9 +360,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
                 self.cardListView.isHidden.toggle()
             })
         }
-        
-        
-        
+
         stackView = UIStackView(arrangedSubviews: [bikBankField, bankListView, accountNumber, cardField, cardListView])
         stackView.axis = .vertical
         stackView.alignment = .fill
@@ -366,7 +377,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     }
     
     func setuoUIByCompany(){
-        
+        stackView.addArrangedSubview(innField)
     }
     
     func setupConstraint() {
@@ -466,18 +477,12 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         }
         
         let body = [
-//            "payerCardNumber": "4656260150230695",
-//            "payerINN": payerINN,
-//            "payeeName": "\(self.fioField.textField.text ?? "")" + " " + "\(self.nameField.textField.text ?? "")" + " " + "\(self.surField.textField.text ?? "")",
-//            "amount": 100,
-//            "payeeAccountNumber": accountNumber,
-//            "payeeBankBIC": bikBank,
             "payerCardNumber": "4656260150230695",
             "amount": 100,
-            "comment": "Оплата за мебель.Без НДdsjkfbksjdfС",
+            "comment": "\(comment)",
             "date": "2020-01-27",
-            "payeeAccountNumber": "40702810638110103994",
-            "payeeBankBIC": "044525225",
+            "payeeAccountNumber": "\(accountNumber)",
+            "payeeBankBIC": "\(bikBank)",
             "payeeINN": "7718164343",
             "payeeKPP": "771801001",
             "payeeName": "ООО ДИК-мебель"

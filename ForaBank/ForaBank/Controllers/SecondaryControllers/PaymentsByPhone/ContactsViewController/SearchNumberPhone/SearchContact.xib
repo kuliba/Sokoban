@@ -43,7 +43,6 @@
                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                             <textInputTraits key="textInputTraits"/>
                             <connections>
-                                <action selector="valueChanged:" destination="-1" eventType="valueChanged" id="sKW-Mx-T81"/>
                                 <outlet property="delegate" destination="-1" id="g5T-yP-NHE"/>
                             </connections>
                         </textField>
@@ -60,7 +59,7 @@
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
-                <outlet property="numberTextField" destination="uBl-9R-atN" id="ObP-9l-1dM"/>
+                <outlet property="numberTextField" destination="uBl-9R-atN" id="sPt-RN-yIc"/>
                 <outlet property="searchView" destination="-1" id="6QA-jO-6Em"/>
             </connections>
             <point key="canvasLocation" x="-186.95652173913044" y="-74.665178571428569"/>

@@ -269,7 +269,7 @@ class PaymentByPhoneViewController: UIViewController {
                     vc.bankPayeer.chooseButton.isHidden = true
                     vc.bankPayeer.imageView.image = self.bankPayeer.imageView.image
                     vc.cardField.chooseButton.isHidden = true
-                    vc.payeerField.textField.text = model.data?.payeeName
+                    vc.payeerField.text = model.data?.payeeName ?? "Получатель не определен"
                     vc.addCloseButton()
                     let navController = UINavigationController(rootViewController: vc)
                     navController.modalPresentationStyle = .fullScreen
@@ -395,11 +395,11 @@ class PaymentByPhoneViewController: UIViewController {
                     vc.summTransctionField.text = self.summTransctionField.textField.text ?? ""
                     vc.bankPayeer.chooseButton.isHidden = true
                     vc.cardField.chooseButton.isHidden = true
-                    vc.payeerField.textField.text = model.data?.listInputs?[5].content?[0]
+                    vc.payeerField.text = model.data?.listInputs?[5].content?[0] ?? "Получатель не найден"
                     if model.data?.commission == 0.0 {
-                        vc.taxTransctionField.textField.text = "Комиссия не взимается"
+                        vc.taxTransctionField.text = "Комиссия не взимается"
                     } else {
-                        vc.taxTransctionField.textField.text = model.data?.commission?.description
+                        vc.taxTransctionField.text = model.data?.commission?.description ?? "Возможна комиссия"
                     }
                     vc.addCloseButton()
                     let navController = UINavigationController(rootViewController: vc)

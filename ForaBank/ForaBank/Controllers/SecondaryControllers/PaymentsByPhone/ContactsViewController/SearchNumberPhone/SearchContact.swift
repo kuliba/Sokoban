@@ -13,18 +13,15 @@ protocol SelectImageDelegate {
 
 class SearchContact: UIView, UITextFieldDelegate{
     
-
+    
     @IBOutlet weak var numberTextField: UITextField!
     
     @IBOutlet weak var searchView: SearchContact!
     
-    @IBAction func valueChanged(_ sender: UITextField) {
-        print("123")
-    }
-    
-    //    @IBOutlet weak var numberTextField2: UITextField!
     var delegate: SelectImageDelegate? = nil
     var searchText: String?
+    
+    
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if (textField == numberTextField) {
@@ -72,8 +69,7 @@ class SearchContact: UIView, UITextFieldDelegate{
     
     override func layoutSubviews() {
         super.layoutSubviews()
-       
-//        self.delegate = self
+        
         roundCorners(corners: .allCorners, radius: 10)
         self.layer.borderWidth = 1
         self.layer.borderColor = UIColor(red: 0.918, green: 0.922, blue: 0.922, alpha: 1).cgColor
