@@ -107,6 +107,8 @@ extension ContactInputViewController {
                 var model = ConfirmViewControllerModel(
                     country: country,
                     model: model)
+                model?.type = .mig
+                model?.paymentSystem = self.paymentSystem
                 model?.bank = self.selectedBank
                 self.goToConfurmVC(with: model!)
                 
@@ -165,11 +167,11 @@ extension ContactInputViewController {
                         
                         guard let country = self.country else { return }
                         let fullName = surname + " " + name + " " + secondName
-                        let model = ConfirmViewControllerModel(
+                        var model = ConfirmViewControllerModel(
                             country: country,
                             model: model,
                             fullName: fullName)
-                                                
+                        model?.paymentSystem = self.paymentSystem
                         self.goToConfurmVC(with: model!)
                         
                     } else {
