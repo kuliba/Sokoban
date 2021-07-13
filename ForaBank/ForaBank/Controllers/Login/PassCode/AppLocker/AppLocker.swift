@@ -10,6 +10,7 @@ import UIKit
 import AudioToolbox
 import LocalAuthentication
 import Valet
+import Firebase
 import FirebaseMessaging
 
 public enum ALConstants {

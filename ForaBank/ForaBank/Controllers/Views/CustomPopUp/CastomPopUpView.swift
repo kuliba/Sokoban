@@ -370,7 +370,9 @@ class MemeDetailVC : AddHeaderImageViewController {
                                 print("DEBUG: cardToCard payment Succses", #function, model)
                                 let vc = ContactConfurmViewController()
                                 vc.modalPresentationStyle = .fullScreen
+                                vc.confurmVCModel?.type = .card2card
                                 vc.confurmVCModel = viewModel
+                                vc.confurmVCModel?.type = .card2card
                                 vc.addCloseButton()
                                 vc.title = "Подтвердите реквизиты"
                                 let navVC = UINavigationController(rootViewController: vc)
