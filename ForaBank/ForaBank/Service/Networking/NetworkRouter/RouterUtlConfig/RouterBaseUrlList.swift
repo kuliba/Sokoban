@@ -93,4 +93,6 @@ enum RouterBaseUrlList: String {
     
     case checkCard                 = "/rest/transfer/checkCard"
     
+    case logout                    = "/logout"
+    
 }

@@ -51,6 +51,7 @@ enum RouterUrlList: String {
     case getProductTemplateList
     case deleteProductTemplate
     case checkCard
+    case logout
     
     
     func returnUrl () -> URLValue {
@@ -454,6 +455,17 @@ enum RouterUrlList: String {
             
         case .checkCard:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.checkCard.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .logout:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.logout.rawValue)
             
             switch result {
             case .success(let url):

@@ -45,6 +45,7 @@ enum RouterManager {
     case getProductTemplateList
     case deleteProductTemplate
     case checkCard
+    case logout
     
 }
 
@@ -593,6 +594,21 @@ extension RouterManager {
             
         case .checkCard:
             let baseUrl = RouterUrlList.checkCard.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .logout:
+            let baseUrl = RouterUrlList.logout.returnUrl()
             switch baseUrl {
             case .success(let url):
                 resultUrl = url.absoluteURL
