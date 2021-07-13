@@ -14,14 +14,10 @@ protocol SelectImageDelegate {
 class SearchContact: UIView, UITextFieldDelegate{
     
 
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-//        let stringMatch = string.rangeOfString(numberTextField.text)
-//        delegate?.didSelectImage(image: numberTextField[0].text ?? "nil")
-        return true
-    }
     @IBOutlet weak var numberTextField: UITextField!
     
     @IBOutlet weak var searchView: SearchContact!
+    
     @IBAction func valueChanged(_ sender: UITextField) {
         print("123")
     }
@@ -30,7 +26,49 @@ class SearchContact: UIView, UITextFieldDelegate{
     var delegate: SelectImageDelegate? = nil
     var searchText: String?
     
-    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if (textField == numberTextField) {
+                let newString = (textField.text! as NSString).replacingCharacters(in: range, with: string)
+                let components = newString.components(separatedBy: NSCharacterSet.decimalDigits.inverted)
+
+                let decimalString = components.joined(separator: "") as NSString
+                let length = decimalString.length
+                let hasLeadingOne = length > 0 && decimalString.hasPrefix("7")
+
+                if length == 0 || (length > 10 && !hasLeadingOne) || length > 11 {
+                let newLength = (textField.text! as NSString).length + (string as NSString).length - range.length as Int
+
+                return (newLength > 10) ? false : true
+            }
+            var index = 0 as Int
+                    let formattedString = NSMutableString()
+
+                    if hasLeadingOne {
+                        formattedString.append("+7 ")
+                        index += 1
+                    }
+
+                    if (length - index) > 3 {
+                        let areaCode = decimalString.substring(with: NSMakeRange(index, 3))
+                        formattedString.appendFormat("(%@)", areaCode)
+                        index += 3
+                    }
+
+                    if length - index > 3 {
+                        let prefix = decimalString.substring(with: NSMakeRange(index, 3))
+                        formattedString.appendFormat("%@-", prefix)
+                        index += 3
+                    }
+
+                        let remainder = decimalString.substring(from: index)
+                        formattedString.append(remainder)
+                        textField.text = formattedString as String
+                    return false
+                    }
+                    else {
+                    return true
+            }
+    }
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -38,7 +76,7 @@ class SearchContact: UIView, UITextFieldDelegate{
 //        self.delegate = self
         roundCorners(corners: .allCorners, radius: 10)
         self.layer.borderWidth = 1
-        self.layer.borderColor = UIColor(red:222/255, green:225/255, blue:227/255, alpha: 1).cgColor
+        self.layer.borderColor = UIColor(red: 0.918, green: 0.922, blue: 0.922, alpha: 1).cgColor
         
         
     }

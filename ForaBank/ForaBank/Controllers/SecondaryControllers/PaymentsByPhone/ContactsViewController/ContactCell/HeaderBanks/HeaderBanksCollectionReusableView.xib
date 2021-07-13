@@ -23,7 +23,7 @@
                     </constraints>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="В другой банк" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DCJ-M4-piY">
-                    <rect key="frame" x="51" y="14.5" width="115.5" height="21"/>
+                    <rect key="frame" x="46" y="14.5" width="115.5" height="21"/>
                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
@@ -44,7 +44,7 @@
                 <constraint firstItem="5Fv-SC-AFZ" firstAttribute="leading" secondItem="VXr-Tz-HHm" secondAttribute="leading" constant="20" id="BRV-0Z-t6C"/>
                 <constraint firstItem="dpr-Ea-NRy" firstAttribute="centerY" secondItem="5Fv-SC-AFZ" secondAttribute="centerY" id="Smv-Ry-PnH"/>
                 <constraint firstItem="dpr-Ea-NRy" firstAttribute="centerY" secondItem="U6b-Vx-4bR" secondAttribute="centerY" id="Syx-FM-8ZY"/>
-                <constraint firstItem="DCJ-M4-piY" firstAttribute="leading" secondItem="5Fv-SC-AFZ" secondAttribute="trailing" constant="15" id="kO0-pa-hJZ"/>
+                <constraint firstItem="DCJ-M4-piY" firstAttribute="leading" secondItem="5Fv-SC-AFZ" secondAttribute="trailing" constant="10" id="kO0-pa-hJZ"/>
                 <constraint firstItem="dpr-Ea-NRy" firstAttribute="trailing" secondItem="VXr-Tz-HHm" secondAttribute="trailing" id="q2w-yy-NDM"/>
                 <constraint firstItem="dpr-Ea-NRy" firstAttribute="centerY" secondItem="DCJ-M4-piY" secondAttribute="centerY" id="uiM-Bw-Fr6"/>
             </constraints>

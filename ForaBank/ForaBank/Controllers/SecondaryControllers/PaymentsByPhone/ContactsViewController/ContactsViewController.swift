@@ -9,7 +9,7 @@ import UIKit
 import ContactsUI
 
 
-class ContactsViewController: UIViewController,SelectImageDelegate{
+class ContactsViewController: UIViewController, SelectImageDelegate, UITextFieldDelegate{
     
     func didSelectImage(image: String) {
         if !reserveContacts.isEmpty{
@@ -94,23 +94,25 @@ class ContactsViewController: UIViewController,SelectImageDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       
+        
         searchContact.delegate = self
+        searchContact.numberTextField.delegate = self
         
         let layout = UICollectionViewFlowLayout()
 
             layout.itemSize = CGSize(width: 80, height: 120)
             layout.scrollDirection = .horizontal
+            
         lastPaymentsCollectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
          let xib = UINib.init(nibName: "LastPaymentsCollectionViewCell", bundle: nil)
         lastPaymentsCollectionView.register(xib, forCellWithReuseIdentifier: "LastPaymentsCollectionViewCell")
 
       
         
-            let viewLastPayments = UIView()
-            viewLastPayments.addSubview(lastPaymentsCollectionView)
+        let viewLastPayments = UIView()
+        viewLastPayments.addSubview(lastPaymentsCollectionView)
         
-            let flowLayout = UICollectionViewFlowLayout()
+        let flowLayout = UICollectionViewFlowLayout()
             
         lastPaymentsCollectionView.isScrollEnabled = true
         
@@ -132,28 +134,42 @@ class ContactsViewController: UIViewController,SelectImageDelegate{
             lastPaymentsCollectionView?.delegate = self
             contactCollectionView.backgroundColor = .white
       
-        
             contactCollectionView.register(UINib(nibName: "HeaderBanksCollectionReusableView", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderBanksCollectionReusableView")
 
             contactCollectionView.register(UINib(nibName: "ContactCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ContactCollectionViewCell")
             lastPaymentsCollectionView.register(UINib(nibName: "LastPaymentsCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "LastPaymentsCollectionViewCell")
        
         lastPaymentsCollectionView.heightAnchor.constraint(equalToConstant: 120).isActive = true
-        lastPaymentsCollectionView.anchor(paddingLeft: 20)
+//        lastPaymentsCollectionView.anchor(paddingLeft: 20)
+//
+//        searchContact.layoutMargins = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+//        lastPaymentsCollectionView.layoutMargins = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+      
         
-        searchContact.layoutMargins = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-        lastPaymentsCollectionView.layoutMargins = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        lastPaymentsCollectionView.insetsLayoutMarginsFromSafeArea = true
+        searchContact.insetsLayoutMarginsFromSafeArea = true
+//        searchContact.anchor(paddingLeft: 20)
+//        lastPaymentsCollectionView.anchor(paddingLeft: 50)
+        lastPaymentsCollectionView.showsHorizontalScrollIndicator = false
+//        lastPaymentsCollectionView.scrollIndicatorInsets = nil
         
             let stackView = UIStackView(arrangedSubviews: [searchContact,lastPaymentsCollectionView, contactView])
-          
-//            stackView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+//            searchContact.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 20).isActive = true
+//            searchContact.leadingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: -20).isActive = true
+            contactView.layoutMargins = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+            stackView.layoutMargins = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        contactCollectionView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        searchContact.backgroundColor = .clear
+
             stackView.isLayoutMarginsRelativeArrangement = true
-        
+            contactView.isUserInteractionEnabled = true
+            contactCollectionView.isScrollEnabled = true
             stackView.axis = .vertical
             stackView.alignment = .fill
             stackView.distribution = .fill
             stackView.spacing = 10
             stackView.backgroundColor = .white
+            
 //            view.addSubview(lastPaymentsCollectionView)
 //            view.addSubview(contactView)
         
@@ -293,7 +309,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
 //                    item.nameLabel.text = cell.name
 //                }
                 if lastPayment.count > 3{
-                    item.contactImageView.image = nil
+//                    item.contactImageView.image = nil
                     item.bankNameLabel.isHidden = true
                     item.bankNameLabel.text = lastPayment[indexPath.item].bankName
                     for contact in contacts {
