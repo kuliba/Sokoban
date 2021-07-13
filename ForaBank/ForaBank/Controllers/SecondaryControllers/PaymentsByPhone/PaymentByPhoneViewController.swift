@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import SVGKit
+
 
 class PaymentByPhoneViewController: UIViewController {
     var sbp: Bool?
@@ -85,7 +87,7 @@ class PaymentByPhoneViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         if selectNumber != nil{
-            phoneField.textField.text = selectNumber
+            phoneField.text = selectNumber ?? ""
         }
         setupUI()
         hideKeyboardWhenTappedAround()
@@ -149,13 +151,9 @@ class PaymentByPhoneViewController: UIViewController {
         
         view.backgroundColor = .white
         
-        let button = UIButton(type: .system)
-        button.setTitle("Оплатить", for: .normal)
-        button.setTitleColor(#colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), for: .normal)
-        button.backgroundColor = #colorLiteral(red: 0.8901960784, green: 0.003921568627, blue: 0.1058823529, alpha: 1)
-        button.layer.cornerRadius = 22
+        let button = UIButton(title: "Оплатить")
         
-        bankPayeer.textField.text = selectBank
+        bankPayeer.text = selectBank ?? ""
         
         
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -178,11 +176,27 @@ class PaymentByPhoneViewController: UIViewController {
         stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
         
+        var sbpimage = UIImage()
+//        let navImage: UIImage = system.svgImage?.convertSVGStringToImage() ?? UIImage()
+//
+//        let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
+//        self.navigationItem.rightBarButtonItem = customViewItem
+        
+        
+        if let paymentSystems = Dict.shared.paymentList{
+        
+            for system in paymentSystems{
+                if system.code == "SFP"{
+                    sbpimage = system.svgImage?.convertSVGStringToImage() ?? UIImage()
+                }
+            }
+            
+        }
         
         if sbp ?? false {
             title = "Перевод через СБП"
             
-            let imageView = UIImageView(image: UIImage(named: "sbp-logoDefault"))
+            let imageView = UIImageView(image: sbpimage)
             let item = UIBarButtonItem(customView: imageView)
             imageView.contentMode = .scaleAspectFit
             imageView.frame = CGRect(origin: .zero, size: CGSize(width: 10, height: 10))

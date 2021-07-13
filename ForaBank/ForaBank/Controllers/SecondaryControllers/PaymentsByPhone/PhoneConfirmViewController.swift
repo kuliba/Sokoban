@@ -75,11 +75,7 @@ class PhoneConfirmViewController: UIViewController {
         
         view.backgroundColor = .white
         
-        let button = UIButton(type: .system)
-        button.setTitle("Оплатить", for: .normal)
-        button.setTitleColor(#colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), for: .normal)
-        button.backgroundColor = #colorLiteral(red: 0.8901960784, green: 0.003921568627, blue: 0.1058823529, alpha: 1)
-        button.layer.cornerRadius = 22
+        let button = UIButton(title: "Перевести")
         
         
         button.translatesAutoresizingMaskIntoConstraints = false

@@ -10,6 +10,7 @@ import ContactsUI
 
 
 class ContactsViewController: UIViewController,SelectImageDelegate{
+    
     func didSelectImage(image: String) {
         if !reserveContacts.isEmpty{
             loadContacts(filter: .none)
@@ -36,7 +37,8 @@ class ContactsViewController: UIViewController,SelectImageDelegate{
     var banks: [FastPayment]?
 
     var selectPhoneNumber: String?
-
+    var selectPerson: String?
+    
     let searchContact: SearchContact = UIView.fromNib()
     
     var checkOwnerFetch: Bool?
@@ -52,17 +54,18 @@ class ContactsViewController: UIViewController,SelectImageDelegate{
     
     var contacts = [PhoneContact]() {
         didSet{
+            for contact in contacts {
+                contact.phoneNumber[0] = format(phoneNumber:  contact.phoneNumber.first!.description) ?? ""
+            }
             contactCollectionView.reloadData()
     //            setupCollectionView()
-        }
-        willSet{
-            contactCollectionView.reloadData()
         }
     }// array of PhoneContact(It is model find it below)
     var filter: ContactsFilter = .none
    
 
        fileprivate func loadContacts(filter: ContactsFilter) {
+        showActivity()
         contacts.removeAll()
             var allContacts = [PhoneContact]()
             for contact in PhoneContacts.getContacts(filter: filter) {
@@ -79,6 +82,7 @@ class ContactsViewController: UIViewController,SelectImageDelegate{
                     lhs.name ?? "" < rhs.name ?? ""
                 }
             }
+        dismissActivity()
         contacts.append(contentsOf: filterdArray)
     }
 
@@ -135,9 +139,16 @@ class ContactsViewController: UIViewController,SelectImageDelegate{
             lastPaymentsCollectionView.register(UINib(nibName: "LastPaymentsCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "LastPaymentsCollectionViewCell")
        
         lastPaymentsCollectionView.heightAnchor.constraint(equalToConstant: 120).isActive = true
+        lastPaymentsCollectionView.anchor(paddingLeft: 20)
+        
+        searchContact.layoutMargins = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        lastPaymentsCollectionView.layoutMargins = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         
             let stackView = UIStackView(arrangedSubviews: [searchContact,lastPaymentsCollectionView, contactView])
-
+          
+//            stackView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+            stackView.isLayoutMarginsRelativeArrangement = true
+        
             stackView.axis = .vertical
             stackView.alignment = .fill
             stackView.distribution = .fill
@@ -262,7 +273,13 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
         } else if collectionView == lastPaymentsCollectionView{
             if lastPhonePayment.count > 1{
                 let item = lastPaymentsCollectionView.dequeueReusableCell(withReuseIdentifier: "LastPaymentsCollectionViewCell", for: indexPath) as! LastPaymentsCollectionViewCell
-                item.nameLabel.text = lastPhonePayment[indexPath.item].bankName
+                item.nameLabel.numberOfLines = 1
+                if lastPhonePayment[indexPath.item].isPayment == true{
+                    item.nameLabel.text = selectPerson
+
+                } else {
+                    item.nameLabel.isHidden = true
+                }
                 item.contactImageView.image = UIImage(named: "\(lastPhonePayment[indexPath.item].bankID!)")
                 item.bankNameLabel.isHidden = false
                 item.bankNameLabel.text = lastPhonePayment[indexPath.item].bankName
@@ -270,16 +287,28 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
             } else {
                 
                 let item = lastPaymentsCollectionView.dequeueReusableCell(withReuseIdentifier: "LastPaymentsCollectionViewCell", for: indexPath) as! LastPaymentsCollectionViewCell
-                item.nameLabel.text = lastPayment[indexPath.item].phoneNumber
+                item.nameLabel.text = format(phoneNumber: lastPayment[indexPath.item].phoneNumber ?? "")
 //                for cell in contacts {
 //                    cell.phoneNumber[0] = lastPayment[indexPath.item].phoneNumber ?? ""
 //                    item.nameLabel.text = cell.name
 //                }
                 if lastPayment.count > 3{
-                    item.contactImageView.image = UIImage(named: lastPayment[indexPath.item].bankID ?? "")
+                    item.contactImageView.image = nil
                     item.bankNameLabel.isHidden = true
                     item.bankNameLabel.text = lastPayment[indexPath.item].bankName
-                    item.nameLabel.text = lastPayment[indexPath.item].amount
+                    for contact in contacts {
+                        if contact.phoneNumber[0] == format(phoneNumber: lastPayment[indexPath.item].phoneNumber ?? "")! {
+                            item.nameLabel.text = contact.name
+                            item.contactImageView.image = UIImage(data: (self.contacts[indexPath.item].avatarData)!)
+                            break
+                        } else {
+                            item.nameLabel.text = format(phoneNumber: lastPayment[indexPath.item].phoneNumber ?? "")
+                        }
+                        
+                        
+
+                    }
+                    
                     
                 }
                 return item
@@ -295,10 +324,11 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
             } else {
                 
                 let item = lastPaymentsCollectionView.dequeueReusableCell(withReuseIdentifier: "LastPaymentsCollectionViewCell", for: indexPath) as! LastPaymentsCollectionViewCell
-                item.nameLabel.text = lastPayment[indexPath.item].phoneNumber
+                item.nameLabel.text = format(phoneNumber: lastPayment[indexPath.item].phoneNumber ?? "")
+                item.nameLabel.text = lastPayment[indexPath.item].bankName
                 if lastPayment.count > 3{
                     item.contactImageView.image = UIImage(named: lastPayment[indexPath.item].bankID ?? "")
-                    item.bankNameLabel.isHidden = true
+                    item.bankNameLabel.isHidden = false
                     item.bankNameLabel.text = lastPayment[indexPath.item].bankName
                     item.nameLabel.text = lastPayment[indexPath.item].amount
                     
@@ -379,7 +409,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                         vc.sbp = true
                     }
                 } else {
-                    vc.selectNumber = lastPayment[indexPath.item].phoneNumber ?? ""
+                    vc.selectNumber =  format(phoneNumber: lastPayment[indexPath.item].phoneNumber ?? "")
                     vc.summTransctionField.textField.text = lastPayment[indexPath.item].amount
                     vc.selectBank = lastPayment[indexPath.row].bankName
                     vc.bankImage = UIImage(named: "\(lastPayment[indexPath.row].bankID ?? "")")
@@ -401,10 +431,11 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                 
             } else {
                 selectPhoneNumber = contacts[indexPath.item].phoneNumber.first
+                selectPerson = contacts[indexPath.item].name
                 guard let numberPhone = contacts[indexPath.item].phoneNumber.first else {
                     return
                 }
-//                searchContact.numberTextField[0].text = numberPhone.dropFirst().description
+                searchContact.numberTextField.text = numberPhone.dropFirst(2).description
                 getBankList()
                 getLastPhonePayments()
                 
@@ -488,6 +519,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                 DispatchQueue.main.async {
                     self.lastPhonePayment = data
                         if self.lastPhonePayment.count != 0{
+                            
                         self.lastPaymentsCollectionView.isHidden = false
                         self.lastPaymentsCollectionView.reloadData()
                         } else {
@@ -529,8 +561,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                     checkOwner = true
                     self.checkOwnerFetch = true
                     self.contacts[index].bankImage = true
-                    self.contactCollectionView.reloadItems(at: [IndexPath(index: index)])
-                    
+//                    self.contactCollectionView.reloadItems(at: [IndexPath(index: index)])
                 }
             } else {
                 
@@ -541,6 +572,72 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
         return checkOwner
     }
     
+    func format(phoneNumber sourcePhoneNumber: String) -> String? {
+        // Remove any character that is not a number
+        var numbersOnly = sourcePhoneNumber.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
+        if numbersOnly.prefix(1) == "7" || numbersOnly.prefix(1) == "8" {
+            numbersOnly = String(numbersOnly.dropFirst())
+        }
+        let length = numbersOnly.count
+        let hasLeadingOne = numbersOnly.hasPrefix("1")
+
+        // Check for supported phone number length
+        guard length == 7 || length == 10 || (length == 11) else {
+            return nil
+        }
+
+        let hasAreaCode = (length >= 10)
+        var sourceIndex = 0
+
+        // Leading 1
+        var leadingOne = ""
+        if hasLeadingOne {
+            leadingOne = "1 "
+            sourceIndex += 1
+        }
+
+        // Area code
+        var areaCode = ""
+        if hasAreaCode {
+            let areaCodeLength = 3
+            guard let areaCodeSubstring = numbersOnly.substring(start: sourceIndex, offsetBy: areaCodeLength) else {
+                return nil
+            }
+            areaCode = String(format: "(%@) ", areaCodeSubstring)
+            sourceIndex += areaCodeLength
+        }
+
+        // Prefix, 3 characters
+        let prefixLength = 3
+        guard let prefix = numbersOnly.substring(start: sourceIndex, offsetBy: prefixLength) else {
+            return nil
+        }
+        sourceIndex += prefixLength
+
+        // Suffix, 4 characters
+        let suffixLength = 4
+        guard let suffix = numbersOnly.substring(start: sourceIndex, offsetBy: suffixLength) else {
+            return nil
+        }
+
+        return "+7 \(leadingOne + areaCode + prefix + "-" + suffix)"
+    }
+}
+
+
+extension String {
+    /// This method makes it easier extract a substring by character index where a character is viewed as a human-readable character (grapheme cluster).
+    internal func substring(start: Int, offsetBy: Int) -> String? {
+        guard let substringStartIndex = self.index(startIndex, offsetBy: start, limitedBy: endIndex) else {
+            return nil
+        }
+
+        guard let substringEndIndex = self.index(startIndex, offsetBy: start + offsetBy, limitedBy: endIndex) else {
+            return nil
+        }
+
+        return String(self[substringStartIndex ..< substringEndIndex])
+    }
 }
 
 extension UIView {

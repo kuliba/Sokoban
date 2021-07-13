@@ -20,7 +20,7 @@
                         <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LgE-h8-3ay">
                             <rect key="frame" x="0.0" y="0.0" width="0.0" height="45"/>
                         </stackView>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ib4-DY-ogm">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ib4-DY-ogm">
                             <rect key="frame" x="10" y="0.0" width="78.5" height="45"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="78.5" id="AH4-ZJ-r09"/>
