@@ -75,7 +75,6 @@ final class NetworkManager<T: NetworkModelProtocol>{
                 print("DEBUG: URLrequest:", urlComponents.url ?? "")
                 request.url = urlComponents.url
             }
-            request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         }
         debugPrint("DEBUG: request url", request.url?.absoluteString ?? "")
         let task = session.dataTask(with: request) { data, response, error in
@@ -105,7 +104,6 @@ final class NetworkManager<T: NetworkModelProtocol>{
             }
         }
         task.resume()
-        // TODO: если 401 ошибка выкинуть человека на стартовый экран
         
         func handleNetworkResponse(_ response: HTTPURLResponse) -> SessionResult<String>{
            switch response.statusCode {

@@ -175,7 +175,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         
         bikBankField.didChooseButtonTapped = { () in
             UIView.animate(withDuration: 0.2) {
-                self.openOrHideView(self.bankListView)
+                self.openOrHideView(self.bankListView) 
             }
         }
                 
@@ -438,7 +438,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
             print("DEBUG: Card list: ", model)
             if model.statusCode == 0 {
                 self.dismissActivity()
-                guard let data = model.data else { return }
+                guard let data  = model.data else { return }
 //                self.selectedCardNumber = cardNumber
                 DispatchQueue.main.async {
                     self.bikBankField.imageView.image = UIImage(imageLiteralResourceName: "100000000013")
@@ -513,8 +513,6 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
                     }
                     if data.commission?.count != 0 {
                         vc.taxTransctionField.text = "\(data.commission?[0].amount ?? 0)"
-                      //  vc.taxTransctionField.text = data.commission?[0] ?? "Возможна комиссия"
-
                     } else {
                         vc.taxTransctionField.isHidden = true
                     }

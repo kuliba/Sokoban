@@ -10,22 +10,50 @@ import UIKit
 extension ContactInputViewController {
     
     
+    private func loadBanks() {
+        
+        
+        if let banks = Dict.shared.banks {
+            self.banks = banks
+//            self.configureVC(with: countries)
+        } else {
+            
+            guard let documentsDirectoryUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+            let filePath = documentsDirectoryUrl.appendingPathComponent("BanksList.json")
+            
+            // Read data from .json file and transform data into an array
+            do {
+                let data = try Data(contentsOf: filePath, options: [])
+                
+                let list = try JSONDecoder().decode(GetBanksDataClass.self, from: data)
+                
+                guard let banks = list.banksList else { return }
+                
+                Dict.shared.banks = banks
+//                self.configureVC(with: countries)
+                self.banks = banks
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
     func startPayment(with card: String, type: PaymentType,
                       completion: @escaping (_ error: String?)->()) {
-        guard let amount = self.bottomView.amountTextField.text else { return }
+        let amount = self.bottomView.amountTextField.text ?? ""
         let phone = self.phoneField.textField.unmaskedText ?? ""
         let surname = self.surnameField.textField.text ?? ""
         let name = self.nameField.textField.text ?? ""
         let secondName = self.secondNameField.textField.text ?? ""
         
-        let puref = self.puref
+        let puref = type.puref
         
         let body = ["accountID": nil,
                     "cardID": nil,
                     "cardNumber": card,
                     "provider": nil,
                     "puref": puref] as [String: AnyObject]
-        print("DEBUG: Error: anywayPaymentBegin with body:",body)
+        
         NetworkManager<AnywayPaymentBeginDecodebleModel>.addRequest(.anywayPaymentBegin, [:], body, completion: { model, error in
             if error != nil {
                 print("DEBUG: Error: anywayPaymentBegin ", error ?? "")
@@ -43,8 +71,8 @@ extension ContactInputViewController {
                     if model.statusCode == 0 {
                         print("DEBUG: Success ")
 //                        completion(nil)
-                        let amountString = amount.replacingOccurrences(of: " ", with: "")
-                        let doubelAmount = amountString.replacingOccurrences(of: ",", with: ".", options: .literal, range: nil)
+                        
+                        let doubelAmount = amount.replacingOccurrences(of: ",", with: ".", options: .literal, range: nil)
                         
                         switch self.typeOfPay {
                         case .migAIbank:
@@ -104,10 +132,9 @@ extension ContactInputViewController {
                 print("DEBUG: Success send Phone")
                 self.dismissActivity()
                 guard let country = self.country else { return }
-                var model = ConfirmViewControllerModel(
+                let model = ConfirmViewControllerModel(
                     country: country,
                     model: model)
-                model?.bank = self.selectedBank
                 self.goToConfurmVC(with: model!)
                 
             } else {

@@ -23,9 +23,9 @@ class PresentationController: UIPresentationController {
     }
     
     override var frameOfPresentedViewInContainerView: CGRect {
-        CGRect(origin: CGPoint(x: 0, y: self.containerView!.frame.height - 470),
+        CGRect(origin: CGPoint(x: 0, y: self.containerView!.frame.height - 450),
                size: CGSize(width: self.containerView!.frame.width,
-                            height: 470))
+                            height: 450))
     }
     
     override func presentationTransitionWillBegin() {

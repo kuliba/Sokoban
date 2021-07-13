@@ -47,11 +47,6 @@ enum RouterUrlList: String {
     case getExchangeCurrencyRates
     case suggestBank
     case suggestCompany
-    case getCurrencyList
-    case getProductTemplateList
-    case deleteProductTemplate
-    case checkCard
-    
     
     func returnUrl () -> URLValue {
         switch self {
@@ -410,50 +405,6 @@ enum RouterUrlList: String {
             
         case .suggestCompany:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.suggestCompany.rawValue)
-            
-            switch result {
-            case .success(let url):
-                return .success(url.absoluteURL)
-            case .failure(let error):
-                debugPrint(error)
-                return .failure(.urlError)
-            }
-            
-        case .getCurrencyList:
-            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getCurrencyList.rawValue)
-            
-            switch result {
-            case .success(let url):
-                return .success(url.absoluteURL)
-            case .failure(let error):
-                debugPrint(error)
-                return .failure(.urlError)
-            }
-            
-        case .getProductTemplateList:
-            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getProductTemplateList.rawValue)
-            
-            switch result {
-            case .success(let url):
-                return .success(url.absoluteURL)
-            case .failure(let error):
-                debugPrint(error)
-                return .failure(.urlError)
-            }
-            
-        case .deleteProductTemplate:
-            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.deleteProductTemplate.rawValue)
-            
-            switch result {
-            case .success(let url):
-                return .success(url.absoluteURL)
-            case .failure(let error):
-                debugPrint(error)
-                return .failure(.urlError)
-            }
-            
-        case .checkCard:
-            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.checkCard.rawValue)
             
             switch result {
             case .success(let url):

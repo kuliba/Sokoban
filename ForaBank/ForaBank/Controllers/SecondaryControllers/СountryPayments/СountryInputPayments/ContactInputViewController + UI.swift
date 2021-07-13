@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SVGKit
 
 extension ContactInputViewController {
     func setupUI() {
@@ -17,14 +16,6 @@ extension ContactInputViewController {
         saveAreaView.anchor(top: view.safeAreaLayoutGuide.bottomAnchor, left: view.leftAnchor,
                             bottom: view.bottomAnchor, right: view.rightAnchor)
         view.addSubview(bottomView)
-        
-        cardFromField.titleLabel.text = "Счет списания"
-        cardFromField.titleLabel.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
-        cardFromField.imageView.isHidden = false
-        cardFromField.leftTitleAncor.constant = 64
-        cardFromField.layoutIfNeeded()
-        
-        
 //        view.addSubview(foraSwitchView)
         
         
@@ -36,11 +27,11 @@ extension ContactInputViewController {
         //  view1.addSubview(stackView)
         // scroll add view1
         
-        stackView = UIStackView(arrangedSubviews: [foraSwitchView, surnameField, nameField, secondNameField, phoneField, bankField, bankListView, cardFromField, cardListView])
+        stackView = UIStackView(arrangedSubviews: [foraSwitchView, surnameField, nameField, secondNameField, phoneField, bankField, bankListView, cardField, cardListView])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
-        stackView.spacing = 12
+        stackView.spacing = 16
         stackView.isUserInteractionEnabled = true
         view.addSubview(stackView)
         
@@ -49,49 +40,6 @@ extension ContactInputViewController {
     
     func configure(with: CountriesList?, byPhone: Bool) {
         guard let country = country else { return }
-        
-        var filterPaymentList: [PaymentSystemList] = []
-        guard let paymentList = Dict.shared.paymentList else { return }
-        paymentList.forEach({ payment in
-            country.paymentSystemCodeList?.forEach({ countryPayment in
-                if countryPayment == payment.code {
-                    filterPaymentList.append(payment)
-                }
-            })
-        })
-        if filterPaymentList.count > 1 {
-            filterPaymentList.forEach { paymentSystem in
-                if paymentSystem.code == "DIRECT" && byPhone {
-                    self.paymentSystem = paymentSystem
-                } else if paymentSystem.code == "CONTACT" && !byPhone {
-                    self.paymentSystem = paymentSystem
-                    let puref = paymentSystem.purefList?.first
-                    puref?.forEach({ (key, value) in
-                        if key == "CONTACT" {
-                            value.forEach { purefList in
-                                if purefList.type == "addressless" {
-                                    self.puref = purefList.puref ?? ""
-                                }
-                            }
-                        }
-                    })
-                }
-            }
-        } else if filterPaymentList.count == 1 {
-            self.paymentSystem = filterPaymentList.first
-            let puref = paymentSystem?.purefList?.first
-            puref?.forEach({ (key, value) in
-                if key == "CONTACT" {
-                    value.forEach { purefList in
-                        if purefList.type == "addressless" {
-                            self.puref = purefList.puref ?? ""
-                        }
-                    }
-                }
-            })
-        }
-        
-        
         UIView.animate(withDuration: 0.1) {
             self.needShowSwitchView = country.code == "AM" ? true : false
             self.phoneField.isHidden = byPhone ? false : true
@@ -103,20 +51,19 @@ extension ContactInputViewController {
             self.stackView.layoutIfNeeded()
         }
         
-    }
-    
-    func setupPaymentsUI(system: PaymentSystemList) {
-        guard let countryName = self.country?.name else { return }
-        let subtitle = "Денежные переводы \(system.name ?? "")"
-        self.navigationItem.titleView = self.setTitle(title: countryName.capitalizingFirstLetter(), subtitle: subtitle)
-        
-        let navImage: UIImage = system.svgImage?.convertSVGStringToImage() ?? UIImage()
-        
+        let navImage = byPhone ? #imageLiteral(resourceName: "MigAvatar") : #imageLiteral(resourceName: "Vector")
         let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
         self.navigationItem.rightBarButtonItem = customViewItem
         
+        guard let countryName = country.name else { return }
+        
+        let subtitle = byPhone
+            ? "Денежные переводы МИГ"
+            : "Денежные переводы Contact"
+        
+        self.navigationItem.titleView = self.setTitle(title: countryName.capitalizingFirstLetter(), subtitle: subtitle)
+        
     }
-    
     
     func setupConstraint() {
         bottomView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,

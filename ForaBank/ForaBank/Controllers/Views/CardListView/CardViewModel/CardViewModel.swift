@@ -18,7 +18,7 @@ struct CardViewModel {
     
     var balance: String {
         let cardBal: Double = card.balance ?? 0
-        return cardBal.currencyFormatter(code: card.currency ?? "")
+        return cardBal.currencyFormatter()
     }
     
     var maskedcardNumber: String {

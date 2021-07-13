@@ -2,6 +2,9 @@
 //  CreatTransferDecodableModel.swift
 //  ForaBank
 //
+//  Created by Константин Савялов on 25.06.2021.
+//
+
 // This file was generated from JSON Schema using quicktype, do not modify it directly.
 // To parse the JSON, add this file to your project and do:
 //
@@ -55,15 +58,18 @@ extension CreatTransferDecodableModel {
     }
 }
 
+// DataClass.swift
+
+// This file was generated from JSON Schema using quicktype, do not modify it directly.
+// To parse the JSON, add this file to your project and do:
+//
+//   let dataClass = try DataClass(json)
+
 // MARK: - CreatTransferDataClass
 struct CreatTransferDataClass: Codable {
-    let needMake, needOTP: Bool?
-    let amount: Double?
-    let creditAmount: JSONNull?
-    let fee: Int?
+    let amount, creditAmount, currencyRate, debitAmount, fee: Double?
+    let needMake: Bool?
     let currencyAmount, currencyPayer, currencyPayee: String?
-    let currencyRate: JSONNull?
-    let debitAmount: Double?
 }
 
 // MARK: DataClass convenience initializers and mutators
@@ -85,28 +91,26 @@ extension CreatTransferDataClass {
     }
 
     func with(
-        needMake: Bool?? = nil,
-        needOTP: Bool?? = nil,
         amount: Double?? = nil,
-        creditAmount: JSONNull?? = nil,
-        fee: Int?? = nil,
+        creditAmount: Double?? = nil,
+        currencyRate: Double?? = nil,
+        debitAmount: Double?? = nil,
+        fee: Double?? = nil,
+        needMake: Bool?? = nil,
         currencyAmount: String?? = nil,
         currencyPayer: String?? = nil,
-        currencyPayee: String?? = nil,
-        currencyRate: JSONNull?? = nil,
-        debitAmount: Double?? = nil
+        currencyPayee: String?? = nil
     ) -> CreatTransferDataClass {
         return CreatTransferDataClass(
-            needMake: needMake ?? self.needMake,
-            needOTP: needOTP ?? self.needOTP,
             amount: amount ?? self.amount,
             creditAmount: creditAmount ?? self.creditAmount,
+            currencyRate: currencyRate ?? self.currencyRate,
+            debitAmount: debitAmount ?? self.debitAmount,
             fee: fee ?? self.fee,
+            needMake: needMake ?? self.needMake,
             currencyAmount: currencyAmount ?? self.currencyAmount,
             currencyPayer: currencyPayer ?? self.currencyPayer,
-            currencyPayee: currencyPayee ?? self.currencyPayee,
-            currencyRate: currencyRate ?? self.currencyRate,
-            debitAmount: debitAmount ?? self.debitAmount
+            currencyPayee: currencyPayee ?? self.currencyPayee
         )
     }
 

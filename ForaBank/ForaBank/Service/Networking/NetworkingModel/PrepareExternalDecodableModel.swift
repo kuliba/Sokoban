@@ -5,6 +5,11 @@
 //  Created by Константин Савялов on 29.06.2021.
 //
 
+// This file was generated from JSON Schema using quicktype, do not modify it directly.
+// To parse the JSON, add this file to your project and do:
+//
+//   let prepareExternalDecodableModel = try PrepareExternalDecodableModel(json)
+
 import Foundation
 
 // MARK: - PrepareExternalDecodableModel
