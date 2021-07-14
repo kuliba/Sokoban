@@ -14,7 +14,8 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
     
     
     var seeall: Bool?
-    
+    var stackView = UIStackView()
+
     func passTextFieldText(text: String) {
         if !reserveContacts.isEmpty{
             loadContacts(filter: .none)
@@ -25,8 +26,8 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
             contactCollectionView.reloadData()
             contacts = filteredContacts
         }
-        if text.count == 10, (text.firstIndex(of: "9") != nil){
-            selectPhoneNumber = text
+        if text.count == 15, (text.firstIndex(of: "(") != nil){
+            selectPhoneNumber =  "+7 \(text)"
             getBankList()
             getLastPhonePayments()
         } 
@@ -49,7 +50,12 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
     var checkOwnerFetch: Bool?
     
 
-    var lastPayment = [GetLatestPaymentsDatum]()
+    var lastPayment = [GetLatestPaymentsDatum](){
+        didSet{
+            stackView.insertArrangedSubview(lastPaymentsCollectionView, at: 1)
+            lastPaymentsCollectionView.reloadData()
+        }
+    }
     
     var lastPhonePayment = [GetLatestPhone](){
         didSet{
@@ -161,15 +167,15 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
 //        lastPaymentsCollectionView.anchor(paddingLeft: 50)
         lastPaymentsCollectionView.showsHorizontalScrollIndicator = false
 //        lastPaymentsCollectionView.scrollIndicatorInsets = nil
-        var stackView = UIStackView()
         switch seeall {
         case true:
             stackView = UIStackView(arrangedSubviews: [searchContact, contactView])
         default:
-            stackView = UIStackView(arrangedSubviews: [searchContact,lastPaymentsCollectionView, contactView])
+            stackView = UIStackView(arrangedSubviews: [searchContact, contactView])
         }
 //            searchContact.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 20).isActive = true
 //            searchContact.leadingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: -20).isActive = true
+        lastPaymentsCollectionView.layoutMargins = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
             contactView.layoutMargins = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
             stackView.layoutMargins = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         contactCollectionView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)

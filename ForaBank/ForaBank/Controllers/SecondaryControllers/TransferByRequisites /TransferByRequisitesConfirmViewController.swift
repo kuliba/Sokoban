@@ -61,11 +61,8 @@ class TransferByRequisitesConfirmViewController: UIViewController {
         
         view.backgroundColor = .white
         
-        let button = UIButton(type: .system)
-        button.setTitle("Перевести", for: .normal)
-        button.setTitleColor(#colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), for: .normal)
-        button.backgroundColor = #colorLiteral(red: 0.8901960784, green: 0.003921568627, blue: 0.1058823529, alpha: 1)
-        button.layer.cornerRadius = 22
+        let button = UIButton(title: "Перевести")
+
         
         
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -79,6 +76,7 @@ class TransferByRequisitesConfirmViewController: UIViewController {
         title = "Подтвердите реквизиты"
         if byCompany == true{
             fioField.imageView.isHidden = true
+            fioField.placeHolder.text = "Наименование получателя "
         }
         let stackView = UIStackView(arrangedSubviews: [fioField, accountNumber, commentField,summTransctionField, taxTransctionField, smsCodeField])
         stackView.axis = .vertical

@@ -33,8 +33,12 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     var bankListView = BankListView()
 
     private func setupBankField(bank: BanksList) {
-        self.bikBankField.text = bank.memberNameRus ?? "" //"АйДиБанк"
-        self.bikBankField.imageView.image = convertSVGStringToImage(bank.svgImage ?? "")
+        if bank.memberNameRus == "Смотреть все"{
+            
+        } else {
+            self.bikBankField.text = bank.memberID ?? "" //"АйДиБанк"
+            self.bikBankField.imageView.image = convertSVGStringToImage(bank.svgImage ?? "")
+        }
     }
     func convertSVGStringToImage(_ string: String) -> UIImage {
         let stringImage = string.replacingOccurrences(of: "\\", with: "")
@@ -107,6 +111,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     
     
     var stackView = UIStackView(arrangedSubviews: [])
+    var fioStackView = UIStackView(arrangedSubviews: [])
     var fio = Fio(name: "", patronymic: "", surname: "") {
         didSet{
             if fio.name != "" && fio.patronymic != "" && fio.surname != ""{
@@ -219,34 +224,61 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
             self.fioField.placeHolder.text = "Фамилия"
             self.nameField.isHidden.toggle()
             self.surField.isHidden.toggle()
-            self.stackView.addArrangedSubview(self.nameField)
-            self.stackView.addArrangedSubview(self.surField)
-            if self.nameField.isHidden || self.nameField.textField.text == "" {
+            self.stackView.insertArrangedSubview(self.nameField, at: 6)
+            self.stackView.insertArrangedSubview(self.surField, at: 7)
+                if self.fioField.textField.text?.count != 0{
+                    self.fioField.textField.text = self.fio.surname
+                } else {
+                    self.fioField.textField.text = self.fio.surname
+                }
+                
+            if self.nameField.isHidden || self.nameField.textField.text == ""   {
                 self.fio.name = self.nameField.textField.text ?? ""
                 self.fio.patronymic = self.surField.textField.text ?? ""
                 self.fio.surname = self.fioField.textField.text ?? ""
-                self.fioField.textField.text = self.fio.name + self.fio.patronymic + self.fio.surname
-                self.stackView.addArrangedSubview(self.commentField)
-
+                self.fioField.textField.text = self.fio.surname + " " +  self.fio.name + " " + self.fio.patronymic
             }
-            
+                
 //            self.fioField.textField.text = "\(fioField.textField.text  nameField.textField.text surField.textField.text)"
          }
+        surField.didChangeValueField = {(field) in
+            
+        }
+        fioField.didChangeValueField = {(field) in
+            if self.nameField.isHidden == true {
+                self.fioField.textField.text = self.fio.surname + self.fio.patronymic + self.fio.name
+            } else {
+                self.fio.surname = self.fioField.textField.text ?? ""
+            }
+
+
+        }
+        
+        
         
         
         accountNumber.didChangeValueField = {(field) in
             if self.accountNumber.textField.text?.count == 20, self.accountNumber.textField.text?.prefix(5) == "40817" || self.accountNumber.textField.text?.prefix(5) == "40820" || self.accountNumber.textField.text?.prefix(3) == "423" || self.accountNumber.textField.text?.prefix(3) == "426" {
                 self.stackView.addArrangedSubview(self.fioField)
+                self.commentField.isHidden = false
+                self.stackView.addArrangedSubview(self.commentField)
                 self.fioField.isHidden = false
             } else if self.accountNumber.textField.text?.count == 20 {
+                self.fio.name.removeAll()
+                self.fio.patronymic.removeAll()
+                self.fioField.textField.text = ""
+                self.fio.surname.removeAll()
                 self.stackView.addArrangedSubview(self.innField)
                 self.innField.isHidden = false
             } else {
+                
                 self.fioField.isHidden = true
                 self.nameField.isHidden = true
                 self.surField.isHidden = true
                 self.commentField.isHidden = true
                 self.innField.isHidden = true
+                self.kppField.isHidden = true
+                self.nameCompanyField.isHidden = true
                 self.stackView.removeArrangedSubview(self.innField)
                 self.stackView.removeArrangedSubview(self.nameCompanyField)
                 self.stackView.removeArrangedSubview(self.kppField)
@@ -393,6 +425,14 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
             })
         }
 
+        fioStackView = UIStackView(arrangedSubviews: [fioField, nameField, surField])
+        fioStackView.axis = .vertical
+        fioStackView.alignment = .fill
+        fioStackView.distribution = .equalSpacing
+        fioStackView.spacing = 20
+        fioStackView.isUserInteractionEnabled = true
+        
+        
         stackView = UIStackView(arrangedSubviews: [bikBankField, bankListView, accountNumber, cardField, cardListView])
         stackView.axis = .vertical
         stackView.alignment = .fill
@@ -507,29 +547,39 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         guard let comment = commentField.textField.text else {
             return
         }
-        guard let inn = innField.textField.text else {
+        guard var inn = innField.textField.text else {
             return
         }
         guard let kpp = kppField.textField.text else {
             return
         }
-        guard let nameCompany = nameCompanyField.textField.text else {
+        
+        guard var nameCompany = nameCompanyField.textField.text else {
             return
         }
         
-        
+        if fioField.textField.text?.count != 0{
+            guard let fio = fioField.textField.text else {
+                    return
+            }
+            inn = "0"
+            nameCompany = fio
+        }
         
         let body = [
             "payerCardNumber": "4656260150230695",
             "amount": 100,
             "comment": "\(comment)",
             "date": "2020-01-27",
-            "payeeAccountNumber": "\(accountNumber)",
+            "payeeAccountNumber": "40702810638110103994",
             "payeeBankBIC": "\(bikBank)",
             "payeeINN": "\(inn)",
             "payeeKPP": "\(kpp)",
             "payeeName": "\(nameCompany)"
         ] as [String: AnyObject]
+        
+        NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer , [:], body) { model, error in
+        }
         
         NetworkManager<PrepareExternalDecodableModel>.addRequest(.prepareExternal , [:], body) { model, error in
 //            if error != nil {
@@ -547,20 +597,20 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
                     vc.addCloseButton()
                     if self.fioField.textField.text == ""{
                         vc.byCompany = true
-                        vc.fioField.placeHolder.text = "Наименование получателя"
-                        vc.fioField.textField.text = self.nameCompanyField.textField.text
-                        vc.commentField.textField.text = self.commentField.textField.text ?? ""
-                        vc.accountNumber.textField.text = self.accountNumber.textField.text ?? ""
-                        vc.summTransctionField.textField.text = self.bottomView.amountTextField.text
+                        vc.fioField.text = "Наименование получателя"
+                        vc.fioField.text = self.nameCompanyField.textField.text ?? ""
+                        vc.commentField.text = self.commentField.textField.text ?? ""
+                        vc.accountNumber.text = self.accountNumber.textField.text ?? ""
+                        vc.summTransctionField.text = self.bottomView.amountTextField.text ?? "" + "₽"
 
                     } else{
-                        vc.accountNumber.textField.text = self.accountNumber.textField.text ?? ""
-                        vc.fioField.textField.text = "\(self.fioField.textField.text ?? "")" + " " + "\(self.nameField.textField.text ?? "")" + " " + "\(self.surField.textField.text ?? "")"
-                        vc.commentField.textField.text = self.commentField.textField.text ?? ""
-                        vc.summTransctionField.textField.text = self.bottomView.amountTextField.text
+                        vc.accountNumber.text = self.accountNumber.textField.text ?? ""
+                        vc.fioField.text = "\(self.fio.name )" + " " + "\(self.fio.patronymic)" + " " + "\(self.fio.surname)"
+                        vc.commentField.text = self.commentField.textField.text ?? ""
+                        vc.summTransctionField.text = self.bottomView.amountTextField.text ?? ""
                     }
                     if data.commission?.count != 0 {
-                        vc.taxTransctionField.text = "\(data.commission?[0].amount ?? 0)"
+                        vc.taxTransctionField.text = "\(data.commission?[0].amount ?? 0) ₽"
                     } else {
                         vc.taxTransctionField.isHidden = true
                     }
@@ -594,7 +644,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
 //                print("DEBUG: Error: ", error ?? "")
 //            }
             DispatchQueue.main.async {
-                self.nameField.isHidden = false
+                self.nameField.isHidden = true
                 self.kppField.isHidden = false
                 self.commentField.isHidden = false
                 self.nameCompanyField.isHidden = false
