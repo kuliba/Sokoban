@@ -19,6 +19,7 @@
 		0B608200268DDD2A00FDB8AD /* CustomCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0B6081FF268DDD2A00FDB8AD /* CustomCardView.xib */; };
 		0B747890267343B400C44F79 /* KeyExchangeDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */; };
 		0B7A18AB2681CED70007CC75 /* SwiftEntryKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0B7A18AA2681CED70007CC75 /* SwiftEntryKit */; };
+		0B7A18AD2681CF160007CC75 /* CastomPopUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18AC2681CF160007CC75 /* CastomPopUpView.swift */; };
 		0B7A18AF268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18AE268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift */; };
 		0B7A18B226836A400007CC75 /* NetworkPDFManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18B126836A400007CC75 /* NetworkPDFManager.swift */; };
 		0B7A18B6268373890007CC75 /* NetworkPDFManagerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18B5268373890007CC75 /* NetworkPDFManagerExtension.swift */; };
@@ -29,6 +30,8 @@
 		0B7A18C72685BD130007CC75 /* GetBanksDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18C62685BD130007CC75 /* GetBanksDecodableModel.swift */; };
 		0B7A18C92685BF700007CC75 /* GetPaymentSystemListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18C82685BF700007CC75 /* GetPaymentSystemListDecodableModel.swift */; };
 		0B7A18CB268648030007CC75 /* GetProductListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18CA268648030007CC75 /* GetProductListDecodableModel.swift */; };
+		0B7A18CE2689C4ED0007CC75 /* AddHeaderImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18CD2689C4ED0007CC75 /* AddHeaderImageViewController.swift */; };
+		0B7A18D02689C51A0007CC75 /* AppHeaderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18CF2689C51A0007CC75 /* AppHeaderProtocol.swift */; };
 		0B8BE08F266FBE0500E96CAA /* CSRFDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE08E266FBE0500E96CAA /* CSRFDecodableModel.swift */; };
 		0B8BE091266FDA1B00E96CAA /* CheckClientDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE090266FDA1B00E96CAA /* CheckClientDecodebleModel.swift */; };
 		0B8BE093266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE092266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift */; };
@@ -222,6 +225,7 @@
 		0B37F9872680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLatestPaymentsDecodableModel.swift; sourceTree = "<group>"; };
 		0B6081FF268DDD2A00FDB8AD /* CustomCardView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomCardView.xib; sourceTree = "<group>"; };
 		0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyExchangeDecodebleModel.swift; sourceTree = "<group>"; };
+		0B7A18AC2681CF160007CC75 /* CastomPopUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastomPopUpView.swift; sourceTree = "<group>"; };
 		0B7A18AE268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLatestPhonePaymentsDecodableModel.swift; sourceTree = "<group>"; };
 		0B7A18B126836A400007CC75 /* NetworkPDFManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkPDFManager.swift; sourceTree = "<group>"; };
 		0B7A18B5268373890007CC75 /* NetworkPDFManagerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkPDFManagerExtension.swift; sourceTree = "<group>"; };
@@ -232,6 +236,8 @@
 		0B7A18C62685BD130007CC75 /* GetBanksDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetBanksDecodableModel.swift; sourceTree = "<group>"; };
 		0B7A18C82685BF700007CC75 /* GetPaymentSystemListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPaymentSystemListDecodableModel.swift; sourceTree = "<group>"; };
 		0B7A18CA268648030007CC75 /* GetProductListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetProductListDecodableModel.swift; sourceTree = "<group>"; };
+		0B7A18CD2689C4ED0007CC75 /* AddHeaderImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddHeaderImageViewController.swift; sourceTree = "<group>"; };
+		0B7A18CF2689C51A0007CC75 /* AppHeaderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppHeaderProtocol.swift; sourceTree = "<group>"; };
 		0B8BE08E266FBE0500E96CAA /* CSRFDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFDecodableModel.swift; sourceTree = "<group>"; };
 		0B8BE090266FDA1B00E96CAA /* CheckClientDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckClientDecodebleModel.swift; sourceTree = "<group>"; };
 		0B8BE092266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyCodeDecodebleModel.swift; sourceTree = "<group>"; };
@@ -444,6 +450,16 @@
 				0B7A18B5268373890007CC75 /* NetworkPDFManagerExtension.swift */,
 			);
 			path = NetworkPDFManager;
+			sourceTree = "<group>";
+		};
+		0B7A18CC2689C4B60007CC75 /* CustomPopUp */ = {
+			isa = PBXGroup;
+			children = (
+				0B7A18AC2681CF160007CC75 /* CastomPopUpView.swift */,
+				0B7A18CD2689C4ED0007CC75 /* AddHeaderImageViewController.swift */,
+				0B7A18CF2689C51A0007CC75 /* AppHeaderProtocol.swift */,
+			);
+			path = CustomPopUp;
 			sourceTree = "<group>";
 		};
 		0BEC89372672305600D8BD22 /* NetworkingLoginModel */ = {
@@ -786,6 +802,7 @@
 				EDB14534266671580028EF5A /* MockItems.swift */,
 				EDB1451F26661B030028EF5A /* StringMask.swift */,
 				EDB1452126661C3F0028EF5A /* MaskedTextField.swift */,
+				0B7A18CC2689C4B60007CC75 /* CustomPopUp */,
 				0B7A18B72683A9940007CC75 /* FileManagerHelper.swift */,
 				0B7A18B92683AC880007CC75 /* NotificationName.swift */,
 				ED3A966D2690A80B00252857 /* PresentationController.swift */,
@@ -1527,6 +1544,7 @@
 				68F6816F269E5E56008157CE /* SearchBanksViewController.swift in Sources */,
 				0BF34852268A5F54005138A8 /* GetVerificationCodeDecodableModel.swift in Sources */,
 				0B37F97C2678EC69007728FC /* AnywayPaymentDecodableModel.swift in Sources */,
+				0B7A18AD2681CF160007CC75 /* CastomPopUpView.swift in Sources */,
 				EDAA99AF2673AB9200435484 /* ForaSwitchView.swift in Sources */,
 				0BF34850268A52CD005138A8 /* AllCardView.swift in Sources */,
 				ED39EC8C268B4F0800158E46 /* CardChooseView.swift in Sources */,
@@ -1559,6 +1577,7 @@
 				0B37F98626807620007728FC /* NetworkHelper.swift in Sources */,
 				EDF6820D266F9EC800FD5C07 /* NetworkManager.swift in Sources */,
 				68FFA5432682DC95002DADFA /* PhoneConfirmViewController.swift in Sources */,
+				0B7A18D02689C51A0007CC75 /* AppHeaderProtocol.swift in Sources */,
 				ED51D6702688B287005FD655 /* SeparatorView.swift in Sources */,
 				EDF6820F266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift in Sources */,
 				EDB1656E266827A8007E6030 /* PaymentsViewController.swift in Sources */,
@@ -1572,6 +1591,7 @@
 				EDB1453C2666AEB90028EF5A /* AppDelegate UI extension.swift in Sources */,
 				ED92D3A226735A0A006D47B3 /* PaymentByPhoneViewController.swift in Sources */,
 				0B7A18B226836A400007CC75 /* NetworkPDFManager.swift in Sources */,
+				0B7A18CE2689C4ED0007CC75 /* AddHeaderImageViewController.swift in Sources */,
 				EDB1655826679C74007E6030 /* SmsCodeView.swift in Sources */,
 				EDB14381265FDA410028EF5A /* AppDelegate.swift in Sources */,
 				EDB1658C266A18C3007E6030 /* PaymentsViewControllerDelegate.swift in Sources */,
