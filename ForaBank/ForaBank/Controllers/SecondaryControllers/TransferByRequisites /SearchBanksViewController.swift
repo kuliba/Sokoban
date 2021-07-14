@@ -105,7 +105,7 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
         let close = UILabel(text: "Закрыть", font: .none, color: .black)
         close.isUserInteractionEnabled = true
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Закрыть", style: .plain, target: self, action:  #selector(backAction))
-        navigationItem.rightBarButtonItem?.tintColor = .black   
+        navigationItem.rightBarButtonItem?.tintColor = .black
 //        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: close)
 //        self.navigationItem.rightBarButtonItem?.action = #selector(backAction)
 
