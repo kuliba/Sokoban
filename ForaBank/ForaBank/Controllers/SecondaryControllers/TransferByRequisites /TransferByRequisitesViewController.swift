@@ -117,7 +117,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         let item = UIBarButtonItem(image: UIImage.init(imageLiteralResourceName: "scanner"), style: .plain, target: self, action: #selector(presentScanner))
         self.navigationItem.setRightBarButton(item, animated: false)
 //        navigationItem.rightBarButtonItem?.action = #selector(doneButtonTapped)
@@ -280,6 +280,10 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
 //                    }
                 }
                 self?.banks = banksList
+//                Dict.shared.banks?.append(BanksList(memberID: "123", memberName: "Смотреть вс1е", memberNameRus: "Смотреть все", md5Hash: "", svgImage: "seeall", paymentSystemCodeList: ["123"]))
+                let seeall = BanksList(memberID: "123", memberName: "Смотреть вс1е", memberNameRus: "Смотреть все", md5Hash: "", svgImage: "seeall", paymentSystemCodeList: ["123"])
+                self?.banks?.insert(seeall, at: 0)
+                
             }
         }
         
@@ -290,7 +294,14 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
             self.hideView(self.cardListView, needHide: true)
         }
         
-     
+        bankListView.didSeeAll = { (bank) in
+            self.selectedBank = bank
+            let vc = SearchBanksViewController()
+            vc.banks = self.banks!
+            let navController = UINavigationController(rootViewController: vc)
+            navController.modalPresentationStyle = .fullScreen
+            self.present(navController, animated: true, completion: nil)
+        }
         
         cardField.didChooseButtonTapped = { () in
             print("cardField didChooseButtonTapped")
@@ -324,9 +335,8 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
             } else {
                 view.alpha = 0
                 view.isHidden = true
-              
-                
             }
+            
             self.stackView.layoutIfNeeded()
         }
     }

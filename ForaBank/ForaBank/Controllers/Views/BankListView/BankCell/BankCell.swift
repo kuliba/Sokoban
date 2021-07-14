@@ -23,6 +23,7 @@ class BankCell: UICollectionViewCell {
     
     private let bankNameLabel: UILabel = {
         let label = UILabel()
+        label.numberOfLines = 0
         label.font = UIFont.systemFont(ofSize: 11 )
         label.textAlignment = .center
         label.text = ""

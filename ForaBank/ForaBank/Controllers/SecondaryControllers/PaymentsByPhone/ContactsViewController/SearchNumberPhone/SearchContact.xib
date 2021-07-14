@@ -15,7 +15,7 @@
                 <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Yj2-Ty-eEn">
                     <rect key="frame" x="10" y="0.0" width="400" height="45"/>
                     <subviews>
-                        <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LgE-h8-3ay">
+                        <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LgE-h8-3ay">
                             <rect key="frame" x="0.0" y="0.0" width="54" height="45"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ib4-DY-ogm">
@@ -35,7 +35,7 @@
                             </subviews>
                         </stackView>
                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Номер телефона или имя" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uBl-9R-atN">
-                            <rect key="frame" x="64" y="0.0" width="336" height="45"/>
+                            <rect key="frame" x="0.0" y="0.0" width="400" height="45"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="45" id="ZGx-xV-knr"/>
@@ -43,7 +43,10 @@
                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                             <textInputTraits key="textInputTraits"/>
                             <connections>
-                                <outlet property="delegate" destination="-1" id="g5T-yP-NHE"/>
+                                <action selector="didBegin:" destination="-1" eventType="editingDidBegin" id="OyY-1R-lBU"/>
+                                <action selector="editingChanged:" destination="-1" eventType="editingChanged" id="Ji0-Mz-d4Y"/>
+                                <action selector="valueChanged:" destination="-1" eventType="valueChanged" id="cXH-JO-f7M"/>
+                                <outlet property="delegate" destination="-1" id="UQr-8U-eVA"/>
                             </connections>
                         </textField>
                     </subviews>
@@ -59,6 +62,7 @@
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
+                <outlet property="buttonStackView" destination="LgE-h8-3ay" id="93H-C3-bHc"/>
                 <outlet property="numberTextField" destination="uBl-9R-atN" id="sPt-RN-yIc"/>
                 <outlet property="searchView" destination="-1" id="6QA-jO-6Em"/>
             </connections>

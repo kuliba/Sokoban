@@ -9,20 +9,24 @@ import UIKit
 import ContactsUI
 
 
-class ContactsViewController: UIViewController, SelectImageDelegate, UITextFieldDelegate{
+class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFieldText{
+
     
-    func didSelectImage(image: String) {
+    
+    var seeall: Bool?
+    
+    func passTextFieldText(text: String) {
         if !reserveContacts.isEmpty{
             loadContacts(filter: .none)
         }
-        let filteredContacts = contacts.filter({$0.name?.lowercased().prefix(image.count) ?? "" == image.lowercased()})
+        let filteredContacts = contacts.filter({$0.name?.lowercased().prefix(text.count) ?? "" == text.lowercased()})
         reserveContacts = contacts
-        if image.count != 0{
+        if text.count != 0{
             contactCollectionView.reloadData()
             contacts = filteredContacts
         }
-        if image.count == 10, (image.firstIndex(of: "9") != nil){
-            selectPhoneNumber = image
+        if text.count == 10, (text.firstIndex(of: "9") != nil){
+            selectPhoneNumber = text
             getBankList()
             getLastPhonePayments()
         }
@@ -91,7 +95,7 @@ class ContactsViewController: UIViewController, SelectImageDelegate, UITextField
 //    var collectionView: UICollectionView!
     var lastPaymentsCollectionView: UICollectionView!
     var contactCollectionView: UICollectionView!
-    var delegate: SelectImageDelegate? = nil
+    var delegate: passTextFieldText? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -99,6 +103,7 @@ class ContactsViewController: UIViewController, SelectImageDelegate, UITextField
 //        searchContact.delegate?.didSelectImage(image: "123")
         searchContact.delegate = self
         searchContact.numberTextField.delegate = self
+        searchContact.buttonStackView.isHidden = false
         
         let layout = UICollectionViewFlowLayout()
 
@@ -154,8 +159,13 @@ class ContactsViewController: UIViewController, SelectImageDelegate, UITextField
 //        lastPaymentsCollectionView.anchor(paddingLeft: 50)
         lastPaymentsCollectionView.showsHorizontalScrollIndicator = false
 //        lastPaymentsCollectionView.scrollIndicatorInsets = nil
-        
-            let stackView = UIStackView(arrangedSubviews: [searchContact,lastPaymentsCollectionView, contactView])
+        var stackView = UIStackView()
+        switch seeall {
+        case true:
+            stackView = UIStackView(arrangedSubviews: [searchContact, contactView])
+        default:
+            stackView = UIStackView(arrangedSubviews: [searchContact,lastPaymentsCollectionView, contactView])
+        }
 //            searchContact.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 20).isActive = true
 //            searchContact.leadingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: -20).isActive = true
             contactView.layoutMargins = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
@@ -255,7 +265,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
             let item = contactCollectionView.dequeueReusableCell(withReuseIdentifier: "ContactCollectionViewCell", for: indexPath) as! ContactCollectionViewCell
             DispatchQueue.main.async{ [self] in
                 if ((self.banks?.isEmpty) == nil){
-                item.contactLabel.text = contacts[indexPath.item].name
+                    item.contactLabel.text = contacts[indexPath.item].name
                 item.phoneLabel.text = contacts[indexPath.item].phoneNumber.first
                
                     if self.contacts[indexPath.item].avatarData?.isEmpty != nil{

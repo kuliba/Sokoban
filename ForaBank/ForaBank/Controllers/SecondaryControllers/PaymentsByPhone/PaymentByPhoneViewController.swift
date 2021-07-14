@@ -89,6 +89,7 @@ class PaymentByPhoneViewController: UIViewController {
         if selectNumber != nil{
             phoneField.text = selectNumber ?? ""
         }
+        
         setupUI()
         hideKeyboardWhenTappedAround()
         getCardList()

@@ -7,8 +7,8 @@
 
 import UIKit
 
-protocol SelectImageDelegate {
-    func didSelectImage(image: String)
+protocol passTextFieldText {
+    func passTextFieldText(text: String)
 }
 
 class SearchContact: UIView, UITextFieldDelegate{
@@ -16,11 +16,23 @@ class SearchContact: UIView, UITextFieldDelegate{
     
     @IBOutlet weak var numberTextField: UITextField!
     
+    @IBAction func didBegin(_ sender: UITextField) {
+        print("begin")
+    }
+    @IBOutlet weak var buttonStackView: UIStackView!
     @IBOutlet weak var searchView: SearchContact!
     
-    var delegate: SelectImageDelegate? = nil
+    var delegate: passTextFieldText? = nil
     var searchText: String?
     
+    @IBAction func editingChanged(_ sender: UITextField) {
+        delegate?.passTextFieldText(text: numberTextField.text ?? "")
+        
+    }
+    
+    @IBAction func valueChanged(_ sender: UITextField) {
+//        delegate2?.add_Contact(name: numberTextField.text ?? "")
+    }
     
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -69,7 +81,8 @@ class SearchContact: UIView, UITextFieldDelegate{
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        
+        numberTextField.addTarget(self, action:Selector("yourWeightValueChanged:"), for:.valueChanged);
+
         roundCorners(corners: .allCorners, radius: 10)
         self.layer.borderWidth = 1
         self.layer.borderColor = UIColor(red: 0.918, green: 0.922, blue: 0.922, alpha: 1).cgColor
