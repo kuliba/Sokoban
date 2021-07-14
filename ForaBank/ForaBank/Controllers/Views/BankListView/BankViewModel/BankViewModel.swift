@@ -15,8 +15,12 @@ struct BankViewModel {
         return bank.memberNameRus ?? ""
     }
     var bankImage: UIImage {
-        let imageString = bank.svgImage ?? ""
-        return convertSVGStringToImage(imageString)
+        if bank.svgImage  == "seeall"{
+            return UIImage(named: bank.svgImage ?? "") ?? UIImage()
+        } else {
+            let imageString = bank.svgImage ?? ""
+            return convertSVGStringToImage(imageString)
+        }
     }
     
     init(bank: BanksList) {

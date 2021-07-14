@@ -221,7 +221,6 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
             self.surField.isHidden.toggle()
             self.stackView.addArrangedSubview(self.nameField)
             self.stackView.addArrangedSubview(self.surField)
-                        
             if self.nameField.isHidden || self.nameField.textField.text == "" {
                 self.fio.name = self.nameField.textField.text ?? ""
                 self.fio.patronymic = self.surField.textField.text ?? ""
@@ -236,12 +235,16 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         
         
         accountNumber.didChangeValueField = {(field) in
-            if self.accountNumber.textField.text?.count == 19, self.accountNumber.textField.text?.prefix(5) == "40817" || self.accountNumber.textField.text?.prefix(5) == "40820" || self.accountNumber.textField.text?.prefix(3) == "423" || self.accountNumber.textField.text?.prefix(3) == "426" {
+            if self.accountNumber.textField.text?.count == 20, self.accountNumber.textField.text?.prefix(5) == "40817" || self.accountNumber.textField.text?.prefix(5) == "40820" || self.accountNumber.textField.text?.prefix(3) == "423" || self.accountNumber.textField.text?.prefix(3) == "426" {
                 self.stackView.addArrangedSubview(self.fioField)
-            } else if self.accountNumber.textField.text?.count == 19 {
+                self.fioField.isHidden = false
+            } else if self.accountNumber.textField.text?.count == 20 {
                 self.stackView.addArrangedSubview(self.innField)
                 self.innField.isHidden = false
             } else {
+                self.fioField.isHidden = true
+                self.nameField.isHidden = true
+                self.surField.isHidden = true
                 self.commentField.isHidden = true
                 self.innField.isHidden = true
                 self.stackView.removeArrangedSubview(self.innField)

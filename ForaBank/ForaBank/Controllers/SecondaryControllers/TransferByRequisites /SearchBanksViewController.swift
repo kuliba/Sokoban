@@ -45,13 +45,14 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
     override func viewDidLoad() {
         super.viewDidLoad()
         searchContact.delegateNumber = self
-        banks = banks.filter({$0.memberNameRus?.lowercased() != "Смотреть все"})
+        banks = banks.filter({$0.memberNameRus != "Смотреть все"})
         allBanks = banks
         setupUI()
     }
     
-    func dismiss(){
+    @objc func backAction(){
         dismiss(animated: true, completion: nil)
+        navigationController?.dismiss(animated: true, completion: nil)
     }
 
     func setupUI(){
@@ -102,9 +103,13 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
         self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: label)
         self.navigationItem.leftItemsSupplementBackButton = true
         let close = UILabel(text: "Закрыть", font: .none, color: .black)
-//        close.target(forAction: #selector(dismiss), withSender: .none)
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: close)
-        
+        close.isUserInteractionEnabled = true
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Закрыть", style: .plain, target: self, action:  #selector(backAction))
+        navigationItem.rightBarButtonItem?.tintColor = .black   
+//        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: close)
+//        self.navigationItem.rightBarButtonItem?.action = #selector(backAction)
+
+
     }
 
     
