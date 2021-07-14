@@ -14,7 +14,7 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
         
         if text != ""{
             banks = allBanks
-            banks = banks.filter({$0.memberNameRus?.lowercased().prefix(text.count) ?? "" == text})
+            banks = banks.filter({$0.memberNameRus?.lowercased().prefix(text.count) ?? "" == text || $0.memberID?.lowercased().prefix(text.count) ?? "" == text})
         } else if text == ""{
             banks = allBanks
         }
@@ -44,7 +44,7 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        searchContact.delegate = self
+        searchContact.delegateNumber = self
         banks = banks.filter({$0.memberNameRus?.lowercased() != "Смотреть все"})
         allBanks = banks
         setupUI()

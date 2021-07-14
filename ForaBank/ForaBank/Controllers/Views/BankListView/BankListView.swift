@@ -46,7 +46,7 @@ class BankListView: UIView {
     }
     
     func commonInit() {
-        self.anchor(height: 80)
+        self.anchor(height: 100)
         setupCollectionView()
         isHidden = true
         alpha = 0

@@ -8,6 +8,12 @@
 import UIKit
 import SVGKit
 
+struct Fio {
+    var name, patronymic, surname: String
+}
+
+
+
 class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate {
 
     
@@ -101,6 +107,14 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     
     
     var stackView = UIStackView(arrangedSubviews: [])
+    var fio = Fio(name: "", patronymic: "", surname: "") {
+        didSet{
+            if fio.name != "" && fio.patronymic != "" && fio.surname != ""{
+                self.commentField.isHidden = false
+                self.stackView.addSubview(commentField)
+            }
+        }
+    }
 
     
     lazy var doneButton: UIButton = {
@@ -192,6 +206,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
                     self.nameField.isHidden = true
                     self.kppField.isHidden = true
                     self.nameCompanyField.isHidden = true
+                    self.commentField.isHidden = true
             }
         }
 //        nameField.didChangeValueField = {(field) in
@@ -199,23 +214,19 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
 //            self.nameField.errorLabel.text = "Укажите название организации"
 //        }
         
-
-            var name = String()
-            var surname = String()
-            var fio = String()
         
             self.fioField.didChooseButtonTapped = { () in
-            
             self.fioField.placeHolder.text = "Фамилия"
             self.nameField.isHidden.toggle()
             self.surField.isHidden.toggle()
             self.stackView.addArrangedSubview(self.nameField)
             self.stackView.addArrangedSubview(self.surField)
-            
-            
-            
+                        
             if self.nameField.isHidden || self.nameField.textField.text == "" {
-                self.fioField.textField.text = "\(self.fioField.textField.text ?? "")" + " " + "\(self.nameField.textField.text ?? "")" + " " + "\(self.surField.textField.text ?? "")"
+                self.fio.name = self.nameField.textField.text ?? ""
+                self.fio.patronymic = self.surField.textField.text ?? ""
+                self.fio.surname = self.fioField.textField.text ?? ""
+                self.fioField.textField.text = self.fio.name + self.fio.patronymic + self.fio.surname
                 self.stackView.addArrangedSubview(self.commentField)
 
             }
@@ -223,15 +234,23 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
 //            self.fioField.textField.text = "\(fioField.textField.text  nameField.textField.text surField.textField.text)"
          }
         
+        
         accountNumber.didChangeValueField = {(field) in
-            if self.accountNumber.textField.text?.count == 19, self.accountNumber.textField.text?.prefix(5) == "40817" || self.accountNumber.textField.text?.prefix(5) == "40820" || self.accountNumber.textField.text?.prefix(3) == "423" || self.accountNumber.textField.text?.prefix(3) == "426"  && self.bikBankField.textField.text != ""{
+            if self.accountNumber.textField.text?.count == 19, self.accountNumber.textField.text?.prefix(5) == "40817" || self.accountNumber.textField.text?.prefix(5) == "40820" || self.accountNumber.textField.text?.prefix(3) == "423" || self.accountNumber.textField.text?.prefix(3) == "426" {
                 self.stackView.addArrangedSubview(self.fioField)
-            } else if self.accountNumber.textField.text?.count == 19 && self.bikBankField.textField.text != "" {
-                self.setuoUIByCompany()
+            } else if self.accountNumber.textField.text?.count == 19 {
+                self.stackView.addArrangedSubview(self.innField)
                 self.innField.isHidden = false
-            } else if self.bikBankField.textField.text?.count ?? 0 < 11 && self.accountNumber.textField.text?.count ?? 0 < 19{
+            } else {
+                self.commentField.isHidden = true
                 self.innField.isHidden = true
-
+                self.stackView.removeArrangedSubview(self.innField)
+                self.stackView.removeArrangedSubview(self.nameCompanyField)
+                self.stackView.removeArrangedSubview(self.kppField)
+                self.stackView.removeArrangedSubview(self.fioField)
+                self.stackView.removeArrangedSubview(self.nameField)
+                self.stackView.removeArrangedSubview(self.surField)
+                self.stackView.removeArrangedSubview(self.commentField)
             }
         }
         
@@ -485,6 +504,17 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         guard let comment = commentField.textField.text else {
             return
         }
+        guard let inn = innField.textField.text else {
+            return
+        }
+        guard let kpp = kppField.textField.text else {
+            return
+        }
+        guard let nameCompany = nameCompanyField.textField.text else {
+            return
+        }
+        
+        
         
         let body = [
             "payerCardNumber": "4656260150230695",
@@ -493,9 +523,9 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
             "date": "2020-01-27",
             "payeeAccountNumber": "\(accountNumber)",
             "payeeBankBIC": "\(bikBank)",
-            "payeeINN": "7718164343",
-            "payeeKPP": "771801001",
-            "payeeName": "ООО ДИК-мебель"
+            "payeeINN": "\(inn)",
+            "payeeKPP": "\(kpp)",
+            "payeeName": "\(nameCompany)"
         ] as [String: AnyObject]
         
         NetworkManager<PrepareExternalDecodableModel>.addRequest(.prepareExternal , [:], body) { model, error in
@@ -548,7 +578,9 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     
     func suggestCompany(){
         showActivity()
-        
+        nameCompanyField.textField.text = ""
+        kppField.textField.text = ""
+        commentField.textField.text = ""
         let body = [
             "query": innField.textField.text
         ] as [String: AnyObject]
@@ -559,9 +591,14 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
 //                print("DEBUG: Error: ", error ?? "")
 //            }
             DispatchQueue.main.async {
+                self.nameField.isHidden = false
+                self.kppField.isHidden = false
+                self.commentField.isHidden = false
+                self.nameCompanyField.isHidden = false
                 self.stackView.addArrangedSubview(self.nameCompanyField)
                 self.stackView.addArrangedSubview(self.kppField)
                 self.stackView.addArrangedSubview(self.commentField)
+
             }
             guard let model = model else { return }
             print("DEBUG: Card list: ", model)

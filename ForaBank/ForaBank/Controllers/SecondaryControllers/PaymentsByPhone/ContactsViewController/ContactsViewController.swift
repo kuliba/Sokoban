@@ -19,7 +19,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
         if !reserveContacts.isEmpty{
             loadContacts(filter: .none)
         }
-        let filteredContacts = contacts.filter({$0.name?.lowercased().prefix(text.count) ?? "" == text.lowercased()})
+        let filteredContacts = contacts.filter({$0.name?.lowercased().prefix(text.count) ?? "" == text.lowercased() || $0.phoneNumber[0].lowercased().prefix(text.count) == text.lowercased()})
         reserveContacts = contacts
         if text.count != 0{
             contactCollectionView.reloadData()
@@ -29,7 +29,8 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
             selectPhoneNumber = text
             getBankList()
             getLastPhonePayments()
-        }
+        } 
+        
     }
     
     
@@ -88,6 +89,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
             }
         dismissActivity()
         contacts.append(contentsOf: filterdArray)
+        
     }
 
 //    let lastPaymentsCollectionView: UICollectionView!
@@ -101,13 +103,13 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
         super.viewDidLoad()
         self.delegate = self
 //        searchContact.delegate?.didSelectImage(image: "123")
-        searchContact.delegate = self
+        searchContact.delegateNumber = self
         searchContact.numberTextField.delegate = self
         searchContact.buttonStackView.isHidden = false
         
         let layout = UICollectionViewFlowLayout()
 
-            layout.itemSize = CGSize(width: 80, height: 120)
+            layout.itemSize = CGSize(width: 80, height: 100)
             layout.scrollDirection = .horizontal
             
         lastPaymentsCollectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
@@ -127,8 +129,8 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
 
           
          
-            viewLastPayments.heightAnchor.constraint(equalToConstant: 120).isActive = true
-            viewLastPayments.frame = CGRect(x: 0 , y: 0, width: self.view.frame.width, height: 120)
+            viewLastPayments.heightAnchor.constraint(equalToConstant: 100).isActive = true
+            viewLastPayments.frame = CGRect(x: 0 , y: 0, width: self.view.frame.width, height: 100)
 
             let contactView = UIView()
             
@@ -146,7 +148,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
             contactCollectionView.register(UINib(nibName: "ContactCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ContactCollectionViewCell")
             lastPaymentsCollectionView.register(UINib(nibName: "LastPaymentsCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "LastPaymentsCollectionViewCell")
        
-        lastPaymentsCollectionView.heightAnchor.constraint(equalToConstant: 120).isActive = true
+        lastPaymentsCollectionView.heightAnchor.constraint(equalToConstant: 100).isActive = true
 //        lastPaymentsCollectionView.anchor(paddingLeft: 20)
 //
 //        searchContact.layoutMargins = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
@@ -404,7 +406,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
         case contactCollectionView:
             return CGSize(width: UIScreen.main.bounds.width, height: 60)
         default:
-            return CGSize(width: 80, height: 120)
+            return CGSize(width: 80, height: 100)
 
         }
     }
