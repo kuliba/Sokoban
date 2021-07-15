@@ -97,8 +97,6 @@
 		ED3A96712690FADD00252857 /* BankListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3A96702690FADD00252857 /* BankListView.swift */; };
 		ED3A96742690FC8300252857 /* BankCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3A96732690FC8300252857 /* BankCell.swift */; };
 		ED3A96772690FCD700252857 /* BankViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3A96762690FCD700252857 /* BankViewModel.swift */; };
-		68D670DE26733241004AA40A /* Encription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D670DD26733241004AA40A /* Encription.swift */; };
-		68D670E026733320004AA40A /* AES.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D670DF26733320004AA40A /* AES.swift */; };
 		ED4FC5EC266AD98E0092B4AB /* NSCollectionLayoutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EB266AD98E0092B4AB /* NSCollectionLayoutItem.swift */; };
 		ED4FC5EF266B70A00092B4AB /* PartialTransparentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5EE266B70A00092B4AB /* PartialTransparentView.swift */; };
 		ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC5F9266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift */; };
@@ -307,8 +305,6 @@
 		ED3A96702690FADD00252857 /* BankListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankListView.swift; sourceTree = "<group>"; };
 		ED3A96732690FC8300252857 /* BankCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankCell.swift; sourceTree = "<group>"; };
 		ED3A96762690FCD700252857 /* BankViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankViewModel.swift; sourceTree = "<group>"; };
-		68D670DD26733241004AA40A /* Encription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Encription.swift; sourceTree = "<group>"; };
-		68D670DF26733320004AA40A /* AES.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AES.swift; sourceTree = "<group>"; };
 		ED4FC5EB266AD98E0092B4AB /* NSCollectionLayoutItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSCollectionLayoutItem.swift; sourceTree = "<group>"; };
 		ED4FC5EE266B70A00092B4AB /* PartialTransparentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartialTransparentView.swift; sourceTree = "<group>"; };
 		ED4FC5F9266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmsCodeBasicAttributes.swift; sourceTree = "<group>"; };
@@ -691,13 +687,6 @@
 				EDB165632667A741007E6030 /* ContactConfirmViewController.swift */,
 			);
 			path = "СountryConfirmPayments";
-		68D670DC2673318A004AA40A /* Encryption */ = {
-			isa = PBXGroup;
-			children = (
-				68D670DD26733241004AA40A /* Encription.swift */,
-				68D670DF26733320004AA40A /* AES.swift */,
-			);
-			path = Encryption;
 			sourceTree = "<group>";
 		};
 		ED4FC5ED266B707F0092B4AB /* CardScannerController */ = {
@@ -959,7 +948,6 @@
 		EDB1437F265FDA410028EF5A /* ForaBank */ = {
 			isa = PBXGroup;
 			children = (
-				68D670DC2673318A004AA40A /* Encryption */,
 				EDF681F0266F9EC800FD5C07 /* Service */,
 				EDB143B6265FDEAD0028EF5A /* Resours */,
 				EDB1452926663BD90028EF5A /* Controllers */,
@@ -1668,8 +1656,6 @@
 				0B7A18BA2683AC880007CC75 /* NotificationName.swift in Sources */,
 				ED4FC5EC266AD98E0092B4AB /* NSCollectionLayoutItem.swift in Sources */,
 				EDB1657A2668C7F2007E6030 /* TransferCell.swift in Sources */,
-				68D670E026733320004AA40A /* AES.swift in Sources */,
-				ED4FC612266CD9660092B4AB /* ChooseCountryLoadFromJson.swift in Sources */,
 				EDB145382666770A0028EF5A /* OrderProductModel.swift in Sources */,
 				0B7A18C326852D6B0007CC75 /* CreatTransferDecodableModel.swift in Sources */,
 				ED0B48A5267E72130037EA06 /* CSRFToken.swift in Sources */,
@@ -1703,7 +1689,6 @@
 				68FFA563268DDFCB002DADFA /* SearchContactView.swift in Sources */,
 				68FFA5452682F48C002DADFA /* SearchContact.swift in Sources */,
 				0B7A18C72685BD130007CC75 /* GetBanksDecodableModel.swift in Sources */,
-				68D670DE26733241004AA40A /* Encription.swift in Sources */,
 				0B8BE093266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift in Sources */,
 				ED4FC60B266CD1020092B4AB /* СountryCell.swift in Sources */,
 				0B7A18B82683A9940007CC75 /* FileManagerHelper.swift in Sources */,
