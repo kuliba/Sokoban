@@ -50,16 +50,15 @@
 		0BF3485D26931254005138A8 /* SuggestBankDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF3485C26931254005138A8 /* SuggestBankDecodableModel.swift */; };
 		0BF3486426943DFB005138A8 /* SuggestCompanyDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF3486326943DFB005138A8 /* SuggestCompanyDecodableModel.swift */; };
 		0BF34866269444D9005138A8 /* AllCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF34865269444D9005138A8 /* AllCardCell.swift */; };
-		68C64626269DCBD800473DE7 /* QRScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C64625269DCBD800473DE7 /* QRScannerViewController.swift */; };
-		68F6816F269E5E56008157CE /* SearchBanksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F6816E269E5E56008157CE /* SearchBanksViewController.swift */; };
-		0BF348682694AA71005138A8 /* CastomCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF348672694AA71005138A8 /* CastomCardView.swift */; };
-		0BF3486A2694CEBA005138A8 /* GetCurrencyListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF348692694CEBA005138A8 /* GetCurrencyListDecodableModel.swift */; };
-		0BF34873269650AE005138A8 /* AllCardListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF34872269650AE005138A8 /* AllCardListViewController.swift */; };
-		0BF3487926976FAE005138A8 /* GetProductTemplateListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF3487826976FAE005138A8 /* GetProductTemplateListDecodableModel.swift */; };
-		0BF3487B2697717E005138A8 /* DeleteProductTemplateDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF3487A2697717E005138A8 /* DeleteProductTemplateDecodableModel.swift */; };
-		0BF3487D26987915005138A8 /* CheckCardDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF3487C26987915005138A8 /* CheckCardDecodableModel.swift */; };
-		0BF3489F269C802C005138A8 /* AnyFormatKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0BF3489E269C802C005138A8 /* AnyFormatKit */; };
 		0BF348A1269E0CDA005138A8 /* LogoutDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF348A0269E0CDA005138A8 /* LogoutDecodableModel.swift */; };
+		68C64626269DCBD800473DE7 /* QRScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C64625269DCBD800473DE7 /* QRScannerViewController.swift */; };
+		68E6A28526A02C1800A1D9A1 /* AnyFormatKit in Frameworks */ = {isa = PBXBuildFile; productRef = 68E6A28426A02C1800A1D9A1 /* AnyFormatKit */; };
+		68E6A28726A02FE900A1D9A1 /* GetCurrencyListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E6A28626A02FE900A1D9A1 /* GetCurrencyListDecodableModel.swift */; };
+		68E6A28926A030C800A1D9A1 /* GetProductTemplateListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E6A28826A030C800A1D9A1 /* GetProductTemplateListDecodableModel.swift */; };
+		68E6A28B26A030DC00A1D9A1 /* DeleteProductTemplateDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E6A28A26A030DC00A1D9A1 /* DeleteProductTemplateDecodableModel.swift */; };
+		68E6A28D26A030F400A1D9A1 /* CheckCardDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E6A28C26A030F300A1D9A1 /* CheckCardDecodableModel.swift */; };
+		68E6A28F26A031B900A1D9A1 /* CastomCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E6A28E26A031B900A1D9A1 /* CastomCardView.swift */; };
+		68F6816F269E5E56008157CE /* SearchBanksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F6816E269E5E56008157CE /* SearchBanksViewController.swift */; };
 		68FFA5282682AF2C002DADFA /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA5272682AF2C002DADFA /* ContactsViewController.swift */; };
 		68FFA52C2682AF62002DADFA /* ContactCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA52A2682AF62002DADFA /* ContactCollectionViewCell.swift */; };
 		68FFA52D2682AF62002DADFA /* ContactCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68FFA52B2682AF62002DADFA /* ContactCollectionViewCell.xib */; };
@@ -264,15 +263,14 @@
 		0BF3485C26931254005138A8 /* SuggestBankDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestBankDecodableModel.swift; sourceTree = "<group>"; };
 		0BF3486326943DFB005138A8 /* SuggestCompanyDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestCompanyDecodableModel.swift; sourceTree = "<group>"; };
 		0BF34865269444D9005138A8 /* AllCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllCardCell.swift; sourceTree = "<group>"; };
-		68C64625269DCBD800473DE7 /* QRScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerViewController.swift; sourceTree = "<group>"; };
-		68F6816E269E5E56008157CE /* SearchBanksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBanksViewController.swift; sourceTree = "<group>"; };
-		0BF348672694AA71005138A8 /* CastomCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastomCardView.swift; sourceTree = "<group>"; };
-		0BF348692694CEBA005138A8 /* GetCurrencyListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCurrencyListDecodableModel.swift; sourceTree = "<group>"; };
-		0BF34872269650AE005138A8 /* AllCardListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllCardListViewController.swift; sourceTree = "<group>"; };
-		0BF3487826976FAE005138A8 /* GetProductTemplateListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetProductTemplateListDecodableModel.swift; sourceTree = "<group>"; };
-		0BF3487A2697717E005138A8 /* DeleteProductTemplateDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteProductTemplateDecodableModel.swift; sourceTree = "<group>"; };
-		0BF3487C26987915005138A8 /* CheckCardDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckCardDecodableModel.swift; sourceTree = "<group>"; };
 		0BF348A0269E0CDA005138A8 /* LogoutDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutDecodableModel.swift; sourceTree = "<group>"; };
+		68C64625269DCBD800473DE7 /* QRScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerViewController.swift; sourceTree = "<group>"; };
+		68E6A28626A02FE900A1D9A1 /* GetCurrencyListDecodableModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GetCurrencyListDecodableModel.swift; path = ../../../../../../../../Downloads/GetCurrencyListDecodableModel.swift; sourceTree = "<group>"; };
+		68E6A28826A030C800A1D9A1 /* GetProductTemplateListDecodableModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GetProductTemplateListDecodableModel.swift; path = ../../../../../../../../Downloads/GetProductTemplateListDecodableModel.swift; sourceTree = "<group>"; };
+		68E6A28A26A030DC00A1D9A1 /* DeleteProductTemplateDecodableModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DeleteProductTemplateDecodableModel.swift; path = ../../../../../../../../Downloads/DeleteProductTemplateDecodableModel.swift; sourceTree = "<group>"; };
+		68E6A28C26A030F300A1D9A1 /* CheckCardDecodableModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CheckCardDecodableModel.swift; path = ../../../../../../../../Downloads/CheckCardDecodableModel.swift; sourceTree = "<group>"; };
+		68E6A28E26A031B900A1D9A1 /* CastomCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CastomCardView.swift; path = ../../../../../../../../Downloads/CastomCardView.swift; sourceTree = "<group>"; };
+		68F6816E269E5E56008157CE /* SearchBanksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBanksViewController.swift; sourceTree = "<group>"; };
 		68FFA5272682AF2C002DADFA /* ContactsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
 		68FFA52A2682AF62002DADFA /* ContactCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactCollectionViewCell.swift; sourceTree = "<group>"; };
 		68FFA52B2682AF62002DADFA /* ContactCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ContactCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -423,6 +421,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EDAA99B42674C38900435484 /* ProgressHUD in Frameworks */,
+				68E6A28526A02C1800A1D9A1 /* AnyFormatKit in Frameworks */,
 				ED39EC91268C8FA800158E46 /* SVGKit in Frameworks */,
 				ED0B4892267B4CDD0037EA06 /* IQKeyboardManagerSwift in Frameworks */,
 				0B7A18AB2681CED70007CC75 /* SwiftEntryKit in Frameworks */,
@@ -453,6 +452,7 @@
 		0B6081FE268DDD0800FDB8AD /* CustomCardView */ = {
 			isa = PBXGroup;
 			children = (
+				68E6A28E26A031B900A1D9A1 /* CastomCardView.swift */,
 				0B6081FF268DDD2A00FDB8AD /* CustomCardView.xib */,
 			);
 			path = CustomCardView;
@@ -1225,10 +1225,10 @@
 				0BF3485A268E5907005138A8 /* GetExchangeCurrencyRatesDecodableModel.swift */,
 				0BF3485C26931254005138A8 /* SuggestBankDecodableModel.swift */,
 				0BF3486326943DFB005138A8 /* SuggestCompanyDecodableModel.swift */,
-				0BF348692694CEBA005138A8 /* GetCurrencyListDecodableModel.swift */,
-				0BF3487826976FAE005138A8 /* GetProductTemplateListDecodableModel.swift */,
-				0BF3487A2697717E005138A8 /* DeleteProductTemplateDecodableModel.swift */,
-				0BF3487C26987915005138A8 /* CheckCardDecodableModel.swift */,
+				68E6A28626A02FE900A1D9A1 /* GetCurrencyListDecodableModel.swift */,
+				68E6A28826A030C800A1D9A1 /* GetProductTemplateListDecodableModel.swift */,
+				68E6A28A26A030DC00A1D9A1 /* DeleteProductTemplateDecodableModel.swift */,
+				68E6A28C26A030F300A1D9A1 /* CheckCardDecodableModel.swift */,
 				0BF348A0269E0CDA005138A8 /* LogoutDecodableModel.swift */,
 			);
 			path = NetworkingModel;
@@ -1392,6 +1392,7 @@
 				ED39EC87268B308800158E46 /* SDWebImageSVGCoder */,
 				ED39EC90268C8FA800158E46 /* SVGKit */,
 				68FFA5672695921E002DADFA /* QRScanner */,
+				68E6A28426A02C1800A1D9A1 /* AnyFormatKit */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -1473,6 +1474,7 @@
 				ED39EC86268B308800158E46 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */,
 				ED39EC8F268C8FA700158E46 /* XCRemoteSwiftPackageReference "SVGKit" */,
 				68FFA5662695921D002DADFA /* XCRemoteSwiftPackageReference "QRScanner" */,
+				68E6A28326A02C1800A1D9A1 /* XCRemoteSwiftPackageReference "AnyFormatKit" */,
 			);
 			productRefGroup = EDB1437E265FDA410028EF5A /* Products */;
 			projectDirPath = "";
@@ -1551,15 +1553,18 @@
 				68C64626269DCBD800473DE7 /* QRScannerViewController.swift in Sources */,
 				EDFFCAF82683943A004EE095 /* UISwitch.swift in Sources */,
 				0BEC893D2672591A00D8BD22 /* GetCardListDecodebleModel.swift in Sources */,
+				68E6A28926A030C800A1D9A1 /* GetProductTemplateListDecodableModel.swift in Sources */,
 				EDF68211266F9EC800FD5C07 /* RequestError.swift in Sources */,
 				0BF3485B268E5907005138A8 /* GetExchangeCurrencyRatesDecodableModel.swift in Sources */,
 				0B37F9882680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift in Sources */,
+				68E6A28D26A030F400A1D9A1 /* CheckCardDecodableModel.swift in Sources */,
 				EDB1451C26652D370028EF5A /* UILabel.swift in Sources */,
 				ED0B4894267B50F50037EA06 /* Int.swift in Sources */,
 				EDB145402666AFD70028EF5A /* Constants.swift in Sources */,
 				0B8BE0972670D53600E96CAA /* DoRegistrationDecodebleModel.swift in Sources */,
 				EDB165712668C480007E6030 /* SectionHeader.swift in Sources */,
 				EDB165602667A569007E6030 /* ForaInput.swift in Sources */,
+				68E6A28F26A031B900A1D9A1 /* CastomCardView.swift in Sources */,
 				EDF68216266F9EC800FD5C07 /* RouterError.swift in Sources */,
 				68F6816F269E5E56008157CE /* SearchBanksViewController.swift in Sources */,
 				0BF34852268A5F54005138A8 /* GetVerificationCodeDecodableModel.swift in Sources */,
@@ -1656,6 +1661,7 @@
 				EDF68217266F9EC800FD5C07 /* RouterSassionConfiguration.swift in Sources */,
 				0B37F97E267A10E4007728FC /* PrepareCard2PhoneDecodableModel.swift in Sources */,
 				0B8BE0952670D4A300E96CAA /* GetCodeDecodebleModel.swift in Sources */,
+				68E6A28726A02FE900A1D9A1 /* GetCurrencyListDecodableModel.swift in Sources */,
 				EDB1452226661C3F0028EF5A /* MaskedTextField.swift in Sources */,
 				ED4FC5EF266B70A00092B4AB /* PartialTransparentView.swift in Sources */,
 				ED0B48AC26812F450037EA06 /* LoginViewModel.swift in Sources */,
@@ -1681,6 +1687,7 @@
 				EDF68219266F9EC800FD5C07 /* RouterBaseUrlList.swift in Sources */,
 				68FFA563268DDFCB002DADFA /* SearchContactView.swift in Sources */,
 				68FFA5452682F48C002DADFA /* SearchContact.swift in Sources */,
+				68E6A28B26A030DC00A1D9A1 /* DeleteProductTemplateDecodableModel.swift in Sources */,
 				0B7A18C72685BD130007CC75 /* GetBanksDecodableModel.swift in Sources */,
 				0B8BE093266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift in Sources */,
 				ED4FC60B266CD1020092B4AB /* СountryCell.swift in Sources */,
@@ -2027,6 +2034,14 @@
 				minimumVersion = 1.2.7;
 			};
 		};
+		68E6A28326A02C1800A1D9A1 /* XCRemoteSwiftPackageReference "AnyFormatKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/luximetr/AnyFormatKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
 		68FFA5662695921D002DADFA /* XCRemoteSwiftPackageReference "QRScanner" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/mercari/QRScanner";
@@ -2090,6 +2105,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0B7A18A92681CED70007CC75 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */;
 			productName = SwiftEntryKit;
+		};
+		68E6A28426A02C1800A1D9A1 /* AnyFormatKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 68E6A28326A02C1800A1D9A1 /* XCRemoteSwiftPackageReference "AnyFormatKit" */;
+			productName = AnyFormatKit;
 		};
 		68FFA5672695921E002DADFA /* QRScanner */ = {
 			isa = XCSwiftPackageProductDependency;
