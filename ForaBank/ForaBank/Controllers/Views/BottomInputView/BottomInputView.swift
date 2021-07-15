@@ -160,7 +160,7 @@ class CurrencyFormatter: NumberFormatter {
     override init() {
         super.init()
 
-        self.currencySymbol = "$"
+        self.currencySymbol = "₽"
         self.minimumFractionDigits = 0
         self.numberStyle = .currency
     }
@@ -196,7 +196,7 @@ extension String {
         var number: NSNumber!
         let formatter = NumberFormatter()
         formatter.numberStyle = .currencyAccounting
-        formatter.currencySymbol = "$"
+        formatter.currencySymbol = "₽"
         formatter.maximumFractionDigits = 2
         formatter.minimumFractionDigits = 2
 
