@@ -493,6 +493,13 @@
 			path = NetworkingLoginModel;
 			sourceTree = "<group>";
 		};
+		6880D32526A07148008FBCB4 /* Encription */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Encription;
+			sourceTree = "<group>";
+		};
 		68C64624269DCBC300473DE7 /* QRScanner */ = {
 			isa = PBXGroup;
 			children = (
@@ -959,6 +966,7 @@
 		EDB1437F265FDA410028EF5A /* ForaBank */ = {
 			isa = PBXGroup;
 			children = (
+				6880D32526A07148008FBCB4 /* Encription */,
 				EDF681F0266F9EC800FD5C07 /* Service */,
 				EDB143B6265FDEAD0028EF5A /* Resours */,
 				EDB1452926663BD90028EF5A /* Controllers */,

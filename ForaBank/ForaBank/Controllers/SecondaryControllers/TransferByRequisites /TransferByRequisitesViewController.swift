@@ -137,6 +137,8 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        bottomView.currency = "₽"
+
         let item = UIBarButtonItem(image: UIImage.init(imageLiteralResourceName: "scanner"), style: .plain, target: self, action: #selector(presentScanner))
         self.navigationItem.setRightBarButton(item, animated: false)
 //        navigationItem.rightBarButtonItem?.action = #selector(doneButtonTapped)

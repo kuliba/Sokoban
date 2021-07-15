@@ -82,6 +82,9 @@ class PaymentByPhoneViewController: UIViewController {
         return button
     }()
     
+    var bottomView = BottomInputView()
+
+    
     var selectNumber: String?
     
     override func viewDidLoad() {
@@ -89,14 +92,32 @@ class PaymentByPhoneViewController: UIViewController {
         if selectNumber != nil{
             phoneField.text = selectNumber ?? ""
         }
-        
+        view.addSubview(bottomView)
         setupUI()
         hideKeyboardWhenTappedAround()
         getCardList()
         
         bankPayeer.imageView.image = bankImage
         setNavigationBar()
-
+        
+        bottomView.didDoneButtonTapped = {(amount) in
+            switch self.sbp{
+            case true:
+                self.startContactPayment(with: self.selectedCardNumber) { [self] error in
+                    self.dismissActivity()
+                    DispatchQueue.main.async {
+                        endSBPPayment(selectBank: selectBank!, amount: summTransctionField.textField.text!) { error in
+                            print(error ?? "")
+                        }
+                    }
+                    if error != nil {
+                        self.showAlert(with: "Ошибка", and: error!)
+                    }
+                }
+            default:
+                self.prepareCard2Phone()
+            }
+        }
         // Do any additional setup after loading the view.
     }
     
@@ -105,6 +126,9 @@ class PaymentByPhoneViewController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = false
     }
+    
+    
+    
     func setNavigationBar() {
         
         
@@ -152,18 +176,12 @@ class PaymentByPhoneViewController: UIViewController {
         
         view.backgroundColor = .white
         
-        let button = UIButton(title: "Оплатить")
         
         bankPayeer.text = selectBank ?? ""
-        
-        
-        button.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(button)
-        button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
-        button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
-        button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20).isActive = true
-        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        button.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
+        bottomView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
+                          right: view.rightAnchor)
+        bottomView.currency = "₽"
+
             
         title = "Перевод по номеру телефона"
         let stackView = UIStackView(arrangedSubviews: [phoneField, bankPayeer,cardField, summTransctionField, commentField])
