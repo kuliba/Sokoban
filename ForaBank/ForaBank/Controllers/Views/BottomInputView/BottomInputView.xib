@@ -26,17 +26,17 @@
                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="1bS-iQ-Fkx">
                     <rect key="frame" x="20" y="66.5" width="392" height="40"/>
                     <subviews>
-                        <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yjB-Uc-1xh">
+                        <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="yjB-Uc-1xh" userLabel="CurrencyStackView">
                             <rect key="frame" x="0.0" y="9" width="182" height="22"/>
                             <subviews>
                                 <textField opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="749" contentHorizontalAlignment="left" contentVerticalAlignment="center" usesAttributedText="YES" placeholder="Сумма перевода" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Att-bb-GzQ">
-                                    <rect key="frame" x="0.0" y="0.0" width="171.5" height="22"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="182" height="22"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <attributedString key="attributedText"/>
                                     <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="decimalPad" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                                 </textField>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lDh-YM-4Lj">
-                                    <rect key="frame" x="171.5" y="0.0" width="10.5" height="22"/>
+                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lDh-YM-4Lj">
+                                    <rect key="frame" x="0.0" y="1" width="0.0" height="20.5"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
@@ -90,7 +90,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ls8-6I-Qxq">
-                    <rect key="frame" x="20" y="106.5" width="182" height="1"/>
+                    <rect key="frame" x="20" y="106.5" width="392" height="1"/>
                     <color key="backgroundColor" red="0.31372549019607843" green="0.31372549019607843" blue="0.34509803921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="1" id="b3B-MX-gWd"/>
@@ -109,10 +109,10 @@
                 <constraint firstItem="ls8-6I-Qxq" firstAttribute="top" secondItem="MeI-1d-qwn" secondAttribute="bottom" id="98U-pQ-8xn"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="1bS-iQ-Fkx" secondAttribute="trailing" constant="20" id="OgR-pZ-sXA"/>
                 <constraint firstItem="kdn-zp-JVN" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="4" id="VMq-rd-1cL"/>
+                <constraint firstItem="ls8-6I-Qxq" firstAttribute="trailing" secondItem="1bS-iQ-Fkx" secondAttribute="trailing" id="agt-Er-nZb"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="7JW-zV-QWE" secondAttribute="trailing" constant="20" id="fUf-2p-93Y"/>
                 <constraint firstItem="7JW-zV-QWE" firstAttribute="top" secondItem="1bS-iQ-Fkx" secondAttribute="bottom" constant="4" id="gIf-6d-2Th"/>
                 <constraint firstItem="ls8-6I-Qxq" firstAttribute="leading" secondItem="Att-bb-GzQ" secondAttribute="leading" id="gcm-Nf-qSw"/>
-                <constraint firstItem="ls8-6I-Qxq" firstAttribute="trailing" secondItem="lDh-YM-4Lj" secondAttribute="trailing" id="nZk-Qb-NQD"/>
                 <constraint firstItem="1bS-iQ-Fkx" firstAttribute="top" secondItem="kdn-zp-JVN" secondAttribute="bottom" constant="4" id="uaQ-t5-DaW"/>
                 <constraint firstItem="7JW-zV-QWE" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="vp4-8H-Z6h"/>
                 <constraint firstItem="kdn-zp-JVN" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="vvE-jG-j7I"/>

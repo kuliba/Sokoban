@@ -16,6 +16,11 @@ extension AppDelegate {
         IQKeyboardManager.shared.toolbarDoneBarButtonItemText = "Готово"
         IQKeyboardManager.shared.toolbarTintColor = .black
         IQKeyboardManager.shared.layoutIfNeededOnUpdate = true
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+        IQKeyboardManager.shared.shouldResignOnTouchOutside = true
+        IQKeyboardManager.shared.shouldPlayInputClicks = true
+        IQKeyboardManager.shared.toolbarPreviousBarButtonItemImage = UIImage()
+        IQKeyboardManager.shared.toolbarNextBarButtonItemImage = UIImage()
         
         // Настройка NavigationBar
         UINavigationBar.appearance().barTintColor = .white

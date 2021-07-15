@@ -6,60 +6,10 @@
 //
 
 import UIKit
-import SwiftEntryKit
+//import SwiftEntryKit
 
 protocol CutomViewProtocol: UIView {
     
-}
-
-struct CastomPopUpView  {
-    
-//    let v = MainPopUpView()
-    
-    let a = MemeDetailVC()
-    
-    func setupAttributs () -> EKAttributes {
-        
-        
-        var attributes = EKAttributes.bottomNote
-        attributes.displayDuration = .infinity
-        attributes.screenBackground = .color(color: .init(light: UIColor(red: 0, green: 0, blue: 0, alpha: 0.2), dark: UIColor(red: 1, green: 1, blue: 1, alpha: 0.2)))
-        attributes.windowLevel = .normal
-        attributes.position = .bottom
-        attributes.roundCorners = .top(radius: 16)
-        attributes.screenInteraction = .dismiss
-        attributes.entryInteraction = .absorbTouches
-        attributes.shadow = .active(with: .init(color: .black, opacity: 0.2, radius: 10, offset: .zero))
-//        attributes.roundCorners = .all(radius: 10)
-        
-        attributes.screenBackground = .clear
-        attributes.scroll = .enabled(swipeable: true, pullbackAnimation: .jolt)
-        
-        let widthConstraint = EKAttributes.PositionConstraints.Edge.ratio(value: 1)
-        let heightConstraint = EKAttributes.PositionConstraints.Edge.fill
-        attributes.positionConstraints.size = .init(width: widthConstraint, height: heightConstraint)
-        attributes.positionConstraints.safeArea = .overridden
-        
-        let offset = EKAttributes.PositionConstraints.KeyboardRelation.Offset(bottom: 10, screenEdgeResistance: 20)
-        let keyboardRelation = EKAttributes.PositionConstraints.KeyboardRelation.bind(offset: offset)
-        attributes.positionConstraints.keyboardRelation = keyboardRelation
-        
-        attributes.statusBar = .dark
-        return attributes
-    }
-    
-    
-    func showAlert () {
-        
-        SwiftEntryKit.display(entry: a , using: setupAttributs())
-        
-    }
-    
-    func exit() {
-        
-        SwiftEntryKit.dismiss()
-        
-    }
 }
 
 class MemeDetailVC : AddHeaderImageViewController {
@@ -85,6 +35,7 @@ class MemeDetailVC : AddHeaderImageViewController {
     var cardToField = CardChooseView()
     var cardToListView: CardListView!
     var bottomView = BottomInputView()
+    lazy var cardView = CastomCardView()
     
     var stackView = UIStackView(arrangedSubviews: [])
     
@@ -93,22 +44,57 @@ class MemeDetailVC : AddHeaderImageViewController {
         setupUI()
         setupConstraint()
         setupActions()
-        
+        setupCardViewActions()
     }
     
     private func setupUI() {
         cardFromField.titleLabel.text = "Откуда"
         cardFromListView = CardListView(onlyMy: onlyMy)
+        cardFromListView.lastItemTap = {
+            print("Открывать все карты ")
+            let vc = AllCardListViewController()
+            let navVc = UINavigationController(rootViewController: vc)
+//            navVc.title = "Выберите карту"
+//            navVc.addCloseButton()
+            navVc.modalPresentationStyle = .fullScreen
+            self.present(navVc, animated: true, completion: nil)
+        }
+        
+        let body = ["currencyCodeAlpha": "USD"] as [String: AnyObject]
+        
+        NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], body) { model, error in
+            print("Error :", error)
+            print("Model :", model)
+            
+        }
+        
+        bottomView.currency = "₽"
+        
         
         cardToField.titleLabel.text = "Куда"
         cardToListView = CardListView(onlyMy: onlyMy)
+        
+        cardToListView.lastItemTap = {
+            print("Открывать все карты ")
+        }
+        
+        cardToListView.firstItemTap = { [weak self] in
+            self?.view.addSubview(self?.cardView ?? UIView())
+            self?.cardView.frame = (self?.view.bounds)!
+            self?.cardView.autoresizingMask = [.flexibleHeight,.flexibleWidth]
+            print("Показываем окно новой карты ")
+            self?.stackView.isHidden = true
+            self?.titleLabel.isHidden = true
+            self?.bottomView.isHidden = true
+            self?.hideAllCardList()
+        }
         
         self.addHeaderImage()
         self.view.layer.cornerRadius = 20
         self.view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         self.view.clipsToBounds = true
         self.view.backgroundColor = .white
-        self.view.anchor(width: UIScreen.main.bounds.width, height: 450)
+        self.view.anchor(width: UIScreen.main.bounds.width, height: 470)
         
         stackView = UIStackView(arrangedSubviews: [cardFromField,
                                                    seporatorView,
@@ -188,6 +174,7 @@ class MemeDetailVC : AddHeaderImageViewController {
         cardFromListView.didCardTapped = { [weak self] (card) in
             self?.viewModel.cardFrom = card
             self?.cardFromField.cardModel = card
+            self?.bottomView.currency = card.currency?.getSymbol() ?? ""
             UIView.animate(withDuration: 0.2) {
                 self?.cardFromListView.isHidden = true
                 
@@ -226,22 +213,18 @@ class MemeDetailVC : AddHeaderImageViewController {
         cardToListView.didCardTapped = { [weak self] (card) in
             self?.viewModel.cardTo = card
             self?.cardToField.cardModel = card
-            UIView.animate(withDuration: 0.2) {
-                self?.cardFromListView.isHidden = true
-                self?.cardFromListView.alpha = 0
-                
-                self?.cardToListView.isHidden = true
-                self?.cardToListView.alpha = 0
-                
-                self?.stackView.layoutIfNeeded()
-            }
+            self?.hideAllCardList()
         }
         
         seporatorView.buttonSwitchCardTapped = { () in
             guard let tmpModelFrom = self.cardFromField.cardModel else { return }
             guard let tmpModelTo = self.cardToField.cardModel else { return }
             self.cardFromField.cardModel = tmpModelTo
+            self.bottomView.currency = tmpModelTo.currency?.getSymbol() ?? ""
             self.cardToField.cardModel = tmpModelFrom
+            self.viewModel.cardFrom = tmpModelTo
+            self.viewModel.cardTo = tmpModelFrom
+            self.checkModel(with: self.viewModel)
         }
         
         bottomView.didDoneButtonTapped = { [weak self] (amaunt) in
@@ -255,10 +238,77 @@ class MemeDetailVC : AddHeaderImageViewController {
         guard model.cardFrom != nil, model.cardTo != nil else { return }
         // TODO: какие условия для смены местами: счет - счет, карта - карта?
         self.seporatorView.changeAccountButton.isHidden = false
-        self.bottomView.currencySwitchButton.isHidden = (model.cardFrom?.currency! == model.cardTo?.currency!) ? false : false // Правильно true : false сейчас для теста
+        self.bottomView.currencySwitchButton.isHidden = (model.cardFrom?.currency! == model.cardTo?.currency!) ? true : false // Правильно true : false сейчас для теста
+        self.bottomView.currencySwitchButton.setTitle((model.cardFrom?.currency?.getSymbol() ?? "") + " ⇆ " + (model.cardTo?.currency?.getSymbol() ?? ""), for: .normal)
         
-        
-        
+        // Запрос на курс валют и после отображение bottomView.currencySwitchButton
+//        Запрос курса валют:
+//        POST /rest/getExchangeCurrencyRates
+//        В телеге описание запроса
+    }
+    
+    private func setupCardViewActions() {
+        cardView.closeView = { [weak self] () in
+//            self?.hideCustomCardView()
+            UIView.animate(withDuration: 0.1) {
+                self?.cardView.alpha = 0
+                self?.stackView.isHidden = false
+                self?.titleLabel.isHidden = false
+                self?.bottomView.isHidden = false
+            } completion: { finish in
+                if finish {
+                    self?.cardView.removeFromSuperview()
+                    self?.cardView.alpha = 1
+                }
+            }
+        }
+        cardView.finishAndCloseView = { [weak self]  (model) in
+//            self?.hideCustomCardView()
+            UIView.animate(withDuration: 0.1) {
+                self?.cardView.alpha = 0
+                self?.stackView.isHidden = false
+                self?.titleLabel.isHidden = false
+                self?.bottomView.isHidden = false
+            } completion: { finish in
+                if finish {
+                    self?.cardView.removeFromSuperview()
+                    self?.cardView.alpha = 1
+                }
+                self?.viewModel.customCardTo = model
+                self?.cardToField.customCardModel = model
+            }
+            
+        }
+    }
+    
+    private func hideCustomCardView() {
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.1) {
+                self.cardView.alpha = 0
+                self.stackView.isHidden = false
+                self.titleLabel.isHidden = false
+                self.bottomView.isHidden = false
+            } completion: { finish in
+                if finish {
+                    self.cardView.removeFromSuperview()
+                    self.cardView.alpha = 1
+                }
+            }
+        }
+    }
+    
+    private func hideAllCardList() {
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.2) {
+                self.cardFromListView.isHidden = true
+                self.cardFromListView.alpha = 0
+                
+                self.cardToListView.isHidden = true
+                self.cardToListView.alpha = 0
+                
+                self.stackView.layoutIfNeeded()
+            }
+        }
     }
     
     //MARK: - API
@@ -278,57 +328,127 @@ class MemeDetailVC : AddHeaderImageViewController {
         
         var viewModel = viewModel
         self.dismissKeyboard()
-        DispatchQueue.main.async {
-            UIApplication.shared.keyWindow?.startIndicatingActivity()
-        }
+        self.showActivity()
+//        DispatchQueue.main.async {
+//            UIApplication.shared.keyWindow?.startIndicatingActivity()
+//        }
         bottomView.doneButtonIsEnabled(true)
-        let body = ["check" : false,
-                    "amount" : viewModel.summTransction,
-                    "currencyAmount" : "RUB",
-                    "payer" : [ "cardId" : viewModel.cardFromCardId,
-                                "cardNumber" : viewModel.cardFromCardNumber,
-                                "carExpireDate" : viewModel.cardFromExpireDate,
-                                "cardCVV" : viewModel.cardFromCardCVV,
-                                "accountId" : viewModel.cardFromAccountId,
-                                "accountNumber" : viewModel.cardFromAccountNumber,
-                                "phoneNumber" : ""
-                    ],
-                    "payee" : [ "cardId" : viewModel.cardToCardId,
-                                "cardNumber" : viewModel.cardToCardNumber,
-                                "accountId" : viewModel.cardToAccountId,
-                                "accountNumber" : viewModel.cardToAccountNumber,
-                                "phoneNumber" : ""
-                    ] ] as [String : AnyObject]
+        let body = [ "check" : false,
+                     "amount" : viewModel.summTransction,
+                     "currencyAmount" : "RUB",
+                     "payer" : [
+                        "cardId" : viewModel.cardFromCardId,
+                        "cardNumber" : viewModel.cardFromCardNumber,
+                        "accountId" : viewModel.cardFromAccountId,
+                        "accountNumber" : viewModel.cardFromAccountNumber
+                     ],
+                     "payeeInternal" : [
+                        "cardId" : viewModel.cardToCardId,
+                        "cardNumber" : viewModel.cardToCardNumber,
+                        "accountId" : viewModel.cardToAccountId,
+                        "accountNumber" : viewModel.cardToAccountNumber,
+                        "productCustomName" : viewModel.cardToCastomName
+                     ] ] as [String : AnyObject]
         print("DEBUG: ", #function, body)
         NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer, [:], body) { [weak self] model, error in
             DispatchQueue.main.async {
-                UIApplication.shared.keyWindow?.stopIndicatingActivity()
-            }
-            self?.bottomView.doneButtonIsEnabled(false)
-            if error != nil {
-                guard let error = error else { return }
-                print("DEBUG: ", #function, error)
-            } else {
-                guard let statusCode = model?.statusCode else { return }
-                if statusCode == 0 {
-                    viewModel.taxTransction = "\(model?.data?.fee ?? 0)"
-                    viewModel.statusIsSuccses = true
-                    print("DEBUG: cardToCard payment Succses", #function, model ?? "nil")
-                    DispatchQueue.main.async {
-                        let vc = ContactConfurmViewController()
-                        vc.modalPresentationStyle = .fullScreen
-                        vc.confurmVCModel = viewModel
-                        vc.addCloseButton()
-                        vc.title = "Подтвердите реквизиты"
-                        let navVC = UINavigationController(rootViewController: vc)
-                        self?.present(navVC, animated: true)
-                    }
+//                UIApplication.shared.keyWindow?.stopIndicatingActivity()
+                self?.dismissActivity()
+                self?.bottomView.doneButtonIsEnabled(false)
+                if error != nil {
+                    guard let error = error else { return }
+                    print("DEBUG: ", #function, error)
+                    self?.showAlert(with: "Ошибка", and: error)
                 } else {
-                    print("DEBUG: ", #function, model?.errorMessage ?? "nil")
+                    guard let model = model else { return }
+                    guard let statusCode = model.statusCode else { return }
+                    if statusCode == 0 {
+                        if let needMake = model.data?.needMake {
+                            if needMake {
+                                viewModel.taxTransction = "\(model.data?.fee ?? 0)"
+                                viewModel.statusIsSuccses = true
+                                print("DEBUG: cardToCard payment Succses", #function, model)
+                                let vc = ContactConfurmViewController()
+                                vc.modalPresentationStyle = .fullScreen
+                                vc.confurmVCModel?.type = .card2card
+                                vc.confurmVCModel = viewModel
+                                vc.confurmVCModel?.type = .card2card
+                                vc.addCloseButton()
+                                vc.title = "Подтвердите реквизиты"
+                                let navVC = UINavigationController(rootViewController: vc)
+                                self?.present(navVC, animated: true)
+                                
+                            } else {
+                                let vc = PaymentsDetailsSuccessViewController()
+                                vc.confurmVCModel = viewModel
+                                vc.modalPresentationStyle = .fullScreen
+                                self?.present(vc, animated: true, completion: nil)
+                                
+                            }
+                        } else {
+                            viewModel.statusIsSuccses = true
+                            let vc = PaymentsDetailsSuccessViewController()
+                            vc.confurmVCModel = viewModel
+                            vc.modalPresentationStyle = .fullScreen
+                            self?.present(vc, animated: true, completion: nil)
+                        }
+                    } else {
+                        print("DEBUG: ", #function, model.errorMessage ?? "nil")
+                        self?.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+                    }
                 }
-                
             }
         }
     }
     
 }
+
+//struct CastomPopUpView  {
+//
+////    let v = MainPopUpView()
+//
+//    let a = MemeDetailVC()
+//
+//    func setupAttributs () -> EKAttributes {
+//
+//
+//        var attributes = EKAttributes.bottomNote
+//        attributes.displayDuration = .infinity
+//        attributes.screenBackground = .color(color: .init(light: UIColor(red: 0, green: 0, blue: 0, alpha: 0.2), dark: UIColor(red: 1, green: 1, blue: 1, alpha: 0.2)))
+//        attributes.windowLevel = .normal
+//        attributes.position = .bottom
+//        attributes.roundCorners = .top(radius: 16)
+//        attributes.screenInteraction = .dismiss
+//        attributes.entryInteraction = .absorbTouches
+//        attributes.shadow = .active(with: .init(color: .black, opacity: 0.2, radius: 10, offset: .zero))
+////        attributes.roundCorners = .all(radius: 10)
+//
+//        attributes.screenBackground = .clear
+//        attributes.scroll = .enabled(swipeable: true, pullbackAnimation: .jolt)
+//
+//        let widthConstraint = EKAttributes.PositionConstraints.Edge.ratio(value: 1)
+//        let heightConstraint = EKAttributes.PositionConstraints.Edge.fill
+//        attributes.positionConstraints.size = .init(width: widthConstraint, height: heightConstraint)
+//        attributes.positionConstraints.safeArea = .overridden
+//
+//        let offset = EKAttributes.PositionConstraints.KeyboardRelation.Offset(bottom: 10, screenEdgeResistance: 20)
+//        let keyboardRelation = EKAttributes.PositionConstraints.KeyboardRelation.bind(offset: offset)
+//        attributes.positionConstraints.keyboardRelation = keyboardRelation
+//
+//        attributes.statusBar = .dark
+//        return attributes
+//    }
+//
+//
+//    func showAlert () {
+//
+//        SwiftEntryKit.display(entry: a , using: setupAttributs())
+//
+//    }
+//
+//    func exit() {
+//
+//        SwiftEntryKit.dismiss()
+//
+//    }
+//}

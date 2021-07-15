@@ -16,7 +16,6 @@
 		0B37F984267A18AC007728FC /* MakeCard2CardDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F983267A18AC007728FC /* MakeCard2CardDecodableModel.swift */; };
 		0B37F98626807620007728FC /* NetworkHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F98526807620007728FC /* NetworkHelper.swift */; };
 		0B37F9882680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F9872680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift */; };
-		0B608200268DDD2A00FDB8AD /* CustomCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0B6081FF268DDD2A00FDB8AD /* CustomCardView.xib */; };
 		0B747890267343B400C44F79 /* KeyExchangeDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */; };
 		0B7A18AB2681CED70007CC75 /* SwiftEntryKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0B7A18AA2681CED70007CC75 /* SwiftEntryKit */; };
 		0B7A18AD2681CF160007CC75 /* CastomPopUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18AC2681CF160007CC75 /* CastomPopUpView.swift */; };
@@ -88,9 +87,12 @@
 		ED0B48A5267E72130037EA06 /* CSRFToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B48A4267E72130037EA06 /* CSRFToken.swift */; };
 		ED0B48AC26812F450037EA06 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B48AB26812F450037EA06 /* LoginViewModel.swift */; };
 		ED0B48AF2681CC6D0037EA06 /* CodeVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B48AE2681CC6D0037EA06 /* CodeVerificationViewModel.swift */; };
+		ED2BE17F26A0498400647CB1 /* AllCardListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2BE17E26A0498400647CB1 /* AllCardListViewController.swift */; };
+		ED2BE18126A04A4300647CB1 /* CastomCardXIB.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED2BE18026A04A4300647CB1 /* CastomCardXIB.xib */; };
+		ED2BE18326A04A8800647CB1 /* BottomInputView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED2BE18226A04A8800647CB1 /* BottomInputView.xib */; };
+		ED2BE18526A04F0600647CB1 /* CardChooseView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED2BE18426A04F0600647CB1 /* CardChooseView.xib */; };
 		ED39EC88268B308800158E46 /* SDWebImageSVGCoder in Frameworks */ = {isa = PBXBuildFile; productRef = ED39EC87268B308800158E46 /* SDWebImageSVGCoder */; };
 		ED39EC8C268B4F0800158E46 /* CardChooseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED39EC8B268B4F0800158E46 /* CardChooseView.swift */; };
-		ED39EC8E268B4F4C00158E46 /* CardChooseView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED39EC8D268B4F4C00158E46 /* CardChooseView.xib */; };
 		ED39EC91268C8FA800158E46 /* SVGKit in Frameworks */ = {isa = PBXBuildFile; productRef = ED39EC90268C8FA800158E46 /* SVGKit */; };
 		ED39EC93268C9AE900158E46 /* NewCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED39EC92268C9AE900158E46 /* NewCardCell.swift */; };
 		ED3A966E2690A80B00252857 /* PresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3A966D2690A80B00252857 /* PresentationController.swift */; };
@@ -179,7 +181,6 @@
 		EDB16595266A4438007E6030 /* DevelopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB16594266A4438007E6030 /* DevelopViewController.swift */; };
 		EDB16597266A576A007E6030 /* CardScannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB16596266A576A007E6030 /* CardScannerController.swift */; };
 		EDC341A226864C4100FFFEF8 /* BottomInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC341A126864C4100FFFEF8 /* BottomInputView.swift */; };
-		EDC341A426864C4900FFFEF8 /* BottomInputView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDC341A326864C4900FFFEF8 /* BottomInputView.xib */; };
 		EDF6820D266F9EC800FD5C07 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681F3266F9EC800FD5C07 /* NetworkManager.swift */; };
 		EDF6820E266F9EC800FD5C07 /* NetworkModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681F6266F9EC800FD5C07 /* NetworkModelProtocol.swift */; };
 		EDF6820F266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681F7266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift */; };
@@ -230,7 +231,6 @@
 		0B37F983267A18AC007728FC /* MakeCard2CardDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeCard2CardDecodableModel.swift; sourceTree = "<group>"; };
 		0B37F98526807620007728FC /* NetworkHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkHelper.swift; sourceTree = "<group>"; };
 		0B37F9872680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLatestPaymentsDecodableModel.swift; sourceTree = "<group>"; };
-		0B6081FF268DDD2A00FDB8AD /* CustomCardView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomCardView.xib; sourceTree = "<group>"; };
 		0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyExchangeDecodebleModel.swift; sourceTree = "<group>"; };
 		0B7A18AC2681CF160007CC75 /* CastomPopUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastomPopUpView.swift; sourceTree = "<group>"; };
 		0B7A18AE268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLatestPhonePaymentsDecodableModel.swift; sourceTree = "<group>"; };
@@ -298,8 +298,11 @@
 		ED0B48A4267E72130037EA06 /* CSRFToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFToken.swift; sourceTree = "<group>"; };
 		ED0B48AB26812F450037EA06 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		ED0B48AE2681CC6D0037EA06 /* CodeVerificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeVerificationViewModel.swift; sourceTree = "<group>"; };
+		ED2BE17E26A0498400647CB1 /* AllCardListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllCardListViewController.swift; sourceTree = "<group>"; };
+		ED2BE18026A04A4300647CB1 /* CastomCardXIB.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CastomCardXIB.xib; sourceTree = "<group>"; };
+		ED2BE18226A04A8800647CB1 /* BottomInputView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BottomInputView.xib; sourceTree = "<group>"; };
+		ED2BE18426A04F0600647CB1 /* CardChooseView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CardChooseView.xib; sourceTree = "<group>"; };
 		ED39EC8B268B4F0800158E46 /* CardChooseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardChooseView.swift; sourceTree = "<group>"; };
-		ED39EC8D268B4F4C00158E46 /* CardChooseView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CardChooseView.xib; sourceTree = "<group>"; };
 		ED39EC92268C9AE900158E46 /* NewCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCardCell.swift; sourceTree = "<group>"; };
 		ED3A966D2690A80B00252857 /* PresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationController.swift; sourceTree = "<group>"; };
 		ED3A96702690FADD00252857 /* BankListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankListView.swift; sourceTree = "<group>"; };
@@ -392,7 +395,6 @@
 		EDB16594266A4438007E6030 /* DevelopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopViewController.swift; sourceTree = "<group>"; };
 		EDB16596266A576A007E6030 /* CardScannerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardScannerController.swift; sourceTree = "<group>"; };
 		EDC341A126864C4100FFFEF8 /* BottomInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomInputView.swift; sourceTree = "<group>"; };
-		EDC341A326864C4900FFFEF8 /* BottomInputView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BottomInputView.xib; sourceTree = "<group>"; };
 		EDF681F3266F9EC800FD5C07 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		EDF681F6266F9EC800FD5C07 /* NetworkModelProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkModelProtocol.swift; sourceTree = "<group>"; };
 		EDF681F7266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetDeviceSettingDecodbleModel.swift; sourceTree = "<group>"; };
@@ -453,7 +455,7 @@
 			isa = PBXGroup;
 			children = (
 				68E6A29026A0338700A1D9A1 /* CastomCardView.swift */,
-				0B6081FF268DDD2A00FDB8AD /* CustomCardView.xib */,
+				ED2BE18026A04A4300647CB1 /* CastomCardXIB.xib */,
 			);
 			path = CustomCardView;
 			sourceTree = "<group>";
@@ -620,6 +622,14 @@
 			path = CodeVerificationViewModel;
 			sourceTree = "<group>";
 		};
+		ED2BE17D26A0498400647CB1 /* CustomCardListView */ = {
+			isa = PBXGroup;
+			children = (
+				ED2BE17E26A0498400647CB1 /* AllCardListViewController.swift */,
+			);
+			path = CustomCardListView;
+			sourceTree = "<group>";
+		};
 		ED39EC89268B3AA300158E46 /* Header */ = {
 			isa = PBXGroup;
 			children = (
@@ -633,7 +643,7 @@
 			isa = PBXGroup;
 			children = (
 				ED39EC8B268B4F0800158E46 /* CardChooseView.swift */,
-				ED39EC8D268B4F4C00158E46 /* CardChooseView.xib */,
+				ED2BE18426A04F0600647CB1 /* CardChooseView.xib */,
 			);
 			path = CardChooseView;
 			sourceTree = "<group>";
@@ -903,6 +913,7 @@
 		EDAA99AC2673AB6D00435484 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				ED2BE17D26A0498400647CB1 /* CustomCardListView */,
 				ED3A966F2690FAB400252857 /* BankListView */,
 				0B6081FE268DDD0800FDB8AD /* CustomCardView */,
 				ED39EC8A268B4EF000158E46 /* CardChooseView */,
@@ -1160,7 +1171,7 @@
 			isa = PBXGroup;
 			children = (
 				EDC341A126864C4100FFFEF8 /* BottomInputView.swift */,
-				EDC341A326864C4900FFFEF8 /* BottomInputView.xib */,
+				ED2BE18226A04A8800647CB1 /* BottomInputView.xib */,
 			);
 			path = BottomInputView;
 			sourceTree = "<group>";
@@ -1494,6 +1505,7 @@
 			files = (
 				EDB143CE265FDEC90028EF5A /* Roboto-Thin.ttf in Resources */,
 				68FFA5472682F49A002DADFA /* SearchContact.xib in Resources */,
+				ED2BE18526A04F0600647CB1 /* CardChooseView.xib in Resources */,
 				ED4FC60C266CD1020092B4AB /* СountryCell.xib in Resources */,
 				EDB143C9265FDEC90028EF5A /* Roboto-BoldItalic.ttf in Resources */,
 				68FFA5412682C6CF002DADFA /* LastPaymentsCollectionViewCell.xib in Resources */,
@@ -1507,22 +1519,21 @@
 				EDB143C5265FDEC90028EF5A /* Roboto-Light.ttf in Resources */,
 				EDB143C8265FDEC90028EF5A /* Roboto-ThinItalic.ttf in Resources */,
 				EDB14518266526BD0028EF5A /* CreditCardEntryView.xib in Resources */,
-				0B608200268DDD2A00FDB8AD /* CustomCardView.xib in Resources */,
 				EDB1452C26663C9D0028EF5A /* GoogleService-Info.plist in Resources */,
-				EDC341A426864C4900FFFEF8 /* BottomInputView.xib in Resources */,
 				EDB14526266624DC0028EF5A /* OrderCardView.xib in Resources */,
 				ED51D66E2688B27E005FD655 /* SeparatorView.xib in Resources */,
 				EDB143CC265FDEC90028EF5A /* Roboto-BlackItalic.ttf in Resources */,
+				ED2BE18126A04A4300647CB1 /* CastomCardXIB.xib in Resources */,
 				68FFA55C268586D3002DADFA /* HeaderBanksCollectionReusableView.xib in Resources */,
 				EDB143C7265FDEC90028EF5A /* Roboto-MediumItalic.ttf in Resources */,
 				EDAA99B12673ABF200435484 /* ForaSwitchView.xib in Resources */,
 				0BF3484E268A455C005138A8 /* AllCardView.xib in Resources */,
 				EDB145112664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf in Resources */,
-				ED39EC8E268B4F4C00158E46 /* CardChooseView.xib in Resources */,
 				EDB143B5265FDE960028EF5A /* Assets.xcassets in Resources */,
 				68FFA52D2682AF62002DADFA /* ContactCollectionViewCell.xib in Resources */,
 				EDB143CB265FDEC90028EF5A /* Roboto-Italic.ttf in Resources */,
 				EDB1655E2667A55F007E6030 /* ForaInput.xib in Resources */,
+				ED2BE18326A04A8800647CB1 /* BottomInputView.xib in Resources */,
 				ED0B489E267D41B10037EA06 /* PaymentsDetailsView.xib in Resources */,
 				EDB14532266667140028EF5A /* OrderProductsCollectionViewCell.xib in Resources */,
 			);
@@ -1552,6 +1563,7 @@
 				ED0B48A3267E71DC0037EA06 /* FCMToken.swift in Sources */,
 				68C64626269DCBD800473DE7 /* QRScannerViewController.swift in Sources */,
 				EDFFCAF82683943A004EE095 /* UISwitch.swift in Sources */,
+				ED2BE17F26A0498400647CB1 /* AllCardListViewController.swift in Sources */,
 				0BEC893D2672591A00D8BD22 /* GetCardListDecodebleModel.swift in Sources */,
 				EDF68211266F9EC800FD5C07 /* RequestError.swift in Sources */,
 				68E6A29526A033D900A1D9A1 /* DeleteProductTemplateDecodableModel.swift in Sources */,

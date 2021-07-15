@@ -258,13 +258,13 @@ class ContactConfurmViewController: UIViewController {
         currTransctionField.isHidden = true
         
 //        let amount = Double(model.summTransction)?.currencyFormatter(code: "RUB")
-        summTransctionField.text = model.summTransction
+        summTransctionField.text = Double(model.summTransction)?.currencyFormatter(symbol: "RUB") ?? ""
         
         if model.taxTransction.isEmpty {
             taxTransctionField.isHidden = true
         }
 //        let tax = Double(model.taxTransction)?.currencyFormatter(code: "RUB")
-        taxTransctionField.text = model.taxTransction
+        taxTransctionField.text = Double(model.taxTransction)?.currencyFormatter(symbol: "RUB") ?? ""
         
         if model.paymentSystem != nil {
             let navImage: UIImage = model.paymentSystem?.svgImage?.convertSVGStringToImage() ?? UIImage()
