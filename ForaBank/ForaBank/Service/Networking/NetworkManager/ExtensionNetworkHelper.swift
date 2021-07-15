@@ -59,6 +59,10 @@ extension NetworkHelper {
         case getProductList
         
         case getPaymentSystemList
+        
+        case getCurrencyList
+        
+        case getExchangeCurrencyRates
     }
     
 }

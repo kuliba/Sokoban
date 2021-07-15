@@ -69,7 +69,7 @@ class PaymentsDetailsView: UIView {
         statusImageView.image = model.statusIsSuccses ? #imageLiteral(resourceName: "success") : #imageLiteral(resourceName: "errorIcon")
         statusLabel.text = model.statusIsSuccses
             ? "Успешный \nперевод" : "Операция \nнеуспешна!"
-        summLabel.text = model.summTransction
+        summLabel.text = Double(model.summTransction)?.currencyFormatter(symbol: "RUB")
         
     }
     

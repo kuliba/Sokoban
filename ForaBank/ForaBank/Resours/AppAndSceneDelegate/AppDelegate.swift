@@ -60,6 +60,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
         UNUserNotificationCenter.current().requestAuthorization(options: authOptions, completionHandler: { _, _ in })
     }
+    
+    func applicationWillTerminate(_ application: UIApplication) {
+        NetworkManager<LogoutDecodableModel>.addRequest(.logout, [:], [:]) { _,_  in
+            print("Logout :", "Вышли из приложения")
+        }
+    }
 }
 
 extension AppDelegate : UNUserNotificationCenterDelegate {

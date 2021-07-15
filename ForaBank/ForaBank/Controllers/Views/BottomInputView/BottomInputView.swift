@@ -6,8 +6,20 @@
 //
 
 import UIKit
+import AnyFormatKit
 
 class BottomInputView: UIView {
+    
+    let moneyInputController = TextFieldStartInputController()
+    var currency = "₽" {
+        didSet {
+//            amountTextField.text = ""
+            setupMoneyController()
+//            amountTextField.text = "111"
+        }
+    }
+    // MARK: - Formatters
+    var moneyFormatter: SumTextInputFormatter?
     
     //MARK: - Property
     let kContentXibName = "BottomInputView"
@@ -37,7 +49,6 @@ class BottomInputView: UIView {
         }
     }
     
-    private let currencyFormatter = CurrencyFormatter(maximumFractionDigits: 2)
     
     var didDoneButtonTapped: ((_ amount: String) -> Void)?
     
@@ -56,10 +67,22 @@ class BottomInputView: UIView {
     func commonInit() {
         Bundle.main.loadNibNamed(kContentXibName, owner: self, options: nil)
         contentView.fixInView(self)
-        amountTextField.delegate = self
         self.heightAnchor.constraint(equalToConstant: 88).isActive = true
         setupTextFIeld()
+//        setupMoneyController()
+        
+        NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: amountTextField, queue: .main) { _ in
+            guard let text = self.amountTextField.text else { return }
+            guard let unformatText = self.moneyFormatter?.unformat(text) else { return }
+            self.doneButtonIsEnabled(unformatText.isEmpty)
+            UIView.animate(withDuration: 0.2) {
+                self.topLabel.alpha = unformatText.isEmpty ? 0 : 1
+                self.buttomLabel.alpha = unformatText.isEmpty ? 0 : 1
+            }
+        }
+        
     }
+    
     
     
     @IBAction func currencyButtonTapped(_ sender: Any) {
@@ -69,8 +92,10 @@ class BottomInputView: UIView {
     @IBAction func doneButtonTapped(_ sender: Any) {
         print(#function)
         guard let amaunt = amountTextField.text else { return }
-        if !amaunt.isEmpty {
-            didDoneButtonTapped?(amaunt)
+        let unformatText = moneyFormatter?.unformat(amaunt)
+        let text = unformatText?.replacingOccurrences(of: ",", with: ".")
+        if !(text?.isEmpty ?? true) {
+            didDoneButtonTapped?(text ?? "")
         }
     }
     
@@ -93,127 +118,34 @@ class BottomInputView: UIView {
         }
     }
     
-    
+    private func setupMoneyController() {
+        var amount = ""
+        if let text = amountTextField.text {
+            let unformatText = moneyFormatter?.unformat(text)
+            amount = unformatText ?? ""
+        }
+        
+        moneyFormatter = SumTextInputFormatter(textPattern: "# ###,## \(self.currency)")
+        moneyInputController.formatter = moneyFormatter
+        amountTextField.delegate = moneyInputController
+        
+        let newText = moneyFormatter?.format(amount)
+        amountTextField.text = newText
+    }
+ 
 }
 
-extension BottomInputView: UITextFieldDelegate {
-    func textFieldDidChangeSelection(_ textField: UITextField) {
-        guard let text = textField.text else { return }
-        self.doneButtonIsEnabled(text.isEmpty)
-        UIView.animate(withDuration: 0.2) {
-            self.topLabel.alpha = text.isEmpty ? 0 : 1
-            self.buttomLabel.alpha = text.isEmpty ? 0 : 1
-        }
-        
-    }
-    
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
-        let newText = (textField.text! as NSString).replacingCharacters(in: range, with: string)
-        guard !newText.isEmpty, textField.keyboardType == .decimalPad else { return true }
-        
-        let separator = self.currencyFormatter.decimalSeparator!
-        let components = newText.components(separatedBy: separator)
-        
-        
-        // Stop exceeding maximumFractionDigits
-        if components.count > 1 && components[1].count > self.currencyFormatter.maximumFractionDigits {
-            return false
-        }
-        
-        guard let cleaned = components.first?.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression) else { return true }
-        
-        var doubleValue: Double?
-        if (components.count > 1) {
-            doubleValue = Double(cleaned + "." + components[1])
-        }
-        
-        if let value = doubleValue ?? Double(cleaned) {
-            var formatted = self.currencyFormatter.beautify(value)
-            if (components.count > 1 && (components[1].isEmpty || components[1].range(of: "^0*$", options: .regularExpression) != nil)) {
-                formatted += separator + components[1]
-            }
-            
-            
-            textField.text =  formatted.currencyInputFormatting()
-        }
-        
-        return false
-        
-    }
-    
-    func getSymbol(forCurrencyCode code: String) -> String? {
-        let locale = NSLocale(localeIdentifier: code)
-        if locale.displayName(forKey: .currencySymbol, value: code) == code {
-            let newlocale = NSLocale(localeIdentifier: code.dropLast() + "_en")
-            return newlocale.displayName(forKey: .currencySymbol, value: code)
-        }
-        return locale.displayName(forKey: .currencySymbol, value: code)
-    }
-    
-}
+//extension BottomInputView: TextFieldStartInputController {
+//    func textFieldDidChangeSelection(_ textField: UITextField) {
+//        guard let text = textField.text else { return }
+//        self.doneButtonIsEnabled(text.isEmpty)
+//        UIView.animate(withDuration: 0.2) {
+//            self.topLabel.alpha = text.isEmpty ? 0 : 1
+//            self.buttomLabel.alpha = text.isEmpty ? 0 : 1
+//        }
+//
+//    }
+//
+//
+//}
 
-
-
-class CurrencyFormatter: NumberFormatter {
-
-    override init() {
-        super.init()
-
-        self.currencySymbol = "₽"
-        self.minimumFractionDigits = 0
-        self.numberStyle = .currency
-    }
-
-    convenience init(locale: String) {
-        self.init()
-        self.locale = Locale(identifier: locale)
-    }
-
-    convenience init(maximumFractionDigits: Int) {
-        self.init()
-        self.maximumFractionDigits = maximumFractionDigits
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    func beautify(_ price: Double) -> String {
-        let formatted = self.string(from: NSNumber(value: price))!
-
-        // Fixes an extra space that is left sometimes at the end of the string
-        return formatted.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-    }
-
-}
-
-extension String {
-
-    // formatting text for currency textField
-    func currencyInputFormatting() -> String {
-
-        var number: NSNumber!
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currencyAccounting
-        formatter.currencySymbol = "₽"
-        formatter.maximumFractionDigits = 2
-        formatter.minimumFractionDigits = 2
-
-        var amountWithPrefix = self
-
-        // remove from String: "$", ".", ","
-        let regex = try! NSRegularExpression(pattern: "[^0-9]", options: .caseInsensitive)
-        amountWithPrefix = regex.stringByReplacingMatches(in: amountWithPrefix, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: NSMakeRange(0, self.count), withTemplate: "")
-
-        let double = (amountWithPrefix as NSString).doubleValue
-        number = NSNumber(value: (double / 100))
-
-        // if first number is 0 or all numbers were deleted
-        guard number != 0 as NSNumber else {
-            return ""
-        }
-
-        return formatter.string(from: number)!
-    }
-}

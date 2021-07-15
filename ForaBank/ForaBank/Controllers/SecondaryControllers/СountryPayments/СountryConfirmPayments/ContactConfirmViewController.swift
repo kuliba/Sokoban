@@ -12,11 +12,18 @@ import UIKit
 struct ConfirmViewControllerModel {
     
     var type: PaymentType
+    var paymentSystem: PaymentSystemList?
     var cardFrom: GetProductListDatum? {
         didSet {
             guard let cardFrom = cardFrom else { return }
-            if let cardID = cardFrom.id {
-                cardFromCardId = "\(cardID)"
+            if cardFrom.productType == "CARD" {
+                if let cardID = cardFrom.id {
+                    cardFromCardId = "\(cardID)"
+                }
+            } else if cardFrom.productType == "ACCOUNT" {
+                if let accountID = cardFrom.id {
+                    cardFromAccountId = "\(accountID)"
+                }
             }
         }
     }
@@ -30,25 +37,48 @@ struct ConfirmViewControllerModel {
     var cardTo: GetProductListDatum? {
         didSet {
             guard let cardTo = cardTo else { return }
-            if let cardID = cardTo.id {
-                cardToCardId = "\(cardID)"
+            self.customCardTo = nil
+            if cardTo.productType == "CARD" {
+                if let cardID = cardTo.id {
+                    cardToCardId = "\(cardID)"
+                }
+            } else if cardTo.productType == "ACCOUNT" {
+                if let accountID = cardTo.id {
+                    cardToAccountId = "\(accountID)"
+                }
             }
         }
     }
+    var customCardTo: CastomCardViewModel? {
+        didSet {
+            guard let cardTo = customCardTo else { return }
+            self.cardTo = nil
+            cardToCardNumber = cardTo.cardNumber
+            cardToCastomName = cardTo.cardName ?? ""
+        }
+    }
+    
     var cardToCardId = ""
     var cardToCardNumber = ""
     var cardToAccountNumber = ""
     var cardToAccountId = ""
+    var cardToCastomName = ""
+    
+    var bank : BanksList?
     
     var phone: String?
-    var fullName: String? = ""
+    var fullName: String? = "" {
+        didSet {
+            print("DEBUG: fullName", fullName)
+        }
+    }
     var country: CountriesList?
     var numberTransction: String = ""
     var summTransction: String = ""
     var taxTransction: String = ""
     var currancyTransction: String = ""
     var statusIsSuccses: Bool = false
-    
+    var summInCurrency = ""
     
     init(type: PaymentType) {
         self.type = type
@@ -56,35 +86,63 @@ struct ConfirmViewControllerModel {
     
     init?(country: CountriesList, model: AnywayPaymentDecodableModel?, fullName: String? = nil) {
         self.type = .contact
+        print("DEBUG:", model)
         var name = ""
         var surname = ""
         var secondName = ""
         var phone = ""
         var transctionNum = ""
+        var fullName = fullName ?? ""
+        var curr = ""
+        var currAmount = ""
         if let listInputs = model?.data?.listInputs {
             for item in listInputs {
                 if item.id == "RECF" {
                     surname = item.content?.first ?? ""
                 } else if item.id == "RECI" {
+                    //
                     name = item.content?.first ?? ""
                 } else if item.id == "RECO" {
+                    //
                     secondName = item.content?.first ?? ""
                 } else if item.id == "RECP" {
+                    // телефон
                     phone = item.content?.first ?? ""
                 } else if item.id == "trnReference" {
                     transctionNum = item.content?.first ?? ""
+                } else if item.id == "RECFIO" {
+                    fullName = item.content?.first ?? ""
+                } else if item.id == "RECCURRENCY" {
+                    curr = item.content?.first ?? ""
+                } else if item.id == "RECAMOUNT" {
+                    currAmount = item.content?.first ?? ""
+                } else if item.id == "A" {
+                    currAmount = item.content?.first ?? ""
+                } else if item.id == "CURR" {
+                    curr = item.content?.first ?? ""
                 }
+                
+                
             }
         }
-        if let fullName = fullName {
-            self.fullName = fullName
-        } else {
+        if fullName.isEmpty {
             self.fullName = surname + " " + name + " " + secondName
+        } else {
+            self.fullName = fullName
         }
+        
+//        let currArr = Dict.shared.currencyList
+//        currArr?.forEach({ currency in
+//            if currency.code == curr {
+//                print("DEBUG: currency", currency)
+//            }
+//        })
+        self.summInCurrency = Double(currAmount)?.currencyFormatter(symbol: curr) ?? ""
+
         self.statusIsSuccses = model?.statusCode == 0 ? true : false
         self.phone = phone
-        self.summTransction = Double(model?.data?.amount ?? 0).currencyFormatter()
-        self.taxTransction = (model?.data?.commission ?? 0).currencyFormatter()
+        self.summTransction = Double(model?.data?.amount ?? 0).currencyFormatter(symbol: "RUB")
+        self.taxTransction = Double(model?.data?.commission ?? 0).currencyFormatter(symbol: "RUB")
         self.numberTransction = transctionNum
         self.currancyTransction = "Наличные"
         self.country = country
@@ -109,7 +167,7 @@ class ContactConfurmViewController: UIViewController {
     
     var phoneField = ForaInput(
         viewModel: ForaInputModel(
-            title: "По номеру телефона",
+            title: "Номер телефона получателя",
             image: #imageLiteral(resourceName: "Phone"),
             type: .phone,
             isEditable: false))
@@ -138,21 +196,25 @@ class ContactConfurmViewController: UIViewController {
             image: #imageLiteral(resourceName: "hash"),
             isEditable: false))
     
-    var cardFromField = ForaInput(
-        viewModel: ForaInputModel(
-            title: "С карты",
-            image: #imageLiteral(resourceName: "credit-card"),
-            type: .credidCard,
-            isEditable: false,
-            showChooseButton: true))
+    var cardFromField = CardChooseView()
     
-    var cardToField = ForaInput(
-        viewModel: ForaInputModel(
-            title: "На карту",
-            image: #imageLiteral(resourceName: "credit-card"),
-            type: .credidCard,
-            isEditable: false,
-            showChooseButton: false))
+//    var cardFromField = ForaInput(
+//        viewModel: ForaInputModel(
+//            title: "С карты",
+//            image: #imageLiteral(resourceName: "credit-card"),
+//            type: .credidCard,
+//            isEditable: false,
+//            showChooseButton: true))
+    
+    var cardToField = CardChooseView()
+    
+//    var cardToField = ForaInput(
+//        viewModel: ForaInputModel(
+//            title: "На карту",
+//            image: #imageLiteral(resourceName: "credit-card"),
+//            type: .credidCard,
+//            isEditable: false,
+//            showChooseButton: false))
     
     var summTransctionField = ForaInput(
         viewModel: ForaInputModel(
@@ -164,6 +226,11 @@ class ContactConfurmViewController: UIViewController {
         viewModel: ForaInputModel(
             title: "Комиссия",
             image: #imageLiteral(resourceName: "Frame 580"),
+            isEditable: false))
+    
+    var currTransctionField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "Сумма зачисления в валюте",
             isEditable: false))
     
     var currancyTransctionField = ForaInput(
@@ -188,6 +255,24 @@ class ContactConfurmViewController: UIViewController {
     }
     
     func setupData(with model: ConfirmViewControllerModel) {
+        currTransctionField.isHidden = true
+        
+//        let amount = Double(model.summTransction)?.currencyFormatter(code: "RUB")
+        summTransctionField.text = model.summTransction
+        
+        if model.taxTransction.isEmpty {
+            taxTransctionField.isHidden = true
+        }
+//        let tax = Double(model.taxTransction)?.currencyFormatter(code: "RUB")
+        taxTransctionField.text = model.taxTransction
+        
+        if model.paymentSystem != nil {
+            let navImage: UIImage = model.paymentSystem?.svgImage?.convertSVGStringToImage() ?? UIImage()
+            
+            let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
+            self.navigationItem.rightBarButtonItem = customViewItem
+        }
+        
         switch model.type {
         case .card2card:
             nameField.isHidden = true
@@ -196,34 +281,76 @@ class ContactConfurmViewController: UIViewController {
             bankField.isHidden = true
             countryField.isHidden = true
             currancyTransctionField.isHidden = true
-            
-            let amount = Double(model.summTransction)?.currencyFormatter()
-            summTransctionField.text = amount ?? "" // .currencyFormatter()
-            let tax = Double(model.taxTransction)?.currencyFormatter()
-            taxTransctionField.text = tax ?? ""
-            
+                        
             guard let cardModelFrom = model.cardFrom else { return }
-            guard let cardModelTo = model.cardTo else { return }
-            cardFromField.configCardView(cardModelFrom)
-            cardToField.configCardView(cardModelTo)
+            cardFromField.cardModel = cardModelFrom
+            
+            let cardModelTo = model.cardTo
+            let cardModelTemp = model.customCardTo
+            
+            if cardModelTo != nil {
+                cardToField.cardModel = cardModelTo
+            } else if cardModelTemp != nil {
+                cardToField.customCardModel = cardModelTemp
+            }
+            
+            
+            var fromTitle = "Откуда"
+            if cardModelFrom.productType == "CARD" {
+                fromTitle = "С карты"
+            } else if cardModelFrom.productType == "ACCOUNT" {
+                fromTitle = "Со счета"
+            }
+            cardFromField.titleLabel.text = fromTitle
+            
+            var toTitle = "Куда"
+            if cardModelTo?.productType == "CARD" {
+                toTitle = "На карту"
+            } else if cardModelTo?.productType == "ACCOUNT" {
+                toTitle = "На счет"
+            }
+            cardToField.titleLabel.text = toTitle
             
             cardFromField.isHidden = false
-            cardFromField.viewModel.showChooseButton = false
-            cardFromField.chooseButton.isHidden = true
+            cardFromField.choseButton.isHidden = true
             cardFromField.balanceLabel.isHidden = true
             
             cardToField.isHidden = false
-            cardToField.viewModel.showChooseButton = false
-            cardToField.chooseButton.isHidden = true
+            cardToField.choseButton.isHidden = true
             cardToField.balanceLabel.isHidden = true
+        case .mig:
+            cardFromField.isHidden = true
+            cardToField.isHidden = true
+            currancyTransctionField.isHidden = true
+            countryField.isHidden = true
+            numberTransctionField.isHidden = true
+            
+            bankField.text = model.bank?.memberNameRus ?? "" //"АйДиБанк"
+            bankField.imageView.image = model.bank?.svgImage?.convertSVGStringToImage()
+            
+            nameField.text =  model.fullName ?? "" //"Колотилин Михаил Алексеевич"
+            countryField.text = model.country?.name?.capitalizingFirstLetter() ?? "" // "Армения"
+            numberTransctionField.text = model.numberTransction  //"1235634790"
+            
+            let mask = StringMask(mask: "+000-0000-00-00")
+            let maskPhone = mask.mask(string: model.phone)
+            
+            phoneField.text = maskPhone ?? ""
+
+            if !model.summInCurrency.isEmpty {
+                currTransctionField.isHidden = false
+            }
+            currTransctionField.text = model.summInCurrency
+            
+            
         default:
             cardFromField.isHidden = true
             cardToField.isHidden = true
             nameField.text =  model.fullName ?? "" //"Колотилин Михаил Алексеевич"
-            countryField.text = model.country?.name ?? "" // "Армения"
+            countryField.text = model.country?.name?.capitalizingFirstLetter() ?? "" // "Армения"
             numberTransctionField.text = model.numberTransction  //"1235634790"
-            summTransctionField.text = model.summTransction  //"10 000.00 ₽ "
-            taxTransctionField.text = model.taxTransction //"100.00 ₽ "
+            
+            
             currancyTransctionField.text = model.currancyTransction //"Наличные"
             
             
@@ -232,9 +359,10 @@ class ContactConfurmViewController: UIViewController {
                 phoneField.isHidden = false
                 phoneField.textField.maskString = "+000-0000-00-00"
                 phoneField.text = model.phone ?? ""
+                
                 bankField.isHidden = false
-                bankField.text = "АйДиБанк"
-                bankField.imageView.image = #imageLiteral(resourceName: "IdBank")
+                bankField.text = model.bank?.memberNameRus ?? ""
+                bankField.imageView.image = model.bank?.svgImage?.convertSVGStringToImage()
                 let customViewItem = UIBarButtonItem(customView: UIImageView(image: #imageLiteral(resourceName: "MigAvatar")))
                 self.navigationItem.rightBarButtonItem = customViewItem
             } else {
@@ -251,14 +379,14 @@ class ContactConfurmViewController: UIViewController {
     }
     
     fileprivate func setupUI() {
-        title = "Подтвердите реквизиты"
         view.backgroundColor = .white
         
-        let stackView = UIStackView(arrangedSubviews: [phoneField, nameField, bankField, countryField, numberTransctionField, cardFromField, cardToField, summTransctionField, taxTransctionField, currancyTransctionField, smsCodeField, doneButton])
+        let stackView = UIStackView(
+            arrangedSubviews: [phoneField, nameField, bankField, countryField, numberTransctionField, cardFromField, cardToField, summTransctionField, taxTransctionField, currTransctionField, currancyTransctionField, smsCodeField, doneButton])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
-        stackView.spacing = 20
+        stackView.spacing = 10
         view.addSubview(stackView)
         
         stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor,

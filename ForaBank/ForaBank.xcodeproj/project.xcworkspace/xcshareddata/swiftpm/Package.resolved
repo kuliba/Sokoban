@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "AnyFormatKit",
+        "repositoryURL": "https://github.com/luximetr/AnyFormatKit.git",
+        "state": {
+          "branch": null,
+          "revision": "27b35c984c1c81e74c8be5273f7b2dc5250cb5cc",
+          "version": "2.5.1"
+        }
+      },
+      {
         "package": "BoringSSL-GRPC",
         "repositoryURL": "https://github.com/firebase/boringssl-SwiftPM.git",
         "state": {
@@ -125,15 +134,6 @@
           "branch": null,
           "revision": "afa9a1ace74e116848d4f743599ab83e584ff8cb",
           "version": "1.2.12"
-        }
-      },
-      {
-        "package": "QRScanner",
-        "repositoryURL": "https://github.com/mercari/QRScanner",
-        "state": {
-          "branch": null,
-          "revision": "9c81351f4cb90742ab89dd8e685fde4e89dc0718",
-          "version": "1.8.0"
         }
       },
       {
