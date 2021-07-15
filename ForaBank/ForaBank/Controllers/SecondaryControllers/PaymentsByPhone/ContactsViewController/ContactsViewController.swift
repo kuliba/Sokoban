@@ -335,7 +335,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                     for contact in contacts {
                         if contact.phoneNumber[0] == format(phoneNumber: lastPayment[indexPath.item].phoneNumber ?? "")! {
                             item.nameLabel.text = contact.name
-                            item.contactImageView.image = UIImage(data: (self.contacts[indexPath.item].avatarData)!)
+                            item.contactImageView.image = UIImage(data: (self.contacts[indexPath.item].avatarData) ?? Data())
                             break
                         } else {
                             item.nameLabel.text = format(phoneNumber: lastPayment[indexPath.item].phoneNumber ?? "")
