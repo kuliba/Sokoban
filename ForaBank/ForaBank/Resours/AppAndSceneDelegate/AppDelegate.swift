@@ -9,10 +9,12 @@ import UIKit
 import Firebase
 import FirebaseMessaging
 
+
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
+    var delegate: Encription?
+    
     static var shared: AppDelegate { return UIApplication.shared.delegate as! AppDelegate }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -68,6 +70,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
+
 extension AppDelegate : UNUserNotificationCenterDelegate {
     
     // Receive displayed notifications for iOS 10 devices.
@@ -121,6 +124,59 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         
         for i in 0 ..< deviceToken.count {
             tokenString.appendFormat("%02.2hhx", tokenChars[i])
+        }
+    }
+    
+}
+extension AppDelegate {
+   
+    func getCSRF(completion: @escaping (_ error: String?) ->()) {
+        let parameters = [
+            "cryptoVersion": "2.0",
+            "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
+            "pushFCMtoken": Messaging.messaging().fcmToken! as String,
+            "model": UIDevice().model,
+            "operationSystem": "IOS"
+        ] as [String : AnyObject]
+//        print("DEBUG: Parameters = ", parameters)
+        
+        NetworkManager<CSRFDecodableModel>.addRequest(.csrf, [:], parameters) { [self] request, error in
+            if error != nil {
+                completion(error)
+            }
+            guard let token = request?.data?.token else {
+                completion("error")
+                return
+                
+            }
+            
+            let certSeparator = request?.data?.cert?.replacingOccurrences(of: "\r", with: "").replacingOccurrences(of: "\n", with: "").components(separatedBy: "-----END CERTIFICATE----------BEGIN CERTIFICATE-----")
+            KeyFromServer.publicKeyCert = certSeparator?[0].replacingOccurrences(of: "-----BEGIN CERTIFICATE-----", with: "")
+            KeyFromServer.privateKeyCert = certSeparator?[1].replacingOccurrences(of: "-----END CERTIFICATE-----", with: "")
+            KeyFromServer.publicKey = request?.data?.pk
+              
+//            let ourKeys = delegate?.createOwnKey()
+            
+            let pubkeyFromCert = Encription().encryptedPublicKey()
+                                   
+            let shared = Encription().computeSharedSecret(ownPrivateKey: KeyPair.privateKey!, otherPublicKey: KeyFromServer.pubFromServ!)
+                                   
+                               
+            let ectoRsa = SecKeyCreateEncryptedData(KeyPair.publicKey!, .rsaEncryptionRaw, Data(base64Encoded: KeyFromServer.publicKey!)! as CFData, nil)
+
+            let newData = Encription().encryptWithRSAKey(Data(base64Encoded: KeyFromServer.publicKey!)!, rsaKeyRef: KeyPair.privateKey!, padding: .PKCS1)
+            
+//                                   keyExchange()
+  
+            
+            // TODO: пределать на сингл тон
+            UserDefaults.standard.set(token, forKey: "sessionToken")
+            
+//            let tok = UserDefaults.standard.object(forKey: "sessionToken")
+//            print("DEBUG: Token = ", tok)
+            
+            completion(nil)
+
         }
         
     }
