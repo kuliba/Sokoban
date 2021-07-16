@@ -29,13 +29,13 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dpr-Ea-NRy">
-                    <rect key="frame" x="400" y="10.5" width="32" height="29"/>
+                    <rect key="frame" x="400" y="10" width="32" height="29"/>
                     <color key="tintColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="40" id="RhC-0f-jVV"/>
                         <constraint firstAttribute="width" constant="32" id="x7B-QG-S61"/>
                     </constraints>
-                    <imageReference key="image" image="chevron.down" catalog="system" symbolScale="small"/>
+                    <imageReference key="image" image="chevron.up" catalog="system" symbolScale="small"/>
                     <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small"/>
                 </imageView>
             </subviews>
@@ -48,11 +48,14 @@
                 <constraint firstItem="dpr-Ea-NRy" firstAttribute="trailing" secondItem="VXr-Tz-HHm" secondAttribute="trailing" id="q2w-yy-NDM"/>
                 <constraint firstItem="dpr-Ea-NRy" firstAttribute="centerY" secondItem="DCJ-M4-piY" secondAttribute="centerY" id="uiM-Bw-Fr6"/>
             </constraints>
+            <connections>
+                <outlet property="rightImage" destination="dpr-Ea-NRy" id="ncb-oH-aIg"/>
+            </connections>
             <point key="canvasLocation" x="163.768115942029" y="39.508928571428569"/>
         </collectionReusableView>
     </objects>
     <resources>
-        <image name="chevron.down" catalog="system" width="128" height="72"/>
+        <image name="chevron.up" catalog="system" width="128" height="72"/>
         <image name="sbp-logo" width="64.5" height="75"/>
     </resources>
 </document>

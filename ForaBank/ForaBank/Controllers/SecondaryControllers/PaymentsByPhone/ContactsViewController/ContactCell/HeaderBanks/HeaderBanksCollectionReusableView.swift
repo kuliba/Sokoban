@@ -9,6 +9,8 @@ import UIKit
 
 class HeaderBanksCollectionReusableView: UICollectionReusableView {
 
+    @IBOutlet weak var rightImage: UIImageView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

@@ -26,6 +26,7 @@
                 <outlet property="imageView" destination="Ip6-4H-Tgh" id="KMY-j9-v2w"/>
                 <outlet property="lineView" destination="hwE-GR-wdf" id="Noc-fj-sSm"/>
                 <outlet property="placeHolder" destination="utL-gx-Bml" id="l7C-uu-adb"/>
+                <outlet property="rightButton" destination="LwO-GA-gxL" id="DDM-lf-cKJ"/>
                 <outlet property="rubButton" destination="Lst-2H-VkR" id="ehq-jM-Xyr"/>
                 <outlet property="textField" destination="7i2-ba-gMx" id="STM-TM-hZT"/>
                 <outlet property="usdButton" destination="EXU-dM-Jff" id="F2x-xf-MrZ"/>

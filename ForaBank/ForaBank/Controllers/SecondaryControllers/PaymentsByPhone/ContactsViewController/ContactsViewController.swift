@@ -375,11 +375,32 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
         
     }
     
+    @objc func hideCollectionView(){
+        if self.banks?.count ?? 0 > 1{
+            self.banks = [FastPayment(id: "", memberID: "", memberName: "", memberNameRus: "")]
+            contactCollectionView.reloadData()
+        } else {
+            getBankList()
+            contactCollectionView.reloadData()
+        }
+        
+    }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
       
         if collectionView == contactCollectionView{
             let reusableview = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderBanksCollectionReusableView", for: indexPath) as! HeaderBanksCollectionReusableView
+                reusableview.tag = indexPath.section
+            
+            if self.banks?.count ?? 0 > 1{
+                reusableview.rightImage.image = UIImage(systemName: "chevron.down")
+            } else {
+                reusableview.rightImage.image = UIImage(systemName: "chevron.up")
+            }
+            
+               let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:#selector(hideCollectionView))
+                reusableview.addGestureRecognizer(tapGestureRecognizer)
+            
             if banks?.count ?? 0 > 0{
                 reusableview.frame = CGRect(x: 0 , y: 0, width: self.view.frame.width - 40, height: 40)
                 
