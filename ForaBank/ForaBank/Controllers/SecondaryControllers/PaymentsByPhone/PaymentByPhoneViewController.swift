@@ -353,13 +353,14 @@ class PaymentByPhoneViewController: UIViewController {
     func endSBPPayment(selectBank: String, amount: String, completion: @escaping (_ error: String?)->()) {
         showActivity()
 //        37477404102
+        let clearAmount = amount.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "₽", with: "")
         let dataName = ["additional": [
             [ "fieldid": 1,
               "fieldname": "RecipientID",
               "fieldvalue": "0115110217" ],
             [ "fieldid": 1,
               "fieldname": "SumSTrs",
-              "fieldvalue": amount ]
+              "fieldvalue": clearAmount ]
         ]] as [String: AnyObject]
         
         NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataName) { model, error in
