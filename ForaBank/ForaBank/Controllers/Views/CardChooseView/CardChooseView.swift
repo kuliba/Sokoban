@@ -76,7 +76,7 @@ class CardChooseView: UIView {
         }
         
         let balance = Double(model.balance ?? 0)
-        self.balanceLabel.text = balance.currencyFormatter(code: model.currency ?? "")
+        self.balanceLabel.text = balance.currencyFormatter(symbol: model.currency ?? "")
         let text = NSAttributedString(
             string: model.productName ?? "",
             attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14),
