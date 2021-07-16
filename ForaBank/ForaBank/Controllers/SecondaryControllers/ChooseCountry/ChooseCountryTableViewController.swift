@@ -17,8 +17,23 @@ class ChooseCountryTableViewController: UITableViewController {
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
+            var titles = [String]()
+            for country in countries {
+                titles.append(country.name?.first?.lowercased() ?? "")
+            }
+            let mySet = Set(titles)
+            let myArray = Array(mySet).sorted()
+            countriesTitles = myArray
         }
     }
+    private var countriesTitles = [String]() {
+        didSet {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
     var searchedCountry = [CountriesList]() {
         didSet {
             DispatchQueue.main.async {
@@ -97,7 +112,10 @@ class ChooseCountryTableViewController: UITableViewController {
 
 
     // MARK: - Table view data source
-
+    override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+        return countriesTitles
+    }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 //        return countries.count
         if searching {
