@@ -58,6 +58,7 @@ class ForaInput: UIView {
             rubButton.layer.cornerRadius = 32 / 2
         }
     }
+    @IBOutlet weak var rightButton: UIButton!
     @IBOutlet var chooseTapGesture: UITapGestureRecognizer!
     @IBOutlet weak var usdButton: UIButton!{
         didSet {

@@ -19,7 +19,8 @@ class PaymentByPhoneViewController: UIViewController {
     var phoneField = ForaInput(
         viewModel: ForaInputModel(
             title: "По номеру телефона",
-            image: #imageLiteral(resourceName: "Phone")))
+            image: #imageLiteral(resourceName: "Phone"),
+            showChooseButton: true))
     
     
     var cardField = ForaInput(
@@ -89,11 +90,16 @@ class PaymentByPhoneViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        phoneField.rightButton.setImage(UIImage(imageLiteralResourceName: "addPerson"), for: .normal)
         if selectNumber != nil{
             phoneField.text = selectNumber ?? ""
         }
         view.addSubview(bottomView)
         setupUI()
+        
+        phoneField.didChooseButtonTapped = {() in
+            self.dismiss(animated: true, completion: nil)
+        }
         hideKeyboardWhenTappedAround()
         getCardList()
         
@@ -106,7 +112,7 @@ class PaymentByPhoneViewController: UIViewController {
                 self.startContactPayment(with: self.selectedCardNumber) { [self] error in
                     self.dismissActivity()
                     DispatchQueue.main.async {
-                        endSBPPayment(selectBank: selectBank!, amount: summTransctionField.textField.text!) { error in
+                        endSBPPayment(selectBank: selectBank!, amount: bottomView.amountTextField.text ?? "0") { error in
                             print(error ?? "")
                         }
                     }
@@ -140,7 +146,7 @@ class PaymentByPhoneViewController: UIViewController {
             self.startContactPayment(with: selectedCardNumber) { [self] error in
                 self.dismissActivity()
                 DispatchQueue.main.async {
-                    endSBPPayment(selectBank: selectBank!, amount: summTransctionField.textField.text!) { error in
+                    endSBPPayment(selectBank: selectBank!, amount: bottomView.amountTextField.text ?? "") { error in
                         print(error ?? "")
                     }
                 }
@@ -184,7 +190,7 @@ class PaymentByPhoneViewController: UIViewController {
 
             
         title = "Перевод по номеру телефона"
-        let stackView = UIStackView(arrangedSubviews: [phoneField, bankPayeer,cardField, summTransctionField, commentField])
+        let stackView = UIStackView(arrangedSubviews: [phoneField, bankPayeer,cardField, commentField])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
@@ -259,7 +265,7 @@ class PaymentByPhoneViewController: UIViewController {
         guard let number = phoneField.textField.text else {
             return
         }
-        guard let sum = summTransctionField.textField.text else {
+        guard let sum = bottomView.amountTextField.text else {
             return
         }
         let body = ["payerCardNumber": "4656260150230695",
@@ -283,7 +289,7 @@ class PaymentByPhoneViewController: UIViewController {
                     vc.phoneField.text = self.phoneField.text
                     vc.cardField.text = self.cardField.text
                     vc.cardField.imageView.image = self.cardField.imageView.image
-                    vc.summTransctionField.textField.text = self.summTransctionField.textField.text
+                    vc.summTransctionField.textField.text = self.bottomView.amountTextField.text
                     vc.taxTransctionField.isHidden = ((model.data?.commission?.isEmpty) != nil)
                     vc.bankPayeer.chooseButton.isHidden = true
                     vc.bankPayeer.imageView.image = self.bankPayeer.imageView.image
@@ -411,7 +417,7 @@ class PaymentByPhoneViewController: UIViewController {
                     vc.phoneField.text = self.phoneField.text
                     vc.cardField.text = self.cardField.text
                     vc.bankPayeer.imageView.image = self.bankPayeer.imageView.image
-                    vc.summTransctionField.text = self.summTransctionField.textField.text ?? ""
+                    vc.summTransctionField.text = self.bottomView.amountTextField.text  ?? ""
                     vc.bankPayeer.chooseButton.isHidden = true
                     vc.cardField.chooseButton.isHidden = true
                     vc.payeerField.text = model.data?.listInputs?[5].content?[0] ?? "Получатель не найден"
