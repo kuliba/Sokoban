@@ -44,12 +44,14 @@ final class NetworkPDFManager {
                 urlComponents.queryItems?.append(queryItem)
             })
             
-            print("DEBUG: URLrequest:", urlComponents.url ?? "")
-        }
-        
-        let resultUrl = url.absoluteString
-        if let resourceUrl = URL(string: resultUrl) {
-            return PDFDocument(url: resourceUrl)
+            let resultUrl = urlComponents.url?.absoluteString ?? ""
+            
+            var router = RouterManager.getPrintForm.request()
+            router?.url = urlComponents.url
+            
+            if let resourceUrl = URL(string: (router?.url!.absoluteString)!) {
+                return PDFDocument(url: resourceUrl)
+            }
         }
         return nil
     }
