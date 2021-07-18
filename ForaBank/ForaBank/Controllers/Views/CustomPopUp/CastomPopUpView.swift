@@ -60,13 +60,6 @@ class MemeDetailVC : AddHeaderImageViewController {
             self.present(navVc, animated: true, completion: nil)
         }
         
-        let body = ["currencyCodeAlpha": "USD"] as [String: AnyObject]
-        
-        NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], body) { model, error in
-            print("Error :", error)
-            print("Model :", model)
-            
-        }
         
         bottomView.currency = "₽"
         
@@ -245,6 +238,48 @@ class MemeDetailVC : AddHeaderImageViewController {
 //        Запрос курса валют:
 //        POST /rest/getExchangeCurrencyRates
 //        В телеге описание запроса
+    }
+    
+    /// MARK - Exchange Rate
+    
+    final func exchangeRate( _ from: String, _ whereTo: String) {
+        let (fromValue, whereValue) = (from, whereTo)
+        
+        let ru = (from == "RUS" || whereTo == "RUS")
+        
+        switch ru {
+        
+        case true:
+            /// Если одна из валют выбранной карты в рублях, то ищем которая
+            switch (fromValue, whereValue) {
+            case ("RUS", let(value)):
+               let body = [ "currencyCodeAlpha" : value]
+                
+                NetworkHelper.request(.getExchangeCurrencyRates, body) { model, _ in
+                    let m = model
+                    print()
+                }
+                
+            case (let(value), "RUS"):
+                let body = [ "currencyCodeAlpha" : value]
+                NetworkHelper.request(.getExchangeCurrencyRates, body) { model, _ in
+                    let m = model
+                }
+            case (_, _):
+                break
+            }
+        
+        case false:
+        /// Если обе валюты в выбранных картах в рублях не в рублях
+             let bodyFrom = [ "currencyCodeAlpha" : from]
+              let bodyTo = [ "currencyCodeAlpha" : whereTo]
+            NetworkHelper.request(.getExchangeCurrencyRates, bodyFrom) { model, _ in
+                NetworkHelper.request(.getExchangeCurrencyRates, bodyTo) { model, _ in
+                    let m = model
+                }
+                let m = model
+            }
+        }
     }
     
     private func setupCardViewActions() {
