@@ -493,7 +493,6 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                     return
                 }
                 searchContact.numberTextField.text = numberPhone.dropFirst(2).description
-                getBankList()
                 getLastPhonePayments()
                 
             }
