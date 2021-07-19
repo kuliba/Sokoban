@@ -23,7 +23,7 @@ class PDFViewerViewController: UIViewController, URLSessionDownloadDelegate {
         super.viewDidLoad()
         
         self.view.backgroundColor = .black
-
+        let resultId = id ?? 0
         let body = [
             "paymentOperationDetailId": 202,
             "printFormType" : "contactAddressless"
@@ -79,23 +79,4 @@ class PDFViewerViewController: UIViewController, URLSessionDownloadDelegate {
     
     }
     
-    
-    func setPDF(_ mainView: UIView) {
-        
-        let fileManager = FileManagerHandler()
-        let pdfView = PDFView()
-        
-        NotificationCenter.default.addObserver(forName: .pdf, object: nil, queue: .main) { _ in
-            
-            let url = fileManager.fileRead ("pdf")
-            let pdfURL = URL(fileURLWithPath: url)
-            mainView.addSubview(pdfView)
-            if let document = PDFDocument(url: pdfURL) {
-                pdfView.document = document
-            }
-        }
-    }
-    
-    
-
 }

@@ -60,13 +60,6 @@ class MemeDetailVC : AddHeaderImageViewController {
             self.present(navVc, animated: true, completion: nil)
         }
         
-        let body = ["currencyCodeAlpha": "USD"] as [String: AnyObject]
-        
-        NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], body) { model, error in
-            print("Error :", error)
-            print("Model :", model)
-            
-        }
         
         bottomView.currency = "₽"
         
@@ -245,8 +238,55 @@ class MemeDetailVC : AddHeaderImageViewController {
 //        Запрос курса валют:
 //        POST /rest/getExchangeCurrencyRates
 //        В телеге описание запроса
+        exchangeRate(model.cardFrom?.currency! ?? "", model.cardTo?.currency! ?? "")
     }
     
+    /// MARK - Exchange Rate
+    
+    final func exchangeRate( _ from: String, _ whereTo: String) {
+        let (fromValue, whereValue) = (from, whereTo)
+        
+        let ru = (from == "RUB" || whereTo == "RUB")
+        
+        switch ru {
+        
+        case true:
+            /// Если одна из валют выбранной карты в рублях, то ищем которая
+            if from != whereTo {
+                switch (fromValue, whereValue) {
+                case ("RUB", let(value)):
+                    let body = [ "currencyCodeAlpha" : value] as [String: AnyObject]
+                    
+                    NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], body) { model, error in
+                        let m = model?.data
+                        print()
+                    }
+                    
+                case (let(value), "RUB"):
+                    let body = [ "currencyCodeAlpha" : value] as [String: AnyObject]
+                    NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], body) { model, error in
+                        let m = model?.data
+                        print()
+                    }
+                case (_, _):
+                    break
+                }
+            }
+        case false:
+            /// Если обе валюты в выбранных картах в рублях не в рублях
+            let bodyFrom = [ "currencyCodeAlpha" : from] as [String: AnyObject]
+            let bodyTo = [ "currencyCodeAlpha" : whereTo] as [String: AnyObject]
+            NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], bodyFrom) { model, error in
+                NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], bodyTo) { model, error in
+                    let m = model?.data
+                    print()
+                }
+                let m = model
+                print()
+            }
+        }
+    }
+   
     private func setupCardViewActions() {
         cardView.closeView = { [weak self] () in
 //            self?.hideCustomCardView()

@@ -393,8 +393,6 @@ struct NetworkHelper {
                 } else {
                     completion(nil ,model.errorMessage)
                 }
-                
-                
             }
         case .getCurrencyList:
             

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import PDFKit
 
 class NetworkPDFManager: NSObject, URLSessionDownloadDelegate {
     
