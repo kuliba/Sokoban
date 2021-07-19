@@ -6,89 +6,121 @@
 //
 
 import Foundation
+import PDFKit
 
-final class NetworkPDFManager {
+class NetworkPDFManager: NSObject, URLSessionDownloadDelegate {
     
-    static func addRequest( //_ requestType: RouterManager,
-                           _ urlParametrs: [String: String],
-                            _ requestBody: [String: AnyObject] ) {
+    
+    let view: UIView?
+    let requestBody: [String: AnyObject]?
+    var pdfUrl:URL!
+    
+    func createPdfDocument() {
         
-        let r = RouterManager.getPrintForm
-        
-        guard var request = r.request() else { return }
-        
-        let s = RouterSassionConfiguration()
-        let session = s.returnSession()
-        
-        if let token = CSRFToken.token {
-            request.allHTTPHeaderFields = ["X-XSRF-TOKEN": token]
-        }
-        //   request.allHTTPHeaderFields = addHeader    +++++++++Singlton
-        
-//        if request.httpMethod != "GET" {
-//
-//        /// URL Parameters
-//        if var urlComponents = URLComponents(url: request.url!,
-//                                             resolvingAgainstBaseURL: false), !urlParametrs.isEmpty {
-//
-//            urlComponents.queryItems = [URLQueryItem]()
-//
-//            urlParametrs.forEach({ (key, value) in
-//                let queryItem = URLQueryItem(name: key,
-//                                             value: "\(value)".addingPercentEncoding(withAllowedCharacters: .urlHostAllowed))
-//                urlComponents.queryItems?.append(queryItem)
-//            })
-//
-//            request.url = urlComponents.url
-//        }
-//        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-//
-//        if request.value(forHTTPHeaderField: "Content-Type") == nil {
-//            request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-//        }
-
-
-        /// Request Body
+        var router = RouterManager.getPrintForm.request()
+        var a: URL!
         do {
-            let jsonAsData = try JSONSerialization.data(withJSONObject: requestBody, options: [])
-            request.httpBody = jsonAsData
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            let jsonAsData = try JSONSerialization.data(withJSONObject: requestBody!, options: [])
+            router?.httpBody = jsonAsData
+            
+            if router?.value(forHTTPHeaderField: "Content-Type") == nil {
+                router?.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            }
         } catch {
             debugPrint(NetworkError.encodingFailed)
         }
         
-//        }
-
-        
-        let task = session.downloadTask(with: request) { data, response, error in
-            if error != nil {
-                print(error?.localizedDescription ?? "")
-            }
+        let session = URLSession(configuration: .default, delegate: self, delegateQueue: .main)
+        router?.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        if let token = CSRFToken.token {
+            router?.allHTTPHeaderFields = ["X-XSRF-TOKEN": token]
+        }
+        let u = router?.url?.absoluteString
+        let m = router?.httpMethod
+        let c = router?.allHTTPHeaderFields
+        print("DEBUG PDF :", u!, m!, c!)
+        session.downloadTask(with: router!) { (url, response, err) in
             
             if let response = response as? HTTPURLResponse {
-                let result = handleNetworkResponse(response)
-                switch result {
-                case .success:
-                    guard data != nil else {
-                        print("PDF : \(NetworkResponse.noData.rawValue)")
-                        return
-                    }
-                case .failure(let networkFailureError):
-                    print("PDF : \(networkFailureError)")
-                }
+                
+                print(response.mimeType)
             }
-        }
-        task.resume()
-        
-        func handleNetworkResponse(_ response: HTTPURLResponse) -> SessionResult<String>{
-           switch response.statusCode {
-           case 200...299: return .success
-           case 401...500: return .failure(NetworkResponse.authenticationError.rawValue)
-           case 501...599: return .failure(NetworkResponse.badRequest.rawValue)
-           case 600: return .failure(NetworkResponse.outdated.rawValue)
-           default: return .failure(NetworkResponse.failed.rawValue)
-           }
-       }
+        }.resume()
+    
     }
     
+    func displayPDF() {
+        let _ = createPdfDocument()
+        guard pdfUrl != nil else { return }
+        let doc = PDFDocument(url: pdfUrl)
+        let pdfview = PDFView(frame: self.view!.bounds)
+        pdfview.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        pdfview.autoScales = true
+        self.view?.addSubview(pdfview)
+        pdfview.document = doc
+    }
+    
+    
+    
+    init(_ view: UIView, _ requestBody: [String: AnyObject]) {
+        self.view = view
+        self.requestBody = requestBody
+    }
+    
+}
+
+extension NetworkPDFManager {
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+               print("DEBUG PDF Delegate downloadLocation:", location)
+               do {
+                   let documentsURL = try
+                       FileManager.default.url(for: .documentDirectory,
+                                               in: .userDomainMask,
+                                               appropriateFor: nil,
+                                               create: false)
+
+                   let savedURL = documentsURL.appendingPathComponent("yourCustomName90.pdf")
+                   self.pdfUrl = savedURL
+                   try FileManager.default.moveItem(at: location, to: savedURL)
+
+               } catch {
+                   print ("file error: \(error)")
+               }
+    }
+}
+
+import MobileCoreServices
+
+extension URL {
+    func mimeType() -> String {
+        let pathExtension = self.pathExtension
+        if let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension as NSString, nil)?.takeRetainedValue() {
+            if let mimetype = UTTypeCopyPreferredTagWithClass(uti, kUTTagClassMIMEType)?.takeRetainedValue() {
+                return mimetype as String
+            }
+        }
+        return "application/octet-stream"
+    }
+    var containsImage: Bool {
+        let mimeType = self.mimeType()
+        guard let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeType as CFString, nil)?.takeRetainedValue() else {
+            return false
+        }
+        return UTTypeConformsTo(uti, kUTTypeImage)
+    }
+    var containsAudio: Bool {
+        let mimeType = self.mimeType()
+        guard let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeType as CFString, nil)?.takeRetainedValue() else {
+            return false
+        }
+        return UTTypeConformsTo(uti, kUTTypeAudio)
+    }
+    var containsVideo: Bool {
+        let mimeType = self.mimeType()
+        guard  let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeType as CFString, nil)?.takeRetainedValue() else {
+            return false
+        }
+        return UTTypeConformsTo(uti, kUTTypeMovie)
+    }
+
 }
