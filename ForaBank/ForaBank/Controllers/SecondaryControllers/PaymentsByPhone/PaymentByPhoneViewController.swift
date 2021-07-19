@@ -268,9 +268,11 @@ class PaymentByPhoneViewController: UIViewController {
         guard let sum = bottomView.amountTextField.text else {
             return
         }
-        let body = ["payerCardNumber": "4656260150230695",
+        let clearSum = NSString(string: "\(sum.replacingOccurrences(of: ",", with: "."))").doubleValue //123
+        
+        let body = ["payerCardNumber": "\(selectedCardNumber)",
                     "payeePhone": "\(number)",
-                    "amount": sum
+                    "amount": clearSum
                     ] as [String: AnyObject]
         NetworkManager<PrepareCard2PhoneDecodableModel>.addRequest(.prepareCard2Phone, [:], body) { model, error in
             if error != nil {

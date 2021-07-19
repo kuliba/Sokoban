@@ -83,6 +83,10 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         
         // Print full message.
             print(userInfo)
+        let otpCode = userInfo["body"] as! String
+        print(otpCode.components(separatedBy:  otpCode))
+        let newstring = otpCode.filter { "0"..."9" ~= $0 }
+        print(newstring)
         
         // Change this to your preferred presentation option
         completionHandler([[.alert, .sound]])
