@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B05163126A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B05163026A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift */; };
 		0B37F9782678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F9772678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift */; };
 		0B37F97A2678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F9792678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift */; };
 		0B37F97C2678EC69007728FC /* AnywayPaymentDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F97B2678EC69007728FC /* AnywayPaymentDecodableModel.swift */; };
@@ -183,6 +184,8 @@
 		EDB16595266A4438007E6030 /* DevelopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB16594266A4438007E6030 /* DevelopViewController.swift */; };
 		EDB16597266A576A007E6030 /* CardScannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB16596266A576A007E6030 /* CardScannerController.swift */; };
 		EDC341A226864C4100FFFEF8 /* BottomInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC341A126864C4100FFFEF8 /* BottomInputView.swift */; };
+		EDC8BA3126A5A5C800EDB401 /* GetPaymentCountriesDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC8BA3026A5A5C800EDB401 /* GetPaymentCountriesDecodableModel.swift */; };
+		EDC8BA3426A5AA0E00EDB401 /* SDWebImagePDFCoder in Frameworks */ = {isa = PBXBuildFile; productRef = EDC8BA3326A5AA0E00EDB401 /* SDWebImagePDFCoder */; };
 		EDF6820D266F9EC800FD5C07 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681F3266F9EC800FD5C07 /* NetworkManager.swift */; };
 		EDF6820E266F9EC800FD5C07 /* NetworkModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681F6266F9EC800FD5C07 /* NetworkModelProtocol.swift */; };
 		EDF6820F266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681F7266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift */; };
@@ -224,6 +227,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0B05163026A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPaymentCountriesDecodableModel.swift; sourceTree = "<group>"; };
 		0B37F9772678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentBeginDecodebleModel.swift; sourceTree = "<group>"; };
 		0B37F9792678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentMakeDecodableModel.swift; sourceTree = "<group>"; };
 		0B37F97B2678EC69007728FC /* AnywayPaymentDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentDecodableModel.swift; sourceTree = "<group>"; };
@@ -399,6 +403,7 @@
 		EDB16594266A4438007E6030 /* DevelopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopViewController.swift; sourceTree = "<group>"; };
 		EDB16596266A576A007E6030 /* CardScannerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardScannerController.swift; sourceTree = "<group>"; };
 		EDC341A126864C4100FFFEF8 /* BottomInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomInputView.swift; sourceTree = "<group>"; };
+		EDC8BA3026A5A5C800EDB401 /* GetPaymentCountriesDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPaymentCountriesDecodableModel.swift; sourceTree = "<group>"; };
 		EDF681F3266F9EC800FD5C07 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		EDF681F6266F9EC800FD5C07 /* NetworkModelProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkModelProtocol.swift; sourceTree = "<group>"; };
 		EDF681F7266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetDeviceSettingDecodbleModel.swift; sourceTree = "<group>"; };
@@ -429,6 +434,7 @@
 				EDAA99B42674C38900435484 /* ProgressHUD in Frameworks */,
 				68E6A28526A02C1800A1D9A1 /* AnyFormatKit in Frameworks */,
 				ED39EC91268C8FA800158E46 /* SVGKit in Frameworks */,
+				EDC8BA3426A5AA0E00EDB401 /* SDWebImagePDFCoder in Frameworks */,
 				ED0B4892267B4CDD0037EA06 /* IQKeyboardManagerSwift in Frameworks */,
 				0B7A18AB2681CED70007CC75 /* SwiftEntryKit in Frameworks */,
 				ED39EC88268B308800158E46 /* SDWebImageSVGCoder in Frameworks */,
@@ -1255,6 +1261,8 @@
 				68E6A29426A033D900A1D9A1 /* DeleteProductTemplateDecodableModel.swift */,
 				68E6A29226A033B700A1D9A1 /* CheckCardDecodableModel.swift */,
 				0BF348A0269E0CDA005138A8 /* LogoutDecodableModel.swift */,
+				0B05163026A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift */,
+				EDC8BA3026A5A5C800EDB401 /* GetPaymentCountriesDecodableModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -1418,6 +1426,7 @@
 				ED39EC90268C8FA800158E46 /* SVGKit */,
 				68FFA5672695921E002DADFA /* QRScanner */,
 				68E6A28426A02C1800A1D9A1 /* AnyFormatKit */,
+				EDC8BA3326A5AA0E00EDB401 /* SDWebImagePDFCoder */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -1500,6 +1509,7 @@
 				ED39EC8F268C8FA700158E46 /* XCRemoteSwiftPackageReference "SVGKit" */,
 				68FFA5662695921D002DADFA /* XCRemoteSwiftPackageReference "QRScanner" */,
 				68E6A28326A02C1800A1D9A1 /* XCRemoteSwiftPackageReference "AnyFormatKit" */,
+				EDC8BA3226A5AA0D00EDB401 /* XCRemoteSwiftPackageReference "SDWebImagePDFCoder" */,
 			);
 			productRefGroup = EDB1437E265FDA410028EF5A /* Products */;
 			projectDirPath = "";
@@ -1602,6 +1612,7 @@
 				EDFFCAF0268245EC004EE095 /* CardViewModel.swift in Sources */,
 				0B9EC85D26739C0000D86EB2 /* GetCountriesDecodebleModel.swift in Sources */,
 				68FFA54C2684C854002DADFA /* PDFViewerViewController.swift in Sources */,
+				0B05163126A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift in Sources */,
 				ED3A966E2690A80B00252857 /* PresentationController.swift in Sources */,
 				ED0B489C267D41A60037EA06 /* PaymentsDetailsView.swift in Sources */,
 				ED4FC602266C0AB50092B4AB /* ChooseCountryTableViewController.swift in Sources */,
@@ -1656,6 +1667,7 @@
 				EDF68210266F9EC800FD5C07 /* LoginDoCodableModel.swift in Sources */,
 				EDFFCAFB2683C135004EE095 /* PaymentType.swift in Sources */,
 				EDB1658A266A181C007E6030 /* PaymentsViewControllerDataSource.swift in Sources */,
+				EDC8BA3126A5A5C800EDB401 /* GetPaymentCountriesDecodableModel.swift in Sources */,
 				ED3A96712690FADD00252857 /* BankListView.swift in Sources */,
 				ED4FC61B266EA42E0092B4AB /* UI.swift in Sources */,
 				EDF6820E266F9EC800FD5C07 /* NetworkModelProtocol.swift in Sources */,
@@ -2118,6 +2130,14 @@
 				kind = branch;
 			};
 		};
+		EDC8BA3226A5AA0D00EDB401 /* XCRemoteSwiftPackageReference "SDWebImagePDFCoder" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImagePDFCoder.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.8.0;
+			};
+		};
 		EDF6821B266FC37F00FD5C07 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -2168,6 +2188,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD" */;
 			productName = ProgressHUD;
+		};
+		EDC8BA3326A5AA0E00EDB401 /* SDWebImagePDFCoder */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EDC8BA3226A5AA0D00EDB401 /* XCRemoteSwiftPackageReference "SDWebImagePDFCoder" */;
+			productName = SDWebImagePDFCoder;
 		};
 		EDF6821C266FC37F00FD5C07 /* FirebaseMessaging */ = {
 			isa = XCSwiftPackageProductDependency;

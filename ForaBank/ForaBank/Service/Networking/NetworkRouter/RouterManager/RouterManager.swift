@@ -46,6 +46,7 @@ enum RouterManager {
     case deleteProductTemplate
     case checkCard
     case logout
+    case getPaymentCountries
     
 }
 
@@ -157,6 +158,7 @@ extension RouterManager {
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.post.rawValue
             return request
+            
         case .installPushDevice:
             let baseUrl = RouterUrlList.installPushDevice.returnUrl()
             switch baseUrl {
@@ -620,6 +622,21 @@ extension RouterManager {
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .getPaymentCountries:
+            let baseUrl = RouterUrlList.getPaymentCountries.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.get.rawValue
             return request
         }
     }
