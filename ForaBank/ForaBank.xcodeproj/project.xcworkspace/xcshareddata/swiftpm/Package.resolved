@@ -155,6 +155,15 @@
         }
       },
       {
+        "package": "SDWebImagePDFCoder",
+        "repositoryURL": "https://github.com/SDWebImage/SDWebImagePDFCoder.git",
+        "state": {
+          "branch": null,
+          "revision": "aec21a33971011dba672630c81cba5c44c7ec788",
+          "version": "0.8.0"
+        }
+      },
+      {
         "package": "SDWebImageSVGCoder",
         "repositoryURL": "https://github.com/SDWebImage/SDWebImageSVGCoder.git",
         "state": {

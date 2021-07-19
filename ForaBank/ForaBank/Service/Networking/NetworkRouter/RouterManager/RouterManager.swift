@@ -158,6 +158,7 @@ extension RouterManager {
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.post.rawValue
             return request
+            
         case .installPushDevice:
             let baseUrl = RouterUrlList.installPushDevice.returnUrl()
             switch baseUrl {
