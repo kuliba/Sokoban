@@ -60,14 +60,6 @@ class MemeDetailVC : AddHeaderImageViewController {
             self.present(navVc, animated: true, completion: nil)
         }
         
-        let body = ["currencyCodeAlpha": "USD"] as [String: AnyObject]
-        
-        NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], body) { model, error in
-            print("Error :", error)
-            print("Model :", model)
-            
-        }
-        
         bottomView.currency = "₽"
         
         
