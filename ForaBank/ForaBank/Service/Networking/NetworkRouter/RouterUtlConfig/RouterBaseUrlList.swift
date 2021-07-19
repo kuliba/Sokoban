@@ -95,4 +95,5 @@ enum RouterBaseUrlList: String {
     
     case logout                    = "/logout"
     
+    case getPaymentCountries       = "/rest/getPaymentCountries"
 }

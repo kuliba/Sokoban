@@ -378,8 +378,21 @@ struct NetworkHelper {
             
             }
         case .getExchangeCurrencyRates:
+            /// Курс обмена валют
             NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, tempParameters, body) { model, error in
+                if error != nil {
+                    print("DEBUG: Error: ", error ?? "")
+                    completion(nil, error)
+                }
+                guard let model = model else { return }
                 
+                if model.statusCode == 0 {
+                    guard let data = model.data else { return }
+                    completion(data, nil)
+                    
+                } else {
+                    completion(nil ,model.errorMessage)
+                }
                 
                 
             }
