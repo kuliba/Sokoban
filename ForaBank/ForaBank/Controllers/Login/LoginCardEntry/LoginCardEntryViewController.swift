@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AnyFormatKit
 
 class LoginCardEntryViewController: UIViewController {
 
@@ -69,8 +70,13 @@ extension LoginCardEntryViewController: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
         guard let textField = textField as? MaskedTextField else { return }
         guard let cardNumber = textField.unmaskedText else { return }
-        creditCardView.doneButton.isHidden = cardNumber.count >= 16 ? false : true
-        creditCardView.cardNumberTextField.maskString = cardNumber.count >= 16 ? "00000000000000000000" : "0000 0000 0000 0000"
+        creditCardView.doneButton.isHidden = cardNumber.count == 16 ? false : true
+        creditCardView.cardNumberTextField.maskString = cardNumber.count == 16 ? "00000000000000000000" : "0000 0000 0000 0000"
+        creditCardView.cardNumberTextField.maskString = cardNumber.count > 16 ? "000000000000000000000000" : "000 00000 00000 00000 000"
+        
+        // inside of UITextFieldDelegate shouldChangeTextIn method
+       
+        
         let newPosition = textField.endOfDocument
         creditCardView.cardNumberTextField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition)
     }
