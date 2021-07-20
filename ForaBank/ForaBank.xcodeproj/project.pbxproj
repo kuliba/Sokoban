@@ -184,7 +184,6 @@
 		EDB16595266A4438007E6030 /* DevelopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB16594266A4438007E6030 /* DevelopViewController.swift */; };
 		EDB16597266A576A007E6030 /* CardScannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB16596266A576A007E6030 /* CardScannerController.swift */; };
 		EDC341A226864C4100FFFEF8 /* BottomInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC341A126864C4100FFFEF8 /* BottomInputView.swift */; };
-		EDC8BA3126A5A5C800EDB401 /* GetPaymentCountriesDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC8BA3026A5A5C800EDB401 /* GetPaymentCountriesDecodableModel.swift */; };
 		EDC8BA3426A5AA0E00EDB401 /* SDWebImagePDFCoder in Frameworks */ = {isa = PBXBuildFile; productRef = EDC8BA3326A5AA0E00EDB401 /* SDWebImagePDFCoder */; };
 		EDF6820D266F9EC800FD5C07 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681F3266F9EC800FD5C07 /* NetworkManager.swift */; };
 		EDF6820E266F9EC800FD5C07 /* NetworkModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681F6266F9EC800FD5C07 /* NetworkModelProtocol.swift */; };
@@ -403,7 +402,6 @@
 		EDB16594266A4438007E6030 /* DevelopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopViewController.swift; sourceTree = "<group>"; };
 		EDB16596266A576A007E6030 /* CardScannerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardScannerController.swift; sourceTree = "<group>"; };
 		EDC341A126864C4100FFFEF8 /* BottomInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomInputView.swift; sourceTree = "<group>"; };
-		EDC8BA3026A5A5C800EDB401 /* GetPaymentCountriesDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPaymentCountriesDecodableModel.swift; sourceTree = "<group>"; };
 		EDF681F3266F9EC800FD5C07 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		EDF681F6266F9EC800FD5C07 /* NetworkModelProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkModelProtocol.swift; sourceTree = "<group>"; };
 		EDF681F7266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetDeviceSettingDecodbleModel.swift; sourceTree = "<group>"; };
@@ -1262,7 +1260,6 @@
 				68E6A29226A033B700A1D9A1 /* CheckCardDecodableModel.swift */,
 				0BF348A0269E0CDA005138A8 /* LogoutDecodableModel.swift */,
 				0B05163026A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift */,
-				EDC8BA3026A5A5C800EDB401 /* GetPaymentCountriesDecodableModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -1667,7 +1664,6 @@
 				EDF68210266F9EC800FD5C07 /* LoginDoCodableModel.swift in Sources */,
 				EDFFCAFB2683C135004EE095 /* PaymentType.swift in Sources */,
 				EDB1658A266A181C007E6030 /* PaymentsViewControllerDataSource.swift in Sources */,
-				EDC8BA3126A5A5C800EDB401 /* GetPaymentCountriesDecodableModel.swift in Sources */,
 				ED3A96712690FADD00252857 /* BankListView.swift in Sources */,
 				ED4FC61B266EA42E0092B4AB /* UI.swift in Sources */,
 				EDF6820E266F9EC800FD5C07 /* NetworkModelProtocol.swift in Sources */,
