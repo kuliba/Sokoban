@@ -44,6 +44,10 @@ extension ContactInputViewController {
         stackView.isUserInteractionEnabled = true
         view.addSubview(stackView)
         
+        self.view.addSubview(countryListView)
+        countryListView.anchor(top: view.topAnchor, left: view.leftAnchor,
+                               right: view.rightAnchor, height: 100)
+        
         setupConstraint()
     }
     

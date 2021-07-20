@@ -72,9 +72,9 @@ class ChooseCountryTableViewController: UITableViewController {
     //MARK: - API
     private func loadLastPayments() {
         NetworkManager<GetPaymentCountriesDecodableModel>.addRequest(.getPaymentCountries, [:], [:]) { model, error in
-            print(model)
+//            print(model)
             if error != nil {
-                print("DEBUG: error", error)
+                print("DEBUG: error", error!)
             } else {
                 guard let model = model else { return }
                 guard let lastPaymentsList = model.data else { return }
@@ -112,9 +112,6 @@ class ChooseCountryTableViewController: UITableViewController {
     private func configureVC(with countries: [CountriesList]) {
         for country in countries {
             if !(country.paymentSystemCodeList?.isEmpty ?? true) {
-                let name = country.name?.capitalizingFirstLetter()
-//                let countryViewModel = Country(name: name, code: country.code, imageSVGString: country.svgImage, paymentSystemIdList: <#String?#>)
-//                country.paymentSystemIDList
                 self.countries.append(country)
             }
         }
