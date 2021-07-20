@@ -115,6 +115,9 @@
 		ED4FC621266EA5CD0092B4AB /* Valet in Frameworks */ = {isa = PBXBuildFile; productRef = ED4FC620266EA5CD0092B4AB /* Valet */; };
 		ED51D66E2688B27E005FD655 /* SeparatorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED51D66D2688B27E005FD655 /* SeparatorView.xib */; };
 		ED51D6702688B287005FD655 /* SeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED51D66F2688B287005FD655 /* SeparatorView.swift */; };
+		ED84994326A6F647005205C6 /* ChooseCountryHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED84993F26A6F647005205C6 /* ChooseCountryHeaderViewModel.swift */; };
+		ED84994426A6F647005205C6 /* ChooseCountryHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED84994126A6F647005205C6 /* ChooseCountryHeaderCell.swift */; };
+		ED84994526A6F647005205C6 /* ChooseCountryHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED84994226A6F647005205C6 /* ChooseCountryHeaderView.swift */; };
 		ED92D3A226735A0A006D47B3 /* PaymentByPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED92D3A126735A0A006D47B3 /* PaymentByPhoneViewController.swift */; };
 		EDAA99AF2673AB9200435484 /* ForaSwitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAA99AE2673AB9200435484 /* ForaSwitchView.swift */; };
 		EDAA99B12673ABF200435484 /* ForaSwitchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDAA99B02673ABF200435484 /* ForaSwitchView.xib */; };
@@ -327,6 +330,9 @@
 		ED4FC618266EA42E0092B4AB /* UI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UI.swift; sourceTree = "<group>"; };
 		ED51D66D2688B27E005FD655 /* SeparatorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SeparatorView.xib; sourceTree = "<group>"; };
 		ED51D66F2688B287005FD655 /* SeparatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorView.swift; sourceTree = "<group>"; };
+		ED84993F26A6F647005205C6 /* ChooseCountryHeaderViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChooseCountryHeaderViewModel.swift; sourceTree = "<group>"; };
+		ED84994126A6F647005205C6 /* ChooseCountryHeaderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChooseCountryHeaderCell.swift; sourceTree = "<group>"; };
+		ED84994226A6F647005205C6 /* ChooseCountryHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChooseCountryHeaderView.swift; sourceTree = "<group>"; };
 		ED92D3A126735A0A006D47B3 /* PaymentByPhoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentByPhoneViewController.swift; sourceTree = "<group>"; };
 		EDAA99AE2673AB9200435484 /* ForaSwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForaSwitchView.swift; sourceTree = "<group>"; };
 		EDAA99B02673ABF200435484 /* ForaSwitchView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ForaSwitchView.xib; sourceTree = "<group>"; };
@@ -855,6 +861,7 @@
 		ED4FC603266CCD0F0092B4AB /* ChooseCountry */ = {
 			isa = PBXGroup;
 			children = (
+				ED84993D26A6F647005205C6 /* HeaderView */,
 				ED4FC60E266CD6600092B4AB /* ViewModel */,
 				ED4FC608266CD1020092B4AB /* Cell */,
 				ED4FC601266C0AB50092B4AB /* ChooseCountryTableViewController.swift */,
@@ -915,6 +922,32 @@
 				ED51D66F2688B287005FD655 /* SeparatorView.swift */,
 			);
 			path = SeparatorView;
+			sourceTree = "<group>";
+		};
+		ED84993D26A6F647005205C6 /* HeaderView */ = {
+			isa = PBXGroup;
+			children = (
+				ED84993E26A6F647005205C6 /* ChooseCountryHeaderViewModel */,
+				ED84994026A6F647005205C6 /* ChooseCountryHeaderCell */,
+				ED84994226A6F647005205C6 /* ChooseCountryHeaderView.swift */,
+			);
+			path = HeaderView;
+			sourceTree = "<group>";
+		};
+		ED84993E26A6F647005205C6 /* ChooseCountryHeaderViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				ED84993F26A6F647005205C6 /* ChooseCountryHeaderViewModel.swift */,
+			);
+			path = ChooseCountryHeaderViewModel;
+			sourceTree = "<group>";
+		};
+		ED84994026A6F647005205C6 /* ChooseCountryHeaderCell */ = {
+			isa = PBXGroup;
+			children = (
+				ED84994126A6F647005205C6 /* ChooseCountryHeaderCell.swift */,
+			);
+			path = ChooseCountryHeaderCell;
 			sourceTree = "<group>";
 		};
 		ED92D3A0267359CD006D47B3 /* PaymentsByPhone */ = {
@@ -1632,6 +1665,7 @@
 				0B37F97A2678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift in Sources */,
 				ED0B48A0267E1A2D0037EA06 /* PaymentsDetailsSuccessViewController.swift in Sources */,
 				0B8CB0882680CAE3006A39C3 /* ExtensionNetworkHelper.swift in Sources */,
+				ED84994326A6F647005205C6 /* ChooseCountryHeaderViewModel.swift in Sources */,
 				EDB14385265FDA410028EF5A /* LoginCardEntryViewController.swift in Sources */,
 				0B37F98626807620007728FC /* NetworkHelper.swift in Sources */,
 				EDF6820D266F9EC800FD5C07 /* NetworkManager.swift in Sources */,
@@ -1688,6 +1722,7 @@
 				EDF68218266F9EC800FD5C07 /* RouterManager.swift in Sources */,
 				EDB1658026694676007E6030 /* PaymentsViewControllerLayout.swift in Sources */,
 				ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */,
+				ED84994526A6F647005205C6 /* ChooseCountryHeaderView.swift in Sources */,
 				EDB1655A2667A220007E6030 /* CodeVerificationViewController UI.swift in Sources */,
 				0B7A18BA2683AC880007CC75 /* NotificationName.swift in Sources */,
 				ED4FC5EC266AD98E0092B4AB /* NSCollectionLayoutItem.swift in Sources */,
@@ -1713,6 +1748,7 @@
 				EDB1452E26665AD50028EF5A /* OrderProductsViewController.swift in Sources */,
 				0B8BE08F266FBE0500E96CAA /* CSRFDecodableModel.swift in Sources */,
 				EDB14535266671580028EF5A /* MockItems.swift in Sources */,
+				ED84994426A6F647005205C6 /* ChooseCountryHeaderCell.swift in Sources */,
 				0B7A18C92685BF700007CC75 /* GetPaymentSystemListDecodableModel.swift in Sources */,
 				EDF68212266F9EC800FD5C07 /* RequestMethod.swift in Sources */,
 				EDF68214266F9EC800FD5C07 /* URLSchemeType.swift in Sources */,
