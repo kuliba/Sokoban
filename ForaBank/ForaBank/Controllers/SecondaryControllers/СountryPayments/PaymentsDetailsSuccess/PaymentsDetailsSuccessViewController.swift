@@ -38,7 +38,9 @@ class PaymentsDetailsSuccessViewController: UIViewController {
         confurmView.saveTapped = { [weak self] () in
             let vc = PDFViewerViewController()
             vc.id = self?.id
-            self?.present(vc, animated: true, completion: nil)
+            let navVC = UINavigationController(rootViewController: vc)
+            navVC.modalPresentationStyle = .fullScreen
+            self?.present(navVC, animated: true, completion: nil)
         }
     }
     
