@@ -248,7 +248,6 @@ public class AppLocker: UIViewController {
     private func incorrectPinAnimation() {
         pinIndicators.forEach { view in
             view.shake(delegate: self)
-            view.layer.backgroundColor = UIColor(red: 0.89, green: 0.004, blue: 0.106, alpha: 1).cgColor
             view.backgroundColor = UIColor(red: 0.89, green: 0.004, blue: 0.106, alpha: 1)
             
         }
@@ -322,61 +321,11 @@ public class AppLocker: UIViewController {
 extension AppLocker {
     //MARK: - API
     func registerMyPin(with code: String, completion: @escaping (_ error: String?) ->() ) {
-        showActivity()
-        let serverDeviceGUID = UserDefaults.standard.object(forKey: "serverDeviceGUID")
-        let biometricType = biometricType()
-        
-        
-        
-        
-        let data = [
-            "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-            "pushFcmToken": Messaging.messaging().fcmToken as String?,
-            "serverDeviceGUID" : serverDeviceGUID,
-            "settings": [ ["type" : "pin",
-                           "isActive": true,
-                           "value": code],
-                          ["type" : "touchId",
-                           "isActive": biometricType == BiometricType.touchId ? true : false,
-                           "value": code],
-                          ["type" : "faceId",
-                           "isActive": biometricType == BiometricType.faceId ? true : false,
-                           "value": code] ] ] as [String : AnyObject]
-        
-        print("DEBUG: Start setDeviceSetting with body: ", data)
-        
-        NetworkManager<SetDeviceSettingDecodbleModel>.addRequest(.setDeviceSetting, [:], data) { model, error in
-            if error != nil {
-                guard let error = error else { return }
-                completion(error)
-            } else {
-                guard let statusCode = model?.statusCode else { return }
-                if statusCode == 0 {
-                    UserDefaults.standard.set(true, forKey: "UserIsRegister")
-                    DispatchQueue.main.async {
-                        AppDelegate.shared.getCSRF { error in
-                            if error != nil {
-                                print("DEBUG: Error getCSRF: ", error!)
-                                completion(error!)
-                            } else {
-                                self.login(with: code, type: .pin) { error in
-                                    if error != nil {
-                                        completion(error!)
-                                        print("DEBUG: Error getCSRF: ", error!)
-                                    } else {
-                                        self.dismissActivity()
-                                        completion(nil)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    guard let error = model?.errorMessage else { return }
-                    completion(error)
-                }
-            }
-        }
+        self.dismissActivity()
+        let vc = FaceTouchIdViewController()
+        vc.code = code
+        vc.modalPresentationStyle = .fullScreen
+        self.present(vc, animated: true, completion: nil)
     }
     
     func login(with code: String, type: BiometricType, completion: @escaping (_ error: String?) ->() ) {
