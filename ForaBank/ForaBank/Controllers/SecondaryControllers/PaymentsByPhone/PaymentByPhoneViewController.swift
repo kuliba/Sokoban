@@ -84,12 +84,28 @@ class PaymentByPhoneViewController: UIViewController {
     }()
     
     var bottomView = BottomInputView()
-
+    
+    var otpCode: String?
     
     var selectNumber: String?
     
+    @objc func showSpinningWheel(_ notification: NSNotification) {
+           print(notification.userInfo ?? "")
+        let otpCode = notification.userInfo?["body"] as! String
+        self.otpCode = otpCode.filter { "0"..."9" ~= $0 }
+        
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "otpCode"))
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.showSpinningWheel(_:)), name: NSNotification.Name(rawValue: "otpCode"), object: nil)
+
+        // handle notification
+    
+        
         phoneField.rightButton.setImage(UIImage(imageLiteralResourceName: "addPerson"), for: .normal)
         if selectNumber != nil{
             phoneField.text = selectNumber ?? ""
@@ -297,6 +313,7 @@ class PaymentByPhoneViewController: UIViewController {
                     vc.bankPayeer.imageView.image = self.bankPayeer.imageView.image
                     vc.cardField.chooseButton.isHidden = true
                     vc.payeerField.text = model.data?.payeeName ?? "Получатель не определен"
+                    vc.otpCode = self.otpCode
                     vc.addCloseButton()
                     let navController = UINavigationController(rootViewController: vc)
                     navController.modalPresentationStyle = .fullScreen

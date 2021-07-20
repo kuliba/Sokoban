@@ -211,6 +211,10 @@ public class AppLocker: UIViewController {
     
     private func confirmPin() {
         if pin == reservedPin {
+            pinIndicators.forEach { pinIndicator in
+                pinIndicator.layer.cornerRadius = 6
+                pinIndicator.backgroundColor = UIColor(red: 0.133, green: 0.757, blue: 0.514, alpha: 1)
+                }
             savedPin = pin
             switch mode {
             case .create:
@@ -244,8 +248,8 @@ public class AppLocker: UIViewController {
     private func incorrectPinAnimation() {
         pinIndicators.forEach { view in
             view.shake(delegate: self)
-//            view.backgroundColor = .clear
-            view.backgroundColor = #colorLiteral(red: 0.8666666667, green: 0.8666666667, blue: 0.8666666667, alpha: 1)
+            view.layer.backgroundColor = UIColor(red: 0.89, green: 0.004, blue: 0.106, alpha: 1).cgColor
+            view.backgroundColor = UIColor(red: 0.89, green: 0.004, blue: 0.106, alpha: 1)
             
         }
         AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
