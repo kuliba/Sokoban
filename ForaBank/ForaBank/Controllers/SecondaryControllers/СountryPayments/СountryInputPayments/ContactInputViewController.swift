@@ -105,6 +105,8 @@ class ContactInputViewController: UIViewController {
     
     var bottomView = BottomInputView()
     
+    var countryListView = CountryListView()
+    
     var stackView = UIStackView(arrangedSubviews: [])
 //    lazy var doneButton: UIButton = {
 //        let button = UIButton(title: "Продолжить")
@@ -124,13 +126,24 @@ class ContactInputViewController: UIViewController {
     //MARK: - Actions
     @objc func titleDidTaped() {
         print("countryField didChooseButtonTapped")
-        let vc = ChooseCountryTableViewController()
-        vc.modalPresent = true
-        vc.didChooseCountryTapped = { [weak self]  (country) in
-            self?.country = country
+        
+        UIView.animate(withDuration: 0.2) {
+            if self.countryListView.isHidden == true {
+                self.countryListView.isHidden = false
+                self.countryListView.alpha = 1
+            } else {
+                self.countryListView.isHidden = true
+                self.countryListView.alpha = 0
+            }
         }
-        let navVc = UINavigationController(rootViewController: vc)
-        self.present(navVc, animated: true, completion: nil)
+        
+//        let vc = ChooseCountryTableViewController()
+//        vc.modalPresent = true
+//        vc.didChooseCountryTapped = { [weak self]  (country) in
+//            self?.country = country
+//        }
+//        let navVc = UINavigationController(rootViewController: vc)
+//        self.present(navVc, animated: true, completion: nil)
     }
     
     func setupActions() {
@@ -179,6 +192,28 @@ class ContactInputViewController: UIViewController {
                 }
                 self?.banks = filteredbanksList
             }
+        }
+        
+        countryListView.didCountryTapped = { [weak self] country in
+            self?.country = country
+            UIView.animate(withDuration: 0.2) {
+                self?.countryListView.isHidden = true
+                self?.countryListView.alpha = 0
+            }
+        }
+        
+        countryListView.openAllCountryTapped = { [weak self] () in
+            UIView.animate(withDuration: 0.2) {
+                self?.countryListView.isHidden = true
+                self?.countryListView.alpha = 0
+            }
+            let vc = ChooseCountryTableViewController()
+            vc.modalPresent = true
+            vc.didChooseCountryTapped = { [weak self]  (country) in
+                self?.country = country
+            }
+            let navVc = UINavigationController(rootViewController: vc)
+            self?.present(navVc, animated: true, completion: nil)
         }
         
         bankListView.didBankTapped = { (bank) in

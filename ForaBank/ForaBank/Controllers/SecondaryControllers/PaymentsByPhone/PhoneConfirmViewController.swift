@@ -10,7 +10,7 @@ import UIKit
 class PhoneConfirmViewController: UIViewController {
 
     var sbp: Bool?
-    
+    var otpCode: String?
     var phoneField = ForaInput(
         viewModel: ForaInputModel(
             title: "По номеру телефона",
@@ -64,9 +64,18 @@ class PhoneConfirmViewController: UIViewController {
             image: #imageLiteral(resourceName: "message-square"),
             type: .smsCode))
     
+    @objc func showSpinningWheel(_ notification: NSNotification) {
+           print(notification.userInfo ?? "")
+        let otpCode = notification.userInfo?["body"] as! String
+        self.otpCode = otpCode.filter { "0"..."9" ~= $0 }
+        smsCodeField.text =  self.otpCode ?? ""
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        smsCodeField.text = otpCode ?? ""
         // Do any additional setup after loading the view.
     }
     

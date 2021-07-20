@@ -211,6 +211,10 @@ public class AppLocker: UIViewController {
     
     private func confirmPin() {
         if pin == reservedPin {
+            pinIndicators.forEach { pinIndicator in
+                pinIndicator.layer.cornerRadius = 6
+                pinIndicator.backgroundColor = UIColor(red: 0.133, green: 0.757, blue: 0.514, alpha: 1)
+                }
             savedPin = pin
             switch mode {
             case .create:
@@ -244,8 +248,7 @@ public class AppLocker: UIViewController {
     private func incorrectPinAnimation() {
         pinIndicators.forEach { view in
             view.shake(delegate: self)
-//            view.backgroundColor = .clear
-            view.backgroundColor = #colorLiteral(red: 0.8666666667, green: 0.8666666667, blue: 0.8666666667, alpha: 1)
+            view.backgroundColor = UIColor(red: 0.89, green: 0.004, blue: 0.106, alpha: 1)
             
         }
         AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
@@ -318,61 +321,11 @@ public class AppLocker: UIViewController {
 extension AppLocker {
     //MARK: - API
     func registerMyPin(with code: String, completion: @escaping (_ error: String?) ->() ) {
-        showActivity()
-        let serverDeviceGUID = UserDefaults.standard.object(forKey: "serverDeviceGUID")
-        let biometricType = biometricType()
-        
-        
-        
-        
-        let data = [
-            "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-            "pushFcmToken": Messaging.messaging().fcmToken as String?,
-            "serverDeviceGUID" : serverDeviceGUID,
-            "settings": [ ["type" : "pin",
-                           "isActive": true,
-                           "value": code],
-                          ["type" : "touchId",
-                           "isActive": biometricType == BiometricType.touchId ? true : false,
-                           "value": code],
-                          ["type" : "faceId",
-                           "isActive": biometricType == BiometricType.faceId ? true : false,
-                           "value": code] ] ] as [String : AnyObject]
-        
-        print("DEBUG: Start setDeviceSetting with body: ", data)
-        
-        NetworkManager<SetDeviceSettingDecodbleModel>.addRequest(.setDeviceSetting, [:], data) { model, error in
-            if error != nil {
-                guard let error = error else { return }
-                completion(error)
-            } else {
-                guard let statusCode = model?.statusCode else { return }
-                if statusCode == 0 {
-                    UserDefaults.standard.set(true, forKey: "UserIsRegister")
-                    DispatchQueue.main.async {
-                        AppDelegate.shared.getCSRF { error in
-                            if error != nil {
-                                print("DEBUG: Error getCSRF: ", error!)
-                                completion(error!)
-                            } else {
-                                self.login(with: code, type: .pin) { error in
-                                    if error != nil {
-                                        completion(error!)
-                                        print("DEBUG: Error getCSRF: ", error!)
-                                    } else {
-                                        self.dismissActivity()
-                                        completion(nil)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    guard let error = model?.errorMessage else { return }
-                    completion(error)
-                }
-            }
-        }
+        self.dismissActivity()
+        let vc = FaceTouchIdViewController()
+        vc.code = code
+        vc.modalPresentationStyle = .fullScreen
+        self.present(vc, animated: true, completion: nil)
     }
     
     func login(with code: String, type: BiometricType, completion: @escaping (_ error: String?) ->() ) {

@@ -11,6 +11,7 @@ struct KeyPair {
     static var publicKey: SecKey?
     static var privateKey: SecKey?
 }
+
 struct KeyFromServer {
     static var publicKey: String?
     static var publicKeyCert: String?

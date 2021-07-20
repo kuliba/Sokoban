@@ -10,6 +10,7 @@ import UIKit
 class ChooseCountryTableViewController: UITableViewController {
 
     //MARK: - Vars
+    let headerReuseIdentifier = "CustomHeaderView"
     private let searchController = UISearchController(searchResultsController: nil)
 //    private var timer: Timer?
     private var countries = [CountriesList]() {
@@ -41,9 +42,17 @@ class ChooseCountryTableViewController: UITableViewController {
             }
         }
     }
+    var lastPaymentsList = [GetPaymentCountriesDatum]() {
+        didSet {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
     var searching = false
     
-    var modalPresent: Bool? = false
+    var modalPresent: Bool = false
     var didChooseCountryTapped: ((CountriesList) -> Void)?
     
     //MARK: - View LifeCycle
@@ -53,11 +62,29 @@ class ChooseCountryTableViewController: UITableViewController {
         
         let nib = UINib(nibName: "СountryCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: СountryCell.reuseId)
-        
+        tableView.register(ChooseCountryHeaderView.self, forHeaderFooterViewReuseIdentifier: headerReuseIdentifier)
         loadCountries()
+        if !modalPresent {
+            loadLastPayments()
+        }
     }
 
     //MARK: - API
+    private func loadLastPayments() {
+        NetworkManager<GetPaymentCountriesDecodableModel>.addRequest(.getPaymentCountries, [:], [:]) { model, error in
+//            print(model)
+            if error != nil {
+                print("DEBUG: error", error!)
+            } else {
+                guard let model = model else { return }
+                guard let lastPaymentsList = model.data else { return }
+                self.lastPaymentsList = lastPaymentsList
+                print("DEBUG: lastPaymentsList count", lastPaymentsList.count)
+            }
+        }
+    }
+    
+    
     private func loadCountries() {
         if let countries = Dict.shared.countries {
             self.configureVC(with: countries)
@@ -85,9 +112,6 @@ class ChooseCountryTableViewController: UITableViewController {
     private func configureVC(with countries: [CountriesList]) {
         for country in countries {
             if !(country.paymentSystemCodeList?.isEmpty ?? true) {
-                let name = country.name?.capitalizingFirstLetter()
-//                let countryViewModel = Country(name: name, code: country.code, imageSVGString: country.svgImage, paymentSystemIdList: <#String?#>)
-//                country.paymentSystemIDList
                 self.countries.append(country)
             }
         }
@@ -97,9 +121,10 @@ class ChooseCountryTableViewController: UITableViewController {
         tableView.tableFooterView = UIView()
         tableView.alwaysBounceVertical = true
         tableView.keyboardDismissMode = .interactive
+        tableView.separatorStyle = .none
         navigationItem.title = "Выберете страну"
         navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = false
+        navigationItem.hidesSearchBarWhenScrolling = true
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Поиск"
         searchController.searchResultsUpdater = self
@@ -110,6 +135,24 @@ class ChooseCountryTableViewController: UITableViewController {
         addCloseButton()
     }
 
+    private func openCountryPaymentVC(model: ChooseCountryHeaderViewModel) {
+        let vc = ContactInputViewController()
+        vc.country = model.country
+        if model.phoneNumber != nil {
+            vc.configure(with: model.country, byPhone: true)
+            vc.selectedBank = model.bank
+            let mask = StringMask(mask: "+000-0000-00-00")
+            let maskPhone = mask.mask(string: model.phoneNumber)
+            vc.phoneField.text = maskPhone ?? ""
+        } else if model.firstName != nil, model.middleName != nil, model.surName != nil {
+            vc.configure(with: model.country, byPhone: false)
+            vc.nameField.text = model.firstName!
+            vc.surnameField.text = model.surName!
+            vc.secondNameField.text = model.middleName!
+        }
+        
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
 
     // MARK: - Table view data source
     override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
@@ -125,8 +168,22 @@ class ChooseCountryTableViewController: UITableViewController {
         }
     }
     
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+//        return 100
+        return lastPaymentsList.count > 0 ? 100 : 0
+    }
+    
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 64
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = self.tableView.dequeueReusableHeaderFooterView(withIdentifier: headerReuseIdentifier) as! ChooseCountryHeaderView
+        headerView.lastPaymentsList = lastPaymentsList
+        headerView.didChooseCountryHeaderTapped = { (model) in
+            self.openCountryPaymentVC(model: model)
+        }
+        return headerView
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -154,7 +211,7 @@ class ChooseCountryTableViewController: UITableViewController {
 
         self.searchController.searchBar.searchTextField.endEditing(true)
         
-        if modalPresent! {
+        if modalPresent {
 //            let country = countries[indexPath.row]
             didChooseCountryTapped?(selectedCountry)
             self.dismiss(animated: true, completion: nil)
