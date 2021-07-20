@@ -150,8 +150,9 @@ class BottomInputView: UIView {
         let currencyFromSimbol = self.currencyFrom?.currencyCodeAlpha?.getSymbol() ?? ""
         
         var tempArray = [self.currencyTo, self.currencyFrom]
-        let reversArray = tempArray.reverse()
-        
+        tempArray.reverse()
+        let reversArray = tempArray
+        currency = currencyToSimbol
         let tempValue = (self.tempTextFieldValue as NSString).doubleValue
         let resultSum = ( tempValue * ((reversArray[1]?.rateBuy ?? 0) / (reversArray[0]?.rateSell ?? 0))).rounded(toPlaces: 2)
         let a = String(((self.currencyFrom?.rateBuy ?? 0) / (self.currencyTo?.rateSell ?? 0)).rounded(toPlaces: 2))
