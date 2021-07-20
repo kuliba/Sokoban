@@ -74,7 +74,7 @@ class ChooseCountryHeaderCell: UICollectionViewCell {
         addSubview(userNameLabel)
         addSubview(countryNameLabel)
         
-        countryImageView.centerX(inView: self, topAnchor: self.topAnchor, paddingTop: 4)
+        countryImageView.centerX(inView: self, topAnchor: self.topAnchor, paddingTop: 8)
         countryImageView.layer.cornerRadius = 56 / 2
         countryImageView.clipsToBounds = true
         

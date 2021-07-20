@@ -43,11 +43,6 @@ class BankCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    //MARK: - Selectors
-    
-    @objc func hendleShareTapped() {
-        print(#function)
-    }
     
     //MARK: - Helpers
     func configure() {
