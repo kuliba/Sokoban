@@ -233,12 +233,18 @@ class MemeDetailVC : AddHeaderImageViewController {
         self.seporatorView.changeAccountButton.isHidden = false
         self.bottomView.currencySwitchButton.isHidden = (model.cardFrom?.currency! == model.cardTo?.currency!) ? true : false // Правильно true : false сейчас для теста
         self.bottomView.currencySwitchButton.setTitle((model.cardFrom?.currency?.getSymbol() ?? "") + " ⇆ " + (model.cardTo?.currency?.getSymbol() ?? ""), for: .normal)
-        
+        /// Когда скрывается кнопка смены валют, то есть валюта одинаковая, то меняем содеожание лейбла на то, что по умолчанию
+        /// Если нет, то оправляем запрос на получения курса валют
+        if self.bottomView.currencySwitchButton.isHidden == true {
+            self.bottomView.buttomLabel.text = "Возможна комиссия ℹ︎"
+        }
         // Запрос на курс валют и после отображение bottomView.currencySwitchButton
 //        Запрос курса валют:
 //        POST /rest/getExchangeCurrencyRates
 //        В телеге описание запроса
+
         exchangeRate(model.cardFrom?.currency! ?? "", model.cardTo?.currency! ?? "")
+        
     }
     
     /// MARK - Exchange Rate
@@ -259,14 +265,16 @@ class MemeDetailVC : AddHeaderImageViewController {
                     
                     NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], body) { model, error in
                         let m = model?.data
-                        print()
+                        self.bottomView.currencyTo = m
+                        self.bottomView.currencyFrom = nil
                     }
                     
                 case (let(value), "RUB"):
                     let body = [ "currencyCodeAlpha" : value] as [String: AnyObject]
                     NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], body) { model, error in
                         let m = model?.data
-                        print()
+                        self.bottomView.currencyFrom = m
+                        self.bottomView.currencyTo = nil
                     }
                 case (_, _):
                     break
@@ -279,10 +287,10 @@ class MemeDetailVC : AddHeaderImageViewController {
             NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], bodyFrom) { model, error in
                 NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], bodyTo) { model, error in
                     let m = model?.data
-                    print()
+                    self.bottomView.currencyTo = m
                 }
-                let m = model
-                print()
+                let m = model?.data
+                self.bottomView.currencyFrom = m
             }
         }
     }

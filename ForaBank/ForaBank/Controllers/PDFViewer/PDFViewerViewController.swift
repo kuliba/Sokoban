@@ -9,26 +9,31 @@ import UIKit
 import PDFKit
 
 class PDFViewerViewController: UIViewController, URLSessionDownloadDelegate {
-    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-        
-    }
     
-    
-    var id: Int?
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {}
     
     var pdfView = PDFView()
-        var pdfURL: URL!
+    lazy var button = UIButton(title: "Сохранить или отправить")
+    
+    var id: Int?
+    var pdfURL: URL!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        addCloseButton()
+        
         self.view.backgroundColor = .black
+        self.view.addSubview(self.pdfView)
+        self.view.addSubview(self.button)
+        button.anchor(left: self.view.leftAnchor, bottom: self.view.safeAreaLayoutGuide.bottomAnchor, right: self.view.rightAnchor, paddingLeft: 20, paddingBottom: 20, paddingRight: 20, height: 48)
+        
         let resultId = id ?? 0
         let body = [
             "paymentOperationDetailId": 202,
             "printFormType" : "contactAddressless"
         ] as [String: AnyObject]
-
+        
         createPdfDocument(body)
         
     }
@@ -56,27 +61,28 @@ class PDFViewerViewController: UIViewController, URLSessionDownloadDelegate {
         if let token = CSRFToken.token {
             router?.allHTTPHeaderFields = ["X-XSRF-TOKEN": token]
         }
-       
+        
         session.downloadTask(with: router!) { (url, response, err) in
             
             if let response = response as? HTTPURLResponse {
-                self.view.addSubview(self.pdfView)
                 if let document = PDFDocument(url: url!) {
-                    self.pdfView.autoresizesSubviews = true
-                    self.pdfView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleTopMargin, .flexibleLeftMargin]
-                    self.pdfView.displayDirection = .vertical
-
+//                    self.pdfView.autoresizesSubviews = true
+//                    self.pdfView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleTopMargin, .flexibleLeftMargin]
+//                    self.pdfView.displayDirection = .vertical
+                    
                     self.pdfView.autoScales = true
-                    self.pdfView.displayMode = .singlePageContinuous
-                    self.pdfView.displaysPageBreaks = true
+//                    self.pdfView.displayMode = .singlePageContinuous
+//                    self.pdfView.displaysPageBreaks = true
                     self.pdfView.document = document
-
-                    self.pdfView.maxScaleFactor = 4.0
-                    self.pdfView.minScaleFactor = self.pdfView.scaleFactorForSizeToFit
-                        }
+                    
+//                    self.pdfView.maxScaleFactor = 4.0
+//                    self.pdfView.minScaleFactor = self.pdfView.scaleFactorForSizeToFit
+                }
             }
         }.resume()
-    
+        
     }
+    
+    
     
 }

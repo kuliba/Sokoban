@@ -10,6 +10,10 @@ import AnyFormatKit
 
 class BottomInputView: UIView {
     
+    var currencyFrom: GetExchangeCurrencyDataClass?
+    var currencyTo: GetExchangeCurrencyDataClass?
+    var tempTextFieldValue = ""
+    
     let moneyInputController = TextFieldStartInputController()
     var currency = "₽" {
         didSet {
@@ -65,6 +69,7 @@ class BottomInputView: UIView {
 
     
     func commonInit() {
+        
         Bundle.main.loadNibNamed(kContentXibName, owner: self, options: nil)
         contentView.fixInView(self)
         self.heightAnchor.constraint(equalToConstant: 88).isActive = true
@@ -74,19 +79,87 @@ class BottomInputView: UIView {
         NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: amountTextField, queue: .main) { _ in
             guard let text = self.amountTextField.text else { return }
             guard let unformatText = self.moneyFormatter?.unformat(text) else { return }
+            self.tempTextFieldValue = unformatText
             self.doneButtonIsEnabled(unformatText.isEmpty)
             UIView.animate(withDuration: 0.2) {
                 self.topLabel.alpha = unformatText.isEmpty ? 0 : 1
                 self.buttomLabel.alpha = unformatText.isEmpty ? 0 : 1
             }
+            self.exchangeRate(unformatText)
         }
+}
+    
+    final func exchangeRate(_ unformatText: String) {
+        if (self.currencyFrom != nil || self.currencyTo != nil) && self.currencySwitchButton.isHidden != true {
+            let currencyToSimbol = self.currencyTo?.currencyCodeAlpha?.getSymbol() ?? ""
+            let currencyFromSimbol = self.currencyFrom?.currencyCodeAlpha?.getSymbol() ?? ""
+            let currencyToValue = String(self.currencyTo?.rateBuy ?? 0)
+            let currencyFromValue = String(self.currencyFrom?.rateSell ?? 0)
+            
+            /// Вычисляем итоговую суммы перевода
+            /// 1.   Если одна из валют рубли
+            let (from, to) = (self.currencyFrom?.currencyName, self.currencyTo?.currencyName)
+            let ru = (from == nil || to == nil)
+            
+            switch ru {
+            
+            case true:
+                /// Если одна из валют выбранной карты в рублях, то ищем которая
+                if from != to {
+                    switch (from, to) {
+                    case (nil, _):
+                        let tempValue = (unformatText as NSString).doubleValue
+                        let resultSum = (tempValue / (self.currencyTo?.rateBuy ?? 0)).rounded(toPlaces: 2)
+                        
+                        let tempBottomLable = String(resultSum) + currencyToSimbol + "  |  " + "1" + currencyToSimbol + " - " + currencyToValue +  self.currency
+                        let tempLable = tempBottomLable.replacingOccurrences(of: ".", with: ",")
+                        self.buttomLabel.text = tempLable
+                        
+                    case (_, nil):
         
+                        let tempValue = unformatText.toDouble() ?? 0
+                        let resultSum = ( tempValue * (self.currencyFrom?.rateSell ?? 0) ).rounded(toPlaces: 2)
+                        
+                        let tempBottomLable = String(resultSum) + "₽" + "  |  " + "1" + currencyFromSimbol + " - " + currencyFromValue + "₽"
+                        let tempLable = tempBottomLable.replacingOccurrences(of: ".", with: ",")
+                        self.buttomLabel.text = tempLable
+                    case (_, _):
+                        break
+                    }
+                }
+            case false:
+            /// Если обе валюты в выбранных картах в рублях не в рублях
+                let tempValue = (unformatText as NSString).doubleValue
+                let resultSum = ( tempValue * ((self.currencyFrom?.rateBuy ?? 0) / (self.currencyTo?.rateSell ?? 0))).rounded(toPlaces: 2)
+                let a = String(((self.currencyFrom?.rateBuy ?? 0) / (self.currencyTo?.rateSell ?? 0)).rounded(toPlaces: 2))
+                
+                
+                let tempBottomLable = String(resultSum) + currencyToSimbol + "  |  " + "1" + currencyFromSimbol + " - " + a +  currencyToSimbol
+                let tempLable = tempBottomLable.replacingOccurrences(of: ".", with: ",")
+                self.buttomLabel.text = tempLable
+            }
+        }
     }
     
     
     
     @IBAction func currencyButtonTapped(_ sender: Any) {
         print(#function)
+        
+        let currencyToSimbol = self.currencyTo?.currencyCodeAlpha?.getSymbol() ?? ""
+        let currencyFromSimbol = self.currencyFrom?.currencyCodeAlpha?.getSymbol() ?? ""
+        
+        var tempArray = [self.currencyTo, self.currencyFrom]
+        let reversArray = tempArray.reverse()
+        
+        let tempValue = (self.tempTextFieldValue as NSString).doubleValue
+        let resultSum = ( tempValue * ((reversArray[1]?.rateBuy ?? 0) / (reversArray[0]?.rateSell ?? 0))).rounded(toPlaces: 2)
+        let a = String(((self.currencyFrom?.rateBuy ?? 0) / (self.currencyTo?.rateSell ?? 0)).rounded(toPlaces: 2))
+        
+        
+        let tempBottomLable = String(resultSum) + currencyToSimbol + "  |  " + "1" + currencyFromSimbol + " - " + a +  currencyToSimbol
+        let tempLable = tempBottomLable.replacingOccurrences(of: ".", with: ",")
+        self.buttomLabel.text = tempLable
     }
     
     @IBAction func doneButtonTapped(_ sender: Any) {
@@ -149,3 +222,16 @@ class BottomInputView: UIView {
 //
 //}
 
+
+extension String {
+    func toDouble() -> Double? {
+        return NumberFormatter().number(from: self)?.doubleValue
+    }
+}
+
+extension Double {
+    func rounded(toPlaces places:Int) -> Double {
+        let divisor = pow(10.0, Double(places))
+        return (self * divisor).rounded() / divisor
+    }
+}
