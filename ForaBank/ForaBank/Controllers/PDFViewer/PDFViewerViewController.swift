@@ -14,7 +14,7 @@ class PDFViewerViewController: UIViewController, URLSessionDownloadDelegate {
     
     var pdfView = PDFView()
     lazy var button = UIButton(title: "Сохранить или отправить")
-    
+    var printFormType: String?
     var id: Int?
     var pdfURL: URL!
     
@@ -23,24 +23,43 @@ class PDFViewerViewController: UIViewController, URLSessionDownloadDelegate {
         
         addCloseButton()
         
-        self.view.backgroundColor = .black
         self.view.addSubview(self.pdfView)
+        pdfView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0)
         self.view.addSubview(self.button)
         button.anchor(left: self.view.leftAnchor, bottom: self.view.safeAreaLayoutGuide.bottomAnchor, right: self.view.rightAnchor, paddingLeft: 20, paddingBottom: 20, paddingRight: 20, height: 48)
         
-        let resultId = id ?? 0
+        guard  let pdfId = id else {
+            return
+        }
+        guard let pdfType = printFormType else {
+            return
+        }
+        
         let body = [
-            "paymentOperationDetailId": 202,
-            "printFormType" : "contactAddressless"
+            "paymentOperationDetailId": pdfId,
+            "printFormType" : pdfType
         ] as [String: AnyObject]
         
         createPdfDocument(body)
+        button.actions(forTarget: (#selector(sharePDF)), forControlEvent: .touchUpInside)
         
     }
     
     override func viewDidLayoutSubviews() {
             pdfView.frame = view.frame
         }
+    
+    @objc func sharePDF(){
+        let path = Bundle.main.path(forResource: "nameFile",  ofType:"pdf")
+        let pdfDocument = PDFDocument(url: URL(fileURLWithPath: path!))
+
+        var filesToShare = [Any]()
+        filesToShare.append(pdfDocument!)
+
+        let activityViewController = UIActivityViewController(activityItems: filesToShare , applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self.view
+        present(activityViewController, animated: true, completion: nil)
+    }
     
     func createPdfDocument(_ requestBody: [String: AnyObject]?) {
         

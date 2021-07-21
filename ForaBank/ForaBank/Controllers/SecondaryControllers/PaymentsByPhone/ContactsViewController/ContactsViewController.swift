@@ -326,7 +326,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
 //                    cell.phoneNumber[0] = lastPayment[indexPath.item].phoneNumber ?? ""
 //                    item.nameLabel.text = cell.name
 //                }
-                if lastPayment.count > 3{
+                if lastPayment.count >= 1{
 //                    item.contactImageView.image = nil
                     item.bankNameLabel.isHidden = true
                     item.bankNameLabel.text = lastPayment[indexPath.item].bankName

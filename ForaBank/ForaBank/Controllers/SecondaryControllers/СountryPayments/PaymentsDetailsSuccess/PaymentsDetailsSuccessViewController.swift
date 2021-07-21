@@ -10,7 +10,7 @@ import UIKit
 class PaymentsDetailsSuccessViewController: UIViewController {
     
     var id: Int?
-    
+    var printFormType: String?
     let confurmView = PaymentsDetailsView()
     let button = UIButton(title: "На главную",
                           titleColor: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1),
@@ -38,6 +38,7 @@ class PaymentsDetailsSuccessViewController: UIViewController {
         confurmView.saveTapped = { [weak self] () in
             let vc = PDFViewerViewController()
             vc.id = self?.id
+            vc.printFormType = self?.printFormType
             let navVC = UINavigationController(rootViewController: vc)
             navVC.modalPresentationStyle = .fullScreen
             self?.present(navVC, animated: true, completion: nil)
