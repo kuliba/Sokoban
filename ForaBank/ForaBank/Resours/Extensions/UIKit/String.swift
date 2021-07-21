@@ -27,13 +27,39 @@ extension String {
     }
     
     func getSymbol() -> String? {
-        let locale = NSLocale(localeIdentifier: self)
-        if locale.displayName(forKey: .currencySymbol, value: self) == self {
-            let newlocale = NSLocale(localeIdentifier: self.dropLast() + "_en")
-            return newlocale.displayName(forKey: .currencySymbol, value: self)
-        }
         
-        return locale.displayName(forKey: .currencySymbol, value: self)
+        var resultString = ""
+        let currArr = Dict.shared.currencyList
+        currArr?.forEach({ currency in
+            if currency.code == self {
+                
+                var symbolArr = currency.cssCode?.components(separatedBy: "\\")
+                symbolArr?.removeFirst()
+                
+                symbolArr?.forEach { qqqq in
+                    if let charCode = UInt32(qqqq, radix: 16), let unicode = UnicodeScalar(charCode)
+                    {
+                        let str = String(unicode)
+                        resultString.append(str)
+                    }
+                    else
+                    {
+                        print("invalid input")
+                    }
+                }
+                
+            }
+        })
+        
+//        let locale = NSLocale(localeIdentifier: self)
+//        if locale.displayName(forKey: .currencySymbol, value: self) == self {
+//            let newlocale = NSLocale(localeIdentifier: self.dropLast() + "_en")
+//            return newlocale.displayName(forKey: .currencySymbol, value: self)
+//        }
+        
+//        return locale.displayName(forKey: .currencySymbol, value: self)
+        
+        return resultString
     }
     
 }

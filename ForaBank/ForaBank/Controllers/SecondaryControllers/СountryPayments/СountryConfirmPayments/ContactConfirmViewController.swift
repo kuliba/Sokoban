@@ -19,10 +19,12 @@ struct ConfirmViewControllerModel {
             if cardFrom.productType == "CARD" {
                 if let cardID = cardFrom.id {
                     cardFromCardId = "\(cardID)"
+                    cardFromAccountId = ""
                 }
             } else if cardFrom.productType == "ACCOUNT" {
                 if let accountID = cardFrom.id {
                     cardFromAccountId = "\(accountID)"
+                    cardFromCardId = ""
                 }
             }
         }
@@ -41,10 +43,12 @@ struct ConfirmViewControllerModel {
             if cardTo.productType == "CARD" {
                 if let cardID = cardTo.id {
                     cardToCardId = "\(cardID)"
+                    cardToAccountId = ""
                 }
             } else if cardTo.productType == "ACCOUNT" {
                 if let accountID = cardTo.id {
                     cardToAccountId = "\(accountID)"
+                    cardToCardId = ""
                 }
             }
         }
