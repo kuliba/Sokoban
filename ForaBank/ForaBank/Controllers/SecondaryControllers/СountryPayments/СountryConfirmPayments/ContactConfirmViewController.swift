@@ -382,7 +382,7 @@ class ContactConfurmViewController: UIViewController {
         view.backgroundColor = .white
         
         let stackView = UIStackView(
-            arrangedSubviews: [phoneField, nameField, bankField, countryField, numberTransctionField, cardFromField, cardToField, summTransctionField, taxTransctionField, currTransctionField, currancyTransctionField, smsCodeField, doneButton])
+            arrangedSubviews: [phoneField, nameField, bankField, countryField, numberTransctionField, cardFromField, cardToField, summTransctionField, taxTransctionField, currTransctionField, currancyTransctionField, smsCodeField])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
@@ -392,8 +392,9 @@ class ContactConfurmViewController: UIViewController {
         stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
                          left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20)
         
-        doneButton.anchor(left: stackView.leftAnchor, right: stackView.rightAnchor,
-                          paddingLeft: 20, paddingRight: 20, height: 44)
+        view.addSubview(doneButton)        
+        doneButton.anchor(left: stackView.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: stackView.rightAnchor,
+                          paddingLeft: 20, paddingBottom: 20, paddingRight: 20, height: 44)
     }
     
     @objc func doneButtonTapped() {

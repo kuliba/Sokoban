@@ -54,6 +54,9 @@ extension Double {
         currencyFormatter.locale = Locale(identifier: "ru_RU")
         currencyFormatter.currencySymbol = resultString
 
+        let maximumDigits = UserDefaults.standard.object(forKey: "maximumFractionDigits") as? Int
+        currencyFormatter.maximumFractionDigits = maximumDigits ?? 2
+        
         if let priceString = currencyFormatter.string(from: NSNumber(value: self)) {
             return priceString
         }
