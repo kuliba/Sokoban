@@ -76,9 +76,10 @@ class PhoneConfirmViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         smsCodeField.text = otpCode ?? ""
+        NotificationCenter.default.addObserver(self, selector: #selector(self.showSpinningWheel(_:)), name: NSNotification.Name(rawValue: "otpCode"), object: nil)
+
         // Do any additional setup after loading the view.
     }
-    
     
     fileprivate func setupUI() {
         
@@ -152,9 +153,8 @@ class PhoneConfirmViewController: UIViewController {
                     DispatchQueue.main.async {
                         let vc = PaymentsDetailsSuccessViewController()
                         vc.id = model.data?.paymentOperationDetailID
-                        
                         vc.modalPresentationStyle = .fullScreen
-                        
+                        vc.printFormType = "sbp"
                         self.present(vc, animated: true, completion: nil)
                     }
                 } else {
@@ -183,6 +183,8 @@ class PhoneConfirmViewController: UIViewController {
                    
                    DispatchQueue.main.async {
                     let vc = PaymentsDetailsSuccessViewController()
+                    
+                    vc.printFormType = "internal"
                     self.navigationController?.pushViewController(vc, animated: true)
                    }
                } else {
@@ -190,5 +192,6 @@ class PhoneConfirmViewController: UIViewController {
                }
            }
        }
+    
     
 }

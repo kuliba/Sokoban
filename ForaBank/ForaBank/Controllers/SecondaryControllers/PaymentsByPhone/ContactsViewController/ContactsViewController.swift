@@ -76,7 +76,6 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
    
 
        fileprivate func loadContacts(filter: ContactsFilter) {
-        showActivity()
         contacts.removeAll()
             var allContacts = [PhoneContact]()
             for contact in PhoneContacts.getContacts(filter: filter) {
@@ -93,7 +92,6 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
                     lhs.name ?? "" < rhs.name ?? ""
                 }
             }
-        dismissActivity()
         contacts.append(contentsOf: filterdArray)
         
     }
@@ -328,14 +326,16 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
 //                    cell.phoneNumber[0] = lastPayment[indexPath.item].phoneNumber ?? ""
 //                    item.nameLabel.text = cell.name
 //                }
-                if lastPayment.count > 3{
+                if lastPayment.count >= 1{
 //                    item.contactImageView.image = nil
                     item.bankNameLabel.isHidden = true
                     item.bankNameLabel.text = lastPayment[indexPath.item].bankName
                     for contact in contacts {
                         if contact.phoneNumber[0] == format(phoneNumber: lastPayment[indexPath.item].phoneNumber ?? "")! {
                             item.nameLabel.text = contact.name
-                            item.contactImageView.image = UIImage(data: (self.contacts[indexPath.item].avatarData) ?? Data())
+                            if self.contacts[indexPath.item].avatarData != nil{
+                                item.contactImageView.image = UIImage(data: (self.contacts[indexPath.item].avatarData) ?? Data())
+                            }
                             break
                         } else {
                             item.nameLabel.text = format(phoneNumber: lastPayment[indexPath.item].phoneNumber ?? "")

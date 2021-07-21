@@ -200,8 +200,8 @@ class PaymentByPhoneViewController: UIViewController {
         
         
         bankPayeer.text = selectBank ?? ""
-        bottomView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
-                          right: view.rightAnchor)
+        bottomView.anchor(left: view.leftAnchor, bottom: view.bottomAnchor,
+                          right: view.rightAnchor, paddingBottom: 20)
         bottomView.currency = "₽"
 
             
@@ -275,6 +275,81 @@ class PaymentByPhoneViewController: UIViewController {
         
     }
     
+    
+    func card2Card() {
+        self.dismissKeyboard()
+        self.showActivity()
+//        DispatchQueue.main.async {
+//            UIApplication.shared.keyWindow?.startIndicatingActivity()
+//        }
+        guard let number = phoneField.textField.text else {
+            return
+        }
+        guard let sum = bottomView.amountTextField.text else {
+            return
+        }
+        let clearSum = NSString(string: "\(sum.replacingOccurrences(of: ",", with: "."))").doubleValue //123
+        
+        bottomView.doneButtonIsEnabled(true)
+        let body = [ "check" : false,
+                     "amount" : clearSum,
+                     "currencyAmount" : "RUB",
+                     "payer" : [
+                        "cardId" : nil,
+                        "cardNumber" : selectNumber,
+                        "accountId" : nil,
+                        "accountNumber" : nil
+                     ],
+                     "payeeInternal" : [
+                        "cardId" : nil,
+                        "cardNumber" : nil,
+                        "accountId" : nil,
+                        "accountNumber" : nil,
+                        "phoneNumber" : number,
+                        "productCustomName" : nil
+                     ] ] as [String : AnyObject]
+        
+        print("DEBUG: ", #function, body)
+        NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer, [:], body) { [weak self] model, error in
+            DispatchQueue.main.async {
+//                UIApplication.shared.keyWindow?.stopIndicatingActivity()
+                self?.dismissActivity()
+                self?.bottomView.doneButtonIsEnabled(false)
+                if error != nil {
+                    guard let error = error else { return }
+                    print("DEBUG: ", #function, error)
+                    self?.showAlert(with: "Ошибка", and: error)
+                } else {
+                    guard let model = model else { return }
+                    guard let statusCode = model.statusCode else { return }
+                    if statusCode == 0 {
+
+                        DispatchQueue.main.async {
+                            let vc = PhoneConfirmViewController()
+                            vc.sbp = self?.sbp
+                            vc.bankPayeer.text = self?.selectBank ?? ""
+                            vc.phoneField.text = self?.phoneField.text ?? ""
+                            vc.cardField.text = self?.cardField.text ?? ""
+                            vc.cardField.imageView.image = self?.cardField.imageView.image
+                            vc.summTransctionField.textField.text = self?.bottomView.amountTextField.text
+                            vc.taxTransctionField.isHidden = ((model.data?.fee) != nil)
+                            vc.bankPayeer.chooseButton.isHidden = true
+                            vc.bankPayeer.imageView.image = self?.bankPayeer.imageView.image
+                            vc.cardField.chooseButton.isHidden = true
+//                            vc.payeerField.text = model.data?. ?? "Получатель не определен"
+                            vc.otpCode = self?.otpCode
+                            vc.addCloseButton()
+                            let navController = UINavigationController(rootViewController: vc)
+                            navController.modalPresentationStyle = .fullScreen
+                            self?.present(navController, animated: true, completion: nil)                }
+                    } else {
+                        print("DEBUG: ", #function, model.errorMessage ?? "nil")
+                        self?.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+                    }
+                }
+            }
+        }
+    }
     
     func prepareCard2Phone(){
         showActivity()

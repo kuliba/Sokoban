@@ -1,0 +1,104 @@
+//
+//  SettingsViewController.swift
+//  ForaBank
+//
+//  Created by Mikhail on 21.07.2021.
+//
+
+import UIKit
+
+class SettingsViewController: UIViewController {
+
+    let imageView = UIImageView(image: UIImage(named: "ErrorIcon"))
+    
+    let titleLabel = UILabel(
+        text: "Настройки",
+        font: .boldSystemFont(ofSize: 18), color: .black)
+    
+    let subTitleLabel = UILabel(
+        text: "Отображать копейки",
+        font: .systemFont(ofSize: 14), color: .black)
+    
+    let currencySwitch = UISwitch()
+    
+    lazy var logoutButton: UIButton = {
+        let button = UIButton(title: "Выход")
+        button.addTarget(self, action: #selector(logout), for: .touchUpInside)
+        return button
+    }()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupUI()
+    }
+    
+    func setupUI() {
+        view.backgroundColor = .white
+        navigationController?.navigationBar.backgroundColor = .white
+        view.addSubview(imageView)
+        view.addSubview(titleLabel)
+        view.addSubview(subTitleLabel)
+        view.addSubview(currencySwitch)
+        view.addSubview(logoutButton)
+        
+        titleLabel.textAlignment = .center
+        subTitleLabel.numberOfLines = 0
+        subTitleLabel.textAlignment = .left
+        
+        imageView.setDimensions(height: 250, width: 250)
+        imageView.centerX(inView: view,
+                          topAnchor: view.safeAreaLayoutGuide.topAnchor,
+                          paddingTop: 22)
+        
+        titleLabel.anchor(left: view.leftAnchor, right: view.rightAnchor,
+                          paddingLeft: 20, paddingRight: 20)
+        titleLabel.centerX(inView: view,
+                           topAnchor: imageView.bottomAnchor, paddingTop: 44)
+        
+//        subTitleLabel.centerX(inView: view,
+//                           topAnchor: titleLabel.bottomAnchor, paddingTop: 16)
+        subTitleLabel.anchor(top: titleLabel.bottomAnchor, left: view.leftAnchor, paddingTop: 16, paddingLeft: 20)
+        
+        currencySwitch.centerY(inView: subTitleLabel)
+        currencySwitch.anchor(right: view.rightAnchor, paddingRight: 20)
+        currencySwitch.addTarget(self, action: #selector(currSwitch), for: .valueChanged)
+        
+        logoutButton.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingLeft: 20, paddingBottom: 30, paddingRight: 20, height: 44)
+        
+        addCloseButton()
+        
+    }
+
+    @objc func currSwitch() {
+        if currencySwitch.isOn {
+            UserDefaults.standard.setValue(2, forKey: "maximumFractionDigits")
+        } else {
+            UserDefaults.standard.setValue(0, forKey: "maximumFractionDigits")
+        }
+    }
+    
+    @objc func logout() {
+        print(#function)
+        
+        NetworkManager<LogoutDecodableModel>.addRequest(.logout, [:], [:]) { _,_  in
+            print("Logout :", "Вышли из приложения")
+            DispatchQueue.main.async {
+                UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
+                let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
+                navVC.modalPresentationStyle = .fullScreen
+                self.present(navVC, animated: true, completion: nil)
+            }
+            
+        }
+        
+        
+        
+//        DispatchQueue.main.async { [weak self] in
+//            let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
+//            self?.window?.rootViewController = navVC
+//        }
+        
+        
+    }
+    
+}
