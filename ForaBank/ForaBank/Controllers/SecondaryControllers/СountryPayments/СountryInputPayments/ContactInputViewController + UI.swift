@@ -23,7 +23,7 @@ extension ContactInputViewController {
         cardFromField.imageView.isHidden = false
         cardFromField.leftTitleAncor.constant = 64
         cardFromField.layoutIfNeeded()
-        
+        phoneField.rightButton.setImage(UIImage(imageLiteralResourceName: "addPerson"), for: .normal)
         
 //        view.addSubview(foraSwitchView)
         

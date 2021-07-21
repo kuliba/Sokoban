@@ -122,6 +122,12 @@
 		ED84994826A6FD97005205C6 /* CountryListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED84994726A6FD97005205C6 /* CountryListView.swift */; };
 		ED84994B26A6FEE3005205C6 /* CountryListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED84994A26A6FEE3005205C6 /* CountryListCell.swift */; };
 		ED84994E26A85A65005205C6 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED84994D26A85A65005205C6 /* SettingsViewController.swift */; };
+		ED84995626A8831E005205C6 /* EPContactsPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED84995026A8831D005205C6 /* EPContactsPicker.swift */; };
+		ED84995726A8831E005205C6 /* EPExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED84995126A8831D005205C6 /* EPExtensions.swift */; };
+		ED84995826A8831E005205C6 /* EPContactCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED84995226A8831D005205C6 /* EPContactCell.xib */; };
+		ED84995926A8831E005205C6 /* EPContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED84995326A8831D005205C6 /* EPContactCell.swift */; };
+		ED84995A26A8831E005205C6 /* EPContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED84995426A8831D005205C6 /* EPContact.swift */; };
+		ED84995B26A8831E005205C6 /* EPConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED84995526A8831D005205C6 /* EPConstants.swift */; };
 		ED92D3A226735A0A006D47B3 /* PaymentByPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED92D3A126735A0A006D47B3 /* PaymentByPhoneViewController.swift */; };
 		EDAA99AF2673AB9200435484 /* ForaSwitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAA99AE2673AB9200435484 /* ForaSwitchView.swift */; };
 		EDAA99B12673ABF200435484 /* ForaSwitchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDAA99B02673ABF200435484 /* ForaSwitchView.xib */; };
@@ -341,6 +347,12 @@
 		ED84994726A6FD97005205C6 /* CountryListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryListView.swift; sourceTree = "<group>"; };
 		ED84994A26A6FEE3005205C6 /* CountryListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryListCell.swift; sourceTree = "<group>"; };
 		ED84994D26A85A65005205C6 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		ED84995026A8831D005205C6 /* EPContactsPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EPContactsPicker.swift; sourceTree = "<group>"; };
+		ED84995126A8831D005205C6 /* EPExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EPExtensions.swift; sourceTree = "<group>"; };
+		ED84995226A8831D005205C6 /* EPContactCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EPContactCell.xib; sourceTree = "<group>"; };
+		ED84995326A8831D005205C6 /* EPContactCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EPContactCell.swift; sourceTree = "<group>"; };
+		ED84995426A8831D005205C6 /* EPContact.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EPContact.swift; sourceTree = "<group>"; };
+		ED84995526A8831D005205C6 /* EPConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EPConstants.swift; sourceTree = "<group>"; };
 		ED92D3A126735A0A006D47B3 /* PaymentByPhoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentByPhoneViewController.swift; sourceTree = "<group>"; };
 		EDAA99AE2673AB9200435484 /* ForaSwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForaSwitchView.swift; sourceTree = "<group>"; };
 		EDAA99B02673ABF200435484 /* ForaSwitchView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ForaSwitchView.xib; sourceTree = "<group>"; };
@@ -985,6 +997,19 @@
 			path = SettingsViewController;
 			sourceTree = "<group>";
 		};
+		ED84994F26A8830E005205C6 /* ContactsPicker */ = {
+			isa = PBXGroup;
+			children = (
+				ED84995526A8831D005205C6 /* EPConstants.swift */,
+				ED84995426A8831D005205C6 /* EPContact.swift */,
+				ED84995326A8831D005205C6 /* EPContactCell.swift */,
+				ED84995226A8831D005205C6 /* EPContactCell.xib */,
+				ED84995026A8831D005205C6 /* EPContactsPicker.swift */,
+				ED84995126A8831D005205C6 /* EPExtensions.swift */,
+			);
+			path = ContactsPicker;
+			sourceTree = "<group>";
+		};
 		ED92D3A0267359CD006D47B3 /* PaymentsByPhone */ = {
 			isa = PBXGroup;
 			children = (
@@ -1244,6 +1269,7 @@
 		EDB16593266A4317007E6030 /* SecondaryControllers */ = {
 			isa = PBXGroup;
 			children = (
+				ED84994F26A8830E005205C6 /* ContactsPicker */,
 				ED84994C26A85A0B005205C6 /* SettingsViewController */,
 				68FFA55D268BF252002DADFA /* TransferByRequisites  */,
 				ED92D3A0267359CD006D47B3 /* PaymentsByPhone */,
@@ -1618,6 +1644,7 @@
 				EDB143C7265FDEC90028EF5A /* Roboto-MediumItalic.ttf in Resources */,
 				EDAA99B12673ABF200435484 /* ForaSwitchView.xib in Resources */,
 				0BF3484E268A455C005138A8 /* AllCardView.xib in Resources */,
+				ED84995826A8831E005205C6 /* EPContactCell.xib in Resources */,
 				EDB145112664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf in Resources */,
 				EDB143B5265FDE960028EF5A /* Assets.xcassets in Resources */,
 				68FFA52D2682AF62002DADFA /* ContactCollectionViewCell.xib in Resources */,
@@ -1681,6 +1708,7 @@
 				0B05163126A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift in Sources */,
 				ED3A966E2690A80B00252857 /* PresentationController.swift in Sources */,
 				ED0B489C267D41A60037EA06 /* PaymentsDetailsView.swift in Sources */,
+				ED84995626A8831E005205C6 /* EPContactsPicker.swift in Sources */,
 				ED4FC602266C0AB50092B4AB /* ChooseCountryTableViewController.swift in Sources */,
 				EDF6821A266F9EC800FD5C07 /* RouterUrlList.swift in Sources */,
 				0BF3486426943DFB005138A8 /* SuggestCompanyDecodableModel.swift in Sources */,
@@ -1688,6 +1716,7 @@
 				EDB16586266A0883007E6030 /* NSDirectionalEdgeInsets.swift in Sources */,
 				EDFFCAF32682461F004EE095 /* CardCell.swift in Sources */,
 				EDB14524266624460028EF5A /* UIViewController.swift in Sources */,
+				ED84995A26A8831E005205C6 /* EPContact.swift in Sources */,
 				68FFA5282682AF2C002DADFA /* ContactsViewController.swift in Sources */,
 				68FFA55326857530002DADFA /* Extension.swift in Sources */,
 				EDB16597266A576A007E6030 /* CardScannerController.swift in Sources */,
@@ -1736,6 +1765,7 @@
 				EDB1658A266A181C007E6030 /* PaymentsViewControllerDataSource.swift in Sources */,
 				ED3A96712690FADD00252857 /* BankListView.swift in Sources */,
 				ED4FC61B266EA42E0092B4AB /* UI.swift in Sources */,
+				ED84995926A8831E005205C6 /* EPContactCell.swift in Sources */,
 				EDF6820E266F9EC800FD5C07 /* NetworkModelProtocol.swift in Sources */,
 				EDB14516266526B10028EF5A /* CreditCardEntryView.swift in Sources */,
 				0B37F984267A18AC007728FC /* MakeCard2CardDecodableModel.swift in Sources */,
@@ -1758,6 +1788,7 @@
 				6880D32D26A70585008FBCB4 /* FaceTouchIdViewController.swift in Sources */,
 				68FFA551268538CF002DADFA /* PhoneContactModel.swift in Sources */,
 				ED84994E26A85A65005205C6 /* SettingsViewController.swift in Sources */,
+				ED84995726A8831E005205C6 /* EPExtensions.swift in Sources */,
 				EDF68218266F9EC800FD5C07 /* RouterManager.swift in Sources */,
 				ED84994826A6FD97005205C6 /* CountryListView.swift in Sources */,
 				EDB1658026694676007E6030 /* PaymentsViewControllerLayout.swift in Sources */,
@@ -1772,6 +1803,7 @@
 				ED0B48A5267E72130037EA06 /* CSRFToken.swift in Sources */,
 				0B7A18CB268648030007CC75 /* GetProductListDecodableModel.swift in Sources */,
 				EDF68217266F9EC800FD5C07 /* RouterSassionConfiguration.swift in Sources */,
+				ED84995B26A8831E005205C6 /* EPConstants.swift in Sources */,
 				0B37F97E267A10E4007728FC /* PrepareCard2PhoneDecodableModel.swift in Sources */,
 				0B8BE0952670D4A300E96CAA /* GetCodeDecodebleModel.swift in Sources */,
 				EDB1452226661C3F0028EF5A /* MaskedTextField.swift in Sources */,
