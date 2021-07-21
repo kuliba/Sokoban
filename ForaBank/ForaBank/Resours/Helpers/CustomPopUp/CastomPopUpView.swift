@@ -383,7 +383,7 @@ class MemeDetailVC : AddHeaderImageViewController {
         bottomView.doneButtonIsEnabled(true)
         let body = [ "check" : false,
                      "amount" : viewModel.summTransction,
-                     "currencyAmount" : "RUB",
+                     "currencyAmount" : self.bottomView.currencySimbol,
                      "payer" : [
                         "cardId" : viewModel.cardFromCardId,
                         "cardNumber" : viewModel.cardFromCardNumber,
