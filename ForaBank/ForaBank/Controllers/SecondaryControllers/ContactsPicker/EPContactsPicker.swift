@@ -53,20 +53,18 @@ open class EPContactsPicker: UITableViewController, UISearchResultsUpdating, UIS
     
     override open func viewDidLoad() {
         super.viewDidLoad()
-        self.title = EPGlobalConstants.Strings.contactsTitle
+//        self.title = EPGlobalConstants.Strings.contactsTitle
         configureTableView()
         registerContactCell()
-//        inititlizeBarButtons()
+        inititlizeBarButtons()
         initializeSearchBar()
         reloadContacts()
-        addCloseButton()
     }
     
     func initializeSearchBar() {
         self.resultSearchController = ( {
             let controller = UISearchController(searchResultsController: nil)
             controller.searchResultsUpdater = self
-//            controller.dimsBackgroundDuringPresentation = false
             controller.hidesNavigationBarDuringPresentation = false
             controller.searchBar.sizeToFit()
             controller.searchBar.delegate = self
@@ -76,14 +74,18 @@ open class EPContactsPicker: UITableViewController, UISearchResultsUpdating, UIS
     }
     
     func inititlizeBarButtons() {
-        let cancelButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.cancel, target: self, action: #selector(onTouchCancelButton))
-        self.navigationItem.leftBarButtonItem = cancelButton
         
-        if multiSelectEnabled {
-            let doneButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.done, target: self, action: #selector(onTouchDoneButton))
-            self.navigationItem.rightBarButtonItem = doneButton
-            
-        }
+        let label = UILabel()
+        label.textColor = UIColor.black
+        label.font = .boldSystemFont(ofSize: 16)
+        label.text = EPGlobalConstants.Strings.contactsTitle
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: label)
+        
+        let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(onTouchCancelButton))
+        
+        self.navigationItem.rightBarButtonItem = cancelButton
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .normal)
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .highlighted)
     }
     
     fileprivate func configureTableView() {
