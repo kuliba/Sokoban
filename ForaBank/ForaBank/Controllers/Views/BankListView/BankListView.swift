@@ -103,7 +103,8 @@ extension BankListView: UICollectionViewDelegateFlowLayout {
 extension BankListView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
-        
+        switch seeAll {
+        case true:
             if indexPath.item == 0 {
                 let card = bankList[indexPath.item]
                 didSeeAll?(card)
@@ -111,7 +112,10 @@ extension BankListView: UICollectionViewDelegate {
                 let card = bankList[indexPath.item]
                 didBankTapped?(card)
             }
-        
+        default:
+            let card = bankList[indexPath.item]
+            didBankTapped?(card)
+        }
     }
 }
 

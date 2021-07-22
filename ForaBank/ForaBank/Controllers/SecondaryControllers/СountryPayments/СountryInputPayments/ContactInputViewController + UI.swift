@@ -24,7 +24,7 @@ extension ContactInputViewController {
         cardFromField.leftTitleAncor.constant = 64
         cardFromField.layoutIfNeeded()
         phoneField.rightButton.setImage(UIImage(imageLiteralResourceName: "addPerson"), for: .normal)
-        
+        bankListView.seeAll = false
 //        view.addSubview(foraSwitchView)
         
         
