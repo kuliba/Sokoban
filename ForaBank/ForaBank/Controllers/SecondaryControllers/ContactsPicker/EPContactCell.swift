@@ -66,7 +66,7 @@ class EPContactCell: UITableViewCell {
                 self.contactDetailTextLabel.text = "\(contact.phoneNumbers[0].phoneNumber)"
             }
             else if phoneNumberCount > 1 {
-                self.contactDetailTextLabel.text = "\(contact.phoneNumbers[0].phoneNumber) and \(contact.phoneNumbers.count-1) more"
+                self.contactDetailTextLabel.text = "\(contact.phoneNumbers[0].phoneNumber) и \(contact.phoneNumbers.count-1) еще"
             }
             else {
                 self.contactDetailTextLabel.text = EPGlobalConstants.Strings.phoneNumberNotAvaialable
@@ -78,7 +78,7 @@ class EPContactCell: UITableViewCell {
                 self.contactDetailTextLabel.text = "\(contact.emails[0].email)"
             }
             else if emailCount > 1 {
-                self.contactDetailTextLabel.text = "\(contact.emails[0].email) and \(contact.emails.count-1) more"
+                self.contactDetailTextLabel.text = "\(contact.emails[0].email) и \(contact.emails.count-1) еще"
             }
             else {
                 self.contactDetailTextLabel.text = EPGlobalConstants.Strings.emailNotAvaialable

@@ -102,7 +102,7 @@ class CastomCardView: UIView, UITextFieldDelegate {
                 }
             }
         case nameTextField:
-            print(nameTextField.text)
+            print(nameTextField.text ?? "")
         default:
             break
         }

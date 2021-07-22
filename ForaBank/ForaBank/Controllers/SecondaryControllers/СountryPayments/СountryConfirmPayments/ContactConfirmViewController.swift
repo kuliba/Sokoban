@@ -73,7 +73,7 @@ struct ConfirmViewControllerModel {
     var phone: String?
     var fullName: String? = "" {
         didSet {
-            print("DEBUG: fullName", fullName)
+            print("DEBUG: fullName", fullName ?? "")
         }
     }
     var country: CountriesList?
@@ -90,7 +90,7 @@ struct ConfirmViewControllerModel {
     
     init?(country: CountriesList, model: AnywayPaymentDecodableModel?, fullName: String? = nil) {
         self.type = .contact
-        print("DEBUG:", model)
+        print("DEBUG:", model ?? "")
         var name = ""
         var surname = ""
         var secondName = ""

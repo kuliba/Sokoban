@@ -54,11 +54,12 @@ open class EPContactsPicker: UITableViewController, UISearchResultsUpdating, UIS
     override open func viewDidLoad() {
         super.viewDidLoad()
         self.title = EPGlobalConstants.Strings.contactsTitle
-
+        configureTableView()
         registerContactCell()
-        inititlizeBarButtons()
+//        inititlizeBarButtons()
         initializeSearchBar()
         reloadContacts()
+        addCloseButton()
     }
     
     func initializeSearchBar() {
@@ -83,6 +84,12 @@ open class EPContactsPicker: UITableViewController, UISearchResultsUpdating, UIS
             self.navigationItem.rightBarButtonItem = doneButton
             
         }
+    }
+    
+    fileprivate func configureTableView() {
+        tableView.tableFooterView = UIView()
+        tableView.separatorStyle = .none
+        tableView.sectionIndexColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1)
     }
     
     fileprivate func registerContactCell() {
@@ -156,8 +163,8 @@ open class EPContactsPicker: UITableViewController, UISearchResultsUpdating, UIS
                 
                 let productName = Bundle.main.infoDictionary!["CFBundleName"]!
                 
-                let alert = UIAlertController(title: "Unable to access contacts", message: "\(productName) does not have access to contacts. Kindly enable it in privacy settings ", preferredStyle: UIAlertController.Style.alert)
-                let okAction = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: {  action in
+                let alert = UIAlertController(title: "Unable to access contacts", message: "\(productName) does not have access to contacts. Kindly enable it in privacy settings ", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "Ok", style: .default, handler: {  action in
                     completion([], error)
                     self.dismiss(animated: true, completion: {
                         self.contactDelegate?.epContactPicker(self, didContactFetchFailed: error)
@@ -168,7 +175,7 @@ open class EPContactsPicker: UITableViewController, UISearchResultsUpdating, UIS
             
             case CNAuthorizationStatus.notDetermined:
                 //This case means the user is prompted for the first time for allowing contacts
-                contactsStore?.requestAccess(for: CNEntityType.contacts, completionHandler: { (granted, error) -> Void in
+                contactsStore?.requestAccess(for: .contacts, completionHandler: { (granted, error) -> Void in
                     //At this point an alert is provided to the user to provide access to contacts. This will get invoked if a user responds to the alert
                     if  (!granted ){
                         DispatchQueue.main.async(execute: { () -> Void in
@@ -253,7 +260,7 @@ open class EPContactsPicker: UITableViewController, UISearchResultsUpdating, UIS
 
     override open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! EPContactCell
-        cell.accessoryType = UITableViewCell.AccessoryType.none
+        cell.accessoryType = .none
         //Convert CNContact to EPContact
 		let contact: EPContact
         
@@ -308,6 +315,10 @@ open class EPContactsPicker: UITableViewController, UISearchResultsUpdating, UIS
         return 60.0
     }
     
+    open override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 0
+    }
+    
     override open func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
         if resultSearchController.isActive { return 0 }
         tableView.scrollToRow(at: IndexPath(row: 0, section: index), at: UITableView.ScrollPosition.top , animated: false)
@@ -319,10 +330,10 @@ open class EPContactsPicker: UITableViewController, UISearchResultsUpdating, UIS
         return sortedContactKeys
     }
 
-    override open func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if resultSearchController.isActive { return nil }
-        return sortedContactKeys[section]
-    }
+//    override open func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+//        if resultSearchController.isActive { return nil }
+//        return sortedContactKeys[section]
+//    }
     
     // MARK: - Button Actions
     
