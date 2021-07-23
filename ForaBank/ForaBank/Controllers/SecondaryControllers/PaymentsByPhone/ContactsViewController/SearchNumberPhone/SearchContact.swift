@@ -83,10 +83,11 @@ class SearchContact: UIView, UITextFieldDelegate{
         super.layoutSubviews()
         numberTextField.addTarget(self, action:Selector("yourWeightValueChanged:"), for:.valueChanged)
         numberTextField.delegate = self
-        roundCorners(corners: .allCorners, radius: 10)
+//        roundCorners(corners: .allCorners, radius: 10)
+        self.layer.cornerRadius = 10
         self.layer.borderWidth = 1
         self.layer.borderColor = UIColor(red: 0.918, green: 0.922, blue: 0.922, alpha: 1).cgColor
-        
+        self.clipsToBounds = true
         
     }
 
