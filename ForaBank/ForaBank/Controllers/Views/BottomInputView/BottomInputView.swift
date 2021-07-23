@@ -23,7 +23,7 @@ class BottomInputView: UIView {
         }
     }
     
-    var currencySimbol = ""
+    var currencySimbol = "RUB"
     
     // MARK: - Formatters
     var moneyFormatter: SumTextInputFormatter?
@@ -81,6 +81,12 @@ class BottomInputView: UIView {
         
         NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: amountTextField, queue: .main) { _ in
             guard let text = self.amountTextField.text else { return }
+//            print(text)
+//            if text.count > 0 {
+////                self.currency = "₽"
+//                self.setupMoneyController()
+//            }
+
             guard let unformatText = self.moneyFormatter?.unformat(text) else { return }
             self.tempTextFieldValue = unformatText
             self.doneButtonIsEnabled(unformatText.isEmpty)

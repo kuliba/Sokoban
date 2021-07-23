@@ -122,9 +122,9 @@ class ChooseCountryTableViewController: UITableViewController {
         tableView.alwaysBounceVertical = true
         tableView.keyboardDismissMode = .interactive
         tableView.separatorStyle = .none
-        navigationItem.title = "Выберете страну"
+        navigationItem.title = modalPresent ? "Выберите страну" : "В какую страну?"
         navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = true
+        navigationItem.hidesSearchBarWhenScrolling = false
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Поиск"
         searchController.searchResultsUpdater = self

@@ -22,6 +22,7 @@ class MemeDetailVC : AddHeaderImageViewController {
 //            cardToListView.onlyMy = onlyMy
         }
     }
+    var onlyCard = false
     
     var viewModel = ConfirmViewControllerModel(type: .card2card) {
         didSet {
@@ -48,7 +49,7 @@ class MemeDetailVC : AddHeaderImageViewController {
     }
     
     private func setupUI() {
-        cardFromField.titleLabel.text = "Откуда"
+        cardFromField.titleLabel.text = onlyMy ? "Откуда" : "С карты"
         cardFromListView = CardListView(onlyMy: onlyMy)
         cardFromListView.lastItemTap = {
             print("Открывать все карты ")
@@ -64,7 +65,7 @@ class MemeDetailVC : AddHeaderImageViewController {
         bottomView.currency = "₽"
         
         
-        cardToField.titleLabel.text = "Куда"
+        cardToField.titleLabel.text = onlyMy ? "Куда" : "На карту"
         cardToListView = CardListView(onlyMy: onlyMy)
         
         cardToListView.lastItemTap = {
@@ -362,14 +363,30 @@ class MemeDetailVC : AddHeaderImageViewController {
     //MARK: - API
     func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?,_ error: String?)->()) {
         
-        NetworkHelper.request(.getProductList) { cardList , error in
+        let param = ["isCard": "true", "isAccount": "\(!onlyCard)", "isDeposit": "false", "isLoan": "false"]
+        
+        NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
             if error != nil {
                 completion(nil, error)
             }
-            guard let cardList = cardList as? [GetProductListDatum] else { return }
-            completion(cardList, nil)
-            print("DEBUG: Load card list... Count is: ", cardList.count)
+            guard let model = model else { return }
+            if model.statusCode == 0 {
+                guard let cardList = model.data else { return }
+                completion(cardList, nil)
+            } else {
+                guard let error = model.errorMessage else { return }
+                completion(nil, error)
+            }
         }
+        
+//        NetworkHelper.request(.getProductList) { cardList , error in
+//            if error != nil {
+//                completion(nil, error)
+//            }
+//            guard let cardList = cardList as? [GetProductListDatum] else { return }
+//            completion(cardList, nil)
+//            print("DEBUG: Load card list... Count is: ", cardList.count)
+//        }
     }
     
     func doneButtonTapped(with viewModel: ConfirmViewControllerModel) {
@@ -419,8 +436,11 @@ class MemeDetailVC : AddHeaderImageViewController {
                                 let vc = ContactConfurmViewController()
                                 vc.modalPresentationStyle = .fullScreen
                                 vc.confurmVCModel?.type = .card2card
+                                viewModel.summTransction = model.data?.debitAmount?.currencyFormatter(symbol: model.data?.currencyPayer ?? "RUB") ?? ""
+                                viewModel.summInCurrency = model.data?.creditAmount?.currencyFormatter(symbol: model.data?.currencyAmount ?? "RUB") ?? ""
+                                viewModel.taxTransction = model.data?.fee?.currencyFormatter(symbol: model.data?.currencyPayer ?? "RUB") ?? ""
+                                
                                 vc.confurmVCModel = viewModel
-                                vc.confurmVCModel?.type = .card2card
                                 vc.addCloseButton()
                                 vc.title = "Подтвердите реквизиты"
                                 let navVC = UINavigationController(rootViewController: vc)
@@ -428,6 +448,21 @@ class MemeDetailVC : AddHeaderImageViewController {
                                 
                             } else {
                                 let vc = PaymentsDetailsSuccessViewController()
+                                if model.data?.documentStatus == "COMPLETE" {
+                                    viewModel.statusIsSuccses = true
+                                    viewModel.taxTransction = model.data?.fee?.currencyFormatter(symbol: model.data?.currencyAmount ?? "RUB") ?? ""
+                                    viewModel.summTransction = model.data?.debitAmount?.currencyFormatter(symbol: model.data?.currencyAmount ?? "RUB") ?? ""
+                                    
+//                                    {
+//                                        "paymentOperationDetailId" : 2945,
+//                                        "printFormType" : "internal"
+//                                    }
+
+                                    
+                                    
+                                }
+                                
+                                
                                 vc.confurmVCModel = viewModel
                                 vc.modalPresentationStyle = .fullScreen
                                 self?.present(vc, animated: true, completion: nil)

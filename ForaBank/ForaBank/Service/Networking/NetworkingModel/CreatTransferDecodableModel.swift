@@ -62,16 +62,17 @@ extension CreatTransferDecodableModel {
 struct CreatTransferDataClass: Codable {
     let needMake, needOTP: Bool?
     let amount: Double?
-    let creditAmount: JSONNull?
-    let fee: Int?
+    let creditAmount: Double?
+    let fee: Double?
     let currencyAmount, currencyPayer, currencyPayee: String?
-    let currencyRate: JSONNull?
+    let currencyRate: Double?
     let debitAmount: Double?
     let payeeName: String?
-    let paymentOperationDetailID: JSONNull?
+    let paymentOperationDetailID: Int?
+    let documentStatus: String?
 
     enum CodingKeys: String, CodingKey {
-        case needMake, needOTP, amount, creditAmount, fee, currencyAmount, currencyPayer, currencyPayee, currencyRate, debitAmount, payeeName
+        case needMake, needOTP, amount, creditAmount, fee, currencyAmount, currencyPayer, currencyPayee, currencyRate, debitAmount, payeeName, documentStatus
         case paymentOperationDetailID = "paymentOperationDetailId"
     }
 }
@@ -98,15 +99,16 @@ extension CreatTransferDataClass {
         needMake: Bool?? = nil,
         needOTP: Bool?? = nil,
         amount: Double?? = nil,
-        creditAmount: JSONNull?? = nil,
-        fee: Int?? = nil,
+        creditAmount: Double?? = nil,
+        fee: Double?? = nil,
         currencyAmount: String?? = nil,
         currencyPayer: String?? = nil,
         currencyPayee: String?? = nil,
-        currencyRate: JSONNull?? = nil,
+        currencyRate: Double?? = nil,
         debitAmount: Double?? = nil,
         payeeName: String?? = nil,
-        paymentOperationDetailID: JSONNull?? = nil
+        paymentOperationDetailID: Int?? = nil,
+        documentStatus: String?? = nil
     ) -> CreatTransferDataClass {
         return CreatTransferDataClass(
             needMake: needMake ?? self.needMake,
@@ -120,7 +122,8 @@ extension CreatTransferDataClass {
             currencyRate: currencyRate ?? self.currencyRate,
             debitAmount: debitAmount ?? self.debitAmount,
             payeeName: payeeName ?? self.payeeName,
-            paymentOperationDetailID: paymentOperationDetailID ?? self.paymentOperationDetailID
+            paymentOperationDetailID: paymentOperationDetailID ?? self.paymentOperationDetailID,
+            documentStatus: documentStatus ?? self.documentStatus
         )
     }
 

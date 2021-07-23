@@ -313,6 +313,10 @@ class ContactConfurmViewController: UIViewController {
             } else if cardModelTo?.productType == "ACCOUNT" {
                 toTitle = "На счет"
             }
+            if !model.summInCurrency.isEmpty {
+                currTransctionField.isHidden = false
+            }
+            currTransctionField.text = model.summInCurrency
             cardToField.titleLabel.text = toTitle
             
             cardFromField.isHidden = false
@@ -322,6 +326,14 @@ class ContactConfurmViewController: UIViewController {
             cardToField.isHidden = false
             cardToField.choseButton.isHidden = true
             cardToField.balanceLabel.isHidden = true
+            
+//            {
+//                "paymentOperationDetailId" : 2945,
+//                "printFormType" : "internal"
+//            }
+
+            
+            
         case .mig:
             cardFromField.isHidden = true
             cardToField.isHidden = true
