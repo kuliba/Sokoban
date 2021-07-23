@@ -39,6 +39,7 @@
 		0B8BE0972670D53600E96CAA /* DoRegistrationDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE0962670D53600E96CAA /* DoRegistrationDecodebleModel.swift */; };
 		0B8CB0882680CAE3006A39C3 /* ExtensionNetworkHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8CB0872680CAE3006A39C3 /* ExtensionNetworkHelper.swift */; };
 		0B9EC85D26739C0000D86EB2 /* GetCountriesDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EC85C26739C0000D86EB2 /* GetCountriesDecodebleModel.swift */; };
+		0BD2177926A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */; };
 		0BEC8939267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC8938267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift */; };
 		0BEC893B2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC893A2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift */; };
 		0BEC893D2672591A00D8BD22 /* GetCardListDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC893C2672591A00D8BD22 /* GetCardListDecodebleModel.swift */; };
@@ -270,6 +271,7 @@
 		0B8BE0962670D53600E96CAA /* DoRegistrationDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoRegistrationDecodebleModel.swift; sourceTree = "<group>"; };
 		0B8CB0872680CAE3006A39C3 /* ExtensionNetworkHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionNetworkHelper.swift; sourceTree = "<group>"; };
 		0B9EC85C26739C0000D86EB2 /* GetCountriesDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCountriesDecodebleModel.swift; sourceTree = "<group>"; };
+		0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAnywayOperatorsListDecodableModel.swift; sourceTree = "<group>"; };
 		0BEC8938267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallPushDeviceDecodebleModel.swift; sourceTree = "<group>"; };
 		0BEC893A2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistredPushDeviceTorUserDecodebleModel.swift; sourceTree = "<group>"; };
 		0BEC893C2672591A00D8BD22 /* GetCardListDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCardListDecodebleModel.swift; sourceTree = "<group>"; };
@@ -1363,6 +1365,7 @@
 				68E6A29226A033B700A1D9A1 /* CheckCardDecodableModel.swift */,
 				0BF348A0269E0CDA005138A8 /* LogoutDecodableModel.swift */,
 				0B05163026A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift */,
+				0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -1768,6 +1771,7 @@
 				68FFA5402682C6CF002DADFA /* LastPaymentsCollectionViewCell.swift in Sources */,
 				0BEC893B2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift in Sources */,
 				6880D32726A5CC69008FBCB4 /* AES.swift in Sources */,
+				0BD2177926A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift in Sources */,
 				EDF68210266F9EC800FD5C07 /* LoginDoCodableModel.swift in Sources */,
 				EDFFCAFB2683C135004EE095 /* PaymentType.swift in Sources */,
 				EDB1658A266A181C007E6030 /* PaymentsViewControllerDataSource.swift in Sources */,
