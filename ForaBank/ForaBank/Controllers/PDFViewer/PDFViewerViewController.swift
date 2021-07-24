@@ -20,11 +20,12 @@ class PDFViewerViewController: UIViewController, URLSessionDownloadDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        title = "Сохранить или отправить чек"
+        view.backgroundColor = .white
         addCloseButton()
         
         self.view.addSubview(self.pdfView)
-        pdfView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0)
+        pdfView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0)
         self.view.addSubview(self.button)
         button.anchor(left: self.view.leftAnchor, bottom: self.view.safeAreaLayoutGuide.bottomAnchor, right: self.view.rightAnchor, paddingLeft: 20, paddingBottom: 20, paddingRight: 20, height: 48)
         
@@ -45,9 +46,9 @@ class PDFViewerViewController: UIViewController, URLSessionDownloadDelegate {
         
     }
     
-    override func viewDidLayoutSubviews() {
-            pdfView.frame = view.frame
-        }
+//    override func viewDidLayoutSubviews() {
+//        pdfView.frame = view.frame
+//    }
     
     @objc func sharePDF(){
         let path = Bundle.main.path(forResource: "nameFile",  ofType:"pdf")
@@ -89,6 +90,7 @@ class PDFViewerViewController: UIViewController, URLSessionDownloadDelegate {
 //                    self.pdfView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleTopMargin, .flexibleLeftMargin]
 //                    self.pdfView.displayDirection = .vertical
                     
+                    self.pdfView.pageBreakMargins = UIEdgeInsets(top: 20, left: 20, bottom: 0, right: 20)
                     self.pdfView.autoScales = true
 //                    self.pdfView.displayMode = .singlePageContinuous
 //                    self.pdfView.displaysPageBreaks = true

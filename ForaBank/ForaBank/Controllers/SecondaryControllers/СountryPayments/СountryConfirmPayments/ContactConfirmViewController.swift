@@ -415,14 +415,17 @@ class ContactConfurmViewController: UIViewController {
     
     @objc func doneButtonTapped() {
         print(#function)
-        guard let code = smsCodeField.textField.text else { return }
+        guard var code = smsCodeField.textField.text else { return }
+        if code.isEmpty {
+            code = "0"
+        }
         let body = ["verificationCode": code] as [String: AnyObject]
         showActivity()
         
         switch confurmVCModel?.type {
         
         case .card2card:
-            print(#function)
+            print(#function, body)
             NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { respons, error in
                 if error != nil {
                     self.dismissActivity()
@@ -437,7 +440,8 @@ class ContactConfurmViewController: UIViewController {
                     DispatchQueue.main.async {
                         let vc = PaymentsDetailsSuccessViewController()
                         vc.confurmVCModel = self.confurmVCModel
-//                        vc.id = model.data?.paymentOperationDetailID
+                        vc.id = model.data?.paymentOperationDetailId ?? 0
+                        vc.printFormType = "internal"
                         vc.modalPresentationStyle = .fullScreen
                         self.present(vc, animated: true, completion: nil)
                     }
@@ -464,6 +468,11 @@ class ContactConfurmViewController: UIViewController {
                         let vc = PaymentsDetailsSuccessViewController()
                         vc.confurmVCModel = self.confurmVCModel
                         vc.id = model.data?.paymentOperationDetailID
+                        if self.confurmVCModel?.type == .mig {
+                            vc.printFormType =  "direct"
+                        } else if self.confurmVCModel?.type == .contact {
+                            vc.printFormType =  "contactAddressless"
+                        }
                         vc.modalPresentationStyle = .fullScreen
                         self.present(vc, animated: true, completion: nil)
                     }

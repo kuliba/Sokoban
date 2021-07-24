@@ -67,9 +67,15 @@ class MemeDetailVC : AddHeaderImageViewController {
         
         cardToField.titleLabel.text = onlyMy ? "Куда" : "На карту"
         cardToListView = CardListView(onlyMy: onlyMy)
-        
+        cardToListView.canAddNewCard = onlyMy ? false : true
         cardToListView.lastItemTap = {
             print("Открывать все карты ")
+            let vc = AllCardListViewController()
+            let navVc = UINavigationController(rootViewController: vc)
+//            navVc.title = "Выберите карту"
+//            navVc.addCloseButton()
+            navVc.modalPresentationStyle = .fullScreen
+            self.present(navVc, animated: true, completion: nil)
         }
         
         cardToListView.firstItemTap = { [weak self] in
@@ -439,7 +445,7 @@ class MemeDetailVC : AddHeaderImageViewController {
                                 viewModel.summTransction = model.data?.debitAmount?.currencyFormatter(symbol: model.data?.currencyPayer ?? "RUB") ?? ""
                                 viewModel.summInCurrency = model.data?.creditAmount?.currencyFormatter(symbol: model.data?.currencyAmount ?? "RUB") ?? ""
                                 viewModel.taxTransction = model.data?.fee?.currencyFormatter(symbol: model.data?.currencyPayer ?? "RUB") ?? ""
-                                
+                                vc.smsCodeField.isHidden = !(model.data?.needOTP ?? true)
                                 vc.confurmVCModel = viewModel
                                 vc.addCloseButton()
                                 vc.title = "Подтвердите реквизиты"
@@ -452,7 +458,8 @@ class MemeDetailVC : AddHeaderImageViewController {
                                     viewModel.statusIsSuccses = true
                                     viewModel.taxTransction = model.data?.fee?.currencyFormatter(symbol: model.data?.currencyAmount ?? "RUB") ?? ""
                                     viewModel.summTransction = model.data?.debitAmount?.currencyFormatter(symbol: model.data?.currencyAmount ?? "RUB") ?? ""
-                                    
+                                    vc.id = model.data?.paymentOperationDetailID ?? 0
+                                    vc.printFormType = "internal"
 //                                    {
 //                                        "paymentOperationDetailId" : 2945,
 //                                        "printFormType" : "internal"
