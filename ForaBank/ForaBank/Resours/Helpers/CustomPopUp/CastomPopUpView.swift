@@ -50,7 +50,9 @@ class MemeDetailVC : AddHeaderImageViewController {
     
     private func setupUI() {
         cardFromField.titleLabel.text = onlyMy ? "Откуда" : "С карты"
+        cardFromField.numberCardLabel.text = onlyMy ? "Номер карты или счета" : "Номер карты отправителя"
         cardFromListView = CardListView(onlyMy: onlyMy)
+        
         cardFromListView.lastItemTap = {
             print("Открывать все карты ")
             let vc = AllCardListViewController()
@@ -66,8 +68,10 @@ class MemeDetailVC : AddHeaderImageViewController {
         
         
         cardToField.titleLabel.text = onlyMy ? "Куда" : "На карту"
+        cardToField.numberCardLabel.text = onlyMy ? "Номер карты или счета" : "Номер карты получателя"
         cardToListView = CardListView(onlyMy: onlyMy)
         cardToListView.canAddNewCard = onlyMy ? false : true
+        
         cardToListView.lastItemTap = {
             print("Открывать все карты ")
             let vc = AllCardListViewController()
