@@ -727,13 +727,6 @@
 			path = BankViewModel;
 			sourceTree = "<group>";
 		};
-		ED46C1642678DCA500D1A9A5 /* OfferAgreement */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = OfferAgreement;
-			sourceTree = "<group>";
-		};
 		ED46C165267A9C0C00D1A9A5 /* СountryInputPayments */ = {
 			isa = PBXGroup;
 			children = (
@@ -1041,7 +1034,6 @@
 				ED51D66C2688B25D005FD655 /* SeparatorView */,
 				EDC3419F26864BF100FFFEF8 /* BottomInputView */,
 				EDFFCACB2681F950004EE095 /* CardListView */,
-				ED46C1642678DCA500D1A9A5 /* OfferAgreement */,
 				EDAA99AD2673AB7700435484 /* Switch */,
 			);
 			path = Views;
