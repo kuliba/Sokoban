@@ -58,21 +58,26 @@ extension CreatTransferDecodableModel {
     }
 }
 
-// DataClass.swift
-
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse the JSON, add this file to your project and do:
-//
-//   let dataClass = try DataClass(json)
-
 // MARK: - CreatTransferDataClass
 struct CreatTransferDataClass: Codable {
-    let amount, creditAmount, currencyRate, debitAmount, fee: Double?
-    let needMake: Bool?
+    let needMake, needOTP: Bool?
+    let amount: Double?
+    let creditAmount: Double?
+    let fee: Double?
     let currencyAmount, currencyPayer, currencyPayee: String?
+    let currencyRate: Double?
+    let debitAmount: Double?
+    let payeeName: String?
+    let paymentOperationDetailID: Int?
+    let documentStatus: String?
+
+    enum CodingKeys: String, CodingKey {
+        case needMake, needOTP, amount, creditAmount, fee, currencyAmount, currencyPayer, currencyPayee, currencyRate, debitAmount, payeeName, documentStatus
+        case paymentOperationDetailID = "paymentOperationDetailId"
+    }
 }
 
-// MARK: DataClass convenience initializers and mutators
+// MARK: CreatTransferDataClass convenience initializers and mutators
 
 extension CreatTransferDataClass {
     init(data: Data) throws {
@@ -91,26 +96,34 @@ extension CreatTransferDataClass {
     }
 
     func with(
+        needMake: Bool?? = nil,
+        needOTP: Bool?? = nil,
         amount: Double?? = nil,
         creditAmount: Double?? = nil,
-        currencyRate: Double?? = nil,
-        debitAmount: Double?? = nil,
         fee: Double?? = nil,
-        needMake: Bool?? = nil,
         currencyAmount: String?? = nil,
         currencyPayer: String?? = nil,
-        currencyPayee: String?? = nil
+        currencyPayee: String?? = nil,
+        currencyRate: Double?? = nil,
+        debitAmount: Double?? = nil,
+        payeeName: String?? = nil,
+        paymentOperationDetailID: Int?? = nil,
+        documentStatus: String?? = nil
     ) -> CreatTransferDataClass {
         return CreatTransferDataClass(
+            needMake: needMake ?? self.needMake,
+            needOTP: needOTP ?? self.needOTP,
             amount: amount ?? self.amount,
             creditAmount: creditAmount ?? self.creditAmount,
-            currencyRate: currencyRate ?? self.currencyRate,
-            debitAmount: debitAmount ?? self.debitAmount,
             fee: fee ?? self.fee,
-            needMake: needMake ?? self.needMake,
             currencyAmount: currencyAmount ?? self.currencyAmount,
             currencyPayer: currencyPayer ?? self.currencyPayer,
-            currencyPayee: currencyPayee ?? self.currencyPayee
+            currencyPayee: currencyPayee ?? self.currencyPayee,
+            currencyRate: currencyRate ?? self.currencyRate,
+            debitAmount: debitAmount ?? self.debitAmount,
+            payeeName: payeeName ?? self.payeeName,
+            paymentOperationDetailID: paymentOperationDetailID ?? self.paymentOperationDetailID,
+            documentStatus: documentStatus ?? self.documentStatus
         )
     }
 

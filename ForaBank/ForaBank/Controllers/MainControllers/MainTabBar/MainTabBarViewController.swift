@@ -83,13 +83,13 @@ class MainTabBarViewController: UITabBarController {
             print("DEBUG: Load Currency")
         }
         
-        NetworkHelper.request(.getProductList) { cardList , error in
-            if error != nil {
-                self.showAlert(with: "Ошибка", and: error!)
-            }
-            guard let cardList = cardList as? [GetProductListDatum] else { return }
-            print("DEBUG: Load card list... Count is: ", cardList.count)
-        }
+//        NetworkHelper.request(.getProductList) { cardList , error in
+//            if error != nil {
+//                self.showAlert(with: "Ошибка", and: error!)
+//            }
+//            guard let cardList = cardList as? [GetProductListDatum] else { return }
+//            print("DEBUG: Load card list... Count is: ", cardList.count)
+//        }
         
     }
 

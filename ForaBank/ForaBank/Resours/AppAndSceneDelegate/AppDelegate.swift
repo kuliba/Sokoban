@@ -171,7 +171,7 @@ extension AppDelegate {
         ] as [String : AnyObject]
 //        print("DEBUG: Parameters = ", parameters)
         
-        NetworkManager<CSRFDecodableModel>.addRequest(.csrf, [:], parameters) { [self] request, error in
+        NetworkManager<CSRFDecodableModel>.addRequest(.csrf, [:], parameters) { request, error in
             if error != nil {
                 completion(error)
             }

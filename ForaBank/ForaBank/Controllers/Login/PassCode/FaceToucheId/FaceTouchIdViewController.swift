@@ -90,6 +90,7 @@ class FaceTouchIdViewController: UIViewController {
         NetworkManager<SetDeviceSettingDecodbleModel>.addRequest(.setDeviceSetting, [:], data) { model, error in
             if error != nil {
                 guard let error = error else { return }
+                print("DEBUG: setDeviceSetting" ,error)
             } else {
                 guard let statusCode = model?.statusCode else { return }
                 if statusCode == 0 {
@@ -111,7 +112,7 @@ class FaceTouchIdViewController: UIViewController {
                     }
                 } else {
                     guard let error = model?.errorMessage else { return }
-                    
+                    print("DEBUG: setDeviceSetting" ,error)
                 }
             }
         }

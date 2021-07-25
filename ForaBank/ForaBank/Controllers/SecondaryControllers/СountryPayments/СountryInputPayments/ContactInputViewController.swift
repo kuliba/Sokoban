@@ -326,15 +326,32 @@ class ContactInputViewController: UIViewController {
     
     //MARK: - API
     func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?)->()) {
+        let param = ["isCard": "true", "isAccount": "true", "isDeposit": "false", "isLoan": "false"]
         
-        NetworkHelper.request(.getProductList) { cardList , error in
+        NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
             if error != nil {
                 completion(nil, error)
             }
-            guard let cardList = cardList as? [GetProductListDatum] else { return }
-            completion(cardList, nil)
-            print("DEBUG: Load card list... Count is: ", cardList.count)
+            guard let model = model else { return }
+            if model.statusCode == 0 {
+                guard let cardList = model.data else { return }
+                completion(cardList, nil)
+            } else {
+                guard let error = model.errorMessage else { return }
+                completion(nil, error)
+            }
         }
+        
+        
+        
+//        NetworkHelper.request(.getProductList) { cardList , error in
+//            if error != nil {
+//                completion(nil, error)
+//            }
+//            guard let cardList = cardList as? [GetProductListDatum] else { return }
+//            completion(cardList, nil)
+//            print("DEBUG: Load card list... Count is: ", cardList.count)
+//        }
     }
     
     func getBankList(completion: @escaping (_ banksList: [BanksList]?, _ error: String?)->()) {

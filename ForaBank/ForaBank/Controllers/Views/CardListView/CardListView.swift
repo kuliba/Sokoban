@@ -21,6 +21,7 @@ class CardListView: UIView {
             }
         }
     }
+    var canAddNewCard = false
     var onlyMy: Bool = true
     var filteredCardList = [GetProductListDatum]() {
         didSet {
@@ -117,35 +118,83 @@ class CardListView: UIView {
 extension CardListView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if isFiltered {
-            return filteredCardList.count + 2
+            return filteredCardList.count
         } else {
-            return cardList.count + 2
+            if canAddNewCard {
+                return cardList.count + 2
+            } else {
+                return cardList.count + 1
+            }
+            
         }
         
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        if indexPath.item == 0 {
-            let cellFirst = collectionView.dequeueReusableCell(withReuseIdentifier: newReuseIdentifier, for: indexPath) as! NewCardCell
-            return cellFirst
-        } else if indexPath.item == cardList.count + 1 {
-            let cellLast = collectionView.dequeueReusableCell(withReuseIdentifier: allReuseIdentifier, for: indexPath) as! AllCardCell
-            return cellLast
-        }  else {
-    
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CardCell
-            
-            if isFiltered {
-                print("DEBUG:", #function, filteredCardList.count, indexPath)
-                
-                cell.card = filteredCardList[indexPath.item - 1]
+        // Если нужно добавлять новую карту
+        if canAddNewCard {
+            if indexPath.item == 0 {
+                let cellFirst = collectionView.dequeueReusableCell(withReuseIdentifier: newReuseIdentifier, for: indexPath) as! NewCardCell
+                return cellFirst
+            } else if indexPath.item == cardList.count + 1 {
+                let cellLast = collectionView.dequeueReusableCell(withReuseIdentifier: allReuseIdentifier, for: indexPath) as! AllCardCell
+                return cellLast
             } else {
-                print("DEBUG:", #function, cardList.count, indexPath)
-                cell.card = cardList[indexPath.item - 1]
+               
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CardCell
+                
+                if isFiltered {
+                    print("DEBUG:", #function, filteredCardList.count, indexPath)
+                    
+                    cell.card = filteredCardList[indexPath.item - 1]
+                } else {
+                    print("DEBUG:", #function, cardList.count, indexPath)
+                    cell.card = cardList[indexPath.item - 1]
+                }
+                return cell
             }
-            return cell
+            
+            // Если Не нужно добавлять новую карту
+        } else {
+            if  indexPath.item == cardList.count  {
+                let cellLast = collectionView.dequeueReusableCell(withReuseIdentifier: allReuseIdentifier, for: indexPath) as! AllCardCell
+                return cellLast
+            } else {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CardCell
+                
+                if isFiltered {
+                    print("DEBUG:", #function, filteredCardList.count, indexPath)
+                    cell.card = filteredCardList[indexPath.item ]
+                } else {
+                    print("DEBUG:", #function, cardList.count, indexPath)
+                    cell.card = cardList[indexPath.item]
+                }
+                return cell
+            }
+            
+            
         }
+        
+//        if indexPath.item == 0 {
+//            let cellFirst = collectionView.dequeueReusableCell(withReuseIdentifier: newReuseIdentifier, for: indexPath) as! NewCardCell
+//            return cellFirst
+//        } else if indexPath.item == cardList.count + 1 {
+//            let cellLast = collectionView.dequeueReusableCell(withReuseIdentifier: allReuseIdentifier, for: indexPath) as! AllCardCell
+//            return cellLast
+//        }  else {
+//
+//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CardCell
+//
+//            if isFiltered {
+//                print("DEBUG:", #function, filteredCardList.count, indexPath)
+//
+//                cell.card = filteredCardList[indexPath.item ]
+//            } else {
+//                print("DEBUG:", #function, cardList.count, indexPath)
+//                cell.card = cardList[indexPath.item - 1]
+//            }
+//            return cell
+//        }
     }
     
 }
@@ -154,12 +203,20 @@ extension CardListView: UICollectionViewDataSource {
 extension CardListView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        if indexPath.item == 0 {
-            return CGSize(width: 72, height: 72)
-        } else if indexPath.item == cardList.count + 1 {
-            return CGSize(width: 72, height: 72)
-        }  else {
-            return CGSize(width: 108, height: 72)
+        if canAddNewCard {
+            if indexPath.item == 0 {
+                return CGSize(width: 72, height: 72)
+            } else if indexPath.item == cardList.count + 1 {
+                return CGSize(width: 72, height: 72)
+            }  else {
+                return CGSize(width: 108, height: 72)
+            }
+        } else {
+            if indexPath.item == cardList.count  {
+                return CGSize(width: 72, height: 72)
+            }  else {
+                return CGSize(width: 108, height: 72)
+            }
         }
     }
     
@@ -173,21 +230,40 @@ extension CardListView: UICollectionViewDelegateFlowLayout {
 extension CardListView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        if indexPath.item == 0 {
-            firstItemTap?()
-            print("GoNew")
-        } else if indexPath.item == cardList.count + 1 {
-            lastItemTap?()
-            print("GoAll")
-        }  else {
-            if isFiltered {
-                let card = filteredCardList[indexPath.item - 1]
-                didCardTapped?(card)
-            } else {
-                let card = cardList[indexPath.item - 1]
-                didCardTapped?(card)
+        if canAddNewCard {
+            
+            if indexPath.item == 0 {
+                firstItemTap?()
+                print("GoNew")
+            } else if indexPath.item == cardList.count + 1 {
+                lastItemTap?()
+                print("GoAll")
+            }  else {
+                if isFiltered {
+                    let card = filteredCardList[indexPath.item]
+                    didCardTapped?(card)
+                } else {
+                    let card = cardList[indexPath.item - 1]
+                    didCardTapped?(card)
+                }
+            }
+        } else {
+            if indexPath.item == cardList.count + 1 {
+                lastItemTap?()
+                print("GoAll")
+            }  else {
+                if isFiltered {
+                    let card = filteredCardList[indexPath.item]
+                    didCardTapped?(card)
+                } else {
+                    let card = cardList[indexPath.item]
+                    didCardTapped?(card)
+                }
             }
         }
+        
+        
+        
     }
 }
 

@@ -47,7 +47,8 @@ enum RouterManager {
     case checkCard
     case logout
     case getPaymentCountries
-    
+    case getProductListByFilter
+    case getAnywayOperatorsList
 }
 
 extension RouterManager {
@@ -626,6 +627,36 @@ extension RouterManager {
             
         case .getPaymentCountries:
             let baseUrl = RouterUrlList.getPaymentCountries.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.get.rawValue
+            return request
+            
+        case .getProductListByFilter:
+            let baseUrl = RouterUrlList.getProductListByFilter.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.get.rawValue
+            return request
+            
+        case .getAnywayOperatorsList:
+            let baseUrl = RouterUrlList.getAnywayOperatorsList.returnUrl()
             switch baseUrl {
             case .success(let url):
                 resultUrl = url.absoluteURL

@@ -73,7 +73,7 @@ struct ConfirmViewControllerModel {
     var phone: String?
     var fullName: String? = "" {
         didSet {
-            print("DEBUG: fullName", fullName)
+            print("DEBUG: fullName", fullName ?? "")
         }
     }
     var country: CountriesList?
@@ -90,7 +90,7 @@ struct ConfirmViewControllerModel {
     
     init?(country: CountriesList, model: AnywayPaymentDecodableModel?, fullName: String? = nil) {
         self.type = .contact
-        print("DEBUG:", model)
+        print("DEBUG:", model ?? "")
         var name = ""
         var surname = ""
         var secondName = ""
@@ -313,6 +313,10 @@ class ContactConfurmViewController: UIViewController {
             } else if cardModelTo?.productType == "ACCOUNT" {
                 toTitle = "На счет"
             }
+            if !model.summInCurrency.isEmpty {
+                currTransctionField.isHidden = false
+            }
+            currTransctionField.text = model.summInCurrency
             cardToField.titleLabel.text = toTitle
             
             cardFromField.isHidden = false
@@ -322,6 +326,14 @@ class ContactConfurmViewController: UIViewController {
             cardToField.isHidden = false
             cardToField.choseButton.isHidden = true
             cardToField.balanceLabel.isHidden = true
+            
+//            {
+//                "paymentOperationDetailId" : 2945,
+//                "printFormType" : "internal"
+//            }
+
+            
+            
         case .mig:
             cardFromField.isHidden = true
             cardToField.isHidden = true
@@ -403,14 +415,17 @@ class ContactConfurmViewController: UIViewController {
     
     @objc func doneButtonTapped() {
         print(#function)
-        guard let code = smsCodeField.textField.text else { return }
+        guard var code = smsCodeField.textField.text else { return }
+        if code.isEmpty {
+            code = "0"
+        }
         let body = ["verificationCode": code] as [String: AnyObject]
         showActivity()
         
         switch confurmVCModel?.type {
         
         case .card2card:
-            print(#function)
+            print(#function, body)
             NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { respons, error in
                 if error != nil {
                     self.dismissActivity()
@@ -425,7 +440,8 @@ class ContactConfurmViewController: UIViewController {
                     DispatchQueue.main.async {
                         let vc = PaymentsDetailsSuccessViewController()
                         vc.confurmVCModel = self.confurmVCModel
-//                        vc.id = model.data?.paymentOperationDetailID
+                        vc.id = model.data?.paymentOperationDetailId ?? 0
+                        vc.printFormType = "internal"
                         vc.modalPresentationStyle = .fullScreen
                         self.present(vc, animated: true, completion: nil)
                     }
@@ -452,6 +468,11 @@ class ContactConfurmViewController: UIViewController {
                         let vc = PaymentsDetailsSuccessViewController()
                         vc.confurmVCModel = self.confurmVCModel
                         vc.id = model.data?.paymentOperationDetailID
+                        if self.confurmVCModel?.type == .mig {
+                            vc.printFormType =  "direct"
+                        } else if self.confurmVCModel?.type == .contact {
+                            vc.printFormType =  "contactAddressless"
+                        }
                         vc.modalPresentationStyle = .fullScreen
                         self.present(vc, animated: true, completion: nil)
                     }
