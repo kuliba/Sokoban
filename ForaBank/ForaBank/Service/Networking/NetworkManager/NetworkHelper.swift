@@ -16,6 +16,7 @@ final class Dict {
     var banks : [BanksList]?
     var paymentList: [PaymentSystemList]?
     var currencyList: [CurrencyList]?
+    var organization: [GetAnywayOperatorsListDatum]?
 }
 
 struct NetworkHelper {

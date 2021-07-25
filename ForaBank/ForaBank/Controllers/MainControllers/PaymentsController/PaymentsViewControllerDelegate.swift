@@ -45,12 +45,11 @@ extension PaymentsViewController: UICollectionViewDelegate {
 
                     }
                     present(navController, animated: true, completion: nil)
-                    
-    //                navigationController?.pushViewController(viewController, animated: true)
                 }
             }
         case .pay:
             print("DEBUG: " + #function + pay[indexPath.row].name)
+            
             if let viewController = pay[indexPath.row].controllerName.getViewController() {
                 navigationController?.pushViewController(viewController, animated: true)
             }
