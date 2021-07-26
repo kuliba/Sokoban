@@ -38,6 +38,8 @@ class AllCardListViewController: UITableViewController {
     
     let cellIdentifier = "CardTableCell"
     let saveIdentifier = "SaveCell"
+    var onlyCard = true
+    var withTemplate = true
     
     var cardModel: [GetProductListDatum] = [] {
         didSet { DispatchQueue.main.async {
@@ -47,6 +49,9 @@ class AllCardListViewController: UITableViewController {
         didSet { DispatchQueue.main.async {
             self.tableView.reloadData() } } }
 
+    var didCardTapped: ((GetProductListDatum) -> Void)?
+    var didTemplateTapped: ((GetProductTemplateDatum) -> Void)?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
@@ -70,7 +75,10 @@ class AllCardListViewController: UITableViewController {
                 
             }
         }
-        getProductTemplate()
+        
+        if withTemplate {
+            getProductTemplate()
+        }
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -128,8 +136,10 @@ class AllCardListViewController: UITableViewController {
         switch indexPath.section {
         case 0:
             let model = cardModel[indexPath.row]
+            didCardTapped?(model)
         default:
             let model = saveCardModel[indexPath.row]
+            didTemplateTapped?(model)
         }
         
         
@@ -141,7 +151,7 @@ class AllCardListViewController: UITableViewController {
     //MARK: - API
     private func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?) ->() ) {
         
-        let param = ["isCard": "true", "isAccount": "true", "isDeposit": "false", "isLoan": "false"]
+        let param = ["isCard": "true", "isAccount": "\(!onlyCard)", "isDeposit": "false", "isLoan": "false"]
         
         NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
             if error != nil {

@@ -49,49 +49,14 @@ class MemeDetailVC : AddHeaderImageViewController {
     }
     
     private func setupUI() {
-        cardFromField.titleLabel.text = onlyMy ? "Откуда" : "С карты"
-        cardFromField.numberCardLabel.text = onlyMy ? "Номер карты или счета" : "Номер карты отправителя"
-        cardFromListView = CardListView(onlyMy: onlyMy)
+        setupFieldFrom()
+        setupFieldTo()
+        setupListFrom()
+        setupListTo()
         
-        cardFromListView.lastItemTap = {
-            print("Открывать все карты ")
-            let vc = AllCardListViewController()
-            let navVc = UINavigationController(rootViewController: vc)
-//            navVc.title = "Выберите карту"
-//            navVc.addCloseButton()
-            navVc.modalPresentationStyle = .fullScreen
-            self.present(navVc, animated: true, completion: nil)
-        }
         
         
         bottomView.currency = "₽"
-        
-        
-        cardToField.titleLabel.text = onlyMy ? "Куда" : "На карту"
-        cardToField.numberCardLabel.text = onlyMy ? "Номер карты или счета" : "Номер карты получателя"
-        cardToListView = CardListView(onlyMy: onlyMy)
-        cardToListView.canAddNewCard = onlyMy ? false : true
-        
-        cardToListView.lastItemTap = {
-            print("Открывать все карты ")
-            let vc = AllCardListViewController()
-            let navVc = UINavigationController(rootViewController: vc)
-//            navVc.title = "Выберите карту"
-//            navVc.addCloseButton()
-            navVc.modalPresentationStyle = .fullScreen
-            self.present(navVc, animated: true, completion: nil)
-        }
-        
-        cardToListView.firstItemTap = { [weak self] in
-            self?.view.addSubview(self?.cardView ?? UIView())
-            self?.cardView.frame = (self?.view.bounds)!
-            self?.cardView.autoresizingMask = [.flexibleHeight,.flexibleWidth]
-            print("Показываем окно новой карты ")
-            self?.stackView.isHidden = true
-            self?.titleLabel.isHidden = true
-            self?.bottomView.isHidden = true
-            self?.hideAllCardList()
-        }
         
         self.addHeaderImage()
         self.view.layer.cornerRadius = 20
@@ -154,6 +119,29 @@ class MemeDetailVC : AddHeaderImageViewController {
             }
         }
         
+        
+        seporatorView.buttonSwitchCardTapped = { () in
+            guard let tmpModelFrom = self.cardFromField.cardModel else { return }
+            guard let tmpModelTo = self.cardToField.cardModel else { return }
+            self.cardFromField.cardModel = tmpModelTo
+            self.bottomView.currency = tmpModelTo.currency?.getSymbol() ?? ""
+            self.cardToField.cardModel = tmpModelFrom
+            self.viewModel.cardFrom = tmpModelTo
+            self.viewModel.cardTo = tmpModelFrom
+            self.checkModel(with: self.viewModel)
+        }
+        
+        bottomView.didDoneButtonTapped = { [weak self] (amaunt) in
+            self?.viewModel.summTransction = amaunt
+            self?.doneButtonTapped(with: self!.viewModel)
+        }
+    }
+    
+    private func setupFieldFrom() {
+        cardFromField.titleLabel.text = onlyMy ? "Откуда" : "С карты"
+        cardFromField.numberCardLabel.text = onlyMy
+            ? "Номер карты или счета"
+            : "Номер карты отправителя"
         cardFromField.didChooseButtonTapped = { [weak self]  () in
             UIView.animate(withDuration: 0.2) {
                 if self?.cardFromListView.isHidden == true {
@@ -174,24 +162,13 @@ class MemeDetailVC : AddHeaderImageViewController {
                 self?.stackView.layoutIfNeeded()
             }
         }
-        
-        cardFromListView.didCardTapped = { [weak self] (card) in
-            self?.viewModel.cardFrom = card
-            self?.cardFromField.cardModel = card
-            self?.bottomView.currency = card.currency?.getSymbol() ?? ""
-            UIView.animate(withDuration: 0.2) {
-                self?.cardFromListView.isHidden = true
-                
-                self?.cardToListView.isHidden = true
-                self?.cardFromListView.alpha = 0
-                
-                self?.seporatorView.curvedLineView.isHidden = false
-                self?.seporatorView.straightLineView.isHidden = true
-                
-                self?.stackView.layoutIfNeeded()
-            }
-        }
-        
+    }
+    
+    private func setupFieldTo() {
+        cardToField.titleLabel.text = onlyMy ? "Куда" : "На карту"
+        cardToField.numberCardLabel.text = onlyMy
+            ? "Номер карты или счета"
+            : "Номер карты получателя"
         cardToField.didChooseButtonTapped = { [weak self]  () in
             UIView.animate(withDuration: 0.2) {
                 if self?.cardToListView.isHidden == true {
@@ -213,27 +190,88 @@ class MemeDetailVC : AddHeaderImageViewController {
                 self?.stackView.layoutIfNeeded()
             }
         }
+    }
+    
+    private func setupListFrom() {
+        cardFromListView = CardListView(onlyMy: onlyMy)
+        cardFromListView.didCardTapped = { [weak self] (card) in
+            self?.viewModel.cardFrom = card
+            self?.cardFromField.cardModel = card
+            self?.bottomView.currency = card.currency?.getSymbol() ?? ""
+            UIView.animate(withDuration: 0.2) {
+                self?.cardFromListView.isHidden = true
+                
+                self?.cardToListView.isHidden = true
+                self?.cardFromListView.alpha = 0
+                
+                self?.seporatorView.curvedLineView.isHidden = false
+                self?.seporatorView.straightLineView.isHidden = true
+                
+                self?.stackView.layoutIfNeeded()
+            }
+        }
+        cardFromListView.lastItemTap = {
+            print("Открывать все карты ")
+            let vc = AllCardListViewController()
+            vc.withTemplate = false
+            if self.onlyMy {
+                vc.onlyCard = false
+            }
+            vc.didCardTapped = { [weak self] card in
+                self?.viewModel.cardFrom = card
+                self?.cardFromField.cardModel = card
+                self?.bottomView.currency = card.currency?.getSymbol() ?? ""
+                self?.hideAllCardList()
+                vc.dismiss(animated: true, completion: nil)
+            }
+            let navVc = UINavigationController(rootViewController: vc)
+            navVc.modalPresentationStyle = .fullScreen
+            self.present(navVc, animated: true, completion: nil)
+        }
+    }
+    
+    private func setupListTo() {
+        cardToListView = CardListView(onlyMy: onlyMy)
+        cardToListView.canAddNewCard = onlyMy ? false : true
         
+        cardToListView.firstItemTap = { [weak self] in
+            print("Показываем окно новой карты ")
+            self?.view.addSubview(self?.cardView ?? UIView())
+            self?.cardView.frame = (self?.view.bounds)!
+            self?.cardView.autoresizingMask = [.flexibleHeight,.flexibleWidth]
+            self?.stackView.isHidden = true
+            self?.titleLabel.isHidden = true
+            self?.bottomView.isHidden = true
+            self?.hideAllCardList()
+        }
         cardToListView.didCardTapped = { [weak self] (card) in
             self?.viewModel.cardTo = card
             self?.cardToField.cardModel = card
             self?.hideAllCardList()
         }
-        
-        seporatorView.buttonSwitchCardTapped = { () in
-            guard let tmpModelFrom = self.cardFromField.cardModel else { return }
-            guard let tmpModelTo = self.cardToField.cardModel else { return }
-            self.cardFromField.cardModel = tmpModelTo
-            self.bottomView.currency = tmpModelTo.currency?.getSymbol() ?? ""
-            self.cardToField.cardModel = tmpModelFrom
-            self.viewModel.cardFrom = tmpModelTo
-            self.viewModel.cardTo = tmpModelFrom
-            self.checkModel(with: self.viewModel)
-        }
-        
-        bottomView.didDoneButtonTapped = { [weak self] (amaunt) in
-            self?.viewModel.summTransction = amaunt
-            self?.doneButtonTapped(with: self!.viewModel)
+        cardToListView.lastItemTap = {
+            print("Открывать все карты ")
+            let vc = AllCardListViewController()
+            if self.onlyMy {
+                vc.onlyCard = false
+                vc.withTemplate = false
+            }
+            vc.didCardTapped = { [weak self] card in
+                self?.viewModel.cardTo = card
+                self?.cardToField.cardModel = card
+//                self?.bottomView.currency = card.currency?.getSymbol() ?? ""
+                self?.hideAllCardList()
+                vc.dismiss(animated: true, completion: nil)
+            }
+            vc.didTemplateTapped = { [weak self] card in
+                self?.viewModel.customCardTo = CastomCardViewModel(cardNumber: card.numberMask ?? "", cardName: card.customName, cardId: card.id)
+                self?.cardToField.tempCardModel = card
+                self?.hideAllCardList()
+                vc.dismiss(animated: true, completion: nil)
+            }
+            let navVc = UINavigationController(rootViewController: vc)
+            navVc.modalPresentationStyle = .fullScreen
+            self.present(navVc, animated: true, completion: nil)
         }
     }
     

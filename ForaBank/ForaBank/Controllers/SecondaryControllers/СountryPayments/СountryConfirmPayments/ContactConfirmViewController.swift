@@ -59,6 +59,10 @@ struct ConfirmViewControllerModel {
             self.cardTo = nil
             cardToCardNumber = cardTo.cardNumber
             cardToCastomName = cardTo.cardName ?? ""
+            if cardTo.cardId != nil {
+                cardToCardId = "\(cardTo.cardId ?? 0)"
+                cardToCardNumber = ""
+            }
         }
     }
     
