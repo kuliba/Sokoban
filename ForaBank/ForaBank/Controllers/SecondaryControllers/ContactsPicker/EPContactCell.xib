@@ -19,7 +19,7 @@
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HUe-8f-NjY">
                         <rect key="frame" x="60" y="9.9999999999999982" width="250" height="19.333333333333329"/>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
                         <color key="textColor" red="0.109803915" green="0.109803915" blue="0.109803915" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <nil key="highlightedColor"/>
                     </label>
@@ -50,6 +50,10 @@
                             <constraint firstAttribute="height" constant="40" id="pAq-lQ-W6t"/>
                         </constraints>
                     </view>
+                    <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="foracontactIcon" translatesAutoresizingMaskIntoConstraints="NO" id="dqo-p1-bpM">
+                        <rect key="frame" x="283" y="17" width="24" height="24"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    </imageView>
                 </subviews>
                 <constraints>
                     <constraint firstItem="Bvt-tZ-NrJ" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="1V9-eI-crl"/>
@@ -68,8 +72,12 @@
                 <outlet property="contactImageView" destination="mxT-DB-6lI" id="aYl-FS-HAU"/>
                 <outlet property="contactInitialLabel" destination="S1U-vh-OnF" id="LBj-Ki-StS"/>
                 <outlet property="contactTextLabel" destination="HUe-8f-NjY" id="Smr-wZ-MHr"/>
+                <outlet property="ownerImageView" destination="dqo-p1-bpM" id="W9y-fA-FHB"/>
             </connections>
             <point key="canvasLocation" x="245" y="321"/>
         </tableViewCell>
     </objects>
+    <resources>
+        <image name="foracontactIcon" width="25" height="24"/>
+    </resources>
 </document>

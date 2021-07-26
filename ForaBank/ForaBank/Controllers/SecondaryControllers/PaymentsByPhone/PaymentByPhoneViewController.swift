@@ -76,6 +76,9 @@ class PaymentByPhoneViewController: UIViewController {
             image: #imageLiteral(resourceName: "message-square"),
             type: .smsCode))
     
+    var stackView = UIStackView(arrangedSubviews: [])
+
+    var cardListView = CardListView()
     
     lazy var doneButton: UIButton = {
         let button = UIButton(title: "Продолжить")
@@ -106,7 +109,7 @@ class PaymentByPhoneViewController: UIViewController {
         // handle notification
     
         
-        phoneField.rightButton.setImage(UIImage(imageLiteralResourceName: "addPerson"), for: .normal)
+        phoneField.rightButton.setImage(UIImage(imageLiteralResourceName: "user-plus"), for: .normal)
         if selectNumber != nil{
             phoneField.text = selectNumber ?? ""
         }
@@ -117,10 +120,9 @@ class PaymentByPhoneViewController: UIViewController {
             self.dismiss(animated: true, completion: nil)
         }
         hideKeyboardWhenTappedAround()
-        getCardList()
-        
+//        getCardList()
+        setupActions()
         bankPayeer.imageView.image = bankImage
-        setNavigationBar()
         
         bottomView.didDoneButtonTapped = {(amount) in
             switch self.sbp{
@@ -137,24 +139,82 @@ class PaymentByPhoneViewController: UIViewController {
                     }
                 }
             default:
-                self.prepareCard2Phone()
+                self.createTransfer()
             }
         }
-        // Do any additional setup after loading the view.
+        getCardList { [weak self] data ,error in
+            DispatchQueue.main.async {
+                
+                
+                if error != nil {
+                    self?.showAlert(with: "Ошибка", and: error!)
+                }
+                guard let data = data else { return }
+                self?.cardListView.cardList = data
+                
+                if data.count > 0 {
+                    self?.cardField.configCardView(data.first!)
+                    guard let cardNumber  = data.first?.number else { return }
+                    self?.selectedCardNumber = cardNumber
+                }
+            }
+        }
+        
+        
     }
     
+    
+    
+    func setupActions() {
+        cardField.didChooseButtonTapped = { () in
+            print("cardField didChooseButtonTapped")
+            self.openOrHideView(self.cardListView)
+//            self.hideView(self.bankListView, needHide: true)
+        }
+        
+        
+        cardListView.didCardTapped = { card in
+            self.cardField.configCardView(card)
+            self.selectedCardNumber = card.number ?? ""
+            self.hideView(self.cardListView, needHide: true)
+//            self.hideView(self.bankListView, needHide: true)
+            
+        }
+    }
+    
+    
+    private func openOrHideView(_ view: UIView) {
+        UIView.animate(withDuration: 0.2) {
+            if view.isHidden == true {
+                view.alpha = 1
+                view.isHidden = false
+                
+            } else {
+                view.alpha = 0
+                view.isHidden = true
+            }
+            
+            self.stackView.layoutIfNeeded()
+        }
+    }
+    
+    private func hideView(_ view: UIView, needHide: Bool) {
+        UIView.animate(withDuration: 0.2) {
+            view.alpha = needHide ? 0 : 1
+            view.isHidden = needHide
+            self.stackView.layoutIfNeeded()
+        }
+    }
+    
+        
+        
+        
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = false
     }
     
-    
-    
-    func setNavigationBar() {
-        
-        
-        }
     
     @objc func doneButtonTapped() {
         switch sbp{
@@ -175,25 +235,6 @@ class PaymentByPhoneViewController: UIViewController {
         }
     }
     
-//    override func viewWillLayoutSubviews() {
-//          let width = self.view.frame.width
-//          let navigationBar: UINavigationBar = UINavigationBar(frame: CGRect(x: 0, y: 40, width: width, height: 44))
-//          self.view.addSubview(navigationBar)
-//          let navigationItem = UINavigationItem(title: "Перевод по номеру телефона")
-////          let doneBtn = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.done, target: nil, action: nil)
-//
-//            let customView = UIImageView(image: #imageLiteral(resourceName: "sbp-logoDefault"))
-//            let customViewItem = UIBarButtonItem(customView: customView)
-//            navigationItem.rightBarButtonItem = customViewItem
-//
-//            let xmark = UIImageView(image: #imageLiteral(resourceName: "xmark"))
-//            let xmarkItem = UIBarButtonItem(customView: xmark)
-//            navigationItem.leftBarButtonItem = xmarkItem
-//
-//          navigationBar.setItems([navigationItem], animated: false)
-//
-//       }
-    
     fileprivate func setupUI() {
         
         view.backgroundColor = .white
@@ -206,7 +247,7 @@ class PaymentByPhoneViewController: UIViewController {
 
             
         title = "Перевод по номеру телефона"
-        let stackView = UIStackView(arrangedSubviews: [phoneField, bankPayeer,cardField, commentField])
+        stackView = UIStackView(arrangedSubviews: [phoneField, bankPayeer,cardField,cardListView, commentField])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
@@ -218,11 +259,6 @@ class PaymentByPhoneViewController: UIViewController {
         stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
         
         var sbpimage = UIImage()
-//        let navImage: UIImage = system.svgImage?.convertSVGStringToImage() ?? UIImage()
-//
-//        let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
-//        self.navigationItem.rightBarButtonItem = customViewItem
-        
         
         if let paymentSystems = Dict.shared.paymentList{
         
@@ -245,38 +281,30 @@ class PaymentByPhoneViewController: UIViewController {
             
         }
         
-        
-    }
-    
-    
-    func getCardList() {
-        showActivity()
-        NetworkManager<GetProductListDecodableModel>.addRequest(.getProductList, [:], [:]) { model, error in
-            self.dismissActivity()
-            if error != nil {
-                print("DEBUG: Error: ", error ?? "")
-            }
-            guard let model = model else { return }
-            print("DEBUG: Card list: ", model)
-            if model.statusCode == 0 {
-                guard let data  = model.data else { return }
-                guard let cardNumber  = model.data?.first?.number else { return }
-                self.selectedCardNumber = cardNumber
-                DispatchQueue.main.async {
-                    self.cardField.text = data.first?.name ?? ""
-                    self.cardField.balanceLabel.text = "\(data.first?.balance ?? 0) ₽"
-                    guard let maskCard = data.first?.numberMasked else { return }
-                    self.cardField.bottomLabel.text = "•••• " + String(maskCard.suffix(4))
-                }
-            } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
-            }
+        cardListView.didCardTapped = {[weak self] (card) in
+            print(card)
         }
-        
+        cardField.didChooseButtonTapped = { () in
+            UIView.animate(withDuration: 0.2, animations: {
+                self.cardListView.isHidden.toggle()
+            })
+        }
     }
     
     
-    func card2Card() {
+    func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?,_ error: String?)->()) {
+        NetworkHelper.request(.getProductList) { cardList , error in
+            if error != nil {
+                completion(nil, error)
+            }
+            guard let cardList = cardList as? [GetProductListDatum] else { return }
+            completion(cardList, nil)
+            print("DEBUG: Load card list... Count is: ", cardList.count)
+        }
+    }
+    
+    
+    func createTransfer() {
         self.dismissKeyboard()
         self.showActivity()
 //        DispatchQueue.main.async {
@@ -341,7 +369,8 @@ class PaymentByPhoneViewController: UIViewController {
                             vc.addCloseButton()
                             let navController = UINavigationController(rootViewController: vc)
                             navController.modalPresentationStyle = .fullScreen
-                            self?.present(navController, animated: true, completion: nil)                }
+                            self?.present(navController, animated: true, completion: nil)
+                        }
                     } else {
                         print("DEBUG: ", #function, model.errorMessage ?? "nil")
                         self?.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
