@@ -100,4 +100,6 @@ enum RouterBaseUrlList: String {
     case getProductListByFilter    = "/rest/getProductListByFilter"
     
     case getAnywayOperatorsList    = "/rest/getAnywayOperatorsList"
+    
+    case getFullBankInfoList       = "/rest/dict/getFullBankInfoList"
 }
