@@ -160,7 +160,7 @@ extension AppDelegate: MessagingDelegate {
 }
 extension AppDelegate {
    
-    func getCSRF1(completion: @escaping (_ error: String?) ->()) {
+    func getCSRF(completion: @escaping (_ error: String?) ->()) {
         
         let parameters = [
             "cryptoVersion": "2.0",

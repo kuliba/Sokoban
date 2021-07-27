@@ -112,7 +112,7 @@ class Encription {
             return Data(bytes: UnsafePointer<UInt8>(encryptedData), count: encryptedData.count)
         }
 
-        func encryptAES(string: String) -> String?{
+       public func encryptAES(string: String) -> String?{
             
             do {
                 
@@ -207,7 +207,7 @@ class Encription {
         }
         
     func publicKey(for certificate: SecCertificate) -> SecKey? {
-            createOwnKey()
+                createOwnKey()
                 pubFromCert = SecCertificateCopyKey(certificate)
                 let str = KeyFromServer.publicKey!
                 let lastKey: CFData?

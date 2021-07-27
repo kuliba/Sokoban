@@ -120,7 +120,7 @@ extension SceneDelegate {
 
 
 extension AppDelegate {
-    func getCSRF(completion: @escaping (_ error: String?) ->()) {
+    func getCSRF1(completion: @escaping (_ error: String?) ->()) {
         let parameters = [
             "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
             "pushFcmToken": Messaging.messaging().fcmToken as String?,
