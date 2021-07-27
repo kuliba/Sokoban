@@ -14,7 +14,7 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
         
         if text != ""{
             banks = allBanks
-            banks = banks.filter({$0.memberNameRus?.lowercased().prefix(text.count) ?? "" == text || $0.memberID?.lowercased().prefix(text.count) ?? "" == text})
+            banks = banks.filter({$0.fullName?.lowercased().prefix(text.count) ?? "" == text || $0.memberID?.lowercased().prefix(text.count) ?? "" == text})
         } else if text == ""{
             banks = allBanks
         }
@@ -45,7 +45,7 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
     override func viewDidLoad() {
         super.viewDidLoad()
         searchContact.delegateNumber = self
-        banks = banks.filter({$0.memberNameRus != "Смотреть все"})
+        banks = banks.filter({$0.fullName != "Смотреть все"})
         allBanks = banks
         setupUI()
     }
@@ -120,7 +120,7 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let item = contactCollectionView.dequeueReusableCell(withReuseIdentifier: "ContactCollectionViewCell", for: indexPath) as! ContactCollectionViewCell
         item.contactImageView.image =  convertSVGStringToImage(banks[indexPath.item].svgImage ?? "")
-        item.contactLabel.text = banks[indexPath.item].memberNameRus
+        item.contactLabel.text = banks[indexPath.item].fullName
         item.phoneLabel.text = banks[indexPath.item].memberID
         return item
     }

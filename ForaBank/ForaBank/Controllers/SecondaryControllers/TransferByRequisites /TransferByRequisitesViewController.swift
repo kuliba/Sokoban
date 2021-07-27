@@ -23,7 +23,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     var banks: [BankFullInfoList]? {
         didSet {
             guard let banks = banks else { return }
-            bankListView.bankList = banks
+//            bankListView.bankList = banks
         }
     }
     var bankListView = BankListView()
