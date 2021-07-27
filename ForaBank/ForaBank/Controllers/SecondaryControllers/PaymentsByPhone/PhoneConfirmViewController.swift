@@ -172,7 +172,7 @@ class PhoneConfirmViewController: UIViewController {
            guard let code = smsCodeField.textField.text else { return }
            let body = [ "verificationCode": code
                        ] as [String: AnyObject]
-           NetworkManager<MakeCard2CardDecodableModel>.addRequest(.makeCard2Card, [:], body) { model, error in
+           NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { model, error in
                self.dismissActivity()
                if error != nil {
                    print("DEBUG: Error: ", error ?? "")
@@ -183,7 +183,7 @@ class PhoneConfirmViewController: UIViewController {
                    
                    DispatchQueue.main.async {
                     let vc = PaymentsDetailsSuccessViewController()
-                    
+                    vc.id = model.data?.paymentOperationDetailId
                     vc.printFormType = "internal"
                     self.navigationController?.pushViewController(vc, animated: true)
                    }

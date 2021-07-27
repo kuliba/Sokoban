@@ -20,7 +20,8 @@ class PaymentByPhoneViewController: UIViewController {
         viewModel: ForaInputModel(
             title: "По номеру телефона",
             image: #imageLiteral(resourceName: "Phone"),
-            showChooseButton: true))
+            showChooseButton: true)
+    )
     
     
     var cardField = ForaInput(
@@ -28,57 +29,72 @@ class PaymentByPhoneViewController: UIViewController {
             title: "Счет списания",
             image: #imageLiteral(resourceName: "credit-card"),
             type: .credidCard,
-            isEditable: false
-            ))
+            isEditable: false)
+    )
     
     var bankPayeer = ForaInput(
         viewModel: ForaInputModel(
             title: "Банк получателя",
-            image: UIImage(),
+            image: #imageLiteral(resourceName: "BankIcon"),
             isEditable: false,
             showChooseButton: true)
-            )
+    )
+    
+    var bankListView = BankListView()
     
     var nameField = ForaInput(
         viewModel: ForaInputModel(
             title: "ФИО получателя",
             image: #imageLiteral(resourceName: "accountImage"),
-            isEditable: true))
+            isEditable: true)
+    )
     
     
     var numberTransctionField = ForaInput(
         viewModel: ForaInputModel(
             title: "Номер перевода",
             image: #imageLiteral(resourceName: "hash"),
-            isEditable: false))
+            isEditable: false)
+    )
     
     var summTransctionField = ForaInput(
         viewModel: ForaInputModel(
             title: "Сумма перевода",
             image: #imageLiteral(resourceName: "coins"),
-            isEditable: true))
+            isEditable: true)
+    )
     
     var commentField = ForaInput(
         viewModel: ForaInputModel(
             title: "Сообщение получателю",
             image: #imageLiteral(resourceName: "message"),
-            isEditable: true))
+            isEditable: true)
+    )
     
     var taxTransctionField = ForaInput(
         viewModel: ForaInputModel(
             title: "Комиссия",
             image: #imageLiteral(resourceName: "Frame 580"),
-            isEditable: false))
+            isEditable: false)
+    )
     
     var smsCodeField = ForaInput(
         viewModel: ForaInputModel(
             title: "Введите код из СМС",
             image: #imageLiteral(resourceName: "message-square"),
-            type: .smsCode))
+            type: .smsCode)
+    )
     
     var stackView = UIStackView(arrangedSubviews: [])
-
+    
     var cardListView = CardListView()
+    
+    var banks: [BanksList]? {
+        didSet {
+            guard let banks = banks else { return }
+            bankListView.bankList = banks
+        }
+    }
     
     lazy var doneButton: UIButton = {
         let button = UIButton(title: "Продолжить")
@@ -93,11 +109,9 @@ class PaymentByPhoneViewController: UIViewController {
     var selectNumber: String?
     
     @objc func showSpinningWheel(_ notification: NSNotification) {
-           print(notification.userInfo ?? "")
+        print(notification.userInfo ?? "")
         let otpCode = notification.userInfo?["body"] as! String
         self.otpCode = otpCode.filter { "0"..."9" ~= $0 }
-        
-        
     }
     
     override func viewDidLoad() {
@@ -159,11 +173,47 @@ class PaymentByPhoneViewController: UIViewController {
                 }
             }
         }
-        
+        setupBankList()
         
     }
     
+    func setupBankList() {
+        getBankList { [weak self]  banksList, error in
+            DispatchQueue.main.async {
+                if error != nil {
+                    self?.showAlert(with: "Ошибка", and: error!)
+                }
+                
+                guard let banksList = banksList else { return }
+                var filteredbanksList : [BanksList] = []
+                
+                banksList.forEach { bank in
+                    guard let codeList = bank.paymentSystemCodeList else { return }
+                    codeList.forEach { code in
+                        if code == "SFP" {
+                            filteredbanksList.append(bank)
+                        }
+                    }
+                }
+                self?.banks = filteredbanksList
+            }
+        }
+        
+        bankListView.didBankTapped = { bank in
+            self.selectBank = bank.memberNameRus
+            self.bankPayeer.viewModel.image =  bank.svgImage?.convertSVGStringToImage() ?? UIImage()
+            self.bankPayeer.text = bank.memberNameRus ?? ""
+            self.hideView(self.bankListView, needHide: true)
+        }
+    }
     
+    func convertSVGStringToImage(_ string: String) -> UIImage {
+        let stringImage = string.replacingOccurrences(of: "\\", with: "")
+        let imageData = Data(stringImage.utf8)
+        let imageSVG = SVGKImage(data: imageData)
+        let image = imageSVG?.uiImage ?? UIImage()
+        return image
+    }
     
     func setupActions() {
         cardField.didChooseButtonTapped = { () in
@@ -179,6 +229,9 @@ class PaymentByPhoneViewController: UIViewController {
             self.hideView(self.cardListView, needHide: true)
 //            self.hideView(self.bankListView, needHide: true)
             
+        }
+        bankPayeer.didChooseButtonTapped = { () in
+            self.openOrHideView(self.bankListView)
         }
     }
     
@@ -231,7 +284,7 @@ class PaymentByPhoneViewController: UIViewController {
                 }
             }
         default:
-                prepareCard2Phone()
+            createTransfer()
         }
     }
     
@@ -247,7 +300,7 @@ class PaymentByPhoneViewController: UIViewController {
 
             
         title = "Перевод по номеру телефона"
-        stackView = UIStackView(arrangedSubviews: [phoneField, bankPayeer,cardField,cardListView, commentField])
+        stackView = UIStackView(arrangedSubviews: [phoneField, bankPayeer, bankListView, cardField, cardListView, commentField])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
@@ -281,14 +334,11 @@ class PaymentByPhoneViewController: UIViewController {
             
         }
         
-        cardListView.didCardTapped = {[weak self] (card) in
-            print(card)
-        }
-        cardField.didChooseButtonTapped = { () in
-            UIView.animate(withDuration: 0.2, animations: {
-                self.cardListView.isHidden.toggle()
-            })
-        }
+//        cardField.didChooseButtonTapped = { () in
+//            UIView.animate(withDuration: 0.2, animations: {
+//                self.cardListView.isHidden.toggle()
+//            })
+//        }
     }
     
     
@@ -303,6 +353,17 @@ class PaymentByPhoneViewController: UIViewController {
         }
     }
     
+    func getBankList(completion: @escaping (_ banksList: [BanksList]?, _ error: String?)->()) {
+        
+        NetworkHelper.request(.getBanks) { banksList , error in
+            if error != nil {
+                completion(nil, error)
+            }
+            guard let banksList = banksList as? [BanksList] else { return }
+            completion(banksList, nil)
+            print("DEBUG: Load Banks List... Count is: ", banksList.count)
+        }
+    }
     
     func createTransfer() {
         self.dismissKeyboard()
@@ -380,55 +441,55 @@ class PaymentByPhoneViewController: UIViewController {
         }
     }
     
-    func prepareCard2Phone(){
-        showActivity()
-        guard let number = phoneField.textField.text else {
-            return
-        }
-        guard let sum = bottomView.amountTextField.text else {
-            return
-        }
-        let clearSum = NSString(string: "\(sum.replacingOccurrences(of: ",", with: "."))").doubleValue //123
-        
-        let body = ["payerCardNumber": "\(selectedCardNumber)",
-                    "payeePhone": "\(number)",
-                    "amount": clearSum
-                    ] as [String: AnyObject]
-        NetworkManager<PrepareCard2PhoneDecodableModel>.addRequest(.prepareCard2Phone, [:], body) { model, error in
-            if error != nil {
-                print("DEBUG: Error: ", error ?? "")
-            }
-            guard let model = model else { return }
-            print("DEBUG: Card list: ", model)
-            if model.statusCode == 0 {
-                self.dismissActivity()
-
-//                guard let data  = model.data else { return }
-                DispatchQueue.main.async {
-                    let vc = PhoneConfirmViewController()
-                    vc.sbp = self.sbp
-                    vc.bankPayeer.text = self.selectBank ?? ""
-                    vc.phoneField.text = self.phoneField.text
-                    vc.cardField.text = self.cardField.text
-                    vc.cardField.imageView.image = self.cardField.imageView.image
-                    vc.summTransctionField.textField.text = self.bottomView.amountTextField.text
-                    vc.taxTransctionField.isHidden = ((model.data?.commission?.isEmpty) != nil)
-                    vc.bankPayeer.chooseButton.isHidden = true
-                    vc.bankPayeer.imageView.image = self.bankPayeer.imageView.image
-                    vc.cardField.chooseButton.isHidden = true
-                    vc.payeerField.text = model.data?.payeeName ?? "Получатель не определен"
-                    vc.otpCode = self.otpCode
-                    vc.addCloseButton()
-                    let navController = UINavigationController(rootViewController: vc)
-                    navController.modalPresentationStyle = .fullScreen
-                    self.present(navController, animated: true, completion: nil)                }
-            } else {
-                self.dismissActivity()
-
-                print("DEBUG: Error: ", model.errorMessage ?? "")
-            }
-        }
-    }
+//    func prepareCard2Phone(){
+//        showActivity()
+//        guard let number = phoneField.textField.text else {
+//            return
+//        }
+//        guard let sum = bottomView.amountTextField.text else {
+//            return
+//        }
+//        let clearSum = NSString(string: "\(sum.replacingOccurrences(of: ",", with: "."))").doubleValue //123
+//
+//        let body = ["payerCardNumber": "\(selectedCardNumber)",
+//                    "payeePhone": "\(number)",
+//                    "amount": clearSum
+//                    ] as [String: AnyObject]
+//        NetworkManager<PrepareCard2PhoneDecodableModel>.addRequest(.prepareCard2Phone, [:], body) { model, error in
+//            if error != nil {
+//                print("DEBUG: Error: ", error ?? "")
+//            }
+//            guard let model = model else { return }
+//            print("DEBUG: Card list: ", model)
+//            if model.statusCode == 0 {
+//                self.dismissActivity()
+//
+////                guard let data  = model.data else { return }
+//                DispatchQueue.main.async {
+//                    let vc = PhoneConfirmViewController()
+//                    vc.sbp = self.sbp
+//                    vc.bankPayeer.text = self.selectBank ?? ""
+//                    vc.phoneField.text = self.phoneField.text
+//                    vc.cardField.text = self.cardField.text
+//                    vc.cardField.imageView.image = self.cardField.imageView.image
+//                    vc.summTransctionField.textField.text = self.bottomView.amountTextField.text
+//                    vc.taxTransctionField.isHidden = ((model.data?.commission?.isEmpty) != nil)
+//                    vc.bankPayeer.chooseButton.isHidden = true
+//                    vc.bankPayeer.imageView.image = self.bankPayeer.imageView.image
+//                    vc.cardField.chooseButton.isHidden = true
+//                    vc.payeerField.text = model.data?.payeeName ?? "Получатель не определен"
+//                    vc.otpCode = self.otpCode
+//                    vc.addCloseButton()
+//                    let navController = UINavigationController(rootViewController: vc)
+//                    navController.modalPresentationStyle = .fullScreen
+//                    self.present(navController, animated: true, completion: nil)                }
+//            } else {
+//                self.dismissActivity()
+//
+//                print("DEBUG: Error: ", model.errorMessage ?? "")
+//            }
+//        }
+//    }
    
     
     

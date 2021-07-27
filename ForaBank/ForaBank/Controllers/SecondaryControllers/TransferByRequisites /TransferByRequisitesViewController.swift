@@ -581,13 +581,6 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         ] as [String: AnyObject]
         
         NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer , [:], body) { model, error in
-        }
-        
-        NetworkManager<PrepareExternalDecodableModel>.addRequest(.prepareExternal , [:], body) { model, error in
-//            if error != nil {
-//                self.dismissActivity()
-//                print("DEBUG: Error: ", error ?? "")
-//            }
             guard let model = model else { return }
             print("DEBUG: Card list: ", model)
             if model.statusCode == 0 {
@@ -611,11 +604,12 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
                         vc.commentField.text = self.commentField.textField.text ?? ""
                         vc.summTransctionField.text = self.bottomView.amountTextField.text ?? ""
                     }
-                    if data.commission?.count != 0 {
-                        vc.taxTransctionField.text = "\(data.commission?[0].amount ?? 0) ₽"
-                    } else {
-                        vc.taxTransctionField.isHidden = true
-                    }
+//                    if data.fee {
+//                    if data.commission?.count != 0 {
+                    vc.taxTransctionField.text = data.fee?.currencyFormatter(symbol: "RUB") ?? "" // "\(data.commission?[0].amount ?? 0) ₽"
+//                    } else {
+//                        vc.taxTransctionField.isHidden = true
+//                    }
                     
 
                     let navController = UINavigationController(rootViewController: vc)
@@ -627,6 +621,14 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
                 self.dismissActivity()
                 print("DEBUG: Error: ", model.errorMessage ?? "")
             }
+        }
+        
+        NetworkManager<PrepareExternalDecodableModel>.addRequest(.prepareExternal , [:], body) { model, error in
+//            if error != nil {
+//                self.dismissActivity()
+//                print("DEBUG: Error: ", error ?? "")
+//            }
+            
         }
 
     }
