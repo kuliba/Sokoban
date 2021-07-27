@@ -15,11 +15,9 @@ class BottomInputView: UIView {
     var tempTextFieldValue = ""
     
     let moneyInputController = TextFieldStartInputController()
-    var currency = "₽" {
+    var currency = "" {
         didSet {
-//            amountTextField.text = ""
             setupMoneyController()
-//            amountTextField.text = "111"
         }
     }
     
@@ -289,18 +287,21 @@ class BottomInputView: UIView {
     }
     
     private func setupMoneyController() {
+        DispatchQueue.main.async {
         var amount = ""
-        if let text = amountTextField.text {
-            let unformatText = moneyFormatter?.unformat(text)
+            if let text = self.amountTextField.text {
+                let unformatText = self.moneyFormatter?.unformat(text)
             amount = unformatText ?? ""
         }
         
-        moneyFormatter = SumTextInputFormatter(textPattern: "# ###,## \(self.currency)")
-        moneyInputController.formatter = moneyFormatter
-        amountTextField.delegate = moneyInputController
+            self.moneyFormatter = SumTextInputFormatter(textPattern: "# ###,## \(self.currency)")
+            self.moneyInputController.formatter = self.moneyFormatter
+            self.amountTextField.delegate = self.moneyInputController
         
-        let newText = moneyFormatter?.format(amount)
-        amountTextField.text = newText
+            let newText = self.moneyFormatter?.format(amount)
+            self.amountTextField.text = newText
+        }
+        
     }
  
 }

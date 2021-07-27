@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -16,26 +17,26 @@
                 <rect key="frame" x="0.0" y="0.0" width="414" height="64"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="V5b-J3-Mx1">
-                        <rect key="frame" x="5" y="2" width="60" height="60"/>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="GKH" translatesAutoresizingMaskIntoConstraints="NO" id="V5b-J3-Mx1">
+                        <rect key="frame" x="5" y="9.5" width="45" height="45"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="60" id="SBi-GL-MvA"/>
-                            <constraint firstAttribute="width" constant="60" id="T4Q-sP-FY2"/>
+                            <constraint firstAttribute="height" constant="45" id="SBi-GL-MvA"/>
+                            <constraint firstAttribute="width" constant="45" id="T4Q-sP-FY2"/>
                         </constraints>
                     </imageView>
-                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="top" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="yKk-4F-AGi">
-                        <rect key="frame" x="75" y="2" width="329" height="60"/>
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="yKk-4F-AGi">
+                        <rect key="frame" x="60" y="5" width="344" height="54"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FoP-fx-rFs">
-                                <rect key="frame" x="0.0" y="0.0" width="50" height="29.5"/>
+                                <rect key="frame" x="0.0" y="0.0" width="50" height="39.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zcw-wW-y5x">
-                                <rect key="frame" x="0.0" y="30.5" width="50" height="29.5"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0000 0000 0000 " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zcw-wW-y5x">
+                                <rect key="frame" x="0.0" y="39.5" width="123" height="14.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" systemColor="systemGray2Color"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
@@ -43,9 +44,9 @@
                 </subviews>
                 <constraints>
                     <constraint firstItem="V5b-J3-Mx1" firstAttribute="leading" secondItem="4de-ke-UGH" secondAttribute="leading" constant="5" id="Fay-W1-Ykd"/>
-                    <constraint firstAttribute="bottom" secondItem="yKk-4F-AGi" secondAttribute="bottom" constant="2" id="OCw-Vm-REd"/>
+                    <constraint firstAttribute="bottom" secondItem="yKk-4F-AGi" secondAttribute="bottom" constant="5" id="OCw-Vm-REd"/>
                     <constraint firstItem="V5b-J3-Mx1" firstAttribute="centerY" secondItem="4de-ke-UGH" secondAttribute="centerY" id="RPt-4S-15T"/>
-                    <constraint firstItem="yKk-4F-AGi" firstAttribute="top" secondItem="4de-ke-UGH" secondAttribute="top" constant="2" id="a1c-le-c4N"/>
+                    <constraint firstItem="yKk-4F-AGi" firstAttribute="top" secondItem="4de-ke-UGH" secondAttribute="top" constant="5" id="a1c-le-c4N"/>
                     <constraint firstAttribute="trailing" secondItem="yKk-4F-AGi" secondAttribute="trailing" constant="10" id="h1u-ap-hZC"/>
                     <constraint firstItem="yKk-4F-AGi" firstAttribute="leading" secondItem="V5b-J3-Mx1" secondAttribute="trailing" constant="10" id="ku6-5p-buW"/>
                 </constraints>
@@ -58,4 +59,10 @@
             <point key="canvasLocation" x="212" y="42"/>
         </tableViewCell>
     </objects>
+    <resources>
+        <image name="GKH" width="40" height="40"/>
+        <systemColor name="systemGray2Color">
+            <color red="0.68235294117647061" green="0.68235294117647061" blue="0.69803921568627447" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
 </document>

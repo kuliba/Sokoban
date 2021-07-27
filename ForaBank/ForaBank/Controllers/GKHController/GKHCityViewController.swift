@@ -33,7 +33,7 @@ class GKHCityViewController: UITableViewController {
         super.viewDidLoad()
         let nib = UINib(nibName: "GHKCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: GHKCell.reuseId)
-        self.navigationItem.backBarButtonItem?.title = "Выберете город"
+        self.navigationItem.title = "Выберите город"
         setupUI()
     }
     
@@ -75,18 +75,14 @@ class GKHCityViewController: UITableViewController {
         searchController.automaticallyShowsCancelButton = false
         searchController.searchBar.delegate = self
         definesPresentationContext = true
-        self.closeButton()
+//        self.closeButton()
         let navImage: UIImage = UIImage()
         let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
         self.navigationItem.backBarButtonItem = customViewItem
     }
     
     func closeButton() {
-       // navigationItem.rightBarButtonItem?.title = "Закрыть"
-        }
-
-    @objc override func onClose(){
-            self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
         }
 
     
@@ -100,7 +96,7 @@ class GKHCityViewController: UITableViewController {
 
 extension GKHCityViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        searchedOrganization = organization.filter { $0.name?.lowercased().prefix(searchText.count) ?? "" == searchText.lowercased() }
+        searchedOrganization = organization.filter { $0.region?.prefix(searchText.count) ?? "" == searchText }
         searching = true
         tableView.reloadData()
     }
