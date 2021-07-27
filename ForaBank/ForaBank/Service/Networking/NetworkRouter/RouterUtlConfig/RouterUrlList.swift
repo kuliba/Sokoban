@@ -55,6 +55,7 @@ enum RouterUrlList: String {
     case getPaymentCountries
     case getProductListByFilter
     case getAnywayOperatorsList
+    case getFullBankInfoList
     
     
     func returnUrl () -> URLValue {
@@ -502,6 +503,17 @@ enum RouterUrlList: String {
             
         case .getAnywayOperatorsList:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getAnywayOperatorsList.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .getFullBankInfoList:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getFullBankInfoList.rawValue)
             
             switch result {
             case .success(let url):

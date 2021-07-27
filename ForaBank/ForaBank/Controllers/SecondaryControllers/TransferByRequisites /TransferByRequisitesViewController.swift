@@ -12,8 +12,6 @@ struct Fio {
     var name, patronymic, surname: String
 }
 
-
-
 class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate {
 
     
@@ -511,10 +509,10 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         showActivity()
         
         let body = [
-            "query": bikBankField.textField.text
-        ] as [String: AnyObject]
+            "bic": bikBankField.textField.text ?? ""
+        ]
         
-        NetworkManager<SuggestBankDecodableModel>.addRequest(.suggestBank , [:], body) { model, error in
+        NetworkManager<GetFullBankInfoListDecodableModel>.addRequest(.getFullBankInfoList , body, [:]) { model, error in
 //            if error != nil {
 //                self.dismissActivity()
 //                print("DEBUG: Error: ", error ?? "")
@@ -525,8 +523,9 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
                 self.dismissActivity()
                 guard let data  = model.data else { return }
 //                self.selectedCardNumber = cardNumber
+                let image = data.bankFullInfoList?.first?.svgImage
                 DispatchQueue.main.async {
-                    self.bikBankField.imageView.image = UIImage(imageLiteralResourceName: "100000000013")
+                    self.bikBankField.imageView.image = self.convertSVGStringToImage(image ?? "")
                 }
             } else {
                 self.dismissActivity()
@@ -535,6 +534,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         }
         
     }
+    
     
     func prepareExternal(){
         
