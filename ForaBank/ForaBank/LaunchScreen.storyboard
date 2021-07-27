@@ -7,6 +7,11 @@
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Inter-VariableFont_slnt,wght.ttf">
+            <string>Inter-Regular</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--View Controller-->
         <scene sceneID="EHf-IW-A2E">
@@ -16,31 +21,22 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="fora logo" translatesAutoresizingMaskIntoConstraints="NO" id="0td-St-zTz">
-                                <rect key="frame" x="24" y="294" width="40" height="48"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="40" id="UsZ-gF-pnj"/>
-                                </constraints>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="BackgroundLine" translatesAutoresizingMaskIntoConstraints="NO" id="14s-hK-gD7">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="762"/>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="foralogotype" translatesAutoresizingMaskIntoConstraints="NO" id="ldk-pm-dDg">
-                                <rect key="frame" x="183" y="294" width="48" height="48"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NewLogoFora" translatesAutoresizingMaskIntoConstraints="NO" id="ldk-pm-dDg">
+                                <rect key="frame" x="183" y="251" width="48" height="48"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="48" id="LHe-i8-0Ut"/>
                                     <constraint firstAttribute="height" constant="48" id="uqt-gE-ddm"/>
                                 </constraints>
                             </imageView>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="#выигрываемвместе" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Rd-Jq-EKG">
-                                <rect key="frame" x="0.0" y="712" width="414" height="24"/>
-                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
-                                <color key="textColor" red="0.90985363720000001" green="0.90573334689999996" blue="0.91372746230000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Выигрываем вместе!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fW4-2N-knu">
-                                <rect key="frame" x="24" y="367.5" width="366" height="21"/>
+                                <rect key="frame" x="124" y="324.5" width="166" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="7mg-eo-bvC"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="19"/>
+                                <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="16"/>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -48,19 +44,14 @@
                         <viewLayoutGuide key="safeArea" id="kYa-c3-h0N"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="ldk-pm-dDg" firstAttribute="top" secondItem="kYa-c3-h0N" secondAttribute="top" constant="207" id="60j-LN-EyB"/>
                             <constraint firstItem="ldk-pm-dDg" firstAttribute="centerX" secondItem="kYa-c3-h0N" secondAttribute="centerX" id="6jX-A6-Glj"/>
                             <constraint firstItem="fW4-2N-knu" firstAttribute="top" secondItem="ldk-pm-dDg" secondAttribute="bottom" constant="25.5" id="88p-7V-f8O"/>
-                            <constraint firstItem="fW4-2N-knu" firstAttribute="leading" secondItem="0td-St-zTz" secondAttribute="leading" id="GGi-PQ-56U"/>
                             <constraint firstItem="fW4-2N-knu" firstAttribute="centerX" secondItem="kYa-c3-h0N" secondAttribute="centerX" id="L6i-DI-rZF"/>
-                            <constraint firstItem="kYa-c3-h0N" firstAttribute="bottom" secondItem="2Rd-Jq-EKG" secondAttribute="bottom" constant="126" id="LVD-M5-yT5"/>
-                            <constraint firstItem="2Rd-Jq-EKG" firstAttribute="centerX" secondItem="Td1-Ro-vrk" secondAttribute="centerX" id="U87-sB-nvi"/>
-                            <constraint firstItem="2Rd-Jq-EKG" firstAttribute="leading" secondItem="kYa-c3-h0N" secondAttribute="leading" id="YqY-AS-Vhn"/>
-                            <constraint firstItem="fW4-2N-knu" firstAttribute="top" secondItem="0td-St-zTz" secondAttribute="bottom" constant="25.5" id="dZM-M4-Jx0"/>
-                            <constraint firstItem="2Rd-Jq-EKG" firstAttribute="centerX" secondItem="Td1-Ro-vrk" secondAttribute="centerX" id="hIK-hx-8ia"/>
-                            <constraint firstItem="0td-St-zTz" firstAttribute="leading" secondItem="kYa-c3-h0N" secondAttribute="leading" constant="24" id="jdd-lK-D40"/>
-                            <constraint firstItem="0td-St-zTz" firstAttribute="top" secondItem="kYa-c3-h0N" secondAttribute="top" constant="250" id="ntM-Ak-ka8"/>
-                            <constraint firstItem="0td-St-zTz" firstAttribute="bottom" secondItem="ldk-pm-dDg" secondAttribute="bottom" id="p4L-0X-0c5"/>
-                            <constraint firstItem="0td-St-zTz" firstAttribute="top" secondItem="ldk-pm-dDg" secondAttribute="top" id="x9e-RU-pUv"/>
+                            <constraint firstItem="14s-hK-gD7" firstAttribute="top" secondItem="Td1-Ro-vrk" secondAttribute="top" id="PFi-05-ENG"/>
+                            <constraint firstItem="14s-hK-gD7" firstAttribute="trailing" secondItem="kYa-c3-h0N" secondAttribute="trailing" id="PT1-2I-jrM"/>
+                            <constraint firstItem="14s-hK-gD7" firstAttribute="leading" secondItem="kYa-c3-h0N" secondAttribute="leading" id="bzt-DX-01Z"/>
+                            <constraint firstItem="kYa-c3-h0N" firstAttribute="bottom" secondItem="14s-hK-gD7" secondAttribute="bottom" constant="100" id="nzf-GR-CYW"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -70,7 +61,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="fora logo" width="32" height="32"/>
-        <image name="foralogotype" width="88" height="88"/>
+        <image name="BackgroundLine" width="376" height="652"/>
+        <image name="NewLogoFora" width="64" height="64"/>
     </resources>
 </document>

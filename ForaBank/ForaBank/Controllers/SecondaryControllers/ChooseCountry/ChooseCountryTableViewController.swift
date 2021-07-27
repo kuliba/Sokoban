@@ -122,7 +122,7 @@ class ChooseCountryTableViewController: UITableViewController {
         tableView.alwaysBounceVertical = true
         tableView.keyboardDismissMode = .interactive
         tableView.separatorStyle = .none
-        navigationItem.title = modalPresent ? "Выберите страну" : "В какую страну?"
+        tableView.sectionIndexColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1)
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
         searchController.obscuresBackgroundDuringPresentation = false
@@ -132,7 +132,22 @@ class ChooseCountryTableViewController: UITableViewController {
         searchController.automaticallyShowsCancelButton = false
         searchController.searchBar.delegate = self
         definesPresentationContext = true
-        addCloseButton()
+        inititlizeBarButtons()
+    }
+    
+    func inititlizeBarButtons() {
+        
+        let label = UILabel()
+        label.textColor = UIColor.black
+        label.font = .boldSystemFont(ofSize: 16)
+        label.text = modalPresent ? "Выберите страну" : "В какую страну?"
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: label)
+        
+        let cancelButton = UIBarButtonItem(title: "Закрыть", style: .plain, target: self, action: #selector(onTouchCancelButton))
+        
+        self.navigationItem.rightBarButtonItem = cancelButton
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .normal)
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .highlighted)
     }
 
     private func openCountryPaymentVC(model: ChooseCountryHeaderViewModel) {
@@ -152,6 +167,9 @@ class ChooseCountryTableViewController: UITableViewController {
         }
         
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+    @objc func onTouchCancelButton() {
+        dismiss(animated: true)
     }
 
     // MARK: - Table view data source

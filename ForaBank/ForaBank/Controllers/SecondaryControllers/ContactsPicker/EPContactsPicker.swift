@@ -85,7 +85,7 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
         label.text = EPGlobalConstants.Strings.contactsTitle
         self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: label)
         
-        let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(onTouchCancelButton))
+        let cancelButton = UIBarButtonItem(title: "Закрыть", style: .plain, target: self, action: #selector(onTouchCancelButton))
         
         self.navigationItem.rightBarButtonItem = cancelButton
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .normal)
@@ -386,7 +386,7 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
     
     private func searchForContactUsingPhoneNumber(phoneNumber: String) {
         DispatchQueue.global().async {
-            var searchNumber = phoneNumber
+            let searchNumber = phoneNumber
             if searchNumber.count > 0 {
                 
                 self.isSearch = true
