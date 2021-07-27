@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SVGKit
 
 struct Fio {
     var name, patronymic, surname: String
@@ -33,15 +32,8 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
             
         } else {
             self.bikBankField.text = bank.memberID ?? "" //"АйДиБанк"
-            self.bikBankField.imageView.image = convertSVGStringToImage(bank.svgImage ?? "")
+            self.bikBankField.imageView.image = bank.svgImage?.convertSVGStringToImage() 
         }
-    }
-    func convertSVGStringToImage(_ string: String) -> UIImage {
-        let stringImage = string.replacingOccurrences(of: "\\", with: "")
-        let imageData = Data(stringImage.utf8)
-        let imageSVG = SVGKImage(data: imageData)
-        let image = imageSVG?.uiImage ?? UIImage()
-        return image
     }
     
     var selectedCardNumber: String?
@@ -193,7 +185,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
                 self.suggestBank(self.bikBankField.textField.text ?? "") { model in
                     let image = model.first?.svgImage
                     DispatchQueue.main.async {
-                        self.bikBankField.imageView.image = self.convertSVGStringToImage(image ?? "")
+                        self.bikBankField.imageView.image = image?.convertSVGStringToImage()
                     }
                 }
             } else {

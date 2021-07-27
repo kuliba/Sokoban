@@ -6,8 +6,6 @@
 //
 
 import UIKit
-import SVGKit
-
 
 class PaymentByPhoneViewController: UIViewController {
     var sbp: Bool?
@@ -205,14 +203,6 @@ class PaymentByPhoneViewController: UIViewController {
             self.bankPayeer.text = bank.memberNameRus ?? ""
             self.hideView(self.bankListView, needHide: true)
         }
-    }
-    
-    func convertSVGStringToImage(_ string: String) -> UIImage {
-        let stringImage = string.replacingOccurrences(of: "\\", with: "")
-        let imageData = Data(stringImage.utf8)
-        let imageSVG = SVGKImage(data: imageData)
-        let image = imageSVG?.uiImage ?? UIImage()
-        return image
     }
     
     func setupActions() {

@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SVGKit
 
 class GHKCell: UITableViewCell {
 
@@ -34,11 +33,5 @@ class GHKCell: UITableViewCell {
 //        }
     }
     
-    func convertSVGStringToImage(_ string: String) -> UIImage {
-        let imageData = Data(string.utf8)
-        let imageSVG = SVGKImage(data: imageData)
-        let image = imageSVG?.uiImage ?? UIImage()
-        return image
-    }
 
 }
