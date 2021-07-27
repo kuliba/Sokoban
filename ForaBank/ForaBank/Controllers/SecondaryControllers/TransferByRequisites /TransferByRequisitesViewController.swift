@@ -20,7 +20,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
             setupBankField(bank: bank)
         }
     }
-    var banks: [BanksList]? {
+    var banks: [BankFullInfoList]? {
         didSet {
             guard let banks = banks else { return }
             bankListView.bankList = banks
@@ -190,7 +190,12 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
 
         bikBankField.didChangeValueField = {(field) in
             if self.bikBankField.textField.text?.count == 9 {
-                self.suggestBank(self.bikBankField.textField.text ?? "")
+                self.suggestBank(self.bikBankField.textField.text ?? "") { model in
+                    let image = model.first?.svgImage
+                    DispatchQueue.main.async {
+                        self.bikBankField.imageView.image = self.convertSVGStringToImage(image ?? "")
+                    }
+                }
             } else {
                 self.bikBankField.imageView.image = UIImage(imageLiteralResourceName: "bikbank")
             }
@@ -441,7 +446,9 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         view.addSubview(stackView)
         
         setupConstraint()
-        suggestBank("")
+        suggestBank("") { model in
+            banks = model
+        }
     }
     
     func updateUI(){
@@ -505,7 +512,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     }
 
     
-    func suggestBank(_ bic: String) {
+    func suggestBank(_ bic: String, completion: @escaping ([BankFullInfoList]) -> Void ) {
         showActivity()
         
         let body = [
@@ -523,10 +530,11 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
                 self.dismissActivity()
                 guard let data  = model.data else { return }
 //                self.selectedCardNumber = cardNumber
-                let image = data.bankFullInfoList?.first?.svgImage
-                DispatchQueue.main.async {
-                    self.bikBankField.imageView.image = self.convertSVGStringToImage(image ?? "")
-                }
+//                let image = data.bankFullInfoList?.first?.svgImage
+                completion(data.bankFullInfoList ?? [])
+//                DispatchQueue.main.async {
+//                    self.bikBankField.imageView.image = self.convertSVGStringToImage(image ?? "")
+//                }
             } else {
                 self.dismissActivity()
                 print("DEBUG: Error: ", model.errorMessage ?? "")
