@@ -42,23 +42,16 @@ class PDFViewerViewController: UIViewController, URLSessionDownloadDelegate {
         ] as [String: AnyObject]
         
         createPdfDocument(body)
-        button.actions(forTarget: (#selector(sharePDF)), forControlEvent: .touchUpInside)
+        button.addTarget(self, action: #selector(sharePDF), for: .touchUpInside)
         
     }
-    
-//    override func viewDidLayoutSubviews() {
-//        pdfView.frame = view.frame
-//    }
-    
+        
     @objc func sharePDF(){
-        let path = Bundle.main.path(forResource: "nameFile",  ofType:"pdf")
-        let pdfDocument = PDFDocument(url: URL(fileURLWithPath: path!))
-
+        guard let pdfDocument = pdfView.document?.dataRepresentation() else { return }
         var filesToShare = [Any]()
-        filesToShare.append(pdfDocument!)
+        filesToShare.append(pdfDocument)
 
-        let activityViewController = UIActivityViewController(activityItems: filesToShare , applicationActivities: nil)
-        activityViewController.popoverPresentationController?.sourceView = self.view
+        let activityViewController = UIActivityViewController(activityItems: filesToShare , applicationActivities: [])
         present(activityViewController, animated: true, completion: nil)
     }
     

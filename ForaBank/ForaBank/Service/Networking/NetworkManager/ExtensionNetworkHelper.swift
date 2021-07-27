@@ -39,6 +39,8 @@ extension NetworkHelper {
         case getCountries
         
         case getBanks
+        
+        case getBankFullInfoList
 
         case anywayPaymentBegin
 

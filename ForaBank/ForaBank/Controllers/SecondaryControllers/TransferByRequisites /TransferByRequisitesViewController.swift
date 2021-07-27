@@ -349,7 +349,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
             let vc = SearchBanksViewController()
             vc.banks = self.banks!
             let navController = UINavigationController(rootViewController: vc)
-            navController.modalPresentationStyle = .fullScreen
+//            navController.modalPresentationStyle = .fullScreen
             self.present(navController, animated: true, completion: nil)
         }
         

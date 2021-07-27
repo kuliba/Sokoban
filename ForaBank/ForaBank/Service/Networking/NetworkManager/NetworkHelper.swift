@@ -17,6 +17,7 @@ final class Dict {
     var paymentList: [PaymentSystemList]?
     var currencyList: [CurrencyList]?
     var organization: [GetAnywayOperatorsListDatum]?
+    var bankFullInfoList: [BankFullInfoList]?
 }
 
 struct NetworkHelper {
@@ -200,6 +201,78 @@ struct NetworkHelper {
                                 completion(countries, nil)
                             } else {
                                 print("DEBUG: CountriesList уже есть")
+                            }
+                            
+                        } else {
+                            let error = model?.errorMessage ?? "nil"
+                            print("DEBUG: ", #function, error)
+                            completion(nil, error)
+                        }
+                    }
+                }
+            }
+            
+            
+        case .getBankFullInfoList:
+            if let banksListSerial = UserDefaults().object(forKey: "BankFullInfoListSerial") as? String {
+
+                guard let documentsDirectoryUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+                let filePath = documentsDirectoryUrl.appendingPathComponent("BankFullInfoList.json")
+                
+                // Read data from .json file and transform data into an array
+                do {
+                    let data = try Data(contentsOf: filePath, options: [])
+                    
+                    let list = try JSONDecoder().decode(GetBanksDataClass.self, from: data)
+                    Dict.shared.banks = list.banksList
+                    completion(list.banksList, nil)
+                } catch {
+                    print(error)
+                }
+                
+                getBanks(withId: banksListSerial)
+                
+            } else {
+                getBanks()
+            }
+            
+            func getBanks(withId: String? = nil) {
+                let bodyTmp = [
+                    "bic": ""
+                ] as [String : AnyObject]
+                let param = ["serial" : withId ?? ""]
+//                print("DEBUG: BankFullInfoList param", param)
+                NetworkManager<GetFullBankInfoListDecodableModel>.addRequest(.getFullBankInfoList, param, [:]) { model, error in
+                    if error != nil {
+                        guard let error = error else { return }
+                        print("DEBUG: ", #function, error)
+                        completion(nil, error)
+                    } else {
+                        guard let statusCode = model?.statusCode else { return }
+                        if statusCode == 0 {
+                            if model?.data?.serial != withId {
+                                
+                                guard let data = model?.data else { return }
+                                
+                                let pathDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                                try? FileManager().createDirectory(at: pathDirectory, withIntermediateDirectories: true)
+                                let filePath = pathDirectory.appendingPathComponent("BankFullInfoList.json")
+
+                                let json = try? JSONEncoder().encode(data)
+
+                                do {
+                                     try json!.write(to: filePath)
+                                } catch {
+                                    print("Failed to write JSON data: \(error.localizedDescription)")
+                                }
+                                
+                                UserDefaults().set(data.serial, forKey: "BankFullInfoListSerial")
+                                
+                                guard let banks = model?.data?.bankFullInfoList else { return }
+                                Dict.shared.bankFullInfoList = banks
+                                completion(banks, nil)
+                            } else {
+                                print("DEBUG: BankFullInfoList уже есть")
                             }
                             
                         } else {
