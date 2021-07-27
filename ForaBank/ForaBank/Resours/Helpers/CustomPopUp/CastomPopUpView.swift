@@ -56,7 +56,7 @@ class MemeDetailVC : AddHeaderImageViewController {
         
         
         
-//        bottomView.currency = "₽"
+        bottomView.currency = "₽"
         
         self.addHeaderImage()
         self.view.layer.cornerRadius = 20
