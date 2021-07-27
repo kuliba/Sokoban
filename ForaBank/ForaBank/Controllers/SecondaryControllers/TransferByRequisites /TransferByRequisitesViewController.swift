@@ -14,8 +14,6 @@ struct Fio {
 
 class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate {
 
-    
-    
     var selectedBank: BanksList? {
         didSet {
             guard let bank = selectedBank else { return }
@@ -192,7 +190,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
 
         bikBankField.didChangeValueField = {(field) in
             if self.bikBankField.textField.text?.count == 9 {
-                self.suggestBank()
+                self.suggestBank(self.bikBankField.textField.text ?? "")
             } else {
                 self.bikBankField.imageView.image = UIImage(imageLiteralResourceName: "bikbank")
             }
@@ -334,6 +332,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
 //                    }
                 }
                 self?.banks = banksList
+                
 //                Dict.shared.banks?.append(BanksList(memberID: "123", memberName: "Смотреть вс1е", memberNameRus: "Смотреть все", md5Hash: "", svgImage: "seeall", paymentSystemCodeList: ["123"]))
                 let seeall = BanksList(memberID: "123", memberName: "Смотреть вс1е", memberNameRus: "Смотреть все", md5Hash: "", svgImage: "seeall", paymentSystemCodeList: ["123"])
                 self?.banks?.insert(seeall, at: 0)
@@ -442,6 +441,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         view.addSubview(stackView)
         
         setupConstraint()
+        suggestBank("")
     }
     
     func updateUI(){
@@ -505,11 +505,11 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     }
 
     
-    func suggestBank() {
+    func suggestBank(_ bic: String) {
         showActivity()
         
         let body = [
-            "bic": bikBankField.textField.text ?? ""
+            "bic": bic
         ]
         
         NetworkManager<GetFullBankInfoListDecodableModel>.addRequest(.getFullBankInfoList , body, [:]) { model, error in
