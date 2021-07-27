@@ -380,9 +380,15 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
         }
     }
     
+    func check(_ givenString: String) -> Bool {
+        return givenString.range(of: "^[7-8]9.", options: .regularExpression) != nil
+    }
+    
     private func searchForContactUsingPhoneNumber(phoneNumber: String) {
         DispatchQueue.global().async {
-            if phoneNumber.count > 0 {
+            var searchNumber = phoneNumber
+            if searchNumber.count > 0 {
+                
                 self.isSearch = true
                 var contacts = [CNContact]()
                 var message: String!
@@ -392,14 +398,16 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
                     (contact, cursor) -> Void in
                     if (!contact.phoneNumbers.isEmpty) {
                         
-                        let phoneNumberToCompareAgainst =  phoneNumber.components(
+                        let phoneNumberToCompareAgainst =  searchNumber.components(
                             separatedBy: NSCharacterSet.decimalDigits.inverted).joined(separator: "")
                         for phoneNumber in contact.phoneNumbers {
                             if let phoneNumberStruct = phoneNumber.value as? CNPhoneNumber {
                                 let phoneNumberString = phoneNumberStruct.stringValue
-                                let phoneNumberToCompare = phoneNumberString.components(
+                                var phoneNumberToCompare = phoneNumberString.components(
                                     separatedBy: NSCharacterSet.decimalDigits.inverted).joined(separator: "")
-                                print(phoneNumberToCompare, " & " ,phoneNumberToCompareAgainst)
+                                if self.check(phoneNumberToCompare)  {
+                                    phoneNumberToCompare = String(phoneNumberToCompare.dropFirst())
+                                }
                                 let phoneNumberFin = phoneNumberToCompare.prefix(phoneNumberToCompareAgainst.count)
                                 if phoneNumberFin == phoneNumberToCompareAgainst {
                                     contacts.append(contact)
@@ -425,16 +433,16 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
                     DispatchQueue.main.async {
                         
                         self.filteredContacts = contacts
-                        let contact = contacts[0] // For just the first contact (if two contacts had the same phone number)
-                        print(contact.givenName) // Print the "first" name
-                        print(contact.familyName) // Print the "last" name
-                        if contact.isKeyAvailable(CNContactImageDataKey) {
-                            if let contactImageData = contact.imageData {
-                                print(UIImage(data: contactImageData)) // Print the image set on the contact
-                            }
-                        } else {
-                            // No Image available
-                        }
+//                        let contact = contacts[0] // For just the first contact (if two contacts had the same phone number)
+//                        print(contact.givenName) // Print the "first" name
+//                        print(contact.familyName) // Print the "last" name
+//                        if contact.isKeyAvailable(CNContactImageDataKey) {
+//                            if let contactImageData = contact.imageData {
+//                                print(UIImage(data: contactImageData)) // Print the image set on the contact
+//                            }
+//                        } else {
+//                            // No Image available
+//                        }
                     }
                 }
             }
@@ -447,6 +455,9 @@ extension EPContactsPicker: passTextFieldText {
     func passTextFieldText(text: String) {
         let searchText = text
         if searchText.isNumeric {
+            if self.check(searchText)  {
+                searchContact.numberTextField.text = String(searchText.dropFirst())
+            }
             searchForContactUsingPhoneNumber(phoneNumber: searchText)
         } else {
             searchForContactUsingName(text: searchText)
