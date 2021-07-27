@@ -9,7 +9,7 @@ import UIKit
 import SVGKit
 
 class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, passTextFieldText {
-   var allBanks = [BanksList]()
+   var allBanks = [BankFullInfoList]()
     func passTextFieldText(text: String) {
         
         if text != ""{
@@ -36,7 +36,7 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
 
     var contactCollectionView: UICollectionView!
     
-    var banks = [BanksList]()
+    var banks = [BankFullInfoList]()
     
     let searchContact: SearchContact = UIView.fromNib()
 

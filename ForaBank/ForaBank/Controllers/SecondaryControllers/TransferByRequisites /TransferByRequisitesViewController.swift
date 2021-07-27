@@ -318,32 +318,32 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
             }
         }
         
-        getBankList { [weak self]  banksList, error in
-            DispatchQueue.main.async {
-                if error != nil {
-                    self?.showAlert(with: "Ошибка", and: error!)
-                }
-                
-                guard let banksList = banksList else { return }
-                var filteredbanksList : [BanksList] = []
-                
-                banksList.forEach { bank in
-                    guard let codeList = bank.paymentSystemCodeList else { return }
-//                    guard let countrylist = self?.country?.paymentSystemCodeList else { return }
-//                    countrylist.forEach { code in
-//                        if codeList.contains(code) {
-//                            filteredbanksList.append(bank)
-//                        }
-//                    }
-                }
-                self?.banks = banksList
-                
-//                Dict.shared.banks?.append(BanksList(memberID: "123", memberName: "Смотреть вс1е", memberNameRus: "Смотреть все", md5Hash: "", svgImage: "seeall", paymentSystemCodeList: ["123"]))
-                let seeall = BanksList(memberID: "123", memberName: "Смотреть вс1е", memberNameRus: "Смотреть все", md5Hash: "", svgImage: "seeall", paymentSystemCodeList: ["123"])
-                self?.banks?.insert(seeall, at: 0)
-                
-            }
-        }
+//        getBankList { [weak self]  banksList, error in
+//            DispatchQueue.main.async {
+//                if error != nil {
+//                    self?.showAlert(with: "Ошибка", and: error!)
+//                }
+//
+//                guard let banksList = banksList else { return }
+//                var filteredbanksList : [BanksList] = []
+//
+//                banksList.forEach { bank in
+//                    guard let codeList = bank.paymentSystemCodeList else { return }
+////                    guard let countrylist = self?.country?.paymentSystemCodeList else { return }
+////                    countrylist.forEach { code in
+////                        if codeList.contains(code) {
+////                            filteredbanksList.append(bank)
+////                        }
+////                    }
+//                }
+//                self?.banks = banksList
+//
+////                Dict.shared.banks?.append(BanksList(memberID: "123", memberName: "Смотреть вс1е", memberNameRus: "Смотреть все", md5Hash: "", svgImage: "seeall", paymentSystemCodeList: ["123"]))
+//                let seeall = BanksList(memberID: "123", memberName: "Смотреть вс1е", memberNameRus: "Смотреть все", md5Hash: "", svgImage: "seeall", paymentSystemCodeList: ["123"])
+//                self?.banks?.insert(seeall, at: 0)
+//
+//            }
+//        }
         
         bankListView.didBankTapped = { (bank) in
             self.selectedBank = bank
@@ -447,7 +447,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         
         setupConstraint()
         suggestBank("") { model in
-            banks = model
+            self.banks = model
         }
     }
     
