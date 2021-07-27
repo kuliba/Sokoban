@@ -316,6 +316,7 @@ class MemeDetailVC : AddHeaderImageViewController {
                         let m = model?.data
                         self.bottomView.currencyTo = m
                         self.bottomView.currencyFrom = nil
+                        self.bottomView.currency = "₽"
                     }
                     
                 case (let(value), "RUB"):

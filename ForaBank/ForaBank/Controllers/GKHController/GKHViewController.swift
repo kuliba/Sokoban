@@ -37,6 +37,7 @@ class GKHViewController: UITableViewController {
     
     let headerReuseIdentifier = "CustomHeaderView"
     var searching = false
+    var modelDataArray = [AnywayPayment]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,26 +75,26 @@ class GKHViewController: UITableViewController {
         titleLabel.attributedText = completeText
         titleLabel.sizeToFit()
 
-        let subtitleLabel = UILabel(frame: CGRect(x: 0, y: 18, width: 0, height: 0))
-        subtitleLabel.backgroundColor = .clear
-        subtitleLabel.textColor = .gray
-        subtitleLabel.font = .systemFont(ofSize: 12)
-        subtitleLabel.text = subtitle
-        subtitleLabel.sizeToFit()
+//        let subtitleLabel = UILabel(frame: CGRect(x: 0, y: 18, width: 0, height: 0))
+//        subtitleLabel.backgroundColor = .clear
+//        subtitleLabel.textColor = .gray
+//        subtitleLabel.font = .systemFont(ofSize: 12)
+//        subtitleLabel.text = subtitle
+//        subtitleLabel.sizeToFit()
         
-        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: max(titleLabel.frame.size.width, subtitleLabel.frame.size.width), height: 30))
+        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: titleLabel.frame.size.width, height: 15))
         titleView.addSubview(titleLabel)
 //        titleView.addSubview(subtitleLabel)
         
-        let widthDiff = subtitleLabel.frame.size.width - titleLabel.frame.size.width
-
-        if widthDiff < 0 {
-            let newX = widthDiff / 2
-            subtitleLabel.frame.origin.x = abs(newX)
-        } else {
-            let newX = widthDiff / 2
-            titleLabel.frame.origin.x = newX
-        }
+//        let widthDiff = subtitleLabel.frame.size.width - titleLabel.frame.size.width
+//
+//        if widthDiff < 0 {
+//            let newX = widthDiff / 2
+//            subtitleLabel.frame.origin.x = abs(newX)
+//        } else {
+//            let newX = widthDiff / 2
+//            titleLabel.frame.origin.x = newX
+//        }
         let gesture = UITapGestureRecognizer(target: self, action: #selector(self.titleDidTaped))
         titleView.addGestureRecognizer(gesture)
         return titleView
@@ -104,7 +105,11 @@ class GKHViewController: UITableViewController {
         print(#function)
         let vc = GKHCityViewController()
         vc.organization = self.organization
-        self.navigationController?.pushViewController(vc, animated: true)
+        let nav = UINavigationController(rootViewController: vc)
+  //      nav.navigationController?.modalPresentationStyle = .currentContext
+        present(nav, animated: true, completion: nil)
+        
+//        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     func setupNavBar() {
@@ -128,9 +133,12 @@ class GKHViewController: UITableViewController {
                 guard let lastPaymentsList = model.data else { return }
                 self.lastPaymentsList = lastPaymentsList
                 lastPaymentsList.forEach { d in
+                    if d.name == "Коммунальные услуги и ЖКХ" {
                         d.operators?.forEach({ logotypeList in
                             self.organization.append(logotypeList)
+                            
                         })
+                    }
                 }
             }
         }
@@ -248,20 +256,84 @@ class GKHViewController: UITableViewController {
         let selectedCountry: GetAnywayOperatorsListDatum
         if searching {
             selectedCountry = searchedOrganization[indexPath.row]
-            print(selectedCountry)
         } else {
             selectedCountry = organization[indexPath.row]
-            print(selectedCountry)
         }
-
         self.searchController.searchBar.searchTextField.endEditing(true)
+        let puref = selectedCountry.code ?? ""
+        var cardNumber = ""
+        getCardList() { card, _  in
+            
+            cardNumber = card?.first?.number ?? ""
+            
+            let anywayBeginBode = [
+                "accountID": "",
+                "cardID":"",
+                "cardNumber": cardNumber,
+                "provider":"",
+                "puref": puref,
+            
+            ] as [String: AnyObject]
+            
+            NetworkManager<AnywayPaymentBeginDecodebleModel>.addRequest(.anywayPaymentBegin, [:], anywayBeginBode) { model, error in
+                if error != nil {
+                    print("DEBUG: error", error!)
+                } else {
+                    NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], [:]) { model, error in
+                        if error != nil {
+                            print("DEBUG: error", error!)
+                        } else {
+                            guard let model = model else { return }
+                            guard let modelData = model.data else { return }
+                            self.modelDataArray.append(modelData)
+                            self.modelDataArray.forEach { a in
+                                a.listInputs?.forEach({ c in
+                                    
+                                })
+                            }
+                            
+                            
+                            
+                            print("AnywayPayment", modelData)
+
+                        }
+                    }
+
+                }
+            }
+            
+        }
+        
+        
+        
+        
+        
 
 //            let vc = GKHCityViewController()
 //            vc.organization = self.organization
 //            self.navigationController?.pushViewController(vc, animated: true)
     }
+    
+    func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?)->()) {
+        let param = ["isCard": "true", "isAccount": "false", "isDeposit": "false", "isLoan": "false"]
+        
+        NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
+            if error != nil {
+                completion(nil, error)
+            }
+            guard let model = model else { return }
+            if model.statusCode == 0 {
+                guard let cardList = model.data else { return }
+                completion(cardList, nil)
+            } else {
+                guard let error = model.errorMessage else { return }
+                completion(nil, error)
+            }
+        }
      
     
+}
+
 }
 
 //MARK: - UISearchBarDelegate
