@@ -33,7 +33,7 @@ public enum SubtitleCellValue{
     case organization
 }
 
-open class EPContactsPicker: UIViewController, UISearchResultsUpdating, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource {
+open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource {
     
     let searchContact: SearchContact = UIView.fromNib()
     let tableView = UITableView(frame: .zero, style: .plain)
@@ -41,16 +41,21 @@ open class EPContactsPicker: UIViewController, UISearchResultsUpdating, UISearch
     
     open weak var contactDelegate: EPPickerDelegate?
     var contactsStore: CNContactStore?
-    var resultSearchController = UISearchController()
     var orderedContacts = [String: [CNContact]]() //Contacts ordered in dicitonary alphabetically
     var sortedContactKeys = [String]()
     
     var selectedContacts = [EPContact]()
-    var filteredContacts = [CNContact]()
+    var filteredContacts = [CNContact]() {
+        didSet {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
     
     var subtitleCellValue = SubtitleCellValue.phoneNumber
     var multiSelectEnabled: Bool = false //Default is single selection contact
-    
+    var isSearch = false
     // MARK: - Lifecycle Methods
     
     override open func viewDidLoad() {
@@ -59,31 +64,17 @@ open class EPContactsPicker: UIViewController, UISearchResultsUpdating, UISearch
         configureTableView()
         registerContactCell()
         inititlizeBarButtons()
-//        initializeSearchBar()
         
         
         self.view.addSubview(searchContact)
         self.view.addSubview(tableView)
         view.backgroundColor = .white
-//        self.tableView.tableHeaderView = searchContact
         searchContact.buttonStackView.isHidden = false
         searchContact.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingRight: 20, height: 44)
         tableView.anchor(top: searchContact.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 16)
-        
+        searchContact.delegateNumber = self
         
         reloadContacts()
-    }
-    
-    func initializeSearchBar() {
-        self.resultSearchController = ( {
-            let controller = UISearchController(searchResultsController: nil)
-            controller.searchResultsUpdater = self
-            controller.hidesNavigationBarDuringPresentation = false
-            controller.searchBar.sizeToFit()
-            controller.searchBar.delegate = self
-            self.tableView.tableHeaderView = controller.searchBar
-            return controller
-        })()
     }
     
     func inititlizeBarButtons() {
@@ -239,7 +230,8 @@ open class EPContactsPicker: UIViewController, UISearchResultsUpdating, UISearch
                 catch let error as NSError {
                     print(error.localizedDescription)
                 }
-            
+        @unknown default:
+            print("Error CNContactStore.authorizationStatus")
         }
     }
     
@@ -261,12 +253,13 @@ open class EPContactsPicker: UIViewController, UISearchResultsUpdating, UISearch
     // MARK: - Table View DataSource
     
     open func numberOfSections(in tableView: UITableView) -> Int {
-        if resultSearchController.isActive { return 1 }
+        if isSearch { return 1 }
         return sortedContactKeys.count
     }
     
      open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if resultSearchController.isActive { return filteredContacts.count }
+        if isSearch { return
+            filteredContacts.count }
         if let contactsForSection = orderedContacts[sortedContactKeys[section]] {
             return contactsForSection.count
         }
@@ -280,8 +273,7 @@ open class EPContactsPicker: UIViewController, UISearchResultsUpdating, UISearch
         cell.accessoryType = .none
         //Convert CNContact to EPContact
 		let contact: EPContact
-        
-        if resultSearchController.isActive {
+        if isSearch {
             contact = EPContact(contact: filteredContacts[(indexPath as NSIndexPath).row])
         } else {
 			guard let contactsForSection = orderedContacts[sortedContactKeys[(indexPath as NSIndexPath).section]] else {
@@ -319,7 +311,8 @@ open class EPContactsPicker: UIViewController, UISearchResultsUpdating, UISearch
         }
         else {
             //Single selection code
-			resultSearchController.isActive = false
+            isSearch = false
+
 			self.dismiss(animated: true, completion: {
 				DispatchQueue.main.async {
 					self.contactDelegate?.epContactPicker(self, didSelectContact: selectedContact)
@@ -337,13 +330,13 @@ open class EPContactsPicker: UIViewController, UISearchResultsUpdating, UISearch
     }
     
      open func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
-        if resultSearchController.isActive { return 0 }
+        if isSearch { return 0 }
         tableView.scrollToRow(at: IndexPath(row: 0, section: index), at: UITableView.ScrollPosition.top , animated: false)
         return sortedContactKeys.firstIndex(of: title)!
     }
     
       open func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-        if resultSearchController.isActive { return nil }
+        if isSearch { return nil }
         return sortedContactKeys
     }
 
@@ -367,45 +360,97 @@ open class EPContactsPicker: UIViewController, UISearchResultsUpdating, UISearch
     }
     
     // MARK: - Search Actions
-    
-    open func updateSearchResults(for searchController: UISearchController)
-    {
-        if let searchText = resultSearchController.searchBar.text , searchController.isActive {
-            
-            let predicate: NSPredicate
-            if searchText.count > 0 {
-                predicate = CNContact.predicateForContacts(matchingName: searchText)
-            } else {
-                predicate = CNContact.predicateForContactsInContainer(withIdentifier: contactsStore!.defaultContainerIdentifier())
-            }
-            
-            let store = CNContactStore()
-            do {
-                filteredContacts = try store.unifiedContacts(matching: predicate,
-                    keysToFetch: allowedContactKeys())
-                //print("\(filteredContacts.count) count")
-                
-                self.tableView.reloadData()
-                
-            }
-            catch {
-                print("Error!")
-            }
+    private func searchForContactUsingName(text: String) {
+        
+        var predicate: NSPredicate
+        if text.count > 0 {
+            isSearch = true
+            predicate = CNContact.predicateForContacts(matchingName: text)
+        } else {
+            predicate = CNContact.predicateForContactsInContainer(withIdentifier: contactsStore!.defaultContainerIdentifier())
+        }
+        
+        let store = CNContactStore()
+        do {
+            filteredContacts = try store.unifiedContacts(matching: predicate,
+                                                         keysToFetch: allowedContactKeys())
+        }
+        catch {
+            print("Error!")
         }
     }
     
-    open func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        
-        DispatchQueue.main.async(execute: {
-            self.tableView.reloadData()
-        })
+    private func searchForContactUsingPhoneNumber(phoneNumber: String) {
+        DispatchQueue.global().async {
+            if phoneNumber.count > 0 {
+                self.isSearch = true
+                var contacts = [CNContact]()
+                var message: String!
+                
+                let contactsStore = CNContactStore()
+                do { try contactsStore.enumerateContacts(with: CNContactFetchRequest(keysToFetch: self.allowedContactKeys())) {
+                    (contact, cursor) -> Void in
+                    if (!contact.phoneNumbers.isEmpty) {
+                        
+                        let phoneNumberToCompareAgainst =  phoneNumber.components(
+                            separatedBy: NSCharacterSet.decimalDigits.inverted).joined(separator: "")
+                        for phoneNumber in contact.phoneNumbers {
+                            if let phoneNumberStruct = phoneNumber.value as? CNPhoneNumber {
+                                let phoneNumberString = phoneNumberStruct.stringValue
+                                let phoneNumberToCompare = phoneNumberString.components(
+                                    separatedBy: NSCharacterSet.decimalDigits.inverted).joined(separator: "")
+                                print(phoneNumberToCompare, " & " ,phoneNumberToCompareAgainst)
+                                let phoneNumberFin = phoneNumberToCompare.prefix(phoneNumberToCompareAgainst.count)
+                                if phoneNumberFin == phoneNumberToCompareAgainst {
+                                    contacts.append(contact)
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                if contacts.count == 0 {
+                    message = "No contacts were found matching the given phone number."
+                    print(message!)
+                }
+                } catch {
+                    message = "Unable to fetch contacts."
+                }
+                if message != nil {
+                    DispatchQueue.main.async {
+                        print(message!)
+                    }
+                } else {
+                    // Success
+                    DispatchQueue.main.async {
+                        
+                        self.filteredContacts = contacts
+                        let contact = contacts[0] // For just the first contact (if two contacts had the same phone number)
+                        print(contact.givenName) // Print the "first" name
+                        print(contact.familyName) // Print the "last" name
+                        if contact.isKeyAvailable(CNContactImageDataKey) {
+                            if let contactImageData = contact.imageData {
+                                print(UIImage(data: contactImageData)) // Print the image set on the contact
+                            }
+                        } else {
+                            // No Image available
+                        }
+                    }
+                }
+            }
+        }
     }
     
 }
 
 extension EPContactsPicker: passTextFieldText {
     func passTextFieldText(text: String) {
-        
+        let searchText = text
+        if searchText.isNumeric {
+            searchForContactUsingPhoneNumber(phoneNumber: searchText)
+        } else {
+            searchForContactUsingName(text: searchText)
+        }
         
     }
 }
