@@ -7,13 +7,14 @@
 
 import Foundation
 
-struct LoginViewModel {
+class LoginViewModel {
    
+    var encription = Encription()
     
     func checkCardNumber(with number: String, completion: @escaping(_ model: String?, _ error: String?) -> ()) {
-        let encript = encryptAES(number)
+        
         let body = ["cryptoVersion": "1.0",
-                    "cardNumber": "\(Encription.encryptAES(string: number))"] as [String : AnyObject]
+                    "cardNumber": "\(encription.encryptAES(string: number) ?? "")"] as [String : AnyObject]
         
         NetworkManager<CheckClientDecodebleModel>.addRequest(.checkCkient, [:], body) { (model, error) in
             

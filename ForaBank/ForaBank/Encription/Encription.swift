@@ -17,6 +17,7 @@ struct KeyFromServer {
     static var publicKeyCert: String?
     static var privateKeyCert: String?
     static var pubFromServ: SecKey?
+    static var secretKey: Data?
 }
 
 class Encription {
@@ -122,7 +123,7 @@ class Encription {
                 let iv = AES256.randomIv()
                 print("Randomize\(iv)")
                 
-                guard let key = secretKey else {
+                guard let key = KeyFromServer.secretKey else {
                     return nil
                 }
                 print(key)
@@ -244,7 +245,7 @@ class Encription {
                 
         
                 secretKey = Data(base64Encoded: sharedSecret.base64EncodedString())?.dropLast(16)
-    
+                KeyFromServer.secretKey =  Data(base64Encoded: sharedSecret.base64EncodedString())?.dropLast(16)
                SecKeyCopyExternalRepresentation(ownPrivateKey, &error)
                 
                return sharedSecret
