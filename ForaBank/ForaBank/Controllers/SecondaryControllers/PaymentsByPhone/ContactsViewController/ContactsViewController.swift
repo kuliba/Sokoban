@@ -259,12 +259,14 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
         label.text = "Выберите контакт"
         self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: label)
         self.navigationItem.leftItemsSupplementBackButton = true
-       let close = UIBarButtonItem(title: "title", style: .plain, target: self, action: #selector(backButton))
+       let close = UIBarButtonItem(title: "Закрыть", style: .plain, target: self, action: #selector(backButton))
         close.tintColor = .black
-        self.navigationItem.setRightBarButton(close, animated: true)
+//        self.navigationItem.setRightBarButton(close, animated: true)
 
 //        self.navigationItem.rightBarButtonItem?.action = #selector(backButton)
         self.navigationItem.rightBarButtonItem = close
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .normal)
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .highlighted)
     }
     
     @objc func backButton(){

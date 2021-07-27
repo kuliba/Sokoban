@@ -93,12 +93,10 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
         label.text = "Выберите контакт"
         self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: label)
         self.navigationItem.leftItemsSupplementBackButton = true
-        let close = UILabel(text: "Закрыть", font: .none, color: .black)
-        close.isUserInteractionEnabled = true
+
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Закрыть", style: .plain, target: self, action:  #selector(backAction))
-        navigationItem.rightBarButtonItem?.tintColor = .black   
-//        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: close)
-//        self.navigationItem.rightBarButtonItem?.action = #selector(backAction)
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .normal)
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .highlighted)
 
 
     }
