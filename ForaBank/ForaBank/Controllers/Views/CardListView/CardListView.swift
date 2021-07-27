@@ -248,7 +248,7 @@ extension CardListView: UICollectionViewDelegate {
                 }
             }
         } else {
-            if indexPath.item == cardList.count + 1 {
+            if indexPath.item == cardList.count {
                 lastItemTap?()
                 print("GoAll")
             }  else {

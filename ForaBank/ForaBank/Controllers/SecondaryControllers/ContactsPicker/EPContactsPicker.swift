@@ -402,3 +402,10 @@ open class EPContactsPicker: UIViewController, UISearchResultsUpdating, UISearch
     }
     
 }
+
+extension EPContactsPicker: passTextFieldText {
+    func passTextFieldText(text: String) {
+        
+        
+    }
+}

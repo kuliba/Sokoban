@@ -13,6 +13,7 @@ struct CastomCardViewModel {
     var cardName: String?
     var dateCard: String?
     var cardCVC: String?
+    var cardId: Int?
 }
 
 class CastomCardView: UIView, UITextFieldDelegate {

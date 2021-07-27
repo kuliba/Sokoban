@@ -15,16 +15,23 @@ class EPContactCell: UITableViewCell {
     @IBOutlet weak var contactImageView: UIImageView!
     @IBOutlet weak var contactInitialLabel: UILabel!
     @IBOutlet weak var contactContainerView: UIView!
+    @IBOutlet weak var ownerImageView: UIImageView!
     
     var contact: EPContact?
-    
+    var banks: FastPayment?
+
     override func awakeFromNib() {
         
         super.awakeFromNib()
         // Initialization code
+        ownerImageView.layer.cornerRadius = ownerImageView.frame.size.width/2
+        ownerImageView.clipsToBounds = true
         selectionStyle = UITableViewCell.SelectionStyle.none
         contactContainerView.layer.masksToBounds = true
         contactContainerView.layer.cornerRadius = contactContainerView.frame.size.width/2
+        if checkOwner(number: contact?.phoneNumbers.first?.phoneNumber) ?? false {
+            ownerImageView.isHidden = false
+        }
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -40,7 +47,16 @@ class EPContactCell: UITableViewCell {
  
     func updateContactsinUI(_ contact: EPContact, indexPath: IndexPath, subtitleType: SubtitleCellValue) {
         self.contact = contact
-        //Update all UI in the cell here
+        
+//        DispatchQueue.main.async{ [self] in
+//            if checkOwner(number: "7\(contact[indexPath.item].phoneNumbers.first?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "").replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "").dropFirst() ?? "")", index: indexPath.item) ?? false {
+//                item.bankImage.isHidden = false
+//
+//            }
+//        }
+        if checkOwner(number: contact.phoneNumbers.first?.phoneNumber) ?? false {
+            ownerImageView.isHidden = false
+        }
         self.contactTextLabel?.text = contact.displayName()
         updateSubtitleBasedonType(subtitleType, contact: contact)
         if contact.thumbnailProfileImage != nil {
@@ -88,5 +104,43 @@ class EPContactCell: UITableViewCell {
         case SubtitleCellValue.organization:
             self.contactDetailTextLabel.text = contact.company
         }
+    }
+    
+    func checkOwner(number: String?) -> Bool?{
+//        showActivity()
+        let body = [
+            "phoneNumber": number
+        ] as [String: AnyObject]
+        
+        var checkOwner: Bool?
+        
+        NetworkManager<GetOwnerPhoneNumberPhoneDecodableModel>.addRequest(.getOwnerPhoneNumber, [:], body) { model, error in
+            if error != nil {
+                
+                checkOwner = false
+                print("DEBUG: Error: ", error ?? "")
+            }
+            guard let model = model else { return }
+            print("DEBUG: Card list: ", model)
+         
+
+            if model.statusCode == 0 {
+                
+//                self.selectedCardNumber = cardNumber
+                DispatchQueue.main.sync {
+                    checkOwner = true
+                    
+//                    self.checkOwnerFetch = true
+//                    self.contacts[index].bankImage = true
+//                    self.contactCollectionView.reloadItems(at: [IndexPath(index: index)])
+
+                }
+            } else {
+                
+                checkOwner = false
+                print("DEBUG: Error: ", model.errorMessage ?? "")
+            }
+        }
+        return checkOwner
     }
 }
