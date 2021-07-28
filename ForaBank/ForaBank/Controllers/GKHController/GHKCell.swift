@@ -27,6 +27,7 @@ class GHKCell: UITableViewCell {
     func set(viewModel: GetAnywayOperatorsListDatum) {
         organizationName.text = viewModel.name?.capitalizingFirstLetter()
         organizationImageView.image = UIImage(named: "GKH")
+        innLable.text = viewModel.synonymList?.first
 //        if viewModel.logotypeList?.first?.content != "" {
 //        organizationImageView.image = convertSVGStringToImage(viewModel.logotypeList?.first?.content ?? "")
 //        } else {

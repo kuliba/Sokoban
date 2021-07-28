@@ -317,6 +317,8 @@ class MemeDetailVC : AddHeaderImageViewController {
                         self.bottomView.currencyTo = m
                         self.bottomView.currencyFrom = nil
                         self.bottomView.currency = "₽"
+                        self.bottomView.tempArray.append(m)
+                        self.bottomView.tempArray.append(nil)
                     }
                     
                 case (let(value), "RUB"):
@@ -325,6 +327,8 @@ class MemeDetailVC : AddHeaderImageViewController {
                         let m = model?.data
                         self.bottomView.currencyFrom = m
                         self.bottomView.currencyTo = nil
+                        self.bottomView.tempArray.append(m)
+                        self.bottomView.tempArray.append(nil)
                     }
                 case (_, _):
                     break
@@ -338,9 +342,12 @@ class MemeDetailVC : AddHeaderImageViewController {
                 NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], bodyTo) { model, error in
                     let m = model?.data
                     self.bottomView.currencyTo = m
+                    self.bottomView.tempArray[1] = m
                 }
                 let m = model?.data
                 self.bottomView.currencyFrom = m
+                
+                self.bottomView.tempArray[0] = m
             }
         }
     }

@@ -160,7 +160,8 @@ class BottomInputView: UIView {
     var tempArray = [GetExchangeCurrencyDataClass?]()
     
     @IBAction func currencyButtonTapped(_ sender: UIButton) {
-        print(#function)
+        
+        guard tempArray.count != 0 else { return }
         
         let (from, to) = (self.currencyFrom?.currencyName, self.currencyTo?.currencyName)
         let ru = (from == nil || to == nil)
