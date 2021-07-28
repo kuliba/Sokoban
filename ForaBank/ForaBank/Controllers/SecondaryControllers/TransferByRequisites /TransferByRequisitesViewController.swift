@@ -23,7 +23,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     var banks: [BankFullInfoList]? {
         didSet {
             guard let banks = banks else { return }
-            bankListView.bankList = banks
+//            bankListView.bankList = banks
         }
     }
     var bankListView = BankListView()
@@ -336,11 +336,11 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
 //                        }
 //                    }
                 }
-                self?.banks = banksList
+//                self?.banks = banksList
                 
 //                Dict.shared.banks?.append(BanksList(memberID: "123", memberName: "Смотреть вс1е", memberNameRus: "Смотреть все", md5Hash: "", svgImage: "seeall", paymentSystemCodeList: ["123"]))
                 let seeall = BanksList(memberID: "123", memberName: "Смотреть вс1е", memberNameRus: "Смотреть все", md5Hash: "", svgImage: "seeall", paymentSystemCodeList: ["123"])
-                self?.banks?.insert(seeall, at: 0)
+//                self?.banks?.insert(seeall, at: 0)
                 
             }
         }
@@ -355,7 +355,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         bankListView.didSeeAll = { (bank) in
             self.selectedBank = bank
             let vc = SearchBanksViewController()
-            vc.banks = self.banks!
+//            vc.banks = self.banks!
             let navController = UINavigationController(rootViewController: vc)
             navController.modalPresentationStyle = .fullScreen
             self.present(navController, animated: true, completion: nil)
@@ -447,7 +447,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         
         setupConstraint()
         suggestBank("") { model in
-            banks = model
+//            banks = model
         }
     }
     
