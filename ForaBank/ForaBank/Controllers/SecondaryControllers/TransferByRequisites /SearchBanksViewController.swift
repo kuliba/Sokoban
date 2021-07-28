@@ -8,7 +8,7 @@
 import UIKit
 
 class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, passTextFieldText {
-   var allBanks = [BankFullInfoList]()
+    var allBanks = [BankFullInfoList]()
     func passTextFieldText(text: String) {
         
         if text != ""{
@@ -18,11 +18,9 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
             banks = allBanks
         }
         contactCollectionView.reloadData()
-//        banks = banks.filter({$0.memberNameRus?.lowercased().prefix(text.count) ?? "" == text})
-//        contactCollectionView.reloadData()
+        //        banks = banks.filter({$0.memberNameRus?.lowercased().prefix(text.count) ?? "" == text})
+        //        contactCollectionView.reloadData()
     }
-    
-    
     
 
     var contactCollectionView: UICollectionView!
@@ -46,61 +44,66 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
         navigationController?.dismiss(animated: true, completion: nil)
     }
 
-    func setupUI(){
+    func setupUI() {
+        setupNavigationBar()
+        setupCollectionView()
+        
         searchContact.numberTextField.placeholder = "Введите название или Бик банка"
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.itemSize = CGSize(width: view.bounds.width, height: 60)
-        contactCollectionView = UICollectionView(frame: view.bounds, collectionViewLayout: flowLayout)
-            
-        contactCollectionView.register(UINib(nibName: "ContactCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ContactCollectionViewCell")
-
-            let contactView = UIView()
-            
-            contactView.addSubview(contactCollectionView)
-            contactCollectionView.delegate = self
-            contactCollectionView.dataSource = self
-            contactCollectionView.backgroundColor = .white
-
+        
+        let contactView = UIView()
+        contactView.isUserInteractionEnabled = true
+        contactView.addSubview(contactCollectionView)
+        contactView.layoutMargins = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         
         let stackView = UIStackView(arrangedSubviews: [searchContact, contactView])
+        view.addSubview(stackView)
 //            searchContact.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 20).isActive = true
 //            searchContact.leadingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: -20).isActive = true
-        contactView.layoutMargins = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        
         stackView.layoutMargins = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        stackView.spacing = 10
+        stackView.backgroundColor = .white
+        stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0)
+
+    }
+    
+    private func setupCollectionView() {
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.itemSize = CGSize(width: view.bounds.width, height: 60)
+        contactCollectionView = UICollectionView(
+            frame: view.bounds, collectionViewLayout: flowLayout)
+        
+        contactCollectionView.isScrollEnabled = true
+        contactCollectionView.delegate = self
+        contactCollectionView.dataSource = self
+        contactCollectionView.backgroundColor = .white
         contactCollectionView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        contactCollectionView.register(UINib(nibName: "ContactCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ContactCollectionViewCell")
         
-
-            stackView.isLayoutMarginsRelativeArrangement = true
-            contactView.isUserInteractionEnabled = true
-            contactCollectionView.isScrollEnabled = true
-            stackView.axis = .vertical
-            stackView.alignment = .fill
-            stackView.distribution = .fill
-            stackView.spacing = 10
-            stackView.backgroundColor = .white
-            
-//            view.addSubview(lastPaymentsCollectionView)
-//            view.addSubview(contactView)
         
-            view.addSubview(stackView)
-        
-
-            stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0)
-        
+    }
+    
+    
+    private func setupNavigationBar() {
         let label = UILabel()
         label.textColor = UIColor.black
         label.font = UIFont.boldSystemFont(ofSize: 16)
         label.text = "Выберите контакт"
         self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: label)
         self.navigationItem.leftItemsSupplementBackButton = true
-
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Закрыть", style: .plain, target: self, action:  #selector(backAction))
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .normal)
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .highlighted)
-
-
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            title: "Закрыть", style: .plain, target: self, action:  #selector(backAction))
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes(
+            [.foregroundColor: UIColor.black], for: .normal)
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes(
+            [.foregroundColor: UIColor.black], for: .highlighted)
     }
-
+    
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return banks.count
