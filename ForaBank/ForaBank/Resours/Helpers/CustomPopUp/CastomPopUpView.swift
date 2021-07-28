@@ -129,6 +129,9 @@ class MemeDetailVC : AddHeaderImageViewController {
             self.cardToField.cardModel = tmpModelFrom
             self.viewModel.cardFrom = tmpModelTo
             self.viewModel.cardTo = tmpModelFrom
+            let text = self.bottomView.amountTextField.text
+            let unformatText = self.bottomView.moneyFormatter?.unformat(text)
+            self.bottomView.exchangeRate(unformatText ?? "")
             self.checkModel(with: self.viewModel)
         }
         
