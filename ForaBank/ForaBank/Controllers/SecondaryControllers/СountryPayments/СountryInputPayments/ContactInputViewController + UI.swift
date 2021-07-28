@@ -16,7 +16,7 @@ extension ContactInputViewController {
         saveAreaView.anchor(top: view.safeAreaLayoutGuide.bottomAnchor, left: view.leftAnchor,
                             bottom: view.bottomAnchor, right: view.rightAnchor)
         view.addSubview(bottomView)
-        bottomView.currency = "₽"
+        bottomView.currencySymbol = "₽"
         cardFromField.titleLabel.text = "Счет списания"
         cardFromField.titleLabel.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
         cardFromField.imageView.isHidden = false

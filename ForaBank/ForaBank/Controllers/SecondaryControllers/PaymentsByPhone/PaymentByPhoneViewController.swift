@@ -295,6 +295,7 @@ class PaymentByPhoneViewController: UIViewController {
                           right: view.rightAnchor)
         bottomView.currency = "₽"
 
+
             
         title = "Перевод по номеру телефона"
         stackView = UIStackView(arrangedSubviews: [phoneField, bankPayeer, bankListView, cardField, cardListView, commentField])
