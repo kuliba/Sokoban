@@ -14,7 +14,7 @@ protocol passTextFieldText {
 class SearchContact: UIView, UITextFieldDelegate{
     
     
-    @IBOutlet weak var numberTextField: UITextField!
+    @IBOutlet weak var numberTextField: MaskedTextField!
     
     @IBAction func didBegin(_ sender: UITextField) {
         print("begin")

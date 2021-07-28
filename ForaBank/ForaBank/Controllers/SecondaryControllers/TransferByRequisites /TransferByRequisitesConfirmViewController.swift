@@ -90,45 +90,37 @@ class TransferByRequisitesConfirmViewController: UIViewController {
         stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
         
         
-        
-        
     }
     
     @objc func doneButtonTapped() {
-        makeCard2Card()
+        makeTransfer()
     }
 
-    func makeCard2Card(){
-           showActivity()
-           guard let code = smsCodeField.textField.text else { return }
-           let body = [ "verificationCode": code
-                       ] as [String: AnyObject]
-           NetworkManager<MakeCard2CardDecodableModel>.addRequest(.makeCard2Card, [:], body) { model, error in
-               self.dismissActivity()
-               if error != nil {
-                   print("DEBUG: Error: ", error ?? "")
-               }
-               guard let model = model else { return }
-               print("DEBUG: Card list: ", model)
-               if model.statusCode == 0 {
-                   
-                   DispatchQueue.main.async {
+    func makeTransfer(){
+        showActivity()
+        guard let code = smsCodeField.textField.text else { return }
+        let body = [ "verificationCode": code
+        ] as [String: AnyObject]
+        
+        NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { model, error in
+            self.dismissActivity()
+            if error != nil {
+                print("DEBUG: Error: ", error ?? "")
+            }
+            guard let model = model else { return }
+            print("DEBUG: Card list: ", model)
+            if model.statusCode == 0 {
+                
+                DispatchQueue.main.async {
                     let vc = PaymentsDetailsSuccessViewController()
+                    vc.id = model.data?.paymentOperationDetailId
+                    vc.printFormType = "external"
                     self.navigationController?.pushViewController(vc, animated: true)
-                   }
-               } else {
-                   print("DEBUG: Error: ", model.errorMessage ?? "")
-               }
-           }
-       }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+                }
+            } else {
+                print("DEBUG: Error: ", model.errorMessage ?? "")
+            }
+        }
     }
-    */
 
 }
