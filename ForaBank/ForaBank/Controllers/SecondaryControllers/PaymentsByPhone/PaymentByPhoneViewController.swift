@@ -6,8 +6,6 @@
 //
 
 import UIKit
-import SVGKit
-
 
 class PaymentByPhoneViewController: UIViewController {
     var sbp: Bool?
@@ -107,6 +105,7 @@ class PaymentByPhoneViewController: UIViewController {
     var otpCode: String?
     
     var selectNumber: String?
+    var memberId: String?
     
     @objc func showSpinningWheel(_ notification: NSNotification) {
         print(notification.userInfo ?? "")
@@ -131,6 +130,7 @@ class PaymentByPhoneViewController: UIViewController {
         setupUI()
         
         phoneField.didChooseButtonTapped = {() in
+            
             self.dismiss(animated: true, completion: nil)
         }
         hideKeyboardWhenTappedAround()
@@ -205,14 +205,6 @@ class PaymentByPhoneViewController: UIViewController {
             self.bankPayeer.text = bank.memberNameRus ?? ""
             self.hideView(self.bankListView, needHide: true)
         }
-    }
-    
-    func convertSVGStringToImage(_ string: String) -> UIImage {
-        let stringImage = string.replacingOccurrences(of: "\\", with: "")
-        let imageData = Data(stringImage.utf8)
-        let imageSVG = SVGKImage(data: imageData)
-        let image = imageSVG?.uiImage ?? UIImage()
-        return image
     }
     
     func setupActions() {
@@ -399,6 +391,7 @@ class PaymentByPhoneViewController: UIViewController {
                      ] ] as [String : AnyObject]
         
         print("DEBUG: ", #function, body)
+        
         NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer, [:], body) { [weak self] model, error in
             DispatchQueue.main.async {
 //                UIApplication.shared.keyWindow?.stopIndicatingActivity()
@@ -412,7 +405,6 @@ class PaymentByPhoneViewController: UIViewController {
                     guard let model = model else { return }
                     guard let statusCode = model.statusCode else { return }
                     if statusCode == 0 {
-
                         DispatchQueue.main.async {
                             let vc = PhoneConfirmViewController()
                             vc.sbp = self?.sbp
@@ -538,10 +530,13 @@ class PaymentByPhoneViewController: UIViewController {
         showActivity()
 //        37477404102
         let clearAmount = amount.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "₽", with: "")
+        guard let memberId = self.memberId else {
+            return
+        }
         let dataName = ["additional": [
             [ "fieldid": 1,
               "fieldname": "RecipientID",
-              "fieldvalue": "0115110217" ],
+              "fieldvalue": memberId ],
             [ "fieldid": 1,
               "fieldname": "SumSTrs",
               "fieldvalue": clearAmount ]

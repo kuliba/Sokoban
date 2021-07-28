@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SVGKit
 
 struct BankViewModel {
     
@@ -18,21 +17,13 @@ struct BankViewModel {
         if bank.svgImage  == "seeall"{
             return UIImage(named: bank.svgImage ?? "") ?? UIImage()
         } else {
-            let imageString = bank.svgImage ?? ""
-            return convertSVGStringToImage(imageString)
+            let imageString = bank.svgImage?.convertSVGStringToImage() ?? UIImage()
+            return imageString
         }
     }
     
     init(bank: BanksList) {
         self.bank = bank
-    }
-    
-    func convertSVGStringToImage(_ string: String) -> UIImage {
-        let stringImage = string.replacingOccurrences(of: "\\", with: "")
-        let imageData = Data(stringImage.utf8)
-        let imageSVG = SVGKImage(data: imageData)
-        let image = imageSVG?.uiImage ?? UIImage()
-        return image
     }
     
 }

@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SVGKit
 
 class ContactInputViewController: UIViewController {
     
@@ -298,7 +297,7 @@ class ContactInputViewController: UIViewController {
     
     private func setupBankField(bank: BanksList) {
         self.bankField.text = bank.memberNameRus ?? "" //"АйДиБанк"
-        self.bankField.imageView.image = convertSVGStringToImage(bank.svgImage ?? "")
+        self.bankField.imageView.image = bank.svgImage?.convertSVGStringToImage()
         
         guard let paymentSystem = self.paymentSystem else { return }
         paymentSystem.purefList?.forEach({ dictArr in
@@ -316,13 +315,6 @@ class ContactInputViewController: UIViewController {
         
     }
     
-    func convertSVGStringToImage(_ string: String) -> UIImage {
-        let stringImage = string.replacingOccurrences(of: "\\", with: "")
-        let imageData = Data(stringImage.utf8)
-        let imageSVG = SVGKImage(data: imageData)
-        let image = imageSVG?.uiImage ?? UIImage()
-        return image
-    }
     
     //MARK: - API
     func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?)->()) {

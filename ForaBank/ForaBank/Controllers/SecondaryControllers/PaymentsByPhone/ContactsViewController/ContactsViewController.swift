@@ -20,6 +20,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
     var contactsStore: CNContactStore?
     var resultSearchController = UISearchController()
     var orderedContacts = [String: [CNContact]]() //Contacts ordered in dicitonary alphabetically
+    var orderedBanks = [String: [BanksList]]()
     var sortedContactKeys = [String]()
     
     var selectedContacts = [EPContact]()
@@ -27,13 +28,16 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
     
     var subtitleCellValue = SubtitleCellValue.phoneNumber
     var multiSelectEnabled: Bool = false //Default is single selection contact
-    
+    var banksActive = false
     var seeall: Bool?
     var stackView = UIStackView()
 
     func passTextFieldText(text: String) {
-        if !reserveContacts.isEmpty{
-            loadContacts(filter: .none)
+        if text == "" {
+            banksActive = false
+            lastPhonePayment.removeAll()
+            getLastPayments()
+            tableView.reloadData()
         }
         let filteredContacts = contacts.filter({$0.name?.lowercased().prefix(text.count) ?? "" == text.lowercased() || $0.phoneNumber[0].lowercased().prefix(text.count) == text.lowercased()})
         reserveContacts = contacts
@@ -42,9 +46,8 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
             contacts = filteredContacts
         }
         if text.count == 15, (text.firstIndex(of: "(") != nil){
-            selectPhoneNumber =  "+7 \(text)"
-            getBankList()
-            getLastPhonePayments()
+            banksActive = true
+            tableView.reloadData()
         } 
         
     }
@@ -116,9 +119,23 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
     var contactCollectionView: UICollectionView!
     var delegate: passTextFieldText? = nil
     let contactView = UIView()
-
+    var banksList = [BanksList](){
+        didSet{
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        banksList = Dict.shared.banks ?? []
+        print(banks)
+        
+        banksList = banksList.sorted { (first, second) -> Bool in
+        if let one = first.memberNameRus, let two = second.memberNameRus {
+            return one < two
+        }
+        return true
+        }
+        
         self.delegate = self
         configureTableView()
         registerContactCell()
@@ -178,10 +195,11 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
 //        lastPaymentsCollectionView.scrollIndicatorInsets = nil
         switch seeall {
         case true:
-            stackView = UIStackView(arrangedSubviews: [searchContact, lastPaymentsCollectionView, tableView])
+            stackView = UIStackView(arrangedSubviews: [searchContact, lastPaymentsCollectionView, tableView, contactCollectionView])
         default:
-            stackView = UIStackView(arrangedSubviews: [searchContact, lastPaymentsCollectionView, tableView])
+            stackView = UIStackView(arrangedSubviews: [searchContact, lastPaymentsCollectionView, tableView, contactCollectionView])
         }
+        lastPaymentsCollectionView.isHidden = true
 //            searchContact.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 20).isActive = true
 //            searchContact.leadingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: -20).isActive = true
 //        lastPaymentsCollectionView.layoutMargins = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
@@ -259,12 +277,14 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
         label.text = "Выберите контакт"
         self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: label)
         self.navigationItem.leftItemsSupplementBackButton = true
-       let close = UIBarButtonItem(title: "title", style: .plain, target: self, action: #selector(backButton))
+       let close = UIBarButtonItem(title: "Закрыть", style: .plain, target: self, action: #selector(backButton))
         close.tintColor = .black
-        self.navigationItem.setRightBarButton(close, animated: true)
+//        self.navigationItem.setRightBarButton(close, animated: true)
 
 //        self.navigationItem.rightBarButtonItem?.action = #selector(backButton)
         self.navigationItem.rightBarButtonItem = close
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .normal)
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .highlighted)
     }
     
     @objc func backButton(){
@@ -272,7 +292,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
     }
     
     func phoneNumberWithContryCode() -> [String] {
-
+        
         let contacts = PhoneContacts.getContacts() // here calling the getContacts methods
         var arrPhoneNumbers = [String]()
         for contact in contacts {
@@ -346,7 +366,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
         } else if collectionView == lastPaymentsCollectionView{
             if lastPhonePayment.count > 1{
                 let item = lastPaymentsCollectionView.dequeueReusableCell(withReuseIdentifier: "LastPaymentsCollectionViewCell", for: indexPath) as! LastPaymentsCollectionViewCell
-                item.nameLabel.numberOfLines = 1
+                item.nameLabel.numberOfLines = 0
                 if lastPhonePayment[indexPath.item].isPayment == true{
                     item.nameLabel.text = selectPerson
 
@@ -367,14 +387,17 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
 //                }
                 if lastPayment.count >= 1{
 //                    item.contactImageView.image = nil
+                    item.nameLabel.isHidden = false
+                    item.nameLabel.numberOfLines = 0
                     item.bankNameLabel.isHidden = true
-                    item.bankNameLabel.text = lastPayment[indexPath.item].bankName
+                    item.nameLabel.text = format(phoneNumber: lastPayment[indexPath.item].phoneNumber ?? "")
+                    item.contactImageView.image = UIImage(systemName: "person.circle.fill")
                     for contact in contacts {
                         if contact.phoneNumber[0] == format(phoneNumber: lastPayment[indexPath.item].phoneNumber ?? "")! {
                             item.nameLabel.text = contact.name
                             if self.contacts[indexPath.item].avatarData != nil{
                                 item.contactImageView.image = UIImage(data: (self.contacts[indexPath.item].avatarData) ?? Data())
-                            }
+                            }                             
                             break
                         } else {
                             item.nameLabel.text = format(phoneNumber: lastPayment[indexPath.item].phoneNumber ?? "")
@@ -559,7 +582,6 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
 //                        lhs.memberNameRus ?? "" < rhs.memberNameRus ?? ""
 //                    }
                     self.lastPaymentsCollectionView.anchor(height:100)
-                    self.stackView.addSubview(self.contactCollectionView)
                     self.contactCollectionView.isHidden = false
                     self.contactCollectionView.reloadData()
                     
@@ -595,7 +617,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
 //                    } else {
 //                        self.lastPaymentsCollectionView.isHidden = true
 //                    }
-
+                    self.lastPaymentsCollectionView.isHidden = false
                     self.lastPaymentsCollectionView.reloadData()
                 }
             } else {
@@ -646,6 +668,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
     
     func format(phoneNumber sourcePhoneNumber: String) -> String? {
         // Remove any character that is not a number
+       
         var numbersOnly = sourcePhoneNumber.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
         if numbersOnly.prefix(1) == "7" || numbersOnly.prefix(1) == "8" {
             numbersOnly = String(numbersOnly.dropFirst())
@@ -826,11 +849,15 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
       }
       
        open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if banksActive{
+            return banksList.count ?? 0
+        } else {
           if resultSearchController.isActive { return filteredContacts.count }
           if let contactsForSection = orderedContacts[sortedContactKeys[section]] {
               return contactsForSection.count
           }
           return 0
+        }
       }
 
       // MARK: - Table View Delegates
@@ -839,40 +866,109 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
           let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! EPContactCell
           cell.accessoryType = .none
           //Convert CNContact to EPContact
-          let contact: EPContact
-          
-          if resultSearchController.isActive {
-              contact = EPContact(contact: filteredContacts[(indexPath as NSIndexPath).row])
-          } else {
-              guard let contactsForSection = orderedContacts[sortedContactKeys[(indexPath as NSIndexPath).section]] else {
-                  assertionFailure()
-                  return UITableViewCell()
-              }
+        cell.contactDetailTextLabel.isHidden = false
+        cell.contactInitialLabel.isHidden  = false
+        if banksActive{
+            do {
+                var contactsArray = [BanksList]()
+                    for item in banksList {
+                    //Ordering contacts based on alphabets in firstname
+                    contactsArray.append(item)
+                    var key: String = "#"
+                    //If ordering has to be happening via family name change it here.
+                        if let firstLetter = item.memberNameRus?[0..<1] , firstLetter.containsAlphabets() {
+                        key = firstLetter.uppercased()
+                    }
+                    var contacts = [BanksList]()
+                    
+                    if let segregatedContact = self.orderedBanks[key] {
+                        contacts = segregatedContact
+                    }
+                    contacts.append(item)
+                    self.orderedBanks[key] = contacts
+                    }
+                
+                self.sortedContactKeys = Array(self.orderedBanks.keys).sorted(by: <)
+                if self.sortedContactKeys.first == "#" {
+                    self.sortedContactKeys.removeFirst()
+                    self.sortedContactKeys.append("#")
+                }
+                
+            }
+            //Catching exception as enumerateContactsWithFetchRequest can throw errors
+            catch let error as NSError {
+                print(error.localizedDescription)
+            }
             
-              contact = EPContact(contact: contactsForSection[(indexPath as NSIndexPath).row])
-          }
-          
-          if multiSelectEnabled  && selectedContacts.contains(where: { $0.contactId == contact.contactId }) {
-              cell.accessoryType = UITableViewCell.AccessoryType.checkmark
-          }
-          
-          cell.updateContactsinUI(contact, indexPath: indexPath, subtitleType: subtitleCellValue)
+            cell.contactImageView.image = banksList[indexPath.row].svgImage?.convertSVGStringToImage()
+            cell.contactTextLabel.text = banksList[indexPath.row].memberNameRus
+            cell.contactDetailTextLabel.isHidden = true
+            cell.contactInitialLabel.isHidden = true
+            
+        } else {
+            
+            let contact: EPContact
+            
+            if resultSearchController.isActive {
+                contact = EPContact(contact: filteredContacts[(indexPath as NSIndexPath).row])
+            } else {
+                guard let contactsForSection = orderedContacts[sortedContactKeys[(indexPath as NSIndexPath).section]] else {
+                    assertionFailure()
+                    return UITableViewCell()
+                }
+              
+                contact = EPContact(contact: contactsForSection[(indexPath as NSIndexPath).row])
+            }
+            
+            if multiSelectEnabled  && selectedContacts.contains(where: { $0.contactId == contact.contactId }) {
+                cell.accessoryType = UITableViewCell.AccessoryType.checkmark
+            }
+            
+            cell.updateContactsinUI(contact, indexPath: indexPath, subtitleType: subtitleCellValue)
+        }
           return cell
       }
       
        open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
           
           let cell = tableView.cellForRow(at: indexPath) as! EPContactCell
-          let selectedContact =  cell.contact!
-            selectPhoneNumber = selectedContact.phoneNumbers.first?.phoneNumber
             resultSearchController.isActive = false
-            tableView.isHidden = true
+            if banksActive{
+                
+                let vc = PaymentByPhoneViewController()
+                vc.selectNumber =  selectPhoneNumber
+                vc.selectBank = banksList[indexPath.row].memberNameRus
+                vc.bankImage = banksList[indexPath.row].svgImage?.convertSVGStringToImage()
+                vc.memberId = banksList[indexPath.row].memberID
+                if banksList[indexPath.row].memberNameRus == "ФОРА-БАНК"{
+                    vc.sbp = false
+                } else {
+                    vc.sbp = true
+                }
+            
+//            vc.confurmVCModel = self.confurmVCModel
+            vc.modalPresentationStyle = .fullScreen
+            
+            vc.phoneField.text = selectPhoneNumber ?? ""
+            vc.addCloseButton()
+
+            let navController = UINavigationController(rootViewController: vc)
+            navController.modalPresentationStyle = .fullScreen
+            self.present(navController, animated: true, completion: nil)
+            } else {
+                let selectedContact =  cell.contact!
+                selectPerson = contacts[indexPath.item].name
+                selectPhoneNumber = selectedContact.phoneNumbers.first?.phoneNumber
+                searchContact.numberTextField.text  = selectPhoneNumber
+            }
+//            tableView.isHidden = true
 //            contactView.addSubview(contactCollectionView)
             
 //            contactCollectionView.isHidden = false
         
-            
-            getBankList()
+            banksActive = true
+            tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: UITableView.ScrollPosition.top , animated: false)
+            tableView.reloadData()
             getLastPhonePayments()
         
 
@@ -890,14 +986,38 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
       
        open func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
           if resultSearchController.isActive { return 0 }
+        
           tableView.scrollToRow(at: IndexPath(row: 0, section: index), at: UITableView.ScrollPosition.top , animated: false)
-          return sortedContactKeys.firstIndex(of: title)!
+        for item in orderedBanks {
+            print(item)
+        }
+        switch banksActive {
+        case true:
+            return 1
+        default:
+            return sortedContactKeys.firstIndex(of: title)!
+        }
       }
       
         open func sectionIndexTitles(for tableView: UITableView) -> [String]? {
           if resultSearchController.isActive { return nil }
           return sortedContactKeys
       }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if section == 0 && banksActive == true{
+            let view = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 30))
+            let label = UILabel(frame: CGRect(x: 20, y: 20, width: 50, height: 50))
+            label.text = "TEST TEXT"
+            label.textColor = .black
+            view.backgroundColor = .black
+            self.view.addSubview(view)
+
+            return view
+        } else {
+            return UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+        }
+    }
 
 }
 

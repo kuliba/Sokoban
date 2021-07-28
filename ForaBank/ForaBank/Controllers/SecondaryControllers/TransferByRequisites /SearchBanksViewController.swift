@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SVGKit
 
 class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, passTextFieldText {
    var allBanks = [BankFullInfoList]()
@@ -24,14 +23,6 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
     }
     
     
-   
-    func convertSVGStringToImage(_ string: String) -> UIImage {
-        let stringImage = string.replacingOccurrences(of: "\\", with: "")
-        let imageData = Data(stringImage.utf8)
-        let imageSVG = SVGKImage(data: imageData)
-        let image = imageSVG?.uiImage ?? UIImage()
-        return image
-    }
     
 
     var contactCollectionView: UICollectionView!
@@ -102,12 +93,10 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
         label.text = "Выберите контакт"
         self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: label)
         self.navigationItem.leftItemsSupplementBackButton = true
-        let close = UILabel(text: "Закрыть", font: .none, color: .black)
-        close.isUserInteractionEnabled = true
+
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Закрыть", style: .plain, target: self, action:  #selector(backAction))
-        navigationItem.rightBarButtonItem?.tintColor = .black   
-//        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: close)
-//        self.navigationItem.rightBarButtonItem?.action = #selector(backAction)
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .normal)
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .highlighted)
 
 
     }
@@ -119,7 +108,7 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let item = contactCollectionView.dequeueReusableCell(withReuseIdentifier: "ContactCollectionViewCell", for: indexPath) as! ContactCollectionViewCell
-        item.contactImageView.image =  convertSVGStringToImage(banks[indexPath.item].svgImage ?? "")
+        item.contactImageView.image = banks[indexPath.item].svgImage?.convertSVGStringToImage()
         item.contactLabel.text = banks[indexPath.item].fullName
         item.phoneLabel.text = banks[indexPath.item].memberID
         return item

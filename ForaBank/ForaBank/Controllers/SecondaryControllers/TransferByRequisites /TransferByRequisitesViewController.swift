@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SVGKit
 
 struct Fio {
     var name, patronymic, surname: String
@@ -33,15 +32,8 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
             
         } else {
             self.bikBankField.text = bank.memberID ?? "" //"АйДиБанк"
-            self.bikBankField.imageView.image = convertSVGStringToImage(bank.svgImage ?? "")
+            self.bikBankField.imageView.image = bank.svgImage?.convertSVGStringToImage() 
         }
-    }
-    func convertSVGStringToImage(_ string: String) -> UIImage {
-        let stringImage = string.replacingOccurrences(of: "\\", with: "")
-        let imageData = Data(stringImage.utf8)
-        let imageSVG = SVGKImage(data: imageData)
-        let image = imageSVG?.uiImage ?? UIImage()
-        return image
     }
     
     var selectedCardNumber: String?
@@ -193,7 +185,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
                 self.suggestBank(self.bikBankField.textField.text ?? "") { model in
                     let image = model.first?.svgImage
                     DispatchQueue.main.async {
-                        self.bikBankField.imageView.image = self.convertSVGStringToImage(image ?? "")
+                        self.bikBankField.imageView.image = image?.convertSVGStringToImage()
                     }
                 }
             } else {
@@ -318,32 +310,35 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
             }
         }
         
-//        getBankList { [weak self]  banksList, error in
-//            DispatchQueue.main.async {
-//                if error != nil {
-//                    self?.showAlert(with: "Ошибка", and: error!)
-//                }
-//
-//                guard let banksList = banksList else { return }
-//                var filteredbanksList : [BanksList] = []
-//
-//                banksList.forEach { bank in
-//                    guard let codeList = bank.paymentSystemCodeList else { return }
-////                    guard let countrylist = self?.country?.paymentSystemCodeList else { return }
-////                    countrylist.forEach { code in
-////                        if codeList.contains(code) {
-////                            filteredbanksList.append(bank)
-////                        }
-////                    }
-//                }
+
+
+        getBankList { [weak self]  banksList, error in
+            DispatchQueue.main.async {
+                if error != nil {
+                    self?.showAlert(with: "Ошибка", and: error!)
+                }
+
+                guard let banksList = banksList else { return }
+                var filteredbanksList : [BanksList] = []
+
+                banksList.forEach { bank in
+                    guard let codeList = bank.paymentSystemCodeList else { return }
+//                    guard let countrylist = self?.country?.paymentSystemCodeList else { return }
+//                    countrylist.forEach { code in
+//                        if codeList.contains(code) {
+//                            filteredbanksList.append(bank)
+//                        }
+//                    }
+                }
 //                self?.banks = banksList
-//
-////                Dict.shared.banks?.append(BanksList(memberID: "123", memberName: "Смотреть вс1е", memberNameRus: "Смотреть все", md5Hash: "", svgImage: "seeall", paymentSystemCodeList: ["123"]))
-//                let seeall = BanksList(memberID: "123", memberName: "Смотреть вс1е", memberNameRus: "Смотреть все", md5Hash: "", svgImage: "seeall", paymentSystemCodeList: ["123"])
+
+//                Dict.shared.banks?.append(BanksList(memberID: "123", memberName: "Смотреть вс1е", memberNameRus: "Смотреть все", md5Hash: "", svgImage: "seeall", paymentSystemCodeList: ["123"]))
+                let seeall = BanksList(memberID: "123", memberName: "Смотреть вс1е", memberNameRus: "Смотреть все", md5Hash: "", svgImage: "seeall", paymentSystemCodeList: ["123"])
 //                self?.banks?.insert(seeall, at: 0)
-//
-//            }
-//        }
+
+            }
+        }
+
         
         bankListView.didBankTapped = { (bank) in
             self.selectedBank = bank
@@ -355,9 +350,9 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         bankListView.didSeeAll = { (bank) in
             self.selectedBank = bank
             let vc = SearchBanksViewController()
-            vc.banks = self.banks!
+//            vc.banks = self.banks!
             let navController = UINavigationController(rootViewController: vc)
-            navController.modalPresentationStyle = .fullScreen
+//            navController.modalPresentationStyle = .fullScreen
             self.present(navController, animated: true, completion: nil)
         }
         
@@ -447,7 +442,8 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         
         setupConstraint()
         suggestBank("") { model in
-            self.banks = model
+//            self.banks = model
+
         }
     }
     
