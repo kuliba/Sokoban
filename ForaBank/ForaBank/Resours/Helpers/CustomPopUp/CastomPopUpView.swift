@@ -504,7 +504,7 @@ class MemeDetailVC : AddHeaderImageViewController {
                                 vc.modalPresentationStyle = .fullScreen
                                 vc.confurmVCModel?.type = .card2card
                                 viewModel.summTransction = model.data?.debitAmount?.currencyFormatter(symbol: model.data?.currencyPayer ?? "RUB") ?? ""
-                                viewModel.summInCurrency = model.data?.creditAmount?.currencyFormatter(symbol: model.data?.currencyAmount ?? "RUB") ?? ""
+                                viewModel.summInCurrency = model.data?.creditAmount?.currencyFormatter(symbol: model.data?.currencyPayee ?? "RUB") ?? ""
                                 viewModel.taxTransction = model.data?.fee?.currencyFormatter(symbol: model.data?.currencyPayer ?? "RUB") ?? ""
                                 vc.smsCodeField.isHidden = !(model.data?.needOTP ?? true)
                                 vc.confurmVCModel = viewModel
