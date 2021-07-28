@@ -288,7 +288,7 @@ class PaymentByPhoneViewController: UIViewController {
         bankPayeer.text = selectBank ?? ""
         bottomView.anchor(left: view.leftAnchor, bottom: view.bottomAnchor,
                           right: view.rightAnchor, paddingBottom: 20)
-        bottomView.currency = "₽"
+        bottomView.currencySymbol = "₽"
 
             
         title = "Перевод по номеру телефона"

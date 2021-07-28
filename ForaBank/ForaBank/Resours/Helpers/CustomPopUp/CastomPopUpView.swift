@@ -56,7 +56,7 @@ class MemeDetailVC : AddHeaderImageViewController {
         
         
         
-        bottomView.currency = "₽"
+        bottomView.currencySymbol = "₽"
         
         self.addHeaderImage()
         self.view.layer.cornerRadius = 20
@@ -124,7 +124,8 @@ class MemeDetailVC : AddHeaderImageViewController {
             guard let tmpModelFrom = self.cardFromField.cardModel else { return }
             guard let tmpModelTo = self.cardToField.cardModel else { return }
             self.cardFromField.cardModel = tmpModelTo
-            self.bottomView.currency = tmpModelTo.currency?.getSymbol() ?? ""
+            self.bottomView.currencySymbol = tmpModelTo.currency?.getSymbol() ?? ""
+            self.bottomView.currencyCode = tmpModelTo.currency ?? ""
             self.cardToField.cardModel = tmpModelFrom
             self.viewModel.cardFrom = tmpModelTo
             self.viewModel.cardTo = tmpModelFrom
@@ -197,7 +198,7 @@ class MemeDetailVC : AddHeaderImageViewController {
         cardFromListView.didCardTapped = { [weak self] (card) in
             self?.viewModel.cardFrom = card
             self?.cardFromField.cardModel = card
-            self?.bottomView.currency = card.currency?.getSymbol() ?? ""
+            self?.bottomView.currencySymbol = card.currency?.getSymbol() ?? ""
             UIView.animate(withDuration: 0.2) {
                 self?.cardFromListView.isHidden = true
                 
@@ -220,7 +221,7 @@ class MemeDetailVC : AddHeaderImageViewController {
             vc.didCardTapped = { [weak self] card in
                 self?.viewModel.cardFrom = card
                 self?.cardFromField.cardModel = card
-                self?.bottomView.currency = card.currency?.getSymbol() ?? ""
+                self?.bottomView.currencySymbol = card.currency?.getSymbol() ?? ""
                 self?.hideAllCardList()
                 vc.dismiss(animated: true, completion: nil)
             }
@@ -316,7 +317,7 @@ class MemeDetailVC : AddHeaderImageViewController {
                         let m = model?.data
                         self.bottomView.currencyTo = m
                         self.bottomView.currencyFrom = nil
-                        self.bottomView.currency = "₽"
+                        self.bottomView.currencySymbol = "₽"
                         self.bottomView.tempArray.append(m)
                         self.bottomView.tempArray.append(nil)
                     }
@@ -342,12 +343,12 @@ class MemeDetailVC : AddHeaderImageViewController {
                 NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], bodyTo) { model, error in
                     let m = model?.data
                     self.bottomView.currencyTo = m
-                    self.bottomView.tempArray[1] = m
+                    self.bottomView.tempArray.append(m)
                 }
                 let m = model?.data
                 self.bottomView.currencyFrom = m
                 
-                self.bottomView.tempArray[0] = m
+                self.bottomView.tempArray.append(m)
             }
         }
     }
@@ -453,10 +454,12 @@ class MemeDetailVC : AddHeaderImageViewController {
 //        DispatchQueue.main.async {
 //            UIApplication.shared.keyWindow?.startIndicatingActivity()
 //        }
+        
+        let a = self.bottomView.currencyCode
         bottomView.doneButtonIsEnabled(true)
         let body = [ "check" : false,
                      "amount" : viewModel.summTransction,
-                     "currencyAmount" : self.bottomView.currencySimbol,
+                     "currencyAmount" : self.bottomView.currencyCode,
                      "payer" : [
                         "cardId" : viewModel.cardFromCardId,
                         "cardNumber" : viewModel.cardFromCardNumber,

@@ -15,13 +15,13 @@ class BottomInputView: UIView {
     var tempTextFieldValue = ""
     
     let moneyInputController = TextFieldStartInputController()
-    var currency = "" {
+    var currencySymbol = "" {
         didSet {
             setupMoneyController()
         }
     }
     
-    var currencySimbol = "RUB"
+    var currencyCode = "RUB"
     
     // MARK: - Formatters
     var moneyFormatter: SumTextInputFormatter?
@@ -123,10 +123,10 @@ class BottomInputView: UIView {
                         let tempValue = unformatText.toDouble() ?? 0
                         let resultSum = (tempValue / (self.currencyTo?.rateBuy ?? 0)).rounded(toPlaces: 2)
                         
-                        let tempBottomLable = String(resultSum) + currencyToSimbol + "  |  " + "1" + currencyToSimbol + " - " + currencyToValue +  self.currency
+                        let tempBottomLable = String(resultSum) + currencyToSimbol + "  |  " + "1" + currencyToSimbol + " - " + currencyToValue +  self.currencySymbol
                         let tempLable = tempBottomLable.replacingOccurrences(of: ".", with: ",")
                         self.buttomLabel.text = tempLable
-                        self.currencySimbol = self.currencyTo?.currencyCodeAlpha ?? ""
+                        self.currencyCode = "RUB"
                         
                     case (_, nil):
         
@@ -136,7 +136,7 @@ class BottomInputView: UIView {
                         let tempBottomLable = String(resultSum) + "₽" + "  |  " + "1" + currencyFromSimbol + " - " + currencyFromValue + "₽"
                         let tempLable = tempBottomLable.replacingOccurrences(of: ".", with: ",")
                         self.buttomLabel.text = tempLable
-                        self.currencySimbol = self.currencyFrom?.currencyCodeAlpha ?? ""
+                        self.currencyCode = self.currencyFrom?.currencyCodeAlpha ?? ""
                     case (_, _):
                         break
                     }
@@ -151,7 +151,7 @@ class BottomInputView: UIView {
                 let tempBottomLable = String(resultSum) + currencyToSimbol + "  |  " + "1" + currencyFromSimbol + " - " + a +  currencyToSimbol
                 let tempLable = tempBottomLable.replacingOccurrences(of: ".", with: ",")
                 self.buttomLabel.text = tempLable
-                self.currencySimbol = self.currencyFrom?.currencyCodeAlpha ?? ""
+                self.currencyCode = self.currencyFrom?.currencyCodeAlpha ?? ""
             }
         }
     }
@@ -173,19 +173,19 @@ class BottomInputView: UIView {
                     switch (from, to) {
                     case (nil, _):
                         let reversArray = Array(tempArray.reversed())
-                        currency = "₽"
+                        currencySymbol = "₽"
                         self.currencySwitchButton.setTitle("₽" + " ⇆ " + (reversArray[1]?.currencyCodeAlpha?.getSymbol() ?? ""), for: .normal)
                         let tempValue = self.tempTextFieldValue.toDouble() ?? 0
                         let resultSum = (tempValue / (reversArray[1]?.rateBuy ?? 0)).rounded(toPlaces: 2)
                         
-                        let tempBottomLable = String(resultSum) + self.currencyToSimbol + "  |  " + "1" + "₽" + " - " + String(reversArray[1]?.rateBuy ?? 0) +  self.currency
+                        let tempBottomLable = String(resultSum) + self.currencyToSimbol + "  |  " + "1" + "₽" + " - " + String(reversArray[1]?.rateBuy ?? 0) +  self.currencySymbol
                         let tempLable = tempBottomLable.replacingOccurrences(of: ".", with: ",")
                         self.buttomLabel.text = tempLable
-                        self.currencySimbol = reversArray[1]?.currencyCodeAlpha ?? ""
+                        self.currencyCode = reversArray[1]?.currencyCodeAlpha ?? ""
                         
                     case (_, nil):
                         let reversArray = Array(tempArray.reversed())
-                        currency = reversArray[0]?.currencyCodeAlpha?.getSymbol() ?? ""
+                        currencySymbol = reversArray[0]?.currencyCodeAlpha?.getSymbol() ?? ""
                         self.currencySwitchButton.setTitle((reversArray[0]?.currencyCodeAlpha?.getSymbol() ?? "") + " ⇆ " + "₽", for: .normal)
                         let tempValue = self.tempTextFieldValue.toDouble() ?? 0
                         let resultSum = ( tempValue * (reversArray[0]?.rateBuy ?? 0) ).rounded(toPlaces: 2)
@@ -193,7 +193,7 @@ class BottomInputView: UIView {
                         let tempBottomLable = String(resultSum) + "₽" + "  |  " + "1" + self.currencyFromSimbol + " - " + String(reversArray[0]?.rateBuy ?? 0) + "₽"
                         let tempLable = tempBottomLable.replacingOccurrences(of: ".", with: ",")
                         self.buttomLabel.text = tempLable
-                        self.currencySimbol = reversArray[0]?.currencyCodeAlpha ?? ""
+                        self.currencyCode = reversArray[0]?.currencyCodeAlpha ?? ""
                     case (_, _):
                         break
                     }
@@ -201,14 +201,14 @@ class BottomInputView: UIView {
             case false:
                 let reversArray = Array(tempArray.reversed())
                 self.currencySwitchButton.setTitle((reversArray[1]?.currencyCodeAlpha?.getSymbol() ?? "") + " ⇆ " + (reversArray[0]?.currencyCodeAlpha?.getSymbol() ?? ""), for: .normal)
-                currency = currencyToSimbol
+                currencySymbol = currencyToSimbol
                 let tempValue = self.tempTextFieldValue.toDouble() ?? 0
                 let resultSum = ( tempValue * ((reversArray[1]?.rateBuy ?? 0) / (reversArray[0]?.rateSell ?? 0))).rounded(toPlaces: 2)
                 let a = String(((reversArray[1]?.rateBuy ?? 0) / (reversArray[0]?.rateSell ?? 0)).rounded(toPlaces: 2))
                 let tempBottomLable = String(resultSum) + currencyFromSimbol + "  |  " + "1" + currencyToSimbol + " - " + a +  currencyFromSimbol
                 let tempLable = tempBottomLable.replacingOccurrences(of: ".", with: ",")
                 self.buttomLabel.text = tempLable
-                self.currencySimbol = reversArray[1]?.currencyCodeAlpha ?? ""
+                self.currencyCode = reversArray[1]?.currencyCodeAlpha ?? ""
             }
             } else {
                 switch ru {
@@ -216,18 +216,18 @@ class BottomInputView: UIView {
                     if from != to {
                         switch (from, to) {
                         case (nil, _):
-                            self.currency = self.tempArray[0]?.currencyCodeAlpha?.getSymbol() ?? ""
+                            self.currencySymbol = self.tempArray[0]?.currencyCodeAlpha?.getSymbol() ?? ""
                             self.currencySwitchButton.setTitle((self.tempArray[0]?.currencyCodeAlpha?.getSymbol() ?? "") + " ⇆ " + "₽", for: .normal)
                             let tempValue = self.tempTextFieldValue.toDouble() ?? 0
                             let resultSum = (tempValue * (self.tempArray[0]?.rateSell ?? 0)).rounded(toPlaces: 2)
                             
-                            let tempBottomLable = String(resultSum) + "₽" + "  |  " + "1" + "₽" + " - " + String(self.tempArray[0]?.rateSell ?? 0) +  self.currency
+                            let tempBottomLable = String(resultSum) + "₽" + "  |  " + "1" + "₽" + " - " + String(self.tempArray[0]?.rateSell ?? 0) +  self.currencySymbol
                             let tempLable = tempBottomLable.replacingOccurrences(of: ".", with: ",")
                             self.buttomLabel.text = tempLable
-                            self.currencySimbol = self.tempArray[0]?.currencyCodeAlpha ?? ""
+                            self.currencyCode = self.tempArray[0]?.currencyCodeAlpha ?? ""
                             
                         case (_, nil):
-                            self.currency = "₽"
+                            self.currencySymbol = "₽"
                             self.currencySwitchButton.setTitle("₽" + " ⇆ " + (self.tempArray[1]?.currencyCodeAlpha?.getSymbol() ?? ""), for: .normal)
                             let tempValue = self.tempTextFieldValue.toDouble() ?? 0
                             let resultSum = ( tempValue / (self.tempArray[1]?.rateSell ?? 0) ).rounded(toPlaces: 2)
@@ -235,7 +235,7 @@ class BottomInputView: UIView {
                             let tempBottomLable = String(resultSum) + curSymbol + "  |  " + "1" + self.currencyFromSimbol + " - " + String(self.tempArray[1]?.rateSell ?? 0) + "₽"
                             let tempLable = tempBottomLable.replacingOccurrences(of: ".", with: ",")
                             self.buttomLabel.text = tempLable
-                            self.currencySimbol = self.tempArray[1]?.currencyCodeAlpha ?? ""
+                            self.currencyCode = self.tempArray[1]?.currencyCodeAlpha ?? ""
                         case (_, _):
                             break
                         }
@@ -244,7 +244,7 @@ class BottomInputView: UIView {
                 
                 self.currencySwitchButton.setTitle((self.tempArray[1]?.currencyCodeAlpha?.getSymbol() ?? "") + " ⇆ " + (self.tempArray[0]?.currencyCodeAlpha?.getSymbol() ?? ""), for: .normal)
                 
-                self.currency = self.currencyFromSimbol
+                self.currencySymbol = self.currencyFromSimbol
                 let tempValue = self.tempTextFieldValue.toDouble() ?? 0
                 let resultSum = ( tempValue * ((self.tempArray[1]?.rateBuy ?? 0) / (self.tempArray[0]?.rateSell ?? 0))).rounded(toPlaces: 2)
                 let a = String(((self.tempArray[1]?.rateBuy ?? 0) / (self.tempArray[0]?.rateSell ?? 0)).rounded(toPlaces: 2))
@@ -253,7 +253,7 @@ class BottomInputView: UIView {
                 let tempBottomLable = String(resultSum) + self.currencyToSimbol + "  |  " + "1" + self.currencyFromSimbol + " - " + a +  self.currencyToSimbol
                 let tempLable = tempBottomLable.replacingOccurrences(of: ".", with: ",")
                 self.buttomLabel.text = tempLable
-                self.currencySimbol = self.tempArray[1]?.currencyCodeAlpha ?? ""
+                self.currencyCode = self.tempArray[1]?.currencyCodeAlpha ?? ""
             }
             }
     }
@@ -295,7 +295,7 @@ class BottomInputView: UIView {
             amount = unformatText ?? ""
         }
         
-            self.moneyFormatter = SumTextInputFormatter(textPattern: "# ###,## \(self.currency)")
+            self.moneyFormatter = SumTextInputFormatter(textPattern: "# ###,## \(self.currencySymbol)")
             self.moneyInputController.formatter = self.moneyFormatter
             self.amountTextField.delegate = self.moneyInputController
         
