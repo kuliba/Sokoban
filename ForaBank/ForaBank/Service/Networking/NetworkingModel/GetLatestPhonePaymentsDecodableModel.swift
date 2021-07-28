@@ -69,12 +69,12 @@ extension GetLatestPhonePaymentsDecodableModel {
 // MARK: - GetLatestPhone
 struct GetLatestPhone: Codable {
     let bankName, bankID: String?
-    let isPayment: Bool?
+    let payment: Bool?
 
     enum CodingKeys: String, CodingKey {
         case bankName
         case bankID = "bankId"
-        case isPayment
+        case payment
     }
 }
 
@@ -103,7 +103,7 @@ extension GetLatestPhone {
         return GetLatestPhone(
             bankName: bankName ?? self.bankName,
             bankID: bankID ?? self.bankID,
-            isPayment: isPayment ?? false
+            payment: payment ?? false
         )
     }
 

@@ -183,6 +183,8 @@ class PhoneConfirmViewController: UIViewController {
                    
                    DispatchQueue.main.async {
                     let vc = PaymentsDetailsSuccessViewController()
+                    
+                    vc.confurmVCModel = ConfirmViewControllerModel(country: CountriesList(code: "", name: "", sendCurr: nil, md5Hash: "", svgImage: "", paymentSystemCodeList: nil), model: AnywayPaymentDecodableModel(statusCode: 0, errorMessage: "", data: AnywayPayment(paymentOperationDetailID: nil, listInputs: [], error: "", errorMessage: "", finalStep: 1, id: "", amount: Double(self.summTransctionField.text.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "₽", with: "").replacingOccurrences(of: ",", with: ".")), commission: 0.0, nextStep: 0)), fullName: "")
                     vc.id = model.data?.paymentOperationDetailId
                     vc.printFormType = "internal"
                     self.navigationController?.pushViewController(vc, animated: true)
