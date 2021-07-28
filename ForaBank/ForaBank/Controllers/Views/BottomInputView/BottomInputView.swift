@@ -152,6 +152,7 @@ class BottomInputView: UIView {
                 let tempLable = tempBottomLable.replacingOccurrences(of: ".", with: ",")
                 self.buttomLabel.text = tempLable
                 self.currencyCode = self.currencyFrom?.currencyCodeAlpha ?? ""
+                print(self.currencyFrom?.currencyCodeAlpha)
             }
         }
     }

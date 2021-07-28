@@ -124,11 +124,21 @@ class MemeDetailVC : AddHeaderImageViewController {
             guard let tmpModelFrom = self.cardFromField.cardModel else { return }
             guard let tmpModelTo = self.cardToField.cardModel else { return }
             self.cardFromField.cardModel = tmpModelTo
-            self.bottomView.currencySymbol = tmpModelTo.currency?.getSymbol() ?? ""
-            self.bottomView.currencyCode = tmpModelTo.currency ?? ""
             self.cardToField.cardModel = tmpModelFrom
             self.viewModel.cardFrom = tmpModelTo
             self.viewModel.cardTo = tmpModelFrom
+            
+            self.bottomView.currencySymbol = tmpModelTo.currency?.getSymbol() ?? ""
+            
+            let tempBottomViewCurrencyFrom = self.bottomView.currencyFrom
+            let tempBottomViewCurrencyTo = self.bottomView.currencyTo
+            self.bottomView.currencyFrom = tempBottomViewCurrencyTo
+            self.bottomView.currencyTo = tempBottomViewCurrencyFrom
+            
+            
+            self.bottomView.currencyCode = tmpModelTo.currency ?? ""
+            
+            
             let text = self.bottomView.amountTextField.text
             let unformatText = self.bottomView.moneyFormatter?.unformat(text)
             self.bottomView.exchangeRate(unformatText ?? "")
@@ -147,23 +157,25 @@ class MemeDetailVC : AddHeaderImageViewController {
             ? "Номер карты или счета"
             : "Номер карты отправителя"
         cardFromField.didChooseButtonTapped = { [weak self]  () in
-            UIView.animate(withDuration: 0.2) {
-                if self?.cardFromListView.isHidden == true {
-                    self?.cardFromListView.alpha = 1
-                    self?.cardFromListView.isHidden = false
-                } else {
-                    self?.cardFromListView.alpha = 0
-                    self?.cardFromListView.isHidden = true
+            DispatchQueue.main.async {
+                UIView.animate(withDuration: 0.2) {
+                    if self?.cardFromListView.isHidden == true {
+                        self?.cardFromListView.alpha = 1
+                        self?.cardFromListView.isHidden = false
+                    } else {
+                        self?.cardFromListView.alpha = 0
+                        self?.cardFromListView.isHidden = true
+                    }
+                    
+                    self?.seporatorView.curvedLineView.isHidden.toggle()
+                    self?.seporatorView.straightLineView.isHidden.toggle()
+                    
+                    if self?.cardToListView.isHidden == false {
+                        self?.cardToListView.isHidden = true
+                        self?.cardToListView.alpha = 0
+                    }
+                    self?.stackView.layoutIfNeeded()
                 }
-                
-                self?.seporatorView.curvedLineView.isHidden.toggle()
-                self?.seporatorView.straightLineView.isHidden.toggle()
-                
-                if self?.cardToListView.isHidden == false {
-                    self?.cardToListView.isHidden = true
-                    self?.cardToListView.alpha = 0
-                }
-                self?.stackView.layoutIfNeeded()
             }
         }
     }
@@ -174,24 +186,26 @@ class MemeDetailVC : AddHeaderImageViewController {
             ? "Номер карты или счета"
             : "Номер карты получателя"
         cardToField.didChooseButtonTapped = { [weak self]  () in
-            UIView.animate(withDuration: 0.2) {
-                if self?.cardToListView.isHidden == true {
-                    self?.cardToListView.alpha = 1
-                    self?.cardToListView.isHidden = false
-                } else {
-                    self?.cardToListView.alpha = 0
-                    self?.cardToListView.isHidden = true
-                }
-                
-                if self?.cardFromListView.isHidden == false {
+            DispatchQueue.main.async {
+                UIView.animate(withDuration: 0.2) {
+                    if self?.cardToListView.isHidden == true {
+                        self?.cardToListView.alpha = 1
+                        self?.cardToListView.isHidden = false
+                    } else {
+                        self?.cardToListView.alpha = 0
+                        self?.cardToListView.isHidden = true
+                    }
                     
-                    self?.cardFromListView.isHidden = true
-                    self?.cardFromListView.alpha = 0
-                    
-                    self?.seporatorView.curvedLineView.isHidden = false
-                    self?.seporatorView.straightLineView.isHidden = true
+                    if self?.cardFromListView.isHidden == false {
+                        
+                        self?.cardFromListView.isHidden = true
+                        self?.cardFromListView.alpha = 0
+                        
+                        self?.seporatorView.curvedLineView.isHidden = false
+                        self?.seporatorView.straightLineView.isHidden = true
+                    }
+                    self?.stackView.layoutIfNeeded()
                 }
-                self?.stackView.layoutIfNeeded()
             }
         }
     }
@@ -202,16 +216,18 @@ class MemeDetailVC : AddHeaderImageViewController {
             self?.viewModel.cardFrom = card
             self?.cardFromField.cardModel = card
             self?.bottomView.currencySymbol = card.currency?.getSymbol() ?? ""
-            UIView.animate(withDuration: 0.2) {
-                self?.cardFromListView.isHidden = true
-                
-                self?.cardToListView.isHidden = true
-                self?.cardFromListView.alpha = 0
-                
-                self?.seporatorView.curvedLineView.isHidden = false
-                self?.seporatorView.straightLineView.isHidden = true
-                
-                self?.stackView.layoutIfNeeded()
+            DispatchQueue.main.async {
+                UIView.animate(withDuration: 0.2) {
+                    self?.cardFromListView.isHidden = true
+                    
+                    self?.cardToListView.isHidden = true
+                    self?.cardFromListView.alpha = 0
+                    
+                    self?.seporatorView.curvedLineView.isHidden = false
+                    self?.seporatorView.straightLineView.isHidden = true
+                    
+                    self?.stackView.layoutIfNeeded()
+                }
             }
         }
         cardFromListView.lastItemTap = {
@@ -359,34 +375,37 @@ class MemeDetailVC : AddHeaderImageViewController {
     private func setupCardViewActions() {
         cardView.closeView = { [weak self] () in
 //            self?.hideCustomCardView()
-            UIView.animate(withDuration: 0.1) {
-                self?.cardView.alpha = 0
-                self?.stackView.isHidden = false
-                self?.titleLabel.isHidden = false
-                self?.bottomView.isHidden = false
-            } completion: { finish in
-                if finish {
-                    self?.cardView.removeFromSuperview()
-                    self?.cardView.alpha = 1
+            DispatchQueue.main.async {
+                UIView.animate(withDuration: 0.1) {
+                    self?.cardView.alpha = 0
+                    self?.stackView.isHidden = false
+                    self?.titleLabel.isHidden = false
+                    self?.bottomView.isHidden = false
+                } completion: { finish in
+                    if finish {
+                        self?.cardView.removeFromSuperview()
+                        self?.cardView.alpha = 1
+                    }
                 }
             }
         }
         cardView.finishAndCloseView = { [weak self]  (model) in
 //            self?.hideCustomCardView()
-            UIView.animate(withDuration: 0.1) {
-                self?.cardView.alpha = 0
-                self?.stackView.isHidden = false
-                self?.titleLabel.isHidden = false
-                self?.bottomView.isHidden = false
-            } completion: { finish in
-                if finish {
-                    self?.cardView.removeFromSuperview()
-                    self?.cardView.alpha = 1
+            DispatchQueue.main.async {
+                UIView.animate(withDuration: 0.1) {
+                    self?.cardView.alpha = 0
+                    self?.stackView.isHidden = false
+                    self?.titleLabel.isHidden = false
+                    self?.bottomView.isHidden = false
+                } completion: { finish in
+                    if finish {
+                        self?.cardView.removeFromSuperview()
+                        self?.cardView.alpha = 1
+                    }
+                    self?.viewModel.customCardTo = model
+                    self?.cardToField.customCardModel = model
                 }
-                self?.viewModel.customCardTo = model
-                self?.cardToField.customCardModel = model
             }
-            
         }
     }
     
@@ -439,14 +458,6 @@ class MemeDetailVC : AddHeaderImageViewController {
             }
         }
         
-//        NetworkHelper.request(.getProductList) { cardList , error in
-//            if error != nil {
-//                completion(nil, error)
-//            }
-//            guard let cardList = cardList as? [GetProductListDatum] else { return }
-//            completion(cardList, nil)
-//            print("DEBUG: Load card list... Count is: ", cardList.count)
-//        }
     }
     
     func doneButtonTapped(with viewModel: ConfirmViewControllerModel) {
@@ -454,11 +465,6 @@ class MemeDetailVC : AddHeaderImageViewController {
         var viewModel = viewModel
         self.dismissKeyboard()
         self.showActivity()
-//        DispatchQueue.main.async {
-//            UIApplication.shared.keyWindow?.startIndicatingActivity()
-//        }
-        
-        let a = self.bottomView.currencyCode
         bottomView.doneButtonIsEnabled(true)
         let body = [ "check" : false,
                      "amount" : viewModel.summTransction,
@@ -479,7 +485,6 @@ class MemeDetailVC : AddHeaderImageViewController {
         print("DEBUG: ", #function, body)
         NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer, [:], body) { [weak self] model, error in
             DispatchQueue.main.async {
-//                UIApplication.shared.keyWindow?.stopIndicatingActivity()
                 self?.dismissActivity()
                 self?.bottomView.doneButtonIsEnabled(false)
                 if error != nil {
@@ -516,16 +521,8 @@ class MemeDetailVC : AddHeaderImageViewController {
                                     viewModel.summTransction = model.data?.debitAmount?.currencyFormatter(symbol: model.data?.currencyAmount ?? "RUB") ?? ""
                                     vc.id = model.data?.paymentOperationDetailID ?? 0
                                     vc.printFormType = "internal"
-//                                    {
-//                                        "paymentOperationDetailId" : 2945,
-//                                        "printFormType" : "internal"
-//                                    }
-
-                                    
-                                    
+                                  
                                 }
-                                
-                                
                                 vc.confurmVCModel = viewModel
                                 vc.modalPresentationStyle = .fullScreen
                                 self?.present(vc, animated: true, completion: nil)
@@ -549,52 +546,3 @@ class MemeDetailVC : AddHeaderImageViewController {
     
 }
 
-//struct CastomPopUpView  {
-//
-////    let v = MainPopUpView()
-//
-//    let a = MemeDetailVC()
-//
-//    func setupAttributs () -> EKAttributes {
-//
-//
-//        var attributes = EKAttributes.bottomNote
-//        attributes.displayDuration = .infinity
-//        attributes.screenBackground = .color(color: .init(light: UIColor(red: 0, green: 0, blue: 0, alpha: 0.2), dark: UIColor(red: 1, green: 1, blue: 1, alpha: 0.2)))
-//        attributes.windowLevel = .normal
-//        attributes.position = .bottom
-//        attributes.roundCorners = .top(radius: 16)
-//        attributes.screenInteraction = .dismiss
-//        attributes.entryInteraction = .absorbTouches
-//        attributes.shadow = .active(with: .init(color: .black, opacity: 0.2, radius: 10, offset: .zero))
-////        attributes.roundCorners = .all(radius: 10)
-//
-//        attributes.screenBackground = .clear
-//        attributes.scroll = .enabled(swipeable: true, pullbackAnimation: .jolt)
-//
-//        let widthConstraint = EKAttributes.PositionConstraints.Edge.ratio(value: 1)
-//        let heightConstraint = EKAttributes.PositionConstraints.Edge.fill
-//        attributes.positionConstraints.size = .init(width: widthConstraint, height: heightConstraint)
-//        attributes.positionConstraints.safeArea = .overridden
-//
-//        let offset = EKAttributes.PositionConstraints.KeyboardRelation.Offset(bottom: 10, screenEdgeResistance: 20)
-//        let keyboardRelation = EKAttributes.PositionConstraints.KeyboardRelation.bind(offset: offset)
-//        attributes.positionConstraints.keyboardRelation = keyboardRelation
-//
-//        attributes.statusBar = .dark
-//        return attributes
-//    }
-//
-//
-//    func showAlert () {
-//
-//        SwiftEntryKit.display(entry: a , using: setupAttributs())
-//
-//    }
-//
-//    func exit() {
-//
-//        SwiftEntryKit.dismiss()
-//
-//    }
-//}
