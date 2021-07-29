@@ -159,7 +159,7 @@ extension AppDelegate: MessagingDelegate {
     }
 }
 extension AppDelegate {
-   
+    
     func getCSRF(completion: @escaping (_ error: String?) ->()) {
         
         let parameters = [
@@ -170,6 +170,8 @@ extension AppDelegate {
             "operationSystem": "IOS"
         ] as [String : AnyObject]
 //        print("DEBUG: Parameters = ", parameters)
+      
+        
         
         NetworkManager<CSRFDecodableModel>.addRequest(.csrf, [:], parameters) { request, error in
             if error != nil {
@@ -209,17 +211,43 @@ extension AppDelegate {
             completion(nil)
             CSRFToken.token = token
                    
+            
                    NetworkManager<InstallPushDeviceDecodebleModel>.addRequest(.installPushDevice, [:], parameters) { model, error in
                        if error != nil {
                            print("DEBUG: installPushDevice error", error ?? "nil")
                            completion(error)
                        }
-                       print("DEBUG: CSRF DONE!")
+                        
+                    keyExchange()
+                    
+                    print("DEBUG: CSRF DONE!")
        //                print("DEBUG: installPushDevice model", model ?? "nil")
                        completion(nil)
                    }
 
+            
         }
+        
+        func keyExchange(){
+            
+            let parametersKey = [
+                "data": KeyFromServer.sendBase64ToServ ?? "",
+                "token": CSRFToken.token ?? "",
+                "type": "",
+            ] as [String : AnyObject]
+            
+            NetworkManager<KeyExchangeDecodebleModel>.addRequest(.keyExchange, [:], parametersKey) { model, error in
+                if error != nil {
+                    print("DEBUG: KeyExchange error", error ?? "nil")
+                    completion(error)
+                }
+             
+                print("DEBUG: KeyExchange DONE!")
+//                print("DEBUG: installPushDevice model", model ?? "nil")
+                completion(nil)
+            }
+        }
+        
     }
 }
 

@@ -16,7 +16,7 @@ import Foundation
 struct KeyExchangeDecodebleModel: Codable, NetworkModelProtocol {
     let statusCode: Int?
     let errorMessage: String?
-    let data: JSONNull?
+    let data: String??
 }
 
 // MARK: KeyExchangeDecodebleModel convenience initializers and mutators
@@ -40,7 +40,7 @@ extension KeyExchangeDecodebleModel {
     func with(
         statusCode: Int?? = nil,
         errorMessage: String?? = nil,
-        data: JSONNull?? = nil
+        data: String?? = nil
     ) -> KeyExchangeDecodebleModel {
         return KeyExchangeDecodebleModel(
             statusCode: statusCode ?? self.statusCode,

@@ -571,19 +571,32 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
             inn = "0"
             nameCompany = fio
         }
-        
-        let body = [
-            "payerCardNumber": "4656260150230695",
-            "amount": 100,
-            "comment": "\(comment)",
-            "date": "2020-01-27",
-            "payeeAccountNumber": "40702810638110103994",
-            "payeeBankBIC": "\(bikBank)",
-            "payeeINN": "\(inn)",
-            "payeeKPP": "\(kpp)",
-            "payeeName": "\(nameCompany)"
-        ] as [String: AnyObject]
-        
+    
+        let body = [ "check" : false,
+                     "amount" : 100,
+                     "comment" : "Оплата за мебель.Без НДС и прочего.",
+                     "currencyAmount" : "RUB",
+                     "payer" : [
+                        "cardId" : nil,
+                        "cardNumber" : "\(comment)",
+                        "accountId" : nil,
+                        "accountNumber" : nil,
+                        "phoneNumber" : nil,
+                        "INN" : "0"
+                     ], "payeeExternal" : [
+                        "cardId" : nil,
+                        "cardNumber" : nil,
+                        "accountId" : nil,
+                        "accountNumber" : "40702810638110103994",
+                        "compilerStatus" : nil,
+                        "date" : "2021-07-07",
+                        "name" : "\(nameCompany)",
+                        "bankBIC" : "\(bikBank)",
+                        "INN" : "\(inn)",
+                        "KPP" : "\(kpp)",
+                        "tax" : nil
+                    ] ] as [String : AnyObject]
+    
         NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer , [:], body) { model, error in
             guard let model = model else { return }
             print("DEBUG: Card list: ", model)
