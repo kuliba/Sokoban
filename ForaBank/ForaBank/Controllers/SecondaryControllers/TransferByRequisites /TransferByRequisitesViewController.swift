@@ -13,27 +13,26 @@ struct Fio {
 
 class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate {
 
-    var selectedBank: BanksList? {
+    var selectedBank: BankFullInfoList? {
         didSet {
             guard let bank = selectedBank else { return }
             setupBankField(bank: bank)
         }
     }
-    var banks: [BankFullInfoList]? {
+    var banks: [BankFullInfoList] = [] {
         didSet {
-            guard let banks = banks else { return }
-//            bankListView.bankList = banks
+            bankListView.bankList = banks
         }
     }
-    var bankListView = BankListView()
+    var bankListView = FullBankInfoListView()
 
-    private func setupBankField(bank: BanksList) {
-        if bank.memberNameRus == "Смотреть все"{
+    private func setupBankField(bank: BankFullInfoList) {
+//        if bank.memberNameRus == "Смотреть все"{
             
-        } else {
+//        } else {
             self.bikBankField.text = bank.memberID ?? "" //"АйДиБанк"
             self.bikBankField.imageView.image = bank.svgImage?.convertSVGStringToImage() 
-        }
+//        }
     }
     
     var selectedCardNumber: String?
@@ -347,10 +346,10 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
             self.hideView(self.cardListView, needHide: true)
         }
         
-        bankListView.didSeeAll = { (bank) in
-            self.selectedBank = bank
+        bankListView.didSeeAll = { () in
+//            self.selectedBank = bank
             let vc = SearchBanksViewController()
-//            vc.banks = self.banks!
+            vc.banks = self.banks
             let navController = UINavigationController(rootViewController: vc)
 //            navController.modalPresentationStyle = .fullScreen
             self.present(navController, animated: true, completion: nil)
@@ -442,7 +441,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         
         setupConstraint()
         suggestBank("") { model in
-//            self.banks = model
+            self.banks = model
 
         }
     }
