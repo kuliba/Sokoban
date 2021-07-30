@@ -190,8 +190,8 @@ public class AppLocker: UIViewController {
     }
     
     private func validateModeAction() {
-        if pin == savedPin {
-            guard let pin = savedPin else { return }
+//        if pin == savedPin {
+//            guard let pin = savedPin else { return }
             login(with: pin, type: .pin) { error in
                 if let error = error {
                     print(error)
@@ -199,10 +199,10 @@ public class AppLocker: UIViewController {
                     self.onSuccessfulDismiss?(self.mode)
                 }
             }
-        } else {
-            onFailedAttempt?(mode)
-            incorrectPinAnimation()
-        }
+//        } else {
+//            onFailedAttempt?(mode)
+//            incorrectPinAnimation()
+//        }
     }
     
     private func removePin() {
@@ -308,20 +308,24 @@ public class AppLocker: UIViewController {
         case ALConstants.button.delete.rawValue:
             drawing(isNeedClear: true)
         case ALConstants.button.cancel.rawValue:
-            clearView()
-//            dismiss(animated: true) {
-            
-            //TODO: Подменить root Controller убрав present
-            UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
-            let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
-            navVC.modalPresentationStyle = .fullScreen
-            self.present(navVC, animated: true, completion: nil)
-        
+            exit()
 //        self.onSuccessfulDismiss?(nil)
     
         default:
             drawing(isNeedClear: false, tag: sender.tag)
         }
+    }
+    
+    func exit() {
+        clearView()
+//            dismiss(animated: true) {
+        
+        //TODO: Подменить root Controller убрав present
+        UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
+        let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
+        navVC.modalPresentationStyle = .fullScreen
+        self.present(navVC, animated: true, completion: nil)
+    
     }
     
 }
@@ -356,7 +360,7 @@ extension AppLocker {
             } else {
                 guard let statusCode = model?.statusCode else { return }
                 if statusCode == 0 {
-                    
+                     
                     let bodyRegisterPush = [
                         "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
                         "pushFcmToken": Messaging.messaging().fcmToken as String?
@@ -372,20 +376,23 @@ extension AppLocker {
                             print("DEBUG: You are LOGGIN!!!")
                             self.dismissActivity()
                             completion(nil)
-                        } else if model?.statusCode == 102 {
-                            self.dismissActivity()
-                            if let m = model?.data?.entryCount {
-                                self.entryCount = m
-                                self.showAlert(with: "Ошибка", and: "\(model?.errorMessage ?? "")/n Количество попыток \(self.entryCount)")
-                            } else if model?.data?.entryCountError == 0 {
-                                DispatchQueue.main.async {
-                                    UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
-                                    let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
-                                    navVC.modalPresentationStyle = .fullScreen
-                                    self.present(navVC, animated: true, completion: nil)
-                                }
-                            }
-                            
+                        }
+                    }
+                } else if model?.statusCode == 102 {
+                    DispatchQueue.main.async {
+                        self.dismissActivity()
+                        self.onFailedAttempt?(self.mode)
+                        self.incorrectPinAnimation()
+                        if let m = model?.data?.entryCount {
+                            self.entryCount = m
+                            self.showAlert(with: "Ошибка", and: "\(model?.errorMessage ?? "")\n Количество попыток \(self.entryCount)")
+                        }
+                    }
+                } else if model?.statusCode == 101 {
+                    DispatchQueue.main.async {
+                        self.dismissActivity()
+                        if (model?.data?.entryCountError) != nil {
+                            self.exit()
                         }
                     }
                 } else {
