@@ -163,7 +163,7 @@ extension AppDelegate {
     func getCSRF(completion: @escaping (_ error: String?) ->()) {
         
         let parameters = [
-            "cryptoVersion": "1.0",
+//            "cryptoVersion": "1.0",
             "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
             "pushFCMtoken": Messaging.messaging().fcmToken! as String,
             "model": UIDevice().model,

@@ -104,6 +104,12 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
             [.foregroundColor: UIColor.black], for: .highlighted)
     }
     
+    private func updateInitialsColorForIndexPath(_ indexpath: IndexPath) -> UIColor {
+        //Applies color to Initial Label
+        let colorArray = [Constants.Colors.amethystColor, Constants.Colors.asbestosColor, Constants.Colors.emeraldColor, Constants.Colors.pumpkinColor, Constants.Colors.sunflowerColor]
+        let randomValue = (indexpath.row + indexpath.section) % colorArray.count
+        return colorArray[randomValue]
+    }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return banks.count
@@ -111,7 +117,16 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let item = contactCollectionView.dequeueReusableCell(withReuseIdentifier: "ContactCollectionViewCell", for: indexPath) as! ContactCollectionViewCell
-        item.contactImageView.image = banks[indexPath.item].svgImage?.convertSVGStringToImage()
+        var image = UIImage()
+        if let imageString = banks[indexPath.item].svgImage {
+            image = imageString.convertSVGStringToImage()
+        } else {
+            image = UIImage(named: "BankIcon")!
+        }
+        item.contactImageView.image = image
+        item.contactImageView.backgroundColor = banks[indexPath.item].svgImage != nil
+            ? .clear : updateInitialsColorForIndexPath(indexPath)
+        
         item.contactLabel.text = banks[indexPath.item].fullName
         item.phoneLabel.text = banks[indexPath.item].memberID
         return item

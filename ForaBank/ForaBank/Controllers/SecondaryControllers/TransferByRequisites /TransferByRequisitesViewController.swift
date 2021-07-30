@@ -13,6 +13,12 @@ struct Fio {
 
 class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate {
 
+    var viewModel = ConfirmViewControllerModel(type: .requisites) {
+        didSet {
+//            checkModel(with: viewModel)
+        }
+    }
+    
     var selectedBank: BankFullInfoList? {
         didSet {
             guard let bank = selectedBank else { return }
@@ -515,6 +521,10 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         guard let accountNumber = accountNumber.textField.text else {
             return
         }
+        //TODO: сделать выборку только по картам и счетам с RUB
+        guard let cardNumber = cardField.viewModel.cardModel?.number else {
+            return
+        }
         guard let bikBank = bikBankField.textField.text else {
             return
         }
@@ -532,6 +542,10 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
             return
         }
         
+        let unformatText = bottomView.moneyFormatter?.unformat(bottomView.amountTextField.text)
+        guard let amount = unformatText?.replacingOccurrences(of: ",", with: ".") else { return }
+        
+        
         if fioField.textField.text?.count != 0{
             guard let fio = fioField.textField.text else {
                     return
@@ -541,78 +555,84 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         }
     
         let body = [ "check" : false,
-                     "amount" : 100,
-                     "comment" : "Оплата за мебель.Без НДС и прочего.",
+                     "amount" : amount,
+                     "comment" : comment,
                      "currencyAmount" : "RUB",
                      "payer" : [
-                        "cardId" : nil,
-                        "cardNumber" : "\(comment)",
-                        "accountId" : nil,
-                        "accountNumber" : nil,
-                        "phoneNumber" : nil,
-                        "INN" : "0"
-                     ], "payeeExternal" : [
-                        "cardId" : nil,
-                        "cardNumber" : nil,
-                        "accountId" : nil,
-                        "accountNumber" : "40702810638110103994",
-                        "compilerStatus" : nil,
+                        "cardNumber" : cardNumber
+                     ],
+                     "payeeExternal" : [
+                        "accountNumber" : accountNumber, // "40702810638110103994"
                         "date" : "2021-07-07",
-                        "name" : "\(nameCompany)",
-                        "bankBIC" : "\(bikBank)",
-                        "INN" : "\(inn)",
-                        "KPP" : "\(kpp)",
-                        "tax" : nil
-                    ] ] as [String : AnyObject]
-    
-        NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer , [:], body) { model, error in
-            guard let model = model else { return }
-            print("DEBUG: Card list: ", model)
-            if model.statusCode == 0 {
-                self.dismissActivity()
-                guard let data  = model.data else { return }
-//                self.selectedCardNumber = cardNumber
-                DispatchQueue.main.async {
-                    let vc = TransferByRequisitesConfirmViewController()
-                    vc.addCloseButton()
-                    if self.fioField.textField.text == ""{
-                        vc.byCompany = true
-                        vc.fioField.text = "Наименование получателя"
-                        vc.fioField.text = self.nameCompanyField.textField.text ?? ""
-                        vc.commentField.text = self.commentField.textField.text ?? ""
-                        vc.accountNumber.text = self.accountNumber.textField.text ?? ""
-                        vc.summTransctionField.text = self.bottomView.amountTextField.text ?? "" + "₽"
-
-                    } else{
-                        vc.accountNumber.text = self.accountNumber.textField.text ?? ""
-                        vc.fioField.text = "\(self.fio.name )" + " " + "\(self.fio.patronymic)" + " " + "\(self.fio.surname)"
-                        vc.commentField.text = self.commentField.textField.text ?? ""
-                        vc.summTransctionField.text = self.bottomView.amountTextField.text ?? ""
-                    }
-//                    if data.fee {
-//                    if data.commission?.count != 0 {
-                    vc.taxTransctionField.text = data.fee?.currencyFormatter(symbol: "RUB") ?? "" // "\(data.commission?[0].amount ?? 0) ₽"
-//                    } else {
-//                        vc.taxTransctionField.isHidden = true
-//                    }
-                    
-
-                    let navController = UINavigationController(rootViewController: vc)
-                    navController.modalPresentationStyle = .fullScreen
-                    self.present(navController, animated: true, completion: nil)
-                    
-                }
-            } else {
-                self.dismissActivity()
-                print("DEBUG: Error: ", model.errorMessage ?? "")
-            }
-        }
+                        "name" : nameCompany,
+                        "bankBIC" : bikBank, //044525187
+                        "INN" : inn, //7718164343
+                        "KPP" : kpp
+                     ] ] as [String : AnyObject]
         
-        NetworkManager<PrepareExternalDecodableModel>.addRequest(.prepareExternal , [:], body) { model, error in
-//            if error != nil {
-//                self.dismissActivity()
-//                print("DEBUG: Error: ", error ?? "")
-//            }
+        NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer , [:], body) { model, error in
+            self.dismissActivity()
+            if error != nil {
+                guard let error = error else { return }
+                print("DEBUG: Error: ", error)
+            } else {
+                guard let model = model else { return }
+                print("DEBUG: Card list: ", model)
+                if model.statusCode == 0 {
+    //                self.dismissActivity()
+                    guard let data  = model.data else { return }
+    //                self.selectedCardNumber = cardNumber
+                    DispatchQueue.main.async {
+                        self.viewModel.statusIsSuccses = true
+                        self.viewModel.cardFrom = self.cardField.viewModel.cardModel
+                        self.viewModel.summTransction = data.debitAmount?.currencyFormatter(symbol: model.data?.currencyPayer ?? "RUB") ?? ""
+                        self.viewModel.summInCurrency = data.creditAmount?.currencyFormatter(symbol: model.data?.currencyPayee ?? "RUB") ?? ""
+                        self.viewModel.taxTransction = data.fee?.currencyFormatter(symbol: model.data?.currencyPayer ?? "RUB") ?? ""
+                        self.viewModel.fullName = nameCompany
+                        self.viewModel.comment = comment
+                        self.viewModel.cardToAccountNumber = accountNumber
+                        if self.fioField.textField.text == "" {
+                            self.viewModel.payToCompany = true
+                        }
+                    
+                    
+                        let vc = ContactConfurmViewController()
+                        vc.modalPresentationStyle = .fullScreen
+                        vc.title = "Подтвердите реквизиты"
+                        vc.confurmVCModel = self.viewModel
+                        
+                        
+                        self.navigationController?.pushViewController(vc, animated: true)
+//                        let vc = TransferByRequisitesConfirmViewController()
+//                        vc.addCloseButton()
+//                        if self.fioField.textField.text == ""{
+//                            vc.byCompany = true
+//                            vc.fioField.text = "Наименование получателя"
+//                            vc.fioField.text = self.nameCompanyField.textField.text ?? ""
+//                            vc.commentField.text = self.commentField.textField.text ?? ""
+//                            vc.accountNumber.text = self.accountNumber.textField.text ?? ""
+//                            vc.summTransctionField.text = self.bottomView.amountTextField.text ?? "" + "₽"
+//
+//                        } else{
+//                            vc.accountNumber.text = self.accountNumber.textField.text ?? ""
+//                            vc.fioField.text = "\(self.fio.name )" + " " + "\(self.fio.patronymic)" + " " + "\(self.fio.surname)"
+//                            vc.commentField.text = self.commentField.textField.text ?? ""
+//                            vc.summTransctionField.text = self.bottomView.amountTextField.text ?? ""
+//                        }
+//                        vc.taxTransctionField.text = data.fee?.currencyFormatter(symbol: "RUB") ?? ""
+                        
+
+//                        let navController = UINavigationController(rootViewController: vc)
+//                        navController.modalPresentationStyle = .fullScreen
+//                        self.present(navController, animated: true, completion: nil)
+                        
+                    }
+                } else {
+    //                self.dismissActivity()
+                    print("DEBUG: Error: ", model.errorMessage ?? "")
+                }
+                
+            }
             
         }
 
