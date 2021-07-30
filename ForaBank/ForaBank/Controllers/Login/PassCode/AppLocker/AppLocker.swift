@@ -91,6 +91,7 @@ public class AppLocker: UIViewController {
             try? AppLocker.valet.setString(newValue, forKey: ALConstants.kPincode)
         }
     }
+    private var entryCount = 5
     
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -364,6 +365,20 @@ extension AppLocker {
                             print("DEBUG: You are LOGGIN!!!")
                             self.dismissActivity()
                             completion(nil)
+                        } else if model.statusCode == 102 {
+                            self.dismissActivity()
+//                            if let model.data.entryCount {
+                                self.entryCount = 2 // model.data.entryCount
+                                self.showAlert(with: "Ошибка", and: "\(model.errorMessage!)/n Количество попыток \(self.entryCount)")
+//                            } else model.data.entryCountError == 0 {
+//                                  DispatchQueue.main.async {
+//                            UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
+//                            let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
+//                            navVC.modalPresentationStyle = .fullScreen
+//                            self.present(navVC, animated: true, completion: nil)
+//                        }
+//                            }
+                           
                         }
                     }
                 } else {
