@@ -45,12 +45,14 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         viewModel: ForaInputModel(
             title: "Бик банка получателя",
             image: #imageLiteral(resourceName: "bikbank"),
+            type: .number,
             showChooseButton: true))
     
     var accountNumber = ForaInput(
         viewModel: ForaInputModel(
             title: "Номер счета получателя",
-            image: #imageLiteral(resourceName: "accountIcon")))
+            image: #imageLiteral(resourceName: "accountIcon"),
+            type: .number))
     
     var fioField = ForaInput(
         viewModel: ForaInputModel(
@@ -74,7 +76,8 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     
     var innField = ForaInput(
         viewModel: ForaInputModel(
-            title: "ИНН получателя"))
+            title: "ИНН получателя",
+            type: .number))
     
     var nameCompanyField = ForaInput(
         viewModel: ForaInputModel(
@@ -84,6 +87,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     var kppField = ForaInput(
         viewModel: ForaInputModel(
             title: "КПП получателя",
+            type: .number,
             errorText: "Необязательное поле"))
     
     
@@ -386,8 +390,6 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         
         self.navigationItem.titleView = setTitle(title: "Перевести", subtitle: "Человеку или организации")
 
-        
-        bikBankField.textField.keyboardType = .numberPad
         
         fioStackView = UIStackView(arrangedSubviews: [fioField, nameField, surField])
         fioStackView.axis = .vertical
