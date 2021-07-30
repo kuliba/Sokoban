@@ -70,6 +70,7 @@ import Foundation
 // MARK: - DataClass
 struct DataClass: Codable {
     let entryCount: Int?
+    let entryCountError : Int?
 }
 
 // MARK: DataClass convenience initializers and mutators
@@ -91,10 +92,12 @@ extension DataClass {
     }
 
     func with(
-        entryCount: Int?? = nil
+        entryCount: Int?? = nil,
+        entryCountError: Int? = nil
     ) -> DataClass {
         return DataClass(
-            entryCount: entryCount ?? self.entryCount
+            entryCount: entryCount ?? self.entryCount,
+            entryCountError: entryCountError ?? self.entryCountError
         )
     }
 

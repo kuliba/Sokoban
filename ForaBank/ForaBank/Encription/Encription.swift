@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import CryptoSwift
+//import CryptoSwift
 import CommonCrypto
 
 

@@ -347,7 +347,7 @@ extension AppLocker {
             "loginValue": code,
             "type": type.rawValue
         ] as [String : AnyObject]
-//        print(data)
+        //        print(data)
         print("DEBUG: Start login with body: ", data)
         NetworkManager<LoginDoCodableModel>.addRequest(.login, [:], data) { model, error in
             if error != nil {
@@ -362,30 +362,30 @@ extension AppLocker {
                         "pushFcmToken": Messaging.messaging().fcmToken as String?
                     ] as [String : AnyObject]
                     print("DEBUG: Start registerPushDeviceForUser with body: ", bodyRegisterPush)
-                    NetworkManager<RegisterPushDeviceDecodebleModel>.addRequest(.registerPushDeviceForUser, [:], bodyRegisterPush) { model, error in
+                    NetworkManager<RegisterPushDeviceDecodebleModel>.addRequest(.registerPushDeviceForUser, [:], bodyRegisterPush) { modelPush, error in
                         if error != nil {
                             guard let error = error else { return }
                             self.showAlert(with: "Ошибка", and: error)
                         }
-                        guard let model = model else { return }
-                        if model.statusCode == 0 {
+                        guard let mPush = modelPush else { return }
+                        if mPush.statusCode == 0 {
                             print("DEBUG: You are LOGGIN!!!")
                             self.dismissActivity()
                             completion(nil)
-                        } else if model.statusCode == 102 {
+                        } else if model?.statusCode == 102 {
                             self.dismissActivity()
-//                            if let model.data.entryCount {
-                                self.entryCount = 2 // model.data.entryCount
-                                self.showAlert(with: "Ошибка", and: "\(model.errorMessage!)/n Количество попыток \(self.entryCount)")
-//                            } else model.data.entryCountError == 0 {
-//                                  DispatchQueue.main.async {
-//                            UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
-//                            let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
-//                            navVC.modalPresentationStyle = .fullScreen
-//                            self.present(navVC, animated: true, completion: nil)
-//                        }
-//                            }
-                           
+                            if let m = model?.data?.entryCount {
+                                self.entryCount = m
+                                self.showAlert(with: "Ошибка", and: "\(model?.errorMessage ?? "")/n Количество попыток \(self.entryCount)")
+                            } else if model?.data?.entryCountError == 0 {
+                                DispatchQueue.main.async {
+                                    UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
+                                    let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
+                                    navVC.modalPresentationStyle = .fullScreen
+                                    self.present(navVC, animated: true, completion: nil)
+                                }
+                            }
+                            
                         }
                     }
                 } else {
