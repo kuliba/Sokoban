@@ -118,7 +118,7 @@ public class AppLocker: UIViewController {
                 submessageLabel.text = "Введите код" // Your submessage for deactive mode
             case .validate:
                 submessageLabel.text = "Введите код" // Your submessage for validate mode
-                cancelButton.isHidden = true
+                cancelButton.isHidden = false
                 isFirstCreationStep = false
             }
         }
@@ -310,8 +310,15 @@ public class AppLocker: UIViewController {
         case ALConstants.button.cancel.rawValue:
             clearView()
 //            dismiss(animated: true) {
-                self.onSuccessfulDismiss?(nil)
-//            }
+            
+            //TODO: Подменить root Controller убрав present
+            UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
+            let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
+            navVC.modalPresentationStyle = .fullScreen
+            self.present(navVC, animated: true, completion: nil)
+        
+//        self.onSuccessfulDismiss?(nil)
+    
         default:
             drawing(isNeedClear: false, tag: sender.tag)
         }
