@@ -18,6 +18,7 @@ struct KeyFromServer {
     static var privateKeyCert: String?
     static var pubFromServ: SecKey?
     static var secretKey: Data?
+    static var sendBase64ToServ: String?
 }
 
 class Encription {
@@ -113,37 +114,49 @@ class Encription {
             return Data(bytes: UnsafePointer<UInt8>(encryptedData), count: encryptedData.count)
         }
 
-       public func encryptAES(string: String) -> String?{
-            
+        func encryptAES(string: String) -> String?{
+    
             do {
-                
+    
                 let digest = string.data(using: .utf8)!
-                _ = AES256.randomSalt()
-                
+                let salt = AES256.randomSalt()
+    
                 let iv = AES256.randomIv()
                 print("Randomize\(iv)")
-                
+    
                 guard let key = KeyFromServer.secretKey else {
                     return nil
                 }
                 print(key)
-                
-                let aes = try AES256(key: key, iv: iv)
-                
+    
+                var aes = try AES256(key: key, iv: iv)
+    
                 let encrypted = try aes.encrypt(digest)
-//                let decrypted = try aes.decrypt(encrypted)
-                
-                
+                let decrypted = try aes.decrypt(encrypted)
+    
+                print("Encrypted: \(encrypted.hexadecimal)")
+                print("Decrypted: \(decrypted)")
+    
                 let string1 = encrypted.base64EncodedData()
                 print(string1)
-                
-//                let data: Data = decrypted
+    
+                let data: Data = decrypted
                 if let string = String(data: string1, encoding: .utf8) {
                     print(string)
                 } else {
                     print("not a valid UTF-8 sequence")
                 }
-
+    //            print("Password: \(password)")
+    //            print("Key: \(key.hexString)")
+    //            print("IV: \(iv.hexString)")
+                print("Salt: \(salt.hexadecimal)")
+                print(" ")
+    
+                print("#! /bin/sh")
+                print("echo \(digest.hexadecimal) | xxd -r -p > digest.txt")
+                print("echo \(encrypted.hexadecimal) | xxd -r -p > encrypted.txt")
+    //            print("openssl aes-256-cbc -K \(key.hexString) -iv \(iv.hexString) -e -in digest.txt -out encrypted-openssl.txt")
+    //            print("openssl aes-256-cbc -K \(key.hexString) -iv \(iv.hexString) -d -in encrypted.txt -out decrypted-openssl.txt")
                 return encrypted.base64EncodedString()
             } catch {
                 print("Failed")
@@ -151,6 +164,7 @@ class Encription {
                 }
             return nil
         }
+
 
     func removePadding(_ data: [UInt8]) -> [UInt8] {
            var idxFirstZero = -1
@@ -218,7 +232,7 @@ class Encription {
         let newData = SecKeyCreateEncryptedData(pubFromCert!, .rsaEncryptionPKCS1, keyWithPem as CFData, &error)
             sendBase64ToServ = (newData as Data?)?.base64EncodedString()
                 let data = (lastKey as Data?)?.advanced(by: 136)
-             
+            KeyFromServer.sendBase64ToServ = sendBase64ToServ
                 otherPublicSecKey(data: data)
 
                 return SecCertificateCopyKey(certificate)

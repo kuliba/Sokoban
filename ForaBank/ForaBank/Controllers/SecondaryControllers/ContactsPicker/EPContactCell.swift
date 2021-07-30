@@ -29,9 +29,6 @@ class EPContactCell: UITableViewCell {
         selectionStyle = UITableViewCell.SelectionStyle.none
         contactContainerView.layer.masksToBounds = true
         contactContainerView.layer.cornerRadius = contactContainerView.frame.size.width/2
-        if checkOwner(number: contact?.phoneNumbers.first?.phoneNumber) ?? false {
-            ownerImageView.isHidden = false
-        }
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -48,15 +45,16 @@ class EPContactCell: UITableViewCell {
     func updateContactsinUI(_ contact: EPContact, indexPath: IndexPath, subtitleType: SubtitleCellValue) {
         self.contact = contact
         
-//        DispatchQueue.main.async{ [self] in
-//            if checkOwner(number: "7\(contact[indexPath.item].phoneNumbers.first?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "").replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "").dropFirst() ?? "")", index: indexPath.item) ?? false {
-//                item.bankImage.isHidden = false
-//
-//            }
-//        }
-        if checkOwner(number: contact.phoneNumbers.first?.phoneNumber) ?? false {
-            ownerImageView.isHidden = false
+        DispatchQueue.main.async{ [self] in
+            if checkOwner(number: contact.phoneNumbers.first?.phoneNumber) ?? false {
+                ownerImageView.isHidden = false
+                self.reloadInputViews()
+
+            } else {
+                ownerImageView.isHidden = true
+            }
         }
+   
         self.contactTextLabel?.text = contact.displayName()
         updateSubtitleBasedonType(subtitleType, contact: contact)
         if contact.thumbnailProfileImage != nil {
@@ -116,7 +114,10 @@ class EPContactCell: UITableViewCell {
         
         NetworkManager<GetOwnerPhoneNumberPhoneDecodableModel>.addRequest(.getOwnerPhoneNumber, [:], body) { model, error in
             if error != nil {
-                
+                DispatchQueue.main.async {
+//                    self.ownerImageView.isHidden = true
+//                    self.reloadInputViews()
+                }
                 checkOwner = false
                 print("DEBUG: Error: ", error ?? "")
             }
@@ -129,6 +130,7 @@ class EPContactCell: UITableViewCell {
 //                self.selectedCardNumber = cardNumber
                 DispatchQueue.main.sync {
                     checkOwner = true
+//                    self.ownerImageView.isHidden = false
                     
 //                    self.checkOwnerFetch = true
 //                    self.contacts[index].bankImage = true
@@ -136,7 +138,10 @@ class EPContactCell: UITableViewCell {
 
                 }
             } else {
-                
+                DispatchQueue.main.async {
+//                    self.ownerImageView.isHidden = true
+//                    self.reloadInputViews()
+                }
                 checkOwner = false
                 print("DEBUG: Error: ", model.errorMessage ?? "")
             }

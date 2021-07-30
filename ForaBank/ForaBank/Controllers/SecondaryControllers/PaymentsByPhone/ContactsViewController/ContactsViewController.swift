@@ -917,7 +917,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
             if multiSelectEnabled  && selectedContacts.contains(where: { $0.contactId == contact.contactId }) {
                 cell.accessoryType = UITableViewCell.AccessoryType.checkmark
             }
-            
+          
             cell.updateContactsinUI(contact, indexPath: indexPath, subtitleType: subtitleCellValue)
         }
           return cell
