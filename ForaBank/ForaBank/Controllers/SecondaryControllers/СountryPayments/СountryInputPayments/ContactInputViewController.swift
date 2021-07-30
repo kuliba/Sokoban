@@ -21,10 +21,22 @@ class ContactInputViewController: UIViewController {
 //            }
         }
     }
+    var cardIsSelect = false
     var selectedCardNumber = ""
     var puref = "" {
         didSet {
             print("DEBUG: Puref string: ", puref)
+            
+            if cardIsSelect {
+                self.startPayment(with: self.selectedCardNumber, amount: "", type: self.typeOfPay) { error in
+                    self.dismissActivity()
+                    if error != nil {
+                        self.showAlert(with: "Ошибка", and: error!)
+                    }
+                }
+            } else {
+                
+            }
         }
     }
     var selectedBank: BanksList? {
@@ -41,6 +53,7 @@ class ContactInputViewController: UIViewController {
     
     var country: CountriesList? {
         didSet {
+            print("Set country", country)
             if country?.code == "AM" {
                 self.typeOfPay = .migAIbank
                 self.configure(with: country, byPhone: true)
@@ -168,6 +181,7 @@ class ContactInputViewController: UIViewController {
 //                    self?.cardField.configCardView(data.first!)
                     guard let cardNumber  = filterProduct.first?.number else { return }
                     self?.selectedCardNumber = cardNumber
+                    self?.cardIsSelect = true
                 }
             }
         }

@@ -46,28 +46,28 @@ extension ContactInputViewController {
 //                        let amountString = amount.replacingOccurrences(of: " ", with: "")
 //                        let doubelAmount = amountString.replacingOccurrences(of: ",", with: ".", options: .literal, range: nil)
                         
-                        switch self.typeOfPay {
-                        case .migAIbank:
-                            
-                            
-                            self.endMigPayment(phone: phone, amount: amount) { error in
-                                self.dismissActivity()
-                                if error != nil {
-                                    print("DEBUG: Error: endMigPayment ", error ?? "")
-                                    completion(error!)
-                                }
-                            }
-                        default:
-                            
-                            
-                            self.endContactPayment(surname: surname, name: name, secondName: secondName, amount: amount) { error in
-                                self.dismissActivity()
-                                if error != nil {
-                                    print("DEBUG: Error: endContactPayment ", error ?? "")
-                                    completion(error!)
-                                }
-                            }
-                        }
+//                        switch self.typeOfPay {
+//                        case .migAIbank:
+//
+//
+//                            self.endMigPayment(phone: phone, amount: amount) { error in
+//                                self.dismissActivity()
+//                                if error != nil {
+//                                    print("DEBUG: Error: endMigPayment ", error ?? "")
+//                                    completion(error!)
+//                                }
+//                            }
+//                        default:
+//
+//
+//                            self.endContactPayment(surname: surname, name: name, secondName: secondName, amount: amount) { error in
+//                                self.dismissActivity()
+//                                if error != nil {
+//                                    print("DEBUG: Error: endContactPayment ", error ?? "")
+//                                    completion(error!)
+//                                }
+//                            }
+//                        }
                         
                     } else {
                         print("DEBUG: Error: anywayPayment1", model.errorMessage ?? "")

@@ -27,12 +27,13 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     var bankListView = FullBankInfoListView()
 
     private func setupBankField(bank: BankFullInfoList) {
-//        if bank.memberNameRus == "Смотреть все"{
-            
-//        } else {
-            self.bikBankField.text = bank.memberID ?? "" //"АйДиБанк"
-            self.bikBankField.imageView.image = bank.svgImage?.convertSVGStringToImage() 
-//        }
+        self.bikBankField.text = bank.bic ?? "" //"АйДиБанк"
+        
+        if let imageString = bank.svgImage {
+            self.bikBankField.imageView.image =  imageString.convertSVGStringToImage()
+        } else {
+            self.bikBankField.imageView.image = UIImage(named: "BankIcon")!
+        }
     }
     
     var selectedCardNumber: String?
@@ -180,16 +181,18 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         
 
         bikBankField.didChangeValueField = {(field) in
-            if self.bikBankField.textField.text?.count == 9 {
-                self.suggestBank(self.bikBankField.textField.text ?? "") { model in
-                    let image = model.first?.svgImage
-                    DispatchQueue.main.async {
-                        self.bikBankField.imageView.image = image?.convertSVGStringToImage()
-                    }
-                }
-            } else {
-                self.bikBankField.imageView.image = UIImage(imageLiteralResourceName: "bikbank")
-            }
+            self.hideView(self.bankListView, needHide: false)
+            self.bankListView.textFieldDidChanchedValue(textField: field)
+//            if self.bikBankField.textField.text?.count == 9 {
+//                self.suggestBank(self.bikBankField.textField.text ?? "") { model in
+//                    let image = model.first?.svgImage
+//                    DispatchQueue.main.async {
+//                        self.bikBankField.imageView.image = image?.convertSVGStringToImage()
+//                    }
+//                }
+//            } else {
+//                self.bikBankField.imageView.image = UIImage(imageLiteralResourceName: "bikbank")
+//            }
         }
         
         bikBankField.didChooseButtonTapped = { () in
@@ -309,35 +312,6 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
             }
         }
         
-
-
-        getBankList { [weak self]  banksList, error in
-            DispatchQueue.main.async {
-                if error != nil {
-                    self?.showAlert(with: "Ошибка", and: error!)
-                }
-
-                guard let banksList = banksList else { return }
-                var filteredbanksList : [BanksList] = []
-
-                banksList.forEach { bank in
-                    guard let codeList = bank.paymentSystemCodeList else { return }
-//                    guard let countrylist = self?.country?.paymentSystemCodeList else { return }
-//                    countrylist.forEach { code in
-//                        if codeList.contains(code) {
-//                            filteredbanksList.append(bank)
-//                        }
-//                    }
-                }
-//                self?.banks = banksList
-
-//                Dict.shared.banks?.append(BanksList(memberID: "123", memberName: "Смотреть вс1е", memberNameRus: "Смотреть все", md5Hash: "", svgImage: "seeall", paymentSystemCodeList: ["123"]))
-                let seeall = BanksList(memberID: "123", memberName: "Смотреть вс1е", memberNameRus: "Смотреть все", md5Hash: "", svgImage: "seeall", paymentSystemCodeList: ["123"])
-//                self?.banks?.insert(seeall, at: 0)
-
-            }
-        }
-
         
         bankListView.didBankTapped = { (bank) in
             self.selectedBank = bank
@@ -375,9 +349,6 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         }
     }
     
-    
-    
-    
     private func openOrHideView(_ view: UIView) {
         UIView.animate(withDuration: 0.2) {
             if view.isHidden == true {
@@ -414,15 +385,10 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         view.addSubview(bottomView)
         
         self.navigationItem.titleView = setTitle(title: "Перевести", subtitle: "Человеку или организации")
-        cardListView.didCardTapped = {[weak self] (card) in
-            print(card)
-        }
-        cardField.didChooseButtonTapped = { () in
-            UIView.animate(withDuration: 0.2, animations: {
-                self.cardListView.isHidden.toggle()
-            })
-        }
 
+        
+        bikBankField.textField.keyboardType = .numberPad
+        
         fioStackView = UIStackView(arrangedSubviews: [fioField, nameField, surField])
         fioStackView.axis = .vertical
         fioStackView.alignment = .fill
@@ -511,7 +477,8 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         showActivity()
         
         let body = [
-            "bic": bic
+            "bic": bic,
+            "type": "20"
         ]
         
         NetworkManager<GetFullBankInfoListDecodableModel>.addRequest(.getFullBankInfoList , body, [:]) { model, error in

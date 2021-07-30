@@ -293,7 +293,7 @@ class PaymentByPhoneViewController: UIViewController {
         bankPayeer.text = selectBank ?? ""
         bottomView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
                           right: view.rightAnchor)
-        bottomView.currency = "₽"
+        bottomView.currencySymbol = "₽"
 
 
             
@@ -352,7 +352,7 @@ class PaymentByPhoneViewController: UIViewController {
     }
     
     func getBankList(completion: @escaping (_ banksList: [BanksList]?, _ error: String?)->()) {
-        
+
         NetworkHelper.request(.getBanks) { banksList , error in
             if error != nil {
                 completion(nil, error)

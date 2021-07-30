@@ -21,6 +21,20 @@ class FullBankInfoListView: UIView {
             }
         }
     }
+    var filteredBankList = [BankFullInfoList]() {
+        didSet {
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+        }
+    }
+    var isFiltered = false {
+        didSet {
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+        }
+    }
     
     var didBankTapped: ((BankFullInfoList) -> Void)?
     var didSeeAll: (() -> Void)?
@@ -62,12 +76,20 @@ class FullBankInfoListView: UIView {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(FullBankInfoCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-//        switch seeAll {
-//        case true:
-//            bankList.append(BanksList(memberID: "123", memberName: "Смотреть вс1е", memberNameRus: "Смотреть все", md5Hash: "", svgImage: "seeall", paymentSystemCodeList: ["123"]))
-//        default:
-//            break
-//        }
+    }
+    
+    func textFieldDidChanchedValue(textField: UITextField) {
+        if let text = textField.text {
+            if text.count > 0 {
+                isFiltered = true
+                self.filteredBankList = self.bankList.filter {
+                    $0.bic?.prefix(text.count) ?? "" == text }
+            } else {
+                isFiltered = false
+            }
+        } else {
+            isFiltered = false
+        }
     }
     
 }
@@ -75,7 +97,13 @@ class FullBankInfoListView: UIView {
 //MARK: - CollectionView DataSource
 extension FullBankInfoListView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return seeAll ? bankList.count + 1 : bankList.count
+//        return seeAll ? bankList.count + 1 : bankList.count
+        if isFiltered {
+            return seeAll ? filteredBankList.count + 1 : filteredBankList.count
+        } else {
+            return seeAll ? bankList.count + 1 : bankList.count
+            
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -89,11 +117,15 @@ extension FullBankInfoListView: UICollectionViewDataSource {
                 cell.bicLabel.textColor = .black
             } else {
                 cell.index = indexPath
-                cell.bank = bankList[indexPath.item - 1]
+                cell.bank = isFiltered
+                    ? filteredBankList[indexPath.item - 1]
+                    : bankList[indexPath.item - 1]
             }
         default:
             cell.index = indexPath
-            cell.bank = bankList[indexPath.item]
+            cell.bank = isFiltered
+                ? filteredBankList[indexPath.item]
+                : bankList[indexPath.item]
         }
         return cell
     }
@@ -108,7 +140,7 @@ extension FullBankInfoListView: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 8, left: 20, bottom: 8, right: 8)
+        return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 8)
     }
     
 }
@@ -122,11 +154,15 @@ extension FullBankInfoListView: UICollectionViewDelegate {
             if indexPath.item == 0 {
                 didSeeAll?()
             } else {
-                let card = bankList[indexPath.item - 1]
+                let card = isFiltered
+                    ? filteredBankList[indexPath.item - 1]
+                    : bankList[indexPath.item - 1]
                 didBankTapped?(card)
             }
         default:
-            let card = bankList[indexPath.item]
+            let card = isFiltered
+                ? filteredBankList[indexPath.item]
+                : bankList[indexPath.item]
             didBankTapped?(card)
         }
     }
