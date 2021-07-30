@@ -8,9 +8,7 @@
 import UIKit
 
 class BankListView: UIView {
-    
-    var seeAll = true
-    
+        
     //MARK: - Property
     let reuseIdentifier = "BankCell"
     
@@ -62,12 +60,6 @@ class BankListView: UIView {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(BankCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        switch seeAll {
-        case true:
-            bankList.append(BanksList(memberID: "123", memberName: "Смотреть вс1е", memberNameRus: "Смотреть все", md5Hash: "", svgImage: "seeall", paymentSystemCodeList: ["123"]))
-        default:
-            break
-        }
     }
     
 }
@@ -102,20 +94,9 @@ extension BankListView: UICollectionViewDelegateFlowLayout {
 //MARK: - CollectionView Delegate
 extension BankListView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
-        switch seeAll {
-        case true:
-            if indexPath.item == 0 {
-                let card = bankList[indexPath.item]
-                didSeeAll?(card)
-            } else {
-                let card = bankList[indexPath.item]
-                didBankTapped?(card)
-            }
-        default:
-            let card = bankList[indexPath.item]
-            didBankTapped?(card)
-        }
+        
+        let card = bankList[indexPath.item]
+        didBankTapped?(card)
     }
 }
 

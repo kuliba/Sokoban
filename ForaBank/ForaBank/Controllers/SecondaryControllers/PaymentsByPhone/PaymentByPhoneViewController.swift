@@ -353,7 +353,7 @@ class PaymentByPhoneViewController: UIViewController {
     }
     
     func getBankList(completion: @escaping (_ banksList: [BanksList]?, _ error: String?)->()) {
-        
+
         NetworkHelper.request(.getBanks) { banksList , error in
             if error != nil {
                 completion(nil, error)

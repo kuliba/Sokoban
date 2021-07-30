@@ -23,19 +23,29 @@ struct FullBankInfoListViewModel {
     
     let bank: BankFullInfoList
     var bankName: String {
-        return bank.fullName ?? ""
+        
+        if self.check(bank.fullName ?? "") {
+            let bankFullName: String = bank.fullName ?? ""
+            let fullNameArr = bankFullName.components(separatedBy: "\"")
+            let shortName: String = fullNameArr[1]
+            return shortName//.capitalizingFirstLetter()
+        } else {
+            return bank.fullName ?? ""
+        }
+        
     }
     var bicNumber: String {
         return bank.bic ?? ""
     }
+    
     var bankImage: UIImage {
-        
         if let imageString = bank.svgImage {
             return imageString.convertSVGStringToImage()
         } else {
             return UIImage(named: "BankIcon")!
         }
     }
+    
     var backgroundColor: UIColor {
         if bank.svgImage != nil {
             return .clear
@@ -55,6 +65,8 @@ struct FullBankInfoListViewModel {
     init(bank: BankFullInfoList, index: IndexPath) {
         self.bank = bank
         self.index = index
+//        let name = "ПАО \"БЕСТ ЭФФОРТС БАНК\""
+//        print("bankName \(bank.fullName) have /: ", self.check(bank.fullName ?? ""))
     }
     
     private func updateInitialsColorForIndexPath(_ indexpath: IndexPath) -> UIColor {
@@ -62,6 +74,10 @@ struct FullBankInfoListViewModel {
         let colorArray = [Colors.amethystColor, Colors.asbestosColor, Colors.emeraldColor,  Colors.pumpkinColor, Colors.sunflowerColor]
         let randomValue = (indexpath.row + indexpath.section) % colorArray.count
         return colorArray[randomValue]
+    }
+    
+    private func check(_ givenString: String) -> Bool {
+        return givenString.range(of: "\"", options: .regularExpression) != nil
     }
     
 }
