@@ -36,11 +36,8 @@ class LoginViewModel {
 //        print(pass)
       
         let body = [
-            "cryptoversion": "2.0",
-            "cardNumber": Encription().encryptAES(string: number)] as [String : AnyObject]
-        
-        
-        
+//            "cryptoversion": "2.0",
+            "cardNumber": number] as [String : AnyObject]
         NetworkManager<CheckClientDecodebleModel>.addRequest(.checkCkient, [:], body) { (model, error) in
             
             if error != nil {

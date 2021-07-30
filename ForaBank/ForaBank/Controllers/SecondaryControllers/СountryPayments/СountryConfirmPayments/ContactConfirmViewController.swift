@@ -72,6 +72,9 @@ struct ConfirmViewControllerModel {
     var cardToAccountId = ""
     var cardToCastomName = ""
     
+    var payToCompany = false
+    var comment = ""
+    
     var bank : BanksList?
     
     var phone: String?
@@ -160,6 +163,7 @@ struct ConfirmViewControllerModel {
         case card2card
         case contact
         case mig
+        case requisites
     }
     
 }
@@ -172,6 +176,7 @@ class ContactConfurmViewController: UIViewController {
             setupData(with: model)
         }
     }
+    var otpCode: String = ""
     
     var phoneField = ForaInput(
         viewModel: ForaInputModel(
@@ -205,24 +210,8 @@ class ContactConfurmViewController: UIViewController {
             isEditable: false))
     
     var cardFromField = CardChooseView()
-    
-//    var cardFromField = ForaInput(
-//        viewModel: ForaInputModel(
-//            title: "С карты",
-//            image: #imageLiteral(resourceName: "credit-card"),
-//            type: .credidCard,
-//            isEditable: false,
-//            showChooseButton: true))
-    
+        
     var cardToField = CardChooseView()
-    
-//    var cardToField = ForaInput(
-//        viewModel: ForaInputModel(
-//            title: "На карту",
-//            image: #imageLiteral(resourceName: "credit-card"),
-//            type: .credidCard,
-//            isEditable: false,
-//            showChooseButton: false))
     
     var summTransctionField = ForaInput(
         viewModel: ForaInputModel(
@@ -260,19 +249,25 @@ class ContactConfurmViewController: UIViewController {
         setupUI()
         doneButton.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
         hideKeyboardWhenTappedAround()
+        NotificationCenter.default.addObserver(self, selector: #selector(self.setOtpCode(_:)), name: NSNotification.Name(rawValue: "otpCode"), object: nil)
+    }
+    
+    @objc func setOtpCode(_ notification: NSNotification) {
+        let otpCode = notification.userInfo?["body"] as! String
+        self.otpCode = otpCode.filter { "0"..."9" ~= $0 }
+        smsCodeField.text =  self.otpCode
+        
     }
     
     func setupData(with model: ConfirmViewControllerModel) {
         currTransctionField.isHidden = true
         
-//        let amount = Double(model.summTransction)?.currencyFormatter(code: "RUB")
-        summTransctionField.text = model.summTransction// Double(model.summTransction)?.currencyFormatter(symbol: "RUB") ?? ""
-        
+        summTransctionField.text = model.summTransction
+        taxTransctionField.text = model.taxTransction
         if model.taxTransction.isEmpty {
             taxTransctionField.isHidden = true
         }
-//        let tax = Double(model.taxTransction)?.currencyFormatter(code: "RUB")
-        taxTransctionField.text = model.taxTransction// Double(model.taxTransction)?.currencyFormatter(symbol: "RUB") ?? ""
+        
         
         if model.paymentSystem != nil {
             let navImage: UIImage = model.paymentSystem?.svgImage?.convertSVGStringToImage() ?? UIImage()
@@ -336,7 +331,28 @@ class ContactConfurmViewController: UIViewController {
 //                "printFormType" : "internal"
 //            }
 
+        case .requisites:
+            cardFromField.isHidden = true
+            cardToField.isHidden = true
+            countryField.isHidden = true
+            currancyTransctionField.isHidden = true
+            phoneField.isHidden = true
+            if model.payToCompany {
+                nameField.imageView.isHidden = true
+                nameField.viewModel.title = "Наименование получателя "
+            }
+            nameField.text =  model.fullName ?? ""
+            if !model.cardToAccountNumber.isEmpty {
+                bankField.viewModel.title = "Номер счета получателя"
+                bankField.viewModel.image = #imageLiteral(resourceName: "accountIcon")
+                bankField.text = model.cardToAccountNumber
+            }
             
+            if !model.comment.isEmpty {
+                countryField.viewModel.title = "Назначение платежа"
+                countryField.viewModel.image = #imageLiteral(resourceName: "comment")
+                countryField.text = model.comment
+            }
             
         case .mig:
             cardFromField.isHidden = true
@@ -428,7 +444,7 @@ class ContactConfurmViewController: UIViewController {
         
         switch confurmVCModel?.type {
         
-        case .card2card:
+        case .card2card, .requisites:
             print(#function, body)
             NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { respons, error in
                 if error != nil {
@@ -445,7 +461,15 @@ class ContactConfurmViewController: UIViewController {
                         let vc = PaymentsDetailsSuccessViewController()
                         vc.confurmVCModel = self.confurmVCModel
                         vc.id = model.data?.paymentOperationDetailId ?? 0
-                        vc.printFormType = "internal"
+                        switch self.confurmVCModel?.type {
+                        case .card2card:
+                            vc.printFormType = "internal"
+                        case .requisites:
+                            vc.printFormType = "external"
+                        default:
+                            break
+                        }
+                        
                         vc.modalPresentationStyle = .fullScreen
                         self.present(vc, animated: true, completion: nil)
                     }
