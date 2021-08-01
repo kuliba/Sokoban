@@ -92,7 +92,7 @@ extension ContactInputViewController {
                 }
             })
         }
-        
+        setupBankList()
         
         UIView.animate(withDuration: 0.1) {
             self.needShowSwitchView = country.code == "AM" ? true : false
@@ -173,4 +173,34 @@ extension ContactInputViewController {
         titleView.addGestureRecognizer(gesture)
         return titleView
     }
+    
+    
+    //MARK: - Animation
+    func openOrHideView(_ view: UIView) {
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.2) {
+                if view.isHidden == true {
+                    view.isHidden = false
+                    view.alpha = 1
+                } else {
+                    view.isHidden = true
+                    view.alpha = 0
+                }
+                self.stackView.layoutIfNeeded()
+            }
+        }
+    }
+    
+    func hideView(_ view: UIView, needHide: Bool) {
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.2) {
+                view.isHidden = needHide
+                view.alpha = needHide ? 0 : 1
+                self.stackView.layoutIfNeeded()
+            }
+        }
+    }
+
+    
+    
 }

@@ -8,15 +8,40 @@
 import UIKit
 
 extension ContactInputViewController {
+    //MARK: - API
+    func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?)->()) {
+        let param = ["isCard": "true", "isAccount": "true", "isDeposit": "false", "isLoan": "false"]
+        
+        NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
+            if error != nil {
+                completion(nil, error)
+            }
+            guard let model = model else { return }
+            if model.statusCode == 0 {
+                guard let cardList = model.data else { return }
+                completion(cardList, nil)
+            } else {
+                guard let error = model.errorMessage else { return }
+                completion(nil, error)
+            }
+        }
+    }
     
+    func getBankList(completion: @escaping (_ banksList: [BanksList]?, _ error: String?)->()) {
+        
+        NetworkHelper.request(.getBanks) { banksList , error in
+            if error != nil {
+                completion(nil, error)
+            }
+            guard let banksList = banksList as? [BanksList] else { return }
+            completion(banksList, nil)
+            print("DEBUG: Load Banks List... Count is: ", banksList.count)
+        }
+    }
     
-    func startPayment(with card: String, amount: String ,type: PaymentType,
-                      completion: @escaping (_ error: String?)->()) {
-        let amount = amount
-        let phone = self.phoneField.textField.unmaskedText ?? ""
-        let surname = self.surnameField.textField.text ?? ""
-        let name = self.nameField.textField.text ?? ""
-        let secondName = self.secondNameField.textField.text ?? ""
+    func startPayment(with card: String, completion: @escaping (_ error: String?)->()) {
+//        let amount = amount
+
         
         let puref = self.puref
         
@@ -42,32 +67,21 @@ extension ContactInputViewController {
                     guard let model = model else { return }
                     if model.statusCode == 0 {
                         print("DEBUG: Success ")
-//                        completion(nil)
-//                        let amountString = amount.replacingOccurrences(of: " ", with: "")
-//                        let doubelAmount = amountString.replacingOccurrences(of: ",", with: ".", options: .literal, range: nil)
                         
-//                        switch self.typeOfPay {
-//                        case .migAIbank:
-//
-//
-//                            self.endMigPayment(phone: phone, amount: amount) { error in
-//                                self.dismissActivity()
-//                                if error != nil {
-//                                    print("DEBUG: Error: endMigPayment ", error ?? "")
-//                                    completion(error!)
-//                                }
-//                            }
-//                        default:
-//
-//
-//                            self.endContactPayment(surname: surname, name: name, secondName: secondName, amount: amount) { error in
-//                                self.dismissActivity()
-//                                if error != nil {
-//                                    print("DEBUG: Error: endContactPayment ", error ?? "")
-//                                    completion(error!)
-//                                }
-//                            }
-//                        }
+                        guard let listInput = model.data?.listInputs else { return }
+                        
+                        listInput.forEach { listInput in
+                            if listInput.id == "trnPickupPoint" {
+                                let pickupPoint = self.setupContactCountryCode(codeList: listInput.dataType ?? "")
+                                self.trnPickupPoint = pickupPoint
+                                print("DEBUG: trnPickupPoint", pickupPoint)
+                            } else if listInput.id == "oferta" {
+                                print("DEBUG: Oferta")
+                            }
+                        }
+                        
+                        completion(nil)
+                        
                         
                     } else {
                         print("DEBUG: Error: anywayPayment1", model.errorMessage ?? "")
@@ -134,7 +148,7 @@ extension ContactInputViewController {
               "fieldvalue": secondName ],
             [ "fieldid": 4,
               "fieldname": "trnPickupPoint",
-              "fieldvalue": "BTOC" ]
+              "fieldvalue": self.trnPickupPoint ]
         ] ] as [String: AnyObject]
 //        print("DEBUG: ", dataName)
         NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataName) { model, error in

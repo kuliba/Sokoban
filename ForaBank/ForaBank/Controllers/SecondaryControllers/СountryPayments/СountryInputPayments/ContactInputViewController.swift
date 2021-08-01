@@ -9,16 +9,9 @@ import UIKit
 
 class ContactInputViewController: UIViewController {
     
-//    let popView = CastomPopUpView()
     var typeOfPay: PaymentType = .contact {
         didSet {
             print("DEBUG: typeOfPay: ", typeOfPay)
-//            self.startPayment(with: selectedCardNumber, type: typeOfPay) { error in
-//                self.dismissActivity()
-//                if error != nil {
-//                    self.showAlert(with: "Ошибка", and: error!)
-//                }
-//            }
         }
     }
     var cardIsSelect = false
@@ -26,19 +19,10 @@ class ContactInputViewController: UIViewController {
     var puref = "" {
         didSet {
             print("DEBUG: Puref string: ", puref)
-            
-            if cardIsSelect {
-                self.startPayment(with: self.selectedCardNumber, amount: "", type: self.typeOfPay) { error in
-                    self.dismissActivity()
-                    if error != nil {
-                        self.showAlert(with: "Ошибка", and: error!)
-                    }
-                }
-            } else {
-                
-            }
+            configPurerf()
         }
     }
+    var trnPickupPoint = ""
     var selectedBank: BanksList? {
         didSet {
             guard let bank = selectedBank else { return }
@@ -53,7 +37,7 @@ class ContactInputViewController: UIViewController {
     
     var country: CountriesList? {
         didSet {
-            print("Set country", country)
+            print("Set country", country ?? "nil")
             if country?.code == "AM" {
                 self.typeOfPay = .migAIbank
                 self.configure(with: country, byPhone: true)
@@ -75,7 +59,7 @@ class ContactInputViewController: UIViewController {
         didSet {
             guard let paymentSystem = paymentSystem else { return }
             setupPaymentsUI(system: paymentSystem)
-            print("DEBUG: payment system: ", paymentSystem.name)
+            print("DEBUG: payment system: ", paymentSystem.name ?? "nil")
         }
     }
     
@@ -121,11 +105,6 @@ class ContactInputViewController: UIViewController {
     var countryListView = CountryListView()
     
     var stackView = UIStackView(arrangedSubviews: [])
-//    lazy var doneButton: UIButton = {
-//        let button = UIButton(title: "Продолжить")
-//        button.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
-//        return button
-//    }()
     
     //MARK: - Viewlifecicle
     override func viewDidLoad() {
@@ -150,63 +129,53 @@ class ContactInputViewController: UIViewController {
             }
         }
         
-//        let vc = ChooseCountryTableViewController()
-//        vc.modalPresent = true
-//        vc.didChooseCountryTapped = { [weak self]  (country) in
-//            self?.country = country
-//        }
-//        let navVc = UINavigationController(rootViewController: vc)
-//        self.present(navVc, animated: true, completion: nil)
+    }
+
+    func setupContactCountryCode(codeList: String) -> String {
+        var codeDict: [[String:String]] = []
+        var codeString = ""
+        let list = codeList.components(separatedBy: ";")
+        list.forEach { element in
+            if element == "=" { } else {
+                let arr = element.components(separatedBy: "=")
+                let dict = [arr[0]: arr[1]]
+                
+                codeDict.append(dict)
+                
+                if arr[1] == country?.name?.capitalizingFirstLetter() {
+                    codeString = arr[0]
+                }
+            }
+        }
+        return codeString
+    }
+    
+    func configPurerf() {
+        self.showActivity()
+        if cardIsSelect {
+            self.startPayment(with: self.selectedCardNumber) { error in
+                self.dismissActivity()
+                if error != nil {
+                    self.showAlert(with: "Ошибка", and: error!)
+                }
+            }
+        } else {
+            setupCardList { _ in
+                self.startPayment(with: self.selectedCardNumber) { error in
+                    self.dismissActivity()
+                    if error != nil {
+                        self.showAlert(with: "Ошибка", and: error!)
+                    }
+                }
+            }
+            
+        }
     }
     
     func setupActions() {
-        getCardList { [weak self] data ,error in
-            DispatchQueue.main.async {
-                
-                if error != nil {
-                    self?.showAlert(with: "Ошибка", and: error!)
-                }
-                guard let data = data else { return }
-                var filterProduct: [GetProductListDatum] = []
-                data.forEach { product in
-                    if (product.productType == "CARD" || product.productType == "ACCOUNT") && product.currency == "RUB" {
-                        filterProduct.append(product)
-                    }
-                }
-                
-                self?.cardListView.cardList = filterProduct
-                
-                if filterProduct.count > 0 {
-                    self?.cardFromField.cardModel = filterProduct.first
-//                    self?.cardField.configCardView(data.first!)
-                    guard let cardNumber  = filterProduct.first?.number else { return }
-                    self?.selectedCardNumber = cardNumber
-                    self?.cardIsSelect = true
-                }
-            }
-        }
         
-        getBankList { [weak self]  banksList, error in
-            DispatchQueue.main.async {
-                if error != nil {
-                    self?.showAlert(with: "Ошибка", and: error!)
-                }
-                
-                guard let banksList = banksList else { return }
-                var filteredbanksList : [BanksList] = []
-                
-                banksList.forEach { bank in
-                    guard let codeList = bank.paymentSystemCodeList else { return }
-                    guard let countrylist = self?.country?.paymentSystemCodeList else { return }
-                    countrylist.forEach { code in
-                        if codeList.contains(code) {
-                            filteredbanksList.append(bank)
-                        }
-                    }
-                }
-                self?.banks = filteredbanksList
-            }
-        }
+//        setupCardList()
+        setupBankList()
         
         countryListView.didCountryTapped = { [weak self] country in
             self?.country = country
@@ -265,6 +234,7 @@ class ContactInputViewController: UIViewController {
         bankField.didChooseButtonTapped = { () in
             print("bankField didChooseButtonTapped")
             self.openOrHideView(self.bankListView)
+            self.bankListView.collectionView.reloadData()
             self.hideView(self.cardListView, needHide: true)
         }
         
@@ -278,26 +248,39 @@ class ContactInputViewController: UIViewController {
         }
         
         bottomView.didDoneButtonTapped = { (amount) in
-//            self?.doneButtonTapped()
-            self.startPayment(with: self.selectedCardNumber, amount: amount, type: self.typeOfPay) { error in
-                self.dismissActivity()
-                if error != nil {
-                    self.showAlert(with: "Ошибка", and: error!)
+            self.showActivity()
+//            self.startPayment(with: self.selectedCardNumber, amount: amount, type: self.typeOfPay) { error in
+//                self.dismissActivity()
+//                if error != nil {
+//                    self.showAlert(with: "Ошибка", and: error!)
+//                }
+//            }
+            let phone = self.phoneField.textField.unmaskedText ?? ""
+            let surname = self.surnameField.textField.text ?? ""
+            let name = self.nameField.textField.text ?? ""
+            let secondName = self.secondNameField.textField.text ?? ""
+            
+            switch self.typeOfPay {
+            case .migAIbank:
+                self.endMigPayment(phone: phone, amount: amount) { error in
+                    self.dismissActivity()
+                    if error != nil {
+                        print("DEBUG: Error: endMigPayment ", error ?? "")
+                        self.showAlert(with: "Ошибка", and: error!)
+                    }
+                }
+            default:
+                self.endContactPayment(surname: surname, name: name, secondName: secondName, amount: amount) { error in
+                    self.dismissActivity()
+                    if error != nil {
+                        print("DEBUG: Error: endContactPayment ", error ?? "")
+                        self.showAlert(with: "Ошибка", and: error!)
+                    }
                 }
             }
         }
     }
     
-    @objc func doneButtonTapped() {
-        // TODO : Нужна проверка данных на не пустые Имя, Телефон, Сумма
-//        showActivity()
-//        startPayment(with: selectedCardNumber, type: typeOfPay) { error in
-//            self.dismissActivity()
-//            if error != nil {
-//                self.showAlert(with: "Ошибка", and: error!)
-//            }
-//        }
-    }
     
     //MARK: - Helpers
     func goToConfurmVC(with model: ConfirmViewControllerModel) {
@@ -326,78 +309,64 @@ class ContactInputViewController: UIViewController {
                 }
             }
         })
-        
     }
     
-    
-    //MARK: - API
-    func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?)->()) {
-        let param = ["isCard": "true", "isAccount": "true", "isDeposit": "false", "isLoan": "false"]
-        
-        NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
-            if error != nil {
-                completion(nil, error)
+    func setupCardList(completion: @escaping ( _ error: String?) ->() ) {
+        getCardList { [weak self] data ,error in
+            DispatchQueue.main.async {
+                
+                if error != nil {
+                    self?.showAlert(with: "Ошибка", and: error!)
+                }
+                guard let data = data else { return }
+                var filterProduct: [GetProductListDatum] = []
+                data.forEach { product in
+                    if (product.productType == "CARD" || product.productType == "ACCOUNT") && product.currency == "RUB" {
+                        filterProduct.append(product)
+                    }
+                }
+                
+                self?.cardListView.cardList = filterProduct
+                
+                if filterProduct.count > 0 {
+                    self?.cardFromField.cardModel = filterProduct.first
+//                    self?.cardField.configCardView(data.first!)
+                    guard let cardNumber  = filterProduct.first?.number else { return }
+                    self?.selectedCardNumber = cardNumber
+                    self?.cardIsSelect = true
+                    completion(nil)
+                }
             }
-            guard let model = model else { return }
-            if model.statusCode == 0 {
-                guard let cardList = model.data else { return }
-                completion(cardList, nil)
-            } else {
-                guard let error = model.errorMessage else { return }
-                completion(nil, error)
-            }
-        }
-        
-        
-        
-//        NetworkHelper.request(.getProductList) { cardList , error in
-//            if error != nil {
-//                completion(nil, error)
-//            }
-//            guard let cardList = cardList as? [GetProductListDatum] else { return }
-//            completion(cardList, nil)
-//            print("DEBUG: Load card list... Count is: ", cardList.count)
-//        }
-    }
-    
-    func getBankList(completion: @escaping (_ banksList: [BanksList]?, _ error: String?)->()) {
-        
-        NetworkHelper.request(.getBanks) { banksList , error in
-            if error != nil {
-                completion(nil, error)
-            }
-            guard let banksList = banksList as? [BanksList] else { return }
-            completion(banksList, nil)
-            print("DEBUG: Load Banks List... Count is: ", banksList.count)
         }
     }
     
-    
-//    jj
-    
-    private func openOrHideView(_ view: UIView) {
-        UIView.animate(withDuration: 0.2) {
-            if view.isHidden == true {
-                view.isHidden = false
-                view.alpha = 1
-            } else {
-                view.isHidden = true
-                view.alpha = 0
+    func setupBankList() {
+        getBankList { [weak self]  banksList, error in
+            DispatchQueue.main.async {
+                if error != nil {
+                    self?.showAlert(with: "Ошибка", and: error!)
+                }
+                
+                guard let banksList = banksList else { return }
+                var filteredbanksList : [BanksList] = []
+                
+                banksList.forEach { bank in
+                    guard let codeList = bank.paymentSystemCodeList else { return }
+                    guard let countrylist = self?.country?.paymentSystemCodeList else { return }
+                    countrylist.forEach { code in
+                        if codeList.contains(code) {
+                            filteredbanksList.append(bank)
+                        }
+                    }
+                }
+                self?.banks = filteredbanksList
             }
-            self.stackView.layoutIfNeeded()
         }
     }
     
-    private func hideView(_ view: UIView, needHide: Bool) {
-        UIView.animate(withDuration: 0.2) {
-            view.isHidden = needHide
-            view.alpha = needHide ? 0 : 1
-            self.stackView.layoutIfNeeded()
-        }
-    }
 
-    
 }
+
 //MARK: EPContactsPicker delegates
 extension ContactInputViewController: EPPickerDelegate {
     
