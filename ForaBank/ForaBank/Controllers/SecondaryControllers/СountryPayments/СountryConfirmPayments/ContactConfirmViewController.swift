@@ -440,6 +440,7 @@ class ContactConfurmViewController: UIViewController {
             code = "0"
         }
         let body = ["verificationCode": code] as [String: AnyObject]
+        print("DEBUG: PaymentMake body", body)
         showActivity()
         
         switch confurmVCModel?.type {

@@ -10,7 +10,13 @@ import UIKit
 
 class PaymentsViewController: UIViewController {
     
-    var payments = [PaymentsModel]()
+    var payments = [PaymentsModel]() {
+        didSet {
+            DispatchQueue.main.async {
+                self.reloadData(with: nil)
+            }
+        }
+    }
     var transfers = [PaymentsModel]()
     var pay = [PaymentsModel]()
     
@@ -40,7 +46,8 @@ class PaymentsViewController: UIViewController {
         setupCollectionView()
         createDataSource()
         reloadData(with: nil)
-        
+        loadLastPhonePayments()
+        loadLastPayments()
     }
     
     func setupData() {
@@ -96,6 +103,59 @@ class PaymentsViewController: UIViewController {
         dataSource?.apply(snapshot, animatingDifferences: true)
         collectionView.reloadData()
         
+    }
+    
+    //MARK: - API
+    private func loadLastPayments() {
+        NetworkManager<GetPaymentCountriesDecodableModel>.addRequest(.getPaymentCountries, [:], [:]) { model, error in
+            if error != nil {
+                print("DEBUG: error", error!)
+            } else {
+                guard let model = model else { return }
+                guard let lastPaymentsList = model.data else { return }
+                if lastPaymentsList.count > 3 {
+                    let payArr = lastPaymentsList.prefix(3)
+                    payArr.forEach { lastPayment in
+                        let mod = ChooseCountryHeaderViewModel(model: lastPayment)
+                        let payment = PaymentsModel(lastCountryPayment: mod)
+                        self.payments.append(payment)
+                    }
+                } else {
+                    lastPaymentsList.forEach { lastPayment in
+                        let mod = ChooseCountryHeaderViewModel(model: lastPayment)
+                        let payment = PaymentsModel(lastCountryPayment: mod)
+                        self.payments.append(payment)
+                    }
+                }
+                
+                print("DEBUG: lastPaymentsList count", lastPaymentsList.count)
+            }
+        }
+    }
+    
+    func loadLastPhonePayments() {
+        NetworkManager<GetLatestPaymentsDecodableModel>.addRequest(.getLatestPayments, [:], [:]) { model, error in
+            if error != nil {
+                print("DEBUG: Error: ", error ?? "")
+            }
+            guard let model = model else { return }
+            print("DEBUG: LatestPayment: ", model)
+            if model.statusCode == 0 {
+                guard let data  = model.data else { return }
+                
+                
+                
+                
+                
+//                DispatchQueue.main.async {
+//                    self.lastPayment = data
+//                    self.lastPaymentsCollectionView.isHidden = self.lastPayment.count == 0 ? true : false
+//                    self.lastPaymentsCollectionView.reloadData()
+//                }
+            } else {
+                print("DEBUG: Error: ", model.errorMessage ?? "")
+            }
+        }
     }
     
 }
