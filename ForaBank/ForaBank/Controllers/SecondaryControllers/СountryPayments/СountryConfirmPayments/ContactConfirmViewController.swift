@@ -350,6 +350,7 @@ class ContactConfurmViewController: UIViewController {
             }
             
             if !model.comment.isEmpty {
+                countryField.isHidden = false
                 countryField.viewModel.title = "Назначение платежа"
                 countryField.viewModel.image = #imageLiteral(resourceName: "comment")
                 countryField.text = model.comment
