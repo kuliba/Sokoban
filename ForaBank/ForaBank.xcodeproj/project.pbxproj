@@ -69,6 +69,10 @@
 		0BF3486426943DFB005138A8 /* SuggestCompanyDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF3486326943DFB005138A8 /* SuggestCompanyDecodableModel.swift */; };
 		0BF34866269444D9005138A8 /* AllCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF34865269444D9005138A8 /* AllCardCell.swift */; };
 		0BF348A1269E0CDA005138A8 /* LogoutDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF348A0269E0CDA005138A8 /* LogoutDecodableModel.swift */; };
+		6822EFD226B935DB00125EEC /* BaseTableViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6822EFD126B935DB00125EEC /* BaseTableViewViewController.swift */; };
+		6822EFD626B935FF00125EEC /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6822EFD426B935FF00125EEC /* BaseTableViewCell.swift */; };
+		6822EFD726B935FF00125EEC /* BaseTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6822EFD526B935FF00125EEC /* BaseTableViewCell.xib */; };
+		684AD35A26B7D2520071C762 /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 684AD35926B7D2520071C762 /* CryptoSwift */; };
 		687ADF1026B07721005A239B /* DataExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687ADF0F26B07721005A239B /* DataExtension.swift */; };
 		6880D32726A5CC69008FBCB4 /* AES.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6880D32626A5CC68008FBCB4 /* AES.swift */; };
 		6880D32926A5CC7D008FBCB4 /* Encription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6880D32826A5CC7D008FBCB4 /* Encription.swift */; };
@@ -323,6 +327,9 @@
 		0BF3486326943DFB005138A8 /* SuggestCompanyDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestCompanyDecodableModel.swift; sourceTree = "<group>"; };
 		0BF34865269444D9005138A8 /* AllCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllCardCell.swift; sourceTree = "<group>"; };
 		0BF348A0269E0CDA005138A8 /* LogoutDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutDecodableModel.swift; sourceTree = "<group>"; };
+		6822EFD126B935DB00125EEC /* BaseTableViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewViewController.swift; sourceTree = "<group>"; };
+		6822EFD426B935FF00125EEC /* BaseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewCell.swift; sourceTree = "<group>"; };
+		6822EFD526B935FF00125EEC /* BaseTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BaseTableViewCell.xib; sourceTree = "<group>"; };
 		687ADF0F26B07721005A239B /* DataExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataExtension.swift; sourceTree = "<group>"; };
 		6880D32626A5CC68008FBCB4 /* AES.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AES.swift; sourceTree = "<group>"; };
 		6880D32826A5CC7D008FBCB4 /* Encription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Encription.swift; sourceTree = "<group>"; };
@@ -507,6 +514,7 @@
 				ED0B4892267B4CDD0037EA06 /* IQKeyboardManagerSwift in Frameworks */,
 				0B7A18AB2681CED70007CC75 /* SwiftEntryKit in Frameworks */,
 				ED39EC88268B308800158E46 /* SDWebImageSVGCoder in Frameworks */,
+				684AD35A26B7D2520071C762 /* CryptoSwift in Frameworks */,
 				EDF6821D266FC37F00FD5C07 /* FirebaseMessaging in Frameworks */,
 				68FFA5682695921E002DADFA /* QRScanner in Frameworks */,
 				ED4FC621266EA5CD0092B4AB /* Valet in Frameworks */,
@@ -630,6 +638,24 @@
 				0B8BE0962670D53600E96CAA /* DoRegistrationDecodebleModel.swift */,
 			);
 			path = NetworkingLoginModel;
+			sourceTree = "<group>";
+		};
+		6822EFD026B935A500125EEC /* DefaultTableView */ = {
+			isa = PBXGroup;
+			children = (
+				6822EFD326B935DF00125EEC /* Cell */,
+				6822EFD126B935DB00125EEC /* BaseTableViewViewController.swift */,
+			);
+			path = DefaultTableView;
+			sourceTree = "<group>";
+		};
+		6822EFD326B935DF00125EEC /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				6822EFD426B935FF00125EEC /* BaseTableViewCell.swift */,
+				6822EFD526B935FF00125EEC /* BaseTableViewCell.xib */,
+			);
+			path = Cell;
 			sourceTree = "<group>";
 		};
 		6880D32526A07148008FBCB4 /* Encription */ = {
@@ -1287,6 +1313,7 @@
 				68FFA54A2684C837002DADFA /* PDFViewer */,
 				68C64624269DCBC300473DE7 /* QRScanner */,
 				EDB16594266A4438007E6030 /* DevelopViewController.swift */,
+				6822EFD026B935A500125EEC /* DefaultTableView */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -1659,6 +1686,7 @@
 				68FFA5672695921E002DADFA /* QRScanner */,
 				68E6A28426A02C1800A1D9A1 /* AnyFormatKit */,
 				EDC8BA3326A5AA0E00EDB401 /* SDWebImagePDFCoder */,
+				684AD35926B7D2520071C762 /* CryptoSwift */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -1742,6 +1770,7 @@
 				68FFA5662695921D002DADFA /* XCRemoteSwiftPackageReference "QRScanner" */,
 				68E6A28326A02C1800A1D9A1 /* XCRemoteSwiftPackageReference "AnyFormatKit" */,
 				EDC8BA3226A5AA0D00EDB401 /* XCRemoteSwiftPackageReference "SDWebImagePDFCoder" */,
+				684AD35826B7D2510071C762 /* XCRemoteSwiftPackageReference "CryptoSwift" */,
 			);
 			productRefGroup = EDB1437E265FDA410028EF5A /* Products */;
 			projectDirPath = "";
@@ -1771,6 +1800,7 @@
 				EDB143CA265FDEC90028EF5A /* Roboto-LightItalic.ttf in Resources */,
 				EDB1654D26678E87007E6030 /* LaunchScreen.storyboard in Resources */,
 				ED4FC619266EA42E0092B4AB /* AppLocker.xib in Resources */,
+				6822EFD726B935FF00125EEC /* BaseTableViewCell.xib in Resources */,
 				EDB143C4265FDEC90028EF5A /* Roboto-Medium.ttf in Resources */,
 				EDB143C5265FDEC90028EF5A /* Roboto-Light.ttf in Resources */,
 				EDB143C8265FDEC90028EF5A /* Roboto-ThinItalic.ttf in Resources */,
@@ -1910,6 +1940,7 @@
 				EDF68215266F9EC800FD5C07 /* URLConstruct.swift in Sources */,
 				68FFA5402682C6CF002DADFA /* LastPaymentsCollectionViewCell.swift in Sources */,
 				0BEC893B2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift in Sources */,
+				6822EFD626B935FF00125EEC /* BaseTableViewCell.swift in Sources */,
 				6880D32726A5CC69008FBCB4 /* AES.swift in Sources */,
 				0BD2177926A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift in Sources */,
 				EDF68210266F9EC800FD5C07 /* LoginDoCodableModel.swift in Sources */,
@@ -1934,6 +1965,7 @@
 				ED84994B26A6FEE3005205C6 /* CountryListCell.swift in Sources */,
 				ED39EC93268C9AE900158E46 /* NewCardCell.swift in Sources */,
 				ED4FC610266CD66F0092B4AB /* СountryModel.swift in Sources */,
+				6822EFD226B935DB00125EEC /* BaseTableViewViewController.swift in Sources */,
 				EDF68213266F9EC800FD5C07 /* URLHostType.swift in Sources */,
 				EDB1656C26681F0E007E6030 /* MainTabBarViewController.swift in Sources */,
 				ED3A96742690FC8300252857 /* BankCell.swift in Sources */,
@@ -2164,7 +2196,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 59;
+				CURRENT_PROJECT_VERSION = 62;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -2189,7 +2221,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 59;
+				CURRENT_PROJECT_VERSION = 62;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -2340,6 +2372,14 @@
 				minimumVersion = 1.2.7;
 			};
 		};
+		684AD35826B7D2510071C762 /* XCRemoteSwiftPackageReference "CryptoSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/krzyzanowskim/CryptoSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.4.1;
+			};
+		};
 		68E6A28326A02C1800A1D9A1 /* XCRemoteSwiftPackageReference "AnyFormatKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/luximetr/AnyFormatKit";
@@ -2419,6 +2459,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0B7A18A92681CED70007CC75 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */;
 			productName = SwiftEntryKit;
+		};
+		684AD35926B7D2520071C762 /* CryptoSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 684AD35826B7D2510071C762 /* XCRemoteSwiftPackageReference "CryptoSwift" */;
+			productName = CryptoSwift;
 		};
 		68E6A28426A02C1800A1D9A1 /* AnyFormatKit */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -13,7 +13,7 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
         
         if text != ""{
             banks = allBanks
-            banks = banks.filter({$0.fullName?.lowercased().prefix(text.count) ?? "" == text || $0.memberID?.lowercased().prefix(text.count) ?? "" == text})
+            banks = banks.filter({$0.fullName?.lowercased().prefix(text.count) ?? "" == text.lowercased() || $0.bic?.lowercased().prefix(text.count) ?? "" == text.lowercased()})
         } else if text == ""{
             banks = allBanks
         }
@@ -48,7 +48,7 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
         setupNavigationBar()
         setupCollectionView()
         
-        searchContact.numberTextField.placeholder = "Введите название или Бик банка"
+        searchContact.numberTextField.placeholder = "Введите название или БИК банка"
         
         let contactView = UIView()
         contactView.isUserInteractionEnabled = true
@@ -92,7 +92,7 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
         let label = UILabel()
         label.textColor = UIColor.black
         label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.text = "Выберите контакт"
+        label.text = "Выберите банк"
         self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: label)
         self.navigationItem.leftItemsSupplementBackButton = true
         
@@ -128,7 +128,7 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
             ? .clear : updateInitialsColorForIndexPath(indexPath)
         
         item.contactLabel.text = banks[indexPath.item].fullName
-        item.phoneLabel.text = banks[indexPath.item].memberID
+        item.phoneLabel.text = banks[indexPath.item].bic
         return item
     }
     

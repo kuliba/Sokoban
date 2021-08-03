@@ -539,6 +539,9 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
             } else if collectionView == lastPaymentsCollectionView{
                 let vc = PaymentByPhoneViewController()
                 if lastPhonePayment.count > 0{
+                    
+                    // TODO: - Взять кусок кода
+                    
                     vc.selectBank = lastPhonePayment[indexPath.row].bankName
                     vc.memberId = lastPhonePayment[indexPath.item].bankID
                     vc.bankImage = UIImage(named: "\(lastPhonePayment[indexPath.row].bankID ?? "")")
@@ -547,7 +550,11 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                     } else {
                         vc.sbp = true
                     }
+                    
+                    
+                    
                 } else {
+                    vc.memberId = lastPayment[indexPath.item].bankID
                     vc.selectNumber =  format(phoneNumber: lastPayment[indexPath.item].phoneNumber ?? "")
                     vc.summTransctionField.text = lastPayment[indexPath.item].amount ?? ""
                     vc.selectBank = lastPayment[indexPath.row].bankName
@@ -616,36 +623,24 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
     
     func getLastPayments() {
         showActivity()
-        
         NetworkManager<GetLatestPaymentsDecodableModel>.addRequest(.getLatestPayments, [:], [:]) { model, error in
+            self.dismissActivity()
             if error != nil {
-                self.dismissActivity()
                 print("DEBUG: Error: ", error ?? "")
             }
             guard let model = model else { return }
-            print("DEBUG: Card list: ", model)
+            print("DEBUG: LatestPayment: ", model)
             if model.statusCode == 0 {
-                self.dismissActivity()
                 guard let data  = model.data else { return }
-//                self.selectedCardNumber = cardNumber
                 DispatchQueue.main.async {
                     self.lastPayment = data
-//                    if self.lastPhonePayment.count != 0{
-//
-//                    self.lastPaymentsCollectionView.isHidden = false
-//                    self.lastPaymentsCollectionView.reloadData()
-//                    } else {
-//                        self.lastPaymentsCollectionView.isHidden = true
-//                    }
-                    self.lastPaymentsCollectionView.isHidden = false
+                    self.lastPaymentsCollectionView.isHidden = self.lastPayment.count == 0 ? true : false
                     self.lastPaymentsCollectionView.reloadData()
                 }
             } else {
-                self.dismissActivity()
                 print("DEBUG: Error: ", model.errorMessage ?? "")
             }
         }
-        
     }
     
     func getLastPhonePayments() {
@@ -1034,9 +1029,9 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
             button.addTarget(self, action: #selector(selectedSectionStoredButtonClicked), for: .touchUpInside)
             button.centerY(inView: label)
             if self.banksList.count > 1{
-                button.setImage(UIImage(systemName: "chevron.down"), for: .normal)
-            } else {
                 button.setImage(UIImage(systemName: "chevron.up"), for: .normal)
+            } else {
+                button.setImage(UIImage(systemName: "chevron.down"), for: .normal)
             }
 //            headerView.backgroundColor = .blue
             

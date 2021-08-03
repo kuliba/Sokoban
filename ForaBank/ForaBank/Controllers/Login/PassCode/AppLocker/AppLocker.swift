@@ -12,6 +12,8 @@ import LocalAuthentication
 import Valet
 import Firebase
 import FirebaseMessaging
+import CommonCrypto
+import Security
 
 public enum ALConstants {
     static let nibName = "AppLocker"
@@ -97,6 +99,7 @@ public class AppLocker: UIViewController {
         super.viewDidLoad()
         // https://stackoverflow.com/questions/56459329/disable-the-interactive-dismissal-of-presented-view-controller-in-ios-13
         modalPresentationStyle = .fullScreen
+        
     }
     
     public override func viewWillAppear(_ animated: Bool) {
@@ -331,6 +334,8 @@ public class AppLocker: UIViewController {
 }
 
 extension AppLocker {
+ 
+    
     //MARK: - API
     func registerMyPin(with code: String, completion: @escaping (_ error: String?) ->() ) {
         self.dismissActivity()
@@ -342,14 +347,36 @@ extension AppLocker {
     
     func login(with code: String, type: BiometricType, completion: @escaping (_ error: String?) ->() ) {
         showActivity()
-        let serverDeviceGUID = UserDefaults.standard.object(forKey: "serverDeviceGUID")
+        var serverDeviceGUID = UserDefaults.standard.object(forKey: "serverDeviceGUID")
+    
+        func encript(string: String) -> String?{
+            do {
+                let aes = try AES(keyString: KeyFromServer.secretKey!)
+
+                let stringToEncrypt: String = "\(string)"
+                
+                print("String to encrypt:\t\t\t\(stringToEncrypt)")
+
+                let encryptedData: Data = try aes.encrypt(stringToEncrypt)
+                print("String encrypted (base64):\t\(encryptedData.base64EncodedString())")
+                
+                let decryptedData: String = try aes.decrypt(encryptedData)
+                print("String decrypted:\t\t\t\(decryptedData)")
+                return encryptedData.base64EncodedString()
+            } catch {
+                print("Something went wrong: \(error)")
+                return nil
+            }
+        }
+        
         let data = [
-            "appId": "IOS",
-            "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-            "pushFcmToken": Messaging.messaging().fcmToken as String?,
-            "serverDeviceGUID": serverDeviceGUID,
-            "loginValue": code,
-            "type": type.rawValue
+            "appId": encript(string:"iOS" ),
+            "cryptoVersion": "1.0",
+            "pushDeviceId": encript(string: UIDevice.current.identifierForVendor!.uuidString),
+            "pushFcmToken": encript(string: Messaging.messaging().fcmToken as String? ?? ""),
+            "serverDeviceGUID" : encript(string: serverDeviceGUID as! String),
+            "loginValue": encript(string: code.sha256() ),
+            "type": encript(string: type.rawValue)
         ] as [String : AnyObject]
         //        print(data)
         print("DEBUG: Start login with body: ", data)

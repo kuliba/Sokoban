@@ -335,6 +335,7 @@ class ContactConfurmViewController: UIViewController {
             cardFromField.isHidden = true
             cardToField.isHidden = true
             countryField.isHidden = true
+            numberTransctionField.isHidden = true
             currancyTransctionField.isHidden = true
             phoneField.isHidden = true
             if model.payToCompany {
@@ -349,6 +350,7 @@ class ContactConfurmViewController: UIViewController {
             }
             
             if !model.comment.isEmpty {
+                countryField.isHidden = false
                 countryField.viewModel.title = "Назначение платежа"
                 countryField.viewModel.image = #imageLiteral(resourceName: "comment")
                 countryField.text = model.comment
@@ -440,6 +442,7 @@ class ContactConfurmViewController: UIViewController {
             code = "0"
         }
         let body = ["verificationCode": code] as [String: AnyObject]
+        print("DEBUG: PaymentMake body", body)
         showActivity()
         
         switch confurmVCModel?.type {

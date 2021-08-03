@@ -382,22 +382,22 @@ class PaymentByPhoneViewController: UIViewController {
 //       let fromatNumber =
         
         bottomView.doneButtonIsEnabled(true)
-        let body = [ "check" : false,
-                     "amount" : clearAmount,
-                     "currencyAmount" : "RUB",
+        let body = [ "check"            : false,
+                     "amount"           : clearAmount,
+                     "currencyAmount"   : "RUB",
                      "payer" : [
-                        "cardId" : nil,
-                        "cardNumber" : selectedCardNumber,
-                        "accountId" : nil,
-                        "accountNumber" : nil
+//                        "cardId"        : nil,
+                        "cardNumber"    : selectedCardNumber,
+//                        "accountId"     : nil,
+//                        "accountNumber" : nil
                      ],
                      "payeeInternal" : [
-                        "cardId" : nil,
-                        "cardNumber" : nil,
-                        "accountId" : nil,
-                        "accountNumber" : nil,
-                        "phoneNumber" : clearNumber.description,
-                        "productCustomName" : nil
+//                        "cardId"        : nil,
+//                        "cardNumber"    : nil,
+//                        "accountId"     : nil,
+//                        "accountNumber" : nil,
+                        "phoneNumber"   : clearNumber.description,
+//                        "productCustomName" : nil
                      ] ] as [String : AnyObject]
         
         print("DEBUG: ", #function, body)

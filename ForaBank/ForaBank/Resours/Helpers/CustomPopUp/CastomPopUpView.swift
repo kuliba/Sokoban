@@ -146,8 +146,7 @@ class MemeDetailVC : AddHeaderImageViewController {
         }
         
         bottomView.didDoneButtonTapped = { [weak self] (amaunt) in
-            self?.viewModel.summTransction = amaunt
-            self?.doneButtonTapped(with: self!.viewModel)
+            self?.doneButtonTapped(with: self!.viewModel, amaunt: amaunt)
         }
     }
     
@@ -299,7 +298,7 @@ class MemeDetailVC : AddHeaderImageViewController {
         //     curvedLineView straightLineView changeAccountButton
         guard model.cardFrom != nil, model.cardTo != nil else { return }
         // TODO: какие условия для смены местами: счет - счет, карта - карта?
-        self.seporatorView.changeAccountButton.isHidden = false
+        self.seporatorView.changeAccountButton.isHidden = true // TODO: для релиза отключена кнопка
         self.bottomView.currencySwitchButton.isHidden = (model.cardFrom?.currency! == model.cardTo?.currency!) ? true : false // Правильно true : false сейчас для теста
         self.bottomView.currencySwitchButton.setTitle((model.cardFrom?.currency?.getSymbol() ?? "") + " ⇆ " + (model.cardTo?.currency?.getSymbol() ?? ""), for: .normal)
         /// Когда скрывается кнопка смены валют, то есть валюта одинаковая, то меняем содеожание лейбла на то, что по умолчанию
@@ -320,7 +319,7 @@ class MemeDetailVC : AddHeaderImageViewController {
     
     final func exchangeRate( _ from: String, _ whereTo: String) {
         let (fromValue, whereValue) = (from, whereTo)
-        
+        self.bottomView.tempArray.removeAll()
         let ru = (from == "RUB" || whereTo == "RUB")
         
         switch ru {
@@ -331,7 +330,6 @@ class MemeDetailVC : AddHeaderImageViewController {
                 switch (fromValue, whereValue) {
                 case ("RUB", let(value)):
                     let body = [ "currencyCodeAlpha" : value] as [String: AnyObject]
-                    
                     NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], body) { model, error in
                         let m = model?.data
                         self.bottomView.currencyTo = m
@@ -366,7 +364,6 @@ class MemeDetailVC : AddHeaderImageViewController {
                 }
                 let m = model?.data
                 self.bottomView.currencyFrom = m
-                
                 self.bottomView.tempArray.append(m)
             }
         }
@@ -460,14 +457,14 @@ class MemeDetailVC : AddHeaderImageViewController {
         
     }
     
-    func doneButtonTapped(with viewModel: ConfirmViewControllerModel) {
-        
+    func doneButtonTapped(with viewModel: ConfirmViewControllerModel, amaunt: String) {
+//        self?.viewModel.summTransction = amaunt
         var viewModel = viewModel
         self.dismissKeyboard()
         self.showActivity()
         bottomView.doneButtonIsEnabled(true)
         let body = [ "check" : false,
-                     "amount" : viewModel.summTransction,
+                     "amount" : amaunt,
                      "currencyAmount" : self.bottomView.currencyCode,
                      "payer" : [
                         "cardId" : viewModel.cardFromCardId,

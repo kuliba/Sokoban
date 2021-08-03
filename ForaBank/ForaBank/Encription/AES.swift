@@ -4,8 +4,8 @@
 //
 //  Created by Дмитрий on 11.06.2021.
 //
-import CommonCrypto
 import Foundation
+import CommonCrypto
 
 struct AES256 {
     
@@ -13,12 +13,6 @@ struct AES256 {
     private var iv: Data
     
     public init(key: Data, iv: Data) throws {
-        guard key.count == kCCKeySizeAES256 else {
-            throw Error.badKeyLength
-        }
-        guard iv.count == kCCBlockSizeAES128 else {
-            throw Error.badInputVectorLength
-        }
         self.key = key
         self.iv = iv
     }
@@ -87,6 +81,9 @@ struct AES256 {
         }
         return Data(bytes: UnsafePointer<UInt8>(derivedBytes), count: length)
     }
+    
+//    let encryptedContent = try! AES.seal("", using: KeyFromServer.secretKey).combined
+
     
     static func randomIv() -> Data {
         return randomData(length: kCCBlockSizeAES128)
