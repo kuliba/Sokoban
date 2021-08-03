@@ -545,12 +545,21 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         guard var nameCompany = nameCompanyField.textField.text else {
             return
         }
+        if self.nameField.isHidden == false {
+            self.fio.name = self.nameField.textField.text ?? ""
+            self.fio.patronymic = self.surField.textField.text ?? ""
+            self.fio.surname = self.fioField.textField.text ?? ""
+            nameCompany = self.fio.surname + " " +  self.fio.name + " " + self.fio.patronymic
+        } else {
+            guard let fio = fioField.textField.text else {
+                    return
+            }
+            nameCompany = fio
+        }
         
         let unformatText = bottomView.moneyFormatter?.unformat(bottomView.amountTextField.text)
         guard let amount = unformatText?.replacingOccurrences(of: ",", with: ".") else { return }
         
-        
-     
     
         var body = [ "check" : false,
                      "amount" : amount,
@@ -573,6 +582,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
             }
             body.removeValue(forKey: "INN")
             nameCompany = fio
+            body["name"] = fio as AnyObject
         }
         
         NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer , [:], body) { model, error in

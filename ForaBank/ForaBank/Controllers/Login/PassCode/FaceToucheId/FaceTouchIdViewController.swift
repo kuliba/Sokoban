@@ -95,18 +95,18 @@ class FaceTouchIdViewController: UIViewController {
             }
         }
         let data = [
-            "pushDeviceId":  UIDevice.current.identifierForVendor!.uuidString,
-            "pushFcmToken": Messaging.messaging().fcmToken as String? ?? "",
-            "serverDeviceGUID" : serverDeviceGUID ?? "",
-            "settings": [ ["type" : "pin",
+            "pushDeviceId": encript(string: UIDevice.current.identifierForVendor!.uuidString),
+            "pushFcmToken": encript(string: Messaging.messaging().fcmToken as String? ?? ""),
+            "serverDeviceGUID" : encript(string: serverDeviceGUID as! String),
+            "settings": [ ["type" : encript(string:"pin"),
                            "isActive": true,
-                           "value": code ?? ""],
-                          ["type" : "touchId",
+                           "value": encript(string:code?.sha256() ?? "")],
+                          ["type" : encript(string:"touchId"),
                            "isActive": touch,
-                           "value": code ?? ""],
-                          ["type" : "faceId",
+                           "value": encript(string:code ?? "")],
+                          ["type" : encript(string:"faceId"),
                            "isActive": face ,
-                           "value": code ?? ""] ] ] as [String : AnyObject]
+                           "value": encript(string:code ?? "")] ] ] as [String : AnyObject]
         
         print("DEBUG: Start setDeviceSetting with body: ", data)
         
