@@ -38,6 +38,13 @@
 		0B8BE0952670D4A300E96CAA /* GetCodeDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE0942670D4A300E96CAA /* GetCodeDecodebleModel.swift */; };
 		0B8BE0972670D53600E96CAA /* DoRegistrationDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE0962670D53600E96CAA /* DoRegistrationDecodebleModel.swift */; };
 		0B8CB0882680CAE3006A39C3 /* ExtensionNetworkHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8CB0872680CAE3006A39C3 /* ExtensionNetworkHelper.swift */; };
+		0B95C3FE26B6C96F00AA57E6 /* DoubleInStringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B95C3FD26B6C96F00AA57E6 /* DoubleInStringExtension.swift */; };
+		0B95C40026B6C99A00AA57E6 /* RoundedDoubleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B95C3FF26B6C99A00AA57E6 /* RoundedDoubleExtension.swift */; };
+		0B95C40326B6CA3700AA57E6 /* CustomPopUpWithRateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B95C40226B6CA3700AA57E6 /* CustomPopUpWithRateView.swift */; };
+		0B95C40526B6CB1D00AA57E6 /* ExtensionCustomPopUpWithRateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B95C40426B6CB1D00AA57E6 /* ExtensionCustomPopUpWithRateView.swift */; };
+		0B95C40826B6CD9000AA57E6 /* BottomInputViewWithRateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B95C40726B6CD9000AA57E6 /* BottomInputViewWithRateView.swift */; };
+		0B95C40A26B6D88000AA57E6 /* BottomLableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B95C40926B6D88000AA57E6 /* BottomLableModel.swift */; };
+		0B95C40C26B72CB100AA57E6 /* ExtensionBottomViewWithSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B95C40B26B72CB100AA57E6 /* ExtensionBottomViewWithSetup.swift */; };
 		0B9EC85D26739C0000D86EB2 /* GetCountriesDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EC85C26739C0000D86EB2 /* GetCountriesDecodebleModel.swift */; };
 		0BA09E2C26ADD6C50065D623 /* GKHViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA09E2B26ADD6C50065D623 /* GKHViewController.swift */; };
 		0BA09E2E26ADEBF50065D623 /* GHKCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0BA09E2D26ADEBF50065D623 /* GHKCell.xib */; };
@@ -45,6 +52,11 @@
 		0BA09E3226AE1AB70065D623 /* GKHCityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA09E3126AE1AB70065D623 /* GKHCityViewController.swift */; };
 		0BA09E3426B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA09E3326B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift */; };
 		0BD2177926A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */; };
+		0BE270B026B76B9700FA958C /* ExtensionCustomPopUpSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270AF26B76B9700FA958C /* ExtensionCustomPopUpSetup.swift */; };
+		0BE270B326B9959900FA958C /* ExtensionBottomLableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */; };
+		0BE270B626B9DA4800FA958C /* ExtensionBottomInputViewRevers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270B526B9DA4800FA958C /* ExtensionBottomInputViewRevers.swift */; };
+		0BE270B826B9DC4200FA958C /* ExtensionBottomInputViewExchange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270B726B9DC4200FA958C /* ExtensionBottomInputViewExchange.swift */; };
+		0BE270BA26B9F36A00FA958C /* ExtensionBottomInputRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270B926B9F36900FA958C /* ExtensionBottomInputRequest.swift */; };
 		0BEC8939267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC8938267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift */; };
 		0BEC893B2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC893A2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift */; };
 		0BEC893D2672591A00D8BD22 /* GetCardListDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC893C2672591A00D8BD22 /* GetCardListDecodebleModel.swift */; };
@@ -100,7 +112,7 @@
 		ED0B48AF2681CC6D0037EA06 /* CodeVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B48AE2681CC6D0037EA06 /* CodeVerificationViewModel.swift */; };
 		ED2BE17F26A0498400647CB1 /* AllCardListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2BE17E26A0498400647CB1 /* AllCardListViewController.swift */; };
 		ED2BE18126A04A4300647CB1 /* CastomCardXIB.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED2BE18026A04A4300647CB1 /* CastomCardXIB.xib */; };
-		ED2BE18326A04A8800647CB1 /* BottomInputView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED2BE18226A04A8800647CB1 /* BottomInputView.xib */; };
+		ED2BE18326A04A8800647CB1 /* BottomInputViewWithRate.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED2BE18226A04A8800647CB1 /* BottomInputViewWithRate.xib */; };
 		ED2BE18526A04F0600647CB1 /* CardChooseView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED2BE18426A04F0600647CB1 /* CardChooseView.xib */; };
 		ED39EC88268B308800158E46 /* SDWebImageSVGCoder in Frameworks */ = {isa = PBXBuildFile; productRef = ED39EC87268B308800158E46 /* SDWebImageSVGCoder */; };
 		ED39EC8C268B4F0800158E46 /* CardChooseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED39EC8B268B4F0800158E46 /* CardChooseView.swift */; };
@@ -279,6 +291,13 @@
 		0B8BE0942670D4A300E96CAA /* GetCodeDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCodeDecodebleModel.swift; sourceTree = "<group>"; };
 		0B8BE0962670D53600E96CAA /* DoRegistrationDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoRegistrationDecodebleModel.swift; sourceTree = "<group>"; };
 		0B8CB0872680CAE3006A39C3 /* ExtensionNetworkHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionNetworkHelper.swift; sourceTree = "<group>"; };
+		0B95C3FD26B6C96F00AA57E6 /* DoubleInStringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleInStringExtension.swift; sourceTree = "<group>"; };
+		0B95C3FF26B6C99A00AA57E6 /* RoundedDoubleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedDoubleExtension.swift; sourceTree = "<group>"; };
+		0B95C40226B6CA3700AA57E6 /* CustomPopUpWithRateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPopUpWithRateView.swift; sourceTree = "<group>"; };
+		0B95C40426B6CB1D00AA57E6 /* ExtensionCustomPopUpWithRateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionCustomPopUpWithRateView.swift; sourceTree = "<group>"; };
+		0B95C40726B6CD9000AA57E6 /* BottomInputViewWithRateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomInputViewWithRateView.swift; sourceTree = "<group>"; };
+		0B95C40926B6D88000AA57E6 /* BottomLableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomLableModel.swift; sourceTree = "<group>"; };
+		0B95C40B26B72CB100AA57E6 /* ExtensionBottomViewWithSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBottomViewWithSetup.swift; sourceTree = "<group>"; };
 		0B9EC85C26739C0000D86EB2 /* GetCountriesDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCountriesDecodebleModel.swift; sourceTree = "<group>"; };
 		0BA09E2B26ADD6C50065D623 /* GKHViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHViewController.swift; sourceTree = "<group>"; };
 		0BA09E2D26ADEBF50065D623 /* GHKCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GHKCell.xib; sourceTree = "<group>"; };
@@ -286,6 +305,12 @@
 		0BA09E3126AE1AB70065D623 /* GKHCityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHCityViewController.swift; sourceTree = "<group>"; };
 		0BA09E3326B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetFullBankInfoListDecodableModel.swift; sourceTree = "<group>"; };
 		0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAnywayOperatorsListDecodableModel.swift; sourceTree = "<group>"; };
+		0BE270AF26B76B9700FA958C /* ExtensionCustomPopUpSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionCustomPopUpSetup.swift; sourceTree = "<group>"; };
+		0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBottomLableModel.swift; sourceTree = "<group>"; };
+		0BE270B426B9D79C00FA958C /* BottomInputView copy.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "BottomInputView copy.xib"; sourceTree = "<group>"; };
+		0BE270B526B9DA4800FA958C /* ExtensionBottomInputViewRevers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBottomInputViewRevers.swift; sourceTree = "<group>"; };
+		0BE270B726B9DC4200FA958C /* ExtensionBottomInputViewExchange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBottomInputViewExchange.swift; sourceTree = "<group>"; };
+		0BE270B926B9F36900FA958C /* ExtensionBottomInputRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBottomInputRequest.swift; sourceTree = "<group>"; };
 		0BEC8938267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallPushDeviceDecodebleModel.swift; sourceTree = "<group>"; };
 		0BEC893A2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistredPushDeviceTorUserDecodebleModel.swift; sourceTree = "<group>"; };
 		0BEC893C2672591A00D8BD22 /* GetCardListDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCardListDecodebleModel.swift; sourceTree = "<group>"; };
@@ -338,7 +363,7 @@
 		ED0B48AE2681CC6D0037EA06 /* CodeVerificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeVerificationViewModel.swift; sourceTree = "<group>"; };
 		ED2BE17E26A0498400647CB1 /* AllCardListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllCardListViewController.swift; sourceTree = "<group>"; };
 		ED2BE18026A04A4300647CB1 /* CastomCardXIB.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CastomCardXIB.xib; sourceTree = "<group>"; };
-		ED2BE18226A04A8800647CB1 /* BottomInputView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BottomInputView.xib; sourceTree = "<group>"; };
+		ED2BE18226A04A8800647CB1 /* BottomInputViewWithRate.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BottomInputViewWithRate.xib; sourceTree = "<group>"; };
 		ED2BE18426A04F0600647CB1 /* CardChooseView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CardChooseView.xib; sourceTree = "<group>"; };
 		ED39EC8B268B4F0800158E46 /* CardChooseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardChooseView.swift; sourceTree = "<group>"; };
 		ED39EC92268C9AE900158E46 /* NewCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCardCell.swift; sourceTree = "<group>"; };
@@ -533,6 +558,46 @@
 			path = CustomPopUp;
 			sourceTree = "<group>";
 		};
+		0B95C3FB26B6C92700AA57E6 /* StringExtensions */ = {
+			isa = PBXGroup;
+			children = (
+				0B95C3FD26B6C96F00AA57E6 /* DoubleInStringExtension.swift */,
+			);
+			path = StringExtensions;
+			sourceTree = "<group>";
+		};
+		0B95C3FC26B6C93C00AA57E6 /* DoubleExtensions */ = {
+			isa = PBXGroup;
+			children = (
+				0B95C3FF26B6C99A00AA57E6 /* RoundedDoubleExtension.swift */,
+			);
+			path = DoubleExtensions;
+			sourceTree = "<group>";
+		};
+		0B95C40126B6C9ED00AA57E6 /* CustonPopUpWithRate */ = {
+			isa = PBXGroup;
+			children = (
+				0B95C40226B6CA3700AA57E6 /* CustomPopUpWithRateView.swift */,
+				0B95C40426B6CB1D00AA57E6 /* ExtensionCustomPopUpWithRateView.swift */,
+				0BE270AF26B76B9700FA958C /* ExtensionCustomPopUpSetup.swift */,
+			);
+			path = CustonPopUpWithRate;
+			sourceTree = "<group>";
+		};
+		0B95C40626B6CD6600AA57E6 /* BottomInputViewWithRate */ = {
+			isa = PBXGroup;
+			children = (
+				0B95C40726B6CD9000AA57E6 /* BottomInputViewWithRateView.swift */,
+				0B95C40B26B72CB100AA57E6 /* ExtensionBottomViewWithSetup.swift */,
+				0BE270B526B9DA4800FA958C /* ExtensionBottomInputViewRevers.swift */,
+				0BE270B726B9DC4200FA958C /* ExtensionBottomInputViewExchange.swift */,
+				0BE270B926B9F36900FA958C /* ExtensionBottomInputRequest.swift */,
+				ED2BE18226A04A8800647CB1 /* BottomInputViewWithRate.xib */,
+				0BE270B126B9957B00FA958C /* BottomLableModel */,
+			);
+			path = BottomInputViewWithRate;
+			sourceTree = "<group>";
+		};
 		0BA09E2A26ADD6A50065D623 /* GKHController */ = {
 			isa = PBXGroup;
 			children = (
@@ -542,6 +607,15 @@
 				0BA09E3126AE1AB70065D623 /* GKHCityViewController.swift */,
 			);
 			path = GKHController;
+			sourceTree = "<group>";
+		};
+		0BE270B126B9957B00FA958C /* BottomLableModel */ = {
+			isa = PBXGroup;
+			children = (
+				0B95C40926B6D88000AA57E6 /* BottomLableModel.swift */,
+				0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */,
+			);
+			path = BottomLableModel;
 			sourceTree = "<group>";
 		};
 		0BEC89372672305600D8BD22 /* NetworkingLoginModel */ = {
@@ -898,6 +972,7 @@
 		ED4FC5FE266B91360092B4AB /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				0B95C40126B6C9ED00AA57E6 /* CustonPopUpWithRate */,
 				EDB1453F2666AFD70028EF5A /* Constants.swift */,
 				EDB14534266671580028EF5A /* MockItems.swift */,
 				EDB1451F26661B030028EF5A /* StringMask.swift */,
@@ -1054,6 +1129,7 @@
 		EDAA99AC2673AB6D00435484 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				0B95C40626B6CD6600AA57E6 /* BottomInputViewWithRate */,
 				EDBEEA1526B1AE5500265683 /* FullBankInfoListView */,
 				ED84994626A6FD7C005205C6 /* CountryListView */,
 				ED2BE17D26A0498400647CB1 /* CustomCardListView */,
@@ -1175,6 +1251,8 @@
 		EDB1451926652D090028EF5A /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				0B95C3FC26B6C93C00AA57E6 /* DoubleExtensions */,
+				0B95C3FB26B6C92700AA57E6 /* StringExtensions */,
 				EDB1451A26652D1A0028EF5A /* UIKit */,
 			);
 			path = Extensions;
@@ -1344,7 +1422,7 @@
 			isa = PBXGroup;
 			children = (
 				EDC341A126864C4100FFFEF8 /* BottomInputView.swift */,
-				ED2BE18226A04A8800647CB1 /* BottomInputView.xib */,
+				0BE270B426B9D79C00FA958C /* BottomInputView copy.xib */,
 			);
 			path = BottomInputView;
 			sourceTree = "<group>";
@@ -1713,7 +1791,7 @@
 				68FFA52D2682AF62002DADFA /* ContactCollectionViewCell.xib in Resources */,
 				EDB143CB265FDEC90028EF5A /* Roboto-Italic.ttf in Resources */,
 				EDB1655E2667A55F007E6030 /* ForaInput.xib in Resources */,
-				ED2BE18326A04A8800647CB1 /* BottomInputView.xib in Resources */,
+				ED2BE18326A04A8800647CB1 /* BottomInputViewWithRate.xib in Resources */,
 				ED0B489E267D41B10037EA06 /* PaymentsDetailsView.xib in Resources */,
 				EDB14532266667140028EF5A /* OrderProductsCollectionViewCell.xib in Resources */,
 			);
@@ -1752,6 +1830,7 @@
 				0BF3485B268E5907005138A8 /* GetExchangeCurrencyRatesDecodableModel.swift in Sources */,
 				0B37F9882680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift in Sources */,
 				EDB1451C26652D370028EF5A /* UILabel.swift in Sources */,
+				0B95C40326B6CA3700AA57E6 /* CustomPopUpWithRateView.swift in Sources */,
 				ED0B4894267B50F50037EA06 /* Int.swift in Sources */,
 				EDB145402666AFD70028EF5A /* Constants.swift in Sources */,
 				0B8BE0972670D53600E96CAA /* DoRegistrationDecodebleModel.swift in Sources */,
@@ -1761,12 +1840,15 @@
 				EDF68216266F9EC800FD5C07 /* RouterError.swift in Sources */,
 				68F6816F269E5E56008157CE /* SearchBanksViewController.swift in Sources */,
 				0BF34852268A5F54005138A8 /* GetVerificationCodeDecodableModel.swift in Sources */,
+				0BE270B626B9DA4800FA958C /* ExtensionBottomInputViewRevers.swift in Sources */,
 				0B37F97C2678EC69007728FC /* AnywayPaymentDecodableModel.swift in Sources */,
 				0B7A18AD2681CF160007CC75 /* CastomPopUpView.swift in Sources */,
+				0BE270B826B9DC4200FA958C /* ExtensionBottomInputViewExchange.swift in Sources */,
 				EDAA99AF2673AB9200435484 /* ForaSwitchView.swift in Sources */,
 				0BF34850268A52CD005138A8 /* AllCardView.swift in Sources */,
 				ED39EC8C268B4F0800158E46 /* CardChooseView.swift in Sources */,
 				EDB1657C2668C8D5007E6030 /* PayCell.swift in Sources */,
+				0BE270BA26B9F36A00FA958C /* ExtensionBottomInputRequest.swift in Sources */,
 				EDFFCAF0268245EC004EE095 /* CardViewModel.swift in Sources */,
 				0B9EC85D26739C0000D86EB2 /* GetCountriesDecodebleModel.swift in Sources */,
 				68FFA54C2684C854002DADFA /* PDFViewerViewController.swift in Sources */,
@@ -1792,6 +1874,7 @@
 				68E6A29926A0340D00A1D9A1 /* GetCurrencyListDecodableModel.swift in Sources */,
 				EDB165652667A741007E6030 /* ContactConfirmViewController.swift in Sources */,
 				EDB16592266A19DA007E6030 /* PaymentsViewControllerSearchBarDelegate.swift in Sources */,
+				0BE270B326B9959900FA958C /* ExtensionBottomLableModel.swift in Sources */,
 				0B37F97A2678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift in Sources */,
 				687ADF1026B07721005A239B /* DataExtension.swift in Sources */,
 				ED0B48A0267E1A2D0037EA06 /* PaymentsDetailsSuccessViewController.swift in Sources */,
@@ -1800,11 +1883,13 @@
 				EDB14385265FDA410028EF5A /* LoginCardEntryViewController.swift in Sources */,
 				0B37F98626807620007728FC /* NetworkHelper.swift in Sources */,
 				EDF6820D266F9EC800FD5C07 /* NetworkManager.swift in Sources */,
+				0B95C40026B6C99A00AA57E6 /* RoundedDoubleExtension.swift in Sources */,
 				68FFA5432682DC95002DADFA /* PhoneConfirmViewController.swift in Sources */,
 				0BF348A1269E0CDA005138A8 /* LogoutDecodableModel.swift in Sources */,
 				0B7A18D02689C51A0007CC75 /* AppHeaderProtocol.swift in Sources */,
 				ED51D6702688B287005FD655 /* SeparatorView.swift in Sources */,
 				6880D32926A5CC7D008FBCB4 /* Encription.swift in Sources */,
+				0B95C40526B6CB1D00AA57E6 /* ExtensionCustomPopUpWithRateView.swift in Sources */,
 				EDF6820F266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift in Sources */,
 				EDB1656E266827A8007E6030 /* PaymentsViewController.swift in Sources */,
 				68FFA55B268586D3002DADFA /* HeaderBanksCollectionReusableView.swift in Sources */,
@@ -1836,7 +1921,9 @@
 				EDF6820E266F9EC800FD5C07 /* NetworkModelProtocol.swift in Sources */,
 				EDB14516266526B10028EF5A /* CreditCardEntryView.swift in Sources */,
 				0B37F984267A18AC007728FC /* MakeCard2CardDecodableModel.swift in Sources */,
+				0B95C40826B6CD9000AA57E6 /* BottomInputViewWithRateView.swift in Sources */,
 				0BA09E3226AE1AB70065D623 /* GKHCityViewController.swift in Sources */,
+				0BE270B026B76B9700FA958C /* ExtensionCustomPopUpSetup.swift in Sources */,
 				0BEC8939267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift in Sources */,
 				EDB1655C2667A2C8007E6030 /* LoginCardEntryViewController UI.swift in Sources */,
 				ED0B48AF2681CC6D0037EA06 /* CodeVerificationViewModel.swift in Sources */,
@@ -1855,6 +1942,7 @@
 				ED0B4896267B97C60037EA06 /* ContactInputViewController + UI.swift in Sources */,
 				68E6A29326A033B700A1D9A1 /* CheckCardDecodableModel.swift in Sources */,
 				6880D32D26A70585008FBCB4 /* FaceTouchIdViewController.swift in Sources */,
+				0B95C40C26B72CB100AA57E6 /* ExtensionBottomViewWithSetup.swift in Sources */,
 				68FFA551268538CF002DADFA /* PhoneContactModel.swift in Sources */,
 				ED84994E26A85A65005205C6 /* SettingsViewController.swift in Sources */,
 				ED84995726A8831E005205C6 /* EPExtensions.swift in Sources */,
@@ -1866,6 +1954,7 @@
 				ED84994526A6F647005205C6 /* ChooseCountryHeaderView.swift in Sources */,
 				EDB1655A2667A220007E6030 /* CodeVerificationViewController UI.swift in Sources */,
 				0B7A18BA2683AC880007CC75 /* NotificationName.swift in Sources */,
+				0B95C3FE26B6C96F00AA57E6 /* DoubleInStringExtension.swift in Sources */,
 				ED4FC5EC266AD98E0092B4AB /* NSCollectionLayoutItem.swift in Sources */,
 				EDB1657A2668C7F2007E6030 /* TransferCell.swift in Sources */,
 				EDB145382666770A0028EF5A /* OrderProductModel.swift in Sources */,
@@ -1911,6 +2000,7 @@
 				68FFA561268DD2CF002DADFA /* CountriesCodeButton.swift in Sources */,
 				EDFFCACD2681F975004EE095 /* CardListView.swift in Sources */,
 				0BF3485D26931254005138A8 /* SuggestBankDecodableModel.swift in Sources */,
+				0B95C40A26B6D88000AA57E6 /* BottomLableModel.swift in Sources */,
 				ED4FC61A266EA42E0092B4AB /* AppLocker.swift in Sources */,
 				0BF34854268B2699005138A8 /* PrepareExternalDecodableModel.swift in Sources */,
 				ED3A96772690FCD700252857 /* BankViewModel.swift in Sources */,

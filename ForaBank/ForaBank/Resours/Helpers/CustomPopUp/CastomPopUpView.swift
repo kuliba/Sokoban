@@ -8,9 +8,9 @@
 import UIKit
 //import SwiftEntryKit
 
-protocol CutomViewProtocol: UIView {
-    
-}
+//protocol CutomViewProtocol: UIView {
+//    
+//}
 
 class MemeDetailVC : AddHeaderImageViewController {
 
