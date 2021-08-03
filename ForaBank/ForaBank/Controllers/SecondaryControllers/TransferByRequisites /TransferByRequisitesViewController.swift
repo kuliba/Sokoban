@@ -550,7 +550,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
             self.fio.patronymic = self.surField.textField.text ?? ""
             self.fio.surname = self.fioField.textField.text ?? ""
             nameCompany = self.fio.surname + " " +  self.fio.name + " " + self.fio.patronymic
-        } else {
+        } else if self.innField.isHidden == true {
             guard let fio = fioField.textField.text else {
                     return
             }
@@ -694,6 +694,9 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                     } else if data.count == 1{
                         self.kppField.textField.text = data[0].data?.kpp
                         self.nameCompanyField.textField.text = data[0].value
+                    } else {
+                        self.kppField.textField.text = ""
+                        self.nameCompanyField.textField.text = ""
                     }
                     
                 }

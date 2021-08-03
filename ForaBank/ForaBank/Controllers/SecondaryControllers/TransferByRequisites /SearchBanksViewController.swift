@@ -13,7 +13,7 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
         
         if text != ""{
             banks = allBanks
-            banks = banks.filter({$0.fullName?.lowercased().prefix(text.count) ?? "" == text || $0.bic?.lowercased().prefix(text.count) ?? "" == text})
+            banks = banks.filter({$0.fullName?.lowercased().prefix(text.count) ?? "" == text.lowercased() || $0.bic?.lowercased().prefix(text.count) ?? "" == text.lowercased()})
         } else if text == ""{
             banks = allBanks
         }
