@@ -14,8 +14,7 @@ protocol MyProtocol: class {
 }
 
 class BaseTableViewViewController: UITableViewController {
-
-
+    
     //MARK: - Vars
     let headerReuseIdentifier = "CustomHeaderView"
     private let searchController = UISearchController(searchResultsController: nil)
@@ -68,56 +67,14 @@ class BaseTableViewViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        
+        tableView.estimatedRowHeight = 68.0
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.separatorStyle = UITableViewCell.SeparatorStyle.singleLine
         let nib = UINib(nibName: "BaseTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: BaseTableViewCell.reuseId)
         tableView.register(ChooseCountryHeaderView.self, forHeaderFooterViewReuseIdentifier: headerReuseIdentifier)
-        loadCountries()
-        if !modalPresent {
-            loadLastPayments()
-        }
     }
 
-    //MARK: - API
-    private func loadLastPayments() {
-        NetworkManager<GetPaymentCountriesDecodableModel>.addRequest(.getPaymentCountries, [:], [:]) { model, error in
-//            print(model)
-            if error != nil {
-                print("DEBUG: error", error!)
-            } else {
-                guard let model = model else { return }
-                guard let lastPaymentsList = model.data else { return }
-                self.lastPaymentsList = lastPaymentsList
-                print("DEBUG: lastPaymentsList count", lastPaymentsList.count)
-            }
-        }
-    }
-    
-    
-    private func loadCountries() {
-        if let countries = Dict.shared.countries {
-            self.configureVC(with: countries)
-        } else {
-            
-            guard let documentsDirectoryUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
-            let filePath = documentsDirectoryUrl.appendingPathComponent("CountriesList.json")
-            
-            // Read data from .json file and transform data into an array
-            do {
-                let data = try Data(contentsOf: filePath, options: [])
-                
-                let list = try JSONDecoder().decode(GetCountriesDataClass.self, from: data)
-                
-                guard let countries = list.countriesList else { return }
-//                Country.countries = countries
-                self.configureVC(with: countries)
-                
-            } catch {
-                print(error)
-            }
-        }
-    }
-    
     private func configureVC(with countries: [CountriesList]) {
         for country in countries {
             if !(country.paymentSystemCodeList?.isEmpty ?? true) {
@@ -140,6 +97,8 @@ class BaseTableViewViewController: UITableViewController {
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.automaticallyShowsCancelButton = false
         searchController.searchBar.delegate = self
+        searchController.searchBar.isHidden = true
+        navigationItem.searchController = nil
         definesPresentationContext = true
         inititlizeBarButtons()
     }
@@ -178,7 +137,7 @@ class BaseTableViewViewController: UITableViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     @objc func onTouchCancelButton() {
-        dismiss(animated: true)
+        self.navigationController?.popViewController(animated: true)
     }
 
     // MARK: - Table view data source
@@ -196,9 +155,9 @@ class BaseTableViewViewController: UITableViewController {
         return lastPaymentsList.count > 0 ? 100 : 0
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 116
-    }
+//    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return 116
+//    }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = self.tableView.dequeueReusableHeaderFooterView(withIdentifier: headerReuseIdentifier) as! ChooseCountryHeaderView
@@ -219,7 +178,7 @@ class BaseTableViewViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         delegate?.sendData(kpp: banks[indexPath.row].data?.kpp ?? "", name: banks[indexPath.row].value ?? "")
-        self.dismiss(animated: true, completion: nil)
+        self.navigationController?.popViewController(animated: true)
     }
 
     

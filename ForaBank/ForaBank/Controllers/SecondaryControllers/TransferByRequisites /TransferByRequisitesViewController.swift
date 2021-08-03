@@ -687,9 +687,10 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                     if data.count > 1 {
                         let vc = BaseTableViewViewController()
                         vc.banks = data
-                        vc.modalPresentationStyle = .formSheet
+                        vc.modalPresentationStyle = .automatic
                         vc.delegate = self
-                        self.present(vc, animated: true, completion: nil)
+                        self.navigationController?.pushViewController(vc, animated: true)
+
                     } else {
                         self.kppField.textField.text = data[0].data?.kpp
                         self.nameCompanyField.textField.text = data[0].value
