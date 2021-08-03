@@ -616,36 +616,24 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
     
     func getLastPayments() {
         showActivity()
-        
         NetworkManager<GetLatestPaymentsDecodableModel>.addRequest(.getLatestPayments, [:], [:]) { model, error in
+            self.dismissActivity()
             if error != nil {
-                self.dismissActivity()
                 print("DEBUG: Error: ", error ?? "")
             }
             guard let model = model else { return }
-            print("DEBUG: Card list: ", model)
+            print("DEBUG: LatestPayment: ", model)
             if model.statusCode == 0 {
-                self.dismissActivity()
                 guard let data  = model.data else { return }
-//                self.selectedCardNumber = cardNumber
                 DispatchQueue.main.async {
                     self.lastPayment = data
-//                    if self.lastPhonePayment.count != 0{
-//
-//                    self.lastPaymentsCollectionView.isHidden = false
-//                    self.lastPaymentsCollectionView.reloadData()
-//                    } else {
-//                        self.lastPaymentsCollectionView.isHidden = true
-//                    }
-                    self.lastPaymentsCollectionView.isHidden = false
+                    self.lastPaymentsCollectionView.isHidden = self.lastPayment.count == 0 ? true : false
                     self.lastPaymentsCollectionView.reloadData()
                 }
             } else {
-                self.dismissActivity()
                 print("DEBUG: Error: ", model.errorMessage ?? "")
             }
         }
-        
     }
     
     func getLastPhonePayments() {
