@@ -11,7 +11,7 @@ struct Fio {
     var name, patronymic, surname: String
 }
 
-class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate {
+class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate, MyProtocol {
 
     var viewModel = ConfirmViewControllerModel(type: .requisites) {
         didSet {
@@ -131,7 +131,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true, completion: nil)
     }
-    
+    var delegate: MyProtocol?
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -303,6 +303,10 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
     }
     
 
+    func sendData(kpp: String, name: String) {
+        self.kppField.text = kpp
+        self.nameCompanyField.textField.text = name
+       }
     
     func setupActions() {
         getCardList { [weak self] data ,error in
@@ -546,15 +550,9 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
         guard let amount = unformatText?.replacingOccurrences(of: ",", with: ".") else { return }
         
         
-        if fioField.textField.text?.count != 0{
-            guard let fio = fioField.textField.text else {
-                    return
-            }
-            inn = "0"
-            nameCompany = fio
-        }
+     
     
-        let body = [ "check" : false,
+        var body = [ "check" : false,
                      "amount" : amount,
                      "comment" : comment,
                      "currencyAmount" : "RUB",
@@ -569,6 +567,13 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
                         "INN" : inn, //7718164343
                         "KPP" : kpp
                      ] ] as [String : AnyObject]
+        if fioField.textField.text?.count != 0{
+            guard let fio = fioField.textField.text else {
+                    return
+            }
+            body.removeValue(forKey: "INN")
+            nameCompany = fio
+        }
         
         NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer , [:], body) { model, error in
             self.dismissActivity()
@@ -669,7 +674,13 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate 
                 guard let data  = model.data else { return }
 //                self.selectedCardNumber = cardNumber
                 DispatchQueue.main.async {
-                    if data.count > 0 {
+                    if data.count > 1 {
+                        let vc = BaseTableViewViewController()
+                        vc.banks = data
+                        vc.modalPresentationStyle = .formSheet
+                        vc.delegate = self
+                        self.present(vc, animated: true, completion: nil)
+                    } else {
                         self.kppField.textField.text = data[0].data?.kpp
                         self.nameCompanyField.textField.text = data[0].value
                     }

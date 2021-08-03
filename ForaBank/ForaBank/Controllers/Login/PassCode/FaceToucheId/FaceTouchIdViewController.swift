@@ -16,8 +16,8 @@ class FaceTouchIdViewController: UIViewController {
 
     var sensor: String?
     var code: String?
-    var face: Bool?
-    var touch: Bool?
+    var face = false
+    var touch = false
     private let context = LAContext()
     public var onSuccessfulDismiss: onSuccessfulDismissCallback?
 
@@ -37,7 +37,7 @@ class FaceTouchIdViewController: UIViewController {
         biometricType()
         setupUI()
         useButton.addTarget(self, action: #selector(registerMyPin), for: .touchUpInside)
-        skipButton.addTarget(self, action: #selector(registerMyPin), for: .touchUpInside)
+        skipButton.addTarget(self, action: #selector(skipRegisterMyPin), for: .touchUpInside)
 
     }
     
@@ -75,6 +75,76 @@ class FaceTouchIdViewController: UIViewController {
         showActivity()
         let serverDeviceGUID = UserDefaults.standard.object(forKey: "serverDeviceGUID")
         
+        func encript(string: String) -> String?{
+            do {
+                let aes = try AES(keyString: KeyFromServer.secretKey!)
+
+                let stringToEncrypt: String = "\(string)"
+                
+                print("String to encrypt:\t\t\t\(stringToEncrypt)")
+
+                let encryptedData: Data = try aes.encrypt(stringToEncrypt)
+                print("String encrypted (base64):\t\(encryptedData.base64EncodedString())")
+                
+                let decryptedData: String = try aes.decrypt(encryptedData)
+                print("String decrypted:\t\t\t\(decryptedData)")
+                return encryptedData.base64EncodedString()
+            } catch {
+                print("Something went wrong: \(error)")
+                return nil
+            }
+        }
+        let data = [
+            "pushDeviceId":  UIDevice.current.identifierForVendor!.uuidString,
+            "pushFcmToken": Messaging.messaging().fcmToken as String? ?? "",
+            "serverDeviceGUID" : serverDeviceGUID ?? "",
+            "settings": [ ["type" : "pin",
+                           "isActive": true,
+                           "value": code ?? ""],
+                          ["type" : "touchId",
+                           "isActive": touch,
+                           "value": code ?? ""],
+                          ["type" : "faceId",
+                           "isActive": face ,
+                           "value": code ?? ""] ] ] as [String : AnyObject]
+        
+        print("DEBUG: Start setDeviceSetting with body: ", data)
+        
+        NetworkManager<SetDeviceSettingDecodbleModel>.addRequest(.setDeviceSetting, [:], data) { model, error in
+            self.dismissActivity()
+            if error != nil {
+                guard let error = error else { return }
+                print("DEBUG: setDeviceSetting" ,error)
+            } else {
+                guard let statusCode = model?.statusCode else { return }
+                if statusCode == 0 {
+                    UserDefaults.standard.set(true, forKey: "UserIsRegister")
+                    DispatchQueue.main.async {
+                        AppDelegate.shared.getCSRF { error in
+                            if error != nil {
+                                print("DEBUG: Error getCSRF: ", error!)
+                            } else {
+                                self.login(with: self.code ?? "", type: .pin) { error in
+                                    if error != nil {
+                                        print("DEBUG: Error getCSRF: ", error!)
+                                    } else {
+                                        self.dismissActivity()
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    guard let error = model?.errorMessage else { return }
+                    print("DEBUG: setDeviceSetting" ,error)
+                }
+            }
+        }
+    }
+    @objc func skipRegisterMyPin() {
+        showActivity()
+        let serverDeviceGUID = UserDefaults.standard.object(forKey: "serverDeviceGUID")
+        
         let data = [
             "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
             "pushFcmToken": Messaging.messaging().fcmToken as String? ?? "",
@@ -83,15 +153,16 @@ class FaceTouchIdViewController: UIViewController {
                            "isActive": true,
                            "value": code ?? ""],
                           ["type" : "touchId",
-                           "isActive": self.touch ?? false,
+                           "isActive": false,
                            "value": code ?? ""],
                           ["type" : "faceId",
-                           "isActive": self.face ,
+                           "isActive": false ,
                            "value": code ?? ""] ] ] as [String : AnyObject]
         
         print("DEBUG: Start setDeviceSetting with body: ", data)
         
         NetworkManager<SetDeviceSettingDecodbleModel>.addRequest(.setDeviceSetting, [:], data) { model, error in
+            self.dismissActivity()
             if error != nil {
                 guard let error = error else { return }
                 print("DEBUG: setDeviceSetting" ,error)
@@ -131,7 +202,7 @@ class FaceTouchIdViewController: UIViewController {
             "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
             "pushFcmToken": Messaging.messaging().fcmToken as String?,
             "serverDeviceGUID": serverDeviceGUID,
-            "loginValue": code.hash,
+            "loginValue": code,
             "type": type.rawValue
         ] as [String : AnyObject]
 //        print(data)

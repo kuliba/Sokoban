@@ -7,6 +7,8 @@
 
 import Foundation
 import UIKit
+import Security
+import CommonCrypto
 
 extension UIView {
     /** Loads instance from nib with the same name. */
@@ -41,4 +43,52 @@ extension StringProtocol {
             return UInt8(self[startIndex..<endIndex], radix: 16)
         }
     }
+}
+extension String {
+
+    func sha256() -> String{
+        if let stringData = self.data(using: String.Encoding.utf8) {
+            return (digest(input: stringData as NSData).base64EncodedString(options: .endLineWithCarriageReturn))
+        }
+        return ""
+    }
+
+    private func digest(input : NSData) -> NSData {
+        let digestLength = Int(CC_SHA256_DIGEST_LENGTH)
+        var hash = [UInt8](repeating: 0, count: digestLength)
+        CC_SHA256(input.bytes, UInt32(input.length), &hash)
+        return NSData(bytes: hash, length: digestLength)
+    }
+
+    private  func hexStringFromData(input: NSData) -> String {
+        var bytes = [UInt8](repeating: 0, count: input.length)
+        input.getBytes(&bytes, length: input.length)
+
+        var hexString = ""
+        for byte in bytes {
+            hexString += String(format:"%02x", UInt8(byte))
+        }
+
+        return hexString
+    }
+    func encript(string: String) -> String?{
+        do {
+            let aes = try AES(keyString: KeyFromServer.secretKey!)
+
+            let stringToEncrypt: String = "\(string)"
+            
+            print("String to encrypt:\t\t\t\(stringToEncrypt)")
+
+            let encryptedData: Data = try aes.encrypt(stringToEncrypt)
+            print("String encrypted (base64):\t\(encryptedData.base64EncodedString())")
+            
+            let decryptedData: String = try aes.decrypt(encryptedData)
+            print("String decrypted:\t\t\t\(decryptedData)")
+            return encryptedData.base64EncodedString()
+        } catch {
+            print("Something went wrong: \(error)")
+            return nil
+        }
+    }
+
 }
