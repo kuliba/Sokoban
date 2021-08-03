@@ -230,7 +230,7 @@ extension AppDelegate {
         
         func keyExchange(){
             
-            let parametersKey = [
+                let parametersKey = [
                 "data": KeyFromServer.sendBase64ToServ ?? "",
                 "token": CSRFToken.token ?? "",
                 "type": "",

@@ -16,6 +16,8 @@ class FaceTouchIdViewController: UIViewController {
 
     var sensor: String?
     var code: String?
+    var face: Bool?
+    var touch: Bool?
     private let context = LAContext()
     public var onSuccessfulDismiss: onSuccessfulDismissCallback?
 
@@ -50,10 +52,12 @@ class FaceTouchIdViewController: UIViewController {
         case .faceID:
             image.image = UIImage(imageLiteralResourceName: "faceId")
             sensor = "Face Id"
+            face = true
             return .faceId
         case .touchID:
             image.image = UIImage(imageLiteralResourceName: "touchId")
             sensor = "отпечаток"
+            touch = true
             return .touchId
         @unknown default:
             return .pin
@@ -79,10 +83,10 @@ class FaceTouchIdViewController: UIViewController {
                            "isActive": true,
                            "value": code ?? ""],
                           ["type" : "touchId",
-                           "isActive": true,
+                           "isActive": self.touch ?? false,
                            "value": code ?? ""],
                           ["type" : "faceId",
-                           "isActive": true,
+                           "isActive": self.face ,
                            "value": code ?? ""] ] ] as [String : AnyObject]
         
         print("DEBUG: Start setDeviceSetting with body: ", data)
@@ -127,7 +131,7 @@ class FaceTouchIdViewController: UIViewController {
             "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
             "pushFcmToken": Messaging.messaging().fcmToken as String?,
             "serverDeviceGUID": serverDeviceGUID,
-            "loginValue": code,
+            "loginValue": code.hash,
             "type": type.rawValue
         ] as [String : AnyObject]
 //        print(data)

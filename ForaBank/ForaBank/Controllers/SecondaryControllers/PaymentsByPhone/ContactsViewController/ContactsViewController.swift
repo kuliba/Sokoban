@@ -1034,9 +1034,9 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
             button.addTarget(self, action: #selector(selectedSectionStoredButtonClicked), for: .touchUpInside)
             button.centerY(inView: label)
             if self.banksList.count > 1{
-                button.setImage(UIImage(systemName: "chevron.down"), for: .normal)
-            } else {
                 button.setImage(UIImage(systemName: "chevron.up"), for: .normal)
+            } else {
+                button.setImage(UIImage(systemName: "chevron.down"), for: .normal)
             }
 //            headerView.backgroundColor = .blue
             

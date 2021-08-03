@@ -133,7 +133,7 @@ class Encription {
                 }
                 print(key)
     
-                var aes = try AES256(key: key, iv: iv)
+                let aes = try AES256(key: key, iv: iv)
     
                 let encrypted = try aes.encrypt(digest)
                 let decrypted = try aes.decrypt(encrypted)
@@ -141,15 +141,15 @@ class Encription {
                 print("Encrypted: \(encrypted.hexadecimal)")
                 print("Decrypted: \(decrypted)")
     
-                let string1 = encrypted.base64EncodedData()
+                let string1 = encrypted.base64EncodedString()
                 print(string1)
     
-                let data: Data = decrypted
-                if let string = String(data: string1, encoding: .utf8) {
-                    print(string)
-                } else {
-                    print("not a valid UTF-8 sequence")
-                }
+//                let data: Data = decrypted
+//                if let string = String(data: string1, encoding: .utf8) {
+//                    print(string)
+//                } else {
+//                    print("not a valid UTF-8 sequence")
+//                }
 
                 
                 return encrypted.base64EncodedString()
@@ -254,6 +254,7 @@ class Encription {
                 
         
                 secretKey = Data(base64Encoded: sharedSecret.base64EncodedString())?.dropLast(16)
+//                KeyFromServer.secretKeyString =
                 KeyFromServer.secretKey =  Data(base64Encoded: sharedSecret.base64EncodedString())?.dropLast(16)
                SecKeyCopyExternalRepresentation(ownPrivateKey, &error)
                 
@@ -275,8 +276,9 @@ struct AES {
     private let ivSize: Int         = kCCBlockSizeAES128
     private let options: CCOptions  = CCOptions(kCCOptionPKCS7Padding)
 
-    init(keyString: String) throws {
-        self.key = Data(keyString.utf8)
+    init(keyString: Data) throws {
+        self.key = keyString
+        
     }
 }
 
@@ -364,15 +366,15 @@ extension AES: Cryptable {
     }
 
     func decrypt(_ data: Data) throws -> String {
-
-        let bufferSize: Int = data.count - ivSize
+        let newData = data.dropLast(16)
+        let bufferSize: Int = newData.count - ivSize
         var buffer = Data(count: bufferSize)
 
         var numberBytesDecrypted: Int = 0
-
+      
         do {
             try key.withUnsafeBytes { keyBytes in
-                try data.withUnsafeBytes { dataToDecryptBytes in
+                try newData.withUnsafeBytes { dataToDecryptBytes in
                     try buffer.withUnsafeMutableBytes { bufferBytes in
 
                         guard let keyBytesBaseAddress = keyBytes.baseAddress,
@@ -406,10 +408,13 @@ extension AES: Cryptable {
         }
 
         let decryptedData: Data = buffer[..<numberBytesDecrypted]
-
-        guard let decryptedString = String(data: decryptedData, encoding: .utf8) else {
+        let decryptedMyData = buffer.prefix(16)
+        let newString = decryptedMyData.base64EncodedString()
+        print(newString.base64Decoded())
+        guard let decryptedString = String(data: decryptedMyData, encoding: .utf8) else {
             throw Error.dataToStringFailed
         }
+        
 
         return decryptedString
     }
