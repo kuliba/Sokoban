@@ -539,6 +539,9 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
             } else if collectionView == lastPaymentsCollectionView{
                 let vc = PaymentByPhoneViewController()
                 if lastPhonePayment.count > 0{
+                    
+                    // TODO: - Взять кусок кода
+                    
                     vc.selectBank = lastPhonePayment[indexPath.row].bankName
                     vc.memberId = lastPhonePayment[indexPath.item].bankID
                     vc.bankImage = UIImage(named: "\(lastPhonePayment[indexPath.row].bankID ?? "")")
@@ -547,6 +550,9 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                     } else {
                         vc.sbp = true
                     }
+                    
+                    
+                    
                 } else {
                     vc.selectNumber =  format(phoneNumber: lastPayment[indexPath.item].phoneNumber ?? "")
                     vc.summTransctionField.text = lastPayment[indexPath.item].amount ?? ""
