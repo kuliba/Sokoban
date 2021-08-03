@@ -48,6 +48,7 @@ extension String {
 
     func sha256() -> String{
         if let stringData = self.data(using: String.Encoding.utf8) {
+            print(hexStringFromData(input: stringData as NSData))
             return (digest(input: stringData as NSData).base64EncodedString(options: .endLineWithCarriageReturn))
         }
         return ""

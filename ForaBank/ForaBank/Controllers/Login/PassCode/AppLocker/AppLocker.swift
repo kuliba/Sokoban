@@ -370,12 +370,13 @@ extension AppLocker {
         }
         
         let data = [
-//            "cryptoVersion": "1.0",
-            "pushDeviceId":  UIDevice.current.identifierForVendor!.uuidString ,
-            "pushFcmToken": Messaging.messaging().fcmToken as String? ?? "",
-            "serverDeviceGUID": serverDeviceGUID,
-            "loginValue": code,
-            "type":  type.rawValue
+            "appId": encript(string:"iOS" ),
+            "cryptoVersion": "1.0",
+            "pushDeviceId": encript(string: UIDevice.current.identifierForVendor!.uuidString),
+            "pushFcmToken": encript(string: Messaging.messaging().fcmToken as String? ?? ""),
+            "serverDeviceGUID" : encript(string: serverDeviceGUID as! String),
+            "loginValue": encript(string: code.sha256() ),
+            "type": encript(string: type.rawValue)
         ] as [String : AnyObject]
         //        print(data)
         print("DEBUG: Start login with body: ", data)

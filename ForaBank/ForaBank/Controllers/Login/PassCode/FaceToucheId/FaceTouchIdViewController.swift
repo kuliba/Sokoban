@@ -95,6 +95,7 @@ class FaceTouchIdViewController: UIViewController {
             }
         }
         let data = [
+            "cryptoVersion": "1.0",
             "pushDeviceId": encript(string: UIDevice.current.identifierForVendor!.uuidString),
             "pushFcmToken": encript(string: Messaging.messaging().fcmToken as String? ?? ""),
             "serverDeviceGUID" : encript(string: serverDeviceGUID as! String),
@@ -103,10 +104,10 @@ class FaceTouchIdViewController: UIViewController {
                            "value": encript(string:code?.sha256() ?? "")],
                           ["type" : encript(string:"touchId"),
                            "isActive": touch,
-                           "value": encript(string:code ?? "")],
+                           "value": encript(string:code?.sha256() ?? "")],
                           ["type" : encript(string:"faceId"),
                            "isActive": face ,
-                           "value": encript(string:code ?? "")] ] ] as [String : AnyObject]
+                           "value": encript(string:code?.sha256() ?? "")] ] ] as [String : AnyObject]
         
         print("DEBUG: Start setDeviceSetting with body: ", data)
         
@@ -144,20 +145,39 @@ class FaceTouchIdViewController: UIViewController {
     @objc func skipRegisterMyPin() {
         showActivity()
         let serverDeviceGUID = UserDefaults.standard.object(forKey: "serverDeviceGUID")
-        
+        func encript(string: String) -> String?{
+            do {
+                let aes = try AES(keyString: KeyFromServer.secretKey!)
+
+                let stringToEncrypt: String = "\(string)"
+                
+                print("String to encrypt:\t\t\t\(stringToEncrypt)")
+
+                let encryptedData: Data = try aes.encrypt(stringToEncrypt)
+                print("String encrypted (base64):\t\(encryptedData.base64EncodedString())")
+                
+                let decryptedData: String = try aes.decrypt(encryptedData)
+                print("String decrypted:\t\t\t\(decryptedData)")
+                return encryptedData.base64EncodedString()
+            } catch {
+                print("Something went wrong: \(error)")
+                return nil
+            }
+        }
         let data = [
-            "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-            "pushFcmToken": Messaging.messaging().fcmToken as String? ?? "",
-            "serverDeviceGUID" : serverDeviceGUID ?? "",
-            "settings": [ ["type" : "pin",
+            "cryptoVersion": "1.0",
+            "pushDeviceId": encript(string: UIDevice.current.identifierForVendor!.uuidString),
+            "pushFcmToken": encript(string: Messaging.messaging().fcmToken as String? ?? ""),
+            "serverDeviceGUID" : encript(string: serverDeviceGUID as! String),
+            "settings": [ ["type" : encript(string:"pin"),
                            "isActive": true,
-                           "value": code ?? ""],
-                          ["type" : "touchId",
+                           "value": encript(string:code?.sha256() ?? "") ],
+                          ["type" : encript(string:"touchId"),
                            "isActive": false,
-                           "value": code ?? ""],
-                          ["type" : "faceId",
+                           "value": encript(string:code?.sha256() ?? "")],
+                          ["type" : encript(string:"faceId"),
                            "isActive": false ,
-                           "value": code ?? ""] ] ] as [String : AnyObject]
+                           "value": encript(string:code?.sha256() ?? "")] ] ] as [String : AnyObject]
         
         print("DEBUG: Start setDeviceSetting with body: ", data)
         
@@ -196,14 +216,34 @@ class FaceTouchIdViewController: UIViewController {
     
     func login(with code: String, type: BiometricType, completion: @escaping (_ error: String?) ->() ) {
         showActivity()
+        func encript(string: String) -> String?{
+            do {
+                let aes = try AES(keyString: KeyFromServer.secretKey!)
+
+                let stringToEncrypt: String = "\(string)"
+                
+                print("String to encrypt:\t\t\t\(stringToEncrypt)")
+
+                let encryptedData: Data = try aes.encrypt(stringToEncrypt)
+                print("String encrypted (base64):\t\(encryptedData.base64EncodedString())")
+                
+                let decryptedData: String = try aes.decrypt(encryptedData)
+                print("String decrypted:\t\t\t\(decryptedData)")
+                return encryptedData.base64EncodedString()
+            } catch {
+                print("Something went wrong: \(error)")
+                return nil
+            }
+        }
         let serverDeviceGUID = UserDefaults.standard.object(forKey: "serverDeviceGUID")
         let data = [
-            "appId": "IOS",
-            "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-            "pushFcmToken": Messaging.messaging().fcmToken as String?,
-            "serverDeviceGUID": serverDeviceGUID,
-            "loginValue": code,
-            "type": type.rawValue
+            "appId": encript(string:"iOS" ),
+            "cryptoVersion": "1.0",
+            "pushDeviceId": encript(string: UIDevice.current.identifierForVendor!.uuidString),
+            "pushFcmToken": encript(string: Messaging.messaging().fcmToken as String? ?? ""),
+            "serverDeviceGUID" : encript(string: serverDeviceGUID as! String),
+            "loginValue": encript(string: code.sha256() ),
+            "type": encript(string: type.rawValue)
         ] as [String : AnyObject]
 //        print(data)
         print("DEBUG: Start login with body: ", data)
