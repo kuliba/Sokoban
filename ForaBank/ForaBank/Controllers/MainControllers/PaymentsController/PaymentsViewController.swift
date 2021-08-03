@@ -127,8 +127,6 @@ class PaymentsViewController: UIViewController {
                         self.payments.append(payment)
                     }
                 }
-                
-                print("DEBUG: lastPaymentsList count", lastPaymentsList.count)
             }
         }
     }
@@ -146,25 +144,15 @@ class PaymentsViewController: UIViewController {
                 if lastPaymentsList.count > 3 {
                     let payArr = lastPaymentsList.prefix(3)
                     payArr.forEach { lastPayment in
-//                        let mod = ChooseCountryHeaderViewModel(model: lastPayment)
                         let payment = PaymentsModel(lastPhonePayment: lastPayment)
                         self.payments.append(payment)
                     }
                 } else {
                     lastPaymentsList.forEach { lastPayment in
-//                        let mod = ChooseCountryHeaderViewModel(model: lastPayment)
                         let payment = PaymentsModel(lastPhonePayment: lastPayment)
                         self.payments.append(payment)
                     }
                 }
-                
-                
-                
-//                DispatchQueue.main.async {
-//                    self.lastPayment = data
-//                    self.lastPaymentsCollectionView.isHidden = self.lastPayment.count == 0 ? true : false
-//                    self.lastPaymentsCollectionView.reloadData()
-//                }
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
             }
