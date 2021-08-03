@@ -691,7 +691,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                         vc.delegate = self
                         self.navigationController?.pushViewController(vc, animated: true)
 
-                    } else {
+                    } else if data.count == 1{
                         self.kppField.textField.text = data[0].data?.kpp
                         self.nameCompanyField.textField.text = data[0].value
                     }

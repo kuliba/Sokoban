@@ -17,11 +17,11 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="116"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="3CJ-qp-Xlp">
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="3CJ-qp-Xlp">
                         <rect key="frame" x="20" y="8" width="280" height="100"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" restorationIdentifier="BaseTableViewCell" text="&quot;ФИЛИАЛ ПУБЛИЧНОГО АКЦИОНЕРНОГО ОБЩЕСТВА \&quot;МОБИЛЬНЫЕ ТЕЛЕСИСТЕМЫ\&quot; В ВОЛГОГРАДСКОЙ ОБЛАСТИ&quot;" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7f2-WA-adW">
-                                <rect key="frame" x="0.0" y="0.0" width="280" height="77.5"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" restorationIdentifier="BaseTableViewCell" text="&quot;ФИЛИАЛ ПУБЛИЧНОГО АКЦИОНЕРНОГО ОБЩЕСТВА \&quot;МОБИЛЬНЫЕ ТЕЛЕСИСТЕМЫ\&quot; В ВОЛГОГРАДСКОЙ ОБЛАСТИ&quot;" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7f2-WA-adW">
+                                <rect key="frame" x="0.0" y="0.0" width="280" height="80.5"/>
                                 <accessibility key="accessibilityConfiguration" identifier="BaseTableViewCell"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <nil key="textColor"/>
