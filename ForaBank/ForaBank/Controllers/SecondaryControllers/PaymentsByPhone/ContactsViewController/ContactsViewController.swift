@@ -548,6 +548,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                         vc.sbp = true
                     }
                 } else {
+                    vc.memberId = lastPayment[indexPath.item].bankID
                     vc.selectNumber =  format(phoneNumber: lastPayment[indexPath.item].phoneNumber ?? "")
                     vc.summTransctionField.text = lastPayment[indexPath.item].amount ?? ""
                     vc.selectBank = lastPayment[indexPath.row].bankName
