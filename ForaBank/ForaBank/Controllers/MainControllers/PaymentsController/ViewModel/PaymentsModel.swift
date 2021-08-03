@@ -56,7 +56,7 @@ struct PaymentsModel: Hashable {
     init(lastPhonePayment: GetLatestPaymentsDatum) {
         self.lastPhonePayment = lastPhonePayment
         self.id = Int.random(in: 100 ... 10000)
-        let mask = StringMask(mask: "+0 (000) 000-00-00")
+        let mask = StringMask(mask: "+7 (000) 000-00-00")
         let maskPhone = mask.mask(string: lastPhonePayment.phoneNumber)
         self.name = maskPhone ?? ""
         self.controllerName = "PaymentByPhoneViewController"

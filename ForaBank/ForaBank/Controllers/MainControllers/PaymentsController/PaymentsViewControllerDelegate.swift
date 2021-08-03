@@ -18,6 +18,8 @@ extension PaymentsViewController: UICollectionViewDelegate {
             print("DEBUG: " + #function + payments[indexPath.row].name)
             if let lastCountryPaymentModel = payments[indexPath.row].lastCountryPayment {
                 openCountryPaymentVC(model: lastCountryPaymentModel)
+            } else if let lastPhonePayment = payments[indexPath.row].lastPhonePayment {
+                openPhonePaymentVC(model: lastPhonePayment)
             } else {
                 if let viewController = payments[indexPath.row].controllerName.getViewController() {
                     viewController.addCloseButton()
@@ -61,6 +63,29 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 navigationController?.pushViewController(viewController, animated: true)
             }
         }
+    }
+    
+    private func openPhonePaymentVC(model: GetLatestPaymentsDatum) {
+        let vc = PaymentByPhoneViewController()
+        
+        vc.selectBank = model.bankName
+        vc.memberId = model.bankID
+        vc.bankImage = UIImage(named: "\(model.bankID ?? "")")
+        let mask = StringMask(mask: "+7 (000) 000-00-00")
+        let maskPhone = mask.mask(string: model.phoneNumber)
+        vc.phoneField.text = maskPhone ?? ""
+        if model.bankName == "ФОРА-БАНК"{
+            vc.sbp = false
+        } else {
+            vc.sbp = true
+        }
+        
+        vc.addCloseButton()
+        vc.modalPresentationStyle = .fullScreen
+        let navController = UINavigationController(rootViewController: vc)
+        navController.modalPresentationStyle = .fullScreen
+        self.present(navController, animated: true, completion: nil)
+        
     }
     
     private func openCountryPaymentVC(model: ChooseCountryHeaderViewModel) {
