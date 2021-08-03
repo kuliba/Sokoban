@@ -335,6 +335,7 @@ class ContactConfurmViewController: UIViewController {
             cardFromField.isHidden = true
             cardToField.isHidden = true
             countryField.isHidden = true
+            numberTransctionField.isHidden = true
             currancyTransctionField.isHidden = true
             phoneField.isHidden = true
             if model.payToCompany {

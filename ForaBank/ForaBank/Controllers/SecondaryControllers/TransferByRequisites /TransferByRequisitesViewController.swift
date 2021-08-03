@@ -577,12 +577,12 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                         "KPP" : kpp
                      ] ] as [String : AnyObject]
         if fioField.textField.text?.count != 0{
-            guard let fio = fioField.textField.text else {
+            guard fioField.textField.text != nil else {
                     return
             }
             body.removeValue(forKey: "INN")
-            nameCompany = fio
-            body["name"] = fio as AnyObject
+//            nameCompany = fio
+//            body["name"] = fio as AnyObject
         }
         
         NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer , [:], body) { model, error in
