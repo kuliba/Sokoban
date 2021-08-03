@@ -71,6 +71,9 @@ import Foundation
 struct DataClass: Codable {
     let entryCount: Int?
     let entryCountError : Int?
+    let data: String?
+    let type: String?
+    let token: String?
 }
 
 // MARK: DataClass convenience initializers and mutators
@@ -93,11 +96,17 @@ extension DataClass {
 
     func with(
         entryCount: Int?? = nil,
-        entryCountError: Int? = nil
+        entryCountError: Int? = nil,
+        data: String? = nil,
+        type: String? = nil,
+        token: String? = nil
     ) -> DataClass {
         return DataClass(
             entryCount: entryCount ?? self.entryCount,
-            entryCountError: entryCountError ?? self.entryCountError
+            entryCountError: entryCountError ?? self.entryCountError,
+            data: data ?? self.data,
+            type: type ?? self.type,
+            token: token ?? self.token
         )
     }
 
