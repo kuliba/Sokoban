@@ -97,7 +97,7 @@ class PhoneConfirmViewController: UIViewController {
         button.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
             
         title = "Подтвердите реквизиты"
-        let stackView = UIStackView(arrangedSubviews: [phoneField, payeerField, bankPayeer,cardField, summTransctionField, taxTransctionField, smsCodeField])
+        let stackView = UIStackView(arrangedSubviews: [phoneField, payeerField, bankPayeer, summTransctionField, taxTransctionField, smsCodeField])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing

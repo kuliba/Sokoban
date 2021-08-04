@@ -165,7 +165,7 @@ extension AppDelegate {
         let parameters = [
 //            "cryptoVersion": "1.0",
             "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-            "pushFCMtoken": Messaging.messaging().fcmToken! as String,
+            "pushFcmToken": Messaging.messaging().fcmToken! as String,
             "model": UIDevice().model,
             "operationSystem": "IOS"
         ] as [String : AnyObject]
@@ -228,7 +228,7 @@ extension AppDelegate {
             
         }
         
-        func keyExchange(){
+            func keyExchange(){
             
                 let parametersKey = [
                 "data": KeyFromServer.sendBase64ToServ ?? "",
