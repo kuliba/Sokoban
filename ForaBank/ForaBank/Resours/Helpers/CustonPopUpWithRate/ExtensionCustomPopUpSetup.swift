@@ -31,10 +31,6 @@ extension CustomPopUpWithRateView {
     
     func doneButtonTapped(with viewModel: ConfirmViewControllerModel) {
         
-        let a = self.bottomView.models.to
-        
-        let b = viewModel.summTransction
-        
         var viewModel = viewModel
         self.dismissKeyboard()
         self.showActivity()

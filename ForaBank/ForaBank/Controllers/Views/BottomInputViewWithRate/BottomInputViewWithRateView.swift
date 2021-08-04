@@ -25,8 +25,10 @@ class BottomInputViewWithRateView: UIView {
     var models = (to: "", from: "") {
         didSet {
             currencySymbol = models.to.getSymbol() ?? ""
-            if models.to != models.from {
-            exchangeRate(models.to, models.from)
+            if (models.to != models.from) && (models.to != "" && models.from != "") {
+                DispatchQueue.main.async {
+                    self.exchangeRate(self.models.to, self.models.from)
+                }
             } else {
                 self.buttomLabel.text = "Возможна комиссия"
             }
@@ -85,10 +87,10 @@ class BottomInputViewWithRateView: UIView {
         contentView.fixInView(self)
         self.heightAnchor.constraint(equalToConstant: 88).isActive = true
         setupTextFIeld()
-        self.currencySwitchButton.setBackgroundColor(.white, for: .selected)
-        self.currencySwitchButton.setBackgroundColor(.white, for: .disabled)
-        self.currencySwitchButton.setBackgroundColor(.white, for: .highlighted)
-        self.currencySwitchButton.setBackgroundColor(.white, for: .normal)
+//        self.currencySwitchButton.setBackgroundColor(.white, for: .selected)
+//        self.currencySwitchButton.setBackgroundColor(.white, for: .disabled)
+//        self.currencySwitchButton.setBackgroundColor(.white, for: .highlighted)
+      //  self.currencySwitchButton.setBackgroundColor(.white, for: .normal)
         self.currencySwitchButton.layer.cornerRadius = 12
         self.currencySwitchButton.layer.masksToBounds = true
         setupMoneyController()
@@ -104,17 +106,9 @@ class BottomInputViewWithRateView: UIView {
                 self.buttomLabel.alpha = text.isEmpty ? 0 : 1
             }
         
-//            if unformatText == "" {
-//                self.currencySymbol = ""
-//            } else {
-//                self.currencySymbol = self.models.to.getSymbol() ?? ""
-//                UIView.animate(withDuration: 0.2) {
-//                    self.topLabel.alpha = text.isEmpty ? 0 : 1
-//                    self.buttomLabel.alpha = text.isEmpty ? 0 : 1
-//                }
-//            }
-            
-            self.exchangeRate(self.models.to, self.models.from)
+            if self.currencySymbol != "" {
+                self.exchangeRate(self.models.to, self.models.from)
+            }
         }
     }
     
@@ -146,7 +140,7 @@ class BottomInputViewWithRateView: UIView {
     
     @IBAction func currencyButtonTapped(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
-        if sender.isSelected == false {
+        if sender.isSelected == true {
             reversedRate(models.to, models.from)
         } else {
             reversedRate(models.from, models.to)

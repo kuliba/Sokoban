@@ -38,9 +38,11 @@ extension BottomInputViewWithRateView  {
                         self?.bottomLable.rateSimbol = value.getSymbol()
                         /// Курс покупки валюты перевода
                         self?.bottomLable.rate = 0
+                        
+                        self?.currencySymbol = "₽"
+                        self?.models = (to: "RUB", from: value)
                         DispatchQueue.main.async {
                             self?.buttomLabel.text = self?.bottomLable.reversRate()
-                            self?.currencySymbol = "₽"
                             self?.currencySwitchButton.setTitle("₽" + " ⇆ " + (value.getSymbol() ?? ""), for: .normal)
                         }
                     }
@@ -58,9 +60,10 @@ extension BottomInputViewWithRateView  {
                         self?.bottomLable.rateSimbol = value.getSymbol()
                         /// Курс покупки валюты перевода
                         self?.bottomLable.rate = 0
+                        
+                        self?.currencySymbol = value.getSymbol() ?? ""
                         DispatchQueue.main.async {
                             self?.buttomLabel.text = self?.bottomLable.secondRate()
-                            self?.currencySymbol = value.getSymbol() ?? ""
                             self?.currencySwitchButton.setTitle((value.getSymbol() ?? "") + " ⇆ " + "₽", for: .normal)
                         }
                     }
@@ -88,6 +91,7 @@ extension BottomInputViewWithRateView  {
                     self?.bottomLable.rateSimbol = m?.currencyCodeAlpha?.getSymbol()
                     /// Курс покупки валюты перевода
                     self?.bottomLable.rate = m?.rateSell
+                    self?.models = (to: tempModel?.currencyCodeAlpha ?? "", from: m?.currencyCodeAlpha ?? "")
                     DispatchQueue.main.async {
                         self?.buttomLabel.text = self?.bottomLable.anyRate()
                         self?.currencySwitchButton.setTitle((tempModel?.currencyCodeAlpha?.getSymbol() ?? "") + " ⇆ " + (m?.currencyCodeAlpha?.getSymbol() ?? ""), for: .normal)
