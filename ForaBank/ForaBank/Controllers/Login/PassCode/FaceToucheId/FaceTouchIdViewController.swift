@@ -94,20 +94,29 @@ class FaceTouchIdViewController: UIViewController {
                 return nil
             }
         }
+        guard   let typePin = encript(string: "pin") else {
+            return
+        }
+        guard  let touchId = encript(string: "touchId") else {
+            return
+        }
+        guard  let faceId = encript(string: "faceId") else {
+            return
+        }
         let data = [
             "cryptoVersion": "1.0",
-            "pushDeviceId": encript(string: UIDevice.current.identifierForVendor!.uuidString),
-            "pushFcmToken": encript(string: Messaging.messaging().fcmToken as String? ?? ""),
-            "serverDeviceGUID" : encript(string: serverDeviceGUID as! String),
-            "settings": [ ["type" : encript(string:"pin"),
+            "pushDeviceId": encript(string: UIDevice.current.identifierForVendor!.uuidString) ?? "",
+            "pushFcmToken": encript(string: Messaging.messaging().fcmToken as String? ?? "") ?? "",
+            "serverDeviceGUID" : encript(string: serverDeviceGUID as! String) ?? "",
+            "settings": [ ["type" : typePin,
                            "isActive": true,
-                           "value": encript(string:code?.sha256() ?? "")],
-                          ["type" : encript(string:"touchId"),
+                           "value": encript(string:code?.sha256() ?? "") ?? ""],
+                          ["type" : touchId,
                            "isActive": touch,
-                           "value": encript(string:code?.sha256() ?? "")],
-                          ["type" : encript(string:"faceId"),
+                           "value": encript(string:code?.sha256() ?? "") ?? ""],
+                          ["type" : faceId,
                            "isActive": face ,
-                           "value": encript(string:code?.sha256() ?? "")] ] ] as [String : AnyObject]
+                           "value": encript(string:code?.sha256() ?? "") ?? ""] ] ] as [String : AnyObject]
         
         print("DEBUG: Start setDeviceSetting with body: ", data)
         
@@ -164,18 +173,27 @@ class FaceTouchIdViewController: UIViewController {
                 return nil
             }
         }
+        guard   let typePin = encript(string: "pin") else {
+            return
+        }
+        guard  let touchId = encript(string: "touchId") else {
+            return
+        }
+        guard  let faceId = encript(string: "faceId") else {
+            return
+        }
         let data = [
             "cryptoVersion": "1.0",
             "pushDeviceId": encript(string: UIDevice.current.identifierForVendor!.uuidString),
             "pushFcmToken": encript(string: Messaging.messaging().fcmToken as String? ?? ""),
             "serverDeviceGUID" : encript(string: serverDeviceGUID as! String),
-            "settings": [ ["type" : encript(string:"pin"),
+            "settings": [ ["type" : typePin,
                            "isActive": true,
                            "value": encript(string:code?.sha256() ?? "") ],
-                          ["type" : encript(string:"touchId"),
+                          ["type" : touchId,
                            "isActive": false,
                            "value": encript(string:code?.sha256() ?? "")],
-                          ["type" : encript(string:"faceId"),
+                          ["type" : faceId,
                            "isActive": false ,
                            "value": encript(string:code?.sha256() ?? "")] ] ] as [String : AnyObject]
         
@@ -237,7 +255,7 @@ class FaceTouchIdViewController: UIViewController {
         }
         let serverDeviceGUID = UserDefaults.standard.object(forKey: "serverDeviceGUID")
         let data = [
-            "appId": encript(string:"iOS" ),
+            "appId": encript(string:"iOS"),
             "cryptoVersion": "1.0",
             "pushDeviceId": encript(string: UIDevice.current.identifierForVendor!.uuidString),
             "pushFcmToken": encript(string: Messaging.messaging().fcmToken as String? ?? ""),
