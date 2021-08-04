@@ -9,8 +9,10 @@ import UIKit
 
 class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, passTextFieldText {
     var allBanks = [BankFullInfoList]()
-    func passTextFieldText(text: String) {
-        
+    func passTextFieldText(textField: UITextField) {
+        guard let text = textField.text else {
+            return
+        }
         if text != ""{
             banks = allBanks
             banks = banks.filter({$0.fullName?.lowercased().prefix(text.count) ?? "" == text.lowercased() || $0.bic?.lowercased().prefix(text.count) ?? "" == text.lowercased()})

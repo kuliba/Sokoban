@@ -452,7 +452,10 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
 }
 
 extension EPContactsPicker: passTextFieldText {
-    func passTextFieldText(text: String) {
+    func passTextFieldText(textField: UITextField) {
+        guard let text = textField.text else {
+            return
+        }
         let searchText = text
         if searchText.isNumeric {
             if self.check(searchText)  {

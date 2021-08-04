@@ -164,6 +164,7 @@ struct ConfirmViewControllerModel {
         case contact
         case mig
         case requisites
+        case phoneNumber
     }
     
 }

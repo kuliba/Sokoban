@@ -134,7 +134,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
     var delegate: MyProtocol?
     override func viewDidLoad() {
         super.viewDidLoad()
-        accountNumber.textField.delegate = self
+//        accountNumber.textField.delegate = self
         bottomView.currencySymbol = "₽"
 
         let item = UIBarButtonItem(image: UIImage.init(imageLiteralResourceName: "scanner"), style: .plain, target: self, action: #selector(presentScanner))
@@ -212,7 +212,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         }
                 
         innField.didChangeValueField = {(field) in
-            if self.innField.textField.text?.count == 10{
+            if self.innField.textField.text?.count == 10 || self.innField.textField.text?.count == 12{
                 self.suggestCompany()
             } else {
                     self.nameField.isHidden = true
@@ -262,12 +262,13 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         }
         
         accountNumber.didChangeValueField = {(field) in
-            if self.accountNumber.textField.text?.count == 20, self.accountNumber.textField.text?.prefix(5) == "40817" || self.accountNumber.textField.text?.prefix(5) == "40820" || self.accountNumber.textField.text?.prefix(3) == "423" || self.accountNumber.textField.text?.prefix(3) == "426" {
+            self.accountNumber.textField.maskString = "00000 000 0 0000 0000000"
+            if self.accountNumber.textField.text?.replacingOccurrences(of: " ", with: "").count == 20, self.accountNumber.textField.text?.prefix(5) == "40817" || self.accountNumber.textField.text?.prefix(5) == "40820" || self.accountNumber.textField.text?.prefix(3) == "423" || self.accountNumber.textField.text?.prefix(3) == "426" {
                 self.stackView.addArrangedSubview(self.fioField)
                 self.commentField.isHidden = false
                 self.stackView.addArrangedSubview(self.commentField)
                 self.fioField.isHidden = false
-            } else if self.accountNumber.textField.text?.count == 20 {
+            } else if self.accountNumber.textField.text?.replacingOccurrences(of: " ", with: "").count == 20 {
                 self.fio.name.removeAll()
                 self.fio.patronymic.removeAll()
                 self.fioField.textField.text = ""
@@ -702,6 +703,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
 //                self.dismissActivity()
 //                print("DEBUG: Error: ", error ?? "")
 //            }
+            self.dismissActivity()
             DispatchQueue.main.async {
                 self.nameField.isHidden = true
                 self.kppField.isHidden = false
@@ -715,7 +717,6 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
             guard let model = model else { return }
             print("DEBUG: Card list: ", model)
             if model.statusCode == 0 {
-                self.dismissActivity()
                 guard let data  = model.data else { return }
 //                self.selectedCardNumber = cardNumber
                 DispatchQueue.main.async {
@@ -790,7 +791,7 @@ extension TransferByRequisitesViewController{
             let maxLength = 24
             let currentString: NSString = accountNumber.textField.text! as NSString
             let newString: NSString = currentString.replacingCharacters(in: range, with: string) as NSString
-        accountNumber.textField.maskString = "00000 000 0 0000 0000000"
+//            accountNumber.textField.maskString = "00000 000 0 0000 0000000"
             return newString.length <= maxLength
     }
 }
