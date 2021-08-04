@@ -75,10 +75,6 @@ extension LoginCardEntryViewController: UITextFieldDelegate {
         
         creditCardView.cardNumberTextField.maskString = cardNumber.count >= 17 ? "00000 000 0 0000 0000000" : "0000 0000 0000 0000 0"
         
-        
-        // inside of UITextFieldDelegate shouldChangeTextIn method
-       
-        
         let newPosition = textField.endOfDocument
         creditCardView.cardNumberTextField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition)
     }
