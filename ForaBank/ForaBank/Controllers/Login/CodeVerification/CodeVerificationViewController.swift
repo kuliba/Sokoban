@@ -61,7 +61,10 @@ class CodeVerificationViewController: UIViewController {
     
     func encript(string: String) -> String?{
         do {
-            let aes = try AES(keyString: KeyFromServer.secretKey!)
+            guard let key = KeyFromServer.secretKey else {
+                return ""
+            }
+            let aes = try AES(keyString: key)
 
             let stringToEncrypt: String = "\(string)"
             
@@ -98,7 +101,10 @@ class CodeVerificationViewController: UIViewController {
             
             func encript(string: String) -> String?{
                 do {
-                    let aes = try AES(keyString: KeyFromServer.secretKey!)
+                    guard let key = KeyFromServer.secretKey else {
+                        return ""
+                    }
+                    let aes = try AES(keyString: key)
 
                     let stringToEncrypt: String = "\(string)"
                     
@@ -155,7 +161,10 @@ class CodeVerificationViewController: UIViewController {
     //                    let str = model?.data?.phone?.data
                         var decryptPhone: String?
                         do {
-                            let aes = try AES(keyString: KeyFromServer.secretKey!)
+                            guard let key = KeyFromServer.secretKey else {
+                                return
+                            }
+                            let aes = try AES(keyString: key)
     //                        let decryptedString = try AES256(key: KeyFromServer.secretKey!, iv: AES256.randomIv()).decrypt(data)
     //                        print(decryptedString)
                             let decryptedData: String = try aes.decrypt(decodedData!)

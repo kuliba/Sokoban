@@ -32,7 +32,17 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
     var seeall: Bool?
     var stackView = UIStackView()
 
-    func passTextFieldText(text: String) {
+    func passTextFieldText(textField: UITextField) {
+//        guard let textField = textField as? MaskedTextField else { return }
+//                guard let cardNumber = textField.unmaskedText else { return }
+//                sea.doneButton.isHidden = cardNumber.count  >= 16 ? false : true
+//
+//                creditCardView.cardNumberTextField.maskString = cardNumber.count >= 17 ? "00000 000 0 0000 0000000" : "0000 0000 0000 0000 0"
+//
+        
+        guard let text = textField.text else {
+            return
+        }
         if text == "" {
             resultSearchController = false
             banksActive = false
@@ -43,16 +53,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
         let filteredContacts = contacts.filter({$0.name?.lowercased().prefix(text.count) ?? "" == text.lowercased() || $0.phoneNumber[0].lowercased().prefix(text.count) == text.lowercased()})
         reserveContacts = contacts
         if text.count != 0{
-        
-            if text.isNumeric || searchContact.numberTextField.unmaskedText?.isNumeric ?? false{
-                searchContact.numberTextField.maskString = "(000) 000-00-00"
-                print("isNumeric")
-            } else {
-                searchContact.numberTextField.maskString = ""
-                print("isNotNumeric")
 
-            }
-            
             searchForContactUsingName(text: text)
             resultSearchController = true
             tableView.reloadData()
@@ -62,8 +63,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
             getLastPhonePayments()
             banksActive = true
             tableView.reloadData()
-        } 
-        
+        }
     }
     private func searchForContactUsingName(text: String) {
         
@@ -167,6 +167,8 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
         self.delegate = self
         configureTableView()
         registerContactCell()
+        searchContact.maskPhone = true
+        searchContact.numberTextField.delegate = self
         searchContact.delegateNumber = self
         searchContact.buttonStackView.isHidden = false
         searchContact.anchor(height:44)
