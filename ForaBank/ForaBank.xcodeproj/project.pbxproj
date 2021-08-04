@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0B05163126A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B05163026A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift */; };
+		0B21E1DD26BABABA00CA2F62 /* BottomInputView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0B21E1DC26BABABA00CA2F62 /* BottomInputView.xib */; };
 		0B37F9782678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F9772678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift */; };
 		0B37F97A2678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F9792678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift */; };
 		0B37F97C2678EC69007728FC /* AnywayPaymentDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F97B2678EC69007728FC /* AnywayPaymentDecodableModel.swift */; };
@@ -266,6 +267,7 @@
 
 /* Begin PBXFileReference section */
 		0B05163026A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPaymentCountriesDecodableModel.swift; sourceTree = "<group>"; };
+		0B21E1DC26BABABA00CA2F62 /* BottomInputView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BottomInputView.xib; sourceTree = "<group>"; };
 		0B37F9772678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentBeginDecodebleModel.swift; sourceTree = "<group>"; };
 		0B37F9792678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentMakeDecodableModel.swift; sourceTree = "<group>"; };
 		0B37F97B2678EC69007728FC /* AnywayPaymentDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentDecodableModel.swift; sourceTree = "<group>"; };
@@ -1447,6 +1449,7 @@
 		EDC3419F26864BF100FFFEF8 /* BottomInputView */ = {
 			isa = PBXGroup;
 			children = (
+				0B21E1DC26BABABA00CA2F62 /* BottomInputView.xib */,
 				EDC341A126864C4100FFFEF8 /* BottomInputView.swift */,
 			);
 			path = BottomInputView;
@@ -1806,6 +1809,7 @@
 				EDB1452C26663C9D0028EF5A /* GoogleService-Info.plist in Resources */,
 				EDB14526266624DC0028EF5A /* OrderCardView.xib in Resources */,
 				ED51D66E2688B27E005FD655 /* SeparatorView.xib in Resources */,
+				0B21E1DD26BABABA00CA2F62 /* BottomInputView.xib in Resources */,
 				EDB143CC265FDEC90028EF5A /* Roboto-BlackItalic.ttf in Resources */,
 				ED2BE18126A04A4300647CB1 /* CastomCardXIB.xib in Resources */,
 				0BA09E2E26ADEBF50065D623 /* GHKCell.xib in Resources */,
