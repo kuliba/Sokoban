@@ -97,7 +97,7 @@ extension SceneDelegate {
     func goToPinVC(_ mode: ALMode) {
         DispatchQueue.main.async { [weak self] in
             var options = ALOptions()
-            options.isSensorsEnabled = true
+            options.isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
             options.onSuccessfulDismiss = { (mode: ALMode?) in
                 if let mode = mode {
                     DispatchQueue.main.async { [weak self] in

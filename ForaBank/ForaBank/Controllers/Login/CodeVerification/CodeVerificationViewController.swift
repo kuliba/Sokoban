@@ -59,12 +59,32 @@ class CodeVerificationViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func encript(string: String) -> String?{
+        do {
+            let aes = try AES(keyString: KeyFromServer.secretKey!)
+
+            let stringToEncrypt: String = "\(string)"
+            
+            print("String to encrypt:\t\t\t\(stringToEncrypt)")
+
+            let encryptedData: Data = try aes.encrypt(stringToEncrypt)
+            print("String encrypted (base64):\t\(encryptedData.base64EncodedString())")
+            
+            let decryptedData: String = try aes.decrypt(encryptedData)
+            print("String decrypted:\t\t\t\(decryptedData)")
+            return encryptedData.base64EncodedString()
+        } catch {
+            print("Something went wrong: \(error)")
+            return nil
+        }
+    }
+    
     //MARK: - API
     //TODO: BUG: Можно ввести в поле больше символов чем есть полей
     func sendSmsCode(code: String) {
 //        print("DEBUG: " + #function + ": " + code)
-        
         let body = [
+//            "cryptoVersion": "1.0",
             "appId": "IOS",
             "verificationCode": "\(code)"
         ] as [String : AnyObject]
@@ -75,14 +95,36 @@ class CodeVerificationViewController: UIViewController {
                 guard let error = error else { return }
                 self?.showAlert(with: "Ошибка", and: error)
             }
+            
+            func encript(string: String) -> String?{
+                do {
+                    let aes = try AES(keyString: KeyFromServer.secretKey!)
+
+                    let stringToEncrypt: String = "\(string)"
+                    
+                    print("String to encrypt:\t\t\t\(stringToEncrypt)")
+
+                    let encryptedData: Data = try aes.encrypt(stringToEncrypt)
+                    print("String encrypted (base64):\t\(encryptedData.base64EncodedString())")
+                    
+                    let decryptedData: String = try aes.decrypt(encryptedData)
+                    print("String decrypted:\t\t\t\(decryptedData)")
+                    return encryptedData.base64EncodedString()
+                } catch {
+                    print("Something went wrong: \(error)")
+                    return nil
+                }
+            }
+            
             guard let model = model else { return }
             if model.statusCode == 0 {
                 
                 let body = [
-                    "model": UIDevice().model,
-                    "operationSystem": "IOS",
-                    "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-                    "pushFcmToken": Messaging.messaging().fcmToken as String?
+                    "cryptoVersion": "1.0",
+                    "model": encript(string: UIDevice().model),
+                    "operationSystem": encript(string: "IOS"),
+                    "pushDeviceId":encript(string: UIDevice.current.identifierForVendor!.uuidString),
+                    "pushFcmToken":encript(string: Messaging.messaging().fcmToken as String? ?? "")
                 ] as [String : AnyObject]
                 
                 print("DEBUG: Start doRegistration with body:", body)
@@ -95,7 +137,34 @@ class CodeVerificationViewController: UIViewController {
                     
                     if model.statusCode == 0 {
                         guard let serverDeviceGUID = model.data else { return }
-                        UserDefaults.standard.set(serverDeviceGUID, forKey: "serverDeviceGUID")
+                        let data = serverDeviceGUID.data(using: .utf8)
+//                        var data1 = model?.data?.phone?.base64Decoded()
+                        let decodedData = Data(base64Encoded: (serverDeviceGUID))
+    //                    let decodedString = String(data: decodedData!, encoding: .utf8)!
+
+    //                    func testEnc() {
+    //
+    ////                        let aesKey = password.padding(toLength: 32, withPad: "0", startingAt: 0)
+    //
+    //                        let aes = try? AES256(key: KeyFromServer.secretKey!, iv: AES256.randomIv())
+    //
+    //                        let decryptString = try? aes?.decrypt(data)
+    //                        print(decryptString)
+    //                    }
+    //                    testEnc()
+    //                    let str = model?.data?.phone?.data
+                        var decryptPhone: String?
+                        do {
+                            let aes = try AES(keyString: KeyFromServer.secretKey!)
+    //                        let decryptedString = try AES256(key: KeyFromServer.secretKey!, iv: AES256.randomIv()).decrypt(data)
+    //                        print(decryptedString)
+                            let decryptedData: String = try aes.decrypt(decodedData!)
+                            print("String decrypted:\t\t\t\(decryptedData)")
+                            decryptPhone = decryptedData
+                        } catch {
+                            print("Something went wrong: \(error)")
+                        }
+                        UserDefaults.standard.set(decryptPhone, forKey: "serverDeviceGUID")
                         
                         
                         //TODO: go to app

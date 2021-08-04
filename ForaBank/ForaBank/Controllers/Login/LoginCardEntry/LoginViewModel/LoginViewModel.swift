@@ -11,11 +11,12 @@ class LoginViewModel {
    
     var encription = Encription()
     
-    
+   
     
     
     func checkCardNumber(with number: String, completion: @escaping(_ model: String?, _ error: String?) -> ()) {
         var cryptString = String()
+        
         do {
             let aes = try AES(keyString: KeyFromServer.secretKey!)
 

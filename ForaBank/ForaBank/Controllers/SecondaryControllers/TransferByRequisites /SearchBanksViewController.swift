@@ -17,24 +17,32 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
         } else if text == ""{
             banks = allBanks
         }
-        contactCollectionView.reloadData()
+        bankListCollectionView.reloadData()
         //        banks = banks.filter({$0.memberNameRus?.lowercased().prefix(text.count) ?? "" == text})
         //        contactCollectionView.reloadData()
     }
     
 
-    var contactCollectionView: UICollectionView!
+    var bankListCollectionView: UICollectionView = {
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.itemSize = CGSize(width: UIScreen.main.bounds.width, height: 60)
+        let collectionView = UICollectionView(
+            frame: UIScreen.main.bounds, collectionViewLayout: flowLayout)
+        return collectionView
+    }()
     
     var banks = [BankFullInfoList]()
     
     let searchContact: SearchContact = UIView.fromNib()
 
     var delegate: passTextFieldText? = nil
-
+    
+    var didBankTapped: ((BankFullInfoList) -> Void)?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         searchContact.delegateNumber = self
-        banks = banks.filter({$0.fullName != "Смотреть все"})
+//        banks = banks.filter({$0.fullName != "Смотреть все"})
         allBanks = banks
         setupUI()
     }
@@ -52,7 +60,7 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
         
         let contactView = UIView()
         contactView.isUserInteractionEnabled = true
-        contactView.addSubview(contactCollectionView)
+        contactView.addSubview(bankListCollectionView)
         contactView.layoutMargins = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         
         let stackView = UIStackView(arrangedSubviews: [searchContact, contactView])
@@ -72,19 +80,12 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
     }
     
     private func setupCollectionView() {
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.itemSize = CGSize(width: view.bounds.width, height: 60)
-        contactCollectionView = UICollectionView(
-            frame: view.bounds, collectionViewLayout: flowLayout)
-        
-        contactCollectionView.isScrollEnabled = true
-        contactCollectionView.delegate = self
-        contactCollectionView.dataSource = self
-        contactCollectionView.backgroundColor = .white
-        contactCollectionView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        contactCollectionView.register(UINib(nibName: "ContactCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ContactCollectionViewCell")
-        
-        
+        bankListCollectionView.isScrollEnabled = true
+        bankListCollectionView.delegate = self
+        bankListCollectionView.dataSource = self
+        bankListCollectionView.backgroundColor = .white
+        bankListCollectionView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        bankListCollectionView.register(UINib(nibName: "ContactCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ContactCollectionViewCell")
     }
     
     
@@ -116,7 +117,7 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let item = contactCollectionView.dequeueReusableCell(withReuseIdentifier: "ContactCollectionViewCell", for: indexPath) as! ContactCollectionViewCell
+        let item = bankListCollectionView.dequeueReusableCell(withReuseIdentifier: "ContactCollectionViewCell", for: indexPath) as! ContactCollectionViewCell
         var image = UIImage()
         if let imageString = banks[indexPath.item].svgImage {
             image = imageString.convertSVGStringToImage()
@@ -142,6 +143,8 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
 //    }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let bank = banks[indexPath.item]
+        didBankTapped?(bank)
         dismiss(animated: true, completion: nil)
     }
 }

@@ -134,7 +134,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
     var delegate: MyProtocol?
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        accountNumber.textField.delegate = self
         bottomView.currencySymbol = "₽"
 
         let item = UIBarButtonItem(image: UIImage.init(imageLiteralResourceName: "scanner"), style: .plain, target: self, action: #selector(presentScanner))
@@ -261,9 +261,6 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
 
         }
         
-        
-        
-        
         accountNumber.didChangeValueField = {(field) in
             if self.accountNumber.textField.text?.count == 20, self.accountNumber.textField.text?.prefix(5) == "40817" || self.accountNumber.textField.text?.prefix(5) == "40820" || self.accountNumber.textField.text?.prefix(3) == "423" || self.accountNumber.textField.text?.prefix(3) == "426" {
                 self.stackView.addArrangedSubview(self.fioField)
@@ -299,6 +296,8 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         setupUI()
         setupActions()
         
+//        setupCardList()
+        
         // Do any additional setup after loading the view.
     }
     
@@ -307,8 +306,25 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         self.kppField.text = kpp
         self.nameCompanyField.textField.text = name
        }
+
     
     func setupActions() {
+//        getCardList { [weak self] data ,error in
+//            DispatchQueue.main.async {
+//
+//                if error != nil {
+//                    self?.showAlert(with: "Ошибка", and: error!)
+//                }
+//                guard let data = data else { return }
+//                self?.cardListView.cardList = data
+//
+//                if data.count > 0 {
+//                    self?.cardField.configCardView(data.first!)
+//                    guard let cardNumber  = data.first?.number else { return }
+//                    self?.selectedCardNumber = cardNumber
+//                }
+//            }
+//        }
         getCardList { [weak self] data ,error in
             DispatchQueue.main.async {
                 
@@ -316,16 +332,22 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                     self?.showAlert(with: "Ошибка", and: error!)
                 }
                 guard let data = data else { return }
-                self?.cardListView.cardList = data
+                var filterProduct: [GetProductListDatum] = []
+                data.forEach { product in
+                    if (product.productType == "CARD" || product.productType == "ACCOUNT") && product.currency == "RUB" {
+                        filterProduct.append(product)
+                    }
+                }
                 
-                if data.count > 0 {
-                    self?.cardField.configCardView(data.first!)
-                    guard let cardNumber  = data.first?.number else { return }
+                self?.cardListView.cardList = filterProduct
+                
+                if filterProduct.count > 0 {
+                    guard let cardNumber  = filterProduct.first?.number else { return }
                     self?.selectedCardNumber = cardNumber
+//                    completion(nil)
                 }
             }
         }
-        
         
         bankListView.didBankTapped = { (bank) in
             self.selectedBank = bank
@@ -342,6 +364,11 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
 //            navController.modalPresentationStyle = .fullScreen
             self.present(navController, animated: true, completion: nil)
         }
+        
+        
+        bankListView.didBankTapped = { (bank) in self.selectBank(bank: bank)}
+        
+        bankListView.didSeeAll = { () in self.openSearchBanksVC() }
         
         cardField.didChooseButtonTapped = { () in
             print("cardField didChooseButtonTapped")
@@ -361,6 +388,20 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         bottomView.didDoneButtonTapped = { [weak self] (_) in
             self?.doneButtonTapped()
         }
+    }
+    
+    private func openSearchBanksVC() {
+        let vc = SearchBanksViewController()
+        vc.banks = self.banks
+        vc.didBankTapped = { (bank) in self.selectBank(bank: bank)}
+        let navController = UINavigationController(rootViewController: vc)
+        self.present(navController, animated: true, completion: nil)
+    }
+    
+    private func selectBank(bank: BankFullInfoList) {
+        self.selectedBank = bank
+        self.hideView(self.bankListView, needHide: true)
+        self.hideView(self.cardListView, needHide: true)
     }
     
     private func openOrHideView(_ view: UIView) {
@@ -424,10 +465,6 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         }
     }
     
-    func updateUI(){
-        
-    }
-    
     func setuoUIByCompany(){
         stackView.addArrangedSubview(innField)
     }
@@ -446,8 +483,6 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         prepareExternal()
     }
     
-    
-  
     func setTitle(title:String, subtitle:String) -> UIView {
         let titleLabel = UILabel(frame: CGRect(x: 0, y: -2, width: 0, height: 0))
 
@@ -569,7 +604,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                         "cardNumber" : cardNumber
                      ],
                      "payeeExternal" : [
-                        "accountNumber" : accountNumber, // "40702810638110103994"
+                        "accountNumber" : accountNumber.replacingOccurrences(of: " ", with: ""), // "40702810638110103994"
                         "date" : "2021-07-07",
                         "name" : nameCompany,
                         "bankBIC" : bikBank, //044525187
@@ -748,4 +783,14 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         }
     }
     
+}
+
+extension TransferByRequisitesViewController{
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+            let maxLength = 24
+            let currentString: NSString = accountNumber.textField.text! as NSString
+            let newString: NSString = currentString.replacingCharacters(in: range, with: string) as NSString
+        accountNumber.textField.maskString = "00000 000 0 0000 0000000"
+            return newString.length <= maxLength
+    }
 }

@@ -366,7 +366,7 @@ extension AES: Cryptable {
     }
 
     func decrypt(_ data: Data) throws -> String {
-        let newData = data.dropLast(16)
+        let newData = data
         let bufferSize: Int = newData.count - ivSize
         var buffer = Data(count: bufferSize)
 
@@ -411,7 +411,7 @@ extension AES: Cryptable {
         let decryptedMyData = buffer.prefix(16)
         let newString = decryptedMyData.base64EncodedString()
         print(newString.base64Decoded())
-        guard let decryptedString = String(data: decryptedMyData, encoding: .utf8) else {
+        guard let decryptedString = String(data: decryptedData, encoding: .utf8) else {
             throw Error.dataToStringFailed
         }
         
