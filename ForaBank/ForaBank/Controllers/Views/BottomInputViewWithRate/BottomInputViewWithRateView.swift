@@ -25,7 +25,11 @@ class BottomInputViewWithRateView: UIView {
     var models = (to: "", from: "") {
         didSet {
             currencySymbol = models.to.getSymbol() ?? ""
+            if models.to != models.from {
             exchangeRate(models.to, models.from)
+            } else {
+                self.buttomLabel.text = "Возможна комиссия"
+            }
         }
     }
     
@@ -87,7 +91,7 @@ class BottomInputViewWithRateView: UIView {
         self.currencySwitchButton.setBackgroundColor(.white, for: .normal)
         self.currencySwitchButton.layer.cornerRadius = 12
         self.currencySwitchButton.layer.masksToBounds = true
-        
+        setupMoneyController()
         NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: amountTextField, queue: .main) { _ in
             guard let text = self.amountTextField.text else { return }
             guard let unformatText = self.moneyFormatter?.unformat(text) else { return }

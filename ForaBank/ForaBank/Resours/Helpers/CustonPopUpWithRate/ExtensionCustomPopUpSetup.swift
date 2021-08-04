@@ -31,13 +31,17 @@ extension CustomPopUpWithRateView {
     
     func doneButtonTapped(with viewModel: ConfirmViewControllerModel) {
         
+        let a = self.bottomView.models.to
+        
+        let b = viewModel.summTransction
+        
         var viewModel = viewModel
         self.dismissKeyboard()
         self.showActivity()
         bottomView.doneButtonIsEnabled(true)
         let body = [ "check" : false,
                      "amount" : viewModel.summTransction,
-                     "currencyAmount" : "", //self.bottomView.currencyCode,
+                     "currencyAmount" : self.bottomView.models.to,
                      "payer" : [
                         "cardId" : viewModel.cardFromCardId,
                         "cardNumber" : viewModel.cardFromCardNumber,
