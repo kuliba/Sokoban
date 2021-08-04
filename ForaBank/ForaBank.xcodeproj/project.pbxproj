@@ -311,7 +311,7 @@
 		0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAnywayOperatorsListDecodableModel.swift; sourceTree = "<group>"; };
 		0BE270AF26B76B9700FA958C /* ExtensionCustomPopUpSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionCustomPopUpSetup.swift; sourceTree = "<group>"; };
 		0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBottomLableModel.swift; sourceTree = "<group>"; };
-		0BE270B426B9D79C00FA958C /* BottomInputView copy.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "BottomInputView copy.xib"; sourceTree = "<group>"; };
+		0BE270B426B9D79C00FA958C /* BottomInputView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BottomInputView.xib; sourceTree = "<group>"; };
 		0BE270B526B9DA4800FA958C /* ExtensionBottomInputViewRevers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBottomInputViewRevers.swift; sourceTree = "<group>"; };
 		0BE270B726B9DC4200FA958C /* ExtensionBottomInputViewExchange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBottomInputViewExchange.swift; sourceTree = "<group>"; };
 		0BE270B926B9F36900FA958C /* ExtensionBottomInputRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBottomInputRequest.swift; sourceTree = "<group>"; };
@@ -600,7 +600,6 @@
 				0BE270B526B9DA4800FA958C /* ExtensionBottomInputViewRevers.swift */,
 				0BE270B726B9DC4200FA958C /* ExtensionBottomInputViewExchange.swift */,
 				0BE270B926B9F36900FA958C /* ExtensionBottomInputRequest.swift */,
-				ED2BE18226A04A8800647CB1 /* BottomInputViewWithRate.xib */,
 				0BE270B126B9957B00FA958C /* BottomLableModel */,
 			);
 			path = BottomInputViewWithRate;
@@ -620,6 +619,7 @@
 		0BE270B126B9957B00FA958C /* BottomLableModel */ = {
 			isa = PBXGroup;
 			children = (
+				ED2BE18226A04A8800647CB1 /* BottomInputViewWithRate.xib */,
 				0B95C40926B6D88000AA57E6 /* BottomLableModel.swift */,
 				0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */,
 			);
@@ -1449,7 +1449,7 @@
 			isa = PBXGroup;
 			children = (
 				EDC341A126864C4100FFFEF8 /* BottomInputView.swift */,
-				0BE270B426B9D79C00FA958C /* BottomInputView copy.xib */,
+				0BE270B426B9D79C00FA958C /* BottomInputView.xib */,
 			);
 			path = BottomInputView;
 			sourceTree = "<group>";
