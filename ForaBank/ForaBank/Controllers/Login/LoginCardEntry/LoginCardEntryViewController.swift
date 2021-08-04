@@ -37,6 +37,7 @@ class LoginCardEntryViewController: UIViewController {
                 }
             }
         }
+        
         orderCardView.orderCardTapped = { self.orderCardTapped() }
 
         

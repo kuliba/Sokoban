@@ -103,6 +103,8 @@ class FaceTouchIdViewController: UIViewController {
         guard  let faceId = encript(string: "faceId") else {
             return
         }
+    
+        UserDefaults().set(true, forKey: "isSensorsEnabled")
         let data = [
             "cryptoVersion": "1.0",
             "pushDeviceId": encript(string: UIDevice.current.identifierForVendor!.uuidString) ?? "",
@@ -182,6 +184,7 @@ class FaceTouchIdViewController: UIViewController {
         guard  let faceId = encript(string: "faceId") else {
             return
         }
+        UserDefaults().set(false, forKey: "isSensorsEnabled")
         let data = [
             "cryptoVersion": "1.0",
             "pushDeviceId": encript(string: UIDevice.current.identifierForVendor!.uuidString),
