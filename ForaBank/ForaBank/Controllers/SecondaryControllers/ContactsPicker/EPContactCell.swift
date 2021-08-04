@@ -45,15 +45,15 @@ class EPContactCell: UITableViewCell {
     func updateContactsinUI(_ contact: EPContact, indexPath: IndexPath, subtitleType: SubtitleCellValue) {
         self.contact = contact
         
-        DispatchQueue.main.async{ [self] in
-            if checkOwner(number: contact.phoneNumbers.first?.phoneNumber) ?? false {
-                ownerImageView.isHidden = false
-                self.reloadInputViews()
-
-            } else {
-                ownerImageView.isHidden = true
-            }
-        }
+//        DispatchQueue.main.async{ [self] in
+//            if checkOwner(number: contact.phoneNumbers.first?.phoneNumber) ?? false {
+//                ownerImageView.isHidden = false
+//                self.reloadInputViews()
+//
+//            } else {
+//                ownerImageView.isHidden = true
+//            }
+//        }
    
         self.contactTextLabel?.text = contact.displayName()
         updateSubtitleBasedonType(subtitleType, contact: contact)
