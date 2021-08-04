@@ -51,7 +51,6 @@
 		0BA09E3026ADEC300065D623 /* GHKCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA09E2F26ADEC300065D623 /* GHKCell.swift */; };
 		0BA09E3226AE1AB70065D623 /* GKHCityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA09E3126AE1AB70065D623 /* GKHCityViewController.swift */; };
 		0BA09E3426B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA09E3326B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift */; };
-		0BA2518526BAC7ED00AD087A /* BottomInputView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0BA2518426BAC7ED00AD087A /* BottomInputView.xib */; };
 		0BD2177926A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */; };
 		0BE270B026B76B9700FA958C /* ExtensionCustomPopUpSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270AF26B76B9700FA958C /* ExtensionCustomPopUpSetup.swift */; };
 		0BE270B326B9959900FA958C /* ExtensionBottomLableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */; };
@@ -115,7 +114,6 @@
 		ED0B48A5267E72130037EA06 /* CSRFToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B48A4267E72130037EA06 /* CSRFToken.swift */; };
 		ED0B48AC26812F450037EA06 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B48AB26812F450037EA06 /* LoginViewModel.swift */; };
 		ED0B48AF2681CC6D0037EA06 /* CodeVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B48AE2681CC6D0037EA06 /* CodeVerificationViewModel.swift */; };
-		ED147D4A26BAB319002F66C8 /* BottomInputView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED147D4926BAB319002F66C8 /* BottomInputView.xib */; };
 		ED2BE17F26A0498400647CB1 /* AllCardListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2BE17E26A0498400647CB1 /* AllCardListViewController.swift */; };
 		ED2BE18126A04A4300647CB1 /* CastomCardXIB.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED2BE18026A04A4300647CB1 /* CastomCardXIB.xib */; };
 		ED2BE18326A04A8800647CB1 /* BottomInputViewWithRate.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED2BE18226A04A8800647CB1 /* BottomInputViewWithRate.xib */; };
@@ -310,7 +308,6 @@
 		0BA09E2F26ADEC300065D623 /* GHKCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GHKCell.swift; sourceTree = "<group>"; };
 		0BA09E3126AE1AB70065D623 /* GKHCityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHCityViewController.swift; sourceTree = "<group>"; };
 		0BA09E3326B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetFullBankInfoListDecodableModel.swift; sourceTree = "<group>"; };
-		0BA2518426BAC7ED00AD087A /* BottomInputView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = BottomInputView.xib; path = "../../../../../../../Downloads/Telegram Desktop/BottomInputView.xib"; sourceTree = "<group>"; };
 		0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAnywayOperatorsListDecodableModel.swift; sourceTree = "<group>"; };
 		0BE270AF26B76B9700FA958C /* ExtensionCustomPopUpSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionCustomPopUpSetup.swift; sourceTree = "<group>"; };
 		0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBottomLableModel.swift; sourceTree = "<group>"; };
@@ -370,7 +367,6 @@
 		ED0B48A4267E72130037EA06 /* CSRFToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFToken.swift; sourceTree = "<group>"; };
 		ED0B48AB26812F450037EA06 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		ED0B48AE2681CC6D0037EA06 /* CodeVerificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeVerificationViewModel.swift; sourceTree = "<group>"; };
-		ED147D4926BAB319002F66C8 /* BottomInputView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BottomInputView.xib; sourceTree = "<group>"; };
 		ED2BE17E26A0498400647CB1 /* AllCardListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllCardListViewController.swift; sourceTree = "<group>"; };
 		ED2BE18026A04A4300647CB1 /* CastomCardXIB.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CastomCardXIB.xib; sourceTree = "<group>"; };
 		ED2BE18226A04A8800647CB1 /* BottomInputViewWithRate.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BottomInputViewWithRate.xib; sourceTree = "<group>"; };
@@ -1451,8 +1447,6 @@
 		EDC3419F26864BF100FFFEF8 /* BottomInputView */ = {
 			isa = PBXGroup;
 			children = (
-				0BA2518426BAC7ED00AD087A /* BottomInputView.xib */,
-				ED147D4926BAB319002F66C8 /* BottomInputView.xib */,
 				EDC341A126864C4100FFFEF8 /* BottomInputView.swift */,
 			);
 			path = BottomInputView;
@@ -1804,7 +1798,6 @@
 				EDB143CA265FDEC90028EF5A /* Roboto-LightItalic.ttf in Resources */,
 				EDB1654D26678E87007E6030 /* LaunchScreen.storyboard in Resources */,
 				ED4FC619266EA42E0092B4AB /* AppLocker.xib in Resources */,
-				0BA2518526BAC7ED00AD087A /* BottomInputView.xib in Resources */,
 				6822EFD726B935FF00125EEC /* BaseTableViewCell.xib in Resources */,
 				EDB143C4265FDEC90028EF5A /* Roboto-Medium.ttf in Resources */,
 				EDB143C5265FDEC90028EF5A /* Roboto-Light.ttf in Resources */,
@@ -1813,7 +1806,6 @@
 				EDB1452C26663C9D0028EF5A /* GoogleService-Info.plist in Resources */,
 				EDB14526266624DC0028EF5A /* OrderCardView.xib in Resources */,
 				ED51D66E2688B27E005FD655 /* SeparatorView.xib in Resources */,
-				ED147D4A26BAB319002F66C8 /* BottomInputView.xib in Resources */,
 				EDB143CC265FDEC90028EF5A /* Roboto-BlackItalic.ttf in Resources */,
 				ED2BE18126A04A4300647CB1 /* CastomCardXIB.xib in Resources */,
 				0BA09E2E26ADEBF50065D623 /* GHKCell.xib in Resources */,
