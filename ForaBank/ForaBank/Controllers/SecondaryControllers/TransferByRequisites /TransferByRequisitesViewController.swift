@@ -261,9 +261,6 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
 
         }
         
-        
-        
-        
         accountNumber.didChangeValueField = {(field) in
             if self.accountNumber.textField.text?.count == 20, self.accountNumber.textField.text?.prefix(5) == "40817" || self.accountNumber.textField.text?.prefix(5) == "40820" || self.accountNumber.textField.text?.prefix(3) == "423" || self.accountNumber.textField.text?.prefix(3) == "426" {
                 self.stackView.addArrangedSubview(self.fioField)
@@ -368,6 +365,11 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
             self.present(navController, animated: true, completion: nil)
         }
         
+        
+        bankListView.didBankTapped = { (bank) in self.selectBank(bank: bank)}
+        
+        bankListView.didSeeAll = { () in self.openSearchBanksVC() }
+        
         cardField.didChooseButtonTapped = { () in
             print("cardField didChooseButtonTapped")
             self.openOrHideView(self.cardListView)
@@ -386,6 +388,20 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         bottomView.didDoneButtonTapped = { [weak self] (_) in
             self?.doneButtonTapped()
         }
+    }
+    
+    private func openSearchBanksVC() {
+        let vc = SearchBanksViewController()
+        vc.banks = self.banks
+        vc.didBankTapped = { (bank) in self.selectBank(bank: bank)}
+        let navController = UINavigationController(rootViewController: vc)
+        self.present(navController, animated: true, completion: nil)
+    }
+    
+    private func selectBank(bank: BankFullInfoList) {
+        self.selectedBank = bank
+        self.hideView(self.bankListView, needHide: true)
+        self.hideView(self.cardListView, needHide: true)
     }
     
     private func openOrHideView(_ view: UIView) {
@@ -449,10 +465,6 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         }
     }
     
-    func updateUI(){
-        
-    }
-    
     func setuoUIByCompany(){
         stackView.addArrangedSubview(innField)
     }
@@ -471,8 +483,6 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         prepareExternal()
     }
     
-    
-  
     func setTitle(title:String, subtitle:String) -> UIView {
         let titleLabel = UILabel(frame: CGRect(x: 0, y: -2, width: 0, height: 0))
 
