@@ -204,6 +204,7 @@ class PaymentByPhoneViewController: UIViewController {
             self.memberId = bank.memberID
             self.bankPayeer.viewModel.image =  bank.svgImage?.convertSVGStringToImage() ?? UIImage()
             self.bankPayeer.text = bank.memberNameRus ?? ""
+            
             self.hideView(self.bankListView, needHide: true)
         }
     }
@@ -436,6 +437,8 @@ class PaymentByPhoneViewController: UIViewController {
                             vc.cardField.chooseButton.isHidden = true
                             vc.payeerField.text = model.data?.payeeName ?? "Получатель не оперделен>"
                             vc.otpCode = self?.otpCode
+                            var model = ConfirmViewControllerModel(type: .phoneNumber)
+//                            model.bank =
                             vc.addCloseButton()
                             let navController = UINavigationController(rootViewController: vc)
                             navController.modalPresentationStyle = .fullScreen

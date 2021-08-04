@@ -212,7 +212,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         }
                 
         innField.didChangeValueField = {(field) in
-            if self.innField.textField.text?.count == 10{
+            if self.innField.textField.text?.count == 10 || self.innField.textField.text?.count == 12{
                 self.suggestCompany()
             } else {
                     self.nameField.isHidden = true

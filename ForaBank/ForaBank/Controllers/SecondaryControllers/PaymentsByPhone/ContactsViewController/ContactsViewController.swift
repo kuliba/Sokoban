@@ -43,6 +43,16 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
         let filteredContacts = contacts.filter({$0.name?.lowercased().prefix(text.count) ?? "" == text.lowercased() || $0.phoneNumber[0].lowercased().prefix(text.count) == text.lowercased()})
         reserveContacts = contacts
         if text.count != 0{
+        
+            if text.isNumeric || searchContact.numberTextField.unmaskedText?.isNumeric ?? false{
+                searchContact.numberTextField.maskString = "(000) 000-00-00"
+                print("isNumeric")
+            } else {
+                searchContact.numberTextField.maskString = ""
+                print("isNotNumeric")
+
+            }
+            
             searchForContactUsingName(text: text)
             resultSearchController = true
             tableView.reloadData()
@@ -61,6 +71,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
         if text.count > 0 {
             resultSearchController = true
             predicate = CNContact.predicateForContacts(matchingName: text)
+//            predicate = CNContact.predicateForContacts(matching:CNPhoneNumber.init(stringValue: text))
         } else {
             predicate = CNContact.predicateForContactsInContainer(withIdentifier: contactsStore!.defaultContainerIdentifier())
         }
@@ -151,7 +162,6 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
         super.viewDidLoad()
 //        banksList = Dict.shared.banks ?? []
         print(banks)
-        
   
         
         self.delegate = self

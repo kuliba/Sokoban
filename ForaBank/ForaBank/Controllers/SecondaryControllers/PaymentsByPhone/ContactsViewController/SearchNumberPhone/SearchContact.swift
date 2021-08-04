@@ -32,56 +32,59 @@ class SearchContact: UIView, UITextFieldDelegate{
     
     private let maxNumberCount = 10
     private let regex = try! NSRegularExpression(pattern: "[\\+ \\s-\\(\\)]", options: .caseInsensitive)
-    
-    private func format(phoneNumber: String, shouldRemoveLastDigit: Bool) -> String {
-           guard !(shouldRemoveLastDigit && phoneNumber.count <= 2) else { return "" }
-           
-           let range = NSString(string: phoneNumber).range(of: phoneNumber)
-           var number = regex.stringByReplacingMatches(in: phoneNumber, options: [], range: range, withTemplate: "")
-           
-           if number.count > maxNumberCount {
-               let maxIndex = number.index(number.startIndex, offsetBy: maxNumberCount)
-               number = String(number[number.startIndex..<maxIndex])
-           }
-           
-           if shouldRemoveLastDigit {
-               let maxIndex = number.index(number.startIndex, offsetBy: number.count - 1)
-               number = String(number[number.startIndex..<maxIndex])
-           }
-           
-           let maxIndex = number.index(number.startIndex, offsetBy: number.count)
-           let regRange = number.startIndex..<maxIndex
-           
-           if number.count < 10 {
-               let pattern = "(\\d{3})(\\d{3})(\\d{2})(\\d+)"
-               number = number.replacingOccurrences(of: pattern, with: "($1) $2-$3-$4", options: .regularExpression, range: regRange)
-           } else {
-               let pattern = "(\\d{3})(\\d{3})(\\d{2})(\\d+)"
-               number = number.replacingOccurrences(of: pattern, with: "($1) $2-$3-$4", options: .regularExpression, range: regRange)
-           }
-           
-           return number
-       }
+////    
+//    private func format(phoneNumber: String, shouldRemoveLastDigit: Bool) -> String {
+//           guard !(shouldRemoveLastDigit && phoneNumber.count <= 2) else { return "" }
+//
+//           let range = NSString(string: phoneNumber).range(of: phoneNumber)
+//           var number = regex.stringByReplacingMatches(in: phoneNumber, options: [], range: range, withTemplate: "")
+//
+//           if number.count > maxNumberCount {
+//               let maxIndex = number.index(number.startIndex, offsetBy: maxNumberCount)
+//               number = String(number[number.startIndex..<maxIndex])
+//           }
+//
+//           if shouldRemoveLastDigit {
+//               let maxIndex = number.index(number.startIndex, offsetBy: number.count - 1)
+//               number = String(number[number.startIndex..<maxIndex])
+//           }
+//
+//           let maxIndex = number.index(number.startIndex, offsetBy: number.count)
+//           let regRange = number.startIndex..<maxIndex
+//
+//           if number.count < 10 {
+//               let pattern = "(\\d{3})(\\d{3})(\\d{2})(\\d+)"
+//               number = number.replacingOccurrences(of: pattern, with: "($1) $2-$3-$4", options: .regularExpression, range: regRange)
+//           } else {
+//               let pattern = "(\\d{3})(\\d{3})(\\d{2})(\\d+)"
+//               number = number.replacingOccurrences(of: pattern, with: "($1) $2-$3-$4", options: .regularExpression, range: regRange)
+//           }
+//
+//           return number
+//       }
    
     
     @IBAction func valueChanged(_ sender: UITextField) {
 //        delegate2?.add_Contact(name: numberTextField.text ?? "")
     }
     
-    
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-           var fullString = (textField.text ?? "") + string
-                if string == "" {
-                    fullString = ""
-                }
-           textField.text = format(phoneNumber: fullString, shouldRemoveLastDigit: range.length == 1)
-            delegateNumber?.passTextFieldText(text: fullString)
-           return false
-       }
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        print(textField.text)
+        
+    }
+//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+//           var fullString = (textField.text ?? "") + string
+//                if string == "" {
+//                    fullString = ""
+//                }
+//           textField.text = format(phoneNumber: fullString, shouldRemoveLastDigit: range.length == 1)
+//        delegateNumber?.passTextFieldText(text: fullString )
+//           return false
+//       }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        numberTextField.addTarget(self, action:Selector("yourWeightValueChanged:"), for:.valueChanged)
+//        numberTextField.addTarget(self, action:Selector("yourWeightValueChanged:"), for:.valueChanged)
         numberTextField.delegate = self
 //        roundCorners(corners: .allCorners, radius: 10)
         self.layer.cornerRadius = 10
