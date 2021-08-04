@@ -77,7 +77,10 @@ class FaceTouchIdViewController: UIViewController {
         
         func encript(string: String) -> String?{
             do {
-                let aes = try AES(keyString: KeyFromServer.secretKey!)
+                guard let key = KeyFromServer.secretKey else {
+                    return ""
+                }
+                let aes = try AES(keyString: key)
 
                 let stringToEncrypt: String = "\(string)"
                 
@@ -158,7 +161,10 @@ class FaceTouchIdViewController: UIViewController {
         let serverDeviceGUID = UserDefaults.standard.object(forKey: "serverDeviceGUID")
         func encript(string: String) -> String?{
             do {
-                let aes = try AES(keyString: KeyFromServer.secretKey!)
+                guard let key = KeyFromServer.secretKey else {
+                    return ""
+                }
+                let aes = try AES(keyString: key)
 
                 let stringToEncrypt: String = "\(string)"
                 
@@ -239,7 +245,10 @@ class FaceTouchIdViewController: UIViewController {
         showActivity()
         func encript(string: String) -> String?{
             do {
-                let aes = try AES(keyString: KeyFromServer.secretKey!)
+                guard let key = KeyFromServer.secretKey else {
+                    return ""
+                }
+                let aes = try AES(keyString: key)
 
                 let stringToEncrypt: String = "\(string)"
                 

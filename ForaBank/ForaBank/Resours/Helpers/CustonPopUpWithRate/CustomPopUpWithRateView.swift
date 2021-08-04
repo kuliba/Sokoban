@@ -30,7 +30,6 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
     var viewModel = ConfirmViewControllerModel(type: .card2card) {
         didSet {
             checkModel(with: viewModel)
-//            self.trasfer = (viewModel.cardFrom?.currency ?? "", viewModel.cardTo?.currency ?? "")
         }
     }
     
@@ -52,10 +51,8 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
     var stackView = UIStackView(arrangedSubviews: [])
     
     final func checkModel(with model: ConfirmViewControllerModel) {
-        //     curvedLineView straightLineView changeAccountButton
         guard model.cardFrom != nil, model.cardTo != nil else { return }
-        // TODO: какие условия для смены местами: счет - счет, карта - карта?
-        /// Отображаем кнопку для переворачивания спика карт
+        /// Отображаем кнопку для переворачивания списка карт
         
         self.seporatorView.changeAccountButton.isHidden = false
         self.bottomView.currencySwitchButton.isHidden = (model.cardFrom?.currency! == model.cardTo?.currency!) ? true : false // Правильно true : false сейчас для теста

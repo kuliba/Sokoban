@@ -351,7 +351,7 @@ extension AppLocker {
     
         func encript(string: String) -> String?{
             do {
-                let aes = try AES(keyString: KeyFromServer.secretKey!)
+                let aes = try AES(keyString: KeyFromServer.secretKey ?? Data())
 
                 let stringToEncrypt: String = "\(string)"
                 

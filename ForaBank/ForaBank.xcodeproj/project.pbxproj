@@ -51,6 +51,7 @@
 		0BA09E3026ADEC300065D623 /* GHKCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA09E2F26ADEC300065D623 /* GHKCell.swift */; };
 		0BA09E3226AE1AB70065D623 /* GKHCityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA09E3126AE1AB70065D623 /* GKHCityViewController.swift */; };
 		0BA09E3426B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA09E3326B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift */; };
+		0BA2518526BAC7ED00AD087A /* BottomInputView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0BA2518426BAC7ED00AD087A /* BottomInputView.xib */; };
 		0BD2177926A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */; };
 		0BE270B026B76B9700FA958C /* ExtensionCustomPopUpSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270AF26B76B9700FA958C /* ExtensionCustomPopUpSetup.swift */; };
 		0BE270B326B9959900FA958C /* ExtensionBottomLableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */; };
@@ -309,6 +310,7 @@
 		0BA09E2F26ADEC300065D623 /* GHKCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GHKCell.swift; sourceTree = "<group>"; };
 		0BA09E3126AE1AB70065D623 /* GKHCityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHCityViewController.swift; sourceTree = "<group>"; };
 		0BA09E3326B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetFullBankInfoListDecodableModel.swift; sourceTree = "<group>"; };
+		0BA2518426BAC7ED00AD087A /* BottomInputView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = BottomInputView.xib; path = "../../../../../../../Downloads/Telegram Desktop/BottomInputView.xib"; sourceTree = "<group>"; };
 		0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAnywayOperatorsListDecodableModel.swift; sourceTree = "<group>"; };
 		0BE270AF26B76B9700FA958C /* ExtensionCustomPopUpSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionCustomPopUpSetup.swift; sourceTree = "<group>"; };
 		0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBottomLableModel.swift; sourceTree = "<group>"; };
@@ -601,7 +603,6 @@
 				0BE270B526B9DA4800FA958C /* ExtensionBottomInputViewRevers.swift */,
 				0BE270B726B9DC4200FA958C /* ExtensionBottomInputViewExchange.swift */,
 				0BE270B926B9F36900FA958C /* ExtensionBottomInputRequest.swift */,
-				ED2BE18226A04A8800647CB1 /* BottomInputViewWithRate.xib */,
 				0BE270B126B9957B00FA958C /* BottomLableModel */,
 			);
 			path = BottomInputViewWithRate;
@@ -621,6 +622,7 @@
 		0BE270B126B9957B00FA958C /* BottomLableModel */ = {
 			isa = PBXGroup;
 			children = (
+				ED2BE18226A04A8800647CB1 /* BottomInputViewWithRate.xib */,
 				0B95C40926B6D88000AA57E6 /* BottomLableModel.swift */,
 				0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */,
 			);
@@ -1449,6 +1451,7 @@
 		EDC3419F26864BF100FFFEF8 /* BottomInputView */ = {
 			isa = PBXGroup;
 			children = (
+				0BA2518426BAC7ED00AD087A /* BottomInputView.xib */,
 				ED147D4926BAB319002F66C8 /* BottomInputView.xib */,
 				EDC341A126864C4100FFFEF8 /* BottomInputView.swift */,
 			);
@@ -1801,6 +1804,7 @@
 				EDB143CA265FDEC90028EF5A /* Roboto-LightItalic.ttf in Resources */,
 				EDB1654D26678E87007E6030 /* LaunchScreen.storyboard in Resources */,
 				ED4FC619266EA42E0092B4AB /* AppLocker.xib in Resources */,
+				0BA2518526BAC7ED00AD087A /* BottomInputView.xib in Resources */,
 				6822EFD726B935FF00125EEC /* BaseTableViewCell.xib in Resources */,
 				EDB143C4265FDEC90028EF5A /* Roboto-Medium.ttf in Resources */,
 				EDB143C5265FDEC90028EF5A /* Roboto-Light.ttf in Resources */,

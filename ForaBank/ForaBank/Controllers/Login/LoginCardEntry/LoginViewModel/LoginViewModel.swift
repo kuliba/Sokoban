@@ -18,7 +18,10 @@ class LoginViewModel {
         var cryptString = String()
         
         do {
-            let aes = try AES(keyString: KeyFromServer.secretKey!)
+            guard let key = KeyFromServer.secretKey else {
+                return
+            }
+            let aes = try AES(keyString: key)
 
             let stringToEncrypt: String = "\(number)"
             
@@ -65,7 +68,10 @@ class LoginViewModel {
 //                    let str = model?.data?.phone?.data
                     var decryptPhone: String?
                     do {
-                        let aes = try AES(keyString: KeyFromServer.secretKey!)
+                        guard let key = KeyFromServer.secretKey else {
+                            return
+                        }
+                        let aes = try AES(keyString: key)
 //                        let decryptedString = try AES256(key: KeyFromServer.secretKey!, iv: AES256.randomIv()).decrypt(data)
 //                        print(decryptedString)
                         let decryptedData: String = try aes.decrypt(decodedData!)
