@@ -13,7 +13,8 @@ class BottomInputViewWithRateView: UIView {
     lazy var bottomLable = BottomLableModel()
     
     var tempTextFieldValue = ""
-    
+    /// Для отправки перевода используем эту модель
+    var requestModel = (to: "", from: "")
     let moneyInputController = TextFieldStartInputController()
     /// Меняем символ валюты в  textField
     var currencySymbol = "" {
@@ -87,10 +88,9 @@ class BottomInputViewWithRateView: UIView {
         contentView.fixInView(self)
         self.heightAnchor.constraint(equalToConstant: 88).isActive = true
         setupTextFIeld()
-//        self.currencySwitchButton.setBackgroundColor(.white, for: .selected)
-//        self.currencySwitchButton.setBackgroundColor(.white, for: .disabled)
-//        self.currencySwitchButton.setBackgroundColor(.white, for: .highlighted)
-      //  self.currencySwitchButton.setBackgroundColor(.white, for: .normal)
+        
+        self.currencySwitchButton.setBackgroundColor(color: .white, forState: [.selected])
+
         self.currencySwitchButton.layer.cornerRadius = 12
         self.currencySwitchButton.layer.masksToBounds = true
         setupMoneyController()
@@ -139,11 +139,29 @@ class BottomInputViewWithRateView: UIView {
     }
     
     @IBAction func currencyButtonTapped(_ sender: UIButton) {
+        
         sender.isSelected = !sender.isSelected
-        if sender.isSelected == true {
+        if sender.isSelected == false {
             reversedRate(models.to, models.from)
         } else {
             reversedRate(models.from, models.to)
         }
     }
+
+}
+
+extension UIButton {
+    func setBackgroundColor(color: UIColor, forState: UIControl.State) {
+        self.clipsToBounds = true  // add this to maintain corner radius
+        UIGraphicsBeginImageContext(CGSize(width: 1, height: 1))
+        if let context = UIGraphicsGetCurrentContext() {
+            context.setFillColor(color.cgColor)
+            context.fill(CGRect(x: 0, y: 0, width: 1, height: 1))
+            let colorImage = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            self.setBackgroundImage(colorImage, for: forState)
+        }
+    }
+    
+    
 }

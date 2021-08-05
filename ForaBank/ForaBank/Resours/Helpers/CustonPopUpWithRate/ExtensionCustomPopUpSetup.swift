@@ -37,7 +37,7 @@ extension CustomPopUpWithRateView {
         bottomView.doneButtonIsEnabled(true)
         let body = [ "check" : false,
                      "amount" : viewModel.summTransction,
-                     "currencyAmount" : self.bottomView.models.to,
+                     "currencyAmount" : self.bottomView.requestModel.to,
                      "payer" : [
                         "cardId" : viewModel.cardFromCardId,
                         "cardNumber" : viewModel.cardFromCardNumber,
