@@ -12,6 +12,7 @@ class PaymentByPhoneViewController: UIViewController {
     var selectBank: String?
     var confirm: Bool?
     var selectedCardNumber = ""
+    var selectedBank: BanksList?
     var bankImage: UIImage?
     var recipiendId = String()
     var phoneField = ForaInput(
@@ -204,7 +205,7 @@ class PaymentByPhoneViewController: UIViewController {
             self.memberId = bank.memberID
             self.bankPayeer.viewModel.image =  bank.svgImage?.convertSVGStringToImage() ?? UIImage()
             self.bankPayeer.text = bank.memberNameRus ?? ""
-            
+            self.selectedBank = bank
             self.hideView(self.bankListView, needHide: true)
         }
     }
@@ -388,16 +389,25 @@ class PaymentByPhoneViewController: UIViewController {
         let clearAmount = sum.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "₽", with: "").replacingOccurrences(of: ",", with: ".")
         let clearNumber = number.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "").replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "").replacingOccurrences(of: ",", with: ".")
 //       let fromatNumber =
+        var accountNumber: String?
+        var cardNumber: String?
+        
+        if selectedCardNumber .count > 16{
+            accountNumber = selectedCardNumber
+        } else {
+            cardNumber = selectedCardNumber
+        }
         
         bottomView.doneButtonIsEnabled(true)
+        
         let body = [ "check"            : false,
                      "amount"           : clearAmount,
                      "currencyAmount"   : "RUB",
                      "payer" : [
 //                        "cardId"        : nil,
-                        "cardNumber"    : selectedCardNumber,
+                        "cardNumber"    : cardNumber,
 //                        "accountId"     : nil,
-//                        "accountNumber" : nil
+                        "accountNumber" : accountNumber
                      ],
                      "payeeInternal" : [
 //                        "cardId"        : nil,
@@ -410,7 +420,7 @@ class PaymentByPhoneViewController: UIViewController {
         
         print("DEBUG: ", #function, body)
         
-        NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer, [:], body) { [weak self] model, error in
+        NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer, [:], body) { [weak self] dataresp, error in
             DispatchQueue.main.async {
 //                UIApplication.shared.keyWindow?.stopIndicatingActivity()
                 self?.dismissActivity()
@@ -420,33 +430,45 @@ class PaymentByPhoneViewController: UIViewController {
                     print("DEBUG: ", #function, error)
                     self?.showAlert(with: "Ошибка", and: error)
                 } else {
-                    guard let model = model else { return }
-                    guard let statusCode = model.statusCode else { return }
+                    guard let data = dataresp?.data else { return }
+                    guard let statusCode = dataresp?.statusCode else { return }
                     if statusCode == 0 {
                         DispatchQueue.main.async {
-                            let vc = PhoneConfirmViewController()
-                            vc.sbp = self?.sbp
-                            vc.bankPayeer.text = self?.selectBank ?? ""
-                            vc.phoneField.text = self?.phoneField.text ?? ""
-                            vc.cardField.text = self?.cardField.text ?? ""
-                            vc.cardField.imageView.image = self?.cardField.imageView.image
-                            vc.summTransctionField.text = self?.bottomView.amountTextField.text ?? ""
-                            vc.taxTransctionField.isHidden = ((model.data?.fee) != nil)
-                            vc.bankPayeer.chooseButton.isHidden = true
-                            vc.bankPayeer.imageView.image = self?.bankPayeer.imageView.image
-                            vc.cardField.chooseButton.isHidden = true
-                            vc.payeerField.text = model.data?.payeeName ?? "Получатель не оперделен>"
-                            vc.otpCode = self?.otpCode
+//                            let vc = PhoneConfirmViewController()
+//                            vc.sbp = self?.sbp
+//                            vc.bankPayeer.text = self?.selectBank ?? ""
+//                            vc.phoneField.text = self?.phoneField.text ?? ""
+//                            vc.cardField.text = self?.cardField.text ?? ""
+//                            vc.cardField.imageView.image = self?.cardField.imageView.image
+//                            vc.summTransctionField.text = self?.bottomView.amountTextField.text ?? ""
+//                            vc.taxTransctionField.isHidden = ((data.fee) != nil)
+//                            vc.bankPayeer.chooseButton.isHidden = true
+//                            vc.bankPayeer.imageView.image = self?.bankPayeer.imageView.image
+//                            vc.cardField.chooseButton.isHidden = true
+//                            vc.payeerField.text = data.payeeName ?? "Получатель не оперделен>"
+//                            vc.otpCode = self?.otpCode
+                            
                             var model = ConfirmViewControllerModel(type: .phoneNumber)
-//                            model.bank =
+                            model.bank = self?.selectedBank
+                            model.cardFrom = self?.cardField.viewModel.cardModel
+                            model.phone = self?.phoneField.text ?? ""
+                            model.summTransction = data.debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
+                            model.summInCurrency = data.creditAmount?.currencyFormatter(symbol: data.currencyPayee ?? "RUB") ?? ""
+                            model.taxTransction = data.fee?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
+//                            model.comment = comment
+                            model.fullName = data.payeeName ?? "Получатель не оперделен"
+                            model.statusIsSuccses = true
+                            
+                            let vc = ContactConfurmViewController()
+                            vc.confurmVCModel = model
                             vc.addCloseButton()
                             let navController = UINavigationController(rootViewController: vc)
                             navController.modalPresentationStyle = .fullScreen
                             self?.present(navController, animated: true, completion: nil)
                         }
                     } else {
-                        print("DEBUG: ", #function, model.errorMessage ?? "nil")
-                        self?.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+                        print("DEBUG: ", #function, dataresp?.errorMessage ?? "nil")
+                        self?.showAlert(with: "Ошибка", and: dataresp?.errorMessage ?? "")
                     }
                 }
             }
@@ -514,9 +536,9 @@ class PaymentByPhoneViewController: UIViewController {
                     "provider": nil,
                     "puref": "iFora||TransferC2CSTEP"] as [String: AnyObject]
         
-        NetworkManager<AnywayPaymentBeginDecodebleModel>.addRequest(.anywayPaymentBegin, [:], body, completion: { model, error in
+        NetworkManager<AnywayPaymentBeginDecodebleModel>.addRequest(.anywayPaymentBegin, [:], body, completion: { [weak self] model, error in
             if error != nil {
-                self.dismissActivity()
+                self?.dismissActivity()
                 print("DEBUG: Error: ", error ?? "")
                 completion(error!)
             }
@@ -525,7 +547,7 @@ class PaymentByPhoneViewController: UIViewController {
                 completion(nil)
                 NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], [:]) { model, error in
                     if error != nil {
-                        self.dismissActivity()
+                        self?.dismissActivity()
                         print("DEBUG: Error: ", error ?? "")
                         completion(error!)
                     }
@@ -539,7 +561,7 @@ class PaymentByPhoneViewController: UIViewController {
                     }
                 }
             } else {
-                self.dismissActivity()
+                self?.dismissActivity()
                 print("DEBUG: Error: ", model.errorMessage ?? "")
                 completion(model.errorMessage)
             }
@@ -566,9 +588,9 @@ class PaymentByPhoneViewController: UIViewController {
               "fieldvalue": clearAmount ]
         ]] as [String: AnyObject]
         
-        NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataName) { model, error in
+        NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataName) { [weak self] model, error in
             if error != nil {
-                self.dismissActivity()
+                self?.dismissActivity()
                 print("DEBUG: Error: ", error ?? "")
                 completion(error!)
             }
@@ -576,14 +598,14 @@ class PaymentByPhoneViewController: UIViewController {
             guard let model = model else { return }
             if model.statusCode == 0 {
                 print("DEBUG: Success send Phone")
-                    self.dismissActivity()
-                    self.endSBPPayment2()
+                    self?.dismissActivity()
+                    self?.endSBPPayment2()
 //                let model = ConfurmViewControllerModel(
 //                    country: country,
 //                    model: model)
 //                self.goToConfurmVC(with: model)
             } else {
-                self.dismissActivity()
+                self?.dismissActivity()
                 print("DEBUG: Error: ", model.errorMessage ?? "")
                 completion(model.errorMessage)
             }
@@ -603,40 +625,69 @@ class PaymentByPhoneViewController: UIViewController {
               "fieldvalue": memberId]
         ]] as [String: AnyObject]
         
-        NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataName) { model, error in
+        NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataName) { [weak self] dataresp, error in
             if error != nil {
-                self.dismissActivity()
+                self?.dismissActivity()
                 print("DEBUG: Error: ", error ?? "")
                 
             }
 //            print("DEBUG: amount ", amount)
-            guard let model = model else { return }
-            if model.statusCode == 0 {
+            guard let data = dataresp else { return }
+            if data.statusCode == 0 {
                 print("DEBUG: Success send Phone")
-                self.dismissActivity()
-                self.confirm = true
+                self?.dismissActivity()
+                self?.confirm = true
 //                self.setupUI()
                 DispatchQueue.main.async {
-                    let vc = PhoneConfirmViewController()
-                    vc.sbp = self.sbp
                     
-                    vc.bankPayeer.text = self.selectBank ?? ""
-                    vc.phoneField.text = self.phoneField.text
-                    vc.cardField.text = self.cardField.text
-                    vc.bankPayeer.imageView.image = self.bankPayeer.imageView.image
-                    vc.summTransctionField.text = self.bottomView.amountTextField.text  ?? ""
-                    vc.bankPayeer.chooseButton.isHidden = true
-                    vc.cardField.chooseButton.isHidden = true
-                    vc.payeerField.text = model.data?.listInputs?[5].content?[0] ?? "Получатель не найден"
-                    if model.data?.commission == 0.0 {
-                        vc.taxTransctionField.text = "Комиссия не взимается"
+                    var model = ConfirmViewControllerModel(type: .phoneNumberSBP)
+                    if self?.selectedBank != nil {
+                        model.bank = self?.selectedBank
                     } else {
-                        vc.taxTransctionField.text = model.data?.commission?.description ?? "Возможна комиссия"
+                        
                     }
+                    
+                    model.cardFrom = self?.cardField.viewModel.cardModel
+                    model.phone = self?.phoneField.text ?? ""
+                    
+                    model.summTransction = data.data?.amount?.currencyFormatter(symbol: "RUB") ?? ""// debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
+//                    model.summInCurrency = model.creditAmount?.currencyFormatter(symbol: data.currencyPayee ?? "RUB") ?? ""
+                    model.taxTransction = data.data?.commission?.currencyFormatter(symbol: "RUB") ?? ""
+//                            model.comment = comment
+                    model.fullName = data.data?.listInputs?[5].content?[0] ?? "Получатель не найден"
+                    
+                    
+                    model.statusIsSuccses = true
+                    
+                    
+                    
+//                    let vc = PhoneConfirmViewController()
+//                    vc.sbp = self?.sbp
+//
+//                    vc.bankPayeer.text = self?.selectBank ?? ""
+//                    vc.phoneField.text = self?.phoneField.text ?? ""
+//                    vc.cardField.text = self?.cardField.text ?? ""
+//                    vc.bankPayeer.imageView.image = self?.bankPayeer.imageView.image
+//                    vc.summTransctionField.text = self?.bottomView.amountTextField.text  ?? ""
+//                    vc.bankPayeer.chooseButton.isHidden = true
+//                    vc.cardField.chooseButton.isHidden = true
+//                    vc.payeerField.text = data.data?.listInputs?[5].content?[0] ?? "Получатель не найден"
+//                    if data.data?.commission == 0.0 {
+//                        vc.taxTransctionField.text = "Комиссия не взимается"
+//                    } else {
+//                        vc.taxTransctionField.text = data.data?.commission?.description ?? "Возможна комиссия"
+//                    }
+//                    vc.addCloseButton()
+                    
+                    
+                    let vc = ContactConfurmViewController()
+                    vc.confurmVCModel = model
                     vc.addCloseButton()
+                    
+                    
                     let navController = UINavigationController(rootViewController: vc)
                     navController.modalPresentationStyle = .fullScreen
-                    self.present(navController, animated: true, completion: nil)
+                    self?.present(navController, animated: true, completion: nil)
                     
                 }
 //                let model = ConfurmViewControllerModel(
@@ -645,9 +696,9 @@ class PaymentByPhoneViewController: UIViewController {
 //                self.goToConfurmVC(with: model)
                 
             } else {
-                self.dismissActivity()
+                self?.dismissActivity()
                 
-                print("DEBUG: Error: ", model.errorMessage ?? "")
+                print("DEBUG: Error: ", data.errorMessage ?? "")
                 
             }
         }

@@ -115,6 +115,7 @@
 		ED0B48AC26812F450037EA06 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B48AB26812F450037EA06 /* LoginViewModel.swift */; };
 		ED0B48AF2681CC6D0037EA06 /* CodeVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B48AE2681CC6D0037EA06 /* CodeVerificationViewModel.swift */; };
 		ED147D4C26BAD7E0002F66C8 /* BottomInputView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED147D4B26BAD7E0002F66C8 /* BottomInputView.xib */; };
+		ED147D4F26BC1237002F66C8 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = ED147D4E26BC1237002F66C8 /* FirebaseCrashlytics */; };
 		ED2BE17F26A0498400647CB1 /* AllCardListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2BE17E26A0498400647CB1 /* AllCardListViewController.swift */; };
 		ED2BE18126A04A4300647CB1 /* CastomCardXIB.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED2BE18026A04A4300647CB1 /* CastomCardXIB.xib */; };
 		ED2BE18326A04A8800647CB1 /* BottomInputViewWithRate.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED2BE18226A04A8800647CB1 /* BottomInputViewWithRate.xib */; };
@@ -517,6 +518,7 @@
 				ED39EC88268B308800158E46 /* SDWebImageSVGCoder in Frameworks */,
 				684AD35A26B7D2520071C762 /* CryptoSwift in Frameworks */,
 				EDF6821D266FC37F00FD5C07 /* FirebaseMessaging in Frameworks */,
+				ED147D4F26BC1237002F66C8 /* FirebaseCrashlytics in Frameworks */,
 				68FFA5682695921E002DADFA /* QRScanner in Frameworks */,
 				ED4FC621266EA5CD0092B4AB /* Valet in Frameworks */,
 			);
@@ -803,6 +805,13 @@
 				ED0B48AE2681CC6D0037EA06 /* CodeVerificationViewModel.swift */,
 			);
 			path = CodeVerificationViewModel;
+			sourceTree = "<group>";
+		};
+		ED147D4D26BC1237002F66C8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		ED2BE17D26A0498400647CB1 /* CustomCardListView */ = {
@@ -1188,6 +1197,7 @@
 				EDB14396265FDA430028EF5A /* ForaBankTests */,
 				EDB143A1265FDA430028EF5A /* ForaBankUITests */,
 				EDB1437E265FDA410028EF5A /* Products */,
+				ED147D4D26BC1237002F66C8 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1670,6 +1680,7 @@
 				EDB14379265FDA410028EF5A /* Sources */,
 				EDB1437A265FDA410028EF5A /* Frameworks */,
 				EDB1437B265FDA410028EF5A /* Resources */,
+				6863D8CB26BC0D59004EF45F /* Run Script */,
 			);
 			buildRules = (
 			);
@@ -1688,6 +1699,7 @@
 				68E6A28426A02C1800A1D9A1 /* AnyFormatKit */,
 				EDC8BA3326A5AA0E00EDB401 /* SDWebImagePDFCoder */,
 				684AD35926B7D2520071C762 /* CryptoSwift */,
+				ED147D4E26BC1237002F66C8 /* FirebaseCrashlytics */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -1844,6 +1856,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6863D8CB26BC0D59004EF45F /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${BUILD_DIR%Build/*}SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		EDB14379265FDA410028EF5A /* Sources */ = {
@@ -2199,6 +2232,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 64;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -2481,6 +2515,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = ED0B4890267B4CDD0037EA06 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
 			productName = IQKeyboardManagerSwift;
+		};
+		ED147D4E26BC1237002F66C8 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EDF6821B266FC37F00FD5C07 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
 		};
 		ED39EC87268B308800158E46 /* SDWebImageSVGCoder */ = {
 			isa = XCSwiftPackageProductDependency;

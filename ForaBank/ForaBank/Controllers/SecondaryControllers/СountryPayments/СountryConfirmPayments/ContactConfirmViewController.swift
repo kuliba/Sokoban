@@ -165,6 +165,7 @@ struct ConfirmViewControllerModel {
         case mig
         case requisites
         case phoneNumber
+        case phoneNumberSBP
     }
     
 }
@@ -331,7 +332,28 @@ class ContactConfurmViewController: UIViewController {
 //                "paymentOperationDetailId" : 2945,
 //                "printFormType" : "internal"
 //            }
-
+        case .phoneNumber, .phoneNumberSBP:
+            cardToField.isHidden = true
+            countryField.isHidden = true
+            currancyTransctionField.isHidden = true
+            numberTransctionField.isHidden = true
+            
+            let mask = StringMask(mask: "+0 (000) 000-00-00")
+            let maskPhone = mask.mask(string: model.phone)
+            
+            phoneField.text = maskPhone ?? ""
+            nameField.text =  model.fullName ?? ""
+            
+            bankField.text = model.bank?.memberNameRus ?? "" //"АйДиБанк"
+            bankField.imageView.image = model.bank?.svgImage?.convertSVGStringToImage()
+            
+            cardFromField.cardModel = model.cardFrom
+            cardFromField.isHidden = false
+            cardFromField.choseButton.isHidden = true
+            cardFromField.balanceLabel.isHidden = true
+            cardFromField.titleLabel.text = "Счет списания"
+            cardFromField.leftTitleAncor.constant = 64
+            
         case .requisites:
             cardFromField.isHidden = true
             cardToField.isHidden = true
@@ -448,7 +470,7 @@ class ContactConfurmViewController: UIViewController {
         
         switch confurmVCModel?.type {
         
-        case .card2card, .requisites:
+        case .card2card, .requisites, .phoneNumber:
             print(#function, body)
             NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { respons, error in
                 if error != nil {
@@ -466,7 +488,7 @@ class ContactConfurmViewController: UIViewController {
                         vc.confurmVCModel = self.confurmVCModel
                         vc.id = model.data?.paymentOperationDetailId ?? 0
                         switch self.confurmVCModel?.type {
-                        case .card2card:
+                        case .card2card, .phoneNumber:
                             vc.printFormType = "internal"
                         case .requisites:
                             vc.printFormType = "external"
@@ -503,7 +525,9 @@ class ContactConfurmViewController: UIViewController {
                         if self.confurmVCModel?.type == .mig {
                             vc.printFormType =  "direct"
                         } else if self.confurmVCModel?.type == .contact {
-                            vc.printFormType =  "contactAddressless"
+                            vc.printFormType = "contactAddressless"
+                        } else if self.confurmVCModel?.type == .phoneNumberSBP {
+                            vc.printFormType = "sbp"
                         }
                         vc.modalPresentationStyle = .fullScreen
                         self.present(vc, animated: true, completion: nil)
