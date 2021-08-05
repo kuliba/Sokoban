@@ -983,6 +983,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
                 let banks = orderedBanks[sortedContactKeys[indexPath.section]]
                 let vc = PaymentByPhoneViewController()
                 vc.selectNumber =  selectPhoneNumber
+                vc.selectedBank = banks?[indexPath.row]
                 vc.selectBank = banks?[indexPath.row].memberNameRus
                 vc.bankImage = banks?[indexPath.row].svgImage?.convertSVGStringToImage()
                 vc.memberId = banks?[indexPath.row].memberID
