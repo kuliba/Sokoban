@@ -167,7 +167,7 @@ extension AppDelegate {
         let parameters = [
 //            "cryptoVersion": "1.0",
             "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-            "pushFcmToken": Messaging.messaging().fcmToken! as String,
+            "pushFcmToken": Messaging.messaging().fcmToken ?? "" as String,
             "model": UIDevice().model,
             "operationSystem": "IOS"
         ] as [String : AnyObject]
@@ -209,9 +209,8 @@ extension AppDelegate {
             
 //            let tok = UserDefaults.standard.object(forKey: "sessionToken")
 //            print("DEBUG: Token = ", tok)
-            
-            completion(nil)
             CSRFToken.token = token
+            completion(nil)
                    
             
                    NetworkManager<InstallPushDeviceDecodebleModel>.addRequest(.installPushDevice, [:], parameters) { model, error in
@@ -231,14 +230,15 @@ extension AppDelegate {
         }
         
             func keyExchange(){
-            
+                var tempParameters = [String: String]()
+                tempParameters = ["X-XSRF-TOKEN":"\(UserDefaults.standard.object(forKey: "sessionToken") ?? "")"]
                 let parametersKey = [
                 "data": KeyFromServer.sendBase64ToServ ?? "",
                 "token": CSRFToken.token ?? "",
                 "type": "",
             ] as [String : AnyObject]
             
-            NetworkManager<KeyExchangeDecodebleModel>.addRequest(.keyExchange, [:], parametersKey) { model, error in
+                NetworkManager<KeyExchangeDecodebleModel>.addRequest(.keyExchange, [:], parametersKey) { model, error in
                 if error != nil {
                     print("DEBUG: KeyExchange error", error ?? "nil")
                     completion(error)

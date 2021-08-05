@@ -14,9 +14,10 @@ class URLHost {
     enum URLHostType: String  {
         
         /// Для тестовых запросов используется этот хост
-        case qa  = "git.briginvest.ru/dbo/api/v3"
+        case qa  = "bg.forabank.ru/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b"
         /// Для релизных запросов используется этот хост
-        case release = "bg.forabank.ru/dbo/api/v3/f437e29a3a094bcfa73cea12366de95b/"
+        case release = "git.briginvest.ru/dbo/api/v3"
+        
         
     }
     

@@ -40,10 +40,10 @@ final class NetworkManager<T: NetworkModelProtocol>{
                 print("DEBUG: URLrequest:", urlComponents.url ?? "")
                 request.url = urlComponents.url
             }
-            request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+            request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
             
             if request.value(forHTTPHeaderField: "Content-Type") == nil {
-                request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+                request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
             }
             
             /// Request Body
@@ -57,6 +57,8 @@ final class NetworkManager<T: NetworkModelProtocol>{
             } catch {
                 debugPrint(NetworkError.encodingFailed)
             }
+            let a = request.allHTTPHeaderFields
+                    print(a)
             
         }
         

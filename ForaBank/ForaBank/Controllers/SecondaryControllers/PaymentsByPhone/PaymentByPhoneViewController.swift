@@ -461,6 +461,7 @@ class PaymentByPhoneViewController: UIViewController {
                             
                             let vc = ContactConfurmViewController()
                             vc.confurmVCModel = model
+                            vc.title = "Подтвердите реквизиты"
                             vc.addCloseButton()
                             let navController = UINavigationController(rootViewController: vc)
                             navController.modalPresentationStyle = .fullScreen
@@ -683,7 +684,7 @@ class PaymentByPhoneViewController: UIViewController {
                     let vc = ContactConfurmViewController()
                     vc.confurmVCModel = model
                     vc.addCloseButton()
-                    
+                    vc.title = "Подтвердите реквизиты"
                     
                     let navController = UINavigationController(rootViewController: vc)
                     navController.modalPresentationStyle = .fullScreen
