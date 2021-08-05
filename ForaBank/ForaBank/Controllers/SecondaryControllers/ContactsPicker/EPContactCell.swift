@@ -24,6 +24,7 @@ class EPContactCell: UITableViewCell {
         
         super.awakeFromNib()
         // Initialization code
+        
         ownerImageView.layer.cornerRadius = ownerImageView.frame.size.width/2
         ownerImageView.clipsToBounds = true
         selectionStyle = UITableViewCell.SelectionStyle.none
@@ -45,15 +46,15 @@ class EPContactCell: UITableViewCell {
     func updateContactsinUI(_ contact: EPContact, indexPath: IndexPath, subtitleType: SubtitleCellValue) {
         self.contact = contact
         
-        DispatchQueue.main.async{ [self] in
-            if checkOwner(number: contact.phoneNumbers.first?.phoneNumber) ?? false {
-                ownerImageView.isHidden = false
-                self.reloadInputViews()
-
-            } else {
-                ownerImageView.isHidden = true
-            }
-        }
+//        DispatchQueue.main.async{ [self] in
+//            if checkOwner(number: contact.phoneNumbers.first?.phoneNumber) ?? false {
+//                ownerImageView.isHidden = false
+//                self.reloadInputViews()
+//
+//            } else {
+//                ownerImageView.isHidden = true
+//            }
+//        }
    
         self.contactTextLabel?.text = contact.displayName()
         updateSubtitleBasedonType(subtitleType, contact: contact)
@@ -67,6 +68,11 @@ class EPContactCell: UITableViewCell {
             self.contactImageView.isHidden = true
             self.contactInitialLabel.isHidden = false
         }
+   
+//        checkOwner(number: contact.phoneNumbers.first?.phoneNumber)
+        ownerImageView.isHidden = contact.bankImaage
+
+        
     }
     
     func updateSubtitleBasedonType(_ subtitleType: SubtitleCellValue , contact: EPContact) {
@@ -102,50 +108,5 @@ class EPContactCell: UITableViewCell {
         case SubtitleCellValue.organization:
             self.contactDetailTextLabel.text = contact.company
         }
-    }
-    
-    func checkOwner(number: String?) -> Bool?{
-//        showActivity()
-        let body = [
-            "phoneNumber": number
-        ] as [String: AnyObject]
-        
-        var checkOwner: Bool?
-        
-        NetworkManager<GetOwnerPhoneNumberPhoneDecodableModel>.addRequest(.getOwnerPhoneNumber, [:], body) { model, error in
-            if error != nil {
-                DispatchQueue.main.async {
-//                    self.ownerImageView.isHidden = true
-//                    self.reloadInputViews()
-                }
-                checkOwner = false
-                print("DEBUG: Error: ", error ?? "")
-            }
-            guard let model = model else { return }
-            print("DEBUG: Card list: ", model)
-         
-
-            if model.statusCode == 0 {
-                
-//                self.selectedCardNumber = cardNumber
-                DispatchQueue.main.sync {
-                    checkOwner = true
-//                    self.ownerImageView.isHidden = false
-                    
-//                    self.checkOwnerFetch = true
-//                    self.contacts[index].bankImage = true
-//                    self.contactCollectionView.reloadItems(at: [IndexPath(index: index)])
-
-                }
-            } else {
-                DispatchQueue.main.async {
-//                    self.ownerImageView.isHidden = true
-//                    self.reloadInputViews()
-                }
-                checkOwner = false
-                print("DEBUG: Error: ", model.errorMessage ?? "")
-            }
-        }
-        return checkOwner
     }
 }

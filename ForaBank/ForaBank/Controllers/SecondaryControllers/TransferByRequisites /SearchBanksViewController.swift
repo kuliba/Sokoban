@@ -57,7 +57,7 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
     func setupUI() {
         setupNavigationBar()
         setupCollectionView()
-        
+        searchContact.maskPhone = false
         searchContact.numberTextField.placeholder = "Введите название или БИК банка"
         
         let contactView = UIView()

@@ -238,8 +238,10 @@ class CodeVerificationViewController: UIViewController {
                 DispatchQueue.main.async { [weak self] in
                     print("Password \(String(describing: mode)) successfully")
                     let vc = MainTabBarViewController()
-                    vc.modalPresentationStyle = .fullScreen
-                    self?.present(vc, animated: true)
+                    UIApplication.shared.windows.first?.rootViewController = vc
+                    UIApplication.shared.windows.first?.makeKeyAndVisible()
+//                    vc.modalPresentationStyle = .fullScreen
+//                    self?.present(vc, animated: true)
                 }
             } else {
                 print("User Cancelled")
