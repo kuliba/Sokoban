@@ -40,7 +40,7 @@ extension BottomInputViewWithRateView  {
                         self?.bottomLable.rate = 0
                         
                         self?.currencySymbol = "₽"
-                        self?.models = (to: "RUB", from: value)
+                        self?.requestModel = (to: "RUB", from: value)
                         DispatchQueue.main.async {
                             self?.buttomLabel.text = self?.bottomLable.reversRate()
                             self?.currencySwitchButton.setTitle("₽" + " ⇆ " + (value.getSymbol() ?? ""), for: .normal)
@@ -60,7 +60,7 @@ extension BottomInputViewWithRateView  {
                         self?.bottomLable.rateSimbol = value.getSymbol()
                         /// Курс покупки валюты перевода
                         self?.bottomLable.rate = 0
-                        
+                        self?.requestModel = (to: value, from: "RUB")
                         self?.currencySymbol = value.getSymbol() ?? ""
                         DispatchQueue.main.async {
                             self?.buttomLabel.text = self?.bottomLable.secondRate()
@@ -91,7 +91,8 @@ extension BottomInputViewWithRateView  {
                     self?.bottomLable.rateSimbol = m?.currencyCodeAlpha?.getSymbol()
                     /// Курс покупки валюты перевода
                     self?.bottomLable.rate = m?.rateSell
-                    self?.models = (to: tempModel?.currencyCodeAlpha ?? "", from: m?.currencyCodeAlpha ?? "")
+                    self?.requestModel = (to: tempModel?.currencyCodeAlpha ?? "", from: m?.currencyCodeAlpha ?? "")
+                    self?.currencySymbol = from.getSymbol() ?? ""
                     DispatchQueue.main.async {
                         self?.buttomLabel.text = self?.bottomLable.anyRate()
                         self?.currencySwitchButton.setTitle((tempModel?.currencyCodeAlpha?.getSymbol() ?? "") + " ⇆ " + (m?.currencyCodeAlpha?.getSymbol() ?? ""), for: .normal)
