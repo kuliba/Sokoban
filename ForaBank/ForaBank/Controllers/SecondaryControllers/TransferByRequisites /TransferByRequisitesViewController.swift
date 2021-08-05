@@ -387,6 +387,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         }
         
         bottomView.didDoneButtonTapped = { [weak self] (_) in
+//            fatalError()
             self?.doneButtonTapped()
         }
     }

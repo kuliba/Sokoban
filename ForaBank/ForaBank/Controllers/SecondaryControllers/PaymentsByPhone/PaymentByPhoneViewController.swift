@@ -388,16 +388,25 @@ class PaymentByPhoneViewController: UIViewController {
         let clearAmount = sum.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "₽", with: "").replacingOccurrences(of: ",", with: ".")
         let clearNumber = number.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "").replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "").replacingOccurrences(of: ",", with: ".")
 //       let fromatNumber =
+        var accountNumber: String?
+        var cardNumber: String?
+        
+        if selectedCardNumber .count > 16{
+            accountNumber = selectedCardNumber
+        } else {
+            cardNumber = selectedCardNumber
+        }
         
         bottomView.doneButtonIsEnabled(true)
+        
         let body = [ "check"            : false,
                      "amount"           : clearAmount,
                      "currencyAmount"   : "RUB",
                      "payer" : [
 //                        "cardId"        : nil,
-                        "cardNumber"    : selectedCardNumber,
+                        "cardNumber"    : cardNumber,
 //                        "accountId"     : nil,
-//                        "accountNumber" : nil
+                        "accountNumber" : accountNumber
                      ],
                      "payeeInternal" : [
 //                        "cardId"        : nil,

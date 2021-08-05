@@ -645,6 +645,40 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
         }
         
     }
+    func checkOwner(number: String?, index: Int, section: Int) -> Bool?{
+//        showActivity()
+        let body = [
+            "phoneNumber": number
+        ] as [String: AnyObject]
+        
+        var checkOwner: Bool?
+        
+        NetworkManager<GetOwnerPhoneNumberPhoneDecodableModel>.addRequest(.getOwnerPhoneNumber, [:], body) { model, error in
+            if error != nil {
+                
+                checkOwner = false
+                print("DEBUG: Error: ", error ?? "")
+            }
+            guard let model = model else { return }
+            print("DEBUG: Card list: ", model)
+         
+
+            if model.statusCode == 0 {
+                
+                self.contacts[index].bankImage = true
+//                self.selectedCardNumber = cardNumber
+                self.tableView.reloadData()
+                DispatchQueue.main.sync {
+                    
+                }
+            } else {
+                
+                checkOwner = false
+                print("DEBUG: Error: ", model.errorMessage ?? "")
+            }
+        }
+        return checkOwner
+    }
     
     func getLastPayments() {
         showActivity()
@@ -964,16 +998,58 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
                 }
               
                 contact = EPContact(contact: contactsForSection[(indexPath as NSIndexPath).row])
+//                contact.bankImaage = checkOwner(number: contact.phoneNumbers.first?.phoneNumber)
+                
+                let body = [
+                    "phoneNumber":  contact.phoneNumbers.first?.phoneNumber
+                ] as [String: AnyObject]
+                
+                NetworkManager<GetOwnerPhoneNumberPhoneDecodableModel>.addRequest(.getOwnerPhoneNumber, [:], body) { model, error in
+                    
+                    guard let model = model else { return }
+                    if model.data != nil {
+                        contact.bankImaage = false
+
+        //                self.reloadInputViews()
+        //                self.contact?.bankImaage = false
+        //                self.reloadInputViews()
+        //                self.bankImage = false
+                    }
+                }
+                cell.ownerImageView.isHidden = contact.bankImaage
             }
             
             if multiSelectEnabled  && selectedContacts.contains(where: { $0.contactId == contact.contactId }) {
                 cell.accessoryType = UITableViewCell.AccessoryType.checkmark
             }
-          
             cell.updateContactsinUI(contact, indexPath: indexPath, subtitleType: subtitleCellValue)
         }
           return cell
       }
+    
+    
+    func checkOwner(number: String?) -> Bool{
+        var checkOwner = true
+        let body = [
+            "phoneNumber":  number
+        ] as [String: AnyObject]
+        DispatchQueue.main.async {
+        NetworkManager<GetOwnerPhoneNumberPhoneDecodableModel>.addRequest(.getOwnerPhoneNumber, [:], body) { model, error in
+            
+            guard let model = model else { return }
+            if model.data != nil {
+                checkOwner = false
+                
+//                self.reloadInputViews()
+//                self.contact?.bankImaage = false
+//                self.reloadInputViews()
+//                self.bankImage = false
+            }
+        }
+       
+        }
+        return checkOwner
+    }
       
        open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
           
@@ -1011,6 +1087,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
                 guard let clearNumber = format(phoneNumber: selectPhoneNumber ?? "") else {
                     return
                 }
+              
                 let newNumber = clearNumber.dropFirst(2)
                 searchContact.numberTextField.text  = newNumber.description
                 banksActive = true

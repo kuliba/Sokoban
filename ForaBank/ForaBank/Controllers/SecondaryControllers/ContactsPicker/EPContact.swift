@@ -21,6 +21,8 @@ open class EPContact {
     open var contactId: String?
     open var phoneNumbers = [(phoneNumber: String, phoneLabel: String)]()
     open var emails = [(email: String, emailLabel: String )]()
+    open var bankImaage = true
+    
 	
     public init (contact: CNContact) {
         firstName = contact.givenName
@@ -28,6 +30,7 @@ open class EPContact {
         company = contact.organizationName
         contactId = contact.identifier
         
+
         if let thumbnailImageData = contact.thumbnailImageData {
             thumbnailProfileImage = UIImage(data:thumbnailImageData)
         }
@@ -80,5 +83,6 @@ open class EPContact {
 		
         return initials
     }
+ 
     
 }
