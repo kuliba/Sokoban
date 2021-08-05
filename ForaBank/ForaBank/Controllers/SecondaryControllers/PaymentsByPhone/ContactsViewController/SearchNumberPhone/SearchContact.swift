@@ -65,7 +65,7 @@ class SearchContact: UIView, UITextFieldDelegate{
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        delegateNumber?.passTextFieldText(textField: numberTextField)
+//        delegateNumber?.passTextFieldText(textField: numberTextField)
     }
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
            var fullString = (textField.text ?? "") + string
@@ -74,8 +74,11 @@ class SearchContact: UIView, UITextFieldDelegate{
                 }
         if maskPhone {
             textField.text = format(phoneNumber: fullString, shouldRemoveLastDigit: range.length == 1)
+            delegateNumber?.passTextFieldText(textField: numberTextField)
         } else {
             textField.text = fullString
+            delegateNumber?.passTextFieldText(textField: numberTextField)
+
         }
 //        delegateNumber?.passTextFieldText(text: fullString )
            return false
