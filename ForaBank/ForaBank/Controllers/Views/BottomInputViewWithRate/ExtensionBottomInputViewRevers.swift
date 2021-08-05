@@ -62,6 +62,7 @@ extension BottomInputViewWithRateView  {
                         self?.bottomLable.rate = 0
                         self?.requestModel = (to: value, from: "RUB")
                         self?.currencySymbol = value.getSymbol() ?? ""
+                        
                         DispatchQueue.main.async {
                             self?.buttomLabel.text = self?.bottomLable.secondRate()
                             self?.currencySwitchButton.setTitle((value.getSymbol() ?? "") + " ⇆ " + "₽", for: .normal)
