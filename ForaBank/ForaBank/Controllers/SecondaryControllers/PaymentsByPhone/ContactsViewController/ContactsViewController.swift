@@ -49,7 +49,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
             lastPhonePayment.removeAll()
             getLastPayments()
             orderedContacts.removeAll()
-            tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: UITableView.ScrollPosition.top , animated: false)
+//            tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: UITableView.ScrollPosition.top , animated: false)
             reloadContacts()
             tableView.reloadData()
         }
