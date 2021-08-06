@@ -303,12 +303,6 @@ class GKHViewController: UITableViewController {
             }
             
         }
-        
-        
-        
-        
-        
-
 //            let vc = GKHCityViewController()
 //            vc.organization = self.organization
 //            self.navigationController?.pushViewController(vc, animated: true)
@@ -330,8 +324,6 @@ class GKHViewController: UITableViewController {
                 completion(nil, error)
             }
         }
-     
-    
 }
 
 }

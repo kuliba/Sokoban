@@ -989,11 +989,16 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
         if banksActive{
 //            let bank = orderedBanks.filter({$0.})
             let banks = orderedBanks[sortedContactKeys[indexPath.section]]
-            
-            cell.contactImageView.image = banks?[indexPath.row].svgImage?.convertSVGStringToImage()
+            if banks?[indexPath.row].svgImage == nil {
+                cell.contactImageView.image = UIImage(imageLiteralResourceName: "bankDefault")
+                
+            } else {
+                cell.contactImageView.image = banks?[indexPath.row].svgImage?.convertSVGStringToImage()
+            }
             cell.contactTextLabel.text = banks?[indexPath.row].memberNameRus
             cell.contactDetailTextLabel.isHidden = true
             cell.contactInitialLabel.isHidden = true
+            
             
         } else {
             

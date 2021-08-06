@@ -85,6 +85,7 @@ extension BottomInputViewWithRateView  {
                     self?.bottomLable.rateSimbol = m?.currencyCodeAlpha?.getSymbol()
                     /// Курс покупки валюты перевода
                     self?.bottomLable.rate = m?.rateSell
+                    self?.requestModel = (to: tempModel?.currencyCodeAlpha ?? "", from: m?.currencyCodeAlpha ?? "")
                     DispatchQueue.main.async {
                         self?.buttomLabel.text = self?.bottomLable.anyRate()
                     }
