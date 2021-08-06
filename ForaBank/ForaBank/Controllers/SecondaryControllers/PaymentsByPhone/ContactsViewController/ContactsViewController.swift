@@ -566,7 +566,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                 if lastPhonePayment.count > 0{
                     
                     // TODO: - Взять кусок кода
-                    
+                    vc.selectNumber = searchContact.numberTextField.text
                     vc.selectBank = lastPhonePayment[indexPath.row].bankName
                     vc.memberId = lastPhonePayment[indexPath.item].bankID
                     vc.bankImage = UIImage(named: "\(lastPhonePayment[indexPath.row].bankID ?? "")")
@@ -979,11 +979,16 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
         if banksActive{
 //            let bank = orderedBanks.filter({$0.})
             let banks = orderedBanks[sortedContactKeys[indexPath.section]]
-            
-            cell.contactImageView.image = banks?[indexPath.row].svgImage?.convertSVGStringToImage()
+            if banks?[indexPath.row].svgImage == nil {
+                cell.contactImageView.image = UIImage(imageLiteralResourceName: "bankDefault")
+                
+            } else {
+                cell.contactImageView.image = banks?[indexPath.row].svgImage?.convertSVGStringToImage()
+            }
             cell.contactTextLabel.text = banks?[indexPath.row].memberNameRus
             cell.contactDetailTextLabel.isHidden = true
             cell.contactInitialLabel.isHidden = true
+            
             
         } else {
             
@@ -1058,7 +1063,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
             if banksActive{
                 let banks = orderedBanks[sortedContactKeys[indexPath.section]]
                 let vc = PaymentByPhoneViewController()
-                vc.selectNumber =  selectPhoneNumber
+                vc.selectNumber =  searchContact.numberTextField.text
                 vc.selectedBank = banks?[indexPath.row]
                 vc.selectBank = banks?[indexPath.row].memberNameRus
                 vc.bankImage = banks?[indexPath.row].svgImage?.convertSVGStringToImage()
