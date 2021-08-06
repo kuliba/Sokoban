@@ -15,6 +15,7 @@ class PaymentByPhoneViewController: UIViewController {
     var selectedBank: BanksList?
     var bankImage: UIImage?
     var recipiendId = String()
+    var phoneNumber: String?
     var phoneField = ForaInput(
         viewModel: ForaInputModel(
             title: "По номеру телефона",
@@ -387,7 +388,7 @@ class PaymentByPhoneViewController: UIViewController {
         }
         
         let clearAmount = sum.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "₽", with: "").replacingOccurrences(of: ",", with: ".")
-        let clearNumber = number.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "").replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "").replacingOccurrences(of: ",", with: ".")
+        var clearNumber = number.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "").replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "").replacingOccurrences(of: ",", with: ".").replacingOccurrences(of: "+", with: "")
 //       let fromatNumber =
         var accountNumber: String?
         var cardNumber: String?
@@ -573,16 +574,20 @@ class PaymentByPhoneViewController: UIViewController {
         showActivity()
 //        37477404102
         var newPhone = String()
-        if phoneField.text.prefix(1) == "7" || phoneField.text.prefix(1) == "8"{
-            newPhone = phoneField.text.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "").replacingOccurrences(of: "+", with: "").replacingOccurrences(of: "-", with: "").dropFirst().description
-        } else {
-            newPhone = phoneField.text.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "").replacingOccurrences(of: "+", with: "").replacingOccurrences(of: "-", with: "")
+        var clearPhone = String()
+        
+        newPhone = phoneField.text.replacingOccurrences(of: "+", with: "").replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "").replacingOccurrences(of: "-", with: "")
+        
+        if newPhone.prefix(1) == "7" || newPhone.prefix(1) == "8"{
+            clearPhone = String(newPhone.dropFirst())
+        } else{
+            clearPhone = newPhone
         }
         let clearAmount = amount.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "₽", with: "").replacingOccurrences(of: ",", with: ".")
         let dataName = ["additional": [
             [ "fieldid": 1,
               "fieldname": "RecipientID",
-              "fieldvalue": newPhone
+              "fieldvalue": clearPhone
             ],
             [ "fieldid": 1,
               "fieldname": "SumSTrs",
@@ -590,6 +595,7 @@ class PaymentByPhoneViewController: UIViewController {
         ]] as [String: AnyObject]
         
         NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataName) { [weak self] model, error in
+            self?.dismissActivity()
             if error != nil {
                 self?.dismissActivity()
                 print("DEBUG: Error: ", error ?? "")
@@ -627,6 +633,7 @@ class PaymentByPhoneViewController: UIViewController {
         ]] as [String: AnyObject]
         
         NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataName) { [weak self] dataresp, error in
+            self?.dismissActivity()
             if error != nil {
                 self?.dismissActivity()
                 print("DEBUG: Error: ", error ?? "")

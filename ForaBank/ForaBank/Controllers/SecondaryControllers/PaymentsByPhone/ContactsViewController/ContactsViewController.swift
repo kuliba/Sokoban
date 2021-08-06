@@ -566,7 +566,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                 if lastPhonePayment.count > 0{
                     
                     // TODO: - Взять кусок кода
-                    
+                    vc.selectNumber = searchContact.numberTextField.text
                     vc.selectBank = lastPhonePayment[indexPath.row].bankName
                     vc.memberId = lastPhonePayment[indexPath.item].bankID
                     vc.bankImage = UIImage(named: "\(lastPhonePayment[indexPath.row].bankID ?? "")")
@@ -1063,7 +1063,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
             if banksActive{
                 let banks = orderedBanks[sortedContactKeys[indexPath.section]]
                 let vc = PaymentByPhoneViewController()
-                vc.selectNumber =  selectPhoneNumber
+                vc.selectNumber =  searchContact.numberTextField.text
                 vc.selectedBank = banks?[indexPath.row]
                 vc.selectBank = banks?[indexPath.row].memberNameRus
                 vc.bankImage = banks?[indexPath.row].svgImage?.convertSVGStringToImage()
