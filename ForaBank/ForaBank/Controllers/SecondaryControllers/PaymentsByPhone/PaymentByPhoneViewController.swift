@@ -9,11 +9,21 @@ import UIKit
 
 class PaymentByPhoneViewController: UIViewController {
     var sbp: Bool?
-    var selectBank: String?
     var confirm: Bool?
     var selectedCardNumber = ""
-    var selectedBank: BanksList?
-    var bankImage: UIImage?
+    var selectedBank: BanksList? {
+        didSet {
+            guard let bank = selectedBank else { return }
+            setupBankField(bank: bank)
+        }
+    }
+    
+    var banks: [BanksList]? {
+        didSet {
+            guard let banks = banks else { return }
+            bankListView.bankList = banks
+        }
+    }
     var recipiendId = String()
     var phoneField = ForaInput(
         viewModel: ForaInputModel(
@@ -21,7 +31,6 @@ class PaymentByPhoneViewController: UIViewController {
             image: #imageLiteral(resourceName: "Phone"),
             showChooseButton: true)
     )
-    
     
     var cardField = ForaInput(
         viewModel: ForaInputModel(
@@ -88,12 +97,6 @@ class PaymentByPhoneViewController: UIViewController {
     
     var cardListView = CardListView()
     
-    var banks: [BanksList]? {
-        didSet {
-            guard let banks = banks else { return }
-            bankListView.bankList = banks
-        }
-    }
     
     lazy var doneButton: UIButton = {
         let button = UIButton(title: "Продолжить")
@@ -106,7 +109,7 @@ class PaymentByPhoneViewController: UIViewController {
     var otpCode: String?
     
     var selectNumber: String?
-    var memberId: String?
+//    var memberId: String?
     
     @objc func showSpinningWheel(_ notification: NSNotification) {
         print(notification.userInfo ?? "")
@@ -137,7 +140,7 @@ class PaymentByPhoneViewController: UIViewController {
         hideKeyboardWhenTappedAround()
 //        getCardList()
         setupActions()
-        bankPayeer.imageView.image = bankImage
+//        bankPayeer.imageView.image = bankImage
         
         bottomView.didDoneButtonTapped = {(amount) in
             switch self.sbp{
@@ -145,7 +148,7 @@ class PaymentByPhoneViewController: UIViewController {
                 self.startContactPayment(with: self.selectedCardNumber) { [self] error in
                     self.dismissActivity()
                     DispatchQueue.main.async {
-                        endSBPPayment(selectBank: selectBank!, amount: bottomView.amountTextField.text ?? "0") { error in
+                        endSBPPayment(amount: bottomView.amountTextField.text ?? "0") { error in
                             print(error ?? "")
                         }
                     }
@@ -201,10 +204,6 @@ class PaymentByPhoneViewController: UIViewController {
         }
         
         bankListView.didBankTapped = { bank in
-            self.selectBank = bank.memberNameRus
-            self.memberId = bank.memberID
-            self.bankPayeer.viewModel.image =  bank.svgImage?.convertSVGStringToImage() ?? UIImage()
-            self.bankPayeer.text = bank.memberNameRus ?? ""
             self.selectedBank = bank
             self.hideView(self.bankListView, needHide: true)
         }
@@ -230,7 +229,6 @@ class PaymentByPhoneViewController: UIViewController {
         }
     }
     
-    
     private func openOrHideView(_ view: UIView) {
         UIView.animate(withDuration: 0.2) {
             if view.isHidden == true {
@@ -254,9 +252,6 @@ class PaymentByPhoneViewController: UIViewController {
         }
     }
     
-        
-        
-        
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -270,7 +265,7 @@ class PaymentByPhoneViewController: UIViewController {
             self.startContactPayment(with: selectedCardNumber) { [self] error in
                 self.dismissActivity()
                 DispatchQueue.main.async {
-                    endSBPPayment(selectBank: selectBank!, amount: bottomView.amountTextField.text ?? "") { error in
+                    endSBPPayment(amount: bottomView.amountTextField.text ?? "") { error in
                         print(error ?? "")
                     }
                 }
@@ -292,7 +287,7 @@ class PaymentByPhoneViewController: UIViewController {
         saveAreaView.anchor(top: view.safeAreaLayoutGuide.bottomAnchor, left: view.leftAnchor,
                             bottom: view.bottomAnchor, right: view.rightAnchor)
         
-        bankPayeer.text = selectBank ?? ""
+//        bankPayeer.text = selectBank ?? ""
 
         bottomView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
                           right: view.rightAnchor)
@@ -335,13 +330,12 @@ class PaymentByPhoneViewController: UIViewController {
             
         }
         
-//        cardField.didChooseButtonTapped = { () in
-//            UIView.animate(withDuration: 0.2, animations: {
-//                self.cardListView.isHidden.toggle()
-//            })
-//        }
     }
     
+    private func setupBankField(bank: BanksList) {
+        self.bankPayeer.text = bank.memberNameRus ?? ""
+        self.bankPayeer.imageView.image = bank.svgImage?.convertSVGStringToImage()
+    }
     
     func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?)->()) {
         let param = ["isCard": "true", "isAccount": "true", "isDeposit": "false", "isLoan": "false"]
@@ -379,7 +373,7 @@ class PaymentByPhoneViewController: UIViewController {
 //        DispatchQueue.main.async {
 //            UIApplication.shared.keyWindow?.startIndicatingActivity()
 //        }
-        guard let number = phoneField.textField.text else {
+        guard let number = phoneField.textField.unmaskedText else {
             return
         }
         guard let sum = bottomView.amountTextField.text else {
@@ -387,15 +381,17 @@ class PaymentByPhoneViewController: UIViewController {
         }
         
         let clearAmount = sum.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "₽", with: "").replacingOccurrences(of: ",", with: ".")
-        let clearNumber = number.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "").replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "").replacingOccurrences(of: ",", with: ".")
+        let clearNumber = number.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "").replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "").replacingOccurrences(of: "+", with: "").replacingOccurrences(of: ",", with: ".")
 //       let fromatNumber =
         var accountNumber: String?
         var cardNumber: String?
         
         if selectedCardNumber .count > 16{
             accountNumber = selectedCardNumber
+//            cardNumber = ""
         } else {
             cardNumber = selectedCardNumber
+//            accountNumber = ""
         }
         
         bottomView.doneButtonIsEnabled(true)
@@ -404,18 +400,18 @@ class PaymentByPhoneViewController: UIViewController {
                      "amount"           : clearAmount,
                      "currencyAmount"   : "RUB",
                      "payer" : [
-//                        "cardId"        : nil,
+                        "cardId"        : nil,
                         "cardNumber"    : cardNumber,
-//                        "accountId"     : nil,
+                        "accountId"     : nil,
                         "accountNumber" : accountNumber
                      ],
                      "payeeInternal" : [
-//                        "cardId"        : nil,
-//                        "cardNumber"    : nil,
-//                        "accountId"     : nil,
-//                        "accountNumber" : nil,
+                        "cardId"        : nil,
+                        "cardNumber"    : nil,
+                        "accountId"     : nil,
+                        "accountNumber" : nil,
                         "phoneNumber"   : clearNumber.description,
-//                        "productCustomName" : nil
+                        "productCustomName" : nil
                      ] ] as [String : AnyObject]
         
         print("DEBUG: ", #function, body)
@@ -475,58 +471,6 @@ class PaymentByPhoneViewController: UIViewController {
         }
     }
     
-//    func prepareCard2Phone(){
-//        showActivity()
-//        guard let number = phoneField.textField.text else {
-//            return
-//        }
-//        guard let sum = bottomView.amountTextField.text else {
-//            return
-//        }
-//        let clearSum = NSString(string: "\(sum.replacingOccurrences(of: ",", with: "."))").doubleValue //123
-//
-//        let body = ["payerCardNumber": "\(selectedCardNumber)",
-//                    "payeePhone": "\(number)",
-//                    "amount": clearSum
-//                    ] as [String: AnyObject]
-//        NetworkManager<PrepareCard2PhoneDecodableModel>.addRequest(.prepareCard2Phone, [:], body) { model, error in
-//            if error != nil {
-//                print("DEBUG: Error: ", error ?? "")
-//            }
-//            guard let model = model else { return }
-//            print("DEBUG: Card list: ", model)
-//            if model.statusCode == 0 {
-//                self.dismissActivity()
-//
-////                guard let data  = model.data else { return }
-//                DispatchQueue.main.async {
-//                    let vc = PhoneConfirmViewController()
-//                    vc.sbp = self.sbp
-//                    vc.bankPayeer.text = self.selectBank ?? ""
-//                    vc.phoneField.text = self.phoneField.text
-//                    vc.cardField.text = self.cardField.text
-//                    vc.cardField.imageView.image = self.cardField.imageView.image
-//                    vc.summTransctionField.textField.text = self.bottomView.amountTextField.text
-//                    vc.taxTransctionField.isHidden = ((model.data?.commission?.isEmpty) != nil)
-//                    vc.bankPayeer.chooseButton.isHidden = true
-//                    vc.bankPayeer.imageView.image = self.bankPayeer.imageView.image
-//                    vc.cardField.chooseButton.isHidden = true
-//                    vc.payeerField.text = model.data?.payeeName ?? "Получатель не определен"
-//                    vc.otpCode = self.otpCode
-//                    vc.addCloseButton()
-//                    let navController = UINavigationController(rootViewController: vc)
-//                    navController.modalPresentationStyle = .fullScreen
-//                    self.present(navController, animated: true, completion: nil)                }
-//            } else {
-//                self.dismissActivity()
-//
-//                print("DEBUG: Error: ", model.errorMessage ?? "")
-//            }
-//        }
-//    }
-   
-    
-    
     func startContactPayment(with card: String, completion: @escaping (_ error: String?)->()) {
         showActivity()
     
@@ -538,7 +482,6 @@ class PaymentByPhoneViewController: UIViewController {
         
         NetworkManager<AnywayPaymentBeginDecodebleModel>.addRequest(.anywayPaymentBegin, [:], body, completion: { [weak self] model, error in
             if error != nil {
-                self?.dismissActivity()
                 print("DEBUG: Error: ", error ?? "")
                 completion(error!)
             }
@@ -546,8 +489,8 @@ class PaymentByPhoneViewController: UIViewController {
             if model.statusCode == 0 {
                 completion(nil)
                 NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], [:]) { model, error in
+                    self?.dismissActivity()
                     if error != nil {
-                        self?.dismissActivity()
                         print("DEBUG: Error: ", error ?? "")
                         completion(error!)
                     }
@@ -568,7 +511,7 @@ class PaymentByPhoneViewController: UIViewController {
         })
     }
     
-    func endSBPPayment(selectBank: String, amount: String, completion: @escaping (_ error: String?)->()) {
+    func endSBPPayment(amount: String, completion: @escaping (_ error: String?)->()) {
         showActivity()
 //        37477404102
         var newPhone = String()
@@ -589,23 +532,16 @@ class PaymentByPhoneViewController: UIViewController {
         ]] as [String: AnyObject]
         
         NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataName) { [weak self] model, error in
+            self?.dismissActivity()
             if error != nil {
-                self?.dismissActivity()
                 print("DEBUG: Error: ", error ?? "")
                 completion(error!)
             }
-//            print("DEBUG: amount ", amount)
             guard let model = model else { return }
             if model.statusCode == 0 {
                 print("DEBUG: Success send Phone")
-                    self?.dismissActivity()
                     self?.endSBPPayment2()
-//                let model = ConfurmViewControllerModel(
-//                    country: country,
-//                    model: model)
-//                self.goToConfurmVC(with: model)
             } else {
-                self?.dismissActivity()
                 print("DEBUG: Error: ", model.errorMessage ?? "")
                 completion(model.errorMessage)
             }
@@ -616,7 +552,7 @@ class PaymentByPhoneViewController: UIViewController {
     func endSBPPayment2() {
         showActivity()
 //        37477404102
-        guard let memberId = memberId else {
+        guard let memberId = self.selectedBank?.memberID else {
             return
         }
         let dataName = ["additional": [

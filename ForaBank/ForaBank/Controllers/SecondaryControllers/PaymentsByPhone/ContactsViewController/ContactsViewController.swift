@@ -12,7 +12,6 @@ import ContactsUI
 class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFieldText{
 
     
-    
     let tableView = UITableView(frame: .zero, style: .plain)
     // MARK: - Properties
     
@@ -31,7 +30,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
     var banksActive = false
     var seeall: Bool?
     var stackView = UIStackView()
-
+    
     func passTextFieldText(textField: UITextField) {
 //        guard let textField = textField as? MaskedTextField else { return }
 //                guard let cardNumber = textField.unmaskedText else { return }
@@ -49,14 +48,14 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
             lastPhonePayment.removeAll()
             getLastPayments()
             orderedContacts.removeAll()
-//            tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: UITableView.ScrollPosition.top , animated: false)
+            //            tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: UITableView.ScrollPosition.top , animated: false)
             reloadContacts()
             tableView.reloadData()
         }
         let filteredContacts = contacts.filter({$0.name?.lowercased().prefix(text.count) ?? "" == text.lowercased() || $0.phoneNumber[0].lowercased().prefix(text.count) == text.lowercased()})
         reserveContacts = contacts
         if text.count != 0{
-
+            
             searchForContactUsingName(text: text)
             resultSearchController = true
             tableView.reloadData()
@@ -129,25 +128,25 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
         }
     }// array of PhoneContact(It is model find it below)
     var filter: ContactsFilter = .none
-   
-
-       fileprivate func loadContacts(filter: ContactsFilter) {
+    
+    
+    fileprivate func loadContacts(filter: ContactsFilter) {
         contacts.removeAll()
-            var allContacts = [PhoneContact]()
-            for contact in PhoneContacts.getContacts(filter: filter) {
-                allContacts.append(PhoneContact(contact: contact))
+        var allContacts = [PhoneContact]()
+        for contact in PhoneContacts.getContacts(filter: filter) {
+            allContacts.append(PhoneContact(contact: contact))
+        }
+        
+        var filterdArray = [PhoneContact]()
+        if self.filter == .mail {
+            filterdArray = allContacts.filter({ $0.email.count > 0 }) // getting all email
+        } else if self.filter == .message {
+            filterdArray = allContacts.filter({ $0.phoneNumber.count > 0 })
+        } else {
+            filterdArray = allContacts.filter({$0.phoneNumber.count != 0}).sorted { lhs, rhs in
+                lhs.name ?? "" < rhs.name ?? ""
             }
-
-            var filterdArray = [PhoneContact]()
-            if self.filter == .mail {
-                filterdArray = allContacts.filter({ $0.email.count > 0 }) // getting all email
-            } else if self.filter == .message {
-                filterdArray = allContacts.filter({ $0.phoneNumber.count > 0 })
-            } else {
-                filterdArray = allContacts.filter({$0.phoneNumber.count != 0}).sorted { lhs, rhs in
-                    lhs.name ?? "" < rhs.name ?? ""
-                }
-            }
+        }
         contacts.append(contentsOf: filterdArray)
         
     }
@@ -548,11 +547,20 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if banks?.count ?? 0 > 0, collectionView == contactCollectionView {
             let vc = PaymentByPhoneViewController()
-//            vc.confurmVCModel = self.confurmVCModel
+            //            vc.confurmVCModel = self.confurmVCModel
             vc.modalPresentationStyle = .fullScreen
+            let fastPaymentBank = banks?[indexPath.row]
+            self.banksList.forEach { bank in
+                if bank.memberID == fastPaymentBank?.memberID {
+                    vc.selectedBank = bank
+                }
+            }
             
-            vc.selectBank = banks?[indexPath.row].memberNameRus
-            vc.bankImage = UIImage(named: "\(banks?[indexPath.row].id ?? "")")
+            
+            
+            //            vc.selectedBank = banks?[indexPath.row]
+            //            vc.selectBank = banks?[indexPath.row].memberNameRus
+            //            vc.bankImage = UIImage(named: "\(banks?[indexPath.row].id ?? "")")
             if banks?[indexPath.item].memberNameRus != "ФОРА-БАНК"{
                 vc.sbp = true
             }
@@ -561,58 +569,60 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
             let navController = UINavigationController(rootViewController: vc)
             navController.modalPresentationStyle = .fullScreen
             self.present(navController, animated: true, completion: nil)
-            } else if collectionView == lastPaymentsCollectionView{
-                let vc = PaymentByPhoneViewController()
-                if lastPhonePayment.count > 0{
-                    
-                    // TODO: - Взять кусок кода
-                    
-                    vc.selectBank = lastPhonePayment[indexPath.row].bankName
-                    vc.memberId = lastPhonePayment[indexPath.item].bankID
-                    vc.bankImage = UIImage(named: "\(lastPhonePayment[indexPath.row].bankID ?? "")")
-                    if lastPhonePayment[indexPath.row].bankName == "ФОРА-БАНК"{
-                        vc.sbp = false
-                    } else {
-                        vc.sbp = true
+            
+        } else if collectionView == lastPaymentsCollectionView {
+            let vc = PaymentByPhoneViewController()
+            if lastPhonePayment.count > 0 {
+                let lastPaymentBank = lastPhonePayment[indexPath.row]
+                self.banksList.forEach { bank in
+                    if bank.memberID == lastPaymentBank.bankID {
+                        vc.selectedBank = bank
                     }
-                    
-                    
-                    
+                }
+                if lastPaymentBank.bankName == "ФОРА-БАНК" {
+                    vc.sbp = false
                 } else {
-                    vc.memberId = lastPayment[indexPath.item].bankID
-                    vc.selectNumber =  format(phoneNumber: lastPayment[indexPath.item].phoneNumber ?? "")
-                    vc.summTransctionField.text = lastPayment[indexPath.item].amount ?? ""
-                    vc.selectBank = lastPayment[indexPath.row].bankName
-                    vc.bankImage = UIImage(named: "\(lastPayment[indexPath.row].bankID ?? "")")
-                    if lastPayment[indexPath.row].bankName == "ФОРА-БАНК"{
-                        vc.sbp = false
-                    } else {
-                        vc.sbp = true
+                    vc.sbp = true
+                }
+            } else {
+                let lastPaymentBank = lastPayment[indexPath.row]
+                self.banksList.forEach { bank in
+                    if bank.memberID == lastPaymentBank.bankID {
+                        vc.selectedBank = bank
                     }
                 }
-    //            vc.confurmVCModel = self.confurmVCModel
-                vc.modalPresentationStyle = .fullScreen
                 
-                vc.phoneField.text = selectPhoneNumber ?? ""
-                vc.addCloseButton()
-
-                let navController = UINavigationController(rootViewController: vc)
-                navController.modalPresentationStyle = .fullScreen
-                self.present(navController, animated: true, completion: nil)
+                vc.selectNumber =  format(phoneNumber: lastPayment[indexPath.item].phoneNumber ?? "")
+                vc.summTransctionField.text = lastPayment[indexPath.item].amount ?? ""
                 
-            } else {
-                selectPhoneNumber = contacts[indexPath.item].phoneNumber.first
-                selectPerson = contacts[indexPath.item].name
-                guard let numberPhone = contacts[indexPath.item].phoneNumber.first else {
-                    return
+                if lastPaymentBank.bankName == "ФОРА-БАНК"{
+                    vc.sbp = false
+                } else {
+                    vc.sbp = true
                 }
-                searchContact.numberTextField.text = numberPhone.dropFirst(2).description
-                banks = [FastPayment.init(id: "", memberID: "", memberName: "", memberNameRus: "")]
-                contactCollectionView.reloadData()
-                getLastPhonePayments()
-                
             }
-    
+            vc.modalPresentationStyle = .fullScreen
+            
+            vc.phoneField.text = selectPhoneNumber ?? ""
+            vc.addCloseButton()
+            
+            let navController = UINavigationController(rootViewController: vc)
+            navController.modalPresentationStyle = .fullScreen
+            self.present(navController, animated: true, completion: nil)
+            
+        } else {
+            selectPhoneNumber = contacts[indexPath.item].phoneNumber.first
+            selectPerson = contacts[indexPath.item].name
+            guard let numberPhone = contacts[indexPath.item].phoneNumber.first else {
+                return
+            }
+            searchContact.numberTextField.text = numberPhone.dropFirst(2).description
+            banks = [FastPayment.init(id: "", memberID: "", memberName: "", memberNameRus: "")]
+            contactCollectionView.reloadData()
+            getLastPhonePayments()
+            
+        }
+        
     }
  
     func getBankList() {
@@ -1053,60 +1063,45 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
       
        open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
           
-          let cell = tableView.cellForRow(at: indexPath) as! EPContactCell
-            resultSearchController = false
-            if banksActive{
-                let banks = orderedBanks[sortedContactKeys[indexPath.section]]
-                let vc = PaymentByPhoneViewController()
-                vc.selectNumber =  selectPhoneNumber
-                vc.selectedBank = banks?[indexPath.row]
-                vc.selectBank = banks?[indexPath.row].memberNameRus
-                vc.bankImage = banks?[indexPath.row].svgImage?.convertSVGStringToImage()
-                vc.memberId = banks?[indexPath.row].memberID
-                
-                if banksList[indexPath.row].memberNameRus == "ФОРА-БАНК"{
-                    vc.sbp = false
-                } else {
-                    vc.sbp = true
-                }
+        let cell = tableView.cellForRow(at: indexPath) as! EPContactCell
+        resultSearchController = false
+        if banksActive{
+            let banks = orderedBanks[sortedContactKeys[indexPath.section]]
+            let vc = PaymentByPhoneViewController()
+            vc.selectNumber = selectPhoneNumber
+            vc.selectedBank = banks?[indexPath.row]
             
-//            vc.confurmVCModel = self.confurmVCModel
+            if banksList[indexPath.row].memberNameRus == "ФОРА-БАНК"{
+                vc.sbp = false
+            } else {
+                vc.sbp = true
+            }
+            
             vc.modalPresentationStyle = .fullScreen
             
             vc.phoneField.text = selectPhoneNumber ?? ""
             vc.addCloseButton()
-//            banksActive = false
-//            tableView.reloadData()
             let navController = UINavigationController(rootViewController: vc)
             navController.modalPresentationStyle = .fullScreen
             self.present(navController, animated: true, completion: nil)
-            } else {
-                let selectedContact =  cell.contact!
-                selectPerson = selectedContact.displayName()
-                selectPhoneNumber = selectedContact.phoneNumbers.first?.phoneNumber
-                
-                guard let clearNumber = format(phoneNumber: selectPhoneNumber ?? "") else {
-                    return
-                }
-              
-                let newNumber = clearNumber.dropFirst(2)
-                searchContact.numberTextField.text  = newNumber.description
-                banksActive = true
-                orderedBanks.removeAll()
-                alphabetScroll()
-                getLastPhonePayments()
-                tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: UITableView.ScrollPosition.top , animated: false)
-                tableView.reloadData()
+        } else {
+            let selectedContact =  cell.contact!
+            selectPerson = selectedContact.displayName()
+            selectPhoneNumber = selectedContact.phoneNumbers.first?.phoneNumber
+            
+            guard let clearNumber = format(phoneNumber: selectPhoneNumber ?? "") else {
+                return
             }
-//            tableView.isHidden = true
-//            contactView.addSubview(contactCollectionView)
             
-//            contactCollectionView.isHidden = false
-//        sortedContactKeys.removeAll()
-//            alphabetScroll()
-        
-
-            
+            let newNumber = clearNumber.dropFirst(2)
+            searchContact.numberTextField.text  = newNumber.description
+            banksActive = true
+            orderedBanks.removeAll()
+            alphabetScroll()
+            getLastPhonePayments()
+            tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: UITableView.ScrollPosition.top , animated: false)
+            tableView.reloadData()
+        }
         
       }
       
