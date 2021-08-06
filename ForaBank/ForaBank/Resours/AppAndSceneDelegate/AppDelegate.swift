@@ -167,7 +167,7 @@ extension AppDelegate {
         let parameters = [
 //            "cryptoVersion": "1.0",
             "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-            "pushFcmToken": Messaging.messaging().fcmToken! as String,
+            "pushFcmToken": (Messaging.messaging().fcmToken ?? "") as String,
             "model": UIDevice().model,
             "operationSystem": "IOS"
         ] as [String : AnyObject]
