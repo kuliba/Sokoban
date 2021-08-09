@@ -60,7 +60,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
             print("DEBUG: " + #function + pay[indexPath.row].name)
             
             if let viewController = pay[indexPath.row].controllerName.getViewController() {
-                navigationController?.pushViewController(viewController, animated: true)
+                present(viewController, animated: true)
             }
         }
     }
