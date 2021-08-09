@@ -32,7 +32,6 @@ extension CustomPopUpWithRateView {
     func doneButtonTapped(with viewModel: ConfirmViewControllerModel) {
         
         var viewModel = viewModel
-        let a = self.bottomView.requestModel.to
         self.dismissKeyboard()
         self.showActivity()
         bottomView.doneButtonIsEnabled(true)
