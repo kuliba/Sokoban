@@ -19,6 +19,7 @@ class EPContactCell: UITableViewCell {
     
     var contact: EPContact?
     var banks: FastPayment?
+    var needChek = false
 
     override func awakeFromNib() {
         
@@ -45,16 +46,6 @@ class EPContactCell: UITableViewCell {
  
     func updateContactsinUI(_ contact: EPContact, indexPath: IndexPath, subtitleType: SubtitleCellValue) {
         self.contact = contact
-        
-//        DispatchQueue.main.async{ [self] in
-//            if checkOwner(number: contact.phoneNumbers.first?.phoneNumber) ?? false {
-//                ownerImageView.isHidden = false
-//                self.reloadInputViews()
-//
-//            } else {
-//                ownerImageView.isHidden = true
-//            }
-//        }
    
         self.contactTextLabel?.text = contact.displayName()
         updateSubtitleBasedonType(subtitleType, contact: contact)
@@ -68,10 +59,15 @@ class EPContactCell: UITableViewCell {
             self.contactImageView.isHidden = true
             self.contactInitialLabel.isHidden = false
         }
-   
-//        checkOwner(number: contact.phoneNumbers.first?.phoneNumber)
-        ownerImageView.isHidden = contact.bankImaage
-
+        if needChek && !contact.phoneNumbers.isEmpty {
+            checkOwner(number: contact.phoneNumbers.first?.phoneNumber) { [weak self] needShow in
+                DispatchQueue.main.async {
+                    self?.ownerImageView.isHidden = !needShow
+                }
+            }
+        } else {
+            ownerImageView.isHidden = true
+        }
         
     }
     
@@ -108,5 +104,28 @@ class EPContactCell: UITableViewCell {
         case SubtitleCellValue.organization:
             self.contactDetailTextLabel.text = contact.company
         }
+    }
+    
+    func checkOwner(number: String?, completion: @escaping (Bool) -> () ) {
+        guard let number = number else { return }
+        let body = [ "phoneNumber": number ] as [String: AnyObject]
+        NetworkManager<GetOwnerPhoneNumberPhoneDecodableModel>.addRequest(.getOwnerPhoneNumber, [:], body) { model, error in
+            if error != nil {
+                completion(false)
+                print("DEBUG: Error: ", error ?? "")
+            }
+            guard let model = model else { return }
+            if model.statusCode == 0 {
+                if model.data != nil {
+                    completion(true)
+                } else {
+                    completion(false)
+                }
+            } else {
+                completion(false)
+                print("DEBUG: Error: ", model.errorMessage ?? "")
+            }
+        }
+        
     }
 }

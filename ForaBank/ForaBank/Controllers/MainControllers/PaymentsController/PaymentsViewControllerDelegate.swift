@@ -60,7 +60,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
             print("DEBUG: " + #function + pay[indexPath.row].name)
             
             if let viewController = pay[indexPath.row].controllerName.getViewController() {
-                navigationController?.pushViewController(viewController, animated: true)
+                present(viewController, animated: true)
             }
         }
     }
@@ -68,9 +68,16 @@ extension PaymentsViewController: UICollectionViewDelegate {
     private func openPhonePaymentVC(model: GetLatestPaymentsDatum) {
         let vc = PaymentByPhoneViewController()
         
-        vc.selectBank = model.bankName
-        vc.memberId = model.bankID
-        vc.bankImage = UIImage(named: "\(model.bankID ?? "")")
+        let banksList = Dict.shared.banks
+        banksList?.forEach { bank in
+            if bank.memberID == model.bankID {
+                vc.selectedBank = bank
+            }
+        }
+        
+//        vc.selectBank = model.bankName
+//        vc.memberId = model.bankID
+//        vc.bankImage = UIImage(named: "\(model.bankID ?? "")")
         let mask = StringMask(mask: "+7 (000) 000-00-00")
         let maskPhone = mask.mask(string: model.phoneNumber)
         vc.phoneField.text = maskPhone ?? ""

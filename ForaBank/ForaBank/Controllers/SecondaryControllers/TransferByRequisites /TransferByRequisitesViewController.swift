@@ -25,6 +25,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
             setupBankField(bank: bank)
         }
     }
+
     var banks: [BankFullInfoList] = [] {
         didSet {
             bankListView.bankList = banks
