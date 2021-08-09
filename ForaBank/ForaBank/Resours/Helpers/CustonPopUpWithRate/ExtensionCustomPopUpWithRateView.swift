@@ -12,19 +12,19 @@ extension CustomPopUpWithRateView {
         super.viewDidLoad()
         setupUI()
         setupConstraint()
-        setupActions()
-        setupCardViewActions()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        setupActions()
+        setupCardViewActions()
+    }
+    
+    private func setupUI() {
         setupFieldFrom()
         setupFieldTo()
         setupListFrom()
         setupListTo()
-    }
-    
-    private func setupUI() {
         
         self.addHeaderImage()
         self.view.layer.cornerRadius = 20
