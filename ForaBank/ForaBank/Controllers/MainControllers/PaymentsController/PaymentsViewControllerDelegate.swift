@@ -60,7 +60,10 @@ extension PaymentsViewController: UICollectionViewDelegate {
             print("DEBUG: " + #function + pay[indexPath.row].name)
             
             if let viewController = pay[indexPath.row].controllerName.getViewController() {
-                present(viewController, animated: true)
+                viewController.addCloseButton()
+                let navVC = UINavigationController(rootViewController: viewController)
+                navVC.modalPresentationStyle = .fullScreen
+                present(navVC, animated: true)
             }
         }
     }

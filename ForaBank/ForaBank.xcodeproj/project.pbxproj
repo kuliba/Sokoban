@@ -154,6 +154,7 @@
 		ED84995926A8831E005205C6 /* EPContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED84995326A8831D005205C6 /* EPContactCell.swift */; };
 		ED84995A26A8831E005205C6 /* EPContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED84995426A8831D005205C6 /* EPContact.swift */; };
 		ED84995B26A8831E005205C6 /* EPConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED84995526A8831D005205C6 /* EPConstants.swift */; };
+		ED8AB45526C116DB006F0D03 /* MeToMeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8AB45426C116DB006F0D03 /* MeToMeViewController.swift */; };
 		ED92D3A226735A0A006D47B3 /* PaymentByPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED92D3A126735A0A006D47B3 /* PaymentByPhoneViewController.swift */; };
 		EDAA99AF2673AB9200435484 /* ForaSwitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAA99AE2673AB9200435484 /* ForaSwitchView.swift */; };
 		EDAA99B12673ABF200435484 /* ForaSwitchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDAA99B02673ABF200435484 /* ForaSwitchView.xib */; };
@@ -406,6 +407,7 @@
 		ED84995326A8831D005205C6 /* EPContactCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EPContactCell.swift; sourceTree = "<group>"; };
 		ED84995426A8831D005205C6 /* EPContact.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EPContact.swift; sourceTree = "<group>"; };
 		ED84995526A8831D005205C6 /* EPConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EPConstants.swift; sourceTree = "<group>"; };
+		ED8AB45426C116DB006F0D03 /* MeToMeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeToMeViewController.swift; sourceTree = "<group>"; };
 		ED92D3A126735A0A006D47B3 /* PaymentByPhoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentByPhoneViewController.swift; sourceTree = "<group>"; };
 		EDAA99AE2673AB9200435484 /* ForaSwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForaSwitchView.swift; sourceTree = "<group>"; };
 		EDAA99B02673ABF200435484 /* ForaSwitchView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ForaSwitchView.xib; sourceTree = "<group>"; };
@@ -1154,6 +1156,30 @@
 			path = ContactsPicker;
 			sourceTree = "<group>";
 		};
+		ED8AB45126C1145D006F0D03 /* MeToMeViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				ED8AB45226C11694006F0D03 /* MeToMeViewController */,
+				ED8AB45326C1169E006F0D03 /* MeToMeSettingViewController */,
+			);
+			path = MeToMeViewControllers;
+			sourceTree = "<group>";
+		};
+		ED8AB45226C11694006F0D03 /* MeToMeViewController */ = {
+			isa = PBXGroup;
+			children = (
+				ED8AB45426C116DB006F0D03 /* MeToMeViewController.swift */,
+			);
+			path = MeToMeViewController;
+			sourceTree = "<group>";
+		};
+		ED8AB45326C1169E006F0D03 /* MeToMeSettingViewController */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = MeToMeSettingViewController;
+			sourceTree = "<group>";
+		};
 		ED92D3A0267359CD006D47B3 /* PaymentsByPhone */ = {
 			isa = PBXGroup;
 			children = (
@@ -1422,6 +1448,7 @@
 		EDB16593266A4317007E6030 /* SecondaryControllers */ = {
 			isa = PBXGroup;
 			children = (
+				ED8AB45126C1145D006F0D03 /* MeToMeViewControllers */,
 				ED84994F26A8830E005205C6 /* ContactsPicker */,
 				ED84994C26A85A0B005205C6 /* SettingsViewController */,
 				68FFA55D268BF252002DADFA /* TransferByRequisites  */,
@@ -2038,6 +2065,7 @@
 				EDF68217266F9EC800FD5C07 /* RouterSassionConfiguration.swift in Sources */,
 				ED84995B26A8831E005205C6 /* EPConstants.swift in Sources */,
 				0B37F97E267A10E4007728FC /* PrepareCard2PhoneDecodableModel.swift in Sources */,
+				ED8AB45526C116DB006F0D03 /* MeToMeViewController.swift in Sources */,
 				0B8BE0952670D4A300E96CAA /* GetCodeDecodebleModel.swift in Sources */,
 				EDB1452226661C3F0028EF5A /* MaskedTextField.swift in Sources */,
 				ED4FC5EF266B70A00092B4AB /* PartialTransparentView.swift in Sources */,
@@ -2263,7 +2291,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 65;
 				CURRENT_PROJECT_VERSION = 66;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
