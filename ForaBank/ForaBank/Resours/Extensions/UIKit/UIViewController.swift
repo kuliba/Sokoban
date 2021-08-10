@@ -72,12 +72,19 @@ extension UIViewController {
                                      style: .done,
                                      target: self,
                                      action: #selector(onClose))
-            navigationItem.leftBarButtonItem = button
+        navigationItem.leftBarButtonItem = button
+    }
+    
+    @objc func onClose(){
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    static func loadFromNib() -> Self {
+        func instantiateFromNib<T: UIViewController>() -> T {
+            return T.init(nibName: String(describing: T.self), bundle: nil)
         }
-
-        @objc func onClose(){
-            self.dismiss(animated: true, completion: nil)
-        }
+        return instantiateFromNib()
+    }
     
 }
 

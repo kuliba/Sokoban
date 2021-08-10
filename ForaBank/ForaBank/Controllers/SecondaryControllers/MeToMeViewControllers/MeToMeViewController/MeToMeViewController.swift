@@ -9,7 +9,6 @@ import UIKit
 
 class MeToMeViewController: UIViewController {
     
-    var selectedCardNumber = ""
     var selectedBank: BankFullInfoList? {
         didSet {
             guard let bank = selectedBank else { return }
@@ -93,9 +92,6 @@ class MeToMeViewController: UIViewController {
         self.navigationItem.titleView = label
         
         var system: PaymentSystemList?
-//        Dict.shared.paymentList?.forEach({ $0.code == "SFP"
-//
-//        })
         
         Dict.shared.paymentList?.forEach({ systemlist in
             if systemlist.code == "SFP" {
@@ -114,17 +110,9 @@ class MeToMeViewController: UIViewController {
         titleLabel.backgroundColor = .clear
         titleLabel.textColor = .black
         
-//        let imageAttachment = NSTextAttachment()
-//        imageAttachment.image = UIImage(systemName: "chevron.down")
-//        imageAttachment.bounds = CGRect(x: 0, y: 0, width: imageAttachment.image!.size.width, height: imageAttachment.image!.size.height)
-
-//        let attachmentString = NSAttributedString(attachment: imageAttachment)
-        
-        
         let completeText = NSMutableAttributedString(string: "")
         let text = NSAttributedString(string: title , attributes: [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 16)])
         completeText.append(text)
-//        completeText.append(attachmentString)
         
         titleLabel.attributedText = completeText
         titleLabel.sizeToFit()
@@ -139,18 +127,6 @@ class MeToMeViewController: UIViewController {
         let titleView = UIView(frame: CGRect(x: 0, y: 0, width: max(titleLabel.frame.size.width, subtitleLabel.frame.size.width), height: 30))
         titleView.addSubview(titleLabel)
         titleView.addSubview(subtitleLabel)
-        
-//        let widthDiff = subtitleLabel.frame.size.width - titleLabel.frame.size.width
-//
-//        if widthDiff < 0 {
-//            let newX = widthDiff / 2
-//            subtitleLabel.frame.origin.x = abs(newX)
-//        } else {
-//            let newX = widthDiff / 2
-//            titleLabel.frame.origin.x = newX
-//        }
-//        let gesture = UITapGestureRecognizer(target: self, action: #selector(self.titleDidTaped))
-//        titleView.addGestureRecognizer(gesture)
         return titleView
     }
     
@@ -181,14 +157,58 @@ class MeToMeViewController: UIViewController {
         view.addSubview(saveAreaView)
         saveAreaView.anchor(top: view.safeAreaLayoutGuide.bottomAnchor, left: view.leftAnchor,
                             bottom: view.bottomAnchor, right: view.rightAnchor)
-        
+        bottomView.didDoneButtonTapped = { amount in
+            self.showActivity()
+            self.antiFraud { success, error in
+                DispatchQueue.main.async {
+                    if error != nil {
+                        self.dismissActivity()
+                        self.showAlert(with: "Ошибка", and: error ?? "")
+                    } else {
+                        if success {
+                            guard let bank = self.selectedBank else {
+                                self.dismissActivity()
+                                self.showAlert(with: "Ошибка", and: "Выберите банк")
+                                return
+                            }
+                            guard let cardModel = self.cardFromField.cardModel else { return }
+                            self.createMe2MePullTransfer(amount: amount, bank: bank.memberID!, cardModel: cardModel) { success, error in
+                                DispatchQueue.main.async {
+                                    if error != nil {
+                                        self.dismissActivity()
+                                        self.showAlert(with: "Ошибка", and: error ?? "")
+                                    } else {
+                                        if success {
+                                            self.dismissActivity()
+                                            let vc = SuccessMeToMeController.loadFromNib()
+                                            
+                                            let double = Double(amount) ?? 0
+                                            let viewModel = SuccessMeToMeModel(amount: double, bank: bank)
+                                            vc.viewModel = viewModel
+                                            vc.modalPresentationStyle = .fullScreen
+                                            self.present(vc, animated: true)
+                                            
+                                        } else {
+                                            self.dismissActivity()
+                                            self.showAlert(with: "Ошибка", and: "")
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            self.dismissActivity()
+                            self.showAlert(with: "Ошибка", and: "")
+                        }
+                    }
+                }
+            }
+        }
     }
     
     private func setupActions() {
         
         bankListView.didBankTapped = { (bank) in
             self.selectedBank = bank
-//            self.openOrHideView(self.bankListView)
             self.hideView(self.bankListView, needHide: true)
             self.hideView(self.cardListView, needHide: true)
         }
@@ -202,8 +222,6 @@ class MeToMeViewController: UIViewController {
         
         cardListView.didCardTapped = { card in
             self.cardFromField.cardModel = card
-            self.selectedCardNumber = card.number ?? ""
-            
             self.hideView(self.cardListView, needHide: true)
             self.hideView(self.bankListView, needHide: true)
             
@@ -220,7 +238,7 @@ class MeToMeViewController: UIViewController {
     }
     
     private func setupBankField(bank: BankFullInfoList) {
-        self.bankField.text = bank.name ?? "" //"АйДиБанк"
+        self.bankField.text = bank.name ?? ""
         
         if let imageString = bank.svgImage {
             self.bankField.imageView.image =  imageString.convertSVGStringToImage()
@@ -248,9 +266,6 @@ class MeToMeViewController: UIViewController {
                 
                 if filterProduct.count > 0 {
                     self?.cardFromField.cardModel = filterProduct.first
-                    guard let cardNumber  = filterProduct.first?.number else { return }
-                    self?.selectedCardNumber = cardNumber
-//                    self?.cardIsSelect = true
                     completion(nil)
                 }
             }
@@ -328,6 +343,67 @@ class MeToMeViewController: UIViewController {
                 completion(nil, error)
             }
         }
+    }
+    
+    func antiFraud(completion: @escaping (_ success: Bool, _ error: String?) -> Void ) {
+        
+        NetworkManager<AntiFraudDecodableModel>.addRequest(.antiFraud, [:], [:]) { model, error in
+            if error != nil {
+                guard let error = error else { return }
+                print("DEBUG: Error: ", error)
+                completion(false, error)
+            }
+            guard let model = model else { return }
+            print("DEBUG: Card list: ", model)
+            if model.statusCode == 0 {
+                guard let data  = model.data else { return }
+                completion(data, nil)
+            } else {
+                guard let error = model.errorMessage else { return }
+                print("DEBUG: Error: ", error)
+                completion(false, error)
+            }
+        }
+    }
+    
+    func createMe2MePullTransfer(amount: String, bank: String, cardModel: GetProductListDatum, completion: @escaping (_ success: Bool, _ error: String?) -> Void ) {
+        
+        var body = [ "amount" : amount,
+                     "currencyAmount" : "RUB",
+                     "comment" : "Перевод Me2Me Pull Credit",
+                     "payer" : [
+                        "cardId" : nil,
+                        "cardNumber" : nil,
+                        "accountId" : nil
+                     ],
+                     "bankId" : bank ] as [String : AnyObject]
+        if cardModel.productType == "CARD" {
+            body["payer"] = ["cardId": cardModel.cardID,
+                             "cardNumber" : nil,
+                             "accountId" : nil] as AnyObject
+        } else if cardModel.productType == "ACCOUNT" {
+            body["payer"] = ["cardId": nil,
+                             "cardNumber" : nil,
+                             "accountId" : cardModel.cardID] as AnyObject
+        }
+        
+        NetworkManager<CreateFastPaymentContractDecodableModel>.addRequest(.createMe2MePullTransfer, [:], body) { model, error in
+            if error != nil {
+                guard let error = error else { return }
+                print("DEBUG: Error: ", error)
+                completion(false, error)
+            }
+            guard let model = model else { return }
+            print("DEBUG: Card list: ", model)
+            if model.statusCode == 0 {
+                completion(true, nil)
+            } else {
+                guard let error = model.errorMessage else { return }
+                print("DEBUG: Error: ", error)
+                completion(false, error)
+            }
+        }
+        
     }
     
 }

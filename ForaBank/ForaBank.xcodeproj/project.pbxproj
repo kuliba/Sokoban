@@ -161,6 +161,8 @@
 		ED84995A26A8831E005205C6 /* EPContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED84995426A8831D005205C6 /* EPContact.swift */; };
 		ED84995B26A8831E005205C6 /* EPConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED84995526A8831D005205C6 /* EPConstants.swift */; };
 		ED8AB45526C116DB006F0D03 /* MeToMeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8AB45426C116DB006F0D03 /* MeToMeViewController.swift */; };
+		ED8AB45B26C2A7C5006F0D03 /* SuccessMeToMeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8AB45A26C2A7C5006F0D03 /* SuccessMeToMeController.swift */; };
+		ED8AB45D26C2B55E006F0D03 /* SuccessMeToMeController.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED8AB45C26C2B55E006F0D03 /* SuccessMeToMeController.xib */; };
 		ED92D3A226735A0A006D47B3 /* PaymentByPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED92D3A126735A0A006D47B3 /* PaymentByPhoneViewController.swift */; };
 		EDAA99AF2673AB9200435484 /* ForaSwitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAA99AE2673AB9200435484 /* ForaSwitchView.swift */; };
 		EDAA99B12673ABF200435484 /* ForaSwitchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDAA99B02673ABF200435484 /* ForaSwitchView.xib */; };
@@ -420,6 +422,8 @@
 		ED84995426A8831D005205C6 /* EPContact.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EPContact.swift; sourceTree = "<group>"; };
 		ED84995526A8831D005205C6 /* EPConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EPConstants.swift; sourceTree = "<group>"; };
 		ED8AB45426C116DB006F0D03 /* MeToMeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeToMeViewController.swift; sourceTree = "<group>"; };
+		ED8AB45A26C2A7C5006F0D03 /* SuccessMeToMeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessMeToMeController.swift; sourceTree = "<group>"; };
+		ED8AB45C26C2B55E006F0D03 /* SuccessMeToMeController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SuccessMeToMeController.xib; sourceTree = "<group>"; };
 		ED92D3A126735A0A006D47B3 /* PaymentByPhoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentByPhoneViewController.swift; sourceTree = "<group>"; };
 		EDAA99AE2673AB9200435484 /* ForaSwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForaSwitchView.swift; sourceTree = "<group>"; };
 		EDAA99B02673ABF200435484 /* ForaSwitchView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ForaSwitchView.xib; sourceTree = "<group>"; };
@@ -1173,6 +1177,8 @@
 			children = (
 				ED8AB45226C11694006F0D03 /* MeToMeViewController */,
 				ED8AB45326C1169E006F0D03 /* MeToMeSettingViewController */,
+				ED8AB45A26C2A7C5006F0D03 /* SuccessMeToMeController.swift */,
+				ED8AB45C26C2B55E006F0D03 /* SuccessMeToMeController.xib */,
 			);
 			path = MeToMeViewControllers;
 			sourceTree = "<group>";
@@ -1880,6 +1886,7 @@
 				0BF3484E268A455C005138A8 /* AllCardView.xib in Resources */,
 				ED84995826A8831E005205C6 /* EPContactCell.xib in Resources */,
 				EDB145112664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf in Resources */,
+				ED8AB45D26C2B55E006F0D03 /* SuccessMeToMeController.xib in Resources */,
 				EDB143B5265FDE960028EF5A /* Assets.xcassets in Resources */,
 				68FFA52D2682AF62002DADFA /* ContactCollectionViewCell.xib in Resources */,
 				EDB143CB265FDEC90028EF5A /* Roboto-Italic.ttf in Resources */,
@@ -2113,6 +2120,7 @@
 				EDC341A226864C4100FFFEF8 /* BottomInputView.swift in Sources */,
 				0B747890267343B400C44F79 /* KeyExchangeDecodebleModel.swift in Sources */,
 				0B7A18C526852EFC0007CC75 /* MakeTransferDecodableModel.swift in Sources */,
+				ED8AB45B26C2A7C5006F0D03 /* SuccessMeToMeController.swift in Sources */,
 				EDB14528266624EE0028EF5A /* OrderCardView.swift in Sources */,
 				EDF68219266F9EC800FD5C07 /* RouterBaseUrlList.swift in Sources */,
 				68FFA563268DDFCB002DADFA /* SearchContactView.swift in Sources */,
