@@ -12,9 +12,7 @@ import Foundation
 class URLSchemeType {
     
     enum URLScheme: String {
-    
-    case http = "http"
-    case https = "https"
-    
+        case http = "http"
+        case https = "https"
     }
 }

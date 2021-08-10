@@ -51,6 +51,7 @@
 		0BA09E3026ADEC300065D623 /* GHKCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA09E2F26ADEC300065D623 /* GHKCell.swift */; };
 		0BA09E3226AE1AB70065D623 /* GKHCityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA09E3126AE1AB70065D623 /* GKHCityViewController.swift */; };
 		0BA09E3426B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA09E3326B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift */; };
+		0BA251ED26C266A400AD087A /* CreateServiceTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA251EC26C266A400AD087A /* CreateServiceTransferDecodableModel.swift */; };
 		0BD2177926A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */; };
 		0BE270B026B76B9700FA958C /* ExtensionCustomPopUpSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270AF26B76B9700FA958C /* ExtensionCustomPopUpSetup.swift */; };
 		0BE270B326B9959900FA958C /* ExtensionBottomLableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */; };
@@ -312,6 +313,7 @@
 		0BA09E2F26ADEC300065D623 /* GHKCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GHKCell.swift; sourceTree = "<group>"; };
 		0BA09E3126AE1AB70065D623 /* GKHCityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHCityViewController.swift; sourceTree = "<group>"; };
 		0BA09E3326B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetFullBankInfoListDecodableModel.swift; sourceTree = "<group>"; };
+		0BA251EC26C266A400AD087A /* CreateServiceTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateServiceTransferDecodableModel.swift; sourceTree = "<group>"; };
 		0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAnywayOperatorsListDecodableModel.swift; sourceTree = "<group>"; };
 		0BE270AF26B76B9700FA958C /* ExtensionCustomPopUpSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionCustomPopUpSetup.swift; sourceTree = "<group>"; };
 		0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBottomLableModel.swift; sourceTree = "<group>"; };
@@ -1563,6 +1565,7 @@
 				0B05163026A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift */,
 				0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */,
 				0BA09E3326B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift */,
+				0BA251EC26C266A400AD087A /* CreateServiceTransferDecodableModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -2103,6 +2106,7 @@
 				0BF3485D26931254005138A8 /* SuggestBankDecodableModel.swift in Sources */,
 				0B95C40A26B6D88000AA57E6 /* BottomLableModel.swift in Sources */,
 				ED4FC61A266EA42E0092B4AB /* AppLocker.swift in Sources */,
+				0BA251ED26C266A400AD087A /* CreateServiceTransferDecodableModel.swift in Sources */,
 				0BF34854268B2699005138A8 /* PrepareExternalDecodableModel.swift in Sources */,
 				ED3A96772690FCD700252857 /* BankViewModel.swift in Sources */,
 				68FFA54F26853897002DADFA /* PhoneContacts.swift in Sources */,

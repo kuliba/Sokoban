@@ -12,6 +12,10 @@ extension CustomPopUpWithRateView {
         super.viewDidLoad()
         setupUI()
         setupConstraint()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         setupActions()
         setupCardViewActions()
     }
