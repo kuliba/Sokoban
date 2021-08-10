@@ -56,6 +56,7 @@
 		0BA251F126C26BE200AD087A /* СreateMe2MePullTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA251F026C26BE200AD087A /* СreateMe2MePullTransferDecodableModel.swift */; };
 		0BA251F326C26FE000AD087A /* CreateFastPaymentContractDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA251F226C26FE000AD087A /* CreateFastPaymentContractDecodableModel.swift */; };
 		0BA251F526C270A100AD087A /* UpdateFastPaymentContractDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA251F426C270A100AD087A /* UpdateFastPaymentContractDecodableModel.swift */; };
+		0BA251F726C2782500AD087A /* FastPaymentContractFindListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA251F626C2782500AD087A /* FastPaymentContractFindListDecodableModel.swift */; };
 		0BD2177926A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */; };
 		0BE270B026B76B9700FA958C /* ExtensionCustomPopUpSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270AF26B76B9700FA958C /* ExtensionCustomPopUpSetup.swift */; };
 		0BE270B326B9959900FA958C /* ExtensionBottomLableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */; };
@@ -322,6 +323,7 @@
 		0BA251F026C26BE200AD087A /* СreateMe2MePullTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "СreateMe2MePullTransferDecodableModel.swift"; sourceTree = "<group>"; };
 		0BA251F226C26FE000AD087A /* CreateFastPaymentContractDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFastPaymentContractDecodableModel.swift; sourceTree = "<group>"; };
 		0BA251F426C270A100AD087A /* UpdateFastPaymentContractDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateFastPaymentContractDecodableModel.swift; sourceTree = "<group>"; };
+		0BA251F626C2782500AD087A /* FastPaymentContractFindListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentContractFindListDecodableModel.swift; sourceTree = "<group>"; };
 		0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAnywayOperatorsListDecodableModel.swift; sourceTree = "<group>"; };
 		0BE270AF26B76B9700FA958C /* ExtensionCustomPopUpSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionCustomPopUpSetup.swift; sourceTree = "<group>"; };
 		0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBottomLableModel.swift; sourceTree = "<group>"; };
@@ -1578,6 +1580,7 @@
 				0BA251F026C26BE200AD087A /* СreateMe2MePullTransferDecodableModel.swift */,
 				0BA251F226C26FE000AD087A /* CreateFastPaymentContractDecodableModel.swift */,
 				0BA251F426C270A100AD087A /* UpdateFastPaymentContractDecodableModel.swift */,
+				0BA251F626C2782500AD087A /* FastPaymentContractFindListDecodableModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -2065,6 +2068,7 @@
 				ED84995726A8831E005205C6 /* EPExtensions.swift in Sources */,
 				EDF68218266F9EC800FD5C07 /* RouterManager.swift in Sources */,
 				ED84994826A6FD97005205C6 /* CountryListView.swift in Sources */,
+				0BA251F726C2782500AD087A /* FastPaymentContractFindListDecodableModel.swift in Sources */,
 				0BA09E2C26ADD6C50065D623 /* GKHViewController.swift in Sources */,
 				EDB1658026694676007E6030 /* PaymentsViewControllerLayout.swift in Sources */,
 				ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */,
