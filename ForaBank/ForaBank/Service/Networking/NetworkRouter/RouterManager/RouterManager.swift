@@ -50,6 +50,7 @@ enum RouterManager {
     case getProductListByFilter
     case getAnywayOperatorsList
     case getFullBankInfoList
+    case createServiceTransfer
 }
 
 extension RouterManager {
@@ -684,6 +685,21 @@ extension RouterManager {
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.get.rawValue
+            return request
+            
+        case .createServiceTransfer:
+            let baseUrl = RouterUrlList.createServiceTransfer.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
             return request
         }
     }
