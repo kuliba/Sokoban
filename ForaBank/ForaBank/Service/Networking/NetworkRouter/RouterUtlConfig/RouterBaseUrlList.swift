@@ -102,4 +102,19 @@ enum RouterBaseUrlList: String {
     case getAnywayOperatorsList    = "/rest/getAnywayOperatorsList"
     
     case getFullBankInfoList       = "/rest/dict/getFullBankInfoList"
+    
+    case createServiceTransfer     = "/rest/transfer/createServiceTransfer"
+    
+    case antiFraud                 = "/rest/transfer/antiFraud"
+    
+    case createMe2MePullTransfer   = "/rest/transfer/createMe2MePullTransfer"
+    
+    case createFastPaymentContract = "/rest/createFastPaymentContract"
+    
+    case updateFastPaymentContract = "/rest/updateFastPaymentContract"
+    
+    case fastPaymentContractFindList = "/rest/fastPaymentContractFindList"
+    
+    
+    
 }
