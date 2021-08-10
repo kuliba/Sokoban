@@ -51,6 +51,10 @@ enum RouterManager {
     case getAnywayOperatorsList
     case getFullBankInfoList
     case createServiceTransfer
+    case antiFraud
+    case createMe2MePullTransfer
+    case createFastPaymentContract
+    case updateFastPaymentContract
 }
 
 extension RouterManager {
@@ -689,6 +693,66 @@ extension RouterManager {
             
         case .createServiceTransfer:
             let baseUrl = RouterUrlList.createServiceTransfer.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .antiFraud:
+            let baseUrl = RouterUrlList.antiFraud.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .createMe2MePullTransfer:
+            let baseUrl = RouterUrlList.createMe2MePullTransfer.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .createFastPaymentContract:
+            let baseUrl = RouterUrlList.createFastPaymentContract.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .updateFastPaymentContract:
+            let baseUrl = RouterUrlList.updateFastPaymentContract.returnUrl()
             switch baseUrl {
             case .success(let url):
                 resultUrl = url.absoluteURL

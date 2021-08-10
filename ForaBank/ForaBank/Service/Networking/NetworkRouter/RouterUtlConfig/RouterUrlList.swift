@@ -57,6 +57,10 @@ enum RouterUrlList: String {
     case getAnywayOperatorsList
     case getFullBankInfoList
     case createServiceTransfer
+    case antiFraud
+    case createMe2MePullTransfer
+    case createFastPaymentContract
+    case updateFastPaymentContract
     
     
     func returnUrl () -> URLValue {
@@ -526,6 +530,50 @@ enum RouterUrlList: String {
             
         case .createServiceTransfer:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.createServiceTransfer.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .antiFraud:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.antiFraud.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .createMe2MePullTransfer:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.createMe2MePullTransfer.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .createFastPaymentContract:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.createFastPaymentContract.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .updateFastPaymentContract:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.updateFastPaymentContract.rawValue)
             
             switch result {
             case .success(let url):
