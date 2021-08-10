@@ -61,7 +61,7 @@ enum RouterUrlList: String {
     case createMe2MePullTransfer
     case createFastPaymentContract
     case updateFastPaymentContract
-    
+    case fastPaymentContractFindList
     
     func returnUrl () -> URLValue {
         switch self {
@@ -574,6 +574,17 @@ enum RouterUrlList: String {
             
         case .updateFastPaymentContract:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.updateFastPaymentContract.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .fastPaymentContractFindList:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.fastPaymentContractFindList.rawValue)
             
             switch result {
             case .success(let url):
