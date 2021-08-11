@@ -96,3 +96,9 @@ extension String {
     }
 
 }
+extension String {
+    var digits: String {
+        return components(separatedBy: CharacterSet.decimalDigits.inverted)
+            .joined()
+    }
+}

@@ -74,6 +74,9 @@ class PaymentsDetailsSuccessViewController: UIViewController {
         vc.doneButton.isHidden = true
         vc.smsCodeField.isHidden = true
         vc.addCloseButton()
+        if printFormType == "sbp"{
+            vc.confurmVCModel?.payToCompany = true
+        }
         vc.title = "Детали операции"
         let navVC = UINavigationController(rootViewController: vc)
         self.present(navVC, animated: true)

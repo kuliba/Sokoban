@@ -152,7 +152,8 @@ class PhoneConfirmViewController: UIViewController {
                     self.dismissActivity()
                     DispatchQueue.main.async {
                         let vc = PaymentsDetailsSuccessViewController()
-//                        vc.confurmVCModel = 
+//                        vc.confurmVCModel =
+                        var data = ConfirmViewControllerModel(type: .phoneNumberSBP)
                         vc.id = model.data?.paymentOperationDetailID
                         vc.modalPresentationStyle = .fullScreen
                         vc.printFormType = "sbp"

@@ -58,9 +58,28 @@ extension PaymentsViewController: UICollectionViewDelegate {
             }
         case .pay:
             print("DEBUG: " + #function + pay[indexPath.row].name)
-            
-            if let viewController = pay[indexPath.row].controllerName.getViewController() {
-                present(viewController, animated: true)
+            if pay[indexPath.row].id == 19 {
+                getFastPaymentContractList { [weak self] contractList, error in
+                    if error != nil {
+                        self?.showAlert(with: "Ошибка", and: error!)
+                    } else {
+                        DispatchQueue.main.async {
+                            if let viewController = self?.pay[indexPath.row].controllerName.getViewController() {
+                                viewController.addCloseButton()
+                                let navVC = UINavigationController(rootViewController: viewController)
+                                navVC.modalPresentationStyle = .fullScreen
+                                self?.present(navVC, animated: true)
+                            }
+                        }
+                    }
+                }
+            } else {
+                if let viewController = pay[indexPath.row].controllerName.getViewController() {
+                    viewController.addCloseButton()
+                    let navVC = UINavigationController(rootViewController: viewController)
+                    navVC.modalPresentationStyle = .fullScreen
+                    present(navVC, animated: true)
+                }
             }
         }
     }
@@ -123,4 +142,5 @@ extension PaymentsViewController: UIViewControllerTransitioningDelegate {
         PresentationController(presentedViewController: presented, presenting: presenting)
     }
 }
+
 

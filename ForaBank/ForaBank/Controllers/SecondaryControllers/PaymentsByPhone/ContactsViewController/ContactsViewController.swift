@@ -583,7 +583,17 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
             }
             vc.modalPresentationStyle = .fullScreen
             
-            vc.phoneField.text = selectPhoneNumber ?? ""
+//            if selectPhoneNumber?.digits.prefix(1) == "8"{
+//                selectPhoneNumber = selectPhoneNumber?.removeFirst().description
+//            }
+            if lastPhonePayment.count > 0{
+                vc.phoneField.text = selectPhoneNumber ?? ""
+                vc.selectNumber = selectPhoneNumber ?? ""
+            } else {
+                let mask = StringMask(mask: "0 (000) 000-00-00")
+                let maskPhone = mask.mask(string: "8\(lastPayment[indexPath.item].phoneNumber ?? "")")
+                vc.selectNumber = maskPhone
+            }
             vc.addCloseButton()
             
             let navController = UINavigationController(rootViewController: vc)
@@ -675,6 +685,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
 //                self.dismissActivity()
 //                print("DEBUG: Error: ", error ?? "")
 //            }
+            self.dismissActivity()
             guard let model = model else { return }
             print("DEBUG: Card list: ", model)
             if model.statusCode == 0 {

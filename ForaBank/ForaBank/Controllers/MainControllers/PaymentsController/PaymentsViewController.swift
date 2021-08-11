@@ -105,8 +105,13 @@ class PaymentsViewController: UIViewController {
         
     }
     
-    //MARK: - API
-    private func loadLastPayments() {
+
+}
+
+//MARK: - API
+extension PaymentsViewController {
+    
+    func loadLastPayments() {
         NetworkManager<GetPaymentCountriesDecodableModel>.addRequest(.getPaymentCountries, [:], [:]) { model, error in
             if error != nil {
                 print("DEBUG: error", error!)
@@ -159,5 +164,21 @@ class PaymentsViewController: UIViewController {
         }
     }
     
+    
+    func getFastPaymentContractList(_ completion: @escaping (_ model: [FastPaymentContractFindListDatum]? ,_ error: String?) -> Void) {
+        NetworkManager<FastPaymentContractFindListDecodableModel>.addRequest(.fastPaymentContractFindList, [:], [:]) { model, error in
+            if error != nil {
+                print("DEBUG: Error: ", error ?? "")
+                completion(nil, error)
+            }
+            guard let model = model else { return }
+            print("DEBUG: fastPaymentContractFindList", model)
+            if model.statusCode == 0 {
+                completion(model.data,nil)
+            } else {
+                print("DEBUG: Error: ", model.errorMessage ?? "")
+                completion(nil, model.errorMessage)
+            }
+        }
+    }
 }
-

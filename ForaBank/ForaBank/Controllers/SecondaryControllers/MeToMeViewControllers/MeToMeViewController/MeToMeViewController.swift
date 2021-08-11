@@ -1,0 +1,409 @@
+//
+//  MeToMeViewController.swift
+//  ForaBank
+//
+//  Created by Mikhail on 09.08.2021.
+//
+
+import UIKit
+
+class MeToMeViewController: UIViewController {
+    
+    var selectedBank: BankFullInfoList? {
+        didSet {
+            guard let bank = selectedBank else { return }
+            setupBankField(bank: bank)
+        }
+    }
+
+    var banks: [BankFullInfoList] = [] {
+        didSet {
+            bankListView.bankList = banks
+        }
+    }
+    var cardFromField = CardChooseView()
+    var cardListView = CardListView(onlyMy: false)
+    var bankField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "Из банка",
+            image: #imageLiteral(resourceName: "BankIcon"),
+            isEditable: false,
+            showChooseButton: true)
+    )
+    var bankListView = FullBankInfoListView()
+    var commentView = ForaInput(
+        viewModel: ForaInputModel(
+            title: "Комментарий",
+            image: #imageLiteral(resourceName: "comment"))
+    )
+    var bottomView = BottomInputView()
+    
+    var stackView = UIStackView(arrangedSubviews: [])
+    
+    //MARK: - Viewlifecicle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupUI()
+        hideKeyboardWhenTappedAround()
+
+    }
+    
+    func setupUI() {
+        view.backgroundColor = .white
+        
+        setupBottomView()
+        setupStackView()
+        setupCardFromView()
+        setupActions()
+        setupPaymentsUI()
+        setupCardList { [weak self] error in
+            if error != nil {
+                self?.showAlert(with: "Ошибка", and: error!)
+            }
+        }
+    }
+    
+    func setupStackView() {
+        //TODO: добавить скроллвью что бы избежать проблем на маленьких экранах
+        // let scroll
+        //  let view1 = UIView()
+        //  view1.addSubview(stackView)
+        // scroll add view1
+        stackView = UIStackView(arrangedSubviews: [cardFromField, cardListView,  bankField, bankListView, commentView])
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.distribution = .equalSpacing
+        stackView.spacing = 12
+        stackView.isUserInteractionEnabled = true
+        view.addSubview(stackView)
+        
+        stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
+                         left: view.leftAnchor, right: view.rightAnchor,
+                         paddingTop: 20)
+    }
+    
+    func setupPaymentsUI() {
+        let label = UILabel(frame: CGRect(x: 0.0, y: 0.0, width: UIScreen.main.bounds.width, height: 44.0))
+        label.backgroundColor = .clear
+        label.numberOfLines = 0
+        label.font = .boldSystemFont(ofSize: 16)
+        label.textAlignment = .center
+        label.text = "Пополнить со счета\nв другом банке"
+        self.navigationItem.titleView = label
+        
+        var system: PaymentSystemList?
+        
+        Dict.shared.paymentList?.forEach({ systemlist in
+            if systemlist.code == "SFP" {
+                system = systemlist
+            }
+        })
+        let navImage: UIImage = system?.svgImage?.convertSVGStringToImage() ?? UIImage()
+        let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
+        self.navigationItem.rightBarButtonItem = customViewItem
+        
+    }
+    
+    func setTitle(title:String, subtitle:String) -> UIView {
+        let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+
+        titleLabel.backgroundColor = .clear
+        titleLabel.textColor = .black
+        
+        let completeText = NSMutableAttributedString(string: "")
+        let text = NSAttributedString(string: title , attributes: [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 16)])
+        completeText.append(text)
+        
+        titleLabel.attributedText = completeText
+        titleLabel.sizeToFit()
+
+        let subtitleLabel = UILabel(frame: CGRect(x: 0, y: 18, width: 0, height: 0))
+        subtitleLabel.backgroundColor = .clear
+        subtitleLabel.textColor = .black
+        subtitleLabel.font = .boldSystemFont(ofSize: 16)
+        subtitleLabel.text = subtitle
+        subtitleLabel.sizeToFit()
+        
+        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: max(titleLabel.frame.size.width, subtitleLabel.frame.size.width), height: 30))
+        titleView.addSubview(titleLabel)
+        titleView.addSubview(subtitleLabel)
+        return titleView
+    }
+    
+    private func setupCardFromView() {
+        cardFromField.titleLabel.text = "Счет зачисления"
+        cardFromField.titleLabel.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
+        cardFromField.imageView.isHidden = false
+        cardFromField.leftTitleAncor.constant = 64
+        cardFromField.layoutIfNeeded()
+        
+        cardFromField.didChooseButtonTapped = { () in
+            print("cardField didChooseButtonTapped")
+            self.openOrHideView(self.cardListView)
+            self.hideView(self.bankListView, needHide: true)
+        }
+        
+    }
+    
+    private func setupBottomView() {
+        view.addSubview(bottomView)
+        bottomView.currencySymbol = "₽"
+        bottomView.anchor(left: view.leftAnchor,
+                          bottom: view.safeAreaLayoutGuide.bottomAnchor,
+                          right: view.rightAnchor)
+        
+        let saveAreaView = UIView()
+        saveAreaView.backgroundColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1)
+        view.addSubview(saveAreaView)
+        saveAreaView.anchor(top: view.safeAreaLayoutGuide.bottomAnchor, left: view.leftAnchor,
+                            bottom: view.bottomAnchor, right: view.rightAnchor)
+        bottomView.didDoneButtonTapped = { amount in
+            self.showActivity()
+            self.antiFraud { success, error in
+                DispatchQueue.main.async {
+                    if error != nil {
+                        self.dismissActivity()
+                        self.showAlert(with: "Ошибка", and: error ?? "")
+                    } else {
+                        if success {
+                            guard let bank = self.selectedBank else {
+                                self.dismissActivity()
+                                self.showAlert(with: "Ошибка", and: "Выберите банк")
+                                return
+                            }
+                            guard let cardModel = self.cardFromField.cardModel else { return }
+                            self.createMe2MePullTransfer(amount: amount, bank: bank.memberID!, cardModel: cardModel) { success, error in
+                                DispatchQueue.main.async {
+                                    if error != nil {
+                                        self.dismissActivity()
+                                        self.showAlert(with: "Ошибка", and: error ?? "")
+                                    } else {
+                                        if success {
+                                            self.dismissActivity()
+                                            let vc = SuccessMeToMeController.loadFromNib()
+                                            
+                                            let double = Double(amount) ?? 0
+                                            let viewModel = SuccessMeToMeModel(amount: double, bank: bank)
+                                            vc.viewModel = viewModel
+                                            vc.modalPresentationStyle = .fullScreen
+                                            self.present(vc, animated: true)
+                                            
+                                        } else {
+                                            self.dismissActivity()
+                                            self.showAlert(with: "Ошибка", and: "")
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            self.dismissActivity()
+                            self.showAlert(with: "Ошибка", and: "")
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    private func setupActions() {
+        
+        bankListView.didBankTapped = { (bank) in
+            self.selectedBank = bank
+            self.hideView(self.bankListView, needHide: true)
+            self.hideView(self.cardListView, needHide: true)
+        }
+        
+        bankField.didChooseButtonTapped = { () in
+            print("bankField didChooseButtonTapped")
+            self.openOrHideView(self.bankListView)
+            self.bankListView.collectionView.reloadData()
+            self.hideView(self.cardListView, needHide: true)
+        }
+        
+        cardListView.didCardTapped = { card in
+            self.cardFromField.cardModel = card
+            self.hideView(self.cardListView, needHide: true)
+            self.hideView(self.bankListView, needHide: true)
+            
+        }
+        
+        suggestBank("") { model, error in
+            if error != nil {
+                self.showAlert(with: "Ошибка", and: error ?? "")
+            } else {
+                guard let bankList = model else { return }
+                self.banks = bankList
+            }
+        }
+    }
+    
+    private func setupBankField(bank: BankFullInfoList) {
+        self.bankField.text = bank.name ?? ""
+        
+        if let imageString = bank.svgImage {
+            self.bankField.imageView.image =  imageString.convertSVGStringToImage()
+        } else {
+            self.bankField.imageView.image = UIImage(named: "BankIcon")!
+        }
+    }
+    
+    private func setupCardList(completion: @escaping ( _ error: String?) ->() ) {
+        getCardList { [weak self] data ,error in
+            DispatchQueue.main.async {
+                
+                if error != nil {
+                    completion(error)
+                }
+                guard let data = data else { return }
+                var filterProduct: [GetProductListDatum] = []
+                data.forEach { product in
+                    if (product.productType == "CARD" || product.productType == "ACCOUNT") && product.currency == "RUB" {
+                        filterProduct.append(product)
+                    }
+                }
+                
+                self?.cardListView.cardList = filterProduct
+                
+                if filterProduct.count > 0 {
+                    self?.cardFromField.cardModel = filterProduct.first
+                    completion(nil)
+                }
+            }
+        }
+    }
+    
+    //MARK: - Animation
+    func openOrHideView(_ view: UIView) {
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.2) {
+                if view.isHidden == true {
+                    view.isHidden = false
+                    view.alpha = 1
+                } else {
+                    view.isHidden = true
+                    view.alpha = 0
+                }
+                self.stackView.layoutIfNeeded()
+            }
+        }
+    }
+    
+    func hideView(_ view: UIView, needHide: Bool) {
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.2) {
+                view.isHidden = needHide
+                view.alpha = needHide ? 0 : 1
+                self.stackView.layoutIfNeeded()
+            }
+        }
+    }
+    
+    
+    //MARK: - API
+    func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?)->()) {
+        let param = ["isCard": "true", "isAccount": "true", "isDeposit": "false", "isLoan": "false"]
+        
+        NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
+            if error != nil {
+                completion(nil, error)
+            }
+            guard let model = model else { return }
+            if model.statusCode == 0 {
+                guard let cardList = model.data else { return }
+                completion(cardList, nil)
+            } else {
+                guard let error = model.errorMessage else { return }
+                completion(nil, error)
+            }
+        }
+    }
+    func suggestBank(_ bic: String, completion: @escaping (_ bankList: [BankFullInfoList]?, _ error: String?) -> Void ) {
+        showActivity()
+        
+        let body = [ "bic": bic,
+                     "serviceType" : "5",
+                     "type": "20"
+        ]
+        
+        NetworkManager<GetFullBankInfoListDecodableModel>.addRequest(.getFullBankInfoList , body, [:]) { [weak self] model, error in
+            self?.dismissActivity()
+            if error != nil {
+                guard let error = error else { return }
+                print("DEBUG: Error: ", error)
+                completion(nil, error)
+            }
+            guard let model = model else { return }
+            print("DEBUG: Card list: ", model)
+            if model.statusCode == 0 {
+                guard let data  = model.data else { return }
+                completion(data.bankFullInfoList ?? [], nil)
+            } else {
+                guard let error = model.errorMessage else { return }
+                print("DEBUG: Error: ", error)
+                completion(nil, error)
+            }
+        }
+    }
+    
+    func antiFraud(completion: @escaping (_ success: Bool, _ error: String?) -> Void ) {
+        
+        NetworkManager<AntiFraudDecodableModel>.addRequest(.antiFraud, [:], [:]) { model, error in
+            if error != nil {
+                guard let error = error else { return }
+                print("DEBUG: Error: ", error)
+                completion(false, error)
+            }
+            guard let model = model else { return }
+            print("DEBUG: Card list: ", model)
+            if model.statusCode == 0 {
+                guard let data  = model.data else { return }
+                completion(data, nil)
+            } else {
+                guard let error = model.errorMessage else { return }
+                print("DEBUG: Error: ", error)
+                completion(false, error)
+            }
+        }
+    }
+    
+    func createMe2MePullTransfer(amount: String, bank: String, cardModel: GetProductListDatum, completion: @escaping (_ success: Bool, _ error: String?) -> Void ) {
+        
+        var body = [ "amount" : amount,
+                     "currencyAmount" : "RUB",
+                     "comment" : "Перевод Me2Me Pull Credit",
+                     "payer" : [
+                        "cardId" : nil,
+                        "cardNumber" : nil,
+                        "accountId" : nil
+                     ],
+                     "bankId" : bank ] as [String : AnyObject]
+        if cardModel.productType == "CARD" {
+            body["payer"] = ["cardId": cardModel.cardID,
+                             "cardNumber" : nil,
+                             "accountId" : nil] as AnyObject
+        } else if cardModel.productType == "ACCOUNT" {
+            body["payer"] = ["cardId": nil,
+                             "cardNumber" : nil,
+                             "accountId" : cardModel.cardID] as AnyObject
+        }
+        
+        NetworkManager<CreateFastPaymentContractDecodableModel>.addRequest(.createMe2MePullTransfer, [:], body) { model, error in
+            if error != nil {
+                guard let error = error else { return }
+                print("DEBUG: Error: ", error)
+                completion(false, error)
+            }
+            guard let model = model else { return }
+            print("DEBUG: Card list: ", model)
+            if model.statusCode == 0 {
+                completion(true, nil)
+            } else {
+                guard let error = model.errorMessage else { return }
+                print("DEBUG: Error: ", error)
+                completion(false, error)
+            }
+        }
+        
+    }
+    
+}

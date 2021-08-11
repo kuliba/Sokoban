@@ -779,7 +779,7 @@ extension RouterManager {
             
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
-            request.httpMethod = RequestMethod.post.rawValue
+            request.httpMethod = RequestMethod.get.rawValue
             return request
         }
     }

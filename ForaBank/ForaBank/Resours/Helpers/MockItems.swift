@@ -138,7 +138,7 @@ class MockItems {
             
             PaymentsModel(id: 19, name: "Прочее",
                           iconName: "PaymentsIconShop",
-                          controllerName: "DevelopViewController",
+                          controllerName: "MeToMeViewController",
                           description: "Что то")
         ]
     }

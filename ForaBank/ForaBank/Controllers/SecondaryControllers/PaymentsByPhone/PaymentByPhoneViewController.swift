@@ -448,7 +448,7 @@ class PaymentByPhoneViewController: UIViewController {
                             var model = ConfirmViewControllerModel(type: .phoneNumber)
                             model.bank = self?.selectedBank
                             model.cardFrom = self?.cardField.viewModel.cardModel
-                            model.phone = self?.phoneField.text ?? ""
+                            model.phone = self?.phoneField.text.digits ?? ""
                             model.summTransction = data.debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
                             model.summInCurrency = data.creditAmount?.currencyFormatter(symbol: data.currencyPayee ?? "RUB") ?? ""
                             model.taxTransction = data.fee?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
@@ -519,7 +519,7 @@ class PaymentByPhoneViewController: UIViewController {
         var newPhone = String()
         var clearPhone = String()
         
-        newPhone = phoneField.text.replacingOccurrences(of: "+", with: "").replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "").replacingOccurrences(of: "-", with: "")
+        newPhone = selectNumber?.digits ?? ""
         
         if newPhone.prefix(1) == "7" || newPhone.prefix(1) == "8"{
             clearPhone = String(newPhone.dropFirst())
@@ -591,7 +591,7 @@ class PaymentByPhoneViewController: UIViewController {
                     }
                     
                     model.cardFrom = self?.cardField.viewModel.cardModel
-                    model.phone = self?.phoneField.text ?? ""
+                    model.phone = self?.phoneField.text.digits ?? ""
                     
                     model.summTransction = data.data?.amount?.currencyFormatter(symbol: "RUB") ?? ""// debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
 //                    model.summInCurrency = model.creditAmount?.currencyFormatter(symbol: data.currencyPayee ?? "RUB") ?? ""
@@ -599,6 +599,7 @@ class PaymentByPhoneViewController: UIViewController {
 //                            model.comment = comment
                     model.fullName = data.data?.listInputs?[5].content?[0] ?? "Получатель не найден"
                     
+                    model.numberTransction = data.data?.id ?? ""
                     
                     model.statusIsSuccses = true
                     

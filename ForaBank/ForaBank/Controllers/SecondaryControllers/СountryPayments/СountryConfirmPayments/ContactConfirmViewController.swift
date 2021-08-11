@@ -336,17 +336,43 @@ class ContactConfurmViewController: UIViewController {
             cardToField.isHidden = true
             countryField.isHidden = true
             currancyTransctionField.isHidden = true
+            
             numberTransctionField.isHidden = true
-            
-            let mask = StringMask(mask: "+0 (000) 000-00-00")
+            let mask = StringMask(mask: "0 (000) 000-00-00")
             let maskPhone = mask.mask(string: model.phone)
-            
+            if model.payToCompany == true, model.type == .phoneNumberSBP{
+                numberTransctionField.isHidden = false
+                numberTransctionField.text = model.numberTransction
+            }
+            if model.type == .phoneNumberSBP{
+                var sbpimage = UIImage()
+                
+                if let paymentSystems = Dict.shared.paymentList{
+                
+                    for system in paymentSystems{
+                        if system.code == "SFP"{
+                            sbpimage = system.svgImage?.convertSVGStringToImage() ?? UIImage()
+                        }
+                    }
+                    
+                }
+                let imageView = UIImageView(image: sbpimage)
+                let item = UIBarButtonItem(customView: imageView)
+                imageView.contentMode = .scaleAspectFit
+                imageView.frame = CGRect(origin: .zero, size: CGSize(width: 10, height: 10))
+                self.navigationItem.rightBarButtonItem = item
+            }
             phoneField.text = maskPhone ?? ""
             nameField.text =  model.fullName ?? ""
-            
             bankField.text = model.bank?.memberNameRus ?? "" //"АйДиБанк"
             bankField.imageView.image = model.bank?.svgImage?.convertSVGStringToImage()
-            
+//            if smsCodeField.isHidden == false{
+//                numberTransctionField.text = model.numberTransction
+//                let customViewItem = UIBarButtonItem(customView: UIImageView(image: #imageLiteral(resourceName: "sbp-logo")))
+//                customViewItem.width = 24
+//                self.navigationItem.rightBarButtonItem = customViewItem
+//
+//            }
             cardFromField.cardModel = model.cardFrom
             cardFromField.isHidden = false
             cardFromField.choseButton.isHidden = true
