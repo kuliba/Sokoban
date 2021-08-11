@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MeToMeSettingViewController" customModule="ForaBank" customModuleProvider="target">
+            <connections>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jEb-Oy-Ma6">
+                    <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                    <items>
+                        <navigationItem title="Настройки СБП" id="N6h-up-JKm"/>
+                    </items>
+                </navigationBar>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="LAK-yW-uVF">
+                    <rect key="frame" x="0.0" y="88" width="414" height="332"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="teu-Rv-JBL">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="104"/>
+                            <subviews>
+                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="gC8-pW-Hyx">
+                                    <rect key="frame" x="345" y="12" width="51" height="31"/>
+                                </switch>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Включить переводы через СБП" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dca-xK-fDZ">
+                                    <rect key="frame" x="20" y="17.5" width="315" height="20.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Подключая возможность осуществлять переводы денежных средств в рамках СБП, соглашаюсь с условиями осуществления переводов СБП." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PIn-RF-wsG">
+                                    <rect key="frame" x="20" y="51" width="374" height="43"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                    <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" red="0.96470588235294119" green="0.96470588235294119" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="104" id="DBP-C2-bJV"/>
+                                <constraint firstItem="PIn-RF-wsG" firstAttribute="leading" secondItem="teu-Rv-JBL" secondAttribute="leading" constant="20" id="Ewp-vK-v2I"/>
+                                <constraint firstItem="Dca-xK-fDZ" firstAttribute="centerY" secondItem="gC8-pW-Hyx" secondAttribute="centerY" id="Hyg-DF-6i0"/>
+                                <constraint firstItem="PIn-RF-wsG" firstAttribute="top" secondItem="gC8-pW-Hyx" secondAttribute="bottom" constant="8" id="Ssq-l6-wWk"/>
+                                <constraint firstItem="gC8-pW-Hyx" firstAttribute="leading" secondItem="Dca-xK-fDZ" secondAttribute="trailing" constant="10" id="U8K-GQ-tvk"/>
+                                <constraint firstAttribute="trailing" secondItem="gC8-pW-Hyx" secondAttribute="trailing" constant="20" id="Wki-i1-wwK"/>
+                                <constraint firstAttribute="trailing" secondItem="PIn-RF-wsG" secondAttribute="trailing" constant="20" id="nYM-47-bOz"/>
+                                <constraint firstItem="Dca-xK-fDZ" firstAttribute="leading" secondItem="teu-Rv-JBL" secondAttribute="leading" constant="20" id="xBR-W1-NnY"/>
+                                <constraint firstItem="gC8-pW-Hyx" firstAttribute="top" secondItem="teu-Rv-JBL" secondAttribute="top" constant="12" id="yb5-i3-TBh"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VzX-gv-BjO" customClass="CardChooseView" customModule="ForaBank" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="114" width="414" height="104"/>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6OM-GE-vPu" customClass="CardListView" customModule="ForaBank" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="228" width="414" height="104"/>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="onlyMy" value="YES"/>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="LAK-yW-uVF" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="44" id="6Jn-3I-lMJ"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="LAK-yW-uVF" secondAttribute="trailing" id="dLQ-sN-2OP"/>
+                <constraint firstItem="LAK-yW-uVF" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="rr7-Sr-rZu"/>
+            </constraints>
+            <point key="canvasLocation" x="82.608695652173921" y="77.678571428571431"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

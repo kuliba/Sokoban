@@ -7,7 +7,8 @@
 
 import UIKit
 
-class CardChooseView: UIView {
+@IBDesignable
+final class CardChooseView: UIView {
     
     //MARK: - Property
     let kContentXibName = "CardChooseView"
@@ -20,6 +21,7 @@ class CardChooseView: UIView {
     @IBOutlet weak var maskNumberLabel: UILabel!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var numberCardLabel: UILabel!
+    @IBInspectable
     @IBOutlet weak var leftTitleAncor: NSLayoutConstraint!
     @IBOutlet weak var choseButton: UIButton!
     

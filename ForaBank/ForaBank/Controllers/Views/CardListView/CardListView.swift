@@ -7,7 +7,8 @@
 
 import UIKit
 
-class CardListView: UIView {
+@IBDesignable
+final class CardListView: UIView {
     
     //MARK: - Property
     let reuseIdentifier = "CardCell"
@@ -21,7 +22,9 @@ class CardListView: UIView {
             }
         }
     }
+    @IBInspectable
     var canAddNewCard = false
+    @IBInspectable
     var onlyMy: Bool = true
     var filteredCardList = [GetProductListDatum]() {
         didSet {

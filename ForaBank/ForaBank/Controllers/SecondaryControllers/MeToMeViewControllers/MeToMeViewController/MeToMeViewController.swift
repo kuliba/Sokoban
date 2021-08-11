@@ -91,14 +91,7 @@ class MeToMeViewController: UIViewController {
         label.text = "Пополнить со счета\nв другом банке"
         self.navigationItem.titleView = label
         
-        var system: PaymentSystemList?
-        
-        Dict.shared.paymentList?.forEach({ systemlist in
-            if systemlist.code == "SFP" {
-                system = systemlist
-            }
-        })
-        let navImage: UIImage = system?.svgImage?.convertSVGStringToImage() ?? UIImage()
+        let navImage = UIImage(named: "logo-spb-mini")
         let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
         self.navigationItem.rightBarButtonItem = customViewItem
         
@@ -207,6 +200,8 @@ class MeToMeViewController: UIViewController {
     
     private func setupActions() {
         
+        bankListView.didSeeAll = { () in self.openSearchBanksVC() }
+        
         bankListView.didBankTapped = { (bank) in
             self.selectedBank = bank
             self.hideView(self.bankListView, needHide: true)
@@ -237,8 +232,23 @@ class MeToMeViewController: UIViewController {
         }
     }
     
+    private func openSearchBanksVC() {
+        let vc = SearchBanksViewController()
+        vc.banks = self.banks
+        vc.didBankTapped = { (bank) in self.selectBank(bank: bank)}
+        let navController = UINavigationController(rootViewController: vc)
+        self.present(navController, animated: true, completion: nil)
+    }
+    
+    private func selectBank(bank: BankFullInfoList) {
+        self.selectedBank = bank
+        self.hideView(self.bankListView, needHide: true)
+        self.hideView(self.cardListView, needHide: true)
+    }
+    
+    
     private func setupBankField(bank: BankFullInfoList) {
-        self.bankField.text = bank.name ?? ""
+        self.bankField.text = bank.fullName ?? ""
         
         if let imageString = bank.svgImage {
             self.bankField.imageView.image =  imageString.convertSVGStringToImage()

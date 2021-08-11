@@ -64,6 +64,9 @@ extension PaymentsViewController: UICollectionViewDelegate {
                         self?.showAlert(with: "Ошибка", and: error!)
                     } else {
                         DispatchQueue.main.async {
+                            
+//                            let viewController = MeToMeSettingViewController.loadFromNib()
+                            
                             if let viewController = self?.pay[indexPath.row].controllerName.getViewController() {
                                 viewController.addCloseButton()
                                 let navVC = UINavigationController(rootViewController: viewController)
