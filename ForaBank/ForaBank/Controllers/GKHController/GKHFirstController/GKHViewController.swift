@@ -288,14 +288,10 @@ class GKHViewController: UITableViewController {
                             self.modelDataArray.append(modelData)
                             self.modelDataArray.forEach { a in
                                 a.listInputs?.forEach({ c in
-                                    
+                                    print("AnywayPayment", modelData)
                                 })
                             }
-                            
-                            
-                            
                             print("AnywayPayment", modelData)
-
                         }
                     }
 
@@ -303,9 +299,9 @@ class GKHViewController: UITableViewController {
             }
             
         }
-//            let vc = GKHCityViewController()
+            let vc = GKHDetailViewController()
 //            vc.organization = self.organization
-//            self.navigationController?.pushViewController(vc, animated: true)
+            self.navigationController?.pushViewController(vc, animated: true)
     }
     
     func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?)->()) {
