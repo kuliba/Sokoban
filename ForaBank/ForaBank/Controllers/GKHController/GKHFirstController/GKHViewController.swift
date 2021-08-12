@@ -260,52 +260,20 @@ class GKHViewController: UITableViewController {
             selectedCountry = organization[indexPath.row]
         }
         self.searchController.searchBar.searchTextField.endEditing(true)
-        let puref = selectedCountry.code ?? ""
-        var cardNumber = ""
+//        let puref = selectedCountry.code ?? ""
+//        var cardNumber = ""
         getCardList() { card, _  in
-            
-            cardNumber = card?.first?.number ?? ""
-            
-            let anywayBeginBode = [
-                "accountID": "",
-                "cardID":"",
-                "cardNumber": cardNumber,
-                "provider":"",
-                "puref": puref,
-            
-            ] as [String: AnyObject]
-            
-            NetworkManager<AnywayPaymentBeginDecodebleModel>.addRequest(.anywayPaymentBegin, [:], anywayBeginBode) { model, error in
-                if error != nil {
-                    print("DEBUG: error", error!)
-                } else {
-                    NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], [:]) { model, error in
-                        if error != nil {
-                            print("DEBUG: error", error!)
-                        } else {
-                            guard let model = model else { return }
-                            guard let modelData = model.data else { return }
-                            self.modelDataArray.append(modelData)
-                            self.modelDataArray.forEach { a in
-                                a.listInputs?.forEach({ c in
-                                    print("AnywayPayment", modelData)
-                                })
-                            }
-                            print("AnywayPayment", modelData)
-                        }
-                    }
-
-                }
-            }
-            
-        }
+            let a = card?.first
             let vc = GKHDetailViewController()
 //            vc.organization = self.organization
             self.navigationController?.pushViewController(vc, animated: true)
     }
     
     func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?)->()) {
-        let param = ["isCard": "true", "isAccount": "false", "isDeposit": "false", "isLoan": "false"]
+        let param = ["isCard": "true",
+                     "isAccount": "false",
+                     "isDeposit": "false",
+                     "isLoan": "false"]
         
         NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
             if error != nil {
@@ -323,7 +291,7 @@ class GKHViewController: UITableViewController {
 }
 
 }
-
+}
 //MARK: - UISearchBarDelegate
 extension GKHViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {

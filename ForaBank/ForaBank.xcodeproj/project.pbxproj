@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0B05163126A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B05163026A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift */; };
+		0B22AE9B26C535F100B11E7F /* GKHCellProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B22AE9A26C535F100B11E7F /* GKHCellProtocol.swift */; };
 		0B37F9782678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F9772678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift */; };
 		0B37F97A2678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F9792678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift */; };
 		0B37F97C2678EC69007728FC /* AnywayPaymentDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F97B2678EC69007728FC /* AnywayPaymentDecodableModel.swift */; };
@@ -293,6 +294,7 @@
 
 /* Begin PBXFileReference section */
 		0B05163026A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPaymentCountriesDecodableModel.swift; sourceTree = "<group>"; };
+		0B22AE9A26C535F100B11E7F /* GKHCellProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHCellProtocol.swift; sourceTree = "<group>"; };
 		0B37F9772678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentBeginDecodebleModel.swift; sourceTree = "<group>"; };
 		0B37F9792678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentMakeDecodableModel.swift; sourceTree = "<group>"; };
 		0B37F97B2678EC69007728FC /* AnywayPaymentDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentDecodableModel.swift; sourceTree = "<group>"; };
@@ -713,6 +715,7 @@
 				0BA2522D26C4012E00AD087A /* GKHAnyCellViewModel.swift */,
 				0BA2522926C4007200AD087A /* GKHAnyCell.swift */,
 				0BA2524126C4498A00AD087A /* GKHAnyCell.xib */,
+				0B22AE9A26C535F100B11E7F /* GKHCellProtocol.swift */,
 			);
 			path = GKHViewCell;
 			sourceTree = "<group>";
@@ -2238,6 +2241,7 @@
 				EDB1453E2666AF260028EF5A /* OrderProductsViewController FlowLayout.swift in Sources */,
 				0BF34866269444D9005138A8 /* AllCardCell.swift in Sources */,
 				EDB1452E26665AD50028EF5A /* OrderProductsViewController.swift in Sources */,
+				0B22AE9B26C535F100B11E7F /* GKHCellProtocol.swift in Sources */,
 				0BA2523326C4420B00AD087A /* MainSectionFactory.swift in Sources */,
 				0B8BE08F266FBE0500E96CAA /* CSRFDecodableModel.swift in Sources */,
 				EDB14535266671580028EF5A /* MockItems.swift in Sources */,
