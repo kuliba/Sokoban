@@ -358,14 +358,14 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
             self.hideView(self.cardListView, needHide: true)
         }
         
-        bankListView.didSeeAll = { () in
-//            self.selectedBank = bank
-            let vc = SearchBanksViewController()
-            vc.banks = self.banks
-            let navController = UINavigationController(rootViewController: vc)
-//            navController.modalPresentationStyle = .fullScreen
-            self.present(navController, animated: true, completion: nil)
-        }
+//        bankListView.didSeeAll = { () in
+////            self.selectedBank = bank
+//            let vc = SearchBanksViewController()
+//            vc.banks = self.banks
+//            let navController = UINavigationController(rootViewController: vc)
+////            navController.modalPresentationStyle = .fullScreen
+//            self.present(navController, animated: true, completion: nil)
+//        }
         
         
         bankListView.didBankTapped = { (bank) in self.selectBank(bank: bank)}
