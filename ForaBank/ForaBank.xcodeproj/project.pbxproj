@@ -83,7 +83,7 @@
 		6880D32726A5CC69008FBCB4 /* AES.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6880D32626A5CC68008FBCB4 /* AES.swift */; };
 		6880D32926A5CC7D008FBCB4 /* Encription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6880D32826A5CC7D008FBCB4 /* Encription.swift */; };
 		6880D32D26A70585008FBCB4 /* FaceTouchIdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6880D32C26A70585008FBCB4 /* FaceTouchIdViewController.swift */; };
-		68B6755D26BC8A9B004DECA4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 68B6755C26BC8A9B004DECA4 /* GoogleService-Info.plist */; };
+		68B6755D26BC8A9B004DECA4 /* GoogleService-Info prod.plist in Resources */ = {isa = PBXBuildFile; fileRef = 68B6755C26BC8A9B004DECA4 /* GoogleService-Info prod.plist */; };
 		68C64626269DCBD800473DE7 /* QRScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C64625269DCBD800473DE7 /* QRScannerViewController.swift */; };
 		68E6A28526A02C1800A1D9A1 /* AnyFormatKit in Frameworks */ = {isa = PBXBuildFile; productRef = 68E6A28426A02C1800A1D9A1 /* AnyFormatKit */; };
 		68E6A29126A0338700A1D9A1 /* CastomCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E6A29026A0338700A1D9A1 /* CastomCardView.swift */; };
@@ -164,7 +164,6 @@
 		ED8AB45B26C2A7C5006F0D03 /* SuccessMeToMeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8AB45A26C2A7C5006F0D03 /* SuccessMeToMeController.swift */; };
 		ED8AB45D26C2B55E006F0D03 /* SuccessMeToMeController.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED8AB45C26C2B55E006F0D03 /* SuccessMeToMeController.xib */; };
 		ED8AB46226C3EA2E006F0D03 /* MeToMeSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8AB46026C3EA2E006F0D03 /* MeToMeSettingViewController.swift */; };
-		ED8AB46326C3EA2E006F0D03 /* MeToMeSettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED8AB46126C3EA2E006F0D03 /* MeToMeSettingViewController.xib */; };
 		ED92D3A226735A0A006D47B3 /* PaymentByPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED92D3A126735A0A006D47B3 /* PaymentByPhoneViewController.swift */; };
 		EDAA99AF2673AB9200435484 /* ForaSwitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAA99AE2673AB9200435484 /* ForaSwitchView.swift */; };
 		EDAA99B12673ABF200435484 /* ForaSwitchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDAA99B02673ABF200435484 /* ForaSwitchView.xib */; };
@@ -197,7 +196,7 @@
 		EDB14524266624460028EF5A /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14523266624460028EF5A /* UIViewController.swift */; };
 		EDB14526266624DC0028EF5A /* OrderCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDB14525266624DC0028EF5A /* OrderCardView.xib */; };
 		EDB14528266624EE0028EF5A /* OrderCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14527266624EE0028EF5A /* OrderCardView.swift */; };
-		EDB1452C26663C9D0028EF5A /* GoogleService-Info1.plist in Resources */ = {isa = PBXBuildFile; fileRef = EDB1452B26663C9D0028EF5A /* GoogleService-Info1.plist */; };
+		EDB1452C26663C9D0028EF5A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EDB1452B26663C9D0028EF5A /* GoogleService-Info.plist */; };
 		EDB1452E26665AD50028EF5A /* OrderProductsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1452D26665AD50028EF5A /* OrderProductsViewController.swift */; };
 		EDB14532266667140028EF5A /* OrderProductsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDB14530266667140028EF5A /* OrderProductsCollectionViewCell.xib */; };
 		EDB14533266667140028EF5A /* OrderProductsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14531266667140028EF5A /* OrderProductsCollectionViewCell.swift */; };
@@ -353,7 +352,7 @@
 		6880D32626A5CC68008FBCB4 /* AES.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AES.swift; sourceTree = "<group>"; };
 		6880D32826A5CC7D008FBCB4 /* Encription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Encription.swift; sourceTree = "<group>"; };
 		6880D32C26A70585008FBCB4 /* FaceTouchIdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceTouchIdViewController.swift; sourceTree = "<group>"; };
-		68B6755C26BC8A9B004DECA4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		68B6755C26BC8A9B004DECA4 /* GoogleService-Info prod.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info prod.plist"; sourceTree = "<group>"; };
 		68C64625269DCBD800473DE7 /* QRScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerViewController.swift; sourceTree = "<group>"; };
 		68E6A29026A0338700A1D9A1 /* CastomCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CastomCardView.swift; sourceTree = "<group>"; };
 		68E6A29226A033B700A1D9A1 /* CheckCardDecodableModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckCardDecodableModel.swift; sourceTree = "<group>"; };
@@ -427,7 +426,6 @@
 		ED8AB45A26C2A7C5006F0D03 /* SuccessMeToMeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessMeToMeController.swift; sourceTree = "<group>"; };
 		ED8AB45C26C2B55E006F0D03 /* SuccessMeToMeController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SuccessMeToMeController.xib; sourceTree = "<group>"; };
 		ED8AB46026C3EA2E006F0D03 /* MeToMeSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeToMeSettingViewController.swift; sourceTree = "<group>"; };
-		ED8AB46126C3EA2E006F0D03 /* MeToMeSettingViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MeToMeSettingViewController.xib; sourceTree = "<group>"; };
 		ED92D3A126735A0A006D47B3 /* PaymentByPhoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentByPhoneViewController.swift; sourceTree = "<group>"; };
 		EDAA99AE2673AB9200435484 /* ForaSwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForaSwitchView.swift; sourceTree = "<group>"; };
 		EDAA99B02673ABF200435484 /* ForaSwitchView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ForaSwitchView.xib; sourceTree = "<group>"; };
@@ -466,7 +464,7 @@
 		EDB14523266624460028EF5A /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
 		EDB14525266624DC0028EF5A /* OrderCardView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OrderCardView.xib; sourceTree = "<group>"; };
 		EDB14527266624EE0028EF5A /* OrderCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCardView.swift; sourceTree = "<group>"; };
-		EDB1452B26663C9D0028EF5A /* GoogleService-Info1.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info1.plist"; sourceTree = "<group>"; };
+		EDB1452B26663C9D0028EF5A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		EDB1452D26665AD50028EF5A /* OrderProductsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderProductsViewController.swift; sourceTree = "<group>"; };
 		EDB14530266667140028EF5A /* OrderProductsCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OrderProductsCollectionViewCell.xib; sourceTree = "<group>"; };
 		EDB14531266667140028EF5A /* OrderProductsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderProductsCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -1199,7 +1197,6 @@
 			isa = PBXGroup;
 			children = (
 				ED8AB46026C3EA2E006F0D03 /* MeToMeSettingViewController.swift */,
-				ED8AB46126C3EA2E006F0D03 /* MeToMeSettingViewController.xib */,
 			);
 			path = MeToMeSettingViewController;
 			sourceTree = "<group>";
@@ -1273,8 +1270,8 @@
 				EDB143B0265FDB380028EF5A /* ForaBank.entitlements */,
 				EDB143B4265FDE960028EF5A /* Assets.xcassets */,
 				EDB1654C26678E87007E6030 /* LaunchScreen.storyboard */,
-				68B6755C26BC8A9B004DECA4 /* GoogleService-Info.plist */,
-				EDB1452B26663C9D0028EF5A /* GoogleService-Info1.plist */,
+				68B6755C26BC8A9B004DECA4 /* GoogleService-Info prod.plist */,
+				EDB1452B26663C9D0028EF5A /* GoogleService-Info.plist */,
 				EDB1438E265FDA420028EF5A /* Info.plist */,
 			);
 			path = ForaBank;
@@ -1873,13 +1870,13 @@
 				EDB143CA265FDEC90028EF5A /* Roboto-LightItalic.ttf in Resources */,
 				EDB1654D26678E87007E6030 /* LaunchScreen.storyboard in Resources */,
 				ED4FC619266EA42E0092B4AB /* AppLocker.xib in Resources */,
-				68B6755D26BC8A9B004DECA4 /* GoogleService-Info.plist in Resources */,
+				68B6755D26BC8A9B004DECA4 /* GoogleService-Info prod.plist in Resources */,
 				6822EFD726B935FF00125EEC /* BaseTableViewCell.xib in Resources */,
 				EDB143C4265FDEC90028EF5A /* Roboto-Medium.ttf in Resources */,
 				EDB143C5265FDEC90028EF5A /* Roboto-Light.ttf in Resources */,
 				EDB143C8265FDEC90028EF5A /* Roboto-ThinItalic.ttf in Resources */,
 				EDB14518266526BD0028EF5A /* CreditCardEntryView.xib in Resources */,
-				EDB1452C26663C9D0028EF5A /* GoogleService-Info1.plist in Resources */,
+				EDB1452C26663C9D0028EF5A /* GoogleService-Info.plist in Resources */,
 				EDB14526266624DC0028EF5A /* OrderCardView.xib in Resources */,
 				ED51D66E2688B27E005FD655 /* SeparatorView.xib in Resources */,
 				ED147D4C26BAD7E0002F66C8 /* BottomInputView.xib in Resources */,
@@ -1889,7 +1886,6 @@
 				68FFA55C268586D3002DADFA /* HeaderBanksCollectionReusableView.xib in Resources */,
 				EDB143C7265FDEC90028EF5A /* Roboto-MediumItalic.ttf in Resources */,
 				EDAA99B12673ABF200435484 /* ForaSwitchView.xib in Resources */,
-				ED8AB46326C3EA2E006F0D03 /* MeToMeSettingViewController.xib in Resources */,
 				0BF3484E268A455C005138A8 /* AllCardView.xib in Resources */,
 				ED84995826A8831E005205C6 /* EPContactCell.xib in Resources */,
 				EDB145112664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf in Resources */,

@@ -65,7 +65,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
                     } else {
                         DispatchQueue.main.async {
                             
-//                            let viewController = MeToMeSettingViewController.loadFromNib()
+//                            let viewController = MeToMeSettingViewController()
                             
                             if let viewController = self?.pay[indexPath.row].controllerName.getViewController() {
                                 viewController.addCloseButton()

@@ -39,7 +39,7 @@ class PaymentsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Платежи"
+//        title = "Платежи"
         view.backgroundColor = .white
         setupData()
         setupSearchBar()

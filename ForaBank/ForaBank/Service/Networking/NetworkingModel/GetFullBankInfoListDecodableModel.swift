@@ -105,7 +105,7 @@ extension GetFullBankInfoListDecodableModelDataClass {
 
 // MARK: - BankFullInfoList
 struct BankFullInfoList: Codable {
-    let name, memberID, fullName, engName: String?
+    let name, memberID, rusName, fullName, engName: String?
     let md5Hash, svgImage, bic, fiasID: String?
     let address, latitude, longitude: String?
     let swiftList: [JSONAny]?
@@ -116,7 +116,7 @@ struct BankFullInfoList: Codable {
     enum CodingKeys: String, CodingKey {
         case name
         case memberID = "memberId"
-        case fullName, engName
+        case fullName, engName, rusName
         case md5Hash = "md5hash"
         case svgImage, bic
         case fiasID = "fiasId"
@@ -145,6 +145,7 @@ extension BankFullInfoList {
     func with(
         name: String?? = nil,
         memberID: String?? = nil,
+        rusName: String?? = nil,
         fullName: String?? = nil,
         engName: String?? = nil,
         md5Hash: String?? = nil,
@@ -168,6 +169,7 @@ extension BankFullInfoList {
         return BankFullInfoList(
             name: name ?? self.name,
             memberID: memberID ?? self.memberID,
+            rusName: rusName ?? self.rusName,
             fullName: fullName ?? self.fullName,
             engName: engName ?? self.engName,
             md5Hash: md5Hash ?? self.md5Hash,
