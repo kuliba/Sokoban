@@ -1,14 +1,15 @@
 //
-//  CardCell.swift
+//  ProductCell.swift
 //  ForaBank
 //
-//  Created by Mikhail on 22.06.2021.
+//  Created by Дмитрий on 11.08.2021.
 //
 
+import Foundation
 import UIKit
 
 
-class CardCell: UICollectionViewCell, SelfConfiguringCell {
+class ProductCell: UICollectionViewCell, SelfConfiguringCell {
    
     func configure<U>(with value: U) where U : Hashable {
         guard let card = card else { return }
@@ -22,7 +23,7 @@ class CardCell: UICollectionViewCell, SelfConfiguringCell {
     }
     
     
-    static var reuseId: String = "CardCell"
+    static var reuseId: String = "ProductCell"
     //MARK: - Properties
     var card: GetProductListDatum? {
         didSet { configure() }
@@ -88,11 +89,16 @@ class CardCell: UICollectionViewCell, SelfConfiguringCell {
     func setupUI() {
         backgroundColor = #colorLiteral(red: 0.9647058824, green: 0.9647058824, blue: 0.968627451, alpha: 1)
         layer.cornerRadius = 8
-        clipsToBounds = true
+//        clipsToBounds = true
         addSubview(logoImageView)
         addSubview(maskCardLabel)
         addSubview(cardNameLabel)
         addSubview(balanceLabel)
+        
+        self.layer.shadowColor = UIColor.black.cgColor
+        self.layer.shadowRadius = 8
+        self.layer.shadowOpacity = 0.1
+        self.layer.shadowOffset = CGSize(width: 0, height: 20)
         
         logoImageView.anchor(top: self.topAnchor, left: self.leftAnchor,
                              paddingTop: 8, paddingLeft: 12)

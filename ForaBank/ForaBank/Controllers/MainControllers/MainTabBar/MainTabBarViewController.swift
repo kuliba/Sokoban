@@ -14,7 +14,7 @@ class MainTabBarViewController: UITabBarController {
         tabBar.barTintColor = .white
         tabBar.tintColor = #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
         
-        let mainVC = DevelopViewController()
+        let mainVC = MainViewController()
         let paymentsVC = PaymentsViewController()
         let historyVC = DevelopViewController()
         let chatVC = SettingsViewController()
