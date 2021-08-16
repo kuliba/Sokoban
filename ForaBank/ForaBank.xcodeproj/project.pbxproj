@@ -251,6 +251,8 @@
 		EDBEEA1D26B1AF2F00265683 /* FullBankInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDBEEA1C26B1AF2F00265683 /* FullBankInfoCell.swift */; };
 		EDC341A226864C4100FFFEF8 /* BottomInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC341A126864C4100FFFEF8 /* BottomInputView.swift */; };
 		EDC8BA3426A5AA0E00EDB401 /* SDWebImagePDFCoder in Frameworks */ = {isa = PBXBuildFile; productRef = EDC8BA3326A5AA0E00EDB401 /* SDWebImagePDFCoder */; };
+		EDCF89E226CACC7300DC9F54 /* MeToMeSetupSwitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCF89E126CACC7300DC9F54 /* MeToMeSetupSwitchView.swift */; };
+		EDCF89E426CACC7D00DC9F54 /* MeToMeSetupSwitchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDCF89E326CACC7D00DC9F54 /* MeToMeSetupSwitchView.xib */; };
 		EDF6820D266F9EC800FD5C07 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681F3266F9EC800FD5C07 /* NetworkManager.swift */; };
 		EDF6820E266F9EC800FD5C07 /* NetworkModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681F6266F9EC800FD5C07 /* NetworkModelProtocol.swift */; };
 		EDF6820F266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681F7266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift */; };
@@ -530,6 +532,8 @@
 		EDBEEA1926B1AEA200265683 /* FullBankInfoListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullBankInfoListViewModel.swift; sourceTree = "<group>"; };
 		EDBEEA1C26B1AF2F00265683 /* FullBankInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullBankInfoCell.swift; sourceTree = "<group>"; };
 		EDC341A126864C4100FFFEF8 /* BottomInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomInputView.swift; sourceTree = "<group>"; };
+		EDCF89E126CACC7300DC9F54 /* MeToMeSetupSwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeToMeSetupSwitchView.swift; sourceTree = "<group>"; };
+		EDCF89E326CACC7D00DC9F54 /* MeToMeSetupSwitchView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MeToMeSetupSwitchView.xib; sourceTree = "<group>"; };
 		EDF681F3266F9EC800FD5C07 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		EDF681F6266F9EC800FD5C07 /* NetworkModelProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkModelProtocol.swift; sourceTree = "<group>"; };
 		EDF681F7266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetDeviceSettingDecodbleModel.swift; sourceTree = "<group>"; };
@@ -1308,6 +1312,7 @@
 		ED8AB45326C1169E006F0D03 /* MeToMeSettingViewController */ = {
 			isa = PBXGroup;
 			children = (
+				EDCF89E026CACBF200DC9F54 /* Views */,
 				ED8AB46026C3EA2E006F0D03 /* MeToMeSettingViewController.swift */,
 			);
 			path = MeToMeSettingViewController;
@@ -1626,6 +1631,15 @@
 				EDC341A126864C4100FFFEF8 /* BottomInputView.swift */,
 			);
 			path = BottomInputView;
+			sourceTree = "<group>";
+		};
+		EDCF89E026CACBF200DC9F54 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				EDCF89E126CACC7300DC9F54 /* MeToMeSetupSwitchView.swift */,
+				EDCF89E326CACC7D00DC9F54 /* MeToMeSetupSwitchView.xib */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		EDF681F0266F9EC800FD5C07 /* Service */ = {
@@ -1976,6 +1990,7 @@
 				EDB143CE265FDEC90028EF5A /* Roboto-Thin.ttf in Resources */,
 				68FFA5472682F49A002DADFA /* SearchContact.xib in Resources */,
 				ED2BE18526A04F0600647CB1 /* CardChooseView.xib in Resources */,
+				EDCF89E426CACC7D00DC9F54 /* MeToMeSetupSwitchView.xib in Resources */,
 				ED4FC60C266CD1020092B4AB /* СountryCell.xib in Resources */,
 				EDB143C9265FDEC90028EF5A /* Roboto-BoldItalic.ttf in Resources */,
 				68FFA5412682C6CF002DADFA /* LastPaymentsCollectionViewCell.xib in Resources */,
@@ -2237,6 +2252,7 @@
 				EDB1453E2666AF260028EF5A /* OrderProductsViewController FlowLayout.swift in Sources */,
 				0BF34866269444D9005138A8 /* AllCardCell.swift in Sources */,
 				EDB1452E26665AD50028EF5A /* OrderProductsViewController.swift in Sources */,
+				EDCF89E226CACC7300DC9F54 /* MeToMeSetupSwitchView.swift in Sources */,
 				0B22AE9B26C535F100B11E7F /* GKHCellProtocol.swift in Sources */,
 				0BA2523326C4420B00AD087A /* MainSectionFactory.swift in Sources */,
 				0B8BE08F266FBE0500E96CAA /* CSRFDecodableModel.swift in Sources */,

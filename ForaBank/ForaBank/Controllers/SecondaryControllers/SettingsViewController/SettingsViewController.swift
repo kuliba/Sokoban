@@ -88,20 +88,26 @@ class SettingsViewController: UIViewController {
     
     @objc func sbpButtonAction() {
         print(#function)
-        
-//        NetworkManager<LogoutDecodableModel>.addRequest(.logout, [:], [:]) { _,_  in
-//            print("Logout :", "Вышли из приложения")
-//            DispatchQueue.main.async {
-//                UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
-        let navVC = UINavigationController(rootViewController: MeToMeSettingViewController())
-        navVC.modalPresentationStyle = .fullScreen
-        navVC.addCloseButton()
-        self.present(navVC, animated: true, completion: nil)
-//            }
-//
-//        }
-        
-    
+        self.showActivity()
+        getFastPaymentContractList { [weak self] contractList, error in
+            self?.dismissActivity()
+            if error != nil {
+                self?.showAlert(with: "Ошибка", and: error!)
+            } else {
+                DispatchQueue.main.async {
+                    let vc = MeToMeSettingViewController()
+                    if contractList != nil {
+                        vc.model = contractList
+                    } else {
+                        vc.model = []
+                    }
+                    let navVC = UINavigationController(rootViewController: vc)
+                    navVC.modalPresentationStyle = .fullScreen
+                    navVC.addCloseButton()
+                    self?.present(navVC, animated: true, completion: nil)
+                }
+            }
+        }
     }
     
     @objc func logout() {
@@ -126,6 +132,24 @@ class SettingsViewController: UIViewController {
 //        }
         
         
+    }
+    
+    
+    func getFastPaymentContractList(_ completion: @escaping (_ model: [FastPaymentContractFindListDatum]? ,_ error: String?) -> Void) {
+        NetworkManager<FastPaymentContractFindListDecodableModel>.addRequest(.fastPaymentContractFindList, [:], [:]) { model, error in
+            if error != nil {
+                print("DEBUG: Error: ", error ?? "")
+                completion(nil, error)
+            }
+            guard let model = model else { return }
+            print("DEBUG: fastPaymentContractFindList", model)
+            if model.statusCode == 0 {
+                completion(model.data, nil)
+            } else {
+                print("DEBUG: Error: ", model.errorMessage ?? "")
+                completion(nil, model.errorMessage)
+            }
+        }
     }
     
 }

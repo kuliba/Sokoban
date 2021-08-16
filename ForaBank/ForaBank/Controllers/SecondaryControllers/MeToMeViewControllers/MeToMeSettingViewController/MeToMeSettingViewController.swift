@@ -9,6 +9,14 @@ import UIKit
 
 class MeToMeSettingViewController: UIViewController {
 
+    var model: [FastPaymentContractFindListDatum]? {
+        didSet {
+            guard let model = model else { return }
+            configure(with: model)
+        }
+    }
+    
+    var topSwitch = MeToMeSetupSwitchView()
     var cardFromField = CardChooseView()
     var cardListView = CardListView(onlyMy: false)
     var stackView = UIStackView(arrangedSubviews: [])
@@ -20,7 +28,7 @@ class MeToMeSettingViewController: UIViewController {
         addCloseButton()
         setupPaymentsUI()
         setupStackView()
-        
+        setupTopSwitch()
         setupCardFromView()
         setupCardList { [weak self] error in
             if error != nil {
@@ -29,13 +37,18 @@ class MeToMeSettingViewController: UIViewController {
         }
     }
     
+    func configure(with model: [FastPaymentContractFindListDatum]) {
+        if !model.isEmpty {
+            topSwitch.bankByPhoneSwitch.isOn = true
+            topSwitch.configViewWithValue(true)
+        } else {
+            topSwitch.configViewWithValue(false)
+            cardFromField.isHidden = true
+        }
+    }
+    
     func setupStackView() {
-        //TODO: добавить скроллвью что бы избежать проблем на маленьких экранах
-        // let scroll
-        //  let view1 = UIView()
-        //  view1.addSubview(stackView)
-        // scroll add view1
-        stackView = UIStackView(arrangedSubviews: [cardFromField, cardListView])
+        stackView = UIStackView(arrangedSubviews: [topSwitch, cardFromField, cardListView])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
@@ -44,8 +57,7 @@ class MeToMeSettingViewController: UIViewController {
         view.addSubview(stackView)
         
         stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
-                         left: view.leftAnchor, right: view.rightAnchor,
-                         paddingTop: 20)
+                         left: view.leftAnchor, right: view.rightAnchor)
     }
 
     func setupPaymentsUI() {
@@ -116,6 +128,16 @@ class MeToMeSettingViewController: UIViewController {
         }
     }
     
+    func setupTopSwitch() {
+        topSwitch.switchIsChanged = { (sender) in
+            self.hideView(self.cardFromField, needHide: !sender.isOn) {
+                if !self.cardListView.isHidden {
+                    self.hideView(self.cardListView, needHide: true) { }
+                }
+            }
+        }
+    }
+    
     //MARK: - Animation
     func openOrHideView(_ view: UIView) {
         DispatchQueue.main.async {
@@ -132,7 +154,7 @@ class MeToMeSettingViewController: UIViewController {
         }
     }
     
-    func hideView(_ view: UIView, needHide: Bool) {
+    func hideView(_ view: UIView, needHide: Bool, completion: @escaping () -> Void ) {
         DispatchQueue.main.async {
             UIView.animate(withDuration: 0.2) {
                 view.isHidden = needHide
@@ -140,6 +162,7 @@ class MeToMeSettingViewController: UIViewController {
                 self.stackView.layoutIfNeeded()
             }
         }
+        completion()
     }
     
     

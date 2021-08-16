@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Inter-VariableFont_slnt,wght.ttf">
+            <string>Inter-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MeToMeSetupSwitchView" customModule="ForaBank" customModuleProvider="target">
+            <connections>
+                <outlet property="bankByPhoneSwitch" destination="4Tw-cl-nZu" id="NHX-ms-cvz"/>
+                <outlet property="bottomTextLabel" destination="tZr-AY-9h2" id="tx5-Ku-6aj"/>
+                <outlet property="contentView" destination="F86-NS-S5U" id="MQO-E9-kWu"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="F86-NS-S5U">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="158"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="4Tw-cl-nZu">
+                    <rect key="frame" x="345" y="56" width="51" height="31"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="onTintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="thumbTintColor" red="0.1333333333" green="0.75686274509999996" blue="0.51372549020000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <connections>
+                        <action selector="bankByPhoneSwitchTapped:" destination="-1" eventType="valueChanged" id="H45-Bz-md4"/>
+                    </connections>
+                </switch>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Включить переводы через СБП" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="KdA-8X-bVv">
+                    <rect key="frame" x="20" y="63" width="305" height="17"/>
+                    <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="14"/>
+                    <color key="textColor" red="0.10980392156862745" green="0.10980392156862745" blue="0.10980392156862745" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tZr-AY-9h2">
+                    <rect key="frame" x="20" y="95" width="374" height="44"/>
+                    <string key="text">Подключая возможность осуществлять переводы денежных средств в рамках СБП, соглашаюсь 
+с условиями осуществления переводов СБП.</string>
+                    <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
+                    <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="Gqt-Ij-fcx"/>
+            <color key="backgroundColor" red="0.96470588239999999" green="0.96470588239999999" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="KdA-8X-bVv" firstAttribute="centerY" secondItem="4Tw-cl-nZu" secondAttribute="centerY" id="0Ds-eN-KZw"/>
+                <constraint firstItem="tZr-AY-9h2" firstAttribute="top" secondItem="4Tw-cl-nZu" secondAttribute="bottom" constant="8" id="4AU-BF-IPb"/>
+                <constraint firstItem="KdA-8X-bVv" firstAttribute="leading" secondItem="Gqt-Ij-fcx" secondAttribute="leading" constant="20" id="6TJ-j9-0GH"/>
+                <constraint firstItem="Gqt-Ij-fcx" firstAttribute="trailing" secondItem="4Tw-cl-nZu" secondAttribute="trailing" constant="20" id="72p-CD-blc"/>
+                <constraint firstItem="tZr-AY-9h2" firstAttribute="leading" secondItem="Gqt-Ij-fcx" secondAttribute="leading" constant="20" id="Pq2-yP-eZJ"/>
+                <constraint firstItem="Gqt-Ij-fcx" firstAttribute="trailing" secondItem="tZr-AY-9h2" secondAttribute="trailing" constant="20" id="WiF-aX-c1R"/>
+                <constraint firstItem="4Tw-cl-nZu" firstAttribute="leading" secondItem="KdA-8X-bVv" secondAttribute="trailing" constant="20" id="Zun-dd-ttb"/>
+                <constraint firstItem="4Tw-cl-nZu" firstAttribute="top" secondItem="Gqt-Ij-fcx" secondAttribute="top" constant="12" id="ngy-Tf-qWS"/>
+            </constraints>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="339.13043478260875" y="-403.125"/>
+        </view>
+    </objects>
+</document>
