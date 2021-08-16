@@ -25,14 +25,14 @@ class GHKCell: UITableViewCell {
     
     func set(viewModel: GetAnywayOperatorsListDatum) {
         organizationName.text = viewModel.name?.capitalizingFirstLetter()
-        organizationImageView.image = UIImage(named: "GKH")
+ //       organizationImageView.image = UIImage(named: "GKH")
         innLable.text = viewModel.synonymList?.first
-//        if viewModel.logotypeList?.first?.content != "" {
-//        organizationImageView.image = convertSVGStringToImage(viewModel.logotypeList?.first?.content ?? "")
-//        } else {
-//            organizationImageView.image = UIImage(named: "GKH")
-//        }
+        if viewModel.logotypeList?.first?.content != "" {
+            let dataDecoded : Data = Data(base64Encoded: viewModel.logotypeList?.first?.content ?? "", options: .ignoreUnknownCharacters)!
+            let decodedimage = UIImage(data: dataDecoded)
+            organizationImageView.image = decodedimage
+        } else {
+            organizationImageView.image = UIImage(named: "GKH")
+        }
     }
-    
-
 }

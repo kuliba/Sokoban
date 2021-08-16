@@ -46,14 +46,14 @@ extension PaymentsViewController {
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .absolute(88),
 //            heightDimension: .fractionalHeight(0.12))
-            heightDimension: .absolute(88))
+            heightDimension: .absolute(100))
         
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         group.contentInsets = .uniform(size: 5)
         
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = 4
-        section.contentInsets = .init(horizontal: 20, vertical: 8)
+        section.contentInsets = .init(horizontal: 8, vertical: 8)
         
         section.orthogonalScrollingBehavior = .continuous
         
@@ -68,12 +68,12 @@ extension PaymentsViewController {
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .absolute(104),
 //            heightDimension: .fractionalHeight(0.2))
-          heightDimension: .absolute(125))
+          heightDimension: .absolute(124))
         
         let group = NSCollectionLayoutGroup.horizontal(
             layoutSize: groupSize, subitems: [item])
         
-        group.contentInsets = .uniform(size: 5)
+        group.contentInsets = .uniform(size: 0)
         
         let section = NSCollectionLayoutSection(group: group)
         
@@ -92,9 +92,10 @@ extension PaymentsViewController {
         
         let item = NSCollectionLayoutItem.withEntireSize()
         let groupSize = NSCollectionLayoutSize(
+//            widthDimension: .fractionalWidth(0.73),
             widthDimension: .fractionalWidth(0.73),
 //            heightDimension: .fractionalHeight(0.35))
-            heightDimension: .absolute(200))
+            heightDimension: .absolute(180))
         
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: groupSize, subitem: item, count: 3)
@@ -103,7 +104,7 @@ extension PaymentsViewController {
         
         let section = NSCollectionLayoutSection(group: group)
         
-        section.interGroupSpacing = 10
+        section.interGroupSpacing = 8
         section.contentInsets = .init(horizontal: 20, vertical: 8)
             
         section.orthogonalScrollingBehavior = .continuous
@@ -117,7 +118,8 @@ extension PaymentsViewController {
     private func createSectionHeader() -> NSCollectionLayoutBoundarySupplementaryItem{
         let sectionHeaderSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1),
-            heightDimension: .estimated(1))
+            heightDimension:.absolute(20))
+//            heightDimension: .estimated(1))
         
         let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
             layoutSize: sectionHeaderSize,

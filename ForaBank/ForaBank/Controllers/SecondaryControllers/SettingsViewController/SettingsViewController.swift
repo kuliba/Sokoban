@@ -21,6 +21,12 @@ class SettingsViewController: UIViewController {
     
     let currencySwitch = UISwitch()
     
+    lazy var sbpButton: UIButton = {
+        let button = UIButton(title: "Настройки СБП", titleColor: .black, backgroundColor: .lightGray)
+        button.addTarget(self, action: #selector(sbpButtonAction), for: .touchUpInside)
+        return button
+    }()
+    
     lazy var logoutButton: UIButton = {
         let button = UIButton(title: "Выход")
         button.addTarget(self, action: #selector(logout), for: .touchUpInside)
@@ -39,6 +45,7 @@ class SettingsViewController: UIViewController {
         view.addSubview(titleLabel)
         view.addSubview(subTitleLabel)
         view.addSubview(currencySwitch)
+        view.addSubview(sbpButton)
         view.addSubview(logoutButton)
         
         titleLabel.textAlignment = .center
@@ -63,6 +70,8 @@ class SettingsViewController: UIViewController {
         currencySwitch.anchor(right: view.rightAnchor, paddingRight: 20)
         currencySwitch.addTarget(self, action: #selector(currSwitch), for: .valueChanged)
         
+        sbpButton.anchor(top: currencySwitch.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 30, paddingLeft: 20, paddingRight: 30, height: 44)
+        
         logoutButton.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingLeft: 20, paddingBottom: 30, paddingRight: 20, height: 44)
         
         addCloseButton()
@@ -75,6 +84,24 @@ class SettingsViewController: UIViewController {
         } else {
             UserDefaults.standard.setValue(0, forKey: "maximumFractionDigits")
         }
+    }
+    
+    @objc func sbpButtonAction() {
+        print(#function)
+        
+//        NetworkManager<LogoutDecodableModel>.addRequest(.logout, [:], [:]) { _,_  in
+//            print("Logout :", "Вышли из приложения")
+//            DispatchQueue.main.async {
+//                UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
+        let navVC = UINavigationController(rootViewController: MeToMeSettingViewController())
+        navVC.modalPresentationStyle = .fullScreen
+        navVC.addCloseButton()
+        self.present(navVC, animated: true, completion: nil)
+//            }
+//
+//        }
+        
+    
     }
     
     @objc func logout() {

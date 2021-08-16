@@ -15,7 +15,7 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
         }
         if text != ""{
             banks = allBanks
-            banks = banks.filter({$0.fullName?.lowercased().prefix(text.count) ?? "" == text.lowercased() || $0.bic?.lowercased().prefix(text.count) ?? "" == text.lowercased()})
+            banks = banks.filter({$0.rusName?.lowercased().prefix(text.count) ?? "" == text.lowercased() || $0.bic?.lowercased().prefix(text.count) ?? "" == text.lowercased()})
         } else if text == ""{
             banks = allBanks
         }
@@ -130,7 +130,7 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
         item.contactImageView.backgroundColor = banks[indexPath.item].svgImage != nil
             ? .clear : updateInitialsColorForIndexPath(indexPath)
         
-        item.contactLabel.text = banks[indexPath.item].fullName
+        item.contactLabel.text = banks[indexPath.item].rusName
         item.phoneLabel.text = banks[indexPath.item].bic
         return item
     }

@@ -21,16 +21,24 @@ class MainTabBarViewController: UITabBarController {
         
         viewControllers = [
             generateNavController(rootViewController: mainVC,
-                                  title: "Главный", image: #imageLiteral(resourceName: "foralogoTapBar")),
+                                  title: "Главный",
+                                  image: UIImage(named: "tabBar-main")!,
+                                  fillImage: UIImage(named: "tabBar-main-fill")!),
             
             generateNavController(rootViewController: paymentsVC,
-                                  title: "Платежи", image: #imageLiteral(resourceName: "credit-card")),
+                                  title: "Платежи",
+                                  image: UIImage(named: "tabBar-card")!,
+                                  fillImage: UIImage(named: "tabBar-card-fill")!),
             
             generateNavController(rootViewController: historyVC,
-                                  title: "История", image: #imageLiteral(resourceName: "rotate-ccw")),
+                                  title: "История",
+                                  image: UIImage(named: "tabBar-history")!,
+                                  fillImage: UIImage(named: "tabBar-history-fill")!),
             
             generateNavController(rootViewController: chatVC,
-                                  title: "Чат", image: #imageLiteral(resourceName: "message-circle")),
+                                  title: "Чат",
+                                  image: UIImage(named: "tabBar-chat")!,
+                                  fillImage: UIImage(named: "tabBar-chat-fill")!),
         ]
         selectedIndex = 1
         
@@ -38,10 +46,11 @@ class MainTabBarViewController: UITabBarController {
         
     }
     
-    private func generateNavController(rootViewController: UIViewController, title: String, image: UIImage) -> UIViewController {
+    private func generateNavController(rootViewController: UIViewController, title: String, image: UIImage, fillImage: UIImage) -> UIViewController {
         let navigationVC = UINavigationController(rootViewController: rootViewController)
         navigationVC.tabBarItem.title = title
         navigationVC.tabBarItem.image = image
+        navigationVC.tabBarItem.selectedImage = fillImage
         return navigationVC
     }
 

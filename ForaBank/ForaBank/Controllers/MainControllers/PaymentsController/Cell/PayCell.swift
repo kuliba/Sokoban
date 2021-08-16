@@ -42,7 +42,7 @@ class PayCell: UICollectionViewCell, SelfConfiguringCell {
         backView.setDimensions(height: 48, width: 48)
         backView.centerY(inView: self, leftAnchor: self.leftAnchor)
         iconImageView.center(inView: backView)
-        iconImageView.setDimensions(height: 24, width: 24)
+        iconImageView.setDimensions(height: 32, width: 32)
         paymentsName.centerY(inView: backView, leftAnchor: backView.rightAnchor, paddingLeft: 12)
         paymentsName.anchor(right: self.rightAnchor, paddingRight: 8)
     }
