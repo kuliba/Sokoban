@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0B05163126A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B05163026A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift */; };
 		0B22AE9B26C535F100B11E7F /* GKHCellProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B22AE9A26C535F100B11E7F /* GKHCellProtocol.swift */; };
+		0B22AE9E26C572F300B11E7F /* GKHPayModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B22AE9D26C572F300B11E7F /* GKHPayModel.swift */; };
 		0B37F9782678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F9772678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift */; };
 		0B37F97A2678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F9792678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift */; };
 		0B37F97C2678EC69007728FC /* AnywayPaymentDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F97B2678EC69007728FC /* AnywayPaymentDecodableModel.swift */; };
@@ -293,6 +294,7 @@
 /* Begin PBXFileReference section */
 		0B05163026A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPaymentCountriesDecodableModel.swift; sourceTree = "<group>"; };
 		0B22AE9A26C535F100B11E7F /* GKHCellProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHCellProtocol.swift; sourceTree = "<group>"; };
+		0B22AE9D26C572F300B11E7F /* GKHPayModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHPayModel.swift; sourceTree = "<group>"; };
 		0B37F9772678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentBeginDecodebleModel.swift; sourceTree = "<group>"; };
 		0B37F9792678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentMakeDecodableModel.swift; sourceTree = "<group>"; };
 		0B37F97B2678EC69007728FC /* AnywayPaymentDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentDecodableModel.swift; sourceTree = "<group>"; };
@@ -589,6 +591,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0B22AE9C26C572D300B11E7F /* GKHModel */ = {
+			isa = PBXGroup;
+			children = (
+				0B22AE9D26C572F300B11E7F /* GKHPayModel.swift */,
+			);
+			path = GKHModel;
+			sourceTree = "<group>";
+		};
 		0B6081FE268DDD0800FDB8AD /* CustomCardView */ = {
 			isa = PBXGroup;
 			children = (
@@ -687,6 +697,7 @@
 		0BA2521926C3CE6200AD087A /* GKHPayViewController */ = {
 			isa = PBXGroup;
 			children = (
+				0B22AE9C26C572D300B11E7F /* GKHModel */,
 				0BA2522326C3CF7500AD087A /* GKHView */,
 			);
 			path = GKHPayViewController;
@@ -2262,6 +2273,7 @@
 				0B95C40A26B6D88000AA57E6 /* BottomLableModel.swift in Sources */,
 				ED4FC61A266EA42E0092B4AB /* AppLocker.swift in Sources */,
 				0BA251ED26C266A400AD087A /* CreateServiceTransferDecodableModel.swift in Sources */,
+				0B22AE9E26C572F300B11E7F /* GKHPayModel.swift in Sources */,
 				0BF34854268B2699005138A8 /* PrepareExternalDecodableModel.swift in Sources */,
 				ED3A96772690FCD700252857 /* BankViewModel.swift in Sources */,
 				68FFA54F26853897002DADFA /* PhoneContacts.swift in Sources */,
