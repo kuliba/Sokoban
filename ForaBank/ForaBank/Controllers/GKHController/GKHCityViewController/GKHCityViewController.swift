@@ -31,8 +31,8 @@ class GKHCityViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let nib = UINib(nibName: "GHKCell", bundle: nil)
-        tableView.register(nib, forCellReuseIdentifier: GHKCell.reuseId)
+ //       let nib = UINib(nibName: "GHKCell", bundle: nil)
+//        tableView.register(nib, forCellReuseIdentifier: GHKCell.reuseId)
         self.navigationItem.title = "Выберите город"
         setupUI()
     }
@@ -51,15 +51,15 @@ class GKHCityViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: GHKCell.reuseId, for: indexPath) as! GHKCell
-        if searching {
-            let model = searchedOrganization[indexPath.row]
-            cell.organizationName.text = model.region
-        } else {
-            let model = organization[indexPath.row]
-            cell.organizationName.text = model.region
-        }
-        return cell
+//        let cell = tableView.dequeueReusableCell(withIdentifier: GHKCell.reuseId, for: indexPath) as! GHKCell
+//        if searching {
+//            let model = searchedOrganization[indexPath.row]
+//            cell.organizationName.text = model.region
+//        } else {
+//            let model = organization[indexPath.row]
+//            cell.organizationName.text = model.region
+//        }
+        return UITableViewCell()
     }
     
     private func setupUI() {

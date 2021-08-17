@@ -327,6 +327,7 @@ class MeToMeViewController: UIViewController {
             }
         }
     }
+    
     func suggestBank(_ bic: String, completion: @escaping (_ bankList: [BankFullInfoList]?, _ error: String?) -> Void ) {
         showActivity()
         

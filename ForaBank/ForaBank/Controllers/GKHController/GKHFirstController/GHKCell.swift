@@ -23,12 +23,11 @@ class GHKCell: UITableViewCell {
         organizationImageView.image = nil
     }
     
-    func set(viewModel: GetAnywayOperatorsListDatum) {
+    func set(viewModel: GKHOperatorsModel) {
         organizationName.text = viewModel.name?.capitalizingFirstLetter()
- //       organizationImageView.image = UIImage(named: "GKH")
-        innLable.text = viewModel.synonymList?.first
-        if viewModel.logotypeList?.first?.content != "" {
-            let dataDecoded : Data = Data(base64Encoded: viewModel.logotypeList?.first?.content ?? "", options: .ignoreUnknownCharacters)!
+ //       innLable.text = viewModel.synonymList?.first
+        if viewModel.logotypeList.first?.content != "" {
+            let dataDecoded : Data = Data(base64Encoded: viewModel.logotypeList.first?.content ?? "", options: .ignoreUnknownCharacters)!
             let decodedimage = UIImage(data: dataDecoded)
             organizationImageView.image = decodedimage
         } else {

@@ -8,8 +8,21 @@
 import UIKit
 
 
-class CardCell: UICollectionViewCell {
+class CardCell: UICollectionViewCell, SelfConfiguringCell {
+   
+    func configure<U>(with value: U) where U : Hashable {
+        guard let card = card else { return }
+        
+        let viewModel = CardViewModel(card: card)
+        balanceLabel.text = viewModel.balance
+        maskCardLabel.text = viewModel.maskedcardNumber
+        logoImageView.image = viewModel.logoImage
+        
+//        balanceLabel.text = contactInitials(model: payment.lastCountryPayment)
+    }
     
+    
+    static var reuseId: String = "CardCell"
     //MARK: - Properties
     var card: GetProductListDatum? {
         didSet { configure() }

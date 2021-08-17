@@ -73,7 +73,7 @@ struct ProductList {
 }
 
 // MARK: - GetProductListDatum
-struct GetProductListDatum: Codable {
+struct GetProductListDatum: Codable{
     let number, numberMasked: String?
     let balance: Double?
     let currency, productType, productName: String?

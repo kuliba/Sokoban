@@ -39,6 +39,7 @@ class PaymentsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        AddOperatorsList.add()
         title = "Платежи"
         view.backgroundColor = .white
         setupData()
