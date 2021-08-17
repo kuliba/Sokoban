@@ -108,7 +108,7 @@ class MockItems {
             
             PaymentsModel(id: 13, name: "Коммунальные услуги ЖКХ",
                           iconName: "PaymentsIconLamp",
-                          controllerName: "GKHViewController",
+                          controllerName: "GKHMainViewController",
                           description: "Что то"),
             
             PaymentsModel(id: 14, name: "Интернет, телевидение, телефон",

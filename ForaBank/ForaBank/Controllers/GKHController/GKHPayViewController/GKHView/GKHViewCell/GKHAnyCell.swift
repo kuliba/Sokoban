@@ -9,7 +9,6 @@ import UIKit
 
 final class GKHAnyCell: UITableViewCell, AdaptedCellProtocol {
 
-    
     // MARK: - IBOutlets
     
     @IBOutlet private weak var label: UILabel!

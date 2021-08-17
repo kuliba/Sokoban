@@ -57,8 +57,6 @@ final class NetworkManager<T: NetworkModelProtocol>{
             } catch {
                 debugPrint(NetworkError.encodingFailed)
             }
-            let a = request.allHTTPHeaderFields
-                    print(a)
             
         }
         
