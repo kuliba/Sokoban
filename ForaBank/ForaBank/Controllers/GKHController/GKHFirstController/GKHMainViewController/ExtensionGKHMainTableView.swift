@@ -8,38 +8,6 @@
 import UIKit
 
 extension GKHMainViewController: UITableViewDelegate {
-    
-    /// Footer
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return UITableView.automaticDimension
-    }
-    
-    func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
-        return 300.0
-    }
-    
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        guard let view = tableView.dequeueReusableHeaderFooterView( withIdentifier: GKHMainViewFooterView.reuseIdentifier) as? GKHMainViewFooterView
-        else { return nil }
-        return view
-    }
-    
-    /// Header
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: GKHMainViewHeader.reuseIdentifier) as? GKHMainViewHeader
-        else {
-            return nil
-        }
-        return view
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return UITableView.automaticDimension
-    }
-    
-    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        return 200.0
-    }
 }
 
 extension GKHMainViewController: UITableViewDataSource {

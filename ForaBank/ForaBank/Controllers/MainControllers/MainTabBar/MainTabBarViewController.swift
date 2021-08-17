@@ -8,6 +8,31 @@
 import UIKit
 
 class MainTabBarViewController: UITabBarController {
+    
+    var netAlert: NetDetectAlert!
+    var netStatus: Bool?
+    
+    private func netDetect() {
+        self.netAlert = NetDetectAlert(self.view)
+        if self.netAlert != nil {
+            self.view.addSubview(self.netAlert)
+        }
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        NetStatus.shared.netStatusChangeHandler = {
+            DispatchQueue.main.async { [weak self] in
+                if NetStatus.shared.isConnected == true {
+                    self?.netStatus = true
+                    self?.netAlert?.removeFromSuperview()
+                } else {
+                    self?.netStatus = false
+                    self?.netDetect()
+                }
+            }
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
