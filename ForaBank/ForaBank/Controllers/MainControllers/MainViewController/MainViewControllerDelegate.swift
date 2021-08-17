@@ -1,13 +1,13 @@
 //
-//  PaymentsViewControllerDelegate.swift
+//  MainViewControllerDelegate.swift
 //  ForaBank
 //
-//  Created by Mikhail on 04.06.2021.
+//  Created by Дмитрий on 11.08.2021.
 //
 
 import UIKit
 
-extension PaymentsViewController: UICollectionViewDelegate {
+extension MainViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let section = Section(rawValue: indexPath.section) else {
@@ -29,33 +29,9 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 }
             }
         case .transfers:
-            if indexPath.row == 0 {
-                let popView = CustomPopUpWithRateView()
-                popView.modalPresentationStyle = .custom
-                popView.transitioningDelegate = self
-                self.present(popView, animated: true, completion: nil)
-                
-            } else if indexPath.row == 3 {
-                let popView = MemeDetailVC()
-                popView.onlyMy = false
-                popView.onlyCard = true
-                popView.titleLabel.text = "На другую карту"
-                popView.modalPresentationStyle = .custom
-                popView.transitioningDelegate = self
-                self.present(popView, animated: true, completion: nil)
-            } else {
-                print("DEBUG: " + #function + transfers[indexPath.row].name)
-                if let viewController = transfers[indexPath.row].controllerName.getViewController() {
-                    let navController = UINavigationController(rootViewController: viewController)
-                    if transfers[indexPath.row].name == "По номеру телефона"{
-                        navController.modalPresentationStyle = .formSheet
-                    } else {
-                        navController.modalPresentationStyle = .fullScreen
-
-                    }
-                    present(navController, animated: true, completion: nil)
-                }
-            }
+            print("It's transfer")
+        case .offer:
+            print("It's transfer")
         case .pay:
             print("DEBUG: " + #function + pay[indexPath.row].name)
             if pay[indexPath.row].id == 19 {
@@ -64,9 +40,6 @@ extension PaymentsViewController: UICollectionViewDelegate {
                         self?.showAlert(with: "Ошибка", and: error!)
                     } else {
                         DispatchQueue.main.async {
-                            
-//                            let viewController = MeToMeSettingViewController()
-                            
                             if let viewController = self?.pay[indexPath.row].controllerName.getViewController() {
                                 viewController.addCloseButton()
                                 let navVC = UINavigationController(rootViewController: viewController)
@@ -140,10 +113,11 @@ extension PaymentsViewController: UICollectionViewDelegate {
     
 }
 
-extension PaymentsViewController: UIViewControllerTransitioningDelegate {
+extension MainViewController: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         PresentationController(presentedViewController: presented, presenting: presenting)
     }
 }
+
 
 

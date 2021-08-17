@@ -8,7 +8,16 @@
 
 import UIKit
 
-class OrderProductsCollectionViewCell: UICollectionViewCell {
+class OrderProductsCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
+
+
+    func configure<U>(with value: U) where U : Hashable {
+        guard let payment: PaymentsModel = value as? PaymentsModel else { return }
+//        titleLabel.text = payment.name
+    }
+    
+
+    static var reuseId: String = "OrderProductsCollectionViewCell"
 
     var viewModel: OrderProductModel? {
         didSet { configure() }

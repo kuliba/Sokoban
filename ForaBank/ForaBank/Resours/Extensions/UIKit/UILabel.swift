@@ -13,9 +13,10 @@ extension UILabel {
     convenience init(text: String,
                      font: UIFont? = .systemFont(ofSize: 14),
                      color: UIColor? = UIColor.init(named: "textColorFora")) {
-        self.init()
+        self.init(frame: .zero)
         self.font = font
         self.text = text
         self.textColor = color
+        self.sizeToFit()
     }
 }

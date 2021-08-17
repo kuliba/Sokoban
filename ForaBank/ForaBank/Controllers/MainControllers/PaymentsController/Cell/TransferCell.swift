@@ -24,11 +24,14 @@ class TransferCell: UICollectionViewCell, SelfConfiguringCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
-        self.layer.cornerRadius = 12
-        layer.shadowColor = UIColor.black.cgColor
-        layer.shadowRadius = 8
-        layer.shadowOpacity = 0.4
-        layer.shadowOffset = CGSize(width: 0, height: 10)
+        self.layer.cornerRadius = 10
+        layer.shadowColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1).cgColor
+        layer.shadowRadius = 10
+        layer.shadowOpacity = 0.3
+        layer.shadowOffset = CGSize(width: 0, height: 0)
+//        0.785
+        let shadowPath = UIBezierPath(rect: CGRect(x: 15, y: 50, width: self.frame.width * 0.7, height: self.frame.height * 0.7))
+        layer.shadowPath = shadowPath.cgPath
     }
     
     required init?(coder: NSCoder) {
@@ -36,7 +39,7 @@ class TransferCell: UICollectionViewCell, SelfConfiguringCell {
     }
 
     private func setupUI() {
-        self.backgroundColor = #colorLiteral(red: 0.262745098, green: 0.2392156863, blue: 0.2392156863, alpha: 1)
+        self.backgroundColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1)
         transferLabel.numberOfLines = 2
         
         addSubview(transferImage)

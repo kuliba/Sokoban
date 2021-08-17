@@ -16,6 +16,8 @@ struct PaymentsModel: Hashable {
     var description: String? = ""
     var lastCountryPayment: ChooseCountryHeaderViewModel? = nil
     var lastPhonePayment: GetLatestPaymentsDatum? = nil
+    var productList: GetProductListDatum? = nil
+    
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
@@ -59,6 +61,13 @@ struct PaymentsModel: Hashable {
         let mask = StringMask(mask: "+7 (000) 000-00-00")
         let maskPhone = mask.mask(string: lastPhonePayment.phoneNumber)
         self.name = maskPhone ?? ""
+        self.controllerName = "PaymentByPhoneViewController"
+        self.iconName = "PaymentsIconPhone"
+    }
+    init(productList: GetProductListDatum) {
+        self.productList = productList
+        self.id = Int.random(in: 100 ... 10000)
+        self.name = productList.name ?? "1234"
         self.controllerName = "PaymentByPhoneViewController"
         self.iconName = "PaymentsIconPhone"
     }

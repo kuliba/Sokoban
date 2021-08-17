@@ -15,14 +15,14 @@ struct FullBankInfoListViewModel {
     let bank: BankFullInfoList
     var bankName: String {
         
-        if self.check(bank.fullName ?? "") {
-            let bankFullName: String = bank.fullName ?? ""
-            let fullNameArr = bankFullName.components(separatedBy: "\"")
-            let shortName: String = fullNameArr[1]
-            return shortName//.capitalizingFirstLetter()
-        } else {
-            return bank.fullName ?? ""
-        }
+//        if self.check(bank.fullName ?? "") {
+//            let bankFullName: String = bank.fullName ?? ""
+//            let fullNameArr = bankFullName.components(separatedBy: "\"")
+//            let shortName: String = fullNameArr[1]
+//            return shortName//.capitalizingFirstLetter()
+//        } else {
+            return bank.rusName ?? ""
+//        }
         
     }
     var bicNumber: String {

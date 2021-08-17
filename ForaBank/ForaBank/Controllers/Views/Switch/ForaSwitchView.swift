@@ -38,12 +38,11 @@ class ForaSwitchView: UIView {
         Bundle.main.loadNibNamed(kContentXibName, owner: self, options: nil)
         contentView.fixInView(self)
         self.heightAnchor.constraint(equalToConstant: 48).isActive = true
-        
+        bankByPhoneSwitch.set(width: 48, height: 24)
+        bankByPhoneSwitch.increaseThumb()
         bankByPhoneSwitch.layer.cornerRadius = 31 / 2
         bankByPhoneSwitch.layer.borderWidth = 1
         bankByPhoneSwitch.layer.borderColor = #colorLiteral(red: 0.1333333333, green: 0.7568627451, blue: 0.5137254902, alpha: 1)
-        bankByPhoneSwitch.increaseThumb()
-        
     }
     
     
