@@ -79,14 +79,8 @@
 		0BA2524226C4498A00AD087A /* GKHAnyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0BA2524126C4498A00AD087A /* GKHAnyCell.xib */; };
 		0BA2524726C5DB5600AD087A /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 0BA2524626C5DB5600AD087A /* Realm */; };
 		0BA2524926C5DB5600AD087A /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0BA2524826C5DB5600AD087A /* RealmSwift */; };
-		0BAC319026CB2523006E03FD /* GKHMainViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0BAC318F26CB2523006E03FD /* GKHMainViewHeader.xib */; };
-		0BAC319226CB25AA006E03FD /* GKHMainViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAC319126CB25AA006E03FD /* GKHMainViewHeader.swift */; };
-		0BAC319426CB2631006E03FD /* ExtensionGKHMainCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAC319326CB2631006E03FD /* ExtensionGKHMainCollectionView.swift */; };
 		0BAC319626CB264B006E03FD /* ExtensionGKHMainTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAC319526CB264B006E03FD /* ExtensionGKHMainTableView.swift */; };
-		0BAC319926CB29C6006E03FD /* GKHMainViewFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0BAC319826CB29C6006E03FD /* GKHMainViewFooterView.xib */; };
-		0BAC319B26CB2DEB006E03FD /* GKHMainViewFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAC319A26CB2DEB006E03FD /* GKHMainViewFooterView.swift */; };
 		0BB015D626C8892700E7A85B /* GKHMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB015D426C8892700E7A85B /* GKHMainViewController.swift */; };
-		0BB015D726C8892700E7A85B /* GKHMainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0BB015D526C8892700E7A85B /* GKHMainViewController.xib */; };
 		0BB015DA26C9378200E7A85B /* GKHOperatorsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB015D926C9378200E7A85B /* GKHOperatorsModel.swift */; };
 		0BB015DC26C9BE3700E7A85B /* ExtensionGKHMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB015DB26C9BE3700E7A85B /* ExtensionGKHMain.swift */; };
 		0BD2177926A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */; };
@@ -389,14 +383,8 @@
 		0BA2523D26C4444700AD087A /* AdaptedTableViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptedTableViewDataSource.swift; sourceTree = "<group>"; };
 		0BA2523F26C4448D00AD087A /* AdaptedTableViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptedTableViewDelegate.swift; sourceTree = "<group>"; };
 		0BA2524126C4498A00AD087A /* GKHAnyCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GKHAnyCell.xib; sourceTree = "<group>"; };
-		0BAC318F26CB2523006E03FD /* GKHMainViewHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GKHMainViewHeader.xib; sourceTree = "<group>"; };
-		0BAC319126CB25AA006E03FD /* GKHMainViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHMainViewHeader.swift; sourceTree = "<group>"; };
-		0BAC319326CB2631006E03FD /* ExtensionGKHMainCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionGKHMainCollectionView.swift; sourceTree = "<group>"; };
 		0BAC319526CB264B006E03FD /* ExtensionGKHMainTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionGKHMainTableView.swift; sourceTree = "<group>"; };
-		0BAC319826CB29C6006E03FD /* GKHMainViewFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GKHMainViewFooterView.xib; sourceTree = "<group>"; };
-		0BAC319A26CB2DEB006E03FD /* GKHMainViewFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHMainViewFooterView.swift; sourceTree = "<group>"; };
 		0BB015D426C8892700E7A85B /* GKHMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHMainViewController.swift; sourceTree = "<group>"; };
-		0BB015D526C8892700E7A85B /* GKHMainViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GKHMainViewController.xib; sourceTree = "<group>"; };
 		0BB015D926C9378200E7A85B /* GKHOperatorsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHOperatorsModel.swift; sourceTree = "<group>"; };
 		0BB015DB26C9BE3700E7A85B /* ExtensionGKHMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionGKHMain.swift; sourceTree = "<group>"; };
 		0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAnywayOperatorsListDecodableModel.swift; sourceTree = "<group>"; };
@@ -840,25 +828,6 @@
 			path = AdaptedTableView;
 			sourceTree = "<group>";
 		};
-		0BAC318E26CB24F2006E03FD /* GKHMainViewHeaderView */ = {
-			isa = PBXGroup;
-			children = (
-				0BAC319326CB2631006E03FD /* ExtensionGKHMainCollectionView.swift */,
-				0BAC318F26CB2523006E03FD /* GKHMainViewHeader.xib */,
-				0BAC319126CB25AA006E03FD /* GKHMainViewHeader.swift */,
-			);
-			path = GKHMainViewHeaderView;
-			sourceTree = "<group>";
-		};
-		0BAC319726CB29AA006E03FD /* GKHMainViewFooterView */ = {
-			isa = PBXGroup;
-			children = (
-				0BAC319826CB29C6006E03FD /* GKHMainViewFooterView.xib */,
-				0BAC319A26CB2DEB006E03FD /* GKHMainViewFooterView.swift */,
-			);
-			path = GKHMainViewFooterView;
-			sourceTree = "<group>";
-		};
 		0BB015D826C9375C00E7A85B /* GKHModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -870,12 +839,9 @@
 		0BB015DD26C9BFCC00E7A85B /* GKHMainViewController */ = {
 			isa = PBXGroup;
 			children = (
-				0BAC319726CB29AA006E03FD /* GKHMainViewFooterView */,
 				0BB015D426C8892700E7A85B /* GKHMainViewController.swift */,
 				0BB015DB26C9BE3700E7A85B /* ExtensionGKHMain.swift */,
-				0BAC318E26CB24F2006E03FD /* GKHMainViewHeaderView */,
 				0BAC319526CB264B006E03FD /* ExtensionGKHMainTableView.swift */,
-				0BB015D526C8892700E7A85B /* GKHMainViewController.xib */,
 			);
 			path = GKHMainViewController;
 			sourceTree = "<group>";
@@ -2165,7 +2131,6 @@
 				EDB143C5265FDEC90028EF5A /* Roboto-Light.ttf in Resources */,
 				EDB143C8265FDEC90028EF5A /* Roboto-ThinItalic.ttf in Resources */,
 				0BA2524226C4498A00AD087A /* GKHAnyCell.xib in Resources */,
-				0BAC319926CB29C6006E03FD /* GKHMainViewFooterView.xib in Resources */,
 				EDB14518266526BD0028EF5A /* CreditCardEntryView.xib in Resources */,
 				EDB1452C26663C9D0028EF5A /* GoogleService-Info.plist in Resources */,
 				EDB14526266624DC0028EF5A /* OrderCardView.xib in Resources */,
@@ -2178,7 +2143,6 @@
 				EDB143C7265FDEC90028EF5A /* Roboto-MediumItalic.ttf in Resources */,
 				EDAA99B12673ABF200435484 /* ForaSwitchView.xib in Resources */,
 				0BF3484E268A455C005138A8 /* AllCardView.xib in Resources */,
-				0BB015D726C8892700E7A85B /* GKHMainViewController.xib in Resources */,
 				ED84995826A8831E005205C6 /* EPContactCell.xib in Resources */,
 				EDB145112664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf in Resources */,
 				ED8AB45D26C2B55E006F0D03 /* SuccessMeToMeController.xib in Resources */,
@@ -2187,7 +2151,6 @@
 				EDB143CB265FDEC90028EF5A /* Roboto-Italic.ttf in Resources */,
 				EDB1655E2667A55F007E6030 /* ForaInput.xib in Resources */,
 				ED2BE18326A04A8800647CB1 /* BottomInputViewWithRate.xib in Resources */,
-				0BAC319026CB2523006E03FD /* GKHMainViewHeader.xib in Resources */,
 				ED0B489E267D41B10037EA06 /* PaymentsDetailsView.xib in Resources */,
 				0B66E8E626CC658A00FD735D /* GKHStoryboard.storyboard in Resources */,
 				EDB14532266667140028EF5A /* OrderProductsCollectionViewCell.xib in Resources */,
@@ -2252,7 +2215,6 @@
 				EDB1451C26652D370028EF5A /* UILabel.swift in Sources */,
 				0BA2523626C442DB00AD087A /* GKHMainViewModel.swift in Sources */,
 				0B95C40326B6CA3700AA57E6 /* CustomPopUpWithRateView.swift in Sources */,
-				0BAC319B26CB2DEB006E03FD /* GKHMainViewFooterView.swift in Sources */,
 				ED0B4894267B50F50037EA06 /* Int.swift in Sources */,
 				68D06F2826C3C13900F9BE4C /* MainViewControllerDelegate.swift in Sources */,
 				EDB145402666AFD70028EF5A /* Constants.swift in Sources */,
@@ -2307,7 +2269,6 @@
 				EDB16592266A19DA007E6030 /* PaymentsViewControllerSearchBarDelegate.swift in Sources */,
 				0BE270B326B9959900FA958C /* ExtensionBottomLableModel.swift in Sources */,
 				0B37F97A2678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift in Sources */,
-				0BAC319426CB2631006E03FD /* ExtensionGKHMainCollectionView.swift in Sources */,
 				687ADF1026B07721005A239B /* DataExtension.swift in Sources */,
 				ED0B48A0267E1A2D0037EA06 /* PaymentsDetailsSuccessViewController.swift in Sources */,
 				0B8CB0882680CAE3006A39C3 /* ExtensionNetworkHelper.swift in Sources */,
@@ -2465,7 +2426,6 @@
 				0BA251ED26C266A400AD087A /* CreateServiceTransferDecodableModel.swift in Sources */,
 				0BAC319626CB264B006E03FD /* ExtensionGKHMainTableView.swift in Sources */,
 				0BF34854268B2699005138A8 /* PrepareExternalDecodableModel.swift in Sources */,
-				0BAC319226CB25AA006E03FD /* GKHMainViewHeader.swift in Sources */,
 				ED3A96772690FCD700252857 /* BankViewModel.swift in Sources */,
 				68FFA54F26853897002DADFA /* PhoneContacts.swift in Sources */,
 				0BA2523C26C443F700AD087A /* AdaptedTableView.swift in Sources */,

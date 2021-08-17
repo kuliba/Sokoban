@@ -39,23 +39,8 @@ class GKHMainViewController: UIViewController, UISearchBarDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let nib = UINib(nibName: "GHKCell", bundle: nil)
-        tableView.register(nib, forCellReuseIdentifier: GHKCell.reuseId)
         setupNavBar()
         operatorsList = realm?.objects(GKHOperatorsModel.self)
-        tableView.delegate = self
-        tableView.dataSource = self
-        
-        self.tableView.register(
-                    GKHMainViewHeader.nib,
-                    forHeaderFooterViewReuseIdentifier:
-                        GKHMainViewHeader.reuseIdentifier
-                )
-        self.tableView.register(
-                    GKHMainViewFooterView.nib,
-                    forHeaderFooterViewReuseIdentifier:
-                        GKHMainViewFooterView.reuseIdentifier
-                )
         
     }
     
