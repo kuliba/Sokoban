@@ -25,6 +25,7 @@
 		0B66E8DE26CC5F8900FD735D /* QRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B66E8DD26CC5F8900FD735D /* QRViewController.swift */; };
 		0B66E8E126CC62BC00FD735D /* NetDetect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B66E8E026CC62BC00FD735D /* NetDetect.swift */; };
 		0B66E8E326CC62DF00FD735D /* NetStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B66E8E226CC62DF00FD735D /* NetStatus.swift */; };
+		0B66E8E626CC658A00FD735D /* GKHStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0B66E8E526CC658A00FD735D /* GKHStoryboard.storyboard */; };
 		0B747890267343B400C44F79 /* KeyExchangeDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */; };
 		0B7A18AB2681CED70007CC75 /* SwiftEntryKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0B7A18AA2681CED70007CC75 /* SwiftEntryKit */; };
 		0B7A18AD2681CF160007CC75 /* CastomPopUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18AC2681CF160007CC75 /* CastomPopUpView.swift */; };
@@ -337,6 +338,7 @@
 		0B66E8DD26CC5F8900FD735D /* QRViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRViewController.swift; sourceTree = "<group>"; };
 		0B66E8E026CC62BC00FD735D /* NetDetect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetDetect.swift; sourceTree = "<group>"; };
 		0B66E8E226CC62DF00FD735D /* NetStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetStatus.swift; sourceTree = "<group>"; };
+		0B66E8E526CC658A00FD735D /* GKHStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = GKHStoryboard.storyboard; sourceTree = "<group>"; };
 		0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyExchangeDecodebleModel.swift; sourceTree = "<group>"; };
 		0B7A18AC2681CF160007CC75 /* CastomPopUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastomPopUpView.swift; sourceTree = "<group>"; };
 		0B7A18AE268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLatestPhonePaymentsDecodableModel.swift; sourceTree = "<group>"; };
@@ -673,6 +675,14 @@
 				0B66E8E226CC62DF00FD735D /* NetStatus.swift */,
 			);
 			path = NetDetect;
+			sourceTree = "<group>";
+		};
+		0B66E8E426CC654600FD735D /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				0B66E8E526CC658A00FD735D /* GKHStoryboard.storyboard */,
+			);
+			path = Storyboards;
 			sourceTree = "<group>";
 		};
 		0B7A18B026836A040007CC75 /* NetworkPDFManager */ = {
@@ -1526,6 +1536,7 @@
 		EDB1437F265FDA410028EF5A /* ForaBank */ = {
 			isa = PBXGroup;
 			children = (
+				0B66E8E426CC654600FD735D /* Storyboards */,
 				6880D32526A07148008FBCB4 /* Encription */,
 				EDF681F0266F9EC800FD5C07 /* Service */,
 				EDB143B6265FDEAD0028EF5A /* Resours */,
@@ -2178,6 +2189,7 @@
 				ED2BE18326A04A8800647CB1 /* BottomInputViewWithRate.xib in Resources */,
 				0BAC319026CB2523006E03FD /* GKHMainViewHeader.xib in Resources */,
 				ED0B489E267D41B10037EA06 /* PaymentsDetailsView.xib in Resources */,
+				0B66E8E626CC658A00FD735D /* GKHStoryboard.storyboard in Resources */,
 				EDB14532266667140028EF5A /* OrderProductsCollectionViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
