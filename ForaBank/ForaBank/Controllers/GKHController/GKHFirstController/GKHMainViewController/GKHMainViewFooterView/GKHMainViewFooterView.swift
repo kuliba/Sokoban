@@ -9,7 +9,8 @@ import UIKit
 
 final class GKHMainViewFooterView: UITableViewHeaderFooterView {
     
-    @IBOutlet var mainView: GKHMainViewFooterView!
+
+    
     static let reuseIdentifier: String = String(describing: self)
 
     static var nib: UINib {

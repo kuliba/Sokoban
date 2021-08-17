@@ -14,9 +14,9 @@ extension GKHMainViewController: UITableViewDelegate {
         return UITableView.automaticDimension
     }
     
-//    func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
-//        return 300.0
-//    }
+    func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
+        return 300.0
+    }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         guard let view = tableView.dequeueReusableHeaderFooterView( withIdentifier: GKHMainViewFooterView.reuseIdentifier) as? GKHMainViewFooterView
@@ -38,7 +38,7 @@ extension GKHMainViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        return 76.0
+        return 200.0
     }
 }
 
