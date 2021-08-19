@@ -11,6 +11,11 @@ import AVFoundation
 
 class GKHMainViewController: UIViewController, UISearchBarDelegate {
     
+    public static func storyboardInstance() -> GKHMainViewController? {
+        let storyboard = UIStoryboard(name: "GKHStoryboard", bundle: nil)
+        return storyboard.instantiateViewController(withIdentifier: "GKHMain") as? GKHMainViewController
+    }
+    
     var alertController: UIAlertController?
     
     @IBOutlet weak var tableView: UITableView!
@@ -39,6 +44,7 @@ class GKHMainViewController: UIViewController, UISearchBarDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.register(UINib(nibName: "GHKCell", bundle: nil), forCellReuseIdentifier: GHKCell.reuseId)
         setupNavBar()
         operatorsList = realm?.objects(GKHOperatorsModel.self)
         

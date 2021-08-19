@@ -81,7 +81,15 @@ extension PaymentsViewController: UICollectionViewDelegate {
                     viewController.addCloseButton()
                     let navVC = UINavigationController(rootViewController: viewController)
                     navVC.modalPresentationStyle = .fullScreen
-                    present(navVC, animated: true)
+                    
+                    if indexPath.row == 2 {
+                        let gkh = GKHMainViewController.storyboardInstance()!
+                        let nc = UINavigationController(rootViewController: gkh)
+                        nc.modalPresentationStyle = .fullScreen
+                        present(nc, animated: true)
+                    } else {
+                        present(navVC, animated: true)
+                    }
                 }
             }
         }

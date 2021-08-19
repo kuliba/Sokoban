@@ -11,6 +11,7 @@ extension GKHMainViewController: UITableViewDelegate {
 }
 
 extension GKHMainViewController: UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return operatorsList?.count ?? 0
     }
@@ -32,13 +33,26 @@ extension GKHMainViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let selectedCountry: GKHOperatorsModel
+        let selectedOperator: GKHOperatorsModel
+        guard operatorsList?.count != 0 else { return }
         if searching {
-            selectedCountry = searchedOrganization[indexPath.row]
+            selectedOperator = (operatorsList?[indexPath.row])!
         } else {
-            selectedCountry = organization[indexPath.row]
+            selectedOperator = (operatorsList?[indexPath.row])!
         }
         self.searchController.searchBar.searchTextField.endEditing(true)
+        performSegue(withIdentifier: "input", sender: self)
+    }
+    
+    // MARK: - Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard segue.identifier == "input" else { return }
+
+            let index = tableView.indexPathForSelectedRow
+            let operators = operatorsList?[index?.row ?? 0]
+            let dc = segue.destination as! GKHInputViewController
+            dc.operatorData = operators
+
     }
     
 }
