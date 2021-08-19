@@ -263,7 +263,7 @@ class GKHViewController: UITableViewController {
         //        let puref = selectedCountry.code ?? ""
         //        var cardNumber = ""
         getCardList() { card, _  in
-            let a = card?.first
+            let a = card
             let vc = GKHDetailViewController()
             //            vc.organization = self.organization
             self.navigationController?.pushViewController(vc, animated: true)
