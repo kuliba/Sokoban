@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol passTextFieldText {
+protocol PassTextFieldText {
     func passTextFieldText(textField: UITextField)
 }
 
@@ -23,7 +23,7 @@ class SearchContact: UIView, UITextFieldDelegate{
     @IBOutlet weak var searchView: SearchContact!
     
     var maskPhone = true
-    var delegateNumber: passTextFieldText? = nil
+    var delegateNumber: PassTextFieldText? = nil
     var searchText: String?
     
     private let maxNumberCount = 10
