@@ -118,6 +118,9 @@ struct AddOperatorsList {
                                 tempOperators.parameterList.append(i)
                             }
                             tempOperatorsArray.append(tempOperators)
+                            listPositionArray.removeAll()
+                            synonymListArray.removeAll()
+                            parametersArray.removeAll()
                         })
                         operatorsArray = tempOperatorsArray
                         /// Сохраняем в REALM
