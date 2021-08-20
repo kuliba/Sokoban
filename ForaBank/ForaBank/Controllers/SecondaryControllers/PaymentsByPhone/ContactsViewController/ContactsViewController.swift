@@ -9,7 +9,7 @@ import UIKit
 import ContactsUI
 
 
-class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFieldText{
+class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFieldText{
 
     
     let tableView = UITableView(frame: .zero, style: .plain)
@@ -33,7 +33,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
     
     var lastPaymentsCollectionView: UICollectionView!
     var contactCollectionView: UICollectionView!
-    var delegate: passTextFieldText? = nil
+    var delegate: PassTextFieldText? = nil
     let contactView = UIView()
     var banksList = [BanksList](){
         didSet{

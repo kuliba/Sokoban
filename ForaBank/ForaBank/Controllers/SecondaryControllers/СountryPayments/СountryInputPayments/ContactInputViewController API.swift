@@ -19,6 +19,7 @@ extension ContactInputViewController {
             guard let model = model else { return }
             if model.statusCode == 0 {
                 guard let cardList = model.data else { return }
+                print(cardList)
                 completion(cardList, nil)
             } else {
                 guard let error = model.errorMessage else { return }

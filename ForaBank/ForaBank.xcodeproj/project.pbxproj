@@ -282,6 +282,10 @@
 		EDC8BA3426A5AA0E00EDB401 /* SDWebImagePDFCoder in Frameworks */ = {isa = PBXBuildFile; productRef = EDC8BA3326A5AA0E00EDB401 /* SDWebImagePDFCoder */; };
 		EDCF89E226CACC7300DC9F54 /* MeToMeSetupSwitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCF89E126CACC7300DC9F54 /* MeToMeSetupSwitchView.swift */; };
 		EDCF89E426CACC7D00DC9F54 /* MeToMeSetupSwitchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDCF89E326CACC7D00DC9F54 /* MeToMeSetupSwitchView.xib */; };
+		EDCF8A1026CE876600DC9F54 /* MeToMeSearchBanksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCF8A0F26CE876600DC9F54 /* MeToMeSearchBanksViewController.swift */; };
+		EDCF8A1526CED86100DC9F54 /* BankTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCF8A1326CED86100DC9F54 /* BankTableViewCell.swift */; };
+		EDCF8A1626CED86100DC9F54 /* BankTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDCF8A1426CED86100DC9F54 /* BankTableViewCell.xib */; };
+		EDCF8A1826CEFF2100DC9F54 /* TextFieldWithPadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCF8A1726CEFF2100DC9F54 /* TextFieldWithPadding.swift */; };
 		EDF6820D266F9EC800FD5C07 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681F3266F9EC800FD5C07 /* NetworkManager.swift */; };
 		EDF6820E266F9EC800FD5C07 /* NetworkModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681F6266F9EC800FD5C07 /* NetworkModelProtocol.swift */; };
 		EDF6820F266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681F7266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift */; };
@@ -592,6 +596,10 @@
 		EDC341A126864C4100FFFEF8 /* BottomInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomInputView.swift; sourceTree = "<group>"; };
 		EDCF89E126CACC7300DC9F54 /* MeToMeSetupSwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeToMeSetupSwitchView.swift; sourceTree = "<group>"; };
 		EDCF89E326CACC7D00DC9F54 /* MeToMeSetupSwitchView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MeToMeSetupSwitchView.xib; sourceTree = "<group>"; };
+		EDCF8A0F26CE876600DC9F54 /* MeToMeSearchBanksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeToMeSearchBanksViewController.swift; sourceTree = "<group>"; };
+		EDCF8A1326CED86100DC9F54 /* BankTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankTableViewCell.swift; sourceTree = "<group>"; };
+		EDCF8A1426CED86100DC9F54 /* BankTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BankTableViewCell.xib; sourceTree = "<group>"; };
+		EDCF8A1726CEFF2100DC9F54 /* TextFieldWithPadding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldWithPadding.swift; sourceTree = "<group>"; };
 		EDF681F3266F9EC800FD5C07 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		EDF681F6266F9EC800FD5C07 /* NetworkModelProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkModelProtocol.swift; sourceTree = "<group>"; };
 		EDF681F7266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetDeviceSettingDecodbleModel.swift; sourceTree = "<group>"; };
@@ -1327,6 +1335,7 @@
 				0B7A18B72683A9940007CC75 /* FileManagerHelper.swift */,
 				0B7A18B92683AC880007CC75 /* NotificationName.swift */,
 				ED3A966D2690A80B00252857 /* PresentationController.swift */,
+				EDCF8A1726CEFF2100DC9F54 /* TextFieldWithPadding.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1469,6 +1478,9 @@
 				ED8AB45326C1169E006F0D03 /* MeToMeSettingViewController */,
 				ED8AB45A26C2A7C5006F0D03 /* SuccessMeToMeController.swift */,
 				ED8AB45C26C2B55E006F0D03 /* SuccessMeToMeController.xib */,
+				EDCF8A0F26CE876600DC9F54 /* MeToMeSearchBanksViewController.swift */,
+				EDCF8A1326CED86100DC9F54 /* BankTableViewCell.swift */,
+				EDCF8A1426CED86100DC9F54 /* BankTableViewCell.xib */,
 			);
 			path = MeToMeViewControllers;
 			sourceTree = "<group>";
@@ -2191,6 +2203,7 @@
 				ED2BE18126A04A4300647CB1 /* CastomCardXIB.xib in Resources */,
 				0BA09E2E26ADEBF50065D623 /* GHKCell.xib in Resources */,
 				68FFA55C268586D3002DADFA /* HeaderBanksCollectionReusableView.xib in Resources */,
+				EDCF8A1626CED86100DC9F54 /* BankTableViewCell.xib in Resources */,
 				EDB143C7265FDEC90028EF5A /* Roboto-MediumItalic.ttf in Resources */,
 				EDAA99B12673ABF200435484 /* ForaSwitchView.xib in Resources */,
 				0BF3484E268A455C005138A8 /* AllCardView.xib in Resources */,
@@ -2253,11 +2266,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				ED0B48A3267E71DC0037EA06 /* FCMToken.swift in Sources */,
+				EDCF8A1026CE876600DC9F54 /* MeToMeSearchBanksViewController.swift in Sources */,
 				68C64626269DCBD800473DE7 /* QRScannerViewController.swift in Sources */,
 				EDFFCAF82683943A004EE095 /* UISwitch.swift in Sources */,
 				0BA09E3026ADEC300065D623 /* GHKCell.swift in Sources */,
 				ED2BE17F26A0498400647CB1 /* AllCardListViewController.swift in Sources */,
 				EDBEEA1D26B1AF2F00265683 /* FullBankInfoCell.swift in Sources */,
+				EDCF8A1826CEFF2100DC9F54 /* TextFieldWithPadding.swift in Sources */,
 				0BEC893D2672591A00D8BD22 /* GetCardListDecodebleModel.swift in Sources */,
 				EDF68211266F9EC800FD5C07 /* RequestError.swift in Sources */,
 				68E6A29526A033D900A1D9A1 /* DeleteProductTemplateDecodableModel.swift in Sources */,
@@ -2308,6 +2323,7 @@
 				EDB16586266A0883007E6030 /* NSDirectionalEdgeInsets.swift in Sources */,
 				EDFFCAF32682461F004EE095 /* CardCell.swift in Sources */,
 				EDB14524266624460028EF5A /* UIViewController.swift in Sources */,
+				EDCF8A1526CED86100DC9F54 /* BankTableViewCell.swift in Sources */,
 				ED84995A26A8831E005205C6 /* EPContact.swift in Sources */,
 				68FFA5282682AF2C002DADFA /* ContactsViewController.swift in Sources */,
 				0B66E8DA26CC5F1E00FD735D /* SquareView.swift in Sources */,

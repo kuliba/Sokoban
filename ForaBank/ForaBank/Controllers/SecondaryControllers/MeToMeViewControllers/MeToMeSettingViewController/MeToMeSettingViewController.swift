@@ -143,22 +143,39 @@ class MeToMeSettingViewController: UIViewController {
         topSwitch.bankByPhoneSwitch.isEnabled = false
         topSwitch.switchIsChanged = { (sender) in
             self.showActivity()
-            guard let contractId = self.model?.first?.fastPaymentContractAttributeList?.first else { return }
-            
-            self.updateContract(contractId: contractId.fpcontractID,
-                                cardModel: self.cardFromField.cardModel!,
-                                isOff: sender.isOn) { success, error in
-                DispatchQueue.main.async {
-                    self.dismissActivity()
-                    self.hideView(self.cardFromField, needHide: !sender.isOn) {
-                        if !self.cardListView.isHidden {
-                            self.hideView(self.cardListView, needHide: true) { }
+            guard let model = self.model else { return }
+            if model.isEmpty {
+                self.createContract(cardModel: self.cardFromField.cardModel!) { success, error in
+                    
+                    DispatchQueue.main.async {
+                        self.dismissActivity()
+                        self.hideView(self.cardFromField, needHide: !sender.isOn) {
+                            if !self.cardListView.isHidden {
+                                self.hideView(self.cardListView, needHide: true) { }
+                            }
+                        }
+                    }
+                }
+            } else {
+                guard let contractId = self.model?.first?.fastPaymentContractAttributeList?.first else { return }
+                
+                self.updateContract(contractId: contractId.fpcontractID,
+                                    cardModel: self.cardFromField.cardModel!,
+                                    isOff: sender.isOn) { success, error in
+                    DispatchQueue.main.async {
+                        self.dismissActivity()
+                        self.hideView(self.cardFromField, needHide: !sender.isOn) {
+                            if !self.cardListView.isHidden {
+                                self.hideView(self.cardListView, needHide: true) { }
+                            }
                         }
                     }
                 }
             }
         }
     }
+    
+    
     
     //MARK: - Animation
     func openOrHideView(_ view: UIView) {
@@ -239,5 +256,26 @@ class MeToMeSettingViewController: UIViewController {
         }
     }
     
+    func createContract(cardModel: GetProductListDatum, completion: @escaping (_ success: Bool, _ error: String?)->()) {
+        guard let accountId = cardModel.ownerID else { return }
+        let body = [ "accountId"                : accountId,
+                     "flagBankDefault"          : "YES",
+                     "flagClientAgreementIn"    : "YES",
+                     "flagClientAgreementOut"   : "YES"
+        ] as [String : AnyObject]
+        
+        NetworkManager<CreateServiceTransferDecodableModel>.addRequest(.createFastPaymentContract, [:], body) { model, error in
+            if error != nil {
+                completion(false, error)
+            }
+            guard let model = model else { return }
+            if model.statusCode == 0 {
+                completion(true, nil)
+            } else {
+                guard let error = model.errorMessage else { return }
+                completion(false, error)
+            }
+        }
+    }
     
 }

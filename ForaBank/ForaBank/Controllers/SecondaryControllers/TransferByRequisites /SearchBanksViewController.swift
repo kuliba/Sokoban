@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, passTextFieldText {
+class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, PassTextFieldText {
     var allBanks = [BankFullInfoList]()
     func passTextFieldText(textField: UITextField) {
         guard let text = textField.text else {
@@ -37,7 +37,7 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
     
     let searchContact: SearchContact = UIView.fromNib()
 
-    var delegate: passTextFieldText? = nil
+    var delegate: PassTextFieldText? = nil
     
     var didBankTapped: ((BankFullInfoList) -> Void)?
     

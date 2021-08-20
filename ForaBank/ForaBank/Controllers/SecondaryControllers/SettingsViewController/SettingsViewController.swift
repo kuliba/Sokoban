@@ -88,28 +88,35 @@ class SettingsViewController: UIViewController {
     
     @objc func sbpButtonAction() {
         print(#function)
-        self.showActivity()
-        getFastPaymentContractList { [weak self] contractList, error in
-            self?.dismissActivity()
-            if error != nil {
-                self?.showAlert(with: "Ошибка", and: error!)
-            } else {
-                DispatchQueue.main.async {
-                    let vc = MeToMeSettingViewController()
-                    if contractList != nil {
-                        vc.model = contractList
-                    } else {
-                        vc.model = []
-                    }
-                    
-                    
-                    let navVC = UINavigationController(rootViewController: vc)
-                    navVC.modalPresentationStyle = .fullScreen
-                    navVC.addCloseButton()
-                    self?.present(navVC, animated: true, completion: nil)
-                }
-            }
-        }
+        
+        let vc = MeToMeSearchBanksViewController()
+        let navVC = UINavigationController(rootViewController: vc)
+//        navVC.modalPresentationStyle = .fullScreen
+        navVC.addCloseButton()
+        self.present(navVC, animated: true, completion: nil)
+        
+//        self.showActivity()
+//        getFastPaymentContractList { [weak self] contractList, error in
+//            self?.dismissActivity()
+//            if error != nil {
+//                self?.showAlert(with: "Ошибка", and: error!)
+//            } else {
+//                DispatchQueue.main.async {
+//                    let vc = MeToMeSettingViewController()
+//                    if contractList != nil {
+//                        vc.model = contractList
+//                    } else {
+//                        vc.model = []
+//                    }
+//
+//
+//                    let navVC = UINavigationController(rootViewController: vc)
+//                    navVC.modalPresentationStyle = .fullScreen
+//                    navVC.addCloseButton()
+//                    self?.present(navVC, animated: true, completion: nil)
+//                }
+//            }
+//        }
     }
     
     @objc func logout() {
