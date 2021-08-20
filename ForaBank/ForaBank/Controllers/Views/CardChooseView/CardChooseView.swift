@@ -70,11 +70,12 @@ final class CardChooseView: UIView {
     
     private func setupData(with model: GetProductListDatum) {
         hideAll(false)
+        
         if model.productType == "ACCOUNT" {
-            imageView.image = #imageLiteral(resourceName: "AccImage")
+            imageView.image = model.smallDesign?.convertSVGStringToImage()
             cardTypeImage.isHidden = true
         } else if model.productType == "CARD" {
-            imageView.image = #imageLiteral(resourceName: "credit-card")
+            imageView.image = model.smallDesign?.convertSVGStringToImage()
         }
         
         let balance = Double(model.balance ?? 0)
