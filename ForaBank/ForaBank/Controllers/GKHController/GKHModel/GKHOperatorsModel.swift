@@ -16,8 +16,8 @@ class GKHOperatorsModel: Object {
     @objc dynamic var name: String?
     @objc dynamic var region: String?
     
-    var logotypeList = List<LogotypeData>()
-    let synonymList = List<String>()
+    var logotypeList  = List<LogotypeData>()
+    let synonymList   = List<String>()
     let parameterList = List<Parameters>()
     
 }
@@ -52,15 +52,15 @@ struct AddOperatorsList {
     static func add() {
         
         /// Общая информация об поставщике услуг
-        var operatorsArray = [GKHOperatorsModel]()
-        var tempOperators = GKHOperatorsModel()
+        var operatorsArray     = [GKHOperatorsModel]()
+        var tempOperators      = GKHOperatorsModel()
         var tempOperatorsArray = [GKHOperatorsModel]()
     
         /// Логотип и название поставщике услуг
         var listPositionArray = [LogotypeData]()
         /// Поля для заполнения
-        var synonymListArray = [String]()
-        var parametersArray = [Parameters]()
+        var synonymListArray  = [String]()
+        var parametersArray   = [Parameters]()
         
         NetworkManager<GetAnywayOperatorsListDecodableModel>.addRequest(.getAnywayOperatorsList, [:], [:]) { model, error in
             
@@ -74,16 +74,16 @@ struct AddOperatorsList {
                     if d.name == "Коммунальные услуги и ЖКХ" {
                         d.operators?.forEach({ operators in
                             /// Общая информация об поставщике услуг
-                            let a = GKHOperatorsModel()
-                            a.code = operators.code
+                            let a     = GKHOperatorsModel()
+                            a.code    = operators.code
                             a.isGroup = operators.isGroup ?? false
-                            a.name = operators.name
-                            a.region = operators.region
+                            a.name    = operators.name
+                            a.region  = operators.region
                             /// Логотип и название поставщике услуг
                             operators.logotypeList?.forEach({ logotypeList in
-                                let l = LogotypeData()
+                                let l     = LogotypeData()
                                 l.content = logotypeList.content
-                                l.name = logotypeList.name
+                                l.name    = logotypeList.name
                                 listPositionArray.append(l)
                             })
                             /// ИНН

@@ -103,11 +103,11 @@ class GKHViewController: UITableViewController {
     @objc func titleDidTaped() {
         /// Выбор города
         print(#function)
-        let vc = GKHCityViewController()
-        vc.organization = self.organization
-        let nav = UINavigationController(rootViewController: vc)
+//        let vc = GKHCityViewController()
+//        vc.organization = self.organization
+//        let nav = UINavigationController(rootViewController: vc)
         //      nav.navigationController?.modalPresentationStyle = .currentContext
-        present(nav, animated: true, completion: nil)
+//        present(nav, animated: true, completion: nil)
         
         //        self.navigationController?.pushViewController(vc, animated: true)
     }

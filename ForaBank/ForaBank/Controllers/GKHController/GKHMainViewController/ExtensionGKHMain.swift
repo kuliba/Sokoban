@@ -29,7 +29,15 @@ extension GKHMainViewController {
         titleLabel.sizeToFit()
         let titleView = UIView(frame: CGRect(x: 0, y: 0, width: titleLabel.frame.size.width, height: 15))
         titleView.addSubview(titleLabel)
+        
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(self.titleDidTaped))
+        titleView.addGestureRecognizer(gesture)
+        
         return titleView
+    }
+    
+    @objc func titleDidTaped() {
+        performSegue(withIdentifier: "citySearch", sender: self)
     }
     
     func setupNavBar() {
@@ -43,7 +51,18 @@ extension GKHMainViewController {
         searchController.automaticallyShowsCancelButton = false
         searchController.searchBar.delegate = self
         definesPresentationContext = true
-        addCloseButton()
+        self.navigationItem.leftBarButtonItem?.style = .done
+        addCloseButton_1()
+        let button = UIBarButtonItem(image: UIImage(systemName: "qrIcon"),
+                                                       landscapeImagePhone: nil,
+                                                       style: .plain,
+                                                       target: self,
+                                                       action: #selector(onQR))
+        button.tintColor = .black
+        navigationItem.rightBarButtonItem = button
         
+    }
+    @objc func onQR(){
+       
     }
 }
