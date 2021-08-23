@@ -18,7 +18,6 @@ class NetworkPDFManager: NSObject, URLSessionDownloadDelegate {
     func createPdfDocument() {
         
         var router = RouterManager.getPrintForm.request()
-        var a: URL!
         do {
             let jsonAsData = try JSONSerialization.data(withJSONObject: requestBody!, options: [])
             router?.httpBody = jsonAsData

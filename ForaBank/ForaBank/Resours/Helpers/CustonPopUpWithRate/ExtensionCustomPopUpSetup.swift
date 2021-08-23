@@ -143,6 +143,35 @@ extension CustomPopUpWithRateView {
         }
     }
     
+    //MARK: - Animation
+    func openOrHideView(_ view: UIView, completion: @escaping () -> Void ) {
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.2) {
+                if view.isHidden == true {
+                    view.isHidden = false
+                    view.alpha = 1
+                } else {
+                    view.isHidden = true
+                    view.alpha = 0
+                }
+                self.stackView.layoutIfNeeded()
+            }
+        }
+        completion()
+    }
+    
+    func hideView(_ view: UIView, needHide: Bool, completion: @escaping () -> Void ) {
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.2) {
+                view.isHidden = needHide
+                view.alpha = needHide ? 0 : 1
+                self.stackView.layoutIfNeeded()
+            }
+        }
+        completion()
+    }
+    
+    
     final func setupCardViewActions() {
        cardView.closeView = { [weak self] () in
            DispatchQueue.main.async {

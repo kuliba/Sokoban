@@ -9,7 +9,7 @@ import UIKit
 import RealmSwift
 import AVFoundation
 
-class GKHMainViewController: UIViewController, UISearchBarDelegate {
+class GKHMainViewController: UIViewController {
     
     public static func storyboardInstance() -> GKHMainViewController? {
         let storyboard = UIStoryboard(name: "GKHStoryboard", bundle: nil)
@@ -18,10 +18,16 @@ class GKHMainViewController: UIViewController, UISearchBarDelegate {
     
     var alertController: UIAlertController?
     
+    func changeTitle(_ text: String) {
+        DispatchQueue.main.async {
+            self.navigationItem.titleView = self.setTitle(title: text, subtitle: "")
+          }
+    }
+    
     @IBOutlet weak var tableView: UITableView!
     var searching = false
     let searchController = UISearchController(searchResultsController: nil)
-    
+    var searchingText = ""
     var organization = [GKHOperatorsModel]() {
         didSet {
             DispatchQueue.main.async {
@@ -33,7 +39,7 @@ class GKHMainViewController: UIViewController, UISearchBarDelegate {
     var searchedOrganization = [GKHOperatorsModel]() {
         didSet {
             DispatchQueue.main.async {
-                self.tableView.reloadData()
+                self.tableView?.reloadData()
             }
         }
     }
@@ -44,9 +50,27 @@ class GKHMainViewController: UIViewController, UISearchBarDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         tableView.register(UINib(nibName: "GHKCell", bundle: nil), forCellReuseIdentifier: GHKCell.reuseId)
         setupNavBar()
         operatorsList = realm?.objects(GKHOperatorsModel.self)
+        operatorsList?.forEach({ op in
+            organization.append(op)
+        })
+        
+        NotificationCenter.default.addObserver(forName: .city, object: nil, queue: .none ) { [weak self] (value) in
+            self?.searching = true
+            let k = value.userInfo?["key"] as? String ?? ""
+            self?.searchedOrganization = (self?.organization.filter { $0.region?.lowercased().prefix(k.count) ?? "" == k.lowercased() })!
+        }
+    }
+    
+    func doStringContainsNumber( _string : String) -> Bool{
+        
+        let numberRegEx  = ".*[0-9]+.*"
+        let testCase = NSPredicate(format:"SELF MATCHES %@", numberRegEx)
+        let containsNumber = testCase.evaluate(with: _string)
+        return containsNumber
         
     }
     

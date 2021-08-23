@@ -8,7 +8,7 @@
 import UIKit
 
 class GHKCell: UITableViewCell {
-
+    
     static let reuseId = "GHKCell"
     @IBOutlet weak var organizationName: UILabel!
     @IBOutlet weak var innLable: UILabel!
@@ -25,6 +25,7 @@ class GHKCell: UITableViewCell {
     
     func set(viewModel: GKHOperatorsModel) {
         organizationName.text = viewModel.name?.capitalizingFirstLetter()
+        organizationImageView.image = UIImage(named: "GKH")
         innLable.text = viewModel.synonymList.first
         if viewModel.logotypeList.first?.content != "" {
             let dataDecoded : Data = Data(base64Encoded: viewModel.logotypeList.first?.content ?? "", options: .ignoreUnknownCharacters)!

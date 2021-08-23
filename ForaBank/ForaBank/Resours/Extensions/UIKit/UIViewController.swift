@@ -75,6 +75,24 @@ extension UIViewController {
         navigationItem.leftBarButtonItem = button
     }
     
+    func addCloseButton_1() {
+        let button = UIBarButtonItem(image: UIImage(systemName: "barcode"),
+                                     landscapeImagePhone: nil,
+                                     style: .done,
+                                     target: self,
+                                     action: #selector(onClose))
+        navigationItem.leftBarButtonItem = button
+    }
+    
+    func addCloseButton_2() {
+        let button = UIBarButtonItem(image: UIImage(systemName: "qrIcon"),
+                                     landscapeImagePhone: nil,
+                                     style: .plain,
+                                     target: self,
+                                     action: #selector(onClose))
+        navigationItem.rightBarButtonItem = button
+    }
+    
     @objc func onClose(){
         self.dismiss(animated: true, completion: nil)
     }
