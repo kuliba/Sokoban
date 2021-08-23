@@ -188,7 +188,6 @@ class MeToMeSettingViewController: UIViewController {
                     view.isHidden = true
                     view.alpha = 0
                 }
-                self.stackView.layoutIfNeeded()
             }
         }
     }
@@ -198,7 +197,6 @@ class MeToMeSettingViewController: UIViewController {
             UIView.animate(withDuration: 0.2) {
                 view.isHidden = needHide
                 view.alpha = needHide ? 0 : 1
-                self.stackView.layoutIfNeeded()
             }
         }
         completion()

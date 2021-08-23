@@ -111,33 +111,14 @@ extension CustomPopUpWithRateView {
         cardFromField.numberCardLabel.text = onlyMy
             ? "Номер карты или счета"
             : "Номер карты отправителя"
-        cardFromField.didChooseButtonTapped = { [weak self]  () in
-            self?.openOrHideView((self?.cardFromListView)!) {
-               // self?.hideView((self?.cardToListView)!, needHide: true) {
-                    self?.seporatorView.curvedLineView.isHidden.toggle()
-                    self?.seporatorView.straightLineView.isHidden.toggle()
-               // }
+        cardFromField.didChooseButtonTapped = { () in
+            self.openOrHideView(self.cardFromListView) {
+                self.seporatorView.curvedLineView.isHidden.toggle()
+                self.seporatorView.straightLineView.isHidden.toggle()
+                if !self.cardToListView.isHidden {
+                    self.hideView(self.cardToListView, needHide: true) { }
+                }
             }
-//            DispatchQueue.main.async {
-//                UIView.animate(withDuration: 0.2) {
-//                    if self?.cardFromListView.isHidden == true {
-//                        self?.cardFromListView.alpha = 1
-//                        self?.cardFromListView.isHidden = false
-//                    } else {
-//                        self?.cardFromListView.alpha = 0
-//                        self?.cardFromListView.isHidden = true
-//                    }
-//
-//                    self?.seporatorView.curvedLineView.isHidden.toggle()
-//                    self?.seporatorView.straightLineView.isHidden.toggle()
-//
-//                    if self?.cardToListView.isHidden == false {
-//                        self?.cardToListView.isHidden = true
-//                        self?.cardToListView.alpha = 0
-//                    }
-//                    self?.stackView.layoutIfNeeded()
-//                }
-//            }
         }
     }
     
@@ -146,34 +127,16 @@ extension CustomPopUpWithRateView {
         cardToField.numberCardLabel.text = onlyMy
             ? "Номер карты или счета"
             : "Номер карты получателя"
-        cardFromField.didChooseButtonTapped = { [weak self]  () in
-            self?.openOrHideView((self?.cardToListView)!) {
-                self?.hideView((self?.cardFromListView)!, needHide: true) {
-                    self?.seporatorView.curvedLineView.isHidden = false
-                    self?.seporatorView.straightLineView.isHidden = true
+        cardToField.didChooseButtonTapped = { () in
+            self.openOrHideView(self.cardToListView) {
+                self.seporatorView.curvedLineView.isHidden = false
+                self.seporatorView.straightLineView.isHidden = true
+                if !self.cardFromListView.isHidden {
+                    self.hideView(self.cardFromListView, needHide: true) {
+                        self.stackView.layoutIfNeeded()
+                    }
                 }
             }
-//            DispatchQueue.main.async {
-//                UIView.animate(withDuration: 0.2) {
-//                    if self?.cardToListView.isHidden == true {
-//                        self?.cardToListView.alpha = 1
-//                        self?.cardToListView.isHidden = false
-//                    } else {
-//                        self?.cardToListView.alpha = 0
-//                        self?.cardToListView.isHidden = true
-//                    }
-//
-//                    if self?.cardFromListView.isHidden == false {
-//
-//                        self?.cardFromListView.isHidden = true
-//                        self?.cardFromListView.alpha = 0
-//
-//                        self?.seporatorView.curvedLineView.isHidden = false
-//                        self?.seporatorView.straightLineView.isHidden = true
-//                    }
-//                    self?.stackView.layoutIfNeeded()
-//                }
-//            }
         }
     }
     
@@ -188,21 +151,9 @@ extension CustomPopUpWithRateView {
                 self?.hideView((self?.cardToListView)!, needHide: true) {
                     self?.seporatorView.curvedLineView.isHidden = false
                     self?.seporatorView.straightLineView.isHidden = true
+                    self?.stackView.layoutIfNeeded()
                 }
             }
-//            DispatchQueue.main.async {
-//                UIView.animate(withDuration: 0.2) {
-//                    self?.cardFromListView.isHidden = true
-//
-//                    self?.cardToListView.isHidden = true
-//                    self?.cardFromListView.alpha = 0
-//
-//                    self?.seporatorView.curvedLineView.isHidden = false
-//                    self?.seporatorView.straightLineView.isHidden = true
-//
-//                    self?.stackView.layoutIfNeeded()
-//                }
-//            }
         }
         cardFromListView.lastItemTap = {
             print("Открывать все карты ")
@@ -215,7 +166,11 @@ extension CustomPopUpWithRateView {
                 self?.viewModel.cardFrom = card
                 self?.reversCard = ""
                 self?.cardFromField.cardModel = card
-                self?.hideAllCardList()
+                self?.hideView((self?.cardFromListView)!, needHide: true) {
+                    self?.hideView((self?.cardToListView)!, needHide: true) {
+                        self?.stackView.layoutIfNeeded()
+                    }
+                }
                 vc.dismiss(animated: true, completion: nil)
             }
             let navVc = UINavigationController(rootViewController: vc)
@@ -228,21 +183,25 @@ extension CustomPopUpWithRateView {
     private func setupListTo() {
         cardToListView = CardListView(onlyMy: onlyMy)
         cardToListView.canAddNewCard = onlyMy ? false : true
-        cardToListView.firstItemTap = { [weak self] in
-            print("Показываем окно новой карты ")
-            self?.view.addSubview(self?.cardView ?? UIView())
-            self?.cardView.frame = (self?.view.bounds)!
-            self?.cardView.autoresizingMask = [.flexibleHeight,.flexibleWidth]
-            self?.stackView.isHidden = true
-            self?.titleLabel.isHidden = true
-            self?.bottomView.isHidden = true
-          //  self?.hideAllCardList()
-        }
+//        cardToListView.firstItemTap = { [weak self] in
+//            print("Показываем окно новой карты ")
+//            self?.view.addSubview(self?.cardView ?? UIView())
+//            self?.cardView.frame = (self?.view.bounds)!
+//            self?.cardView.autoresizingMask = [.flexibleHeight,.flexibleWidth]
+//            self?.stackView.isHidden = true
+//            self?.titleLabel.isHidden = true
+//            self?.bottomView.isHidden = true
+//          //  self?.hideAllCardList()
+//        }
         cardToListView.didCardTapped = { [weak self] (card) in
             self?.viewModel.cardTo = card
             self?.reversCard = ""
             self?.cardToField.cardModel = card
-            self?.hideAllCardList()
+            self?.hideView((self?.cardFromListView)!, needHide: true) {
+                self?.hideView((self?.cardToListView)!, needHide: true) {
+                    self?.stackView.layoutIfNeeded()
+                }
+            }
         }
         cardToListView.lastItemTap = {
             print("Открывать все карты ")
@@ -255,13 +214,21 @@ extension CustomPopUpWithRateView {
                 self?.viewModel.cardTo = card
                 self?.reversCard = ""
                 self?.cardToField.cardModel = card
-                self?.hideAllCardList()
+                self?.hideView((self?.cardFromListView)!, needHide: true) {
+                    self?.hideView((self?.cardToListView)!, needHide: true) {
+                        self?.stackView.layoutIfNeeded()
+                    }
+                }
                 vc.dismiss(animated: true, completion: nil)
             }
             vc.didTemplateTapped = { [weak self] card in
                 self?.viewModel.customCardTo = CastomCardViewModel(cardNumber: card.numberMask ?? "", cardName: card.customName, cardId: card.id)
                 self?.cardToField.tempCardModel = card
-                self?.hideAllCardList()
+                self?.hideView((self?.cardFromListView)!, needHide: true) {
+                    self?.hideView((self?.cardToListView)!, needHide: true) {
+                        self?.stackView.layoutIfNeeded()
+                    }
+                }
                 vc.dismiss(animated: true, completion: nil)
             }
             let navVc = UINavigationController(rootViewController: vc)
