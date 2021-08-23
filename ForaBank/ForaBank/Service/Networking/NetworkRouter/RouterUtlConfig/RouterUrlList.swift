@@ -62,6 +62,8 @@ enum RouterUrlList: String {
     case createFastPaymentContract
     case updateFastPaymentContract
     case fastPaymentContractFindList
+    case createContactAddresslessTransfer
+    case createDirectTransfer
     
     func returnUrl () -> URLValue {
         switch self {
@@ -593,6 +595,29 @@ enum RouterUrlList: String {
                 debugPrint(error)
                 return .failure(.urlError)
             }
+            
+        case .createContactAddresslessTransfer:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.createContactAddresslessTransfer.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+        
+        case .createDirectTransfer:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.createDirectTransfer.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
         }
     }
+
 }

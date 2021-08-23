@@ -115,6 +115,8 @@ enum RouterBaseUrlList: String {
     
     case fastPaymentContractFindList = "/rest/fastPaymentContractFindList"
     
+    case createContactAddresslessTransfer = "/rest/transfer/createContactAddresslessTransfer"
     
+    case createDirectTransfer = "/rest/transfer/createDirectTransfer"
     
 }
