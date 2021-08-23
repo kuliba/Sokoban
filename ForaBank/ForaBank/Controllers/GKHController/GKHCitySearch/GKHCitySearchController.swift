@@ -47,23 +47,16 @@ class GKHCitySearchController: UIViewController {
     }
     
     @IBAction func backButton(_ sender: UIButton) {
-        if let vc = GKHMainViewController.storyboardInstance() {
-            dismiss(animated: true, completion: {
-                if self.searching {
+        
+        dismiss(animated: true, completion: {
+            if self.searching {
+                NotificationCenter.default.post(name: .city, object: nil, userInfo: ["key" : self.searchText])
+            } else {
+                if self.searchText != "" {
                     NotificationCenter.default.post(name: .city, object: nil, userInfo: ["key" : self.searchText])
-                } else {
-                    if self.searchText != "" {
-                        NotificationCenter.default.post(name: .city, object: nil, userInfo: ["key" : self.searchText])
-                    }
-                    
                 }
-//                vc.changeTitle(self.searchText)
-//                vc.searching = true
-//                if self.searchText != "" {
-//                    vc.searchingText = self.searchText
-//                }
-            })
-        }
+            }
+        })
     }
     
 }

@@ -8,17 +8,15 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="GKHInputCell" customModule="ForaBank" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner">
             <connections>
-                <outlet property="errorLable" destination="GBe-0Q-3aC" id="6Ac-wC-3cp"/>
                 <outlet property="operatorsIcon" destination="fX2-bl-W2e" id="uMq-ZL-pDC"/>
                 <outlet property="placeholderLable" destination="YcM-ak-Cz8" id="p5w-YY-qi3"/>
                 <outlet property="showFIOButton" destination="oWR-cQ-HAd" id="CDZ-hH-96d"/>
-                <outlet property="showFIOLable" destination="oWR-cQ-HAd" id="LNb-vB-IST"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="56" id="YSr-Zo-ERi">
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="56" id="YSr-Zo-ERi" customClass="GKHInputCell" customModule="ForaBank" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="414" height="56"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="YSr-Zo-ERi" id="kI0-3f-HuM">
