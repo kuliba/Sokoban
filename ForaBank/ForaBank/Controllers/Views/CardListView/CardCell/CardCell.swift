@@ -88,7 +88,19 @@ class CardCell: UICollectionViewCell, SelfConfiguringCell {
     func setupUI() {
         backgroundColor = #colorLiteral(red: 0.9647058824, green: 0.9647058824, blue: 0.968627451, alpha: 1)
         layer.cornerRadius = 8
-        clipsToBounds = true
+        layer.shadowColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1).cgColor
+        layer.shadowRadius = 6
+        layer.shadowOpacity = 0.3
+        layer.shadowOffset = CGSize()
+//        0.785
+        let shadowPath = UIBezierPath(
+            rect: CGRect(x: 15, y: 15,
+                         width: self.frame.width * 0.785,
+                         height: self.frame.height * 0.785))
+        layer.shadowPath = shadowPath.cgPath
+        
+        
+//        clipsToBounds = true
         addSubview(logoImageView)
         addSubview(maskCardLabel)
         addSubview(cardNameLabel)

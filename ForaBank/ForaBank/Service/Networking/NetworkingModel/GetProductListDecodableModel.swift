@@ -86,7 +86,7 @@ struct GetProductListDatum: Codable{
     let validThru: Int?
     let status, holderName, product, branch: String?
     let miniStatement: [JSONAny]?
-    let mainField, additionalField, smallDesign, mediumDesign, largeDesign: String?
+    let mainField, additionalField, smallDesign, mediumDesign, largeDesign, paymentSystemName, paymentSystemImage: String?
     let id: Int?
 }
 
@@ -133,6 +133,8 @@ extension GetProductListDatum {
         smallDesign: String?? = nil,
         mediumDesign: String?? = nil,
         largeDesign: String?? = nil,
+        paymentSystemName: String?? = nil,
+        paymentSystemImage: String?? = nil,
         id: Int?? = nil
     ) -> GetProductListDatum {
         return GetProductListDatum (
@@ -160,6 +162,8 @@ extension GetProductListDatum {
             smallDesign: smallDesign ?? self.smallDesign,
             mediumDesign: mediumDesign ?? self.mediumDesign,
             largeDesign: largeDesign ?? self.largeDesign,
+            paymentSystemName: paymentSystemName ?? self.paymentSystemName,
+            paymentSystemImage: paymentSystemImage ?? self.paymentSystemImage,
             id: id ?? self.id
         )
     }

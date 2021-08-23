@@ -26,6 +26,7 @@ struct CardViewModel {
     }
     
     var logoImage: UIImage {
+        
         let firstSimb = cardNumber?.first
         switch firstSimb {
         case "1":
