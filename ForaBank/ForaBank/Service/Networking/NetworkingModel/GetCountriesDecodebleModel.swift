@@ -116,13 +116,13 @@ extension GetCountriesDataClass {
 //   let countriesList = try CountriesList(json)
 // MARK: - CountriesList
 struct CountriesList: Codable {
-    let code, name: String?
+    let code, contactCode, name: String?
     let sendCurr: SendCurr?
     let md5Hash, svgImage: String?
     let paymentSystemCodeList: [String]?
 
     enum CodingKeys: String, CodingKey {
-        case code, name, sendCurr
+        case code, name, sendCurr, contactCode
         case md5Hash = "md5hash"
         case svgImage
         case paymentSystemCodeList = "paymentSystemIdList"
@@ -149,6 +149,7 @@ extension CountriesList {
 
     func with(
         code: String?? = nil,
+        contactCode: String?? = nil,
         name: String?? = nil,
         sendCurr: SendCurr?? = nil,
         md5Hash: String?? = nil,
@@ -157,6 +158,7 @@ extension CountriesList {
     ) -> CountriesList {
         return CountriesList(
             code: code ?? self.code,
+            contactCode: contactCode ?? self.contactCode,
             name: name ?? self.name,
             sendCurr: sendCurr ?? self.sendCurr,
             md5Hash: md5Hash ?? self.md5Hash,

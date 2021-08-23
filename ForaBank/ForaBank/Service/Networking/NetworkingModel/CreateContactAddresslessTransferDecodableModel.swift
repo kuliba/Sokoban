@@ -56,12 +56,12 @@ extension CreateContactAddresslessTransferDecodableModel {
 // MARK: - CreateContactAddresslessDataClass
 struct CreateContactAddresslessDataClass: Codable {
     let needMake, needOTP: Bool?
-    let amount: Int?
+    let amount: Double?
     let creditAmount: JSONNull?
     let fee: Double?
     let currencyAmount, currencyPayer, currencyPayee: String?
     let currencyRate: JSONNull?
-    let debitAmount: Int?
+    let debitAmount: Double?
     let payeeName: String?
     let paymentOperationDetailID, documentStatus: JSONNull?
     let additionalList: [CreateAdditionalList]?
@@ -94,14 +94,14 @@ extension CreateContactAddresslessDataClass {
     func with(
         needMake: Bool?? = nil,
         needOTP: Bool?? = nil,
-        amount: Int?? = nil,
+        amount: Double?? = nil,
         creditAmount: JSONNull?? = nil,
         fee: Double?? = nil,
         currencyAmount: String?? = nil,
         currencyPayer: String?? = nil,
         currencyPayee: String?? = nil,
         currencyRate: JSONNull?? = nil,
-        debitAmount: Int?? = nil,
+        debitAmount: Double?? = nil,
         payeeName: String?? = nil,
         paymentOperationDetailID: JSONNull?? = nil,
         documentStatus: JSONNull?? = nil,
