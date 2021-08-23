@@ -61,7 +61,12 @@ extension Double {
         currencyFormatter.currencySymbol = resultString
 
         let maximumDigits = UserDefaults.standard.object(forKey: "maximumFractionDigits") as? Int
-        currencyFormatter.maximumFractionDigits = maximumDigits ?? 2
+        
+        if String(self).components(separatedBy: ".").last == "0" {
+            currencyFormatter.maximumFractionDigits = 0
+        } else {
+            currencyFormatter.maximumFractionDigits = maximumDigits ?? 2
+        }
         
         if let priceString = currencyFormatter.string(from: NSNumber(value: self)) {
             return priceString

@@ -22,20 +22,38 @@ struct CardViewModel {
     }
     
     var maskedcardNumber: String {
-        return "  *\(cardNumber?.suffix(4) ?? "")"
+        return "\(cardNumber?.suffix(4) ?? "")"
+    }
+    
+    var cardName: String? {
+        return card.mainField
     }
     
     var logoImage: UIImage {
-        
-        let firstSimb = cardNumber?.first
-        switch firstSimb {
-        case "1":
-            return #imageLiteral(resourceName: "mir-colored")
-        case "4":
-            return #imageLiteral(resourceName: "card_visa_logo")
-        case "5":
-            return #imageLiteral(resourceName: "card_mastercard_logo")
-        default:
+        if card.productType == "ACCOUNT" {
+            let label = UILabel(text: card.currency?.getSymbol() ?? "",
+                                font: .systemFont(ofSize: 10),
+                                color: .white)
+            label.frame = CGRect(x: 0, y: 0, width: 13, height: 13)
+            label.textAlignment = .center
+            label.layer.cornerRadius = 3
+            label.layer.borderWidth = 1.25
+            label.layer.borderColor = UIColor.white.cgColor
+            return UIImage.imageWithLabel(label: label)
+        } else {
+            return UIImage()
+        }
+    }
+    
+    var colorText: UIColor? {
+        let color = hexStringToUIColor(hex: card.fontDesignColor ?? "FFFFFF")
+        return color
+    }
+    
+    var backgroundImage: UIImage {
+        if !(card.mediumDesign?.isEmpty ?? true)  {
+            return card.mediumDesign?.convertSVGStringToImage() ?? UIImage()
+        } else {
             return UIImage()
         }
     }
@@ -44,5 +62,26 @@ struct CardViewModel {
         self.card = card
     }
     
+    func hexStringToUIColor(hex: String) -> UIColor {
+        var cString:String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+
+        if (cString.hasPrefix("#")) {
+            cString.remove(at: cString.startIndex)
+        }
+
+        if ((cString.count) != 6) {
+            return UIColor.gray
+        }
+
+        var rgbValue:UInt64 = 0
+        Scanner(string: cString).scanHexInt64(&rgbValue)
+
+        return UIColor(
+            red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
+            green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
+            blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
+            alpha: CGFloat(1.0)
+        )
+    }
 }
 

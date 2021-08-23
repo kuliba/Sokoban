@@ -31,7 +31,7 @@ class CardCell: UICollectionViewCell, SelfConfiguringCell {
     private let logoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.setDimensions(height: 24, width: 24)
+//        imageView.setDimensions(height: 20, width: 20)
         return imageView
     }()
     
@@ -44,17 +44,26 @@ class CardCell: UICollectionViewCell, SelfConfiguringCell {
 
     private let balanceLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 11 )
+        label.font = UIFont(name: "Inter-Regular", size: 11)
+//        label.font = UIFont.boldSystemFont(ofSize: 11 )
+        label.textAlignment = .left
         label.text = ""
         return label
     }()
 
     private let cardNameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 11 )
+        label.font = UIFont(name: "Inter-Regular", size: 11)
         label.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
+        label.textAlignment = .left
         label.text = "Зарплатная"
         return label
+    }()
+    
+    private let backgroundImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        return imageView
     }()
     
     //MARK: - Lifecycle
@@ -80,8 +89,14 @@ class CardCell: UICollectionViewCell, SelfConfiguringCell {
         guard let card = card else { return }
         
         let viewModel = CardViewModel(card: card)
+        backgroundImageView.image = viewModel.backgroundImage
         balanceLabel.text = viewModel.balance
+        balanceLabel.textColor = viewModel.colorText
+        cardNameLabel.text = viewModel.cardName
+        cardNameLabel.textColor = viewModel.colorText
+        cardNameLabel.alpha = 0.5
         maskCardLabel.text = viewModel.maskedcardNumber
+        maskCardLabel.textColor = viewModel.colorText
         logoImageView.image = viewModel.logoImage
     }
     
@@ -94,30 +109,32 @@ class CardCell: UICollectionViewCell, SelfConfiguringCell {
         layer.shadowOffset = CGSize()
 //        0.785
         let shadowPath = UIBezierPath(
-            rect: CGRect(x: 15, y: 15,
+            rect: CGRect(x: 15, y: 20,
                          width: self.frame.width * 0.785,
                          height: self.frame.height * 0.785))
         layer.shadowPath = shadowPath.cgPath
         
         
-//        clipsToBounds = true
+        addSubview(backgroundImageView)
         addSubview(logoImageView)
         addSubview(maskCardLabel)
         addSubview(cardNameLabel)
         addSubview(balanceLabel)
         
-        logoImageView.anchor(top: self.topAnchor, left: self.leftAnchor,
-                             paddingTop: 8, paddingLeft: 12)
+        backgroundImageView.fillSuperview()
         
-        maskCardLabel.anchor(right: self.rightAnchor, paddingRight: 12)
-        maskCardLabel.centerY(inView: logoImageView, leftAnchor: logoImageView.rightAnchor,
-                              paddingLeft: 8)
+        maskCardLabel.anchor(top: self.topAnchor, left: self.leftAnchor, right: self.rightAnchor, paddingTop: 12, paddingLeft: 37, paddingRight: 12)
+        
+        logoImageView.centerY(inView: maskCardLabel)
+        logoImageView.anchor(left: self.leftAnchor,
+                             paddingLeft: 8, width: 18, height: 18)
+        
         
         cardNameLabel.anchor(top: maskCardLabel.bottomAnchor, left: self.leftAnchor, right: self.rightAnchor,
-                             paddingTop: 4, paddingLeft: 12, paddingRight: 12)
+                             paddingTop: 12, paddingLeft: 8, paddingRight: 8)
         
         balanceLabel.anchor(left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor,
-                            paddingLeft: 12, paddingBottom: 8, paddingRight: 12)
+                            paddingLeft: 8, paddingBottom: 8, paddingRight: 30)
     }
     
 }

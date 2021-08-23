@@ -207,7 +207,7 @@ extension CardListView: UICollectionViewDataSource {
 extension CardListView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let itemHeight = 72
-        let bigItemWidth = 108
+        let bigItemWidth = 112
         let smallItemWidth = 72
         
         if canAddNewCard {
