@@ -48,25 +48,25 @@ class MainTabBarViewController: UITabBarController {
         let chatVC = SettingsViewController()
         
         viewControllers = [
-//            generateNavController(rootViewController: mainVC,
-//                                  title: "Главный",
-//                                  image: UIImage(named: "tabBar-main")!,
-//                                  fillImage: UIImage(named: "tabBar-main-fill")!),
+            generateNavController(rootViewController: mainVC,
+                                  title: "Главный",
+                                  image: UIImage(named: "tabBar-main")!,
+                                  fillImage: UIImage(named: "tabBar-main-fill")!),
             
             generateNavController(rootViewController: paymentsVC,
                                   title: "Платежи",
                                   image: UIImage(named: "tabBar-card")!,
-                                  fillImage: UIImage(named: "tabBar-card-fill")!, alpha: 1),
+                                  fillImage: UIImage(named: "tabBar-card-fill")!),
             
-//            generateNavController(rootViewController: historyVC,
-//                                  title: "История",
-//                                  image: UIImage(named: "tabBar-history")!,
-//                                  fillImage: UIImage(named: "tabBar-history-fill")!),
+            generateNavController(rootViewController: historyVC,
+                                  title: "История",
+                                  image: UIImage(named: "tabBar-history")!,
+                                  fillImage: UIImage(named: "tabBar-history-fill")!),
             
             generateNavController(rootViewController: chatVC,
                                   title: "Чат",
                                   image: UIImage(named: "tabBar-chat")!,
-                                  fillImage: UIImage(named: "tabBar-chat-fill")!, alpha: 0.3),
+                                  fillImage: UIImage(named: "tabBar-chat-fill")!),
         ]
         selectedIndex = 0
         
@@ -74,12 +74,11 @@ class MainTabBarViewController: UITabBarController {
         
     }
     
-    private func generateNavController(rootViewController: UIViewController, title: String, image: UIImage, fillImage: UIImage, alpha: Double) -> UIViewController {
+    private func generateNavController(rootViewController: UIViewController, title: String, image: UIImage, fillImage: UIImage) -> UIViewController {
         let navigationVC = UINavigationController(rootViewController: rootViewController)
         navigationVC.tabBarItem.title = title
         navigationVC.tabBarItem.image = image
         navigationVC.tabBarItem.selectedImage = fillImage
-        navigationVC.toolbar.alpha = CGFloat(alpha)
         return navigationVC
     }
 
