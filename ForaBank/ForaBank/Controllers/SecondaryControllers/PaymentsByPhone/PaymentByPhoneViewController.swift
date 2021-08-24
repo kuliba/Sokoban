@@ -33,13 +33,7 @@ class PaymentByPhoneViewController: UIViewController {
             showChooseButton: true)
     )
     
-    var cardField = ForaInput(
-        viewModel: ForaInputModel(
-            title: "Счет списания",
-            image: #imageLiteral(resourceName: "credit-card"),
-            type: .credidCard,
-            isEditable: false)
-    )
+    var cardField = CardChooseView()
     
     var bankPayeer = ForaInput(
         viewModel: ForaInputModel(
@@ -172,7 +166,8 @@ class PaymentByPhoneViewController: UIViewController {
                 self?.cardListView.cardList = data
                 
                 if data.count > 0 {
-                    self?.cardField.configCardView(data.first!)
+                    self?.cardField.cardModel = data.first
+//                    self?.cardField.configCardView(data.first!)
                     guard let cardNumber  = data.first?.number else { return }
                     self?.selectedCardNumber = cardNumber
                 }
@@ -219,7 +214,8 @@ class PaymentByPhoneViewController: UIViewController {
         
         
         cardListView.didCardTapped = { card in
-            self.cardField.configCardView(card)
+            self.cardField.cardModel = card
+//            self.cardField.configCardView(card)
             self.selectedCardNumber = card.number ?? ""
             self.hideView(self.cardListView, needHide: true)
 //            self.hideView(self.bankListView, needHide: true)
@@ -447,7 +443,7 @@ class PaymentByPhoneViewController: UIViewController {
                             
                             var model = ConfirmViewControllerModel(type: .phoneNumber)
                             model.bank = self?.selectedBank
-                            model.cardFrom = self?.cardField.viewModel.cardModel
+                            model.cardFrom = self?.cardField.cardModel
                             model.phone = self?.phoneField.text.digits ?? ""
                             model.summTransction = data.debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
                             model.summInCurrency = data.creditAmount?.currencyFormatter(symbol: data.currencyPayee ?? "RUB") ?? ""
@@ -590,7 +586,7 @@ class PaymentByPhoneViewController: UIViewController {
                         
                     }
                     
-                    model.cardFrom = self?.cardField.viewModel.cardModel
+                    model.cardFrom = self?.cardField.cardModel
                     model.phone = self?.phoneField.text.digits ?? ""
                     
                     model.summTransction = data.data?.amount?.currencyFormatter(symbol: "RUB") ?? ""// debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
