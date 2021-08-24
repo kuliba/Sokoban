@@ -12,11 +12,17 @@ class LoginViewModel {
     var encription = Encription()
     
    
+
     
+    func csrf(){
+        AppDelegate.shared.getCSRF() { errorMessage in
+            print(errorMessage)
+        }
+    }
     
     func checkCardNumber(with number: String, completion: @escaping(_ model: String?, _ error: String?) -> ()) {
         var cryptString = String()
-        
+
         do {
             guard let key = KeyFromServer.secretKey else {
                 return

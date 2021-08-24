@@ -13,8 +13,11 @@ class MainTabBarViewController: UITabBarController {
         super.viewDidLoad()
         tabBar.barTintColor = .white
         tabBar.tintColor = #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
-        
-        let mainVC = MainViewController()
+        self.tabBar.layer.borderWidth = 0.50
+        self.tabBar.layer.borderColor = UIColor.clear.cgColor
+        self.tabBar.clipsToBounds = true
+     
+        let mainVC = DevelopViewController()
         let paymentsVC = PaymentsViewController()
         let historyVC = DevelopViewController()
         let chatVC = SettingsViewController()
@@ -23,22 +26,22 @@ class MainTabBarViewController: UITabBarController {
             generateNavController(rootViewController: mainVC,
                                   title: "Главный",
                                   image: UIImage(named: "tabBar-main")!,
-                                  fillImage: UIImage(named: "tabBar-main-fill")!),
+                                  fillImage: UIImage(named: "tabBar-main-fill")!, alpha: 0.3),
             
             generateNavController(rootViewController: paymentsVC,
                                   title: "Платежи",
                                   image: UIImage(named: "tabBar-card")!,
-                                  fillImage: UIImage(named: "tabBar-card-fill")!),
+                                  fillImage: UIImage(named: "tabBar-card-fill")!, alpha: 1),
             
             generateNavController(rootViewController: historyVC,
                                   title: "История",
                                   image: UIImage(named: "tabBar-history")!,
-                                  fillImage: UIImage(named: "tabBar-history-fill")!),
+                                  fillImage: UIImage(named: "tabBar-history-fill")!, alpha: 0.3),
             
             generateNavController(rootViewController: chatVC,
                                   title: "Чат",
                                   image: UIImage(named: "tabBar-chat")!,
-                                  fillImage: UIImage(named: "tabBar-chat-fill")!),
+                                  fillImage: UIImage(named: "tabBar-chat-fill")!, alpha: 0.3),
         ]
         selectedIndex = 1
         
@@ -46,16 +49,16 @@ class MainTabBarViewController: UITabBarController {
         
     }
     
-    private func generateNavController(rootViewController: UIViewController, title: String, image: UIImage, fillImage: UIImage) -> UIViewController {
+    private func generateNavController(rootViewController: UIViewController, title: String, image: UIImage, fillImage: UIImage, alpha: Double) -> UIViewController {
         let navigationVC = UINavigationController(rootViewController: rootViewController)
         navigationVC.tabBarItem.title = title
         navigationVC.tabBarItem.image = image
         navigationVC.tabBarItem.selectedImage = fillImage
+        navigationVC.toolbar.alpha = CGFloat(alpha)
         return navigationVC
     }
 
     private func loadCatalog() {
-        
         NetworkHelper.request(.getCountries) { model, error in
             if error != nil {
                 self.showAlert(with: "Ошибка", and: error!)

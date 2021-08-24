@@ -36,9 +36,12 @@ extension PaymentsViewController {
         }
         let config = UICollectionViewCompositionalLayoutConfiguration()
         config.interSectionSpacing = 16
+        
         layout.configuration = config
+        
         return layout
     }
+    
     
     private func createPayments() -> NSCollectionLayoutSection {
         
@@ -50,10 +53,11 @@ extension PaymentsViewController {
         
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         group.contentInsets = .uniform(size: 5)
-        
+    
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = 4
-        section.contentInsets = .init(horizontal: 8, vertical: 8)
+        
+        section.contentInsets = .init(horizontal: 20, vertical: 16)
         
         section.orthogonalScrollingBehavior = .continuous
         
@@ -69,7 +73,7 @@ extension PaymentsViewController {
             widthDimension: .absolute(104),
 //            heightDimension: .fractionalHeight(0.2))
           heightDimension: .absolute(124))
-        
+    
         let group = NSCollectionLayoutGroup.horizontal(
             layoutSize: groupSize, subitems: [item])
         
@@ -78,7 +82,7 @@ extension PaymentsViewController {
         let section = NSCollectionLayoutSection(group: group)
         
         section.interGroupSpacing = 8
-        section.contentInsets = .init(horizontal: 20, vertical: 8)
+        section.contentInsets = .init(horizontal: 20, vertical: 16)
         
         section.orthogonalScrollingBehavior = .continuous
         
@@ -91,21 +95,32 @@ extension PaymentsViewController {
     private func createPay() -> NSCollectionLayoutSection {
         
         let item = NSCollectionLayoutItem.withEntireSize()
-        let groupSize = NSCollectionLayoutSize(
+        var groupSize = NSCollectionLayoutSize(
 //            widthDimension: .fractionalWidth(0.73),
             widthDimension: .fractionalWidth(0.73),
 //            heightDimension: .fractionalHeight(0.35))
             heightDimension: .absolute(180))
         
-        let group = NSCollectionLayoutGroup.vertical(
+        var group = NSCollectionLayoutGroup.vertical(
             layoutSize: groupSize, subitem: item, count: 3)
         
-        group.contentInsets = .uniform(size: 5)
         
+        if self.view.frame.size.height > 700{
+            groupSize = NSCollectionLayoutSize(
+    //            widthDimension: .fractionalWidth(0.73),
+                widthDimension: .fractionalWidth(0.73),
+    //            heightDimension: .fractionalHeight(0.35))
+                heightDimension: .absolute(250))
+            
+            group = NSCollectionLayoutGroup.vertical(
+                layoutSize: groupSize, subitem: item, count: 4)
+        } 
+        
+        group.contentInsets = .uniform(size: 5)
         let section = NSCollectionLayoutSection(group: group)
         
         section.interGroupSpacing = 8
-        section.contentInsets = .init(horizontal: 20, vertical: 8)
+        section.contentInsets = .init(horizontal: 20, vertical: 16)
             
         section.orthogonalScrollingBehavior = .continuous
         

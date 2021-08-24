@@ -80,8 +80,9 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
         super.viewDidLoad()
         banksList = Dict.shared.banks ?? []
         print(banks)
-        
-        
+        let viewLine = UIView()
+ 
+    
         self.delegate = self
         configureTableView()
         registerContactCell()
@@ -140,19 +141,20 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
 //        lastPaymentsCollectionView.anchor(paddingLeft: 50)
         lastPaymentsCollectionView.showsHorizontalScrollIndicator = false
 //        lastPaymentsCollectionView.scrollIndicatorInsets = nil
+        viewLine.anchor(width:  UIScreen.main.bounds.width + 20, height: 1)
+        viewLine.backgroundColor = UIColor(red: 0.96, green: 0.96, blue: 0.97, alpha: 1)
+        
         switch seeall {
         case true:
-            stackView = UIStackView(arrangedSubviews: [searchContact, lastPaymentsCollectionView, tableView, contactCollectionView])
+            stackView = UIStackView(arrangedSubviews: [searchContact, lastPaymentsCollectionView,viewLine, tableView, contactCollectionView])
         default:
-            stackView = UIStackView(arrangedSubviews: [searchContact, lastPaymentsCollectionView, tableView, contactCollectionView])
+            stackView = UIStackView(arrangedSubviews: [searchContact, lastPaymentsCollectionView,viewLine, tableView, contactCollectionView])
         }
+     
+
         lastPaymentsCollectionView.isHidden = true
 //            searchContact.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 20).isActive = true
 //            searchContact.leadingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: -20).isActive = true
-        lastPaymentsCollectionView.layoutMargins = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
-            contactView.layoutMargins = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-            stackView.layoutMargins = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-        contactCollectionView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         searchContact.backgroundColor = .white
 
             stackView.isLayoutMarginsRelativeArrangement = true
@@ -166,15 +168,9 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, passTextFie
             
 //            view.addSubview(lastPaymentsCollectionView)
 //            view.addSubview(contactView)
-        
             view.addSubview(stackView)
-        
-
             stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0)
-
-            
-        
-        
+            stackView.layoutMargins = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         
         setupUI()
 //        fetchContacts()
@@ -419,7 +415,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                     item.nameLabel.numberOfLines = 0
                     item.bankNameLabel.isHidden = true
                     item.nameLabel.text = format(phoneNumber: lastPayment[indexPath.item].phoneNumber ?? "")
-                    item.contactImageView.image = UIImage(systemName: "person.circle.fill")
+                    item.contactImageView.image = UIImage(named: "phoneBackgroundImage")
                     for contact in contacts {
                         if contact.phoneNumber[0] == format(phoneNumber: lastPayment[indexPath.item].phoneNumber ?? "")! {
                             item.nameLabel.text = contact.name
@@ -640,6 +636,11 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                 }
             } else {
                 self.dismissActivity()
+                DispatchQueue.main.async {
+                if model.errorMessage == "Пользователь не авторизован"{
+                    AppLocker.present(with: .validate)
+                }
+                }
                 print("DEBUG: Error: ", model.errorMessage ?? "")
             }
         }
@@ -663,6 +664,11 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                     self.lastPaymentsCollectionView.reloadData()
                 }
             } else {
+                DispatchQueue.main.async {
+                if model.errorMessage == "Пользователь не авторизован"{
+                    AppLocker.present(with: .validate)
+                }
+                }
                 print("DEBUG: Error: ", model.errorMessage ?? "")
             }
         }
@@ -706,6 +712,11 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                 }
             } else {
                 self.dismissActivity()
+                DispatchQueue.main.async {
+                if model.errorMessage == "Пользователь не авторизован"{
+                    AppLocker.present(with: .validate)
+                }
+                }
                 print("DEBUG: Error: ", model.errorMessage ?? "")
             }
         }
@@ -918,8 +929,12 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
       // MARK: - Table View DataSource
       
       open func numberOfSections(in tableView: UITableView) -> Int {
-          if resultSearchController == true { return 1 }
-          return sortedContactKeys.count
+        if banksActive{
+            return sortedContactKeys.count
+        } else {
+            if resultSearchController == true { return 1 }
+            return sortedContactKeys.count
+        }
       }
       
        open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

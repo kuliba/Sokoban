@@ -20,6 +20,8 @@ class PaymentsViewController: UIViewController {
     var transfers = [PaymentsModel]()
     var pay = [PaymentsModel]()
     
+    let searchContact: NavigationBarUIView = UIView.fromNib()
+    
     enum Section: Int, CaseIterable {
         case payments, transfers, pay
         func description() -> String {
@@ -39,9 +41,16 @@ class PaymentsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.isHidden = true
+        
+       
+        
+        
         AddOperatorsList.add()
-        title = "Платежи"
-        view.backgroundColor = .white
+        view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
+        
+        self.view.addSubview(searchContact)
+        searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 48)
         setupData()
         setupSearchBar()
         setupCollectionView()
@@ -49,6 +58,12 @@ class PaymentsViewController: UIViewController {
         reloadData(with: nil)
         loadLastPhonePayments()
         loadLastPayments()
+      
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        navigationController?.navigationBar.isHidden = true
     }
     
     func setupData() {
@@ -58,20 +73,21 @@ class PaymentsViewController: UIViewController {
     }
     
     private func setupSearchBar() {
-        navigationController?.navigationBar.barTintColor = .white
-        navigationController?.navigationBar.backgroundColor = .white
-        navigationController?.navigationBar.shadowImage = UIImage()
-        let searchController = UISearchController(searchResultsController: nil)
-        navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = false
-        searchController.hidesNavigationBarDuringPresentation = true
-        searchController.obscuresBackgroundDuringPresentation = false
-        searchController.automaticallyShowsCancelButton = false
-        searchController.searchBar.delegate = self
-        searchController.searchBar.placeholder = "Название категории, ИНН"
-        searchController.searchBar.showsBookmarkButton = true
-        searchController.searchBar.setImage(UIImage(named: "scanCard")?.withTintColor(.black), for: .bookmark, state: .normal)
-        searchController.searchBar.backgroundColor = .white
+        
+//        navigationController?.navigationBar.barTintColor = .white
+//        navigationController?.navigationBar.backgroundColor = .white
+//        navigationController?.navigationBar.shadowImage = UIImage()
+//        let searchController = UISearchController(searchResultsController: nil)
+//        navigationItem.searchController = searchController
+//        navigationItem.hidesSearchBarWhenScrolling = false
+//        searchController.hidesNavigationBarDuringPresentation = true
+//        searchController.obscuresBackgroundDuringPresentation = false
+//        searchController.automaticallyShowsCancelButton = false
+//        searchController.searchBar.delegate = self
+//        searchController.searchBar.placeholder = "Название категории, ИНН"
+//        searchController.searchBar.showsBookmarkButton = true
+//        searchController.searchBar.setImage(UIImage(named: "scanCard")?.withTintColor(.black), for: .bookmark, state: .normal)
+//        searchController.searchBar.backgroundColor = .white
         
     }
     
@@ -79,16 +95,16 @@ class PaymentsViewController: UIViewController {
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createCompositionLayout())
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.backgroundColor = .white
-        view.backgroundColor = .white
+        view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
         view.addSubview(collectionView)
-        
+        collectionView.anchor(top: searchContact.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, height: UIScreen.main.bounds.height)
         collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.reuseId)
         
         collectionView.register(PaymentsCell.self, forCellWithReuseIdentifier: PaymentsCell.reuseId)
         collectionView.register(TransferCell.self, forCellWithReuseIdentifier: TransferCell.reuseId)
         collectionView.register(PayCell.self, forCellWithReuseIdentifier: PayCell.reuseId)
-        
-        collectionView.isScrollEnabled = false
+        collectionView!.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: 0, right: 0)
+        collectionView.isScrollEnabled = true
         collectionView.delegate = self
         
     }
@@ -111,7 +127,7 @@ class PaymentsViewController: UIViewController {
 
 //MARK: - API
 extension PaymentsViewController {
-    
+        
     func loadLastPayments() {
         NetworkManager<GetPaymentCountriesDecodableModel>.addRequest(.getPaymentCountries, [:], [:]) { model, error in
             if error != nil {
@@ -161,6 +177,11 @@ extension PaymentsViewController {
                 }
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
+                DispatchQueue.main.async {
+                if model.errorMessage == "Пользователь не авторизован"{
+                    AppLocker.present(with: .validate)
+                }
+                }
             }
         }
     }
@@ -178,6 +199,9 @@ extension PaymentsViewController {
                 completion(model.data,nil)
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
+                if model.errorMessage == "Пользователь не авторизован"{
+                    AppLocker.present(with: .validate)
+                }
                 completion(nil, model.errorMessage)
             }
         }

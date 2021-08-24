@@ -14,13 +14,13 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
     let iconImageView = UIImageView()
     
     let initialsLabel: UILabel = {
-        let label = UILabel(text: "", font: .boldSystemFont(ofSize: 16), color: #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1))
+        let label = UILabel(text: "", font: .boldSystemFont(ofSize: 12), color: #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1))
         label.textAlignment = .center
         return label
     }()
     
     let titleLabel: UILabel = {
-        let label = UILabel(text: "", font: .systemFont(ofSize: 11, weight: .regular), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
+        let label = UILabel(text: "", font: .systemFont(ofSize: 12, weight: .regular), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
         label.numberOfLines = 2
         label.textAlignment = .center
         return label
@@ -40,7 +40,10 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
         guard let payment: PaymentsModel = value as? PaymentsModel else { return }
         
         titleLabel.text = payment.name
-        
+        if titleLabel.text == "Шаблоны и\nавтоплатежи"{
+            titleLabel.alpha = 0.3
+            iconImageView.alpha = 0.3
+        }
         if let iconName = payment.iconName {
             iconImageView.image = UIImage(named: iconName)
         }

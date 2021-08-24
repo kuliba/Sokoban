@@ -85,11 +85,21 @@ extension ContactInputViewController {
                         
                     } else {
                         print("DEBUG: Error: anywayPayment1", model.errorMessage ?? "")
+                        DispatchQueue.main.async {
+                        if model.errorMessage == "Пользователь не авторизован"{
+                            AppLocker.present(with: .validate)
+                        }
+                        }
                         completion(model.errorMessage)
                     }
                 }
             } else {
                 print("DEBUG: Error: anywayPaymentBegin ", model.errorMessage ?? "")
+                DispatchQueue.main.async {
+                if model.errorMessage == "Пользователь не авторизован"{
+                    AppLocker.present(with: .validate)
+                }
+                }
                 completion(model.errorMessage)
             }
         })

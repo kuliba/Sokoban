@@ -24,18 +24,26 @@ class LoginCardEntryViewController: UIViewController {
         creditCardView.scanerCardTapped = { self.scanCardTapped() }
         creditCardView.enterCardNumberTapped = { [weak self] (cardNumber) in
             self?.showActivity()
-            LoginViewModel().checkCardNumber(with: cardNumber) { resp, error in
-                self?.dismissActivity()
-                if error != nil {
-                    self?.showAlert(with: "Ошибка", and: error ?? "")
-                } else {
-                    DispatchQueue.main.async { [weak self] in
-                        let model = CodeVerificationViewModel(phone: resp, type: .register)
-                        let vc = CodeVerificationViewController(model: model)
-                        self?.navigationController?.pushViewController(vc, animated: true)
+            DispatchQueue.main.async {
+            AppDelegate.shared.getCSRF { errorMessage in
+                if errorMessage == "Ok"{
+                    LoginViewModel().checkCardNumber(with: cardNumber) { resp, error in
+                        self?.dismissActivity()
+                        if error != nil {
+                            self?.showAlert(with: "Ошибка", and: error ?? "")
+                        } else {
+                            DispatchQueue.main.async { [weak self] in
+                                let model = CodeVerificationViewModel(phone: resp, type: .register)
+                                let vc = CodeVerificationViewController(model: model)
+                                self?.navigationController?.pushViewController(vc, animated: true)
+                            }
+                        }
                     }
                 }
             }
+
+                    }
+                
         }
         
         orderCardView.orderCardTapped = { self.orderCardTapped() }

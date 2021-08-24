@@ -28,6 +28,7 @@ extension UIViewController {
         else {
             fatalError("Unable to dequeue \(cellType)")
         }
+
         cell.configure(with: value)
         return cell
     }
