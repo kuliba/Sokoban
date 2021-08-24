@@ -41,7 +41,7 @@ class MockItems {
             
             PaymentsModel(id: 2, name: "Шаблоны и\nавтоплатежи",
                           iconName: "PaymentsIconFavorites",
-                          controllerName: "DevelopViewController"),
+                          controllerName: ""),
             
 //            PaymentsModel(id: 3, name: "Перевод по\nтелефону",
 //                          iconName: "PaymentsIconPhone",
