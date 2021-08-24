@@ -15,13 +15,16 @@ class GKHInputCell: UITableViewCell {
     @IBOutlet weak var errorLable: UILabel!
     @IBOutlet weak var showFIOButton: UIButton!
     
+    @IBOutlet weak var lineView: UIView!
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        showFIOButton.isHidden = true
     }
 
     func setupUI (_ dataModel: Parameters) {
-         
+        let q = GKHDataSorted.a(dataModel.title ?? "")
+        operatorsIcon.image = UIImage(named: q.1)
+        placeholderLable.text = q.0
     }
     
     

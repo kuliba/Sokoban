@@ -36,7 +36,7 @@ extension GKHMainViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+       // tableView.deselectRow(at: indexPath, animated: true)
         self.searchController.searchBar.searchTextField.endEditing(true)
         performSegue(withIdentifier: "input", sender: self)
     }
@@ -45,12 +45,12 @@ extension GKHMainViewController: UITableViewDataSource {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard segue.identifier == "input" else { return }
 
-            let index = tableView.indexPathForSelectedRow
+            let index = (self.tableView.indexPathForSelectedRow?.row)!
             let operators: GKHOperatorsModel?
         if searching {
-            operators = searchedOrganization[index?.row ?? 0]
+            operators = searchedOrganization[index]
         } else {
-            operators = organization[index?.row ?? 0]
+            operators = organization[index]
         }
             let dc = segue.destination as! GKHInputViewController
             dc.operatorData = operators
@@ -59,21 +59,3 @@ extension GKHMainViewController: UITableViewDataSource {
     
 }
 
-//MARK: - UISearchBarDelegate
-extension GKHMainViewController: UISearchBarDelegate {
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if !doStringContainsNumber(_string: searchText) {
-        searchedOrganization = organization.filter { $0.name?.lowercased().prefix(searchText.count) ?? "" == searchText.lowercased() }
-        } else {
-            searchedOrganization = organization.filter { $0.synonymList.first?.lowercased().prefix(searchText.count) ?? "" == searchText.lowercased() }
-        }
-        searching = true
-            
-    }
-    
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searching = false
-        searchBar.text = ""
-        tableView.reloadData()
-    }
-}

@@ -63,6 +63,28 @@ extension GKHMainViewController {
         
     }
     @objc func onQR(){
-       
+        checkCameraAccess(isAllowed: {
+            if $0 {
+                    DispatchQueue.main.async {
+                        self.navigationController?.isNavigationBarHidden = true
+                        self.performSegue(withIdentifier: "qr", sender: nil)
+                    }
+            } else {
+                guard self.alertController == nil else {
+                        print("There is already an alert presented")
+                        return
+                    }
+                self.alertController = UIAlertController(title: "Внимание", message: "Для сканирования QR кода, необходим доступ к камере", preferredStyle: .alert)
+                    guard let alert = self.alertController else {
+                        return
+                    }
+                alert.addAction(UIAlertAction(title: "Понятно", style: .default, handler: { (action) in
+                        self.alertController = nil
+                    }))
+                    DispatchQueue.main.async {
+                        self.present(alert, animated: true, completion: nil)
+                    }
+            }
+        })
     }
 }

@@ -14,8 +14,6 @@
 		0B216FC126D1B28F0023C878 /* GKHCitySearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B216FC026D1B28F0023C878 /* GKHCitySearchController.swift */; };
 		0B216FC326D1B30C0023C878 /* ExtensionGKHCitySearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B216FC226D1B30C0023C878 /* ExtensionGKHCitySearchController.swift */; };
 		0B216FC626D1E9EB0023C878 /* ExtensionNotificationName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B216FC526D1E9EB0023C878 /* ExtensionNotificationName.swift */; };
-		0B22AE9B26C535F100B11E7F /* GKHCellProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B22AE9A26C535F100B11E7F /* GKHCellProtocol.swift */; };
-		0B22AE9E26C572F300B11E7F /* GKHPayModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B22AE9D26C572F300B11E7F /* GKHPayModel.swift */; };
 		0B22AEA126CDA9BC00B11E7F /* GKHInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B22AEA026CDA9BC00B11E7F /* GKHInputViewController.swift */; };
 		0B22AEA326CDB38500B11E7F /* ExtensionGKHInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B22AEA226CDB38500B11E7F /* ExtensionGKHInput.swift */; };
 		0B22AEA526CDB48F00B11E7F /* GKHDataType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B22AEA426CDB48F00B11E7F /* GKHDataType.swift */; };
@@ -70,7 +68,6 @@
 		0B95C40A26B6D88000AA57E6 /* BottomLableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B95C40926B6D88000AA57E6 /* BottomLableModel.swift */; };
 		0B95C40C26B72CB100AA57E6 /* ExtensionBottomViewWithSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B95C40B26B72CB100AA57E6 /* ExtensionBottomViewWithSetup.swift */; };
 		0B9EC85D26739C0000D86EB2 /* GetCountriesDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EC85C26739C0000D86EB2 /* GetCountriesDecodebleModel.swift */; };
-		0BA09E2C26ADD6C50065D623 /* GKHViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA09E2B26ADD6C50065D623 /* GKHViewController.swift */; };
 		0BA09E2E26ADEBF50065D623 /* GHKCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0BA09E2D26ADEBF50065D623 /* GHKCell.xib */; };
 		0BA09E3026ADEC300065D623 /* GHKCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA09E2F26ADEC300065D623 /* GHKCell.swift */; };
 		0BA09E3426B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA09E3326B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift */; };
@@ -80,21 +77,12 @@
 		0BA251F326C26FE000AD087A /* CreateFastPaymentContractDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA251F226C26FE000AD087A /* CreateFastPaymentContractDecodableModel.swift */; };
 		0BA251F526C270A100AD087A /* UpdateFastPaymentContractDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA251F426C270A100AD087A /* UpdateFastPaymentContractDecodableModel.swift */; };
 		0BA251F726C2782500AD087A /* FastPaymentContractFindListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA251F626C2782500AD087A /* FastPaymentContractFindListDecodableModel.swift */; };
-		0BA2522A26C4007200AD087A /* GKHAnyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA2522926C4007200AD087A /* GKHAnyCell.swift */; };
-		0BA2522C26C4009300AD087A /* TableViewCellProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA2522B26C4009300AD087A /* TableViewCellProtocol.swift */; };
-		0BA2522E26C4012E00AD087A /* GKHAnyCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA2522D26C4012E00AD087A /* GKHAnyCellViewModel.swift */; };
-		0BA2523126C4415E00AD087A /* AdaptedSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA2523026C4415E00AD087A /* AdaptedSectionViewModel.swift */; };
-		0BA2523326C4420B00AD087A /* MainSectionFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA2523226C4420B00AD087A /* MainSectionFactory.swift */; };
-		0BA2523626C442DB00AD087A /* GKHMainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA2523526C442DB00AD087A /* GKHMainViewModel.swift */; };
-		0BA2523826C4439900AD087A /* GKHDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA2523726C4439900AD087A /* GKHDetailViewController.swift */; };
-		0BA2523C26C443F700AD087A /* AdaptedTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA2523B26C443F700AD087A /* AdaptedTableView.swift */; };
-		0BA2523E26C4444700AD087A /* AdaptedTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA2523D26C4444700AD087A /* AdaptedTableViewDataSource.swift */; };
-		0BA2524026C4448D00AD087A /* AdaptedTableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA2523F26C4448D00AD087A /* AdaptedTableViewDelegate.swift */; };
-		0BA2524226C4498A00AD087A /* GKHAnyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0BA2524126C4498A00AD087A /* GKHAnyCell.xib */; };
 		0BA2524726C5DB5600AD087A /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 0BA2524626C5DB5600AD087A /* Realm */; };
 		0BA2524926C5DB5600AD087A /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0BA2524826C5DB5600AD087A /* RealmSwift */; };
 		0BAC319626CB264B006E03FD /* ExtensionGKHMainTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAC319526CB264B006E03FD /* ExtensionGKHMainTableView.swift */; };
 		0BAC674126D408DC005AAD91 /* CreateDirectTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAC674026D408DC005AAD91 /* CreateDirectTransferDecodableModel.swift */; };
+		0BAC674426D41C18005AAD91 /* ExtensionGKHSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAC674326D41C18005AAD91 /* ExtensionGKHSearch.swift */; };
+		0BAC674726D4F471005AAD91 /* QRCodeStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0BAC674626D4F471005AAD91 /* QRCodeStoryboard.storyboard */; };
 		0BB015D626C8892700E7A85B /* GKHMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB015D426C8892700E7A85B /* GKHMainViewController.swift */; };
 		0BB015DA26C9378200E7A85B /* GKHOperatorsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB015D926C9378200E7A85B /* GKHOperatorsModel.swift */; };
 		0BB015DC26C9BE3700E7A85B /* ExtensionGKHMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB015DB26C9BE3700E7A85B /* ExtensionGKHMain.swift */; };
@@ -341,8 +329,6 @@
 		0B216FC026D1B28F0023C878 /* GKHCitySearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHCitySearchController.swift; sourceTree = "<group>"; };
 		0B216FC226D1B30C0023C878 /* ExtensionGKHCitySearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionGKHCitySearchController.swift; sourceTree = "<group>"; };
 		0B216FC526D1E9EB0023C878 /* ExtensionNotificationName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionNotificationName.swift; sourceTree = "<group>"; };
-		0B22AE9A26C535F100B11E7F /* GKHCellProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHCellProtocol.swift; sourceTree = "<group>"; };
-		0B22AE9D26C572F300B11E7F /* GKHPayModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHPayModel.swift; sourceTree = "<group>"; };
 		0B22AEA026CDA9BC00B11E7F /* GKHInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHInputViewController.swift; sourceTree = "<group>"; };
 		0B22AEA226CDB38500B11E7F /* ExtensionGKHInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionGKHInput.swift; sourceTree = "<group>"; };
 		0B22AEA426CDB48F00B11E7F /* GKHDataType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHDataType.swift; sourceTree = "<group>"; };
@@ -396,7 +382,6 @@
 		0B95C40926B6D88000AA57E6 /* BottomLableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomLableModel.swift; sourceTree = "<group>"; };
 		0B95C40B26B72CB100AA57E6 /* ExtensionBottomViewWithSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBottomViewWithSetup.swift; sourceTree = "<group>"; };
 		0B9EC85C26739C0000D86EB2 /* GetCountriesDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCountriesDecodebleModel.swift; sourceTree = "<group>"; };
-		0BA09E2B26ADD6C50065D623 /* GKHViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHViewController.swift; sourceTree = "<group>"; };
 		0BA09E2D26ADEBF50065D623 /* GHKCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GHKCell.xib; sourceTree = "<group>"; };
 		0BA09E2F26ADEC300065D623 /* GHKCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GHKCell.swift; sourceTree = "<group>"; };
 		0BA09E3326B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetFullBankInfoListDecodableModel.swift; sourceTree = "<group>"; };
@@ -406,19 +391,10 @@
 		0BA251F226C26FE000AD087A /* CreateFastPaymentContractDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFastPaymentContractDecodableModel.swift; sourceTree = "<group>"; };
 		0BA251F426C270A100AD087A /* UpdateFastPaymentContractDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateFastPaymentContractDecodableModel.swift; sourceTree = "<group>"; };
 		0BA251F626C2782500AD087A /* FastPaymentContractFindListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentContractFindListDecodableModel.swift; sourceTree = "<group>"; };
-		0BA2522926C4007200AD087A /* GKHAnyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHAnyCell.swift; sourceTree = "<group>"; };
-		0BA2522B26C4009300AD087A /* TableViewCellProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCellProtocol.swift; sourceTree = "<group>"; };
-		0BA2522D26C4012E00AD087A /* GKHAnyCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHAnyCellViewModel.swift; sourceTree = "<group>"; };
-		0BA2523026C4415E00AD087A /* AdaptedSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptedSectionViewModel.swift; sourceTree = "<group>"; };
-		0BA2523226C4420B00AD087A /* MainSectionFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionFactory.swift; sourceTree = "<group>"; };
-		0BA2523526C442DB00AD087A /* GKHMainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHMainViewModel.swift; sourceTree = "<group>"; };
-		0BA2523726C4439900AD087A /* GKHDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHDetailViewController.swift; sourceTree = "<group>"; };
-		0BA2523B26C443F700AD087A /* AdaptedTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptedTableView.swift; sourceTree = "<group>"; };
-		0BA2523D26C4444700AD087A /* AdaptedTableViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptedTableViewDataSource.swift; sourceTree = "<group>"; };
-		0BA2523F26C4448D00AD087A /* AdaptedTableViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptedTableViewDelegate.swift; sourceTree = "<group>"; };
-		0BA2524126C4498A00AD087A /* GKHAnyCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GKHAnyCell.xib; sourceTree = "<group>"; };
 		0BAC319526CB264B006E03FD /* ExtensionGKHMainTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionGKHMainTableView.swift; sourceTree = "<group>"; };
 		0BAC674026D408DC005AAD91 /* CreateDirectTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDirectTransferDecodableModel.swift; sourceTree = "<group>"; };
+		0BAC674326D41C18005AAD91 /* ExtensionGKHSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionGKHSearch.swift; sourceTree = "<group>"; };
+		0BAC674626D4F471005AAD91 /* QRCodeStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = QRCodeStoryboard.storyboard; sourceTree = "<group>"; };
 		0BB015D426C8892700E7A85B /* GKHMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHMainViewController.swift; sourceTree = "<group>"; };
 		0BB015D926C9378200E7A85B /* GKHOperatorsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHOperatorsModel.swift; sourceTree = "<group>"; };
 		0BB015DB26C9BE3700E7A85B /* ExtensionGKHMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionGKHMain.swift; sourceTree = "<group>"; };
@@ -701,21 +677,13 @@
 			path = NotificationName;
 			sourceTree = "<group>";
 		};
-		0B22AE9C26C572D300B11E7F /* GKHModel */ = {
-			isa = PBXGroup;
-			children = (
-				0B22AE9D26C572F300B11E7F /* GKHPayModel.swift */,
-			);
-			path = GKHModel;
-			sourceTree = "<group>";
-		};
 		0B22AE9F26CDA97100B11E7F /* GKHInputViewController */ = {
 			isa = PBXGroup;
 			children = (
+				0B22AEA626CE72A800B11E7F /* GKHDataType */,
 				0B216FBA26D15B7D0023C878 /* GKHInputCell */,
 				0B22AEA026CDA9BC00B11E7F /* GKHInputViewController.swift */,
 				0B22AEA226CDB38500B11E7F /* ExtensionGKHInput.swift */,
-				0B22AEA626CE72A800B11E7F /* GKHDataType */,
 			);
 			path = GKHInputViewController;
 			sourceTree = "<group>";
@@ -766,6 +734,7 @@
 			isa = PBXGroup;
 			children = (
 				0B66E8E526CC658A00FD735D /* GKHStoryboard.storyboard */,
+				0BAC674626D4F471005AAD91 /* QRCodeStoryboard.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -831,92 +800,31 @@
 		0BA09E2A26ADD6A50065D623 /* GKHController */ = {
 			isa = PBXGroup;
 			children = (
-				0B216FBF26D1B26A0023C878 /* GKHCitySearch */,
 				0BB015D826C9375C00E7A85B /* GKHModel */,
-				0BA2521926C3CE6200AD087A /* GKHPayViewController */,
 				0BB015DD26C9BFCC00E7A85B /* GKHMainViewController */,
-				0BA2521726C3C4BC00AD087A /* GKHFirstController */,
 				0B22AE9F26CDA97100B11E7F /* GKHInputViewController */,
 			);
 			path = GKHController;
 			sourceTree = "<group>";
 		};
-		0BA2521726C3C4BC00AD087A /* GKHFirstController */ = {
+		0BAC674226D418C4005AAD91 /* GKHCell */ = {
 			isa = PBXGroup;
 			children = (
-				0BA09E2B26ADD6C50065D623 /* GKHViewController.swift */,
 				0BA09E2F26ADEC300065D623 /* GHKCell.swift */,
 				0BA09E2D26ADEBF50065D623 /* GHKCell.xib */,
 			);
-			path = GKHFirstController;
+			path = GKHCell;
 			sourceTree = "<group>";
 		};
-		0BA2521926C3CE6200AD087A /* GKHPayViewController */ = {
+		0BAC674526D4F138005AAD91 /* GKHMainController */ = {
 			isa = PBXGroup;
 			children = (
-				0B22AE9C26C572D300B11E7F /* GKHModel */,
-				0BA2522326C3CF7500AD087A /* GKHView */,
+				0BB015D426C8892700E7A85B /* GKHMainViewController.swift */,
+				0BB015DB26C9BE3700E7A85B /* ExtensionGKHMain.swift */,
+				0BAC319526CB264B006E03FD /* ExtensionGKHMainTableView.swift */,
+				0BAC674326D41C18005AAD91 /* ExtensionGKHSearch.swift */,
 			);
-			path = GKHPayViewController;
-			sourceTree = "<group>";
-		};
-		0BA2522326C3CF7500AD087A /* GKHView */ = {
-			isa = PBXGroup;
-			children = (
-				0BA2523A26C443EA00AD087A /* AdaptedTableView */,
-				0BA2523426C442B600AD087A /* GKHMainViewModel */,
-				0BA2522F26C4411200AD087A /* GKHSections */,
-				0BA2522626C3D01B00AD087A /* GKHViewCell */,
-				0BA2523926C443A600AD087A /* GKHDetailViewController */,
-			);
-			path = GKHView;
-			sourceTree = "<group>";
-		};
-		0BA2522626C3D01B00AD087A /* GKHViewCell */ = {
-			isa = PBXGroup;
-			children = (
-				0BA2522B26C4009300AD087A /* TableViewCellProtocol.swift */,
-				0BA2522D26C4012E00AD087A /* GKHAnyCellViewModel.swift */,
-				0BA2522926C4007200AD087A /* GKHAnyCell.swift */,
-				0BA2524126C4498A00AD087A /* GKHAnyCell.xib */,
-				0B22AE9A26C535F100B11E7F /* GKHCellProtocol.swift */,
-			);
-			path = GKHViewCell;
-			sourceTree = "<group>";
-		};
-		0BA2522F26C4411200AD087A /* GKHSections */ = {
-			isa = PBXGroup;
-			children = (
-				0BA2523026C4415E00AD087A /* AdaptedSectionViewModel.swift */,
-				0BA2523226C4420B00AD087A /* MainSectionFactory.swift */,
-			);
-			path = GKHSections;
-			sourceTree = "<group>";
-		};
-		0BA2523426C442B600AD087A /* GKHMainViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				0BA2523526C442DB00AD087A /* GKHMainViewModel.swift */,
-			);
-			path = GKHMainViewModel;
-			sourceTree = "<group>";
-		};
-		0BA2523926C443A600AD087A /* GKHDetailViewController */ = {
-			isa = PBXGroup;
-			children = (
-				0BA2523726C4439900AD087A /* GKHDetailViewController.swift */,
-			);
-			path = GKHDetailViewController;
-			sourceTree = "<group>";
-		};
-		0BA2523A26C443EA00AD087A /* AdaptedTableView */ = {
-			isa = PBXGroup;
-			children = (
-				0BA2523B26C443F700AD087A /* AdaptedTableView.swift */,
-				0BA2523D26C4444700AD087A /* AdaptedTableViewDataSource.swift */,
-				0BA2523F26C4448D00AD087A /* AdaptedTableViewDelegate.swift */,
-			);
-			path = AdaptedTableView;
+			path = GKHMainController;
 			sourceTree = "<group>";
 		};
 		0BB015D826C9375C00E7A85B /* GKHModel */ = {
@@ -930,9 +838,9 @@
 		0BB015DD26C9BFCC00E7A85B /* GKHMainViewController */ = {
 			isa = PBXGroup;
 			children = (
-				0BB015D426C8892700E7A85B /* GKHMainViewController.swift */,
-				0BB015DB26C9BE3700E7A85B /* ExtensionGKHMain.swift */,
-				0BAC319526CB264B006E03FD /* ExtensionGKHMainTableView.swift */,
+				0B216FBF26D1B26A0023C878 /* GKHCitySearch */,
+				0BAC674226D418C4005AAD91 /* GKHCell */,
+				0BAC674526D4F138005AAD91 /* GKHMainController */,
 			);
 			path = GKHMainViewController;
 			sourceTree = "<group>";
@@ -2212,6 +2120,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EDB143CE265FDEC90028EF5A /* Roboto-Thin.ttf in Resources */,
+				0BAC674726D4F471005AAD91 /* QRCodeStoryboard.storyboard in Resources */,
 				68FFA5472682F49A002DADFA /* SearchContact.xib in Resources */,
 				ED2BE18526A04F0600647CB1 /* CardChooseView.xib in Resources */,
 				EDCF89E426CACC7D00DC9F54 /* MeToMeSetupSwitchView.xib in Resources */,
@@ -2230,7 +2139,6 @@
 				EDB143C4265FDEC90028EF5A /* Roboto-Medium.ttf in Resources */,
 				EDB143C5265FDEC90028EF5A /* Roboto-Light.ttf in Resources */,
 				EDB143C8265FDEC90028EF5A /* Roboto-ThinItalic.ttf in Resources */,
-				0BA2524226C4498A00AD087A /* GKHAnyCell.xib in Resources */,
 				EDB14518266526BD0028EF5A /* CreditCardEntryView.xib in Resources */,
 				EDB1452C26663C9D0028EF5A /* GoogleService-Info.plist in Resources */,
 				EDB14526266624DC0028EF5A /* OrderCardView.xib in Resources */,
@@ -2318,7 +2226,6 @@
 				0BF3485B268E5907005138A8 /* GetExchangeCurrencyRatesDecodableModel.swift in Sources */,
 				0B37F9882680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift in Sources */,
 				EDB1451C26652D370028EF5A /* UILabel.swift in Sources */,
-				0BA2523626C442DB00AD087A /* GKHMainViewModel.swift in Sources */,
 				0B22AEA826CE72C200B11E7F /* GKHDataFilter.swift in Sources */,
 				0B95C40326B6CA3700AA57E6 /* CustomPopUpWithRateView.swift in Sources */,
 				ED0B4894267B50F50037EA06 /* Int.swift in Sources */,
@@ -2334,6 +2241,7 @@
 				0B22AEAA26CE77F100B11E7F /* GKHDataCase.swift in Sources */,
 				EDF68216266F9EC800FD5C07 /* RouterError.swift in Sources */,
 				0B216FC626D1E9EB0023C878 /* ExtensionNotificationName.swift in Sources */,
+				0BAC674426D41C18005AAD91 /* ExtensionGKHSearch.swift in Sources */,
 				68D06F2626C3C11700F9BE4C /* MainViewControllerDataSource.swift in Sources */,
 				0BA251F126C26BE200AD087A /* СreateMe2MePullTransferDecodableModel.swift in Sources */,
 				68F6816F269E5E56008157CE /* SearchBanksViewController.swift in Sources */,
@@ -2348,7 +2256,6 @@
 				ED39EC8C268B4F0800158E46 /* CardChooseView.swift in Sources */,
 				EDB1657C2668C8D5007E6030 /* PayCell.swift in Sources */,
 				0BE270BA26B9F36A00FA958C /* ExtensionBottomInputRequest.swift in Sources */,
-				0BA2522C26C4009300AD087A /* TableViewCellProtocol.swift in Sources */,
 				EDFFCAF0268245EC004EE095 /* CardViewModel.swift in Sources */,
 				0B9EC85D26739C0000D86EB2 /* GetCountriesDecodebleModel.swift in Sources */,
 				68FFA54C2684C854002DADFA /* PDFViewerViewController.swift in Sources */,
@@ -2370,7 +2277,6 @@
 				68FFA55326857530002DADFA /* Extension.swift in Sources */,
 				EDB16597266A576A007E6030 /* CardScannerController.swift in Sources */,
 				0BB015D626C8892700E7A85B /* GKHMainViewController.swift in Sources */,
-				0BA2522E26C4012E00AD087A /* GKHAnyCellViewModel.swift in Sources */,
 				EDB165662667A741007E6030 /* ContactInputViewController.swift in Sources */,
 				EDB14533266667140028EF5A /* OrderProductsCollectionViewCell.swift in Sources */,
 				0B8BE091266FDA1B00E96CAA /* CheckClientDecodebleModel.swift in Sources */,
@@ -2406,7 +2312,6 @@
 				0B37F980267A11FB007728FC /* GetOwnerPhoneNumberPhoneDecodableModel.swift in Sources */,
 				68FFA52C2682AF62002DADFA /* ContactCollectionViewCell.swift in Sources */,
 				0B216FBE26D15BDF0023C878 /* GKHInputCell.swift in Sources */,
-				0BA2523E26C4444700AD087A /* AdaptedTableViewDataSource.swift in Sources */,
 				0B37F982267A1814007728FC /* FastPaymentBanksListDecodableModel.swift in Sources */,
 				EDB1654B26676F20007E6030 /* UIButton.swift in Sources */,
 				0B37F9782678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift in Sources */,
@@ -2450,9 +2355,6 @@
 				0BA09E3426B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift in Sources */,
 				ED84994B26A6FEE3005205C6 /* CountryListCell.swift in Sources */,
 				ED39EC93268C9AE900158E46 /* NewCardCell.swift in Sources */,
-				0BA2523126C4415E00AD087A /* AdaptedSectionViewModel.swift in Sources */,
-				0BA2524026C4448D00AD087A /* AdaptedTableViewDelegate.swift in Sources */,
-				0BA2522A26C4007200AD087A /* GKHAnyCell.swift in Sources */,
 				ED4FC610266CD66F0092B4AB /* СountryModel.swift in Sources */,
 				6822EFD226B935DB00125EEC /* BaseTableViewViewController.swift in Sources */,
 				EDF68213266F9EC800FD5C07 /* URLHostType.swift in Sources */,
@@ -2471,13 +2373,11 @@
 				0B66E8E326CC62DF00FD735D /* NetStatus.swift in Sources */,
 				ED84994826A6FD97005205C6 /* CountryListView.swift in Sources */,
 				0BA251F726C2782500AD087A /* FastPaymentContractFindListDecodableModel.swift in Sources */,
-				0BA09E2C26ADD6C50065D623 /* GKHViewController.swift in Sources */,
 				EDB1658026694676007E6030 /* PaymentsViewControllerLayout.swift in Sources */,
 				0B66E8D826CC5EC400FD735D /* ExtensionDevice.swift in Sources */,
 				0B216FC326D1B30C0023C878 /* ExtensionGKHCitySearchController.swift in Sources */,
 				ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */,
 				ED84994526A6F647005205C6 /* ChooseCountryHeaderView.swift in Sources */,
-				0BA2523826C4439900AD087A /* GKHDetailViewController.swift in Sources */,
 				EDB1655A2667A220007E6030 /* CodeVerificationViewController UI.swift in Sources */,
 				0B7A18BA2683AC880007CC75 /* NotificationName.swift in Sources */,
 				0B95C3FE26B6C96F00AA57E6 /* DoubleInStringExtension.swift in Sources */,
@@ -2512,8 +2412,6 @@
 				68D06F2426C3C0F300F9BE4C /* MainViewControllerLayout.swift in Sources */,
 				EDB1452E26665AD50028EF5A /* OrderProductsViewController.swift in Sources */,
 				EDCF89E226CACC7300DC9F54 /* MeToMeSetupSwitchView.swift in Sources */,
-				0B22AE9B26C535F100B11E7F /* GKHCellProtocol.swift in Sources */,
-				0BA2523326C4420B00AD087A /* MainSectionFactory.swift in Sources */,
 				0B8BE08F266FBE0500E96CAA /* CSRFDecodableModel.swift in Sources */,
 				EDB14535266671580028EF5A /* MockItems.swift in Sources */,
 				ED84994426A6F647005205C6 /* ChooseCountryHeaderCell.swift in Sources */,
@@ -2543,12 +2441,10 @@
 				0B95C40A26B6D88000AA57E6 /* BottomLableModel.swift in Sources */,
 				ED4FC61A266EA42E0092B4AB /* AppLocker.swift in Sources */,
 				0BA251ED26C266A400AD087A /* CreateServiceTransferDecodableModel.swift in Sources */,
-				0B22AE9E26C572F300B11E7F /* GKHPayModel.swift in Sources */,
 				0BAC319626CB264B006E03FD /* ExtensionGKHMainTableView.swift in Sources */,
 				0BF34854268B2699005138A8 /* PrepareExternalDecodableModel.swift in Sources */,
 				ED3A96772690FCD700252857 /* BankViewModel.swift in Sources */,
 				68FFA54F26853897002DADFA /* PhoneContacts.swift in Sources */,
-				0BA2523C26C443F700AD087A /* AdaptedTableView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
