@@ -94,9 +94,5 @@ class PDFViewerViewController: UIViewController, URLSessionDownloadDelegate {
                 }
             }
         }.resume()
-        
     }
-    
-    
-    
 }

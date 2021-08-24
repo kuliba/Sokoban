@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Inter-VariableFont_slnt,wght.ttf">
+            <string>Inter-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="84" id="KGk-i7-Jjw" customClass="BankTableViewCell" customModule="ForaBank" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="369" height="84"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="369" height="84"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bank_icon" translatesAutoresizingMaskIntoConstraints="NO" id="IzA-tP-y2P">
+                        <rect key="frame" x="20" y="22" width="40" height="40"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="40" id="Oxq-SJ-Bhk"/>
+                            <constraint firstAttribute="height" constant="40" id="ZEk-Im-Gwv"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                <integer key="value" value="20"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Сбербанк" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="unS-EG-KJJ">
+                        <rect key="frame" x="80" y="32.5" width="226" height="19.5"/>
+                        <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="16"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Checkbox_normal" translatesAutoresizingMaskIntoConstraints="NO" id="P0E-sg-O3a">
+                        <rect key="frame" x="326" y="30" width="24" height="24"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="24" id="Dgy-4Z-2Qr"/>
+                            <constraint firstAttribute="width" constant="24" id="ZYe-RO-SCx"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="P0E-sg-O3a" secondAttribute="trailing" constant="19" id="H21-0c-wi0"/>
+                    <constraint firstItem="unS-EG-KJJ" firstAttribute="leading" secondItem="IzA-tP-y2P" secondAttribute="trailing" constant="20" id="OxO-WZ-JTD"/>
+                    <constraint firstItem="IzA-tP-y2P" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="Sja-W7-h3N"/>
+                    <constraint firstItem="IzA-tP-y2P" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="T90-SE-EyY"/>
+                    <constraint firstItem="unS-EG-KJJ" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="nMy-LV-3KA"/>
+                    <constraint firstItem="P0E-sg-O3a" firstAttribute="leading" secondItem="unS-EG-KJJ" secondAttribute="trailing" constant="20" id="sSX-gX-vjU"/>
+                    <constraint firstItem="P0E-sg-O3a" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="zkx-Lq-K6i"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="bankImageView" destination="IzA-tP-y2P" id="kpT-vG-A21"/>
+                <outlet property="bankNameLabel" destination="unS-EG-KJJ" id="seA-od-j4f"/>
+                <outlet property="chekboxImgeView" destination="P0E-sg-O3a" id="zQR-Uu-AdA"/>
+            </connections>
+            <point key="canvasLocation" x="148.55072463768118" y="105.13392857142857"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="Checkbox_normal" width="24" height="24"/>
+        <image name="bank_icon" width="32" height="32"/>
+    </resources>
+</document>

@@ -70,24 +70,28 @@ final class CardChooseView: UIView {
     
     private func setupData(with model: GetProductListDatum) {
         hideAll(false)
+        
         if model.productType == "ACCOUNT" {
-            imageView.image = #imageLiteral(resourceName: "AccImage")
+            imageView.image = model.smallDesign?.convertSVGStringToImage() ?? #imageLiteral(resourceName: "AccImage")
             cardTypeImage.isHidden = true
-        } else if model.productType == "CARD" {
-            imageView.image = #imageLiteral(resourceName: "credit-card")
         }
+        else if model.productType == "CARD" {
+            self.imageView.image = model.smallDesign?.convertSVGStringToImage() ?? #imageLiteral(resourceName: "credit-card")
+        }
+        
         
         let balance = Double(model.balance ?? 0)
         self.balanceLabel.text = balance.currencyFormatter(symbol: model.currency ?? "")
         let text = NSAttributedString(
-            string: model.productName ?? "",
+//            string: model.mainField ?? model.productName ?? "",
+            string: model.mainField ?? "",
             attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14),
                          NSAttributedString.Key.foregroundColor : UIColor.black])
         self.numberCardLabel.attributedText = text
         self.maskNumberLabel.text = "• \(model.number?.suffix(4) ?? "")"
-        self.nameLabel.text = model.customName ?? model.name ?? ""
-        self.setupCardImage(with: model.number ?? "")
-
+        self.nameLabel.text = model.customName ?? model.additionalField ?? ""
+//        self.setupCardImage(with: model.number ?? "")
+        self.cardTypeImage.image = model.paymentSystemImage?.convertSVGStringToImage()
     }
     
     private func setupCustomData(with model: CastomCardViewModel) {

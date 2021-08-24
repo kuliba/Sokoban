@@ -451,7 +451,7 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
     
 }
 
-extension EPContactsPicker: passTextFieldText {
+extension EPContactsPicker: PassTextFieldText {
     func passTextFieldText(textField: UITextField) {
         guard let text = textField.text else {
             return

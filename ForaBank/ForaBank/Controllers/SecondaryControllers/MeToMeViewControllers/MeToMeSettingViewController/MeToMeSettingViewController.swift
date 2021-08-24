@@ -33,14 +33,25 @@ class MeToMeSettingViewController: UIViewController {
         setupCardList { [weak self] error in
             if error != nil {
                 self?.showAlert(with: "Ошибка", and: error!)
+            } else {
+                self?.topSwitch.bankByPhoneSwitch.isEnabled = true
             }
         }
     }
     
     func configure(with model: [FastPaymentContractFindListDatum]) {
         if !model.isEmpty {
-            topSwitch.bankByPhoneSwitch.isOn = true
-            topSwitch.configViewWithValue(true)
+            let contract = model.first?.fastPaymentContractAttributeList?.first
+            if contract?.flagClientAgreementIn == "YES"
+                && contract?.flagClientAgreementOut == "YES" {
+                
+                topSwitch.bankByPhoneSwitch.isOn = true
+                topSwitch.configViewWithValue(true)
+                cardFromField.isHidden = false
+            } else {
+                topSwitch.configViewWithValue(false)
+                cardFromField.isHidden = true
+            }
         } else {
             topSwitch.configViewWithValue(false)
             cardFromField.isHidden = true
@@ -129,14 +140,42 @@ class MeToMeSettingViewController: UIViewController {
     }
     
     func setupTopSwitch() {
+        topSwitch.bankByPhoneSwitch.isEnabled = false
         topSwitch.switchIsChanged = { (sender) in
-            self.hideView(self.cardFromField, needHide: !sender.isOn) {
-                if !self.cardListView.isHidden {
-                    self.hideView(self.cardListView, needHide: true) { }
+            self.showActivity()
+            guard let model = self.model else { return }
+            if model.isEmpty {
+                self.createContract(cardModel: self.cardFromField.cardModel!) { success, error in
+                    
+                    DispatchQueue.main.async {
+                        self.dismissActivity()
+                        self.hideView(self.cardFromField, needHide: !sender.isOn) {
+                            if !self.cardListView.isHidden {
+                                self.hideView(self.cardListView, needHide: true) { }
+                            }
+                        }
+                    }
+                }
+            } else {
+                guard let contractId = self.model?.first?.fastPaymentContractAttributeList?.first else { return }
+                
+                self.updateContract(contractId: contractId.fpcontractID,
+                                    cardModel: self.cardFromField.cardModel!,
+                                    isOff: sender.isOn) { success, error in
+                    DispatchQueue.main.async {
+                        self.dismissActivity()
+                        self.hideView(self.cardFromField, needHide: !sender.isOn) {
+                            if !self.cardListView.isHidden {
+                                self.hideView(self.cardListView, needHide: true) { }
+                            }
+                        }
+                    }
                 }
             }
         }
     }
+    
+    
     
     //MARK: - Animation
     func openOrHideView(_ view: UIView) {
@@ -149,7 +188,6 @@ class MeToMeSettingViewController: UIViewController {
                     view.isHidden = true
                     view.alpha = 0
                 }
-                self.stackView.layoutIfNeeded()
             }
         }
     }
@@ -159,7 +197,6 @@ class MeToMeSettingViewController: UIViewController {
             UIView.animate(withDuration: 0.2) {
                 view.isHidden = needHide
                 view.alpha = needHide ? 0 : 1
-                self.stackView.layoutIfNeeded()
             }
         }
         completion()
@@ -186,5 +223,57 @@ class MeToMeSettingViewController: UIViewController {
         }
     }
     
+    func updateContract(contractId: Int?, cardModel: GetProductListDatum, isOff: Bool ,completion: @escaping (_ success: Bool, _ error: String?)->()) {
+        guard let fpcontractID = contractId else { return }
+        
+        var body = [ "contractId"               : fpcontractID,
+                     "cardId"                   : nil,
+                     "accountId"                : nil,
+                     "flagBankDefault"          : "EMPTY",
+                     "flagClientAgreementIn"    : isOff ? "YES" : "NO",
+                     "flagClientAgreementOut"   : isOff ? "YES" : "NO"
+        ] as [String : AnyObject]
+        
+        if cardModel.productType == "CARD" {
+            body["cardId"] = cardModel.cardID as AnyObject?
+        } else if cardModel.productType == "ACCOUNT" {
+            body["accountId"] = cardModel.cardID as AnyObject?
+        }
+        
+        NetworkManager<UpdateFastPaymentContractDecodableModel>.addRequest(.updateFastPaymentContract, [:], body) { model, error in
+            if error != nil {
+                completion(false, error)
+            }
+            guard let model = model else { return }
+            if model.statusCode == 0 {
+                completion(true, nil)
+            } else {
+                guard let error = model.errorMessage else { return }
+                completion(false, error)
+            }
+        }
+    }
+    
+    func createContract(cardModel: GetProductListDatum, completion: @escaping (_ success: Bool, _ error: String?)->()) {
+        guard let accountId = cardModel.ownerID else { return }
+        let body = [ "accountId"                : accountId,
+                     "flagBankDefault"          : "YES",
+                     "flagClientAgreementIn"    : "YES",
+                     "flagClientAgreementOut"   : "YES"
+        ] as [String : AnyObject]
+        
+        NetworkManager<CreateServiceTransferDecodableModel>.addRequest(.createFastPaymentContract, [:], body) { model, error in
+            if error != nil {
+                completion(false, error)
+            }
+            guard let model = model else { return }
+            if model.statusCode == 0 {
+                completion(true, nil)
+            } else {
+                guard let error = model.errorMessage else { return }
+                completion(false, error)
+            }
+        }
+    }
     
 }

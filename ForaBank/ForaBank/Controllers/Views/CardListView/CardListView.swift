@@ -81,7 +81,7 @@ final class CardListView: UIView {
 //        let height: CGFloat = self.onlyMy ? 110 : 80
         changeCardButtonCollection.isHidden = !self.onlyMy
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.heightAnchor.constraint(equalToConstant: self.onlyMy ? 120 : 90).isActive = true
+        self.heightAnchor.constraint(equalToConstant: self.onlyMy ? 125 : 95).isActive = true
         setupCollectionView()
         isHidden = true
         alpha = 0
@@ -108,6 +108,7 @@ final class CardListView: UIView {
         collectionView.anchor(top: changeCardButtonCollection.bottomAnchor, left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor)
         
         collectionView.backgroundColor = .white
+        collectionView.showsHorizontalScrollIndicator = false
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(CardCell.self, forCellWithReuseIdentifier: reuseIdentifier)
@@ -205,26 +206,29 @@ extension CardListView: UICollectionViewDataSource {
 //MARK: - CollectionView FlowLayout
 extension CardListView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let itemHeight = 72
+        let bigItemWidth = 112
+        let smallItemWidth = 72
         
         if canAddNewCard {
             if indexPath.item == 0 {
-                return CGSize(width: 72, height: 72)
+                return CGSize(width: smallItemWidth, height: itemHeight)
             } else if indexPath.item == cardList.count + 1 {
-                return CGSize(width: 72, height: 72)
+                return CGSize(width: smallItemWidth, height: itemHeight)
             }  else {
-                return CGSize(width: 108, height: 72)
+                return CGSize(width: bigItemWidth, height: itemHeight)
             }
         } else {
             if indexPath.item == cardList.count  {
-                return CGSize(width: 72, height: 72)
+                return CGSize(width: smallItemWidth, height: itemHeight)
             }  else {
-                return CGSize(width: 108, height: 72)
+                return CGSize(width: bigItemWidth, height: itemHeight)
             }
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 8, left: 20, bottom: 8, right: 8)
+        return UIEdgeInsets(top: 2, left: 20, bottom: 8, right: 8)
     }
     
 }

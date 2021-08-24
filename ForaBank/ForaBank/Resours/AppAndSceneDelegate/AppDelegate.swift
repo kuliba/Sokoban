@@ -33,6 +33,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         requestNotificationAuthorization(application: application)
       
         customizeUiInApp()
+        
+        // Net Detect
+        NetStatus.shared.startMonitoring()
 
         return true
     }
