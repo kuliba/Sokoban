@@ -122,7 +122,7 @@ class MockItems {
                           description: "Что то"),
             
             PaymentsModel(id: 16, name: "Соцсети, игры, карты",
-                          iconName: "gameIcon",
+                          iconName: "iconGame",
                           controllerName: "",
                           description: "Что то"),
             

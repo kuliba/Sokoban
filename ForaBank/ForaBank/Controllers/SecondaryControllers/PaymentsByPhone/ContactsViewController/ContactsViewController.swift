@@ -30,7 +30,8 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
     var banksActive = false
     var seeall: Bool?
     var stackView = UIStackView()
-    
+    var firstTap = true
+
     var lastPaymentsCollectionView: UICollectionView!
     var contactCollectionView: UICollectionView!
     var delegate: PassTextFieldText? = nil
@@ -268,7 +269,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
             selectPhoneNumber = "+7\(text)"
             getLastPhonePayments()
             banksActive = true
-            alphabetScroll()
+            orderedBanks.removeAll()
             
         }
     }
@@ -397,9 +398,18 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                 } else {
                     item.nameLabel.isHidden = true
                 }
-                item.contactImageView.image = UIImage(named: "\(lastPhonePayment[indexPath.item].bankID!)")
+//                item.contactImageView.image = UIImage(named: "\(lastPhonePayment[indexPath.item].bankID!)")
+                for bank in banksList {
+                    if bank.memberID == lastPhonePayment[indexPath.item].bankID{
+                        item.contactImageView.image = bank.svgImage?.convertSVGStringToImage()
+                    }
+                }
                 item.bankNameLabel.isHidden = false
-                item.bankNameLabel.text = lastPhonePayment[indexPath.item].bankName
+                if lastPhonePayment[indexPath.item].bankName == "ФОРА-БАНК"{
+                    item.bankNameLabel.text = "Фора-Банк"
+                } else {
+                    item.bankNameLabel.text = lastPhonePayment[indexPath.item].bankName
+                }
                 return item
             } else {
                 
@@ -484,7 +494,6 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
             
             if banks?.count ?? 0 > 0{
                 reusableview.frame = CGRect(x: 0 , y: 0, width: self.view.frame.width - 40, height: 40)
-                
             } else {
                 reusableview.frame = CGRect(x: 0 , y: 0, width: 0, height: 40)
             }
@@ -702,6 +711,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                     self.lastPhonePayment = data
                         if self.lastPhonePayment.count != 0{
                         
+                           
                         self.lastPaymentsCollectionView.isHidden = false
                         self.lastPaymentsCollectionView.reloadData()
                         } else {
@@ -958,24 +968,33 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
         //Convert CNContact to EPContact
         cell.contactDetailTextLabel.isHidden = false
         cell.contactInitialLabel.isHidden  = false
+        
         if banksActive{
+           
             //            let bank = orderedBanks.filter({$0.})
             let banks = orderedBanks[sortedContactKeys[indexPath.section]]
-            if banks?[indexPath.row].svgImage == nil {
-                cell.contactImageView.image = UIImage(imageLiteralResourceName: "bankDefault")
-                
-            } else {
-                cell.contactImageView.image = banks?[indexPath.row].svgImage?.convertSVGStringToImage()
-            }
+             
+//            if banks?[indexPath.row].svgImage == nil {
+//                cell.contactImageView.image = UIImage(imageLiteralResourceName: "bankDefault")
+//            } else {
+//                for item in banksList {
+//                    if item.memberID ==  banks?[indexPath.item].memberID{
+//                        cell.contact?.thumbnailProfileImage  = item.svgImage?.convertSVGStringToImage()
+//                        cell.contactImageView.image = item.svgImage?.convertSVGStringToImage()
+//                    }
+//                }
+//            }
+            cell.contactImageView.image = UIImage(imageLiteralResourceName: "bankDefault")
+            cell.banks = banks?[indexPath.item]
+            cell.updateBankCell()
             cell.contactTextLabel.text = banks?[indexPath.row].memberNameRus
             cell.contactDetailTextLabel.isHidden = true
             cell.contactInitialLabel.isHidden = true
             cell.ownerImageView.isHidden = true
             cell.needChek = false
-        } else {
-            
+           
+        } else if banksActive == false{
             let contact: EPContact
-            
             if resultSearchController == true {
                 contact = EPContact(contact: filteredContacts[(indexPath as NSIndexPath).row])
             } else {
@@ -1033,7 +1052,6 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
             searchContact.numberTextField.text  = newNumber.description
             banksActive = true
             orderedBanks.removeAll()
-            alphabetScroll()
             getLastPhonePayments()
             tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: UITableView.ScrollPosition.top , animated: false)
             tableView.reloadData()
@@ -1052,7 +1070,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
             return 0
         }
     }
-    
+
     open func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
         if resultSearchController == true { return 0 }
         
@@ -1060,9 +1078,17 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
         for item in orderedBanks {
             print(item)
         }
+        if firstTap{
+            orderedBanks.removeAll()
+        }
         switch banksActive {
         case true:
-            return sortedContactKeys.firstIndex(of: title)!
+            if firstTap{
+                return 1
+
+            } else {
+                return sortedContactKeys.firstIndex(of: title)!
+            }
         default:
             return sortedContactKeys.firstIndex(of: title)!
         }
@@ -1106,9 +1132,10 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
             button.contentVerticalAlignment = .center
             button.addTarget(self, action: #selector(selectedSectionStoredButtonClicked), for: .touchUpInside)
             button.centerY(inView: label)
-            if self.banksList.count > 1{
+          
+            if self.orderedBanks.count > 1{
                 button.setImage(UIImage(systemName: "chevron.up"), for: .normal)
-            } else {
+            } else  {
                 button.setImage(UIImage(systemName: "chevron.down"), for: .normal)
             }
             //            headerView.backgroundColor = .blue
@@ -1121,6 +1148,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
     
     @objc func selectedSectionStoredButtonClicked(){
         if orderedBanks.isEmpty{
+            firstTap = false
             alphabetScroll()
             banksList = banksList.sorted { (first, second) -> Bool in
                 if let one = first.memberNameRus, let two = second.memberNameRus {
@@ -1130,6 +1158,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
             }
             tableView.reloadData()
         } else {
+            firstTap = true
             orderedBanks.removeAll()
             tableView.reloadData()
         }

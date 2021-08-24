@@ -692,6 +692,8 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                     if model.errorMessage == "Пользователь не авторизован"{
                         AppLocker.present(with: .validate)
                     }
+                        self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+
                     }
                 }
                 
@@ -755,6 +757,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                     AppLocker.present(with: .validate)
                 }
                 }
+                self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
                 print("DEBUG: Error: ", model.errorMessage ?? "")
             }
         }

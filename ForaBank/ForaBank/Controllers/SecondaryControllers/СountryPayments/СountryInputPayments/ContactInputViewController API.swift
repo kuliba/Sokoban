@@ -19,6 +19,7 @@ extension ContactInputViewController {
             guard let model = model else { return }
             if model.statusCode == 0 {
                 guard let cardList = model.data else { return }
+                print(cardList)
                 completion(cardList, nil)
             } else {
                 guard let error = model.errorMessage else { return }
@@ -39,177 +40,128 @@ extension ContactInputViewController {
         }
     }
     
-    func startPayment(with card: String, completion: @escaping (_ error: String?)->()) {
-//        let amount = amount
-
+    func contaktPayment(with card: String, surname: String, name: String, secondName: String, amount: String, completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
         
-        let puref = self.puref
+        guard let countryCode = country?.contactCode else { return }
         
-        let body = ["accountID": nil,
-                    "cardID": nil,
-                    "cardNumber": card,
-                    "provider": nil,
-                    "puref": puref] as [String: AnyObject]
-        print("DEBUG: Error: anywayPaymentBegin with body:",body)
-        NetworkManager<AnywayPaymentBeginDecodebleModel>.addRequest(.anywayPaymentBegin, [:], body, completion: { model, error in
+        let body = ["check" : false,
+                    "amount" : amount,
+                    "currencyAmount" : "RUB",
+                    "payer" : [
+                        "cardId" : nil,
+                        "cardNumber" : card,
+                        "accountId" : nil
+                    ],
+                    "puref" : puref,
+                    "additional" : [
+                        [ "fieldid": 1,
+                          "fieldname": "bName",
+                          "fieldvalue": surname
+                        ],
+                        [  "fieldid": 2,
+                           "fieldname": "bLastName",
+                           "fieldvalue": name
+                        ],
+                        [  "fieldid": 3,
+                           "fieldname": "bSurName",
+                           "fieldvalue": secondName
+                        ],
+                        [ "fieldid": 4,
+                          "fieldname": "trnPickupPoint",
+                          "fieldvalue": countryCode
+                        ],
+                        [  "fieldid": 5,
+                           "fieldname": "CURR",
+                           "fieldvalue": "RUR"
+                        ]
+                    ] ] as [String: AnyObject]
+        
+        print("DEBUG: ContaktPaymentBegin with body:",body)
+        
+        NetworkManager<CreateContactAddresslessTransferDecodableModel>.addRequest(.createContactAddresslessTransfer, [:], body, completion: { respModel, error in
             if error != nil {
-                print("DEBUG: Error: anywayPaymentBegin ", error ?? "")
-                completion(error!)
+                print("DEBUG: Error: ContaktPaymentBegin ", error ?? "")
+                completion(nil, error!)
             }
-            guard let model = model else { return }
-            if model.statusCode == 0 {
-                
-                NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], [:]) { model, error in
-                    if error != nil {
-                        print("DEBUG: Error: anywayPayment1 ", error ?? "")
-                        completion(error!)
+            guard let respModel = respModel else { return }
+            if respModel.statusCode == 0 {
+                guard let country = self.country else { return }
+                guard let data = respModel.data else { return }
+                var model = ConfirmViewControllerModel(type: .contact)
+                model.country = country
+                model.cardFrom = self.cardFromField.cardModel
+                model.summTransction = data.debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
+                model.taxTransction = data.fee?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
+                model.fullName = data.payeeName ?? "Получатель не оперделен"
+                model.currancyTransction = "Наличные"
+                model.statusIsSuccses = true
+                respModel.data?.additionalList?.forEach({ additional in
+                    if additional.fieldName == "trnReference" {
+                        model.numberTransction = additional.fieldValue ?? ""
                     }
-                    guard let model = model else { return }
-                    if model.statusCode == 0 {
-                        print("DEBUG: Success ")
-                        
-                        guard let listInput = model.data?.listInputs else { return }
-                        
-                        listInput.forEach { listInput in
-                            if listInput.id == "trnPickupPoint" {
-                                let pickupPoint = self.setupContactCountryCode(codeList: listInput.dataType ?? "")
-                                self.trnPickupPoint = pickupPoint
-                                print("DEBUG: trnPickupPoint", pickupPoint)
-                            } else if listInput.id == "oferta" {
-                                print("DEBUG: Oferta")
-                            }
-                        }
-                        
-                        completion(nil)
-                        
-                        
-                    } else {
-                        print("DEBUG: Error: anywayPayment1", model.errorMessage ?? "")
-                        DispatchQueue.main.async {
-                        if model.errorMessage == "Пользователь не авторизован"{
-                            AppLocker.present(with: .validate)
-                        }
-                        }
-                        completion(model.errorMessage)
-                    }
-                }
+                })
+                completion(model, nil)
+        
             } else {
-                print("DEBUG: Error: anywayPaymentBegin ", model.errorMessage ?? "")
-                DispatchQueue.main.async {
-                if model.errorMessage == "Пользователь не авторизован"{
-                    AppLocker.present(with: .validate)
-                }
-                }
-                completion(model.errorMessage)
+                print("DEBUG: Error: ContaktPaymentBegin ", respModel.errorMessage ?? "")
+                completion(nil, respModel.errorMessage)
             }
         })
     }
     
-    func endMigPayment(phone: String, amount: String, completion: @escaping (_ error: String?)->()) {
-        showActivity()
-//        37477404102
-        let dataName = ["additional": [
-            [ "fieldid": 1,
-              "fieldname": "RECP",
-              "fieldvalue": phone ],
-            [ "fieldid": 1,
-              "fieldname": "SumSTrs",
-              "fieldvalue": amount ]
-        ]] as [String: AnyObject]
+    func migPayment(with card: String, phone: String, amount: String, completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
         
-        NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataName) { model, error in
+        let body = ["check" : false,
+                    "amount" : amount,
+                    "currencyAmount" : "RUB",
+                    "payer" : [
+                        "cardId" : nil,
+                        "cardNumber" : card,
+                        "accountId" : nil
+                    ],
+                    "puref" : puref,
+                    "additional" : [
+                        [
+                            "fieldid": 1,
+                            "fieldname": "RECP",
+                            "fieldvalue": phone
+                        ]
+                    ] ] as [String: AnyObject]
+        
+        print("DEBUG: ContaktPaymentBegin with body:",body)
+        
+        NetworkManager<CreateDirectTransferDecodableModel>.addRequest(.createDirectTransfer, [:], body, completion: { respModel, error in
             if error != nil {
-                print("DEBUG: Error: ", error ?? "")
-                completion(error!)
+                print("DEBUG: Error: ContaktPaymentBegin ", error ?? "")
+                completion(nil, error!)
             }
-//            print("DEBUG: amount ", amount)
-            guard let model = model else { return }
-            if model.statusCode == 0 {
-                print("DEBUG: Success send Phone")
-                self.dismissActivity()
+            guard let respModel = respModel else { return }
+            if respModel.statusCode == 0 {
                 guard let country = self.country else { return }
-                var model = ConfirmViewControllerModel(
-                    country: country,
-                    model: model)
-                model?.type = .mig
-                model?.paymentSystem = self.paymentSystem
-                model?.bank = self.selectedBank
-                self.goToConfurmVC(with: model!)
+                guard let data = respModel.data else { return }
+                var model = ConfirmViewControllerModel(type: .mig)
+                model.country = country
+                model.cardFrom = self.cardFromField.cardModel
+                model.summTransction = data.debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
+                model.summInCurrency = data.creditAmount?.currencyFormatter(symbol: data.currencyPayee ?? "RUB") ?? ""
                 
-            } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
-                completion(model.errorMessage)
-            }
-        }
+                model.taxTransction = data.fee?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
+                model.fullName = data.payeeName ?? "Получатель не оперделен"
+                model.statusIsSuccses = true
+                model.bank = self.selectedBank
+                respModel.data?.additionalList?.forEach({ additional in
+                    if additional.fieldName == "RECP" {
+                        model.phone = additional.fieldValue ?? ""
+                    }
+                })
+                completion(model, nil)
         
+            } else {
+                print("DEBUG: Error: ContaktPaymentBegin ", respModel.errorMessage ?? "")
+                completion(nil, respModel.errorMessage)
+            }
+        })
     }
     
-    func endContactPayment(surname: String, name: String, secondName: String, amount: String, completion: @escaping (_ error: String?)->()) {
-        showActivity()
-        let dataName = [ "additional": [
-            ["fieldid": 1,
-             "fieldname": "bName",
-             "fieldvalue": surname ],
-            ["fieldid": 2,
-             "fieldname": "bLastName",
-             "fieldvalue": name ],
-            [ "fieldid": 3,
-              "fieldname": "bSurName",
-              "fieldvalue": secondName ],
-            [ "fieldid": 4,
-              "fieldname": "trnPickupPoint",
-              "fieldvalue": self.trnPickupPoint ]
-        ] ] as [String: AnyObject]
-//        print("DEBUG: ", dataName)
-        NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataName) { model, error in
-            if error != nil {
-                print("DEBUG: Error: ", error ?? "")
-                completion(error!)
-            }
-            
-            print("DEBUG: amount", amount)
-            guard let model = model else { return }
-            if model.statusCode == 0 {
-                print("DEBUG: Success send Name")
-                let dataAmount = [ "additional": [
-                    [ "fieldid": 1,
-                      "fieldname": "A",
-                      "fieldvalue": amount ],
-                    [ "fieldid": 2,
-                      "fieldname": "CURR",
-                      "fieldvalue": "RUR" ]
-                ] ] as [String: AnyObject]
-                
-                NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataAmount) { model, error in
-                    if error != nil {
-                        print("DEBUG: Error: ", error ?? "")
-                    }
-                    guard let model = model else { return }
-                    if model.statusCode == 0 {
-                        print("DEBUG: Success send sms code")
-                        self.dismissActivity()
-                        
-                        guard let country = self.country else { return }
-                        let fullName = surname + " " + name + " " + secondName
-                        var model = ConfirmViewControllerModel(
-                            country: country,
-                            model: model,
-                            fullName: fullName)
-                        model?.paymentSystem = self.paymentSystem
-                        self.goToConfurmVC(with: model!)
-                        
-                    } else {
-                        print("DEBUG: Error: ", model.errorMessage ?? "")
-                        completion(model.errorMessage)
-                    }
-                }
-            } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
-                completion(model.errorMessage)
-            }
-        }
-        
-        
-    }
     
 }
