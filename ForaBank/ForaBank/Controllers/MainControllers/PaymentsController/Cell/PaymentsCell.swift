@@ -6,13 +6,14 @@
 //
 
 import UIKit
+import Contacts
 
 class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
     
     static var reuseId: String = "PaymentsCell"
     
     let iconImageView = UIImageView()
-    
+    let avatarImageView = UIImageView()
     let initialsLabel: UILabel = {
         let label = UILabel(text: "", font: .boldSystemFont(ofSize: 12), color: #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1))
         label.textAlignment = .center
@@ -38,15 +39,46 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
     
     func configure<U>(with value: U) where U : Hashable {
         guard let payment: PaymentsModel = value as? PaymentsModel else { return }
-        
-        titleLabel.text = payment.name
-        if titleLabel.text == "Шаблоны и\nавтоплатежи"{
+        if payment.name == "Шаблоны и\nавтоплатежи" {
+            titleLabel.text = payment.name
             titleLabel.alpha = 0.3
             iconImageView.alpha = 0.3
+            if let iconName = payment.iconName {
+                iconImageView.image = UIImage(named: iconName)
+            }
+        } else {
+            let mask = StringMask(mask: "+7 (000) 000-00-00")
+            if let unMaskPhone = mask.unmask(string: payment.name) {
+                self.searchForContactUsingPhoneNumber(phoneNumber: unMaskPhone) { contact in
+                    
+                    self.titleLabel.text = "\(contact.givenName) \(contact.familyName)"
+                    
+                    if contact.isKeyAvailable(CNContactImageDataKey) {
+                        if let contactImageData = contact.imageData {
+//                            print(UIImage(data: contactImageData))
+                            // Print the image set on the contact
+                            self.avatarImageView.image = UIImage(data: contactImageData)
+                        }
+                    } else {
+                        // No Image available
+                        guard let avatarImageName = payment.avatarImageName else { return }
+                        guard let avatarImage = UIImage(named: avatarImageName) else { return }
+                        self.iconImageView.image = avatarImage
+                    }
+                }
+                
+            } else {
+                
+                titleLabel.text = payment.name
+                if let iconName = payment.iconName {
+                    iconImageView.image = UIImage(named: iconName)
+                }
+                guard let avatarImageName = payment.avatarImageName else { return }
+                guard let avatarImage = UIImage(named: avatarImageName) else { return }
+                iconImageView.image = avatarImage
+            }
         }
-        if let iconName = payment.iconName {
-            iconImageView.image = UIImage(named: iconName)
-        }
+
         if payment.lastCountryPayment != nil {
             iconCountryImageView.isHidden = false
             iconImageView.isHidden = true
@@ -71,7 +103,7 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
         guard let avatarImageName = payment.avatarImageName else { return }
         guard let avatarImage = UIImage(named: avatarImageName) else { return }
         iconImageView.image = avatarImage
-        
+        avatarImageView.image = UIImage()
     }
     
     
@@ -96,6 +128,7 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
         addSubview(titleLabel)
         addSubview(iconImageView)
         addSubview(iconCountryImageView)
+        addSubview(avatarImageView)
              
         initialsLabel.fillSuperview()
         
@@ -108,6 +141,8 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
         
         iconCountryImageView.anchor(
             top: view.topAnchor, right: view.rightAnchor, paddingRight: -8)
+        avatarImageView.center(inView: view)
+        avatarImageView.setDimensions(height: 56, width: 56)
     }
     
     func contactInitials(model: ChooseCountryHeaderViewModel?) -> String {
@@ -123,5 +158,124 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
         
         return initials
     }
+    
+    
+    
+    func searchForContactUsingPhoneNumber(phoneNumber: String, completion: @escaping  (_ contact: CNContact) -> Void) {
+        self.requestForAccess { (accessGranted) -> Void in
+            if accessGranted {
+                let keys = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactImageDataKey, CNContactPhoneNumbersKey]
+                var contacts = [CNContact]()
+                var message: String!
+                
+                let contactsStore = CNContactStore()
+                do {
+                    try contactsStore.enumerateContacts(with: CNContactFetchRequest(keysToFetch: self.allowedContactKeys())) {
+                        (contact, cursor) -> Void in
+                        if (!contact.phoneNumbers.isEmpty) {
+                            let phoneNumberToCompareAgainst = phoneNumber.components(
+                                separatedBy: NSCharacterSet.decimalDigits.inverted).joined(separator: "")
+                            for phoneNumber in contact.phoneNumbers {
+                                if let phoneNumberStruct = phoneNumber.value as? CNPhoneNumber {
+                                    let phoneNumberString = phoneNumberStruct.stringValue
+                                    let phoneNumberToCompare = phoneNumberString.components(
+                                        separatedBy: NSCharacterSet.decimalDigits.inverted).joined(separator: "")
+                                    if phoneNumberToCompare == phoneNumberToCompareAgainst {
+                                        contacts.append(contact)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    if contacts.count == 0 {
+                        message = "No contacts were found matching the given phone number."
+                    }
+                }
+                catch {
+                    message = "Unable to fetch contacts."
+                }
+                
+                if message != nil {
+                    DispatchQueue.main.async {
+                        print(message ?? "")
+                    }
+                }
+                else {
+                    // Success
+                    DispatchQueue.main.async {
+                        
+                        // Do someting with the contacts in the main queue, for example
+                        /*
+                         self.delegate.didFetchContacts(contacts) <= which extracts the required info and puts it in a tableview
+                         */
+                        print(contacts) // Will print all contact info for each contact (multiple line is, for example, there are multiple phone numbers or email addresses)
+                        let contact = contacts[0] // For just the first contact (if two contacts had the same phone number)
+                        completion(contact)
+                        
+                        
+                        print(contact.givenName) // Print the "first" name
+                        print(contact.familyName) // Print the "last" name
+                        if contact.isKeyAvailable(CNContactImageDataKey) {
+                            if let contactImageData = contact.imageData {
+                                print(UIImage(data: contactImageData)) // Print the image set on the contact
+                            }
+                        } else {
+                            // No Image available
+                            
+                        }
+                    }
+                }
+            }
+        }
+        
+    }
+    
+    func allowedContactKeys() -> [CNKeyDescriptor]{
+        //We have to provide only the keys which we have to access. We should avoid unnecessary keys when fetching the contact. Reducing the keys means faster the access.
+        return [CNContactNamePrefixKey as CNKeyDescriptor,
+            CNContactGivenNameKey as CNKeyDescriptor,
+            CNContactFamilyNameKey as CNKeyDescriptor,
+            CNContactOrganizationNameKey as CNKeyDescriptor,
+            CNContactBirthdayKey as CNKeyDescriptor,
+            CNContactImageDataKey as CNKeyDescriptor,
+            CNContactThumbnailImageDataKey as CNKeyDescriptor,
+            CNContactImageDataAvailableKey as CNKeyDescriptor,
+            CNContactPhoneNumbersKey as CNKeyDescriptor,
+            CNContactEmailAddressesKey as CNKeyDescriptor,
+        ]
+    }
+    
+    func requestForAccess(completionHandler: @escaping  (_ accessGranted: Bool) -> Void) {
+        // Get authorization
+        let authorizationStatus = CNContactStore.authorizationStatus(for: CNEntityType.contacts)
+        
+        // Find out what access level we have currently
+        switch authorizationStatus {
+        case .authorized:
+            completionHandler(true)
+            
+        case .denied, .notDetermined:
+            CNContactStore().requestAccess(for: .contacts) { access, accessError in
+                if access {
+                    completionHandler(access)
+                }
+                else {
+                    if authorizationStatus == CNAuthorizationStatus.denied {
+                        DispatchQueue.main.async {
+                            let message = "\(accessError!.localizedDescription)\n\nPlease allow the app to access your contacts through the Settings."
+                            print(message)
+                        }
+                    }
+                }
+            }
+            
+        default:
+            completionHandler(false)
+        }
+    }
+    
+    
+    
     
 }

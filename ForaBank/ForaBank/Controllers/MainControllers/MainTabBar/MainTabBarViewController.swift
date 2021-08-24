@@ -45,23 +45,23 @@ class MainTabBarViewController: UITabBarController {
         let mainVC = DevelopViewController()
         let paymentsVC = PaymentsViewController()
         let historyVC = DevelopViewController()
-        let chatVC = SettingsViewController()
+        let chatVC = DevelopViewController()
         
         viewControllers = [
-//            generateNavController(rootViewController: mainVC,
-//                                  title: "Главный",
-//                                  image: UIImage(named: "tabBar-main")!,
-//                                  fillImage: UIImage(named: "tabBar-main-fill")!),
+            generateNavController(rootViewController: mainVC,
+                                  title: "Главный",
+                                  image: UIImage(named: "tabBar-main")!,
+                                  fillImage: UIImage(named: "tabBar-main-fill")!, alpha: 1),
             
             generateNavController(rootViewController: paymentsVC,
                                   title: "Платежи",
                                   image: UIImage(named: "tabBar-card")!,
                                   fillImage: UIImage(named: "tabBar-card-fill")!, alpha: 1),
             
-//            generateNavController(rootViewController: historyVC,
-//                                  title: "История",
-//                                  image: UIImage(named: "tabBar-history")!,
-//                                  fillImage: UIImage(named: "tabBar-history-fill")!),
+            generateNavController(rootViewController: historyVC,
+                                  title: "История",
+                                  image: UIImage(named: "tabBar-history")!,
+                                  fillImage: UIImage(named: "tabBar-history-fill")!, alpha: 1),
             
             generateNavController(rootViewController: chatVC,
                                   title: "Чат",
