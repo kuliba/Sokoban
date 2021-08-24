@@ -16,9 +16,11 @@ class LastPaymentsCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var bankNameLabel: UILabel!
     
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         contactImageView.layer.cornerRadius = contactImageView.frame.height/2
+        
     }
 
 }

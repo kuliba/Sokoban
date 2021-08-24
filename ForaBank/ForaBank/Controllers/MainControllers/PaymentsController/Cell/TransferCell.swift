@@ -12,7 +12,7 @@ class TransferCell: UICollectionViewCell, SelfConfiguringCell {
     static var reuseId: String = "TransferCell"
     
     let transferImage = UIImageView()
-    let transferLabel = UILabel(text: "", font: .systemFont(ofSize: 11), color: .white)
+    let transferLabel = UILabel(text: "", font: .systemFont(ofSize: 14), color: .white)
     
     func configure<U>(with value: U) where U : Hashable {
         guard let payment: PaymentsModel = value as? PaymentsModel else { return }
@@ -29,6 +29,7 @@ class TransferCell: UICollectionViewCell, SelfConfiguringCell {
         layer.shadowRadius = 10
         layer.shadowOpacity = 0.3
         layer.shadowOffset = CGSize(width: 0, height: 0)
+        
 //        0.785
         let shadowPath = UIBezierPath(rect: CGRect(x: 15, y: 50, width: self.frame.width * 0.7, height: self.frame.height * 0.7))
         layer.shadowPath = shadowPath.cgPath

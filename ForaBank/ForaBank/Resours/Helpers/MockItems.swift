@@ -41,7 +41,7 @@ class MockItems {
             
             PaymentsModel(id: 2, name: "Шаблоны и\nавтоплатежи",
                           iconName: "PaymentsIconFavorites",
-                          controllerName: "DevelopViewController"),
+                          controllerName: ""),
             
 //            PaymentsModel(id: 3, name: "Перевод по\nтелефону",
 //                          iconName: "PaymentsIconPhone",
@@ -98,46 +98,46 @@ class MockItems {
         return [
             PaymentsModel(id: 11, name: "Оплата по QR",
                           iconName: "PaymentsIconBarcode-scanner",
-                          controllerName: "DevelopViewController",
+                          controllerName: "",
                           description: "QR"),
             
             PaymentsModel(id: 12, name: "Мобильная связь",
-                          iconName: "PaymentsIconPhone",
-                          controllerName: "DevelopViewController",
+                          iconName: "smartphone",
+                          controllerName: "",
                           description: "Что то"),
             
             PaymentsModel(id: 13, name: "Услуги ЖКХ",
-                          iconName: "PaymentsIconLamp",
-                          controllerName: "GKHMainViewController",
+                          iconName: "iconLampNew",
+                          controllerName: "",
                           description: "Что то"),
             
-            PaymentsModel(id: 14, name: "Интернет, телевидение, телефон",
-                          iconName: "PaymentsIconComputer",
-                          controllerName: "DevelopViewController",
+            PaymentsModel(id: 14, name: "Интернет, ТВ",
+                          iconName: "tv",
+                          controllerName: "",
                           description: "Что то"),
             
-            PaymentsModel(id: 15, name: "Штрафы, налоги и государственные услуги",
-                          iconName: "PaymentsIconCourt",
-                          controllerName: "DevelopViewController",
+            PaymentsModel(id: 15, name: "Штрафы",
+                          iconName: "carMain",
+                          controllerName: "",
                           description: "Что то"),
             
-            PaymentsModel(id: 16, name: "Социальные сети, онлайн игры карты",
-                          iconName: "PaymentsIconGamepad",
-                          controllerName: "DevelopViewController",
+            PaymentsModel(id: 16, name: "Соцсети, игры, карты",
+                          iconName: "iconGame",
+                          controllerName: "",
                           description: "Что то"),
             
-            PaymentsModel(id: 17, name: "В бюджет РФ",
+            PaymentsModel(id: 17, name: "Госуслуги",
                           iconName: "PaymentsIconBlazon",
-                          controllerName: "DevelopViewController",
+                          controllerName: "",
                           description: "Что то"),
             
             PaymentsModel(id: 18, name: "Охранные системы",
-                          iconName: "PaymentsIconKey",
-                          controllerName: "DevelopViewController",
+                          iconName: "key",
+                          controllerName: "",
                           description: "Что то"),
             
             PaymentsModel(id: 19, name: "Прочее",
-                          iconName: "PaymentsIconShop",
+                          iconName: "shopping-cart",
                           controllerName: "MeToMeViewController",
                           description: "Что то")
         ]

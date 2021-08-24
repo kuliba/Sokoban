@@ -56,10 +56,10 @@ extension CreateDirectTransferDecodableModel {
 // MARK: - CreateDirectDataClass
 struct CreateDirectDataClass: Codable {
     let needMake, needOTP: Bool?
-    let amount, creditAmount, fee: Int?
+    let amount, creditAmount, fee: Double?
     let currencyAmount, currencyPayer, currencyPayee: String?
     let currencyRate: JSONNull?
-    let debitAmount: Int?
+    let debitAmount: Double?
     let payeeName: String?
     let paymentOperationDetailID, documentStatus: JSONNull?
     let additionalList: [AdditionalList]?
@@ -92,14 +92,14 @@ extension CreateDirectDataClass {
     func with(
         needMake: Bool?? = nil,
         needOTP: Bool?? = nil,
-        amount: Int?? = nil,
-        creditAmount: Int?? = nil,
-        fee: Int?? = nil,
+        amount: Double?? = nil,
+        creditAmount: Double?? = nil,
+        fee: Double?? = nil,
         currencyAmount: String?? = nil,
         currencyPayer: String?? = nil,
         currencyPayee: String?? = nil,
         currencyRate: JSONNull?? = nil,
-        debitAmount: Int?? = nil,
+        debitAmount: Double?? = nil,
         payeeName: String?? = nil,
         paymentOperationDetailID: JSONNull?? = nil,
         documentStatus: JSONNull?? = nil,

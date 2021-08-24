@@ -96,9 +96,13 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
         addSubview(balanceLabel)
         
         self.layer.shadowColor = UIColor.black.cgColor
-        self.layer.shadowRadius = 8
-        self.layer.shadowOpacity = 0.1
-        self.layer.shadowOffset = CGSize(width: 0, height: 20)
+        layer.shadowColor = #colorLiteral(red: 0.2117647059, green: 0.01568627451, blue: 0.01568627451, alpha: 1).cgColor
+        layer.shadowRadius = 10
+        layer.shadowOpacity = 0.3
+        layer.shadowOffset = CGSize(width: 0, height: 0)
+//        0.785
+        let shadowPath = UIBezierPath(rect: CGRect(x: 26, y: 50, width: self.frame.width * 0.785, height: self.frame.height * 0.785))
+        layer.shadowPath = shadowPath.cgPath
         
         logoImageView.anchor(top: self.topAnchor, left: self.leftAnchor,
                              paddingTop: 8, paddingLeft: 12)

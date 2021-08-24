@@ -135,10 +135,8 @@ class FaceTouchIdViewController: UIViewController {
                 if statusCode == 0 {
                     UserDefaults.standard.set(true, forKey: "UserIsRegister")
                     DispatchQueue.main.async {
-                        AppDelegate.shared.getCSRF { error in
-                            if error != nil {
-                                print("DEBUG: Error getCSRF: ", error!)
-                            } else {
+                        AppDelegate.shared.getCSRF { errorMessage in
+                            if errorMessage == "Ok"{
                                 self.login(with: self.code ?? "", type: .pin) { error in
                                     if error != nil {
                                         print("DEBUG: Error getCSRF: ", error!)
@@ -146,6 +144,11 @@ class FaceTouchIdViewController: UIViewController {
                                         self.dismissActivity()
                                     }
                                 }
+                            }
+                            if error != nil {
+                                print("DEBUG: Error getCSRF: ", error!)
+                            } else {
+                               
                             }
                         }
                     }
@@ -213,6 +216,7 @@ class FaceTouchIdViewController: UIViewController {
             if error != nil {
                 guard let error = error else { return }
                 print("DEBUG: setDeviceSetting" ,error)
+//                showAlert(with: "Ошибка", and: error)
             } else {
                 guard let statusCode = model?.statusCode else { return }
                 if statusCode == 0 {
@@ -222,6 +226,8 @@ class FaceTouchIdViewController: UIViewController {
                             if error != nil {
                                 print("DEBUG: Error getCSRF: ", error!)
                             } else {
+                            }
+                            if error == "Ok"{
                                 self.login(with: self.code ?? "", type: .pin) { error in
                                     if error != nil {
                                         print("DEBUG: Error getCSRF: ", error!)

@@ -25,6 +25,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
                     viewController.addCloseButton()
                     let navVC = UINavigationController(rootViewController: viewController)
                     navVC.modalPresentationStyle = .fullScreen
+                    
                     present(navVC, animated: true)
                 }
             }
@@ -111,11 +112,15 @@ extension PaymentsViewController: UICollectionViewDelegate {
         let mask = StringMask(mask: "+7 (000) 000-00-00")
         let maskPhone = mask.mask(string: model.phoneNumber)
         vc.phoneField.text = maskPhone ?? ""
+        vc.selectNumber = maskPhone
         if model.bankName == "ФОРА-БАНК"{
             vc.sbp = false
         } else {
             vc.sbp = true
         }
+        vc.phoneField.chooseButton.isHidden = true
+        vc.phoneField.rightButton.isHidden = true
+        
         
         vc.addCloseButton()
         vc.modalPresentationStyle = .fullScreen

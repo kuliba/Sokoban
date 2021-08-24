@@ -44,8 +44,9 @@ extension PaymentsViewController {
                                         textColor: .black)
             default:
                 sectionHeader.configure(text: section.description(),
-                                        font: .boldSystemFont(ofSize: 18),
+                                        font: .boldSystemFont(ofSize: 20),
                                         textColor: .black)
+                
             }
             
             return sectionHeader

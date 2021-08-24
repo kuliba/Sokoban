@@ -97,14 +97,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
             type: .number,
             errorText: "Необязательное поле"))
     
-    
-    var cardField = ForaInput(
-        viewModel: ForaInputModel(
-            title: "Счет списания",
-            image: #imageLiteral(resourceName: "credit-card"),
-            type: .credidCard,
-            isEditable: false
-            ))
+    var cardField = CardChooseView()
     
     var cardListView = CardListView()
     
@@ -168,7 +161,8 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                 self?.cardListView.cardList = data
                 
                 if data.count > 0 {
-                    self?.cardField.configCardView(data.first!)
+                    self?.cardField.cardModel = data.first
+//                    self?.cardField.configCardView(data.first!)
                     guard let cardNumber  = data.first?.number else { return }
                     self?.selectedCardNumber = cardNumber
                 }
@@ -380,7 +374,8 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         
         
         cardListView.didCardTapped = { card in
-            self.cardField.configCardView(card)
+            self.cardField.cardModel = card
+//            self.cardField.configCardView(card)
             self.selectedCardNumber = card.number ?? ""
             self.hideView(self.cardListView, needHide: true)
             self.hideView(self.bankListView, needHide: true)
@@ -549,6 +544,11 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
 //                }
             } else {
                 self.dismissActivity()
+                DispatchQueue.main.async {
+                if model.errorMessage == "Пользователь не авторизован"{
+                    AppLocker.present(with: .validate)
+                }
+                }
                 print("DEBUG: Error: ", model.errorMessage ?? "")
             }
         }
@@ -564,7 +564,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
             return
         }
         //TODO: сделать выборку только по картам и счетам с RUB
-        guard let cardNumber = cardField.viewModel.cardModel?.number else {
+        guard let cardNumber = cardField.cardModel?.number else {
             return
         }
         guard let bikBank = bikBankField.textField.text else {
@@ -637,7 +637,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
     //                self.selectedCardNumber = cardNumber
                     DispatchQueue.main.async {
                         self.viewModel.statusIsSuccses = true
-                        self.viewModel.cardFrom = self.cardField.viewModel.cardModel
+                        self.viewModel.cardFrom = self.cardField.cardModel
                         self.viewModel.summTransction = data.debitAmount?.currencyFormatter(symbol: model.data?.currencyPayer ?? "RUB") ?? ""
                         self.viewModel.summInCurrency = data.creditAmount?.currencyFormatter(symbol: model.data?.currencyPayee ?? "RUB") ?? ""
                         self.viewModel.taxTransction = data.fee?.currencyFormatter(symbol: model.data?.currencyPayer ?? "RUB") ?? ""
@@ -683,6 +683,13 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                 } else {
     //                self.dismissActivity()
                     print("DEBUG: Error: ", model.errorMessage ?? "")
+                    DispatchQueue.main.async {
+                    if model.errorMessage == "Пользователь не авторизован"{
+                        AppLocker.present(with: .validate)
+                    }
+                        self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+
+                    }
                 }
                 
             }
@@ -740,6 +747,12 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                 }
             } else {
                 self.dismissActivity()
+                DispatchQueue.main.async {
+                if model.errorMessage == "Пользователь не авторизован"{
+                    AppLocker.present(with: .validate)
+                }
+                }
+                self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
                 print("DEBUG: Error: ", model.errorMessage ?? "")
             }
         }

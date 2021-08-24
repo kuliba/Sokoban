@@ -16,12 +16,7 @@ class ContactInputViewController: UIViewController {
     }
     var cardIsSelect = false
     var selectedCardNumber = ""
-    var puref = "" {
-        didSet {
-            print("DEBUG: Puref string: ", puref)
-            configPurerf()
-        }
-    }
+    var puref = ""
     var trnPickupPoint = ""
     var selectedBank: BanksList? {
         didSet {
@@ -150,31 +145,13 @@ class ContactInputViewController: UIViewController {
         return codeString
     }
     
-    func configPurerf() {
-        self.showActivity()
-        if cardIsSelect {
-            self.startPayment(with: self.selectedCardNumber) { error in
-                self.dismissActivity()
-                if error != nil {
-                    self.showAlert(with: "Ошибка", and: error!)
-                }
-            }
-        } else {
-            setupCardList { _ in
-                self.startPayment(with: self.selectedCardNumber) { error in
-                    self.dismissActivity()
-                    if error != nil {
-                        self.showAlert(with: "Ошибка", and: error!)
-                    }
-                }
-            }
-            
-        }
-    }
-    
     func setupActions() {
         
-//        setupCardList()
+        setupCardList { error in
+            guard let error = error else { return }
+            self.showAlert(with: "Ошибка", and: error)
+        }
+        
         setupBankList()
         
         countryListView.didCountryTapped = { [weak self] country in
@@ -249,12 +226,6 @@ class ContactInputViewController: UIViewController {
         
         bottomView.didDoneButtonTapped = { (amount) in
             self.showActivity()
-//            self.startPayment(with: self.selectedCardNumber, amount: amount, type: self.typeOfPay) { error in
-//                self.dismissActivity()
-//                if error != nil {
-//                    self.showAlert(with: "Ошибка", and: error!)
-//                }
-//            }
             let phone = self.phoneField.textField.unmaskedText ?? ""
             let surname = self.surnameField.textField.text ?? ""
             let name = self.nameField.textField.text ?? ""
@@ -262,20 +233,27 @@ class ContactInputViewController: UIViewController {
             
             switch self.typeOfPay {
             case .migAIbank:
-                self.endMigPayment(phone: phone, amount: amount) { error in
-                    self.dismissActivity()
-                    if error != nil {
-                        print("DEBUG: Error: endMigPayment ", error ?? "")
-                        self.showAlert(with: "Ошибка", and: error!)
-                    }
-                }
-            default:
-                self.endContactPayment(surname: surname, name: name, secondName: secondName, amount: amount) { error in
+                self.migPayment(with: self.selectedCardNumber, phone: phone, amount: amount) { model, error in
                     self.dismissActivity()
                     if error != nil {
                         print("DEBUG: Error: endContactPayment ", error ?? "")
                         self.showAlert(with: "Ошибка", and: error!)
+                    } else {
+                        guard let model = model else { return }
+                        self.goToConfurmVC(with: model)
                     }
+                }
+            default:
+                self.contaktPayment(with: self.selectedCardNumber, surname: surname, name: name, secondName: secondName, amount: amount) { model, error in
+                    self.dismissActivity()
+                    if error != nil {
+                        print("DEBUG: Error: endContactPayment ", error ?? "")
+                        self.showAlert(with: "Ошибка", and: error!)
+                    } else {
+                        guard let model = model else { return }
+                        self.goToConfurmVC(with: model)
+                    }
+                    
                 }
             }
         }

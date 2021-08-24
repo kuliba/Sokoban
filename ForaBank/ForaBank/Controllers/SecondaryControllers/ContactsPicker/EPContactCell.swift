@@ -18,7 +18,7 @@ class EPContactCell: UITableViewCell {
     @IBOutlet weak var ownerImageView: UIImageView!
     
     var contact: EPContact?
-    var banks: FastPayment?
+    var banks: BanksList?
     var needChek = false
 
     override func awakeFromNib() {
@@ -31,6 +31,7 @@ class EPContactCell: UITableViewCell {
         selectionStyle = UITableViewCell.SelectionStyle.none
         contactContainerView.layer.masksToBounds = true
         contactContainerView.layer.cornerRadius = contactContainerView.frame.size.width/2
+        
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -43,7 +44,21 @@ class EPContactCell: UITableViewCell {
         let randomValue = (indexpath.row + indexpath.section) % colorArray.count
         contactInitialLabel.backgroundColor = colorArray[randomValue]
     }
- 
+    
+    func updateBankCell(){
+        contactContainerView.layer.cornerRadius = 0
+        guard let banksList = Dict.shared.banks else {
+            return
+        }
+        for item in banksList {
+            if item.memberID == banks?.memberID{
+                self.contactImageView?.image = item.svgImage?.convertSVGStringToImage()
+            self.contactImageView.isHidden = false
+            }
+            
+        }
+    }
+    
     func updateContactsinUI(_ contact: EPContact, indexPath: IndexPath, subtitleType: SubtitleCellValue) {
         self.contact = contact
    
@@ -123,7 +138,10 @@ class EPContactCell: UITableViewCell {
                 }
             } else {
                 completion(false)
-                print("DEBUG: Error: ", model.errorMessage ?? "")
+                    print("DEBUG: Error: ", model.errorMessage ?? "")
+                if model.errorMessage == "Пользователь не авторизован"{
+                    AppLocker.present(with: .validate)
+                }
             }
         }
         

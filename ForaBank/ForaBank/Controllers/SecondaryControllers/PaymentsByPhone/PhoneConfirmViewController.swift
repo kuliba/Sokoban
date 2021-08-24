@@ -23,13 +23,7 @@ class PhoneConfirmViewController: UIViewController {
             image: #imageLiteral(resourceName: "accountImage"),
             isEditable: false))
     
-    var cardField = ForaInput(
-        viewModel: ForaInputModel(
-            title: "Счет списания",
-            image: #imageLiteral(resourceName: "credit-card"),
-            type: .credidCard,
-            isEditable: false,
-            showChooseButton: false))
+    var cardField = CardChooseView()
     
     var bankPayeer = ForaInput(
         viewModel: ForaInputModel(
@@ -160,6 +154,11 @@ class PhoneConfirmViewController: UIViewController {
                         self.present(vc, animated: true, completion: nil)
                     }
                 } else {
+                    DispatchQueue.main.async {
+                    if model.errorMessage == "Пользователь не авторизован"{
+                        AppLocker.present(with: .validate)
+                    }
+                    }
                     print("DEBUG: Error: ", model.errorMessage ?? "")
                 }
             }
@@ -186,13 +185,18 @@ class PhoneConfirmViewController: UIViewController {
                    DispatchQueue.main.async {
                     let vc = PaymentsDetailsSuccessViewController()
                     
-                    vc.confurmVCModel = ConfirmViewControllerModel(country: CountriesList(code: "", name: "", sendCurr: nil, md5Hash: "", svgImage: "", paymentSystemCodeList: nil), model: AnywayPaymentDecodableModel(statusCode: 0, errorMessage: "", data: AnywayPayment(paymentOperationDetailID: nil, listInputs: [], error: "", errorMessage: "", finalStep: 1, id: "", amount: Double(self.summTransctionField.text.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "₽", with: "").replacingOccurrences(of: ",", with: ".")), commission: 0.0, nextStep: 0)), fullName: "")
+                    vc.confurmVCModel = ConfirmViewControllerModel(country: CountriesList(code: "", contactCode: "", name: "", sendCurr: nil, md5Hash: "", svgImage: "", paymentSystemCodeList: nil), model: AnywayPaymentDecodableModel(statusCode: 0, errorMessage: "", data: AnywayPayment(paymentOperationDetailID: nil, listInputs: [], error: "", errorMessage: "", finalStep: 1, id: "", amount: Double(self.summTransctionField.text.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "₽", with: "").replacingOccurrences(of: ",", with: ".")), commission: 0.0, nextStep: 0)), fullName: "")
                     vc.id = model.data?.paymentOperationDetailId
                     vc.printFormType = "internal"
                     self.navigationController?.pushViewController(vc, animated: true)
                    }
                } else {
                    print("DEBUG: Error: ", model.errorMessage ?? "")
+                DispatchQueue.main.async {
+                if model.errorMessage == "Пользователь не авторизован"{
+                    AppLocker.present(with: .validate)
+                }
+                }
                }
            }
        }
