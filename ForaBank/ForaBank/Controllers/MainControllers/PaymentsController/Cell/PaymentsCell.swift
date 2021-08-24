@@ -13,7 +13,15 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
     static var reuseId: String = "PaymentsCell"
     
     let iconImageView = UIImageView()
-    let avatarImageView = UIImageView()
+    let avatarImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.cornerRadius = 56/2
+        imageView.clipsToBounds = true
+        return imageView
+    }()
+    
+    
     let initialsLabel: UILabel = {
         let label = UILabel(text: "", font: .boldSystemFont(ofSize: 12), color: #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1))
         label.textAlignment = .center
