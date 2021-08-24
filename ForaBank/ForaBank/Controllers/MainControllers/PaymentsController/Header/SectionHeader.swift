@@ -30,6 +30,9 @@ class SectionHeader: UICollectionReusableView {
         title.textColor = textColor
         title.font = font
         title.text = text
+        if title.text == "Оплатить" {
+            title.alpha = 0.3
+        }
     }
     
     required init?(coder: NSCoder) {

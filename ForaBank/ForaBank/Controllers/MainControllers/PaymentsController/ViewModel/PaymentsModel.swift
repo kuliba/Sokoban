@@ -52,7 +52,7 @@ struct PaymentsModel: Hashable {
             self.name = "\(lastCountryPayment.firstName ?? "")\n\(lastCountryPayment.surName ?? "")"
         }
         self.controllerName = "ChooseCountryTableViewController"
-        self.iconName = "PaymentsIconPhone"
+        self.iconName = "smartphonegray"
     }
     
     init(lastPhonePayment: GetLatestPaymentsDatum) {
@@ -62,14 +62,14 @@ struct PaymentsModel: Hashable {
         let maskPhone = mask.mask(string: lastPhonePayment.phoneNumber)
         self.name = maskPhone ?? ""
         self.controllerName = "PaymentByPhoneViewController"
-        self.iconName = "PaymentsIconPhone"
+        self.iconName = "smartphonegray"
     }
     init(productList: GetProductListDatum) {
         self.productList = productList
         self.id = Int.random(in: 100 ... 10000)
         self.name = productList.name ?? "1234"
         self.controllerName = "PaymentByPhoneViewController"
-        self.iconName = "PaymentsIconPhone"
+        self.iconName = "smartphonegray"
     }
     
 }

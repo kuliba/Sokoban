@@ -134,6 +134,8 @@
 		68D06F2D26C405FB00F9BE4C /* ProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D06F2C26C405FB00F9BE4C /* ProductCell.swift */; };
 		68D06F3426C40DF500F9BE4C /* CurrencyExchangeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D06F3226C40DF500F9BE4C /* CurrencyExchangeCollectionViewCell.swift */; };
 		68D06F3526C40DF500F9BE4C /* CurrencyExchangeCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68D06F3326C40DF500F9BE4C /* CurrencyExchangeCollectionViewCell.xib */; };
+		68D06F3826CCDDCA00F9BE4C /* NavigationBarUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D06F3726CCDDCA00F9BE4C /* NavigationBarUIView.swift */; };
+		68D06F3A26CCDE0100F9BE4C /* NavigationBarUIView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68D06F3926CCDE0100F9BE4C /* NavigationBarUIView.xib */; };
 		68E6A28526A02C1800A1D9A1 /* AnyFormatKit in Frameworks */ = {isa = PBXBuildFile; productRef = 68E6A28426A02C1800A1D9A1 /* AnyFormatKit */; };
 		68E6A29126A0338700A1D9A1 /* CastomCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E6A29026A0338700A1D9A1 /* CastomCardView.swift */; };
 		68E6A29326A033B700A1D9A1 /* CheckCardDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E6A29226A033B700A1D9A1 /* CheckCardDecodableModel.swift */; };
@@ -457,6 +459,8 @@
 		68D06F2C26C405FB00F9BE4C /* ProductCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCell.swift; sourceTree = "<group>"; };
 		68D06F3226C40DF500F9BE4C /* CurrencyExchangeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyExchangeCollectionViewCell.swift; sourceTree = "<group>"; };
 		68D06F3326C40DF500F9BE4C /* CurrencyExchangeCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CurrencyExchangeCollectionViewCell.xib; sourceTree = "<group>"; };
+		68D06F3726CCDDCA00F9BE4C /* NavigationBarUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarUIView.swift; sourceTree = "<group>"; };
+		68D06F3926CCDE0100F9BE4C /* NavigationBarUIView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NavigationBarUIView.xib; sourceTree = "<group>"; };
 		68E6A29026A0338700A1D9A1 /* CastomCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CastomCardView.swift; sourceTree = "<group>"; };
 		68E6A29226A033B700A1D9A1 /* CheckCardDecodableModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckCardDecodableModel.swift; sourceTree = "<group>"; };
 		68E6A29426A033D900A1D9A1 /* DeleteProductTemplateDecodableModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeleteProductTemplateDecodableModel.swift; sourceTree = "<group>"; };
@@ -1021,6 +1025,7 @@
 		68D06F2B26C405BD00F9BE4C /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				68D06F3626CCDD9F00F9BE4C /* NavigationBar */,
 				68D06F2F26C40DAC00F9BE4C /* CerrencyExchange */,
 				68D06F2C26C405FB00F9BE4C /* ProductCell.swift */,
 			);
@@ -1034,6 +1039,15 @@
 				68D06F3326C40DF500F9BE4C /* CurrencyExchangeCollectionViewCell.xib */,
 			);
 			path = CerrencyExchange;
+			sourceTree = "<group>";
+		};
+		68D06F3626CCDD9F00F9BE4C /* NavigationBar */ = {
+			isa = PBXGroup;
+			children = (
+				68D06F3726CCDDCA00F9BE4C /* NavigationBarUIView.swift */,
+				68D06F3926CCDE0100F9BE4C /* NavigationBarUIView.xib */,
+			);
+			path = NavigationBar;
 			sourceTree = "<group>";
 		};
 		68FFA5262682AEE1002DADFA /* ContactsViewController */ = {
@@ -2244,6 +2258,7 @@
 				EDB143C7265FDEC90028EF5A /* Roboto-MediumItalic.ttf in Resources */,
 				0B216FBC26D15BAA0023C878 /* GKHInputCell.xib in Resources */,
 				EDAA99B12673ABF200435484 /* ForaSwitchView.xib in Resources */,
+				68D06F3A26CCDE0100F9BE4C /* NavigationBarUIView.xib in Resources */,
 				0BF3484E268A455C005138A8 /* AllCardView.xib in Resources */,
 				ED84995826A8831E005205C6 /* EPContactCell.xib in Resources */,
 				EDB145112664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf in Resources */,
@@ -2407,6 +2422,7 @@
 				68FFA52C2682AF62002DADFA /* ContactCollectionViewCell.swift in Sources */,
 				0B216FBE26D15BDF0023C878 /* GKHInputCell.swift in Sources */,
 				0BA2523E26C4444700AD087A /* AdaptedTableViewDataSource.swift in Sources */,
+				68D06F3826CCDDCA00F9BE4C /* NavigationBarUIView.swift in Sources */,
 				0B37F982267A1814007728FC /* FastPaymentBanksListDecodableModel.swift in Sources */,
 				EDB1654B26676F20007E6030 /* UIButton.swift in Sources */,
 				0B37F9782678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift in Sources */,
@@ -2708,7 +2724,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 71;
+				CURRENT_PROJECT_VERSION = 73;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
@@ -2734,7 +2750,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 66;
+				CURRENT_PROJECT_VERSION = 73;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

@@ -124,6 +124,9 @@ class EPContactCell: UITableViewCell {
             } else {
                 completion(false)
                 print("DEBUG: Error: ", model.errorMessage ?? "")
+                if model.errorMessage == "Пользователь не авторизован"{
+                    AppLocker.present(with: .validate)
+                }
             }
         }
         

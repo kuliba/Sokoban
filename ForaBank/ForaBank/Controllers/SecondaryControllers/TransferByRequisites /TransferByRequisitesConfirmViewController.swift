@@ -118,6 +118,11 @@ class TransferByRequisitesConfirmViewController: UIViewController {
                     self.navigationController?.pushViewController(vc, animated: true)
                 }
             } else {
+                DispatchQueue.main.async {
+                if model.errorMessage == "Пользователь не авторизован"{
+                    AppLocker.present(with: .validate)
+                }
+                }
                 print("DEBUG: Error: ", model.errorMessage ?? "")
             }
         }

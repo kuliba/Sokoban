@@ -544,6 +544,11 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
 //                }
             } else {
                 self.dismissActivity()
+                DispatchQueue.main.async {
+                if model.errorMessage == "Пользователь не авторизован"{
+                    AppLocker.present(with: .validate)
+                }
+                }
                 print("DEBUG: Error: ", model.errorMessage ?? "")
             }
         }
@@ -678,6 +683,11 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                 } else {
     //                self.dismissActivity()
                     print("DEBUG: Error: ", model.errorMessage ?? "")
+                    DispatchQueue.main.async {
+                    if model.errorMessage == "Пользователь не авторизован"{
+                        AppLocker.present(with: .validate)
+                    }
+                    }
                 }
                 
             }
@@ -735,6 +745,11 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                 }
             } else {
                 self.dismissActivity()
+                DispatchQueue.main.async {
+                if model.errorMessage == "Пользователь не авторизован"{
+                    AppLocker.present(with: .validate)
+                }
+                }
                 print("DEBUG: Error: ", model.errorMessage ?? "")
             }
         }

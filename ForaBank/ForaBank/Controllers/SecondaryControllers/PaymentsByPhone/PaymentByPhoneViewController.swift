@@ -95,7 +95,7 @@ class PaymentByPhoneViewController: UIViewController {
     
     lazy var doneButton: UIButton = {
         let button = UIButton(title: "Продолжить")
-        button.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
+//        button.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -141,14 +141,10 @@ class PaymentByPhoneViewController: UIViewController {
             switch self.sbp{
             case true:
                 self.startContactPayment(with: self.selectedCardNumber) { [self] error in
-                    self.dismissActivity()
-                    DispatchQueue.main.async {
-                        endSBPPayment(amount: bottomView.amountTextField.text ?? "0") { error in
-                            print(error ?? "")
-                        }
-                    }
                     if error != nil {
                         self.showAlert(with: "Ошибка", and: error!)
+                    } else {
+
                     }
                 }
             default:
@@ -255,25 +251,6 @@ class PaymentByPhoneViewController: UIViewController {
         navigationController?.navigationBar.isHidden = false
     }
     
-    
-    @objc func doneButtonTapped() {
-        switch sbp{
-        case true:
-            self.startContactPayment(with: selectedCardNumber) { [self] error in
-                self.dismissActivity()
-                DispatchQueue.main.async {
-                    endSBPPayment(amount: bottomView.amountTextField.text ?? "") { error in
-                        print(error ?? "")
-                    }
-                }
-                if error != nil {
-                    self.showAlert(with: "Ошибка", and: error!)
-                }
-            }
-        default:
-            createTransfer()
-        }
-    }
     
     fileprivate func setupUI() {
         
@@ -487,23 +464,45 @@ class PaymentByPhoneViewController: UIViewController {
             if model.statusCode == 0 {
                 completion(nil)
                 NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], [:]) { model, error in
-                    self?.dismissActivity()
+                    
                     if error != nil {
+                        self?.dismissActivity()
+                        self?.showAlert(with: "Ошибка", and: error!)
                         print("DEBUG: Error: ", error ?? "")
                         completion(error!)
                     }
                     guard let model = model else { return }
                     if model.statusCode == 0 {
+                        self?.dismissActivity()
+                        DispatchQueue.main.async {
+                            self?.endSBPPayment(amount: self?.bottomView.amountTextField.text ?? "0") { error in
+                                self?.showAlert(with: "Ошибка", and: error!)
+                                print(error ?? "")
+                            }
+                        }
                         print("DEBUG: Success ")
                         completion(nil)
                     } else {
+                        self?.dismissActivity()
+                        self?.showAlert(with: "Ошибка", and: error!)
                         print("DEBUG: Error: ", model.errorMessage ?? "")
+                        DispatchQueue.main.async {
+                        if model.errorMessage == "Пользователь не авторизован"{
+                            AppLocker.present(with: .validate)
+                        }
+                        }
                         completion(model.errorMessage)
                     }
                 }
             } else {
                 self?.dismissActivity()
+                self?.showAlert(with: "Ошибка", and: error!)
                 print("DEBUG: Error: ", model.errorMessage ?? "")
+                DispatchQueue.main.async {
+                if model.errorMessage == "Пользователь не авторизован"{
+                    AppLocker.present(with: .validate)
+                }
+                }
                 completion(model.errorMessage)
             }
         })
@@ -534,17 +533,28 @@ class PaymentByPhoneViewController: UIViewController {
         ]] as [String: AnyObject]
         
         NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataName) { [weak self] model, error in
-            self?.dismissActivity()
             if error != nil {
+                self?.dismissActivity()
                 print("DEBUG: Error: ", error ?? "")
+                self?.showAlert(with: "Ошибка", and: error!)
                 completion(error!)
             }
             guard let model = model else { return }
             if model.statusCode == 0 {
+                self?.dismissActivity()
                 print("DEBUG: Success send Phone")
+                DispatchQueue.main.async {
                     self?.endSBPPayment2()
+                }
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
+                self?.showAlert(with: "Ошибка", and: error!)
+                DispatchQueue.main.async {
+                if model.errorMessage == "Пользователь не авторизован"{
+                    AppLocker.present(with: .validate)
+                }
+                }
+                self?.dismissActivity()
                 completion(model.errorMessage)
             }
         }
@@ -564,9 +574,9 @@ class PaymentByPhoneViewController: UIViewController {
         ]] as [String: AnyObject]
         
         NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataName) { [weak self] dataresp, error in
-            self?.dismissActivity()
             if error != nil {
                 self?.dismissActivity()
+                self?.showAlert(with: "Ошибка", and: error!)
                 print("DEBUG: Error: ", error ?? "")
                 
             }
@@ -599,27 +609,6 @@ class PaymentByPhoneViewController: UIViewController {
                     
                     model.statusIsSuccses = true
                     
-                    
-                    
-//                    let vc = PhoneConfirmViewController()
-//                    vc.sbp = self?.sbp
-//
-//                    vc.bankPayeer.text = self?.selectBank ?? ""
-//                    vc.phoneField.text = self?.phoneField.text ?? ""
-//                    vc.cardField.text = self?.cardField.text ?? ""
-//                    vc.bankPayeer.imageView.image = self?.bankPayeer.imageView.image
-//                    vc.summTransctionField.text = self?.bottomView.amountTextField.text  ?? ""
-//                    vc.bankPayeer.chooseButton.isHidden = true
-//                    vc.cardField.chooseButton.isHidden = true
-//                    vc.payeerField.text = data.data?.listInputs?[5].content?[0] ?? "Получатель не найден"
-//                    if data.data?.commission == 0.0 {
-//                        vc.taxTransctionField.text = "Комиссия не взимается"
-//                    } else {
-//                        vc.taxTransctionField.text = data.data?.commission?.description ?? "Возможна комиссия"
-//                    }
-//                    vc.addCloseButton()
-                    
-                    
                     let vc = ContactConfurmViewController()
                     vc.confurmVCModel = model
                     vc.addCloseButton()
@@ -637,7 +626,7 @@ class PaymentByPhoneViewController: UIViewController {
                 
             } else {
                 self?.dismissActivity()
-                
+//                self?.showAlert(with: "Ошибка", and: data.errorMessage ?? "")
                 print("DEBUG: Error: ", data.errorMessage ?? "")
                 
             }

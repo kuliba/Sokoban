@@ -12,7 +12,7 @@ class PayCell: UICollectionViewCell, SelfConfiguringCell {
     
     let iconImageView = UIImageView()
     let paymentsName = UILabel(text: "Оплата",
-                               font: .systemFont(ofSize: 14), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
+                               font: .systemFont(ofSize: 16), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -23,6 +23,10 @@ class PayCell: UICollectionViewCell, SelfConfiguringCell {
         guard let payments: PaymentsModel = value as? PaymentsModel else { return }
         paymentsName.text = payments.name
         iconImageView.image = UIImage(named: payments.iconName ?? "")
+        if paymentsName.text == "Оплата по QR" || paymentsName.text == "Мобильная связь" || paymentsName.text == "Услуги ЖКХ" || paymentsName.text ==  "Интернет, ТВ" || paymentsName.text == "Штрафы" ||  paymentsName.text == "Соцсети, игры, карты" ||  paymentsName.text == "Госуслуги" ||  paymentsName.text == "Охранные системы" ||  paymentsName.text == "Прочее" {
+            iconImageView.alpha = 0.3
+            paymentsName.alpha = 0.3
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -34,11 +38,10 @@ class PayCell: UICollectionViewCell, SelfConfiguringCell {
         backView.layer.cornerRadius = 8
         backView.backgroundColor = #colorLiteral(red: 0.9647058824, green: 0.9647058824, blue: 0.968627451, alpha: 1)
         paymentsName.numberOfLines = 2
-        
         addSubview(backView)
         backView.addSubview(iconImageView)
         addSubview(paymentsName)
-
+        self.alpha = 0.8
         backView.setDimensions(height: 48, width: 48)
         backView.centerY(inView: self, leftAnchor: self.leftAnchor)
         iconImageView.center(inView: backView)

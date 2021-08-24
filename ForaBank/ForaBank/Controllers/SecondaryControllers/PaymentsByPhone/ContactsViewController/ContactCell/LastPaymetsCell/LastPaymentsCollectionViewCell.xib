@@ -15,8 +15,9 @@
                 <rect key="frame" x="0.0" y="0.0" width="100" height="108"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="person.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="NSS-Mw-wuz">
-                        <rect key="frame" x="22" y="0.5" width="56" height="55"/>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="phoneBackgroundImage" translatesAutoresizingMaskIntoConstraints="NO" id="NSS-Mw-wuz">
+                        <rect key="frame" x="22" y="0.0" width="56" height="56"/>
+                        <color key="backgroundColor" red="0.96470588235294119" green="0.96470588235294119" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="tintColor" red="0.82745098039999998" green="0.82745098039999998" blue="0.82745098039999998" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="56" id="yda-eE-Vg3"/>
@@ -63,6 +64,6 @@
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="person.circle.fill" catalog="system" width="128" height="121"/>
+        <image name="phoneBackgroundImage" width="56" height="56"/>
     </resources>
 </document>
