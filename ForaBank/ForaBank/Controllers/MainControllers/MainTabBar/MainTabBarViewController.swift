@@ -68,7 +68,7 @@ class MainTabBarViewController: UITabBarController {
                                   image: UIImage(named: "tabBar-chat")!,
                                   fillImage: UIImage(named: "tabBar-chat-fill")!),
         ]
-        selectedIndex = 0
+        selectedIndex = 1
         
         loadCatalog()
         
