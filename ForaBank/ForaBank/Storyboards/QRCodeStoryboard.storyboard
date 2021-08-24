@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="wgA-FR-PPr">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="wnZ-mj-MIH">
+            <objects>
+                <viewController storyboardIdentifier="qr" id="wgA-FR-PPr" customClass="QRViewController" customModule="ForaBank" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="WVM-r6-tM2">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="roo-Fp-kuA" userLabel="QRView">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Наведите камеру на QR код" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rrq-fJ-g0g">
+                                <rect key="frame" x="106" y="139.5" width="202" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="o3W-Jf-Vxn"/>
+                                    <constraint firstAttribute="width" secondItem="Rrq-fJ-g0g" secondAttribute="height" multiplier="101:25" id="wXh-IL-2fu"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TDj-0m-265">
+                                <rect key="frame" x="20" y="802" width="374" height="40"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="Q1D-SF-Oev"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
+                                <state key="normal" title="Отмена">
+                                    <color key="titleColor" systemColor="labelColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="back:" destination="wgA-FR-PPr" eventType="touchUpInside" id="UV3-gd-JjO"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="x1f-hB-Fnh"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Rrq-fJ-g0g" firstAttribute="top" secondItem="x1f-hB-Fnh" secondAttribute="top" constant="95.5" id="8bb-pT-Nho"/>
+                            <constraint firstItem="TDj-0m-265" firstAttribute="leading" secondItem="x1f-hB-Fnh" secondAttribute="leading" constant="20" id="8tw-PJ-jHQ"/>
+                            <constraint firstItem="roo-Fp-kuA" firstAttribute="trailing" secondItem="x1f-hB-Fnh" secondAttribute="trailing" id="A25-xM-Afr"/>
+                            <constraint firstItem="TDj-0m-265" firstAttribute="centerX" secondItem="WVM-r6-tM2" secondAttribute="centerX" id="C9E-hj-ZtX"/>
+                            <constraint firstItem="roo-Fp-kuA" firstAttribute="top" secondItem="WVM-r6-tM2" secondAttribute="top" id="CSG-aX-SJJ"/>
+                            <constraint firstItem="x1f-hB-Fnh" firstAttribute="bottom" secondItem="TDj-0m-265" secondAttribute="bottom" constant="20" id="HXZ-pt-NrD"/>
+                            <constraint firstAttribute="bottom" secondItem="roo-Fp-kuA" secondAttribute="bottom" id="OC5-eB-6ny"/>
+                            <constraint firstItem="roo-Fp-kuA" firstAttribute="leading" secondItem="x1f-hB-Fnh" secondAttribute="leading" id="seT-2R-cSy"/>
+                            <constraint firstItem="Rrq-fJ-g0g" firstAttribute="centerX" secondItem="WVM-r6-tM2" secondAttribute="centerX" id="xfr-dF-lou"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="3fT-km-hND"/>
+                    <connections>
+                        <outlet property="backButton" destination="TDj-0m-265" id="vjr-v1-s0q"/>
+                        <outlet property="qrView" destination="roo-Fp-kuA" id="meg-im-Xtd"/>
+                        <segue destination="W82-dc-jAv" kind="unwind" identifier="auth" unwindAction="auth:" id="EdC-xT-Il0"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Qdw-Sz-EVB" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="W82-dc-jAv" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="3545" y="1556"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

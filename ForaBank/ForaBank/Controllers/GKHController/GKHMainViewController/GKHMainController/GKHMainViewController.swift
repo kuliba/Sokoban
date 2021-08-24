@@ -44,6 +44,11 @@ class GKHMainViewController: UIViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        self.navigationController?.isNavigationBarHidden = false
+    }
+    
     var operatorsList: Results<GKHOperatorsModel>? = nil
     
     lazy var realm = try? Realm()
@@ -72,31 +77,6 @@ class GKHMainViewController: UIViewController {
         let containsNumber = testCase.evaluate(with: _string)
         return containsNumber
         
-    }
-    
-    @IBAction func qrCodeButton(_ sender: UIButton) {
-//        checkCameraAccess(isAllowed: {
-//            if $0 {
-//                    DispatchQueue.main.async {
-//                        self.performSegue(withIdentifier: "qr", sender: nil)
-//                    }
-//            } else {
-//                guard self.alertController == nil else {
-//                        print("There is already an alert presented")
-//                        return
-//                    }
-//                self.alertController = UIAlertController(title: "\(self.attention)", message: "\(self.attention_2)", preferredStyle: .alert)
-//                    guard let alert = self.alertController else {
-//                        return
-//                    }
-//                alert.addAction(UIAlertAction(title: "\(self.gotIt)", style: .default, handler: { (action) in
-//                        self.alertController = nil
-//                    }))
-//                    DispatchQueue.main.async {
-//                        self.present(alert, animated: true, completion: nil)
-//                    }
-//            }
-//        })
     }
     
     func checkCameraAccess(isAllowed: @escaping (Bool) -> Void) {
