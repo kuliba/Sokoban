@@ -21,7 +21,7 @@ struct FullBankInfoListViewModel {
 //            let shortName: String = fullNameArr[1]
 //            return shortName//.capitalizingFirstLetter()
 //        } else {
-            return bank.rusName ?? ""
+        return bank.rusName ?? bank.fullName ?? ""
 //        }
         
     }

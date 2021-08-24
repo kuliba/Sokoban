@@ -123,6 +123,7 @@ class TransferByRequisitesConfirmViewController: UIViewController {
                     AppLocker.present(with: .validate)
                 }
                 }
+                self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
                 print("DEBUG: Error: ", model.errorMessage ?? "")
             }
         }

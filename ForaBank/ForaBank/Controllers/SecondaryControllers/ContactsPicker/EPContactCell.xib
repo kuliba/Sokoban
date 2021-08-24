@@ -37,7 +37,7 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bvt-tZ-NrJ">
                         <rect key="frame" x="10" y="10" width="40" height="40"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mxT-DB-6lI">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="100000000016" translatesAutoresizingMaskIntoConstraints="NO" id="mxT-DB-6lI">
                                 <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
@@ -86,6 +86,7 @@
         </tableViewCell>
     </objects>
     <resources>
+        <image name="100000000016" width="104" height="104"/>
         <image name="foracontactIcon" width="56" height="56"/>
     </resources>
 </document>

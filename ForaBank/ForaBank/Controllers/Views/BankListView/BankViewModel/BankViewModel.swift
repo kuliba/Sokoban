@@ -11,7 +11,7 @@ struct BankViewModel {
     
     let bank: BanksList
     var bankName: String {
-        return bank.memberNameRus ?? ""
+        return bank.memberNameRus ?? bank.memberName ?? ""
     }
     var bankImage: UIImage {
         if bank.svgImage  == "seeall"{

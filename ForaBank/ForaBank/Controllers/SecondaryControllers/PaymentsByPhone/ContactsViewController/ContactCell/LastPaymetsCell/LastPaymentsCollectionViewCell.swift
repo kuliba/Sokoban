@@ -10,7 +10,8 @@ import UIKit
 class LastPaymentsCollectionViewCell: UICollectionViewCell {
     
     static var reuseId: String = "LastPaymentsCollectionViewCell"
-
+    
+    var contacts = [PhoneContact]()
     
     @IBOutlet weak var contactImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!

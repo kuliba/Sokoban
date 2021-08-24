@@ -130,7 +130,7 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
         item.contactImageView.backgroundColor = banks[indexPath.item].svgImage != nil
             ? .clear : updateInitialsColorForIndexPath(indexPath)
         
-        item.contactLabel.text = banks[indexPath.item].rusName
+        item.contactLabel.text = banks[indexPath.item].rusName ??  banks[indexPath.item].fullName
         item.phoneLabel.text = banks[indexPath.item].bic
         return item
     }

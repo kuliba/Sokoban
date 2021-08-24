@@ -41,7 +41,7 @@ class MockItems {
             
             PaymentsModel(id: 2, name: "Шаблоны и\nавтоплатежи",
                           iconName: "PaymentsIconFavorites",
-                          controllerName: "DevelopViewController"),
+                          controllerName: ""),
             
 //            PaymentsModel(id: 3, name: "Перевод по\nтелефону",
 //                          iconName: "PaymentsIconPhone",
@@ -102,7 +102,7 @@ class MockItems {
                           description: "QR"),
             
             PaymentsModel(id: 12, name: "Мобильная связь",
-                          iconName: "smartphone",
+                          iconName: "smartphoneBlack",
                           controllerName: "",
                           description: "Что то"),
             
@@ -122,7 +122,7 @@ class MockItems {
                           description: "Что то"),
             
             PaymentsModel(id: 16, name: "Соцсети, игры, карты",
-                          iconName: "gameIcon",
+                          iconName: "iconGame",
                           controllerName: "",
                           description: "Что то"),
             
@@ -138,7 +138,7 @@ class MockItems {
             
             PaymentsModel(id: 19, name: "Прочее",
                           iconName: "shopping-cart",
-                          controllerName: "MeToMeViewController",
+                          controllerName: "",
                           description: "Что то")
         ]
     }

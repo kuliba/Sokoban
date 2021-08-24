@@ -126,6 +126,17 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         present(vc, animated: true, completion: nil)
     }
     var delegate: MyProtocol?
+    @objc func myTargetFunction(textField: UITextField) {
+        if self.nameField.isHidden ==    true {
+            self.fioField.placeHolder.text = "Фамилия"
+            self.nameField.isHidden = false
+            self.surField.isHidden = false
+            self.stackView.insertArrangedSubview(self.nameField, at: 6)
+            self.stackView.insertArrangedSubview(self.surField, at: 7)
+        }
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 //        accountNumber.textField.delegate = self
@@ -220,8 +231,9 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
 //            self.nameField.errorLabel.isHidden = false
 //            self.nameField.errorLabel.text = "Укажите название организации"
 //        }
-        
-        
+        fioField.textField.addTarget(self, action: #selector(myTargetFunction), for: .touchDown)
+            
+       
             self.fioField.didChooseButtonTapped = { () in
             self.fioField.placeHolder.text = "Фамилия"
             self.nameField.isHidden.toggle()
@@ -687,6 +699,8 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                     if model.errorMessage == "Пользователь не авторизован"{
                         AppLocker.present(with: .validate)
                     }
+                        self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+
                     }
                 }
                 
@@ -750,6 +764,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                     AppLocker.present(with: .validate)
                 }
                 }
+                self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
                 print("DEBUG: Error: ", model.errorMessage ?? "")
             }
         }

@@ -49,7 +49,9 @@ class BankCell: UICollectionViewCell {
         guard let bank = bank else { return }
         
         let viewModel = BankViewModel(bank: bank)
+        
         bankNameLabel.text = viewModel.bankName
+        
         bankImageView.image = viewModel.bankImage
     }
     
