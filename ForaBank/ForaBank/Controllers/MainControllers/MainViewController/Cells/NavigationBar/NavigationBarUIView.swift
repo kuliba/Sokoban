@@ -9,6 +9,7 @@ import UIKit
 
 class NavigationBarUIView: UIView {
 
+    @IBOutlet weak var textField: MaskedTextField!
     /*
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
@@ -16,5 +17,6 @@ class NavigationBarUIView: UIView {
         // Drawing code
     }
     */
+ 
 
 }

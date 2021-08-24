@@ -102,7 +102,7 @@ class MockItems {
                           description: "QR"),
             
             PaymentsModel(id: 12, name: "Мобильная связь",
-                          iconName: "smartphone",
+                          iconName: "smartphoneBlack",
                           controllerName: "",
                           description: "Что то"),
             

@@ -51,6 +51,9 @@
                 <constraint firstItem="qPz-DT-tDS" firstAttribute="top" secondItem="3bu-AX-FmJ" secondAttribute="top" id="vMF-lf-iGo"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="textField" destination="Khf-SE-kKg" id="ssN-7S-URp"/>
+            </connections>
             <point key="canvasLocation" x="-186.95652173913044" y="-74.665178571428569"/>
         </view>
     </objects>

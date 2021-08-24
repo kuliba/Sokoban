@@ -491,6 +491,7 @@ class PaymentByPhoneViewController: UIViewController {
                             AppLocker.present(with: .validate)
                         }
                         }
+                        self?.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
                         completion(model.errorMessage)
                     }
                 }
@@ -503,6 +504,7 @@ class PaymentByPhoneViewController: UIViewController {
                     AppLocker.present(with: .validate)
                 }
                 }
+                self?.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
                 completion(model.errorMessage)
             }
         })
@@ -555,6 +557,7 @@ class PaymentByPhoneViewController: UIViewController {
                 }
                 }
                 self?.dismissActivity()
+                self?.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
                 completion(model.errorMessage)
             }
         }
@@ -626,7 +629,7 @@ class PaymentByPhoneViewController: UIViewController {
                 
             } else {
                 self?.dismissActivity()
-//                self?.showAlert(with: "Ошибка", and: data.errorMessage ?? "")
+                self?.showAlert(with: "Ошибка", and: data.errorMessage ?? "")
                 print("DEBUG: Error: ", data.errorMessage ?? "")
                 
             }
