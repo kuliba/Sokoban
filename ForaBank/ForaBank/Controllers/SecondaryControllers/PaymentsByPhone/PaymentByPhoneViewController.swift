@@ -587,11 +587,9 @@ class PaymentByPhoneViewController: UIViewController {
             guard let data = dataresp else { return }
             if data.statusCode == 0 {
                 print("DEBUG: Success send Phone")
-                self?.dismissActivity()
                 self?.confirm = true
-//                self.setupUI()
                 DispatchQueue.main.async {
-                    
+                    self?.dismissActivity()
                     var model = ConfirmViewControllerModel(type: .phoneNumberSBP)
                     if self?.selectedBank != nil {
                         model.bank = self?.selectedBank
