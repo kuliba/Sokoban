@@ -23,13 +23,7 @@ class PhoneConfirmViewController: UIViewController {
             image: #imageLiteral(resourceName: "accountImage"),
             isEditable: false))
     
-    var cardField = ForaInput(
-        viewModel: ForaInputModel(
-            title: "Счет списания",
-            image: #imageLiteral(resourceName: "credit-card"),
-            type: .credidCard,
-            isEditable: false,
-            showChooseButton: false))
+    var cardField = CardChooseView()
     
     var bankPayeer = ForaInput(
         viewModel: ForaInputModel(
