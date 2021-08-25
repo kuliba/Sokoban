@@ -42,7 +42,7 @@ class MainTabBarViewController: UITabBarController {
         self.tabBar.layer.borderColor = UIColor.clear.cgColor
         self.tabBar.clipsToBounds = true
      
-        let mainVC = DevelopViewController()
+        let mainVC = MainViewController()
         let paymentsVC = PaymentsViewController()
         let historyVC = DevelopViewController()
         let chatVC = DevelopViewController()
