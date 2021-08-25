@@ -166,6 +166,7 @@ struct ConfirmViewControllerModel {
         case requisites
         case phoneNumber
         case phoneNumberSBP
+        case gkh
     }
     
 }
@@ -428,6 +429,11 @@ class ContactConfurmViewController: UIViewController {
                 currTransctionField.isHidden = false
             }
             currTransctionField.text = model.summInCurrency
+            
+            
+        case .gkh:
+            print("Собрать экран под ЖКХ")
+            
             
             
         default:
