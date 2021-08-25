@@ -128,7 +128,7 @@ struct AddOperatorsList {
                         let realm = try? Realm()
                         do {
                             let operators = realm?.objects(GKHOperatorsModel.self)
-                            guard (operators != nil) else { return }
+//                            guard (operators != nil) else { return }
                             realm?.beginWrite()
                             realm?.delete(operators!)
                             realm?.add(operatorsArray)

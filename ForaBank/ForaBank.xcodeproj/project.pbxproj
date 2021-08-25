@@ -88,6 +88,7 @@
 		0BB015DC26C9BE3700E7A85B /* ExtensionGKHMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB015DB26C9BE3700E7A85B /* ExtensionGKHMain.swift */; };
 		0BB8816D26D6696400015E27 /* GKHCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB8816B26D6696400015E27 /* GKHCardCell.swift */; };
 		0BB8816E26D6696400015E27 /* GKHCardCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0BB8816C26D6696400015E27 /* GKHCardCell.xib */; };
+		0BB8817026D6AE4200015E27 /* UserAllCardsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB8816F26D6AE4200015E27 /* UserAllCardsModel.swift */; };
 		0BD2177926A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */; };
 		0BE270B026B76B9700FA958C /* ExtensionCustomPopUpSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270AF26B76B9700FA958C /* ExtensionCustomPopUpSetup.swift */; };
 		0BE270B326B9959900FA958C /* ExtensionBottomLableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */; };
@@ -404,6 +405,7 @@
 		0BB015DB26C9BE3700E7A85B /* ExtensionGKHMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionGKHMain.swift; sourceTree = "<group>"; };
 		0BB8816B26D6696400015E27 /* GKHCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHCardCell.swift; sourceTree = "<group>"; };
 		0BB8816C26D6696400015E27 /* GKHCardCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GKHCardCell.xib; sourceTree = "<group>"; };
+		0BB8816F26D6AE4200015E27 /* UserAllCardsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAllCardsModel.swift; sourceTree = "<group>"; };
 		0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAnywayOperatorsListDecodableModel.swift; sourceTree = "<group>"; };
 		0BE270AF26B76B9700FA958C /* ExtensionCustomPopUpSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionCustomPopUpSetup.swift; sourceTree = "<group>"; };
 		0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBottomLableModel.swift; sourceTree = "<group>"; };
@@ -871,6 +873,14 @@
 			name = CardCell;
 			sourceTree = "<group>";
 		};
+		0BB8817126D6C95200015E27 /* REALMModel */ = {
+			isa = PBXGroup;
+			children = (
+				0BB8816F26D6AE4200015E27 /* UserAllCardsModel.swift */,
+			);
+			path = REALMModel;
+			sourceTree = "<group>";
+		};
 		0BE270B126B9957B00FA958C /* BottomLableModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -1302,6 +1312,7 @@
 		ED4FC5FE266B91360092B4AB /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				0BB8817126D6C95200015E27 /* REALMModel */,
 				0B66E8DF26CC62A100FD735D /* NetDetect */,
 				0B95C40126B6C9ED00AA57E6 /* CustonPopUpWithRate */,
 				EDB1453F2666AFD70028EF5A /* Constants.swift */,
@@ -2295,6 +2306,7 @@
 				EDB1657C2668C8D5007E6030 /* PayCell.swift in Sources */,
 				0BE270BA26B9F36A00FA958C /* ExtensionBottomInputRequest.swift in Sources */,
 				EDFFCAF0268245EC004EE095 /* CardViewModel.swift in Sources */,
+				0BB8817026D6AE4200015E27 /* UserAllCardsModel.swift in Sources */,
 				0B9EC85D26739C0000D86EB2 /* GetCountriesDecodebleModel.swift in Sources */,
 				68FFA54C2684C854002DADFA /* PDFViewerViewController.swift in Sources */,
 				0B05163126A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift in Sources */,
