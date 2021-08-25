@@ -15,16 +15,24 @@ class GKHInputCell: UITableViewCell {
     @IBOutlet weak var errorLable: UILabel!
     @IBOutlet weak var showFIOButton: UIButton!
     
+    @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var lineView: UIView!
     override func awakeFromNib() {
         super.awakeFromNib()
         showFIOButton.isHidden = true
+//        textField.delegate = self
     }
 
     func setupUI (_ dataModel: Parameters) {
         let q = GKHDataSorted.a(dataModel.title ?? "")
         operatorsIcon.image = UIImage(named: q.1)
-        placeholderLable.text = q.0
+        textField.text = q.0
+        let type = dataModel.viewType
+//        if type != "INPUT" {
+//            self.textField.isSelected = false
+//        }
+    }
+    @IBAction func textField(_ sender: UITextField) {
     }
     
     
@@ -33,5 +41,10 @@ class GKHInputCell: UITableViewCell {
     }
     @IBAction func showInfo(_ sender: UIButton) {
     }
+    
+}
+
+
+extension GKHInputCell: UITextFieldDelegate {
     
 }
