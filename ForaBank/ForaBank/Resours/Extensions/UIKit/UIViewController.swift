@@ -47,11 +47,7 @@ extension UIViewController {
     func showActivity() {
         DispatchQueue.main.async {
             
-//            UIApplication.shared.keyWindow?.startIndicatingActivity()
-            
-            DispatchQueue.main.async {
-                UIApplication.shared.keyWindow?.startIndicatingActivity()
-            }
+            UIApplication.shared.keyWindow?.startIndicatingActivity()
             
 //            ProgressHUD.colorAnimation = #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
 //            ProgressHUD.colorHUD = .clear
