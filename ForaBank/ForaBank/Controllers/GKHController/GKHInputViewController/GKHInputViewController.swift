@@ -10,7 +10,8 @@ import UIKit
 class GKHInputViewController: UIViewController {
     
     var operatorData: GKHOperatorsModel?
-
+    var valueToPass : String?
+    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var bottomInputView: BottomInputView!
     
@@ -20,6 +21,8 @@ class GKHInputViewController: UIViewController {
         tableView.register(UINib(nibName: "GKHCardCell", bundle: nil), forCellReuseIdentifier: GKHCardCell.reuseId)
         // Изменения символа валюты
         bottomInputView.currencySymbol = "₽"
+        
+        AddAllUserCardtList.add()
         
         // Замыкание которое срабатывает по нажатию на кнопку продолжить
         // amount значение выдает отформатированное значение для передачи в запрос
@@ -40,16 +43,20 @@ class GKHInputViewController: UIViewController {
                     // Переход на экран подтверждения
                     self.goToConfurmVC(with: model)
                 }
+                // Функция настройки выбранной карты и список карт
+                self.setupCardList { error in
+                    guard let error = error else { return }
+                    self.showAlert(with: "Ошибка", and: error)
+                }
                 
             }
         }
-        // Функция настройки выбранной карты и список карт
-        setupCardList { error in
-            guard let error = error else { return }
-            self.showAlert(with: "Ошибка", and: error)
-        }
-        
     }
+    
+    
+}
+
+extension GKHInputViewController {
     
     //MARK: - Helpers
     func goToConfurmVC(with model: ConfirmViewControllerModel) {
@@ -76,15 +83,15 @@ class GKHInputViewController: UIViewController {
                     }
                 }
                 
-//                self?.cardListView.cardList = filterProduct
+                //                self?.cardListView.cardList = filterProduct
                 
-//                if filterProduct.count > 0 {
-//                    self?.cardFromField.cardModel = filterProduct.first
-//                    guard let cardNumber  = filterProduct.first?.number else { return }
-//                    self?.selectedCardNumber = cardNumber
-//                    self?.cardIsSelect = true
-//                    completion(nil)
-//                }
+                //                if filterProduct.count > 0 {
+                //                    self?.cardFromField.cardModel = filterProduct.first
+                //                    guard let cardNumber  = filterProduct.first?.number else { return }
+                //                    self?.selectedCardNumber = cardNumber
+                //                    self?.cardIsSelect = true
+                //                    completion(nil)
+                //                }
             }
         }
     }
@@ -109,7 +116,6 @@ class GKHInputViewController: UIViewController {
             }
         }
     }
-    
     func paymentGKH(amount: String ,completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
         
         let body = [ "check" : false,
@@ -147,23 +153,23 @@ class GKHInputViewController: UIViewController {
             if respModel.statusCode == 0 {
                 guard let data = respModel.data else { return }
                 var model = ConfirmViewControllerModel(type: .gkh)
-
-//                    model.cardFrom = self.cardFromField.cardModel
-//                    model.summTransction = data.debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
-//                    model.summInCurrency = data.creditAmount?.currencyFormatter(symbol: data.currencyPayee ?? "RUB") ?? ""
-//
-//                    model.taxTransction = data.fee?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
-//                    model.fullName = data.payeeName ?? "Получатель не оперделен"
-//                    model.statusIsSuccses = true
-//                    model.bank = self.selectedBank
-//                    respModel.data?.additionalList?.forEach({ additional in
-//                        if additional.fieldName == "RECP" {
-//                            model.phone = additional.fieldValue ?? ""
-//                        }
-//                    })
+                
+                //                    model.cardFrom = self.cardFromField.cardModel
+                //                    model.summTransction = data.debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
+                //                    model.summInCurrency = data.creditAmount?.currencyFormatter(symbol: data.currencyPayee ?? "RUB") ?? ""
+                //
+                //                    model.taxTransction = data.fee?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
+                //                    model.fullName = data.payeeName ?? "Получатель не оперделен"
+                //                    model.statusIsSuccses = true
+                //                    model.bank = self.selectedBank
+                //                    respModel.data?.additionalList?.forEach({ additional in
+                //                        if additional.fieldName == "RECP" {
+                //                            model.phone = additional.fieldValue ?? ""
+                //                        }
+                //                    })
                 
                 completion(model, nil)
-        
+                
             } else {
                 print("DEBUG: Error: ContaktPaymentBegin ", respModel.errorMessage ?? "")
                 completion(nil, respModel.errorMessage)
@@ -174,11 +180,4 @@ class GKHInputViewController: UIViewController {
         }
         
     }
-    
-    
-    
-}
-
-extension GKHInputViewController: UITextFieldDelegate {
-    
 }

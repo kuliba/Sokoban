@@ -11,7 +11,7 @@ import RealmSwift
 // MARK: - GKHOperatorsModel
 class GKHOperatorsModel: Object {
 
-    @objc dynamic var code: String?
+    @objc dynamic var puref: String?
     @objc dynamic var isGroup = false
     @objc dynamic var name: String?
     @objc dynamic var region: String?
@@ -76,7 +76,7 @@ struct AddOperatorsList {
                         d.operators?.forEach({ operators in
                             /// Общая информация об поставщике услуг
                             let a     = GKHOperatorsModel()
-                            a.code    = operators.code
+                            a.puref    = operators.code
                             a.isGroup = operators.isGroup ?? false
                             a.name    = operators.name
                             a.region  = operators.region
@@ -128,7 +128,7 @@ struct AddOperatorsList {
                         let realm = try? Realm()
                         do {
                             let operators = realm?.objects(GKHOperatorsModel.self)
-                            guard (operators != nil) else { return }
+//                            guard (operators != nil) else { return }
                             realm?.beginWrite()
                             realm?.delete(operators!)
                             realm?.add(operatorsArray)
