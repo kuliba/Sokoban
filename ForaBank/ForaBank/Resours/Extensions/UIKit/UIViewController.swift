@@ -49,21 +49,21 @@ extension UIViewController {
             
 //            UIApplication.shared.keyWindow?.startIndicatingActivity()
             
-//            DispatchQueue.main.async {
-//                UIApplication.shared.keyWindow?.startIndicatingActivity()
-//            }
+            DispatchQueue.main.async {
+                UIApplication.shared.keyWindow?.startIndicatingActivity()
+            }
             
-            ProgressHUD.colorAnimation = #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
-            ProgressHUD.colorHUD = .clear
-            ProgressHUD.animationType = .circleRotateChase
-            ProgressHUD.show()
+//            ProgressHUD.colorAnimation = #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
+//            ProgressHUD.colorHUD = .clear
+//            ProgressHUD.animationType = .circleRotateChase
+//            ProgressHUD.show()
         }
     }
 
     func dismissActivity() {
         DispatchQueue.main.async {
-//            UIApplication.shared.keyWindow?.stopIndicatingActivity()
-            ProgressHUD.dismiss()
+            UIApplication.shared.keyWindow?.stopIndicatingActivity()
+//            ProgressHUD.dismiss()
         }
     }
     
