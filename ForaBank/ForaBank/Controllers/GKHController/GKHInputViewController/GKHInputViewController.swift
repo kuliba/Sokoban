@@ -19,3 +19,7 @@ class GKHInputViewController: UIViewController {
         
     }
 }
+
+extension GKHInputViewController: UITextFieldDelegate {
+    
+}

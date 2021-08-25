@@ -20,7 +20,6 @@ class GKHInputCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         showFIOButton.isHidden = true
-//        textField.delegate = self
     }
 
     func setupUI (_ dataModel: Parameters) {
@@ -28,11 +27,12 @@ class GKHInputCell: UITableViewCell {
         operatorsIcon.image = UIImage(named: q.1)
         textField.text = q.0
         let type = dataModel.viewType
-//        if type != "INPUT" {
-//            self.textField.isSelected = false
-//        }
+        if type != "INPUT" {
+            self.textField.isSelected = false
+        }
     }
     @IBAction func textField(_ sender: UITextField) {
+        
     }
     
     
@@ -44,7 +44,3 @@ class GKHInputCell: UITableViewCell {
     
 }
 
-
-extension GKHInputCell: UITextFieldDelegate {
-    
-}
