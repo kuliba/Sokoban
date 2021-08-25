@@ -18,11 +18,16 @@ extension GKHInputViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: GKHInputCell.reuseId, for: indexPath) as! GKHInputCell
-        guard operatorData?.parameterList.count != 0 else { return cell}
-        cell.setupUI((operatorData?.parameterList[indexPath.row])!)
-        cell.textField.delegate = self
-        return cell
+        if indexPath.row == 3 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: GKHCardCell.reuseId, for: indexPath) as! GKHCardCell
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: GKHInputCell.reuseId, for: indexPath) as! GKHInputCell
+            guard operatorData?.parameterList.count != 0 else { return cell}
+            cell.setupUI((operatorData?.parameterList[indexPath.row])!)
+            cell.textField.delegate = self
+            return cell
+        }
     }
     
     

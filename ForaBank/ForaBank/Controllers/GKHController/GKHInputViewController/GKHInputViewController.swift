@@ -17,10 +17,11 @@ class GKHInputViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UINib(nibName: "GKHInputCell", bundle: nil), forCellReuseIdentifier: GKHInputCell.reuseId)
+        tableView.register(UINib(nibName: "GKHCardCell", bundle: nil), forCellReuseIdentifier: GKHCardCell.reuseId)
         // Изменения символа валюты
-        bottomInputView.currencySymbol = "$"
+        bottomInputView.currencySymbol = "₽"
         
-        // Замыкание которое срабатывает по на жатию на кнопку продолжить
+        // Замыкание которое срабатывает по нажатию на кнопку продолжить
         // amount значение выдает отформатированное значение для передачи в запрос
         bottomInputView.didDoneButtonTapped = { amount in
             
