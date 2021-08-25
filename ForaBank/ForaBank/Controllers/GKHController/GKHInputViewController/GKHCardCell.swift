@@ -9,6 +9,7 @@ import UIKit
 
 class GKHCardCell: UITableViewCell {
 
+    @IBOutlet weak var cardChooseView: CardChooseView!
     
     static let reuseId = "GKHCardCell"
     override func awakeFromNib() {
