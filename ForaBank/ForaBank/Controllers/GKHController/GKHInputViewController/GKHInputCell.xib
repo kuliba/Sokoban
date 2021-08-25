@@ -10,11 +10,11 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="66" id="YSr-Zo-ERi" customClass="GKHInputCell" customModule="ForaBank" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="414" height="66"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="66" id="YSr-Zo-ERi" customClass="GKHInputCell" customModule="ForaBank" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="80"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="YSr-Zo-ERi" id="kI0-3f-HuM">
-                <rect key="frame" x="0.0" y="0.0" width="414" height="66"/>
+                <rect key="frame" x="0.0" y="0.0" width="414" height="80"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fX2-bl-W2e">
@@ -28,7 +28,7 @@
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="ujY-wc-OZM">
                         <rect key="frame" x="53" y="5" width="346" height="61"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YcM-ak-Cz8" userLabel="placeholder">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YcM-ak-Cz8" userLabel="placeholder">
                                 <rect key="frame" x="0.0" y="0.0" width="346" height="15"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="15" id="Hj5-0I-g8t"/>
@@ -45,7 +45,23 @@
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rG9-DJ-H9G" userLabel="ConstructView">
                                                 <rect key="frame" x="0.0" y="0.0" width="244" height="30"/>
+                                                <subviews>
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dXE-ga-D5X">
+                                                        <rect key="frame" x="0.0" y="0.0" width="244" height="30"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <textInputTraits key="textInputTraits"/>
+                                                        <connections>
+                                                            <action selector="textField:" destination="YSr-Zo-ERi" eventType="editingDidEnd" id="5gA-im-c8q"/>
+                                                        </connections>
+                                                    </textField>
+                                                </subviews>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                <constraints>
+                                                    <constraint firstItem="dXE-ga-D5X" firstAttribute="top" secondItem="rG9-DJ-H9G" secondAttribute="top" id="8cs-ie-ZVz"/>
+                                                    <constraint firstAttribute="bottom" secondItem="dXE-ga-D5X" secondAttribute="bottom" id="IVb-hb-Rr8"/>
+                                                    <constraint firstItem="dXE-ga-D5X" firstAttribute="leading" secondItem="rG9-DJ-H9G" secondAttribute="leading" id="m3K-UI-muI"/>
+                                                    <constraint firstAttribute="trailing" secondItem="dXE-ga-D5X" secondAttribute="trailing" id="qro-g7-RLe"/>
+                                                </constraints>
                                             </view>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oWR-cQ-HAd" userLabel="ConstructButton">
                                                 <rect key="frame" x="271" y="3" width="24" height="24"/>
@@ -91,7 +107,7 @@
                                     <constraint firstAttribute="height" constant="1" id="NQn-IQ-KH7"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GBe-0Q-3aC" userLabel="error">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GBe-0Q-3aC" userLabel="error">
                                 <rect key="frame" x="0.0" y="46" width="346" height="15"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="15" id="L1z-MT-KYy"/>
@@ -129,6 +145,7 @@
                 <outlet property="operatorsIcon" destination="fX2-bl-W2e" id="cm1-Xe-S1L"/>
                 <outlet property="placeholderLable" destination="YcM-ak-Cz8" id="Udi-CL-4kW"/>
                 <outlet property="showFIOButton" destination="oWR-cQ-HAd" id="mg4-NO-KhJ"/>
+                <outlet property="textField" destination="dXE-ga-D5X" id="8KQ-Sh-sfG"/>
             </connections>
             <point key="canvasLocation" x="-10.144927536231885" y="81.696428571428569"/>
         </tableViewCell>

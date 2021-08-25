@@ -15,9 +15,9 @@ class URLHost {
         
         /// Для тестовых запросов используется этот хост
 
-        case qa  = "bg.forabank.ru/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b" //  "bg.forabank.ru/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b" "git.briginvest.ru/dbo/api/v3"
+        case release  = "bg.forabank.ru/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b" //  "bg.forabank.ru/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b" "git.briginvest.ru/dbo/api/v3"
         /// Для релизных запросов используется этот хост
-        case release = "git.briginvest.ru/dbo/api/v3"
+        case qa = "git.briginvest.ru/dbo/api/v3"
 
         
         

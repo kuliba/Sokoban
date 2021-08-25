@@ -35,6 +35,10 @@ extension CustomPopUpWithRateView {
         self.dismissKeyboard()
         self.showActivity()
         bottomView.doneButtonIsEnabled(true)
+        if self.bottomView.requestModel.to == ""{
+            self.bottomView.requestModel.to = viewModel.cardFrom?.currency ?? ""
+        }
+        
         let body = [ "check" : false,
                      "amount" : viewModel.summTransction,
                      "currencyAmount" : self.bottomView.requestModel.to,

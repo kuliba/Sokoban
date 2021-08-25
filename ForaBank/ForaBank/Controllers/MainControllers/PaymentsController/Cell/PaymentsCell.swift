@@ -56,6 +56,10 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
             }
         } else {
             let mask = StringMask(mask: "+7 (000) 000-00-00")
+            self.titleLabel.text = "\(payment.name)"
+            guard let avatarImage = UIImage(named: "smartphonegray") else { return }
+            self.iconImageView.image = avatarImage
+            
             if let unMaskPhone = mask.unmask(string: payment.name) {
                 self.searchForContactUsingPhoneNumber(phoneNumber: unMaskPhone) { contact in
                     
@@ -69,8 +73,8 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
                         }
                     } else {
                         // No Image available
-                        guard let avatarImageName = payment.avatarImageName else { return }
-                        guard let avatarImage = UIImage(named: avatarImageName) else { return }
+//                        guard let avatarImageName = payment.avatarImageName else { return }
+                        guard let avatarImage = UIImage(named: "smartphonegray") else { return }
                         self.iconImageView.image = avatarImage
                     }
                 }

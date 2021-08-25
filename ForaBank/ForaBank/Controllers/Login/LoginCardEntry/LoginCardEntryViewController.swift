@@ -65,9 +65,11 @@ class LoginCardEntryViewController: UIViewController {
 
     fileprivate func scanCardTapped() {
         print(#function + " Открываем экран сканера")
+        
         let scannerView = CardScannerController.getScanner { card in
             guard let cardNumder = card else { return }
             self.creditCardView.cardNumberTextField.text = "\(cardNumder)"
+            self.creditCardView.doneButton.isHidden = cardNumder.count  >= 16 ? false : true
         }
         present(scannerView, animated: true, completion: nil)
     }
@@ -81,7 +83,7 @@ extension LoginCardEntryViewController: UITextFieldDelegate {
         guard let cardNumber = textField.unmaskedText else { return }
         creditCardView.doneButton.isHidden = cardNumber.count  >= 16 ? false : true
         
-        creditCardView.cardNumberTextField.maskString = cardNumber.count >= 17 ? "00000 000 0 0000 0000000" : "0000 0000 0000 0000 0"
+        creditCardView.cardNumberTextField.maskString = cardNumber.count >= 16 ? "00000 000 0 0000 0000000" : "0000 0000 0000 0000"
         
         let newPosition = textField.endOfDocument
         creditCardView.cardNumberTextField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition)

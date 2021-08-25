@@ -58,6 +58,7 @@ struct AddOperatorsList {
     
         /// Логотип и название поставщике услуг
         var listPositionArray = [LogotypeData]()
+        
         /// Поля для заполнения
         var synonymListArray  = [String]()
         var parametersArray   = [Parameters]()
