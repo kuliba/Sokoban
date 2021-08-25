@@ -390,6 +390,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                     for contact in contacts {
                         if contact.phoneNumber[0] == format(phoneNumber: searchContact.numberTextField.text ?? "")! {
                             item.nameLabel.text = contact.name
+                            item.nameLabel.isHidden = false
                             break
                         } else {
                             item.nameLabel.text = format(phoneNumber: searchContact.numberTextField.text ?? "")
