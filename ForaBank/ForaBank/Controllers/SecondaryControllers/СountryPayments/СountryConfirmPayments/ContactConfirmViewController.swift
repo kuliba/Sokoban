@@ -435,6 +435,19 @@ class ContactConfurmViewController: UIViewController {
             print("Собрать экран под ЖКХ")
             
             
+        case .contact:
+            cardFromField.isHidden = true
+            cardToField.isHidden = true
+            phoneField.isHidden = true
+            bankField.isHidden = true
+            numberTransctionField.isHidden = false
+            numberTransctionField.text = model.numberTransction
+            nameField.text =  model.fullName ?? ""
+            countryField.text = model.country?.name?.capitalizingFirstLetter() ?? ""
+            currancyTransctionField.text = model.currancyTransction
+            
+            let customViewItem = UIBarButtonItem(customView: UIImageView(image: #imageLiteral(resourceName: "Vector")))
+            self.navigationItem.rightBarButtonItem = customViewItem
             
         default:
             cardFromField.isHidden = true

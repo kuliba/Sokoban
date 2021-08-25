@@ -20,18 +20,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     static var shared: AppDelegate { return UIApplication.shared.delegate as! AppDelegate }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-        UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
+        
         FirebaseApp.configure()
         Messaging.messaging().delegate = self
-        application.registerForRemoteNotifications()
-        application.openSessions
-        application.backgroundRefreshStatus
-        application.beginBackgroundTask {
-            print("background")
-        }
         requestNotificationAuthorization(application: application)
-      
         customizeUiInApp()
         
         // Net Detect
@@ -114,7 +106,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         // ...
         
         // Print full message.
-            print(userInfo)
+        print(userInfo)
         let otpCode = userInfo["body"] as! String
         print(otpCode.components(separatedBy:  otpCode))
         let newstring = otpCode.filter { "0"..."9" ~= $0 }
@@ -147,19 +139,12 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         UNUserNotificationCenter.current().delegate = self
         
         let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+
         UNUserNotificationCenter.current().requestAuthorization(
             options: authOptions,
             completionHandler: {_, _ in })
         
         application.registerForRemoteNotifications()
-
-        
-        let tokenChars = (deviceToken as NSData).bytes.bindMemory(to: CChar.self, capacity: deviceToken.count)
-        let tokenString = NSMutableString()
-        
-        for i in 0 ..< deviceToken.count {
-            tokenString.appendFormat("%02.2hhx", tokenChars[i])
-        }
         
     }
     
@@ -195,13 +180,11 @@ extension AppDelegate {
         let parameters = [
 //            "cryptoVersion": "1.0",
             "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-            "pushFcmToken": Messaging.messaging().fcmToken ?? "" as String,
+            "pushFcmToken": "\(Messaging.messaging().fcmToken ?? "")",
             "model": UIDevice().model,
             "operationSystem": "IOS"
         ] as [String : AnyObject]
 //        print("DEBUG: Parameters = ", parameters)
-      
-        
         
         NetworkManager<CSRFDecodableModel>.addRequest(.csrf, [:], parameters) { request, error in
             if error != nil {
@@ -210,7 +193,6 @@ extension AppDelegate {
             guard let token = request?.data?.token else {
                 completion("error")
                 return
-                
             }
             
             let certSeparator = request?.data?.cert?.replacingOccurrences(of: "\r", with: "").replacingOccurrences(of: "\n", with: "").components(separatedBy: "-----END CERTIFICATE----------BEGIN CERTIFICATE-----")
@@ -218,8 +200,6 @@ extension AppDelegate {
             KeyFromServer.privateKeyCert = certSeparator?[1].replacingOccurrences(of: "-----END CERTIFICATE-----", with: "")
             KeyFromServer.publicKey = request?.data?.pk
               
-//            let ourKeys = delegate?.createOwnKey()
-            
             let pubkeyFromCert = Encription().encryptedPublicKey()
                                    
             let shared = Encription().computeSharedSecret(ownPrivateKey: KeyPair.privateKey!, otherPublicKey: KeyFromServer.pubFromServ!)
@@ -229,55 +209,40 @@ extension AppDelegate {
 
             let newData = Encription().encryptWithRSAKey(Data(base64Encoded: KeyFromServer.publicKey!)!, rsaKeyRef: KeyPair.privateKey!, padding: .PKCS1)
             
-//                                   keyExchange()
-  
             
             // TODO: пределать на сингл тон
             UserDefaults.standard.set(token, forKey: "sessionToken")
             
-//            let tok = UserDefaults.standard.object(forKey: "sessionToken")
-//            print("DEBUG: Token = ", tok)
             CSRFToken.token = token
-            completion(nil)
             
-                   NetworkManager<InstallPushDeviceDecodebleModel>.addRequest(.installPushDevice, [:], parameters) { model, error in
-                       if error != nil {
-                           print("DEBUG: installPushDevice error", error ?? "nil")
-                           completion(error)
-                       }
-                        
-                    keyExchange()
-                    
-                    print("DEBUG: CSRF DONE!")
-       //                print("DEBUG: installPushDevice model", model ?? "nil")
-                       completion(nil)
-                   }
-
-            
-        }
-        
-            func keyExchange(){
-                var tempParameters = [String: String]()
-                tempParameters = ["X-XSRF-TOKEN":"\(UserDefaults.standard.object(forKey: "sessionToken") ?? "")"]
-                let parametersKey = [
-                "data": KeyFromServer.sendBase64ToServ ?? "",
-                "token": CSRFToken.token ?? "",
-                "type": "",
-            ] as [String : AnyObject]
-            
-                NetworkManager<KeyExchangeDecodebleModel>.addRequest(.keyExchange, [:], parametersKey) { model, error in
+            NetworkManager<InstallPushDeviceDecodebleModel>.addRequest(.installPushDevice, [:], parameters) { model, error in
                 if error != nil {
-                    print("DEBUG: KeyExchange error", error ?? "nil")
+                    print("DEBUG: installPushDevice error", error ?? "nil")
                     completion(error)
+                } else {
+                    
+                    let parametersKey = [
+                        "data": KeyFromServer.sendBase64ToServ ?? "",
+                        "token": CSRFToken.token ?? "",
+                        "type": "",
+                    ] as [String : AnyObject]
+                    
+                    NetworkManager<KeyExchangeDecodebleModel>.addRequest(.keyExchange, [:], parametersKey) { model, error in
+                        if error != nil {
+                            print("DEBUG: KeyExchange error", error ?? "nil")
+                            completion(error)
+                        } else {
+                            print("DEBUG: KeyExchange DONE!")
+                            print("DEBUG: CSRF DONE!")
+                            completion(nil)
+                        }
+                    }
                 }
-             
-                print("DEBUG: KeyExchange DONE!")
-//                print("DEBUG: installPushDevice model", model ?? "nil")
-                completion("Ok")
             }
         }
-        
     }
+    
+    
 }
 
 extension DispatchQueue {
