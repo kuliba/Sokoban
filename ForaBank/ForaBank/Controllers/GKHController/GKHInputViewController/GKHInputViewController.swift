@@ -10,6 +10,7 @@ import UIKit
 class GKHInputViewController: UIViewController {
     
     var operatorData: GKHOperatorsModel?
+    var valueToPass : String?
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var bottomInputView: BottomInputView!
@@ -21,63 +22,67 @@ class GKHInputViewController: UIViewController {
         // Изменения символа валюты
         bottomInputView.currencySymbol = "₽"
         
-        // Замыкание которое срабатывает по нажатию на кнопку продолжить
-        // amount значение выдает отформатированное значение для передачи в запрос
-        bottomInputView.didDoneButtonTapped = { amount in
-            
-            self.showActivity()
-            
-            // Запрос на платеж в ЖКХ : нужно добавить параметры в рапрос
-            self.paymentGKH(amount: amount) { model, error in
-                
-                self.dismissActivity()
-                
-                if error != nil {
-                    print("DEBUG: Error: endContactPayment ", error ?? "")
-                    self.showAlert(with: "Ошибка", and: error!)
-                } else {
-                    guard let model = model else { return }
-                    // Переход на экран подтверждения
-                    self.goToConfurmVC(with: model)
-                }
-                
-            }
-        }
-        // Функция настройки выбранной карты и список карт
-        setupCardList { error in
-            guard let error = error else { return }
-            self.showAlert(with: "Ошибка", and: error)
-        }
+    // Замыкание которое срабатывает по нажатию на кнопку продолжить
+    // amount значение выдает отформатированное значение для передачи в запрос
+    bottomInputView.didDoneButtonTapped = { amount in
         
+        self.showActivity()
+        
+        // Запрос на платеж в ЖКХ : нужно добавить параметры в рапрос
+        self.paymentGKH(amount: amount) { model, error in
+            
+            self.dismissActivity()
+            
+            if error != nil {
+                print("DEBUG: Error: endContactPayment ", error ?? "")
+                self.showAlert(with: "Ошибка", and: error!)
+            } else {
+                guard let model = model else { return }
+                // Переход на экран подтверждения
+                self.goToConfurmVC(with: model)
+            }
+    // Функция настройки выбранной карты и список карт
+            self.setupCardList { error in
+        guard let error = error else { return }
+        self.showAlert(with: "Ошибка", and: error)
     }
-    
-    //MARK: - Helpers
-    func goToConfurmVC(with model: ConfirmViewControllerModel) {
-        DispatchQueue.main.async {
-            let vc = ContactConfurmViewController()
-            vc.title = "Подтвердите реквизиты"
-            vc.confurmVCModel = model
-            self.navigationController?.pushViewController(vc, animated: true)
+            
         }
     }
+    }
     
-    func setupCardList(completion: @escaping ( _ error: String?) ->() ) {
-        getCardList { [weak self] data ,error in
-            DispatchQueue.main.async {
-                
-                if error != nil {
-                    self?.showAlert(with: "Ошибка", and: error!)
+    
+}
+
+extension GKHInputViewController {
+
+//MARK: - Helpers
+func goToConfurmVC(with model: ConfirmViewControllerModel) {
+    DispatchQueue.main.async {
+        let vc = ContactConfurmViewController()
+        vc.title = "Подтвердите реквизиты"
+        vc.confurmVCModel = model
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+}
+
+func setupCardList(completion: @escaping ( _ error: String?) ->() ) {
+    getCardList { [weak self] data ,error in
+        DispatchQueue.main.async {
+            
+            if error != nil {
+                self?.showAlert(with: "Ошибка", and: error!)
+            }
+            guard let data = data else { return }
+            var filterProduct: [GetProductListDatum] = []
+            data.forEach { product in
+                if (product.productType == "CARD" || product.productType == "ACCOUNT") && product.currency == "RUB" {
+                    filterProduct.append(product)
                 }
-                guard let data = data else { return }
-                var filterProduct: [GetProductListDatum] = []
-                data.forEach { product in
-                    if (product.productType == "CARD" || product.productType == "ACCOUNT") && product.currency == "RUB" {
-                        filterProduct.append(product)
-                    }
-                }
-                
+            }
+            
 //                self?.cardListView.cardList = filterProduct
-                
+            
 //                if filterProduct.count > 0 {
 //                    self?.cardFromField.cardModel = filterProduct.first
 //                    guard let cardNumber  = filterProduct.first?.number else { return }
@@ -85,31 +90,30 @@ class GKHInputViewController: UIViewController {
 //                    self?.cardIsSelect = true
 //                    completion(nil)
 //                }
-            }
         }
     }
+}
+
+
+//MARK: - API
+func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?)->()) {
+    let param = ["isCard": "true", "isAccount": "true", "isDeposit": "false", "isLoan": "false"]
     
-    
-    //MARK: - API
-    func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?)->()) {
-        let param = ["isCard": "true", "isAccount": "true", "isDeposit": "false", "isLoan": "false"]
-        
-        NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
-            if error != nil {
-                completion(nil, error)
-            }
-            guard let model = model else { return }
-            if model.statusCode == 0 {
-                guard let cardList = model.data else { return }
-                print(cardList)
-                completion(cardList, nil)
-            } else {
-                guard let error = model.errorMessage else { return }
-                completion(nil, error)
-            }
+    NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
+        if error != nil {
+            completion(nil, error)
+        }
+        guard let model = model else { return }
+        if model.statusCode == 0 {
+            guard let cardList = model.data else { return }
+            print(cardList)
+            completion(cardList, nil)
+        } else {
+            guard let error = model.errorMessage else { return }
+            completion(nil, error)
         }
     }
-    
+}
     func paymentGKH(amount: String ,completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
         
         let body = [ "check" : false,
@@ -174,11 +178,4 @@ class GKHInputViewController: UIViewController {
         }
         
     }
-    
-    
-    
-}
-
-extension GKHInputViewController: UITextFieldDelegate {
-    
 }

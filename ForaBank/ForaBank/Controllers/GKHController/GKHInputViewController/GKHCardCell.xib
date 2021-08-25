@@ -29,6 +29,9 @@
                     <constraint firstAttribute="bottom" secondItem="auT-aG-9ng" secondAttribute="bottom" id="ugO-bz-oOa"/>
                 </constraints>
             </tableViewCellContentView>
+            <connections>
+                <outlet property="cardChooseView" destination="auT-aG-9ng" id="ndG-KC-vrm"/>
+            </connections>
             <point key="canvasLocation" x="90" y="88"/>
         </tableViewCell>
     </objects>

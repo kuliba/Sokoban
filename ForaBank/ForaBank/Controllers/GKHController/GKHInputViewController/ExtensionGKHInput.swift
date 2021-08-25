@@ -25,10 +25,17 @@ extension GKHInputViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: GKHInputCell.reuseId, for: indexPath) as! GKHInputCell
             guard operatorData?.parameterList.count != 0 else { return cell}
             cell.setupUI((operatorData?.parameterList[indexPath.row])!)
-            cell.textField.delegate = self
+            cell.tableViewDelegate = (self as TableViewDelegate)
             return cell
         }
     }
     
-    
+}
+
+extension GKHInputViewController: TableViewDelegate {
+
+        func afterClickingReturnInTextField(cell: GKHInputCell) {
+
+            valueToPass = cell.textField.text
+        }
 }
