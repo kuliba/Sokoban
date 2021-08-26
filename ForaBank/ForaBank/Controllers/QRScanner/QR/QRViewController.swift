@@ -7,6 +7,7 @@
 
 import UIKit
 import AVFoundation
+import RealmSwift
 
 final class QRViewController: UIViewController {
     
@@ -16,7 +17,9 @@ final class QRViewController: UIViewController {
     
     let bottomSpace: CGFloat = 80.0
     var squareView: SquareView? = nil
-
+    
+    lazy var realm = try? Realm()
+    var operatorsList: Results<GKHOperatorsModel>? = nil
     
     var keyValue = ""
     var complition: ((String) -> ())?
@@ -26,6 +29,7 @@ final class QRViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        operatorsList = realm?.objects(GKHOperatorsModel.self)
         self.setupLayer()
         self.startQRCodeScanning()
         self.view.insertSubview(qrView, at: 1)
@@ -83,6 +87,19 @@ extension QRViewController: AVCaptureMetadataOutputObjectsDelegate, CALayerDeleg
         if let object = metadataObjects.first as? AVMetadataMachineReadableCodeObject {
             if object.type == AVMetadataObject.ObjectType.qr {
                 self.keyValue = object.stringValue ?? ""
+                let a = self.keyValue.components(separatedBy: "|")
+                var c = [String: String?]()
+                
+                a.forEach { v in
+                    let tempArray = v.components(separatedBy: "=")
+                    print(tempArray)
+//                    let key = tempArray[0]
+//                    let value = tempArray[1]
+//                    c.updateValue(value, forKey: key)
+                }
+                let r = c
+                
+          //      let b = operatorsList?.filter{ $0.synonymList.first == a }
                 self.returnKey()
             } else {
                 DispatchQueue.main.async {

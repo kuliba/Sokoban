@@ -30,7 +30,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 print("DEBUG: Error getCSRF: ", error!)
             }
             let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
-//            userIsRegister = false
             if let userIsRegister = userIsRegister {
                 if userIsRegister {
                     self.goToPinVC(.validate)
@@ -55,9 +54,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Called when the scene has moved from an inactive state to an active state.
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
         
-//        DispatchQueue.main.async {
+        DispatchQueue.main.async {
             UIApplication.shared.keyWindow?.deleteBlure()
-//        }
+        }
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
@@ -119,36 +118,36 @@ extension SceneDelegate {
 }
 
 
-extension AppDelegate {
-    func getCSRF1(completion: @escaping (_ error: String?) ->()) {
-        let parameters = [
-            "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-            "pushFcmToken": Messaging.messaging().fcmToken as String?,
-            "model": UIDevice().model,
-            "operationSystem": "IOS"
-        ] as [String : AnyObject]
-        
-        NetworkManager<CSRFDecodableModel>.addRequest(.csrf, [:], parameters) { request, error in
-            if error != nil {
-                completion(error)
-            }
-            guard let token = request?.data?.token else {
-                completion("error")
-                return
-            }
-            print("DEBUG: CSRF DONE!")
-            CSRFToken.token = token
-            
-            NetworkManager<InstallPushDeviceDecodebleModel>.addRequest(.installPushDevice, [:], parameters) { model, error in
-                if error != nil {
-                    print("DEBUG: installPushDevice error", error ?? "nil")
-                    completion(error)
-                }
-                print("DEBUG: CSRF DONE!")
-//                print("DEBUG: installPushDevice model", model ?? "nil")
-                completion(nil)
-            }
-            
-        }
-    }
-}
+//extension AppDelegate {
+//    func getCSRF1(completion: @escaping (_ error: String?) ->()) {
+//        let parameters = [
+//            "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
+//            "pushFcmToken": Messaging.messaging().fcmToken as String?,
+//            "model": UIDevice().model,
+//            "operationSystem": "IOS"
+//        ] as [String : AnyObject]
+//
+//        NetworkManager<CSRFDecodableModel>.addRequest(.csrf, [:], parameters) { request, error in
+//            if error != nil {
+//                completion(error)
+//            }
+//            guard let token = request?.data?.token else {
+//                completion("error")
+//                return
+//            }
+//            print("DEBUG: CSRF DONE!")
+//            CSRFToken.token = token
+//
+//            NetworkManager<InstallPushDeviceDecodebleModel>.addRequest(.installPushDevice, [:], parameters) { model, error in
+//                if error != nil {
+//                    print("DEBUG: installPushDevice error", error ?? "nil")
+//                    completion(error)
+//                }
+//                print("DEBUG: CSRF DONE!")
+////                print("DEBUG: installPushDevice model", model ?? "nil")
+//                completion(nil)
+//            }
+//
+//        }
+//    }
+//}

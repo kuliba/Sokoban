@@ -303,15 +303,23 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="4Lk-8t-flG">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="80" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="4Lk-8t-flG">
                                 <rect key="frame" x="0.0" y="88" width="414" height="667"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="oCC-q3-D08">
-                                        <rect key="frame" x="0.0" y="24.5" width="414" height="44"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" rowHeight="80" id="oCC-q3-D08" userLabel="Anycell">
+                                        <rect key="frame" x="0.0" y="24.5" width="414" height="80"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="oCC-q3-D08" id="f1d-h1-1Vq">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="80"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cardcell" rowHeight="80" id="VUI-aD-sPK" userLabel="Cardcell">
+                                        <rect key="frame" x="0.0" y="104.5" width="414" height="80"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="VUI-aD-sPK" id="xeM-uY-IJW">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="80"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -321,18 +329,27 @@
                                     <outlet property="delegate" destination="aEQ-Qe-EY3" id="gKJ-8j-F62"/>
                                 </connections>
                             </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9GB-Uu-AZ1" customClass="BottomInputView" customModule="ForaBank" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="755" width="414" height="107"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="8AZ-W8-4gG"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="9GB-Uu-AZ1" firstAttribute="trailing" secondItem="8AZ-W8-4gG" secondAttribute="trailing" id="1LU-dH-CnO"/>
+                            <constraint firstItem="9GB-Uu-AZ1" firstAttribute="bottom" secondItem="8AZ-W8-4gG" secondAttribute="bottom" id="HSb-kN-tOw"/>
                             <constraint firstItem="4Lk-8t-flG" firstAttribute="top" secondItem="8AZ-W8-4gG" secondAttribute="top" id="NpF-dN-KfS"/>
+                            <constraint firstItem="9GB-Uu-AZ1" firstAttribute="leading" secondItem="8AZ-W8-4gG" secondAttribute="leading" id="XT9-9s-c0a"/>
                             <constraint firstItem="4Lk-8t-flG" firstAttribute="trailing" secondItem="8AZ-W8-4gG" secondAttribute="trailing" id="b9x-Ez-IvL"/>
                             <constraint firstItem="4Lk-8t-flG" firstAttribute="leading" secondItem="8AZ-W8-4gG" secondAttribute="leading" id="c9O-vk-kRT"/>
+                            <constraint firstItem="9GB-Uu-AZ1" firstAttribute="top" secondItem="4Lk-8t-flG" secondAttribute="bottom" id="cHb-ER-JM1"/>
                             <constraint firstItem="8AZ-W8-4gG" firstAttribute="bottom" secondItem="4Lk-8t-flG" secondAttribute="bottom" constant="107" id="r7Y-EB-Ntz"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="RJ9-JY-dGF"/>
                     <connections>
+                        <outlet property="bottomInputView" destination="9GB-Uu-AZ1" id="95i-CF-YgK"/>
                         <outlet property="tableView" destination="4Lk-8t-flG" id="2CS-Hl-N1b"/>
                     </connections>
                 </viewController>

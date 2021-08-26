@@ -86,6 +86,9 @@
 		0BB015D626C8892700E7A85B /* GKHMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB015D426C8892700E7A85B /* GKHMainViewController.swift */; };
 		0BB015DA26C9378200E7A85B /* GKHOperatorsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB015D926C9378200E7A85B /* GKHOperatorsModel.swift */; };
 		0BB015DC26C9BE3700E7A85B /* ExtensionGKHMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB015DB26C9BE3700E7A85B /* ExtensionGKHMain.swift */; };
+		0BB8816D26D6696400015E27 /* GKHCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB8816B26D6696400015E27 /* GKHCardCell.swift */; };
+		0BB8816E26D6696400015E27 /* GKHCardCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0BB8816C26D6696400015E27 /* GKHCardCell.xib */; };
+		0BB8817026D6AE4200015E27 /* UserAllCardsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB8816F26D6AE4200015E27 /* UserAllCardsModel.swift */; };
 		0BD2177926A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */; };
 		0BE270B026B76B9700FA958C /* ExtensionCustomPopUpSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270AF26B76B9700FA958C /* ExtensionCustomPopUpSetup.swift */; };
 		0BE270B326B9959900FA958C /* ExtensionBottomLableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */; };
@@ -400,6 +403,9 @@
 		0BB015D426C8892700E7A85B /* GKHMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHMainViewController.swift; sourceTree = "<group>"; };
 		0BB015D926C9378200E7A85B /* GKHOperatorsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHOperatorsModel.swift; sourceTree = "<group>"; };
 		0BB015DB26C9BE3700E7A85B /* ExtensionGKHMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionGKHMain.swift; sourceTree = "<group>"; };
+		0BB8816B26D6696400015E27 /* GKHCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHCardCell.swift; sourceTree = "<group>"; };
+		0BB8816C26D6696400015E27 /* GKHCardCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GKHCardCell.xib; sourceTree = "<group>"; };
+		0BB8816F26D6AE4200015E27 /* UserAllCardsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAllCardsModel.swift; sourceTree = "<group>"; };
 		0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAnywayOperatorsListDecodableModel.swift; sourceTree = "<group>"; };
 		0BE270AF26B76B9700FA958C /* ExtensionCustomPopUpSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionCustomPopUpSetup.swift; sourceTree = "<group>"; };
 		0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBottomLableModel.swift; sourceTree = "<group>"; };
@@ -658,8 +664,8 @@
 		0B216FBA26D15B7D0023C878 /* GKHInputCell */ = {
 			isa = PBXGroup;
 			children = (
-				0B216FBB26D15BAA0023C878 /* GKHInputCell.xib */,
-				0B216FBD26D15BDF0023C878 /* GKHInputCell.swift */,
+				0BB8816A26D6692600015E27 /* CardCell */,
+				0BB8816826D6685000015E27 /* AnyCell */,
 			);
 			name = GKHInputCell;
 			sourceTree = "<group>";
@@ -847,6 +853,32 @@
 				0BAC674526D4F138005AAD91 /* GKHMainController */,
 			);
 			path = GKHMainViewController;
+			sourceTree = "<group>";
+		};
+		0BB8816826D6685000015E27 /* AnyCell */ = {
+			isa = PBXGroup;
+			children = (
+				0B216FBB26D15BAA0023C878 /* GKHInputCell.xib */,
+				0B216FBD26D15BDF0023C878 /* GKHInputCell.swift */,
+			);
+			name = AnyCell;
+			sourceTree = "<group>";
+		};
+		0BB8816A26D6692600015E27 /* CardCell */ = {
+			isa = PBXGroup;
+			children = (
+				0BB8816B26D6696400015E27 /* GKHCardCell.swift */,
+				0BB8816C26D6696400015E27 /* GKHCardCell.xib */,
+			);
+			name = CardCell;
+			sourceTree = "<group>";
+		};
+		0BB8817126D6C95200015E27 /* REALMModel */ = {
+			isa = PBXGroup;
+			children = (
+				0BB8816F26D6AE4200015E27 /* UserAllCardsModel.swift */,
+			);
+			path = REALMModel;
 			sourceTree = "<group>";
 		};
 		0BE270B126B9957B00FA958C /* BottomLableModel */ = {
@@ -1280,6 +1312,7 @@
 		ED4FC5FE266B91360092B4AB /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				0BB8817126D6C95200015E27 /* REALMModel */,
 				0B66E8DF26CC62A100FD735D /* NetDetect */,
 				0B95C40126B6C9ED00AA57E6 /* CustonPopUpWithRate */,
 				EDB1453F2666AFD70028EF5A /* Constants.swift */,
@@ -2179,6 +2212,7 @@
 				ED0B489E267D41B10037EA06 /* PaymentsDetailsView.xib in Resources */,
 				0B66E8E626CC658A00FD735D /* GKHStoryboard.storyboard in Resources */,
 				EDB14532266667140028EF5A /* OrderProductsCollectionViewCell.xib in Resources */,
+				0BB8816E26D6696400015E27 /* GKHCardCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2272,6 +2306,7 @@
 				EDB1657C2668C8D5007E6030 /* PayCell.swift in Sources */,
 				0BE270BA26B9F36A00FA958C /* ExtensionBottomInputRequest.swift in Sources */,
 				EDFFCAF0268245EC004EE095 /* CardViewModel.swift in Sources */,
+				0BB8817026D6AE4200015E27 /* UserAllCardsModel.swift in Sources */,
 				0B9EC85D26739C0000D86EB2 /* GetCountriesDecodebleModel.swift in Sources */,
 				68FFA54C2684C854002DADFA /* PDFViewerViewController.swift in Sources */,
 				0B05163126A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift in Sources */,
@@ -2394,6 +2429,7 @@
 				0B216FC326D1B30C0023C878 /* ExtensionGKHCitySearchController.swift in Sources */,
 				ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */,
 				ED84994526A6F647005205C6 /* ChooseCountryHeaderView.swift in Sources */,
+				0BB8816D26D6696400015E27 /* GKHCardCell.swift in Sources */,
 				EDB1655A2667A220007E6030 /* CodeVerificationViewController UI.swift in Sources */,
 				0B7A18BA2683AC880007CC75 /* NotificationName.swift in Sources */,
 				0B95C3FE26B6C96F00AA57E6 /* DoubleInStringExtension.swift in Sources */,
