@@ -210,6 +210,9 @@ class MainViewController: UIViewController {
                     completion(model.data,nil)
                 } else {
                     print("DEBUG: Error: ", model.errorMessage ?? "")
+                    if model.errorMessage == "Пользователь не авторизован"{
+                        AppLocker.present(with: .validate)
+                    }
                     completion(nil, model.errorMessage)
                 }
             }

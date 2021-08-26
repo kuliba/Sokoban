@@ -79,7 +79,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        banksList = Dict.shared.banks ?? []
+        banksList = Dict.shared.banks?.filter({$0.paymentSystemCodeList?.first == "SFP"}) ?? []
         print(banks)
         let viewLine = UIView()
  
@@ -674,10 +674,10 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                     self.lastPaymentsCollectionView.reloadData()
                 }
             } else {
-                DispatchQueue.main.async {
                 if model.errorMessage == "Пользователь не авторизован"{
-                    AppLocker.present(with: .validate)
-                }
+                    DispatchQueue.main.async {
+                        AppLocker.present(with: .validate)
+                    }
                 }
                 print("DEBUG: Error: ", model.errorMessage ?? "")
             }
