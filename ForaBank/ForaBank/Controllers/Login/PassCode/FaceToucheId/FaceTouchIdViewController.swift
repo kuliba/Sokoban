@@ -13,17 +13,17 @@ import Valet
 
 
 class FaceTouchIdViewController: UIViewController {
-
+    
     var sensor: String?
     var code: String?
     var face = false
     var touch = false
     private let context = LAContext()
     public var onSuccessfulDismiss: onSuccessfulDismissCallback?
-
+    
     
     lazy var image = UIImageView(frame: CGRect(x: 0, y: 0, width: 64, height: 64))
-     var circleView = UIView()
+    var circleView = UIView()
     lazy var subTitleLabel = UILabel(text: "")
     lazy var skipButton: UIButton = {
         let button = UIButton(title: "Пропустить", titleColor: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), backgroundColor: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1))
@@ -38,10 +38,8 @@ class FaceTouchIdViewController: UIViewController {
         setupUI()
         useButton.addTarget(self, action: #selector(registerMyPin), for: .touchUpInside)
         skipButton.addTarget(self, action: #selector(skipRegisterMyPin), for: .touchUpInside)
-
+        
     }
-    
-    
     
     func biometricType() -> BiometricType {
         let _ = context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: nil)
@@ -81,11 +79,11 @@ class FaceTouchIdViewController: UIViewController {
                     return ""
                 }
                 let aes = try AES(keyString: key)
-
+                
                 let stringToEncrypt: String = "\(string)"
                 
                 print("String to encrypt:\t\t\t\(stringToEncrypt)")
-
+                
                 let encryptedData: Data = try aes.encrypt(stringToEncrypt)
                 print("String encrypted (base64):\t\(encryptedData.base64EncodedString())")
                 
@@ -106,7 +104,7 @@ class FaceTouchIdViewController: UIViewController {
         guard  let faceId = encript(string: "faceId") else {
             return
         }
-    
+        
         UserDefaults().set(true, forKey: "isSensorsEnabled")
         let data = [
             "cryptoVersion": "1.0",
@@ -136,7 +134,7 @@ class FaceTouchIdViewController: UIViewController {
                     UserDefaults.standard.set(true, forKey: "UserIsRegister")
                     DispatchQueue.main.async {
                         AppDelegate.shared.getCSRF { errorMessage in
-                            if errorMessage == "Ok"{
+                            if errorMessage == nil{
                                 self.login(with: self.code ?? "", type: .pin) { error in
                                     if error != nil {
                                         print("DEBUG: Error getCSRF: ", error!)
@@ -148,7 +146,7 @@ class FaceTouchIdViewController: UIViewController {
                             if error != nil {
                                 print("DEBUG: Error getCSRF: ", error!)
                             } else {
-                               
+                                
                             }
                         }
                     }
@@ -168,11 +166,11 @@ class FaceTouchIdViewController: UIViewController {
                     return ""
                 }
                 let aes = try AES(keyString: key)
-
+                
                 let stringToEncrypt: String = "\(string)"
                 
                 print("String to encrypt:\t\t\t\(stringToEncrypt)")
-
+                
                 let encryptedData: Data = try aes.encrypt(stringToEncrypt)
                 print("String encrypted (base64):\t\(encryptedData.base64EncodedString())")
                 
@@ -216,7 +214,7 @@ class FaceTouchIdViewController: UIViewController {
             if error != nil {
                 guard let error = error else { return }
                 print("DEBUG: setDeviceSetting" ,error)
-//                showAlert(with: "Ошибка", and: error)
+                //                showAlert(with: "Ошибка", and: error)
             } else {
                 guard let statusCode = model?.statusCode else { return }
                 if statusCode == 0 {
@@ -226,8 +224,6 @@ class FaceTouchIdViewController: UIViewController {
                             if error != nil {
                                 print("DEBUG: Error getCSRF: ", error!)
                             } else {
-                            }
-                            if error == "Ok"{
                                 self.login(with: self.code ?? "", type: .pin) { error in
                                     if error != nil {
                                         print("DEBUG: Error getCSRF: ", error!)
@@ -255,11 +251,11 @@ class FaceTouchIdViewController: UIViewController {
                     return ""
                 }
                 let aes = try AES(keyString: key)
-
+                
                 let stringToEncrypt: String = "\(string)"
                 
                 print("String to encrypt:\t\t\t\(stringToEncrypt)")
-
+                
                 let encryptedData: Data = try aes.encrypt(stringToEncrypt)
                 print("String encrypted (base64):\t\(encryptedData.base64EncodedString())")
                 
@@ -281,7 +277,7 @@ class FaceTouchIdViewController: UIViewController {
             "loginValue": encript(string: code.sha256() ),
             "type": encript(string: type.rawValue)
         ] as [String : AnyObject]
-//        print(data)
+        //        print(data)
         print("DEBUG: Start login with body: ", data)
         NetworkManager<LoginDoCodableModel>.addRequest(.login, [:], data) { model, error in
             if error != nil {
@@ -305,11 +301,11 @@ class FaceTouchIdViewController: UIViewController {
                         if model.statusCode == 0 {
                             print("DEBUG: You are LOGGIN!!!")
                             self.dismissActivity()
-                                    DispatchQueue.main.async { [weak self] in
-                                        let vc = MainTabBarViewController()
-                                        vc.modalPresentationStyle = .fullScreen
-                                        self?.present(vc, animated: true)
-                                    }
+                            DispatchQueue.main.async { [weak self] in
+                                let vc = MainTabBarViewController()
+                                vc.modalPresentationStyle = .fullScreen
+                                self?.present(vc, animated: true)
+                            }
                         }
                     }
                 } else {
@@ -322,7 +318,6 @@ class FaceTouchIdViewController: UIViewController {
     
     func setupUI() {
         
-
         subTitleLabel.numberOfLines = 2
         subTitleLabel.textAlignment = .center
         subTitleLabel.text = "Вместо пароля вы можете использовать \(sensor ?? "") для входа"
@@ -337,52 +332,36 @@ class FaceTouchIdViewController: UIViewController {
         view.addSubview(useButton)
         view.addSubview(skipButton)
         
-                
-
-        
-        
-
-       
-        
         subTitleLabel.anchor(left: view.leftAnchor , right: view.rightAnchor, paddingLeft: 41, paddingRight: 41, width: 170, height: 170)
         subTitleLabel.centerX(inView: view, topAnchor: image.bottomAnchor,
                               paddingTop: 29)
-    
+        
         let circle = UIView()
         view.addSubview(circle)
-
+        
         circle.centerX(inView: view)
         circle.addSubview(image)
         image.center(inView: circle)
-       
+        
         image.backgroundColor = .clear
-
-     
         
         circle.anchor(top: view.topAnchor, paddingTop: 79, width: 170, height: 170)
         circle.layer.cornerRadius = 170/2
         circle.clipsToBounds = true
-
+        
         circle.backgroundColor = UIColor(red: 0.965, green: 0.965, blue: 0.969, alpha: 1)
-
-       
         
         useButton.centerX(inView: view)
         useButton.anchor(bottom: skipButton.topAnchor, paddingTop: -20)
         useButton.anchor(left: view.leftAnchor, right: view.rightAnchor,
-                          paddingLeft: 20, paddingRight: 20, height: 44)
+                         paddingLeft: 20, paddingRight: 20, height: 44)
         useButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-
+        
         skipButton.centerX(inView: view, topAnchor: view.bottomAnchor,
-                                 paddingTop: -100)
+                           paddingTop: -100)
         skipButton.anchor(left: view.leftAnchor, right: view.rightAnchor,
                           paddingLeft: 20, paddingRight: 20, height: 44)
         
-        
-        
     }
-
-
-    
     
 }
