@@ -20,6 +20,7 @@ class LoginCardEntryViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         hideKeyboardWhenTappedAround()
+        self.creditCardView.cardNumberTextField.becomeFirstResponder()
         creditCardView.cardNumberTextField.delegate = self
         creditCardView.scanerCardTapped = { self.scanCardTapped() }
         creditCardView.enterCardNumberTapped = { [weak self] (cardNumber) in
@@ -70,6 +71,7 @@ class LoginCardEntryViewController: UIViewController {
             guard let cardNumder = card else { return }
             self.creditCardView.cardNumberTextField.text = "\(cardNumder)"
             self.creditCardView.doneButton.isHidden = cardNumder.count  >= 16 ? false : true
+            self.creditCardView.cardNumberTextField.becomeFirstResponder()
         }
         present(scannerView, animated: true, completion: nil)
     }
@@ -86,6 +88,5 @@ extension LoginCardEntryViewController: UITextFieldDelegate {
         creditCardView.cardNumberTextField.maskString = cardNumber.count >= 16 ? "00000 000 0 0000 0000000" : "0000 0000 0000 0000"
         
         let newPosition = textField.endOfDocument
-        creditCardView.cardNumberTextField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition)
     }
 }
