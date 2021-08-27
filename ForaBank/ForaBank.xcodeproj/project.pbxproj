@@ -89,6 +89,7 @@
 		0BB8816D26D6696400015E27 /* GKHCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB8816B26D6696400015E27 /* GKHCardCell.swift */; };
 		0BB8816E26D6696400015E27 /* GKHCardCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0BB8816C26D6696400015E27 /* GKHCardCell.xib */; };
 		0BB8817026D6AE4200015E27 /* UserAllCardsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB8816F26D6AE4200015E27 /* UserAllCardsModel.swift */; };
+		0BB8817326D6F9E400015E27 /* GKHInputFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB8817226D6F9E400015E27 /* GKHInputFooter.swift */; };
 		0BD2177926A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */; };
 		0BE270B026B76B9700FA958C /* ExtensionCustomPopUpSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270AF26B76B9700FA958C /* ExtensionCustomPopUpSetup.swift */; };
 		0BE270B326B9959900FA958C /* ExtensionBottomLableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */; };
@@ -406,6 +407,7 @@
 		0BB8816B26D6696400015E27 /* GKHCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHCardCell.swift; sourceTree = "<group>"; };
 		0BB8816C26D6696400015E27 /* GKHCardCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GKHCardCell.xib; sourceTree = "<group>"; };
 		0BB8816F26D6AE4200015E27 /* UserAllCardsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAllCardsModel.swift; sourceTree = "<group>"; };
+		0BB8817226D6F9E400015E27 /* GKHInputFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHInputFooter.swift; sourceTree = "<group>"; };
 		0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAnywayOperatorsListDecodableModel.swift; sourceTree = "<group>"; };
 		0BE270AF26B76B9700FA958C /* ExtensionCustomPopUpSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionCustomPopUpSetup.swift; sourceTree = "<group>"; };
 		0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBottomLableModel.swift; sourceTree = "<group>"; };
@@ -666,6 +668,7 @@
 			children = (
 				0BB8816A26D6692600015E27 /* CardCell */,
 				0BB8816826D6685000015E27 /* AnyCell */,
+				0BB8817226D6F9E400015E27 /* GKHInputFooter.swift */,
 			);
 			name = GKHInputCell;
 			sourceTree = "<group>";
@@ -2318,6 +2321,7 @@
 				0BF3486426943DFB005138A8 /* SuggestCompanyDecodableModel.swift in Sources */,
 				EDB1452026661B030028EF5A /* StringMask.swift in Sources */,
 				EDB16586266A0883007E6030 /* NSDirectionalEdgeInsets.swift in Sources */,
+				0BB8817326D6F9E400015E27 /* GKHInputFooter.swift in Sources */,
 				EDFFCAF32682461F004EE095 /* CardCell.swift in Sources */,
 				EDB14524266624460028EF5A /* UIViewController.swift in Sources */,
 				EDCF8A1526CED86100DC9F54 /* BankTableViewCell.swift in Sources */,
