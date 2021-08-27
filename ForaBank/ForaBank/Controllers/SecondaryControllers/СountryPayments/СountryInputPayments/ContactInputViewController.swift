@@ -34,10 +34,10 @@ class ContactInputViewController: UIViewController {
         didSet {
             print("Set country", country ?? "nil")
             if country?.code == "AM" {
-//                self.typeOfPay = .migAIbank
+                self.typeOfPay = .mig
                 self.configure(with: country, byPhone: true)
             } else {
-//                self.typeOfPay = .contact
+                self.typeOfPay = .contact
                 self.configure(with: country, byPhone: false)
             }
         }
