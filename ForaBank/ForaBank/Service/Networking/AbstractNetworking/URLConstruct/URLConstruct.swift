@@ -15,7 +15,7 @@ struct URLConstruct {
                        _ host: URLHost.URLHostType,
                        _ path: String) -> URLType {
         
-        let temp = scheme.rawValue + "://" + host.rawValue + path
+        let temp = scheme.rawValue + "://" + URLHost().getHost() + path
         
         let components = URLComponents(string: temp)
         
