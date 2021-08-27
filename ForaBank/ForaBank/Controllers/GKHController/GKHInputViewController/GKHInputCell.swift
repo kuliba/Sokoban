@@ -23,6 +23,7 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
     @IBOutlet weak var errorLable: UILabel!
     @IBOutlet weak var showFIOButton: UIButton!
     
+    @IBOutlet weak var payTypeButton: UIButton!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var lineView: UIView!
     
@@ -32,6 +33,7 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
         super.awakeFromNib()
         showFIOButton.isHidden = true
         textField.delegate = self
+        textField.clearButtonMode = .whileEditing
     }
     
     // @IBAction Of UITextfiled
@@ -47,13 +49,17 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
             textField.resignFirstResponder()
             return true
         }
-        func textFieldDidEndEditing(_ textField: UITextField) {
-            self.placeholderLable.text = placeholder
-            self.textField = textField
-            if placeholder == "" {
-                self.placeholderLable.text = ""
-            }
-        }
+//        func textFieldDidEndEditing(_ textField: UITextField) {
+//            if placeholderLable.text == "" {
+//                self.placeholderLable.text = placeholder
+//                self.placeholder = ""
+//            }
+//        }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        textField.text = ""
+        self.placeholderLable.text = placeholder
+    }
 
     func setupUI (_ dataModel: Parameters) {
         let q = GKHDataSorted.a(dataModel.title ?? "")
@@ -77,7 +83,19 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
 //        tableViewDelegate?.afterClickingReturnInTextField(cell: self)
     }
     
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+               
+                if (string == " ") {
+                    return false
+                } else {
+                    
+                    return true
+                }
+            }
     
+    
+    @IBAction func payTapButton(_ sender: UIButton) {
+    }
     
     @IBAction func showFIOButton(_ sender: UIButton) {
     }

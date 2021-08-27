@@ -9,6 +9,8 @@ import UIKit
 
 extension GKHMainViewController {
     
+      
+      
     func setTitle(title:String, subtitle:String) -> UIView {
         let titleLabel = UILabel(frame: CGRect(x: 0, y: -2, width: 0, height: 0))
         
@@ -42,7 +44,7 @@ extension GKHMainViewController {
     
     func setupNavBar() {
         
-        self.navigationItem.titleView = setTitle(title: "Все", subtitle: "")
+        navigationItem.titleView = setTitle(title: "Все", subtitle: "")
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
         searchController.obscuresBackgroundDuringPresentation = false
@@ -51,16 +53,25 @@ extension GKHMainViewController {
         searchController.automaticallyShowsCancelButton = false
         searchController.searchBar.delegate = self
         definesPresentationContext = true
-        self.navigationItem.leftBarButtonItem?.style = .done
-        addCloseButton_1()
-        let button = UIBarButtonItem(image: UIImage(systemName: "qrIcon"),
-                                                       landscapeImagePhone: nil,
-                                                       style: .plain,
-                                                       target: self,
-                                                       action: #selector(onQR))
-        button.tintColor = .black
-        navigationItem.rightBarButtonItem = button
         
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "back_button") , style: .plain, target: self, action: #selector(backAction))
+        
+        self.navigationItem.leftBarButtonItem?.setTitleTextAttributes(
+            [.foregroundColor: UIColor.black], for: .normal)
+        self.navigationItem.leftBarButtonItem?.setTitleTextAttributes(
+            [.foregroundColor: UIColor.black], for: .highlighted)
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "qr_Icon") , style: .plain, target: self, action: #selector(onQR))
+        
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes(
+            [.foregroundColor: UIColor.black], for: .normal)
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes(
+            [.foregroundColor: UIColor.black], for: .highlighted)
+        
+    }
+    @objc func backAction(){
+        dismiss(animated: true, completion: nil)
+        navigationController?.dismiss(animated: true, completion: nil)
     }
     @objc func onQR(){
         checkCameraAccess(isAllowed: {
@@ -88,3 +99,4 @@ extension GKHMainViewController {
         })
     }
 }
+

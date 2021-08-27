@@ -11,19 +11,28 @@ class GKHInputViewController: UIViewController {
     
     var operatorData: GKHOperatorsModel?
     var valueToPass : String?
+    var puref = ""
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var bottomInputView: BottomInputView!
+    @IBOutlet weak var goButton: UIButton!
+    
+    let footerView = GKHFooterView(text: "This is the text to be displayed in the footer view. Lets just think this contains some sort of disclaimer or maybe information that needs to be always shown below the content of the table. We don't know the length of this, especially if we want to support different languages, so we rely Auto Layout to calculate the correct size.")
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        bottomInputView.isHidden = true
+        setupNavBar()
+//        goButton.isEnabled = false
+//        goButton.backgroundColor = .lightGray
+        goButton.add_CornerRadius(5)
+        puref = operatorData?.puref ?? ""
         tableView.register(UINib(nibName: "GKHInputCell", bundle: nil), forCellReuseIdentifier: GKHInputCell.reuseId)
         tableView.register(UINib(nibName: "GKHCardCell", bundle: nil), forCellReuseIdentifier: GKHCardCell.reuseId)
         // Изменения символа валюты
         bottomInputView.currencySymbol = "₽"
-        
+        /// Загружаем карты
         AddAllUserCardtList.add()
-        
         // Замыкание которое срабатывает по нажатию на кнопку продолжить
         // amount значение выдает отформатированное значение для передачи в запрос
         bottomInputView.didDoneButtonTapped = { amount in
@@ -51,6 +60,27 @@ class GKHInputViewController: UIViewController {
                 
             }
         }
+                self.tableView.tableFooterView = footerView
+    }
+    
+    override func viewDidLayoutSubviews() {
+            super.viewDidLayoutSubviews()
+            guard let footerView = self.tableView.tableFooterView else {
+                return
+            }
+
+            let width = self.tableView.bounds.size.width
+            let size = footerView.systemLayoutSizeFitting(CGSize(width: width, height: UIView.layoutFittingCompressedSize.height))
+
+            if footerView.frame.size.height != size.height {
+                footerView.frame.size.height = size.height
+                self.tableView.tableFooterView = footerView
+            }
+        }
+    
+    @IBAction func goButton(_ sender: UIButton) {
+        goButton.isHidden = true
+        bottomInputView.isHidden = false
     }
     
     
@@ -64,6 +94,16 @@ extension GKHInputViewController {
             let vc = ContactConfurmViewController()
             vc.title = "Подтвердите реквизиты"
             vc.confurmVCModel = model
+            vc.countryField.isHidden = true
+            vc.phoneField.isHidden = true
+            vc.nameField.isHidden = true
+            vc.bankField.isHidden = true
+            vc.numberTransctionField.isHidden = true
+            vc.cardToField.isHidden = true
+            vc.summTransctionField.isHidden = false
+            vc.taxTransctionField.isHidden = false
+            vc.currTransctionField.isHidden = true
+            vc.currancyTransctionField.isHidden = true
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }
@@ -122,13 +162,15 @@ extension GKHInputViewController {
     }
     func paymentGKH(amount: String ,completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
         
+        let a = puref
+        print(a)
         let body = [ "check" : false,
                      "amount" : amount,
                      "currencyAmount" : "RUB",
                      "payer" : [ "cardId" : nil,
                                  "cardNumber" : 4656260142582070,
                                  "accountId" : nil ],
-                     "puref" : "iFora||TNS",
+                     "puref" : puref,
                      "additional" : [
                         [ "fieldid": 1,
                           "fieldname": "account",
@@ -158,19 +200,13 @@ extension GKHInputViewController {
                 guard let data = respModel.data else { return }
                 var model = ConfirmViewControllerModel(type: .gkh)
                 
-                //                    model.cardFrom = self.cardFromField.cardModel
-                //                    model.summTransction = data.debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
-                //                    model.summInCurrency = data.creditAmount?.currencyFormatter(symbol: data.currencyPayee ?? "RUB") ?? ""
-                //
-                //                    model.taxTransction = data.fee?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
-                //                    model.fullName = data.payeeName ?? "Получатель не оперделен"
-                //                    model.statusIsSuccses = true
-                //                    model.bank = self.selectedBank
-                //                    respModel.data?.additionalList?.forEach({ additional in
-                //                        if additional.fieldName == "RECP" {
-                //                            model.phone = additional.fieldValue ?? ""
-                //                        }
-                //                    })
+                //                                    model.cardFrom = self.cardFromField.cardModel
+                let r = Double(data.debitAmount ?? 0)
+                
+                model.summTransction = r.currencyFormatter(symbol: "RUB")
+                
+                let c = Double(data.fee ?? 0)
+                model.taxTransction = c.currencyFormatter(symbol: "RUB")
                 
                 completion(model, nil)
                 
