@@ -123,6 +123,10 @@ extension GKHInputViewController {
                     }
                 }
                 
+                let cell = self?.tableView.cellForRow(at: IndexPath(row: 3, section: 0)) as! GKHCardCell
+                cell.cardListView.cardList = filterProduct
+                cell.cardChooseView.cardModel = filterProduct.first
+                
                 //                self?.cardListView.cardList = filterProduct
                 
                 //                if filterProduct.count > 0 {
