@@ -16,7 +16,7 @@ class DevelopViewController: UIViewController {
         font: .boldSystemFont(ofSize: 18), color: .black)
     
     let subTitleLabel = UILabel(
-        text: "Этот функционал рейчас в разработке, мы скоро его дабавим",
+        text: "Этот функционал сейчас в разработке, мы скоро его добавим",
         font: .systemFont(ofSize: 14), color: .black)
     
     override func viewDidLoad() {

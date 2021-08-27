@@ -132,7 +132,7 @@ class PaymentByPhoneViewController: UIViewController {
             
             self.dismiss(animated: true, completion: nil)
         }
-        hideKeyboardWhenTappedAround()
+//        hideKeyboardWhenTappedAround()
 //        getCardList()
         setupActions()
 //        bankPayeer.imageView.image = bankImage
@@ -393,7 +393,7 @@ class PaymentByPhoneViewController: UIViewController {
         NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer, [:], body) { [weak self] dataresp, error in
             DispatchQueue.main.async {
 //                UIApplication.shared.keyWindow?.stopIndicatingActivity()
-                self?.dismissActivity()
+//                self?.dismissActivity()
                 self?.bottomView.doneButtonIsEnabled(false)
                 if error != nil {
                     guard let error = error else { return }
@@ -433,12 +433,14 @@ class PaymentByPhoneViewController: UIViewController {
                             vc.confurmVCModel = model
                             vc.title = "Подтвердите реквизиты"
                             vc.addCloseButton()
+                            self?.dismissActivity()
                             let navController = UINavigationController(rootViewController: vc)
                             navController.modalPresentationStyle = .fullScreen
                             self?.present(navController, animated: true, completion: nil)
                         }
                     } else {
                         print("DEBUG: ", #function, dataresp?.errorMessage ?? "nil")
+                        self?.dismissActivity()
                         self?.showAlert(with: "Ошибка", and: dataresp?.errorMessage ?? "")
                     }
                 }
@@ -473,8 +475,9 @@ class PaymentByPhoneViewController: UIViewController {
                     }
                     guard let model = model else { return }
                     if model.statusCode == 0 {
-                        self?.dismissActivity()
+                        
                         DispatchQueue.main.async {
+                            self?.dismissActivity()
                             self?.endSBPPayment(amount: self?.bottomView.amountTextField.text ?? "0") { error in
                                 self?.showAlert(with: "Ошибка", and: error!)
                                 print(error ?? "")
@@ -543,9 +546,9 @@ class PaymentByPhoneViewController: UIViewController {
             }
             guard let model = model else { return }
             if model.statusCode == 0 {
-                self?.dismissActivity()
                 print("DEBUG: Success send Phone")
                 DispatchQueue.main.async {
+                    self?.dismissActivity()
                     self?.endSBPPayment2()
                 }
             } else {
@@ -589,7 +592,6 @@ class PaymentByPhoneViewController: UIViewController {
                 print("DEBUG: Success send Phone")
                 self?.confirm = true
                 DispatchQueue.main.async {
-                    self?.dismissActivity()
                     var model = ConfirmViewControllerModel(type: .phoneNumberSBP)
                     if self?.selectedBank != nil {
                         model.bank = self?.selectedBank
@@ -618,6 +620,7 @@ class PaymentByPhoneViewController: UIViewController {
                     let navController = UINavigationController(rootViewController: vc)
                     navController.modalPresentationStyle = .fullScreen
                     self?.present(navController, animated: true, completion: nil)
+                    self?.dismissActivity()
                     
                 }
 //                let model = ConfurmViewControllerModel(
@@ -628,6 +631,9 @@ class PaymentByPhoneViewController: UIViewController {
             } else {
                 self?.dismissActivity()
                 self?.showAlert(with: "Ошибка", and: data.errorMessage ?? "")
+                if data.errorMessage  == "Пользователь не авторизован"{
+                    AppLocker.present(with: .validate)
+                }
                 print("DEBUG: Error: ", data.errorMessage ?? "")
                 
             }

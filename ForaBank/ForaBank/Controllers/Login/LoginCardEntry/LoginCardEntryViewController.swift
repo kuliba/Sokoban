@@ -20,34 +20,38 @@ class LoginCardEntryViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         hideKeyboardWhenTappedAround()
+        self.creditCardView.cardNumberTextField.becomeFirstResponder()
         creditCardView.cardNumberTextField.delegate = self
         creditCardView.scanerCardTapped = { self.scanCardTapped() }
         creditCardView.enterCardNumberTapped = { [weak self] (cardNumber) in
             self?.showActivity()
             DispatchQueue.main.async {
-            AppDelegate.shared.getCSRF { errorMessage in
-                if errorMessage == "Ok"{
-                    LoginViewModel().checkCardNumber(with: cardNumber) { resp, error in
-                        self?.dismissActivity()
-                        if error != nil {
-                            self?.showAlert(with: "Ошибка", and: error ?? "")
-                        } else {
-                            DispatchQueue.main.async { [weak self] in
-                                let model = CodeVerificationViewModel(phone: resp, type: .register)
-                                let vc = CodeVerificationViewController(model: model)
-                                self?.navigationController?.pushViewController(vc, animated: true)
+                AppDelegate.shared.getCSRF { errorMessage in
+                    if errorMessage == nil{
+                        LoginViewModel().checkCardNumber(with: cardNumber) { resp, error in
+                            self?.dismissActivity()
+                            if error != nil {
+                                self?.showAlert(with: "Ошибка", and: error ?? "")
+                            } else {
+                                DispatchQueue.main.async { [weak self] in
+                                    let model = CodeVerificationViewModel(phone: resp, type: .register)
+                                    let vc = CodeVerificationViewController(model: model)
+                                    self?.navigationController?.pushViewController(vc, animated: true)
+                                }
                             }
                         }
+                    } else {
+                        self?.dismissActivity()
+                        self?.showAlert(with: "Ошибка", and: errorMessage ?? "" )
                     }
                 }
-            }
-
-                    }
                 
+            }
+            
         }
         
         orderCardView.orderCardTapped = { self.orderCardTapped() }
-
+        
         
     }
     
@@ -70,6 +74,7 @@ class LoginCardEntryViewController: UIViewController {
             guard let cardNumder = card else { return }
             self.creditCardView.cardNumberTextField.text = "\(cardNumder)"
             self.creditCardView.doneButton.isHidden = cardNumder.count  >= 16 ? false : true
+            self.creditCardView.cardNumberTextField.becomeFirstResponder()
         }
         present(scannerView, animated: true, completion: nil)
     }
@@ -86,6 +91,5 @@ extension LoginCardEntryViewController: UITextFieldDelegate {
         creditCardView.cardNumberTextField.maskString = cardNumber.count >= 16 ? "00000 000 0 0000 0000000" : "0000 0000 0000 0000"
         
         let newPosition = textField.endOfDocument
-        creditCardView.cardNumberTextField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition)
     }
 }

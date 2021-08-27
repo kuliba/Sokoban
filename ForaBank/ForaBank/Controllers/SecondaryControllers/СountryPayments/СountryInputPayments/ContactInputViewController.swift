@@ -34,7 +34,7 @@ class ContactInputViewController: UIViewController {
         didSet {
             print("Set country", country ?? "nil")
             if country?.code == "AM" {
-                self.typeOfPay = .migAIbank
+                self.typeOfPay = .mig
                 self.configure(with: country, byPhone: true)
             } else {
                 self.typeOfPay = .contact
@@ -198,7 +198,7 @@ class ContactInputViewController: UIViewController {
         }
         
         foraSwitchView.switchIsChanged = { [weak self] (switchView) in
-            self?.typeOfPay = switchView.isOn ? .migAIbank : .contact
+            self?.typeOfPay = switchView.isOn ? .mig : .contact
             self?.configure(with: self?.country, byPhone: switchView.isOn)
         }
         
@@ -232,7 +232,7 @@ class ContactInputViewController: UIViewController {
             let secondName = self.secondNameField.textField.text ?? ""
             
             switch self.typeOfPay {
-            case .migAIbank:
+            case .mig:
                 self.migPayment(with: self.selectedCardNumber, phone: phone, amount: amount) { model, error in
                     self.dismissActivity()
                     if error != nil {

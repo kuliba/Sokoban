@@ -164,7 +164,7 @@ extension GKHInputViewController {
                      "amount" : amount,
                      "currencyAmount" : "RUB",
                      "payer" : [ "cardId" : nil,
-                                 "cardNumber" : 4656260142595932,
+                                 "cardNumber" : 4656260142582070,
                                  "accountId" : nil ],
                      "puref" : puref,
                      "additional" : [
