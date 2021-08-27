@@ -167,7 +167,7 @@
                             <constraint firstItem="pm1-we-3w5" firstAttribute="bottom" secondItem="5EZ-qb-Rvc" secondAttribute="bottom" id="pwB-m1-x2P"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="Jc9-ng-aVx"/>
+                    <navigationItem key="navigationItem" largeTitleDisplayMode="never" id="Jc9-ng-aVx"/>
                     <size key="freeformSize" width="414" height="900"/>
                     <connections>
                         <outlet property="tableView" destination="G8s-V3-Z5p" id="G6V-wB-8f3"/>
@@ -336,7 +336,7 @@
                                     <outlet property="delegate" destination="aEQ-Qe-EY3" id="gKJ-8j-F62"/>
                                 </connections>
                             </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ttR-ce-VXD">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ttR-ce-VXD">
                                 <rect key="frame" x="20" y="772" width="374" height="40"/>
                                 <color key="backgroundColor" name="redColorFora"/>
                                 <constraints>

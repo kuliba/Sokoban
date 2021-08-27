@@ -31,6 +31,7 @@
 		0B37F984267A18AC007728FC /* MakeCard2CardDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F983267A18AC007728FC /* MakeCard2CardDecodableModel.swift */; };
 		0B37F98626807620007728FC /* NetworkHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F98526807620007728FC /* NetworkHelper.swift */; };
 		0B37F9882680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F9872680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift */; };
+		0B51D87626D959BB00FC7B6B /* ExtensionGKHInputNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B51D87526D959BB00FC7B6B /* ExtensionGKHInputNav.swift */; };
 		0B66E8D626CC5D6500FD735D /* NetDetectAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B66E8D526CC5D6500FD735D /* NetDetectAlert.swift */; };
 		0B66E8D826CC5EC400FD735D /* ExtensionDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B66E8D726CC5EC400FD735D /* ExtensionDevice.swift */; };
 		0B66E8DA26CC5F1E00FD735D /* SquareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B66E8D926CC5F1E00FD735D /* SquareView.swift */; };
@@ -352,6 +353,7 @@
 		0B37F983267A18AC007728FC /* MakeCard2CardDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeCard2CardDecodableModel.swift; sourceTree = "<group>"; };
 		0B37F98526807620007728FC /* NetworkHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkHelper.swift; sourceTree = "<group>"; };
 		0B37F9872680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLatestPaymentsDecodableModel.swift; sourceTree = "<group>"; };
+		0B51D87526D959BB00FC7B6B /* ExtensionGKHInputNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionGKHInputNav.swift; sourceTree = "<group>"; };
 		0B66E8D526CC5D6500FD735D /* NetDetectAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetDetectAlert.swift; sourceTree = "<group>"; };
 		0B66E8D726CC5EC400FD735D /* ExtensionDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDevice.swift; sourceTree = "<group>"; };
 		0B66E8D926CC5F1E00FD735D /* SquareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquareView.swift; sourceTree = "<group>"; };
@@ -697,6 +699,7 @@
 				0B216FBA26D15B7D0023C878 /* GKHInputCell */,
 				0B22AEA026CDA9BC00B11E7F /* GKHInputViewController.swift */,
 				0B22AEA226CDB38500B11E7F /* ExtensionGKHInput.swift */,
+				0B51D87526D959BB00FC7B6B /* ExtensionGKHInputNav.swift */,
 			);
 			path = GKHInputViewController;
 			sourceTree = "<group>";
@@ -2455,6 +2458,7 @@
 				EDB1452226661C3F0028EF5A /* MaskedTextField.swift in Sources */,
 				ED4FC5EF266B70A00092B4AB /* PartialTransparentView.swift in Sources */,
 				ED302A3126D3E56600161243 /* UIImage.swift in Sources */,
+				0B51D87626D959BB00FC7B6B /* ExtensionGKHInputNav.swift in Sources */,
 				ED0B48AC26812F450037EA06 /* LoginViewModel.swift in Sources */,
 				0B22AEA326CDB38500B11E7F /* ExtensionGKHInput.swift in Sources */,
 				EDB16588266A14F9007E6030 /* String.swift in Sources */,

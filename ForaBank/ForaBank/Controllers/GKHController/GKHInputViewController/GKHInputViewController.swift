@@ -22,7 +22,7 @@ class GKHInputViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         bottomInputView.isHidden = true
-        
+        setupNavBar()
 //        goButton.isEnabled = false
 //        goButton.backgroundColor = .lightGray
         goButton.add_CornerRadius(5)

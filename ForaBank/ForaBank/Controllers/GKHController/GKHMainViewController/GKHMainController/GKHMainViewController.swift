@@ -44,11 +44,6 @@ class GKHMainViewController: UIViewController {
         }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-        self.navigationController?.isNavigationBarHidden = false
-    }
-    
     var operatorsList: Results<GKHOperatorsModel>? = nil
     
     lazy var realm = try? Realm()
@@ -97,6 +92,8 @@ class GKHMainViewController: UIViewController {
         }
     }
     
+  
+    }
+    
 
-}
 
