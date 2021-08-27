@@ -73,6 +73,7 @@ extension GKHMainViewController {
         dismiss(animated: true, completion: nil)
         navigationController?.dismiss(animated: true, completion: nil)
     }
+    
     @objc func onQR(){
         checkCameraAccess(isAllowed: {
             if $0 {
