@@ -24,7 +24,7 @@ class GKHInputViewController: UIViewController {
         bottomInputView.isHidden = true
         setupNavBar()
 //        goButton.isEnabled = false
-//        goButton.backgroundColor = .lightGray
+        //        goButton.backgroundColor = .lightGray
         goButton.add_CornerRadius(5)
         puref = operatorData?.puref ?? ""
         tableView.register(UINib(nibName: "GKHInputCell", bundle: nil), forCellReuseIdentifier: GKHInputCell.reuseId)
@@ -60,23 +60,29 @@ class GKHInputViewController: UIViewController {
                 
             }
         }
-                self.tableView.tableFooterView = footerView
+        self.tableView.tableFooterView = footerView
+        
+        
+        setupCardList { error in
+            guard let error = error else { return }
+            self.showAlert(with: "Ошибка", and: error)
+        }
     }
     
     override func viewDidLayoutSubviews() {
-            super.viewDidLayoutSubviews()
-            guard let footerView = self.tableView.tableFooterView else {
-                return
-            }
-
-            let width = self.tableView.bounds.size.width
-            let size = footerView.systemLayoutSizeFitting(CGSize(width: width, height: UIView.layoutFittingCompressedSize.height))
-
-            if footerView.frame.size.height != size.height {
-                footerView.frame.size.height = size.height
-                self.tableView.tableFooterView = footerView
-            }
+        super.viewDidLayoutSubviews()
+        guard let footerView = self.tableView.tableFooterView else {
+            return
         }
+        
+        let width = self.tableView.bounds.size.width
+        let size = footerView.systemLayoutSizeFitting(CGSize(width: width, height: UIView.layoutFittingCompressedSize.height))
+        
+        if footerView.frame.size.height != size.height {
+            footerView.frame.size.height = size.height
+            self.tableView.tableFooterView = footerView
+        }
+    }
     
     @IBAction func goButton(_ sender: UIButton) {
         goButton.isHidden = true
@@ -123,9 +129,10 @@ extension GKHInputViewController {
                     }
                 }
                 
-                let cell = self?.tableView.cellForRow(at: IndexPath(row: 3, section: 0)) as! GKHCardCell
-                cell.cardListView.cardList = filterProduct
-                cell.cardChooseView.cardModel = filterProduct.first
+//                let cell = self?.tableView.cellForRow(at: IndexPath(row: 3, section: 0)) as! GKHCardCell
+                
+                self?.footerView.cardListView.cardList = filterProduct
+                self?.footerView.cardFromField.cardModel = filterProduct.first
                 
                 //                self?.cardListView.cardList = filterProduct
                 
