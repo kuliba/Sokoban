@@ -18,17 +18,13 @@ extension GKHInputViewController: UITableViewDataSource, TableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        if indexPath.row == 3 {
-//            let cell = tableView.dequeueReusableCell(withIdentifier: GKHCardCell.reuseId, for: indexPath) as! GKHCardCell
-//            return cell
-//        } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: GKHInputCell.reuseId, for: indexPath) as! GKHInputCell
             guard operatorData?.parameterList.count != 0 else { return cell }
             
             cell.setupUI((operatorData?.parameterList[indexPath.row])!)
             cell.tableViewDelegate = (self as TableViewDelegate)
             return cell
-//        }
+
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -42,6 +38,10 @@ extension GKHInputViewController: UITableViewDataSource, TableViewDelegate {
 //
 //        return footerView
 //      }
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 250
+    }
+    
 }
 
 extension GKHInputViewController {

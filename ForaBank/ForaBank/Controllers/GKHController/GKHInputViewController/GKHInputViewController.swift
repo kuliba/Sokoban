@@ -17,18 +17,19 @@ class GKHInputViewController: UIViewController {
     @IBOutlet weak var bottomInputView: BottomInputView!
     @IBOutlet weak var goButton: UIButton!
     
+    
     let footerView = GKHFooterView(text: "This is the text to be displayed in the footer view. Lets just think this contains some sort of disclaimer or maybe information that needs to be always shown below the content of the table. We don't know the length of this, especially if we want to support different languages, so we rely Auto Layout to calculate the correct size.")
     
     override func viewDidLoad() {
         super.viewDidLoad()
         bottomInputView.isHidden = true
+
         setupNavBar()
 //        goButton.isEnabled = false
         //        goButton.backgroundColor = .lightGray
         goButton.add_CornerRadius(5)
         puref = operatorData?.puref ?? ""
         tableView.register(UINib(nibName: "GKHInputCell", bundle: nil), forCellReuseIdentifier: GKHInputCell.reuseId)
-        tableView.register(UINib(nibName: "GKHCardCell", bundle: nil), forCellReuseIdentifier: GKHCardCell.reuseId)
         // Изменения символа валюты
         bottomInputView.currencySymbol = "₽"
         /// Загружаем карты
@@ -128,8 +129,6 @@ extension GKHInputViewController {
                         filterProduct.append(product)
                     }
                 }
-                
-//                let cell = self?.tableView.cellForRow(at: IndexPath(row: 3, section: 0)) as! GKHCardCell
                 
                 self?.footerView.cardListView.cardList = filterProduct
                 self?.footerView.cardFromField.cardModel = filterProduct.first

@@ -21,13 +21,14 @@ class GKHMainViewController: UIViewController {
     func changeTitle(_ text: String) {
         DispatchQueue.main.async {
             self.navigationItem.titleView = self.setTitle(title: text, subtitle: "")
-          }
+        }
     }
     
     @IBOutlet weak var tableView: UITableView!
     var searching = false
     let searchController = UISearchController(searchResultsController: nil)
     var searchingText = ""
+    
     var organization = [GKHOperatorsModel]() {
         didSet {
             DispatchQueue.main.async {
@@ -50,6 +51,12 @@ class GKHMainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        /// Загрузка истории операций
+        AddHistoryList.add()
+        
+        
+        tableView.register(GKHHistoryHeaderView.self,
+               forHeaderFooterViewReuseIdentifier: "sectionHeader")
         
         tableView.register(UINib(nibName: "GHKCell", bundle: nil), forCellReuseIdentifier: GHKCell.reuseId)
         setupNavBar()
@@ -63,15 +70,6 @@ class GKHMainViewController: UIViewController {
             let k = value.userInfo?["key"] as? String ?? ""
             self?.searchedOrganization = (self?.organization.filter { $0.region?.lowercased().prefix(k.count) ?? "" == k.lowercased() })!
         }
-    }
-    
-    func doStringContainsNumber( _string : String) -> Bool{
-        
-        let numberRegEx  = ".*[0-9]+.*"
-        let testCase = NSPredicate(format:"SELF MATCHES %@", numberRegEx)
-        let containsNumber = testCase.evaluate(with: _string)
-        return containsNumber
-        
     }
     
     func checkCameraAccess(isAllowed: @escaping (Bool) -> Void) {
@@ -92,8 +90,7 @@ class GKHMainViewController: UIViewController {
         }
     }
     
-  
-    }
-    
+}
+
 
 

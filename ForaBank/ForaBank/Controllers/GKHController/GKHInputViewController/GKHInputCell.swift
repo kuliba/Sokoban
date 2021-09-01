@@ -36,13 +36,6 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
         textField.clearButtonMode = .whileEditing
     }
     
-    // @IBAction Of UITextfiled
-//        @IBAction func tapHerre(_ sender: UITextField) {
-//
-//            tableViewDelegate?.responds(to: #selector(TableViewDelegate.afterClickingReturnInTextField(cell:)))
-//            tableViewDelegate?.afterClickingReturnInTextField(cell: self)
-//        }
-    
     // UITextField Defaults delegates
         func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 
@@ -63,7 +56,6 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
 
     func setupUI (_ dataModel: Parameters) {
         let q = GKHDataSorted.a(dataModel.title ?? "")
-        print("GKHCell", q.1, q.0)
         operatorsIcon.image = UIImage(named: q.1)
         textField.text = q.0
         placeholder = q.0

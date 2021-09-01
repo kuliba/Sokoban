@@ -8,6 +8,16 @@
 import UIKit
 
 extension GKHMainViewController: UITableViewDelegate {
+    
+     func tableView(_ tableView: UITableView,
+            viewForHeaderInSection section: Int) -> UIView? {
+       let view = tableView.dequeueReusableHeaderFooterView(withIdentifier:
+                   "sectionHeader") as! GKHHistoryHeaderView
+//       view.title.text = sections[section]
+//       view.image.image = UIImage(named: sectionImages[section])
+
+       return view
+    }
 }
 
 extension GKHMainViewController: UITableViewDataSource {

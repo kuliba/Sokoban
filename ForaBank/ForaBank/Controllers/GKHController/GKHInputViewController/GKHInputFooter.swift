@@ -23,7 +23,6 @@ final class GKHFooterView: UIView {
 
     init(text: String) {
         super.init(frame: .zero)
-//        self.contentLabel.text = text
         self.setupUI()
     }
 
@@ -47,13 +46,13 @@ final class GKHFooterView: UIView {
         stackView.isUserInteractionEnabled = true
         
         let contentView = UIView()
-        contentView.backgroundColor = .red
+        contentView.backgroundColor = .white
         contentView.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(contentView)
-        contentView.addSubview(stackView)
+        self.addSubview(stackView)
+//        contentView.addSubview(stackView)
         
         // Hack to fix AutoLayout bug related to UIView-Encapsulated-Layout-Width
-        let leadingContraint = contentView.leadingAnchor.constraint(equalTo: self.layoutMarginsGuide.leadingAnchor)
+        let leadingContraint = contentView.leadingAnchor.constraint(equalTo: self.leadingAnchor)
 //        leadingContraint.priority = .defaultHigh
 
         // Hack to fix AutoLayout bug related to UIView-Encapsulated-Layout-Height
@@ -61,15 +60,16 @@ final class GKHFooterView: UIView {
         topConstraint.priority = .defaultHigh
 
         NSLayoutConstraint.activate([
-            leadingContraint,
-            topConstraint,
-            
-            contentView.trailingAnchor.constraint(equalTo: self.layoutMarginsGuide.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: self.layoutMarginsGuide.bottomAnchor),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            stackView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+//            leadingContraint,
+//            topConstraint,
+//
+//            contentView.trailingAnchor.constraint(equalTo: self.layoutMarginsGuide.trailingAnchor),
+//            contentView.bottomAnchor.constraint(equalTo: self.layoutMarginsGuide.bottomAnchor),
+////            contentView.heightAnchor.constraint(equalToConstant: 200),
+            stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            stackView.topAnchor.constraint(equalTo: self.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
             
         ])
         setupActions()
@@ -80,7 +80,7 @@ final class GKHFooterView: UIView {
             print("cardField didChooseButtonTapped")
             self.openOrHideView(self.cardListView)
         }
-        
+
         cardListView.didCardTapped = { card in
             self.cardFromField.cardModel = card
             self.hideView(self.cardListView, needHide: true)

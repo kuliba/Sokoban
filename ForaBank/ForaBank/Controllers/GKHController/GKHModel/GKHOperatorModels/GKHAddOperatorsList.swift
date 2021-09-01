@@ -1,50 +1,12 @@
 //
-//  GKHOperatorsModel.swift
+//  GKHAddOperatorsList.swift
 //  ForaBank
 //
-//  Created by Константин Савялов on 15.08.2021.
+//  Created by Константин Савялов on 30.08.2021.
 //
 
 import Foundation
 import RealmSwift
-
-// MARK: - GKHOperatorsModel
-class GKHOperatorsModel: Object {
-
-    @objc dynamic var puref: String?
-    @objc dynamic var isGroup = false
-    @objc dynamic var name: String?
-    @objc dynamic var region: String?
-    
-    var logotypeList  = List<LogotypeData>()
-    let synonymList   = List<String>()
-    let parameterList = List<Parameters>()
-    
-}
-
-// MARK: - LogotypeData
-class LogotypeData: Object {
-    @objc dynamic var content: String?
-    @objc dynamic var name: String?
-}
-
-// MARK: - ParameterList
-class Parameters: Object {
-
-    @objc dynamic var id: String?
-    @objc dynamic var order = 0
-    @objc dynamic var title: String?
-    @objc dynamic var subTitle: String?
-    @objc dynamic var viewType: String?
-    @objc dynamic var dataType: String?
-    @objc dynamic var type: String?
-    @objc dynamic var mask: String?
-    @objc dynamic var regExp: String?
-    @objc dynamic var maxLength = 0
-    @objc dynamic var minLength = 0
-    @objc dynamic var rawLength = 0
-    
-}
 
 // MARK: - Save REALM
 struct AddOperatorsList {
