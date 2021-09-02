@@ -6,15 +6,64 @@
 //
 
 import UIKit
+import RealmSwift
 
 struct RequestMeToMeModel {
-    var amount: Double?
+    var amount: Double
+    var fee: Double
     var bank: BankFullInfoList?
+    var card: UserAllCardsModel?
+    var RecipientID: String?
+    var RcvrMsgId: String?
+    var RefTrnId: String?
+    
+    lazy var realm = try? Realm()
+    
+    init(amount: Double, bankId: String, fee: Double, cardId: Int?, accountId: Int?) {
+        self.amount = amount
+        self.fee = fee
+        self.bank = findBank(with: bankId)
+        self.card = findProduct(with: cardId, with: accountId)
+    }
+    
+    private func findBank(with bankId: String) -> BankFullInfoList? {
+        let bankList = Dict.shared.bankFullInfoList
+        var bankForReturn: BankFullInfoList?
+        bankList?.forEach({ bank in
+            if bank.memberID == bankId {
+                bankForReturn = bank
+            }
+        })
+        return bankForReturn
+    }
+    
+    private mutating func findProduct(with cardId: Int?, with accountId: Int?) -> UserAllCardsModel? {
+        let cardList = realm?.objects(UserAllCardsModel.self)
+        var card: UserAllCardsModel?
+        cardList?.forEach { product in
+            if cardId != nil {
+                if product.id == cardId {
+                    card = product
+                }
+            } else {
+                if product.id == accountId {
+                    card = product
+                }
+            }
+        }
+        return card
+    }
+    
 }
 
 class MeToMeRequestController: UIViewController {
 
-    var viewModel: RequestMeToMeModel?
+    var viewModel: RequestMeToMeModel? {
+        didSet {
+            guard let model = self.viewModel else { return }
+            fillData(model: model)
+        }
+    }
     
     lazy var contentViewSize = CGSize(width: self.view.frame.width, height: self.view.frame.height + 400)
     
@@ -67,6 +116,7 @@ class MeToMeRequestController: UIViewController {
         cardField.titleLabel.text = "Счет списания"
         cardField.titleLabel.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
         cardField.imageView.isHidden = false
+        cardField.choseButton.isHidden = true
         cardField.leftTitleAncor.constant = 64
         cardField.layoutIfNeeded()
         return cardField
@@ -116,15 +166,18 @@ class MeToMeRequestController: UIViewController {
         let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
         self.navigationItem.rightBarButtonItem = customViewItem
         
+        let model = RequestMeToMeModel(amount: 2344.59, bankId: "100000000004", fee: 0.5, cardId: 10000164837, accountId: nil)
         
-        
-//        guard let model = self.viewModel else { return }
-//        fillData(model: model)
+        self.viewModel = model
     }
     
     func fillData(model: RequestMeToMeModel) {
-//        self.currencyLabel.text = model.amount?.currencyFormatter(symbol: "RUB")
-//        self.bankLabel.text = model.bank?.fullName
+        summTransctionField.text = model.amount.currencyFormatter(symbol: "RUB")
+        taxTransctionField.text = model.fee.currencyFormatter(symbol: "RUB")
+        bankField.text = model.bank?.rusName ?? ""
+        bankField.imageView.image = model.bank?.svgImage?.convertSVGStringToImage()
+        labelSubTitle.text = "Денежные средства будут списываться по вашим запросам из \(model.bank?.rusName ?? "bank") без подтверждения?"
+        cardFromField.model = model.card
     }
     
     private func setupUI() {
@@ -177,8 +230,6 @@ class MeToMeRequestController: UIViewController {
             top: labelSubTitle.bottomAnchor, left: containerView.leftAnchor,
             right: containerView.rightAnchor, paddingTop: 20, paddingRight: 20)
         
-        summTransctionField.text = Double(1000).currencyFormatter(symbol: "RUB")
-        taxTransctionField.text = Double(0).currencyFormatter(symbol: "RUB")
     }
     
     
