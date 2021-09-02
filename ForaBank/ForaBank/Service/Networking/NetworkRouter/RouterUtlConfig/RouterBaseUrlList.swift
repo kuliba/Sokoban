@@ -90,17 +90,22 @@ enum RouterBaseUrlList: String {
     
     // MARK: - В не авторизованную зону.
     ///Обновление по serial
+    #if DEBUG
     case getAnywayOperatorsList    = "/getAnywayOperatorsList"
-    
     case getFullBankInfoList       = "/dict/getFullBankInfoList"
-    
     case getCurrencyList           = "/dict/getCurrencyList"
-    
     case getBanks                  = "/dict/getBanks"
-    
     case getPaymentSystemList      = "/dict/getPaymentSystemList"
-    
     case getCountries              = "/dict/getCountries"
+
+    #elseif RELEASE
+    case getAnywayOperatorsList    = "/rest/getAnywayOperatorsList"
+    case getFullBankInfoList       = "/rest/dict/getFullBankInfoList"
+    case getCurrencyList           = "/rest/dict/getCurrencyList"
+    case getBanks                  = "/rest/dict/getBanks"
+    case getPaymentSystemList      = "/rest/dict/getPaymentSystemList"
+    case getCountries              = "/rest/dict/getCountries"
+    #endif
     
     // MARK: - Надо в авторизованную зону.
     /// Обновление при заходе на экран

@@ -102,6 +102,16 @@ class MainTabBarViewController: UITabBarController {
             print("DEBUG: Load Banks")
         }
         
+        
+        NetworkHelper.request(.getBankFullInfoList) { model, error in
+            if error != nil {
+                self.showAlert(with: "Ошибка", and: error!)
+            }
+            guard let banks = model as? [BankFullInfoList] else { return }
+            Dict.shared.bankFullInfoList = banks
+            print("DEBUG: Load Banks")
+        }
+        
         NetworkHelper.request(.getPaymentSystemList) { model, error in
             if error != nil {
                 self.showAlert(with: "Ошибка", and: error!)
