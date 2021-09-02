@@ -15,15 +15,15 @@ extension GKHInputViewController {
         titleLabel.backgroundColor = .clear
         titleLabel.textColor = .black
         
-        let imageAttachment = NSTextAttachment()
-        imageAttachment.image = UIImage(systemName: "chevron.down")
-        imageAttachment.bounds = CGRect(x: 0, y: 0, width: imageAttachment.image!.size.width, height: imageAttachment.image!.size.height)
-        
-        let attachmentString = NSAttributedString(attachment: imageAttachment)
+//        let imageAttachment = NSTextAttachment()
+//        imageAttachment.image = UIImage(systemName: "chevron.down")
+//        imageAttachment.bounds = CGRect(x: 0, y: 0, width: imageAttachment.image!.size.width, height: imageAttachment.image!.size.height)
+//
+//        let attachmentString = NSAttributedString(attachment: imageAttachment)
         let completeText = NSMutableAttributedString(string: "")
         let text = NSAttributedString(string: title + " ", attributes: [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 16)])
         completeText.append(text)
-        completeText.append(attachmentString)
+//        completeText.append(attachmentString)
         
         titleLabel.attributedText = completeText
         titleLabel.sizeToFit()
@@ -33,9 +33,9 @@ extension GKHInputViewController {
         return titleView
     }
     
-    func setupNavBar() {
+    func setupNavBar(_ title: String, _ subTitle: String) {
         
-        navigationItem.titleView = setTitle(title: "Все", subtitle: "0000")
+        navigationItem.titleView = setTitle(title: title, subtitle: subTitle)
         navigationItem.hidesSearchBarWhenScrolling = false
         definesPresentationContext = true
         

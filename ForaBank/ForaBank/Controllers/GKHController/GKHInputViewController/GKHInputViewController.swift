@@ -22,7 +22,9 @@ class GKHInputViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         bottomInputView.isHidden = true
-        setupNavBar()
+        let navTitle = operatorData?.name ?? ""
+        let navSubTitle = operatorData?.synonymList.first ?? ""
+        setupNavBar(navTitle, navSubTitle)
 //        goButton.isEnabled = false
 //        goButton.backgroundColor = .lightGray
         goButton.add_CornerRadius(5)
@@ -214,9 +216,6 @@ extension GKHInputViewController {
                 print("DEBUG: Error: ContaktPaymentBegin ", respModel.errorMessage ?? "")
                 completion(nil, respModel.errorMessage)
             }
-            
-            
-            
         }
         
     }

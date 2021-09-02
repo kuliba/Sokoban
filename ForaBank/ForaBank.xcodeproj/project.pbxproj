@@ -854,8 +854,8 @@
 		0BB015DD26C9BFCC00E7A85B /* GKHMainViewController */ = {
 			isa = PBXGroup;
 			children = (
-				0B216FBF26D1B26A0023C878 /* GKHCitySearch */,
 				0BAC674226D418C4005AAD91 /* GKHCell */,
+				0B216FBF26D1B26A0023C878 /* GKHCitySearch */,
 				0BAC674526D4F138005AAD91 /* GKHMainController */,
 			);
 			path = GKHMainViewController;
