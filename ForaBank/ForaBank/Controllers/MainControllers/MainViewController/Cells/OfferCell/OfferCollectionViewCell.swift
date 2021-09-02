@@ -1,21 +1,19 @@
 //
-//  ProductCell.swift
+//  OfferCollectionViewCell.swift
 //  ForaBank
 //
-//  Created by Дмитрий on 11.08.2021.
+//  Created by Дмитрий on 01.09.2021.
 //
 
-import Foundation
 import UIKit
 
-
-class ProductCell: UICollectionViewCell, SelfConfiguringCell {
+class OfferCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
    
     func configure<U>(with value: U) where U : Hashable {
         guard let card = card else { return }
         
         let viewModel = CardViewModel(card: card)
-        backgroundImageView.image =  card.largeDesign?.convertSVGStringToImage()
+        backgroundImageView.image =  UIImage(named: "promoBanner2")
         balanceLabel.text = viewModel.balance
         balanceLabel.textColor = viewModel.colorText
         cardNameLabel.text = viewModel.cardName
@@ -28,7 +26,7 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
     }
     
     
-    static var reuseId: String = "ProductCell"
+    static var reuseId: String = "OfferCollectionViewCell"
     //MARK: - Properties
     var card: GetProductListDatum? {
         didSet { configure() }
@@ -59,7 +57,7 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 11 )
         label.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
-        label.text = "Зарплатная"
+        label.text = ""
         return label
     }()
     
@@ -93,7 +91,7 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
         
         let viewModel = CardViewModel(card: card)
         
-        backgroundImageView.image =  card.largeDesign?.convertSVGStringToImage()
+        backgroundImageView.image =  UIImage(named: "promoBanner2")
 
         balanceLabel.text = viewModel.balance
         balanceLabel.textColor = viewModel.colorText

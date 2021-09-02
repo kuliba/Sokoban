@@ -16,23 +16,68 @@ class MainViewController: UIViewController {
                 }
             }
         }
-        var productList = [GetProductListDatum]()
-        var transfers = [PaymentsModel]()
-        var pay = [PaymentsModel]()
-        var offer = [PaymentsModel]()
+    var productList = [GetProductListDatum](){
+        didSet{
+            DispatchQueue.main.async {
+                self.reloadData(with: nil)
+            }
+        }
+    }
+        var transfers = [PaymentsModel](){
+            didSet{
+                DispatchQueue.main.async {
+                    self.reloadData(with: nil)
+                }
+            }
+        }
+        var pay = [PaymentsModel](){
+            didSet{
+                DispatchQueue.main.async {
+                    self.reloadData(with: nil)
+                }
+            }
+        }
+        var offer = [PaymentsModel](){
+            didSet{
+                DispatchQueue.main.async {
+                    self.reloadData(with: nil)
+                }
+            }
+        }
+        var openProduct = [PaymentsModel](){
+            didSet{
+                DispatchQueue.main.async {
+                    self.reloadData(with: nil)
+                }
+            }
+        }
+        var branches = [PaymentsModel]()
+        var investment = [PaymentsModel]()
+        var services = [PaymentsModel]()
+    
+        let searchContact: NavigationBarUIView = UIView.fromNib()
+
     
         enum Section: Int, CaseIterable {
-            case payments, transfers, pay, offer
+            case transfers, payments, pay, offer, openProduct, branches, investment, services
             func description() -> String {
                 switch self {
-                case .payments:
-                    return "Мои продукты"
                 case .transfers:
-                    return "Быстрые операции"
+                    return "Мои продукты"
+                case .payments:
+                    return "Предложения"
                 case .offer:
-                    return ""
+                    return "Быстрые операции"
                 case .pay:
                     return "Обмен валют"
+                case .openProduct:
+                    return "Открыть продукт"
+                case .branches:
+                    return "Отделения и банкоматы"
+                case .investment:
+                    return "Инвестиции и пенсии"
+                case .services:
+                    return "Услуги и сервисы"
                 }
             }
         }
@@ -42,19 +87,21 @@ class MainViewController: UIViewController {
         
         override func viewDidLoad() {
             super.viewDidLoad()
-            view.backgroundColor = .white
-            setupData()
+            navigationController?.navigationBar.isHidden = true
+            view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
+          
             setupSearchBar()
             setupCollectionView()
             createDataSource()
+            getCurrency()
+            setupData()
             reloadData(with: nil)
-            loadLastPhonePayments()
-            loadLastPayments()
+            collectionView.dataSource = dataSource
         }
     
         func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?,_ error: String?)->()) {
         
-        let param = ["isCard": "true", "isAccount": "true", "isDeposit": "false", "isLoan": "false"]
+        let param = ["isCard": "true", "isAccount": "false", "isDeposit": "false", "isLoan": "false"]
         
         NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
             if error != nil {
@@ -73,50 +120,46 @@ class MainViewController: UIViewController {
         }
         
         func setupData() {
+            openProduct = MockItems.returnOpenProduct()
+            offer = MockItems.returnFastPay()
+            pay = MockItems.returnBanner()
             payments = MockItems.returnPayments()
             getCardList { data, errorMessage in
-                self.transfers = [PaymentsModel(productList: (data?[0])!)]
+                guard let list = data else {return}
+                for i in list {
+                    self.transfers.append(PaymentsModel(productList: i))
+                }
+//                self.payments =  self.transfers
+                self.productList = data ?? []
             }
-            offer = MockItems.returnPay()
-            transfers = MockItems.returnTransfers()
-            pay = MockItems.returnPay()
+            payments = MockItems.returnPayments()
+
+       
         }
         
         private func setupSearchBar() {
-            navigationController?.navigationBar.barTintColor = .white
-            navigationController?.navigationBar.backgroundColor = .white
-            navigationController?.navigationBar.shadowImage = UIImage()
-            let searchController = UISearchController(searchResultsController: nil)
-            navigationItem.searchController = searchController
-            navigationItem.hidesSearchBarWhenScrolling = false
-            searchController.hidesNavigationBarDuringPresentation = true
-            searchController.obscuresBackgroundDuringPresentation = false
-            searchController.automaticallyShowsCancelButton = false
-            searchController.searchBar.delegate = self
-            searchController.searchBar.placeholder = "Название категории, ИНН"
-            searchController.searchBar.showsBookmarkButton = true
-            searchController.searchBar.setImage(UIImage(named: "scanCard")?.withTintColor(.black), for: .bookmark, state: .normal)
-            searchController.searchBar.backgroundColor = .white
-            
+            self.view.addSubview(searchContact)
+            searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 48)
         }
         
         private func setupCollectionView() {
             collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createCompositionLayout())
             collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             collectionView.backgroundColor = .white
-            view.backgroundColor = .white
             view.addSubview(collectionView)
+            collectionView.anchor(top: searchContact.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, height: UIScreen.main.bounds.height)
             
             collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.reuseId)
             
-            collectionView.register(OrderProductsCollectionViewCell.self, forCellWithReuseIdentifier: OrderProductsCollectionViewCell.reuseId)
+            collectionView.register(TransferCell.self, forCellWithReuseIdentifier: TransferCell.reuseId)
+            collectionView.register(OfferCollectionViewCell.self, forCellWithReuseIdentifier: OfferCollectionViewCell.reuseId)
             collectionView.register(CurrencyExchangeCollectionViewCell.self, forCellWithReuseIdentifier: CurrencyExchangeCollectionViewCell.reuseId)
             collectionView.register(PaymentsCell.self, forCellWithReuseIdentifier: PaymentsCell.reuseId)
             collectionView.register(ProductCell.self, forCellWithReuseIdentifier: ProductCell.reuseId)
             collectionView.register(PayCell.self, forCellWithReuseIdentifier: PayCell.reuseId)
             
-            
-            collectionView.isScrollEnabled = false
+            collectionView.contentInset = UIEdgeInsets(top: 15, left: 0, bottom: 20, right: 0)
+            collectionView.isScrollEnabled = true
             collectionView.delegate = self
             
         }
@@ -124,99 +167,42 @@ class MainViewController: UIViewController {
         func reloadData(with searchText: String?) {
             var snapshot = NSDiffableDataSourceSnapshot<Section, PaymentsModel>()
             
-            snapshot.appendSections([.payments, .transfers,.offer, .pay])
+            snapshot.appendSections([.transfers, .payments, .offer, .pay, .openProduct, .branches, .investment, .services])
             snapshot.appendItems(payments, toSection: .payments)
             snapshot.appendItems(transfers, toSection: .transfers)
-            snapshot.appendItems(offer, toSection: .offer)
             snapshot.appendItems(pay, toSection: .pay)
-            
+            snapshot.appendItems(offer, toSection: .offer)
+            snapshot.appendItems(openProduct, toSection: .openProduct)
+            snapshot.appendItems(branches, toSection: .branches)
+            snapshot.appendItems(investment, toSection: .investment)
+            snapshot.appendItems(services, toSection: .services)
+
             dataSource?.apply(snapshot, animatingDifferences: true)
             collectionView.reloadData()
             
         }
         
-
-    }
-
-    //MARK: - API
-    extension MainViewController {
-        
-        func loadLastPayments() {
-            NetworkManager<GetPaymentCountriesDecodableModel>.addRequest(.getPaymentCountries, [:], [:]) { model, error in
-                if error != nil {
-                    print("DEBUG: error", error!)
-                } else {
-                    guard let model = model else { return }
-                    guard let lastPaymentsList = model.data else { return }
-                    if lastPaymentsList.count > 3 {
-                        let payArr = lastPaymentsList.prefix(3)
-                        payArr.forEach { lastPayment in
-                            let mod = ChooseCountryHeaderViewModel(model: lastPayment)
-                            let payment = PaymentsModel(lastCountryPayment: mod)
-                            self.payments.append(payment)
-                        }
-                    } else {
-                        lastPaymentsList.forEach { lastPayment in
-                            let mod = ChooseCountryHeaderViewModel(model: lastPayment)
-                            let payment = PaymentsModel(lastCountryPayment: mod)
-                            self.payments.append(payment)
-                        }
-                    }
-                }
+    func getCurrency() {
+        NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], [:]) { model, error in
+            if error != nil {
+                print("DEBUG: Error: ", error ?? "")
             }
-        }
-        
-        func loadLastPhonePayments() {
-            NetworkManager<GetLatestPaymentsDecodableModel>.addRequest(.getLatestPayments, [:], [:]) { model, error in
-                if error != nil {
-                    print("DEBUG: Error: ", error ?? "")
+            guard let model = model else { return }
+            print("DEBUG: LatestPayment: ", model)
+            if model.statusCode == 0 {
+                guard let lastPaymentsList  = model.data else { return }
+            } else {
+                print("DEBUG: Error: ", model.errorMessage ?? "")
+                DispatchQueue.main.async {
+                if model.errorMessage == "Пользователь не авторизован"{
+                    AppLocker.present(with: .validate)
                 }
-                guard let model = model else { return }
-                print("DEBUG: LatestPayment: ", model)
-                if model.statusCode == 0 {
-                    guard let lastPaymentsList  = model.data else { return }
-                    
-                    if lastPaymentsList.count > 3 {
-                        let payArr = lastPaymentsList.prefix(3)
-                        payArr.forEach { lastPayment in
-                            let payment = PaymentsModel(lastPhonePayment: lastPayment)
-                            self.payments.append(payment)
-                        }
-                    } else {
-                        lastPaymentsList.forEach { lastPayment in
-                            let payment = PaymentsModel(lastPhonePayment: lastPayment)
-                            self.payments.append(payment)
-                        }
-                    }
-                } else {
-                    print("DEBUG: Error: ", model.errorMessage ?? "")
-                    if model.errorMessage == "Пользователь не авторизован"{
-                        AppLocker.present(with: .validate)
-                    }
-                }
-            }
-        }
-        
-        
-        func getFastPaymentContractList(_ completion: @escaping (_ model: [FastPaymentContractFindListDatum]? ,_ error: String?) -> Void) {
-            NetworkManager<FastPaymentContractFindListDecodableModel>.addRequest(.fastPaymentContractFindList, [:], [:]) { model, error in
-                if error != nil {
-                    print("DEBUG: Error: ", error ?? "")
-                    completion(nil, error)
-                }
-                guard let model = model else { return }
-                print("DEBUG: fastPaymentContractFindList", model)
-                if model.statusCode == 0 {
-                    completion(model.data,nil)
-                } else {
-                    print("DEBUG: Error: ", model.errorMessage ?? "")
-                    if model.errorMessage == "Пользователь не авторизован"{
-                        AppLocker.present(with: .validate)
-                    }
-                    completion(nil, model.errorMessage)
                 }
             }
         }
     }
+    
+    }
+
 
 
