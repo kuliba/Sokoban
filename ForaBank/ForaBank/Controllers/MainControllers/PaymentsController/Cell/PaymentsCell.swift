@@ -54,6 +54,10 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
             if let iconName = payment.iconName {
                 iconImageView.image = UIImage(named: iconName)
             }
+        } else if payment.iconName != "" && payment.lastPhonePayment == nil{
+            iconImageView.image = UIImage(named: payment.iconName ?? "")
+            self.titleLabel.text = "\(payment.name)"
+            
         } else {
             let mask = StringMask(mask: "+7 (000) 000-00-00")
             self.titleLabel.text = "\(payment.name)"

@@ -1,15 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "star.svg",
+      "filename" : "promoBanner2.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Frame 717.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Frame 717 (1).png",
       "idiom" : "universal",
       "scale" : "3x"
     }

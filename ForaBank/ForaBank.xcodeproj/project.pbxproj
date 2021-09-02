@@ -117,6 +117,13 @@
 		6880D32726A5CC69008FBCB4 /* AES.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6880D32626A5CC68008FBCB4 /* AES.swift */; };
 		6880D32926A5CC7D008FBCB4 /* Encription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6880D32826A5CC7D008FBCB4 /* Encription.swift */; };
 		6880D32D26A70585008FBCB4 /* FaceTouchIdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6880D32C26A70585008FBCB4 /* FaceTouchIdViewController.swift */; };
+		688B9BA126DD0C2500407A75 /* ProductsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688B9BA026DD0C2500407A75 /* ProductsViewController.swift */; };
+		688B9BA526DD0DC600407A75 /* ProductTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688B9BA326DD0DC600407A75 /* ProductTableViewCell.swift */; };
+		688B9BA626DD0DC600407A75 /* ProductTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 688B9BA426DD0DC600407A75 /* ProductTableViewCell.xib */; };
+		688B9BAC26DE7D7E00407A75 /* ProductViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688B9BAB26DE7D7E00407A75 /* ProductViewController.swift */; };
+		688B9BB026DEC27200407A75 /* OfferCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688B9BAE26DEC27200407A75 /* OfferCollectionViewCell.swift */; };
+		688B9BB426E03B3000407A75 /* TotalMoneyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688B9BB326E03B3000407A75 /* TotalMoneyView.swift */; };
+		688B9BB626E03B3E00407A75 /* TotalMoneyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 688B9BB526E03B3E00407A75 /* TotalMoneyView.xib */; };
 		68B6755D26BC8A9B004DECA4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 68B6755C26BC8A9B004DECA4 /* GoogleService-Info.plist */; };
 		68C64626269DCBD800473DE7 /* QRScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C64625269DCBD800473DE7 /* QRScannerViewController.swift */; };
 		68D06F2226C3C0C100F9BE4C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D06F2126C3C0C100F9BE4C /* MainViewController.swift */; };
@@ -435,6 +442,13 @@
 		6880D32626A5CC68008FBCB4 /* AES.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AES.swift; sourceTree = "<group>"; };
 		6880D32826A5CC7D008FBCB4 /* Encription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Encription.swift; sourceTree = "<group>"; };
 		6880D32C26A70585008FBCB4 /* FaceTouchIdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceTouchIdViewController.swift; sourceTree = "<group>"; };
+		688B9BA026DD0C2500407A75 /* ProductsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsViewController.swift; sourceTree = "<group>"; };
+		688B9BA326DD0DC600407A75 /* ProductTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductTableViewCell.swift; sourceTree = "<group>"; };
+		688B9BA426DD0DC600407A75 /* ProductTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProductTableViewCell.xib; sourceTree = "<group>"; };
+		688B9BAB26DE7D7E00407A75 /* ProductViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductViewController.swift; sourceTree = "<group>"; };
+		688B9BAE26DEC27200407A75 /* OfferCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferCollectionViewCell.swift; sourceTree = "<group>"; };
+		688B9BB326E03B3000407A75 /* TotalMoneyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalMoneyView.swift; sourceTree = "<group>"; };
+		688B9BB526E03B3E00407A75 /* TotalMoneyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TotalMoneyView.xib; sourceTree = "<group>"; };
 		68B6755C26BC8A9B004DECA4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		68C64625269DCBD800473DE7 /* QRScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerViewController.swift; sourceTree = "<group>"; };
 		68D06F2126C3C0C100F9BE4C /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -946,6 +960,57 @@
 			path = FaceToucheId;
 			sourceTree = "<group>";
 		};
+		688B9B9F26DD0BFB00407A75 /* ProductsViewController */ = {
+			isa = PBXGroup;
+			children = (
+				688B9BA226DD0DAA00407A75 /* Cells */,
+				688B9BA026DD0C2500407A75 /* ProductsViewController.swift */,
+			);
+			path = ProductsViewController;
+			sourceTree = "<group>";
+		};
+		688B9BA226DD0DAA00407A75 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				688B9BA726DE6DC500407A75 /* HeaderTotalMoney */,
+				688B9BA326DD0DC600407A75 /* ProductTableViewCell.swift */,
+				688B9BA426DD0DC600407A75 /* ProductTableViewCell.xib */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		688B9BA726DE6DC500407A75 /* HeaderTotalMoney */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = HeaderTotalMoney;
+			sourceTree = "<group>";
+		};
+		688B9BAA26DE7D6300407A75 /* ProductViewController */ = {
+			isa = PBXGroup;
+			children = (
+				688B9BAB26DE7D7E00407A75 /* ProductViewController.swift */,
+			);
+			path = ProductViewController;
+			sourceTree = "<group>";
+		};
+		688B9BAD26DEC25500407A75 /* OfferCell */ = {
+			isa = PBXGroup;
+			children = (
+				688B9BAE26DEC27200407A75 /* OfferCollectionViewCell.swift */,
+			);
+			path = OfferCell;
+			sourceTree = "<group>";
+		};
+		688B9BB226E03B0400407A75 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				688B9BB326E03B3000407A75 /* TotalMoneyView.swift */,
+				688B9BB526E03B3E00407A75 /* TotalMoneyView.xib */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		68C64624269DCBC300473DE7 /* QRScanner */ = {
 			isa = PBXGroup;
 			children = (
@@ -958,6 +1023,7 @@
 		68D06F2026C3C08200F9BE4C /* MainViewController */ = {
 			isa = PBXGroup;
 			children = (
+				688B9BB226E03B0400407A75 /* View */,
 				68D06F2B26C405BD00F9BE4C /* Cells */,
 				68D06F2126C3C0C100F9BE4C /* MainViewController.swift */,
 				68D06F2326C3C0F300F9BE4C /* MainViewControllerLayout.swift */,
@@ -971,6 +1037,7 @@
 		68D06F2B26C405BD00F9BE4C /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				688B9BAD26DEC25500407A75 /* OfferCell */,
 				68D06F3626CCDD9F00F9BE4C /* NavigationBar */,
 				68D06F2F26C40DAC00F9BE4C /* CerrencyExchange */,
 				68D06F2C26C405FB00F9BE4C /* ProductCell.swift */,
@@ -1717,6 +1784,8 @@
 		EDB165722668C51A007E6030 /* MainControllers */ = {
 			isa = PBXGroup;
 			children = (
+				688B9BAA26DE7D6300407A75 /* ProductViewController */,
+				688B9B9F26DD0BFB00407A75 /* ProductsViewController */,
 				68D06F2026C3C08200F9BE4C /* MainViewController */,
 				ED4FC5F8266B8BD70092B4AB /* MainTabBar */,
 				EDB165732668C53A007E6030 /* PaymentsController */,
@@ -2185,6 +2254,7 @@
 				EDB143CD265FDEC90028EF5A /* Roboto-Bold.ttf in Resources */,
 				EDB143C6265FDEC90028EF5A /* Roboto-Regular.ttf in Resources */,
 				EDB143CA265FDEC90028EF5A /* Roboto-LightItalic.ttf in Resources */,
+				688B9BA626DD0DC600407A75 /* ProductTableViewCell.xib in Resources */,
 				EDB1654D26678E87007E6030 /* LaunchScreen.storyboard in Resources */,
 				ED4FC619266EA42E0092B4AB /* AppLocker.xib in Resources */,
 				ED302A3A26D944E900161243 /* GoogleService-Info-test.plist in Resources */,
@@ -2210,6 +2280,7 @@
 				ED84995826A8831E005205C6 /* EPContactCell.xib in Resources */,
 				EDB145112664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf in Resources */,
 				ED8AB45D26C2B55E006F0D03 /* SuccessMeToMeController.xib in Resources */,
+				688B9BB626E03B3E00407A75 /* TotalMoneyView.xib in Resources */,
 				EDB143B5265FDE960028EF5A /* Assets.xcassets in Resources */,
 				68FFA52D2682AF62002DADFA /* ContactCollectionViewCell.xib in Resources */,
 				EDB143CB265FDEC90028EF5A /* Roboto-Italic.ttf in Resources */,
@@ -2280,6 +2351,7 @@
 				0B1DBA9C26D4032F009F3E98 /* CreateContactAddresslessTransferDecodableModel.swift in Sources */,
 				0BF3485B268E5907005138A8 /* GetExchangeCurrencyRatesDecodableModel.swift in Sources */,
 				0B37F9882680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift in Sources */,
+				688B9BAC26DE7D7E00407A75 /* ProductViewController.swift in Sources */,
 				EDB1451C26652D370028EF5A /* UILabel.swift in Sources */,
 				0B22AEA826CE72C200B11E7F /* GKHDataFilter.swift in Sources */,
 				0B95C40326B6CA3700AA57E6 /* CustomPopUpWithRateView.swift in Sources */,
@@ -2435,6 +2507,7 @@
 				0B66E8D826CC5EC400FD735D /* ExtensionDevice.swift in Sources */,
 				0B216FC326D1B30C0023C878 /* ExtensionGKHCitySearchController.swift in Sources */,
 				ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */,
+				688B9BB426E03B3000407A75 /* TotalMoneyView.swift in Sources */,
 				ED84994526A6F647005205C6 /* ChooseCountryHeaderView.swift in Sources */,
 				0BB8816D26D6696400015E27 /* GKHCardCell.swift in Sources */,
 				EDB1655A2667A220007E6030 /* CodeVerificationViewController UI.swift in Sources */,
@@ -2455,6 +2528,7 @@
 				ED8AB45526C116DB006F0D03 /* MeToMeViewController.swift in Sources */,
 				0B8BE0952670D4A300E96CAA /* GetCodeDecodebleModel.swift in Sources */,
 				0B66E8DE26CC5F8900FD735D /* QRViewController.swift in Sources */,
+				688B9BA526DD0DC600407A75 /* ProductTableViewCell.swift in Sources */,
 				EDB1452226661C3F0028EF5A /* MaskedTextField.swift in Sources */,
 				ED4FC5EF266B70A00092B4AB /* PartialTransparentView.swift in Sources */,
 				ED302A3126D3E56600161243 /* UIImage.swift in Sources */,
@@ -2500,7 +2574,9 @@
 				0BF3485D26931254005138A8 /* SuggestBankDecodableModel.swift in Sources */,
 				0B95C40A26B6D88000AA57E6 /* BottomLableModel.swift in Sources */,
 				ED4FC61A266EA42E0092B4AB /* AppLocker.swift in Sources */,
+				688B9BA126DD0C2500407A75 /* ProductsViewController.swift in Sources */,
 				0BA251ED26C266A400AD087A /* CreateServiceTransferDecodableModel.swift in Sources */,
+				688B9BB026DEC27200407A75 /* OfferCollectionViewCell.swift in Sources */,
 				0BAC319626CB264B006E03FD /* ExtensionGKHMainTableView.swift in Sources */,
 				0BF34854268B2699005138A8 /* PrepareExternalDecodableModel.swift in Sources */,
 				ED3A96772690FCD700252857 /* BankViewModel.swift in Sources */,
