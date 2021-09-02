@@ -8,58 +8,57 @@
 import Foundation
 
 import UIKit
+import RealmSwift
 
 struct GKHHistoryCaruselModel {
     var mainImage: UIImage
-    var sushiName: String
-    var smallDescription: String
-    var cost: Int
+    var banksName: String
+    var inn: String
     
     static func fetchModel() -> [GKHHistoryCaruselModel] {
-        let firstItem = GKHHistoryCaruselModel(mainImage: UIImage(named: "sushi1")!,
-                               sushiName: "Jengibre",
-                               smallDescription: "Original Japanese",
-                               cost: 8)
-        let secondItem = GKHHistoryCaruselModel(mainImage: UIImage(named: "sushi2")!,
-                                    sushiName: "Caviar",
-                                    smallDescription: "Original Japanese",
-                                    cost: 10)
-        let thirdItem = GKHHistoryCaruselModel(mainImage: UIImage(named: "sushi3")!,
-                                   sushiName: "Camaron",
-                                   smallDescription: "Original Japanese",
-                                   cost: 7)
         
-        let fouthItem = GKHHistoryCaruselModel(mainImage: UIImage(named: "sushi4")!,
-                                   sushiName: "Salmon",
-                                   smallDescription: "Original Japanese",
-                                   cost: 12)
+        var tempArray = [GKHHistoryCaruselModel]()
         
-        let five = GKHHistoryCaruselModel(mainImage: UIImage(named: "sushi1")!,
-                                   sushiName: "Jengibre",
-                                   smallDescription: "Original Japanese",
-                                   cost: 8)
-        let six = GKHHistoryCaruselModel(mainImage: UIImage(named: "sushi2")!,
-                                    sushiName: "Caviar",
-                                    smallDescription: "Original Japanese",
-                                    cost: 10)
-        let seven = GKHHistoryCaruselModel(mainImage: UIImage(named: "sushi3")!,
-                                   sushiName: "Camaron",
-                                   smallDescription: "Original Japanese",
-                                   cost: 7)
+        var inn = ""
+        var name = ""
+        var image: UIImage!
         
-        let eight = GKHHistoryCaruselModel(mainImage: UIImage(named: "sushi4")!,
-                                   sushiName: "Salmon",
-                                   smallDescription: "Original Japanese",
-                                   cost: 12)
+        let realm = try? Realm()
+        var payModelArray: Results<GKHHistoryModel>?
+        var operatorsArray: Results<GKHOperatorsModel>?
+        payModelArray = realm?.objects(GKHHistoryModel.self)
+        operatorsArray = realm?.objects(GKHOperatorsModel.self)
+        payModelArray?.forEach({ operation in
+            
+            let puref = operation.puref
+            operatorsArray?.forEach({ op in
+                if puref == op.puref {
+                    name = op.name?.capitalizingFirstLetter() ?? ""
+                    let tempImage = op.logotypeList.first?.content ?? ""
+                    inn = op.synonymList.first ?? ""
+                    if tempImage != "" {
+                        let dataDecoded : Data = Data(base64Encoded: tempImage, options: .ignoreUnknownCharacters)!
+                        let decodedimage = UIImage(data: dataDecoded)
+                        image = decodedimage
+                    } else {
+                        image = UIImage(named: "GKH")
+                    }
+                    
+                }
+            })
+            if image != nil {
+            let temp = GKHHistoryCaruselModel(mainImage: image, banksName: name, inn: inn)
+            tempArray.append(temp)
+            }
+        })
         
-        
-        return [firstItem, secondItem, thirdItem, fouthItem, five, six, seven, eight]
+        return tempArray
     }
 }
 
 struct GKHConstants {
-    static let leftDistanceToView: CGFloat = 40
-    static let rightDistanceToView: CGFloat = 40
+    static let leftDistanceToView: CGFloat = 20
+    static let rightDistanceToView: CGFloat = 20
     static let galleryMinimumLineSpacing: CGFloat = 10
     static let galleryItemWidth = (UIScreen.main.bounds.width - GKHConstants.leftDistanceToView - GKHConstants.rightDistanceToView - (GKHConstants.galleryMinimumLineSpacing / 2)) / 2
 }

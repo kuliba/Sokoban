@@ -22,13 +22,14 @@ class GKHHistoryHeaderView: UITableViewHeaderFooterView {
     
     func configureContents() {
         caruselCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.backgroundColor = .clear
         contentView.addSubview(caruselCollectionView)
         NSLayoutConstraint.activate([
     
             caruselCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             caruselCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            caruselCollectionView.topAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 10),
-            caruselCollectionView.heightAnchor.constraint(equalToConstant: 350),
+            caruselCollectionView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+//            caruselCollectionView.heightAnchor.constraint(equalToConstant: 100),
         ])
         caruselCollectionView.set(cells: GKHHistoryCaruselModel.fetchModel())
     }

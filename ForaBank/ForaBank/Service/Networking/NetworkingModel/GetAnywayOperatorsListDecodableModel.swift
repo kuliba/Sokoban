@@ -169,9 +169,9 @@ struct ParameterList: Codable {
     let order: Int?
     let title: String?
     let subTitle: String?
-    let viewType: ViewType?
-    let dataType: DataType?
-    let type: TypeEnums?
+    let viewType: String?
+    let dataType: String?
+    let type: String?
     let mask, regExp: String?
     let maxLength, minLength: Int?
     let rawLength: Int?
@@ -201,9 +201,9 @@ extension ParameterList {
         order: Int?? = nil,
         title: String?? = nil,
         subTitle: String?? = nil,
-        viewType: ViewType?? = nil,
-        dataType: DataType?? = nil,
-        type: TypeEnums?? = nil,
+        viewType: String?? = nil,
+        dataType: String?? = nil,
+        type: String?? = nil,
         mask: String?? = nil,
         regExp: String?? = nil,
         maxLength: Int?? = nil,
@@ -237,23 +237,24 @@ extension ParameterList {
     }
 }
 
-enum DataType: String, Codable {
-    case number = "%Number"
-    case numeric = "%Numeric"
-    case string = "%String"
-}
+//enum DataType: String, Codable {
+//    case number      = "%Number"
+//    case numeric     = "%Numeric"
+//    case string      = "%String"
+//    case phoneNumber = "%Number_Phone"
+//    case integer     = "%Integer"
+//}
 
-enum TypeEnums: String, Codable {
-    case int = "Int"
-    case maskList = "MaskList"
-    case string = "String"
-}
+//enum TypeEnums: String, Codable {
+//    case int      = "Int"
+//    case maskList = "MaskList"
+//    case string   = "String"
+//}
 
-// ViewType.swift
 
-import Foundation
+//enum ViewType: String, Codable {
+//    case input    = "INPUT"
+//    case output   = "OUTPUT"
+//    case constant = "CONSTANT"
+//}
 
-enum ViewType: String, Codable {
-    case input = "INPUT"
-    case output = "OUTPUT"
-}

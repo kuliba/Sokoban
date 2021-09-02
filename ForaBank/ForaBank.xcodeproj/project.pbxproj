@@ -71,8 +71,8 @@
 		0B931B4726DE2DF700CA8017 /* GKHHistoryCarusel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B931B4626DE2DF700CA8017 /* GKHHistoryCarusel.swift */; };
 		0B931B4926DE2E3300CA8017 /* GKHHistoryCaruselCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B931B4826DE2E3300CA8017 /* GKHHistoryCaruselCell.swift */; };
 		0B931B4B26DE2E5F00CA8017 /* GKHHistoryCaruselModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B931B4A26DE2E5F00CA8017 /* GKHHistoryCaruselModel.swift */; };
-		0B931B4D26DE2EA900CA8017 /* GKHHistoryCaruselController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B931B4C26DE2EA900CA8017 /* GKHHistoryCaruselController.swift */; };
 		0B931B4F26DE334500CA8017 /* GKHHistoryHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B931B4E26DE334500CA8017 /* GKHHistoryHeaderView.swift */; };
+		0B931B5126E005D700CA8017 /* GKHInputFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B931B5026E005D700CA8017 /* GKHInputFooterView.swift */; };
 		0B95C3FE26B6C96F00AA57E6 /* DoubleInStringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B95C3FD26B6C96F00AA57E6 /* DoubleInStringExtension.swift */; };
 		0B95C40026B6C99A00AA57E6 /* RoundedDoubleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B95C3FF26B6C99A00AA57E6 /* RoundedDoubleExtension.swift */; };
 		0B95C40326B6CA3700AA57E6 /* CustomPopUpWithRateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B95C40226B6CA3700AA57E6 /* CustomPopUpWithRateView.swift */; };
@@ -100,7 +100,6 @@
 		0BB015DA26C9378200E7A85B /* GKHOperatorsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB015D926C9378200E7A85B /* GKHOperatorsModel.swift */; };
 		0BB015DC26C9BE3700E7A85B /* ExtensionGKHMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB015DB26C9BE3700E7A85B /* ExtensionGKHMain.swift */; };
 		0BB8817026D6AE4200015E27 /* UserAllCardsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB8816F26D6AE4200015E27 /* UserAllCardsModel.swift */; };
-		0BB8817326D6F9E400015E27 /* GKHInputFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB8817226D6F9E400015E27 /* GKHInputFooter.swift */; };
 		0BD2177926A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */; };
 		0BE270B026B76B9700FA958C /* ExtensionCustomPopUpSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270AF26B76B9700FA958C /* ExtensionCustomPopUpSetup.swift */; };
 		0BE270B326B9959900FA958C /* ExtensionBottomLableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */; };
@@ -402,8 +401,8 @@
 		0B931B4626DE2DF700CA8017 /* GKHHistoryCarusel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHHistoryCarusel.swift; sourceTree = "<group>"; };
 		0B931B4826DE2E3300CA8017 /* GKHHistoryCaruselCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHHistoryCaruselCell.swift; sourceTree = "<group>"; };
 		0B931B4A26DE2E5F00CA8017 /* GKHHistoryCaruselModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHHistoryCaruselModel.swift; sourceTree = "<group>"; };
-		0B931B4C26DE2EA900CA8017 /* GKHHistoryCaruselController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHHistoryCaruselController.swift; sourceTree = "<group>"; };
 		0B931B4E26DE334500CA8017 /* GKHHistoryHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHHistoryHeaderView.swift; sourceTree = "<group>"; };
+		0B931B5026E005D700CA8017 /* GKHInputFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHInputFooterView.swift; sourceTree = "<group>"; };
 		0B95C3FD26B6C96F00AA57E6 /* DoubleInStringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleInStringExtension.swift; sourceTree = "<group>"; };
 		0B95C3FF26B6C99A00AA57E6 /* RoundedDoubleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedDoubleExtension.swift; sourceTree = "<group>"; };
 		0B95C40226B6CA3700AA57E6 /* CustomPopUpWithRateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPopUpWithRateView.swift; sourceTree = "<group>"; };
@@ -429,7 +428,6 @@
 		0BB015D926C9378200E7A85B /* GKHOperatorsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHOperatorsModel.swift; sourceTree = "<group>"; };
 		0BB015DB26C9BE3700E7A85B /* ExtensionGKHMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionGKHMain.swift; sourceTree = "<group>"; };
 		0BB8816F26D6AE4200015E27 /* UserAllCardsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAllCardsModel.swift; sourceTree = "<group>"; };
-		0BB8817226D6F9E400015E27 /* GKHInputFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHInputFooter.swift; sourceTree = "<group>"; };
 		0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAnywayOperatorsListDecodableModel.swift; sourceTree = "<group>"; };
 		0BE270AF26B76B9700FA958C /* ExtensionCustomPopUpSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionCustomPopUpSetup.swift; sourceTree = "<group>"; };
 		0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBottomLableModel.swift; sourceTree = "<group>"; };
@@ -689,7 +687,7 @@
 			isa = PBXGroup;
 			children = (
 				0BB8816826D6685000015E27 /* AnyCell */,
-				0BB8817226D6F9E400015E27 /* GKHInputFooter.swift */,
+				0B931B5026E005D700CA8017 /* GKHInputFooterView.swift */,
 			);
 			name = GKHInputCell;
 			sourceTree = "<group>";
@@ -820,7 +818,6 @@
 				0B931B4626DE2DF700CA8017 /* GKHHistoryCarusel.swift */,
 				0B931B4826DE2E3300CA8017 /* GKHHistoryCaruselCell.swift */,
 				0B931B4A26DE2E5F00CA8017 /* GKHHistoryCaruselModel.swift */,
-				0B931B4C26DE2EA900CA8017 /* GKHHistoryCaruselController.swift */,
 				0B931B4E26DE334500CA8017 /* GKHHistoryHeaderView.swift */,
 			);
 			path = GKHHistoryView;
@@ -2373,13 +2370,13 @@
 				EDB1452026661B030028EF5A /* StringMask.swift in Sources */,
 				EDB16586266A0883007E6030 /* NSDirectionalEdgeInsets.swift in Sources */,
 				0B931B4F26DE334500CA8017 /* GKHHistoryHeaderView.swift in Sources */,
-				0BB8817326D6F9E400015E27 /* GKHInputFooter.swift in Sources */,
 				EDFFCAF32682461F004EE095 /* CardCell.swift in Sources */,
 				EDB14524266624460028EF5A /* UIViewController.swift in Sources */,
 				EDCF8A1526CED86100DC9F54 /* BankTableViewCell.swift in Sources */,
 				ED84995A26A8831E005205C6 /* EPContact.swift in Sources */,
 				68FFA5282682AF2C002DADFA /* ContactsViewController.swift in Sources */,
 				0B66E8DA26CC5F1E00FD735D /* SquareView.swift in Sources */,
+				0B931B5126E005D700CA8017 /* GKHInputFooterView.swift in Sources */,
 				68FFA55326857530002DADFA /* Extension.swift in Sources */,
 				EDB16597266A576A007E6030 /* CardScannerController.swift in Sources */,
 				0BB015D626C8892700E7A85B /* GKHMainViewController.swift in Sources */,
@@ -2536,7 +2533,6 @@
 				EDB16549266766FD007E6030 /* CodeVerificationViewController.swift in Sources */,
 				EDC341A226864C4100FFFEF8 /* BottomInputView.swift in Sources */,
 				68D06F2226C3C0C100F9BE4C /* MainViewController.swift in Sources */,
-				0B931B4D26DE2EA900CA8017 /* GKHHistoryCaruselController.swift in Sources */,
 				0B747890267343B400C44F79 /* KeyExchangeDecodebleModel.swift in Sources */,
 				0B7A18C526852EFC0007CC75 /* MakeTransferDecodableModel.swift in Sources */,
 				ED8AB45B26C2A7C5006F0D03 /* SuccessMeToMeController.swift in Sources */,

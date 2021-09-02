@@ -17,12 +17,18 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
     weak var tableViewDelegate: TableViewDelegate?
 
     static let reuseId = "GKHInputCell"
+    
+    var fieldid = ""
+    var fieldname = ""
+    var fieldvalue = ""
+    var body = [String: String]()
+    
+    
     @IBOutlet weak var operatorsIcon: UIImageView!
     @IBOutlet weak var showFioButton: UIButton!
     @IBOutlet weak var placeholderLable: UILabel!
     @IBOutlet weak var errorLable: UILabel!
     @IBOutlet weak var showFIOButton: UIButton!
-    
     @IBOutlet weak var payTypeButton: UIButton!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var lineView: UIView!
@@ -42,19 +48,21 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
             textField.resignFirstResponder()
             return true
         }
-//        func textFieldDidEndEditing(_ textField: UITextField) {
-//            if placeholderLable.text == "" {
-//                self.placeholderLable.text = placeholder
-//                self.placeholder = ""
-//            }
-//        }
+    
+        func textFieldDidEndEditing(_ textField: UITextField) {
+            
+            fieldvalue = textField.text ?? ""
+        }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         textField.text = ""
-        self.placeholderLable.text = placeholder
     }
 
-    func setupUI (_ dataModel: Parameters) {
+    func setupUI (_ index: Int, _ dataModel: Parameters) {
+        
+        self.fieldid = String(index + 1)
+        fieldname = dataModel.title ?? ""
+        
         let q = GKHDataSorted.a(dataModel.title ?? "")
         operatorsIcon.image = UIImage(named: q.1)
         textField.text = q.0
@@ -71,8 +79,12 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
         }
     }
     @IBAction func textField(_ sender: UITextField) {
-//        tableViewDelegate?.responds(to: #selector(TableViewDelegate.afterClickingReturnInTextField(cell:)))
-//        tableViewDelegate?.afterClickingReturnInTextField(cell: self)
+        fieldvalue = textField.text ?? ""
+        body.updateValue(fieldid, forKey: "fieldid")
+        body.updateValue(fieldname, forKey: "fieldname")
+        body.updateValue(textField.text ?? "" , forKey: "fieldvalue")
+        tableViewDelegate?.responds(to: #selector(TableViewDelegate.afterClickingReturnInTextField(cell:)))
+        tableViewDelegate?.afterClickingReturnInTextField(cell: self)
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {

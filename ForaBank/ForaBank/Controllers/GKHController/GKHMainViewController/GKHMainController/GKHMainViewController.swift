@@ -55,14 +55,15 @@ class GKHMainViewController: UIViewController {
         AddHistoryList.add()
         
         
-        tableView.register(GKHHistoryHeaderView.self,
-               forHeaderFooterViewReuseIdentifier: "sectionHeader")
-        
+        tableView.register(GKHHistoryHeaderView.self, forHeaderFooterViewReuseIdentifier: "sectionHeader")
         tableView.register(UINib(nibName: "GHKCell", bundle: nil), forCellReuseIdentifier: GHKCell.reuseId)
+        
         setupNavBar()
         operatorsList = realm?.objects(GKHOperatorsModel.self)
         operatorsList?.forEach({ op in
+            if !op.parameterList.isEmpty {
             organization.append(op)
+            }
         })
         
         NotificationCenter.default.addObserver(forName: .city, object: nil, queue: .none ) { [weak self] (value) in

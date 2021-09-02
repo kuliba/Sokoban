@@ -60,9 +60,9 @@ struct AddOperatorsList {
                                 p.order     = parameterList.order ?? 0
                                 p.title     = parameterList.title
                                 p.subTitle  = parameterList.subTitle
-                                p.viewType  = parameterList.viewType?.rawValue
-                                p.dataType  = parameterList.dataType?.rawValue
-                                p.type      = parameterList.type?.rawValue
+                                p.viewType  = parameterList.viewType
+                                p.dataType  = parameterList.dataType
+                                p.type      = parameterList.type
                                 p.mask      = parameterList.mask
                                 p.regExp    = parameterList.regExp
                                 p.maxLength = parameterList.maxLength ?? 0

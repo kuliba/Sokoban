@@ -1,35 +1,28 @@
 //
-//  GKHInputFooter.swift
+//  GKHInputFooterView.swift
 //  ForaBank
 //
-//  Created by Константин Савялов on 26.08.2021.
+//  Created by Константин Савялов on 01.09.2021.
 //
 
 import UIKit
 
-final class GKHFooterView: UIView {
-
+class GKHInputFooterView: UITableViewHeaderFooterView {
+    
     var stackView = UIStackView(arrangedSubviews: [])
     var cardFromField = CardChooseView()
-    
     var cardListView = CardListView(onlyMy: false)
-    
-    lazy var contentLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 0
-        return label
-    }()
 
-    init(text: String) {
-        super.init(frame: .zero)
+    override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: reuseIdentifier)
         self.setupUI()
+        configureContents()
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     private func setupUI() {
         cardFromField.titleLabel.text = "Счет списания"
         cardFromField.titleLabel.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
@@ -45,39 +38,13 @@ final class GKHFooterView: UIView {
         stackView.spacing = 12
         stackView.isUserInteractionEnabled = true
         
-        let contentView = UIView()
-        contentView.backgroundColor = .white
-        contentView.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(stackView)
-//        contentView.addSubview(stackView)
-        
-        // Hack to fix AutoLayout bug related to UIView-Encapsulated-Layout-Width
-        let leadingContraint = contentView.leadingAnchor.constraint(equalTo: self.leadingAnchor)
-//        leadingContraint.priority = .defaultHigh
-
-        // Hack to fix AutoLayout bug related to UIView-Encapsulated-Layout-Height
-        let topConstraint = contentView.topAnchor.constraint(equalTo: self.layoutMarginsGuide.topAnchor)
-        topConstraint.priority = .defaultHigh
-
-        NSLayoutConstraint.activate([
-//            leadingContraint,
-//            topConstraint,
-//
-//            contentView.trailingAnchor.constraint(equalTo: self.layoutMarginsGuide.trailingAnchor),
-//            contentView.bottomAnchor.constraint(equalTo: self.layoutMarginsGuide.bottomAnchor),
-////            contentView.heightAnchor.constraint(equalToConstant: 200),
-            stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            stackView.topAnchor.constraint(equalTo: self.topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
-            
-        ])
+        cardListView.isHidden = false
         setupActions()
     }
 
     func setupActions() {
+        
         cardFromField.didChooseButtonTapped = { () in
-            print("cardField didChooseButtonTapped")
             self.openOrHideView(self.cardListView)
         }
 
@@ -114,4 +81,16 @@ final class GKHFooterView: UIView {
         }
     }
     
+    func configureContents() {
+        contentView.backgroundColor = .clear
+        contentView.addSubview(stackView)
+        NSLayoutConstraint.activate([
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+        ])
+    }
 }
+
+

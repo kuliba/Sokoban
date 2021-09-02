@@ -9,14 +9,21 @@ import UIKit
 
 extension GKHMainViewController: UITableViewDelegate {
     
-     func tableView(_ tableView: UITableView,
-            viewForHeaderInSection section: Int) -> UIView? {
-       let view = tableView.dequeueReusableHeaderFooterView(withIdentifier:
-                   "sectionHeader") as! GKHHistoryHeaderView
-//       view.title.text = sections[section]
-//       view.image.image = UIImage(named: sectionImages[section])
-
+     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+       let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "sectionHeader") as! GKHHistoryHeaderView
        return view
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        guard let headerView = tableView.tableHeaderView else {return}
+        let size = headerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+        if headerView.frame.size.height != size.height {
+            headerView.frame.size.height = size.height
+            tableView.tableHeaderView = headerView
+            tableView.layoutIfNeeded()
+        }
     }
 }
 
@@ -46,7 +53,6 @@ extension GKHMainViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-       // tableView.deselectRow(at: indexPath, animated: true)
         self.searchController.searchBar.searchTextField.endEditing(true)
         performSegue(withIdentifier: "input", sender: self)
     }

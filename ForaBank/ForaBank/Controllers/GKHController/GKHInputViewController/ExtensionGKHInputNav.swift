@@ -14,18 +14,21 @@ extension GKHInputViewController {
         let operatorsName = operatorData?.name ?? ""
         let inn = operatorData?.synonymList.first ?? ""
         self.navigationItem.titleView = set_Title(title: operatorsName, subtitle: "ИНН " +  inn )
-
-        if operatorData?.logotypeList.first?.content != "" {
+        
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+        imageView.contentMode = .scaleAspectFit
+        
+        if !(operatorData?.logotypeList.isEmpty)!  {
             let dataDecoded : Data = Data(base64Encoded: operatorData?.logotypeList.first?.content ?? "", options: .ignoreUnknownCharacters)!
             
             let decodedimage = UIImage(data: dataDecoded)
-
-            let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
-            imageView.contentMode = .scaleAspectFit
             imageView.image = decodedimage
             
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: imageView)
             
+        } else {
+            imageView.image = UIImage(named: "GKH")
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: imageView)
         }
         navigationItem.hidesSearchBarWhenScrolling = false
         definesPresentationContext = true
