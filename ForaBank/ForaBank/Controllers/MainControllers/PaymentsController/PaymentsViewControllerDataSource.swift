@@ -41,11 +41,11 @@ extension PaymentsViewController {
             case .payments:
                 sectionHeader.configure(text: section.description(),
                                         font: .boldSystemFont(ofSize: 24),
-                                        textColor: .black)
+                                        textColor: .black, expandingIsHidden: true, seeAllIsHidden: true)
             default:
                 sectionHeader.configure(text: section.description(),
                                         font: .boldSystemFont(ofSize: 20),
-                                        textColor: .black)
+                                        textColor: .black, expandingIsHidden: true, seeAllIsHidden: true)
                 
             }
             

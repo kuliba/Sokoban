@@ -1,0 +1,20 @@
+//
+//  totalMoneyView.swift
+//  ForaBank
+//
+//  Created by Дмитрий on 02.09.2021.
+//
+
+import UIKit
+
+class TotalMoneyView: UIView {
+
+    /*
+    // Only override draw() if you perform custom drawing.
+    // An empty implementation adversely affects performance during animation.
+    override func draw(_ rect: CGRect) {
+        // Drawing code
+    }
+    */
+
+}
