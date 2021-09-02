@@ -52,7 +52,7 @@ enum RouterManager {
     case getFullBankInfoList
     case createServiceTransfer
     case antiFraud
-    case createMe2MePullTransfer
+    case createMe2MePullCreditTransfer
     case createFastPaymentContract
     case updateFastPaymentContract
     case fastPaymentContractFindList
@@ -727,8 +727,8 @@ extension RouterManager {
             request.httpMethod = RequestMethod.post.rawValue
             return request
             
-        case .createMe2MePullTransfer:
-            let baseUrl = RouterUrlList.createMe2MePullTransfer.returnUrl()
+        case .createMe2MePullCreditTransfer:
+            let baseUrl = RouterUrlList.createMe2MePullCreditTransfer.returnUrl()
             switch baseUrl {
             case .success(let url):
                 resultUrl = url.absoluteURL

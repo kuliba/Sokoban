@@ -72,7 +72,7 @@ enum RouterBaseUrlList: String {
     
     case antiFraud                 = "/rest/transfer/antiFraud"
     
-    case createMe2MePullTransfer   = "/rest/transfer/createMe2MePullTransfer"
+    case createMe2MePullCreditTransfer   = "/rest/transfer/createMe2MePullCreditTransfer"
     
     case createFastPaymentContract = "/rest/createFastPaymentContract"
     

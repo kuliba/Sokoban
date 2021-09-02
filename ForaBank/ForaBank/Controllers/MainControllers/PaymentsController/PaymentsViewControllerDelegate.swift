@@ -69,12 +69,14 @@ extension PaymentsViewController: UICollectionViewDelegate {
                             
 //                            let viewController = MeToMeSettingViewController()
                             
-                            if let viewController = self?.pay[indexPath.row].controllerName.getViewController() {
-                                viewController.addCloseButton()
-                                let navVC = UINavigationController(rootViewController: viewController)
-                                navVC.modalPresentationStyle = .fullScreen
-                                self?.present(navVC, animated: true)
-                            }
+                            guard let viewController = self?.pay[indexPath.row].controllerName.getViewController() as? MeToMeViewController else { return }
+                            viewController.meToMeContract = contractList
+//                            if let viewController = self?.pay[indexPath.row].controllerName.getViewController() {
+                            viewController.addCloseButton()
+                            let navVC = UINavigationController(rootViewController: viewController)
+                            navVC.modalPresentationStyle = .fullScreen
+                            self?.present(navVC, animated: true)
+//                            }
                         }
                     }
                 }

@@ -196,15 +196,15 @@ class MainViewController: UIViewController {
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
                 DispatchQueue.main.async {
-                if model.errorMessage == "Пользователь не авторизован"{
-                    AppLocker.present(with: .validate)
-                }
+                    if model.errorMessage == "Пользователь не авторизован"{
+                        AppLocker.present(with: .validate)
+                    }
                 }
             }
         }
     }
     
-    }
+}
 
 
 

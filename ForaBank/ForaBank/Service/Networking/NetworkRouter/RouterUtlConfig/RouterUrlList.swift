@@ -58,7 +58,7 @@ enum RouterUrlList: String {
     case getFullBankInfoList
     case createServiceTransfer
     case antiFraud
-    case createMe2MePullTransfer
+    case createMe2MePullCreditTransfer
     case createFastPaymentContract
     case updateFastPaymentContract
     case fastPaymentContractFindList
@@ -555,8 +555,8 @@ enum RouterUrlList: String {
                 return .failure(.urlError)
             }
             
-        case .createMe2MePullTransfer:
-            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.createMe2MePullTransfer.rawValue)
+        case .createMe2MePullCreditTransfer:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.createMe2MePullCreditTransfer.rawValue)
             
             switch result {
             case .success(let url):
