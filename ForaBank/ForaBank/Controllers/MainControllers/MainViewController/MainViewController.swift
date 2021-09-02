@@ -122,17 +122,19 @@ class MainViewController: UIViewController {
         func setupData() {
             openProduct = MockItems.returnOpenProduct()
             offer = MockItems.returnFastPay()
-            pay = MockItems.returnBanner()
+            pay = MockItems.returnPayments()
             payments = MockItems.returnPayments()
             getCardList { data, errorMessage in
                 guard let list = data else {return}
                 for i in list {
                     self.transfers.append(PaymentsModel(productList: i))
                 }
-//                self.payments =  self.transfers
+                if list.count < 3{
+//                    self.transfers.append(PaymentsModel(id: 32, name: "Хочу карты", iconName: "openCard", controllerName: ""))
+                }
+//                self.transfers = self.payments
                 self.productList = data ?? []
             }
-            payments = MockItems.returnPayments()
 
        
         }
@@ -167,8 +169,8 @@ class MainViewController: UIViewController {
         func reloadData(with searchText: String?) {
             var snapshot = NSDiffableDataSourceSnapshot<Section, PaymentsModel>()
             
-            snapshot.appendSections([.transfers, .payments, .offer, .pay, .openProduct, .branches, .investment, .services])
-            snapshot.appendItems(payments, toSection: .payments)
+            snapshot.appendSections([.transfers, .pay, .payments, .offer, .openProduct, .branches, .investment, .services])
+            snapshot.appendItems(transfers, toSection: .payments)
             snapshot.appendItems(transfers, toSection: .transfers)
             snapshot.appendItems(pay, toSection: .pay)
             snapshot.appendItems(offer, toSection: .offer)
