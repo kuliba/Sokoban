@@ -27,7 +27,7 @@ class GHKCell: UITableViewCell {
         organizationName.text = viewModel.name?.capitalizingFirstLetter()
         organizationImageView.image = UIImage(named: "GKH")
         innLable.text = viewModel.synonymList.first
-        if viewModel.logotypeList.first?.content != "" {
+        if viewModel.logotypeList.first?.content != nil {
             let dataDecoded : Data = Data(base64Encoded: viewModel.logotypeList.first?.content ?? "", options: .ignoreUnknownCharacters)!
             let decodedimage = UIImage(data: dataDecoded)
             organizationImageView.image = decodedimage

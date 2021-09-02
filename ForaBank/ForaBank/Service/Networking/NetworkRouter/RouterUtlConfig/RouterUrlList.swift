@@ -64,6 +64,9 @@ enum RouterUrlList: String {
     case fastPaymentContractFindList
     case createContactAddresslessTransfer
     case createDirectTransfer
+    case getClientConsentMe2MePull
+    case changeClientConsentMe2MePull
+    case getLatestServicePayments
     
     func returnUrl () -> URLValue {
         switch self {
@@ -609,6 +612,37 @@ enum RouterUrlList: String {
         
         case .createDirectTransfer:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.createDirectTransfer.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+        case .getClientConsentMe2MePull:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getClientConsentMe2MePull.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+        case .changeClientConsentMe2MePull:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.changeClientConsentMe2MePull.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .getLatestServicePayments:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getLatestServicePayments.rawValue)
             
             switch result {
             case .success(let url):

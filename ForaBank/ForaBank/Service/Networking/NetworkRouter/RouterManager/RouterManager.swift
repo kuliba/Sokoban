@@ -58,6 +58,9 @@ enum RouterManager {
     case fastPaymentContractFindList
     case createContactAddresslessTransfer
     case createDirectTransfer
+    case getClientConsentMe2MePull
+    case changeClientConsentMe2MePull
+    case getLatestServicePayments
 }
 
 extension RouterManager {
@@ -793,7 +796,6 @@ extension RouterManager {
                 resultUrl = nil
                 debugPrint(error)
             }
-            
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.post.rawValue
@@ -812,6 +814,50 @@ extension RouterManager {
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .getClientConsentMe2MePull:
+            let baseUrl = RouterUrlList.getClientConsentMe2MePull.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.get.rawValue
+            return request
+            
+        case .changeClientConsentMe2MePull:
+            let baseUrl = RouterUrlList.changeClientConsentMe2MePull.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+            
+        case .getLatestServicePayments:
+            let baseUrl = RouterUrlList.getLatestServicePayments.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.get.rawValue
             return request
         }
     }
