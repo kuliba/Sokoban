@@ -29,17 +29,27 @@ extension MainViewController {
                 return cell
             
             case .transfers:
-                guard let cell = collectionView.dequeueReusableCell(
-                        withReuseIdentifier: ProductCell.reuseId,
-                        for: indexPath) as? ProductCell
-                else {
-                    fatalError("Unable to dequeue \(ProductCell.self)")
-                }
+                if item.id != 33{
+                    guard let cell = collectionView.dequeueReusableCell(
+                            withReuseIdentifier: ProductCell.reuseId,
+                            for: indexPath) as? ProductCell
+                    else {
+                        fatalError("Unable to dequeue \(ProductCell.self)")
+                    }
 
-                cell.card = item.productList
-                return cell
+                    cell.card = item.productList
+                    return cell
+                } else {
+                    guard let cell = collectionView.dequeueReusableCell(
+                            withReuseIdentifier: "AllCardCell",
+                            for: indexPath) as? AllCardCell
+                    else {
+                        fatalError("Unable to dequeue \(AllCardCell.self)")
+                    }
+
+                    return cell
+                }
             case .offer:
-                
                 return self.configure(collectionView: collectionView, cellType: PaymentsCell.self, with: item, for: indexPath)
             case .pay:
                 return self.configure(collectionView: collectionView, cellType: PaymentsCell.self, with: item, for: indexPath)
@@ -68,6 +78,10 @@ extension MainViewController {
             }
             switch section {
             case .payments:
+                sectionHeader.configure(text: section.description(),
+                                        font: .boldSystemFont(ofSize: 18),
+                                        textColor: .black, expandingIsHidden: false, seeAllIsHidden: true)
+            case .transfers:
                 sectionHeader.configure(text: section.description(),
                                         font: .boldSystemFont(ofSize: 18),
                                         textColor: .black, expandingIsHidden: false, seeAllIsHidden: false)

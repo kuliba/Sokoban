@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "transferMig2.png",
+      "filename" : "migBanner.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "transferMig2-1.png",
+      "filename" : "Frame 719.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "transferMig2-2.png",
+      "filename" : "Frame 719 (1).png",
       "idiom" : "universal",
       "scale" : "3x"
     }
