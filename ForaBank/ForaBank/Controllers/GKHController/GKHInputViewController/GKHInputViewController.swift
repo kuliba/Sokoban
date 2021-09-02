@@ -230,9 +230,6 @@ extension GKHInputViewController {
                 print("DEBUG: Error: ContaktPaymentBegin ", respModel.errorMessage ?? "")
                 completion(nil, respModel.errorMessage)
             }
-            
-            
-            
         }
         
     }
