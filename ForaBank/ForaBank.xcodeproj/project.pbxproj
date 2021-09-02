@@ -194,6 +194,10 @@
 		ED4FC621266EA5CD0092B4AB /* Valet in Frameworks */ = {isa = PBXBuildFile; productRef = ED4FC620266EA5CD0092B4AB /* Valet */; };
 		ED51D66E2688B27E005FD655 /* SeparatorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED51D66D2688B27E005FD655 /* SeparatorView.xib */; };
 		ED51D6702688B287005FD655 /* SeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED51D66F2688B287005FD655 /* SeparatorView.swift */; };
+		ED60A1E126DC10A3000F3208 /* GetClientConsentMe2MePullDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED60A1E026DC10A3000F3208 /* GetClientConsentMe2MePullDecodableModel.swift */; };
+		ED60A1E326DC1600000F3208 /* ChangeClientConsentMe2MePullDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED60A1E226DC1600000F3208 /* ChangeClientConsentMe2MePullDecodableModel.swift */; };
+		ED60A1E626DCEA01000F3208 /* MeToMeRequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED60A1E526DCEA01000F3208 /* MeToMeRequestController.swift */; };
+		ED60A1E826DCFA87000F3208 /* MeToMeRequestController.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED60A1E726DCFA87000F3208 /* MeToMeRequestController.xib */; };
 		ED84994326A6F647005205C6 /* ChooseCountryHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED84993F26A6F647005205C6 /* ChooseCountryHeaderViewModel.swift */; };
 		ED84994426A6F647005205C6 /* ChooseCountryHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED84994126A6F647005205C6 /* ChooseCountryHeaderCell.swift */; };
 		ED84994526A6F647005205C6 /* ChooseCountryHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED84994226A6F647005205C6 /* ChooseCountryHeaderView.swift */; };
@@ -505,6 +509,10 @@
 		ED4FC618266EA42E0092B4AB /* UI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UI.swift; sourceTree = "<group>"; };
 		ED51D66D2688B27E005FD655 /* SeparatorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SeparatorView.xib; sourceTree = "<group>"; };
 		ED51D66F2688B287005FD655 /* SeparatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorView.swift; sourceTree = "<group>"; };
+		ED60A1E026DC10A3000F3208 /* GetClientConsentMe2MePullDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetClientConsentMe2MePullDecodableModel.swift; sourceTree = "<group>"; };
+		ED60A1E226DC1600000F3208 /* ChangeClientConsentMe2MePullDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeClientConsentMe2MePullDecodableModel.swift; sourceTree = "<group>"; };
+		ED60A1E526DCEA01000F3208 /* MeToMeRequestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeToMeRequestController.swift; sourceTree = "<group>"; };
+		ED60A1E726DCFA87000F3208 /* MeToMeRequestController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MeToMeRequestController.xib; sourceTree = "<group>"; };
 		ED84993F26A6F647005205C6 /* ChooseCountryHeaderViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChooseCountryHeaderViewModel.swift; sourceTree = "<group>"; };
 		ED84994126A6F647005205C6 /* ChooseCountryHeaderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChooseCountryHeaderCell.swift; sourceTree = "<group>"; };
 		ED84994226A6F647005205C6 /* ChooseCountryHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChooseCountryHeaderView.swift; sourceTree = "<group>"; };
@@ -1401,6 +1409,42 @@
 			path = SeparatorView;
 			sourceTree = "<group>";
 		};
+		ED60A1DD26DC024A000F3208 /* MeToMeSearchBanksViewController */ = {
+			isa = PBXGroup;
+			children = (
+				ED60A1DE26DC0253000F3208 /* BankTableViewCell */,
+				EDCF8A0F26CE876600DC9F54 /* MeToMeSearchBanksViewController.swift */,
+			);
+			path = MeToMeSearchBanksViewController;
+			sourceTree = "<group>";
+		};
+		ED60A1DE26DC0253000F3208 /* BankTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				EDCF8A1326CED86100DC9F54 /* BankTableViewCell.swift */,
+				EDCF8A1426CED86100DC9F54 /* BankTableViewCell.xib */,
+			);
+			path = BankTableViewCell;
+			sourceTree = "<group>";
+		};
+		ED60A1DF26DC0274000F3208 /* SuccessMeToMeController */ = {
+			isa = PBXGroup;
+			children = (
+				ED8AB45A26C2A7C5006F0D03 /* SuccessMeToMeController.swift */,
+				ED8AB45C26C2B55E006F0D03 /* SuccessMeToMeController.xib */,
+			);
+			path = SuccessMeToMeController;
+			sourceTree = "<group>";
+		};
+		ED60A1E426DCE9C7000F3208 /* MeToMeRequestController */ = {
+			isa = PBXGroup;
+			children = (
+				ED60A1E526DCEA01000F3208 /* MeToMeRequestController.swift */,
+				ED60A1E726DCFA87000F3208 /* MeToMeRequestController.xib */,
+			);
+			path = MeToMeRequestController;
+			sourceTree = "<group>";
+		};
 		ED84993D26A6F647005205C6 /* HeaderView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1468,13 +1512,11 @@
 		ED8AB45126C1145D006F0D03 /* MeToMeViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				ED60A1E426DCE9C7000F3208 /* MeToMeRequestController */,
 				ED8AB45226C11694006F0D03 /* MeToMeViewController */,
 				ED8AB45326C1169E006F0D03 /* MeToMeSettingViewController */,
-				ED8AB45A26C2A7C5006F0D03 /* SuccessMeToMeController.swift */,
-				ED8AB45C26C2B55E006F0D03 /* SuccessMeToMeController.xib */,
-				EDCF8A0F26CE876600DC9F54 /* MeToMeSearchBanksViewController.swift */,
-				EDCF8A1326CED86100DC9F54 /* BankTableViewCell.swift */,
-				EDCF8A1426CED86100DC9F54 /* BankTableViewCell.xib */,
+				ED60A1DF26DC0274000F3208 /* SuccessMeToMeController */,
+				ED60A1DD26DC024A000F3208 /* MeToMeSearchBanksViewController */,
 			);
 			path = MeToMeViewControllers;
 			sourceTree = "<group>";
@@ -1901,6 +1943,8 @@
 				0BA251F626C2782500AD087A /* FastPaymentContractFindListDecodableModel.swift */,
 				0B1DBA9B26D4032F009F3E98 /* CreateContactAddresslessTransferDecodableModel.swift */,
 				0BAC674026D408DC005AAD91 /* CreateDirectTransferDecodableModel.swift */,
+				ED60A1E026DC10A3000F3208 /* GetClientConsentMe2MePullDecodableModel.swift */,
+				ED60A1E226DC1600000F3208 /* ChangeClientConsentMe2MePullDecodableModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -2204,6 +2248,7 @@
 				EDCF8A1626CED86100DC9F54 /* BankTableViewCell.xib in Resources */,
 				EDB143C7265FDEC90028EF5A /* Roboto-MediumItalic.ttf in Resources */,
 				0B216FBC26D15BAA0023C878 /* GKHInputCell.xib in Resources */,
+				ED60A1E826DCFA87000F3208 /* MeToMeRequestController.xib in Resources */,
 				EDAA99B12673ABF200435484 /* ForaSwitchView.xib in Resources */,
 				68D06F3A26CCDE0100F9BE4C /* NavigationBarUIView.xib in Resources */,
 				0BF3484E268A455C005138A8 /* AllCardView.xib in Resources */,
@@ -2326,6 +2371,7 @@
 				EDB16586266A0883007E6030 /* NSDirectionalEdgeInsets.swift in Sources */,
 				0BB8817326D6F9E400015E27 /* GKHInputFooter.swift in Sources */,
 				EDFFCAF32682461F004EE095 /* CardCell.swift in Sources */,
+				ED60A1E626DCEA01000F3208 /* MeToMeRequestController.swift in Sources */,
 				EDB14524266624460028EF5A /* UIViewController.swift in Sources */,
 				EDCF8A1526CED86100DC9F54 /* BankTableViewCell.swift in Sources */,
 				ED84995A26A8831E005205C6 /* EPContact.swift in Sources */,
@@ -2434,6 +2480,7 @@
 				EDB1658026694676007E6030 /* PaymentsViewControllerLayout.swift in Sources */,
 				0B66E8D826CC5EC400FD735D /* ExtensionDevice.swift in Sources */,
 				0B216FC326D1B30C0023C878 /* ExtensionGKHCitySearchController.swift in Sources */,
+				ED60A1E126DC10A3000F3208 /* GetClientConsentMe2MePullDecodableModel.swift in Sources */,
 				ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */,
 				ED84994526A6F647005205C6 /* ChooseCountryHeaderView.swift in Sources */,
 				0BB8816D26D6696400015E27 /* GKHCardCell.swift in Sources */,
@@ -2454,6 +2501,7 @@
 				0B37F97E267A10E4007728FC /* PrepareCard2PhoneDecodableModel.swift in Sources */,
 				ED8AB45526C116DB006F0D03 /* MeToMeViewController.swift in Sources */,
 				0B8BE0952670D4A300E96CAA /* GetCodeDecodebleModel.swift in Sources */,
+				ED60A1E326DC1600000F3208 /* ChangeClientConsentMe2MePullDecodableModel.swift in Sources */,
 				0B66E8DE26CC5F8900FD735D /* QRViewController.swift in Sources */,
 				EDB1452226661C3F0028EF5A /* MaskedTextField.swift in Sources */,
 				ED4FC5EF266B70A00092B4AB /* PartialTransparentView.swift in Sources */,

@@ -119,4 +119,7 @@ enum RouterBaseUrlList: String {
     
     case createDirectTransfer = "/rest/transfer/createDirectTransfer"
     
+    case getClientConsentMe2MePull = "/rest/getClientConsentMe2MePull"
+    
+    case changeClientConsentMe2MePull = "/rest/changeClientConsentMe2MePull"
 }

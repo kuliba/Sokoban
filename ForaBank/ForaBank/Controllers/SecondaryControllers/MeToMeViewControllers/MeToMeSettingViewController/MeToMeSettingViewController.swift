@@ -19,6 +19,12 @@ class MeToMeSettingViewController: UIViewController {
     var topSwitch = MeToMeSetupSwitchView()
     var cardFromField = CardChooseView()
     var cardListView = CardListView(onlyMy: false)
+    var bankField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "Банк получателя",
+            image: #imageLiteral(resourceName: "BankIcon"),
+            isEditable: false,
+            showChooseButton: true))
     var stackView = UIStackView(arrangedSubviews: [])
     
     
@@ -30,6 +36,7 @@ class MeToMeSettingViewController: UIViewController {
         setupStackView()
         setupTopSwitch()
         setupCardFromView()
+        setupBankFiewld()
         setupCardList { [weak self] error in
             if error != nil {
                 self?.showAlert(with: "Ошибка", and: error!)
@@ -59,7 +66,7 @@ class MeToMeSettingViewController: UIViewController {
     }
     
     func setupStackView() {
-        stackView = UIStackView(arrangedSubviews: [topSwitch, cardFromField, cardListView])
+        stackView = UIStackView(arrangedSubviews: [topSwitch, cardFromField, cardListView, bankField])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
@@ -114,7 +121,17 @@ class MeToMeSettingViewController: UIViewController {
         }
     }
     
-    private func setupCardList(completion: @escaping ( _ error: String?) ->() ) {
+    private func setupBankFiewld() {
+        // действие по нажатию на поле с банком
+        bankField.didChooseButtonTapped = { () in
+            print("bankField didChooseButtonTapped")
+            let settingVC = MeToMeSearchBanksViewController()
+            let navVC = UINavigationController(rootViewController: settingVC)
+            self.present(navVC, animated: true, completion: nil)
+        }
+    }
+    
+    private func setupCardList(after completion: @escaping ( _ error: String?) ->() ) {
         getCardList { [weak self] data ,error in
             DispatchQueue.main.async {
                 

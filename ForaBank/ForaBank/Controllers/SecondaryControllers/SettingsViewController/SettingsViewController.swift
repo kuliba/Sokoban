@@ -102,15 +102,16 @@ class SettingsViewController: UIViewController {
                 self?.showAlert(with: "Ошибка", and: error!)
             } else {
                 DispatchQueue.main.async {
-                    let vc = MeToMeSettingViewController()
-                    if contractList != nil {
-                        vc.model = contractList
-                    } else {
-                        vc.model = []
-                    }
+                    let vc = MeToMeRequestController()
+//                    if contractList != nil {
+//                        vc.model = contractList
+//                    } else {
+//                        vc.model = []
+//                    }
+                    vc.addCloseButton()
                     let navVC = UINavigationController(rootViewController: vc)
                     navVC.modalPresentationStyle = .fullScreen
-                    navVC.addCloseButton()
+//                    navVC.addCloseButton()
                     self?.present(navVC, animated: true, completion: nil)
                 }
             }

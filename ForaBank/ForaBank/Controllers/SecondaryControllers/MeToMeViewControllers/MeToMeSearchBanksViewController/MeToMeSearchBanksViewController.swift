@@ -17,7 +17,13 @@ class MeToMeSearchBanksViewController: UIViewController {
             }
         }
     }
-    var selectedBanks = [BankFullInfoList]()
+    var selectedBanks = [BankFullInfoList]() {
+        didSet {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
     
     let searchTextField: TextFieldWithPadding = {
         let textField = TextFieldWithPadding()
@@ -65,6 +71,21 @@ class MeToMeSearchBanksViewController: UIViewController {
                 guard let bankList = bankList else { return }
                 self.banks = bankList
                 self.allBanks = bankList
+                self.getClientConsent { consentList, error in
+                    if error != nil {
+                        self.showAlert(with: "Ошибка", and: error ?? "")
+                    } else {
+                        var selected = [BankFullInfoList]()
+                        consentList?.forEach({ consent in
+                            self.allBanks.forEach { bank in
+                                if bank.memberID == consent.bankId {
+                                    selected.append(bank)
+                                }
+                            }
+                        })
+                        self.selectedBanks = selected
+                    }
+                }
             }
         }
     }
@@ -127,8 +148,23 @@ class MeToMeSearchBanksViewController: UIViewController {
     }
     
     @objc func saveAction(){
-        dismiss(animated: true, completion: nil)
-//        navigationController?.dismiss(animated: true, completion: nil)
+        var bankList: [String] = []
+        selectedBanks.forEach { bank in
+            bankList.append(bank.memberID ?? "")
+        }
+        
+        let body = ["bankIdList" : bankList] as [String: AnyObject]
+        self.showActivity()
+        NetworkManager<ChangeClientConsentMe2MePullDecodableModel>.addRequest(.changeClientConsentMe2MePull, [:], body) { model, error in
+            DispatchQueue.main.async {
+                self.dismissActivity()
+                if error != nil {
+                    self.showAlert(with: "Ошибка", and: error!)
+                } else {
+                    self.dismiss(animated: true, completion: nil)
+                }
+            }
+        }
     }
     
     //MARK: - API
@@ -152,6 +188,31 @@ class MeToMeSearchBanksViewController: UIViewController {
             if model.statusCode == 0 {
                 guard let data  = model.data else { return }
                 completion(data.bankFullInfoList ?? [], nil)
+            } else {
+                guard let error = model.errorMessage else { return }
+                print("DEBUG: Error: ", error)
+                if model.errorMessage == "Пользователь не авторизован"{
+                    AppLocker.present(with: .validate)
+                }
+                completion(nil, error)
+            }
+        }
+    }
+    
+    func getClientConsent(completion: @escaping (_ bankList: [ConsentList]?, _ error: String?) -> Void) {
+        showActivity()
+        NetworkManager<GetClientConsentMe2MePullDecodableModel>.addRequest(.getClientConsentMe2MePull, [:], [:]) { [weak self] model, error in
+            self?.dismissActivity()
+            if error != nil {
+                guard let error = error else { return }
+                print("DEBUG: Error: ", error)
+                completion(nil, error)
+            }
+            guard let model = model else { return }
+            print("DEBUG: Card list: ", model)
+            if model.statusCode == 0 {
+                guard let data  = model.data else { return }
+                completion(data.consentList ?? [], nil)
             } else {
                 guard let error = model.errorMessage else { return }
                 print("DEBUG: Error: ", error)
