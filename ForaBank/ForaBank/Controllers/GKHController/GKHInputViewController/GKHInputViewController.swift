@@ -156,7 +156,7 @@ extension GKHInputViewController {
                 
                 self?.footerView.cardListView.cardList = filterProduct
                 self?.footerView.cardFromField.cardModel = filterProduct.first
-                self?.cardNumber  = filterProduct.first?.accountNumber ?? ""
+                self?.cardNumber  = filterProduct.first?.number ?? ""
 //                                self?.cardListView.cardList = filterProduct
 //
 //                                if filterProduct.count > 0 {
@@ -206,7 +206,7 @@ extension GKHInputViewController {
                      "additional" : bodyArray] as [String: AnyObject]
         print("DEBUG: GKHInputView" , body)
         
-        NetworkManager<CreateServiceTransferDecodableModel>.addRequest(.createServiceTransfer, [:], body) { respModel, error in
+        NetworkManager<CreateDirectTransferDecodableModel>.addRequest(.createServiceTransfer, [:], body) { respModel, error in
             if error != nil {
                 print("DEBUG: Error: ContaktPaymentBegin ", error ?? "")
                 completion(nil, error!)
