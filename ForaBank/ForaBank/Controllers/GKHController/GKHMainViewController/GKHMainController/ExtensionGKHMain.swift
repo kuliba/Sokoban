@@ -44,7 +44,7 @@ extension GKHMainViewController {
     
     func setupNavBar() {
         
-        navigationItem.titleView = setTitle(title: "Все", subtitle: "")
+        navigationItem.titleView = setTitle(title: "Все города", subtitle: "")
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
         searchController.obscuresBackgroundDuringPresentation = false

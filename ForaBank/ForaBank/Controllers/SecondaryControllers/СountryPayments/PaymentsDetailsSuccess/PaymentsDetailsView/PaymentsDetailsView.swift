@@ -68,7 +68,7 @@ class PaymentsDetailsView: UIView {
         buttonView.isHidden = !model.statusIsSuccses
         statusImageView.image = model.statusIsSuccses ? #imageLiteral(resourceName: "success") : #imageLiteral(resourceName: "errorIcon")
         statusLabel.text = model.statusIsSuccses
-            ? "Успешный \nперевод" : "Операция \nнеуспешна!"
+            ? "Успешный перевод" : "Операция неуспешна!"
         summLabel.text = model.summTransction
         
     }
