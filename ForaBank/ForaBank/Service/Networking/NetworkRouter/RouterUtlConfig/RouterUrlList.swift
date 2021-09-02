@@ -66,6 +66,7 @@ enum RouterUrlList: String {
     case createDirectTransfer
     case getClientConsentMe2MePull
     case changeClientConsentMe2MePull
+    case getLatestServicePayments
     
     func returnUrl () -> URLValue {
         switch self {
@@ -640,6 +641,16 @@ enum RouterUrlList: String {
                 return .failure(.urlError)
             }
             
+        case .getLatestServicePayments:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getLatestServicePayments.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
         }
     }
 

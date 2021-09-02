@@ -6,29 +6,43 @@
 //
 
 import UIKit
+import RealmSwift
 
 class GKHInputViewController: UIViewController {
     
+    var bodyValue = [String : String]()
+    var bodyArray = [[String : String]]()
     var operatorData: GKHOperatorsModel?
     var valueToPass : String?
     var puref = ""
+    var cardNumber = ""
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var bottomInputView: BottomInputView!
     @IBOutlet weak var goButton: UIButton!
     
-    let footerView = GKHFooterView(text: "This is the text to be displayed in the footer view. Lets just think this contains some sort of disclaimer or maybe information that needs to be always shown below the content of the table. We don't know the length of this, especially if we want to support different languages, so we rely Auto Layout to calculate the correct size.")
+    /// MARK - REALM
+    lazy var realm = try? Realm()
+    var cardList: Results<UserAllCardsModel>? = nil
+    
+    
+    let footerView = GKHInputFooterView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        cardList = realm?.objects(UserAllCardsModel.self)
+        
+        
         bottomInputView.isHidden = true
+
         setupNavBar()
 //        goButton.isEnabled = false
-        //        goButton.backgroundColor = .lightGray
+//        goButton.backgroundColor = .lightGray
         goButton.add_CornerRadius(5)
         puref = operatorData?.puref ?? ""
         tableView.register(UINib(nibName: "GKHInputCell", bundle: nil), forCellReuseIdentifier: GKHInputCell.reuseId)
-        tableView.register(UINib(nibName: "GKHCardCell", bundle: nil), forCellReuseIdentifier: GKHCardCell.reuseId)
+        tableView.register(GKHInputFooterView.self, forHeaderFooterViewReuseIdentifier: "sectionFooter")
+        
         // Изменения символа валюты
         bottomInputView.currencySymbol = "₽"
         /// Загружаем карты
@@ -60,8 +74,6 @@ class GKHInputViewController: UIViewController {
                 
             }
         }
-        self.tableView.tableFooterView = footerView
-        
         
         setupCardList { error in
             guard let error = error else { return }
@@ -71,16 +83,12 @@ class GKHInputViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        guard let footerView = self.tableView.tableFooterView else {
-            return
-        }
-        
-        let width = self.tableView.bounds.size.width
-        let size = footerView.systemLayoutSizeFitting(CGSize(width: width, height: UIView.layoutFittingCompressedSize.height))
-        
+ //       guard footerView = tableView.tableFooterView else {return}
+        let size = footerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
         if footerView.frame.size.height != size.height {
             footerView.frame.size.height = size.height
-            self.tableView.tableFooterView = footerView
+            tableView.tableFooterView = footerView
+            tableView.layoutIfNeeded()
         }
     }
     
@@ -115,6 +123,21 @@ extension GKHInputViewController {
     }
     
     func setupCardList(completion: @escaping ( _ error: String?) ->() ) {
+        
+//        self.cardList?.forEach{ card in
+//            if (card.allowDebit && card.productType == "CARD") {
+//                var filterProduct: [UserAllCardsModel] = []
+//                filterProduct.append(card)
+//                self.footerView.cardListView.cardList = filterProduct
+//                self.footerView.cardFromField.cardModel = filterProduct.first
+//                self.cardNumber  = filterProduct.first?.accountNumber ?? ""
+//            }
+//        }
+        
+        
+        
+        
+        
         getCardList { [weak self] data ,error in
             DispatchQueue.main.async {
                 
@@ -125,24 +148,24 @@ extension GKHInputViewController {
                 var filterProduct: [GetProductListDatum] = []
                 data.forEach { product in
                     if (product.productType == "CARD" || product.productType == "ACCOUNT") && product.currency == "RUB" {
+                        if product.allowDebit == true {
                         filterProduct.append(product)
+                        }
                     }
                 }
                 
-//                let cell = self?.tableView.cellForRow(at: IndexPath(row: 3, section: 0)) as! GKHCardCell
-                
                 self?.footerView.cardListView.cardList = filterProduct
                 self?.footerView.cardFromField.cardModel = filterProduct.first
-                
-                //                self?.cardListView.cardList = filterProduct
-                
-                //                if filterProduct.count > 0 {
-                //                    self?.cardFromField.cardModel = filterProduct.first
-                //                    guard let cardNumber  = filterProduct.first?.number else { return }
-                //                    self?.selectedCardNumber = cardNumber
-                //                    self?.cardIsSelect = true
-                //                    completion(nil)
-                //                }
+                self?.cardNumber  = filterProduct.first?.accountNumber ?? ""
+//                                self?.cardListView.cardList = filterProduct
+//
+//                                if filterProduct.count > 0 {
+//                                    self?.cardFromField.cardModel = filterProduct.first
+//                                    guard let cardNumber  = filterProduct.first?.number else { return }
+//                                    self?.selectedCardNumber = cardNumber
+//                                    self?.cardIsSelect = true
+//                                    completion(nil)
+//                                }
             }
         }
     }
@@ -151,7 +174,7 @@ extension GKHInputViewController {
     //MARK: - API
     func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?)->()) {
         let param = ["isCard": "true", "isAccount": "true", "isDeposit": "false", "isLoan": "false"]
-        
+
         NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
             if error != nil {
                 completion(nil, error)
@@ -169,33 +192,19 @@ extension GKHInputViewController {
     }
     func paymentGKH(amount: String ,completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
         
-        let a = puref
-        print(a)
+        let b = bodyArray
+        let a = amount
+        let c = self.cardNumber
+        print(b, a, c)
         let body = [ "check" : false,
                      "amount" : amount,
                      "currencyAmount" : "RUB",
                      "payer" : [ "cardId" : nil,
-                                 "cardNumber" : 4656260142582070,
+                                 "cardNumber" : self.cardNumber,
                                  "accountId" : nil ],
                      "puref" : puref,
-                     "additional" : [
-                        [ "fieldid": 1,
-                          "fieldname": "account",
-                          "fieldvalue": "766440148001" ],
-                        [ "fieldid": 2,
-                          "fieldname": "fine",
-                          "fieldvalue": "0" ],
-                        [ "fieldid": 3,
-                          "fieldname": "counter",
-                          "fieldvalue": "120001" ],
-                        [ "fieldid": 4,
-                          "fieldname": "counterDay",
-                          "fieldvalue": "120002" ],
-                        [ "fieldid": 5,
-                          "fieldname": "counterNight",
-                          "fieldvalue": "120003" ]
-                     ] ] as [String: AnyObject]
-        print("DEBUG: GKHInputView" ,body)
+                     "additional" : bodyArray] as [String: AnyObject]
+        print("DEBUG: GKHInputView" , body)
         
         NetworkManager<CreateServiceTransferDecodableModel>.addRequest(.createServiceTransfer, [:], body) { respModel, error in
             if error != nil {

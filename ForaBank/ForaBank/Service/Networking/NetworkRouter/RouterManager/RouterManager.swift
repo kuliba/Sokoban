@@ -60,6 +60,7 @@ enum RouterManager {
     case createDirectTransfer
     case getClientConsentMe2MePull
     case changeClientConsentMe2MePull
+    case getLatestServicePayments
 }
 
 extension RouterManager {
@@ -843,6 +844,21 @@ extension RouterManager {
             request.httpMethod = RequestMethod.post.rawValue
             return request
             
+            
+        case .getLatestServicePayments:
+            let baseUrl = RouterUrlList.getLatestServicePayments.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.get.rawValue
+            return request
         }
     }
 }
