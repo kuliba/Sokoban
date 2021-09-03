@@ -31,14 +31,14 @@ struct AddOperatorsList {
                 print("DEBUG: error", error!)
             } else {
                 guard let model = model else { return }
-                guard let lastPaymentsList = model.data else { return }
+                guard let lastPaymentsList = model.data?.operatorGroupList else { return }
     
                 lastPaymentsList.forEach { d in
                     if d.name == "Коммунальные услуги и ЖКХ" {
                         d.operators?.forEach({ operators in
                             /// Общая информация об поставщике услуг
                             let a     = GKHOperatorsModel()
-                            a.puref    = operators.code
+                            a.puref   = operators.code
                             a.isGroup = operators.isGroup ?? false
                             a.name    = operators.name
                             a.region  = operators.region

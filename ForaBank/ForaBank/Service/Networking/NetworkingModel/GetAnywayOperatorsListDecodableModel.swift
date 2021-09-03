@@ -9,7 +9,7 @@ import Foundation
 struct GetAnywayOperatorsListDecodableModel: Codable, NetworkModelProtocol {
     let statusCode: Int?
     let errorMessage: String?
-    let data: [GetAnywayOperatorsListDatum]?
+    let data: GetAnywayOperatorsDataClass?
 }
 
 // MARK: GetAnywayOperatorsListDecodableModel convenience initializers and mutators
@@ -33,7 +33,7 @@ extension GetAnywayOperatorsListDecodableModel {
     func with(
         statusCode: Int?? = nil,
         errorMessage: String?? = nil,
-        data: [GetAnywayOperatorsListDatum]?? = nil
+        data: GetAnywayOperatorsDataClass?? = nil
     ) -> GetAnywayOperatorsListDecodableModel {
         return GetAnywayOperatorsListDecodableModel(
             statusCode: statusCode ?? self.statusCode,
@@ -50,6 +50,50 @@ extension GetAnywayOperatorsListDecodableModel {
         return String(data: try self.jsonData(), encoding: encoding)
     }
 }
+
+// MARK: - GetAnywayOperatorsDataClass
+struct GetAnywayOperatorsDataClass: Codable {
+    let operatorGroupList: [GetAnywayOperatorsListDatum]?
+    let serial: String?
+}
+
+// MARK: GetAnywayOperatorsDataClass convenience initializers and mutators
+
+extension GetAnywayOperatorsDataClass {
+    init(data: Data) throws {
+        self = try newJSONDecoder().decode(GetAnywayOperatorsDataClass.self, from: data)
+    }
+
+    init(_ json: String, using encoding: String.Encoding = .utf8) throws {
+        guard let data = json.data(using: encoding) else {
+            throw NSError(domain: "JSONDecoding", code: 0, userInfo: nil)
+        }
+        try self.init(data: data)
+    }
+
+    init(fromURL url: URL) throws {
+        try self.init(data: try Data(contentsOf: url))
+    }
+
+    func with(
+        operatorGroupList: [GetAnywayOperatorsListDatum]?? = nil,
+        serial: String?? = nil
+    ) -> GetAnywayOperatorsDataClass {
+        return GetAnywayOperatorsDataClass(
+            operatorGroupList: operatorGroupList ?? self.operatorGroupList,
+            serial: serial ?? self.serial
+        )
+    }
+
+    func jsonData() throws -> Data {
+        return try newJSONEncoder().encode(self)
+    }
+
+    func jsonString(encoding: String.Encoding = .utf8) throws -> String? {
+        return String(data: try self.jsonData(), encoding: encoding)
+    }
+}
+
 
 // MARK: - GetAnywayOperatorsListDatum
 struct GetAnywayOperatorsListDatum: Codable {
