@@ -59,25 +59,25 @@ class MainViewController: UIViewController {
 
     
         enum Section: Int, CaseIterable {
-            case transfers, payments, pay, offer, openProduct, branches, investment, services
+            case  offer
             func description() -> String {
                 switch self {
-                case .transfers:
-                    return "Мои продукты"
-                case .payments:
-                    return "Предложения"
+//                case .transfers:
+//                    return "Мои продукты"
                 case .offer:
-                    return "Быстрые операции"
-                case .pay:
-                    return "Обмен валют"
-                case .openProduct:
-                    return "Открыть продукт"
-                case .branches:
-                    return "Отделения и банкоматы"
-                case .investment:
-                    return "Инвестиции и пенсии"
-                case .services:
-                    return "Услуги и сервисы"
+                    return "Предложения"
+//                case .offer:
+//                    return "Быстрые операции"
+//                case .pay:
+//                    return "Обмен валют"
+//                case .openProduct:
+//                    return "Открыть продукт"
+//                case .branches:
+//                    return "Отделения и банкоматы"
+//                case .investment:
+//                    return "Инвестиции и пенсии"
+//                case .services:
+//                    return "Услуги и сервисы"
                 }
             }
         }
@@ -120,21 +120,21 @@ class MainViewController: UIViewController {
         }
         
         func setupData() {
-            openProduct = MockItems.returnOpenProduct()
-            offer = MockItems.returnFastPay()
-            pay = MockItems.returnPayments()
-            payments = MockItems.returnPayments()
-            getCardList { data, errorMessage in
-                guard let list = data else {return}
-                for i in list {
-                    self.transfers.append(PaymentsModel(productList: i))
-                }
-                if list.count < 3{
-//                    self.transfers.append(PaymentsModel(id: 32, name: "Хочу карты", iconName: "openCard", controllerName: ""))
-                }
-//                self.transfers = self.payments
-                self.productList = data ?? []
-            }
+//            openProduct = MockItems.returnOpenProduct()
+            offer = MockItems.returnBanner()
+//            pay = MockItems.returnPayments()
+//            payments = MockItems.returnPayments()
+//            getCardList { data, errorMessage in
+//                guard let list = data else {return}
+//                for i in list {
+//                    self.transfers.append(PaymentsModel(productList: i))
+//                }
+//                if list.count < 3{
+////                    self.transfers.append(PaymentsModel(id: 32, name: "Хочу карты", iconName: "openCard", controllerName: ""))
+//                }
+////                self.transfers = self.payments
+//                self.productList = data ?? []
+//            }
 
        
         }
@@ -169,15 +169,8 @@ class MainViewController: UIViewController {
         func reloadData(with searchText: String?) {
             var snapshot = NSDiffableDataSourceSnapshot<Section, PaymentsModel>()
             
-            snapshot.appendSections([.transfers, .pay, .payments, .offer, .openProduct, .branches, .investment, .services])
-            snapshot.appendItems(transfers, toSection: .payments)
-            snapshot.appendItems(transfers, toSection: .transfers)
-            snapshot.appendItems(pay, toSection: .pay)
+            snapshot.appendSections([.offer])
             snapshot.appendItems(offer, toSection: .offer)
-            snapshot.appendItems(openProduct, toSection: .openProduct)
-            snapshot.appendItems(branches, toSection: .branches)
-            snapshot.appendItems(investment, toSection: .investment)
-            snapshot.appendItems(services, toSection: .services)
 
             dataSource?.apply(snapshot, animatingDifferences: true)
             collectionView.reloadData()
