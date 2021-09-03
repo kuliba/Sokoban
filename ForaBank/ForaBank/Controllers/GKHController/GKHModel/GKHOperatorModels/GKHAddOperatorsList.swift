@@ -55,6 +55,7 @@ struct AddOperatorsList {
                             })
                             /// Поля для заполнения
                             operators.parameterList?.forEach({ parameterList in
+                                if parameterList.viewType == "INPUT" {
                                 let p = Parameters()
                                 p.id        = parameterList.id
                                 p.order     = parameterList.order ?? 0
@@ -69,6 +70,7 @@ struct AddOperatorsList {
                                 p.minLength = parameterList.minLength ?? 0
                                 p.rawLength = parameterList.rawLength ?? 0
                                 parametersArray.append(p)
+                                }
                             })
                             tempOperators = a
                             listPositionArray.forEach { i in

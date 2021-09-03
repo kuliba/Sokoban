@@ -62,21 +62,22 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
         
         self.fieldid = String(index + 1)
         fieldname = dataModel.id ?? ""
-        
         let q = GKHDataSorted.a(dataModel.title ?? "")
-        operatorsIcon.image = UIImage(named: q.1)
+        DispatchQueue.main.async {
+            self.operatorsIcon.image = UIImage(named: q.1)
+        }
         textField.text = q.0
         placeholder = q.0
-        self.errorLable.text = dataModel.subTitle
-        let type = dataModel.viewType
-        if type != "INPUT" {
-            self.textField.isEnabled = false
+        
+        if q.0 == "" {
+            textField.text = dataModel.title
         }
         if q.0 == "ФИО" {
             showFioButton.isHidden = false
         } else {
             showFioButton.isHidden = true
         }
+        
     }
     @IBAction func textField(_ sender: UITextField) {
         fieldvalue = textField.text ?? ""
@@ -88,14 +89,14 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-               
-                if (string == " ") {
-                    return false
-                } else {
-                    
-                    return true
-                }
-            }
+        
+        if (string == " ") {
+            return false
+        } else {
+            
+            return true
+        }
+    }
     
     
     @IBAction func payTapButton(_ sender: UIButton) {
