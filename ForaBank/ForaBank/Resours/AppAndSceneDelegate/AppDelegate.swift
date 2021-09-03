@@ -21,13 +21,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
+        /// FirebaseApp configure
         var filePath = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist")!
         #if DEBUG
         filePath = Bundle.main.path(forResource: "GoogleService-Info-test", ofType: "plist")!
         #endif
         let fileopts = FirebaseOptions.init(contentsOfFile: filePath)
         FirebaseApp.configure(options: fileopts!)
+        
+        /// FirebaseApp Messaging configure
         Messaging.messaging().delegate = self
+        application.registerForRemoteNotifications()
+        
         requestNotificationAuthorization(application: application)
         customizeUiInApp()
         
@@ -127,8 +132,6 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             options: authOptions,
             completionHandler: {_, _ in })
         
-        application.registerForRemoteNotifications()
-        
     }
     
     
@@ -160,16 +163,7 @@ extension AppDelegate {
     
     func getCSRF(completion: @escaping (_ error: String?) ->()) {
         
-        let parameters = [
-//            "cryptoVersion": "1.0",
-            "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-            "pushFcmToken": "\(Messaging.messaging().fcmToken ?? "")",
-            "model": UIDevice().model,
-            "operationSystem": "IOS"
-        ] as [String : AnyObject]
-//        print("DEBUG: Parameters = ", parameters)
-        
-        NetworkManager<CSRFDecodableModel>.addRequest(.csrf, [:], parameters) { request, error in
+        NetworkManager<CSRFDecodableModel>.addRequest(.csrf, [:], [:]) { request, error in
             if error != nil {
                 completion(error)
             }
@@ -193,10 +187,16 @@ extension AppDelegate {
             let newData = Encription().encryptWithRSAKey(Data(base64Encoded: KeyFromServer.publicKey!)!, rsaKeyRef: KeyPair.privateKey!, padding: .PKCS1)
             
             
-            // TODO: пределать на сингл тон
-            UserDefaults.standard.set(token, forKey: "sessionToken")
-            
             CSRFToken.token = token
+            
+            let parameters = [
+    //            "cryptoVersion": "1.0",
+                "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
+                "pushFcmToken": "\(Messaging.messaging().fcmToken ?? "")",
+                "model": UIDevice().model,
+                "operationSystem": "IOS"
+            ] as [String : AnyObject]
+            print("DEBUG: Parameters = ", parameters)
             
             NetworkManager<InstallPushDeviceDecodebleModel>.addRequest(.installPushDevice, [:], parameters) { model, error in
                 if error != nil {
@@ -205,8 +205,8 @@ extension AppDelegate {
                 } else {
                     
                     let parametersKey = [
-                        "data": KeyFromServer.sendBase64ToServ ?? "",
-                        "token": CSRFToken.token ?? "",
+                        "data": "\(KeyFromServer.sendBase64ToServ ?? "")",
+                        "token": "\(CSRFToken.token ?? "")",
                         "type": "",
                     ] as [String : AnyObject]
                     

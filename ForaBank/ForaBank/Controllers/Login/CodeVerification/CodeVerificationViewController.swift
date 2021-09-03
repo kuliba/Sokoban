@@ -85,10 +85,9 @@ class CodeVerificationViewController: UIViewController {
     //MARK: - API
     //TODO: BUG: Можно ввести в поле больше символов чем есть полей
     func sendSmsCode(code: String) {
-//        print("DEBUG: " + #function + ": " + code)
         let body = [
 //            "cryptoVersion": "1.0",
-            "appId": "IOS",
+//            "appId": "IOS",
             "verificationCode": "\(code)"
         ] as [String : AnyObject]
         
@@ -124,6 +123,8 @@ class CodeVerificationViewController: UIViewController {
             
             guard let model = model else { return }
             if model.statusCode == 0 {
+                
+                print("DEBUG: messaging().fcmToken = ", Messaging.messaging().fcmToken)
                 
                 let body = [
                     "cryptoVersion": "1.0",

@@ -269,7 +269,7 @@ class FaceTouchIdViewController: UIViewController {
         }
         let serverDeviceGUID = UserDefaults.standard.object(forKey: "serverDeviceGUID")
         let data = [
-            "appId": encript(string:"iOS"),
+            "appId": encript(string:"IOS"),
             "cryptoVersion": "1.0",
             "pushDeviceId": encript(string: UIDevice.current.identifierForVendor!.uuidString),
             "pushFcmToken": encript(string: Messaging.messaging().fcmToken as String? ?? ""),
