@@ -61,7 +61,7 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
     func setupUI (_ index: Int, _ dataModel: Parameters) {
         
         self.fieldid = String(index + 1)
-        fieldname = dataModel.title ?? ""
+        fieldname = dataModel.id ?? ""
         
         let q = GKHDataSorted.a(dataModel.title ?? "")
         operatorsIcon.image = UIImage(named: q.1)

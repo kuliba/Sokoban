@@ -108,9 +108,10 @@ class SettingsViewController: UIViewController {
                     } else {
                         vc.model = []
                     }
+                    vc.addCloseButton()
                     let navVC = UINavigationController(rootViewController: vc)
                     navVC.modalPresentationStyle = .fullScreen
-                    navVC.addCloseButton()
+//                    navVC.addCloseButton()
                     self?.present(navVC, animated: true, completion: nil)
                 }
             }

@@ -230,9 +230,9 @@ struct NetworkHelper {
                 do {
                     let data = try Data(contentsOf: filePath, options: [])
                     
-                    let list = try JSONDecoder().decode(GetBanksDataClass.self, from: data)
-                    Dict.shared.banks = list.banksList
-                    completion(list.banksList, nil)
+                    let list = try JSONDecoder().decode(GetFullBankInfoListDecodableModelDataClass.self, from: data)
+                    Dict.shared.bankFullInfoList = list.bankFullInfoList
+                    completion(list.bankFullInfoList, nil)
                 } catch {
                     print(error)
                 }
@@ -244,10 +244,10 @@ struct NetworkHelper {
             }
             
             func getBanks(withId: String? = nil) {
-                let bodyTmp = [
-                    "bic": ""
-                ] as [String : AnyObject]
-                let param = ["serial" : withId ?? ""]
+//                let bodyTmp = [
+//                    "bic": ""
+//                ] as [String : AnyObject]
+                let param = ["bic": "","serial" : withId ?? ""]
 //                print("DEBUG: BankFullInfoList param", param)
                 NetworkManager<GetFullBankInfoListDecodableModel>.addRequest(.getFullBankInfoList, param, [:]) { model, error in
                     if error != nil {

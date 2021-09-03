@@ -9,6 +9,8 @@ import UIKit
 
 class MeToMeViewController: UIViewController {
     
+    var meToMeContract: [FastPaymentContractFindListDatum]?
+    
     var selectedBank: BankFullInfoList? {
         didSet {
             guard let bank = selectedBank else { return }
@@ -388,11 +390,9 @@ class MeToMeViewController: UIViewController {
         var body = [ "amount" : amount,
                      "currencyAmount" : "RUB",
                      "comment" : "Перевод Me2Me Pull Credit",
-                     "payer" : [
-                        "cardId" : nil,
-                        "cardNumber" : nil,
-                        "accountId" : nil
-                     ],
+                     "payer" : [ "cardId" : nil,
+                                 "cardNumber" : nil,
+                                 "accountId" : nil ],
                      "bankId" : bank ] as [String : AnyObject]
         if cardModel.productType == "CARD" {
             body["payer"] = ["cardId": cardModel.cardID,
@@ -401,10 +401,10 @@ class MeToMeViewController: UIViewController {
         } else if cardModel.productType == "ACCOUNT" {
             body["payer"] = ["cardId": nil,
                              "cardNumber" : nil,
-                             "accountId" : cardModel.cardID] as AnyObject
+                             "accountId" : cardModel.id] as AnyObject
         }
         
-        NetworkManager<CreateFastPaymentContractDecodableModel>.addRequest(.createMe2MePullTransfer, [:], body) { model, error in
+        NetworkManager<CreateFastPaymentContractDecodableModel>.addRequest(.createMe2MePullCreditTransfer, [:], body) { model, error in
             if error != nil {
                 guard let error = error else { return }
                 print("DEBUG: Error: ", error)
@@ -415,8 +415,8 @@ class MeToMeViewController: UIViewController {
             if model.statusCode == 0 {
                 completion(true, nil)
             } else {
-                guard let error = model.errorMessage else { return }
-                print("DEBUG: Error: ", error)
+//                guard let error = model.errorMessage else { return }
+                print("DEBUG: Error: ", error ?? "")
                 if model.errorMessage == "Пользователь не авторизован"{
                     AppLocker.present(with: .validate)
                 }

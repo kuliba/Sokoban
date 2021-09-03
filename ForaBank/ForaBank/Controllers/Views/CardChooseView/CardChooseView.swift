@@ -34,6 +34,12 @@ final class CardChooseView: UIView {
         }
     }
     
+    var model: UserAllCardsModel? {
+        didSet { guard let model = model else { return }
+            setupRealmData(with: model)
+        }
+    }
+    
     var customCardModel: CastomCardViewModel? {
         didSet { guard let model = customCardModel else { return }
             setupCustomData(with: model)
@@ -66,6 +72,29 @@ final class CardChooseView: UIView {
     }
     @IBAction func chooseButtonTapped(_ sender: Any) {
         didChooseButtonTapped?()
+    }
+    
+    private func setupRealmData(with model: UserAllCardsModel) {
+        hideAll(false)
+        
+        if model.productType == "ACCOUNT" {
+            imageView.image = model.smallDesign?.convertSVGStringToImage() ?? #imageLiteral(resourceName: "AccImage")
+            cardTypeImage.isHidden = true
+        }
+        else if model.productType == "CARD" {
+            self.imageView.image = model.smallDesign?.convertSVGStringToImage() ?? #imageLiteral(resourceName: "credit-card")
+        }
+        
+        let balance = Double(model.balance)
+        self.balanceLabel.text = balance.currencyFormatter(symbol: model.currency ?? "")
+        let text = NSAttributedString(
+            string: model.mainField ?? "",
+            attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14),
+                         NSAttributedString.Key.foregroundColor : UIColor.black])
+        self.numberCardLabel.attributedText = text
+        self.maskNumberLabel.text = "• \(model.number?.suffix(4) ?? "")"
+        self.nameLabel.text = model.customName ?? model.additionalField ?? ""
+        self.cardTypeImage.image = model.paymentSystemImage?.convertSVGStringToImage()
     }
     
     private func setupData(with model: GetProductListDatum) {

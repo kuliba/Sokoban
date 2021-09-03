@@ -160,8 +160,8 @@ extension CreateAdditionalList {
     func with(
         fieldName: String?? = nil,
         fieldValue: String?? = nil
-    ) -> AdditionalList {
-        return AdditionalList(
+    ) -> CreateAdditionalList {
+        return CreateAdditionalList(
             fieldName: fieldName ?? self.fieldName,
             fieldValue: fieldValue ?? self.fieldValue
         )

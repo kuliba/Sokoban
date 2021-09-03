@@ -28,18 +28,18 @@
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="center" spacing="34" translatesAutoresizingMaskIntoConstraints="NO" id="vsX-N9-VcX">
                     <rect key="frame" x="0.0" y="64" width="338" height="368"/>
                     <subviews>
-                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="qYk-Rg-BWS">
-                            <rect key="frame" x="20" y="0.0" width="298" height="167"/>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="qYk-Rg-BWS">
+                            <rect key="frame" x="20" y="0.0" width="298" height="233"/>
                             <subviews>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SuccessIcon" translatesAutoresizingMaskIntoConstraints="NO" id="LgR-Py-0Qe">
-                                    <rect key="frame" x="0.0" y="63.5" width="40" height="40"/>
+                                    <rect key="frame" x="129" y="0.0" width="40" height="40"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="40" id="A2l-Dm-Rff"/>
                                         <constraint firstAttribute="width" constant="40" id="qqh-p8-neb"/>
                                     </constraints>
                                 </imageView>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Успешный перевод" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PcT-mV-ek0">
-                                    <rect key="frame" x="56" y="53.5" width="242" height="60"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Успешный перевод" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PcT-mV-ek0">
+                                    <rect key="frame" x="61.5" y="50" width="175" height="60"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="60" id="Lvz-KO-y1A"/>
                                     </constraints>
@@ -47,20 +47,8 @@
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Vector" translatesAutoresizingMaskIntoConstraints="NO" id="2q9-Ij-ZkL">
-                                    <rect key="frame" x="298" y="68.5" width="30" height="30"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="30" id="grN-ca-39J"/>
-                                        <constraint firstAttribute="width" constant="30" id="qIP-qJ-RKB"/>
-                                    </constraints>
-                                </imageView>
-                            </subviews>
-                        </stackView>
-                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Msc-Pk-H4e">
-                            <rect key="frame" x="0.0" y="201" width="338" height="32"/>
-                            <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1000,00 ₽" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hq8-1x-8iq">
-                                    <rect key="frame" x="20" y="0.0" width="298" height="32"/>
+                                    <rect key="frame" x="90.5" y="120" width="117.5" height="32"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="32" id="1WH-cf-KUz"/>
                                     </constraints>
@@ -68,19 +56,20 @@
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="В Сбер Банк через КОНТАКТ" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nwm-YS-rJg">
-                                    <rect key="frame" x="20" y="0.0" width="298" height="0.0"/>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Vector" translatesAutoresizingMaskIntoConstraints="NO" id="2q9-Ij-ZkL">
+                                    <rect key="frame" x="134" y="162" width="30" height="30"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="30" id="grN-ca-39J"/>
+                                        <constraint firstAttribute="width" constant="30" id="qIP-qJ-RKB"/>
+                                    </constraints>
+                                </imageView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="В Сбер Банк через КОНТАКТ" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nwm-YS-rJg">
+                                    <rect key="frame" x="51.5" y="202" width="195.5" height="31"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                             </subviews>
-                            <constraints>
-                                <constraint firstItem="Hq8-1x-8iq" firstAttribute="leading" secondItem="Msc-Pk-H4e" secondAttribute="leading" constant="20" id="MII-fC-yRE"/>
-                                <constraint firstAttribute="trailing" secondItem="Nwm-YS-rJg" secondAttribute="trailing" constant="20" id="SA0-LN-1Ft"/>
-                                <constraint firstItem="Nwm-YS-rJg" firstAttribute="leading" secondItem="Msc-Pk-H4e" secondAttribute="leading" constant="20" id="WN9-PT-UCc"/>
-                                <constraint firstAttribute="trailing" secondItem="Hq8-1x-8iq" secondAttribute="trailing" constant="20" id="Zy9-4g-ZEd"/>
-                            </constraints>
                         </stackView>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="bkl-Ev-CtO">
                             <rect key="frame" x="0.0" y="267" width="338" height="101"/>
@@ -175,15 +164,13 @@
                     <constraints>
                         <constraint firstAttribute="trailing" secondItem="bkl-Ev-CtO" secondAttribute="trailing" id="EHS-KW-Fyz"/>
                         <constraint firstItem="bkl-Ev-CtO" firstAttribute="leading" secondItem="vsX-N9-VcX" secondAttribute="leading" id="KpV-6o-NGc"/>
-                        <constraint firstAttribute="trailing" secondItem="Msc-Pk-H4e" secondAttribute="trailing" id="Um0-Dy-5Km"/>
-                        <constraint firstItem="Msc-Pk-H4e" firstAttribute="leading" secondItem="vsX-N9-VcX" secondAttribute="leading" id="a18-Hb-CcM"/>
                         <constraint firstItem="qYk-Rg-BWS" firstAttribute="leading" secondItem="vsX-N9-VcX" secondAttribute="leading" constant="20" id="aa7-oP-HfI"/>
                         <constraint firstAttribute="trailing" secondItem="qYk-Rg-BWS" secondAttribute="trailing" constant="20" id="cIx-Lr-gK6"/>
                     </constraints>
                 </stackView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
-            <color key="backgroundColor" red="0.92941176470588238" green="0.92941176470588238" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="vsX-N9-VcX" secondAttribute="bottom" id="LHe-yb-UUz"/>
                 <constraint firstAttribute="trailing" secondItem="vsX-N9-VcX" secondAttribute="trailing" id="Pj6-RP-mJ4"/>

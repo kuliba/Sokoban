@@ -46,7 +46,7 @@ class MainTabBarViewController: UITabBarController {
         let mainVC = MainViewController()
         let paymentsVC = PaymentsViewController()
         let historyVC = DevelopViewController()
-        let chatVC = DevelopViewController()
+        let chatVC = SettingsViewController()
         
         viewControllers = [
             generateNavController(rootViewController: mainVC,
@@ -69,7 +69,7 @@ class MainTabBarViewController: UITabBarController {
                                   image: UIImage(named: "tabBar-chat")!,
                                   fillImage: UIImage(named: "tabBar-chat-fill")!),
         ]
-        selectedIndex = 1
+        selectedIndex = 0
         
         loadCatalog()
         
@@ -99,6 +99,16 @@ class MainTabBarViewController: UITabBarController {
             }
             guard let banks = model as? [BanksList] else { return }
             Dict.shared.banks = banks
+            print("DEBUG: Load Banks")
+        }
+        
+        
+        NetworkHelper.request(.getBankFullInfoList) { model, error in
+            if error != nil {
+                self.showAlert(with: "Ошибка", and: error!)
+            }
+            guard let banks = model as? [BankFullInfoList] else { return }
+            Dict.shared.bankFullInfoList = banks
             print("DEBUG: Load Banks")
         }
         

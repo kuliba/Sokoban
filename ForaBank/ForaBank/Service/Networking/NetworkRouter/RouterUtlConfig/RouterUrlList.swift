@@ -58,12 +58,14 @@ enum RouterUrlList: String {
     case getFullBankInfoList
     case createServiceTransfer
     case antiFraud
-    case createMe2MePullTransfer
+    case createMe2MePullCreditTransfer
     case createFastPaymentContract
     case updateFastPaymentContract
     case fastPaymentContractFindList
     case createContactAddresslessTransfer
     case createDirectTransfer
+    case getClientConsentMe2MePull
+    case changeClientConsentMe2MePull
     case getLatestServicePayments
     
     func returnUrl () -> URLValue {
@@ -553,8 +555,8 @@ enum RouterUrlList: String {
                 return .failure(.urlError)
             }
             
-        case .createMe2MePullTransfer:
-            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.createMe2MePullTransfer.rawValue)
+        case .createMe2MePullCreditTransfer:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.createMe2MePullCreditTransfer.rawValue)
             
             switch result {
             case .success(let url):
@@ -618,6 +620,27 @@ enum RouterUrlList: String {
                 debugPrint(error)
                 return .failure(.urlError)
             }
+        case .getClientConsentMe2MePull:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getClientConsentMe2MePull.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+        case .changeClientConsentMe2MePull:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.changeClientConsentMe2MePull.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
         case .getLatestServicePayments:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getLatestServicePayments.rawValue)
             

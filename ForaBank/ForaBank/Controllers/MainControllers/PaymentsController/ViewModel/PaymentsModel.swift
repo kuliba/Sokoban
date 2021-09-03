@@ -19,6 +19,7 @@ struct PaymentsModel: Hashable {
     var productList: GetProductListDatum? = nil
     
     
+    
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
