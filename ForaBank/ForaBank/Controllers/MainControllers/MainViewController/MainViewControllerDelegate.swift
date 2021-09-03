@@ -14,7 +14,7 @@ extension MainViewController: UICollectionViewDelegate {
             fatalError("Unknown section kind")
         }
         switch section {
-        case .payments:
+        case .offer:
             print("DEBUG: " + #function + payments[indexPath.row].name)
                 if let viewController = payments[indexPath.row].controllerName.getViewController() {
                     viewController.addCloseButton()
@@ -22,22 +22,22 @@ extension MainViewController: UICollectionViewDelegate {
                     navVC.modalPresentationStyle = .fullScreen
                     present(navVC, animated: true)
             }
-        case .transfers:
-            let viewController = ProductViewController()
-                viewController.addCloseButton()
-                let navVC = UINavigationController(rootViewController: viewController)
-                navVC.modalPresentationStyle = .fullScreen
-                present(navVC, animated: true)
-            
-        case .offer:
-            print("It's transfer")
-        case .pay:
-            print("its CurrencyExchange")
-        case .openProduct:
-            print("openProduct")
-        case .branches: break
-        case .investment: break
-        case .services: break
+//        case .transfers:
+//            let viewController = ProductViewController()
+//                viewController.addCloseButton()
+//                let navVC = UINavigationController(rootViewController: viewController)
+//                navVC.modalPresentationStyle = .fullScreen
+//                present(navVC, animated: true)
+//            
+//        case .offer:
+//            print("It's transfer")
+//        case .pay:
+//            print("its CurrencyExchange")
+//        case .openProduct:
+//            print("openProduct")
+//        case .branches: break
+//        case .investment: break
+//        case .services: break
         }
     }
     
