@@ -26,8 +26,8 @@ class LoginCardEntryViewController: UIViewController {
         creditCardView.enterCardNumberTapped = { [weak self] (cardNumber) in
             self?.showActivity()
             DispatchQueue.main.async {
-                AppDelegate.shared.getCSRF { errorMessage in
-                    if errorMessage == nil{
+//                AppDelegate.shared.getCSRF { errorMessage in
+//                    if errorMessage == nil{
                         LoginViewModel().checkCardNumber(with: cardNumber) { resp, error in
                             self?.dismissActivity()
                             if error != nil {
@@ -40,11 +40,11 @@ class LoginCardEntryViewController: UIViewController {
                                 }
                             }
                         }
-                    } else {
-                        self?.dismissActivity()
-                        self?.showAlert(with: "Ошибка", and: errorMessage ?? "" )
-                    }
-                }
+//                    } else {
+//                        self?.dismissActivity()
+//                        self?.showAlert(with: "Ошибка", and: errorMessage ?? "" )
+//                    }
+//                }
                 
             }
             

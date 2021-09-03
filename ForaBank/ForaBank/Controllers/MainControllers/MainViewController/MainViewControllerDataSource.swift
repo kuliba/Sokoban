@@ -13,10 +13,13 @@ extension MainViewController {
        
     func createDataSource() {
         dataSource = UICollectionViewDiffableDataSource<Section, PaymentsModel>(collectionView: collectionView, cellProvider: { (collectionView, indexPath, item) -> UICollectionViewCell? in
-            var section = Section(rawValue: indexPath.section)!
+            
+            guard let section = Section(rawValue: indexPath.section) else {
+                fatalError("Unknown section kind")
+            }
             
             switch section {
-            case .payments:
+            case .offer:
                 guard let cell = collectionView.dequeueReusableCell(
                         withReuseIdentifier: OfferCollectionViewCell.reuseId,
                         for: indexPath) as? OfferCollectionViewCell
@@ -28,39 +31,39 @@ extension MainViewController {
 
                 return cell
             
-            case .transfers:
-                if item.id != 33{
-                    guard let cell = collectionView.dequeueReusableCell(
-                            withReuseIdentifier: ProductCell.reuseId,
-                            for: indexPath) as? ProductCell
-                    else {
-                        fatalError("Unable to dequeue \(ProductCell.self)")
-                    }
-
-                    cell.card = item.productList
-                    return cell
-                } else {
-                    guard let cell = collectionView.dequeueReusableCell(
-                            withReuseIdentifier: "AllCardCell",
-                            for: indexPath) as? AllCardCell
-                    else {
-                        fatalError("Unable to dequeue \(AllCardCell.self)")
-                    }
-
-                    return cell
-                }
-            case .offer:
-                return self.configure(collectionView: collectionView, cellType: PaymentsCell.self, with: item, for: indexPath)
-            case .pay:
-                return self.configure(collectionView: collectionView, cellType: PaymentsCell.self, with: item, for: indexPath)
-            case .openProduct:
-                return self.configure(collectionView: collectionView, cellType: TransferCell.self, with: item, for: indexPath)
-            case .branches:
-                return self.configure(collectionView: collectionView, cellType: TransferCell.self, with: item, for: indexPath)
-            case .investment:
-                return self.configure(collectionView: collectionView, cellType: TransferCell.self, with: item, for: indexPath)  
-            case .services:
-                return self.configure(collectionView: collectionView, cellType: TransferCell.self, with: item, for: indexPath)
+//            case .transfers:
+//                if item.id != 33{
+//                    guard let cell = collectionView.dequeueReusableCell(
+//                            withReuseIdentifier: ProductCell.reuseId,
+//                            for: indexPath) as? ProductCell
+//                    else {
+//                        fatalError("Unable to dequeue \(ProductCell.self)")
+//                    }
+//
+//                    cell.card = item.productList
+//                    return cell
+//                } else {
+//                    guard let cell = collectionView.dequeueReusableCell(
+//                            withReuseIdentifier: "AllCardCell",
+//                            for: indexPath) as? AllCardCell
+//                    else {
+//                        fatalError("Unable to dequeue \(AllCardCell.self)")
+//                    }
+//
+//                    return cell
+//                }
+//            case .offer:
+//                return self.configure(collectionView: collectionView, cellType: PaymentsCell.self, with: item, for: indexPath)
+//            case .pay:
+//                return self.configure(collectionView: collectionView, cellType: PaymentsCell.self, with: item, for: indexPath)
+//            case .openProduct:
+//                return self.configure(collectionView: collectionView, cellType: TransferCell.self, with: item, for: indexPath)
+//            case .branches:
+//                return self.configure(collectionView: collectionView, cellType: TransferCell.self, with: item, for: indexPath)
+//            case .investment:
+//                return self.configure(collectionView: collectionView, cellType: TransferCell.self, with: item, for: indexPath)  
+//            case .services:
+//                return self.configure(collectionView: collectionView, cellType: TransferCell.self, with: item, for: indexPath)
 
             }
         })
@@ -77,16 +80,16 @@ extension MainViewController {
                 else { fatalError("Unknown section kind")
             }
             switch section {
-            case .payments:
+            case .offer:
                 sectionHeader.configure(text: section.description(),
                                         font: .boldSystemFont(ofSize: 18),
                                         textColor: .black, expandingIsHidden: false, seeAllIsHidden: true)
-            case .transfers:
-                sectionHeader.configure(text: section.description(),
-                                        font: .boldSystemFont(ofSize: 18),
-                                        textColor: .black, expandingIsHidden: false, seeAllIsHidden: false)
-                sectionHeader.seeAllButton.addTarget(self, action: #selector(passAllProducts), for: .touchUpInside)
-                sectionHeader.arrowButton.addTarget(self, action: #selector(expandingSection), for: .touchUpInside)
+//            case .transfers:
+//                sectionHeader.configure(text: section.description(),
+//                                        font: .boldSystemFont(ofSize: 18),
+//                                        textColor: .black, expandingIsHidden: false, seeAllIsHidden: false)
+//                sectionHeader.seeAllButton.addTarget(self, action: #selector(passAllProducts), for: .touchUpInside)
+//                sectionHeader.arrowButton.addTarget(self, action: #selector(expandingSection), for: .touchUpInside)
             default:
                 sectionHeader.configure(text: section.description(),
                                         font: .boldSystemFont(ofSize: 18),
