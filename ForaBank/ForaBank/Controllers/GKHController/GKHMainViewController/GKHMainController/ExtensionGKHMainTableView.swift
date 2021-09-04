@@ -59,18 +59,39 @@ extension GKHMainViewController: UITableViewDataSource {
     
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard segue.identifier == "input" else { return }
-
-            let index = (self.tableView.indexPathForSelectedRow?.row)!
-            let operators: GKHOperatorsModel?
-        if searching {
-            operators = searchedOrganization[index]
-        } else {
-            operators = organization[index]
+        let op: GKHOperatorsModel!
+        //        guard segue.identifier == "input" else { return }
+        switch segue.identifier {
+        
+        case "input":
+            // Если переход по нажатию на ячейку
+            if self.tableView.indexPathForSelectedRow?.row != nil {
+                let index = (self.tableView.indexPathForSelectedRow?.row)!
+                if searching {
+                    op = searchedOrganization[index]
+                } else {
+                    op = organization[index]
+                }
+                let dc = segue.destination as! GKHInputViewController
+                dc.operatorData = op
+            }
+            // Переход по QR
+            if (qrData.count != 0 && operators != nil) {
+                let dc = segue.destination as! GKHInputViewController
+                dc.operatorData = operators
+                dc.qrData = qrData
+            }
+            qrData.removeAll()
+        case "qr":
+            let dc = segue.destination as! QRViewController
+            dc.delegate = self
+            
+        case .none:
+            print()
+        case .some(_):
+            print()
         }
-            let dc = segue.destination as! GKHInputViewController
-            dc.operatorData = operators
-
+        
     }
     
 }

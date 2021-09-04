@@ -8,12 +8,25 @@
 import UIKit
 import AVFoundation
 import RealmSwift
+import PDFKit
 
-final class QRViewController: UIViewController {
+
+protocol QRProtocol: NSObject {
+    func setResultOfBusinessLogic (_ qr: [String: String], _ model: GKHOperatorsModel )
+}
+
+final class QRViewController: UIViewController, UIDocumentPickerDelegate {
+    
+    
+    weak var delegate: QRProtocol?
     
     var qrCodeLayer = AVCaptureVideoPreviewLayer()
     let qrCodesession = AVCaptureSession()
     var alertController: UIAlertController?
+    
+    @IBOutlet weak var pdfFile: UIButton!
+    @IBOutlet weak var zap: UIButton!
+    @IBOutlet weak var info: UIButton!
     
     let bottomSpace: CGFloat = 80.0
     var squareView: SquareView? = nil
@@ -22,13 +35,20 @@ final class QRViewController: UIViewController {
     var operatorsList: Results<GKHOperatorsModel>? = nil
     
     var keyValue = ""
-    var complition: ((String) -> ())?
+    
+    var qrData = [String: String]()
+    var operators: GKHOperatorsModel? = nil
     
     @IBOutlet weak var qrView: UIView!
     @IBOutlet weak var backButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        pdfFile.add_CornerRadius(30)
+        zap.add_CornerRadius(30)
+        info.add_CornerRadius(30)
+        
+        
         operatorsList = realm?.objects(GKHOperatorsModel.self)
         self.setupLayer()
         self.startQRCodeScanning()
@@ -38,115 +58,68 @@ final class QRViewController: UIViewController {
     
     
     final func returnKey() {
-        self.complition?(self.keyValue)
         self.qrCodesession.stopRunning()
         self.qrView.layer.sublayers?.removeLast()
-        self.navigationController?.popViewController(animated: true)
-    }
-    
-    @IBAction func back(_ sender: UIButton) {
-        returnKey()
-    }
-    
-}
-
-extension QRViewController: AVCaptureMetadataOutputObjectsDelegate, CALayerDelegate {
-    
-    
-    func setupLayer() {
-        
-        guard let captureDevice = AVCaptureDevice.default(for: .video) else { return }
-        let input: AVCaptureDeviceInput
-        
-        do {
-            input = try AVCaptureDeviceInput(device: captureDevice)
-            self.qrCodesession.addInput(input)
-        } catch {
-            return
+        if operators != nil {
+            self.navigationController?.popViewController(animated: true)
+            self.delegate?.setResultOfBusinessLogic(qrData, operators!)
         }
-        
-        let output = AVCaptureMetadataOutput()
-        self.qrCodesession.addOutput(output)
-        output.setMetadataObjectsDelegate(self, queue: .main)
-        output.metadataObjectTypes = [AVMetadataObject.ObjectType.qr]
-        
-        self.qrCodeLayer = AVCaptureVideoPreviewLayer(session: qrCodesession)
-        self.qrCodeLayer.videoGravity = .resizeAspectFill
-        self.qrCodeLayer.frame = self.qrView.layer.frame
-        self.qrView.backgroundColor = UIColor(white: 1, alpha: 1)
     }
     
-    func startQRCodeScanning() {
-        createCornerFrame()
-        self.view.layer.insertSublayer(self.qrCodeLayer, at: 0)
-        self.qrCodesession.startRunning()
+    public func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+        controller.dismiss(animated: true)
     }
     
-    func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-        guard metadataObjects.count > 0 else { return }
-        if let object = metadataObjects.first as? AVMetadataMachineReadableCodeObject {
-            if object.type == AVMetadataObject.ObjectType.qr {
-                self.keyValue = object.stringValue ?? ""
-                let a = self.keyValue.components(separatedBy: "|")
-                
-                a.forEach { v in
-                    if v.contains("=") {
-                        let tempArray = v.components(separatedBy: "=")
-                        print(tempArray)
-                    }
-                }
-                
-                self.returnKey()
-            } else {
-                DispatchQueue.main.async {
-                    guard self.alertController == nil else {
-                        print("There is already an alert presented")
-                        return
-                    }
-                    self.alertController = UIAlertController(title: "Код не получен", message: object.stringValue ?? "", preferredStyle: .actionSheet)
-                    guard let alert = self.alertController else {
-                        return
-                    }
-                    alert.addAction(UIAlertAction(title: "Повторить попытку", style: .default, handler: { (action) in
-                        print(object.stringValue ?? "")
-                        self.alertController = nil
-                    }))
-                    self.present(alert, animated: true, completion: nil)
-                }
+    @IBAction func info(_ sender: UIButton) {
+    }
+    @IBAction func zap(_ sender: UIButton) {
+        let device = AVCaptureDevice.default(for: .video)
+        if ((device?.hasTorch) != nil) {
+            do {
+                try device?.lockForConfiguration()
+                device?.torchMode = device?.torchMode == AVCaptureDevice.TorchMode.on ? .off : .on
+                device?.unlockForConfiguration()
+            } catch {
+                print(error.localizedDescription)
             }
         }
     }
-    
-    func createCornerFrame() {
-        let width: CGFloat = 200.0
-        let height: CGFloat = 200.0
+    @IBAction func addPdfFile(_ sender: UIButton) {
         
-        let rect = CGRect.init(
-            origin: CGPoint.init(
-                x: self.view.frame.midX - width/2,
-                y: self.view.frame.midY - (width + self.bottomSpace)/2),
-            size: CGSize.init(width: width, height: height))
-        self.squareView = SquareView(frame: rect)
-        if let squareView = squareView {
-            self.qrView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
-            
-            UIGraphicsBeginImageContext(self.qrView.bounds.size)
-            let cgContext = UIGraphicsGetCurrentContext()
-            cgContext?.setFillColor(UIColor.white.cgColor)
-            cgContext?.fill(self.qrView.bounds)
-            cgContext?.clear(CGRect(x: squareView.frame.origin.x + 2, y: squareView.frame.origin.y + 2, width: squareView.bounds.width - 4, height: squareView.frame.height - 4))
-            let maskImage = UIGraphicsGetImageFromCurrentImageContext()
-            UIGraphicsEndImageContext()
-            
-            let maskView = UIView(frame: self.qrView.bounds)
-            maskView.layer.contents = maskImage?.cgImage
-            self.qrView.mask = maskView
-            
-            squareView.autoresizingMask = UIView.AutoresizingMask(rawValue: UInt(0.0))
-            self.qrView.layer.masksToBounds = false
-            self.qrView.addSubview(squareView)
-            
+        var documentPickerController: UIDocumentPickerViewController!
+        
+        documentPickerController = UIDocumentPickerViewController(documentTypes: ["com.adobe.pdf"], in: .import)
+        documentPickerController.delegate = self
+        present(documentPickerController, animated: true, completion: nil)
+    }
+    
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
+        
+        let image = drawPDFfromURL(url: url)
+        let qrString = string(from: image!)
+        
+        let a = qrString.components(separatedBy: "|")
+        
+        a.forEach { [weak self] v in
+            if v.contains("=") {
+                let tempArray = v.components(separatedBy: "=")
+                var key = tempArray[0]
+                let value = tempArray[1]
+                if key == "persAcc" {
+                   key = "Лицевой счет"
+                }
+                self?.qrData.updateValue(value, forKey: key)
+            }
         }
+       
+        let inn = qrData.filter { $0.key == "PayeeINN" }
+        operatorsList?.forEach({ operators in
+            if operators.synonymList.first == inn.values.first {
+                self.operators = operators
+            }
+        })
+        self.returnKey()
+        
     }
     
 }

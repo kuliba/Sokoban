@@ -11,6 +11,10 @@ import AVFoundation
 
 class GKHMainViewController: UIViewController {
     
+    // QR data
+    var qrData = [String: String]()
+    var operators: GKHOperatorsModel? = nil
+    
     public static func storyboardInstance() -> GKHMainViewController? {
         let storyboard = UIStoryboard(name: "GKHStoryboard", bundle: nil)
         return storyboard.instantiateViewController(withIdentifier: "GKHMain") as? GKHMainViewController

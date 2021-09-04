@@ -58,7 +58,7 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
         textField.text = ""
     }
 
-    func setupUI (_ index: Int, _ dataModel: Parameters) {
+    func setupUI (_ index: Int, _ dataModel: Parameters, _ qrData: [String: String]) {
         
         self.fieldid = String(index + 1)
         fieldname = dataModel.id ?? ""
@@ -66,18 +66,24 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
         DispatchQueue.main.async {
             self.operatorsIcon.image = UIImage(named: q.1)
         }
-        textField.text = q.0
+        textField.placeholder = q.0
         placeholder = q.0
         
+        if q.0 == "Лицевой счет" {
+            let h = qrData.filter { $0.key == "Лицевой счет"}
+            if h.first?.value != "" {
+            textField.placeholder = h.values.first
+            }
+         }
+        
         if q.0 == "" {
-            textField.text = dataModel.title
+            textField.placeholder = dataModel.title
         }
         if q.0 == "ФИО" {
             showFioButton.isHidden = false
         } else {
             showFioButton.isHidden = true
         }
-        
     }
     @IBAction func textField(_ sender: UITextField) {
         fieldvalue = textField.text ?? ""

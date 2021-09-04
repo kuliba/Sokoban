@@ -17,6 +17,8 @@ class GKHInputViewController: UIViewController {
     var puref = ""
     var cardNumber = ""
     
+    var qrData = [String: String]()
+    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var bottomInputView: BottomInputView!
     @IBOutlet weak var goButton: UIButton!
@@ -32,8 +34,13 @@ class GKHInputViewController: UIViewController {
         super.viewDidLoad()
         cardList = realm?.objects(UserAllCardsModel.self)
         
+        if !qrData.isEmpty {
+            let a = qrData.filter { $0.key == "Sum"}
+            bottomInputView.tempTextFieldValue = a.first?.value ?? ""
+        }
         
-        bottomInputView.isHidden = true
+        
+        bottomInputView?.isHidden = true
 
         setupNavBar()
 //        goButton.isEnabled = false
@@ -79,6 +86,7 @@ class GKHInputViewController: UIViewController {
             guard let error = error else { return }
             self.showAlert(with: "Ошибка", and: error)
         }
+
     }
     
     override func viewDidLayoutSubviews() {
@@ -95,6 +103,11 @@ class GKHInputViewController: UIViewController {
     @IBAction func goButton(_ sender: UIButton) {
         goButton.isHidden = true
         bottomInputView.isHidden = false
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        qrData.removeAll()
     }
     
     
@@ -229,4 +242,5 @@ extension GKHInputViewController {
             }
         }
     }
+    
 }

@@ -80,6 +80,8 @@ extension GKHMainViewController {
                     DispatchQueue.main.async {
                         self.navigationController?.isNavigationBarHidden = true
                         self.performSegue(withIdentifier: "qr", sender: nil)
+                        
+                        
                     }
             } else {
                 guard self.alertController == nil else {
