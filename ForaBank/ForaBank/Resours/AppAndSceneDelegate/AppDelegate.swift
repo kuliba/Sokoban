@@ -88,6 +88,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let userInfo = notification.request.content.userInfo
         
+        
         // With swizzling disabled you must let Messaging know about the message, for Analytics
         // Messaging.messaging().appDidReceiveMessage(userInfo)
         
@@ -117,6 +118,30 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         
         // Print full message.
         print(userInfo)
+        
+        if let type = userInfo["type"] as? String {
+            if type == "сonsentMe2MePull" {
+                print("ОТКРЫВАЕМ ЭКРАН", userInfo)
+                let amount = userInfo["amount"] as? String ?? ""
+                let fee = userInfo["fee"] as? String ?? ""
+                let cardId = userInfo["cardId"] as? String ?? ""
+                let accountId = userInfo["accountId"] as? String ?? ""
+                let bank = userInfo["BankRecipientID"] as? String ?? ""
+                var meToMeReq = RequestMeToMeModel(
+                    amount: Double(amount) ?? 0, bankId: bank,
+                    fee: Double(fee) ?? 0, cardId: Int(cardId), accountId: Int(accountId))
+                meToMeReq.RefTrnId = userInfo["RefTrnId"] as? String ?? ""
+                meToMeReq.RcvrMsgId = userInfo["RcvrMsgId"] as? String ?? ""
+                meToMeReq.RecipientID = userInfo["RecipientID"] as? String ?? ""
+                
+                let topvc = UIApplication.topViewController()
+                
+                let vc = MeToMeRequestController()
+                vc.viewModel = meToMeReq
+                vc.modalPresentationStyle = .fullScreen
+                topvc?.present(vc, animated: true, completion: nil)
+            }
+        }
         
         completionHandler()
     }

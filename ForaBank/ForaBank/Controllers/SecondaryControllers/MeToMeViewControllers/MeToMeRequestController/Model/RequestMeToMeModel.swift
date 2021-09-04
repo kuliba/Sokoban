@@ -1,0 +1,57 @@
+//
+//  RequestMeToMeModel.swift
+//  ForaBank
+//
+//  Created by Mikhail on 03.09.2021.
+//
+
+import UIKit
+import RealmSwift
+
+struct RequestMeToMeModel {
+    var amount: Double
+    var fee: Double
+    var bank: BankFullInfoList?
+    var card: UserAllCardsModel?
+    var RecipientID: String?
+    var RcvrMsgId: String?
+    var RefTrnId: String?
+    
+    lazy var realm = try? Realm()
+    
+    init(amount: Double, bankId: String, fee: Double, cardId: Int?, accountId: Int?) {
+        self.amount = amount
+        self.fee = fee
+        self.bank = findBank(with: bankId)
+        self.card = findProduct(with: cardId, with: accountId)
+    }
+    
+    private func findBank(with bankId: String) -> BankFullInfoList? {
+        let bankList = Dict.shared.bankFullInfoList
+        var bankForReturn: BankFullInfoList?
+        bankList?.forEach({ bank in
+            if bank.memberID == bankId {
+                bankForReturn = bank
+            }
+        })
+        return bankForReturn
+    }
+    
+    private mutating func findProduct(with cardId: Int?, with accountId: Int?) -> UserAllCardsModel? {
+        let cardList = realm?.objects(UserAllCardsModel.self)
+        var card: UserAllCardsModel?
+        cardList?.forEach { product in
+            if cardId != nil {
+                if product.id == cardId {
+                    card = product
+                }
+            } else {
+                if product.id == accountId {
+                    card = product
+                }
+            }
+        }
+        return card
+    }
+    
+}
