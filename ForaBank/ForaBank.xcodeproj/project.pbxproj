@@ -216,8 +216,13 @@
 		ED60A1E126DC10A3000F3208 /* GetClientConsentMe2MePullDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED60A1E026DC10A3000F3208 /* GetClientConsentMe2MePullDecodableModel.swift */; };
 		ED60A1E326DC1600000F3208 /* ChangeClientConsentMe2MePullDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED60A1E226DC1600000F3208 /* ChangeClientConsentMe2MePullDecodableModel.swift */; };
 		ED60A1E626DCEA01000F3208 /* MeToMeRequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED60A1E526DCEA01000F3208 /* MeToMeRequestController.swift */; };
-		ED60A1E826DCFA87000F3208 /* MeToMeRequestController.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED60A1E726DCFA87000F3208 /* MeToMeRequestController.xib */; };
 		ED75CDF926E245EE0074F5D5 /* GoogleService-Info-test.plist in Resources */ = {isa = PBXBuildFile; fileRef = ED75CDF826E245EE0074F5D5 /* GoogleService-Info-test.plist */; };
+		ED75CDFB26E27F150074F5D5 /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED75CDFA26E27F150074F5D5 /* UIApplication.swift */; };
+		ED75CDFD26E2AA5B0074F5D5 /* RequestMeToMeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED75CDFC26E2AA5B0074F5D5 /* RequestMeToMeModel.swift */; };
+		ED75CE0126E2AB3A0074F5D5 /* MeToMeReqestSwitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED75CE0026E2AB3A0074F5D5 /* MeToMeReqestSwitchView.swift */; };
+		ED75CE0326E2AB8A0074F5D5 /* MeToMeReqestSwitchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED75CE0226E2AB8A0074F5D5 /* MeToMeReqestSwitchView.xib */; };
+		ED75CE0726E2BA600074F5D5 /* TarifView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED75CE0626E2BA600074F5D5 /* TarifView.swift */; };
+		ED75CE0926E2BA6F0074F5D5 /* TarifView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED75CE0826E2BA6E0074F5D5 /* TarifView.xib */; };
 		ED84994326A6F647005205C6 /* ChooseCountryHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED84993F26A6F647005205C6 /* ChooseCountryHeaderViewModel.swift */; };
 		ED84994426A6F647005205C6 /* ChooseCountryHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED84994126A6F647005205C6 /* ChooseCountryHeaderCell.swift */; };
 		ED84994526A6F647005205C6 /* ChooseCountryHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED84994226A6F647005205C6 /* ChooseCountryHeaderView.swift */; };
@@ -551,8 +556,13 @@
 		ED60A1E026DC10A3000F3208 /* GetClientConsentMe2MePullDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetClientConsentMe2MePullDecodableModel.swift; sourceTree = "<group>"; };
 		ED60A1E226DC1600000F3208 /* ChangeClientConsentMe2MePullDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeClientConsentMe2MePullDecodableModel.swift; sourceTree = "<group>"; };
 		ED60A1E526DCEA01000F3208 /* MeToMeRequestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeToMeRequestController.swift; sourceTree = "<group>"; };
-		ED60A1E726DCFA87000F3208 /* MeToMeRequestController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MeToMeRequestController.xib; sourceTree = "<group>"; };
 		ED75CDF826E245EE0074F5D5 /* GoogleService-Info-test.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-test.plist"; sourceTree = "<group>"; };
+		ED75CDFA26E27F150074F5D5 /* UIApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplication.swift; sourceTree = "<group>"; };
+		ED75CDFC26E2AA5B0074F5D5 /* RequestMeToMeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestMeToMeModel.swift; sourceTree = "<group>"; };
+		ED75CE0026E2AB3A0074F5D5 /* MeToMeReqestSwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeToMeReqestSwitchView.swift; sourceTree = "<group>"; };
+		ED75CE0226E2AB8A0074F5D5 /* MeToMeReqestSwitchView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MeToMeReqestSwitchView.xib; sourceTree = "<group>"; };
+		ED75CE0626E2BA600074F5D5 /* TarifView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TarifView.swift; sourceTree = "<group>"; };
+		ED75CE0826E2BA6E0074F5D5 /* TarifView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TarifView.xib; sourceTree = "<group>"; };
 		ED84993F26A6F647005205C6 /* ChooseCountryHeaderViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChooseCountryHeaderViewModel.swift; sourceTree = "<group>"; };
 		ED84994126A6F647005205C6 /* ChooseCountryHeaderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChooseCountryHeaderCell.swift; sourceTree = "<group>"; };
 		ED84994226A6F647005205C6 /* ChooseCountryHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChooseCountryHeaderView.swift; sourceTree = "<group>"; };
@@ -1560,10 +1570,46 @@
 		ED60A1E426DCE9C7000F3208 /* MeToMeRequestController */ = {
 			isa = PBXGroup;
 			children = (
+				ED75CDFF26E2AB240074F5D5 /* View */,
+				ED75CDFE26E2AA640074F5D5 /* Model */,
 				ED60A1E526DCEA01000F3208 /* MeToMeRequestController.swift */,
-				ED60A1E726DCFA87000F3208 /* MeToMeRequestController.xib */,
 			);
 			path = MeToMeRequestController;
+			sourceTree = "<group>";
+		};
+		ED75CDFE26E2AA640074F5D5 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				ED75CDFC26E2AA5B0074F5D5 /* RequestMeToMeModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		ED75CDFF26E2AB240074F5D5 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				ED75CE0526E2BA450074F5D5 /* TarifView */,
+				ED75CE0426E2BA340074F5D5 /* MeToMeReqestSwitchView */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		ED75CE0426E2BA340074F5D5 /* MeToMeReqestSwitchView */ = {
+			isa = PBXGroup;
+			children = (
+				ED75CE0026E2AB3A0074F5D5 /* MeToMeReqestSwitchView.swift */,
+				ED75CE0226E2AB8A0074F5D5 /* MeToMeReqestSwitchView.xib */,
+			);
+			path = MeToMeReqestSwitchView;
+			sourceTree = "<group>";
+		};
+		ED75CE0526E2BA450074F5D5 /* TarifView */ = {
+			isa = PBXGroup;
+			children = (
+				ED75CE0626E2BA600074F5D5 /* TarifView.swift */,
+				ED75CE0826E2BA6E0074F5D5 /* TarifView.xib */,
+			);
+			path = TarifView;
 			sourceTree = "<group>";
 		};
 		ED84993D26A6F647005205C6 /* HeaderView */ = {
@@ -1821,6 +1867,7 @@
 				EDFFCAF72683943A004EE095 /* UISwitch.swift */,
 				687ADF0F26B07721005A239B /* DataExtension.swift */,
 				ED302A3026D3E56600161243 /* UIImage.swift */,
+				ED75CDFA26E27F150074F5D5 /* UIApplication.swift */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";
@@ -2357,6 +2404,7 @@
 				EDB1654D26678E87007E6030 /* LaunchScreen.storyboard in Resources */,
 				ED4FC619266EA42E0092B4AB /* AppLocker.xib in Resources */,
 				ED75CDF926E245EE0074F5D5 /* GoogleService-Info-test.plist in Resources */,
+				ED75CE0926E2BA6F0074F5D5 /* TarifView.xib in Resources */,
 				68B6755D26BC8A9B004DECA4 /* GoogleService-Info.plist in Resources */,
 				6822EFD726B935FF00125EEC /* BaseTableViewCell.xib in Resources */,
 				EDB143C4265FDEC90028EF5A /* Roboto-Medium.ttf in Resources */,
@@ -2373,7 +2421,6 @@
 				EDCF8A1626CED86100DC9F54 /* BankTableViewCell.xib in Resources */,
 				EDB143C7265FDEC90028EF5A /* Roboto-MediumItalic.ttf in Resources */,
 				0B216FBC26D15BAA0023C878 /* GKHInputCell.xib in Resources */,
-				ED60A1E826DCFA87000F3208 /* MeToMeRequestController.xib in Resources */,
 				EDAA99B12673ABF200435484 /* ForaSwitchView.xib in Resources */,
 				68D06F3A26CCDE0100F9BE4C /* NavigationBarUIView.xib in Resources */,
 				0BF3484E268A455C005138A8 /* AllCardView.xib in Resources */,
@@ -2387,6 +2434,7 @@
 				EDB1655E2667A55F007E6030 /* ForaInput.xib in Resources */,
 				ED2BE18326A04A8800647CB1 /* BottomInputViewWithRate.xib in Resources */,
 				ED0B489E267D41B10037EA06 /* PaymentsDetailsView.xib in Resources */,
+				ED75CE0326E2AB8A0074F5D5 /* MeToMeReqestSwitchView.xib in Resources */,
 				0B66E8E626CC658A00FD735D /* GKHStoryboard.storyboard in Resources */,
 				EDB14532266667140028EF5A /* OrderProductsCollectionViewCell.xib in Resources */,
 			);
@@ -2491,6 +2539,7 @@
 				0B05163126A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift in Sources */,
 				ED3A966E2690A80B00252857 /* PresentationController.swift in Sources */,
 				ED0B489C267D41A60037EA06 /* PaymentsDetailsView.swift in Sources */,
+				ED75CE0126E2AB3A0074F5D5 /* MeToMeReqestSwitchView.swift in Sources */,
 				ED84995626A8831E005205C6 /* EPContactsPicker.swift in Sources */,
 				ED4FC602266C0AB50092B4AB /* ChooseCountryTableViewController.swift in Sources */,
 				0B931B4726DE2DF700CA8017 /* GKHHistoryCarusel.swift in Sources */,
@@ -2521,6 +2570,7 @@
 				0BE270B326B9959900FA958C /* ExtensionBottomLableModel.swift in Sources */,
 				0B37F97A2678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift in Sources */,
 				687ADF1026B07721005A239B /* DataExtension.swift in Sources */,
+				ED75CDFB26E27F150074F5D5 /* UIApplication.swift in Sources */,
 				ED0B48A0267E1A2D0037EA06 /* PaymentsDetailsSuccessViewController.swift in Sources */,
 				0B8CB0882680CAE3006A39C3 /* ExtensionNetworkHelper.swift in Sources */,
 				ED84994326A6F647005205C6 /* ChooseCountryHeaderViewModel.swift in Sources */,
@@ -2551,6 +2601,7 @@
 				0B216FBE26D15BDF0023C878 /* GKHInputCell.swift in Sources */,
 				68D06F3826CCDDCA00F9BE4C /* NavigationBarUIView.swift in Sources */,
 				0B37F982267A1814007728FC /* FastPaymentBanksListDecodableModel.swift in Sources */,
+				ED75CDFD26E2AA5B0074F5D5 /* RequestMeToMeModel.swift in Sources */,
 				EDB1654B26676F20007E6030 /* UIButton.swift in Sources */,
 				0B37F9782678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift in Sources */,
 				EDB1453C2666AEB90028EF5A /* AppDelegate UI extension.swift in Sources */,
@@ -2655,6 +2706,7 @@
 				0B931B1C26DCD69900CA8017 /* GKHHistoryModel.swift in Sources */,
 				EDB165782668C76A007E6030 /* SelfConfiguringCell.swift in Sources */,
 				EDB165622667A571007E6030 /* ForaInputModel.swift in Sources */,
+				ED75CE0726E2BA600074F5D5 /* TarifView.swift in Sources */,
 				EDB1453E2666AF260028EF5A /* OrderProductsViewController FlowLayout.swift in Sources */,
 				0B931B1E26DCD83B00CA8017 /* GKHAdditionalListModel.swift in Sources */,
 				0BF34866269444D9005138A8 /* AllCardCell.swift in Sources */,
