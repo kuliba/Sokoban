@@ -18,7 +18,7 @@ class GKHOperatorsModel: Object {
     
     var logotypeList  = List<LogotypeData>()
     let synonymList   = List<String>()
-    let parameterList = List<Parameters>()
+    var parameterList = List<Parameters>()
     
 }
 

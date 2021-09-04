@@ -23,15 +23,15 @@ class TransferCell: UICollectionViewCell, SelfConfiguringCell {
         transferImage.image = UIImage(named: payment.iconName ?? "")
         transferLabel.text = payment.name
         descriptionLabel.text = payment.description
-        if payment.id == 99 || payment.id == 98 || payment.id == 97 || payment.id == 96 || payment.id == 95 {
-                transferImage.setDimensions(height: 32, width: 32)
-                backgroundColor = UIColor(hexString: "F6F6F7")
-                transferImage.anchor(top: self.topAnchor, left: self.leftAnchor, paddingTop: 12, paddingLeft: 12)
-                transferLabel.textColor = .black
-                descriptionLabel.textColor = .black
-            
-
-        }
+//        if payment.id == 99 || payment.id == 98 || payment.id == 97 || payment.id == 96 || payment.id == 95 {
+//                transferImage.setDimensions(height: 32, width: 32)
+//                backgroundColor = UIColor(hexString: "F6F6F7")
+//                transferImage.anchor(top: self.topAnchor, left: self.leftAnchor, paddingTop: 12, paddingLeft: 12)
+//                transferLabel.textColor = .black
+//                descriptionLabel.textColor = .black
+//            
+//
+//        }
     }
     
     
@@ -65,20 +65,20 @@ class TransferCell: UICollectionViewCell, SelfConfiguringCell {
         transferLabel.anchor(left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor, paddingLeft: 12, paddingBottom: 8, paddingRight: 12)
         descriptionLabel.anchor(top: transferLabel.topAnchor, left: self.leftAnchor, right: self.rightAnchor, paddingLeft: 12, paddingBottom: 8, paddingRight: 12)
         descriptionLabel.font = UIFont(name: "", size: 14)
-        if descriptionLabel.text == "" {
-                transferImage.setDimensions(height: 32, width: 32)
-                backgroundColor = UIColor(hexString: "F6F6F7")
-                transferImage.anchor(top: self.topAnchor, left: self.leftAnchor, paddingTop: 12, paddingLeft: 12)
-                transferLabel.textColor = .black
-                descriptionLabel.textColor = .black
-                transferLabel.anchor(left: self.leftAnchor, bottom: descriptionLabel.bottomAnchor, right: self.rightAnchor, paddingLeft: 12, paddingBottom: 8, paddingRight: 12)
-                descriptionLabel.anchor(left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor, paddingLeft: 12, paddingBottom: 8, paddingRight: 12)
-            
-
-        } else {
-            transferImage.setDimensions(height: 48, width: 48)
-            transferImage.centerX(inView: self, topAnchor: self.topAnchor, paddingTop: 16)
-        }
+//        if descriptionLabel.text == "" {
+//                transferImage.setDimensions(height: 32, width: 32)
+//                backgroundColor = UIColor(hexString: "F6F6F7")
+//                transferImage.anchor(top: self.topAnchor, left: self.leftAnchor, paddingTop: 12, paddingLeft: 12)
+//                transferLabel.textColor = .black
+//                descriptionLabel.textColor = .black
+//                transferLabel.anchor(left: self.leftAnchor, bottom: descriptionLabel.bottomAnchor, right: self.rightAnchor, paddingLeft: 12, paddingBottom: 8, paddingRight: 12)
+//                descriptionLabel.anchor(left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor, paddingLeft: 12, paddingBottom: 8, paddingRight: 12)
+//
+//
+//        } else {
+//            transferImage.setDimensions(height: 48, width: 48)
+//            transferImage.centerX(inView: self, topAnchor: self.topAnchor, paddingTop: 16)
+//        }
         
     }
 }

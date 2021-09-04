@@ -191,11 +191,8 @@ extension GKHInputViewController {
         }
     }
     func paymentGKH(amount: String ,completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
+    
         
-        let b = bodyArray
-        let a = amount
-        let c = self.cardNumber
-        print(b, a, c)
         let body = [ "check" : false,
                      "amount" : amount,
                      "currencyAmount" : "RUB",
@@ -231,6 +228,5 @@ extension GKHInputViewController {
                 completion(nil, respModel.errorMessage)
             }
         }
-        
     }
 }
