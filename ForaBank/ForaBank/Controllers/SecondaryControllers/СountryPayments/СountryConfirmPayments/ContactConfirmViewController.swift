@@ -531,6 +531,7 @@ class ContactConfurmViewController: UIViewController {
                     DispatchQueue.main.async {
                         let vc = PaymentsDetailsSuccessViewController()
                         vc.confurmVCModel = self.confurmVCModel
+                        vc.confurmVCModel?.statusIsSuccses = true
                         vc.id = model.data?.paymentOperationDetailId ?? 0
                         switch self.confurmVCModel?.type {
                         case .card2card, .phoneNumber:
@@ -571,6 +572,7 @@ class ContactConfurmViewController: UIViewController {
                     DispatchQueue.main.async {
                         let vc = PaymentsDetailsSuccessViewController()
                         vc.confurmVCModel = self.confurmVCModel
+                        vc.confurmVCModel?.statusIsSuccses = true
                         vc.id = model.data?.paymentOperationDetailID
                         if self.confurmVCModel?.type == .mig {
                             vc.printFormType =  "direct"
