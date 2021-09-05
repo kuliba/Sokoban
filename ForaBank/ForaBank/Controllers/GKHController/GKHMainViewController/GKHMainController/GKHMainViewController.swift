@@ -14,6 +14,7 @@ class GKHMainViewController: UIViewController {
     // QR data
     var qrData = [String: String]()
     var operators: GKHOperatorsModel? = nil
+    var token: NotificationToken?
     
     public static func storyboardInstance() -> GKHMainViewController? {
         let storyboard = UIStoryboard(name: "GKHStoryboard", bundle: nil)

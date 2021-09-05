@@ -94,7 +94,9 @@ enum RouterBaseUrlList: String {
     case getAnywayOperatorsList    = "/dict/getAnywayOperatorsList"
     case getFullBankInfoList       = "/dict/getFullBankInfoList"
     case getCurrencyList           = "/dict/getCurrencyList"
+    // Не делать
     case getBanks                  = "/dict/getBanks"
+    //
     case getPaymentSystemList      = "/dict/getPaymentSystemList"
     case getCountries              = "/dict/getCountries"
 

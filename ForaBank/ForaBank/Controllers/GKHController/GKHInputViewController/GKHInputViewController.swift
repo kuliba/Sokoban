@@ -147,10 +147,6 @@ extension GKHInputViewController {
 //            }
 //        }
         
-        
-        
-        
-        
         getCardList { [weak self] data ,error in
             DispatchQueue.main.async {
                 
@@ -195,7 +191,6 @@ extension GKHInputViewController {
             guard let model = model else { return }
             if model.statusCode == 0 {
                 guard let cardList = model.data else { return }
-                print(cardList)
                 completion(cardList, nil)
             } else {
                 guard let error = model.errorMessage else { return }
@@ -225,8 +220,7 @@ extension GKHInputViewController {
             if respModel.statusCode == 0 {
                 guard let data = respModel.data else { return }
                 var model = ConfirmViewControllerModel(type: .gkh)
-                
-                //                                    model.cardFrom = self.cardFromField.cardModel
+
                 let r = Double(data.debitAmount ?? 0)
                 
                 model.summTransction = r.currencyFormatter(symbol: "RUB")
