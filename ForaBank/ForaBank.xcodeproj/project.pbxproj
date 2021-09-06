@@ -41,6 +41,8 @@
 		0B66E8E326CC62DF00FD735D /* NetStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B66E8E226CC62DF00FD735D /* NetStatus.swift */; };
 		0B66E8E626CC658A00FD735D /* GKHStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0B66E8E526CC658A00FD735D /* GKHStoryboard.storyboard */; };
 		0B747890267343B400C44F79 /* KeyExchangeDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */; };
+		0B797C9226E6ABC100589DBF /* GetBankList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B797C9126E6ABC100589DBF /* GetBankList.swift */; };
+		0B797C9426E6AD0700589DBF /* BanksListSaved.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B797C9326E6AD0700589DBF /* BanksListSaved.swift */; };
 		0B7A18AB2681CED70007CC75 /* SwiftEntryKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0B7A18AA2681CED70007CC75 /* SwiftEntryKit */; };
 		0B7A18AD2681CF160007CC75 /* CastomPopUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18AC2681CF160007CC75 /* CastomPopUpView.swift */; };
 		0B7A18AF268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18AE268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift */; };
@@ -395,6 +397,8 @@
 		0B66E8E226CC62DF00FD735D /* NetStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetStatus.swift; sourceTree = "<group>"; };
 		0B66E8E526CC658A00FD735D /* GKHStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = GKHStoryboard.storyboard; sourceTree = "<group>"; };
 		0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyExchangeDecodebleModel.swift; sourceTree = "<group>"; };
+		0B797C9126E6ABC100589DBF /* GetBankList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetBankList.swift; sourceTree = "<group>"; };
+		0B797C9326E6AD0700589DBF /* BanksListSaved.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BanksListSaved.swift; sourceTree = "<group>"; };
 		0B7A18AC2681CF160007CC75 /* CastomPopUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastomPopUpView.swift; sourceTree = "<group>"; };
 		0B7A18AE268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLatestPhonePaymentsDecodableModel.swift; sourceTree = "<group>"; };
 		0B7A18B126836A400007CC75 /* NetworkPDFManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkPDFManager.swift; sourceTree = "<group>"; };
@@ -821,6 +825,15 @@
 			path = Storyboards;
 			sourceTree = "<group>";
 		};
+		0B797C9026E6ABA000589DBF /* GetBanks */ = {
+			isa = PBXGroup;
+			children = (
+				0B797C9126E6ABC100589DBF /* GetBankList.swift */,
+				0B797C9326E6AD0700589DBF /* BanksListSaved.swift */,
+			);
+			path = GetBanks;
+			sourceTree = "<group>";
+		};
 		0B7A18B026836A040007CC75 /* NetworkPDFManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -974,6 +987,7 @@
 		0BB8817126D6C95200015E27 /* REALMModels */ = {
 			isa = PBXGroup;
 			children = (
+				0B797C9026E6ABA000589DBF /* GetBanks */,
 				0BDE453626E53AD500B64A0A /* UserAllCards */,
 				0BDE453926E53B1900B64A0A /* GetPaymentSystem */,
 			);
@@ -2664,6 +2678,7 @@
 				0BE270B026B76B9700FA958C /* ExtensionCustomPopUpSetup.swift in Sources */,
 				0BEC8939267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift in Sources */,
 				EDB1655C2667A2C8007E6030 /* LoginCardEntryViewController UI.swift in Sources */,
+				0B797C9426E6AD0700589DBF /* BanksListSaved.swift in Sources */,
 				ED0B48AF2681CC6D0037EA06 /* CodeVerificationViewModel.swift in Sources */,
 				0BB015DA26C9378200E7A85B /* GKHOperatorsModel.swift in Sources */,
 				EDFFCAFD2683C18B004EE095 /* ContactInputViewController API.swift in Sources */,
@@ -2719,6 +2734,7 @@
 				0B8BE0952670D4A300E96CAA /* GetCodeDecodebleModel.swift in Sources */,
 				ED60A1E326DC1600000F3208 /* ChangeClientConsentMe2MePullDecodableModel.swift in Sources */,
 				0B66E8DE26CC5F8900FD735D /* QRViewController.swift in Sources */,
+				0B797C9226E6ABC100589DBF /* GetBankList.swift in Sources */,
 				0BDE453D26E5442500B64A0A /* GetPaymentSystemSaved.swift in Sources */,
 				688B9BA526DD0DC600407A75 /* ProductTableViewCell.swift in Sources */,
 				EDB1452226661C3F0028EF5A /* MaskedTextField.swift in Sources */,
@@ -3118,7 +3134,7 @@
 			repositoryURL = "https://github.com/realm/realm-cocoa.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 10.12.0;
+				minimumVersion = 10.14.0;
 			};
 		};
 		684AD35826B7D2510071C762 /* XCRemoteSwiftPackageReference "CryptoSwift" */ = {
