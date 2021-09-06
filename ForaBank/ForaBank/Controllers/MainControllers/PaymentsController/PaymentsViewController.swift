@@ -45,7 +45,7 @@ class PaymentsViewController: UIViewController {
         
        
         
-        
+        GetPaymentSystemSaved.add([:], [:])
         AddOperatorsList.add()
         view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
         

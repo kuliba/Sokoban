@@ -131,6 +131,8 @@ class MainTabBarViewController: UITabBarController {
         }
         
         AddAllUserCardtList.add()
+        
+        
 //        NetworkHelper.request(.getProductList) { cardList , error in
 //            if error != nil {
 //                self.showAlert(with: "Ошибка", and: error!)

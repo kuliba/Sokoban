@@ -107,7 +107,6 @@
 		0BDE453326E3EA4A00B64A0A /* ExtensionQRReadPDF.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDE453226E3EA4A00B64A0A /* ExtensionQRReadPDF.swift */; };
 		0BDE453526E5385900B64A0A /* GetPaymentSystemList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDE453426E5385900B64A0A /* GetPaymentSystemList.swift */; };
 		0BDE453826E53AEF00B64A0A /* AddAllUserCardtList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDE453726E53AEE00B64A0A /* AddAllUserCardtList.swift */; };
-		0BDE453B26E53B3C00B64A0A /* GetPaymentList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDE453A26E53B3C00B64A0A /* GetPaymentList.swift */; };
 		0BDE453D26E5442500B64A0A /* GetPaymentSystemSaved.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDE453C26E5442500B64A0A /* GetPaymentSystemSaved.swift */; };
 		0BE270B026B76B9700FA958C /* ExtensionCustomPopUpSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270AF26B76B9700FA958C /* ExtensionCustomPopUpSetup.swift */; };
 		0BE270B326B9959900FA958C /* ExtensionBottomLableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */; };
@@ -459,7 +458,6 @@
 		0BDE453226E3EA4A00B64A0A /* ExtensionQRReadPDF.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionQRReadPDF.swift; sourceTree = "<group>"; };
 		0BDE453426E5385900B64A0A /* GetPaymentSystemList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPaymentSystemList.swift; sourceTree = "<group>"; };
 		0BDE453726E53AEE00B64A0A /* AddAllUserCardtList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAllUserCardtList.swift; sourceTree = "<group>"; };
-		0BDE453A26E53B3C00B64A0A /* GetPaymentList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPaymentList.swift; sourceTree = "<group>"; };
 		0BDE453C26E5442500B64A0A /* GetPaymentSystemSaved.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPaymentSystemSaved.swift; sourceTree = "<group>"; };
 		0BE270AF26B76B9700FA958C /* ExtensionCustomPopUpSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionCustomPopUpSetup.swift; sourceTree = "<group>"; };
 		0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBottomLableModel.swift; sourceTree = "<group>"; };
@@ -995,7 +993,6 @@
 			isa = PBXGroup;
 			children = (
 				0BDE453426E5385900B64A0A /* GetPaymentSystemList.swift */,
-				0BDE453A26E53B3C00B64A0A /* GetPaymentList.swift */,
 				0BDE453C26E5442500B64A0A /* GetPaymentSystemSaved.swift */,
 			);
 			path = GetPaymentSystem;
@@ -2525,7 +2522,6 @@
 				68E6A29526A033D900A1D9A1 /* DeleteProductTemplateDecodableModel.swift in Sources */,
 				0B1DBA9C26D4032F009F3E98 /* CreateContactAddresslessTransferDecodableModel.swift in Sources */,
 				0BF3485B268E5907005138A8 /* GetExchangeCurrencyRatesDecodableModel.swift in Sources */,
-				0BDE453B26E53B3C00B64A0A /* GetPaymentList.swift in Sources */,
 				0B37F9882680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift in Sources */,
 				688B9BAC26DE7D7E00407A75 /* ProductViewController.swift in Sources */,
 				EDB1451C26652D370028EF5A /* UILabel.swift in Sources */,
