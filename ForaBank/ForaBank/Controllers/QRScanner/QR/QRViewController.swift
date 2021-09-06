@@ -122,5 +122,12 @@ final class QRViewController: UIViewController, UIDocumentPickerDelegate {
         
     }
     
+    @IBAction func back(_ sender: UIButton) {
+        self.qrCodesession.stopRunning()
+        self.qrView.layer.sublayers?.removeLast()
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    
 }
 

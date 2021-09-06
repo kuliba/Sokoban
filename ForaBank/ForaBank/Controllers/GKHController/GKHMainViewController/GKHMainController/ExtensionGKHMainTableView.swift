@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 extension GKHMainViewController: UITableViewDelegate {
     
@@ -14,17 +15,21 @@ extension GKHMainViewController: UITableViewDelegate {
        return view
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-
-        guard let headerView = tableView.tableHeaderView else {return}
-        let size = headerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-        if headerView.frame.size.height != size.height {
-            headerView.frame.size.height = size.height
-            tableView.tableHeaderView = headerView
-            tableView.layoutIfNeeded()
-        }
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 120
     }
+    
+//    override func viewDidLayoutSubviews() {
+//        super.viewDidLayoutSubviews()
+//
+//        guard let headerView = tableView.tableHeaderView else {return}
+//        let size = headerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+//        if headerView.frame.size.height != size.height {
+//            headerView.frame.size.height = size.height
+//            tableView.tableHeaderView = headerView
+//            tableView.layoutIfNeeded()
+//        }
+//    }
 }
 
 extension GKHMainViewController: UITableViewDataSource {
@@ -78,8 +83,10 @@ extension GKHMainViewController: UITableViewDataSource {
             // Переход по QR
             if (qrData.count != 0 && operators != nil) {
                 let dc = segue.destination as! GKHInputViewController
+               
                 dc.operatorData = operators
                 dc.qrData = qrData
+                
             }
             qrData.removeAll()
         case "qr":
@@ -91,6 +98,26 @@ extension GKHMainViewController: UITableViewDataSource {
         case .some(_):
             print()
         }
+        
+    }
+    
+    func observerRealm() {
+            operatorsList = realm?.objects(GKHOperatorsModel.self)
+            self.token = self.operatorsList?.observe { [weak self] ( changes: RealmCollectionChange) in
+                guard (self?.tableView) != nil else {return}
+                switch changes {
+                case .initial:
+                    self?.tableView.reloadData()
+                case .update(_, let deletions, let insertions, let modifications):
+                    self?.tableView.beginUpdates()
+                    self?.tableView.insertRows(at: insertions.map({ IndexPath(row: $0, section: 0) }), with: .automatic)
+                    self?.tableView.deleteRows(at: deletions.map({ IndexPath(row: $0, section: 0) }), with: .automatic)
+                    self?.tableView.reloadRows(at: modifications.map({ IndexPath(row: $0, section: 0) }), with: .automatic)
+                    self?.tableView.endUpdates()
+                case .error(let error):
+                    fatalError("\(error)")
+                }
+            }
         
     }
     

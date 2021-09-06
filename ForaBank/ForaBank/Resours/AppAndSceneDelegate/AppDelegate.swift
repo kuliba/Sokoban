@@ -134,12 +134,15 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                 meToMeReq.RcvrMsgId = userInfo["RcvrMsgId"] as? String ?? ""
                 meToMeReq.RecipientID = userInfo["RecipientID"] as? String ?? ""
                 
+                
+                
                 let topvc = UIApplication.topViewController()
                 
                 let vc = MeToMeRequestController()
                 vc.viewModel = meToMeReq
                 vc.modalPresentationStyle = .fullScreen
                 topvc?.present(vc, animated: true, completion: nil)
+                
             }
         }
         

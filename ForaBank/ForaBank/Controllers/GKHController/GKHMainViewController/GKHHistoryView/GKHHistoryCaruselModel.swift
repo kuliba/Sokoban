@@ -35,7 +35,7 @@ struct GKHHistoryCaruselModel {
                 if puref == op.puref {
                     name = op.name?.capitalizingFirstLetter() ?? ""
                     let tempImage = op.logotypeList.first?.content ?? ""
-                    inn = op.synonymList.first ?? ""
+                    inn = String(operation.amount) + " ₽"
                     if tempImage != "" {
                         let dataDecoded : Data = Data(base64Encoded: tempImage, options: .ignoreUnknownCharacters)!
                         let decodedimage = UIImage(data: dataDecoded)

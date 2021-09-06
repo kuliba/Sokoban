@@ -125,7 +125,7 @@
                                     <color key="titleColor" systemColor="labelColor"/>
                                 </state>
                                 <connections>
-                                    <action selector="back:" destination="wgA-FR-PPr" eventType="touchUpInside" id="UV3-gd-JjO"/>
+                                    <action selector="back:" destination="wgA-FR-PPr" eventType="touchUpInside" id="5QT-tb-5AY"/>
                                 </connections>
                             </button>
                         </subviews>
