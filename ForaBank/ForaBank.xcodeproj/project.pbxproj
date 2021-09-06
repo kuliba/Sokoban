@@ -106,6 +106,9 @@
 		0BD1CA9D26E6B63900CFE993 /* CountriesListSaved.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD1CA9C26E6B63900CFE993 /* CountriesListSaved.swift */; };
 		0BD1CAA026E6C3CD00CFE993 /* GetCurrencyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD1CA9F26E6C3CD00CFE993 /* GetCurrencyList.swift */; };
 		0BD1CAA226E6C46900CFE993 /* GetCurrencyListSaved.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD1CAA126E6C46900CFE993 /* GetCurrencyListSaved.swift */; };
+		0BD1CAA426E6C7E400CFE993 /* CreateSFPTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD1CAA326E6C7E400CFE993 /* CreateSFPTransferDecodableModel.swift */; };
+		0BD1CAA626E6D54A00CFE993 /* CreateIsOneTimeConsentMe2MePullDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD1CAA526E6D54A00CFE993 /* CreateIsOneTimeConsentMe2MePullDecodableModel.swift */; };
+		0BD1CAA826E6D5D600CFE993 /* CreatePermanentConsentMe2MePullDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD1CAA726E6D5D600CFE993 /* CreatePermanentConsentMe2MePullDecodableModel.swift */; };
 		0BD2177926A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */; };
 		0BDE452D26E298F600B64A0A /* ExtensionQRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDE452C26E298F600B64A0A /* ExtensionQRViewController.swift */; };
 		0BDE452F26E2995700B64A0A /* ExtensionQRMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDE452E26E2995700B64A0A /* ExtensionQRMetaData.swift */; };
@@ -463,6 +466,9 @@
 		0BD1CA9C26E6B63900CFE993 /* CountriesListSaved.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesListSaved.swift; sourceTree = "<group>"; };
 		0BD1CA9F26E6C3CD00CFE993 /* GetCurrencyList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCurrencyList.swift; sourceTree = "<group>"; };
 		0BD1CAA126E6C46900CFE993 /* GetCurrencyListSaved.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCurrencyListSaved.swift; sourceTree = "<group>"; };
+		0BD1CAA326E6C7E400CFE993 /* CreateSFPTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSFPTransferDecodableModel.swift; sourceTree = "<group>"; };
+		0BD1CAA526E6D54A00CFE993 /* CreateIsOneTimeConsentMe2MePullDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateIsOneTimeConsentMe2MePullDecodableModel.swift; sourceTree = "<group>"; };
+		0BD1CAA726E6D5D600CFE993 /* CreatePermanentConsentMe2MePullDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePermanentConsentMe2MePullDecodableModel.swift; sourceTree = "<group>"; };
 		0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAnywayOperatorsListDecodableModel.swift; sourceTree = "<group>"; };
 		0BDE452C26E298F600B64A0A /* ExtensionQRViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionQRViewController.swift; sourceTree = "<group>"; };
 		0BDE452E26E2995700B64A0A /* ExtensionQRMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionQRMetaData.swift; sourceTree = "<group>"; };
@@ -861,7 +867,7 @@
 			path = CustomPopUp;
 			sourceTree = "<group>";
 		};
-		0B931B1926DCD66200CA8017 /* GKHOperatorModels */ = {
+		0B931B1926DCD66200CA8017 /* GetAnywayOretatorsList */ = {
 			isa = PBXGroup;
 			children = (
 				0B931B1726DCD62200CA8017 /* GKHAddOperatorsList.swift */,
@@ -869,7 +875,7 @@
 				0B931B1326DCD59900CA8017 /* GKHLogotypeData.swift */,
 				0B931B1526DCD5F100CA8017 /* GKHParametersModel.swift */,
 			);
-			path = GKHOperatorModels;
+			path = GetAnywayOretatorsList;
 			sourceTree = "<group>";
 		};
 		0B931B1A26DCD67600CA8017 /* GKHHistoryModel */ = {
@@ -967,7 +973,6 @@
 			isa = PBXGroup;
 			children = (
 				0B931B1A26DCD67600CA8017 /* GKHHistoryModel */,
-				0B931B1926DCD66200CA8017 /* GKHOperatorModels */,
 			);
 			path = GKHModel;
 			sourceTree = "<group>";
@@ -995,6 +1000,7 @@
 		0BB8817126D6C95200015E27 /* REALMModels */ = {
 			isa = PBXGroup;
 			children = (
+				0B931B1926DCD66200CA8017 /* GetAnywayOretatorsList */,
 				0BD1CA9E26E6C39A00CFE993 /* GetCurrencyList */,
 				0BD1CA9926E6B52C00CFE993 /* GetCountries */,
 				0B797C9026E6ABA000589DBF /* GetBanks */,
@@ -2183,6 +2189,9 @@
 				ED60A1E026DC10A3000F3208 /* GetClientConsentMe2MePullDecodableModel.swift */,
 				ED60A1E226DC1600000F3208 /* ChangeClientConsentMe2MePullDecodableModel.swift */,
 				0B931B2126DCDA1800CA8017 /* GetLatestServicePaymentsDecodableModel.swift */,
+				0BD1CAA326E6C7E400CFE993 /* CreateSFPTransferDecodableModel.swift */,
+				0BD1CAA526E6D54A00CFE993 /* CreateIsOneTimeConsentMe2MePullDecodableModel.swift */,
+				0BD1CAA726E6D5D600CFE993 /* CreatePermanentConsentMe2MePullDecodableModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -2599,8 +2608,10 @@
 				0BD1CAA226E6C46900CFE993 /* GetCurrencyListSaved.swift in Sources */,
 				0BF34850268A52CD005138A8 /* AllCardView.swift in Sources */,
 				ED39EC8C268B4F0800158E46 /* CardChooseView.swift in Sources */,
+				0BD1CAA626E6D54A00CFE993 /* CreateIsOneTimeConsentMe2MePullDecodableModel.swift in Sources */,
 				EDB1657C2668C8D5007E6030 /* PayCell.swift in Sources */,
 				0BE270BA26B9F36A00FA958C /* ExtensionBottomInputRequest.swift in Sources */,
+				0BD1CAA426E6C7E400CFE993 /* CreateSFPTransferDecodableModel.swift in Sources */,
 				EDFFCAF0268245EC004EE095 /* CardViewModel.swift in Sources */,
 				0BB8817026D6AE4200015E27 /* UserAllCardsModel.swift in Sources */,
 				0B9EC85D26739C0000D86EB2 /* GetCountriesDecodebleModel.swift in Sources */,
@@ -2794,6 +2805,7 @@
 				ED84994426A6F647005205C6 /* ChooseCountryHeaderCell.swift in Sources */,
 				EDBEEA1A26B1AEA200265683 /* FullBankInfoListViewModel.swift in Sources */,
 				0B7A18C92685BF700007CC75 /* GetPaymentSystemListDecodableModel.swift in Sources */,
+				0BD1CAA826E6D5D600CFE993 /* CreatePermanentConsentMe2MePullDecodableModel.swift in Sources */,
 				EDF68212266F9EC800FD5C07 /* RequestMethod.swift in Sources */,
 				EDF68214266F9EC800FD5C07 /* URLSchemeType.swift in Sources */,
 				EDB16549266766FD007E6030 /* CodeVerificationViewController.swift in Sources */,

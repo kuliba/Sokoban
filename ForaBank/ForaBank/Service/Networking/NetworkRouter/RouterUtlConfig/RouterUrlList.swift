@@ -67,6 +67,9 @@ enum RouterUrlList: String {
     case getClientConsentMe2MePull
     case changeClientConsentMe2MePull
     case getLatestServicePayments
+    case createSFPTransfer
+    case createIsOneTimeConsentMe2MePull
+    case createPermanentConsentMe2MePull
     
     func returnUrl () -> URLValue {
         switch self {
@@ -643,6 +646,39 @@ enum RouterUrlList: String {
             
         case .getLatestServicePayments:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getLatestServicePayments.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .createSFPTransfer:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.createSFPTransfer.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .createIsOneTimeConsentMe2MePull:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.createIsOneTimeConsentMe2MePull.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .createPermanentConsentMe2MePull:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.createPermanentConsentMe2MePull.rawValue)
             
             switch result {
             case .success(let url):
