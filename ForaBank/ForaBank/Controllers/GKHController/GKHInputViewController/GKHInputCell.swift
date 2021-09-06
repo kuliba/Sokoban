@@ -54,9 +54,9 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
             fieldvalue = textField.text ?? ""
         }
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        textField.text = ""
-    }
+//    func textFieldDidBeginEditing(_ textField: UITextField) {
+//        textField.text = ""
+//    }
 
     func setupUI (_ index: Int, _ dataModel: Parameters, _ qrData: [String: String]) {
         
@@ -72,7 +72,7 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
         if q.0 == "Лицевой счет" {
             let h = qrData.filter { $0.key == "Лицевой счет"}
             if h.first?.value != "" {
-            textField.placeholder = h.values.first
+            textField.text = h.values.first
             }
          }
         
@@ -93,15 +93,26 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
         tableViewDelegate?.responds(to: #selector(TableViewDelegate.afterClickingReturnInTextField(cell:)))
         tableViewDelegate?.afterClickingReturnInTextField(cell: self)
     }
+//
+//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+//
+//        if (string == " ") {
+//            return false
+//        } else {
+//
+//            return true
+//        }
+//    }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
-        if (string == " ") {
-            return false
-        } else {
-            
-            return true
-        }
+
+        let previousText:NSString = textField.text! as NSString
+        let updatedText = previousText.replacingCharacters(in: range, with: string)
+        print("updatedText > ", updatedText)
+
+       //the rest of your code
+
+        return true
     }
     
     

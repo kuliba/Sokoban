@@ -69,9 +69,11 @@ struct AddOperatorsList {
                                 p.maxLength = parameterList.maxLength ?? 0
                                 p.minLength = parameterList.minLength ?? 0
                                 p.rawLength = parameterList.rawLength ?? 0
+                                
                                 parametersArray.append(p)
                                 }
                             })
+                            
                             tempOperators = a
                             listPositionArray.forEach { i in
                                 tempOperators.logotypeList.append(i)
@@ -82,6 +84,11 @@ struct AddOperatorsList {
                             parametersArray.forEach { i in
                                 tempOperators.parameterList.append(i)
                             }
+                            
+                            tempOperators.parameterList.sort(by: { (l, r) -> Bool in
+                                return l.order < r.order
+                            })
+                            
                             tempOperatorsArray.append(tempOperators)
                             listPositionArray.removeAll()
                             synonymListArray.removeAll()
