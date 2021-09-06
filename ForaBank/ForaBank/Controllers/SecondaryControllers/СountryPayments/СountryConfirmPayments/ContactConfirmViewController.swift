@@ -515,7 +515,7 @@ class ContactConfurmViewController: UIViewController {
         
         switch confurmVCModel?.type {
         
-        case .card2card, .requisites, .phoneNumber:
+        case .card2card, .requisites, .phoneNumber, .gkh:
             print(#function, body)
             NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { respons, error in
                 if error != nil {
