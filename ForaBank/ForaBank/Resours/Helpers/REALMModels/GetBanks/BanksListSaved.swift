@@ -12,7 +12,7 @@ struct BanksListSaved {
     
     static func add(_ param: [String : String], _ body: [String: AnyObject]) {
         
-        NetworkManager<GetBanksDecodableModel>.addRequest(.getBanks, param, body) { model, error in
+        NetworkManager<GetFullBankInfoListDecodableModel>.addRequest(.getFullBankInfoList, param, body) { model, error in
             if error != nil {
                 print("DEBUG: error", error!)
             } else {
@@ -25,15 +25,41 @@ struct BanksListSaved {
                     let banksList = GetBankList()
                     banksList.serial = banks.serial
                     
-                    banks.banksList?.forEach{ bank in
+                    banks.bankFullInfoList?.forEach{ bank in
                         let a = BankList()
-                        a.md5hash = bank.md5Hash
+                        
                         a.memberId = bank.memberID
-                        a.memberName = bank.memberName
-                        a.memberNameRus = bank.memberNameRus
+                        a.name = bank.name
+                        a.fullName = bank.fullName
+                        a.engName = bank.engName
+                        a.rusName = bank.rusName
                         a.svgImage = bank.svgImage
-                        bank.paymentSystemCodeList?.forEach{ list in
-                            a.paymentSystemCodeList.append(list)
+                        a.bic = bank.bic
+                        a.fiasId = bank.fiasID
+                        a.address = bank.address
+                        a.latitude = bank.latitude
+                        
+                        a.longitude = bank.longitude
+                        a.inn = bank.inn
+                        a.kpp = bank.kpp
+                        a.registrationNumber = bank.registrationNumber
+                        a.bankType = bank.bankType
+                        a.bankTypeCode = bank.bankTypeCode
+                        a.bankServiceType = bank.bankServiceType
+                        a.bankServiceTypeCode = bank.bankServiceTypeCode
+                        
+                        bank.accountList?.forEach{ list in
+                            
+                            let b = BankAccauntList()
+                            
+                            b.account = list.account
+                            b.regulationAccountType = list.regulationAccountType
+                            b.ck = list.ck
+                            b.dateIn = list.dateIn
+                            b.dateOut = list.dateOut
+                            b.status = list.status
+                            b.CBRBIC = list.cbrbic
+                            a.accountList.append(b)
                         }
                         banksList.banksList.append(a)
                     }

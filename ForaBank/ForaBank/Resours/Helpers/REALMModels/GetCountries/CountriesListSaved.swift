@@ -32,7 +32,7 @@ struct CountriesListSaved {
                         model.name = country.name
                         model.md5hash = country.md5Hash
                         model.svgImage = country.svgImage
-                        model.sendCurr = country.sendCurr 
+//                        model.sendC = country.sendCurr
                         country.paymentSystemCodeList?.forEach{ list in
                             model.paymentSystemIdList.append(list)
                         }
