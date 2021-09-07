@@ -213,12 +213,12 @@ class MockItems {
 //                          controllerName: "DevelopViewController",
 //                          description: "QR"),
             
-            PaymentsModel(id: 2, name: "Шаблоны и\nавтоплатежи",
+            PaymentsModel(id: 22, name: "Шаблоны и\nавтоплатежи",
                           iconName: "promoBanner2",
                           controllerName: ""),
             
-            PaymentsModel(id: 3, name: "Перевод по\nтелефону",
-                          iconName: "promoBanner2",
+            PaymentsModel(id: 33, name: "Перевод по\nтелефону",
+                          iconName: "migBanner",
                           controllerName: "DevelopViewController",
                           description: "Что то"),
 //
@@ -227,6 +227,25 @@ class MockItems {
 //                          avatarImageName: "bilane",
 //                          controllerName: "DevelopViewController",
 //                          description: "Что то"),
+//
+//            PaymentsModel(id: 5, name: "Обмен валют",
+//                          iconName: "PaymentsIconCarancy",
+//                          controllerName: "DevelopViewController",
+//                          description: "Что то"),
+            
+        ]
+    }
+    class func returnCurrency() -> [PaymentsModel] {
+        return [
+//            PaymentsModel(id: 1, name: "Оплата \nпо QR",
+//                          iconName: "PaymentsIconBarcode-scanner",
+//                          avatarImageName: nil,
+//                          controllerName: "DevelopViewController",
+//                          description: "QR"),
+            
+            PaymentsModel(id: 2, name: "Шаблоны и\nавтоплатежи",
+                          iconName: "promoBanner2",
+                          controllerName: "")
 //
 //            PaymentsModel(id: 5, name: "Обмен валют",
 //                          iconName: "PaymentsIconCarancy",

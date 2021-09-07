@@ -45,13 +45,14 @@ class PaymentsViewController: UIViewController {
         
        
         
-        
+        BanksListSaved.add([:], [:])
         AddOperatorsList.add()
         view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
         
         self.view.addSubview(searchContact)
         searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 48)
         searchContact.alpha = 0.5
+        searchContact.bellIcon.isHidden = true
         setupData()
         setupSearchBar()
         setupCollectionView()

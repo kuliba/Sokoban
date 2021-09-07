@@ -65,6 +65,8 @@
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
+                <outlet property="bellIcon" destination="PNY-Vu-HLi" id="zTd-tf-hSk"/>
+                <outlet property="secondButton" destination="C93-cG-axB" id="lpq-Jk-n0m"/>
                 <outlet property="textField" destination="Khf-SE-kKg" id="ssN-7S-URp"/>
             </connections>
             <point key="canvasLocation" x="-186.95652173913044" y="-74.665178571428569"/>

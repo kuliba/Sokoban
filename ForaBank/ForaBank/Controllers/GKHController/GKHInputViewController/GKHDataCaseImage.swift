@@ -15,7 +15,7 @@ enum GKHDataCaseImage: String, CaseIterable {
     case paymentPeriod   = "Период оплаты"
     case insurance       = "Страхование"
     case phoneNumber     = "Номер телефона"
-    case summ            = "Cумма (всякие пени, задолженности)"
+    case summ            = "Cумма (пени, задолженности)"
     case date            = "Дата"
     case transitonType   = "Тип перевода"
     case fio             = "ФИО"

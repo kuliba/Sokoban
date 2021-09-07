@@ -9,17 +9,27 @@ import UIKit
 
 class ProductsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
  
+    var totalMoney: Double = 0.0 {
+        didSet{
+            totalMoneyView.totalBalance.text = String(totalMoney)
+        }
+    }
     
     var products = [GetProductListDatum](){
         didSet {
             DispatchQueue.main.async {
+                self.totalMoney = 0.0
+                for i in self.products{
+                    self.totalMoney += i.balance!
+                }
                 self.tableView?.reloadData()
             }
         }
     }
+    let totalMoneyView: TotalMoneyView = UIView.fromNib()
 
     var tableView: UITableView!
-    var totalMoneyView = UIView()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,24 +51,28 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
 
         let displayWidth: CGFloat = self.view.frame.width
         let displayHeight: CGFloat = self.view.frame.height
-//        totalMoneyView.anchor(top: view.topAnchor, left: view.leadingAnchor, right: view.trailingAnchor,height: 50)
 //        tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView?.anchor(top: totalMoneyView.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, width: 200, height: 500)
-        totalMoneyView = UIView(frame: CGRect(x: 0, y: 0, width: displayWidth, height: 50))
-        tableView = UITableView(frame: CGRect(x: 0, y: 50, width: displayWidth, height: displayHeight))
+        tableView = UITableView(frame: CGRect(x: 0, y: totalMoneyView.bounds.height, width: displayWidth, height: displayHeight))
         tableView.register(ProductTableViewCell.nib(), forCellReuseIdentifier: ProductTableViewCell.identifier)
         tableView?.delegate = self
         tableView?.dataSource = self
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: -20)
+
+        
         view.addSubview(totalMoneyView)
         view.addSubview(tableView)
+        tableView?.anchor(top: totalMoneyView.bottomAnchor ,left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor,paddingTop: 10, paddingLeft: 20, paddingRight: 20)
+
+
+        totalMoneyView.anchor(top: view.topAnchor ,left: view.leftAnchor,
+                          right: view.rightAnchor, paddingTop: 20)
+
         tableView?.backgroundColor = .white
         tableView.separatorStyle = .none
-        let totalMoneyLabel = UILabel(text: "Всего денег")
-        totalMoneyView.addSubview(totalMoneyLabel)
         
         UINavigationBar.appearance().barTintColor = UIColor(red: 0.965, green: 0.965, blue: 0.969, alpha: 1)
-        view.backgroundColor = UIColor(red: 0.965, green: 0.965, blue: 0.969, alpha: 1)
+        totalMoneyView.backgroundColor = UIColor(red: 0.965, green: 0.965, blue: 0.969, alpha: 1)
+        view.backgroundColor = .white
     }
     @objc func action(sender: UIBarButtonItem) {
         // Function body goes here
@@ -72,7 +86,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: ProductTableViewCell.identifier, for: indexPath) as! ProductTableViewCell
-        cell.titleProductLabel.text = products[indexPath.row].name
+        cell.titleProductLabel.text = products[indexPath.row].productName
         cell.numberProductLabel.text = products[indexPath.row].numberMasked
         cell.balanceLabel.text = "\(products[indexPath.row].balance?.currencyFormatter() ?? "")"
         cell.coverpProductImage.image = products[indexPath.row].smallDesign?.convertSVGStringToImage()
@@ -125,7 +139,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
             if model.statusCode == 0 {
                 guard let cardList = model.data else { return }
                 self.products = model.data ?? []
-
+                
                 completion(cardList, nil)
             } else {
                 guard let error = model.errorMessage else { return }

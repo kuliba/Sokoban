@@ -19,6 +19,26 @@ extension MainViewController {
             }
             
             switch section {
+                case .products:
+                    if item.id != 32{
+                        guard let cell = collectionView.dequeueReusableCell(
+                                withReuseIdentifier: ProductCell.reuseId,
+                                for: indexPath) as? ProductCell
+                        else {
+                            fatalError("Unable to dequeue \(ProductCell.self)")
+                        }
+                                cell.card = item.productList
+                                return cell
+                            } else {
+                                guard let cell = collectionView.dequeueReusableCell(
+                                        withReuseIdentifier: "AllCardCell",
+                                        for: indexPath) as? AllCardCell
+                                else {
+                                    fatalError("Unable to dequeue \(AllCardCell.self)")
+                                }
+//                                cell.widthAnchor.constraint(equalToConstant: 112).isActive = true
+                                return cell
+                            }
             case .offer:
                 guard let cell = collectionView.dequeueReusableCell(
                         withReuseIdentifier: OfferCollectionViewCell.reuseId,
@@ -27,43 +47,54 @@ extension MainViewController {
                     fatalError("Unable to dequeue \(OfferCollectionViewCell.self)")
                 }
                 cell.backgroundColor = .red
-                cell.backgroundColor = UIColor(patternImage: UIImage(named: "promoBanner2") ?? UIImage())
+                cell.backgroundColor = UIColor(patternImage: UIImage(named: self.offer[indexPath.row].iconName!) ?? UIImage())
 
                 return cell
+            case .currentsExchange:
+                guard let cell = collectionView.dequeueReusableCell(
+                        withReuseIdentifier: CurrencyExchangeCollectionViewCell.reuseId,
+                        for: indexPath) as? CurrencyExchangeCollectionViewCell
+                else {
+                    fatalError("Unable to dequeue \(CurrencyExchangeCollectionViewCell.self)")
+                }
             
-//            case .transfers:
-//                if item.id != 33{
-//                    guard let cell = collectionView.dequeueReusableCell(
-//                            withReuseIdentifier: ProductCell.reuseId,
-//                            for: indexPath) as? ProductCell
-//                    else {
-//                        fatalError("Unable to dequeue \(ProductCell.self)")
-//                    }
-//
-//                    cell.card = item.productList
-//                    return cell
-//                } else {
-//                    guard let cell = collectionView.dequeueReusableCell(
-//                            withReuseIdentifier: "AllCardCell",
-//                            for: indexPath) as? AllCardCell
-//                    else {
-//                        fatalError("Unable to dequeue \(AllCardCell.self)")
-//                    }
-//
-//                    return cell
-//                }
+                cell.backgroundColor = .red
+
+                return cell
+            case .pay:
+                guard let cell = collectionView.dequeueReusableCell(
+                        withReuseIdentifier: PaymentsCell.reuseId,
+                        for: indexPath) as? PaymentsCell
+                else {
+                    fatalError("Unable to dequeue \(PaymentsCell.self)")
+                }
+            
+                cell.configure(with: item)
+
+                return cell
+            case .openProduct:
+                guard let cell = collectionView.dequeueReusableCell(
+                        withReuseIdentifier: NewProductCell.reuseId,
+                        for: indexPath) as? NewProductCell
+                else {
+                    fatalError("Unable to dequeue \(NewProductCell.self)")
+                }
+            
+                cell.configure(with: item)
+
+                return cell
 //            case .offer:
 //                return self.configure(collectionView: collectionView, cellType: PaymentsCell.self, with: item, for: indexPath)
 //            case .pay:
 //                return self.configure(collectionView: collectionView, cellType: PaymentsCell.self, with: item, for: indexPath)
 //            case .openProduct:
 //                return self.configure(collectionView: collectionView, cellType: TransferCell.self, with: item, for: indexPath)
-//            case .branches:
-//                return self.configure(collectionView: collectionView, cellType: TransferCell.self, with: item, for: indexPath)
-//            case .investment:
-//                return self.configure(collectionView: collectionView, cellType: TransferCell.self, with: item, for: indexPath)  
-//            case .services:
-//                return self.configure(collectionView: collectionView, cellType: TransferCell.self, with: item, for: indexPath)
+            case .branches:
+                return self.configure(collectionView: collectionView, cellType: TransferCell.self, with: item, for: indexPath)
+            case .investment:
+                return self.configure(collectionView: collectionView, cellType: TransferCell.self, with: item, for: indexPath)  
+            case .services:
+                return self.configure(collectionView: collectionView, cellType: TransferCell.self, with: item, for: indexPath)
 
             }
         })
@@ -82,14 +113,19 @@ extension MainViewController {
             switch section {
             case .offer:
                 sectionHeader.configure(text: section.description(),
+                                        font: .boldSystemFont(ofSize: 1),
+                                        textColor: .black, expandingIsHidden: true, seeAllIsHidden: true)
+                sectionHeader.isHidden = true
+            case .products:
+                sectionHeader.configure(text: section.description(),
                                         font: .boldSystemFont(ofSize: 18),
-                                        textColor: .black, expandingIsHidden: false, seeAllIsHidden: true)
+                                        textColor: .black, expandingIsHidden: false, seeAllIsHidden: false)
+                sectionHeader.seeAllButton.addTarget(self, action: #selector(passAllProducts), for: .touchUpInside)
+                sectionHeader.arrowButton.addTarget(self, action: #selector(expandingSection), for: .touchUpInside)
 //            case .transfers:
 //                sectionHeader.configure(text: section.description(),
 //                                        font: .boldSystemFont(ofSize: 18),
 //                                        textColor: .black, expandingIsHidden: false, seeAllIsHidden: false)
-//                sectionHeader.seeAllButton.addTarget(self, action: #selector(passAllProducts), for: .touchUpInside)
-//                sectionHeader.arrowButton.addTarget(self, action: #selector(expandingSection), for: .touchUpInside)
             default:
                 sectionHeader.configure(text: section.description(),
                                         font: .boldSystemFont(ofSize: 18),

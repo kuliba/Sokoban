@@ -58,12 +58,6 @@ extension GetCountriesDecodebleModel {
     }
 }
 
-// DataClass.swift
-
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse the JSON, add this file to your project and do:
-//
-//   let dataClass = try DataClass(json)
 
 // MARK: - GetCountriesDataClass
 struct GetCountriesDataClass: Codable {
@@ -108,16 +102,10 @@ extension GetCountriesDataClass {
     }
 }
 
-// CountriesList.swift
-
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse the JSON, add this file to your project and do:
-//
-//   let countriesList = try CountriesList(json)
 // MARK: - CountriesList
 struct CountriesList: Codable {
     let code, contactCode, name: String?
-    let sendCurr: SendCurr?
+    let sendCurr: SendCur?
     let md5Hash, svgImage: String?
     let paymentSystemCodeList: [String]?
 
@@ -151,7 +139,7 @@ extension CountriesList {
         code: String?? = nil,
         contactCode: String?? = nil,
         name: String?? = nil,
-        sendCurr: SendCurr?? = nil,
+        sendCurr: SendCur?? = nil,
         md5Hash: String?? = nil,
         svgImage: String?? = nil,
         paymentSystemCodeList: [String]?? = nil
@@ -176,20 +164,7 @@ extension CountriesList {
     }
 }
 
-// PaymentSystemIDList.swift
-
-//import Foundation
-//
-//enum PaymentSystemIDList: String, Codable, CaseIterable {
-//    case contact = "CONTACT"
-//    case direct = "DIRECT"
-//}
-
-// SendCurr.swift
-
-import Foundation
-
-enum SendCurr: String, Codable {
+enum SendCur: String, Codable {
     case empty = ""
     case eur = "EUR;"
     case rurUsdEur = "RUR;USD;EUR;"

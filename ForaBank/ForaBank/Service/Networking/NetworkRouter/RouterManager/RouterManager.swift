@@ -61,6 +61,9 @@ enum RouterManager {
     case getClientConsentMe2MePull
     case changeClientConsentMe2MePull
     case getLatestServicePayments
+    case createSFPTransfer
+    case createIsOneTimeConsentMe2MePull
+    case createPermanentConsentMe2MePull
 }
 
 extension RouterManager {
@@ -858,6 +861,51 @@ extension RouterManager {
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.get.rawValue
+            return request
+            
+        case .createSFPTransfer:
+            let baseUrl = RouterUrlList.createSFPTransfer.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .createIsOneTimeConsentMe2MePull:
+            let baseUrl = RouterUrlList.createIsOneTimeConsentMe2MePull.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .createPermanentConsentMe2MePull:
+            let baseUrl = RouterUrlList.createIsOneTimeConsentMe2MePull.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
             return request
         }
     }
