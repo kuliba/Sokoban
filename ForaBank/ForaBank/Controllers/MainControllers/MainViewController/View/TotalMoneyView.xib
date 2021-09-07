@@ -10,7 +10,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleAspectFit" id="nyl-mf-E5q" customClass="SearchContact" customModule="ForaBank" customModuleProvider="target">
+        <view contentMode="scaleAspectFit" id="nyl-mf-E5q" customClass="TotalMoneyView" customModule="ForaBank" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="420" height="76"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
@@ -18,41 +18,67 @@
                     <rect key="frame" x="10" y="0.0" width="400" height="76"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="6Pd-gB-uTq">
-                            <rect key="frame" x="0.0" y="0.0" width="206.5" height="76"/>
+                            <rect key="frame" x="0.0" y="0.0" width="207.5" height="76"/>
                             <subviews>
-                                <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="nvD-vb-I4R">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Всего денег" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ath-iW-Fs7">
                                     <rect key="frame" x="0.0" y="0.0" width="116.5" height="76"/>
-                                    <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Всего денег" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ath-iW-Fs7">
-                                            <rect key="frame" x="0.0" y="0.0" width="116.5" height="24"/>
-                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
-                                </stackView>
+                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
                             </subviews>
                         </stackView>
-                        <stackView opaque="NO" contentMode="center" axis="vertical" alignment="bottom" translatesAutoresizingMaskIntoConstraints="NO" id="ahv-lv-ESU">
-                            <rect key="frame" x="216.5" y="0.0" width="183.5" height="76"/>
+                        <stackView opaque="NO" contentMode="top" axis="vertical" alignment="bottom" translatesAutoresizingMaskIntoConstraints="NO" id="ahv-lv-ESU">
+                            <rect key="frame" x="217.5" y="0.0" width="182.5" height="76"/>
                             <subviews>
-                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="TwP-t8-diB">
-                                    <rect key="frame" x="84.5" y="0.0" width="99" height="61.5"/>
+                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="TwP-t8-diB">
+                                    <rect key="frame" x="84.5" y="0.0" width="98" height="61.5"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="170 897" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="05s-gq-LWn">
-                                            <rect key="frame" x="0.0" y="20" width="67.5" height="21.5"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="05s-gq-LWn">
+                                            <rect key="frame" x="0.0" y="6" width="50" height="50"/>
                                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xD4-96-oYH">
-                                            <rect key="frame" x="67.5" y="20" width="31.5" height="22"/>
-                                            <state key="normal" title="Р" image="rublesign.square.fill" catalog="system"/>
-                                        </button>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LPW-86-NC9">
+                                            <rect key="frame" x="58" y="19" width="40" height="24"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="q1I-h4-CLq">
+                                                    <rect key="frame" x="5.5" y="4" width="29" height="16"/>
+                                                    <subviews>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xD4-96-oYH">
+                                                            <rect key="frame" x="0.0" y="0.0" width="10" height="16"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="16" id="0wJ-WQ-bWt"/>
+                                                                <constraint firstAttribute="width" constant="10" id="jVl-h1-mDx"/>
+                                                            </constraints>
+                                                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <state key="normal" title="₽"/>
+                                                        </button>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="65M-DD-RyQ">
+                                                            <rect key="frame" x="13" y="0.0" width="16" height="16"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="16" id="lbg-Ii-gzA"/>
+                                                                <constraint firstAttribute="width" constant="16" id="y3v-3j-TIf"/>
+                                                            </constraints>
+                                                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <state key="normal" image="chevron.down" catalog="system"/>
+                                                        </button>
+                                                    </subviews>
+                                                </stackView>
+                                            </subviews>
+                                            <color key="backgroundColor" red="0.23921568627450979" green="0.23921568627450979" blue="0.23921568627450979" alpha="1" colorSpace="calibratedRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="24" id="0MD-uf-Fkx"/>
+                                                <constraint firstItem="q1I-h4-CLq" firstAttribute="centerX" secondItem="LPW-86-NC9" secondAttribute="centerX" id="KeD-Td-Qhh"/>
+                                                <constraint firstItem="q1I-h4-CLq" firstAttribute="centerY" secondItem="LPW-86-NC9" secondAttribute="centerY" id="X5j-eT-2Gx"/>
+                                                <constraint firstAttribute="width" constant="40" id="Xb6-W5-9SP"/>
+                                            </constraints>
+                                        </view>
                                     </subviews>
                                 </stackView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="По курсу ЦБ" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g6D-ZH-Mll">
-                                    <rect key="frame" x="110" y="61.5" width="73.5" height="14.5"/>
+                                    <rect key="frame" x="109" y="61.5" width="73.5" height="14.5"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                     <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="0.84705882352941175" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
@@ -72,10 +98,14 @@
                 <constraint firstItem="08c-o2-erP" firstAttribute="top" secondItem="nyl-mf-E5q" secondAttribute="top" id="jXo-m4-E3M"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="buttonView" destination="LPW-86-NC9" id="mjF-rP-26h"/>
+                <outlet property="totalBalance" destination="05s-gq-LWn" id="828-vL-zC6"/>
+            </connections>
             <point key="canvasLocation" x="-186.95652173913044" y="-74.665178571428569"/>
         </view>
     </objects>
     <resources>
-        <image name="rublesign.square.fill" catalog="system" width="128" height="114"/>
+        <image name="chevron.down" catalog="system" width="128" height="72"/>
     </resources>
 </document>

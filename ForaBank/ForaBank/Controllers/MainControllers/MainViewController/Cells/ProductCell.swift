@@ -127,8 +127,8 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
         addSubview(balanceLabel)
         
         backgroundImageView.fillSuperview()
-        
-        maskCardLabel.anchor(top: self.topAnchor, left: self.leftAnchor, right: self.rightAnchor, paddingTop: 12, paddingLeft: 37, paddingRight: 12)
+        balanceLabel.font = UIFont.boldSystemFont(ofSize: 14)
+        maskCardLabel.anchor(top: self.topAnchor, left: self.leftAnchor, right: self.rightAnchor, paddingTop: 21, paddingLeft: 49, paddingRight: 12)
         
         logoImageView.centerY(inView: maskCardLabel)
         logoImageView.anchor(left: self.leftAnchor,
@@ -136,10 +136,10 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
         
         
         cardNameLabel.anchor(top: maskCardLabel.bottomAnchor, left: self.leftAnchor, right: self.rightAnchor,
-                             paddingTop: 12, paddingLeft: 8, paddingRight: 8)
+                             paddingTop: 25, paddingLeft: 12, paddingRight: 8)
         
         balanceLabel.anchor(left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor,
-                            paddingLeft: 8, paddingBottom: 8, paddingRight: 30)
+                            paddingLeft: 12, paddingBottom: 15, paddingRight: 30)
     }
     
 }

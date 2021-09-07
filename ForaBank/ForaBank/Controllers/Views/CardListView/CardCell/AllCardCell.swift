@@ -7,7 +7,14 @@
 
 import UIKit
 
-class AllCardCell: UICollectionViewCell {
+class AllCardCell: UICollectionViewCell, SelfConfiguringCell {
+   
+    static var reuseId = "AllCardCell"
+    
+    func configure<U>(with value: U) where U : Hashable {
+        
+    }
+    
     
     //MARK: - Properties
 //    var card: GetProductListDatum? {
