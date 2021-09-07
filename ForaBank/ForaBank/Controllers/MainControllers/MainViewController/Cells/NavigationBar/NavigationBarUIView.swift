@@ -9,6 +9,8 @@ import UIKit
 
 class NavigationBarUIView: UIView {
 
+    @IBOutlet weak var secondButton: UIImageView!
+    @IBOutlet weak var bellIcon: UIButton!
     @IBOutlet weak var textField: MaskedTextField!
     /*
     // Only override draw() if you perform custom drawing.

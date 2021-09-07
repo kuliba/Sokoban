@@ -52,6 +52,7 @@ class PaymentsViewController: UIViewController {
         self.view.addSubview(searchContact)
         searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 48)
         searchContact.alpha = 0.5
+        searchContact.bellIcon.isHidden = true
         setupData()
         setupSearchBar()
         setupCollectionView()
