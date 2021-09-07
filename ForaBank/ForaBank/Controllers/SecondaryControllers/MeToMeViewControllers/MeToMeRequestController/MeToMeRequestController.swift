@@ -15,7 +15,7 @@ class MeToMeRequestController: UIViewController {
             fillData(model: model)
         }
     }
-    
+    var nextStep = false
     lazy var contentViewSize = CGSize(width: self.view.frame.width, height: self.view.frame.height + 30)
     
     // MARK: - Views
@@ -117,14 +117,14 @@ class MeToMeRequestController: UIViewController {
             title: "Отменить", titleColor: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1),
             backgroundColor: .white, isBorder: true, borderColor: #colorLiteral(red: 0.9176470588, green: 0.9215686275, blue: 0.9215686275, alpha: 1))
         button.addTarget(self, action:#selector(cancelButtonTapped), for: .touchUpInside)
-        
+        button.isEnabled = false
         return button
     }()
     
     lazy var nextButton: UIButton = {
         let button = UIButton(title: "Перевести")
         button.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
-        
+        button.isEnabled = false
         return button
     }()
     
@@ -138,6 +138,16 @@ class MeToMeRequestController: UIViewController {
         let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
         self.navigationItem.rightBarButtonItem = customViewItem
         
+        checkAuth { error in
+            if error != nil {
+                self.goToPinVC(.validate)
+            } else {
+                DispatchQueue.main.async {
+                    self.nextButton.isEnabled = true
+                    self.cancelButton.isEnabled = true
+                }
+            }
+        }
     }
     
     func fillData(model: RequestMeToMeModel) {
@@ -216,28 +226,123 @@ class MeToMeRequestController: UIViewController {
     //MARK: - Actions
     @objc func doneButtonTapped() {
         print(#function)
-        UIView.animate(withDuration: 0.2) {
-            self.labelSubTitle.isHidden = false
-            self.bankField.isHidden = true
-            self.summTransctionField.isHidden = true
-            self.taxTransctionField.isHidden = true
-            self.fpsSwitch.isHidden = true
-            self.tarifView.isHidden = true
-            self.nextButton.setTitle("Да", for: .normal)
-            self.cancelButton.setTitle("Пока нет", for: .normal)
+        if nextStep {
+            createPermanentConsentMe2Me { error in
+                if error != nil {
+                    self.showAlert(with: "Ошибка", and: error!)
+                } else {
+                    
+                    
+                }
+            }
+        } else {
+            UIView.animate(withDuration: 0.2) {
+                self.labelSubTitle.isHidden = false
+                self.bankField.isHidden = true
+                self.summTransctionField.isHidden = true
+                self.taxTransctionField.isHidden = true
+                self.fpsSwitch.isHidden = true
+                self.tarifView.isHidden = true
+                self.nextButton.setTitle("Да", for: .normal)
+                self.cancelButton.setTitle("Пока нет", for: .normal)
+            }
+            nextStep = true
         }
-        
-        
     }
     
     @objc func cancelButtonTapped() {
         print(#function)
-        dismiss(animated: true, completion: nil)
+        if nextStep {
+            createIsOneTimeConsentMe2Me { error in
+                if error != nil {
+                    self.showAlert(with: "Ошибка", and: error!)
+                } else {
+                    
+                    
+                }
+            }
+        } else {
+            dismiss(animated: true, completion: nil)
+        }
     }
     
     @objc func tariffButtonTapped() {
         print(#function)
     }
+    
+    
+    func goToPinVC(_ mode: ALMode) {
+        DispatchQueue.main.async { [weak self] in
+            var options = ALOptions()
+            options.isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
+            options.onSuccessfulDismiss = { (mode: ALMode?) in
+                self?.nextButton.isEnabled = true
+                self?.cancelButton.isEnabled = true
+                
+//                if let mode = mode {
+//                    DispatchQueue.main.async { [weak self] in
+//                        print("Password \(String(describing: mode)) successfully")
+//                        let vc = MainTabBarViewController()
+//                        vc.modalPresentationStyle = .fullScreen
+//                        self?.present(vc, animated: true, completion: nil)
+//                    }
+//                } else {
+//                    print("User Cancelled")
+//                }
+            }
+            options.onFailedAttempt = { (mode: ALMode?) in
+                print("Failed to \(String(describing: mode))")
+            }
+            AppLocker.present(with: mode, and: options, over: self)
+        }
+    }
+    
+    
+    //MARK: - API
+    private func checkAuth(completion: @escaping (_ error: String?) -> () ) {
+        NetworkManager<IsLoginDecodableModel>.addRequest(.isLogin, [:], [:]) { model, error in
+            if error != nil {
+                completion(error)
+            }
+            if model?.statusCode == 0 {
+                completion(nil)
+            } else {
+                guard let error = model?.errorMessage else { return }
+                completion(error)
+            }
+        }
+    }
+    
+    private func createIsOneTimeConsentMe2Me(completion: @escaping (_ error: String?) -> () ) {
+        let body = ["" : ""] as [String : AnyObject]
+        NetworkManager<CreateIsOneTimeConsentMe2MePullDecodableModel>.addRequest(.createIsOneTimeConsentMe2MePull, [:], body) { model, error in
+            if error != nil {
+                completion(error)
+            }
+            if model?.statusCode == 0 {
+                completion(nil)
+            } else {
+                guard let error = model?.errorMessage else { return }
+                completion(error)
+            }
+        }
+    }
+    
+    private func createPermanentConsentMe2Me(completion: @escaping (_ error: String?) -> () ) {
+        let body = ["" : ""] as [String : AnyObject]
+        NetworkManager<CreatePermanentConsentMe2MePullDecodableModel>.addRequest(.createPermanentConsentMe2MePull, [:], body) { model, error in
+            if error != nil {
+                completion(error)
+            }
+            if model?.statusCode == 0 {
+                completion(nil)
+            } else {
+                guard let error = model?.errorMessage else { return }
+                completion(error)
+            }
+        }
+    }
+    
     
     
 }

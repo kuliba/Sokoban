@@ -17,16 +17,12 @@ struct RequestMeToMeModel {
     var RcvrMsgId: String?
     var RefTrnId: String?
     
+    var userInfo: [AnyHashable : Any]
+    
     lazy var realm = try? Realm()
     
-    init(amount: Double, bankId: String, fee: Double, cardId: Int?, accountId: Int?) {
-        self.amount = amount
-        self.fee = fee
-        self.bank = findBank(with: bankId)
-        self.card = findProduct(with: cardId, with: accountId)
-    }
-    
     init(userInfo: [AnyHashable : Any]) {
+        self.userInfo = userInfo
         
         let amount = userInfo["amount"] as? String ?? ""
         let fee = userInfo["fee"] as? String ?? ""

@@ -11,7 +11,7 @@ import Foundation
 struct IsLoginDecodableModel: Codable, NetworkModelProtocol {
     let statusCode: Int?
     let errorMessage: String?
-    let data: JSONNull?
+    let data: Bool?
 }
 
 // MARK: IsLoginDecodableModel convenience initializers and mutators
@@ -35,7 +35,7 @@ extension IsLoginDecodableModel {
     func with(
         statusCode: Int?? = nil,
         errorMessage: String?? = nil,
-        data: JSONNull?? = nil
+        data: Bool?? = nil
     ) -> IsLoginDecodableModel {
         return IsLoginDecodableModel(
             statusCode: statusCode ?? self.statusCode,
