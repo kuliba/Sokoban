@@ -14,12 +14,12 @@ struct GKHDataSorted {
             i.returnDataCase().values.forEach { value in
                 if value.contains(dataType) {
                 dataCase.0 = i.returnDataCase().keys.first! as String
-                    GKHDataCaseImage.allCases.forEach { im in
-                        let a = i.returnDataCase().keys.first! as String
-                        let b = im.rawValue
-                        if b == a {
-                            dataCase.1 = im.returnImage()
-                        }
+                }
+                GKHDataCaseImage.allCases.forEach { im in
+                    let a = i.returnDataCase().keys.first! as String
+                    let b = im.rawValue
+                    if b == a {
+                        dataCase.1 = im.returnImage()
                     }
                 }
             }

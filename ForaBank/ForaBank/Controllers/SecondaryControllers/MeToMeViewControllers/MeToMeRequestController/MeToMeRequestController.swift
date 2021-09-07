@@ -6,55 +6,6 @@
 //
 
 import UIKit
-import RealmSwift
-
-struct RequestMeToMeModel {
-    var amount: Double
-    var fee: Double
-    var bank: BankFullInfoList?
-    var card: UserAllCardsModel?
-    var RecipientID: String?
-    var RcvrMsgId: String?
-    var RefTrnId: String?
-    
-    lazy var realm = try? Realm()
-    
-    init(amount: Double, bankId: String, fee: Double, cardId: Int?, accountId: Int?) {
-        self.amount = amount
-        self.fee = fee
-        self.bank = findBank(with: bankId)
-        self.card = findProduct(with: cardId, with: accountId)
-    }
-    
-    private func findBank(with bankId: String) -> BankFullInfoList? {
-        let bankList = Dict.shared.bankFullInfoList
-        var bankForReturn: BankFullInfoList?
-        bankList?.forEach({ bank in
-            if bank.memberID == bankId {
-                bankForReturn = bank
-            }
-        })
-        return bankForReturn
-    }
-    
-    private mutating func findProduct(with cardId: Int?, with accountId: Int?) -> UserAllCardsModel? {
-        let cardList = realm?.objects(UserAllCardsModel.self)
-        var card: UserAllCardsModel?
-        cardList?.forEach { product in
-            if cardId != nil {
-                if product.id == cardId {
-                    card = product
-                }
-            } else {
-                if product.id == accountId {
-                    card = product
-                }
-            }
-        }
-        return card
-    }
-    
-}
 
 class MeToMeRequestController: UIViewController {
 
@@ -65,7 +16,7 @@ class MeToMeRequestController: UIViewController {
         }
     }
     
-    lazy var contentViewSize = CGSize(width: self.view.frame.width, height: self.view.frame.height + 400)
+    lazy var contentViewSize = CGSize(width: self.view.frame.width, height: self.view.frame.height + 30)
     
     // MARK: - Views
     
@@ -99,7 +50,7 @@ class MeToMeRequestController: UIViewController {
     lazy var labelSubTitle: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "Inter-Regular", size: 14)
-        label.text = "Денежные средства будут списываться по вашим запросам из Bank Y без подтверждения?"
+        label.text = ""
         label.numberOfLines = 0
         label.textAlignment = .center
         return label
@@ -121,8 +72,8 @@ class MeToMeRequestController: UIViewController {
         cardField.layoutIfNeeded()
         return cardField
     }()
-        
-    lazy var cardListView = CardListView(onlyMy: false)
+    
+//    lazy var cardListView = CardListView(onlyMy: false)
     
     lazy var summTransctionField = ForaInput(
         viewModel: ForaInputModel(
@@ -138,7 +89,7 @@ class MeToMeRequestController: UIViewController {
     
     lazy var fpsSwitch: UIView = {
         let view = UIView()
-        var topSwitch = MeToMeSetupSwitchView()
+        var topSwitch = MeToMeReqestSwitchView()
         view.addSubview(topSwitch)
         topSwitch.anchor(
             top: view.topAnchor, left: view.leftAnchor,
@@ -149,11 +100,32 @@ class MeToMeRequestController: UIViewController {
         return view
     }()
     
+    lazy var tarifView: UIView = {
+        let view = UIView()
+        let tarifView = TarifView()
+        view.addSubview(tarifView)
+        tarifView.anchor(
+            top: view.topAnchor, left: view.leftAnchor,
+            bottom: view.bottomAnchor, right: view.rightAnchor,
+            paddingLeft: 20, paddingRight: 20)
+        tarifView.viewDidTapped = { () in self.tariffButtonTapped() }
+        return view
+    }()
     
-    lazy var label: UILabel = {
-        let label = UILabel()
-        label.text = "Center of container view"
-        return label
+    lazy var cancelButton: UIButton = {
+        let button = UIButton(
+            title: "Отменить", titleColor: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1),
+            backgroundColor: .white, isBorder: true, borderColor: #colorLiteral(red: 0.9176470588, green: 0.9215686275, blue: 0.9215686275, alpha: 1))
+        button.addTarget(self, action:#selector(cancelButtonTapped), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    lazy var nextButton: UIButton = {
+        let button = UIButton(title: "Перевести")
+        button.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
+        
+        return button
     }()
     
     //MARK: - Viewlifecicle
@@ -166,9 +138,6 @@ class MeToMeRequestController: UIViewController {
         let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
         self.navigationItem.rightBarButtonItem = customViewItem
         
-        let model = RequestMeToMeModel(amount: 2344.59, bankId: "100000000004", fee: 0.5, cardId: 10000164837, accountId: nil)
-        
-        self.viewModel = model
     }
     
     func fillData(model: RequestMeToMeModel) {
@@ -177,6 +146,7 @@ class MeToMeRequestController: UIViewController {
         bankField.text = model.bank?.rusName ?? ""
         bankField.imageView.image = model.bank?.svgImage?.convertSVGStringToImage()
         labelSubTitle.text = "Денежные средства будут списываться по вашим запросам из \(model.bank?.rusName ?? "bank") без подтверждения?"
+        labelSubTitle.isHidden = true
         cardFromField.model = model.card
     }
     
@@ -185,7 +155,6 @@ class MeToMeRequestController: UIViewController {
         
         view.addSubview(scrollView)
         scrollView.addSubview(containerView)
-        
         
         let topView = UIView()
         let labelImage = UIImageView(image: UIImage(named: "incomeMeToMe"))
@@ -198,16 +167,23 @@ class MeToMeRequestController: UIViewController {
         labelImage.center(inView: topView)
         
         let stackView = UIStackView(
-            arrangedSubviews: [bankField, cardFromField, cardListView, summTransctionField, taxTransctionField, fpsSwitch])
+            arrangedSubviews: [bankField, cardFromField, summTransctionField, taxTransctionField, fpsSwitch, tarifView])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
         stackView.spacing = 24
         
+        let buttonSteck = UIStackView(arrangedSubviews: [cancelButton, nextButton])
+        buttonSteck.axis = .horizontal
+        buttonSteck.alignment = .fill
+        buttonSteck.distribution = .fillEqually
+        buttonSteck.spacing = 16
+        
         containerView.addSubview(topView)
         containerView.addSubview(labelTitle)
         containerView.addSubview(labelSubTitle)
         containerView.addSubview(stackView)
+        view.addSubview(buttonSteck)
         
         topView.centerX(
             inView: view, topAnchor: containerView.topAnchor, paddingTop: 30)
@@ -228,13 +204,40 @@ class MeToMeRequestController: UIViewController {
         
         stackView.anchor(
             top: labelSubTitle.bottomAnchor, left: containerView.leftAnchor,
-            right: containerView.rightAnchor, paddingTop: 20, paddingRight: 20)
+            right: containerView.rightAnchor, paddingTop: 20)
+        
+        buttonSteck.anchor(
+            left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
+            right: view.rightAnchor, paddingLeft: 20, paddingBottom: 20,
+            paddingRight: 20, height: 44)
         
     }
     
+    //MARK: - Actions
+    @objc func doneButtonTapped() {
+        print(#function)
+        UIView.animate(withDuration: 0.2) {
+            self.labelSubTitle.isHidden = false
+            self.bankField.isHidden = true
+            self.summTransctionField.isHidden = true
+            self.taxTransctionField.isHidden = true
+            self.fpsSwitch.isHidden = true
+            self.tarifView.isHidden = true
+            self.nextButton.setTitle("Да", for: .normal)
+            self.cancelButton.setTitle("Пока нет", for: .normal)
+        }
+        
+        
+    }
     
+    @objc func cancelButtonTapped() {
+        print(#function)
+        dismiss(animated: true, completion: nil)
+    }
     
-    
+    @objc func tariffButtonTapped() {
+        print(#function)
+    }
     
     
 }

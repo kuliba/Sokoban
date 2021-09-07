@@ -18,7 +18,7 @@ extension GKHInputViewController {
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
         imageView.contentMode = .scaleAspectFit
         
-        if !(operatorData?.logotypeList.isEmpty)!  {
+        if operatorData?.logotypeList != nil {
             let dataDecoded : Data = Data(base64Encoded: operatorData?.logotypeList.first?.content ?? "", options: .ignoreUnknownCharacters)!
             
             let decodedimage = UIImage(data: dataDecoded)

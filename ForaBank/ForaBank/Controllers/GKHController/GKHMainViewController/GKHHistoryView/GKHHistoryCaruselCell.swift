@@ -20,7 +20,7 @@ class GKHCaruselCollectionViewCell: UICollectionViewCell {
     
     let nameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 17, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: 15, weight: .regular)
         label.textColor = #colorLiteral(red: 0.007841579616, green: 0.007844132371, blue: 0.007841020823, alpha: 1)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -28,10 +28,11 @@ class GKHCaruselCollectionViewCell: UICollectionViewCell {
     
     let smallDescriptionLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
-        label.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+        label.font = UIFont.systemFont(ofSize: 13, weight: .semibold)
+        label.textColor = #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .center
         return label
     }()
     
@@ -42,23 +43,28 @@ class GKHCaruselCollectionViewCell: UICollectionViewCell {
         addSubview(nameLabel)
         addSubview(smallDescriptionLabel)
         
-        backgroundColor = .clear
+        backgroundColor = .white
         
         // mainImageView constraints
         mainImageView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         mainImageView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        mainImageView.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
-        mainImageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/3).isActive = true
+        mainImageView.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
+//        mainImageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 2/3).isActive = true
+        mainImageView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        mainImageView.widthAnchor.constraint(equalToConstant: 50).isActive = true
         
         // nameLabel constraints
-        nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20).isActive = true
+        nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant:0).isActive = true
         nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        nameLabel.topAnchor.constraint(equalTo: mainImageView.bottomAnchor, constant: 12).isActive = true
+        nameLabel.topAnchor.constraint(equalTo: mainImageView.bottomAnchor, constant: 8).isActive = true
         
         // smallDescriptionLabel constraints
-        smallDescriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20).isActive = true
+        smallDescriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0).isActive = true
         smallDescriptionLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8).isActive = true
-        smallDescriptionLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1/2, constant: 10).isActive = true
+        smallDescriptionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0).isActive = true
+//        smallDescriptionLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1/2, constant: 10).isActive = true
+        
+        self.widthAnchor.constraint(equalToConstant: 100).isActive = true
         
     }
     

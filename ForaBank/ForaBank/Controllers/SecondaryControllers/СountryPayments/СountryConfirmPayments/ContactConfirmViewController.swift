@@ -515,7 +515,7 @@ class ContactConfurmViewController: UIViewController {
         
         switch confurmVCModel?.type {
         
-        case .card2card, .requisites, .phoneNumber:
+        case .card2card, .requisites, .phoneNumber, .gkh:
             print(#function, body)
             NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { respons, error in
                 if error != nil {
@@ -531,6 +531,7 @@ class ContactConfurmViewController: UIViewController {
                     DispatchQueue.main.async {
                         let vc = PaymentsDetailsSuccessViewController()
                         vc.confurmVCModel = self.confurmVCModel
+                        vc.confurmVCModel?.statusIsSuccses = true
                         vc.id = model.data?.paymentOperationDetailId ?? 0
                         switch self.confurmVCModel?.type {
                         case .card2card, .phoneNumber:
@@ -571,6 +572,7 @@ class ContactConfurmViewController: UIViewController {
                     DispatchQueue.main.async {
                         let vc = PaymentsDetailsSuccessViewController()
                         vc.confurmVCModel = self.confurmVCModel
+                        vc.confurmVCModel?.statusIsSuccses = true
                         vc.id = model.data?.paymentOperationDetailID
                         if self.confurmVCModel?.type == .mig {
                             vc.printFormType =  "direct"

@@ -17,6 +17,8 @@ class GKHInputViewController: UIViewController {
     var puref = ""
     var cardNumber = ""
     
+    var qrData = [String: String]()
+    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var bottomInputView: BottomInputView!
     @IBOutlet weak var goButton: UIButton!
@@ -32,8 +34,13 @@ class GKHInputViewController: UIViewController {
         super.viewDidLoad()
         cardList = realm?.objects(UserAllCardsModel.self)
         
+        if !qrData.isEmpty {
+            let a = qrData.filter { $0.key == "Sum"}
+            bottomInputView.tempTextFieldValue = a.first?.value ?? ""
+        }
         
-        bottomInputView.isHidden = true
+        
+        bottomInputView?.isHidden = true
 
         setupNavBar()
 //        goButton.isEnabled = false
@@ -79,6 +86,7 @@ class GKHInputViewController: UIViewController {
             guard let error = error else { return }
             self.showAlert(with: "Ошибка", and: error)
         }
+
     }
     
     override func viewDidLayoutSubviews() {
@@ -95,6 +103,11 @@ class GKHInputViewController: UIViewController {
     @IBAction func goButton(_ sender: UIButton) {
         goButton.isHidden = true
         bottomInputView.isHidden = false
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        qrData.removeAll()
     }
     
     
@@ -133,10 +146,6 @@ extension GKHInputViewController {
 //                self.cardNumber  = filterProduct.first?.accountNumber ?? ""
 //            }
 //        }
-        
-        
-        
-        
         
         getCardList { [weak self] data ,error in
             DispatchQueue.main.async {
@@ -182,7 +191,6 @@ extension GKHInputViewController {
             guard let model = model else { return }
             if model.statusCode == 0 {
                 guard let cardList = model.data else { return }
-                print(cardList)
                 completion(cardList, nil)
             } else {
                 guard let error = model.errorMessage else { return }
@@ -190,12 +198,9 @@ extension GKHInputViewController {
             }
         }
     }
+    
     func paymentGKH(amount: String ,completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
-        
-        let b = bodyArray
-        let a = amount
-        let c = self.cardNumber
-        print(b, a, c)
+    
         let body = [ "check" : false,
                      "amount" : amount,
                      "currencyAmount" : "RUB",
@@ -215,8 +220,7 @@ extension GKHInputViewController {
             if respModel.statusCode == 0 {
                 guard let data = respModel.data else { return }
                 var model = ConfirmViewControllerModel(type: .gkh)
-                
-                //                                    model.cardFrom = self.cardFromField.cardModel
+
                 let r = Double(data.debitAmount ?? 0)
                 
                 model.summTransction = r.currencyFormatter(symbol: "RUB")
@@ -231,6 +235,6 @@ extension GKHInputViewController {
                 completion(nil, respModel.errorMessage)
             }
         }
-        
     }
+    
 }

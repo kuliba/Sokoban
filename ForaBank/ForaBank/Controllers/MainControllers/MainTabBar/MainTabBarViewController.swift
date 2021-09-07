@@ -130,6 +130,9 @@ class MainTabBarViewController: UITabBarController {
             print("DEBUG: Load Currency")
         }
         
+        AddAllUserCardtList.add()
+        
+        
 //        NetworkHelper.request(.getProductList) { cardList , error in
 //            if error != nil {
 //                self.showAlert(with: "Ошибка", and: error!)

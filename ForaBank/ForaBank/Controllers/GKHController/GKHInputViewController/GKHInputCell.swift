@@ -54,23 +54,30 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
             fieldvalue = textField.text ?? ""
         }
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        textField.text = ""
-    }
+//    func textFieldDidBeginEditing(_ textField: UITextField) {
+//        textField.text = ""
+//    }
 
-    func setupUI (_ index: Int, _ dataModel: Parameters) {
+    func setupUI (_ index: Int, _ dataModel: Parameters, _ qrData: [String: String]) {
         
         self.fieldid = String(index + 1)
         fieldname = dataModel.id ?? ""
-        
         let q = GKHDataSorted.a(dataModel.title ?? "")
-        operatorsIcon.image = UIImage(named: q.1)
-        textField.text = q.0
+        DispatchQueue.main.async {
+            self.operatorsIcon.image = UIImage(named: q.1)
+        }
+        textField.placeholder = q.0
         placeholder = q.0
-        self.errorLable.text = dataModel.subTitle
-        let type = dataModel.viewType
-        if type != "INPUT" {
-            self.textField.isEnabled = false
+        
+        if q.0 == "Лицевой счет" {
+            let h = qrData.filter { $0.key == "Лицевой счет"}
+            if h.first?.value != "" {
+            textField.text = h.values.first
+            }
+         }
+        
+        if q.0 == "" {
+            textField.placeholder = dataModel.title
         }
         if q.0 == "ФИО" {
             showFioButton.isHidden = false
@@ -86,16 +93,27 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
         tableViewDelegate?.responds(to: #selector(TableViewDelegate.afterClickingReturnInTextField(cell:)))
         tableViewDelegate?.afterClickingReturnInTextField(cell: self)
     }
+//
+//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+//
+//        if (string == " ") {
+//            return false
+//        } else {
+//
+//            return true
+//        }
+//    }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-               
-                if (string == " ") {
-                    return false
-                } else {
-                    
-                    return true
-                }
-            }
+
+        let previousText:NSString = textField.text! as NSString
+        let updatedText = previousText.replacingCharacters(in: range, with: string)
+        print("updatedText > ", updatedText)
+
+       //the rest of your code
+
+        return true
+    }
     
     
     @IBAction func payTapButton(_ sender: UIButton) {

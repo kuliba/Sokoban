@@ -58,13 +58,6 @@ extension GetPaymentSystemListDecodableModel {
     }
 }
 
-// DataClass.swift
-
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse the JSON, add this file to your project and do:
-//
-//   let dataClass = try DataClass(json)
-
 // MARK: - GetPaymentSystemListDataClass
 struct GetPaymentSystemListDataClass: Codable {
     let paymentSystemList: [PaymentSystemList]?
@@ -107,15 +100,6 @@ extension GetPaymentSystemListDataClass {
         return String(data: try self.jsonData(), encoding: encoding)
     }
 }
-
-// PaymentSystemList.swift
-
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse the JSON, add this file to your project and do:
-//
-//   let paymentSystemList = try PaymentSystemList(json)
-
-import Foundation
 
 // MARK: - PaymentSystemList
 struct PaymentSystemList: Codable {
@@ -172,15 +156,6 @@ extension PaymentSystemList {
     }
 }
 
-// PurefList.swift
-
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse the JSON, add this file to your project and do:
-//
-//   let purefList = try PurefList(json)
-
-import Foundation
-
 // MARK: - PurefList
 struct PurefList: Codable {
     let puref: String?
@@ -226,12 +201,10 @@ extension PurefList {
 
 // TypeEnum.swift
 
-import Foundation
-
-enum TypeEnum: String, Codable {
-    case account = "account"
-    case addressing = "addressing"
-    case addressless = "addressless"
-    case card = "card"
-    case phone = "phone"
-}
+//enum TypeEnum: String, Codable {
+//    case account = "account"
+//    case addressing = "addressing"
+//    case addressless = "addressless"
+//    case card = "card"
+//    case phone = "phone"
+//}

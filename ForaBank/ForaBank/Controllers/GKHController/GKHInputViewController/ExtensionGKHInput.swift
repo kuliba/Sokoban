@@ -20,7 +20,8 @@ extension GKHInputViewController: UITableViewDataSource, TableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: GKHInputCell.reuseId, for: indexPath) as! GKHInputCell
         guard operatorData?.parameterList.count != 0 else { return cell }
-        cell.setupUI(indexPath.row, (operatorData?.parameterList[indexPath.row])!)
+        
+        cell.setupUI(indexPath.row, (operatorData?.parameterList[indexPath.row])!, qrData)
         cell.tableViewDelegate = (self as TableViewDelegate)
         return cell
         

@@ -19,7 +19,90 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="roo-Fp-kuA" userLabel="QRView">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="53" translatesAutoresizingMaskIntoConstraints="NO" id="okQ-kA-yPg">
+                                        <rect key="frame" x="53" y="646" width="308.5" height="100"/>
+                                        <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="Rg5-st-TKe" userLabel="Pdf Stack View">
+                                                <rect key="frame" x="0.0" y="0.0" width="67.5" height="100"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cuq-R3-Q17">
+                                                        <rect key="frame" x="3.5" y="0.0" width="60" height="60"/>
+                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="60" id="4Ew-xy-A32"/>
+                                                            <constraint firstAttribute="width" secondItem="Cuq-R3-Q17" secondAttribute="height" multiplier="1:1" id="Lh1-w5-Hwy"/>
+                                                        </constraints>
+                                                        <state key="normal" image="pdfFile"/>
+                                                        <connections>
+                                                            <action selector="addPdfFile:" destination="wgA-FR-PPr" eventType="touchUpInside" id="wKO-Sz-YTr"/>
+                                                        </connections>
+                                                    </button>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Из файла" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HqI-gG-CvS">
+                                                        <rect key="frame" x="0.0" y="80" width="67.5" height="20"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                            </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="wqr-WX-PfY" userLabel="Zap Stack View">
+                                                <rect key="frame" x="120.5" y="0.0" width="67.5" height="100"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SVD-XB-ywx">
+                                                        <rect key="frame" x="3.5" y="0.0" width="60" height="60"/>
+                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="60" id="Kya-D8-XeF"/>
+                                                            <constraint firstAttribute="width" secondItem="SVD-XB-ywx" secondAttribute="height" multiplier="1:1" id="ceX-dC-ACF"/>
+                                                        </constraints>
+                                                        <state key="normal" image="zap"/>
+                                                        <connections>
+                                                            <action selector="zap:" destination="wgA-FR-PPr" eventType="touchUpInside" id="bf1-jY-XFD"/>
+                                                        </connections>
+                                                    </button>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="Фонарик" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gwf-Qj-etm">
+                                                        <rect key="frame" x="1.5" y="80" width="64" height="20"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                            </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="p6l-uX-3os" userLabel="Info Stack View">
+                                                <rect key="frame" x="241" y="0.0" width="67.5" height="100"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XUL-kv-REV">
+                                                        <rect key="frame" x="3.5" y="0.0" width="60" height="60"/>
+                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="60" id="ezI-Y8-0eU"/>
+                                                            <constraint firstAttribute="width" secondItem="XUL-kv-REV" secondAttribute="height" multiplier="1:1" id="qhC-Kd-QTa"/>
+                                                        </constraints>
+                                                        <state key="normal" image="info"/>
+                                                        <connections>
+                                                            <action selector="info:" destination="wgA-FR-PPr" eventType="touchUpInside" id="vQi-ro-1Yk"/>
+                                                        </connections>
+                                                    </button>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="Инфо" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ch1-GQ-mhQ">
+                                                        <rect key="frame" x="14" y="80" width="39.5" height="20"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                            </stackView>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="100" id="S0j-Me-ns8"/>
+                                        </constraints>
+                                    </stackView>
+                                </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="okQ-kA-yPg" secondAttribute="bottom" constant="150" id="hZo-8p-Dgj"/>
+                                    <constraint firstItem="okQ-kA-yPg" firstAttribute="centerX" secondItem="roo-Fp-kuA" secondAttribute="centerX" id="nwt-Pj-oqO"/>
+                                </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Наведите камеру на QR код" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rrq-fJ-g0g">
                                 <rect key="frame" x="106" y="139.5" width="202" height="50"/>
@@ -32,17 +115,17 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TDj-0m-265">
-                                <rect key="frame" x="20" y="802" width="374" height="40"/>
+                                <rect key="frame" x="20" y="792" width="374" height="50"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="Q1D-SF-Oev"/>
+                                    <constraint firstAttribute="height" constant="50" id="Q1D-SF-Oev"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
                                 <state key="normal" title="Отмена">
                                     <color key="titleColor" systemColor="labelColor"/>
                                 </state>
                                 <connections>
-                                    <action selector="back:" destination="wgA-FR-PPr" eventType="touchUpInside" id="UV3-gd-JjO"/>
+                                    <action selector="back:" destination="wgA-FR-PPr" eventType="touchUpInside" id="5QT-tb-5AY"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -63,7 +146,10 @@
                     <navigationItem key="navigationItem" id="3fT-km-hND"/>
                     <connections>
                         <outlet property="backButton" destination="TDj-0m-265" id="vjr-v1-s0q"/>
+                        <outlet property="info" destination="XUL-kv-REV" id="wr2-pO-vZC"/>
+                        <outlet property="pdfFile" destination="Cuq-R3-Q17" id="q1G-hn-hiw"/>
                         <outlet property="qrView" destination="roo-Fp-kuA" id="meg-im-Xtd"/>
+                        <outlet property="zap" destination="SVD-XB-ywx" id="b2i-QU-7Dc"/>
                         <segue destination="W82-dc-jAv" kind="unwind" identifier="auth" unwindAction="auth:" id="EdC-xT-Il0"/>
                     </connections>
                 </viewController>
@@ -74,6 +160,9 @@
         </scene>
     </scenes>
     <resources>
+        <image name="info" width="24" height="24"/>
+        <image name="pdfFile" width="32" height="32"/>
+        <image name="zap" width="32" height="32"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
