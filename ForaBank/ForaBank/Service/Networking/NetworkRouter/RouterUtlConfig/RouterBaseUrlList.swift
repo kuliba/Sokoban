@@ -96,6 +96,8 @@ enum RouterBaseUrlList: String {
     
     case isLogin                         = "/rest/isLogin"
     
+    case createMe2MePullDebitTransfer    = "/rest/transfer/createMe2MePullDebitTransfer"
+    
     // MARK: - В не авторизованную зону.
     ///Обновление по serial
     #if DEBUG
