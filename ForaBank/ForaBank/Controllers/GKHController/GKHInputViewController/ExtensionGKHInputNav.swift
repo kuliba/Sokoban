@@ -23,7 +23,7 @@ extension GKHInputViewController {
             
             let decodedimage = UIImage(data: dataDecoded)
             imageView.image = decodedimage
-            
+            imageView.setDimensions(height: 30, width: 30)
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: imageView)
             
         } else {
