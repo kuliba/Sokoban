@@ -134,8 +134,22 @@ class MeToMeViewController: UIViewController {
         
         cardFromField.didChooseButtonTapped = { () in
             print("cardField didChooseButtonTapped")
-            self.openOrHideView(self.cardListView)
-            self.hideView(self.bankListView, needHide: true)
+            DispatchQueue.main.async {
+                UIView.animate(withDuration: 0.2) {
+                    if self.cardListView.isHidden == true {
+                        self.cardListView.isHidden = false
+                        self.cardListView.alpha = 1
+                    } else {
+                        self.cardListView.isHidden = true
+                        self.cardListView.alpha = 0
+                    }
+                    if self.bankListView.isHidden == false {
+                        self.bankListView.isHidden = true
+                        self.bankListView.alpha = 0
+                    }
+                }
+                self.stackView.layoutIfNeeded()
+            }
         }
         
     }
@@ -206,22 +220,52 @@ class MeToMeViewController: UIViewController {
         
         bankListView.didBankTapped = { (bank) in
             self.selectedBank = bank
-            self.hideView(self.bankListView, needHide: true)
-            self.hideView(self.cardListView, needHide: true)
+            DispatchQueue.main.async {
+                UIView.animate(withDuration: 0.2) {
+                    self.bankListView.isHidden = true
+                    self.bankListView.alpha = 0
+                    if self.cardListView.isHidden == false {
+                        self.cardListView.isHidden = true
+                        self.cardListView.alpha = 0
+                    }
+                }
+                self.stackView.layoutIfNeeded()
+            }
         }
         
         bankField.didChooseButtonTapped = { () in
             print("bankField didChooseButtonTapped")
-            self.openOrHideView(self.bankListView)
-            self.bankListView.collectionView.reloadData()
-            self.hideView(self.cardListView, needHide: true)
+            DispatchQueue.main.async {
+                UIView.animate(withDuration: 0.2) {
+                    if self.bankListView.isHidden == true {
+                        self.bankListView.isHidden = false
+                        self.bankListView.alpha = 1
+                    } else {
+                        self.bankListView.isHidden = true
+                        self.bankListView.alpha = 0
+                    }
+                    if self.cardListView.isHidden == false {
+                        self.cardListView.isHidden = true
+                        self.cardListView.alpha = 0
+                    }
+                }
+                self.stackView.layoutIfNeeded()
+            }
         }
         
         cardListView.didCardTapped = { card in
             self.cardFromField.cardModel = card
-            self.hideView(self.cardListView, needHide: true)
-            self.hideView(self.bankListView, needHide: true)
-            
+            DispatchQueue.main.async {
+                UIView.animate(withDuration: 0.2) {
+                    self.bankListView.isHidden = true
+                    self.bankListView.alpha = 0
+                    if self.cardListView.isHidden == false {
+                        self.cardListView.isHidden = true
+                        self.cardListView.alpha = 0
+                    }
+                }
+                self.stackView.layoutIfNeeded()
+            }
         }
         
         suggestBank("") { model, error in
