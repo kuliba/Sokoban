@@ -94,6 +94,8 @@ enum RouterBaseUrlList: String {
     
     case createPermanentConsentMe2MePull = "/rest/createPermanentConsentMe2MePull"
     
+    case isLogin                         = "/rest/isLogin"
+    
     // MARK: - В не авторизованную зону.
     ///Обновление по serial
     #if DEBUG
