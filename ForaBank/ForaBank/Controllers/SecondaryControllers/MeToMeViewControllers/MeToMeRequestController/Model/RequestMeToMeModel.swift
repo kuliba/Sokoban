@@ -13,9 +13,9 @@ struct RequestMeToMeModel {
     var fee: Double
     var bank: BankFullInfoList?
     var card: UserAllCardsModel?
-    var RecipientID: String?
-    var RcvrMsgId: String?
-    var RefTrnId: String?
+    var RecipientID: String
+    var RcvrMsgId: String
+    var RefTrnId: String
     
     var userInfo: [AnyHashable : Any]
     
@@ -29,14 +29,15 @@ struct RequestMeToMeModel {
         let cardId = userInfo["cardId"] as? String ?? ""
         let accountId = userInfo["accountId"] as? String ?? ""
         let bank = userInfo["BankRecipientID"] as? String ?? ""
-       
+        self.RefTrnId = userInfo["RefTrnId"] as? String ?? ""
+        self.RcvrMsgId = userInfo["RcvrMsgId"] as? String ?? ""
+        self.RecipientID = userInfo["RecipientID"] as? String ?? ""
+        
         self.amount = Double(amount) ?? 0
         self.fee = Double(fee) ?? 0
         self.bank = findBank(with: bank)
         self.card = findProduct(with: Int(cardId), with: Int(accountId))
-        self.RefTrnId = userInfo["RefTrnId"] as? String ?? ""
-        self.RcvrMsgId = userInfo["RcvrMsgId"] as? String ?? ""
-        self.RecipientID = userInfo["RecipientID"] as? String ?? ""
+        
         
     }
     

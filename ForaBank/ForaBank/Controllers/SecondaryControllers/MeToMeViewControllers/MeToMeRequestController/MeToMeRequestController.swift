@@ -231,8 +231,17 @@ class MeToMeRequestController: UIViewController {
                 if error != nil {
                     self.showAlert(with: "Ошибка", and: error!)
                 } else {
-                    
-                    
+                    self.createMe2MePullDebit { error in
+                        if error != nil {
+                            self.showAlert(with: "Ошибка", and: error!)
+                        } else {
+                            self.showAlert(with: "Удачно", and: "Ваши деньги зачислены") {
+                                DispatchQueue.main.async {
+                                    self.dismiss(animated: true, completion: nil)
+                                }
+                            }
+                        }
+                    }
                 }
             }
         } else {
@@ -257,8 +266,17 @@ class MeToMeRequestController: UIViewController {
                 if error != nil {
                     self.showAlert(with: "Ошибка", and: error!)
                 } else {
-                    
-                    
+                    self.createMe2MePullDebit { error in
+                        if error != nil {
+                            self.showAlert(with: "Ошибка", and: error!)
+                        } else {
+                            self.showAlert(with: "Удачно", and: "Ваши деньги зачислены") {
+                                DispatchQueue.main.async {
+                                    self.dismiss(animated: true, completion: nil)
+                                }
+                            }
+                        }
+                    }
                 }
             }
         } else {
@@ -314,7 +332,8 @@ class MeToMeRequestController: UIViewController {
     }
     
     private func createIsOneTimeConsentMe2Me(completion: @escaping (_ error: String?) -> () ) {
-        let body = ["" : ""] as [String : AnyObject]
+        guard let memberID = viewModel?.bank?.memberID else { return }
+        let body = ["bankId": memberID] as [String : AnyObject]
         NetworkManager<CreateIsOneTimeConsentMe2MePullDecodableModel>.addRequest(.createIsOneTimeConsentMe2MePull, [:], body) { model, error in
             if error != nil {
                 completion(error)
@@ -329,7 +348,8 @@ class MeToMeRequestController: UIViewController {
     }
     
     private func createPermanentConsentMe2Me(completion: @escaping (_ error: String?) -> () ) {
-        let body = ["" : ""] as [String : AnyObject]
+        guard let memberID = viewModel?.bank?.memberID else { return }
+        let body = ["bankId": memberID] as [String : AnyObject]
         NetworkManager<CreatePermanentConsentMe2MePullDecodableModel>.addRequest(.createPermanentConsentMe2MePull, [:], body) { model, error in
             if error != nil {
                 completion(error)
@@ -343,6 +363,59 @@ class MeToMeRequestController: UIViewController {
         }
     }
     
-    
+    private func createMe2MePullDebit(completion: @escaping (_ error: String?) -> ()) {
+        DispatchQueue.main.async {
+            guard let viewModel = self.viewModel else { return }
+            guard let bankRecipientID = viewModel.bank?.memberID else { return }
+            
+            let body = [
+                "check" : false,
+                "amount" : viewModel.amount,
+                "currencyAmount" : "RUB",
+                "payer" : ["cardId" : viewModel.card?.productType == "CARD" ? viewModel.card?.id : nil,
+                           "cardNumber" : nil,
+                           "accountId" : viewModel.card?.productType == "ACCOUNT" ? viewModel.card?.id : nil ],
+                "puref" : "iFora||TransferC2CSTEP",
+                "additional" :
+                    [["fieldid": 1, "fieldname": "RecipientID", "fieldvalue": viewModel.RecipientID],
+                     ["fieldid": 2, "fieldname": "BankRecipientID", "fieldvalue": bankRecipientID],
+                     ["fieldid": 3, "fieldname": "RcvrMsgId", "fieldvalue": viewModel.RcvrMsgId],
+                     ["fieldid": 4, "fieldname": "RefTrnId", "fieldvalue": viewModel.RefTrnId]
+                    ] ] as [String : AnyObject]
+            
+            print(body)
+            
+            NetworkManager<CreateMe2MePullDebitTransferDecodableModel>.addRequest(.createMe2MePullDebitTransfer, [:], body) { transferModel, error in
+                if error != nil {
+                    completion(error)
+                }
+                if transferModel?.statusCode == 0 {
+                    NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], [:]) { model, error in
+                        self.dismissActivity()
+                        if error != nil {
+                            completion(error)
+                        } else if model?.statusCode == 0 {
+                            
+                            completion(nil)
+//                                {"statusCode":0,"errorMessage":null,"data":{"paymentOperationDetailId":2352,"documentStatus":"COMPLETE"}}
+                            
+                            //                        DispatchQueue.main.async {
+                            //                            let vc = PaymentsDetailsSuccessViewController()
+                            //                            vc.id = model.data?.paymentOperationDetailId
+                            //                            vc.printFormType = "external"
+                            //                            self.navigationController?.pushViewController(vc, animated: true)
+                            //                        }
+                        } else {
+                            guard let error = model?.errorMessage else { return }
+                            completion(error)
+                        }
+                    }
+                } else {
+                    guard let error = transferModel?.errorMessage else { return }
+                    completion(error)
+                }
+            }
+        }
+    }
     
 }
