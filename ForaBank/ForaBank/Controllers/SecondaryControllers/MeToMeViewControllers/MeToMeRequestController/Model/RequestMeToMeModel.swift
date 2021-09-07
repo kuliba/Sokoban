@@ -26,6 +26,24 @@ struct RequestMeToMeModel {
         self.card = findProduct(with: cardId, with: accountId)
     }
     
+    init(userInfo: [AnyHashable : Any]) {
+        
+        let amount = userInfo["amount"] as? String ?? ""
+        let fee = userInfo["fee"] as? String ?? ""
+        let cardId = userInfo["cardId"] as? String ?? ""
+        let accountId = userInfo["accountId"] as? String ?? ""
+        let bank = userInfo["BankRecipientID"] as? String ?? ""
+       
+        self.amount = Double(amount) ?? 0
+        self.fee = Double(fee) ?? 0
+        self.bank = findBank(with: bank)
+        self.card = findProduct(with: Int(cardId), with: Int(accountId))
+        self.RefTrnId = userInfo["RefTrnId"] as? String ?? ""
+        self.RcvrMsgId = userInfo["RcvrMsgId"] as? String ?? ""
+        self.RecipientID = userInfo["RecipientID"] as? String ?? ""
+        
+    }
+    
     private func findBank(with bankId: String) -> BankFullInfoList? {
         let bankList = Dict.shared.bankFullInfoList
         var bankForReturn: BankFullInfoList?

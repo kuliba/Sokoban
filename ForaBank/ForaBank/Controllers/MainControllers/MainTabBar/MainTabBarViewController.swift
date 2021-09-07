@@ -75,6 +75,22 @@ class MainTabBarViewController: UITabBarController {
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            guard let userInfo = UserDefaults.standard.object(forKey: "ConsentMe2MePull") as? [AnyHashable : Any] else { return }
+            let meToMeReq = RequestMeToMeModel(userInfo: userInfo)
+            
+            let topvc = UIApplication.topViewController()
+            
+            let vc = MeToMeRequestController()
+            vc.viewModel = meToMeReq
+            vc.modalPresentationStyle = .fullScreen
+            topvc?.present(vc, animated: true, completion: {
+                UserDefaults.standard.set(nil, forKey: "ConsentMe2MePull")
+            })
+        }
+    }
+    
     private func generateNavController(rootViewController: UIViewController, title: String, image: UIImage, fillImage: UIImage) -> UIViewController {
         let navigationVC = UINavigationController(rootViewController: rootViewController)
         navigationVC.tabBarItem.title = title

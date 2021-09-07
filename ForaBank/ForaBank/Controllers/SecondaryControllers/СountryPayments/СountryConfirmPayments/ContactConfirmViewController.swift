@@ -538,6 +538,8 @@ class ContactConfurmViewController: UIViewController {
                             vc.printFormType = "internal"
                         case .requisites:
                             vc.printFormType = "external"
+                        case .gkh:
+                            vc.printFormType = "housingAndCommunalService"
                         default:
                             break
                         }
