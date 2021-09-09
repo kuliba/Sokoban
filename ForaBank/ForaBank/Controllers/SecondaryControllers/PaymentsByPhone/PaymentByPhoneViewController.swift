@@ -10,14 +10,14 @@ import UIKit
 class PaymentByPhoneViewController: UIViewController {
     var sbp: Bool?
     var confirm: Bool?
-    var selectedCardNumber = ""
+    var selectedCardNumber = 0
     var selectedBank: BanksList? {
         didSet {
             guard let bank = selectedBank else { return }
             setupBankField(bank: bank)
         }
     }
-    
+    var bankId = String()
     var banks: [BanksList]? {
         didSet {
             guard let banks = banks else { return }
@@ -164,7 +164,7 @@ class PaymentByPhoneViewController: UIViewController {
                 if data.count > 0 {
                     self?.cardField.cardModel = data.first
 //                    self?.cardField.configCardView(data.first!)
-                    guard let cardNumber  = data.first?.number else { return }
+                    guard let cardNumber  = data.first?.cardID else { return }
                     self?.selectedCardNumber = cardNumber
                 }
             }
@@ -212,7 +212,7 @@ class PaymentByPhoneViewController: UIViewController {
         cardListView.didCardTapped = { card in
             self.cardField.cardModel = card
 //            self.cardField.configCardView(card)
-            self.selectedCardNumber = card.number ?? ""
+            self.selectedCardNumber = card.cardID ?? 0
             self.hideView(self.cardListView, needHide: true)
 //            self.hideView(self.bankListView, needHide: true)
             
@@ -355,16 +355,16 @@ class PaymentByPhoneViewController: UIViewController {
         }
         
         let clearAmount = sum.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "₽", with: "").replacingOccurrences(of: ",", with: ".")
-        var clearNumber = number.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "").replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "").replacingOccurrences(of: ",", with: ".").replacingOccurrences(of: "+", with: "")
+        let clearNumber = number.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "").replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "").replacingOccurrences(of: ",", with: ".").replacingOccurrences(of: "+", with: "")
 //       let fromatNumber =
-        var accountNumber: String?
-        var cardNumber: String?
+        var accountId: Int?
+        var cardId: Int?
         
-        if selectedCardNumber .count > 16{
-            accountNumber = selectedCardNumber
+        if String(selectedCardNumber).count > 16{
+            accountId = selectedCardNumber
 //            cardNumber = ""
         } else {
-            cardNumber = selectedCardNumber
+            cardId = selectedCardNumber
 //            accountNumber = ""
         }
         
@@ -374,10 +374,10 @@ class PaymentByPhoneViewController: UIViewController {
                      "amount"           : clearAmount,
                      "currencyAmount"   : "RUB",
                      "payer" : [
-                        "cardId"        : nil,
-                        "cardNumber"    : cardNumber,
-                        "accountId"     : nil,
-                        "accountNumber" : accountNumber
+                        "cardId"        : cardId,
+                        "cardNumber"    : nil,
+                        "accountId"     : accountId,
+                        "accountNumber" : nil
                      ],
                      "payeeInternal" : [
                         "cardId"        : nil,
@@ -448,69 +448,174 @@ class PaymentByPhoneViewController: UIViewController {
         }
     }
     
-    func startContactPayment(with card: String, completion: @escaping (_ error: String?)->()) {
+    func startContactPayment(with card: Int, completion: @escaping (_ error: String?)->()) {
         showActivity()
-    
+        
+        guard let sum = bottomView.amountTextField.text else {
+            return
+        }
+        
+        let clearAmount = sum.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "₽", with: "").replacingOccurrences(of: ",", with: ".")
+
+        var newPhone = String()
+        var clearPhone = String()
+        
+        newPhone = selectNumber?.digits ?? ""
+        
+        if newPhone.prefix(1) == "7" || newPhone.prefix(1) == "8"{
+            clearPhone = String(newPhone.dropFirst())
+        } else{
+            clearPhone = newPhone
+        }
+        
+        guard let memberId = self.selectedBank?.memberID else {
+            return
+        }
+        
+        
+        let newBody = [
+            "check" : false,
+            "amount" : clearAmount,
+            "currencyAmount" : "RUB",
+            "payer" : [
+                "cardId" : card,
+                "cardNumber" : "null",
+                "accountId" : "null"
+            ],
+            "puref" : "iFora||TransferC2CSTEP",
+            "additional" : [
+                [
+                  "fieldid": "1",
+                  "fieldname": "RecipientID",
+                  "fieldvalue": "0115110217"//clearPhone
+                ],
+                [
+                  "fieldid": "2",
+                  "fieldname": "BankRecipientID",
+                  "fieldvalue": "1crt88888881"// bankId
+                ]
+            ]
+        ] as [String: AnyObject]
+        
+        NetworkManager<CreateSFPTransferDecodableModel>.addRequest(.createSFPTransfer, [:], newBody, completion: { [weak self] model, error in
+                if error != nil {
+                    print("DEBUG: Error: ", error ?? "")
+                    completion(error!)
+                }
+                guard let model = model else { return }
+                if model.statusCode == 0 {
+                    print("DEBUG: Success send Phone")
+                    self?.confirm = true
+                    DispatchQueue.main.async {
+                        var model = ConfirmViewControllerModel(type: .phoneNumberSBP)
+                        if self?.selectedBank != nil {
+                            model.bank = self?.selectedBank
+                        } else {
+                            
+                        }
+                        
+                        model.cardFrom = self?.cardField.cardModel
+                        model.phone = self?.phoneField.text.digits ?? ""
+//                        model.summTransction = model.summTransction
+                        
+//                        model.summTransction = model.amount?.currencyFormatter(symbol: "RUB") ?? ""// debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
+//    //                    model.summInCurrency = model.creditAmount?.currencyFormatter(symbol: data.currencyPayee ?? "RUB") ?? ""
+//                        model.taxTransction = model.data?.commission?.currencyFormatter(symbol: "RUB") ?? ""
+//    //                            model.comment = comment
+//                        model.fullName = model.data?.listInputs?[5].content?[0] ?? "Получатель не найден"
+//
+//                        model.numberTransction = model.data?.id ?? ""
+                        
+                        model.statusIsSuccses = true
+                        
+                        let vc = ContactConfurmViewController()
+                        vc.confurmVCModel = model
+                        vc.addCloseButton()
+                        vc.title = "Подтвердите реквизиты"
+                        
+                        let navController = UINavigationController(rootViewController: vc)
+                        navController.modalPresentationStyle = .fullScreen
+                        self?.present(navController, animated: true, completion: nil)
+                        self?.dismissActivity()
+                        
+                    }
+                } else {
+                    self?.dismissActivity()
+                    self?.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+                    print("DEBUG: Error: ", model.errorMessage ?? "")
+                    DispatchQueue.main.async {
+                    if model.errorMessage == "Пользователь не авторизован"{
+                        AppLocker.present(with: .validate)
+                    }
+                    }
+                    self?.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+                    completion(model.errorMessage)
+                }
+            
+        })
+        
+        
+        
         let body = ["accountID": nil,
                     "cardID": nil,
                     "cardNumber": card,
                     "provider": nil,
                     "puref": "iFora||TransferC2CSTEP"] as [String: AnyObject]
         
-        NetworkManager<AnywayPaymentBeginDecodebleModel>.addRequest(.anywayPaymentBegin, [:], body, completion: { [weak self] model, error in
-            if error != nil {
-                print("DEBUG: Error: ", error ?? "")
-                completion(error!)
-            }
-            guard let model = model else { return }
-            if model.statusCode == 0 {
-                completion(nil)
-                NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], [:]) { model, error in
-                    
-                    if error != nil {
-                        self?.dismissActivity()
-                        self?.showAlert(with: "Ошибка", and: error!)
-                        print("DEBUG: Error: ", error ?? "")
-                        completion(error!)
-                    }
-                    guard let model = model else { return }
-                    if model.statusCode == 0 {
-                        
-                        DispatchQueue.main.async {
-                            self?.dismissActivity()
-                            self?.endSBPPayment(amount: self?.bottomView.amountTextField.text ?? "0") { error in
-                                self?.showAlert(with: "Ошибка", and: error!)
-                                print(error ?? "")
-                            }
-                        }
-                        print("DEBUG: Success ")
-                        completion(nil)
-                    } else {
-                        self?.dismissActivity()
-                        self?.showAlert(with: "Ошибка", and: error!)
-                        print("DEBUG: Error: ", model.errorMessage ?? "")
-                        DispatchQueue.main.async {
-                        if model.errorMessage == "Пользователь не авторизован"{
-                            AppLocker.present(with: .validate)
-                        }
-                        }
-                        self?.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
-                        completion(model.errorMessage)
-                    }
-                }
-            } else {
-                self?.dismissActivity()
-                self?.showAlert(with: "Ошибка", and: error!)
-                print("DEBUG: Error: ", model.errorMessage ?? "")
-                DispatchQueue.main.async {
-                if model.errorMessage == "Пользователь не авторизован"{
-                    AppLocker.present(with: .validate)
-                }
-                }
-                self?.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
-                completion(model.errorMessage)
-            }
-        })
+//        NetworkManager<AnywayPaymentBeginDecodebleModel>.addRequest(.anywayPaymentBegin, [:], body, completion: { [weak self] model, error in
+//            if error != nil {
+//                print("DEBUG: Error: ", error ?? "")
+//                completion(error!)
+//            }
+//            guard let model = model else { return }
+//            if model.statusCode == 0 {
+//                completion(nil)
+//                NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], [:]) { model, error in
+//
+//                    if error != nil {
+//                        self?.dismissActivity()
+//                        self?.showAlert(with: "Ошибка", and: error!)
+//                        print("DEBUG: Error: ", error ?? "")
+//                        completion(error!)
+//                    }
+//                    guard let model = model else { return }
+//                    if model.statusCode == 0 {
+//
+//                        DispatchQueue.main.async {
+//                            self?.dismissActivity()
+//                            self?.endSBPPayment(amount: self?.bottomView.amountTextField.text ?? "0") { error in
+//                                self?.showAlert(with: "Ошибка", and: error!)
+//                                print(error ?? "")
+//                            }
+//                        }
+//                        print("DEBUG: Success ")
+//                        completion(nil)
+//                    } else {
+//                        self?.dismissActivity()
+//                        self?.showAlert(with: "Ошибка", and: error!)
+//                        print("DEBUG: Error: ", model.errorMessage ?? "")
+//                        DispatchQueue.main.async {
+//                        if model.errorMessage == "Пользователь не авторизован"{
+//                            AppLocker.present(with: .validate)
+//                        }
+//                        }
+//                        self?.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+//                        completion(model.errorMessage)
+//                    }
+//                }
+//            } else {
+//                self?.dismissActivity()
+//                self?.showAlert(with: "Ошибка", and: error!)
+//                print("DEBUG: Error: ", model.errorMessage ?? "")
+//                DispatchQueue.main.async {
+//                if model.errorMessage == "Пользователь не авторизован"{
+//                    AppLocker.present(with: .validate)
+//                }
+//                }
+//                self?.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+//                completion(model.errorMessage)
+//            }
+//        })
     }
     
     func endSBPPayment(amount: String, completion: @escaping (_ error: String?)->()) {

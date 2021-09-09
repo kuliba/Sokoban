@@ -1,14 +1,22 @@
+//
+//  OfferCard.swift
+//  ForaBank
+//
+//  Created by Дмитрий on 08.09.2021.
+//
+
+import Foundation
 
 
 import UIKit
 
-class NewProductCell: UICollectionViewCell, SelfConfiguringCell {
+class OfferCard: UICollectionViewCell, SelfConfiguringCell {
     
-    static var reuseId: String = "NewProductCell"
+    static var reuseId: String = "OfferCard"
     
     let transferImage = UIImageView()
-    let transferLabel = UILabel(text: "", font: .systemFont(ofSize: 14), color: .white)
-    let descriptionLabel = UILabel(text: "", font: .systemFont(ofSize: 12), color: .white)
+    let transferLabel = UILabel(text: "Хочу карту", font: .systemFont(ofSize: 14), color: .white)
+    let descriptionLabel = UILabel(text: "Бесплатно", font: .systemFont(ofSize: 12), color: .white)
     
     func configure<U>(with value: U) where U : Hashable {
         guard let payment: PaymentsModel = value as? PaymentsModel else { return }
@@ -24,10 +32,12 @@ class NewProductCell: UICollectionViewCell, SelfConfiguringCell {
         setupUI()
         self.layer.cornerRadius = 10
 //        0.785
+        
         transferImage.setDimensions(height: 32, width: 32)
         backgroundColor = UIColor(hexString: "F6F6F7")
         transferLabel.textColor = .black
         descriptionLabel.textColor = .gray
+        transferImage.image = UIImage(named: "openCard")
     }
     
     required init?(coder: NSCoder) {

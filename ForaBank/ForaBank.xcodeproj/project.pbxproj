@@ -140,6 +140,8 @@
 		684AD35A26B7D2520071C762 /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 684AD35926B7D2520071C762 /* CryptoSwift */; };
 		687ADF1026B07721005A239B /* DataExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687ADF0F26B07721005A239B /* DataExtension.swift */; };
 		687FB22D26E65FC5004A479F /* NewProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687FB22C26E65FC5004A479F /* NewProductCell.swift */; };
+		687FB23026E8D41A004A479F /* OfferCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687FB22F26E8D41A004A479F /* OfferCard.swift */; };
+		687FB23326E9E551004A479F /* PaymentMainCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687FB23226E9E551004A479F /* PaymentMainCell.swift */; };
 		6880D32726A5CC69008FBCB4 /* AES.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6880D32626A5CC68008FBCB4 /* AES.swift */; };
 		6880D32926A5CC7D008FBCB4 /* Encription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6880D32826A5CC7D008FBCB4 /* Encription.swift */; };
 		6880D32D26A70585008FBCB4 /* FaceTouchIdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6880D32C26A70585008FBCB4 /* FaceTouchIdViewController.swift */; };
@@ -500,6 +502,8 @@
 		6822EFD526B935FF00125EEC /* BaseTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BaseTableViewCell.xib; sourceTree = "<group>"; };
 		687ADF0F26B07721005A239B /* DataExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataExtension.swift; sourceTree = "<group>"; };
 		687FB22C26E65FC5004A479F /* NewProductCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProductCell.swift; sourceTree = "<group>"; };
+		687FB22F26E8D41A004A479F /* OfferCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferCard.swift; sourceTree = "<group>"; };
+		687FB23226E9E551004A479F /* PaymentMainCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMainCell.swift; sourceTree = "<group>"; };
 		6880D32626A5CC68008FBCB4 /* AES.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AES.swift; sourceTree = "<group>"; };
 		6880D32826A5CC7D008FBCB4 /* Encription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Encription.swift; sourceTree = "<group>"; };
 		6880D32C26A70585008FBCB4 /* FaceTouchIdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceTouchIdViewController.swift; sourceTree = "<group>"; };
@@ -1094,8 +1098,17 @@
 			isa = PBXGroup;
 			children = (
 				687FB22C26E65FC5004A479F /* NewProductCell.swift */,
+				687FB22F26E8D41A004A479F /* OfferCard.swift */,
 			);
 			path = NewProductCell;
+			sourceTree = "<group>";
+		};
+		687FB23126E9E541004A479F /* PaymentCell */ = {
+			isa = PBXGroup;
+			children = (
+				687FB23226E9E551004A479F /* PaymentMainCell.swift */,
+			);
+			path = PaymentCell;
 			sourceTree = "<group>";
 		};
 		6880D32526A07148008FBCB4 /* Encription */ = {
@@ -1192,6 +1205,7 @@
 		68D06F2B26C405BD00F9BE4C /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				687FB23126E9E541004A479F /* PaymentCell */,
 				687FB22B26E65F9F004A479F /* NewProductCell */,
 				688B9BAD26DEC25500407A75 /* OfferCell */,
 				68D06F3626CCDD9F00F9BE4C /* NavigationBar */,
@@ -2590,6 +2604,7 @@
 				EDB1451C26652D370028EF5A /* UILabel.swift in Sources */,
 				0B22AEA826CE72C200B11E7F /* GKHDataFilter.swift in Sources */,
 				0B95C40326B6CA3700AA57E6 /* CustomPopUpWithRateView.swift in Sources */,
+				687FB23326E9E551004A479F /* PaymentMainCell.swift in Sources */,
 				ED0B4894267B50F50037EA06 /* Int.swift in Sources */,
 				0B22AEAC26CE8DD100B11E7F /* GKHDataSorted.swift in Sources */,
 				68D06F2826C3C13900F9BE4C /* MainViewControllerDelegate.swift in Sources */,
@@ -2623,6 +2638,7 @@
 				EDB1657C2668C8D5007E6030 /* PayCell.swift in Sources */,
 				0BE270BA26B9F36A00FA958C /* ExtensionBottomInputRequest.swift in Sources */,
 				0BD1CAA426E6C7E400CFE993 /* CreateSFPTransferDecodableModel.swift in Sources */,
+				687FB23026E8D41A004A479F /* OfferCard.swift in Sources */,
 				EDFFCAF0268245EC004EE095 /* CardViewModel.swift in Sources */,
 				0BB8817026D6AE4200015E27 /* UserAllCardsModel.swift in Sources */,
 				0B9EC85D26739C0000D86EB2 /* GetCountriesDecodebleModel.swift in Sources */,
@@ -2939,6 +2955,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=*]" = forabank.debugSense;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -2993,6 +3010,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=*]" = ru.forabank.sense;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";

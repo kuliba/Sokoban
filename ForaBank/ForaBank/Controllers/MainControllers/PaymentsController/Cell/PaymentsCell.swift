@@ -47,7 +47,9 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
     
     func configure<U>(with value: U) where U : Hashable {
         guard let payment: PaymentsModel = value as? PaymentsModel else { return }
+      
         if payment.name == "Шаблоны и\nавтоплатежи" {
+            self.alpha = 0.3
             titleLabel.text = payment.name
             titleLabel.alpha = 0.3
             iconImageView.alpha = 0.3
@@ -120,12 +122,15 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
         guard let avatarImage = UIImage(named: avatarImageName) else { return }
         iconImageView.image = avatarImage
         avatarImageView.image = UIImage()
+        
     }
     
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
+        
+        
     }
 
     required init?(coder: NSCoder) {

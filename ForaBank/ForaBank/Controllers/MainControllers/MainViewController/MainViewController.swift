@@ -6,10 +6,14 @@
 //
 
 import UIKit
+import RealmSwift
 
 class MainViewController: UIViewController {
         
-        var payments = [PaymentsModel]() {
+    var card: UserAllCardsModel?
+    var sectionIndexCounter = 0
+
+    var payments = [PaymentsModel]() {
             didSet {
                 DispatchQueue.main.async {
                     self.reloadData(with: nil)
@@ -62,8 +66,19 @@ class MainViewController: UIViewController {
         var investment = [PaymentsModel]()
         var services = [PaymentsModel]()
     
+    
+        var dataEuro: GetExchangeCurrencyDataClass? = nil {
+            didSet{
+            }
+        }
+        var dataUSD: GetExchangeCurrencyDataClass? = nil {
+            didSet{
+        
+            }
+        }
+    
         let searchContact: NavigationBarUIView = UIView.fromNib()
-
+        
     
         enum Section: Int, CaseIterable {
             case  products, pay, offer, currentsExchange, openProduct, branches, investment, services
@@ -91,12 +106,14 @@ class MainViewController: UIViewController {
         
         var collectionView: UICollectionView!
         var dataSource: UICollectionViewDiffableDataSource<Section, PaymentsModel>?
-        
+        lazy var realm = try? Realm()
+
         override func viewDidLoad() {
             super.viewDidLoad()
             navigationController?.navigationBar.isHidden = true
             view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
-          
+            let cardList = realm?.objects(UserAllCardsModel.self)
+
             setupSearchBar()
             setupCollectionView()
             createDataSource()
@@ -144,6 +161,8 @@ class MainViewController: UIViewController {
                 }
                 if list?.count ?? 0 < 3{
                     self.products.append(PaymentsModel(id: 32, name: "Хочу карты", iconName: "openCard", controllerName: ""))
+                } else if list?.count ?? 0 == 3{
+                    self.products.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
                 }
 //                self.transfers = self.payments
                 self.productList = data ?? []
@@ -156,6 +175,9 @@ class MainViewController: UIViewController {
             self.view.addSubview(searchContact)
             searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 48)
             searchContact.secondButton.image = UIImage(named: "Avatar")
+            
+          
+            
         }
         
         private func setupCollectionView() {
@@ -166,10 +188,11 @@ class MainViewController: UIViewController {
             collectionView.anchor(top: searchContact.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, height: UIScreen.main.bounds.height)
             
             collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.reuseId)
-            collectionView.register(PaymentsCell.self, forCellWithReuseIdentifier: PaymentsCell.reuseId)
+            collectionView.register(PaymentsMainCell.self, forCellWithReuseIdentifier: PaymentsMainCell.reuseId)
             collectionView.register(AllCardCell.self, forCellWithReuseIdentifier: AllCardCell.reuseId)
+            collectionView.register(OfferCard.self, forCellWithReuseIdentifier: OfferCard.reuseId)
 
-            
+
         
             let nib = UINib(nibName: "CurrencyExchangeCollectionViewCell", bundle: nil)
             self.collectionView.register(nib, forCellWithReuseIdentifier: "CurrencyExchangeCollectionViewCell")
@@ -205,7 +228,11 @@ class MainViewController: UIViewController {
         }
         
     func getCurrency() {
-        NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], [:]) { model, error in
+        
+        let body = [ "currencyCodeAlpha" : "USD"
+                     ] as [String : AnyObject]
+        
+        NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], body) { model, error in
             if error != nil {
                 print("DEBUG: Error: ", error ?? "")
             }
@@ -213,6 +240,29 @@ class MainViewController: UIViewController {
             print("DEBUG: LatestPayment: ", model)
             if model.statusCode == 0 {
                 guard let lastPaymentsList  = model.data else { return }
+                self.dataUSD = lastPaymentsList
+            } else {
+                print("DEBUG: Error: ", model.errorMessage ?? "")
+                DispatchQueue.main.async {
+                    if model.errorMessage == "Пользователь не авторизован"{
+                        AppLocker.present(with: .validate)
+                    }
+                }
+            }
+        }
+        
+        let bodyEURO = [ "currencyCodeAlpha" : "EUR"
+                     ] as [String : AnyObject]
+        
+        NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], bodyEURO) { model, error in
+            if error != nil {
+                print("DEBUG: Error: ", error ?? "")
+            }
+            guard let model = model else { return }
+            print("DEBUG: LatestPayment: ", model)
+            if model.statusCode == 0 {
+                guard let lastPaymentsList  = model.data else { return }
+                self.dataEuro = lastPaymentsList
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
                 DispatchQueue.main.async {

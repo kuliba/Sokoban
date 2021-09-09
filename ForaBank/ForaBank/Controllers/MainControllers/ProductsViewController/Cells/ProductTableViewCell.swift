@@ -20,6 +20,7 @@ class ProductTableViewCell: UITableViewCell {
     @IBOutlet weak var titleProductLabel: UILabel!
     @IBOutlet weak var balanceLabel: UILabel!
     @IBOutlet weak var numberProductLabel: UILabel!
+    @IBOutlet weak var typeOfProduct: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
