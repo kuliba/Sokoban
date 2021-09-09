@@ -134,6 +134,7 @@ enum RouterBaseUrlList: String {
     case getLatestPhonePayments    = "/rest/getLatestPhonePayments"
     
     case getLatestPayments         = "/rest/getLatestPayments"
+    
     /// Добавить поле в модель с номером карты и результатом проверки ( название банка )
     case checkCard                 = "/rest/transfer/checkCard"
     /// Вопрос для обсуждения. Нужно ли кэшировать

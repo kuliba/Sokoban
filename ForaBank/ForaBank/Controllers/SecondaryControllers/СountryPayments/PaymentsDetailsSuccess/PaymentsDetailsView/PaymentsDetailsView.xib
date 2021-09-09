@@ -34,7 +34,7 @@
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="qYk-Rg-BWS">
                             <rect key="frame" x="20" y="0.0" width="351" height="384"/>
                             <subviews>
-                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SuccessIcon" translatesAutoresizingMaskIntoConstraints="NO" id="LgR-Py-0Qe">
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="OkOperators" translatesAutoresizingMaskIntoConstraints="NO" id="LgR-Py-0Qe">
                                     <rect key="frame" x="155.5" y="0.0" width="40" height="40"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="40" id="A2l-Dm-Rff"/>
@@ -62,8 +62,8 @@
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Vector" translatesAutoresizingMaskIntoConstraints="NO" id="2q9-Ij-ZkL">
                                     <rect key="frame" x="160.5" y="162" width="30" height="30"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="30" id="grN-ca-39J"/>
-                                        <constraint firstAttribute="width" constant="30" id="qIP-qJ-RKB"/>
+                                        <constraint firstAttribute="height" constant="30" id="grN-ca-39J" userLabel="height = 50"/>
+                                        <constraint firstAttribute="width" constant="30" id="qIP-qJ-RKB" userLabel="width = 50"/>
                                     </constraints>
                                 </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nwm-YS-rJg">
@@ -187,8 +187,8 @@
         </view>
     </objects>
     <resources>
+        <image name="OkOperators" width="72" height="72"/>
         <image name="PaymentsIconFavorites" width="32" height="32"/>
-        <image name="SuccessIcon" width="42" height="42"/>
         <image name="Vector" width="21" height="20"/>
         <image name="doc" catalog="system" width="115" height="128"/>
         <image name="info.circle" catalog="system" width="128" height="121"/>

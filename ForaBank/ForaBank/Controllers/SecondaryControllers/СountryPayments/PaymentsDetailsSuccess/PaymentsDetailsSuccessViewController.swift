@@ -13,7 +13,7 @@ class PaymentsDetailsSuccessViewController: UIViewController {
     var printFormType: String?
     let confurmView = PaymentsDetailsView()
     let button = UIButton(title: "На главную")
-    
+    let opView = ""
     var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
             guard let model = confurmVCModel else { return }

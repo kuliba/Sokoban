@@ -24,6 +24,8 @@
 		0B22AEB026CEB80100B11E7F /* Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B22AEAF26CEB80100B11E7F /* Keyboard.swift */; };
 		0B2A8D2726E7837300651BCB /* IsLoginDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2A8D2626E7837300651BCB /* IsLoginDecodableModel.swift */; };
 		0B2A8D2926E78E5C00651BCB /* CreateMe2MePullDebitTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2A8D2826E78E5C00651BCB /* CreateMe2MePullDebitTransferDecodableModel.swift */; };
+		0B2A8D2C26E8D9B600651BCB /* GetLatestPhonePayments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2A8D2B26E8D9B600651BCB /* GetLatestPhonePayments.swift */; };
+		0B2A8D2E26E8DA3400651BCB /* GetLatestPhonePaymentsSaved.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2A8D2D26E8DA3400651BCB /* GetLatestPhonePaymentsSaved.swift */; };
 		0B37F9782678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F9772678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift */; };
 		0B37F97A2678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F9792678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift */; };
 		0B37F97C2678EC69007728FC /* AnywayPaymentDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F97B2678EC69007728FC /* AnywayPaymentDecodableModel.swift */; };
@@ -390,6 +392,8 @@
 		0B22AEAF26CEB80100B11E7F /* Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keyboard.swift; sourceTree = "<group>"; };
 		0B2A8D2626E7837300651BCB /* IsLoginDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsLoginDecodableModel.swift; sourceTree = "<group>"; };
 		0B2A8D2826E78E5C00651BCB /* CreateMe2MePullDebitTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMe2MePullDebitTransferDecodableModel.swift; sourceTree = "<group>"; };
+		0B2A8D2B26E8D9B600651BCB /* GetLatestPhonePayments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLatestPhonePayments.swift; sourceTree = "<group>"; };
+		0B2A8D2D26E8DA3400651BCB /* GetLatestPhonePaymentsSaved.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLatestPhonePaymentsSaved.swift; sourceTree = "<group>"; };
 		0B37F9772678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentBeginDecodebleModel.swift; sourceTree = "<group>"; };
 		0B37F9792678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentMakeDecodableModel.swift; sourceTree = "<group>"; };
 		0B37F97B2678EC69007728FC /* AnywayPaymentDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentDecodableModel.swift; sourceTree = "<group>"; };
@@ -803,6 +807,15 @@
 			name = GKHDataType;
 			sourceTree = "<group>";
 		};
+		0B2A8D2A26E8D98700651BCB /* GetLatestPhonePayments */ = {
+			isa = PBXGroup;
+			children = (
+				0B2A8D2B26E8D9B600651BCB /* GetLatestPhonePayments.swift */,
+				0B2A8D2D26E8DA3400651BCB /* GetLatestPhonePaymentsSaved.swift */,
+			);
+			path = GetLatestPhonePayments;
+			sourceTree = "<group>";
+		};
 		0B6081FE268DDD0800FDB8AD /* CustomCardView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1006,6 +1019,7 @@
 		0BB8817126D6C95200015E27 /* REALMModels */ = {
 			isa = PBXGroup;
 			children = (
+				0B2A8D2A26E8D98700651BCB /* GetLatestPhonePayments */,
 				0B931B1926DCD66200CA8017 /* GetAnywayOretatorsList */,
 				0BD1CA9E26E6C39A00CFE993 /* GetCurrencyList */,
 				0BD1CA9926E6B52C00CFE993 /* GetCountries */,
@@ -2582,6 +2596,7 @@
 				68C64626269DCBD800473DE7 /* QRScannerViewController.swift in Sources */,
 				EDFFCAF82683943A004EE095 /* UISwitch.swift in Sources */,
 				0BA09E3026ADEC300065D623 /* GHKCell.swift in Sources */,
+				0B2A8D2C26E8D9B600651BCB /* GetLatestPhonePayments.swift in Sources */,
 				ED2BE17F26A0498400647CB1 /* AllCardListViewController.swift in Sources */,
 				EDBEEA1D26B1AF2F00265683 /* FullBankInfoCell.swift in Sources */,
 				EDCF8A1826CEFF2100DC9F54 /* TextFieldWithPadding.swift in Sources */,
@@ -2607,6 +2622,7 @@
 				EDB165712668C480007E6030 /* SectionHeader.swift in Sources */,
 				EDB165602667A569007E6030 /* ForaInput.swift in Sources */,
 				68E6A29126A0338700A1D9A1 /* CastomCardView.swift in Sources */,
+				0B2A8D2E26E8DA3400651BCB /* GetLatestPhonePaymentsSaved.swift in Sources */,
 				0B22AEAA26CE77F100B11E7F /* GKHDataCase.swift in Sources */,
 				EDF68216266F9EC800FD5C07 /* RouterError.swift in Sources */,
 				0B216FC626D1E9EB0023C878 /* ExtensionNotificationName.swift in Sources */,

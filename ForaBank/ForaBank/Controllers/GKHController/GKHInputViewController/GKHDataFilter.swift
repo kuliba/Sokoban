@@ -11,7 +11,7 @@ struct GKHDataFilter {
     
     static var personalAccountArray = ["Номер счета",
                                        "Лицевой счёт",
-                                       "Лицевой счeт",
+                                       "Лицевой счет",
                                        "лиц. счeт",
                                        "Лиц. счeт",
                                        "Номер лицевого счета",
