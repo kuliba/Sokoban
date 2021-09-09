@@ -20,7 +20,7 @@ enum GKHDataCaseImage: String, CaseIterable {
     case transitonType   = "Тип перевода"
     case fio             = "ФИО"
     
-    func returnImage() -> String {
+    func returnStringImage() -> String {
         switch self {
         case .personalAccount:
             return "accaunt"

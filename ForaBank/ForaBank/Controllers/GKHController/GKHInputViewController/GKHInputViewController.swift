@@ -131,6 +131,7 @@ extension GKHInputViewController {
             vc.taxTransctionField.isHidden = false
             vc.currTransctionField.isHidden = true
             vc.currancyTransctionField.isHidden = true
+            vc.operatorView = self.operatorData?.logotypeList.first?.content ?? ""
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }

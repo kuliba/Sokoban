@@ -24,7 +24,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.windowScene = windowScene
         window?.rootViewController = UIStoryboard(name: "LaunchScreen", bundle: nil).instantiateInitialViewController()
         window?.makeKeyAndVisible()
-        
         AppDelegate.shared.getCSRF { error in
             if error != nil {
                 print("DEBUG: Error getCSRF: ", error!)

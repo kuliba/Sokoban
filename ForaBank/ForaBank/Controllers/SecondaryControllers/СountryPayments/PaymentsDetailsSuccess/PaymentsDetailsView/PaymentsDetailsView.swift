@@ -24,7 +24,7 @@ class PaymentsDetailsView: UIView {
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var summLabel: UILabel!
     @IBOutlet weak var infoLabel: UILabel!
-    @IBOutlet weak var buttonView: UIStackView!
+//    @IBOutlet weak var buttonView: UIStackView!
     
     var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
@@ -65,8 +65,22 @@ class PaymentsDetailsView: UIView {
     
     
     func setupData(with model: ConfirmViewControllerModel) {
-        buttonView.isHidden = !model.statusIsSuccses
-        statusImageView.image = model.statusIsSuccses ? #imageLiteral(resourceName: "success") : #imageLiteral(resourceName: "errorIcon")
+//        buttonView.isHidden = !model.statusIsSuccses
+        statusImageView.image = model.statusIsSuccses ? #imageLiteral(resourceName: "OkOperators") : #imageLiteral(resourceName: "errorIcon")
+        
+        if (UserDefaults.standard.object(forKey: "OPERATOR_IMAGE") != nil) {
+            let im = UserDefaults.standard.object(forKey: "OPERATOR_IMAGE") as? String ?? ""
+            if im != "" {
+                let dataDecoded : Data = Data(base64Encoded: im, options: .ignoreUnknownCharacters)!
+                
+                let decodedimage = UIImage(data: dataDecoded)
+                operatorImageView.image = decodedimage
+                
+            } else {
+                operatorImageView.image = UIImage(named: "GKH")
+            }
+            
+        }
         statusLabel.text = model.statusIsSuccses
             ? "Успешный перевод" : "Операция неуспешна!"
         summLabel.text = model.summTransction

@@ -18,12 +18,15 @@ extension GKHInputViewController {
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
         imageView.contentMode = .scaleAspectFit
         
-        if operatorData?.logotypeList != nil {
+        if operatorData?.logotypeList.first?.content != nil {
+            
+            UserDefaults.standard.set(operatorData?.logotypeList.first?.content ?? "", forKey: "OPERATOR_IMAGE")
+            
             let dataDecoded : Data = Data(base64Encoded: operatorData?.logotypeList.first?.content ?? "", options: .ignoreUnknownCharacters)!
             
             let decodedimage = UIImage(data: dataDecoded)
             imageView.image = decodedimage
-            
+            imageView.setDimensions(height: 30, width: 30)
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: imageView)
             
         } else {
@@ -42,6 +45,7 @@ extension GKHInputViewController {
         titleLabel.textColor = .black
         titleLabel.font = .boldSystemFont(ofSize: 17)
         titleLabel.text = title
+        titleLabel.textAlignment = .center
         titleLabel.sizeToFit()
 
         let subtitleLabel = UILabel(frame: CGRect(x: 0, y: 18, width: 0, height: 0))
@@ -49,12 +53,16 @@ extension GKHInputViewController {
         subtitleLabel.textColor = .lightGray
         subtitleLabel.font = .systemFont(ofSize: 12)
         subtitleLabel.text = subtitle
+        subtitleLabel.textAlignment = .center
         subtitleLabel.sizeToFit()
 
         let titleView = UIView(frame: CGRect(x: 0, y: 0, width: max(titleLabel.frame.size.width, subtitleLabel.frame.size.width),  height: 30))
+        titleView.setDimensions(height: 30, width: 300)
         titleView.addSubview(titleLabel)
         titleView.addSubview(subtitleLabel)
-
+        
+        titleLabel.anchor( left: titleView.leftAnchor, right: titleView.rightAnchor)
+        subtitleLabel.anchor(top: titleLabel.bottomAnchor, left: titleView.leftAnchor, right: titleView.rightAnchor)
         let widthDiff = subtitleLabel.frame.size.width - titleLabel.frame.size.width
 
         if widthDiff < 0 {

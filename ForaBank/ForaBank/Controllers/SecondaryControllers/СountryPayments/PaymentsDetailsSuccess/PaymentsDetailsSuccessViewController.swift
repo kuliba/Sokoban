@@ -12,11 +12,8 @@ class PaymentsDetailsSuccessViewController: UIViewController {
     var id: Int?
     var printFormType: String?
     let confurmView = PaymentsDetailsView()
-    let button = UIButton(title: "На главную",
-                          titleColor: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1),
-                          backgroundColor: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1),
-                          isBorder: true)
-    
+    let button = UIButton(title: "На главную")
+    let opView = ""
     var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
             guard let model = confurmVCModel else { return }
@@ -53,13 +50,13 @@ class PaymentsDetailsSuccessViewController: UIViewController {
         view.addSubview(button)
         button.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
                       right: view.rightAnchor, paddingLeft: 20, paddingBottom: 20,
-                      paddingRight: 20, height: 44)
+                      paddingRight: 20, height: 48)
         
         view.addSubview(confurmView)
-        confurmView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor,
-                           right: view.rightAnchor, paddingTop: 120, paddingLeft: 20, paddingRight: 20)
-        confurmView.layer.cornerRadius = 16
-        confurmView.clipsToBounds = true
+        confurmView.anchor(
+            top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor,
+            bottom: button.topAnchor, right: view.rightAnchor,
+            paddingTop: 120,  paddingLeft: 20, paddingBottom: 90, paddingRight: 20)
         
     }
     

@@ -13,17 +13,32 @@ struct RequestMeToMeModel {
     var fee: Double
     var bank: BankFullInfoList?
     var card: UserAllCardsModel?
-    var RecipientID: String?
-    var RcvrMsgId: String?
-    var RefTrnId: String?
+    var RecipientID: String
+    var RcvrMsgId: String
+    var RefTrnId: String
+    
+    var userInfo: [AnyHashable : Any]
     
     lazy var realm = try? Realm()
     
-    init(amount: Double, bankId: String, fee: Double, cardId: Int?, accountId: Int?) {
-        self.amount = amount
-        self.fee = fee
-        self.bank = findBank(with: bankId)
-        self.card = findProduct(with: cardId, with: accountId)
+    init(userInfo: [AnyHashable : Any]) {
+        self.userInfo = userInfo
+        
+        let amount = userInfo["amount"] as? String ?? ""
+        let fee = userInfo["fee"] as? String ?? ""
+        let cardId = userInfo["cardId"] as? String ?? ""
+        let accountId = userInfo["accountId"] as? String ?? ""
+        let bank = userInfo["BankRecipientID"] as? String ?? ""
+        self.RefTrnId = userInfo["RefTrnId"] as? String ?? ""
+        self.RcvrMsgId = userInfo["RcvrMsgId"] as? String ?? ""
+        self.RecipientID = userInfo["RecipientID"] as? String ?? ""
+        
+        self.amount = Double(amount) ?? 0
+        self.fee = Double(fee) ?? 0
+        self.bank = findBank(with: bank)
+        self.card = findProduct(with: Int(cardId), with: Int(accountId))
+        
+        
     }
     
     private func findBank(with bankId: String) -> BankFullInfoList? {

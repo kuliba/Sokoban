@@ -401,6 +401,9 @@ extension AppLocker {
                         guard let mPush = modelPush else { return }
                         if mPush.statusCode == 0 {
                             print("DEBUG: You are LOGGIN!!!")
+                            DispatchQueue.main.async {
+                                AppDelegate.shared.isAuth = true
+                            }
                             self.dismissActivity()
                             completion(nil)
                         }

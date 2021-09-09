@@ -35,7 +35,7 @@ struct ConfirmViewControllerModel {
     var cardFromCardCVV = ""
     var cardFromAccountId = ""
     var cardFromAccountNumber = ""
-    
+    var operatorImage = ""
     var cardTo: GetProductListDatum? {
         didSet {
             guard let cardTo = cardTo else { return }
@@ -179,6 +179,7 @@ class ContactConfurmViewController: UIViewController {
             setupData(with: model)
         }
     }
+    var operatorView = ""
     var otpCode: String = ""
     
     var phoneField = ForaInput(
@@ -539,6 +540,8 @@ class ContactConfurmViewController: UIViewController {
                             vc.printFormType = "internal"
                         case .requisites:
                             vc.printFormType = "external"
+                        case .gkh:
+                            vc.printFormType = "housingAndCommunalService"
                         default:
                             break
                         }

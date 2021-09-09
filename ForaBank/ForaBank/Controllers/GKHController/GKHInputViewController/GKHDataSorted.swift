@@ -11,19 +11,22 @@ struct GKHDataSorted {
     static func a(_ dataType: String) -> (String, String) {
         var dataCase = ("", "")
         for i in GKHDataCase.allCases {
-            i.returnDataCase().values.forEach { value in
-                if value.contains(dataType) {
-                dataCase.0 = i.returnDataCase().keys.first! as String
-                }
-                GKHDataCaseImage.allCases.forEach { im in
-                    let a = i.returnDataCase().keys.first! as String
-                    let b = im.rawValue
-                    if b == a {
-                        dataCase.1 = im.returnImage()
-                    }
+            let key = i.returnDataCase().first?.key ?? ""
+            let value = i.returnDataCase().first?.value ?? []
+            
+            for i in value {
+                if i == dataType {
+                    
+                    let v = GKHDataCaseImage.allCases.filter {$0.rawValue == key}.first
+                    
+                    dataCase.1 = v?.returnStringImage() ?? ""
+                    dataCase.0 = v?.rawValue ?? ""
+
                 }
             }
         }
         return dataCase
     }
+    
+    
 }

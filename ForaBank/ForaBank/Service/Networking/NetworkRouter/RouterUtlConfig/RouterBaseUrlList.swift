@@ -94,6 +94,10 @@ enum RouterBaseUrlList: String {
     
     case createPermanentConsentMe2MePull = "/rest/createPermanentConsentMe2MePull"
     
+    case isLogin                         = "/rest/isLogin"
+    
+    case createMe2MePullDebitTransfer    = "/rest/transfer/createMe2MePullDebitTransfer"
+    
     // MARK: - В не авторизованную зону.
     ///Обновление по serial
     #if DEBUG
@@ -130,6 +134,7 @@ enum RouterBaseUrlList: String {
     case getLatestPhonePayments    = "/rest/getLatestPhonePayments"
     
     case getLatestPayments         = "/rest/getLatestPayments"
+    
     /// Добавить поле в модель с номером карты и результатом проверки ( название банка )
     case checkCard                 = "/rest/transfer/checkCard"
     /// Вопрос для обсуждения. Нужно ли кэшировать

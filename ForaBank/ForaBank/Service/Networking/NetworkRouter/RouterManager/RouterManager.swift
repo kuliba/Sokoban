@@ -64,6 +64,8 @@ enum RouterManager {
     case createSFPTransfer
     case createIsOneTimeConsentMe2MePull
     case createPermanentConsentMe2MePull
+    case isLogin
+    case createMe2MePullDebitTransfer
 }
 
 extension RouterManager {
@@ -895,6 +897,36 @@ extension RouterManager {
             
         case .createPermanentConsentMe2MePull:
             let baseUrl = RouterUrlList.createIsOneTimeConsentMe2MePull.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .isLogin:
+            let baseUrl = RouterUrlList.isLogin.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.get.rawValue
+            return request
+        
+        case .createMe2MePullDebitTransfer:
+            let baseUrl = RouterUrlList.createMe2MePullDebitTransfer.returnUrl()
             switch baseUrl {
             case .success(let url):
                 resultUrl = url.absoluteURL

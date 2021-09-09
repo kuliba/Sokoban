@@ -25,10 +25,16 @@ class GKHCitySearchController: UIViewController {
     var searchedOrganization = [GKHOperatorsModel]() {
         didSet {
             DispatchQueue.main.async {
+                self.searchedOrganization.forEach{ op in
+                    self.tempArray.append(op.region ?? "")
+                    
+                }
                 self.tableView.reloadData()
             }
         }
     }
+    
+    var tempArray = [String]()
     
     var searching = false
     
@@ -40,9 +46,11 @@ class GKHCitySearchController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         operatorsList = realm?.objects(GKHOperatorsModel.self)
-        operatorsList?.forEach({ op in
-            organization.append(op)
-        })
+        operatorsList?.forEach{ op in
+            tempArray.append(op.region ?? "")
+            let r = tempArray.uniqued()
+            tempArray = r
+        }
         textField.delegate = self
     }
     
@@ -73,4 +81,11 @@ extension GKHCitySearchController: UITextFieldDelegate {
         return true
     }
     
+}
+
+extension Sequence where Element: Hashable {
+    func uniqued() -> [Element] {
+        var set = Set<Element>()
+        return filter { set.insert($0).inserted }
+    }
 }
