@@ -72,7 +72,6 @@ struct AddAllUserCardtList {
                     realm?.delete(operators!)
                     realm?.add(cardsArray)
                     try realm?.commitWrite()
-                    print("REALM",realm?.configuration.fileURL?.absoluteString ?? "")
                 } catch {
                     print(error.localizedDescription)
                 }

@@ -8,9 +8,9 @@
 import Foundation
 import RealmSwift
 
-struct GetPaymentSystemSaved {
+struct GetPaymentSystemSaved: DownloadQueueProtocol {
     
-    static func add(_ param: [String : String], _ body: [String: AnyObject]) {
+    func add(_ param: [String : String], _ body: [String: AnyObject], completion: @escaping () -> ()) {
         
         NetworkManager<GetPaymentSystemListDecodableModel>.addRequest(.getPaymentSystemList, param, body) { model, error in
             
@@ -63,7 +63,7 @@ struct GetPaymentSystemSaved {
                         realm?.delete(operators!)
                         realm?.add(getPaymentSystemList)
                         try realm?.commitWrite()
-                        print("REALM",realm?.configuration.fileURL?.absoluteString ?? "")
+                        completion()
                     } catch {
                         print(error.localizedDescription)
                     }

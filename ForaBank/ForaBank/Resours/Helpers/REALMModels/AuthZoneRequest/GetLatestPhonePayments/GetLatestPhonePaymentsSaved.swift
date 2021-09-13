@@ -47,7 +47,6 @@ struct GetLatestPhonePaymentsSaved {
                         realm?.delete(b!)
                         realm?.add(currency)
                         try realm?.commitWrite()
-                        print(realm?.configuration.fileURL?.absoluteString ?? "")
                     } catch {
                         print(error.localizedDescription)
                     }
