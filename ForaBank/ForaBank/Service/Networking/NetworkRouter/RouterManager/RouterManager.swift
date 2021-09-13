@@ -66,6 +66,7 @@ enum RouterManager {
     case createPermanentConsentMe2MePull
     case isLogin
     case createMe2MePullDebitTransfer
+    case getMe2MeDebitConsent
 }
 
 extension RouterManager {
@@ -939,6 +940,23 @@ extension RouterManager {
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.post.rawValue
             return request
+            
+        case .getMe2MeDebitConsent:
+            let baseUrl = RouterUrlList.createMe2MePullDebitTransfer.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+            
         }
     }
 }

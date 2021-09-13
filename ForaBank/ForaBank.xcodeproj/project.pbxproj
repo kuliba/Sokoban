@@ -194,6 +194,7 @@
 		68FFA563268DDFCB002DADFA /* SearchContactView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA562268DDFCA002DADFA /* SearchContactView.swift */; };
 		68FFA565269464FF002DADFA /* TransferByRequisitesConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA564269464FF002DADFA /* TransferByRequisitesConfirmViewController.swift */; };
 		68FFA5682695921E002DADFA /* QRScanner in Frameworks */ = {isa = PBXBuildFile; productRef = 68FFA5672695921E002DADFA /* QRScanner */; };
+		ED07DB9026EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */; };
 		ED0B4892267B4CDD0037EA06 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = ED0B4891267B4CDD0037EA06 /* IQKeyboardManagerSwift */; };
 		ED0B4894267B50F50037EA06 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B4893267B50F50037EA06 /* Int.swift */; };
 		ED0B4896267B97C60037EA06 /* ContactInputViewController + UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B4895267B97C60037EA06 /* ContactInputViewController + UI.swift */; };
@@ -558,6 +559,7 @@
 		68FFA560268DD2CE002DADFA /* CountriesCodeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesCodeButton.swift; sourceTree = "<group>"; };
 		68FFA562268DDFCA002DADFA /* SearchContactView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchContactView.swift; sourceTree = "<group>"; };
 		68FFA564269464FF002DADFA /* TransferByRequisitesConfirmViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferByRequisitesConfirmViewController.swift; sourceTree = "<group>"; };
+		ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMe2MeDebitConsentDecodableModel.swift; sourceTree = "<group>"; };
 		ED0B4893267B50F50037EA06 /* Int.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
 		ED0B4895267B97C60037EA06 /* ContactInputViewController + UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContactInputViewController + UI.swift"; sourceTree = "<group>"; };
 		ED0B489B267D41A60037EA06 /* PaymentsDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsDetailsView.swift; sourceTree = "<group>"; };
@@ -2237,6 +2239,7 @@
 				0BD1CAA726E6D5D600CFE993 /* CreatePermanentConsentMe2MePullDecodableModel.swift */,
 				0B2A8D2626E7837300651BCB /* IsLoginDecodableModel.swift */,
 				0B2A8D2826E78E5C00651BCB /* CreateMe2MePullDebitTransferDecodableModel.swift */,
+				ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -2605,6 +2608,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED07DB9026EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift in Sources */,
 				ED0B48A3267E71DC0037EA06 /* FCMToken.swift in Sources */,
 				EDCF8A1026CE876600DC9F54 /* MeToMeSearchBanksViewController.swift in Sources */,
 				68C64626269DCBD800473DE7 /* QRScannerViewController.swift in Sources */,

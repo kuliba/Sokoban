@@ -88,15 +88,17 @@ enum RouterBaseUrlList: String {
     
     case changeClientConsentMe2MePull = "/rest/changeClientConsentMe2MePull"
     
-    case createSFPTransfer            = "/rest/transfer/createSFPTransfer"
+    case createSFPTransfer         = "/rest/transfer/createSFPTransfer"
     
     case createIsOneTimeConsentMe2MePull = "/rest/createIsOneTimeConsentMe2MePull"
     
     case createPermanentConsentMe2MePull = "/rest/createPermanentConsentMe2MePull"
     
-    case isLogin                         = "/rest/isLogin"
+    case isLogin                   = "/rest/isLogin"
     
     case createMe2MePullDebitTransfer    = "/rest/transfer/createMe2MePullDebitTransfer"
+    
+    case getMe2MeDebitConsent       =  "/rest/getMe2MeDebitConsent"
     
     // MARK: - В не авторизованную зону.
     ///Обновление по serial

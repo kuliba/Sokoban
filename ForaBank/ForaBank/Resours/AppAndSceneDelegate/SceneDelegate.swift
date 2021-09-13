@@ -87,7 +87,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
               let params = components.queryItems else {
             return
         }
-        print("params", params)
+
+        if let bankId = params.first?.value {
+            let bankId = String(bankId.dropFirst(4))
+            UserDefaults.standard.set(bankId, forKey: "GetMe2MeDebitConsent")
+        }
+        
+        
     }
 
 }
