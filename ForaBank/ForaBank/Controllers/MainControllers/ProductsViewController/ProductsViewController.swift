@@ -11,7 +11,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
  
     var totalMoney: Double = 0.0 {
         didSet{
-            totalMoneyView.totalBalance.text = String(totalMoney)
+            totalMoneyView.totalBalance.text = String(totalMoney.currencyFormatter(symbol: ""))
         }
     }
     
@@ -26,16 +26,19 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
             }
         }
     }
+    
     let totalMoneyView: TotalMoneyView = UIView.fromNib()
 
     var tableView: UITableView!
-    
+    var sectionData: [PaymentsModel] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         getCardList { products, errorMessage in
             self.products = products ?? []
         }
+        sectionData = MockItems.returnSectionInProducts()
+
         // Do any additional setup after loading the view.
         setupUI()
     }
@@ -59,67 +62,94 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
         tableView?.dataSource = self
 
         
+        
         view.addSubview(totalMoneyView)
         view.addSubview(tableView)
-        tableView?.anchor(top: totalMoneyView.bottomAnchor ,left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor,paddingTop: 10, paddingLeft: 20, paddingRight: 20)
-
-
+        tableView?.anchor(top: totalMoneyView.bottomAnchor ,left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor,paddingTop: 10)
+//        tableView.layoutMargins = .init(top: 0.0, left: 23.5, bottom: 0.0, right: 23.5)
+         // if you want the separator lines to follow the content width
+         tableView.separatorInset = tableView.layoutMargins
         totalMoneyView.anchor(top: view.topAnchor ,left: view.leftAnchor,
-                          right: view.rightAnchor, paddingTop: 20)
-
+                          right: view.rightAnchor, paddingTop: 10, paddingBottom: 5, paddingRight: 10)
+        
         tableView?.backgroundColor = .white
         tableView.separatorStyle = .none
         
         UINavigationBar.appearance().barTintColor = UIColor(red: 0.965, green: 0.965, blue: 0.969, alpha: 1)
         totalMoneyView.backgroundColor = UIColor(red: 0.965, green: 0.965, blue: 0.969, alpha: 1)
-        view.backgroundColor = .white
+        
+
+        view.backgroundColor = UIColor(red: 0.965, green: 0.965, blue: 0.969, alpha: 1)
     }
     @objc func action(sender: UIBarButtonItem) {
-        // Function body goes here
+        guard let url = URL(string: "https://promo.forabank.ru" ) else { return  }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+           return 5
     }
     
-
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return products.count
+        if section == 0{
+            return products.count
+        } else {
+            return 0
+        }
     }
+    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: ProductTableViewCell.identifier, for: indexPath) as! ProductTableViewCell
-        cell.titleProductLabel.text = products[indexPath.row].productName
-        cell.numberProductLabel.text = products[indexPath.row].numberMasked
-        cell.balanceLabel.text = "\(products[indexPath.row].balance?.currencyFormatter() ?? "")"
-        cell.coverpProductImage.image = products[indexPath.row].smallDesign?.convertSVGStringToImage()
-        cell.cardTypeImage.image = products[indexPath.row].paymentSystemImage?.convertSVGStringToImage()
+        if indexPath.section == 0, products.count != 0{
+            let str = products[indexPath.row].numberMasked ?? ""
+            cell.titleProductLabel.text = products[indexPath.row].mainField
+            cell.numberProductLabel.text = "\(str.suffix(4))"
+            cell.balanceLabel.text = "\(products[indexPath.row].balance?.currencyFormatter(symbol: products[indexPath.row].currency ?? "") ?? "")"
+            cell.coverpProductImage.image = products[indexPath.row].smallDesign?.convertSVGStringToImage()
+            cell.cardTypeImage.image = products[indexPath.row].paymentSystemImage?.convertSVGStringToImage()
+            cell.typeOfProduct.text = products[indexPath.row].additionalField
+            
+        }
+        if products[indexPath.row].paymentSystemImage == nil{
+            cell.cardTypeImage.isHidden = true
+        }
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let vc = ProductViewController()
-        vc.addCloseButton()
-        vc.modalPresentationStyle = .fullScreen
-        vc.products = products
-        vc.product = products[indexPath.row]
-        present(vc, animated: true, completion: nil)
+//        let vc = ProductViewController()
+//        vc.addCloseButton()
+//        vc.modalPresentationStyle = .fullScreen
+//        vc.products = products
+//        vc.product = products[indexPath.row]
+//        present(vc, animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
             let headerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.width, height: 50))
             let label = UILabel()
-            label.frame = CGRect.init(x: 5, y: 5, width: headerView.frame.width-10, height: headerView.frame.height-10)
-            label.text = "Карты и счета"
+            label.frame = CGRect.init(x: 20, y: 0, width: headerView.frame.width-10, height: headerView.frame.height-10)
+            label.text = sectionData[section].name
             label.font = .boldSystemFont(ofSize: 18)
             label.textColor = .black
             headerView.addSubview(label)
             let button = UIButton(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
-//            button.setImage(UIImage(systemName: "arrow"), for: .normal)
-
+            button.setImage(UIImage(systemName: "arrow"), for: .normal)
+                        
             headerView.backgroundColor = .white
 //            button.anchor()
             headerView.addSubview(button)
-            
+            button.anchor(left: label.leftAnchor, paddingLeft: 10, width: 24, height: 24)
+
+            if section != 0{
+                headerView.alpha = 0.2
+            }
+//            label.centerY(inView: headerView)
+//            headerView.anchor(paddingTop: 10)
             return headerView
     }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

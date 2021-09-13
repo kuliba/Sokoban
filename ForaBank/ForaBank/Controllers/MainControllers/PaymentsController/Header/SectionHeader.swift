@@ -41,8 +41,10 @@ class SectionHeader: UICollectionReusableView {
         title.textColor = textColor
         title.font = font
         title.text = text
-        if title.text == "Оплатить" {
+        if title.text == "Оплатить" ||  title.text == "Отделения и банкоматы" || title.text == "Инвестиции и пенсии"  || title.text == "Услуги и сервисы" {
             title.alpha = 0.3
+        } else {
+            title.alpha = 1
         }
         arrowButton.isHidden = expandingIsHidden
         seeAllButton.isHidden = seeAllIsHidden

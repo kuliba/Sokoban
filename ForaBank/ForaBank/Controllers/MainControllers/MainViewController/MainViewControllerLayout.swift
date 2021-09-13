@@ -8,6 +8,7 @@
 import UIKit
 
 extension MainViewController {
+
     func createCompositionLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { (sectionIndex, layoutEnvironment) -> NSCollectionLayoutSection? in
             guard let section = Section(rawValue: sectionIndex) else {
@@ -15,7 +16,7 @@ extension MainViewController {
             }
             switch section {
             case .products:
-                if self.products.count > 0 {
+                if self.products.count > 0{
                     return self.createProduct()
                 } else {
                     return nil
@@ -66,19 +67,21 @@ extension MainViewController {
             widthDimension: .absolute(164),
 //            heightDimension: .fractionalHeight(0.2))
           heightDimension: .absolute(117))
-
+        
+        
+        
         let group = NSCollectionLayoutGroup.horizontal(
             layoutSize: groupSize, subitems: [item])
 
         group.contentInsets = .uniform(size: 5)
-
+        
         let section = NSCollectionLayoutSection(group: group)
 
         section.interGroupSpacing = 8
         section.contentInsets = .init(horizontal: 20, vertical: 8)
 
         section.orthogonalScrollingBehavior = .continuous
-
+        section.orthogonalScrollingBehavior = .paging
         let sectionHeader = createSectionHeader()
         section.boundarySupplementaryItems = [sectionHeader]
         return section
@@ -125,9 +128,9 @@ extension MainViewController {
         let section = NSCollectionLayoutSection(group: group)
         
         section.interGroupSpacing = 8
-        section.contentInsets = .init(horizontal: 20, vertical: 8)
+        section.contentInsets = .init(horizontal: 20, vertical: 10)
         
-        section.orthogonalScrollingBehavior = .continuous
+        section.orthogonalScrollingBehavior = .paging
         
 //        let sectionHeader = nil
 //        section.boundarySupplementaryItems = [sectionHeader]
@@ -140,7 +143,7 @@ extension MainViewController {
 
         let item = NSCollectionLayoutItem.withEntireSize()
         let groupSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(0.95),
+            widthDimension: .fractionalWidth(0.9),
 //            heightDimension: .fractionalHeight(0.35))
             heightDimension: .absolute(124))
 
@@ -177,7 +180,7 @@ extension MainViewController {
 
         section.contentInsets = .init(horizontal: 20, vertical: 16)
 
-        section.orthogonalScrollingBehavior = .continuous
+        section.orthogonalScrollingBehavior = .paging
 
         let sectionHeader = createSectionHeader()
         section.boundarySupplementaryItems = [sectionHeader]
@@ -201,9 +204,10 @@ extension MainViewController {
         section.interGroupSpacing = 8
         section.contentInsets = .init(horizontal: 20, vertical: 16)
 
-        section.orthogonalScrollingBehavior = .continuous
+        section.orthogonalScrollingBehavior = .paging
 
         let sectionHeader = createSectionHeader()
+        
         section.boundarySupplementaryItems = [sectionHeader]
         return section
     }

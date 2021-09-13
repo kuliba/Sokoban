@@ -79,6 +79,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
     }
 
+    
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        
+        guard let url = URLContexts.first?.url else { return }
+        guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true),
+              let params = components.queryItems else {
+            return
+        }
+
+        if let bankId = params.first?.value {
+            let bankId = String(bankId.dropFirst(4))
+            UserDefaults.standard.set(bankId, forKey: "GetMe2MeDebitConsent")
+        }
+        
+        
+    }
 
 }
 

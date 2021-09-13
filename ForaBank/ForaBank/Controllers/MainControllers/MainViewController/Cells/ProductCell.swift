@@ -132,7 +132,7 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
         
         logoImageView.centerY(inView: maskCardLabel)
         logoImageView.anchor(left: self.leftAnchor,
-                             paddingLeft: 8, width: 18, height: 18)
+                             paddingLeft: 13, width: 18, height: 18)
         
         
         cardNameLabel.anchor(top: maskCardLabel.bottomAnchor, left: self.leftAnchor, right: self.rightAnchor,

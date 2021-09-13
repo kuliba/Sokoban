@@ -539,6 +539,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
             self.banksList.forEach { bank in
                 if bank.memberID == fastPaymentBank?.memberID {
                     vc.selectedBank = bank
+                    vc.bankId = bank.memberID ?? ""
                 }
             }
             
@@ -563,6 +564,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                 self.banksList.forEach { bank in
                     if bank.memberID == lastPaymentBank.bankID {
                         vc.selectedBank = bank
+                        vc.bankId = bank.memberID ?? ""
                     }
                 }
                 if lastPaymentBank.bankName == "ФОРА-БАНК" {
@@ -575,6 +577,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                 self.banksList.forEach { bank in
                     if bank.memberID == lastPaymentBank.bankID {
                         vc.selectedBank = bank
+                        vc.bankId = bank.memberID ?? ""
                     }
                 }
                 
@@ -1026,6 +1029,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
             let vc = PaymentByPhoneViewController()
             vc.selectNumber = selectPhoneNumber
             vc.selectedBank = banks?[indexPath.row]
+            vc.bankId = banks?[indexPath.row].memberID ?? ""
             
             if banksList[indexPath.row].memberNameRus == "ФОРА-БАНК"{
                 vc.sbp = false

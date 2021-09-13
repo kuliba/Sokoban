@@ -56,7 +56,7 @@ extension CreateMe2MePullDebitTransferDecodableModel {
 // MARK: - CreateMe2MePullDebitTransferDataClass
 struct CreateMe2MePullDebitTransferDataClass: Codable {
     let needMake, needOTP: Bool?
-    let amount: Int?
+    let amount: Double?
     let creditAmount: JSONNull?
     let fee: Double?
     let currencyAmount, currencyPayer, currencyPayee: String?
@@ -94,7 +94,7 @@ extension CreateMe2MePullDebitTransferDataClass {
     func with(
         needMake: Bool?? = nil,
         needOTP: Bool?? = nil,
-        amount: Int?? = nil,
+        amount: Double?? = nil,
         creditAmount: JSONNull?? = nil,
         fee: Double?? = nil,
         currencyAmount: String?? = nil,

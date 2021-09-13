@@ -118,6 +118,7 @@ class MeToMeSettingViewController: UIViewController {
         cardFromField.didChooseButtonTapped = { () in
             print("cardField didChooseButtonTapped")
             self.openOrHideView(self.cardListView)
+            
         }
     }
     
@@ -291,6 +292,10 @@ class MeToMeSettingViewController: UIViewController {
                 completion(false, error)
             }
         }
+    }
+    
+    func safeDefaultCard() {
+        
     }
     
 }

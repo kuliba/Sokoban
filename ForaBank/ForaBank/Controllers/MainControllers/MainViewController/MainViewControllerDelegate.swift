@@ -17,21 +17,11 @@ extension MainViewController: UICollectionViewDelegate {
         case .products:
             print("its CurrencyExchange")
         case .offer:
-            print("DEBUG: " + #function + payments[indexPath.row].name)
-                if let viewController = payments[indexPath.row].controllerName.getViewController() {
-                    viewController.addCloseButton()
-                    let navVC = UINavigationController(rootViewController: viewController)
-                    navVC.modalPresentationStyle = .fullScreen
-                    present(navVC, animated: true)
-            }
+            guard let url = URL(string: offer[indexPath.row].controllerName ) else { return  }
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
         case .currentsExchange:
-            print("DEBUG: " + #function + payments[indexPath.row].name)
-                if let viewController = payments[indexPath.row].controllerName.getViewController() {
-                    viewController.addCloseButton()
-                    let navVC = UINavigationController(rootViewController: viewController)
-                    navVC.modalPresentationStyle = .fullScreen
-                    present(navVC, animated: true)
-            }
+            print("Currency")
+
 //        case .transfers:
 //            let viewController = ProductViewController()
 //                viewController.addCloseButton()
@@ -42,9 +32,17 @@ extension MainViewController: UICollectionViewDelegate {
 //        case .offer:
 //            print("It's transfer")
         case .pay:
-            print("its CurrencyExchange")
+            if indexPath.row == 1{
+                if let viewController = pay[indexPath.row].controllerName.getViewController() {
+                    let navVC = UINavigationController(rootViewController: viewController)
+                    present(navVC, animated: true)
+            }
+            } else {
+                print("Pay")
+            }
         case .openProduct:
-            print("openProduct")
+            guard let url = URL(string: openProduct[indexPath.row].controllerName ) else { return  }
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
             
         case .branches: break
         case .investment: break

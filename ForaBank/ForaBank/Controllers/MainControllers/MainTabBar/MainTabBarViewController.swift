@@ -77,17 +77,40 @@ class MainTabBarViewController: UITabBarController {
     
     override func viewWillAppear(_ animated: Bool) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            guard let userInfo = UserDefaults.standard.object(forKey: "ConsentMe2MePull") as? [AnyHashable : Any] else { return }
-            let meToMeReq = RequestMeToMeModel(userInfo: userInfo)
+            if let userInfo = UserDefaults.standard.object(forKey: "ConsentMe2MePull") as? [AnyHashable : Any] {
+                let meToMeReq = RequestMeToMeModel(userInfo: userInfo)
+                
+                let topvc = UIApplication.topViewController()
+                
+                let vc = MeToMeRequestController()
+                vc.viewModel = meToMeReq
+                vc.modalPresentationStyle = .fullScreen
+                topvc?.present(vc, animated: true, completion: {
+                    UserDefaults.standard.set(nil, forKey: "ConsentMe2MePull")
+                })
+            }
             
-            let topvc = UIApplication.topViewController()
+            if let bankId = UserDefaults.standard.object(forKey: "GetMe2MeDebitConsent") as? String {
+                let body = ["bankId": bankId] as [String: AnyObject]
+                NetworkManager<GetMe2MeDebitConsentDecodableModel>.addRequest(.getMe2MeDebitConsent, [:], body) { model, error in
+                    guard let model = model else { return }
+                    if model.statusCode == 0 {
+                        let meToMeReq = RequestMeToMeModel(model: model)
+                        
+                        let topvc = UIApplication.topViewController()
+                        
+                        let vc = MeToMeRequestController()
+                        vc.viewModel = meToMeReq
+                        vc.modalPresentationStyle = .fullScreen
+                        topvc?.present(vc, animated: true, completion: {
+                            UserDefaults.standard.set(nil, forKey: "GetMe2MeDebitConsent")
+                        })
+                        
+                        
+                    }
+                }
+            }
             
-            let vc = MeToMeRequestController()
-            vc.viewModel = meToMeReq
-            vc.modalPresentationStyle = .fullScreen
-            topvc?.present(vc, animated: true, completion: {
-                UserDefaults.standard.set(nil, forKey: "ConsentMe2MePull")
-            })
         }
     }
     

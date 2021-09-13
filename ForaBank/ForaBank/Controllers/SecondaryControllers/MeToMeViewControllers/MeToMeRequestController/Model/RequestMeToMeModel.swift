@@ -18,6 +18,7 @@ struct RequestMeToMeModel {
     var RefTrnId: String
     
     var userInfo: [AnyHashable : Any]
+    var model: GetMe2MeDebitConsentDecodableModel?
     
     lazy var realm = try? Realm()
     
@@ -38,6 +39,23 @@ struct RequestMeToMeModel {
         self.bank = findBank(with: bank)
         self.card = findProduct(with: Int(cardId), with: Int(accountId))
         
+        
+    }
+    
+    init(model: GetMe2MeDebitConsentDecodableModel) {
+        self.model = model
+        
+        self.amount = model.data?.amount ?? 0
+        self.fee = model.data?.fee ?? 0
+        let cardId = model.data?.cardId
+        let accountId = model.data?.accountId
+        let bank = model.data?.bankRecipientID ?? ""
+        self.RefTrnId = model.data?.refTrnId ?? ""
+        self.RcvrMsgId = model.data?.rcvrMsgId ?? ""
+        self.RecipientID = model.data?.recipientID ?? ""
+        
+        self.bank = findBank(with: bank)
+        self.card = findProduct(with: cardId, with: accountId)
         
     }
     

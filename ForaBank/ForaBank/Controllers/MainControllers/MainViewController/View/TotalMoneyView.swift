@@ -20,6 +20,9 @@ class TotalMoneyView: UIView {
     @IBOutlet weak var buttonView: UIView!
     
     override func draw(_ rect: CGRect) {
-//        buttonView.layer.cornerRadius = 10
+        self.buttonView.layer.cornerRadius = 12
+        self.buttonView.alpha = 0.4
+
     }
+  
 }

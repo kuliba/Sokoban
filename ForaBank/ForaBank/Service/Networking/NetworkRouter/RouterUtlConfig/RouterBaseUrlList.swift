@@ -88,19 +88,21 @@ enum RouterBaseUrlList: String {
     
     case changeClientConsentMe2MePull = "/rest/changeClientConsentMe2MePull"
     
-    case createSFPTransfer            = "/rest/transfer/createSFPTransfer"
+    case createSFPTransfer         = "/rest/transfer/createSFPTransfer"
     
     case createIsOneTimeConsentMe2MePull = "/rest/createIsOneTimeConsentMe2MePull"
     
     case createPermanentConsentMe2MePull = "/rest/createPermanentConsentMe2MePull"
     
-    case isLogin                         = "/rest/isLogin"
+    case isLogin                   = "/rest/isLogin"
     
     case createMe2MePullDebitTransfer    = "/rest/transfer/createMe2MePullDebitTransfer"
     
+    case getMe2MeDebitConsent       =  "/rest/getMe2MeDebitConsent"
+    
     // MARK: - В не авторизованную зону.
     ///Обновление по serial
-    #if DEBUG
+        
     case getAnywayOperatorsList    = "/dict/getAnywayOperatorsList"
     case getFullBankInfoList       = "/dict/getFullBankInfoList"
     case getCurrencyList           = "/dict/getCurrencyList"
@@ -109,15 +111,6 @@ enum RouterBaseUrlList: String {
     //
     case getPaymentSystemList      = "/dict/getPaymentSystemList"
     case getCountries              = "/dict/getCountries"
-
-    #else
-    case getAnywayOperatorsList    = "/rest/getAnywayOperatorsList"
-    case getFullBankInfoList       = "/rest/dict/getFullBankInfoList"
-    case getCurrencyList           = "/rest/dict/getCurrencyList"
-    case getBanks                  = "/rest/dict/getBanks"
-    case getPaymentSystemList      = "/rest/dict/getPaymentSystemList"
-    case getCountries              = "/rest/dict/getCountries"
-    #endif
     
     // MARK: - Надо в авторизованную зону.
     /// Обновление при заходе на экран

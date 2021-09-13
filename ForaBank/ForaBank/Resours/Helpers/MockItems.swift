@@ -65,14 +65,14 @@ class MockItems {
     /// Данные для заполнения экрана PaymentsController в средней секции
     class func returnTransfers() -> [PaymentsModel] {
         return [
-            PaymentsModel(id: 6, name: "Между своими",
-                          iconName: "PaymentsIconMyPay",
-                          controllerName: "DevelopViewController",
-                          description: ""),
             
             PaymentsModel(id: 7, name: "По номеру телефона",
                           iconName: "PaymentsIconPhonePay",
                           controllerName: "ContactsViewController",
+                          description: ""),
+            PaymentsModel(id: 6, name: "Между своими",
+                          iconName: "PaymentsIconMyPay",
+                          controllerName: "DevelopViewController",
                           description: ""),
             
             PaymentsModel(id: 8, name: "За рубеж",
@@ -93,31 +93,32 @@ class MockItems {
         ]
     }
     
+
     class func returnOpenProduct() -> [PaymentsModel] {
         return [
             PaymentsModel(id: 99, name: "Карту",
                           iconName: "openCard",
-                          controllerName: "DevelopViewController",
+                          controllerName: "https://www.forabank.ru/private/cards/",
                           description: "62 дня без %"),
             
             PaymentsModel(id: 98, name: "Вклад",
                           iconName: "openDeposit",
-                          controllerName: "ContactsViewController",
+                          controllerName: "https://www.forabank.ru/private/deposits/",
                           description: "8% годовых"),
             
             PaymentsModel(id: 97, name: "Кредит",
                           iconName: "loanIcon",
-                          controllerName: "ChooseCountryTableViewController",
+                          controllerName: "https://www.forabank.ru/private/credits/",
                           description: "от 7% годовых"),
             
             PaymentsModel(id: 96, name: "Счет",
                           iconName: "openAccount",
-                          controllerName: "DevelopViewController",
+                          controllerName: "https://www.forabank.ru/business/credits/investitsii/?sphrase_id=26274",
                           description: "₽  $  €"),
             
             PaymentsModel(id: 95, name: "Страховку",
                           iconName: "shieldMain",
-                          controllerName: "TransferByRequisitesViewController",
+                          controllerName: "https://www.forabank.ru/private/strakhovanie/",
                           description: "Для себя")
             
         ]
@@ -177,27 +178,27 @@ class MockItems {
     /// Данные для заполнения экрана PaymentsController в нижней секции
     class func returnFastPay() -> [PaymentsModel] {
         return [
-            PaymentsModel(id: 11, name: "Оплата по QR",
+            PaymentsModel(id: 80, name: "Оплата по QR",
                           iconName: "PaymentsIconBarcode-scanner",
-                          controllerName: "",
+                          controllerName: "QRViewController",
                           description: "QR"),
             
-            PaymentsModel(id: 12, name: "Перевод по номеру",
+            PaymentsModel(id: 81, name: "Перевод по номеру",
                           iconName: "smartphoneBlack",
-                          controllerName: "",
+                          controllerName: "ContactsViewController",
                           description: "Что то"),
             
-            PaymentsModel(id: 13, name: "Шаблоны и автоплатежи",
+            PaymentsModel(id: 82, name: "Шаблоны и автоплатежи",
                           iconName: "star",
                           controllerName: "GKHMainViewController",
                           description: "ЖКХ"),
             
-            PaymentsModel(id: 14, name: "Мой дом",
+            PaymentsModel(id: 83, name: "Мой дом",
                           iconName: "home",
                           controllerName: "",
                           description: "Что то"),
             
-            PaymentsModel(id: 15, name: "Госуслуги",
+            PaymentsModel(id: 84, name: "Госуслуги",
                           iconName: "PaymentsIconBlazon",
                           controllerName: "",
                           description: "Что то")
@@ -215,11 +216,11 @@ class MockItems {
             
             PaymentsModel(id: 22, name: "Шаблоны и\nавтоплатежи",
                           iconName: "promoBanner2",
-                          controllerName: ""),
+                          controllerName: "https://promo3.forabank.ru/?from=krpst"),
             
             PaymentsModel(id: 33, name: "Перевод по\nтелефону",
                           iconName: "migBanner",
-                          controllerName: "DevelopViewController",
+                          controllerName: "https://www.forabank.ru/private/cards/karta-mig/",
                           description: "Что то"),
 //
 //            PaymentsModel(id: 4, name: "Любимая Beeline",
@@ -252,6 +253,34 @@ class MockItems {
 //                          controllerName: "DevelopViewController",
 //                          description: "Что то"),
             
+        ]
+    }
+    
+    class func returnSectionInProducts() -> [PaymentsModel] {
+        return [
+            PaymentsModel(id: 1, name: "Карты и счета",
+                          iconName: "PaymentsIconBarcode-scanner",
+                          controllerName: "https://www.forabank.ru/private/cards/",
+                          description: "QR"),
+            
+            PaymentsModel(id: 2, name: "Вклады",
+                          iconName: "promoBanner2",
+                          controllerName: "https://www.forabank.ru/private/deposits/"),
+//
+            PaymentsModel(id: 5, name: "Кредиты",
+                          iconName: "PaymentsIconCarancy",
+                          controllerName: "https://www.forabank.ru/private/credits/",
+                          description: "Что то"),
+            
+            PaymentsModel(id: 5, name: "Инвестиции",
+                          iconName: "PaymentsIconCarancy",
+                          controllerName: "https://www.forabank.ru/business/credits/investitsii/?sphrase_id=26274",
+                          description: "Что то"),
+            
+            PaymentsModel(id: 5, name: "Страховка",
+                          iconName: "PaymentsIconCarancy",
+                          controllerName: "https://www.forabank.ru/private/strakhovanie/",
+                          description: "Что то"),
         ]
     }
     

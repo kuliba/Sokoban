@@ -20,7 +20,30 @@ extension MainViewController {
             
             switch section {
                 case .products:
-                    if item.id != 32{
+                    switch item.id {
+                    case 33:
+                        guard let cell = collectionView.dequeueReusableCell(
+                                withReuseIdentifier: "AllCardCell",
+                                for: indexPath) as? AllCardCell
+                        else {
+                            fatalError("Unable to dequeue \(AllCardCell.self)")
+                        }
+                        
+                        
+//                                cell.widthAnchor.constraint(equalToConstant: 112).isActive = true
+                        return cell
+                    case 32:
+                        guard let cell = collectionView.dequeueReusableCell(
+                                withReuseIdentifier: "OfferCard",
+                                for: indexPath) as? OfferCard
+                        else {
+                            fatalError("Unable to dequeue \(OfferCard.self)")
+                        }
+                        
+                        
+//                                cell.widthAnchor.constraint(equalToConstant: 112).isActive = true
+                        return cell
+                    default:
                         guard let cell = collectionView.dequeueReusableCell(
                                 withReuseIdentifier: ProductCell.reuseId,
                                 for: indexPath) as? ProductCell
@@ -29,16 +52,7 @@ extension MainViewController {
                         }
                                 cell.card = item.productList
                                 return cell
-                            } else {
-                                guard let cell = collectionView.dequeueReusableCell(
-                                        withReuseIdentifier: "AllCardCell",
-                                        for: indexPath) as? AllCardCell
-                                else {
-                                    fatalError("Unable to dequeue \(AllCardCell.self)")
-                                }
-//                                cell.widthAnchor.constraint(equalToConstant: 112).isActive = true
-                                return cell
-                            }
+                    }
             case .offer:
                 guard let cell = collectionView.dequeueReusableCell(
                         withReuseIdentifier: OfferCollectionViewCell.reuseId,
@@ -57,20 +71,22 @@ extension MainViewController {
                 else {
                     fatalError("Unable to dequeue \(CurrencyExchangeCollectionViewCell.self)")
                 }
-            
+                cell.rateBuyEuro.text = self.dataEuro?.rateBuy?.currencyFormatter(symbol: "")
+                cell.rateSellEuro.text = self.dataEuro?.rateSell?.currencyFormatter(symbol: "")
+                cell.rateBuyUSD.text = self.dataUSD?.rateBuy?.currencyFormatter(symbol: "")
+                cell.rateSellUSD.text = self.dataUSD?.rateSell?.currencyFormatter(symbol: "")
                 cell.backgroundColor = .red
 
                 return cell
             case .pay:
                 guard let cell = collectionView.dequeueReusableCell(
-                        withReuseIdentifier: PaymentsCell.reuseId,
-                        for: indexPath) as? PaymentsCell
+                        withReuseIdentifier: PaymentsMainCell.reuseId,
+                        for: indexPath) as? PaymentsMainCell
                 else {
-                    fatalError("Unable to dequeue \(PaymentsCell.self)")
+                    fatalError("Unable to dequeue \(PaymentsMainCell.self)")
                 }
-            
                 cell.configure(with: item)
-
+             
                 return cell
             case .openProduct:
                 guard let cell = collectionView.dequeueReusableCell(
@@ -104,7 +120,6 @@ extension MainViewController {
                     ofKind: kind,
                     withReuseIdentifier: SectionHeader.reuseId,
                     for: indexPath) as? SectionHeader
-            
                 else { fatalError("Can not create new section header")
             }
             guard let section = Section(rawValue: indexPath.section)
@@ -126,18 +141,29 @@ extension MainViewController {
 //                sectionHeader.configure(text: section.description(),
 //                                        font: .boldSystemFont(ofSize: 18),
 //                                        textColor: .black, expandingIsHidden: false, seeAllIsHidden: false)
+            
             default:
                 sectionHeader.configure(text: section.description(),
                                         font: .boldSystemFont(ofSize: 18),
                                         textColor: .black, expandingIsHidden: false, seeAllIsHidden: true)
             }
             
+//            if sectionHeader.title.text == "Отделения и банкоматы" || sectionHeader.title.text == "Инвестиции и пенсии"  || sectionHeader.title.text == "Услуги и сервисы" {
+//                sectionHeader.title.alpha = 0.3
+//                sectionHeader.arrowButton.alpha = 0.3
+//            } else {
+//                sectionHeader.title.alpha = 1
+//                sectionHeader.arrowButton.alpha = 1
+//            }
+            
             return sectionHeader
         }
     }
     
+    
+
+    
     @objc func passAllProducts(){
-        
             let viewController = ProductsViewController()
             viewController.addCloseButton()
             let navVC = UINavigationController(rootViewController: viewController)
@@ -146,7 +172,7 @@ extension MainViewController {
             present(navVC, animated: true)
     }
     @objc func expandingSection()  -> NSCollectionLayoutSection {
-        
+     
         let item = NSCollectionLayoutItem.withEntireSize()
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .absolute(0),
