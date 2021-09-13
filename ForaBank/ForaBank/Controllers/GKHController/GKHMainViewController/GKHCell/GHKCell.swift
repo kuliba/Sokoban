@@ -24,7 +24,7 @@ class GHKCell: UITableViewCell {
     }
     
     func set(viewModel: GKHOperatorsModel) {
-        organizationName.text = viewModel.name?.capitalizingFirstLetter()
+        organizationName.text = viewModel.name?.uppercased()
         organizationImageView.image = UIImage(named: "GKH")
         innLable.text = viewModel.synonymList.first
         if viewModel.logotypeList.first?.content != nil {

@@ -249,7 +249,6 @@ extension AppDelegate {
                     print("DEBUG: installPushDevice error", error ?? "nil")
                     completion(error)
                 } else {
-                    
                     let parametersKey = [
                         "data": "\(KeyFromServer.sendBase64ToServ ?? "")",
                         "token": "\(CSRFToken.token ?? "")",

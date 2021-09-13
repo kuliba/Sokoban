@@ -30,7 +30,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 }
             }
         case .transfers:
-            if indexPath.row == 0 {
+            if indexPath.row == 1 {
                 let popView = CustomPopUpWithRateView()
                 popView.onlyMy = false
                 popView.modalPresentationStyle = .custom
@@ -106,6 +106,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
         banksList?.forEach { bank in
             if bank.memberID == model.bankID {
                 vc.selectedBank = bank
+                vc.bankId = bank.memberID ?? ""
             }
         }
         

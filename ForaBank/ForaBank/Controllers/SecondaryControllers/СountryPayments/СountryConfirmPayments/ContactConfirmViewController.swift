@@ -35,7 +35,7 @@ struct ConfirmViewControllerModel {
     var cardFromCardCVV = ""
     var cardFromAccountId = ""
     var cardFromAccountNumber = ""
-    
+    var operatorImage = ""
     var cardTo: GetProductListDatum? {
         didSet {
             guard let cardTo = cardTo else { return }
@@ -179,6 +179,7 @@ class ContactConfurmViewController: UIViewController {
             setupData(with: model)
         }
     }
+    var operatorView = ""
     var otpCode: String = ""
     
     var phoneField = ForaInput(
@@ -336,6 +337,7 @@ class ContactConfurmViewController: UIViewController {
         case .phoneNumber, .phoneNumberSBP:
             cardToField.isHidden = true
             countryField.isHidden = true
+            
             currancyTransctionField.isHidden = true
             
             numberTransctionField.isHidden = true
@@ -560,13 +562,13 @@ class ContactConfurmViewController: UIViewController {
             }
             
         default:
-            NetworkManager<AnywayPaymentMakeDecodableModel>.addRequest(.anywayPaymentMake, [:], body) { model, error in
+            NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { respons, error in
                 if error != nil {
                     self.dismissActivity()
                     print("DEBUG: Error: ", error ?? "")
                     self.showAlert(with: "Ошибка", and: error ?? "")
                 }
-                guard let model = model else { return }
+                guard let model = respons else { return }
                 
                 if model.statusCode == 0 {
                     print("DEBUG: Success payment")
@@ -575,12 +577,16 @@ class ContactConfurmViewController: UIViewController {
                         let vc = PaymentsDetailsSuccessViewController()
                         vc.confurmVCModel = self.confurmVCModel
                         vc.confurmVCModel?.statusIsSuccses = true
-                        vc.id = model.data?.paymentOperationDetailID
-                        if self.confurmVCModel?.type == .mig {
-                            vc.printFormType =  "direct"
-                        } else if self.confurmVCModel?.type == .contact {
-                            vc.printFormType = "contactAddressless"
-                        } else if self.confurmVCModel?.type == .phoneNumberSBP {
+                        vc.id = model.data?.paymentOperationDetailId ?? 0
+                        switch self.confurmVCModel?.type {
+                        case .card2card, .phoneNumber:
+                            vc.printFormType = "internal"
+                        case .requisites:
+                            vc.printFormType = "external"
+                        default:
+                            break
+                        }
+                        if self.confurmVCModel?.type == .phoneNumberSBP {
                             vc.printFormType = "sbp"
                         }
                         vc.modalPresentationStyle = .fullScreen
@@ -592,7 +598,7 @@ class ContactConfurmViewController: UIViewController {
                     DispatchQueue.main.async {
                     if model.errorMessage == "Пользователь не авторизован"{
                         AppLocker.present(with: .validate)
-                    }
+                        }
                     }
                     self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
                 }

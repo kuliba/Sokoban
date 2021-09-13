@@ -21,7 +21,7 @@ extension AppDelegate {
         IQKeyboardManager.shared.shouldPlayInputClicks = true
         IQKeyboardManager.shared.toolbarPreviousBarButtonItemImage = UIImage()
         IQKeyboardManager.shared.toolbarNextBarButtonItemImage = UIImage()
-        IQKeyboardManager.shared.keyboardDistanceFromTextField = 40
+//        IQKeyboardManager.shared.keyboardDistanceFromTextField = 40
         
         // Настройка NavigationBar
         UINavigationBar.appearance().barTintColor = .white

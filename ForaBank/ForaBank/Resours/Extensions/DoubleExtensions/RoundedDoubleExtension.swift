@@ -29,6 +29,19 @@ extension Double {
         
     }
     
+    func currencyFormatterForMain() -> String {
+        
+        let currencyFormatter = NumberFormatter()
+        currencyFormatter.usesGroupingSeparator = true
+        currencyFormatter.numberStyle = .decimal
+        
+        if let priceString = currencyFormatter.string(from: NSNumber(value: self)) {
+            return priceString
+        }
+        return String(self)
+        
+    }
+    
     func currencyFormatter(symbol: String = "") -> String {
         
         var resultString = ""
