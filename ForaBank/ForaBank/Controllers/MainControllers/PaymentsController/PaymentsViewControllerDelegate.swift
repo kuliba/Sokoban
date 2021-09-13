@@ -106,6 +106,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
         banksList?.forEach { bank in
             if bank.memberID == model.bankID {
                 vc.selectedBank = bank
+                vc.bankId = bank.memberID ?? ""
             }
         }
         

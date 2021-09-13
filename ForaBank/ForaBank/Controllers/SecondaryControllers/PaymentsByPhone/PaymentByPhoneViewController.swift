@@ -479,31 +479,31 @@ class PaymentByPhoneViewController: UIViewController {
             "currencyAmount" : "RUB",
             "payer" : [
                 "cardId" : card,
-                "cardNumber" : "null",
-                "accountId" : "null"
+                "cardNumber" : nil,
+                "accountId" : nil
             ],
             "puref" : "iFora||TransferC2CSTEP",
             "additional" : [
                 [
                   "fieldid": "1",
                   "fieldname": "RecipientID",
-                  "fieldvalue": "0115110217"//clearPhone
+                  "fieldvalue": clearPhone
                 ],
                 [
                   "fieldid": "2",
                   "fieldname": "BankRecipientID",
-                  "fieldvalue": "1crt88888881"// bankId
+                  "fieldvalue": bankId
                 ]
             ]
         ] as [String: AnyObject]
         
-        NetworkManager<CreateSFPTransferDecodableModel>.addRequest(.createSFPTransfer, [:], newBody, completion: { [weak self] model, error in
+        NetworkManager<CreateSFPTransferDecodableModel>.addRequest(.createSFPTransfer, [:], newBody, completion: { [weak self] data, error in
                 if error != nil {
                     print("DEBUG: Error: ", error ?? "")
                     completion(error!)
                 }
-                guard let model = model else { return }
-                if model.statusCode == 0 {
+                guard let data = data else { return }
+                if data.statusCode == 0 {
                     print("DEBUG: Success send Phone")
                     self?.confirm = true
                     DispatchQueue.main.async {
@@ -518,13 +518,17 @@ class PaymentByPhoneViewController: UIViewController {
                         model.phone = self?.phoneField.text.digits ?? ""
 //                        model.summTransction = model.summTransction
                         
-//                        model.summTransction = model.amount?.currencyFormatter(symbol: "RUB") ?? ""// debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
+//                        model.summTransction = data.data?.amount?.currencyFormatter(symbol: "RUB") ?? ""// debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
 //    //                    model.summInCurrency = model.creditAmount?.currencyFormatter(symbol: data.currencyPayee ?? "RUB") ?? ""
-//                        model.taxTransction = model.data?.commission?.currencyFormatter(symbol: "RUB") ?? ""
-//    //                            model.comment = comment
-//                        model.fullName = model.data?.listInputs?[5].content?[0] ?? "Получатель не найден"
+//                        model.taxTransction = data.data?.commission?.currencyFormatter(symbol: "RUB") ?? ""
+    //                            model.comment = comment
+                        model.fullName = data.data?.payeeName
+                        model.summTransction = Double(data.data?.amount ?? Double(0.0)).currencyFormatter(symbol: data.data?.currencyAmount ?? "" )
+                        model.taxTransction = data.data?.fee?.currencyFormatter(symbol: data.data?.currencyAmount ?? "") ?? ""
+                        model.comment = self?.commentField.textField.text ?? ""
+//                            model.data?.listInputs?[5].content?[0] ?? "Получатель не найден"
 //
-//                        model.numberTransction = model.data?.id ?? ""
+//                        model.numberTransction = data.data?.
                         
                         model.statusIsSuccses = true
                         
@@ -541,15 +545,16 @@ class PaymentByPhoneViewController: UIViewController {
                     }
                 } else {
                     self?.dismissActivity()
-                    self?.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
-                    print("DEBUG: Error: ", model.errorMessage ?? "")
+                    self?.showAlert(with: "Ошибка", and: data.errorMessage ?? "")
+                    print("DEBUG: Error: ", data.errorMessage ?? "")
                     DispatchQueue.main.async {
-                    if model.errorMessage == "Пользователь не авторизован"{
+                    if data.errorMessage == "Пользователь не авторизован"{
                         AppLocker.present(with: .validate)
                     }
                     }
-                    self?.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
-                    completion(model.errorMessage)
+                    self?.showAlert(with: "Ошибка", and: data.errorMessage ?? "")
+                    completion(
+                        data.errorMessage)
                 }
             
         })

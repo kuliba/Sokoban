@@ -67,6 +67,7 @@ class PaymentsDetailsView: UIView {
     func setupData(with model: ConfirmViewControllerModel) {
 //        buttonView.isHidden = !model.statusIsSuccses
         statusImageView.image = model.statusIsSuccses ? #imageLiteral(resourceName: "OkOperators") : #imageLiteral(resourceName: "errorIcon")
+        operatorImageView.image = UIImage()
         
         if (UserDefaults.standard.object(forKey: "OPERATOR_IMAGE") != nil) {
             let im = UserDefaults.standard.object(forKey: "OPERATOR_IMAGE") as? String ?? ""

@@ -110,8 +110,10 @@ class MainViewController: UIViewController {
 
         override func viewDidLoad() {
             super.viewDidLoad()
-            navigationController?.navigationBar.isHidden = true
             view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
+            self.view.addSubview(searchContact)
+            searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 48)
+            
             let cardList = realm?.objects(UserAllCardsModel.self)
 
             setupSearchBar()
@@ -172,9 +174,10 @@ class MainViewController: UIViewController {
         }
         
         private func setupSearchBar() {
-            self.view.addSubview(searchContact)
-            searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 48)
-            searchContact.secondButton.image = UIImage(named: "Avatar")
+//            self.view.addSubview(searchContact)
+//            searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 48)
+//            searchContact.secondButton.image = UIImage(named: "Avatar")
+            navigationController?.navigationBar.isHidden = true
             
           
             
@@ -211,7 +214,7 @@ class MainViewController: UIViewController {
             var snapshot = NSDiffableDataSourceSnapshot<Section, PaymentsModel>()
             
             snapshot.appendSections([.products, .pay, .offer, .currentsExchange, .openProduct, .branches, .investment, . services])
-            snapshot.appendItems(products, toSection: .products)
+                snapshot.appendItems(products, toSection: .products)
             snapshot.appendItems(pay, toSection: .pay)
             snapshot.appendItems(offer, toSection: .offer)
             snapshot.appendItems(currentsExchange, toSection: .currentsExchange)

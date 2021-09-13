@@ -56,14 +56,14 @@ extension CreateSFPTransferDecodableModel {
 // MARK: - CreateSFPDataClass
 struct CreateSFPDataClass: Codable {
     let needMake, needOTP: Bool?
-    let amount: Int?
-    let creditAmount: JSONNull?
+    let amount: Double?
+    let creditAmount: String?
     let fee: Double?
     let currencyAmount, currencyPayer, currencyPayee: String?
-    let currencyRate: JSONNull?
-    let debitAmount: Int?
+    let currencyRate: String?
+    let debitAmount: Double?
     let payeeName: String?
-    let paymentOperationDetailID, documentStatus: JSONNull?
+    let paymentOperationDetailID, documentStatus: String?
     let additionalList: [CreateSFPAdditionalList]?
 
     enum CodingKeys: String, CodingKey {
@@ -94,17 +94,17 @@ extension CreateSFPDataClass {
     func with(
         needMake: Bool?? = nil,
         needOTP: Bool?? = nil,
-        amount: Int?? = nil,
-        creditAmount: JSONNull?? = nil,
+        amount: Double?? = nil,
+        creditAmount: String?? = nil,
         fee: Double?? = nil,
         currencyAmount: String?? = nil,
         currencyPayer: String?? = nil,
         currencyPayee: String?? = nil,
-        currencyRate: JSONNull?? = nil,
-        debitAmount: Int?? = nil,
+        currencyRate: String?? = nil,
+        debitAmount: Double?? = nil,
         payeeName: String?? = nil,
-        paymentOperationDetailID: JSONNull?? = nil,
-        documentStatus: JSONNull?? = nil,
+        paymentOperationDetailID: String?? = nil,
+        documentStatus: String?? = nil,
         additionalList: [CreateSFPAdditionalList]?? = nil
     ) -> CreateSFPDataClass {
         return CreateSFPDataClass(
