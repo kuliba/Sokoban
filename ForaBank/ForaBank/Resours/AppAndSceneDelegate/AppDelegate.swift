@@ -43,6 +43,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
+    
+    
+    func application(_ application: UIApplication,
+                     open url: URL,
+                     options: [UIApplication.OpenURLOptionsKey : Any] = [:] ) -> Bool {
+
+        // Determine who sent the URL.
+        let sendingAppID = options[.sourceApplication]
+        print("source application = \(sendingAppID ?? "Unknown")")
+        print("source", url)
+        // Process the URL.
+        guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true),
+            let albumPath = components.path,
+            let params = components.queryItems else {
+                print("Invalid URL or album path missing")
+                return false
+        }
+        print("components", components)
+        
+        if let photoIndex = params.first(where: { $0.name == "id" })?.value {
+            print("id = \(albumPath)")
+            return true
+        } else {
+            print("Photo index missing")
+            return false
+        }
+    }
 
     // MARK: UISceneSession Lifecycle
 
