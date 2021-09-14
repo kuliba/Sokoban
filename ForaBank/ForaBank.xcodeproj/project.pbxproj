@@ -146,6 +146,7 @@
 		687FB22D26E65FC5004A479F /* NewProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687FB22C26E65FC5004A479F /* NewProductCell.swift */; };
 		687FB23026E8D41A004A479F /* OfferCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687FB22F26E8D41A004A479F /* OfferCard.swift */; };
 		687FB23326E9E551004A479F /* PaymentMainCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687FB23226E9E551004A479F /* PaymentMainCell.swift */; };
+		687FB23626F0189C004A479F /* ProductViewControllerDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687FB23526F0189B004A479F /* ProductViewControllerDataSource.swift */; };
 		6880D32726A5CC69008FBCB4 /* AES.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6880D32626A5CC68008FBCB4 /* AES.swift */; };
 		6880D32926A5CC7D008FBCB4 /* Encription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6880D32826A5CC7D008FBCB4 /* Encription.swift */; };
 		6880D32D26A70585008FBCB4 /* FaceTouchIdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6880D32C26A70585008FBCB4 /* FaceTouchIdViewController.swift */; };
@@ -512,6 +513,7 @@
 		687FB22C26E65FC5004A479F /* NewProductCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProductCell.swift; sourceTree = "<group>"; };
 		687FB22F26E8D41A004A479F /* OfferCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferCard.swift; sourceTree = "<group>"; };
 		687FB23226E9E551004A479F /* PaymentMainCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMainCell.swift; sourceTree = "<group>"; };
+		687FB23526F0189B004A479F /* ProductViewControllerDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductViewControllerDataSource.swift; sourceTree = "<group>"; };
 		6880D32626A5CC68008FBCB4 /* AES.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AES.swift; sourceTree = "<group>"; };
 		6880D32826A5CC7D008FBCB4 /* Encription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Encription.swift; sourceTree = "<group>"; };
 		6880D32C26A70585008FBCB4 /* FaceTouchIdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceTouchIdViewController.swift; sourceTree = "<group>"; };
@@ -1129,6 +1131,13 @@
 			path = PaymentCell;
 			sourceTree = "<group>";
 		};
+		687FB23426F016FF004A479F /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		6880D32526A07148008FBCB4 /* Encription */ = {
 			isa = PBXGroup;
 			children = (
@@ -1175,7 +1184,9 @@
 		688B9BAA26DE7D6300407A75 /* ProductViewController */ = {
 			isa = PBXGroup;
 			children = (
+				687FB23426F016FF004A479F /* Cells */,
 				688B9BAB26DE7D7E00407A75 /* ProductViewController.swift */,
+				687FB23526F0189B004A479F /* ProductViewControllerDataSource.swift */,
 			);
 			path = ProductViewController;
 			sourceTree = "<group>";
@@ -2727,6 +2738,7 @@
 				0B2A8D2926E78E5C00651BCB /* CreateMe2MePullDebitTransferDecodableModel.swift in Sources */,
 				0BD1CA9D26E6B63900CFE993 /* CountriesListSaved.swift in Sources */,
 				68FFA55B268586D3002DADFA /* HeaderBanksCollectionReusableView.swift in Sources */,
+				687FB23626F0189C004A479F /* ProductViewControllerDataSource.swift in Sources */,
 				0B7A18AF268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift in Sources */,
 				0B37F980267A11FB007728FC /* GetOwnerPhoneNumberPhoneDecodableModel.swift in Sources */,
 				68FFA52C2682AF62002DADFA /* ContactCollectionViewCell.swift in Sources */,
