@@ -31,33 +31,31 @@ struct DownloadQueue {
         let withIdBank = bank?.first?.serial ?? ""
         let countriesBank = ["serial" : withIdBank ]
         
-//        let operators = realm?.objects(GKHOperatorsModel.self)
-//        let withIdOperators = operators?.first?.serial ?? ""
-//        let countriesOperators = ["serial" : withIdOperators ]
+        //        let operators = realm?.objects(GKHOperatorsModel.self)
+        //        let withIdOperators = operators?.first?.serial ?? ""
+        //        let countriesOperators = ["serial" : withIdOperators ]
         
         var downloadArray = [DownloadQueueProtocol]()
+        var paramArray = [[String: String]]()
         
-        if withIdCountries == "" {
-            downloadArray.append(CountriesListSaved())
-        }
+        downloadArray.append(CountriesListSaved())
+        paramArray.append(countriesParam)
         
-        if withIdPaymentSystem == "" {
-            downloadArray.append(GetPaymentSystemSaved())
-        }
+        downloadArray.append(GetPaymentSystemSaved())
+        paramArray.append(paymentSystemParam)
         
-        if withIdCurrency == "" {
-            downloadArray.append(GetCurrencySaved())
-        }
+        downloadArray.append(GetCurrencySaved())
+        paramArray.append(currencyParam)
         
-        if withIdBank == "" {
-            downloadArray.append(BanksListSaved())
-        }
+        downloadArray.append(BanksListSaved())
+        paramArray.append(countriesBank)
         
         downloadArray.append(AddOperatorsList())
+        paramArray.append(["serial": ""])
         
-        for i in downloadArray {
+        for (n, i) in downloadArray.enumerated() {
             let semaphore = DispatchSemaphore(value: 0)
-            i.add(countriesParam, [:]) {
+            i.add(paramArray[n], [:]) {
                 semaphore.signal()
             }
             semaphore.wait()
