@@ -53,12 +53,16 @@ extension GetCardStatementDecodableModel {
     }
 }
 
-
 // MARK: - GetCardStatementDataClass
 struct GetCardStatementDataClass: Codable {
-    let cardNumber, endDate: String?
-    let id: Int?
-    let name, startDate, statementFormat: String?
+    let accountID, date: Int?
+    let operationType: String?
+    let amount: Int?
+    let comment: String?
+    let documentID: Int?
+    let accountNumber: String?
+    let currencyCodeNumeric: Int?
+    let name: String?
 }
 
 // MARK: DataClass convenience initializers and mutators
@@ -80,20 +84,26 @@ extension GetCardStatementDataClass {
     }
 
     func with(
-        cardNumber: String?? = nil,
-        endDate: String?? = nil,
-        id: Int?? = nil,
-        name: String?? = nil,
-        startDate: String?? = nil,
-        statementFormat: String?? = nil
+        accountID: Int?? = nil,
+        date: Int?? = nil,
+        operationType: String?? = nil,
+        amount: Int?? = nil,
+        comment: String?? = nil,
+        documentID: Int?? = nil,
+        accountNumber: String?? = nil,
+        currencyCodeNumeric: Int?? = nil,
+        name: String?? = nil
     ) -> GetCardStatementDataClass {
         return GetCardStatementDataClass(
-            cardNumber: cardNumber ?? self.cardNumber,
-            endDate: endDate ?? self.endDate,
-            id: id ?? self.id,
-            name: name ?? self.name,
-            startDate: startDate ?? self.startDate,
-            statementFormat: statementFormat ?? self.statementFormat
+            accountID: accountID ?? self.accountID,
+            date: date ?? self.date,
+            operationType: operationType ?? self.operationType,
+            amount: amount ?? self.amount,
+            comment: comment ?? self.comment,
+            documentID: documentID ?? self.documentID,
+            accountNumber: accountNumber ?? self.accountNumber,
+            currencyCodeNumeric: currencyCodeNumeric ?? self.currencyCodeNumeric,
+            name: name ?? self.name
         )
     }
 
