@@ -72,6 +72,12 @@ enum RouterUrlList: String {
     case createPermanentConsentMe2MePull
     case isLogin
     case createMe2MePullDebitTransfer
+    case getMe2MeDebitConsent
+    
+    case getCardStatement
+    case saveCardName
+    case blockCard
+    case unblockCard
     
     func returnUrl () -> URLValue {
         switch self {
@@ -703,6 +709,61 @@ enum RouterUrlList: String {
             
         case .createMe2MePullDebitTransfer:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.createMe2MePullDebitTransfer.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .getMe2MeDebitConsent:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getMe2MeDebitConsent.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .getCardStatement:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getCardStatement.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .saveCardName:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.saveCardName.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .blockCard:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.blockCard.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .unblockCard:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.unblockCard.rawValue)
             
             switch result {
             case .success(let url):

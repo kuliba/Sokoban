@@ -45,8 +45,8 @@ class PaymentsViewController: UIViewController {
         
        
         
-        BanksListSaved.add([:], [:])
-        AddOperatorsList.add()
+//        BanksListSaved.add([:], [:])
+//        AddOperatorsList.add()
         view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
         
         self.view.addSubview(searchContact)

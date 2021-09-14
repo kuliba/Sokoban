@@ -1,18 +1,18 @@
 //
-//  GetCurrencyListSaved.swift
+//  GetPaymentCountriesListSaved.swift
 //  ForaBank
 //
-//  Created by Константин Савялов on 07.09.2021.
+//  Created by Константин Савялов on 13.09.2021.
 //
 
 import Foundation
 import RealmSwift
 
-struct GetCurrencySaved {
+struct GetPaymentCountriesListSaved {
     
     static func add(_ param: [String : String], _ body: [String: AnyObject]) {
         
-        NetworkManager<GetCurrencyListDecodableModel>.addRequest(.getCurrencyList, param, body) { model, error in
+        NetworkManager<GetPaymentCountriesDecodableModel>.addRequest(.getPaymentCountries, param, body) { model, error in
             if error != nil {
                 print("DEBUG: error", error!)
             } else {
@@ -22,32 +22,32 @@ struct GetCurrencySaved {
                     guard let model = model else { return }
                     guard let m = model.data else { return }
                     
-                    let currency = GetCurrency()
-                    currency.serial = m.serial
+                    var tempArray = [GetPaymentCountriesList]()
                     
-                    m.currencyList?.forEach{ b in
-                        let a = GetCurrencyList()
+                    m.forEach { b in
                         
-                        a.id = b.id
-                        a.code = b.code
-                        a.cssCode = b.cssCode
-                        a.name = b.name
-                        a.unicode = b.unicode
-                        a.htmlCode = b.htmlCode
+                        let a = GetPaymentCountriesList()
+                        a.surName = b.surName
+                        a.firstName = b.firstName
+                        a.middleName = b.middleName
+                        a.shortName = b.shortName
+                        a.countryName = b.countryName
+                        a.countryCode = b.countryCode
+                        a.puref = b.puref
+                        a.phoneNumber = b.phoneNumber
                         
-                        currency.currencyList.append(a)
+                        tempArray.append(a)
                         
                     }
                     
                     /// Сохраняем в REALM
                     let realm = try? Realm()
                     do {
-                        let b = realm?.objects(GetCurrency.self)
+                        let b = realm?.objects(GetPaymentCountriesList.self)
                         realm?.beginWrite()
                         realm?.delete(b!)
-                        realm?.add(currency)
+                        realm?.add(tempArray)
                         try realm?.commitWrite()
-                        print(realm?.configuration.fileURL?.absoluteString ?? "")
                     } catch {
                         print(error.localizedDescription)
                     }

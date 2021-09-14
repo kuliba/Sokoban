@@ -1,28 +1,24 @@
 //
-//  GetProductTemplateListDecodableModel.swift
+//  GetCardStatementDecodableModel.swift
 //  ForaBank
 //
-//  Created by Константин Савялов on 08.07.2021.
+//  Created by Константин Савялов on 14.09.2021.
 //
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse the JSON, add this file to your project and do:
-//
-//   let getProductTemplateListDecodableModel = try GetProductTemplateListDecodableModel(json)
 
 import Foundation
 
-// MARK: - GetProductTemplateListDecodableModel
-struct GetProductTemplateListDecodableModel: Codable, NetworkModelProtocol {
+// MARK: - GetCardStatementDecodableModel
+struct GetCardStatementDecodableModel: Codable, NetworkModelProtocol {
     let statusCode: Int?
     let errorMessage: String?
-    let data: [GetProductTemplateDatum]?
+    let data: GetCardStatementDataClass?
 }
 
-// MARK: GetProductTemplateListDecodableModel convenience initializers and mutators
+// MARK: GetCardStatementDecodableModel convenience initializers and mutators
 
-extension GetProductTemplateListDecodableModel {
+extension GetCardStatementDecodableModel {
     init(data: Data) throws {
-        self = try newJSONDecoder().decode(GetProductTemplateListDecodableModel.self, from: data)
+        self = try newJSONDecoder().decode(GetCardStatementDecodableModel.self, from: data)
     }
 
     init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -39,9 +35,9 @@ extension GetProductTemplateListDecodableModel {
     func with(
         statusCode: Int?? = nil,
         errorMessage: String?? = nil,
-        data: [GetProductTemplateDatum]?? = nil
-    ) -> GetProductTemplateListDecodableModel {
-        return GetProductTemplateListDecodableModel(
+        data: GetCardStatementDataClass?? = nil
+    ) -> GetCardStatementDecodableModel {
+        return GetCardStatementDecodableModel(
             statusCode: statusCode ?? self.statusCode,
             errorMessage: errorMessage ?? self.errorMessage,
             data: data ?? self.data
@@ -57,15 +53,19 @@ extension GetProductTemplateListDecodableModel {
     }
 }
 
-// MARK: - GetProductTemplateDatum
-struct GetProductTemplateDatum: Codable {
+
+// MARK: - GetCardStatementDataClass
+struct GetCardStatementDataClass: Codable {
+    let cardNumber, endDate: String?
     let id: Int?
-    let numberMask, customName, currency, type: String?
+    let name, startDate, statementFormat: String?
 }
 
-extension GetProductTemplateDatum {
+// MARK: DataClass convenience initializers and mutators
+
+extension GetCardStatementDataClass {
     init(data: Data) throws {
-        self = try newJSONDecoder().decode(GetProductTemplateDatum.self, from: data)
+        self = try newJSONDecoder().decode(GetCardStatementDataClass.self, from: data)
     }
 
     init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -80,18 +80,20 @@ extension GetProductTemplateDatum {
     }
 
     func with(
+        cardNumber: String?? = nil,
+        endDate: String?? = nil,
         id: Int?? = nil,
-        numberMask: String?? = nil,
-        customName: String?? = nil,
-        currency: String?? = nil,
-        type: String?? = nil
-    ) -> GetProductTemplateDatum {
-        return GetProductTemplateDatum(
+        name: String?? = nil,
+        startDate: String?? = nil,
+        statementFormat: String?? = nil
+    ) -> GetCardStatementDataClass {
+        return GetCardStatementDataClass(
+            cardNumber: cardNumber ?? self.cardNumber,
+            endDate: endDate ?? self.endDate,
             id: id ?? self.id,
-            numberMask: numberMask ?? self.numberMask,
-            customName: customName ?? self.customName,
-            currency: currency ?? self.currency,
-            type: type ?? self.type
+            name: name ?? self.name,
+            startDate: startDate ?? self.startDate,
+            statementFormat: statementFormat ?? self.statementFormat
         )
     }
 
