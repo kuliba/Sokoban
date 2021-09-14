@@ -100,6 +100,16 @@ enum RouterBaseUrlList: String {
     
     case getMe2MeDebitConsent       =  "/rest/getMe2MeDebitConsent"
     
+    
+    
+    case getCardStatement           = "/rest/getCardStatement"
+    
+    case saveCardName           = "/rest/saveCardName"
+    
+    case blockCard           = "/rest/blockCard"
+    
+    case unblockCard           = "/rest/unblockCard"
+    
     // MARK: - В не авторизованную зону.
     ///Обновление по serial
         

@@ -17,7 +17,7 @@ struct RequestMeToMeModel {
     var RcvrMsgId: String
     var RefTrnId: String
     
-    var userInfo: [AnyHashable : Any]
+    var userInfo: [AnyHashable : Any]?
     var model: GetMe2MeDebitConsentDecodableModel?
     
     lazy var realm = try? Realm()
