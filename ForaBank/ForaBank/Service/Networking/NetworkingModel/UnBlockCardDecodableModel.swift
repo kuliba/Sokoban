@@ -59,7 +59,7 @@ struct UnBlockCardDataClass: Codable {
     let cardNumber: String?
 }
 
-// MARK: DataClass convenience initializers and mutators
+// MARK: UnBlockCardDataClass convenience initializers and mutators
 
 extension UnBlockCardDataClass {
     init(data: Data) throws {
