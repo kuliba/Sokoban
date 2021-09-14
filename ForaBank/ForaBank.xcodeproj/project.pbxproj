@@ -173,6 +173,8 @@
 		688B9BB626E03B3E00407A75 /* TotalMoneyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 688B9BB526E03B3E00407A75 /* TotalMoneyView.xib */; };
 		68B6755D26BC8A9B004DECA4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 68B6755C26BC8A9B004DECA4 /* GoogleService-Info.plist */; };
 		68C64626269DCBD800473DE7 /* QRScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C64625269DCBD800473DE7 /* QRScannerViewController.swift */; };
+		68C8D57026F0DF120076246B /* HistoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C8D56E26F0DF120076246B /* HistoryTableViewCell.swift */; };
+		68C8D57126F0DF120076246B /* HistoryTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68C8D56F26F0DF120076246B /* HistoryTableViewCell.xib */; };
 		68D06F2226C3C0C100F9BE4C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D06F2126C3C0C100F9BE4C /* MainViewController.swift */; };
 		68D06F2426C3C0F300F9BE4C /* MainViewControllerLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D06F2326C3C0F300F9BE4C /* MainViewControllerLayout.swift */; };
 		68D06F2626C3C11700F9BE4C /* MainViewControllerDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D06F2526C3C11700F9BE4C /* MainViewControllerDataSource.swift */; };
@@ -555,6 +557,8 @@
 		688B9BB526E03B3E00407A75 /* TotalMoneyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TotalMoneyView.xib; sourceTree = "<group>"; };
 		68B6755C26BC8A9B004DECA4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		68C64625269DCBD800473DE7 /* QRScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerViewController.swift; sourceTree = "<group>"; };
+		68C8D56E26F0DF120076246B /* HistoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryTableViewCell.swift; sourceTree = "<group>"; };
+		68C8D56F26F0DF120076246B /* HistoryTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HistoryTableViewCell.xib; sourceTree = "<group>"; };
 		68D06F2126C3C0C100F9BE4C /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		68D06F2326C3C0F300F9BE4C /* MainViewControllerLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewControllerLayout.swift; sourceTree = "<group>"; };
 		68D06F2526C3C11700F9BE4C /* MainViewControllerDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewControllerDataSource.swift; sourceTree = "<group>"; };
@@ -1229,6 +1233,7 @@
 		687FB23426F016FF004A479F /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				68C8D56D26F0DECC0076246B /* HistoryCells */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -1310,6 +1315,15 @@
 				68C64625269DCBD800473DE7 /* QRScannerViewController.swift */,
 			);
 			path = QRScanner;
+			sourceTree = "<group>";
+		};
+		68C8D56D26F0DECC0076246B /* HistoryCells */ = {
+			isa = PBXGroup;
+			children = (
+				68C8D56E26F0DF120076246B /* HistoryTableViewCell.swift */,
+				68C8D56F26F0DF120076246B /* HistoryTableViewCell.xib */,
+			);
+			path = HistoryCells;
 			sourceTree = "<group>";
 		};
 		68D06F2026C3C08200F9BE4C /* MainViewController */ = {
@@ -2624,6 +2638,7 @@
 				0BAC674726D4F471005AAD91 /* QRCodeStoryboard.storyboard in Resources */,
 				68FFA5472682F49A002DADFA /* SearchContact.xib in Resources */,
 				ED2BE18526A04F0600647CB1 /* CardChooseView.xib in Resources */,
+				68C8D57126F0DF120076246B /* HistoryTableViewCell.xib in Resources */,
 				EDCF89E426CACC7D00DC9F54 /* MeToMeSetupSwitchView.xib in Resources */,
 				ED4FC60C266CD1020092B4AB /* СountryCell.xib in Resources */,
 				68D06F3526C40DF500F9BE4C /* CurrencyExchangeCollectionViewCell.xib in Resources */,
@@ -2845,6 +2860,7 @@
 				0B2A8D2926E78E5C00651BCB /* CreateMe2MePullDebitTransferDecodableModel.swift in Sources */,
 				0BD1CA9D26E6B63900CFE993 /* CountriesListSaved.swift in Sources */,
 				68FFA55B268586D3002DADFA /* HeaderBanksCollectionReusableView.swift in Sources */,
+				68C8D57026F0DF120076246B /* HistoryTableViewCell.swift in Sources */,
 				687FB23626F0189C004A479F /* ProductViewControllerDataSource.swift in Sources */,
 				0B7A18AF268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift in Sources */,
 				0B37F980267A11FB007728FC /* GetOwnerPhoneNumberPhoneDecodableModel.swift in Sources */,
