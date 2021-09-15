@@ -8,6 +8,7 @@
 import Foundation
 import RealmSwift
 
+/// Получаем из  REALM  карты пользователя
 struct ReturnAllCardList {
     
     static func cards() ->  [UserAllCardsModel]{
