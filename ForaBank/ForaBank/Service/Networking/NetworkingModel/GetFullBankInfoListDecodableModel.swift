@@ -112,7 +112,9 @@ struct BankFullInfoList: Codable {
     let inn, kpp, registrationNumber, registrationDate: String?
     let bankType, bankTypeCode, bankServiceType, bankServiceTypeCode: String?
     let accountList: [AccountList]?
-
+    let senderList: [String]?
+    let receiverList: [String]?
+    
     enum CodingKeys: String, CodingKey {
         case name
         case memberID = "memberId"
@@ -120,7 +122,7 @@ struct BankFullInfoList: Codable {
         case md5Hash = "md5hash"
         case svgImage, bic
         case fiasID = "fiasId"
-        case address, latitude, longitude, swiftList, inn, kpp, registrationNumber, registrationDate, bankType, bankTypeCode, bankServiceType, bankServiceTypeCode, accountList
+        case address, latitude, longitude, swiftList, inn, kpp, registrationNumber, registrationDate, bankType, bankTypeCode, bankServiceType, bankServiceTypeCode, accountList, senderList, receiverList
     }
 }
 
@@ -164,7 +166,9 @@ extension BankFullInfoList {
         bankTypeCode: String?? = nil,
         bankServiceType: String?? = nil,
         bankServiceTypeCode: String?? = nil,
-        accountList: [AccountList]?? = nil
+        accountList: [AccountList]?? = nil,
+        senderList: [String]?? = nil,
+        receiverList: [String]?? = nil
     ) -> BankFullInfoList {
         return BankFullInfoList(
             name: name ?? self.name,
@@ -188,7 +192,9 @@ extension BankFullInfoList {
             bankTypeCode: bankTypeCode ?? self.bankTypeCode,
             bankServiceType: bankServiceType ?? self.bankServiceType,
             bankServiceTypeCode: bankServiceTypeCode ?? self.bankServiceTypeCode,
-            accountList: accountList ?? self.accountList
+            accountList: accountList ?? self.accountList,
+            senderList: senderList ?? self.senderList,
+            receiverList: receiverList ?? self.receiverList
         )
     }
 

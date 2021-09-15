@@ -227,11 +227,14 @@ class MeToMeRequestController: UIViewController {
     @objc func doneButtonTapped() {
         print(#function)
         if nextStep {
+            showActivity()
             createPermanentConsentMe2Me { error in
                 if error != nil {
+                    self.dismissActivity()
                     self.showAlert(with: "Ошибка", and: error!)
                 } else {
                     self.createMe2MePullDebit { error in
+                        self.dismissActivity()
                         if error != nil {
                             self.showAlert(with: "Ошибка", and: error!)
                         } else {
@@ -262,11 +265,14 @@ class MeToMeRequestController: UIViewController {
     @objc func cancelButtonTapped() {
         print(#function)
         if nextStep {
+            self.showActivity()
             createIsOneTimeConsentMe2Me { error in
                 if error != nil {
+                    self.dismissActivity()
                     self.showAlert(with: "Ошибка", and: error!)
                 } else {
                     self.createMe2MePullDebit { error in
+                        self.dismissActivity()
                         if error != nil {
                             self.showAlert(with: "Ошибка", and: error!)
                         } else {
@@ -377,14 +383,12 @@ class MeToMeRequestController: UIViewController {
                            "accountId" : viewModel.card?.productType == "ACCOUNT" ? viewModel.card?.id : nil ],
                 "puref" : "iFora||TransferC2CSTEP",
                 "additional" :
-                    [["fieldid": 1, "fieldname": "RecipientID", "fieldvalue": viewModel.RecipientID],
+                    [["fieldid": 1, "fieldname": "RecipientID",     "fieldvalue": viewModel.RecipientID],
                      ["fieldid": 2, "fieldname": "BankRecipientID", "fieldvalue": bankRecipientID],
-                     ["fieldid": 3, "fieldname": "RcvrMsgId", "fieldvalue": viewModel.RcvrMsgId],
-                     ["fieldid": 4, "fieldname": "RefTrnId", "fieldvalue": viewModel.RefTrnId]
+                     ["fieldid": 3, "fieldname": "RcvrMsgId",       "fieldvalue": viewModel.RcvrMsgId],
+                     ["fieldid": 4, "fieldname": "RefTrnId",        "fieldvalue": viewModel.RefTrnId]
                     ] ] as [String : AnyObject]
-            
-            print(body)
-            
+                        
             NetworkManager<CreateMe2MePullDebitTransferDecodableModel>.addRequest(.createMe2MePullDebitTransfer, [:], body) { transferModel, error in
                 if error != nil {
                     completion(error)

@@ -82,6 +82,7 @@ struct GetProductListDatum: Codable{
     let allowDebit, allowCredit: Bool?
     let customName: String?
     let cardID: Int?
+    let accountID: Int?
     let name: String?
     let validThru: Int?
     let status, holderName, product, branch: String?
@@ -121,6 +122,7 @@ extension GetProductListDatum {
         allowCredit: Bool?? = nil,
         customName: String?? = nil,
         cardID: Int?? = nil,
+        accountID: Int?? = nil,
         name: String?? = nil,
         validThru: Int?? = nil,
         status: String?? = nil,
@@ -151,6 +153,7 @@ extension GetProductListDatum {
             allowCredit: allowCredit ?? self.allowCredit,
             customName: customName ?? self.customName,
             cardID: cardID ?? self.cardID,
+            accountID: accountID ?? self.accountID,
             name: name ?? self.name,
             validThru: validThru ?? self.validThru,
             status: status ?? self.status,
