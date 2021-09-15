@@ -11,7 +11,7 @@ import RealmSwift
 // MARK: - Save REALM
 struct AddAllUserCardtList {
     
-    static func add() {
+    static func add(_ completion: @escaping () -> ()) {
         
         /// Общая информация об поставщике услуг
         var cardsArray     = [UserAllCardsModel]()
@@ -72,6 +72,7 @@ struct AddAllUserCardtList {
                     realm?.delete(operators!)
                     realm?.add(cardsArray)
                     try realm?.commitWrite()
+                    completion()
                 } catch {
                     print(error.localizedDescription)
                 }

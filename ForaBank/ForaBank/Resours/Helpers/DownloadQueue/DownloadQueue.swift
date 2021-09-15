@@ -29,7 +29,7 @@ struct DownloadQueue {
         
         let bank = realm?.objects(GetBankList.self)
         let withIdBank = bank?.first?.serial ?? ""
-        let countriesBank = ["serial" : withIdBank ]
+        let countriesBank = ["serial" : withIdBank, "type" : "", "bic":"", "serviceType":""]
         
         //        let operators = realm?.objects(GKHOperatorsModel.self)
         //        let withIdOperators = operators?.first?.serial ?? ""
@@ -53,13 +53,17 @@ struct DownloadQueue {
         downloadArray.append(AddOperatorsList())
         paramArray.append(["serial": ""])
         
+        let group = DispatchGroup()
+        
         for (n, i) in downloadArray.enumerated() {
-            let semaphore = DispatchSemaphore(value: 0)
+            group.enter()
             i.add(paramArray[n], [:]) {
-                semaphore.signal()
+                group.leave()
+                
             }
-            semaphore.wait()
         }
-        completion()
+        group.notify(queue: .main) {
+            completion()
+        }
     }
 }

@@ -42,11 +42,7 @@ class PaymentsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.isHidden = true
-        
-       
-        
-//        BanksListSaved.add([:], [:])
-//        AddOperatorsList.add()
+
         view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
         
         self.view.addSubview(searchContact)
