@@ -90,10 +90,37 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         if let bankId = params.first?.value {
             let bankId = String(bankId.dropFirst(4))
-            UserDefaults.standard.set(bankId, forKey: "GetMe2MeDebitConsent")
+            let isAuth = AppDelegate.shared.isAuth
+            if isAuth == true {
+                
+                let body = ["bankId": bankId] as [String: AnyObject]
+                NetworkManager<GetMe2MeDebitConsentDecodableModel>.addRequest(.getMe2MeDebitConsent, [:], body) { model, error in
+                    guard let model = model else { return }
+                    if model.statusCode == 0 {
+                        if model.data != nil {
+                            DispatchQueue.main.async {
+                                let topvc = UIApplication.topViewController()
+                                
+                                let vc = MeToMeRequestController()
+                                let meToMeReq = RequestMeToMeModel(model: model)
+                                vc.viewModel = meToMeReq
+                                vc.modalPresentationStyle = .fullScreen
+                                
+                                topvc?.present(vc, animated: true, completion: {
+                                    UserDefaults.standard.set(nil, forKey: "GetMe2MeDebitConsent")
+                                })
+                            }
+                        } else {
+                            UserDefaults.standard.set(nil, forKey: "GetMe2MeDebitConsent")
+                        }
+                    }
+                }
+                
+            } else {
+                
+                UserDefaults.standard.set(bankId, forKey: "GetMe2MeDebitConsent")
+            }
         }
-        
-        
     }
 
 }
