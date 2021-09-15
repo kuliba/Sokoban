@@ -100,6 +100,16 @@ enum RouterBaseUrlList: String {
     
     case getMe2MeDebitConsent       =  "/rest/getMe2MeDebitConsent"
     
+    
+    
+    case getCardStatement           = "/rest/getCardStatement"
+    
+    case saveCardName           = "/rest/saveCardName"
+    
+    case blockCard           = "/rest/blockCard"
+    
+    case unblockCard           = "/rest/unblockCard"
+    
     // MARK: - В не авторизованную зону.
     ///Обновление по serial
         
@@ -114,16 +124,15 @@ enum RouterBaseUrlList: String {
     
     // MARK: - Надо в авторизованную зону.
     /// Обновление при заходе на экран
+
     case getLatestServicePayments  = "/rest/getLatestServicePayments"
-    
+
     case getPaymentCountries       = "/rest/getPaymentCountries"
-    
+    // В процессе
     case getProductListByFilter    = "/rest/getProductListByFilter"
-    
+
     case getProductTemplateList    = "/rest/getProductTemplateList"
-    
-    case getProductList            = "/rest/getProductList"
-    
+
     case getLatestPhonePayments    = "/rest/getLatestPhonePayments"
     
     case getLatestPayments         = "/rest/getLatestPayments"
@@ -135,6 +144,8 @@ enum RouterBaseUrlList: String {
     
     
     // MARK: - Не используется
+    
+    case getProductList            = "/rest/getProductList"
     
     case prepareExternal           = "/rest/prepareExternal"
     

@@ -8,9 +8,9 @@
 import Foundation
 import RealmSwift
 
-struct CountriesListSaved {
+struct CountriesListSaved: DownloadQueueProtocol {
     
-    static func add(_ param: [String : String], _ body: [String: AnyObject]) {
+     func add(_ param: [String : String], _ body: [String: AnyObject], completion: @escaping () -> ()) {
         
         NetworkManager<GetCountriesDecodebleModel>.addRequest(.getCountries, param, body) { model, error in
             if error != nil {
@@ -47,7 +47,7 @@ struct CountriesListSaved {
                         realm?.delete(c!)
                         realm?.add(countriesList)
                         try realm?.commitWrite()
-                        print(realm?.configuration.fileURL?.absoluteString ?? "")
+                        completion()
                     } catch {
                         print(error.localizedDescription)
                     }

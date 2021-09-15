@@ -89,6 +89,8 @@ struct GetProductListDatum: Codable{
     let miniStatement: [JSONAny]?
     let mainField, additionalField, smallDesign, mediumDesign, largeDesign, paymentSystemName, paymentSystemImage, fontDesignColor: String?
     let id: Int?
+    let background: [String?]
+
 }
 
 // MARK: GetProductListDatum convenience initializers and mutators
@@ -138,7 +140,8 @@ extension GetProductListDatum {
         paymentSystemName: String?? = nil,
         paymentSystemImage: String?? = nil,
         fontDesignColor: String?? = nil,
-        id: Int?? = nil
+        id: Int?? = nil,
+        background: [String]?? = nil
     ) -> GetProductListDatum {
         return GetProductListDatum (
             number: number ?? self.number,
@@ -169,7 +172,8 @@ extension GetProductListDatum {
             paymentSystemName: paymentSystemName ?? self.paymentSystemName,
             paymentSystemImage: paymentSystemImage ?? self.paymentSystemImage,
             fontDesignColor: fontDesignColor ?? self.fontDesignColor,
-            id: id ?? self.id
+            id: id ?? self.id,
+            background: (background ?? self.background) ?? []
         )
     }
 

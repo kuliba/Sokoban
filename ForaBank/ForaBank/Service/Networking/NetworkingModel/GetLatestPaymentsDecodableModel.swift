@@ -59,21 +59,14 @@ extension GetLatestPaymentsDecodableModel {
     }
 }
 
-// Datum.swift
-
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse the JSON, add this file to your project and do:
-//
-//   let datum = try Datum(json)
-
 // MARK: - GetLatestPaymentsDatum
 struct GetLatestPaymentsDatum: Codable {
-    let bankName, bankID, phoneNumber, amount: String?
+    let bankName, bankID, phoneNumber, amount, paymentDate: String?
 
     enum CodingKeys: String, CodingKey {
         case bankName
         case bankID = "bankId"
-        case phoneNumber, amount
+        case phoneNumber, amount, paymentDate
     }
 }
 
@@ -99,13 +92,15 @@ extension GetLatestPaymentsDatum {
         bankName: String?? = nil,
         bankID: String?? = nil,
         phoneNumber: String?? = nil,
-        amount: String?? = nil
+        amount: String?? = nil,
+        paymentDate: String?? = nil
     ) -> GetLatestPaymentsDatum {
         return GetLatestPaymentsDatum(
             bankName: bankName ?? self.bankName,
             bankID: bankID ?? self.bankID,
             phoneNumber: phoneNumber ?? self.phoneNumber,
-            amount: amount ?? self.amount
+            amount: amount ?? self.amount,
+            paymentDate: paymentDate ?? self.paymentDate
         )
     }
 

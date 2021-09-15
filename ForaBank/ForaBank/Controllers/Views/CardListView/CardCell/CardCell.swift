@@ -35,14 +35,14 @@ class CardCell: UICollectionViewCell, SelfConfiguringCell {
         return imageView
     }()
     
-    private let maskCardLabel: UILabel = {
+    public let maskCardLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 11 )
         label.text = ""
         return label
     }()
 
-    private let balanceLabel: UILabel = {
+    public let balanceLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "Inter-Regular", size: 11)
 //        label.font = UIFont.boldSystemFont(ofSize: 11 )
@@ -51,7 +51,7 @@ class CardCell: UICollectionViewCell, SelfConfiguringCell {
         return label
     }()
 
-    private let cardNameLabel: UILabel = {
+    public let cardNameLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "Inter-Regular", size: 11)
         label.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
@@ -60,7 +60,7 @@ class CardCell: UICollectionViewCell, SelfConfiguringCell {
         return label
     }()
     
-    private let backgroundImageView: UIImageView = {
+    public let backgroundImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         return imageView

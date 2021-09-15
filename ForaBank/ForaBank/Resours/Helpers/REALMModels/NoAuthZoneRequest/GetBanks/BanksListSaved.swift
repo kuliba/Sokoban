@@ -8,9 +8,9 @@
 import Foundation
 import RealmSwift
 
-struct BanksListSaved {
+struct BanksListSaved: DownloadQueueProtocol {
     
-    static func add(_ param: [String : String], _ body: [String: AnyObject]) {
+    func add(_ param: [String : String], _ body: [String: AnyObject], completion: @escaping () -> ()) {
         
         NetworkManager<GetFullBankInfoListDecodableModel>.addRequest(.getFullBankInfoList, param, body) { model, error in
             if error != nil {
@@ -72,7 +72,7 @@ struct BanksListSaved {
                         realm?.delete(banks!)
                         realm?.add(banksList)
                         try realm?.commitWrite()
-                        print(realm?.configuration.fileURL?.absoluteString ?? "")
+                        completion()
                     } catch {
                         print(error.localizedDescription)
                     }

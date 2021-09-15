@@ -74,6 +74,11 @@ enum RouterUrlList: String {
     case createMe2MePullDebitTransfer
     case getMe2MeDebitConsent
     
+    case getCardStatement
+    case saveCardName
+    case blockCard
+    case unblockCard
+    
     func returnUrl () -> URLValue {
         switch self {
         /// Авторизация
@@ -724,6 +729,49 @@ enum RouterUrlList: String {
                 return .failure(.urlError)
             }
             
+        case .getCardStatement:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getCardStatement.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .saveCardName:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.saveCardName.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .blockCard:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.blockCard.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .unblockCard:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.unblockCard.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
         }
     }
 

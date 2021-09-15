@@ -9,9 +9,9 @@ import Foundation
 import RealmSwift
 
 // MARK: - Save REALM
-struct AddOperatorsList {
+struct AddOperatorsList: DownloadQueueProtocol {
     
-    static func add() {
+    func add(_ param: [String : String], _ body: [String: AnyObject], completion: @escaping () -> ()) {
         
         /// Общая информация об поставщике услуг
         var operatorsArray     = [GKHOperatorsModel]()
@@ -104,6 +104,7 @@ struct AddOperatorsList {
                             realm?.delete(operators!)
                             realm?.add(operatorsArray)
                             try realm?.commitWrite()
+                            completion()
                             print("REALM",realm?.configuration.fileURL?.absoluteString ?? "")
                         } catch {
                             print(error.localizedDescription)

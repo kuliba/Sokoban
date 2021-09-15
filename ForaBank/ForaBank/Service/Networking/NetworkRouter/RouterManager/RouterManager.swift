@@ -67,6 +67,11 @@ enum RouterManager {
     case isLogin
     case createMe2MePullDebitTransfer
     case getMe2MeDebitConsent
+    
+    case getCardStatement
+    case saveCardName
+    case blockCard
+    case unblockCard
 }
 
 extension RouterManager {
@@ -943,6 +948,66 @@ extension RouterManager {
             
         case .getMe2MeDebitConsent:
             let baseUrl = RouterUrlList.getMe2MeDebitConsent.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .getCardStatement:
+            let baseUrl = RouterUrlList.getCardStatement.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .saveCardName:
+            let baseUrl = RouterUrlList.saveCardName.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .blockCard:
+            let baseUrl = RouterUrlList.blockCard.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .unblockCard:
+            let baseUrl = RouterUrlList.unblockCard.returnUrl()
             switch baseUrl {
             case .success(let url):
                 resultUrl = url.absoluteURL
