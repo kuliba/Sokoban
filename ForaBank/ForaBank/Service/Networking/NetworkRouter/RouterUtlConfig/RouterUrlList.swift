@@ -73,11 +73,11 @@ enum RouterUrlList: String {
     case isLogin
     case createMe2MePullDebitTransfer
     case getMe2MeDebitConsent
-    
     case getCardStatement
     case saveCardName
     case blockCard
     case unblockCard
+    case getProductDetails
     
     func returnUrl () -> URLValue {
         switch self {
@@ -764,6 +764,17 @@ enum RouterUrlList: String {
             
         case .unblockCard:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.unblockCard.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .getProductDetails:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getProductDetails.rawValue)
             
             switch result {
             case .success(let url):

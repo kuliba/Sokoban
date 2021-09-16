@@ -120,6 +120,7 @@
 		0BB24AB526F0C62500DDA4F6 /* BlockCardDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB24AB426F0C62500DDA4F6 /* BlockCardDecodableModel.swift */; };
 		0BB24AB726F0C6AC00DDA4F6 /* UnBlockCardDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB24AB626F0C6AC00DDA4F6 /* UnBlockCardDecodableModel.swift */; };
 		0BB24ABA26F2884A00DDA4F6 /* ReturnAllCardList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB24AB926F2884A00DDA4F6 /* ReturnAllCardList.swift */; };
+		0BB24ABC26F370A300DDA4F6 /* GetProductDetailsDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB24ABB26F370A300DDA4F6 /* GetProductDetailsDecodableModel.swift */; };
 		0BB8817026D6AE4200015E27 /* UserAllCardsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB8816F26D6AE4200015E27 /* UserAllCardsModel.swift */; };
 		0BD1CA9B26E6B55F00CFE993 /* GetCountriesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD1CA9A26E6B55F00CFE993 /* GetCountriesList.swift */; };
 		0BD1CA9D26E6B63900CFE993 /* CountriesListSaved.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD1CA9C26E6B63900CFE993 /* CountriesListSaved.swift */; };
@@ -512,6 +513,7 @@
 		0BB24AB426F0C62500DDA4F6 /* BlockCardDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockCardDecodableModel.swift; sourceTree = "<group>"; };
 		0BB24AB626F0C6AC00DDA4F6 /* UnBlockCardDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnBlockCardDecodableModel.swift; sourceTree = "<group>"; };
 		0BB24AB926F2884A00DDA4F6 /* ReturnAllCardList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReturnAllCardList.swift; sourceTree = "<group>"; };
+		0BB24ABB26F370A300DDA4F6 /* GetProductDetailsDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetProductDetailsDecodableModel.swift; sourceTree = "<group>"; };
 		0BB8816F26D6AE4200015E27 /* UserAllCardsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAllCardsModel.swift; sourceTree = "<group>"; };
 		0BD1CA9A26E6B55F00CFE993 /* GetCountriesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCountriesList.swift; sourceTree = "<group>"; };
 		0BD1CA9C26E6B63900CFE993 /* CountriesListSaved.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesListSaved.swift; sourceTree = "<group>"; };
@@ -2424,6 +2426,7 @@
 				0BB24AB226F0C59900DDA4F6 /* SaveCardNameDecodableModel.swift */,
 				0BB24AB426F0C62500DDA4F6 /* BlockCardDecodableModel.swift */,
 				0BB24AB626F0C6AC00DDA4F6 /* UnBlockCardDecodableModel.swift */,
+				0BB24ABB26F370A300DDA4F6 /* GetProductDetailsDecodableModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -3021,6 +3024,7 @@
 				0B95C3FE26B6C96F00AA57E6 /* DoubleInStringExtension.swift in Sources */,
 				0BA251F326C26FE000AD087A /* CreateFastPaymentContractDecodableModel.swift in Sources */,
 				ED4FC5EC266AD98E0092B4AB /* NSCollectionLayoutItem.swift in Sources */,
+				0BB24ABC26F370A300DDA4F6 /* GetProductDetailsDecodableModel.swift in Sources */,
 				EDB1657A2668C7F2007E6030 /* TransferCell.swift in Sources */,
 				EDB145382666770A0028EF5A /* OrderProductModel.swift in Sources */,
 				0B931B2026DCD87F00CA8017 /* GKHHistorySaveRealm.swift in Sources */,
