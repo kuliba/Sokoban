@@ -104,7 +104,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
         let cell = tableView.dequeueReusableCell(withIdentifier: ProductTableViewCell.identifier, for: indexPath) as! ProductTableViewCell
         if indexPath.section == 0, products.count != 0{
             let str = products[indexPath.row].numberMasked ?? ""
-            cell.titleProductLabel.text = products[indexPath.row].mainField
+            cell.titleProductLabel.text = products[indexPath.row].customName ?? products[indexPath.row].mainField
             cell.numberProductLabel.text = "\(str.suffix(4))"
             cell.balanceLabel.text = "\(products[indexPath.row].balance?.currencyFormatter(symbol: products[indexPath.row].currency ?? "") ?? "")"
             cell.coverpProductImage.image = products[indexPath.row].smallDesign?.convertSVGStringToImage()

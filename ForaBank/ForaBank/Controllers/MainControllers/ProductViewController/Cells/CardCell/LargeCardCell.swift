@@ -90,7 +90,7 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         guard let card = card else { return }
         
         let viewModel = CardViewModel(card: card)
-        backgroundImageView.image = card.largeDesign?.convertSVGStringToImage()
+        backgroundImageView.image = card.XLDesign?.convertSVGStringToImage()
         balanceLabel.text = viewModel.balance
         balanceLabel.textColor = viewModel.colorText
         cardNameLabel.text = viewModel.cardName
@@ -103,7 +103,7 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
     
     func setupUI() {
         backgroundColor = #colorLiteral(red: 0.9647058824, green: 0.9647058824, blue: 0.968627451, alpha: 1)
-        layer.cornerRadius = 8
+        layer.cornerRadius = 12
         layer.shadowColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1).cgColor
         layer.shadowRadius = 6
         layer.shadowOpacity = 0.3
@@ -124,7 +124,7 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         
         backgroundImageView.fillSuperview()
         
-        maskCardLabel.anchor(top: self.topAnchor, left: self.leftAnchor, right: self.rightAnchor, paddingTop: 33, paddingLeft: 90, paddingRight: 12)
+        maskCardLabel.anchor(top: self.topAnchor, left: self.leftAnchor, right: self.rightAnchor, paddingTop: 15, paddingLeft: 55, paddingRight: 12)
 //        maskCardLabel.centerY(inView: logoImageView)
         logoImageView.centerY(inView: maskCardLabel)
         logoImageView.anchor(left: self.leftAnchor,

@@ -26,7 +26,7 @@ struct CardViewModel {
     }
     
     var cardName: String? {
-        return card.mainField
+        return card.customName ?? card.mainField
     }
     
     var logoImage: UIImage {

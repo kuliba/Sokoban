@@ -120,6 +120,7 @@
 		0BB24AB526F0C62500DDA4F6 /* BlockCardDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB24AB426F0C62500DDA4F6 /* BlockCardDecodableModel.swift */; };
 		0BB24AB726F0C6AC00DDA4F6 /* UnBlockCardDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB24AB626F0C6AC00DDA4F6 /* UnBlockCardDecodableModel.swift */; };
 		0BB24ABA26F2884A00DDA4F6 /* ReturnAllCardList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB24AB926F2884A00DDA4F6 /* ReturnAllCardList.swift */; };
+		0BB24ABC26F370A300DDA4F6 /* GetProductDetailsDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB24ABB26F370A300DDA4F6 /* GetProductDetailsDecodableModel.swift */; };
 		0BB8817026D6AE4200015E27 /* UserAllCardsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB8816F26D6AE4200015E27 /* UserAllCardsModel.swift */; };
 		0BD1CA9B26E6B55F00CFE993 /* GetCountriesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD1CA9A26E6B55F00CFE993 /* GetCountriesList.swift */; };
 		0BD1CA9D26E6B63900CFE993 /* CountriesListSaved.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD1CA9C26E6B63900CFE993 /* CountriesListSaved.swift */; };
@@ -160,6 +161,8 @@
 		68673B4F26F2F29300F67A8C /* RequisitesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68673B4E26F2F29300F67A8C /* RequisitesViewController.swift */; };
 		68673B5326F2F3B900F67A8C /* RequisitsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68673B5126F2F3B900F67A8C /* RequisitsTableViewCell.swift */; };
 		68673B5426F2F3B900F67A8C /* RequisitsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68673B5226F2F3B900F67A8C /* RequisitsTableViewCell.xib */; };
+		68673B5826F3772400F67A8C /* CardCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68673B5626F3772400F67A8C /* CardCollectionViewCell.swift */; };
+		68673B5926F3772400F67A8C /* CardCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68673B5726F3772400F67A8C /* CardCollectionViewCell.xib */; };
 		687ADF1026B07721005A239B /* DataExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687ADF0F26B07721005A239B /* DataExtension.swift */; };
 		687FB22D26E65FC5004A479F /* NewProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687FB22C26E65FC5004A479F /* NewProductCell.swift */; };
 		687FB23026E8D41A004A479F /* OfferCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687FB22F26E8D41A004A479F /* OfferCard.swift */; };
@@ -512,6 +515,7 @@
 		0BB24AB426F0C62500DDA4F6 /* BlockCardDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockCardDecodableModel.swift; sourceTree = "<group>"; };
 		0BB24AB626F0C6AC00DDA4F6 /* UnBlockCardDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnBlockCardDecodableModel.swift; sourceTree = "<group>"; };
 		0BB24AB926F2884A00DDA4F6 /* ReturnAllCardList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReturnAllCardList.swift; sourceTree = "<group>"; };
+		0BB24ABB26F370A300DDA4F6 /* GetProductDetailsDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetProductDetailsDecodableModel.swift; sourceTree = "<group>"; };
 		0BB8816F26D6AE4200015E27 /* UserAllCardsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAllCardsModel.swift; sourceTree = "<group>"; };
 		0BD1CA9A26E6B55F00CFE993 /* GetCountriesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCountriesList.swift; sourceTree = "<group>"; };
 		0BD1CA9C26E6B63900CFE993 /* CountriesListSaved.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesListSaved.swift; sourceTree = "<group>"; };
@@ -551,6 +555,8 @@
 		68673B4E26F2F29300F67A8C /* RequisitesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequisitesViewController.swift; sourceTree = "<group>"; };
 		68673B5126F2F3B900F67A8C /* RequisitsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequisitsTableViewCell.swift; sourceTree = "<group>"; };
 		68673B5226F2F3B900F67A8C /* RequisitsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RequisitsTableViewCell.xib; sourceTree = "<group>"; };
+		68673B5626F3772400F67A8C /* CardCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardCollectionViewCell.swift; sourceTree = "<group>"; };
+		68673B5726F3772400F67A8C /* CardCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CardCollectionViewCell.xib; sourceTree = "<group>"; };
 		687ADF0F26B07721005A239B /* DataExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataExtension.swift; sourceTree = "<group>"; };
 		687FB22C26E65FC5004A479F /* NewProductCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProductCell.swift; sourceTree = "<group>"; };
 		687FB22F26E8D41A004A479F /* OfferCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferCard.swift; sourceTree = "<group>"; };
@@ -1244,6 +1250,15 @@
 			path = Cell;
 			sourceTree = "<group>";
 		};
+		68673B5526F3770D00F67A8C /* CardCell */ = {
+			isa = PBXGroup;
+			children = (
+				68673B5626F3772400F67A8C /* CardCollectionViewCell.swift */,
+				68673B5726F3772400F67A8C /* CardCollectionViewCell.xib */,
+			);
+			path = CardCell;
+			sourceTree = "<group>";
+		};
 		687FB22B26E65F9F004A479F /* NewProductCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -1362,6 +1377,7 @@
 		68C8D57226F1FD730076246B /* CardCell */ = {
 			isa = PBXGroup;
 			children = (
+				68673B5526F3770D00F67A8C /* CardCell */,
 				68C8D57326F1FDB60076246B /* LargeCardCell.swift */,
 			);
 			path = CardCell;
@@ -2424,6 +2440,7 @@
 				0BB24AB226F0C59900DDA4F6 /* SaveCardNameDecodableModel.swift */,
 				0BB24AB426F0C62500DDA4F6 /* BlockCardDecodableModel.swift */,
 				0BB24AB626F0C6AC00DDA4F6 /* UnBlockCardDecodableModel.swift */,
+				0BB24ABB26F370A300DDA4F6 /* GetProductDetailsDecodableModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -2718,6 +2735,7 @@
 				ED75CE0926E2BA6F0074F5D5 /* TarifView.xib in Resources */,
 				68B6755D26BC8A9B004DECA4 /* GoogleService-Info.plist in Resources */,
 				6822EFD726B935FF00125EEC /* BaseTableViewCell.xib in Resources */,
+				68673B5926F3772400F67A8C /* CardCollectionViewCell.xib in Resources */,
 				EDB143C4265FDEC90028EF5A /* Roboto-Medium.ttf in Resources */,
 				EDB143C5265FDEC90028EF5A /* Roboto-Light.ttf in Resources */,
 				EDB143C8265FDEC90028EF5A /* Roboto-ThinItalic.ttf in Resources */,
@@ -2974,6 +2992,7 @@
 				0BDE452D26E298F600B64A0A /* ExtensionQRViewController.swift in Sources */,
 				EDB14516266526B10028EF5A /* CreditCardEntryView.swift in Sources */,
 				0B37F984267A18AC007728FC /* MakeCard2CardDecodableModel.swift in Sources */,
+				68673B5826F3772400F67A8C /* CardCollectionViewCell.swift in Sources */,
 				0B95C40826B6CD9000AA57E6 /* BottomInputViewWithRateView.swift in Sources */,
 				0BB24AAD26F0053A00DDA4F6 /* DownloadQueue.swift in Sources */,
 				0BE270B026B76B9700FA958C /* ExtensionCustomPopUpSetup.swift in Sources */,
@@ -3021,6 +3040,7 @@
 				0B95C3FE26B6C96F00AA57E6 /* DoubleInStringExtension.swift in Sources */,
 				0BA251F326C26FE000AD087A /* CreateFastPaymentContractDecodableModel.swift in Sources */,
 				ED4FC5EC266AD98E0092B4AB /* NSCollectionLayoutItem.swift in Sources */,
+				0BB24ABC26F370A300DDA4F6 /* GetProductDetailsDecodableModel.swift in Sources */,
 				EDB1657A2668C7F2007E6030 /* TransferCell.swift in Sources */,
 				EDB145382666770A0028EF5A /* OrderProductModel.swift in Sources */,
 				0B931B2026DCD87F00CA8017 /* GKHHistorySaveRealm.swift in Sources */,
