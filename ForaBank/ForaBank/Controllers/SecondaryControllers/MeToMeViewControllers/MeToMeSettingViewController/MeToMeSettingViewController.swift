@@ -31,7 +31,6 @@ class MeToMeSettingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        addCloseButton()
         setupPaymentsUI()
         setupStackView()
         setupTopSwitch()

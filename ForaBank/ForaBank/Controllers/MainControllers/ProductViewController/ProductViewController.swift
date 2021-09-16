@@ -110,8 +110,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         view.backgroundColor = .white
 //        navigationController?.view.addoverlay(color: .black, alpha: 0.2)
         navigationController?.navigationBar.barTintColor = UIColor(hexString: product?.background[0] ?? "").darker()
-        UINavigationBar.appearance().tintColor =  UIColor(hexString: product?.fontDesignColor ?? "000000")
-        
+//        UINavigationBar.appearance().tintColor =  UIColor(hexString: product?.fontDesignColor ?? "000000")
+        addCloseColorButton(with: UIColor(hexString: product?.fontDesignColor ?? "000000"))
 
 
         scrollView.addSubview(backgroundView)
@@ -293,10 +293,22 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        self.navigationController?.navigationBar.barTintColor = .white
 //        self.navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
         self.navigationController?.navigationBar.shadowImage = nil
         self.navigationController?.navigationBar.isTranslucent = false
     }
+    
+    func addCloseColorButton(with color: UIColor) {
+        let button = UIBarButtonItem(image: UIImage(systemName: "xmark"),
+                                     landscapeImagePhone: nil,
+                                     style: .done,
+                                     target: self,
+                                     action: #selector(onClose))
+        button.tintColor = color
+        navigationItem.leftBarButtonItem = button
+    }
+    
     
     @objc func customName(){
         let alertController = UIAlertController(title: "Название карты", message: "", preferredStyle: UIAlertController.Style.alert)
@@ -421,19 +433,21 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
                             } else {
                                 vc.model = []
                             }
-                            vc.addCloseButton()
-                            let navVC = UINavigationController(rootViewController: vc)
-                            navVC.modalPresentationStyle = .fullScreen
-                            //                    navVC.addCloseButton()
-                            self?.present(navVC, animated: true, completion: nil)
+//                            vc.addCloseButton()
+                            self?.navigationController?.pushViewController(vc, animated: true)
+//                            let navVC = UINavigationController(rootViewController: vc)
+//                            navVC.modalPresentationStyle = .fullScreen
+//                            //                    navVC.addCloseButton()
+//                            self?.present(navVC, animated: true, completion: nil)
                         } else {
                             
                             let viewController =  MeToMeViewController()
                             viewController.meToMeContract = contractList
-                            viewController.addCloseButton()
-                            let navVC = UINavigationController(rootViewController: viewController)
-                            navVC.modalPresentationStyle = .fullScreen
-                            self?.present(navVC, animated: true)
+                            self?.navigationController?.pushViewController(viewController, animated: true)
+//                            viewController.addCloseButton()
+//                            let navVC = UINavigationController(rootViewController: viewController)
+//                            navVC.modalPresentationStyle = .fullScreen
+//                            self?.present(navVC, animated: true)
                         }
                     }
                 }

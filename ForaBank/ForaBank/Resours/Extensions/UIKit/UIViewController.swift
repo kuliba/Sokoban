@@ -69,6 +69,7 @@ extension UIViewController {
                                      style: .done,
                                      target: self,
                                      action: #selector(onClose))
+        button.tintColor = .black
         navigationItem.leftBarButtonItem = button
     }
     

@@ -313,6 +313,10 @@
                                                 <constraint firstItem="TgF-hq-at0" firstAttribute="centerY" secondItem="OLd-dL-iMO" secondAttribute="centerY" id="grz-dP-ZHD"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <gestureRecognizers/>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="sOm-bJ-kVV" appends="YES" id="KKh-Ou-ZSd"/>
+                                        </connections>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -404,6 +408,11 @@
                 <tapGestureRecognizer id="OwF-bx-hVY">
                     <connections>
                         <action selector="logout:" destination="zN1-Px-RKf" id="rNK-yT-jUX"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="sOm-bJ-kVV">
+                    <connections>
+                        <action selector="sbpCellAction:" destination="zN1-Px-RKf" id="cBR-pN-pK6"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>

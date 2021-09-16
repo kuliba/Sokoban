@@ -116,6 +116,8 @@ class MainViewController: UIViewController {
 //            navigationController?.navigationBar.isHidden = true
             searchContact.secondButton.image = UIImage(named: "Avatar")
 
+            let gesture = UITapGestureRecognizer(target: self, action: #selector(openSetting))
+            searchContact.secondButton.addGestureRecognizer(gesture)
             
             let cardList = realm?.objects(UserAllCardsModel.self)
 
@@ -128,10 +130,18 @@ class MainViewController: UIViewController {
             collectionView.dataSource = dataSource
         }
     
-            private func setupSearchBar() {
-                self.view.addSubview(searchContact)
-                searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 48)
-            }
+    @objc func openSetting() {
+        let vc: SettingTableViewController = SettingTableViewController.loadFromStoryboard()
+        vc.addCloseButton()
+        let navVC = UINavigationController(rootViewController: vc)
+        navVC.modalPresentationStyle = .fullScreen
+        present(navVC, animated: true, completion: nil)
+    }
+    
+    private func setupSearchBar() {
+        self.view.addSubview(searchContact)
+        searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 48)
+    }
     
         func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?,_ error: String?)->()) {
         
