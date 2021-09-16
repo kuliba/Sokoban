@@ -11,7 +11,7 @@ import Foundation
 struct GetCardStatementDecodableModel: Codable, NetworkModelProtocol {
     let statusCode: Int?
     let errorMessage: String?
-    let data: GetCardStatementDataClass?
+    let data: [GetCardStatementDataClass]?
 }
 
 // MARK: GetCardStatementDecodableModel convenience initializers and mutators
@@ -35,7 +35,7 @@ extension GetCardStatementDecodableModel {
     func with(
         statusCode: Int?? = nil,
         errorMessage: String?? = nil,
-        data: GetCardStatementDataClass?? = nil
+        data: [GetCardStatementDataClass]?? = nil
     ) -> GetCardStatementDecodableModel {
         return GetCardStatementDecodableModel(
             statusCode: statusCode ?? self.statusCode,
@@ -57,12 +57,13 @@ extension GetCardStatementDecodableModel {
 struct GetCardStatementDataClass: Codable {
     let accountID, date: Int?
     let operationType: String?
-    let amount: Int?
+    let amount: Double?
     let comment: String?
     let documentID: Int?
     let accountNumber: String?
     let currencyCodeNumeric: Int?
     let name: String?
+    let time: String?
 }
 
 // MARK: DataClass convenience initializers and mutators
@@ -87,12 +88,13 @@ extension GetCardStatementDataClass {
         accountID: Int?? = nil,
         date: Int?? = nil,
         operationType: String?? = nil,
-        amount: Int?? = nil,
+        amount: Double?? = nil,
         comment: String?? = nil,
         documentID: Int?? = nil,
         accountNumber: String?? = nil,
         currencyCodeNumeric: Int?? = nil,
-        name: String?? = nil
+        name: String?? = nil,
+        tiem: String?? = nil
     ) -> GetCardStatementDataClass {
         return GetCardStatementDataClass(
             accountID: accountID ?? self.accountID,
@@ -103,7 +105,8 @@ extension GetCardStatementDataClass {
             documentID: documentID ?? self.documentID,
             accountNumber: accountNumber ?? self.accountNumber,
             currencyCodeNumeric: currencyCodeNumeric ?? self.currencyCodeNumeric,
-            name: name ?? self.name
+            name: name ?? self.name,
+            time: time ?? self.time
         )
     }
 

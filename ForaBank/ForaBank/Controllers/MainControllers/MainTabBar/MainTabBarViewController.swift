@@ -172,8 +172,9 @@ class MainTabBarViewController: UITabBarController {
             Dict.shared.currencyList = currencySystem
             print("DEBUG: Load Currency")
         }
-        
-        AddAllUserCardtList.add()
+
+        /// Add REALM
+        AddAllUserCardtList.add() {}
         
         
 //        NetworkHelper.request(.getProductList) { cardList , error in

@@ -284,4 +284,36 @@ class MockItems {
         ]
     }
     
+    class func returnsRequisits() -> [PaymentsModel] {
+        return [
+            PaymentsModel(id: 1, name: "Получатель",
+                          iconName: "PaymentsIconBarcode-scanner",
+                          controllerName: "https://www.forabank.ru/private/cards/",
+                          description: "QR"),
+            
+            PaymentsModel(id: 2, name: "Номер счета",
+                          iconName: "promoBanner2",
+                          controllerName: "https://www.forabank.ru/private/deposits/"),
+//
+            PaymentsModel(id: 5, name: "БИК",
+                          iconName: "PaymentsIconCarancy",
+                          controllerName: "https://www.forabank.ru/private/credits/",
+                          description: "Что то"),
+            
+            PaymentsModel(id: 5, name: "Кореспондентский счет",
+                          iconName: "PaymentsIconCarancy",
+                          controllerName: "https://www.forabank.ru/business/credits/investitsii/?sphrase_id=26274",
+                          description: "Что то"),
+            
+            PaymentsModel(id: 5, name: "ИНН",
+                          iconName: "PaymentsIconCarancy",
+                          controllerName: "https://www.forabank.ru/private/strakhovanie/",
+                          description: "Что то"),
+            PaymentsModel(id: 5, name: "КПП",
+                          iconName: "PaymentsIconCarancy",
+                          controllerName: "https://www.forabank.ru/private/strakhovanie/",
+                          description: "Что то"),
+        ]
+    }
+    
 }

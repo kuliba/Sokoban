@@ -1,14 +1,15 @@
 //
-//  CardCell.swift
+//  LargeCardCell.swift
 //  ForaBank
 //
-//  Created by Mikhail on 22.06.2021.
+//  Created by Дмитрий on 15.09.2021.
 //
 
+import Foundation
 import UIKit
 
 
-class CardCell: UICollectionViewCell, SelfConfiguringCell {
+class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
    
     func configure<U>(with value: U) where U : Hashable {
         guard let card = card else { return }
@@ -21,9 +22,8 @@ class CardCell: UICollectionViewCell, SelfConfiguringCell {
 //        balanceLabel.text = contactInitials(model: payment.lastCountryPayment)
     }
     
-
-  
-    static var reuseId: String = "CardCell"
+    
+    static var reuseId: String = "LargeCardCell"
     //MARK: - Properties
     var card: GetProductListDatum? {
         didSet { configure() }
@@ -38,14 +38,14 @@ class CardCell: UICollectionViewCell, SelfConfiguringCell {
     
     public let maskCardLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 11 )
+        label.font = UIFont.systemFont(ofSize: 14 )
         label.text = ""
         return label
     }()
 
     public let balanceLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "Inter-Regular", size: 11)
+        label.font = UIFont(name: "Inter-Regular", size: 14)
 //        label.font = UIFont.boldSystemFont(ofSize: 11 )
         label.textAlignment = .left
         label.text = ""
@@ -54,7 +54,7 @@ class CardCell: UICollectionViewCell, SelfConfiguringCell {
 
     public let cardNameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "Inter-Regular", size: 11)
+        label.font = UIFont(name: "Inter-Regular", size: 14)
         label.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
         label.textAlignment = .left
         label.text = "Зарплатная"
@@ -90,7 +90,7 @@ class CardCell: UICollectionViewCell, SelfConfiguringCell {
         guard let card = card else { return }
         
         let viewModel = CardViewModel(card: card)
-        backgroundImageView.image = viewModel.backgroundImage
+        backgroundImageView.image = card.largeDesign?.convertSVGStringToImage()
         balanceLabel.text = viewModel.balance
         balanceLabel.textColor = viewModel.colorText
         cardNameLabel.text = viewModel.cardName
@@ -124,18 +124,19 @@ class CardCell: UICollectionViewCell, SelfConfiguringCell {
         
         backgroundImageView.fillSuperview()
         
-        maskCardLabel.anchor(top: self.topAnchor, left: self.leftAnchor, right: self.rightAnchor, paddingTop: 12, paddingLeft: 37, paddingRight: 12)
-        
+        maskCardLabel.anchor(top: self.topAnchor, left: self.leftAnchor, right: self.rightAnchor, paddingTop: 33, paddingLeft: 90, paddingRight: 12)
+//        maskCardLabel.centerY(inView: logoImageView)
         logoImageView.centerY(inView: maskCardLabel)
         logoImageView.anchor(left: self.leftAnchor,
-                             paddingLeft: 8, width: 18, height: 18)
+                             paddingLeft: 28, width: 18, height: 18)
         
         
-        cardNameLabel.anchor(top: maskCardLabel.bottomAnchor, left: self.leftAnchor, right: self.rightAnchor,
-                             paddingTop: 12, paddingLeft: 8, paddingRight: 8)
+        cardNameLabel.anchor(left: self.leftAnchor, bottom: balanceLabel.topAnchor, right: self.rightAnchor,
+                             paddingTop: 12, paddingLeft: 12, paddingBottom: 5, paddingRight: 8)
         
+        balanceLabel.font = UIFont.boldSystemFont(ofSize: 14)
         balanceLabel.anchor(left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor,
-                            paddingLeft: 8, paddingBottom: 8, paddingRight: 30)
+                            paddingLeft: 12, paddingBottom: 16, paddingRight: 30)
     }
     
 }
