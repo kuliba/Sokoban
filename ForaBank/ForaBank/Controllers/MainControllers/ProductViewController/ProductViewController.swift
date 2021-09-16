@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ProductViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UITableViewDelegate, UITableViewDataSource, UIViewControllerTransitioningDelegate {
+class ProductViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UITableViewDelegate, UITableViewDataSource{
 
     var card = LargeCardCell()
     var mockItem: [PaymentsModel] = []
@@ -25,7 +25,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
                 return
             }
             navigationController?.navigationBar.barTintColor = UIColor(hexString: product?.background[0] ?? "").darker()
-            self.navigationItem.setTitle(title: (product?.customName ?? product?.mainField)!, subtitle: String(number.suffix(4)), color: product?.fontDesignColor)
+            self.navigationItem.setTitle(title: (product?.customName ?? product?.mainField)!, subtitle: "· \(String(number.suffix(4)))", color: product?.fontDesignColor)
             collectionView?.reloadData()
         }
     }
@@ -81,7 +81,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         guard let number = product?.numberMasked else {
             return
         }
-        self.navigationItem.setTitle(title: (product?.customName ?? product?.mainField)!, subtitle: String(number.suffix(4)), color: product?.fontDesignColor)
+        self.navigationItem.setTitle(title: (product?.customName ?? product?.mainField)!, subtitle: "· \(String(number.suffix(4)))", color: product?.fontDesignColor)
         loadHistoryForCard()
         view.backgroundColor = .white
 //        navigationController?.view.addoverlay(color: .black, alpha: 0.2)
@@ -197,23 +197,30 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         
         //CollectionView set
         let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.itemSize = CGSize(width: 50, height: 50)
+        flowLayout.minimumLineSpacing = 5
+        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+//        flowLayout.estimatedItemSize = CGSize(width: 48, height: 48)
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: flowLayout)
-        collectionView?.register(CardCell.self, forCellWithReuseIdentifier: CardCell.reuseId)
+        collectionView?.register(UINib(nibName: "CardCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "CardCollectionViewCell")
         collectionView?.delegate = self
         collectionView?.dataSource = self
         collectionView?.backgroundColor = .clear
+        collectionView?.isMultipleTouchEnabled = false
+        collectionView?.allowsMultipleSelection = false
+        
         scrollView.addSubview(collectionView ?? UICollectionView())
-        collectionView?.anchor(top: view.safeAreaLayoutGuide.topAnchor, paddingTop: 20, paddingLeft: 0, paddingBottom: 0, paddingRight: 20, width: CGFloat(products.count) * 80,  height: 80)
+        collectionView?.anchor(top: view.safeAreaLayoutGuide.topAnchor, paddingTop: 20, paddingLeft: 0, paddingBottom: 20, paddingRight: 0, width: CGFloat(products.count) * 80,  height: 65)
 //        collectionView?.contentInsetAdjustmentBehavior = .always
         collectionView?.centerX(inView: view)
         collectionView?.contentMode = .center
         
         //CardView set
-        card.anchor(top: collectionView?.bottomAnchor, paddingTop: 0,  paddingBottom: 20,  width: 268, height: 172)
+        card.anchor(top: collectionView?.bottomAnchor, paddingTop: 0,  paddingBottom: 20,  width: 268, height: 160)
         card.backgroundColor = .clear
         card.centerX(inView: view)
         card.card = product
-        card.backgroundImageView.image = product?.largeDesign?.convertSVGStringToImage()
+        card.backgroundImageView.image = product?.XLDesign?.convertSVGStringToImage()
 
         
         // UIView
@@ -287,7 +294,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
                         return
                     }
                     DispatchQueue.main.async {
-                        self.navigationItem.setTitle(title: name, subtitle: String(number.suffix(4)), color: self.product?.fontDesignColor)
+                        self.navigationItem.setTitle(title: name, subtitle: "· \(String(number.suffix(4)))", color: self.product?.fontDesignColor)
                     }
 //                    self.dataUSD = lastPaymentsList
                 } else {
@@ -329,8 +336,14 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         mockItem[4].description = "7704113772"
         mockItem[5].description = "770401001"
         viewController.mockItem = mockItem
-        navController.modalPresentationStyle = .formSheet
-        present(navController, animated: true, completion: nil)
+        
+        
+        
+        viewController.modalPresentationStyle = .custom
+        viewController.transitioningDelegate = self
+        self.present(viewController, animated: true, completion: nil)
+//        navController.modalPresentationStyle = .formSheet
+//        present(navController, animated: true, completion: nil)
     }
     
     @objc func showAlert(sender: AnyObject) {
@@ -397,7 +410,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
                     guard let number = self.product?.numberMasked else {
                         return
                     }
-                    self.navigationItem.setTitle(title: name, subtitle: String(number.suffix(4)), color: self.product?.fontDesignColor)
+                    self.navigationItem.setTitle(title: name, subtitle: "· \(String(number.suffix(4)))", color: self.product?.fontDesignColor)
 //                    self.dataUSD = lastPaymentsList
                 } else {
                     print("DEBUG: Error: ", model.errorMessage ?? "")
@@ -481,57 +494,63 @@ extension ProductViewController{
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch indexPath.row {
         case products.count:
-            let item = collectionView.dequeueReusableCell(withReuseIdentifier: CardCell.reuseId, for: indexPath) as? CardCell
+            let item = collectionView.dequeueReusableCell(withReuseIdentifier: "CardCollectionViewCell", for: indexPath) as? CardCollectionViewCell
     //        item?.card = products[indexPath.item]
-            item?.backgroundImageView.image = UIImage(named: "cardMore")
+            item?.cardImageView.image = UIImage(named: "cardMore")
 //            item?.backgroundColor = .gray
-            item?.alpha = 0.3
+//            item?.selectedView.isHidden = true
             return item ?? UICollectionViewCell()
         default:
-            let item = collectionView.dequeueReusableCell(withReuseIdentifier: CardCell.reuseId, for: indexPath) as? CardCell
+            let item = collectionView.dequeueReusableCell(withReuseIdentifier: "CardCollectionViewCell", for: indexPath) as? CardCollectionViewCell
     //        item?.card = products[indexPath.item]
-            item?.card = products[indexPath.row]
-            item?.backgroundColor = .clear
-            item?.layer.shadowPath = .none
-            item?.layer.shadowRadius = 0
-            item?.maskCardLabel.isHidden = true
-            item?.balanceLabel.isHidden = true
-            item?.cardNameLabel.isHidden = true
-            item?.backgroundImageView.image = products[indexPath.row].smallDesign?.convertSVGStringToImage()
-            item?.alpha = 0.3
+//            item?.selectedView.isHidden = true
+            item?.cardImageView.image = products[indexPath.row].smallDesign?.convertSVGStringToImage()
             return item ?? UICollectionViewCell()
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        switch indexPath.row {
-        case products.count:
-            let cell = collectionView.cellForItem(at: indexPath)
-            cell?.backgroundColor = .red
-            let vc = ProductsViewController()
-            vc.addCloseButton()
-            present(vc, animated: true, completion: nil)
-        default:
-            product = products[indexPath.row]
-            let cell = collectionView.cellForItem(at: indexPath)
-            cell?.alpha = 1
-    //        cell?.layer.borderWidth = 2.0
-    //        cell?.layer.borderColor = UIColor.gray.cgColor
-//            cell?.backgroundColor = .red
-//            cell?.layer.cornerRadius = 20
+//        switch indexPath.row {
+//        case products.count:
+//            let vc = ProductsViewController()
+//            vc.addCloseButton()
+//            present(vc, animated: true, completion: nil)
+//        default:
+//            if let cell = collectionView.cellForItem(at: indexPath) as? CardCollectionViewCell{
+//                product = products[indexPath.row]
+//                cell.showSelect()
+//            }
+//
+////            cell?.selectedView?.backgroundColor = .black
+////            cell?.selectedView.layer.cornerRadius = cell?.frame.size.width ?? 0/2
+//
+//        }
+        if indexPath.row < 3{
+            let cell = collectionView.cellForItem(at: indexPath) as? CardCollectionViewCell
+            cell?.showSelect()
+        }
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        let cell = collectionView.cellForItem(at: indexPath) as? CardCollectionViewCell
+        cell?.hideSelect()
+    }
+
+    
+    func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
+        if let cell = collectionView.cellForItem(at: indexPath) as? CardCollectionViewCell{
             
-    //        cell?.layer.cornerRadius = 10
+        }
+    }
+  
+    func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath) {
+        if let cell = collectionView.cellForItem(at: indexPath) as? CardCollectionViewCell{
             
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath)!
-//        cell.contentView.backgroundColor = .white
-        
-
-    }
-  
+    
 
     
 //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
@@ -713,5 +732,9 @@ extension UIColor {
     }
 }
 
-
+extension ProductViewController: UIViewControllerTransitioningDelegate {
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        PresentationController(presentedViewController: presented, presenting: presenting)
+    }
+}
 
