@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" restorationIdentifier="RequisitsTableViewCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="RequisitsTableViewCell" rowHeight="68" id="KGk-i7-Jjw" customClass="RequisitsTableViewCell" customModule="ForaBank" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="56"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="56"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GjN-vf-BQm">
+                        <rect key="frame" x="286" y="10" width="24" height="36"/>
+                        <state key="normal" image="eye"/>
+                    </button>
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Wkt-cj-mu6">
+                        <rect key="frame" x="0.0" y="7" width="166" height="42"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Получатель" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YPU-TK-W9m">
+                                <rect key="frame" x="0.0" y="0.0" width="166" height="14.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Константин Войцехов" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t8I-Gh-9iC">
+                                <rect key="frame" x="0.0" y="22.5" width="166" height="19.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                    </stackView>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="GjN-vf-BQm" secondAttribute="bottom" constant="10" id="KMR-en-ded"/>
+                    <constraint firstAttribute="trailing" secondItem="GjN-vf-BQm" secondAttribute="trailing" constant="10" id="Qu8-hS-xVJ"/>
+                    <constraint firstItem="Wkt-cj-mu6" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="VhD-Rf-dV6"/>
+                    <constraint firstItem="Wkt-cj-mu6" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="YBQ-R6-wAZ"/>
+                    <constraint firstItem="GjN-vf-BQm" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="puL-Lu-jNJ"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="nameCellLabel" destination="YPU-TK-W9m" id="m5g-4p-lzj"/>
+                <outlet property="rightButton" destination="GjN-vf-BQm" id="PfG-Vd-Y8y"/>
+                <outlet property="titleLabel" destination="t8I-Gh-9iC" id="lvF-Vw-jI8"/>
+            </connections>
+            <point key="canvasLocation" x="102.89855072463769" y="65.625"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="eye" width="24" height="24"/>
+    </resources>
+</document>

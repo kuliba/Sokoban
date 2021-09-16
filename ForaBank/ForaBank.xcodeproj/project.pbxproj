@@ -156,6 +156,9 @@
 		6822EFD626B935FF00125EEC /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6822EFD426B935FF00125EEC /* BaseTableViewCell.swift */; };
 		6822EFD726B935FF00125EEC /* BaseTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6822EFD526B935FF00125EEC /* BaseTableViewCell.xib */; };
 		684AD35A26B7D2520071C762 /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 684AD35926B7D2520071C762 /* CryptoSwift */; };
+		68673B4F26F2F29300F67A8C /* RequisitesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68673B4E26F2F29300F67A8C /* RequisitesViewController.swift */; };
+		68673B5326F2F3B900F67A8C /* RequisitsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68673B5126F2F3B900F67A8C /* RequisitsTableViewCell.swift */; };
+		68673B5426F2F3B900F67A8C /* RequisitsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68673B5226F2F3B900F67A8C /* RequisitsTableViewCell.xib */; };
 		687ADF1026B07721005A239B /* DataExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687ADF0F26B07721005A239B /* DataExtension.swift */; };
 		687FB22D26E65FC5004A479F /* NewProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687FB22C26E65FC5004A479F /* NewProductCell.swift */; };
 		687FB23026E8D41A004A479F /* OfferCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687FB22F26E8D41A004A479F /* OfferCard.swift */; };
@@ -175,6 +178,7 @@
 		68C64626269DCBD800473DE7 /* QRScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C64625269DCBD800473DE7 /* QRScannerViewController.swift */; };
 		68C8D57026F0DF120076246B /* HistoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C8D56E26F0DF120076246B /* HistoryTableViewCell.swift */; };
 		68C8D57126F0DF120076246B /* HistoryTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68C8D56F26F0DF120076246B /* HistoryTableViewCell.xib */; };
+		68C8D57426F1FDB60076246B /* LargeCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C8D57326F1FDB60076246B /* LargeCardCell.swift */; };
 		68D06F2226C3C0C100F9BE4C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D06F2126C3C0C100F9BE4C /* MainViewController.swift */; };
 		68D06F2426C3C0F300F9BE4C /* MainViewControllerLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D06F2326C3C0F300F9BE4C /* MainViewControllerLayout.swift */; };
 		68D06F2626C3C11700F9BE4C /* MainViewControllerDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D06F2526C3C11700F9BE4C /* MainViewControllerDataSource.swift */; };
@@ -540,6 +544,9 @@
 		6822EFD126B935DB00125EEC /* BaseTableViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewViewController.swift; sourceTree = "<group>"; };
 		6822EFD426B935FF00125EEC /* BaseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewCell.swift; sourceTree = "<group>"; };
 		6822EFD526B935FF00125EEC /* BaseTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BaseTableViewCell.xib; sourceTree = "<group>"; };
+		68673B4E26F2F29300F67A8C /* RequisitesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequisitesViewController.swift; sourceTree = "<group>"; };
+		68673B5126F2F3B900F67A8C /* RequisitsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequisitsTableViewCell.swift; sourceTree = "<group>"; };
+		68673B5226F2F3B900F67A8C /* RequisitsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RequisitsTableViewCell.xib; sourceTree = "<group>"; };
 		687ADF0F26B07721005A239B /* DataExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataExtension.swift; sourceTree = "<group>"; };
 		687FB22C26E65FC5004A479F /* NewProductCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProductCell.swift; sourceTree = "<group>"; };
 		687FB22F26E8D41A004A479F /* OfferCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferCard.swift; sourceTree = "<group>"; };
@@ -559,6 +566,7 @@
 		68C64625269DCBD800473DE7 /* QRScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerViewController.swift; sourceTree = "<group>"; };
 		68C8D56E26F0DF120076246B /* HistoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryTableViewCell.swift; sourceTree = "<group>"; };
 		68C8D56F26F0DF120076246B /* HistoryTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HistoryTableViewCell.xib; sourceTree = "<group>"; };
+		68C8D57326F1FDB60076246B /* LargeCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeCardCell.swift; sourceTree = "<group>"; };
 		68D06F2126C3C0C100F9BE4C /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		68D06F2326C3C0F300F9BE4C /* MainViewControllerLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewControllerLayout.swift; sourceTree = "<group>"; };
 		68D06F2526C3C11700F9BE4C /* MainViewControllerDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewControllerDataSource.swift; sourceTree = "<group>"; };
@@ -1213,6 +1221,15 @@
 			path = Cell;
 			sourceTree = "<group>";
 		};
+		68673B5026F2F39E00F67A8C /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				68673B5126F2F3B900F67A8C /* RequisitsTableViewCell.swift */,
+				68673B5226F2F3B900F67A8C /* RequisitsTableViewCell.xib */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
 		687FB22B26E65F9F004A479F /* NewProductCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -1233,6 +1250,7 @@
 		687FB23426F016FF004A479F /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				68C8D57226F1FD730076246B /* CardCell */,
 				68C8D56D26F0DECC0076246B /* HistoryCells */,
 			);
 			path = Cells;
@@ -1284,6 +1302,7 @@
 		688B9BAA26DE7D6300407A75 /* ProductViewController */ = {
 			isa = PBXGroup;
 			children = (
+				68C8D57526F1FEE30076246B /* RequisitsViewController */,
 				687FB23426F016FF004A479F /* Cells */,
 				688B9BAB26DE7D7E00407A75 /* ProductViewController.swift */,
 				687FB23526F0189B004A479F /* ProductViewControllerDataSource.swift */,
@@ -1324,6 +1343,23 @@
 				68C8D56F26F0DF120076246B /* HistoryTableViewCell.xib */,
 			);
 			path = HistoryCells;
+			sourceTree = "<group>";
+		};
+		68C8D57226F1FD730076246B /* CardCell */ = {
+			isa = PBXGroup;
+			children = (
+				68C8D57326F1FDB60076246B /* LargeCardCell.swift */,
+			);
+			path = CardCell;
+			sourceTree = "<group>";
+		};
+		68C8D57526F1FEE30076246B /* RequisitsViewController */ = {
+			isa = PBXGroup;
+			children = (
+				68673B5026F2F39E00F67A8C /* Cell */,
+				68673B4E26F2F29300F67A8C /* RequisitesViewController.swift */,
+			);
+			path = RequisitsViewController;
 			sourceTree = "<group>";
 		};
 		68D06F2026C3C08200F9BE4C /* MainViewController */ = {
@@ -2645,6 +2681,7 @@
 				EDB143C9265FDEC90028EF5A /* Roboto-BoldItalic.ttf in Resources */,
 				68FFA5412682C6CF002DADFA /* LastPaymentsCollectionViewCell.xib in Resources */,
 				EDB143CF265FDEC90028EF5A /* Roboto-Black.ttf in Resources */,
+				68673B5426F2F3B900F67A8C /* RequisitsTableViewCell.xib in Resources */,
 				EDB143CD265FDEC90028EF5A /* Roboto-Bold.ttf in Resources */,
 				EDB143C6265FDEC90028EF5A /* Roboto-Regular.ttf in Resources */,
 				EDB143CA265FDEC90028EF5A /* Roboto-LightItalic.ttf in Resources */,
@@ -2755,6 +2792,7 @@
 				EDB1451C26652D370028EF5A /* UILabel.swift in Sources */,
 				0B22AEA826CE72C200B11E7F /* GKHDataFilter.swift in Sources */,
 				0B95C40326B6CA3700AA57E6 /* CustomPopUpWithRateView.swift in Sources */,
+				68C8D57426F1FDB60076246B /* LargeCardCell.swift in Sources */,
 				687FB23326E9E551004A479F /* PaymentMainCell.swift in Sources */,
 				ED0B4894267B50F50037EA06 /* Int.swift in Sources */,
 				0B22AEAC26CE8DD100B11E7F /* GKHDataSorted.swift in Sources */,
@@ -2862,6 +2900,7 @@
 				68FFA55B268586D3002DADFA /* HeaderBanksCollectionReusableView.swift in Sources */,
 				68C8D57026F0DF120076246B /* HistoryTableViewCell.swift in Sources */,
 				687FB23626F0189C004A479F /* ProductViewControllerDataSource.swift in Sources */,
+				68673B4F26F2F29300F67A8C /* RequisitesViewController.swift in Sources */,
 				0B7A18AF268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift in Sources */,
 				0B37F980267A11FB007728FC /* GetOwnerPhoneNumberPhoneDecodableModel.swift in Sources */,
 				0BB24AB326F0C59900DDA4F6 /* SaveCardNameDecodableModel.swift in Sources */,
@@ -2957,6 +2996,7 @@
 				EDB1657A2668C7F2007E6030 /* TransferCell.swift in Sources */,
 				EDB145382666770A0028EF5A /* OrderProductModel.swift in Sources */,
 				0B931B2026DCD87F00CA8017 /* GKHHistorySaveRealm.swift in Sources */,
+				68673B5326F2F3B900F67A8C /* RequisitsTableViewCell.swift in Sources */,
 				EDBEEA1726B1AE7300265683 /* FullBankInfoListView.swift in Sources */,
 				0B7A18C326852D6B0007CC75 /* CreatTransferDecodableModel.swift in Sources */,
 				ED0B48A5267E72130037EA06 /* CSRFToken.swift in Sources */,

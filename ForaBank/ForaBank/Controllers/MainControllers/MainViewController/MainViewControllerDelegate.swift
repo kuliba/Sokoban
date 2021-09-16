@@ -17,7 +17,7 @@ extension MainViewController: UICollectionViewDelegate {
         case .products:
             let viewController = ProductViewController()
             viewController.addCloseButton()
-            viewController.product = productList[indexPath.row]
+            viewController.product = productList[indexPath.item]
             viewController.products = productList
             let navVC = UINavigationController(rootViewController: viewController)
             navVC.modalPresentationStyle = .fullScreen
