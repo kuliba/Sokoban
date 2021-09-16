@@ -113,6 +113,9 @@ class MainViewController: UIViewController {
             view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
             self.view.addSubview(searchContact)
             searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 48)
+//            navigationController?.navigationBar.isHidden = true
+            searchContact.secondButton.image = UIImage(named: "Avatar")
+
             
             let cardList = realm?.objects(UserAllCardsModel.self)
 
@@ -124,6 +127,11 @@ class MainViewController: UIViewController {
             reloadData(with: nil)
             collectionView.dataSource = dataSource
         }
+    
+            private func setupSearchBar() {
+                self.view.addSubview(searchContact)
+                searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 48)
+            }
     
         func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?,_ error: String?)->()) {
         
@@ -173,15 +181,15 @@ class MainViewController: UIViewController {
        
         }
         
-        private func setupSearchBar() {
-//            self.view.addSubview(searchContact)
-//            searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 48)
-//            searchContact.secondButton.image = UIImage(named: "Avatar")
-            navigationController?.navigationBar.isHidden = true
-            
-          
-            
-        }
+//        private func setupSearchBar() {
+////            self.view.addSubview(searchContact)
+////            searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 48)
+////            searchContact.secondButton.image = UIImage(named: "Avatar")
+//            navigationController?.navigationBar.isHidden = true
+//
+//
+//
+//        }
         
         private func setupCollectionView() {
             collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createCompositionLayout())

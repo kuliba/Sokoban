@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ProductViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UITableViewDelegate, UITableViewDataSource{
+class ProductViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate{
 
     var card = LargeCardCell()
     var mockItem: [PaymentsModel] = []
@@ -72,11 +72,35 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        scrollView.delegate = self
+        scrollView.bounces = false
+        tableView?.bounces = false
+        tableView?.isScrollEnabled = false
         view.addSubview(scrollView)
         scrollView.isScrollEnabled = true
-        scrollView.contentSize = CGSize(width: UIScreen.main.bounds.width, height: 1000)//or what ever size you want to set
+//        scrollView.showsVerticalScrollIndicator = false
+        scrollView.contentSize = CGSize(width: UIScreen.main.bounds.width, height: 21000)//or what ever size you want to set
         
-        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)
+        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 2000)
+        let screenHeight = UIScreen.main.bounds.height
+        let scrollViewContentHeight = 1200 as CGFloat
+        func scrollViewDidScroll(scrollView: UIScrollView) {
+            let yOffset = scrollView.contentOffset.y
+
+            if scrollView == self.scrollView {
+                if yOffset >= scrollViewContentHeight - screenHeight {
+                    scrollView.isScrollEnabled = false
+                    tableView?.isScrollEnabled = true
+                }
+            }
+
+            if scrollView == self.tableView {
+                if yOffset <= 0 {
+                    self.scrollView.isScrollEnabled = true
+                    self.tableView?.isScrollEnabled = false
+                }
+            }
+        }
         _ = CardViewModel(card: self.product!)
         guard let number = product?.numberMasked else {
             return
@@ -86,7 +110,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         view.backgroundColor = .white
 //        navigationController?.view.addoverlay(color: .black, alpha: 0.2)
         navigationController?.navigationBar.barTintColor = UIColor(hexString: product?.background[0] ?? "").darker()
-        UINavigationBar.appearance().tintColor =  UIColor(hexString: product?.fontDesignColor ?? "FFFFFF")
+        UINavigationBar.appearance().tintColor =  UIColor(hexString: product?.fontDesignColor ?? "000000")
         
 
 
@@ -109,10 +133,12 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         let btnImage = UIImage(named: "math-plus")
         button.tintColor = .black
         button.setImage(btnImage , for: .normal)
+        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -15, bottom: 0, right: 10)
         
         button.backgroundColor = UIColor(hexString: "F6F6F7")
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 0  )
+//        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 0  )
         button.sizeToFit()
     
         
@@ -127,7 +153,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         let btnImage2 = UIImage(named: "arrow-up-right")
         button2.tintColor = .black
         button2.setImage(btnImage2 , for: .normal)
-        
+        button2.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
+        button2.imageEdgeInsets = UIEdgeInsets(top: 0, left: -15, bottom: 0, right: 10)
         button2.backgroundColor = UIColor(hexString: "F6F6F7")
         button2.translatesAutoresizingMaskIntoConstraints = false
         
@@ -144,7 +171,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         let btnImage3 = UIImage(named: "file-text")
         button3.tintColor = .black
         button3.setImage(btnImage3 , for: .normal)
-        
+        button3.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
+        button3.imageEdgeInsets = UIEdgeInsets(top: 0, left: -15, bottom: 0, right: 10)
         button3.backgroundColor = UIColor(hexString: "F6F6F7")
         button3.translatesAutoresizingMaskIntoConstraints = false
         
@@ -160,6 +188,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         let btnImage4 = UIImage(named: "lock")
         button4.tintColor = .black
         button4.setImage(btnImage4 , for: .normal)
+        button4.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
+        button4.imageEdgeInsets = UIEdgeInsets(top: 0, left: -15, bottom: 0, right: 10)
         button4.backgroundColor = UIColor(hexString: "F6F6F7")
         button4.translatesAutoresizingMaskIntoConstraints = false
 //        button4.moveImageLeftTextCenter(imagePadding: 10)
@@ -179,7 +209,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
 
         scrollView.addSubview(stackView)
         
-        stackView.anchor(top: card.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingRight: 20)
+        stackView.anchor(top: card.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 30, paddingLeft: 20, paddingRight: 20)
         
         
         stackView2.alignment = .fill
@@ -216,7 +246,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         collectionView?.contentMode = .center
         
         //CardView set
-        card.anchor(top: collectionView?.bottomAnchor, paddingTop: 0,  paddingBottom: 20,  width: 268, height: 160)
+        card.anchor(top: collectionView?.bottomAnchor, paddingTop: 0,  paddingBottom: 30,  width: 268, height: 160)
         card.backgroundColor = .clear
         card.centerX(inView: view)
         card.card = product
@@ -237,15 +267,15 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         filterButton.setDimensions(height: 32, width: 32)
         filterButton.alpha = 0.3
         tableViewLabel.centerY(inView: filterButton)
-        headerView.anchor(top: stackView2.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingRight: 20, height: 20)
+        headerView.anchor(top: stackView2.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 30, paddingLeft: 20, paddingRight: 20, height: 20)
         
         //TableView set
         tableView = UITableView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
         tableView?.dataSource = self
         tableView?.delegate = self
         scrollView.addSubview(tableView ?? UITableView())
-        tableView?.isScrollEnabled = false
-        tableView?.anchor(top: headerView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 20, paddingRight: 20, height: 1000)
+//        tableView?.isScrollEnabled = false
+        tableView?.anchor(top: headerView.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 20, paddingRight: 20)
         tableView?.register(UINib(nibName: "HistoryTableViewCell", bundle: nil), forCellReuseIdentifier: "HistoryTableViewCell")
         tableView?.separatorStyle = UITableViewCell.SeparatorStyle.none
         tableView?.showsVerticalScrollIndicator = false
@@ -263,7 +293,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
+//        self.navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
         self.navigationController?.navigationBar.shadowImage = nil
         self.navigationController?.navigationBar.isTranslucent = false
     }
@@ -294,11 +324,13 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
                         return
                     }
                     DispatchQueue.main.async {
+                        self.card.cardNameLabel.text = name
                         self.navigationItem.setTitle(title: name, subtitle: "· \(String(number.suffix(4)))", color: self.product?.fontDesignColor)
                     }
 //                    self.dataUSD = lastPaymentsList
                 } else {
                     print("DEBUG: Error: ", model.errorMessage ?? "")
+                    self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
                     DispatchQueue.main.async {
                         if model.errorMessage == "Пользователь не авторизован"{
                             AppLocker.present(with: .validate)
@@ -325,23 +357,46 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
     }
     
     @objc func presentRequisitsVc(){
-        let viewController = RequisitesViewController()
-        let navController = UINavigationController(rootViewController: viewController)
-        mockItem = MockItems.returnsRequisits()
-        mockItem[0].description = product?.holderName
-        mockItem[1].description = product?.accountNumber
-        mockItem[2].description = product?.numberMasked
-        mockItem[3].description = "044525341"
-        mockItem[4].description = "301018103000000000341"
-        mockItem[4].description = "7704113772"
-        mockItem[5].description = "770401001"
-        viewController.mockItem = mockItem
         
+        let body = [ "cardId": product?.cardID
+                     ] as [String : AnyObject]
         
+        NetworkManager<GetProductDetailsDecodableModel>.addRequest(.getProductDetails, [:], body) { model, error in
+            if error != nil {
+                print("DEBUG: Error: ", error ?? "")
+            }
+            guard let model = model else { return }
+            print("DEBUG: LatestPayment: ", model)
+            if model.statusCode == 0 {
+                DispatchQueue.main.async {
+                    let viewController = RequisitesViewController()
+                    let navController = UINavigationController(rootViewController: viewController)
+                    self.mockItem = MockItems.returnsRequisits()
+                    self.mockItem[0].description =  model.data?.payeeName
+                    self.mockItem[1].description =  self.product?.accountNumber
+                    self.mockItem[2].description =  self.product?.numberMasked
+                    self.mockItem[3].description = model.data?.bic
+                    self.mockItem[4].description = model.data?.corrAccount
+                    self.mockItem[5].description = model.data?.inn
+                    self.mockItem[6].description = model.data?.kpp
+                    viewController.mockItem =  self.mockItem
+                    viewController.product = self.product
+                    navController.modalPresentationStyle = .custom
+                    navController.transitioningDelegate = self
+                    self.present(navController, animated: true, completion: nil)
+                }
+                
+            } else {
+                print("DEBUG: Error: ", model.errorMessage ?? "")
+                self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+                DispatchQueue.main.async {
+                    if model.errorMessage == "Пользователь не авторизован"{
+                        AppLocker.present(with: .validate)
+                    }
+                }
+            }
+        }
         
-        viewController.modalPresentationStyle = .custom
-        viewController.transitioningDelegate = self
-        self.present(viewController, animated: true, completion: nil)
 //        navController.modalPresentationStyle = .formSheet
 //        present(navController, animated: true, completion: nil)
     }
@@ -391,11 +446,13 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         let alertController = UIAlertController(title: "Заблокироать карту?", message: "Карту можно будет разблокироать в колл-центре", preferredStyle: UIAlertController.Style.alert)
         
         let saveAction = UIAlertAction(title: "Ок", style: UIAlertAction.Style.default, handler: { alert -> Void in
-               let nameTextField = alertController.textFields![0] as UITextField
+            
             guard let idCard = self.product?.cardID else { return }
-            guard let name = nameTextField.text else { return }
-            let body = [ "id" : idCard,
-                         "name" : name
+            guard let number = self.product?.number else { return }
+
+            let body = [ "cardId": idCard,
+                         "cardNumber": number
+                         
                          ] as [String : AnyObject]
             
             NetworkManager<BlockCardDecodableModel>.addRequest(.blockCard, [:], body) { model, error in
@@ -405,15 +462,48 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
                 guard let model = model else { return }
                 print("DEBUG: LatestPayment: ", model)
                 if model.statusCode == 0 {
-                    
+//                    DispatchQueue.main.async {
+//
+//
+//                        let body = [ "cardId": idCard,
+//                                     "cardNumber": number
+//                        ] as [String : AnyObject]
+//
+//                    NetworkManager<UnBlockCardDecodableModel>.addRequest(.unblockCard, [:], body) { model, error in
+//                        if error != nil {
+//                            print("DEBUG: Error: ", error ?? "")
+//                        }
+//                        guard let model = model else { return }
+//                        print("DEBUG: LatestPayment: ", model)
+//                        if model.statusCode == 0 {
+//
+//        //                    guard let lastPaymentsList  = model.data else { return }
+//                            guard let number = self.product?.numberMasked else {
+//                                return
+//                            }
+////                            self.navigationItem.setTitle(title: name, subtitle: "· \(String(number.suffix(4)))", color: self.product?.fontDesignColor)
+//        //                    self.dataUSD = lastPaymentsList
+//                        } else {
+//                            print("DEBUG: Error: ", model.errorMessage ?? "")
+//                            DispatchQueue.main.async {
+//                                if model.errorMessage == "Пользователь не авторизован"{
+//                                    AppLocker.present(with: .validate)
+//                                }
+//                            }
+//                        }
+//                    }
+//                    }
 //                    guard let lastPaymentsList  = model.data else { return }
+                    self.showAlert(with: "Карта заблокирована", and: "")
                     guard let number = self.product?.numberMasked else {
                         return
                     }
-                    self.navigationItem.setTitle(title: name, subtitle: "· \(String(number.suffix(4)))", color: self.product?.fontDesignColor)
+//                    self.navigationItem.setTitle(title: name, subtitle: "· \(String(number.suffix(4)))", color: self.product?.fontDesignColor)
 //                    self.dataUSD = lastPaymentsList
                 } else {
                     print("DEBUG: Error: ", model.errorMessage ?? "")
+                    self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+
                     DispatchQueue.main.async {
                         if model.errorMessage == "Пользователь не авторизован"{
                             AppLocker.present(with: .validate)
@@ -525,9 +615,15 @@ extension ProductViewController{
 ////            cell?.selectedView.layer.cornerRadius = cell?.frame.size.width ?? 0/2
 //
 //        }
-        if indexPath.row < 3{
+        if indexPath.row < products.count{
             let cell = collectionView.cellForItem(at: indexPath) as? CardCollectionViewCell
             cell?.showSelect()
+            
+
+        } else {
+            let vc = ProductsViewController()
+            vc.addCloseButton()
+            present(vc, animated: true, completion: nil)
         }
     }
     
@@ -619,7 +715,7 @@ extension ProductViewController{
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
-            let headerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.width, height: 60))
+            let headerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.width, height: 0))
             headerView.backgroundColor = .white
             let label = UILabel()
             label.frame = CGRect.init(x: 5, y: 5, width: headerView.frame.width-10, height: headerView.frame.height)

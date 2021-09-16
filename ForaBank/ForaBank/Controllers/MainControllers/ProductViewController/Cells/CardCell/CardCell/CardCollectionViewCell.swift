@@ -16,7 +16,7 @@ class CardCollectionViewCell: UICollectionViewCell {
             if self.isSelected{
                 cardImageView.alpha = 1
             } else {
-                cardImageView.alpha = 0.7
+                cardImageView.alpha = 0.5
             }
         }
     }

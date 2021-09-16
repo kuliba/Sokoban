@@ -12,6 +12,7 @@ class RequisitesViewController: UIViewController, UITableViewDataSource, UITable
     var tableView = UITableView()
     
     var mockItem: [PaymentsModel] = []
+    var product: GetProductListDatum?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,7 +26,7 @@ class RequisitesViewController: UIViewController, UITableViewDataSource, UITable
         tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
 
         tableView.register(UINib(nibName: "RequisitsTableViewCell", bundle: nil), forCellReuseIdentifier: "RequisitsTableViewCell")
-     
+        
         
         // Do any additional setup after loading the view.
     }
@@ -60,6 +61,15 @@ class RequisitesViewController: UIViewController, UITableViewDataSource, UITable
         let cell = tableView.dequeueReusableCell(withIdentifier: "RequisitsTableViewCell", for: indexPath) as? RequisitsTableViewCell
         cell?.nameCellLabel.text = mockItem[indexPath.row].name
         cell?.titleLabel.text = mockItem[indexPath.row].description
+        cell?.product = self.product
+        if cell?.nameCellLabel.text == "Номер карты"{
+            cell?.rightButton.isHidden = false
+        } else if cell?.nameCellLabel.text == "Кореспондентский счет"{
+            cell?.rightButton.setImage(UIImage(named: "copy"), for: .normal)
+            cell?.rightButton.isHidden = false
+
+        }
+        cell?.selectionStyle = .none
         return cell ?? UITableViewCell()
     }
     
