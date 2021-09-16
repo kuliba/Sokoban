@@ -110,6 +110,8 @@ enum RouterBaseUrlList: String {
     
     case unblockCard           = "/rest/unblockCard"
     
+    case getProductDetails = "/rest/getProductDetails"
+    
     // MARK: - В не авторизованную зону.
     ///Обновление по serial
         

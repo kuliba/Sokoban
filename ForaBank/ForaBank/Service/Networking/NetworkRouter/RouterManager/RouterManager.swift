@@ -67,11 +67,11 @@ enum RouterManager {
     case isLogin
     case createMe2MePullDebitTransfer
     case getMe2MeDebitConsent
-    
     case getCardStatement
     case saveCardName
     case blockCard
     case unblockCard
+    case getProductDetails
 }
 
 extension RouterManager {
@@ -1022,6 +1022,20 @@ extension RouterManager {
             return request
             
             
+        case .getProductDetails:
+            let baseUrl = RouterUrlList.getProductDetails.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
         }
     }
 }
