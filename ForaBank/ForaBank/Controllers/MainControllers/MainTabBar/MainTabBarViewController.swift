@@ -46,7 +46,7 @@ class MainTabBarViewController: UITabBarController {
         let mainVC = MainViewController()
         let paymentsVC = PaymentsViewController()
         let historyVC = DevelopViewController()
-        let chatVC = SettingsViewController()
+        let chatVC: SettingTableViewController = SettingTableViewController.loadFromStoryboard()
         
         viewControllers = [
             generateNavController(rootViewController: mainVC,

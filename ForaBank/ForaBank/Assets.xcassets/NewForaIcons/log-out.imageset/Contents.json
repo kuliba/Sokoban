@@ -1,17 +1,15 @@
 {
   "images" : [
     {
-      "filename" : "Phone.png",
+      "filename" : "log-out.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Phone@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Phone@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

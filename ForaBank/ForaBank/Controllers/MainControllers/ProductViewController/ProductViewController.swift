@@ -340,7 +340,36 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         alert.message = nil
         
         alert.addAction(UIAlertAction(title: "С моего счета в другом банке", style: .default , handler:{ (UIAlertAction)in
-            
+            self.getFastPaymentContractList { [weak self] contractList, error in
+                DispatchQueue.main.async {
+                    if error != nil {
+                        self?.showAlert(with: "Ошибка", and: error!)
+                    } else {
+                        let contr = contractList?.first?.fastPaymentContractAttributeList?.first
+                        if contr?.flagClientAgreementIn == "NO" || contr?.flagClientAgreementOut == "NO" {
+                            let vc = MeToMeSettingViewController()
+                            if contractList != nil {
+                                vc.model = contractList
+                            } else {
+                                vc.model = []
+                            }
+                            vc.addCloseButton()
+                            let navVC = UINavigationController(rootViewController: vc)
+                            navVC.modalPresentationStyle = .fullScreen
+                            //                    navVC.addCloseButton()
+                            self?.present(navVC, animated: true, completion: nil)
+                        } else {
+                            
+                            let viewController =  MeToMeViewController()
+                            viewController.meToMeContract = contractList
+                            viewController.addCloseButton()
+                            let navVC = UINavigationController(rootViewController: viewController)
+                            navVC.modalPresentationStyle = .fullScreen
+                            self?.present(navVC, animated: true)
+                        }
+                    }
+                }
+            }
         }))
         
         alert.addAction(UIAlertAction(title: "Со своего счета", style: .default , handler:{ (UIAlertAction)in
@@ -613,6 +642,29 @@ extension ProductViewController{
             return headerView
         }
     
+    
+    
+    func getFastPaymentContractList(_ completion: @escaping (_ model: [FastPaymentContractFindListDatum]? ,_ error: String?) -> Void) {
+        NetworkManager<FastPaymentContractFindListDecodableModel>.addRequest(.fastPaymentContractFindList, [:], [:]) { model, error in
+            if error != nil {
+                print("DEBUG: Error: ", error ?? "")
+                completion(nil, error)
+            }
+            guard let model = model else { return }
+            print("DEBUG: fastPaymentContractFindList", model)
+            if model.statusCode == 0 {
+                completion(model.data, nil)
+            } else {
+                print("DEBUG: Error: ", model.errorMessage ?? "")
+                DispatchQueue.main.async {
+                if model.errorMessage == "Пользователь не авторизован"{
+                    AppLocker.present(with: .validate)
+                }
+                }
+                completion(nil, model.errorMessage)
+            }
+        }
+    }
 }
 
 //extension ProductViewController: UICollectionViewDelegateFlowLayout {
