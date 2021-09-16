@@ -45,7 +45,7 @@
                         </button>
                         <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="barcode-scanner" translatesAutoresizingMaskIntoConstraints="NO" id="C93-cG-axB">
                             <rect key="frame" x="356" y="12" width="24" height="24"/>
-                            <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="24" id="eI0-q1-tGX"/>
                                 <constraint firstAttribute="height" constant="24" id="jM2-dG-IPG"/>
