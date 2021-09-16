@@ -119,6 +119,7 @@
 		0BB24AB326F0C59900DDA4F6 /* SaveCardNameDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB24AB226F0C59900DDA4F6 /* SaveCardNameDecodableModel.swift */; };
 		0BB24AB526F0C62500DDA4F6 /* BlockCardDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB24AB426F0C62500DDA4F6 /* BlockCardDecodableModel.swift */; };
 		0BB24AB726F0C6AC00DDA4F6 /* UnBlockCardDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB24AB626F0C6AC00DDA4F6 /* UnBlockCardDecodableModel.swift */; };
+		0BB24ABA26F2884A00DDA4F6 /* ReturnAllCardList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB24AB926F2884A00DDA4F6 /* ReturnAllCardList.swift */; };
 		0BB8817026D6AE4200015E27 /* UserAllCardsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB8816F26D6AE4200015E27 /* UserAllCardsModel.swift */; };
 		0BD1CA9B26E6B55F00CFE993 /* GetCountriesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD1CA9A26E6B55F00CFE993 /* GetCountriesList.swift */; };
 		0BD1CA9D26E6B63900CFE993 /* CountriesListSaved.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD1CA9C26E6B63900CFE993 /* CountriesListSaved.swift */; };
@@ -508,6 +509,7 @@
 		0BB24AB226F0C59900DDA4F6 /* SaveCardNameDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveCardNameDecodableModel.swift; sourceTree = "<group>"; };
 		0BB24AB426F0C62500DDA4F6 /* BlockCardDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockCardDecodableModel.swift; sourceTree = "<group>"; };
 		0BB24AB626F0C6AC00DDA4F6 /* UnBlockCardDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnBlockCardDecodableModel.swift; sourceTree = "<group>"; };
+		0BB24AB926F2884A00DDA4F6 /* ReturnAllCardList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReturnAllCardList.swift; sourceTree = "<group>"; };
 		0BB8816F26D6AE4200015E27 /* UserAllCardsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAllCardsModel.swift; sourceTree = "<group>"; };
 		0BD1CA9A26E6B55F00CFE993 /* GetCountriesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCountriesList.swift; sourceTree = "<group>"; };
 		0BD1CA9C26E6B63900CFE993 /* CountriesListSaved.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesListSaved.swift; sourceTree = "<group>"; };
@@ -1125,6 +1127,14 @@
 			path = DownloadQueue;
 			sourceTree = "<group>";
 		};
+		0BB24AB826F2883000DDA4F6 /* REALMHelper */ = {
+			isa = PBXGroup;
+			children = (
+				0BB24AB926F2884A00DDA4F6 /* ReturnAllCardList.swift */,
+			);
+			path = REALMHelper;
+			sourceTree = "<group>";
+		};
 		0BB8816826D6685000015E27 /* AnyCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -1729,6 +1739,7 @@
 		ED4FC5FE266B91360092B4AB /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				0BB24AB826F2883000DDA4F6 /* REALMHelper */,
 				0BB24AAB26F0051700DDA4F6 /* DownloadQueue */,
 				0BB8817126D6C95200015E27 /* REALMModels */,
 				0B66E8DF26CC62A100FD735D /* NetDetect */,
@@ -2840,6 +2851,7 @@
 				ED3A966E2690A80B00252857 /* PresentationController.swift in Sources */,
 				ED0B489C267D41A60037EA06 /* PaymentsDetailsView.swift in Sources */,
 				ED75CE0126E2AB3A0074F5D5 /* MeToMeReqestSwitchView.swift in Sources */,
+				0BB24ABA26F2884A00DDA4F6 /* ReturnAllCardList.swift in Sources */,
 				ED84995626A8831E005205C6 /* EPContactsPicker.swift in Sources */,
 				ED4FC602266C0AB50092B4AB /* ChooseCountryTableViewController.swift in Sources */,
 				0B931B4726DE2DF700CA8017 /* GKHHistoryCarusel.swift in Sources */,

@@ -33,13 +33,16 @@ class LoginCardEntryViewController: UIViewController {
                             if error != nil {
                                 self?.showAlert(with: "Ошибка", and: error ?? "")
                             } else {
-                                DispatchQueue.main.async { [weak self] in
-                                    let model = CodeVerificationViewModel(phone: resp, type: .register)
-                                    let vc = CodeVerificationViewController(model: model)
-                                    self?.navigationController?.pushViewController(vc, animated: true)
+                                
+                                DownloadQueue.download {}
+                                    DispatchQueue.main.async { [weak self] in
+                                        let model = CodeVerificationViewModel(phone: resp, type: .register)
+                                        let vc = CodeVerificationViewController(model: model)
+                                        self?.navigationController?.pushViewController(vc, animated: true)
+                                    }
                                 }
                             }
-                        }
+//                        }
 //                    } else {
 //                        self?.dismissActivity()
 //                        self?.showAlert(with: "Ошибка", and: errorMessage ?? "" )

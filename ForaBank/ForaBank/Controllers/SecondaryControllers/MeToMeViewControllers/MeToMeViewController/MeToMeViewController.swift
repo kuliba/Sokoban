@@ -393,7 +393,15 @@ class MeToMeViewController: UIViewController {
             print("DEBUG: Card list: ", model)
             if model.statusCode == 0 {
                 guard let data  = model.data else { return }
-                completion(data.bankFullInfoList ?? [], nil)
+                var filterBank: [BankFullInfoList] = []
+                data.bankFullInfoList?.forEach({ bank in
+                    if bank.senderList?.contains("ME2MEPULL") ?? false
+                        && bank.receiverList?.contains("ME2MEPULL") ?? false {
+                        filterBank.append(bank)
+                    }
+                })
+                let list = filterBank.sorted(by: {$0.rusName ?? "" < $1.rusName ?? ""})
+                completion(list, nil)
             } else {
                 guard let error = model.errorMessage else { return }
                 print("DEBUG: Error: ", error)
@@ -459,8 +467,8 @@ class MeToMeViewController: UIViewController {
             if model.statusCode == 0 {
                 completion(true, nil)
             } else {
-//                guard let error = model.errorMessage else { return }
-                print("DEBUG: Error: ", error ?? "")
+                guard let error = model.errorMessage else { return }
+                print("DEBUG: Error: ", error)
                 if model.errorMessage == "Пользователь не авторизован"{
                     AppLocker.present(with: .validate)
                 }

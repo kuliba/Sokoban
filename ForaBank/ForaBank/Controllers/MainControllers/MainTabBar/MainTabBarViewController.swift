@@ -95,18 +95,22 @@ class MainTabBarViewController: UITabBarController {
                 NetworkManager<GetMe2MeDebitConsentDecodableModel>.addRequest(.getMe2MeDebitConsent, [:], body) { model, error in
                     guard let model = model else { return }
                     if model.statusCode == 0 {
-                        let meToMeReq = RequestMeToMeModel(model: model)
-                        
-                        let topvc = UIApplication.topViewController()
-                        
-                        let vc = MeToMeRequestController()
-                        vc.viewModel = meToMeReq
-                        vc.modalPresentationStyle = .fullScreen
-                        topvc?.present(vc, animated: true, completion: {
+                        if model.data != nil {
+                            DispatchQueue.main.async {
+                                let meToMeReq = RequestMeToMeModel(model: model)
+                                
+                                let topvc = UIApplication.topViewController()
+                                
+                                let vc = MeToMeRequestController()
+                                vc.viewModel = meToMeReq
+                                vc.modalPresentationStyle = .fullScreen
+                                topvc?.present(vc, animated: true, completion: {
+                                    UserDefaults.standard.set(nil, forKey: "GetMe2MeDebitConsent")
+                                })
+                            }
+                        } else {
                             UserDefaults.standard.set(nil, forKey: "GetMe2MeDebitConsent")
-                        })
-                        
-                        
+                        }
                     }
                 }
             }
@@ -168,8 +172,9 @@ class MainTabBarViewController: UITabBarController {
             Dict.shared.currencyList = currencySystem
             print("DEBUG: Load Currency")
         }
-        
-        AddAllUserCardtList.add()
+
+        /// Add REALM
+        AddAllUserCardtList.add() {}
         
         
 //        NetworkHelper.request(.getProductList) { cardList , error in

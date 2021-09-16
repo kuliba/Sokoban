@@ -902,7 +902,7 @@ extension RouterManager {
             return request
             
         case .createPermanentConsentMe2MePull:
-            let baseUrl = RouterUrlList.createIsOneTimeConsentMe2MePull.returnUrl()
+            let baseUrl = RouterUrlList.createPermanentConsentMe2MePull.returnUrl()
             switch baseUrl {
             case .success(let url):
                 resultUrl = url.absoluteURL
@@ -947,7 +947,7 @@ extension RouterManager {
             return request
             
         case .getMe2MeDebitConsent:
-            let baseUrl = RouterUrlList.createMe2MePullDebitTransfer.returnUrl()
+            let baseUrl = RouterUrlList.getMe2MeDebitConsent.returnUrl()
             switch baseUrl {
             case .success(let url):
                 resultUrl = url.absoluteURL

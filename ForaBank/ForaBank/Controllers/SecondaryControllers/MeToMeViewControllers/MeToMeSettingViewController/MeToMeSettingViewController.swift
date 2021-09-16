@@ -44,6 +44,30 @@ class MeToMeSettingViewController: UIViewController {
                 self?.topSwitch.bankByPhoneSwitch.isEnabled = true
             }
         }
+        cardListView.didCardTapped = { card in
+            self.cardFromField.cardModel = card
+            DispatchQueue.main.async {
+                UIView.animate(withDuration: 0.2) {
+                    if self.cardListView.isHidden == false {
+                        self.cardListView.isHidden = true
+                        self.cardListView.alpha = 0
+                    }
+                }
+                self.stackView.layoutIfNeeded()
+            }
+            
+            guard let contractId = self.model?.first?.fastPaymentContractAttributeList?.first else { return }
+            self.showActivity()
+            self.updateContract(contractId: contractId.fpcontractID,
+                                cardModel: card,
+                                isOff: true) { success, error in
+                if error != nil {
+                    self.showAlert(with: "Ошибка", and: error!)
+                } else {
+                    self.dismissActivity()
+                }
+            }
+        }
     }
     
     func configure(with model: [FastPaymentContractFindListDatum]) {
@@ -148,9 +172,19 @@ class MeToMeSettingViewController: UIViewController {
                 }
                 
                 self?.cardListView.cardList = filterProduct
-                
+                guard let contractId = self?.model?.first?.fastPaymentContractAttributeList?.first else { return }
                 if filterProduct.count > 0 {
-                    self?.cardFromField.cardModel = filterProduct.first
+                    filterProduct.forEach { product in
+                        if product.productType == "CARD" {
+                            if product.accountID == contractId.accountID {
+                                self?.cardFromField.cardModel = product
+                            }
+                        } else if product.productType == "ACCOUNT" {
+                            if product.id == contractId.accountID {
+                                self?.cardFromField.cardModel = product
+                            }
+                        }
+                    }
                     completion(nil)
                 }
             }
@@ -253,9 +287,9 @@ class MeToMeSettingViewController: UIViewController {
         ] as [String : AnyObject]
         
         if cardModel.productType == "CARD" {
-            body["cardId"] = cardModel.cardID as AnyObject?
+            body["cardId"] = cardModel.id as AnyObject?
         } else if cardModel.productType == "ACCOUNT" {
-            body["accountId"] = cardModel.cardID as AnyObject?
+            body["accountId"] = cardModel.id as AnyObject?
         }
         
         NetworkManager<UpdateFastPaymentContractDecodableModel>.addRequest(.updateFastPaymentContract, [:], body) { model, error in
@@ -295,7 +329,7 @@ class MeToMeSettingViewController: UIViewController {
     }
     
     func safeDefaultCard() {
-        
+
     }
     
 }
