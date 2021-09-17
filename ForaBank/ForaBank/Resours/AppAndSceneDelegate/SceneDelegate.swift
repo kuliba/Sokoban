@@ -97,8 +97,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 NetworkManager<GetMe2MeDebitConsentDecodableModel>.addRequest(.getMe2MeDebitConsent, [:], body) { model, error in
                     guard let model = model else { return }
                     if model.statusCode == 0 {
-                        if model.data != nil {
-                            DispatchQueue.main.async {
+                        DispatchQueue.main.async {
+                            if model.data != nil {
+                                
                                 let topvc = UIApplication.topViewController()
                                 
                                 let vc = MeToMeRequestController()
@@ -109,9 +110,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                                 topvc?.present(vc, animated: true, completion: {
                                     UserDefaults.standard.set(nil, forKey: "GetMe2MeDebitConsent")
                                 })
+                                
+                            } else {
+                                let topvc = UIApplication.topViewController()
+                                
+                                let vc = MeToMeRequestController()
+                                let meToMeReq = RequestMeToMeModel(bank: bankId)
+                                vc.viewModel = meToMeReq
+                                vc.doneButtonTapped()
+                                vc.modalPresentationStyle = .fullScreen
+                                
+                                topvc?.present(vc, animated: true, completion: {
+                                    UserDefaults.standard.set(nil, forKey: "GetMe2MeDebitConsent")
+                                })
                             }
-                        } else {
-                            UserDefaults.standard.set(nil, forKey: "GetMe2MeDebitConsent")
                         }
                     }
                 }

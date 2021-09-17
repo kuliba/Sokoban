@@ -59,6 +59,23 @@ struct RequestMeToMeModel {
         
     }
     
+    init(bank: String) {
+//        self.model = model
+        
+        self.amount =  0
+        self.fee =  0
+//        let cardId = model.data?.cardId
+//        let accountId = model.data?.accountId
+//        let bank = bank
+        self.RefTrnId = ""
+        self.RcvrMsgId =  ""
+        self.RecipientID =  ""
+        
+        self.bank = findBank(with: bank)
+        self.card = findProduct(with: nil, with: nil)
+        
+    }
+    
     private func findBank(with bankId: String) -> BankFullInfoList? {
         let bankList = Dict.shared.bankFullInfoList
         var bankForReturn: BankFullInfoList?
@@ -78,10 +95,12 @@ struct RequestMeToMeModel {
                 if product.id == cardId {
                     card = product
                 }
-            } else {
+            } else if accountId != nil {
                 if product.id == accountId {
                     card = product
                 }
+            } else {
+                card = cardList?.first
             }
         }
         return card

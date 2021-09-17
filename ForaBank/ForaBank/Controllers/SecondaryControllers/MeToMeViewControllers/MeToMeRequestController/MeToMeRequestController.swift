@@ -148,6 +148,7 @@ class MeToMeRequestController: UIViewController {
                 }
             }
         }
+        
     }
     
     func fillData(model: RequestMeToMeModel) {
@@ -233,15 +234,24 @@ class MeToMeRequestController: UIViewController {
                     self.dismissActivity()
                     self.showAlert(with: "Ошибка", and: error!)
                 } else {
-                    self.createMe2MePullDebit { error in
-                        self.dismissActivity()
-                        if error != nil {
-                            self.showAlert(with: "Ошибка", and: error!)
-                        } else {
-                            self.showAlert(with: "Удачно", and: "Ваши деньги зачислены") {
-                                DispatchQueue.main.async {
-                                    self.dismiss(animated: true, completion: nil)
+                    if self.viewModel?.amount != 0 {
+                        self.createMe2MePullDebit { error in
+                            self.dismissActivity()
+                            if error != nil {
+                                self.showAlert(with: "Ошибка", and: error!)
+                            } else {
+                                self.showAlert(with: "Удачно", and: "Ваши деньги зачислены") {
+                                    DispatchQueue.main.async {
+                                        self.dismiss(animated: true, completion: nil)
+                                    }
                                 }
+                            }
+                        }
+                    } else {
+                        self.dismissActivity()
+                        self.showAlert(with: "Готово", and: "") {
+                            DispatchQueue.main.async {
+                                self.dismiss(animated: true, completion: nil)
                             }
                         }
                     }
@@ -271,18 +281,28 @@ class MeToMeRequestController: UIViewController {
                     self.dismissActivity()
                     self.showAlert(with: "Ошибка", and: error!)
                 } else {
-                    self.createMe2MePullDebit { error in
-                        self.dismissActivity()
-                        if error != nil {
-                            self.showAlert(with: "Ошибка", and: error!)
-                        } else {
-                            self.showAlert(with: "Удачно", and: "Ваши деньги зачислены") {
-                                DispatchQueue.main.async {
-                                    self.dismiss(animated: true, completion: nil)
+                    if self.viewModel?.amount != 0 {
+                        self.createMe2MePullDebit { error in
+                            self.dismissActivity()
+                            if error != nil {
+                                self.showAlert(with: "Ошибка", and: error!)
+                            } else {
+                                self.showAlert(with: "Удачно", and: "Ваши деньги зачислены") {
+                                    DispatchQueue.main.async {
+                                        self.dismiss(animated: true, completion: nil)
+                                    }
                                 }
                             }
                         }
+                    } else {
+                        self.dismissActivity()
+                        self.showAlert(with: "Готово", and: "") {
+                            DispatchQueue.main.async {
+                                self.dismiss(animated: true, completion: nil)
+                            }
+                        }
                     }
+                    
                 }
             }
         } else {
