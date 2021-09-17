@@ -120,12 +120,14 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let vc = ProductViewController()
-//        vc.addCloseButton()
-//        vc.modalPresentationStyle = .fullScreen
-//        vc.products = products
-//        vc.product = products[indexPath.row]
-//        present(vc, animated: true, completion: nil)
+        let viewController = ProductViewController()
+//            viewController.addCloseButton()
+        viewController.product = products[indexPath.item]
+        viewController.products = products
+        viewController.indexItem = indexPath.item
+        let navVC = UINavigationController(rootViewController: viewController)
+        navVC.modalPresentationStyle = .fullScreen
+        present(navVC, animated: true)
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

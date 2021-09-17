@@ -17,6 +17,7 @@ extension MainViewController: UICollectionViewDelegate {
         case .products:
             let viewController = ProductViewController()
 //            viewController.addCloseButton()
+            viewController.indexItem = indexPath.item
             viewController.product = productList[indexPath.item]
             viewController.products = productList
             let navVC = UINavigationController(rootViewController: viewController)

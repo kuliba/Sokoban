@@ -1194,3 +1194,8 @@ extension UIView {
     }
 }
 
+extension ContactsViewController: UIViewControllerTransitioningDelegate {
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        PresentationController(presentedViewController: presented, presenting: presenting)
+    }
+}

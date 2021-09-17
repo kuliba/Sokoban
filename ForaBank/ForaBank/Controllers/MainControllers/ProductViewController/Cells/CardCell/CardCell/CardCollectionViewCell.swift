@@ -15,8 +15,10 @@ class CardCollectionViewCell: UICollectionViewCell {
         didSet{
             if self.isSelected{
                 cardImageView.alpha = 1
+                self.selectedView.isHidden = false
             } else {
                 cardImageView.alpha = 0.5
+                self.selectedView.isHidden = true
             }
         }
     }

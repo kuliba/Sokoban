@@ -78,7 +78,7 @@ class PaymentsDetailsView: UIView {
                 operatorImageView.image = decodedimage
                 
             } else {
-                operatorImageView.image = UIImage(named: "GKH")
+//                operatorImageView.image = UIImage(named: "GKH")
             }
             
         }
