@@ -744,14 +744,16 @@ extension ProductViewController{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "HistoryTableViewCell", for: indexPath) as? HistoryTableViewCell else { return  UITableViewCell() }
-        if historyArray[indexPath.row].operationType == "DEBIT"{
-            cell.amountLabel.text = "-\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
-        } else if historyArray[indexPath.row].operationType == "CREDIT"{
-            cell.amountLabel.textColor = UIColor(hexString: "22C183")
-            cell.amountLabel.text =  "+\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
-        }
-        
-        cell.titleLable.text = historyArray[indexPath.row].comment
+//        if historyArray[indexPath.row].operationType == "DEBIT"{
+//            cell.amountLabel.text = "-\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
+//        } else if historyArray[indexPath.row].operationType == "CREDIT"{
+//            cell.amountLabel.textColor = UIColor(hexString: "22C183")
+//            cell.amountLabel.text =  "+\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
+//        }
+//
+//        cell.titleLable.text = historyArray[indexPath.row].comment
+        cell.operation = historyArray[indexPath.row]
+        cell.configure()
         cell.selectionStyle = .none
         return cell
     }
@@ -768,10 +770,17 @@ extension ProductViewController{
         vc.confurmView.statusImageView.isHidden = true
         vc.confurmView.statusLabel.text = historyArray[indexPath.row].comment
         
+//        if historyArray[indexPath.row].operationType == "DEBIT"{
+//            vc.confurmView.summLabel.text = "+\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
+//        } else {
+//            vc.confurmView.summLabel.text = "-\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
+//        }
+        
         if historyArray[indexPath.row].operationType == "DEBIT"{
-            vc.confurmView.summLabel.text = "+\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
-        } else {
             vc.confurmView.summLabel.text = "-\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
+        } else if historyArray[indexPath.row].operationType == "CREDIT"{
+            vc.confurmView.summLabel.textColor = UIColor(hexString: "22C183")
+            vc.confurmView.summLabel.text =  "+\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
         }
         
         present(vc, animated: true, completion: nil)
