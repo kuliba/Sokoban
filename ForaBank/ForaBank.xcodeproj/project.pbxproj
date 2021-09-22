@@ -240,6 +240,8 @@
 		ED2BE18326A04A8800647CB1 /* BottomInputViewWithRate.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED2BE18226A04A8800647CB1 /* BottomInputViewWithRate.xib */; };
 		ED2BE18526A04F0600647CB1 /* CardChooseView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED2BE18426A04F0600647CB1 /* CardChooseView.xib */; };
 		ED302A3126D3E56600161243 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED302A3026D3E56600161243 /* UIImage.swift */; };
+		ED353B6A26FB5ADA00F17F00 /* SetUserSettingDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED353B6926FB5ADA00F17F00 /* SetUserSettingDecodableModel.swift */; };
+		ED353B6C26FB5E8300F17F00 /* GetUserSettingDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED353B6B26FB5E8300F17F00 /* GetUserSettingDecodableModel.swift */; };
 		ED39EC88268B308800158E46 /* SDWebImageSVGCoder in Frameworks */ = {isa = PBXBuildFile; productRef = ED39EC87268B308800158E46 /* SDWebImageSVGCoder */; };
 		ED39EC8C268B4F0800158E46 /* CardChooseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED39EC8B268B4F0800158E46 /* CardChooseView.swift */; };
 		ED39EC91268C8FA800158E46 /* SVGKit in Frameworks */ = {isa = PBXBuildFile; productRef = ED39EC90268C8FA800158E46 /* SVGKit */; };
@@ -290,6 +292,8 @@
 		ED92D3A226735A0A006D47B3 /* PaymentByPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED92D3A126735A0A006D47B3 /* PaymentByPhoneViewController.swift */; };
 		EDA5637726F375980093F0C8 /* SettingTableViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDA5637626F375980093F0C8 /* SettingTableViewController.storyboard */; };
 		EDA5637A26F386AD0093F0C8 /* SettingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA5637926F386AD0093F0C8 /* SettingTableViewController.swift */; };
+		EDA563AE26F881AF0093F0C8 /* BanksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA563AD26F881AF0093F0C8 /* BanksView.swift */; };
+		EDA563B026F881D60093F0C8 /* BanksView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDA563AF26F881D60093F0C8 /* BanksView.xib */; };
 		EDAA99AF2673AB9200435484 /* ForaSwitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAA99AE2673AB9200435484 /* ForaSwitchView.swift */; };
 		EDAA99B12673ABF200435484 /* ForaSwitchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDAA99B02673ABF200435484 /* ForaSwitchView.xib */; };
 		EDAA99B42674C38900435484 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = EDAA99B32674C38900435484 /* ProgressHUD */; };
@@ -633,6 +637,8 @@
 		ED2BE18226A04A8800647CB1 /* BottomInputViewWithRate.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BottomInputViewWithRate.xib; sourceTree = "<group>"; };
 		ED2BE18426A04F0600647CB1 /* CardChooseView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CardChooseView.xib; sourceTree = "<group>"; };
 		ED302A3026D3E56600161243 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
+		ED353B6926FB5ADA00F17F00 /* SetUserSettingDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetUserSettingDecodableModel.swift; sourceTree = "<group>"; };
+		ED353B6B26FB5E8300F17F00 /* GetUserSettingDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetUserSettingDecodableModel.swift; sourceTree = "<group>"; };
 		ED39EC8B268B4F0800158E46 /* CardChooseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardChooseView.swift; sourceTree = "<group>"; };
 		ED39EC92268C9AE900158E46 /* NewCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCardCell.swift; sourceTree = "<group>"; };
 		ED3A966D2690A80B00252857 /* PresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationController.swift; sourceTree = "<group>"; };
@@ -680,6 +686,8 @@
 		ED92D3A126735A0A006D47B3 /* PaymentByPhoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentByPhoneViewController.swift; sourceTree = "<group>"; };
 		EDA5637626F375980093F0C8 /* SettingTableViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SettingTableViewController.storyboard; sourceTree = "<group>"; };
 		EDA5637926F386AD0093F0C8 /* SettingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTableViewController.swift; sourceTree = "<group>"; };
+		EDA563AD26F881AF0093F0C8 /* BanksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BanksView.swift; sourceTree = "<group>"; };
+		EDA563AF26F881D60093F0C8 /* BanksView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BanksView.xib; sourceTree = "<group>"; };
 		EDAA99AE2673AB9200435484 /* ForaSwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForaSwitchView.swift; sourceTree = "<group>"; };
 		EDAA99B02673ABF200435484 /* ForaSwitchView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ForaSwitchView.xib; sourceTree = "<group>"; };
 		EDB1437D265FDA410028EF5A /* ForaBank.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ForaBank.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2053,6 +2061,24 @@
 			path = Cell;
 			sourceTree = "<group>";
 		};
+		EDA563AB26F8806B0093F0C8 /* Switch */ = {
+			isa = PBXGroup;
+			children = (
+				EDCF89E126CACC7300DC9F54 /* MeToMeSetupSwitchView.swift */,
+				EDCF89E326CACC7D00DC9F54 /* MeToMeSetupSwitchView.xib */,
+			);
+			path = Switch;
+			sourceTree = "<group>";
+		};
+		EDA563AC26F8807B0093F0C8 /* BanksView */ = {
+			isa = PBXGroup;
+			children = (
+				EDA563AD26F881AF0093F0C8 /* BanksView.swift */,
+				EDA563AF26F881D60093F0C8 /* BanksView.xib */,
+			);
+			path = BanksView;
+			sourceTree = "<group>";
+		};
 		EDAA99AC2673AB6D00435484 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -2370,8 +2396,8 @@
 		EDCF89E026CACBF200DC9F54 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				EDCF89E126CACC7300DC9F54 /* MeToMeSetupSwitchView.swift */,
-				EDCF89E326CACC7D00DC9F54 /* MeToMeSetupSwitchView.xib */,
+				EDA563AC26F8807B0093F0C8 /* BanksView */,
+				EDA563AB26F8806B0093F0C8 /* Switch */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2466,6 +2492,8 @@
 				0BB24AB426F0C62500DDA4F6 /* BlockCardDecodableModel.swift */,
 				0BB24AB626F0C6AC00DDA4F6 /* UnBlockCardDecodableModel.swift */,
 				0BB24ABB26F370A300DDA4F6 /* GetProductDetailsDecodableModel.swift */,
+				ED353B6926FB5ADA00F17F00 /* SetUserSettingDecodableModel.swift */,
+				ED353B6B26FB5E8300F17F00 /* GetUserSettingDecodableModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -2769,6 +2797,7 @@
 				EDB14526266624DC0028EF5A /* OrderCardView.xib in Resources */,
 				ED51D66E2688B27E005FD655 /* SeparatorView.xib in Resources */,
 				ED147D4C26BAD7E0002F66C8 /* BottomInputView.xib in Resources */,
+				EDA563B026F881D60093F0C8 /* BanksView.xib in Resources */,
 				EDB143CC265FDEC90028EF5A /* Roboto-BlackItalic.ttf in Resources */,
 				ED2BE18126A04A4300647CB1 /* CastomCardXIB.xib in Resources */,
 				0BA09E2E26ADEBF50065D623 /* GHKCell.xib in Resources */,
@@ -2888,6 +2917,7 @@
 				0BF34852268A5F54005138A8 /* GetVerificationCodeDecodableModel.swift in Sources */,
 				0BE270B626B9DA4800FA958C /* ExtensionBottomInputViewRevers.swift in Sources */,
 				0BB24A9926EFE71C00DDA4F6 /* GetPaymentCountriesListSaved.swift in Sources */,
+				EDA563AE26F881AF0093F0C8 /* BanksView.swift in Sources */,
 				0B37F97C2678EC69007728FC /* AnywayPaymentDecodableModel.swift in Sources */,
 				0B7A18AD2681CF160007CC75 /* CastomPopUpView.swift in Sources */,
 				0BE270B826B9DC4200FA958C /* ExtensionBottomInputViewExchange.swift in Sources */,
@@ -2965,6 +2995,7 @@
 				687FB22D26E65FC5004A479F /* NewProductCell.swift in Sources */,
 				0B95C40526B6CB1D00AA57E6 /* ExtensionCustomPopUpWithRateView.swift in Sources */,
 				EDF6820F266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift in Sources */,
+				ED353B6C26FB5E8300F17F00 /* GetUserSettingDecodableModel.swift in Sources */,
 				0B931B1626DCD5F100CA8017 /* GKHParametersModel.swift in Sources */,
 				EDB1656E266827A8007E6030 /* PaymentsViewController.swift in Sources */,
 				0B2A8D2926E78E5C00651BCB /* CreateMe2MePullDebitTransferDecodableModel.swift in Sources */,
@@ -3032,6 +3063,7 @@
 				EDFFCAFD2683C18B004EE095 /* ContactInputViewController API.swift in Sources */,
 				EDB1451E26652F170028EF5A /* UIView.swift in Sources */,
 				68FFA565269464FF002DADFA /* TransferByRequisitesConfirmViewController.swift in Sources */,
+				ED353B6A26FB5ADA00F17F00 /* SetUserSettingDecodableModel.swift in Sources */,
 				0BB24A9226EFC6AB00DDA4F6 /* GetProductTemplateList.swift in Sources */,
 				0BA09E3426B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift in Sources */,
 				ED84994B26A6FEE3005205C6 /* CountryListCell.swift in Sources */,

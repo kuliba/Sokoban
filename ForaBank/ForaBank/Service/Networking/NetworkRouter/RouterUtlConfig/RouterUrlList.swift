@@ -78,6 +78,8 @@ enum RouterUrlList: String {
     case blockCard
     case unblockCard
     case getProductDetails
+    case setUserSetting
+    case getUserSettings
     
     func returnUrl () -> URLValue {
         switch self {
@@ -783,6 +785,29 @@ enum RouterUrlList: String {
                 debugPrint(error)
                 return .failure(.urlError)
             }
+            
+        case .setUserSetting:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.setUserSetting.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .getUserSettings:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getUserSettings.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
         }
     }
 

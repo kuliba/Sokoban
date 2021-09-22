@@ -104,13 +104,17 @@ enum RouterBaseUrlList: String {
     
     case getCardStatement           = "/rest/getCardStatement"
     
-    case saveCardName           = "/rest/saveCardName"
+    case saveCardName               = "/rest/saveCardName"
     
-    case blockCard           = "/rest/blockCard"
+    case blockCard                  = "/rest/blockCard"
     
-    case unblockCard           = "/rest/unblockCard"
+    case unblockCard                = "/rest/unblockCard"
     
-    case getProductDetails = "/rest/getProductDetails"
+    case getProductDetails          = "/rest/getProductDetails"
+    
+    case setUserSetting             = "/rest/setUserSetting"
+    
+    case getUserSettings            = "/rest/getUserSettings"
     
     // MARK: - В не авторизованную зону.
     ///Обновление по serial

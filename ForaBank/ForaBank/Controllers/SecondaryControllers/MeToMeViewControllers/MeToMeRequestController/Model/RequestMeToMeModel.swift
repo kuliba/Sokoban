@@ -95,11 +95,13 @@ struct RequestMeToMeModel {
                 if product.id == cardId {
                     card = product
                 }
-            } else if accountId != nil {
+            }
+            if accountId != nil {
                 if product.id == accountId {
                     card = product
                 }
-            } else {
+            }
+            if cardId == nil &&  accountId == nil {
                 card = cardList?.first
             }
         }

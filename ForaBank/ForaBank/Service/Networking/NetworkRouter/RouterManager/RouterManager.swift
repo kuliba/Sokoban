@@ -72,6 +72,8 @@ enum RouterManager {
     case blockCard
     case unblockCard
     case getProductDetails
+    case setUserSetting
+    case getUserSettings
 }
 
 extension RouterManager {
@@ -1021,7 +1023,6 @@ extension RouterManager {
             request.httpMethod = RequestMethod.post.rawValue
             return request
             
-            
         case .getProductDetails:
             let baseUrl = RouterUrlList.getProductDetails.returnUrl()
             switch baseUrl {
@@ -1036,6 +1037,37 @@ extension RouterManager {
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.post.rawValue
             return request
+            
+        case .setUserSetting:
+            let baseUrl = RouterUrlList.setUserSetting.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .getUserSettings:
+            let baseUrl = RouterUrlList.getUserSettings.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.get.rawValue
+            return request
+            
         }
     }
 }
