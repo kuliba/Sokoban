@@ -25,7 +25,6 @@ extension PaymentsViewController: UICollectionViewDelegate {
                     viewController.addCloseButton()
                     let navVC = UINavigationController(rootViewController: viewController)
                     navVC.modalPresentationStyle = .fullScreen
-                    
                     present(navVC, animated: true)
                 }
             }
@@ -51,6 +50,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
                     let navController = UINavigationController(rootViewController: viewController)
                     if transfers[indexPath.row].name == "По номеру телефона"{
                         navController.modalPresentationStyle = .formSheet
+//                        navController.transitioningDelegate = self
                     } else {
                         navController.modalPresentationStyle = .fullScreen
 
@@ -60,7 +60,9 @@ extension PaymentsViewController: UICollectionViewDelegate {
             }
         case .pay:
             print("DEBUG: " + #function + pay[indexPath.row].name)
+       
             if pay[indexPath.row].id == 19 {
+                #if DEBUG
                 getFastPaymentContractList { [weak self] contractList, error in
                     DispatchQueue.main.async {
                         if error != nil {
@@ -91,6 +93,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
                         }
                     }
                 }
+                #endif
             } else {
                 if let viewController = pay[indexPath.row].controllerName.getViewController() {
                     viewController.addCloseButton()
@@ -141,6 +144,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
         vc.modalPresentationStyle = .fullScreen
         let navController = UINavigationController(rootViewController: vc)
         navController.modalPresentationStyle = .fullScreen
+//        navController.transitioningDelegate = self
         self.present(navController, animated: true, completion: nil)
         
     }

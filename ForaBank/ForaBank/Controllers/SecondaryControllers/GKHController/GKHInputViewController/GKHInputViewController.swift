@@ -53,7 +53,9 @@ class GKHInputViewController: UIViewController {
         // Изменения символа валюты
         bottomInputView.currencySymbol = "₽"
         /// Загружаем карты
-        AddAllUserCardtList.add()
+        AddAllUserCardtList.add {
+            
+        }
         // Замыкание которое срабатывает по нажатию на кнопку продолжить
         // amount значение выдает отформатированное значение для передачи в запрос
         bottomInputView.didDoneButtonTapped = { amount in

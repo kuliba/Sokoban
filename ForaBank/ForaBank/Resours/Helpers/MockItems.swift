@@ -293,8 +293,15 @@ class MockItems {
             
             PaymentsModel(id: 2, name: "Номер счета",
                           iconName: "promoBanner2",
-                          controllerName: "https://www.forabank.ru/private/deposits/"),
-//
+                          controllerName: "https://www.forabank.ru/private/deposits/",
+                        description: "Что то"),
+        
+
+            PaymentsModel(id: 5, name: "Номер карты",
+                          iconName: "PaymentsIconCarancy",
+                          controllerName: "https://www.forabank.ru/private/credits/",
+                          description: "Что то"),
+            
             PaymentsModel(id: 5, name: "БИК",
                           iconName: "PaymentsIconCarancy",
                           controllerName: "https://www.forabank.ru/private/credits/",

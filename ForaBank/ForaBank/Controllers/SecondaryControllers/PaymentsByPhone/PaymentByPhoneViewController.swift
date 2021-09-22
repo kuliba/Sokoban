@@ -29,7 +29,7 @@ class PaymentByPhoneViewController: UIViewController {
     var phoneField = ForaInput(
         viewModel: ForaInputModel(
             title: "По номеру телефона",
-            image: #imageLiteral(resourceName: "Phone"),
+            image: #imageLiteral(resourceName: "smartphonegray"),
             showChooseButton: true)
     )
     
@@ -395,10 +395,11 @@ class PaymentByPhoneViewController: UIViewController {
 //                UIApplication.shared.keyWindow?.stopIndicatingActivity()
 //                self?.dismissActivity()
                 self?.bottomView.doneButtonIsEnabled(false)
-                if error != nil {
-                    guard let error = error else { return }
-                    print("DEBUG: ", #function, error)
-                    self?.showAlert(with: "Ошибка", and: error)
+                if dataresp?.errorMessage != nil {
+//                    guard let error = error else { return }
+                    print("DEBUG: ", #function, dataresp?.errorMessage ?? "")
+                    self?.showAlert(with: "Ошибка", and: dataresp?.errorMessage ?? "Ошибка")
+                    self?.dismissActivity()
                 } else {
                     guard let data = dataresp?.data else { return }
                     guard let statusCode = dataresp?.statusCode else { return }
@@ -498,8 +499,11 @@ class PaymentByPhoneViewController: UIViewController {
         ] as [String: AnyObject]
         
         NetworkManager<CreateSFPTransferDecodableModel>.addRequest(.createSFPTransfer, [:], newBody, completion: { [weak self] data, error in
-                if error != nil {
+           
+            if data?.errorMessage != nil {
                     print("DEBUG: Error: ", error ?? "")
+                    self?.dismissActivity()
+                    self?.showAlert(with: "Ошибка", and: data?.errorMessage ?? "")
                     completion(error!)
                 }
                 guard let data = data else { return }
