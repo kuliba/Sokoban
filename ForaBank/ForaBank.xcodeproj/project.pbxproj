@@ -2161,7 +2161,6 @@
 		EDB1452926663BD90028EF5A /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				0BA09E2A26ADD6A50065D623 /* GKHController */,
 				EDAA99AC2673AB6D00435484 /* Views */,
 				EDB1452A26663BF40028EF5A /* Login */,
 				EDB165722668C51A007E6030 /* MainControllers */,
@@ -2267,6 +2266,7 @@
 		EDB16593266A4317007E6030 /* SecondaryControllers */ = {
 			isa = PBXGroup;
 			children = (
+				0BA09E2A26ADD6A50065D623 /* GKHController */,
 				ED8AB45126C1145D006F0D03 /* MeToMeViewControllers */,
 				ED84994F26A8830E005205C6 /* ContactsPicker */,
 				ED84994C26A85A0B005205C6 /* SettingsViewController */,
