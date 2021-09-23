@@ -94,7 +94,7 @@ class SettingsViewController: UIViewController {
 ////        navVC.modalPresentationStyle = .fullScreen
 //        navVC.addCloseButton()
 //        self.present(navVC, animated: true, completion: nil)
-        
+        #if DEBUG
         self.showActivity()
         getFastPaymentContractList { [weak self] contractList, error in
             self?.dismissActivity()
@@ -116,6 +116,7 @@ class SettingsViewController: UIViewController {
                 }
             }
         }
+        #endif
     }
     
     @objc func logout() {

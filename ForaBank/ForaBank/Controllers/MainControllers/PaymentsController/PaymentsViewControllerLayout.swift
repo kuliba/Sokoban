@@ -59,7 +59,7 @@ extension PaymentsViewController {
         
         section.contentInsets = .init(horizontal: 20, vertical: 16)
         
-        section.orthogonalScrollingBehavior = .paging
+        section.orthogonalScrollingBehavior = .continuous
         
         let sectionHeader = createSectionHeader()
         section.boundarySupplementaryItems = [sectionHeader]
@@ -84,7 +84,7 @@ extension PaymentsViewController {
         section.interGroupSpacing = 8
         section.contentInsets = .init(horizontal: 20, vertical: 16)
         
-        section.orthogonalScrollingBehavior = .paging
+        section.orthogonalScrollingBehavior = .continuous
         
         let sectionHeader = createSectionHeader()
         section.boundarySupplementaryItems = [sectionHeader]

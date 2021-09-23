@@ -80,7 +80,7 @@ extension MainViewController {
         section.interGroupSpacing = 8
         section.contentInsets = .init(horizontal: 20, vertical: 8)
 
-        section.orthogonalScrollingBehavior = .continuous
+        
         section.orthogonalScrollingBehavior = .paging
         let sectionHeader = createSectionHeader()
         section.boundarySupplementaryItems = [sectionHeader]
@@ -130,7 +130,7 @@ extension MainViewController {
         section.interGroupSpacing = 8
         section.contentInsets = .init(horizontal: 20, vertical: 10)
         
-        section.orthogonalScrollingBehavior = .paging
+        section.orthogonalScrollingBehavior = .continuous
         
 //        let sectionHeader = nil
 //        section.boundarySupplementaryItems = [sectionHeader]
@@ -180,7 +180,7 @@ extension MainViewController {
 
         section.contentInsets = .init(horizontal: 20, vertical: 16)
 
-        section.orthogonalScrollingBehavior = .paging
+        section.orthogonalScrollingBehavior = .continuous
 
         let sectionHeader = createSectionHeader()
         section.boundarySupplementaryItems = [sectionHeader]
@@ -204,7 +204,7 @@ extension MainViewController {
         section.interGroupSpacing = 8
         section.contentInsets = .init(horizontal: 20, vertical: 16)
 
-        section.orthogonalScrollingBehavior = .paging
+        section.orthogonalScrollingBehavior = .continuous
 
         let sectionHeader = createSectionHeader()
         

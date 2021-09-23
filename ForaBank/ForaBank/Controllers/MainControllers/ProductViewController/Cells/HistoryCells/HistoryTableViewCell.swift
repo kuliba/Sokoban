@@ -15,9 +15,12 @@ class HistoryTableViewCell: UITableViewCell {
     @IBOutlet weak var subTitleLabel: UILabel!
     @IBOutlet weak var amountLabel: UILabel!
     
+    var operation: GetCardStatementDataClass?
+    
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        configure()
     }
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -29,6 +32,20 @@ class HistoryTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
+    }
+    
+    func configure(){
+        titleLable.text = operation?.comment
+        guard let sum = operation?.amount else {
+            return
+        }
+        if operation?.operationType == "DEBIT"{
+            amountLabel.textColor = UIColor(hexString: "1C1C1C")
+            amountLabel.text = "-\(sum)"
+        } else {
+            amountLabel.textColor = UIColor(hexString: "22C183")
+            amountLabel.text = "+\(sum)"
+        }
     }
     
 }

@@ -11,7 +11,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
 
     var card = LargeCardCell()
     var mockItem: [PaymentsModel] = []
-
+    var firstTimeLoad = true
+    var indexItem: Int?
     var scrollView = UIScrollView()
     var collectionView: UICollectionView?
     var products = [GetProductListDatum]()
@@ -110,8 +111,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         view.backgroundColor = .white
 //        navigationController?.view.addoverlay(color: .black, alpha: 0.2)
         navigationController?.navigationBar.barTintColor = UIColor(hexString: product?.background[0] ?? "").darker()
-        UINavigationBar.appearance().tintColor =  UIColor(hexString: product?.fontDesignColor ?? "000000")
-        
+//        UINavigationBar.appearance().tintColor =  UIColor(hexString: product?.fontDesignColor ?? "000000")
+        addCloseColorButton(with: UIColor(hexString: product?.fontDesignColor ?? "000000"))
 
 
         scrollView.addSubview(backgroundView)
@@ -283,6 +284,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
     
         //Right navigation button
         let item = UIBarButtonItem(image: UIImage(named: "pencil-3"), style: .done, target: self, action: #selector(customName))
+        item.tintColor = UIColor(hexString: product?.fontDesignColor ?? "FFFFFF")
         self.navigationItem.setRightBarButton(item, animated: false)
     }
     
@@ -293,10 +295,22 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        self.navigationController?.navigationBar.barTintColor = .white
 //        self.navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
         self.navigationController?.navigationBar.shadowImage = nil
         self.navigationController?.navigationBar.isTranslucent = false
     }
+    
+    func addCloseColorButton(with color: UIColor) {
+        let button = UIBarButtonItem(image: UIImage(systemName: "xmark"),
+                                     landscapeImagePhone: nil,
+                                     style: .done,
+                                     target: self,
+                                     action: #selector(onClose))
+        button.tintColor = color
+        navigationItem.leftBarButtonItem = button
+    }
+    
     
     @objc func customName(){
         let alertController = UIAlertController(title: "Название карты", message: "", preferredStyle: UIAlertController.Style.alert)
@@ -402,44 +416,81 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
     }
     
     @objc func showAlert(sender: AnyObject) {
-        let alert = UIAlertController(title: "", message: "", preferredStyle: .actionSheet)
+//        let alert = UIAlertController(title: "", message: "", preferredStyle: .actionSheet)
+//
+//        alert.title = nil
+//        alert.message = nil
+//
+//        alert.addAction(UIAlertAction(title: "С моего счета в другом банке", style: .default , handler:{ (UIAlertAction)in
+//            self.getFastPaymentContractList { [weak self] contractList, error in
+//                DispatchQueue.main.async {
+//                    if error != nil {
+//                        self?.showAlert(with: "Ошибка", and: error!)
+//                    } else {
+//                        let contr = contractList?.first?.fastPaymentContractAttributeList?.first
+//                        if contr?.flagClientAgreementIn == "NO" || contr?.flagClientAgreementOut == "NO" {
+//                            let vc = MeToMeSettingViewController()
+//                            if contractList != nil {
+//                                vc.model = contractList
+//                            } else {
+//                                vc.model = []
+//                            }
+////                            vc.addCloseButton()
+//                            self?.navigationController?.pushViewController(vc, animated: true)
+////                            let navVC = UINavigationController(rootViewController: vc)
+////                            navVC.modalPresentationStyle = .fullScreen
+////                            //                    navVC.addCloseButton()
+////                            self?.present(navVC, animated: true, completion: nil)
+//                        } else {
+//
+//                            let viewController =  MeToMeViewController()
+//                            viewController.meToMeContract = contractList
+//                            self?.navigationController?.pushViewController(viewController, animated: true)
+////                            viewController.addCloseButton()
+////                            let navVC = UINavigationController(rootViewController: viewController)
+////                            navVC.modalPresentationStyle = .fullScreen
+////                            self?.present(navVC, animated: true)
+//                        }
+//                    }
+//                }
+//            }
+//        }))
+//
+//        alert.addAction(UIAlertAction(title: "Со своего счета", style: .default , handler:{ (UIAlertAction)in
+//            let popView = CustomPopUpWithRateView()
+//            popView.onlyMy = false
+//            popView.modalPresentationStyle = .custom
+//            popView.transitioningDelegate = self
+//            self.present(popView, animated: true, completion: nil)
+//        }))
+//
+//        alert.addAction(UIAlertAction(title: "С карты в другом банке", style: .default , handler:{ (UIAlertAction)in
+//            let popView = MemeDetailVC()
+//            popView.onlyMy = false
+//            popView.onlyCard = true
+//            popView.titleLabel.text = "На другую карту"
+//            popView.modalPresentationStyle = .custom
+//            popView.transitioningDelegate = self
+//            self.present(popView, animated: true, completion: nil)
+//        }))
+//
+//        alert.addAction(UIAlertAction(title: "Отменить", style: .cancel, handler:{ (UIAlertAction)in
+//            print("User click Dismiss button")
+//        }))
+//
+//
+//        //uncomment for iPad Support
+//        //alert.popoverPresentationController?.sourceView = self.view
+//
+//        self.present(alert, animated: true, completion: {
+//            print("completion block")
+//        })
         
-        alert.title = nil
-        alert.message = nil
-        
-        alert.addAction(UIAlertAction(title: "С моего счета в другом банке", style: .default , handler:{ (UIAlertAction)in
-            
-        }))
-        
-        alert.addAction(UIAlertAction(title: "Со своего счета", style: .default , handler:{ (UIAlertAction)in
-            let popView = CustomPopUpWithRateView()
-            popView.onlyMy = false
-            popView.modalPresentationStyle = .custom
-            popView.transitioningDelegate = self
-            self.present(popView, animated: true, completion: nil)
-        }))
-
-        alert.addAction(UIAlertAction(title: "С карты в другом банке", style: .default , handler:{ (UIAlertAction)in
-            let popView = MemeDetailVC()
-            popView.onlyMy = false
-            popView.onlyCard = true
-            popView.titleLabel.text = "На другую карту"
-            popView.modalPresentationStyle = .custom
-            popView.transitioningDelegate = self
-            self.present(popView, animated: true, completion: nil)
-        }))
-        
-        alert.addAction(UIAlertAction(title: "Отменить", style: .cancel, handler:{ (UIAlertAction)in
-            print("User click Dismiss button")
-        }))
-
-        
-        //uncomment for iPad Support
-        //alert.popoverPresentationController?.sourceView = self.view
-
-        self.present(alert, animated: true, completion: {
-            print("completion block")
-        })
+        let viewController = PayViewController()
+        let navController = UINavigationController(rootViewController: viewController)
+        navController.modalPresentationStyle = .custom
+        navController.transitioningDelegate = self
+        self.present(navController, animated: true, completion: nil)
     }
     
     @objc func blockProduct(){
@@ -589,12 +640,18 @@ extension ProductViewController{
             item?.cardImageView.image = UIImage(named: "cardMore")
 //            item?.backgroundColor = .gray
 //            item?.selectedView.isHidden = true
+            
+            item?.isSelected = false
+
             return item ?? UICollectionViewCell()
         default:
             let item = collectionView.dequeueReusableCell(withReuseIdentifier: "CardCollectionViewCell", for: indexPath) as? CardCollectionViewCell
     //        item?.card = products[indexPath.item]
 //            item?.selectedView.isHidden = true
             item?.cardImageView.image = products[indexPath.row].smallDesign?.convertSVGStringToImage()
+            if firstTimeLoad{
+                item?.isSelected = false
+            }
             return item ?? UICollectionViewCell()
         }
     }
@@ -615,15 +672,23 @@ extension ProductViewController{
 ////            cell?.selectedView.layer.cornerRadius = cell?.frame.size.width ?? 0/2
 //
 //        }
-        if indexPath.row < products.count{
-            let cell = collectionView.cellForItem(at: indexPath) as? CardCollectionViewCell
+        if firstTimeLoad{
+            firstTimeLoad = false
+            self.collectionView?.selectItem(at: IndexPath(item: indexItem ?? 0, section: 0), animated: true, scrollPosition: .bottom)
+            let cell = collectionView.cellForItem(at: IndexPath(item: indexItem ?? 0, section: 0)) as? CardCollectionViewCell
             cell?.showSelect()
-            
-
         } else {
-            let vc = ProductsViewController()
-            vc.addCloseButton()
-            present(vc, animated: true, completion: nil)
+            if indexPath.item < products.count{
+                product = products[indexPath.item]
+                self.collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: .bottom)
+//                guard let cell = collectionView.cellForItem(at: indexPath) as? CardCollectionViewCell else {return}
+//                cell.showSelect()
+            } else {
+                self.collectionView?.deselectItem(at: indexPath, animated: true)
+                let vc = ProductsViewController()
+                vc.addCloseButton()
+                present(vc, animated: true, completion: nil)
+            }
         }
     }
     
@@ -679,14 +744,16 @@ extension ProductViewController{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "HistoryTableViewCell", for: indexPath) as? HistoryTableViewCell else { return  UITableViewCell() }
-        if historyArray[indexPath.row].operationType == "DEBIT"{
-            cell.amountLabel.textColor = UIColor(hexString: "22C183")
-            cell.amountLabel.text = "+\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
-        } else {
-            cell.amountLabel.text =  "-\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
-        }
-        
-        cell.titleLable.text = historyArray[indexPath.row].comment
+//        if historyArray[indexPath.row].operationType == "DEBIT"{
+//            cell.amountLabel.text = "-\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
+//        } else if historyArray[indexPath.row].operationType == "CREDIT"{
+//            cell.amountLabel.textColor = UIColor(hexString: "22C183")
+//            cell.amountLabel.text =  "+\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
+//        }
+//
+//        cell.titleLable.text = historyArray[indexPath.row].comment
+        cell.operation = historyArray[indexPath.row]
+        cell.configure()
         cell.selectionStyle = .none
         return cell
     }
@@ -703,10 +770,17 @@ extension ProductViewController{
         vc.confurmView.statusImageView.isHidden = true
         vc.confurmView.statusLabel.text = historyArray[indexPath.row].comment
         
+//        if historyArray[indexPath.row].operationType == "DEBIT"{
+//            vc.confurmView.summLabel.text = "+\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
+//        } else {
+//            vc.confurmView.summLabel.text = "-\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
+//        }
+        
         if historyArray[indexPath.row].operationType == "DEBIT"{
-            vc.confurmView.summLabel.text = "+\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
-        } else {
             vc.confurmView.summLabel.text = "-\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
+        } else if historyArray[indexPath.row].operationType == "CREDIT"{
+            vc.confurmView.summLabel.textColor = UIColor(hexString: "22C183")
+            vc.confurmView.summLabel.text =  "+\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
         }
         
         present(vc, animated: true, completion: nil)
@@ -728,6 +802,29 @@ extension ProductViewController{
             return headerView
         }
     
+    
+    
+    func getFastPaymentContractList(_ completion: @escaping (_ model: [FastPaymentContractFindListDatum]? ,_ error: String?) -> Void) {
+        NetworkManager<FastPaymentContractFindListDecodableModel>.addRequest(.fastPaymentContractFindList, [:], [:]) { model, error in
+            if error != nil {
+                print("DEBUG: Error: ", error ?? "")
+                completion(nil, error)
+            }
+            guard let model = model else { return }
+            print("DEBUG: fastPaymentContractFindList", model)
+            if model.statusCode == 0 {
+                completion(model.data, nil)
+            } else {
+                print("DEBUG: Error: ", model.errorMessage ?? "")
+                DispatchQueue.main.async {
+                if model.errorMessage == "Пользователь не авторизован"{
+                    AppLocker.present(with: .validate)
+                }
+                }
+                completion(nil, model.errorMessage)
+            }
+        }
+    }
 }
 
 //extension ProductViewController: UICollectionViewDelegateFlowLayout {
