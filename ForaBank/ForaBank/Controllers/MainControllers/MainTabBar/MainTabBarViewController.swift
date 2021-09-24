@@ -183,7 +183,7 @@ class MainTabBarViewController: UITabBarController {
         }
 
         /// Add REALM
-//        AddAllUserCardtList.add() {}
+        AddAllUserCardtList.add() {}
         
         
 //        NetworkHelper.request(.getProductList) { cardList , error in

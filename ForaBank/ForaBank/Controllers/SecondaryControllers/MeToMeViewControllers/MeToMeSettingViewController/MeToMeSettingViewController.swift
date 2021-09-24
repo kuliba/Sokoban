@@ -19,15 +19,13 @@ class MeToMeSettingViewController: UIViewController {
     var topSwitch = MeToMeSetupSwitchView()
     var cardFromField = CardChooseView()
     var cardListView = CardListView(onlyMy: false)
-//    var bankField = ForaInput(
-//        viewModel: ForaInputModel(
-//            title: "Банк получателя",
-//            image: #imageLiteral(resourceName: "BankIcon"),
-//            isEditable: false,
-//            showChooseButton: true))
     var banksView: BanksView = BanksView()
     var stackView = UIStackView(arrangedSubviews: [])
-    
+    var logo: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "sfpBig"))
+
+        return imageView
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -114,9 +112,9 @@ class MeToMeSettingViewController: UIViewController {
         // настраиваем название контроллера в 2 строки
         self.navigationItem.titleView = setTitle(title: "Настройки СБП", subtitle: "Система быстрых платежей")
         // настраиваем логотип экрана
-        let navImage = UIImage(named: "logo-spb-mini")
-        let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
-        self.navigationItem.rightBarButtonItem = customViewItem
+        view.addSubview(logo)
+        logo.centerX(inView: view)
+        logo.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingBottom: 40)
     }
     
     func setTitle(title: String, subtitle: String) -> UIView {
