@@ -115,10 +115,9 @@ class MainViewController: UIViewController {
         searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 48)
         //            navigationController?.navigationBar.isHidden = true
         searchContact.secondButton.image = UIImage(named: "Avatar")?.withRenderingMode(.alwaysTemplate)
-
-        searchContact.secondButton.tintColor = .gray
-        searchContact.secondButton.isUserInteractionEnabled = false
-        searchContact.secondButton.alpha = 0.4
+        searchContact.secondButton.tintColor = .black
+        searchContact.secondButton.isUserInteractionEnabled = true
+        searchContact.secondButton.alpha = 1
         
         let gesture = UITapGestureRecognizer(target: self, action: #selector(openSetting))
         searchContact.secondButton.addGestureRecognizer(gesture)

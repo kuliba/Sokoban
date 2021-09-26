@@ -52,11 +52,50 @@ class SettingTableViewController: UITableViewController {
         super.viewDidLoad()
         title = "Профиль"
         tableView.tableHeaderView = tableHeaderView
-        nameLabel.text = ""
-        phoneLabel.text = ""
+//        nameLabel.text = ""
+//        phoneLabel.text = ""
         emailLabel.text = ""
+        loadConfig()
     }
 
+    private func loadConfig() {
+        showActivity()
+        NetworkManager<GetUserSettingDecodableModel>.addRequest(.getUserSettings, [:], [:]) { model, error in
+            if error != nil {
+                self.dismissActivity()
+                self.showAlert(with: "Ошибка", and: error!)
+            } else {
+                if let model = model {
+                    if model.statusCode == 0 {
+                        DispatchQueue.main.async {
+                            model.data?.userSettingList?.forEach({ setting in
+                                if setting.sysName == "DisablePush" {
+                                    self.pushSwitch.isOn = setting.value == "1" ? false : true
+                                }
+                            })
+                        }
+                    }
+                }
+                self.getFastPaymentContractList { [weak self] contractList, error in
+                    self?.dismissActivity()
+                    if error != nil {
+                        self?.showAlert(with: "Ошибка", and: error!)
+                    } else {
+                        if let contractList = contractList {
+                            DispatchQueue.main.async {
+                                let mask = StringMask(mask: "+0 (000) 000-00-00")
+                                let number = mask.mask(string: contractList.first?.fastPaymentContractAttributeList?.first?.phoneNumber)
+                                self?.phoneLabel.text = number
+                                self?.nameLabel.text = contractList.first?.fastPaymentContractClAttributeList?.first?.clientInfo?.name
+                                
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     //MARK: - Actions
     
     @objc func changeImage() {
@@ -74,7 +113,9 @@ class SettingTableViewController: UITableViewController {
         let body = ["settingSysName": "DisablePush",
                     "settingValue": value] as [String : AnyObject]
         NetworkManager<SetUserSettingDecodableModel>.addRequest(.setUserSetting, [:], body) { model, error in
-            
+            if error != nil {
+                self.showAlert(with: "Ошибка", and: error!)
+            }
             
         }
     }
@@ -103,15 +144,15 @@ class SettingTableViewController: UITableViewController {
     
     //MARK: - API
     @IBAction func logout(_ sender: Any) {
-        NetworkManager<LogoutDecodableModel>.addRequest(.logout, [:], [:]) { _,_  in
-            print("Logout :", "Вышли из приложения")
-            DispatchQueue.main.async {
-                UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
-                let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
-                navVC.modalPresentationStyle = .fullScreen
-                self.present(navVC, animated: true, completion: nil)
+        showAlertWithCancel(with: "Выход", and: "Вы действительно хотите выйте из учетной записи?") {
+            NetworkManager<LogoutDecodableModel>.addRequest(.logout, [:], [:]) { _,_  in
+                DispatchQueue.main.async {
+                    UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
+                    let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
+                    navVC.modalPresentationStyle = .fullScreen
+                    self.present(navVC, animated: true, completion: nil)
+                }
             }
-            
         }
     }
     
