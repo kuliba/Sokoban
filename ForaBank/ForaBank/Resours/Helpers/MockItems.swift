@@ -134,7 +134,7 @@ class MockItems {
             
             PaymentsModel(id: 12, name: "Мобильная связь",
                           iconName: "smartphoneBlack",
-                          controllerName: "",
+                          controllerName: "MobilePayViewController",
                           description: "Что то"),
             
             PaymentsModel(id: 13, name: "Услуги ЖКХ",

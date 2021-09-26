@@ -99,7 +99,9 @@ extension PaymentsViewController: UICollectionViewDelegate {
                     viewController.addCloseButton()
                     let navVC = UINavigationController(rootViewController: viewController)
                     navVC.modalPresentationStyle = .fullScreen
+//                    present(navVC, animated: true)
                     
+//                    // ЖКХ
                     if indexPath.row == 2 {
                         let gkh = GKHMainViewController.storyboardInstance()!
                         let nc = UINavigationController(rootViewController: gkh)
@@ -108,10 +110,21 @@ extension PaymentsViewController: UICollectionViewDelegate {
                     } else {
                         present(navVC, animated: true)
                     }
+//                    // Мобильная связь
+//                    if indexPath.row == 1 {
+//                        let gkh = MobilePayViewController()
+//                        let nc = UINavigationController(rootViewController: gkh)
+//                        nc.modalPresentationStyle = .fullScreen
+//                        present(nc, animated: true)
+//                    } else {
+//                        present(navVC, animated: true)
+//                    }
                 }
             }
         }
     }
+    
+    
     
     private func openPhonePaymentVC(model: GetLatestPaymentsDatum) {
         let vc = PaymentByPhoneViewController()
