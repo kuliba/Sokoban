@@ -231,7 +231,7 @@
                                                     </userDefinedRuntimeAttributes>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Паспорт, ИНН, регистрация" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fTO-QC-0HL">
-                                                    <rect key="frame" x="80" y="27" width="314" height="21"/>
+                                                    <rect key="frame" x="80" y="27.5" width="314" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.10980392156862745" green="0.10980392156862745" blue="0.10980392156862745" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                     <nil key="highlightedColor"/>
@@ -330,6 +330,54 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ktq-DN-7f9" id="CLV-3c-dfs">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="56"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4lM-rO-3dH">
+                                                    <rect key="frame" x="20" y="8" width="40" height="40"/>
+                                                    <subviews>
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profileRing" translatesAutoresizingMaskIntoConstraints="NO" id="bWn-92-PCE">
+                                                            <rect key="frame" x="8" y="8" width="24" height="24"/>
+                                                            <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="24" id="JEP-de-DQs"/>
+                                                                <constraint firstAttribute="width" constant="24" id="rB2-Qv-oZe"/>
+                                                            </constraints>
+                                                        </imageView>
+                                                    </subviews>
+                                                    <color key="backgroundColor" red="0.96470588239999999" green="0.96470588239999999" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <constraints>
+                                                        <constraint firstItem="bWn-92-PCE" firstAttribute="centerX" secondItem="4lM-rO-3dH" secondAttribute="centerX" id="BWK-aL-l80"/>
+                                                        <constraint firstItem="bWn-92-PCE" firstAttribute="centerY" secondItem="4lM-rO-3dH" secondAttribute="centerY" id="Kim-YB-aOa"/>
+                                                        <constraint firstAttribute="height" constant="40" id="WKH-LX-o2j"/>
+                                                        <constraint firstAttribute="width" constant="40" id="nOZ-cB-XjU"/>
+                                                    </constraints>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                            <integer key="value" value="20"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                </view>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Push-уведомления" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UHg-gB-eD3">
+                                                    <rect key="frame" x="80" y="17.5" width="245" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="m4W-4m-C3O">
+                                                    <rect key="frame" x="345" y="12.5" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="pushSwitchChange:" destination="zN1-Px-RKf" eventType="valueChanged" id="1bZ-BK-moY"/>
+                                                    </connections>
+                                                </switch>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="4lM-rO-3dH" firstAttribute="centerY" secondItem="CLV-3c-dfs" secondAttribute="centerY" id="4EH-3x-HGp"/>
+                                                <constraint firstItem="m4W-4m-C3O" firstAttribute="centerY" secondItem="CLV-3c-dfs" secondAttribute="centerY" id="5Cn-3e-AZl"/>
+                                                <constraint firstItem="4lM-rO-3dH" firstAttribute="leading" secondItem="CLV-3c-dfs" secondAttribute="leading" constant="20" id="98d-3y-Z0h"/>
+                                                <constraint firstItem="UHg-gB-eD3" firstAttribute="leading" secondItem="4lM-rO-3dH" secondAttribute="trailing" constant="20" id="CaL-bD-mmV"/>
+                                                <constraint firstItem="m4W-4m-C3O" firstAttribute="leading" secondItem="UHg-gB-eD3" secondAttribute="trailing" constant="20" id="dZz-Di-KC7"/>
+                                                <constraint firstItem="UHg-gB-eD3" firstAttribute="centerY" secondItem="CLV-3c-dfs" secondAttribute="centerY" id="hMx-Xz-jK1"/>
+                                                <constraint firstAttribute="trailing" secondItem="m4W-4m-C3O" secondAttribute="trailing" constant="20" id="xHF-XS-T5X"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="56" id="Odo-L9-lRy">
@@ -404,6 +452,7 @@
                         <outlet property="emailLabel" destination="8ic-pW-xGf" id="pKg-gY-WGi"/>
                         <outlet property="nameLabel" destination="12K-VH-o7W" id="0Ls-mQ-xjM"/>
                         <outlet property="phoneLabel" destination="AkU-iQ-TX1" id="nLt-MG-Kgv"/>
+                        <outlet property="pushSwitch" destination="m4W-4m-C3O" id="5k5-w8-fNy"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ckU-lS-rMc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -429,5 +478,6 @@
         <image name="log-out" width="24" height="24"/>
         <image name="logo-spb-mini" width="32" height="32"/>
         <image name="person" catalog="system" width="128" height="117"/>
+        <image name="profileRing" width="24" height="24"/>
     </resources>
 </document>

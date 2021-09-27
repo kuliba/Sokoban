@@ -263,10 +263,12 @@ class MeToMeRequestController: UIViewController {
                 self.bankField.isHidden = true
                 self.summTransctionField.isHidden = true
                 self.taxTransctionField.isHidden = true
-                self.fpsSwitch.isHidden = true
-                self.tarifView.isHidden = true
+//                self.fpsSwitch.isHidden = true
+//                self.tarifView.isHidden = true
+                self.labelTitle.text = "Переводить без подтверждения?"
                 self.nextButton.setTitle("Да", for: .normal)
                 self.cancelButton.setTitle("Пока нет", for: .normal)
+                
             }
             nextStep = true
         }

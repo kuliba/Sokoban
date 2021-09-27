@@ -106,6 +106,7 @@ class PayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
 
                             let viewController =  MeToMeViewController()
                             viewController.meToMeContract = contractList
+                            viewController.addCloseButton()
 //                            viewController.modalPresentationStyle = .fullScreen
 //                            self?.navigationController?.pushViewController(viewController, animated: true)
                             let navController = UINavigationController(rootViewController: viewController)

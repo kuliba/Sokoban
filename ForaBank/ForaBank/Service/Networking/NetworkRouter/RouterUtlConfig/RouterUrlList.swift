@@ -78,6 +78,10 @@ enum RouterUrlList: String {
     case blockCard
     case unblockCard
     case getProductDetails
+    case setUserSetting
+    case getUserSettings
+    case getPhoneInfo
+    case createMobileTransfer
     
     func returnUrl () -> URLValue {
         switch self {
@@ -775,6 +779,49 @@ enum RouterUrlList: String {
             
         case .getProductDetails:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getProductDetails.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .setUserSetting:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.setUserSetting.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .getUserSettings:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getUserSettings.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .getPhoneInfo:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getPhoneInfo.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+        case .createMobileTransfer:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.createMobileTransfer.rawValue)
             
             switch result {
             case .success(let url):

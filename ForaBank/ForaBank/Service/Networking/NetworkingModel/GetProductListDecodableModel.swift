@@ -175,7 +175,7 @@ extension GetProductListDatum {
             paymentSystemImage: paymentSystemImage ?? self.paymentSystemImage,
             fontDesignColor: fontDesignColor ?? self.fontDesignColor,
             id: id ?? self.id,
-            background: (background ?? self.background) ?? [],
+            background: (background ?? []) ?? self.background,
             XLDesign: XLDesign ?? self.XLDesign
         )
     }

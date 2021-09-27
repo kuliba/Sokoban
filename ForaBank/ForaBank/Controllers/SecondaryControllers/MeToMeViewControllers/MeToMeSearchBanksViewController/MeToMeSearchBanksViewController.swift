@@ -95,10 +95,28 @@ class MeToMeSearchBanksViewController: UIViewController {
         view.backgroundColor = .white
         setupNavigationBar()
 
+        let bottomView = UIView()
+        bottomView.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 0.82)
+        
+        let logo = UIImageView(image: UIImage(named: "sfpBig"))
+        bottomView.addSubview(logo)
+        bottomView.addSubview(saveButton)
+        
+        logo.centerX(inView: bottomView)
+        logo.anchor(bottom: bottomView.bottomAnchor, paddingBottom: 14)
+        saveButton.anchor(top: bottomView.topAnchor,
+                          left: bottomView.leftAnchor,
+                          right: bottomView.rightAnchor,
+                          paddingTop: 14, paddingLeft: 20,
+                          paddingRight: 20, height: 48)
+        
         view.addSubview(topLabel)
         view.addSubview(searchTextField)
         view.addSubview(tableView)
-        view.addSubview(saveButton)
+        view.addSubview(bottomView)
+        
+        bottomView.anchor(left: view.leftAnchor, bottom: view.bottomAnchor,
+                          right: view.rightAnchor, height: 136)
         
         topLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor,
                         left: view.leftAnchor, right: view.rightAnchor,
@@ -112,11 +130,6 @@ class MeToMeSearchBanksViewController: UIViewController {
         tableView.anchor(top: searchTextField.bottomAnchor, left: view.leftAnchor,
                          bottom: view.bottomAnchor, right: view.rightAnchor,
                          paddingTop: 20)
-        
-        saveButton.anchor(left: view.leftAnchor,
-                          bottom: view.safeAreaLayoutGuide.bottomAnchor,
-                          right: view.rightAnchor, paddingLeft: 20,
-                          paddingBottom: 20, paddingRight: 20, height: 48)
         
     }
     

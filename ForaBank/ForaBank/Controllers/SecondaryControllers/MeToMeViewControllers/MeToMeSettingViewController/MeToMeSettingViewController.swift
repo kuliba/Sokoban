@@ -19,14 +19,13 @@ class MeToMeSettingViewController: UIViewController {
     var topSwitch = MeToMeSetupSwitchView()
     var cardFromField = CardChooseView()
     var cardListView = CardListView(onlyMy: false)
-    var bankField = ForaInput(
-        viewModel: ForaInputModel(
-            title: "Банк получателя",
-            image: #imageLiteral(resourceName: "BankIcon"),
-            isEditable: false,
-            showChooseButton: true))
+    var banksView: BanksView = BanksView()
     var stackView = UIStackView(arrangedSubviews: [])
-    
+    var logo: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "sfpBig"))
+
+        return imageView
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,7 +34,7 @@ class MeToMeSettingViewController: UIViewController {
         setupStackView()
         setupTopSwitch()
         setupCardFromView()
-        setupBankFiewld()
+        setupBankField()
         setupCardList { [weak self] error in
             if error != nil {
                 self?.showAlert(with: "Ошибка", and: error!)
@@ -67,6 +66,14 @@ class MeToMeSettingViewController: UIViewController {
                 }
             }
         }
+        
+        getClientConsent { list, error in
+            if error != nil {
+                self.showAlert(with: "Ошибка", and: error!)
+            } else {
+                self.banksView.consentList = list
+            }
+        }
     }
     
     func configure(with model: [FastPaymentContractFindListDatum]) {
@@ -89,7 +96,7 @@ class MeToMeSettingViewController: UIViewController {
     }
     
     func setupStackView() {
-        stackView = UIStackView(arrangedSubviews: [topSwitch, cardFromField, cardListView, bankField])
+        stackView = UIStackView(arrangedSubviews: [topSwitch, cardFromField, cardListView, banksView])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
@@ -105,9 +112,9 @@ class MeToMeSettingViewController: UIViewController {
         // настраиваем название контроллера в 2 строки
         self.navigationItem.titleView = setTitle(title: "Настройки СБП", subtitle: "Система быстрых платежей")
         // настраиваем логотип экрана
-        let navImage = UIImage(named: "logo-spb-mini")
-        let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
-        self.navigationItem.rightBarButtonItem = customViewItem
+        view.addSubview(logo)
+        logo.centerX(inView: view)
+        logo.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingBottom: 40)
     }
     
     func setTitle(title: String, subtitle: String) -> UIView {
@@ -145,9 +152,9 @@ class MeToMeSettingViewController: UIViewController {
         }
     }
     
-    private func setupBankFiewld() {
+    private func setupBankField() {
         // действие по нажатию на поле с банком
-        bankField.didChooseButtonTapped = { () in
+        banksView.didChooseButtonTapped = { () in
             print("bankField didChooseButtonTapped")
             let settingVC = MeToMeSearchBanksViewController()
             let navVC = UINavigationController(rootViewController: settingVC)
@@ -327,8 +334,29 @@ class MeToMeSettingViewController: UIViewController {
         }
     }
     
-    func safeDefaultCard() {
-
+    func getClientConsent(completion: @escaping (_ bankList: [ConsentList]?, _ error: String?) -> Void) {
+        showActivity()
+        NetworkManager<GetClientConsentMe2MePullDecodableModel>.addRequest(.getClientConsentMe2MePull, [:], [:]) { [weak self] model, error in
+            self?.dismissActivity()
+            if error != nil {
+                guard let error = error else { return }
+                print("DEBUG: Error: ", error)
+                completion(nil, error)
+            }
+            guard let model = model else { return }
+            print("DEBUG: Card list: ", model)
+            if model.statusCode == 0 {
+                guard let data  = model.data else { return }
+                completion(data.consentList ?? [], nil)
+            } else {
+                guard let error = model.errorMessage else { return }
+                print("DEBUG: Error: ", error)
+                if model.errorMessage == "Пользователь не авторизован"{
+                    AppLocker.present(with: .validate)
+                }
+                completion(nil, error)
+            }
+        }
     }
     
 }

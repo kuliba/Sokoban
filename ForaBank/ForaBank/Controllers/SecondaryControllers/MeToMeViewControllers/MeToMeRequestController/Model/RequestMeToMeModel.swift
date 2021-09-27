@@ -89,19 +89,23 @@ struct RequestMeToMeModel {
     
     private mutating func findProduct(with cardId: Int?, with accountId: Int?) -> UserAllCardsModel? {
         let cardList = realm?.objects(UserAllCardsModel.self)
+        print("DEBUG UserAllCards", cardList?.count)
         var card: UserAllCardsModel?
         cardList?.forEach { product in
+            print("DEBUG product", product.id)
             if cardId != nil {
                 if product.id == cardId {
                     card = product
                 }
-            } else if accountId != nil {
+            } else {
                 if product.id == accountId {
                     card = product
                 }
-            } else {
-                card = cardList?.first
             }
+            
+        }
+        if card == nil {
+            card = cardList?.first
         }
         return card
     }
