@@ -230,7 +230,7 @@ class MainViewController: UIViewController {
         collectionView.register(ProductCell.self, forCellWithReuseIdentifier: ProductCell.reuseId)
         collectionView.register(NewProductCell.self, forCellWithReuseIdentifier: NewProductCell.reuseId)
         
-        collectionView.contentInset = UIEdgeInsets(top: 15, left: 0, bottom: 20, right: 0)
+        collectionView.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: 20, right: 0)
         collectionView.isScrollEnabled = true
         collectionView.delegate = self
         

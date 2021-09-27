@@ -55,7 +55,7 @@ extension MainViewController {
             }
         }
         let config = UICollectionViewCompositionalLayoutConfiguration()
-        config.interSectionSpacing = 16
+        config.interSectionSpacing = 0
         layout.configuration = config
         return layout
     }
@@ -73,12 +73,12 @@ extension MainViewController {
         let group = NSCollectionLayoutGroup.horizontal(
             layoutSize: groupSize, subitems: [item])
 
-        group.contentInsets = .uniform(size: 5)
+        group.contentInsets = .uniform(size: 4)
         
         let section = NSCollectionLayoutSection(group: group)
 
-        section.interGroupSpacing = 8
-        section.contentInsets = .init(horizontal: 20, vertical: 8)
+        section.interGroupSpacing = 0
+        section.contentInsets = .init(top: 16, leading: 20, bottom: 32, trailing: 20)
 
         
         section.orthogonalScrollingBehavior = .paging
@@ -123,12 +123,12 @@ extension MainViewController {
         let group = NSCollectionLayoutGroup.horizontal(
             layoutSize: groupSize, subitems: [item])
         
-        group.contentInsets = .uniform(size: 5)
+        group.contentInsets = .uniform(size: 4)
         
         let section = NSCollectionLayoutSection(group: group)
         
-        section.interGroupSpacing = 8
-        section.contentInsets = .init(horizontal: 20, vertical: 10)
+        section.interGroupSpacing = 0
+        section.contentInsets = .init(top: 16, leading: 20, bottom: 32, trailing: 20)
         
         section.orthogonalScrollingBehavior = .continuous
         
@@ -154,8 +154,9 @@ extension MainViewController {
 
         let section = NSCollectionLayoutSection(group: group)
 
-        section.interGroupSpacing = 10
-        section.contentInsets = .init(horizontal: 20, vertical: 8)
+        section.interGroupSpacing = 0
+        
+        section.contentInsets = .init(top: 16, leading: 20, bottom: 32, trailing: 20)
 
         section.orthogonalScrollingBehavior = .continuous
 
@@ -168,17 +169,17 @@ extension MainViewController {
 
         let item = NSCollectionLayoutItem.withEntireSize()
         let groupSize = NSCollectionLayoutSize(
-            widthDimension: .absolute(88),
+            widthDimension: .absolute(80),
 //            heightDimension: .fractionalHeight(0.12))
-            heightDimension: .absolute(100))
+            heightDimension: .absolute(96))
 
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        group.contentInsets = .uniform(size: 5)
+        group.contentInsets = .uniform(size: 2)
 
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = 4
 
-        section.contentInsets = .init(horizontal: 20, vertical: 16)
+        section.contentInsets = .init(top: 16, leading: 20, bottom: 32, trailing: 20)
 
         section.orthogonalScrollingBehavior = .continuous
 
@@ -202,7 +203,7 @@ extension MainViewController {
         let section = NSCollectionLayoutSection(group: group)
 
         section.interGroupSpacing = 8
-        section.contentInsets = .init(horizontal: 20, vertical: 16)
+        section.contentInsets = .init(top: 16, leading: 20, bottom: 32, trailing: 20)
 
         section.orthogonalScrollingBehavior = .continuous
 
@@ -222,6 +223,7 @@ extension MainViewController {
             layoutSize: sectionHeaderSize,
             elementKind: UICollectionView.elementKindSectionHeader,
             alignment: .top)
+         
 
         
         return sectionHeader

@@ -43,21 +43,21 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
     
     private let maskCardLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 11 )
+        label.font = UIFont.systemFont(ofSize: 12 )
         label.text = ""
         return label
     }()
 
     private let balanceLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 11 )
+        label.font = UIFont.boldSystemFont(ofSize: 14 )
         label.text = ""
         return label
     }()
 
     private let cardNameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 11 )
+        label.font = UIFont.boldSystemFont(ofSize: 14 )
         label.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
         label.text = "Зарплатная"
         return label
@@ -109,8 +109,8 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
         backgroundColor = .clear
         layer.cornerRadius = 8
         layer.shadowColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1).cgColor
-        layer.shadowRadius = 6
-        layer.shadowOpacity = 0.3
+        layer.shadowRadius = 10
+        layer.shadowOpacity = 0.4
         layer.shadowOffset = CGSize()
 //        0.785
         let shadowPath = UIBezierPath(
@@ -137,7 +137,8 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
         
         cardNameLabel.anchor(top: maskCardLabel.bottomAnchor, left: self.leftAnchor, right: self.rightAnchor,
                              paddingTop: 25, paddingLeft: 12, paddingRight: 8)
-        
+        cardNameLabel.font = UIFont.systemFont(ofSize: 14, weight: .light)
+
         balanceLabel.anchor(left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor,
                             paddingLeft: 12, paddingBottom: 15, paddingRight: 30)
     }
