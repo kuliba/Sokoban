@@ -13,7 +13,7 @@ class RequisitsTableViewCell: UITableViewCell {
     @IBOutlet weak var nameCellLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
     var product: GetProductListDatum?
-
+    var bRec = true
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -21,15 +21,13 @@ class RequisitsTableViewCell: UITableViewCell {
         contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0))
         if nameCellLabel.text == "Номер карты"{
             rightButton.isHidden = false
+            
             rightButton.addTarget(self, action: #selector(unmaskNumber), for: .touchUpInside)
         } else if nameCellLabel.text == "Корреспондентский счет"{
             rightButton.setImage(UIImage(named: "copy"), for: .normal)
             rightButton.isHidden = false
             rightButton.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(copyValuePressed)))
-
         }
-
-
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -42,7 +40,14 @@ class RequisitsTableViewCell: UITableViewCell {
         UIPasteboard.general.string = titleLabel.text
     }
     @objc func unmaskNumber() {
-        titleLabel.text = product?.number
+        bRec = !bRec
+        if bRec {
+            rightButton.setImage(UIImage(named: "copy"), for: .normal)
+            titleLabel.text = product?.number
+        } else {
+            titleLabel.text = product?.numberMasked
+            rightButton.setImage(UIImage(named: "eye-off"), for: .normal)
+        }
     }
     
 }
