@@ -20,7 +20,7 @@ class HistoryTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        configure()
+        
     }
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -34,17 +34,17 @@ class HistoryTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    func configure(){
+    func configure(currency: String){
         titleLable.text = operation?.comment
         guard let sum = operation?.amount else {
             return
         }
         if operation?.operationType == "DEBIT"{
             amountLabel.textColor = UIColor(hexString: "1C1C1C")
-            amountLabel.text = "-\(sum)"
+            amountLabel.text = "-\(sum.currencyFormatter(symbol: currency))"
         } else {
             amountLabel.textColor = UIColor(hexString: "22C183")
-            amountLabel.text = "+\(sum)"
+            amountLabel.text = "+\(sum.currencyFormatter(symbol: currency))"
         }
     }
     
