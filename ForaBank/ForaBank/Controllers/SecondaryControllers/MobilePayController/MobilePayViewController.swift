@@ -33,7 +33,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        addCloseButton()
+        //        addCloseButton()
         setupNavBar()
         phoneField.textField.delegate = self
         phoneField.rightButton.setImage(UIImage(imageLiteralResourceName: "user-plus"), for: .normal)
@@ -79,11 +79,11 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if let text = textField.text,
-                   let textRange = Range(range, in: text) {
-                   let updatedText = text.replacingCharacters(in: textRange,
-                                                               with: string)
+           let textRange = Range(range, in: text) {
+            let updatedText = text.replacingCharacters(in: textRange,
+                                                       with: string)
             selectNumber = updatedText
-                }
+        }
         return true
     }
     
@@ -187,7 +187,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
         
         NetworkManager<GetPhoneInfoDecodableModel>.addRequest(.getPhoneInfo, [:], newBody, completion: { [weak self] phoneData, error in
             self?.dismissActivity()
-
+            
             if phoneData?.errorMessage != nil {
                 completion(error)
             }
@@ -196,42 +196,48 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                 UserDefaults.standard.set(data.data?.first?.svgImage, forKey: "MobilePhoneSVGImage")
                 let puref = data.data?.first?.puref ?? ""
                 
-                let cardId = self?.cardField.cardModel?.accountID ?? 0
+                let cardId = self?.cardField.cardModel?.id ?? 0
                 
                 let body = [
                     "check" : false,
                     "amount" : amount,
                     "currencyAmount" : "RUB",
                     "payer" : [
-                        "cardId" : nil,
+                        "cardId" : cardId,
                         "cardNumber" : nil,
-                        "accountId" : cardId
+                        "accountId" : nil
                     ],
                     "puref" : puref,
-                    "additional" : [
-                          "fieldid": 1,
-                          "fieldname": "a3_NUMBER_1_2",
-                          "fieldvalue": "9139005160"]
+                    "additional" : [[
+                        "fieldid": 1,
+                        "fieldname": "a3_NUMBER_1_2",
+                        "fieldvalue": phone.digits]]
                 ] as [String: AnyObject]
                 
                 print(body)
-            
+                
                 NetworkManager<CreateMobileTransferDecodableModel>.addRequest(.createMobileTransfer, [:], body, completion: { [weak self] data, error in
                     
                     if data?.errorMessage != nil {
                         completion(error)
                     }
                     if data?.statusCode == 0 {
-                    var model = ConfirmViewControllerModel(type: .mobilePayment)
-                    
-                    model.cardFrom = self?.cardField.cardModel
-                    model.phone = self?.phoneField.text.digits ?? ""
+                        var model = ConfirmViewControllerModel(type: .mobilePayment)
+                        
+                        model.cardFrom = self?.cardField.cardModel
+                        
+                        let a = data?.data?.additionalList
+                        
+                        a?.forEach{ list in
+                            if list.fieldName == "a3_NUMBER_1_2" {
+                                model.phone = list.fieldValue
+                            }
+                        }
 
-//                    model.fullName = data?.data?.payeeName
                         model.summTransction = Double(data?.data?.amount ?? Double(0.0)).currencyFormatter(symbol: data?.data?.currencyAmount ?? "" )
                         model.taxTransction = Double(data?.data?.fee ?? Int(0.0)).currencyFormatter(symbol: data?.data?.currencyAmount ?? "")
-
-                    model.statusIsSuccses = true
+                        
+                        model.statusIsSuccses = true
                         DispatchQueue.main.async {
                             let vc = ContactConfurmViewController()
                             vc.bankField.isHidden = true
@@ -243,8 +249,9 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                             vc.currancyTransctionField.isHidden = true
                             vc.confurmVCModel = model
                             vc.addCloseButton()
+                            
                             vc.title = "Подтвердите реквизиты"
-
+                            
                             let navController = UINavigationController(rootViewController: vc)
                             navController.modalPresentationStyle = .fullScreen
                             self?.present(navController, animated: true, completion: nil)

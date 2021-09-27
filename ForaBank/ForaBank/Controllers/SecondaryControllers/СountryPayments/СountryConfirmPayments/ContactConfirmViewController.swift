@@ -385,7 +385,7 @@ class ContactConfurmViewController: UIViewController {
             currancyTransctionField.isHidden = true
             
             numberTransctionField.isHidden = true
-            let mask = StringMask(mask: "0 (000) 000-00-00")
+            let mask = StringMask(mask: "+7 (000) 000-00-00")
             let maskPhone = mask.mask(string: model.phone)
         
             phoneField.text = maskPhone ?? ""
