@@ -167,6 +167,7 @@ struct ConfirmViewControllerModel {
         case phoneNumber
         case phoneNumberSBP
         case gkh
+        case mobilePayment
     }
     
 }
@@ -369,13 +370,27 @@ class ContactConfurmViewController: UIViewController {
             nameField.text =  model.fullName ?? ""
             bankField.text = model.bank?.memberNameRus ?? "" //"АйДиБанк"
             bankField.imageView.image = model.bank?.svgImage?.convertSVGStringToImage()
-//            if smsCodeField.isHidden == false{
-//                numberTransctionField.text = model.numberTransction
-//                let customViewItem = UIBarButtonItem(customView: UIImageView(image: #imageLiteral(resourceName: "sbp-logo")))
-//                customViewItem.width = 24
-//                self.navigationItem.rightBarButtonItem = customViewItem
-//
-//            }
+
+            cardFromField.cardModel = model.cardFrom
+            cardFromField.isHidden = false
+            cardFromField.choseButton.isHidden = true
+            cardFromField.balanceLabel.isHidden = true
+            cardFromField.titleLabel.text = "Счет списания"
+            cardFromField.leftTitleAncor.constant = 64
+            
+        case .mobilePayment:
+            cardToField.isHidden = true
+            countryField.isHidden = true
+            bankField.isHidden = true
+            currancyTransctionField.isHidden = true
+            
+            numberTransctionField.isHidden = true
+            let mask = StringMask(mask: "+7 (000) 000-00-00")
+            let maskPhone = mask.mask(string: model.phone)
+        
+            phoneField.text = maskPhone ?? ""
+            nameField.text =  model.fullName ?? ""
+
             cardFromField.cardModel = model.cardFrom
             cardFromField.isHidden = false
             cardFromField.choseButton.isHidden = true
@@ -517,7 +532,7 @@ class ContactConfurmViewController: UIViewController {
         
         switch confurmVCModel?.type {
         
-        case .card2card, .requisites, .phoneNumber, .gkh:
+        case .card2card, .requisites, .phoneNumber, .gkh, .mobilePayment:
             print(#function, body)
             NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { respons, error in
                 if error != nil {
@@ -542,6 +557,8 @@ class ContactConfurmViewController: UIViewController {
                             vc.printFormType = "external"
                         case .gkh:
                             vc.printFormType = "housingAndCommunalService"
+                        case .mobilePayment:
+                            vc.printFormType = "mobile"
                         default:
                             break
                         }

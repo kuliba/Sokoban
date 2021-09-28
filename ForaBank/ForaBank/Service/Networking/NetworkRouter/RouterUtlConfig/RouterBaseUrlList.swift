@@ -116,6 +116,10 @@ enum RouterBaseUrlList: String {
     
     case getUserSettings            = "/rest/getUserSettings"
     
+    case getPhoneInfo               = "/rest/getPhoneInfo"
+    
+    case createMobileTransfer       = "/rest/transfer/createMobileTransfer"
+    
     // MARK: - В не авторизованную зону.
     ///Обновление по serial
         

@@ -133,7 +133,7 @@ extension MainViewController {
                 sectionHeader.isHidden = true
             case .products:
                 sectionHeader.configure(text: section.description(),
-                                        font: .boldSystemFont(ofSize: 18),
+                                        font: .boldSystemFont(ofSize: 20),
                                         textColor: .black, expandingIsHidden: false, seeAllIsHidden: false)
                 sectionHeader.seeAllButton.addTarget(self, action: #selector(passAllProducts), for: .touchUpInside)
                 sectionHeader.arrowButton.addTarget(self, action: #selector(expandingSection), for: .touchUpInside)
@@ -144,7 +144,7 @@ extension MainViewController {
             
             default:
                 sectionHeader.configure(text: section.description(),
-                                        font: .boldSystemFont(ofSize: 18),
+                                        font: .boldSystemFont(ofSize: 20),
                                         textColor: .black, expandingIsHidden: false, seeAllIsHidden: true)
             }
             

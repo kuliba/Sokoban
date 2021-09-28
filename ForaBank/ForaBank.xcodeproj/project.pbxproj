@@ -22,6 +22,13 @@
 		0B22AEAC26CE8DD100B11E7F /* GKHDataSorted.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B22AEAB26CE8DD100B11E7F /* GKHDataSorted.swift */; };
 		0B22AEAE26CE8DFE00B11E7F /* GKHDataCaseImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B22AEAD26CE8DFE00B11E7F /* GKHDataCaseImage.swift */; };
 		0B22AEB026CEB80100B11E7F /* Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B22AEAF26CEB80100B11E7F /* Keyboard.swift */; };
+		0B283FB626FB7D1000B5E925 /* MobilePayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B283FB526FB7D1000B5E925 /* MobilePayViewController.swift */; };
+		0B283FB826FB7DD300B5E925 /* ExtensionMobilePayNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B283FB726FB7DD300B5E925 /* ExtensionMobilePayNav.swift */; };
+		0B283FBB26FBC9C800B5E925 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B283FBA26FBC9C800B5E925 /* Coordinator.swift */; };
+		0B283FBD26FBC9F100B5E925 /* Presentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B283FBC26FBC9F100B5E925 /* Presentable.swift */; };
+		0B283FBF26FBCA0A00B5E925 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B283FBE26FBCA0A00B5E925 /* Router.swift */; };
+		0B283FC126FCB31600B5E925 /* GetPhoneInfoDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B283FC026FCB31600B5E925 /* GetPhoneInfoDecodableModel.swift */; };
+		0B283FC32701016100B5E925 /* CreateMobileTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B283FC22701016100B5E925 /* CreateMobileTransferDecodableModel.swift */; };
 		0B2A8D2726E7837300651BCB /* IsLoginDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2A8D2626E7837300651BCB /* IsLoginDecodableModel.swift */; };
 		0B2A8D2926E78E5C00651BCB /* CreateMe2MePullDebitTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2A8D2826E78E5C00651BCB /* CreateMe2MePullDebitTransferDecodableModel.swift */; };
 		0B2A8D2C26E8D9B600651BCB /* GetLatestPhonePayments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2A8D2B26E8D9B600651BCB /* GetLatestPhonePayments.swift */; };
@@ -141,7 +148,6 @@
 		0BE270B326B9959900FA958C /* ExtensionBottomLableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */; };
 		0BE270B626B9DA4800FA958C /* ExtensionBottomInputViewRevers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270B526B9DA4800FA958C /* ExtensionBottomInputViewRevers.swift */; };
 		0BE270B826B9DC4200FA958C /* ExtensionBottomInputViewExchange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270B726B9DC4200FA958C /* ExtensionBottomInputViewExchange.swift */; };
-		0BE270BA26B9F36A00FA958C /* ExtensionBottomInputRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270B926B9F36900FA958C /* ExtensionBottomInputRequest.swift */; };
 		0BEC8939267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC8938267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift */; };
 		0BEC893B2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC893A2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift */; };
 		0BEC893D2672591A00D8BD22 /* GetCardListDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC893C2672591A00D8BD22 /* GetCardListDecodebleModel.swift */; };
@@ -427,6 +433,13 @@
 		0B22AEAB26CE8DD100B11E7F /* GKHDataSorted.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHDataSorted.swift; sourceTree = "<group>"; };
 		0B22AEAD26CE8DFE00B11E7F /* GKHDataCaseImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHDataCaseImage.swift; sourceTree = "<group>"; };
 		0B22AEAF26CEB80100B11E7F /* Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keyboard.swift; sourceTree = "<group>"; };
+		0B283FB526FB7D1000B5E925 /* MobilePayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilePayViewController.swift; sourceTree = "<group>"; };
+		0B283FB726FB7DD300B5E925 /* ExtensionMobilePayNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionMobilePayNav.swift; sourceTree = "<group>"; };
+		0B283FBA26FBC9C800B5E925 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		0B283FBC26FBC9F100B5E925 /* Presentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presentable.swift; sourceTree = "<group>"; };
+		0B283FBE26FBCA0A00B5E925 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		0B283FC026FCB31600B5E925 /* GetPhoneInfoDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPhoneInfoDecodableModel.swift; sourceTree = "<group>"; };
+		0B283FC22701016100B5E925 /* CreateMobileTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMobileTransferDecodableModel.swift; sourceTree = "<group>"; };
 		0B2A8D2626E7837300651BCB /* IsLoginDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsLoginDecodableModel.swift; sourceTree = "<group>"; };
 		0B2A8D2826E78E5C00651BCB /* CreateMe2MePullDebitTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMe2MePullDebitTransferDecodableModel.swift; sourceTree = "<group>"; };
 		0B2A8D2B26E8D9B600651BCB /* GetLatestPhonePayments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLatestPhonePayments.swift; sourceTree = "<group>"; };
@@ -543,7 +556,6 @@
 		0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBottomLableModel.swift; sourceTree = "<group>"; };
 		0BE270B526B9DA4800FA958C /* ExtensionBottomInputViewRevers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBottomInputViewRevers.swift; sourceTree = "<group>"; };
 		0BE270B726B9DC4200FA958C /* ExtensionBottomInputViewExchange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBottomInputViewExchange.swift; sourceTree = "<group>"; };
-		0BE270B926B9F36900FA958C /* ExtensionBottomInputRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBottomInputRequest.swift; sourceTree = "<group>"; };
 		0BEC8938267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallPushDeviceDecodebleModel.swift; sourceTree = "<group>"; };
 		0BEC893A2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistredPushDeviceTorUserDecodebleModel.swift; sourceTree = "<group>"; };
 		0BEC893C2672591A00D8BD22 /* GetCardListDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCardListDecodebleModel.swift; sourceTree = "<group>"; };
@@ -881,6 +893,25 @@
 			name = GKHDataType;
 			sourceTree = "<group>";
 		};
+		0B283FB426FB7CCE00B5E925 /* MobilePayController */ = {
+			isa = PBXGroup;
+			children = (
+				0B283FB526FB7D1000B5E925 /* MobilePayViewController.swift */,
+				0B283FB726FB7DD300B5E925 /* ExtensionMobilePayNav.swift */,
+			);
+			path = MobilePayController;
+			sourceTree = "<group>";
+		};
+		0B283FB926FBC99600B5E925 /* NavigationCoordinator */ = {
+			isa = PBXGroup;
+			children = (
+				0B283FBA26FBC9C800B5E925 /* Coordinator.swift */,
+				0B283FBC26FBC9F100B5E925 /* Presentable.swift */,
+				0B283FBE26FBCA0A00B5E925 /* Router.swift */,
+			);
+			path = NavigationCoordinator;
+			sourceTree = "<group>";
+		};
 		0B2A8D2A26E8D98700651BCB /* GetLatestPhonePayments */ = {
 			isa = PBXGroup;
 			children = (
@@ -1025,7 +1056,6 @@
 				0B95C40B26B72CB100AA57E6 /* ExtensionBottomViewWithSetup.swift */,
 				0BE270B526B9DA4800FA958C /* ExtensionBottomInputViewRevers.swift */,
 				0BE270B726B9DC4200FA958C /* ExtensionBottomInputViewExchange.swift */,
-				0BE270B926B9F36900FA958C /* ExtensionBottomInputRequest.swift */,
 				0BE270B126B9957B00FA958C /* BottomLableModel */,
 			);
 			path = BottomInputViewWithRate;
@@ -2239,7 +2269,6 @@
 		EDB1452926663BD90028EF5A /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				0BA09E2A26ADD6A50065D623 /* GKHController */,
 				EDAA99AC2673AB6D00435484 /* Views */,
 				EDB1452A26663BF40028EF5A /* Login */,
 				EDB165722668C51A007E6030 /* MainControllers */,
@@ -2345,6 +2374,8 @@
 		EDB16593266A4317007E6030 /* SecondaryControllers */ = {
 			isa = PBXGroup;
 			children = (
+				0B283FB426FB7CCE00B5E925 /* MobilePayController */,
+				0BA09E2A26ADD6A50065D623 /* GKHController */,
 				68673B5A26F4B82400F67A8C /* PayViewController */,
 				ED8AB45126C1145D006F0D03 /* MeToMeViewControllers */,
 				ED84994F26A8830E005205C6 /* ContactsPicker */,
@@ -2405,6 +2436,7 @@
 		EDF681F0266F9EC800FD5C07 /* Service */ = {
 			isa = PBXGroup;
 			children = (
+				0B283FB926FBC99600B5E925 /* NavigationCoordinator */,
 				EDF681F1266F9EC800FD5C07 /* Networking */,
 			);
 			path = Service;
@@ -2494,6 +2526,8 @@
 				0BB24ABB26F370A300DDA4F6 /* GetProductDetailsDecodableModel.swift */,
 				ED353B6926FB5ADA00F17F00 /* SetUserSettingDecodableModel.swift */,
 				ED353B6B26FB5E8300F17F00 /* GetUserSettingDecodableModel.swift */,
+				0B283FC026FCB31600B5E925 /* GetPhoneInfoDecodableModel.swift */,
+				0B283FC22701016100B5E925 /* CreateMobileTransferDecodableModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -2894,6 +2928,7 @@
 				68C8D57426F1FDB60076246B /* LargeCardCell.swift in Sources */,
 				687FB23326E9E551004A479F /* PaymentMainCell.swift in Sources */,
 				ED0B4894267B50F50037EA06 /* Int.swift in Sources */,
+				0B283FBF26FBCA0A00B5E925 /* Router.swift in Sources */,
 				0B22AEAC26CE8DD100B11E7F /* GKHDataSorted.swift in Sources */,
 				68D06F2826C3C13900F9BE4C /* MainViewControllerDelegate.swift in Sources */,
 				0B931B1426DCD59900CA8017 /* GKHLogotypeData.swift in Sources */,
@@ -2928,9 +2963,9 @@
 				ED39EC8C268B4F0800158E46 /* CardChooseView.swift in Sources */,
 				0BD1CAA626E6D54A00CFE993 /* CreateIsOneTimeConsentMe2MePullDecodableModel.swift in Sources */,
 				EDB1657C2668C8D5007E6030 /* PayCell.swift in Sources */,
-				0BE270BA26B9F36A00FA958C /* ExtensionBottomInputRequest.swift in Sources */,
 				0BD1CAA426E6C7E400CFE993 /* CreateSFPTransferDecodableModel.swift in Sources */,
 				68673B5C26F4B84900F67A8C /* PayViewController.swift in Sources */,
+				0B283FBB26FBC9C800B5E925 /* Coordinator.swift in Sources */,
 				687FB23026E8D41A004A479F /* OfferCard.swift in Sources */,
 				EDFFCAF0268245EC004EE095 /* CardViewModel.swift in Sources */,
 				0BB24A9726EFE66900DDA4F6 /* GetPaymentCountriesList.swift in Sources */,
@@ -2955,6 +2990,7 @@
 				EDB14524266624460028EF5A /* UIViewController.swift in Sources */,
 				EDCF8A1526CED86100DC9F54 /* BankTableViewCell.swift in Sources */,
 				ED84995A26A8831E005205C6 /* EPContact.swift in Sources */,
+				0B283FC126FCB31600B5E925 /* GetPhoneInfoDecodableModel.swift in Sources */,
 				68FFA5282682AF2C002DADFA /* ContactsViewController.swift in Sources */,
 				0B66E8DA26CC5F1E00FD735D /* SquareView.swift in Sources */,
 				0B931B5126E005D700CA8017 /* GKHInputFooterView.swift in Sources */,
@@ -2981,6 +3017,7 @@
 				0B37F98626807620007728FC /* NetworkHelper.swift in Sources */,
 				EDF6820D266F9EC800FD5C07 /* NetworkManager.swift in Sources */,
 				0B95C40026B6C99A00AA57E6 /* RoundedDoubleExtension.swift in Sources */,
+				0B283FBD26FBC9F100B5E925 /* Presentable.swift in Sources */,
 				68FFA5432682DC95002DADFA /* PhoneConfirmViewController.swift in Sources */,
 				0BAC674126D408DC005AAD91 /* CreateDirectTransferDecodableModel.swift in Sources */,
 				0BF348A1269E0CDA005138A8 /* LogoutDecodableModel.swift in Sources */,
@@ -3074,6 +3111,7 @@
 				EDB1656C26681F0E007E6030 /* MainTabBarViewController.swift in Sources */,
 				ED3A96742690FC8300252857 /* BankCell.swift in Sources */,
 				68E6A29726A033F200A1D9A1 /* GetProductTemplateListDecodableModel.swift in Sources */,
+				0B283FB826FB7DD300B5E925 /* ExtensionMobilePayNav.swift in Sources */,
 				68FFA55F268BF2D2002DADFA /* TransferByRequisitesViewController.swift in Sources */,
 				ED0B4896267B97C60037EA06 /* ContactInputViewController + UI.swift in Sources */,
 				0BB24AB126F0C3DC00DDA4F6 /* GetCardStatementDecodableModel.swift in Sources */,
@@ -3084,6 +3122,7 @@
 				ED84994E26A85A65005205C6 /* SettingsViewController.swift in Sources */,
 				ED84995726A8831E005205C6 /* EPExtensions.swift in Sources */,
 				EDF68218266F9EC800FD5C07 /* RouterManager.swift in Sources */,
+				0B283FC32701016100B5E925 /* CreateMobileTransferDecodableModel.swift in Sources */,
 				0B66E8E326CC62DF00FD735D /* NetStatus.swift in Sources */,
 				ED84994826A6FD97005205C6 /* CountryListView.swift in Sources */,
 				0BA251F726C2782500AD087A /* FastPaymentContractFindListDecodableModel.swift in Sources */,
@@ -3175,6 +3214,7 @@
 				ED4FC61A266EA42E0092B4AB /* AppLocker.swift in Sources */,
 				688B9BA126DD0C2500407A75 /* ProductsViewController.swift in Sources */,
 				0BA251ED26C266A400AD087A /* CreateServiceTransferDecodableModel.swift in Sources */,
+				0B283FB626FB7D1000B5E925 /* MobilePayViewController.swift in Sources */,
 				688B9BB026DEC27200407A75 /* OfferCollectionViewCell.swift in Sources */,
 				0BAC319626CB264B006E03FD /* ExtensionGKHMainTableView.swift in Sources */,
 				0BB24A9426EFCC5800DDA4F6 /* GetProductTemplateListSaved.swift in Sources */,
@@ -3342,7 +3382,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
@@ -3368,7 +3408,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -3479,7 +3519,7 @@
 				EDB143A6265FDA430028EF5A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		EDB143A7265FDA430028EF5A /* Build configuration list for PBXNativeTarget "ForaBank" */ = {
 			isa = XCConfigurationList;
@@ -3488,7 +3528,7 @@
 				EDB143A9265FDA430028EF5A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		EDB143AA265FDA430028EF5A /* Build configuration list for PBXNativeTarget "ForaBankTests" */ = {
 			isa = XCConfigurationList;
@@ -3497,7 +3537,7 @@
 				EDB143AC265FDA430028EF5A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		EDB143AD265FDA430028EF5A /* Build configuration list for PBXNativeTarget "ForaBankUITests" */ = {
 			isa = XCConfigurationList;
@@ -3506,7 +3546,7 @@
 				EDB143AF265FDA430028EF5A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 

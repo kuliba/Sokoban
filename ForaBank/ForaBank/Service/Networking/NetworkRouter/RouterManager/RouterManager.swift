@@ -74,6 +74,8 @@ enum RouterManager {
     case getProductDetails
     case setUserSetting
     case getUserSettings
+    case getPhoneInfo
+    case createMobileTransfer
 }
 
 extension RouterManager {
@@ -1068,6 +1070,35 @@ extension RouterManager {
             request.httpMethod = RequestMethod.get.rawValue
             return request
             
+        case .getPhoneInfo:
+            let baseUrl = RouterUrlList.getPhoneInfo.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .createMobileTransfer:
+            let baseUrl = RouterUrlList.createMobileTransfer.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
         }
     }
 }
