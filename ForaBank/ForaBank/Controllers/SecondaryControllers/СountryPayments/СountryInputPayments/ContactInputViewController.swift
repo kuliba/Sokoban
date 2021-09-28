@@ -93,7 +93,7 @@ class ContactInputViewController: UIViewController {
             
     var cardFromField = CardChooseView()
     
-    var cardListView = CardListView(onlyMy: false)
+    var cardListView = CardsScrollView(onlyMy: false)
     
     var bottomView = BottomInputView()
     
@@ -192,9 +192,12 @@ class ContactInputViewController: UIViewController {
         
         bankListView.didBankTapped = { (bank) in
             self.selectedBank = bank
-//            self.openOrHideView(self.bankListView)
-            self.hideView(self.bankListView, needHide: true)
-            self.hideView(self.cardListView, needHide: true)
+            if self.bankListView.isHidden == false {
+                self.hideView(self.bankListView, needHide: true)
+            }
+            if self.cardListView.isHidden == false {
+                self.hideView(self.cardListView, needHide: true)
+            }
         }
         
         foraSwitchView.switchIsChanged = { [weak self] (switchView) in
@@ -205,22 +208,34 @@ class ContactInputViewController: UIViewController {
         cardFromField.didChooseButtonTapped = { () in
             print("cardField didChooseButtonTapped")
             self.openOrHideView(self.cardListView)
-            self.hideView(self.bankListView, needHide: true)
+            if self.bankListView.isHidden == false {
+                self.hideView(self.bankListView, needHide: true)
+            }
         }
         
         bankField.didChooseButtonTapped = { () in
             print("bankField didChooseButtonTapped")
             self.openOrHideView(self.bankListView)
             self.bankListView.collectionView.reloadData()
-            self.hideView(self.cardListView, needHide: true)
+            if self.cardListView.isHidden == false {
+                self.hideView(self.cardListView, needHide: true)
+            }
         }
         
         cardListView.didCardTapped = { card in
-            self.cardFromField.cardModel = card
+            self.cardFromField.model = card
             self.selectedCardNumber = card.number ?? ""
+            if self.bankListView.isHidden == false {
+                self.hideView(self.bankListView, needHide: true)
+            }
+            if self.cardListView.isHidden == false {
+                self.hideView(self.cardListView, needHide: true)
+            }            
+        }
+        
+        cardListView.lastItemTap = {
+            print("Открывать все карты доработать")
             
-            self.hideView(self.cardListView, needHide: true)
-            self.hideView(self.bankListView, needHide: true)
             
         }
         
@@ -290,30 +305,28 @@ class ContactInputViewController: UIViewController {
     }
     
     func setupCardList(completion: @escaping ( _ error: String?) ->() ) {
-        getCardList { [weak self] data ,error in
-            DispatchQueue.main.async {
-                
-                if error != nil {
-                    self?.showAlert(with: "Ошибка", and: error!)
+        self.readAndSetupCard()
+//        AddAllUserCardtList.add() {
+//            self.readAndSetupCard()
+//        }
+    }
+    
+    private func readAndSetupCard() {
+        DispatchQueue.main.async {
+            var filterProduct: [UserAllCardsModel] = []
+            let cards = ReturnAllCardList.cards()
+            cards.forEach { product in
+                if (product.productType == "CARD"
+                        || product.productType == "ACCOUNT") && product.currency == "RUB" {
+                    filterProduct.append(product)
                 }
-                guard let data = data else { return }
-                var filterProduct: [GetProductListDatum] = []
-                data.forEach { product in
-                    if (product.productType == "CARD" || product.productType == "ACCOUNT") && product.currency == "RUB" {
-                        filterProduct.append(product)
-                    }
-                }
-                
-                self?.cardListView.cardList = filterProduct
-                
-                if filterProduct.count > 0 {
-                    self?.cardFromField.cardModel = filterProduct.first
-//                    self?.cardField.configCardView(data.first!)
-                    guard let cardNumber  = filterProduct.first?.number else { return }
-                    self?.selectedCardNumber = cardNumber
-                    self?.cardIsSelect = true
-                    completion(nil)
-                }
+            }
+            self.cardListView.cardList = filterProduct
+            if filterProduct.count > 0 {
+                self.cardFromField.model = filterProduct.first
+                guard let cardNumber  = filterProduct.first?.number else { return }
+                self.selectedCardNumber = cardNumber
+                self.cardIsSelect = true
             }
         }
     }
@@ -355,7 +368,6 @@ extension ContactInputViewController: EPPickerDelegate {
         func epContactPicker(_: EPContactsPicker, didSelectContact contact : EPContact) {
             let phoneFromContact = contact.phoneNumbers.first?.phoneNumber
             let numbers = phoneFromContact?.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
-//            print("Contact \(contact.displayName()) \(numbers) has been selected")
             let mask = StringMask(mask: "+000-0000-00-00")
             let maskPhone = mask.mask(string: numbers)
             phoneField.text = maskPhone ?? ""
