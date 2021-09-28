@@ -21,25 +21,25 @@
                         <rect key="frame" x="0.0" y="0.0" width="336" height="104"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="NjA-1M-MCE">
-                                <rect key="frame" x="10" y="10.5" width="316" height="88.5"/>
+                                <rect key="frame" x="12" y="11" width="312" height="88.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="kbw-b9-i2p">
-                                        <rect key="frame" x="0.0" y="0.0" width="168.5" height="88.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="164.5" height="88.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalCompressionResistancePriority="749" text="Валюта" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dbb-4Y-C7I">
-                                                <rect key="frame" x="0.0" y="0.0" width="168.5" height="19.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="164.5" height="19.5"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
                                                 <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Евро" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aKL-PE-Igv">
-                                                <rect key="frame" x="0.0" y="34.5" width="168.5" height="19.5"/>
+                                                <rect key="frame" x="0.0" y="34.5" width="164.5" height="19.5"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0039215686274509803" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Доллар США" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ABp-Lr-G1A">
-                                                <rect key="frame" x="0.0" y="69" width="168.5" height="19.5"/>
+                                                <rect key="frame" x="0.0" y="69" width="164.5" height="19.5"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0039215686274509803" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -47,7 +47,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="HR4-j6-UZs">
-                                        <rect key="frame" x="188.5" y="0.0" width="48.5" height="88.5"/>
+                                        <rect key="frame" x="184.5" y="0.0" width="48.5" height="88.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalCompressionResistancePriority="751" text="Купить" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QXu-sR-Mul">
                                                 <rect key="frame" x="0.0" y="0.0" width="48.5" height="19.5"/>
@@ -74,7 +74,7 @@
                                         </constraints>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="Blt-Rw-OVo">
-                                        <rect key="frame" x="257" y="0.0" width="59" height="88.5"/>
+                                        <rect key="frame" x="253" y="0.0" width="59" height="88.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalCompressionResistancePriority="749" text="Продать" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="fB4-ER-Hjo">
                                                 <rect key="frame" x="0.0" y="0.0" width="59" height="19.5"/>
@@ -102,9 +102,9 @@
                         </subviews>
                         <color key="backgroundColor" red="0.96470588235294119" green="0.96470588235294119" blue="0.96862745098039216" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="NjA-1M-MCE" firstAttribute="leading" secondItem="3Lg-7d-vji" secondAttribute="leading" constant="10" id="HyG-W9-4al"/>
-                            <constraint firstItem="NjA-1M-MCE" firstAttribute="top" secondItem="3Lg-7d-vji" secondAttribute="top" constant="10.5" id="hah-aP-T5O"/>
-                            <constraint firstAttribute="trailing" secondItem="NjA-1M-MCE" secondAttribute="trailing" constant="10" id="uYr-2b-wUB"/>
+                            <constraint firstItem="NjA-1M-MCE" firstAttribute="leading" secondItem="3Lg-7d-vji" secondAttribute="leading" constant="12" id="HyG-W9-4al"/>
+                            <constraint firstItem="NjA-1M-MCE" firstAttribute="top" secondItem="3Lg-7d-vji" secondAttribute="top" constant="11" id="hah-aP-T5O"/>
+                            <constraint firstAttribute="trailing" secondItem="NjA-1M-MCE" secondAttribute="trailing" constant="12" id="uYr-2b-wUB"/>
                         </constraints>
                     </view>
                 </subviews>
