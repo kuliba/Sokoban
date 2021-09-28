@@ -61,55 +61,21 @@ extension PaymentsViewController: UICollectionViewDelegate {
         case .pay:
             print("DEBUG: " + #function + pay[indexPath.row].name)
        
-            if pay[indexPath.row].id == 19 {
-                #if DEBUG
-                getFastPaymentContractList { [weak self] contractList, error in
-                    DispatchQueue.main.async {
-                        if error != nil {
-                            self?.showAlert(with: "Ошибка", and: error!)
-                        } else {
-                            let contr = contractList?.first?.fastPaymentContractAttributeList?.first
-                            if contr?.flagClientAgreementIn == "NO" || contr?.flagClientAgreementOut == "NO" {
-                                let vc = MeToMeSettingViewController()
-                                if contractList != nil {
-                                    vc.model = contractList
-                                } else {
-                                    vc.model = []
-                                }
-                                vc.addCloseButton()
-                                let navVC = UINavigationController(rootViewController: vc)
-                                navVC.modalPresentationStyle = .fullScreen
-                                //                    navVC.addCloseButton()
-                                self?.present(navVC, animated: true, completion: nil)
-                            } else {
-                                
-                                guard let viewController = self?.pay[indexPath.row].controllerName.getViewController() as? MeToMeViewController else { return }
-                                viewController.meToMeContract = contractList
-                                viewController.addCloseButton()
-                                let navVC = UINavigationController(rootViewController: viewController)
-                                navVC.modalPresentationStyle = .fullScreen
-                                self?.present(navVC, animated: true)
-                            }
-                        }
-                    }
-                }
-                #endif
-            } else {
-                if let viewController = pay[indexPath.row].controllerName.getViewController() {
-                    viewController.addCloseButton()
-                    let navVC = UINavigationController(rootViewController: viewController)
-                    navVC.modalPresentationStyle = .fullScreen
+            if let viewController = pay[indexPath.row].controllerName.getViewController() {
+                viewController.addCloseButton()
+                let navVC = UINavigationController(rootViewController: viewController)
+                navVC.modalPresentationStyle = .fullScreen
 //                    present(navVC, animated: true)
-                    
+                
 //                    // ЖКХ
-                    if indexPath.row == 2 {
-                        let gkh = GKHMainViewController.storyboardInstance()!
-                        let nc = UINavigationController(rootViewController: gkh)
-                        nc.modalPresentationStyle = .fullScreen
-                        present(nc, animated: true)
-                    } else {
-                        present(navVC, animated: true)
-                    }
+                if indexPath.row == 2 {
+                    let gkh = GKHMainViewController.storyboardInstance()!
+                    let nc = UINavigationController(rootViewController: gkh)
+                    nc.modalPresentationStyle = .fullScreen
+                    present(nc, animated: true)
+                } else {
+                    present(navVC, animated: true)
+                }
 //                    // Мобильная связь
 //                    if indexPath.row == 1 {
 //                        let gkh = MobilePayViewController()
@@ -119,12 +85,10 @@ extension PaymentsViewController: UICollectionViewDelegate {
 //                    } else {
 //                        present(navVC, animated: true)
 //                    }
-                    present(navVC, animated: true)
-                }
-            
+                present(navVC, animated: true)
             }
         }
-    
+    }
     
     
     
