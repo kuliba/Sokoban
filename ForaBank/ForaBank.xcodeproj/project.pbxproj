@@ -202,6 +202,8 @@
 		68D06F3526C40DF500F9BE4C /* CurrencyExchangeCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68D06F3326C40DF500F9BE4C /* CurrencyExchangeCollectionViewCell.xib */; };
 		68D06F3826CCDDCA00F9BE4C /* NavigationBarUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D06F3726CCDDCA00F9BE4C /* NavigationBarUIView.swift */; };
 		68D06F3A26CCDE0100F9BE4C /* NavigationBarUIView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68D06F3926CCDE0100F9BE4C /* NavigationBarUIView.xib */; };
+		68E3461F27030F4F00D6FE37 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E3461E27030F4F00D6FE37 /* ChatViewController.swift */; };
+		68E3462227033D9100D6FE37 /* LaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E3462127033D9100D6FE37 /* LaunchViewController.swift */; };
 		68E6A28526A02C1800A1D9A1 /* AnyFormatKit in Frameworks */ = {isa = PBXBuildFile; productRef = 68E6A28426A02C1800A1D9A1 /* AnyFormatKit */; };
 		68E6A29126A0338700A1D9A1 /* CastomCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E6A29026A0338700A1D9A1 /* CastomCardView.swift */; };
 		68E6A29326A033B700A1D9A1 /* CheckCardDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E6A29226A033B700A1D9A1 /* CheckCardDecodableModel.swift */; };
@@ -609,6 +611,8 @@
 		68D06F3326C40DF500F9BE4C /* CurrencyExchangeCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CurrencyExchangeCollectionViewCell.xib; sourceTree = "<group>"; };
 		68D06F3726CCDDCA00F9BE4C /* NavigationBarUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarUIView.swift; sourceTree = "<group>"; };
 		68D06F3926CCDE0100F9BE4C /* NavigationBarUIView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NavigationBarUIView.xib; sourceTree = "<group>"; };
+		68E3461E27030F4F00D6FE37 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		68E3462127033D9100D6FE37 /* LaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchViewController.swift; sourceTree = "<group>"; };
 		68E6A29026A0338700A1D9A1 /* CastomCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CastomCardView.swift; sourceTree = "<group>"; };
 		68E6A29226A033B700A1D9A1 /* CheckCardDecodableModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckCardDecodableModel.swift; sourceTree = "<group>"; };
 		68E6A29426A033D900A1D9A1 /* DeleteProductTemplateDecodableModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeleteProductTemplateDecodableModel.swift; sourceTree = "<group>"; };
@@ -1499,6 +1503,22 @@
 			path = NavigationBar;
 			sourceTree = "<group>";
 		};
+		68E3461D27030F2A00D6FE37 /* ChatViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				68E3461E27030F4F00D6FE37 /* ChatViewController.swift */,
+			);
+			path = ChatViewControllers;
+			sourceTree = "<group>";
+		};
+		68E3462027033D6D00D6FE37 /* LaunchViewController */ = {
+			isa = PBXGroup;
+			children = (
+				68E3462127033D9100D6FE37 /* LaunchViewController.swift */,
+			);
+			path = LaunchViewController;
+			sourceTree = "<group>";
+		};
 		68FFA5262682AEE1002DADFA /* ContactsViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -2273,10 +2293,12 @@
 				EDB1452A26663BF40028EF5A /* Login */,
 				EDB165722668C51A007E6030 /* MainControllers */,
 				EDB16593266A4317007E6030 /* SecondaryControllers */,
+				68E3461D27030F2A00D6FE37 /* ChatViewControllers */,
 				68FFA54A2684C837002DADFA /* PDFViewer */,
 				68C64624269DCBC300473DE7 /* QRScanner */,
 				EDB16594266A4438007E6030 /* DevelopViewController.swift */,
 				6822EFD026B935A500125EEC /* DefaultTableView */,
+				68E3462027033D6D00D6FE37 /* LaunchViewController */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -2933,6 +2955,7 @@
 				68D06F2826C3C13900F9BE4C /* MainViewControllerDelegate.swift in Sources */,
 				0B931B1426DCD59900CA8017 /* GKHLogotypeData.swift in Sources */,
 				EDB145402666AFD70028EF5A /* Constants.swift in Sources */,
+				68E3462227033D9100D6FE37 /* LaunchViewController.swift in Sources */,
 				68D06F2A26C3C19800F9BE4C /* MainViewControllerSearchBarDelegate.swift in Sources */,
 				0B22AEA526CDB48F00B11E7F /* GKHDataType.swift in Sources */,
 				0B8BE0972670D53600E96CAA /* DoRegistrationDecodebleModel.swift in Sources */,
@@ -3080,6 +3103,7 @@
 				EDFFCAFB2683C135004EE095 /* PaymentType.swift in Sources */,
 				EDB1658A266A181C007E6030 /* PaymentsViewControllerDataSource.swift in Sources */,
 				0B216FC126D1B28F0023C878 /* GKHCitySearchController.swift in Sources */,
+				68E3461F27030F4F00D6FE37 /* ChatViewController.swift in Sources */,
 				ED3A96712690FADD00252857 /* BankListView.swift in Sources */,
 				ED4FC61B266EA42E0092B4AB /* UI.swift in Sources */,
 				ED84995926A8831E005205C6 /* EPContactCell.swift in Sources */,
@@ -3382,7 +3406,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
@@ -3408,7 +3432,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

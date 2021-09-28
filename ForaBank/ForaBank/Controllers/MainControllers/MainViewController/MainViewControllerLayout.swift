@@ -76,7 +76,7 @@ extension MainViewController {
         let section = NSCollectionLayoutSection(group: group)
 
         section.interGroupSpacing = 8
-        section.contentInsets = .init(top: 20, leading: 20, bottom: 32, trailing: 20)
+        section.contentInsets = .init(top: 16, leading: 20, bottom: 32, trailing: 20)
         
         
         section.orthogonalScrollingBehavior = .paging
@@ -157,7 +157,7 @@ extension MainViewController {
 
         section.interGroupSpacing = 0
         
-        section.contentInsets = .init(top: 20, leading: 20, bottom: 32, trailing: 0)
+        section.contentInsets = .init(top: 16, leading: 20, bottom: 32, trailing: 0)
 
 
         section.orthogonalScrollingBehavior = .none
@@ -181,7 +181,7 @@ extension MainViewController {
         let section = NSCollectionLayoutSection(group: group)
 
         section.interGroupSpacing = 4
-        section.contentInsets = .init(top: 20, leading: 8, bottom: 32, trailing: 20)
+        section.contentInsets = .init(top: 16, leading: 8, bottom: 32, trailing: 20)
         
         
         section.orthogonalScrollingBehavior = .continuous
@@ -206,7 +206,7 @@ extension MainViewController {
         let section = NSCollectionLayoutSection(group: group)
 
         section.interGroupSpacing = 8
-        section.contentInsets = .init(top: 20, leading: 20, bottom: 32, trailing: 20)
+        section.contentInsets = .init(top: 16, leading: 20, bottom: 32, trailing: 20)
 
 
         section.orthogonalScrollingBehavior = .continuous

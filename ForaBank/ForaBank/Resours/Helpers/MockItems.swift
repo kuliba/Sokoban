@@ -98,8 +98,8 @@ class MockItems {
         return [
             PaymentsModel(id: 99, name: "Карту",
                           iconName: "openCard",
-                          controllerName: "https://www.forabank.ru/private/cards/",
-                          description: "62 дня без %"),
+                          controllerName: "https://promo.forabank.ru/?metka=leads1&affiliate_id=44935&source=leads1&transaction_id=6dae603673619b0681e492d4bd1d8f3a",
+                          description: "Все включено"),
             
             PaymentsModel(id: 98, name: "Вклад",
                           iconName: "openDeposit",
