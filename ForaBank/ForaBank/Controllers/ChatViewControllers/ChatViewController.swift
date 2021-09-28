@@ -68,8 +68,8 @@ class ChatViewController: UIViewController {
         stackView.distribution  = UIStackView.Distribution.fillEqually
         stackView.alignment = UIStackView.Alignment.center
         stackView.spacing = 16
-        phoneButton = createButton(title: "8 (800) 100 9889", image: "phone-outgoing", tintColor: "000000")
-        emailButton = createButton(title: "Отправить e-mail", image: "mailForChat", tintColor: "000000")
+        phoneButton = createButton(title: "8 (800) 100 9889", image: "", tintColor: "000000") //phone-outgoing
+        emailButton = createButton(title: "Отправить e-mail", image: "", tintColor: "000000") //mailForChat
         stackView.addArrangedSubview(phoneButton)
         stackView.addArrangedSubview(emailButton)
 
@@ -85,8 +85,8 @@ class ChatViewController: UIViewController {
         secondStackView.distribution  = UIStackView.Distribution.fillEqually
         secondStackView.alignment = UIStackView.Alignment.center
         secondStackView.spacing = 16
-        whatsUpButton = createButton(title: "WhatsApp", image: "whatsup", tintColor: "5DD467")
-        telegramButton = createButton(title: "Telegram", image: "telegram", tintColor: "2AABEE")
+        whatsUpButton = createButton(title: "WhatsApp", image: "", tintColor: "5DD467") //whatsup
+        telegramButton = createButton(title: "Telegram", image: "", tintColor: "2AABEE") //telegram
         secondStackView.addArrangedSubview(whatsUpButton)
         secondStackView.addArrangedSubview(telegramButton)
 
