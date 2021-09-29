@@ -180,20 +180,21 @@ class MainViewController: UIViewController {
         //            pay = MockItems.returnPayments()
         //            payments = MockItems.returnPayments()
         getCardList { data, errorMessage in
-            let list = data?.sorted(by: {$0.id ?? 0 < $1.id ?? 0})
             
-            guard let listProducts = list else {return}
+            guard let listProducts = data else {return}
             
             for i in listProducts.prefix(3) {
                 self.products.append(PaymentsModel(productList: i))
             }
-            if list?.count ?? 0 < 3{
-                self.products.append(PaymentsModel(id: 32, name: "Хочу карты", iconName: "openCard", controllerName: ""))
-            } else if list?.count ?? 0 == 3{
-                self.products.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
+            if listProducts.prefix(3).count < 3{
+                self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
+            } else if listProducts.prefix(3).count == 3{
+                self.products.append(PaymentsModel(id: 32, name: "Cм.все", iconName: "openCard", controllerName: ""))
             }
             //                self.transfers = self.payments
             self.productList = data ?? []
+            
+
         }
         
         
@@ -230,7 +231,7 @@ class MainViewController: UIViewController {
         collectionView.register(ProductCell.self, forCellWithReuseIdentifier: ProductCell.reuseId)
         collectionView.register(NewProductCell.self, forCellWithReuseIdentifier: NewProductCell.reuseId)
         
-        collectionView.contentInset = UIEdgeInsets(top: 22, left: 0, bottom: 20, right: 0)
+        collectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0)
         collectionView.isScrollEnabled = true
         collectionView.delegate = self
         

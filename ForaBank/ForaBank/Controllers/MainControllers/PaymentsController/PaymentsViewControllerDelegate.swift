@@ -73,9 +73,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
                     let nc = UINavigationController(rootViewController: gkh)
                     nc.modalPresentationStyle = .fullScreen
                     present(nc, animated: true)
-                } else {
-                    present(navVC, animated: true)
-                }
+                } 
 //                    // Мобильная связь
 //                    if indexPath.row == 1 {
 //                        let gkh = MobilePayViewController()
@@ -85,7 +83,8 @@ extension PaymentsViewController: UICollectionViewDelegate {
 //                    } else {
 //                        present(navVC, animated: true)
 //                    }
-                present(navVC, animated: true)
+//                present(navVC, animated: true)
+                present(navVC, animated: true, completion: nil)
             }
         }
     }

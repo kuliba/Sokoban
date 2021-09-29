@@ -63,13 +63,15 @@ extension MainViewController {
     private func createProduct() -> NSCollectionLayoutSection {
 
         let item = NSCollectionLayoutItem.withEntireSize()
+        let itemadd = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .absolute(114), heightDimension: .absolute(104)))
+        
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .absolute(164),
 //            heightDimension: .fractionalHeight(0.2))
           heightDimension: .absolute(104))
 
         let group = NSCollectionLayoutGroup.horizontal(
-            layoutSize: groupSize, subitems: [item])
+            layoutSize: groupSize,  subitems: [item, itemadd])
 //        group.interItemSpacing = NSCollectionLayoutSpacing.fixed(8)
 //        group.contentInsets = .init(top: 12, leading: 20, bottom: 19, trailing: 0)
         

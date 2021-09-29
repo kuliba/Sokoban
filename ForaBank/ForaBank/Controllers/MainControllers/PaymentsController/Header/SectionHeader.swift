@@ -25,7 +25,8 @@ class SectionHeader: UICollectionReusableView {
         arrowButton.anchor(right: title.rightAnchor, paddingRight: -30, width: 24, height: 24)
         seeAllButton.anchor(right: self.rightAnchor, width: 32, height: 32)
         seeAllButton.setImage(UIImage(imageLiteralResourceName: "seeall"), for: .normal)
-        arrowButton.setImage(UIImage(systemName: "chevron.down"), for: .normal)
+        arrowButton.setImage(UIImage(named: "chevron-downnew"), for: .normal)
+        arrowButton.imageView?.sizeToFit()
         arrowButton.tintColor = .gray
         arrowButton.centerY(inView: self)
         seeAllButton.centerY(inView: self)

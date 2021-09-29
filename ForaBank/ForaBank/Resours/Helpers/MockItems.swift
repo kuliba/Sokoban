@@ -40,7 +40,7 @@ class MockItems {
 //                          description: "QR"),
             
             PaymentsModel(id: 2, name: "Шаблоны и\nавтоплатежи",
-                          iconName: "PaymentsIconFavorites",
+                          iconName: "star",
                           controllerName: ""),
             
 //            PaymentsModel(id: 3, name: "Перевод по\nтелефону",
@@ -70,7 +70,7 @@ class MockItems {
                           iconName: "PaymentsIconPhonePay",
                           controllerName: "ContactsViewController",
                           description: ""),
-            PaymentsModel(id: 6, name: "Между своими",
+            PaymentsModel(id: 6, name: "Между счетами",
                           iconName: "PaymentsIconMyPay",
                           controllerName: "DevelopViewController",
                           description: ""),

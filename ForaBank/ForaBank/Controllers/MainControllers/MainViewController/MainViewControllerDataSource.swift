@@ -21,28 +21,30 @@ extension MainViewController {
             switch section {
                 case .products:
                     switch item.id {
-                    case 33:
-                        guard let cell = collectionView.dequeueReusableCell(
-                                withReuseIdentifier: "AllCardCell",
-                                for: indexPath) as? AllCardCell
-                        else {
-                            fatalError("Unable to dequeue \(AllCardCell.self)")
-                        }
-                        
-                        
-//                                cell.widthAnchor.constraint(equalToConstant: 112).isActive = true
-                        return cell
                     case 32:
-                        guard let cell = collectionView.dequeueReusableCell(
-                                withReuseIdentifier: "OfferCard",
-                                for: indexPath) as? OfferCard
-                        else {
-                            fatalError("Unable to dequeue \(OfferCard.self)")
+                       if item.name == "Cм.все"{
+                            guard let cell = collectionView.dequeueReusableCell(
+                                    withReuseIdentifier: "AllCardCell",
+                                    for: indexPath) as? AllCardCell
+                            else {
+                                fatalError("Unable to dequeue \(AllCardCell.self)")
+                            }
+                            
+                            
+    //                                cell.widthAnchor.constraint(equalToConstant: 112).isActive = true
+                            return cell
+                        } else {
+                            guard let cell = collectionView.dequeueReusableCell(
+                                    withReuseIdentifier: "OfferCard",
+                                    for: indexPath) as? OfferCard
+                            else {
+                                fatalError("Unable to dequeue \(OfferCard.self)")
+                            }
+                            
+                            
+    //                                cell.widthAnchor.constraint(equalToConstant: 112).isActive = true
+                            return cell
                         }
-                        
-                        
-//                                cell.widthAnchor.constraint(equalToConstant: 112).isActive = true
-                        return cell
                     default:
                         guard let cell = collectionView.dequeueReusableCell(
                                 withReuseIdentifier: ProductCell.reuseId,
