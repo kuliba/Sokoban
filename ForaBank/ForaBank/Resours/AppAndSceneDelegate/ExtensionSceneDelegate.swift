@@ -23,8 +23,7 @@ extension SceneDelegate: UIGestureRecognizerDelegate {
         let realm = try? Realm()
         let timeObject = realm?.objects(GetSessionTimeout.self).first
         let startTime = timeObject?.currentTimeStamp ?? ""
-        var  distanceTime = timeObject?.timeDistance ?? 0
-        // distanceTime = 20
+        let distanceTime = timeObject?.timeDistance ?? 0
         let currentTime = Date().localDate()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
@@ -91,7 +90,7 @@ extension SceneDelegate: UIGestureRecognizerDelegate {
                         realm?.add(currency)
                         try realm?.commitWrite()
                         guard let vcLoker = UIApplication.getTopViewController() else {return}
-                        vcLoker.dismiss(animated: true)
+                        vcLoker.navigationController?.popViewController(animated: true)
                     } catch {
                         print(error.localizedDescription)
                     }
@@ -104,7 +103,7 @@ extension SceneDelegate: UIGestureRecognizerDelegate {
                 print("Failed to \(String(describing: mode))")
             }
             
-            AppLocker.rootViewController(with: mode, and: options, window: self.window)
+            AppLocker.present(with: mode, and: options, over: vc)
         }
     }
     

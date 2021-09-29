@@ -192,6 +192,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
         NetworkManager<GetPhoneInfoDecodableModel>.addRequest(.getPhoneInfo, [:], newBody, completion: { [weak self] phoneData, error in
             
             if phoneData?.errorMessage != nil {
+                self?.dismissActivity()
                 completion(error)
             }
             guard let data = phoneData else { return }
@@ -216,8 +217,6 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                         "fieldname": "a3_NUMBER_1_2",
                         "fieldvalue": phone.digits]]
                 ] as [String: AnyObject]
-                
-                print(body)
                 
                 NetworkManager<CreateMobileTransferDecodableModel>.addRequest(.createMobileTransfer, [:], body, completion: { [weak self] data, error in
                     self?.dismissActivity()
@@ -268,8 +267,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                         AppLocker.present(with: .validate)
                     }
                 }
-                completion(
-                    data.errorMessage)
+                completion(data.errorMessage)
             }
             
         })
