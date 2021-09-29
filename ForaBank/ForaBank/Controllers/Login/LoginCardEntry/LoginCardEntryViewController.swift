@@ -41,6 +41,9 @@ class LoginCardEntryViewController: UIViewController {
                                     }
                                 }
                             }
+                        }
+                }
+                  
 //                        }
 //                    } else {
 //                        self?.dismissActivity()
