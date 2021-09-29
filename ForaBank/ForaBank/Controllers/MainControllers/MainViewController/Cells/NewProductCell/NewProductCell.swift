@@ -15,6 +15,19 @@ class NewProductCell: UICollectionViewCell, SelfConfiguringCell {
         transferImage.image = UIImage(named: payment.iconName ?? "")
         transferLabel.text = payment.name
         descriptionLabel.text = payment.description
+        if payment.id == 98 || payment.id == 97 || payment.id == 96 || payment.id == 95{
+            self.backgroundView?.alpha = 0.4
+            transferImage.alpha = 0.4
+            transferLabel.alpha = 0.4
+            descriptionLabel.alpha = 0.4
+            self.isUserInteractionEnabled = false
+        } else {
+            self.backgroundView?.alpha = 1
+            transferImage.alpha = 1
+            transferLabel.alpha = 1
+            descriptionLabel.alpha = 1
+            self.isUserInteractionEnabled = true
+        }
         
     }
     
@@ -28,6 +41,7 @@ class NewProductCell: UICollectionViewCell, SelfConfiguringCell {
         backgroundColor = UIColor(hexString: "F6F6F7")
         transferLabel.textColor = .black
         descriptionLabel.textColor = .gray
+    
     }
     
     required init?(coder: NSCoder) {

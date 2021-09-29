@@ -51,7 +51,7 @@ class ForaSwitchView: UIView {
         switchIsChanged?(sender)
     }
     
-    private func switchDidChange(_ sender: UISwitch) {
+    func switchDidChange(_ sender: UISwitch) {
         bankByPhoneSwitch.layer.borderColor = sender.isOn ? #colorLiteral(red: 0.1333333333, green: 0.7568627451, blue: 0.5137254902, alpha: 1) : #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         bankByPhoneSwitch.thumbTintColor = sender.isOn ? #colorLiteral(red: 0.1333333333, green: 0.7568627451, blue: 0.5137254902, alpha: 1) : #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         

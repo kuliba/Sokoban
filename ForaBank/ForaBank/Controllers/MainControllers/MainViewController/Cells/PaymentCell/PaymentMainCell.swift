@@ -85,7 +85,7 @@ class PaymentsMainCell: UICollectionViewCell, SelfConfiguringCell {
         view.layer.cornerRadius = 56 / 2
         view.backgroundColor = #colorLiteral(red: 0.9647058824, green: 0.9647058824, blue: 0.968627451, alpha: 1)
         view.addSubview(initialsLabel)
-        
+//        self.backgroundColor = .systemGray6
         addSubview(titleLabel)
         addSubview(iconImageView)
         addSubview(iconCountryImageView)
