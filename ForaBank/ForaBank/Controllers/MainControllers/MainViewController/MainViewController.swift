@@ -122,8 +122,6 @@ class MainViewController: UIViewController {
         let gesture = UITapGestureRecognizer(target: self, action: #selector(openSetting))
         searchContact.secondButton.addGestureRecognizer(gesture)
         
-        let cardList = realm?.objects(UserAllCardsModel.self)
-        
         setupSearchBar()
         setupCollectionView()
         createDataSource()

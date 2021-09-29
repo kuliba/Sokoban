@@ -33,7 +33,6 @@ class LoginCardEntryViewController: UIViewController {
                             if error != nil {
                                 self?.showAlert(with: "Ошибка", and: error ?? "")
                             } else {
-                                
                                 DownloadQueue.download {}
                                     DispatchQueue.main.async { [weak self] in
                                         let model = CodeVerificationViewModel(phone: resp, type: .register)

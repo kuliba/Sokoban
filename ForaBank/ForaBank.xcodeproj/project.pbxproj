@@ -29,6 +29,11 @@
 		0B283FBF26FBCA0A00B5E925 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B283FBE26FBCA0A00B5E925 /* Router.swift */; };
 		0B283FC126FCB31600B5E925 /* GetPhoneInfoDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B283FC026FCB31600B5E925 /* GetPhoneInfoDecodableModel.swift */; };
 		0B283FC32701016100B5E925 /* CreateMobileTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B283FC22701016100B5E925 /* CreateMobileTransferDecodableModel.swift */; };
+		0B283FC52703722900B5E925 /* GetSessionTimeoutDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B283FC42703722900B5E925 /* GetSessionTimeoutDecodableModel.swift */; };
+		0B283FC72703815900B5E925 /* ExtensionSceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B283FC62703815900B5E925 /* ExtensionSceneDelegate.swift */; };
+		0B283FC927038C2600B5E925 /* GetSessionTimeout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B283FC827038C2600B5E925 /* GetSessionTimeout.swift */; };
+		0B283FCB27038C5400B5E925 /* GetSessionTimeoutSaved.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B283FCA27038C5400B5E925 /* GetSessionTimeoutSaved.swift */; };
+		0B283FCE2704D0D600B5E925 /* GetAccountStatementDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B283FCD2704D0D600B5E925 /* GetAccountStatementDecodableModel.swift */; };
 		0B2A8D2726E7837300651BCB /* IsLoginDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2A8D2626E7837300651BCB /* IsLoginDecodableModel.swift */; };
 		0B2A8D2926E78E5C00651BCB /* CreateMe2MePullDebitTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2A8D2826E78E5C00651BCB /* CreateMe2MePullDebitTransferDecodableModel.swift */; };
 		0B2A8D2C26E8D9B600651BCB /* GetLatestPhonePayments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2A8D2B26E8D9B600651BCB /* GetLatestPhonePayments.swift */; };
@@ -440,6 +445,11 @@
 		0B283FBE26FBCA0A00B5E925 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		0B283FC026FCB31600B5E925 /* GetPhoneInfoDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPhoneInfoDecodableModel.swift; sourceTree = "<group>"; };
 		0B283FC22701016100B5E925 /* CreateMobileTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMobileTransferDecodableModel.swift; sourceTree = "<group>"; };
+		0B283FC42703722900B5E925 /* GetSessionTimeoutDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetSessionTimeoutDecodableModel.swift; sourceTree = "<group>"; };
+		0B283FC62703815900B5E925 /* ExtensionSceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionSceneDelegate.swift; sourceTree = "<group>"; };
+		0B283FC827038C2600B5E925 /* GetSessionTimeout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetSessionTimeout.swift; sourceTree = "<group>"; };
+		0B283FCA27038C5400B5E925 /* GetSessionTimeoutSaved.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetSessionTimeoutSaved.swift; sourceTree = "<group>"; };
+		0B283FCD2704D0D600B5E925 /* GetAccountStatementDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAccountStatementDecodableModel.swift; sourceTree = "<group>"; };
 		0B2A8D2626E7837300651BCB /* IsLoginDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsLoginDecodableModel.swift; sourceTree = "<group>"; };
 		0B2A8D2826E78E5C00651BCB /* CreateMe2MePullDebitTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMe2MePullDebitTransferDecodableModel.swift; sourceTree = "<group>"; };
 		0B2A8D2B26E8D9B600651BCB /* GetLatestPhonePayments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLatestPhonePayments.swift; sourceTree = "<group>"; };
@@ -912,6 +922,15 @@
 			path = NavigationCoordinator;
 			sourceTree = "<group>";
 		};
+		0B283FCC27038D4D00B5E925 /* GetSessionTimeOut */ = {
+			isa = PBXGroup;
+			children = (
+				0B283FC827038C2600B5E925 /* GetSessionTimeout.swift */,
+				0B283FCA27038C5400B5E925 /* GetSessionTimeoutSaved.swift */,
+			);
+			path = GetSessionTimeOut;
+			sourceTree = "<group>";
+		};
 		0B2A8D2A26E8D98700651BCB /* GetLatestPhonePayments */ = {
 			isa = PBXGroup;
 			children = (
@@ -1149,6 +1168,7 @@
 		0BB24AA926F0038D00DDA4F6 /* NoAuthZoneRequest */ = {
 			isa = PBXGroup;
 			children = (
+				0B283FCC27038D4D00B5E925 /* GetSessionTimeOut */,
 				0BD1CA9926E6B52C00CFE993 /* GetCountries */,
 				0BDE453926E53B1900B64A0A /* GetPaymentSystem */,
 				0BD1CA9E26E6C39A00CFE993 /* GetCurrencyList */,
@@ -1812,6 +1832,7 @@
 			isa = PBXGroup;
 			children = (
 				EDB14380265FDA410028EF5A /* AppDelegate.swift */,
+				0B283FC62703815900B5E925 /* ExtensionSceneDelegate.swift */,
 				EDB1453B2666AEB90028EF5A /* AppDelegate UI extension.swift */,
 				EDB14382265FDA410028EF5A /* SceneDelegate.swift */,
 			);
@@ -2528,6 +2549,8 @@
 				ED353B6B26FB5E8300F17F00 /* GetUserSettingDecodableModel.swift */,
 				0B283FC026FCB31600B5E925 /* GetPhoneInfoDecodableModel.swift */,
 				0B283FC22701016100B5E925 /* CreateMobileTransferDecodableModel.swift */,
+				0B283FC42703722900B5E925 /* GetSessionTimeoutDecodableModel.swift */,
+				0B283FCD2704D0D600B5E925 /* GetAccountStatementDecodableModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -3002,6 +3025,7 @@
 				EDB14533266667140028EF5A /* OrderProductsCollectionViewCell.swift in Sources */,
 				0B8BE091266FDA1B00E96CAA /* CheckClientDecodebleModel.swift in Sources */,
 				EDB16595266A4438007E6030 /* DevelopViewController.swift in Sources */,
+				0B283FC72703815900B5E925 /* ExtensionSceneDelegate.swift in Sources */,
 				68E6A29926A0340D00A1D9A1 /* GetCurrencyListDecodableModel.swift in Sources */,
 				EDB165652667A741007E6030 /* ContactConfirmViewController.swift in Sources */,
 				EDB16592266A19DA007E6030 /* PaymentsViewControllerSearchBarDelegate.swift in Sources */,
@@ -3048,6 +3072,7 @@
 				68FFA52C2682AF62002DADFA /* ContactCollectionViewCell.swift in Sources */,
 				0BDE452F26E2995700B64A0A /* ExtensionQRMetaData.swift in Sources */,
 				0B216FBE26D15BDF0023C878 /* GKHInputCell.swift in Sources */,
+				0B283FC927038C2600B5E925 /* GetSessionTimeout.swift in Sources */,
 				0BB24AAF26F0141200DDA4F6 /* DownloadQueueProtocol.swift in Sources */,
 				68D06F3826CCDDCA00F9BE4C /* NavigationBarUIView.swift in Sources */,
 				0B37F982267A1814007728FC /* FastPaymentBanksListDecodableModel.swift in Sources */,
@@ -3074,10 +3099,13 @@
 				0BEC893B2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift in Sources */,
 				ED8AB46226C3EA2E006F0D03 /* MeToMeSettingViewController.swift in Sources */,
 				6822EFD626B935FF00125EEC /* BaseTableViewCell.swift in Sources */,
+				0B283FCB27038C5400B5E925 /* GetSessionTimeoutSaved.swift in Sources */,
 				6880D32726A5CC69008FBCB4 /* AES.swift in Sources */,
 				0BD2177926A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift in Sources */,
 				EDF68210266F9EC800FD5C07 /* LoginDoCodableModel.swift in Sources */,
+				0B283FC52703722900B5E925 /* GetSessionTimeoutDecodableModel.swift in Sources */,
 				EDFFCAFB2683C135004EE095 /* PaymentType.swift in Sources */,
+				0B283FCE2704D0D600B5E925 /* GetAccountStatementDecodableModel.swift in Sources */,
 				EDB1658A266A181C007E6030 /* PaymentsViewControllerDataSource.swift in Sources */,
 				0B216FC126D1B28F0023C878 /* GKHCitySearchController.swift in Sources */,
 				ED3A96712690FADD00252857 /* BankListView.swift in Sources */,

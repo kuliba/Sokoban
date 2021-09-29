@@ -76,6 +76,8 @@ enum RouterManager {
     case getUserSettings
     case getPhoneInfo
     case createMobileTransfer
+    case getSessionTimeout
+    case getAccountStatement
 }
 
 extension RouterManager {
@@ -1091,6 +1093,37 @@ extension RouterManager {
             case .success(let url):
                 resultUrl = url.absoluteURL
             case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+            //getSessionTimeout
+        case .getSessionTimeout:
+            let baseUrl = RouterUrlList.getSessionTimeout.returnUrl()
+            switch baseUrl {
+        case .success(let url):
+                resultUrl = url.absoluteURL
+        case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.get.rawValue
+            return request
+            
+        case .getAccountStatement:
+            let baseUrl = RouterUrlList.getAccountStatement.returnUrl()
+            switch baseUrl {
+        case .success(let url):
+                resultUrl = url.absoluteURL
+        case .failure(let error):
                 resultUrl = nil
                 debugPrint(error)
             }

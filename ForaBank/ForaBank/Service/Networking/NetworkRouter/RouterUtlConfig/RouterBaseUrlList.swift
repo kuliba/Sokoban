@@ -120,6 +120,10 @@ enum RouterBaseUrlList: String {
     
     case createMobileTransfer       = "/rest/transfer/createMobileTransfer"
     
+    case getSessionTimeout          = "/getSessionTimeout"
+    
+    case getAccountStatement        = "/rest /getAccountStatement"
+    
     // MARK: - В не авторизованную зону.
     ///Обновление по serial
         
