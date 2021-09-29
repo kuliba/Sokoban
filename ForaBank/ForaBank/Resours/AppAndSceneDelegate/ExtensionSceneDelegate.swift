@@ -23,43 +23,43 @@ extension SceneDelegate: UIGestureRecognizerDelegate {
         let startTime = timeObject?.currentTimeStamp ?? ""
         var distanceTime = timeObject?.timeDistance ?? 0
         
-        let currentTime = Date()
+        let currentTime = Date().localDate()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM dd, yyyy hh:mm:ss"
-        dateFormatter.locale = Locale.current
         //Удалить
         distanceTime = 300
         
         
         guard startTime != "" else { return false}
         guard let date = dateFormatter.date(from: startTime) else { fatalError() }
-        let withTimeDistance = date.addingTimeInterval(TimeInterval(distanceTime))
+        let d = date.localDate()
+        let withTimeDistance = d.addingTimeInterval(TimeInterval(distanceTime))
         let r = withTimeDistance.seconds(from: currentTime)
         
-//        if r < 0 {
-//                let currency = GetSessionTimeout()
-//                currency.timeDistance = distanceTime
-//
-//                let dateFormatter = DateFormatter()
-//                    dateFormatter.dateFormat = "MMM dd, yyyy hh:mm:ss"
-//                let time = dateFormatter.string(from: Date())
-//                // Сохраняем текущее время
-//                currency.currentTimeStamp = time
-//
-//                /// Сохраняем в REALM
-//                let realm = try? Realm()
-//                do {
-//                    let b = realm?.objects(GetSessionTimeout.self)
-//                    realm?.beginWrite()
-//                    realm?.delete(b!)
-//                    realm?.add(currency)
-//                    try realm?.commitWrite()
-//
-//                } catch {
-//                    print(error.localizedDescription)
-//                }
-//            goVC(.validate, distanceTime)
-//        }
+        if r < 0 {
+                let currency = GetSessionTimeout()
+                currency.timeDistance = distanceTime
+
+                let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "MMM dd, yyyy hh:mm:ss"
+                let time = dateFormatter.string(from: Date())
+                // Сохраняем текущее время
+                currency.currentTimeStamp = time
+
+                /// Сохраняем в REALM
+                let realm = try? Realm()
+                do {
+                    let b = realm?.objects(GetSessionTimeout.self)
+                    realm?.beginWrite()
+                    realm?.delete(b!)
+                    realm?.add(currency)
+                    try realm?.commitWrite()
+
+                } catch {
+                    print(error.localizedDescription)
+                }
+            goVC(.validate, distanceTime)
+        }
         
         return false
     }
@@ -76,7 +76,7 @@ extension SceneDelegate: UIGestureRecognizerDelegate {
                     currency.timeDistance = distanceTime
                     
                     let dateFormatter = DateFormatter()
-                        dateFormatter.dateFormat = "MMM dd, yyyy hh:mm:ss"
+                    dateFormatter.dateFormat = "MMM dd, yyyy hh:mm:ss"
                     let time = dateFormatter.string(from: Date())
                     // Сохраняем текущее время
                     currency.currentTimeStamp = time
@@ -171,3 +171,12 @@ extension UIApplication {
     }
 }
 
+extension Date {
+    func localDate() -> Date {
+        let nowUTC = Date()
+        let timeZoneOffset = Double(TimeZone.current.secondsFromGMT(for: nowUTC))
+        guard let localDate = Calendar.current.date(byAdding: .second, value: Int(timeZoneOffset), to: nowUTC) else {return Date()}
+
+        return localDate
+    }
+}

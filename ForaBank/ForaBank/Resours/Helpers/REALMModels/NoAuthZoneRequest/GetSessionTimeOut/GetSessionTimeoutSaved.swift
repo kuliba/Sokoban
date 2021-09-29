@@ -28,7 +28,6 @@ struct GetSessionTimeoutSaved: DownloadQueueProtocol {
                     
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = "MMM dd, yyyy hh:mm:ss"
-                    dateFormatter.locale = Locale.current
                     let time = dateFormatter.string(from: Date())
                     // Сохраняем текущее время
                     currency.currentTimeStamp = time
