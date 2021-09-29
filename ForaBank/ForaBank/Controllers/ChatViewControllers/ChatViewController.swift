@@ -109,9 +109,9 @@ class ChatViewController: UIViewController {
         button.backgroundColor = UIColor(hexString: "EAEBEB")
         button.tintColor = UIColor(hexString: tintColor)
         button.setImage(UIImage(named: image), for: .normal)
+        
         return button
     }
-
 }
 
 
