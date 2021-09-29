@@ -9,7 +9,7 @@ import UIKit
 import AnyFormatKit
 
 class LoginCardEntryViewController: UIViewController {
-
+    
     let titleLabel = UILabel(text: "Войти", font: .systemFont(ofSize: 24))
     let subTitleLabel = UILabel(text: "чтобы получить доступ к счетам и картам")
     let creditCardView = CreditCardEntryView()
@@ -26,16 +26,15 @@ class LoginCardEntryViewController: UIViewController {
         creditCardView.enterCardNumberTapped = { [weak self] (cardNumber) in
             self?.showActivity()
             DispatchQueue.main.async {
-//                AppDelegate.shared.getCSRF { errorMessage in
-//                    if errorMessage == nil{
+                
                 if cardNumber == "0565205123484281"{
-
-                        self?.dismissActivity()
-                        DispatchQueue.main.async { [weak self] in
-                            let resp = "+79626129268"
-                            let model = CodeVerificationViewModel(phone: resp, type: .register)
-                            let vc = CodeVerificationViewController(model: model)
-                            self?.navigationController?.pushViewController(vc, animated: true)
+                    
+                    self?.dismissActivity()
+                    DispatchQueue.main.async { [weak self] in
+                        let resp = "+79626129268"
+                        let model = CodeVerificationViewModel(phone: resp, type: .register)
+                        let vc = CodeVerificationViewController(model: model)
+                        self?.navigationController?.pushViewController(vc, animated: true)
                     }
                     
                 } else {
@@ -46,21 +45,14 @@ class LoginCardEntryViewController: UIViewController {
                         } else {
                             
                             DownloadQueue.download {}
-                                DispatchQueue.main.async { [weak self] in
-                                    let model = CodeVerificationViewModel(phone: resp, type: .register)
-                                    let vc = CodeVerificationViewController(model: model)
-                                    self?.navigationController?.pushViewController(vc, animated: true)
-                                }
+                            DispatchQueue.main.async { [weak self] in
+                                let model = CodeVerificationViewModel(phone: resp, type: .register)
+                                let vc = CodeVerificationViewController(model: model)
+                                self?.navigationController?.pushViewController(vc, animated: true)
                             }
                         }
+                    }
                 }
-                  
-//                        }
-//                    } else {
-//                        self?.dismissActivity()
-//                        self?.showAlert(with: "Ошибка", and: errorMessage ?? "" )
-//                    }
-//                }
                 
             }
             
@@ -82,7 +74,7 @@ class LoginCardEntryViewController: UIViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
     
-
+    
     fileprivate func scanCardTapped() {
         print(#function + " Открываем экран сканера")
         
@@ -94,9 +86,9 @@ class LoginCardEntryViewController: UIViewController {
         }
         present(scannerView, animated: true, completion: nil)
     }
-        
-}
     
+}
+
 //MARK: - TextFieldDelegate
 extension LoginCardEntryViewController: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
