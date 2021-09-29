@@ -10,10 +10,7 @@ import Foundation
 class LoginViewModel {
    
     var encription = Encription()
-    
-   
 
-    
     func csrf(){
         AppDelegate.shared.getCSRF() { errorMessage in
             print(errorMessage)

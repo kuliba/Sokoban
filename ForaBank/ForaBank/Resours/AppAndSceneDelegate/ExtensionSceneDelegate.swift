@@ -18,19 +18,17 @@ extension SceneDelegate: UIGestureRecognizerDelegate {
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         print("Tapped window", "Касание экрану")
+        if AppDelegate.shared.isAuth ?? false {
+        
         let realm = try? Realm()
         let timeObject = realm?.objects(GetSessionTimeout.self).first
         let startTime = timeObject?.currentTimeStamp ?? ""
-        var distanceTime = timeObject?.timeDistance ?? 0
-        
+        var  distanceTime = timeObject?.timeDistance ?? 0
+        // distanceTime = 20
         let currentTime = Date().localDate()
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM dd, yyyy hh:mm:ss"
-        //Удалить
-        distanceTime = 300
+        dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
         
-        
-        guard startTime != "" else { return false}
         guard let date = dateFormatter.date(from: startTime) else { fatalError() }
         let d = date.localDate()
         let withTimeDistance = d.addingTimeInterval(TimeInterval(distanceTime))
@@ -40,9 +38,10 @@ extension SceneDelegate: UIGestureRecognizerDelegate {
                 let currency = GetSessionTimeout()
                 currency.timeDistance = distanceTime
 
-                let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "MMM dd, yyyy hh:mm:ss"
-                let time = dateFormatter.string(from: Date())
+            let date = Date()
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
+            let time = dateFormatter.string(from: date)
                 // Сохраняем текущее время
                 currency.currentTimeStamp = time
 
@@ -60,7 +59,7 @@ extension SceneDelegate: UIGestureRecognizerDelegate {
                 }
             goVC(.validate, distanceTime)
         }
-        
+        }
         return false
     }
     
@@ -71,13 +70,15 @@ extension SceneDelegate: UIGestureRecognizerDelegate {
             var options = ALOptions()
             options.isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
             options.onSuccessfulDismiss = { (mode: ALMode?) in
+                DispatchQueue.main.async {
                 if mode != nil {
                     let currency = GetSessionTimeout()
                     currency.timeDistance = distanceTime
                     
+                    let date = Date()
                     let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "MMM dd, yyyy hh:mm:ss"
-                    let time = dateFormatter.string(from: Date())
+                    dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
+                    let time = dateFormatter.string(from: date)
                     // Сохраняем текущее время
                     currency.currentTimeStamp = time
                     
@@ -98,12 +99,12 @@ extension SceneDelegate: UIGestureRecognizerDelegate {
                     print("User Cancelled")
                 }
             }
-            
+            }
             options.onFailedAttempt = { (mode: ALMode?) in
                 print("Failed to \(String(describing: mode))")
             }
             
-            AppLocker.present(with: mode, and: options, over: vc)
+            AppLocker.rootViewController(with: mode, and: options, window: self.window)
         }
     }
     
@@ -173,9 +174,9 @@ extension UIApplication {
 
 extension Date {
     func localDate() -> Date {
-        let nowUTC = Date()
-        let timeZoneOffset = Double(TimeZone.current.secondsFromGMT(for: nowUTC))
-        guard let localDate = Calendar.current.date(byAdding: .second, value: Int(timeZoneOffset), to: nowUTC) else {return Date()}
+      //  let nowUTC = Date()
+        let timeZoneOffset = Double(TimeZone.current.secondsFromGMT(for: self))
+        guard let localDate = Calendar.current.date(byAdding: .second, value: Int(timeZoneOffset), to: self) else {return Date()}
 
         return localDate
     }
