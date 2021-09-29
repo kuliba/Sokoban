@@ -287,7 +287,7 @@ extension StatementEntryList {
         auditDate: EndDateClass?? = nil,
         comment: String?? = nil,
         documentID: Int?? = nil,
-        fastPayment: FastPayment?? = nil,
+        fastPayment: FastPayment_1?? = nil,
         operationDate: EndDateClass?? = nil,
         operationType: String?? = nil
     ) -> StatementEntryList {
@@ -313,13 +313,13 @@ extension StatementEntryList {
     }
 }
 
-// MARK: - FastPayment
+// MARK: - FastPayment_1
 struct FastPayment_1: Codable {
     let documentComment, foreignBankBIC, foreignBankID, foreignBankName: String?
     let foreignName, foreignPhoneNumber, opkcid: String?
 }
 
-// MARK: FastPayment convenience initializers and mutators
+// MARK: FastPayment_1 convenience initializers and mutators
 
 extension FastPayment_1 {
     init(data: Data) throws {

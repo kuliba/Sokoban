@@ -124,6 +124,8 @@ enum RouterBaseUrlList: String {
     
     case getAccountStatement        = "/rest /getAccountStatement"
     
+    case getLatestMobilePayments    = "/rest/getLatestMobilePayments"
+    
     // MARK: - В не авторизованную зону.
     ///Обновление по serial
         
