@@ -140,7 +140,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
             return
         }
         self.navigationItem.setTitle(title: (product?.customName ?? product?.mainField)!, subtitle: "· \(String(number.suffix(4)))", color: product?.fontDesignColor)
-        loadHistoryForCard()
+//        loadHistoryForCard()
         view.backgroundColor = .white
 //        navigationController?.view.addoverlay(color: .black, alpha: 0.2)
         navigationController?.navigationBar.barTintColor = UIColor(hexString: product?.background[0] ?? "").darker()
@@ -562,6 +562,10 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
     }
     
     func loadHistoryForCard(){
+        if product?.productType == "ACCOUNT"{
+            
+        } else {
+        
         totalExpenses = 0.0
         let body = ["cardNumber": product?.number
                      ] as [String : AnyObject]
@@ -618,7 +622,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
             }
         }
     }
-
+    }
 }
 
 extension ProductViewController{
