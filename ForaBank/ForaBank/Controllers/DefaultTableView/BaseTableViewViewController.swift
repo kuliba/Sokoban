@@ -9,7 +9,7 @@ import UIKit
 
 
 
-protocol MyProtocol: class {
+protocol MyProtocol: AnyObject {
     func sendData(kpp: String, name: String)
 }
 

@@ -36,11 +36,11 @@ class MainTabBarViewController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
 //        fatalError()
-//        tabBar.barTintColor = .black
+        tabBar.barTintColor = .black
         tabBar.layer.backgroundColor = UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 0.82).cgColor
-        tabBar.tintColor = #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
+//        tabBar.tintColor = #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
+//        tabBar.tintColor = .clear
         self.tabBar.layer.borderWidth = 0.50
         self.tabBar.layer.borderColor = UIColor.clear.cgColor
         self.tabBar.clipsToBounds = true
@@ -48,7 +48,7 @@ class MainTabBarViewController: UITabBarController {
         let mainVC = MainViewController()
         let paymentsVC = PaymentsViewController()
         let historyVC = DevelopViewController()
-        let chatVC = DevelopViewController()
+        let chatVC = ChatViewController()
         
         viewControllers = [
             generateNavController(rootViewController: mainVC,

@@ -63,20 +63,22 @@ extension MainViewController {
     private func createProduct() -> NSCollectionLayoutSection {
 
         let item = NSCollectionLayoutItem.withEntireSize()
+        let itemadd = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .absolute(114), heightDimension: .absolute(104)))
+        
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .absolute(164),
 //            heightDimension: .fractionalHeight(0.2))
           heightDimension: .absolute(104))
 
         let group = NSCollectionLayoutGroup.horizontal(
-            layoutSize: groupSize, subitems: [item])
+            layoutSize: groupSize,  subitems: [item, itemadd])
 //        group.interItemSpacing = NSCollectionLayoutSpacing.fixed(8)
 //        group.contentInsets = .init(top: 12, leading: 20, bottom: 19, trailing: 0)
         
         let section = NSCollectionLayoutSection(group: group)
 
         section.interGroupSpacing = 8
-        section.contentInsets = .init(top: 20, leading: 20, bottom: 32, trailing: 20)
+        section.contentInsets = .init(top: 16, leading: 20, bottom: 32, trailing: 20)
         
         
         section.orthogonalScrollingBehavior = .paging
@@ -157,7 +159,7 @@ extension MainViewController {
 
         section.interGroupSpacing = 0
         
-        section.contentInsets = .init(top: 20, leading: 20, bottom: 32, trailing: 0)
+        section.contentInsets = .init(top: 16, leading: 20, bottom: 32, trailing: 0)
 
 
         section.orthogonalScrollingBehavior = .none
@@ -181,7 +183,7 @@ extension MainViewController {
         let section = NSCollectionLayoutSection(group: group)
 
         section.interGroupSpacing = 4
-        section.contentInsets = .init(top: 20, leading: 8, bottom: 32, trailing: 20)
+        section.contentInsets = .init(top: 16, leading: 8, bottom: 32, trailing: 20)
         
         
         section.orthogonalScrollingBehavior = .continuous
@@ -206,7 +208,7 @@ extension MainViewController {
         let section = NSCollectionLayoutSection(group: group)
 
         section.interGroupSpacing = 8
-        section.contentInsets = .init(top: 20, leading: 20, bottom: 32, trailing: 20)
+        section.contentInsets = .init(top: 16, leading: 20, bottom: 32, trailing: 20)
 
 
         section.orthogonalScrollingBehavior = .continuous
