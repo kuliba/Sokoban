@@ -76,6 +76,13 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
             }
         }
     }
+    var historyArrayAccount = [GetAccountStatementDataClass](){
+        didSet{
+            DispatchQueue.main.async {
+                self.tableView?.reloadData()
+            }
+        }
+    }
     
     var tableViewHeight: CGFloat {
         tableView?.layoutIfNeeded()
@@ -564,7 +571,61 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
     
     func loadHistoryForCard(){
         if product?.productType == "ACCOUNT"{
+            totalExpenses = 0.0
+            let body = ["id": product?.id
+                         ] as [String : AnyObject]
             
+            NetworkManager<GetCardStatementDecodableModel>.addRequest(.getAccountStatement, [:], body) { model, error in
+                if error != nil {
+                    print("DEBUG: Error: ", error ?? "")
+                }
+                guard let model = model else { return }
+                print("DEBUG: LatestPayment: ", model)
+                if model.statusCode == 0 {
+                    DispatchQueue.main.async {
+                        guard let lastPaymentsList  = model.data else { return }
+                        self.historyArray = lastPaymentsList
+                        self.historyArray.sort(by: { (a, b) -> Bool in
+                            if let timestamp1 = a.date, let timestamp2 = b.date {
+                                return timestamp1 > timestamp2
+                            } else {
+                                //At least one of your timestamps is nil.  You have to decide how to sort here.
+                                return true
+                            }
+                        })
+                        for i in self.historyArray{
+                            let timeInterval = TimeInterval(i.date ?? 0)
+                            // create NSDate from Double (NSTimeInterval)
+                            let myNSDate = Date(timeIntervalSince1970: timeInterval)
+                            print(myNSDate)
+                            
+                            if let timeResult = (i.date) {
+                                let date = Date(timeIntervalSince1970: TimeInterval(timeResult))
+                                let dateFormatter = DateFormatter()
+                                dateFormatter.timeStyle = DateFormatter.Style.medium //Set time style
+                                dateFormatter.dateStyle = DateFormatter.Style.medium //Set date style
+                                dateFormatter.timeZone = .current
+                                let localDate = dateFormatter.string(from: date)
+                                print(localDate)
+                            }
+                        }
+                        for i in lastPaymentsList{
+                            if i.operationType == "DEBIT"{
+                                self.totalExpenses  += i.amount ?? 0.0
+                            }
+                        }
+                        
+                    }
+    //                    self.dataUSD = lastPaymentsList
+                } else {
+                    print("DEBUG: Error: ", model.errorMessage ?? "")
+                    DispatchQueue.main.async {
+                        if model.errorMessage == "Пользователь не авторизован"{
+                            AppLocker.present(with: .validate)
+                        }
+                    }
+                }
+            }
         } else {
         totalExpenses = 0.0
         let body = ["cardNumber": product?.number
