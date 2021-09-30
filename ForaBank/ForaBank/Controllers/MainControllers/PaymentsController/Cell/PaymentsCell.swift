@@ -7,11 +7,13 @@
 
 import UIKit
 import Contacts
+import RealmSwift
+
 
 class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
     
     static var reuseId: String = "PaymentsCell"
-    
+
     let iconImageView = UIImageView()
     let avatarImageView: UIImageView = {
         let imageView = UIImageView()
@@ -107,7 +109,8 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
                 initialsLabel.isHidden = false
             }
         } else {
-            iconCountryImageView.isHidden = true
+            iconCountryImageView.isHidden = false
+            iconCountryImageView.image = UIImage(named: "beline")
             initialsLabel.isHidden = true
             iconImageView.isHidden = false
             
@@ -115,6 +118,38 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
         iconCountryImageView.image = payment.lastCountryPayment != nil
             ? payment.lastCountryPayment?.countryImage
             : UIImage()
+        if payment.lastCountryPayment != nil{
+            iconCountryImageView.image = payment.lastCountryPayment?.countryImage
+        } else if payment.lastMobilePayment != nil{
+            guard let banks = Dict.shared.mobileSystem  else {
+                return
+            }
+            for i in banks{
+                if i.puref == payment.lastMobilePayment?.puref{
+                    iconCountryImageView.image = i.svgImage?.convertSVGStringToImage()
+                }
+            }
+        } else if payment.lastPhonePayment?.bankID != nil {
+            guard let banks = Dict.shared.banks  else {
+                return
+            }
+            for i in banks{
+                if i.memberID == payment.lastPhonePayment?.bankID{
+                    iconCountryImageView.image = i.svgImage?.convertSVGStringToImage()
+                }
+            }
+        } else if payment.lastGKHPayment != nil{
+
+            let organization = List<LogotypeData>()
+                for i in organization{
+                if i.code == payment.lastGKHPayment?.puref{
+                    iconCountryImageView.image = i.content?.convertSVGStringToImage()
+                    
+                }
+            }
+        } else {
+            iconCountryImageView.image = UIImage()
+        }
         
         initialsLabel.text = contactInitials(model: payment.lastCountryPayment)
         
@@ -148,9 +183,9 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
         
         addSubview(titleLabel)
         addSubview(iconImageView)
-        addSubview(iconCountryImageView)
         addSubview(avatarImageView)
-             
+        addSubview(iconCountryImageView)
+
         initialsLabel.fillSuperview()
         
         iconImageView.center(inView: view)

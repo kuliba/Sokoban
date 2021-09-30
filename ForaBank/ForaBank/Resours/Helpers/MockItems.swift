@@ -216,11 +216,11 @@ class MockItems {
             
             PaymentsModel(id: 22, name: "Шаблоны и\nавтоплатежи",
                           iconName: "promoBanner2",
-                          controllerName: "https://promo3.forabank.ru/?from=krpst"),
+                          controllerName: "https://www.forabank.ru/actions/krasnaya-polyana/"),
             
             PaymentsModel(id: 33, name: "Перевод по\nтелефону",
                           iconName: "migBanner",
-                          controllerName: "https://www.forabank.ru/private/cards/karta-mig/",
+                          controllerName: "https://www.forabank.ru/landings/mig/",
                           description: "Что то"),
 //
 //            PaymentsModel(id: 4, name: "Любимая Beeline",

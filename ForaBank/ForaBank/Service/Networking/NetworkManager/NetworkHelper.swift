@@ -18,6 +18,8 @@ final class Dict {
     var currencyList: [CurrencyList]?
     var organization: [GetAnywayOperatorsListDatum]?
     var bankFullInfoList: [BankFullInfoList]?
+    var mobileSystem: [MobileList]?
+
 }
 
 struct NetworkHelper {
@@ -412,6 +414,71 @@ struct NetworkHelper {
                                 
                                 guard let payments = model?.data?.paymentSystemList else { return }
                                 Dict.shared.paymentList = payments
+                                completion(payments, nil)
+                            } else {
+                                print("DEBUG: BanksList уже есть")
+                            }
+                            
+                        } else {
+                            let error = model?.errorMessage ?? "nil"
+                            print("DEBUG: ", #function, error)
+                            completion(nil, error)
+                        }
+                    }
+                }
+            }
+            
+        case .getMobileSystem:
+            
+            if let banksListSerial = UserDefaults().object(forKey: "getMobileSystem") as? String {
+
+                guard let documentsDirectoryUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+                let filePath = documentsDirectoryUrl.appendingPathComponent("getMobileSystem.json")
+                
+                // Read data from .json file and transform data into an array
+                do {
+                    let data = try Data(contentsOf: filePath, options: [])
+                    
+                    let list = try JSONDecoder().decode(GetMobileListDataClass.self, from: data)
+                    Dict.shared.mobileSystem = list.mobileList
+                    completion(list.mobileList, nil)
+                } catch {
+                    print(error)
+                }
+                getPayments(withId: banksListSerial)
+            } else {
+                getPayments()
+            }
+            
+            func getPayments(withId: String? = nil) {
+                
+                let param = ["serial" : withId ?? ""]
+                print("DEBUG: getPayments param", param)
+                NetworkManager<GetMobileListDecodableModel>.addRequest(.getMobileList, param, body) { model, error in
+                    if error != nil {
+                        guard let error = error else { return }
+                        print("DEBUG: ", #function, error)
+                        completion(nil, error)
+                    } else {
+                        guard let statusCode = model?.statusCode else { return }
+                        if statusCode == 0 {
+                            if model?.data?.serial != withId {
+                                
+                                guard let data = model?.data else { return }
+                                
+                                let pathDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                                try? FileManager().createDirectory(at: pathDirectory, withIntermediateDirectories: true)
+                                let filePath = pathDirectory.appendingPathComponent("getMobileSystem.json")
+
+                                let json = try? JSONEncoder().encode(data)
+
+                                do { try json!.write(to: filePath) }
+                                catch { print("Failed to write JSON: \(error.localizedDescription)") }
+                                
+                                UserDefaults().set(data.serial, forKey: "getMobileSystem")
+                                
+                                guard let payments = model?.data?.mobileList else { return }
+                                Dict.shared.mobileSystem = payments
                                 completion(payments, nil)
                             } else {
                                 print("DEBUG: BanksList уже есть")
