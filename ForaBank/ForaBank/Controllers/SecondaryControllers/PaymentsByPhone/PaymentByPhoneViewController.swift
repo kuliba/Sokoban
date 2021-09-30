@@ -321,7 +321,7 @@ class PaymentByPhoneViewController: UIViewController {
     private func setupBankField(bank: BanksList) {
         self.bankPayeer.text = bank.memberNameRus ?? ""
 //        self.selectedBank?.memberID = bank.memberID
-        self.bankId = bank.memberID
+        self.bankId = bank.memberID ?? ""
         self.bankPayeer.imageView.image = bank.svgImage?.convertSVGStringToImage()
     }
     
