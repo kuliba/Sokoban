@@ -31,7 +31,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
         case .transfers:
             if indexPath.row == 1 {
                 let popView = CustomPopUpWithRateView()
-                popView.onlyMy = false
+//                popView.onlyMy = false
                 popView.modalPresentationStyle = .custom
                 popView.transitioningDelegate = self
                 self.present(popView, animated: true, completion: nil)
