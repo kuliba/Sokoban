@@ -26,6 +26,11 @@ class PayCell: UICollectionViewCell, SelfConfiguringCell {
         if paymentsName.text == "Оплата по QR" || paymentsName.text ==  "Интернет, ТВ" || paymentsName.text == "Штрафы" ||  paymentsName.text == "Соцсети, игры, карты" ||  paymentsName.text == "Госуслуги" ||  paymentsName.text == "Охранные системы" ||  paymentsName.text == "Прочее" {
             iconImageView.alpha = 0.3
             paymentsName.alpha = 0.3
+            self.isUserInteractionEnabled = false
+        } else {
+            iconImageView.alpha = 1
+            paymentsName.alpha = 1
+            self.isUserInteractionEnabled = true
         }
     }
     

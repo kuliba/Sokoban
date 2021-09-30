@@ -117,7 +117,7 @@ extension GetBanksDataClass {
 
 // MARK: - BanksList
 struct BanksList: Codable {
-    let memberID, memberName, memberNameRus: String?
+    var memberID, memberName, memberNameRus: String?
     let md5Hash, svgImage: String?
     let paymentSystemCodeList: [String]?
 

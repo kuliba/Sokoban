@@ -230,6 +230,7 @@ class PaymentByPhoneViewController: UIViewController {
         }
         bankPayeer.didChooseButtonTapped = { () in
             self.openOrHideView(self.bankListView)
+            
         }
     }
     
@@ -273,7 +274,7 @@ class PaymentByPhoneViewController: UIViewController {
                             bottom: view.bottomAnchor, right: view.rightAnchor)
         
 //        bankPayeer.text = selectBank ?? ""
-
+        
         bottomView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
                           right: view.rightAnchor)
         bottomView.currencySymbol = "₽"
@@ -319,6 +320,8 @@ class PaymentByPhoneViewController: UIViewController {
     
     private func setupBankField(bank: BanksList) {
         self.bankPayeer.text = bank.memberNameRus ?? ""
+//        self.selectedBank?.memberID = bank.memberID
+        self.bankId = bank.memberID ?? ""
         self.bankPayeer.imageView.image = bank.svgImage?.convertSVGStringToImage()
     }
     
@@ -515,7 +518,7 @@ class PaymentByPhoneViewController: UIViewController {
                     print("DEBUG: Error: ", error ?? "")
                     self?.dismissActivity()
                     self?.showAlert(with: "Ошибка", and: data?.errorMessage ?? "")
-                    completion(error!)
+                    completion(error)
                 }
                 guard let data = data else { return }
                 if data.statusCode == 0 {

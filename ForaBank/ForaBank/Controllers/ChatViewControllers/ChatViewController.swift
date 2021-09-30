@@ -7,10 +7,10 @@
 
 import UIKit
 import SwiftUI
+import MessageUI
 
 
-
-class ChatViewController: UIViewController {
+class ChatViewController: UIViewController, MFMailComposeViewControllerDelegate {
 
     var stackView = UIStackView()
     var secondStackView = UIStackView()
@@ -27,6 +27,16 @@ class ChatViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+       
+        let navigationBar = navigationController?.navigationBar
+        let navigationBarAppearance = UINavigationBarAppearance()
+        navigationBar?.isTranslucent = false
+        navigationBarAppearance.shadowColor = .clear
+        navigationBar?.scrollEdgeAppearance = navigationBarAppearance
+        navigationBar?.barTintColor = .red
+        navigationBar?.isTranslucent = false
+        navigationBar?.setBackgroundImage(UIImage(), for: .default)
+        navigationBar?.shadowImage = UIImage()
         setupUI()
     }
     
@@ -90,15 +100,73 @@ class ChatViewController: UIViewController {
         secondStackView.addArrangedSubview(whatsUpButton)
         secondStackView.addArrangedSubview(telegramButton)
 
-      
+        
         
         secondStackView.translatesAutoresizingMaskIntoConstraints = false
         
         secondStackView.anchor(top: stackView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 16, paddingLeft: 20, paddingBottom: 20, paddingRight: 20, height: 76)
         
         
+        //Action buttons
+        
+        
+        
+        phoneButton.addTarget(self, action: #selector(callNumber), for: .touchUpInside)
+        telegramButton.addTarget(self, action: #selector(openTG), for: .touchUpInside)
+        whatsUpButton.addTarget(self, action: #selector(openWhatsUp), for: .touchUpInside)
+        emailButton.addTarget(self, action: #selector(sendEmail), for: .touchUpInside)
+
+        
+        
     }
     
+    
+    @objc func sendEmail() {
+         let mailVC = MFMailComposeViewController()
+         mailVC.mailComposeDelegate = self
+         mailVC.setToRecipients(["fora-digital@forabank.ru"])
+         mailVC.setSubject("ФОРА-ОНЛАЙН")
+         mailVC.setMessageBody("", isHTML: false)
+
+        present(mailVC, animated: true, completion: nil)
+     }
+
+     // MARK: - Email Delegate
+
+    private func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+         controller.dismiss(animated: true, completion: nil)
+     }
+    
+    @objc func openWhatsUp(){
+        UIApplication.shared.openURL(NSURL(string: "https://api.whatsapp.com/send/?phone=%2B79257756555&text&app_absent=0")! as URL)
+
+    }
+    
+    @objc func openTG(){
+        UIApplication.shared.openURL(NSURL(string: "https://telegram.me/forabank_bot")! as URL)
+
+    }
+    
+    @objc func callNumber() {
+
+        if let phoneCallURL = URL(string: "telprompt://\("88001009889")") {
+
+            let application:UIApplication = UIApplication.shared
+            if (application.canOpenURL(phoneCallURL)) {
+                if #available(iOS 10.0, *) {
+                    application.open(phoneCallURL, options: [:], completionHandler: nil)
+                } else {
+                    // Fallback on earlier versions
+                     application.openURL(phoneCallURL as URL)
+
+                }
+            }
+        }
+    }
+    @objc  func openPhoneNumber(){
+        guard let number = URL(string: "tel://" + "8 (800) 100 9889") else { return }
+        UIApplication.shared.open(number)
+    }
     func createButton(title: String, image: String, tintColor: String) -> UIButton{
         
         let button = UIButton(title: title)
@@ -109,7 +177,7 @@ class ChatViewController: UIViewController {
         button.backgroundColor = UIColor(hexString: "EAEBEB")
         button.tintColor = UIColor(hexString: tintColor)
         button.setImage(UIImage(named: image), for: .normal)
-        
+    
         return button
     }
 }

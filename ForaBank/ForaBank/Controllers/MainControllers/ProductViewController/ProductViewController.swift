@@ -76,7 +76,19 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
             }
         }
     }
+    var historyArrayAccount = [GetAccountStatementDataClass](){
+        didSet{
+            DispatchQueue.main.async {
+                self.tableView?.reloadData()
+            }
+        }
+    }
     
+    var tableViewHeight: CGFloat {
+        tableView?.layoutIfNeeded()
+
+        return tableView?.contentSize.height ?? 0
+    }
     // Stackview setup
     lazy var stackView: UIStackView = {
 
@@ -109,9 +121,13 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         super.viewDidLoad()
 //        statusBarView.isHidden = true
         scrollView.delegate = self
-        scrollView.bounces = false
-        tableView?.bounces = false
-        tableView?.isScrollEnabled = false
+        //Set table height to cover entire view
+            //if navigation bar is not translucent, reduce navigation bar height from view height
+//            tableViewHeight.constant = self.view.frame.height-64
+            self.tableView?.isScrollEnabled = false
+            //no need to write following if checked in storyboard
+            self.scrollView.bounces = false
+            self.tableView?.bounces = true
         
         
         view.addSubview(scrollView)
@@ -122,35 +138,16 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         
         scrollView.isScrollEnabled = true
 //        scrollView.showsVerticalScrollIndicator = false
-        scrollView.contentSize = CGSize(width: UIScreen.main.bounds.width, height: 21000)//or what ever size you want to set
-        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, height: 2000)
-        
+        scrollView.contentSize = CGSize(width: UIScreen.main.bounds.width, height:  2000)//or what ever size you want to set
+        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)
 
-        let screenHeight = UIScreen.main.bounds.height
-//        let scrollViewContentHeight = 1200 as CGFloat
-//        func scrollViewDidScroll(scrollView: UIScrollView) {
-//            let yOffset = scrollView.contentOffset.y
-//
-//            if scrollView == self.scrollView {
-//                if yOffset >= scrollViewContentHeight - screenHeight {
-//                    scrollView.isScrollEnabled = false
-//                    tableView?.isScrollEnabled = true
-//                }
-//            }
-//
-//            if scrollView == self.tableView {
-//                if yOffset <= 0 {
-//                    self.scrollView.isScrollEnabled = true
-//                    self.tableView?.isScrollEnabled = false
-//                }
-//            }
-//        }
+        
         _ = CardViewModel(card: self.product!)
         guard let number = product?.numberMasked else {
             return
         }
         self.navigationItem.setTitle(title: (product?.customName ?? product?.mainField)!, subtitle: "· \(String(number.suffix(4)))", color: product?.fontDesignColor)
-        loadHistoryForCard()
+//        loadHistoryForCard()
         view.backgroundColor = .white
 //        navigationController?.view.addoverlay(color: .black, alpha: 0.2)
         navigationController?.navigationBar.barTintColor = UIColor(hexString: product?.background[0] ?? "").darker()
@@ -276,7 +273,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         collectionView?.allowsMultipleSelection = false
         
         scrollView.addSubview(collectionView ?? UICollectionView())
-        collectionView?.anchor(top: view.safeAreaLayoutGuide.topAnchor, paddingTop: 20, paddingLeft: 0, paddingBottom: 20, paddingRight: 0, width: CGFloat(products.count) * 80,  height: 65)
+        collectionView?.anchor(top: scrollView.topAnchor, paddingTop: 20, paddingLeft: 0, paddingBottom: 20, paddingRight: 0, width: CGFloat(products.count) * 80,  height: 65)
 //        collectionView?.contentInsetAdjustmentBehavior = .always
         collectionView?.centerX(inView: view)
         collectionView?.contentMode = .center
@@ -456,7 +453,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
                     self.mockItem[6].description = model.data?.kpp
                     viewController.mockItem =  self.mockItem
                     viewController.product = self.product
-                    navController.modalPresentationStyle = .custom
+                    navController.modalPresentationStyle = .fullScreen
+                    viewController.addCloseButton()
                     navController.transitioningDelegate = self
                     self.present(navController, animated: true, completion: nil)
                 }
@@ -572,6 +570,63 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
     }
     
     func loadHistoryForCard(){
+        if product?.productType == "ACCOUNT"{
+            totalExpenses = 0.0
+            let body = ["id": product?.id
+                         ] as [String : AnyObject]
+            
+            NetworkManager<GetCardStatementDecodableModel>.addRequest(.getAccountStatement, [:], body) { model, error in
+                if error != nil {
+                    print("DEBUG: Error: ", error ?? "")
+                }
+                guard let model = model else { return }
+                print("DEBUG: LatestPayment: ", model)
+                if model.statusCode == 0 {
+                    DispatchQueue.main.async {
+                        guard let lastPaymentsList  = model.data else { return }
+                        self.historyArray = lastPaymentsList
+                        self.historyArray.sort(by: { (a, b) -> Bool in
+                            if let timestamp1 = a.date, let timestamp2 = b.date {
+                                return timestamp1 > timestamp2
+                            } else {
+                                //At least one of your timestamps is nil.  You have to decide how to sort here.
+                                return true
+                            }
+                        })
+                        for i in self.historyArray{
+                            let timeInterval = TimeInterval(i.date ?? 0)
+                            // create NSDate from Double (NSTimeInterval)
+                            let myNSDate = Date(timeIntervalSince1970: timeInterval)
+                            print(myNSDate)
+                            
+                            if let timeResult = (i.date) {
+                                let date = Date(timeIntervalSince1970: TimeInterval(timeResult))
+                                let dateFormatter = DateFormatter()
+                                dateFormatter.timeStyle = DateFormatter.Style.medium //Set time style
+                                dateFormatter.dateStyle = DateFormatter.Style.medium //Set date style
+                                dateFormatter.timeZone = .current
+                                let localDate = dateFormatter.string(from: date)
+                                print(localDate)
+                            }
+                        }
+                        for i in lastPaymentsList{
+                            if i.operationType == "DEBIT"{
+                                self.totalExpenses  += i.amount ?? 0.0
+                            }
+                        }
+                        
+                    }
+    //                    self.dataUSD = lastPaymentsList
+                } else {
+                    print("DEBUG: Error: ", model.errorMessage ?? "")
+                    DispatchQueue.main.async {
+                        if model.errorMessage == "Пользователь не авторизован"{
+                            AppLocker.present(with: .validate)
+                        }
+                    }
+                }
+            }
+        } else {
         totalExpenses = 0.0
         let body = ["cardNumber": product?.number
                      ] as [String : AnyObject]
@@ -628,7 +683,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
             }
         }
     }
-
+    }
 }
 
 extension ProductViewController{
@@ -806,7 +861,16 @@ extension ProductViewController{
             
             return headerView
         }
-    
+  
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView == self.scrollView {
+            tableView?.isScrollEnabled = (self.scrollView.contentOffset.y >= 200)
+        }
+
+        if scrollView == self.tableView {
+            self.tableView?.isScrollEnabled = (tableView?.contentOffset.y ?? 0 > 0)
+        }
+    }
     
     
     func getFastPaymentContractList(_ completion: @escaping (_ model: [FastPaymentContractFindListDatum]? ,_ error: String?) -> Void) {
