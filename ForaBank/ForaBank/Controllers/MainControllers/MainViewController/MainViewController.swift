@@ -110,10 +110,13 @@ class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.isHidden = true
+
         view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
+        
         self.view.addSubview(searchContact)
-        searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 48)
-        //            navigationController?.navigationBar.isHidden = true
+        searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 48)
+        
         searchContact.secondButton.image = UIImage(named: "Avatar")?.withRenderingMode(.alwaysTemplate)
         searchContact.secondButton.tintColor = .black
         searchContact.secondButton.isUserInteractionEnabled = true
@@ -128,7 +131,7 @@ class MainViewController: UIViewController {
         getCurrency()
         setupData()
         reloadData(with: nil)
-        collectionView.dataSource = dataSource
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -210,10 +213,10 @@ class MainViewController: UIViewController {
         
     private func setupCollectionView() {
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createCompositionLayout())
-        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+//        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.backgroundColor = .white
         view.addSubview(collectionView)
-        collectionView.anchor(top: searchContact.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, height: UIScreen.main.bounds.height)
+        collectionView.anchor(top: searchContact.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor)
         
         collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.reuseId)
         collectionView.register(PaymentsMainCell.self, forCellWithReuseIdentifier: PaymentsMainCell.reuseId)
@@ -232,7 +235,7 @@ class MainViewController: UIViewController {
         collectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0)
         collectionView.isScrollEnabled = true
         collectionView.delegate = self
-        
+        collectionView.dataSource = dataSource
     }
     
     func reloadData(with searchText: String?) {

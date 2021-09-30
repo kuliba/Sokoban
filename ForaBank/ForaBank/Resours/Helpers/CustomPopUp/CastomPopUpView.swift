@@ -14,14 +14,9 @@ import UIKit
 
 class MemeDetailVC : AddHeaderImageViewController {
 
-    var titleLabel = UILabel(text: "Между своими", font: .boldSystemFont(ofSize: 16), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
+    var titleLabel = UILabel(text: "Между своими", font: .boldSystemFont(ofSize: 18), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
     
-    var onlyMy = true {
-        didSet {
-//            cardFromListView.onlyMy = onlyMy
-//            cardToListView.onlyMy = onlyMy
-        }
-    }
+    var onlyMy = true
     var onlyCard = false
     
     var viewModel = ConfirmViewControllerModel(type: .card2card) {
@@ -54,16 +49,14 @@ class MemeDetailVC : AddHeaderImageViewController {
         setupListFrom()
         setupListTo()
         
-        
-        
         bottomView.currencySymbol = "₽"
         
         self.addHeaderImage()
-        self.view.layer.cornerRadius = 20
+        self.view.layer.cornerRadius = 16
         self.view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         self.view.clipsToBounds = true
         self.view.backgroundColor = .white
-        self.view.anchor(width: UIScreen.main.bounds.width, height: 470)
+        self.view.anchor(width: UIScreen.main.bounds.width, height: 490)
         
         stackView = UIStackView(arrangedSubviews: [cardFromField,
                                                    seporatorView,
@@ -73,7 +66,7 @@ class MemeDetailVC : AddHeaderImageViewController {
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fillProportionally
-        stackView.spacing = 0
+        stackView.spacing = 5
         stackView.isUserInteractionEnabled = true
         view.addSubview(stackView)
     }

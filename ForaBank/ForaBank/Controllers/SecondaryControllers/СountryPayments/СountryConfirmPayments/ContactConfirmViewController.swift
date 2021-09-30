@@ -580,8 +580,8 @@ class ContactConfurmViewController: UIViewController {
             
         default:
             NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { respons, error in
+                self.dismissActivity()
                 if error != nil {
-                    self.dismissActivity()
                     print("DEBUG: Error: ", error ?? "")
                     self.showAlert(with: "Ошибка", and: error ?? "")
                 }
@@ -589,7 +589,6 @@ class ContactConfurmViewController: UIViewController {
                 
                 if model.statusCode == 0 {
                     print("DEBUG: Success payment")
-                    self.dismissActivity()
                     DispatchQueue.main.async {
                         let vc = PaymentsDetailsSuccessViewController()
                         vc.confurmVCModel = self.confurmVCModel
@@ -609,14 +608,12 @@ class ContactConfurmViewController: UIViewController {
                         vc.modalPresentationStyle = .fullScreen
                         self.present(vc, animated: true, completion: nil)
                     }
-                } else {
-                    self.dismissActivity()
-                    print("DEBUG: Error: ", model.errorMessage ?? "")
-                    DispatchQueue.main.async {
-                    if model.errorMessage == "Пользователь не авторизован"{
-                        AppLocker.present(with: .validate)
-                        }
+                } else if model.statusCode == 102 {
+                    self.showAlert(with: "Ошибка", and: model.errorMessage ?? "") {
+                        self.navigationController?.popViewController(animated: true)
                     }
+                } else {
+                    print("DEBUG: Error: ", model.errorMessage ?? "")
                     self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
                 }
             }
