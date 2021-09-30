@@ -27,6 +27,16 @@ class ChatViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+       
+        let navigationBar = navigationController?.navigationBar
+        let navigationBarAppearance = UINavigationBarAppearance()
+        navigationBar?.isTranslucent = false
+        navigationBarAppearance.shadowColor = .clear
+        navigationBar?.scrollEdgeAppearance = navigationBarAppearance
+        navigationBar?.barTintColor = .red
+        navigationBar?.isTranslucent = false
+        navigationBar?.setBackgroundImage(UIImage(), for: .default)
+        navigationBar?.shadowImage = UIImage()
         setupUI()
     }
     

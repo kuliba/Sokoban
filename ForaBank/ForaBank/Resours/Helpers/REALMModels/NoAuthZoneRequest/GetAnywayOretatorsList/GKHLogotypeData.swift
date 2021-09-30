@@ -12,4 +12,5 @@ import RealmSwift
 class LogotypeData: Object {
     @objc dynamic var content: String?
     @objc dynamic var name: String?
+    @objc dynamic var code: String?
 }

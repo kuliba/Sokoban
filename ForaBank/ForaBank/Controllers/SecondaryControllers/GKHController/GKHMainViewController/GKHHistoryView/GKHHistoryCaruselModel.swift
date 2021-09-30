@@ -41,7 +41,7 @@ struct GKHHistoryCaruselModel {
                         let decodedimage = UIImage(data: dataDecoded)
                         image = decodedimage
                     } else {
-                        image = UIImage(named: "GKH")
+//                        image = UIImage(named: "GKH")
                     }
                     
                 }
