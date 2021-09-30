@@ -7,10 +7,10 @@
 
 import UIKit
 import SwiftUI
+import MessageUI
 
 
-
-class ChatViewController: UIViewController {
+class ChatViewController: UIViewController, MFMailComposeViewControllerDelegate {
 
     var stackView = UIStackView()
     var secondStackView = UIStackView()
@@ -111,15 +111,57 @@ class ChatViewController: UIViewController {
         
         
         
-        phoneButton.addTarget(self, action: #selector(openPhoneNumber), for: .touchUpInside)
+        phoneButton.addTarget(self, action: #selector(callNumber), for: .touchUpInside)
+        telegramButton.addTarget(self, action: #selector(openTG), for: .touchUpInside)
+        whatsUpButton.addTarget(self, action: #selector(openWhatsUp), for: .touchUpInside)
+        emailButton.addTarget(self, action: #selector(sendEmail), for: .touchUpInside)
+
         
-        telegramButton.addTarget(self, action: #selector(openWhatsUp), for: .touchUpInside)
         
     }
     
-    @objc func openWhatsUp(){
-        UIApplication.shared.openURL(NSURL(string: "http://www.google.com")! as URL)
+    
+    @objc func sendEmail() {
+         let mailVC = MFMailComposeViewController()
+         mailVC.mailComposeDelegate = self
+         mailVC.setToRecipients(["fora-digital@forabank.ru"])
+         mailVC.setSubject("ФОРА-ОНЛАЙН")
+         mailVC.setMessageBody("", isHTML: false)
 
+        present(mailVC, animated: true, completion: nil)
+     }
+
+     // MARK: - Email Delegate
+
+    private func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+         controller.dismiss(animated: true, completion: nil)
+     }
+    
+    @objc func openWhatsUp(){
+        UIApplication.shared.openURL(NSURL(string: "https://api.whatsapp.com/send/?phone=%2B79257756555&text&app_absent=0")! as URL)
+
+    }
+    
+    @objc func openTG(){
+        UIApplication.shared.openURL(NSURL(string: "https://telegram.me/forabank_bot")! as URL)
+
+    }
+    
+    @objc func callNumber() {
+
+        if let phoneCallURL = URL(string: "telprompt://\("88001009889")") {
+
+            let application:UIApplication = UIApplication.shared
+            if (application.canOpenURL(phoneCallURL)) {
+                if #available(iOS 10.0, *) {
+                    application.open(phoneCallURL, options: [:], completionHandler: nil)
+                } else {
+                    // Fallback on earlier versions
+                     application.openURL(phoneCallURL as URL)
+
+                }
+            }
+        }
     }
     @objc  func openPhoneNumber(){
         guard let number = URL(string: "tel://" + "8 (800) 100 9889") else { return }

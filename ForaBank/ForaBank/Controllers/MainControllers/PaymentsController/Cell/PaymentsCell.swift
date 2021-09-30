@@ -121,7 +121,14 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
         if payment.lastCountryPayment != nil{
             iconCountryImageView.image = payment.lastCountryPayment?.countryImage
         } else if payment.lastMobilePayment != nil{
-            
+            guard let banks = Dict.shared.mobileSystem  else {
+                return
+            }
+            for i in banks{
+                if i.puref == payment.lastMobilePayment?.puref{
+                    iconCountryImageView.image = i.svgImage?.convertSVGStringToImage()
+                }
+            }
         } else if payment.lastPhonePayment?.bankID != nil {
             guard let banks = Dict.shared.banks  else {
                 return
@@ -134,7 +141,7 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
         } else if payment.lastGKHPayment != nil{
 
             let organization = List<LogotypeData>()
-            for i in organization{
+                for i in organization{
                 if i.code == payment.lastGKHPayment?.puref{
                     iconCountryImageView.image = i.content?.convertSVGStringToImage()
                     

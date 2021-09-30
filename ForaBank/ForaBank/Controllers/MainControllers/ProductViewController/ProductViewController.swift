@@ -446,7 +446,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
                     self.mockItem[6].description = model.data?.kpp
                     viewController.mockItem =  self.mockItem
                     viewController.product = self.product
-                    navController.modalPresentationStyle = .custom
+                    navController.modalPresentationStyle = .fullScreen
+                    viewController.addCloseButton()
                     navController.transitioningDelegate = self
                     self.present(navController, animated: true, completion: nil)
                 }
@@ -565,7 +566,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         if product?.productType == "ACCOUNT"{
             
         } else {
-        
         totalExpenses = 0.0
         let body = ["cardNumber": product?.number
                      ] as [String : AnyObject]

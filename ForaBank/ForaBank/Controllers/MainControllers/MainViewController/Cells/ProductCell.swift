@@ -128,11 +128,11 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
         
         backgroundImageView.fillSuperview()
         balanceLabel.font = UIFont.boldSystemFont(ofSize: 14)
-        maskCardLabel.anchor(top: self.topAnchor, left: self.leftAnchor, right: self.rightAnchor, paddingTop: 18, paddingLeft: 55, paddingRight: 12)
+        maskCardLabel.anchor(top: self.topAnchor, left: self.leftAnchor, right: self.rightAnchor, paddingTop: 17, paddingLeft: 55, paddingRight: 12)
         
         logoImageView.centerY(inView: maskCardLabel)
         logoImageView.anchor(left: self.leftAnchor,
-                             paddingLeft: 13, width: 18, height: 18)
+                             paddingLeft: 16, width: 18, height: 18)
         
         
         cardNameLabel.anchor(top: maskCardLabel.bottomAnchor, left: self.leftAnchor, right: self.rightAnchor,
