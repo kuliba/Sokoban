@@ -31,7 +31,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
         case .transfers:
             if indexPath.row == 1 {
                 let popView = CustomPopUpWithRateView()
-                popView.onlyMy = false
+//                popView.onlyMy = false
                 popView.modalPresentationStyle = .custom
                 popView.transitioningDelegate = self
                 self.present(popView, animated: true, completion: nil)
@@ -131,12 +131,14 @@ extension PaymentsViewController: UICollectionViewDelegate {
         let vc = ContactInputViewController()
         vc.country = model.country
         if model.phoneNumber != nil {
+            vc.typeOfPay = .mig
             vc.configure(with: model.country, byPhone: true)
             vc.selectedBank = model.bank
             let mask = StringMask(mask: "+000-0000-00-00")
             let maskPhone = mask.mask(string: model.phoneNumber)
             vc.phoneField.text = maskPhone ?? ""
         } else if model.firstName != nil, model.middleName != nil, model.surName != nil {
+            vc.typeOfPay = .contact
             vc.configure(with: model.country, byPhone: false)
             vc.foraSwitchView.bankByPhoneSwitch.isOn = false
             vc.foraSwitchView.bankByPhoneSwitch.layer.borderColor =  #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)

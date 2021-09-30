@@ -123,7 +123,6 @@ class PayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
             #endif
         case 1:
             let popView = CustomPopUpWithRateView()
-            popView.onlyMy = false
             popView.modalPresentationStyle = .custom
             popView.transitioningDelegate = self
             self.present(popView, animated: true, completion: nil)
