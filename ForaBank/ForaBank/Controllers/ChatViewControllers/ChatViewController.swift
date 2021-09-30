@@ -100,15 +100,31 @@ class ChatViewController: UIViewController {
         secondStackView.addArrangedSubview(whatsUpButton)
         secondStackView.addArrangedSubview(telegramButton)
 
-      
+        
         
         secondStackView.translatesAutoresizingMaskIntoConstraints = false
         
         secondStackView.anchor(top: stackView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 16, paddingLeft: 20, paddingBottom: 20, paddingRight: 20, height: 76)
         
         
+        //Action buttons
+        
+        
+        
+        phoneButton.addTarget(self, action: #selector(openPhoneNumber), for: .touchUpInside)
+        
+        telegramButton.addTarget(self, action: #selector(openWhatsUp), for: .touchUpInside)
+        
     }
     
+    @objc func openWhatsUp(){
+        UIApplication.shared.openURL(NSURL(string: "http://www.google.com")! as URL)
+
+    }
+    @objc  func openPhoneNumber(){
+        guard let number = URL(string: "tel://" + "8 (800) 100 9889") else { return }
+        UIApplication.shared.open(number)
+    }
     func createButton(title: String, image: String, tintColor: String) -> UIButton{
         
         let button = UIButton(title: title)
@@ -119,7 +135,7 @@ class ChatViewController: UIViewController {
         button.backgroundColor = UIColor(hexString: "EAEBEB")
         button.tintColor = UIColor(hexString: tintColor)
         button.setImage(UIImage(named: image), for: .normal)
-        
+    
         return button
     }
 }

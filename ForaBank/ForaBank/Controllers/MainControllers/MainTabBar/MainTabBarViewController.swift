@@ -173,6 +173,15 @@ class MainTabBarViewController: UITabBarController {
             print("DEBUG: Load Payments")
         }
         
+//        NetworkHelper.request(.getMobileList) { model, error in
+//            if error != nil {
+//                self.showAlert(with: "Ошибка", and: error!)
+//            }
+//            guard let paymentSystem = model as? [PaymentSystemList] else { return }
+//            Dict.shared.mobileSystem = paymentSystem
+//            print("DEBUG: Load Payments")
+//        }
+        
         NetworkHelper.request(.getCurrencyList) { model, error in
             if error != nil {
                 self.showAlert(with: "Ошибка", and: error!)

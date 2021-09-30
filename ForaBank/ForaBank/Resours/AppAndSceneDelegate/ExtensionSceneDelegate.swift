@@ -28,7 +28,7 @@ extension SceneDelegate: UIGestureRecognizerDelegate {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
         
-        guard let date = dateFormatter.date(from: startTime) else { fatalError() }
+        guard let date = dateFormatter.date(from: startTime) else { return false }
         let d = date.localDate()
         let withTimeDistance = d.addingTimeInterval(TimeInterval(distanceTime))
         let r = withTimeDistance.seconds(from: currentTime)

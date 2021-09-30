@@ -176,9 +176,9 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
         
         addSubview(titleLabel)
         addSubview(iconImageView)
-        addSubview(iconCountryImageView)
         addSubview(avatarImageView)
-             
+        addSubview(iconCountryImageView)
+
         initialsLabel.fillSuperview()
         
         iconImageView.center(inView: view)

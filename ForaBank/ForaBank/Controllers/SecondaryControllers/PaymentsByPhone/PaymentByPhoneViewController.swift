@@ -515,7 +515,7 @@ class PaymentByPhoneViewController: UIViewController {
                     print("DEBUG: Error: ", error ?? "")
                     self?.dismissActivity()
                     self?.showAlert(with: "Ошибка", and: data?.errorMessage ?? "")
-                    completion(error!)
+                    completion(error)
                 }
                 guard let data = data else { return }
                 if data.statusCode == 0 {

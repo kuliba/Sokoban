@@ -77,6 +77,11 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         }
     }
     
+    var tableViewHeight: CGFloat {
+        tableView?.layoutIfNeeded()
+
+        return tableView?.contentSize.height ?? 0
+    }
     // Stackview setup
     lazy var stackView: UIStackView = {
 
@@ -109,9 +114,13 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         super.viewDidLoad()
 //        statusBarView.isHidden = true
         scrollView.delegate = self
-        scrollView.bounces = false
-        tableView?.bounces = false
-        tableView?.isScrollEnabled = false
+        //Set table height to cover entire view
+            //if navigation bar is not translucent, reduce navigation bar height from view height
+//            tableViewHeight.constant = self.view.frame.height-64
+            self.tableView?.isScrollEnabled = false
+            //no need to write following if checked in storyboard
+            self.scrollView.bounces = false
+            self.tableView?.bounces = true
         
         
         view.addSubview(scrollView)
@@ -122,29 +131,10 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         
         scrollView.isScrollEnabled = true
 //        scrollView.showsVerticalScrollIndicator = false
-        scrollView.contentSize = CGSize(width: UIScreen.main.bounds.width, height: 21000)//or what ever size you want to set
-        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, height: 2000)
-        
+        scrollView.contentSize = CGSize(width: UIScreen.main.bounds.width, height:  2000)//or what ever size you want to set
+        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)
 
-        let screenHeight = UIScreen.main.bounds.height
-//        let scrollViewContentHeight = 1200 as CGFloat
-//        func scrollViewDidScroll(scrollView: UIScrollView) {
-//            let yOffset = scrollView.contentOffset.y
-//
-//            if scrollView == self.scrollView {
-//                if yOffset >= scrollViewContentHeight - screenHeight {
-//                    scrollView.isScrollEnabled = false
-//                    tableView?.isScrollEnabled = true
-//                }
-//            }
-//
-//            if scrollView == self.tableView {
-//                if yOffset <= 0 {
-//                    self.scrollView.isScrollEnabled = true
-//                    self.tableView?.isScrollEnabled = false
-//                }
-//            }
-//        }
+        
         _ = CardViewModel(card: self.product!)
         guard let number = product?.numberMasked else {
             return
@@ -276,7 +266,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         collectionView?.allowsMultipleSelection = false
         
         scrollView.addSubview(collectionView ?? UICollectionView())
-        collectionView?.anchor(top: view.safeAreaLayoutGuide.topAnchor, paddingTop: 20, paddingLeft: 0, paddingBottom: 20, paddingRight: 0, width: CGFloat(products.count) * 80,  height: 65)
+        collectionView?.anchor(top: scrollView.topAnchor, paddingTop: 20, paddingLeft: 0, paddingBottom: 20, paddingRight: 0, width: CGFloat(products.count) * 80,  height: 65)
 //        collectionView?.contentInsetAdjustmentBehavior = .always
         collectionView?.centerX(inView: view)
         collectionView?.contentMode = .center
@@ -806,7 +796,16 @@ extension ProductViewController{
             
             return headerView
         }
-    
+  
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView == self.scrollView {
+            tableView?.isScrollEnabled = (self.scrollView.contentOffset.y >= 200)
+        }
+
+        if scrollView == self.tableView {
+            self.tableView?.isScrollEnabled = (tableView?.contentOffset.y ?? 0 > 0)
+        }
+    }
     
     
     func getFastPaymentContractList(_ completion: @escaping (_ model: [FastPaymentContractFindListDatum]? ,_ error: String?) -> Void) {
