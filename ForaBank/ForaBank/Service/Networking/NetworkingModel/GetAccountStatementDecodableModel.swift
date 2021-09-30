@@ -94,8 +94,8 @@ extension GetAccountStatementDatum {
         name: String?? = nil,
         operationType: String?? = nil,
         tranDate: String?? = nil
-    ) -> Datum {
-        return Datum(
+    ) -> GetAccountStatementDatum {
+        return GetAccountStatementDatum(
             accountID: accountID ?? self.accountID,
             accountNumber: accountNumber ?? self.accountNumber,
             amount: amount ?? self.amount,
