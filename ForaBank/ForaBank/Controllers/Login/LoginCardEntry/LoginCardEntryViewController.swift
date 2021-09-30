@@ -38,24 +38,30 @@ class LoginCardEntryViewController: UIViewController {
                     }
                     
                 } else {
-                    LoginViewModel().checkCardNumber(with: cardNumber) { resp, error in
-                        self?.dismissActivity()
+                    DispatchQueue.main.async {
+                    AppDelegate.shared.getCSRF { error in
                         if error != nil {
-                            self?.showAlert(with: "Ошибка", and: error ?? "")
-                        } else {
-                            
-                            DownloadQueue.download {}
-                            DispatchQueue.main.async { [weak self] in
-                                let model = CodeVerificationViewModel(phone: resp, type: .register)
-                                let vc = CodeVerificationViewController(model: model)
-                                self?.navigationController?.pushViewController(vc, animated: true)
+                            print("DEBUG: Error getCSRF: ", error!)
+                        }
+                    
+                        LoginViewModel().checkCardNumber(with: cardNumber) { resp, error in
+                            self?.dismissActivity()
+                            if error != nil {
+                                self?.showAlert(with: "Ошибка", and: error ?? "")
+                            } else {
+                                
+                                DownloadQueue.download {}
+                                DispatchQueue.main.async { [weak self] in
+                                    let model = CodeVerificationViewModel(phone: resp, type: .register)
+                                    let vc = CodeVerificationViewController(model: model)
+                                    self?.navigationController?.pushViewController(vc, animated: true)
+                                }
                             }
                         }
                     }
                 }
-                
             }
-            
+            }
         }
         
         orderCardView.orderCardTapped = { self.orderCardTapped() }

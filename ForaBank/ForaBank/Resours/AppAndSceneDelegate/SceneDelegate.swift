@@ -28,10 +28,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let tapGesture = UITapGestureRecognizer(target: self, action: nil)
             tapGesture.delegate = self
             window?.addGestureRecognizer(tapGesture)
-        AppDelegate.shared.getCSRF { error in
-            if error != nil {
-                print("DEBUG: Error getCSRF: ", error!)
-            }
             let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
             if let userIsRegister = userIsRegister {
                 if userIsRegister {
@@ -42,7 +38,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             } else {
                 self.goToRegisterVC()
             }
-        }
         window?.makeKeyAndVisible()
     }
 

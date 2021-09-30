@@ -44,10 +44,17 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
         setupUI()
         
         phoneField.didChooseButtonTapped = {() in
+            print("phoneField didChooseButtonTapped")
+//            self.dismiss(animated: true, completion: nil)
             
-            self.dismiss(animated: true, completion: nil)
+            let contactPickerScene = EPContactsPicker(
+                delegate: self,
+                multiSelection: false,
+                subtitleCellType: SubtitleCellValue.phoneNumber)
+//            contactPickerScene.addCloseButton()
+            let navigationController = UINavigationController(rootViewController: contactPickerScene)
+            self.present(navigationController, animated: true, completion: nil)
         }
-        
         setupActions()
         
         bottomView.didDoneButtonTapped = { [self](amount) in
@@ -129,7 +136,6 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
         navigationController?.navigationBar.isHidden = false
     }
     
-    
     fileprivate func setupUI() {
         phoneField.textField.maskString = "+7 (000) 000-00-00"
         view.backgroundColor = .white
@@ -142,8 +148,6 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
         bottomView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
                           right: view.rightAnchor)
         bottomView.currencySymbol = "₽"
-        
-        
         
         title = "Мобильная связь"
         stackView = UIStackView(arrangedSubviews: [phoneField, cardField, cardListView])
@@ -186,9 +190,9 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
         ] as [String: AnyObject]
         
         NetworkManager<GetPhoneInfoDecodableModel>.addRequest(.getPhoneInfo, [:], newBody, completion: { [weak self] phoneData, error in
-            self?.dismissActivity()
             
             if phoneData?.errorMessage != nil {
+                self?.dismissActivity()
                 completion(error)
             }
             guard let data = phoneData else { return }
@@ -214,10 +218,8 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                         "fieldvalue": phone.digits]]
                 ] as [String: AnyObject]
                 
-                print(body)
-                
                 NetworkManager<CreateMobileTransferDecodableModel>.addRequest(.createMobileTransfer, [:], body, completion: { [weak self] data, error in
-                    
+                    self?.dismissActivity()
                     if data?.errorMessage != nil {
                         completion(error)
                     }
@@ -265,11 +267,39 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                         AppLocker.present(with: .validate)
                     }
                 }
-                completion(
-                    data.errorMessage)
+                completion(data.errorMessage)
             }
             
         })
     }
     
+}
+
+
+extension MobilePayViewController: EPPickerDelegate {
+    
+        func epContactPicker(_: EPContactsPicker, didContactFetchFailed error : NSError) {
+            print("Failed with error \(error.description)")
+        }
+        
+        func epContactPicker(_: EPContactsPicker, didSelectContact contact : EPContact) {
+            let phoneFromContact = contact.phoneNumbers.first?.phoneNumber
+            let numbers = phoneFromContact?.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
+//            print("Contact \(contact.displayName()) \(numbers) has been selected")
+            let mask = StringMask(mask: "+000-0000-00-00")
+            let maskPhone = mask.mask(string: numbers)
+            phoneField.text = maskPhone ?? ""
+        }
+        
+        func epContactPicker(_: EPContactsPicker, didCancel error : NSError) {
+            print("User canceled the selection");
+        }
+        
+        func epContactPicker(_: EPContactsPicker, didSelectMultipleContacts contacts: [EPContact]) {
+            print("The following contacts are selected")
+            for contact in contacts {
+                print("\(contact.displayName())")
+            }
+        }
+
 }
