@@ -11,13 +11,6 @@ import IQKeyboardManagerSwift
 extension AppDelegate {
     func customizeUiInApp() {
         
-        if #available(iOS 15, *) {
-            let appearance = UINavigationBarAppearance()
-            appearance.configureWithOpaqueBackground()
-            UINavigationBar.appearance().standardAppearance = appearance
-            UINavigationBar.appearance().scrollEdgeAppearance = appearance
-        }
-        
         // Настройка клавиатуры
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.toolbarDoneBarButtonItemText = "Готово"
@@ -48,5 +41,12 @@ extension AppDelegate {
         // Настройка TabBar
         UITabBarItem.appearance().setTitleTextAttributes(
             [.foregroundColor: UIColor.black ], for: .selected)
+        
+        if #available(iOS 15, *) {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            UINavigationBar.appearance().standardAppearance = appearance
+            UINavigationBar.appearance().scrollEdgeAppearance = appearance
+        }
     }
 }

@@ -46,7 +46,7 @@ class PaymentsViewController: UIViewController {
         view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
         
         self.view.addSubview(searchContact)
-        searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 48)
+        searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 48)
         searchContact.alpha = 0.5
         searchContact.bellIcon.isHidden = true
         setupData()
@@ -95,7 +95,7 @@ class PaymentsViewController: UIViewController {
         collectionView.backgroundColor = .white
         view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
         view.addSubview(collectionView)
-        collectionView.anchor(top: searchContact.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, height: UIScreen.main.bounds.height)
+        collectionView.anchor(top: searchContact.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor)
         collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.reuseId)
         
         collectionView.register(PaymentsCell.self, forCellWithReuseIdentifier: PaymentsCell.reuseId)

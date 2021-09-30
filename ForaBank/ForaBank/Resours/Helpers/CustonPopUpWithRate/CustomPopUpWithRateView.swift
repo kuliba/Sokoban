@@ -9,7 +9,7 @@ import UIKit
 
 class CustomPopUpWithRateView : AddHeaderImageViewController {
 
-    var titleLabel = UILabel(text: "Между счетами", font: .boldSystemFont(ofSize: 16), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
+    var titleLabel = UILabel(text: "Между счетами", font: .boldSystemFont(ofSize: 18), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
     
     var onlyMy = true
     
