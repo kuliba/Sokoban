@@ -76,7 +76,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
             }
         }
     }
-    var historyArrayAccount = [GetAccountStatementDataClass](){
+    var historyArrayAccount = [GetAccountStatementDatum](){
         didSet{
             DispatchQueue.main.async {
                 self.tableView?.reloadData()

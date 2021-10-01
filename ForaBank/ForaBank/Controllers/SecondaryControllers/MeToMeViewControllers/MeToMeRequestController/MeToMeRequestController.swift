@@ -133,7 +133,7 @@ class MeToMeRequestController: UIViewController {
         super.viewDidLoad()
         setupUI()
         hideKeyboardWhenTappedAround()
-        
+        addCloseButton()
         let navImage = UIImage(named: "logo-spb-mini")
         let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
         self.navigationItem.rightBarButtonItem = customViewItem
