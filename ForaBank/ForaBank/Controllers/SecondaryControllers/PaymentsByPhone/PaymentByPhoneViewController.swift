@@ -8,6 +8,7 @@
 import UIKit
 
 class PaymentByPhoneViewController: UIViewController {
+
     var sbp: Bool?
     var confirm: Bool?
     var selectedCardNumber = 0
@@ -129,8 +130,18 @@ class PaymentByPhoneViewController: UIViewController {
         setupUI()
         
         phoneField.didChooseButtonTapped = {() in
+            print("phoneField didChooseButtonTapped")
+//            self.dismiss(animated: true, completion: nil)
             
-            self.dismiss(animated: true, completion: nil)
+            let contactPickerScene = EPContactsPicker(
+                delegate: self,
+                multiSelection: false,
+                subtitleCellType: SubtitleCellValue.phoneNumber)
+//            contactPickerScene.addCloseButton()
+            let navigationController = UINavigationController(rootViewController: contactPickerScene)
+            self.present(navigationController, animated: true, completion: nil)
+            
+            
         }
 //        hideKeyboardWhenTappedAround()
 //        getCardList()
@@ -219,6 +230,7 @@ class PaymentByPhoneViewController: UIViewController {
         }
         bankPayeer.didChooseButtonTapped = { () in
             self.openOrHideView(self.bankListView)
+            
         }
     }
     
@@ -262,7 +274,7 @@ class PaymentByPhoneViewController: UIViewController {
                             bottom: view.bottomAnchor, right: view.rightAnchor)
         
 //        bankPayeer.text = selectBank ?? ""
-
+        
         bottomView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
                           right: view.rightAnchor)
         bottomView.currencySymbol = "₽"
@@ -308,6 +320,8 @@ class PaymentByPhoneViewController: UIViewController {
     
     private func setupBankField(bank: BanksList) {
         self.bankPayeer.text = bank.memberNameRus ?? ""
+//        self.selectedBank?.memberID = bank.memberID
+        self.bankId = bank.memberID ?? ""
         self.bankPayeer.imageView.image = bank.svgImage?.convertSVGStringToImage()
     }
     
@@ -504,7 +518,7 @@ class PaymentByPhoneViewController: UIViewController {
                     print("DEBUG: Error: ", error ?? "")
                     self?.dismissActivity()
                     self?.showAlert(with: "Ошибка", and: data?.errorMessage ?? "")
-                    completion(error!)
+                    completion(error)
                 }
                 guard let data = data else { return }
                 if data.statusCode == 0 {
@@ -754,4 +768,33 @@ class PaymentByPhoneViewController: UIViewController {
         }
         
     }
+}
+
+//MARK: EPContactsPicker delegates
+extension PaymentByPhoneViewController: EPPickerDelegate {
+    
+        func epContactPicker(_: EPContactsPicker, didContactFetchFailed error : NSError) {
+            print("Failed with error \(error.description)")
+        }
+        
+        func epContactPicker(_: EPContactsPicker, didSelectContact contact : EPContact) {
+            let phoneFromContact = contact.phoneNumbers.first?.phoneNumber
+            let numbers = phoneFromContact?.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
+//            print("Contact \(contact.displayName()) \(numbers) has been selected")
+            let mask = StringMask(mask: "+000-0000-00-00")
+            let maskPhone = mask.mask(string: numbers)
+            phoneField.text = maskPhone ?? ""
+        }
+        
+        func epContactPicker(_: EPContactsPicker, didCancel error : NSError) {
+            print("User canceled the selection");
+        }
+        
+        func epContactPicker(_: EPContactsPicker, didSelectMultipleContacts contacts: [EPContact]) {
+            print("The following contacts are selected")
+            for contact in contacts {
+                print("\(contact.displayName())")
+            }
+        }
+
 }

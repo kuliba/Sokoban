@@ -27,11 +27,11 @@ extension CustomPopUpWithRateView {
         setupListTo()
         
         self.addHeaderImage()
-        self.view.layer.cornerRadius = 20
+        self.view.layer.cornerRadius = 16
         self.view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         self.view.clipsToBounds = true
         self.view.backgroundColor = .white
-        self.view.anchor(width: UIScreen.main.bounds.width, height: 470)
+        self.view.anchor(width: UIScreen.main.bounds.width, height: 490)
         
         stackView = UIStackView(arrangedSubviews: [cardFromField,
                                                    seporatorView,
@@ -41,7 +41,7 @@ extension CustomPopUpWithRateView {
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fillProportionally
-        stackView.spacing = 0
+        stackView.spacing = 5
         stackView.isUserInteractionEnabled = true
         view.addSubview(stackView)
     }
@@ -84,6 +84,7 @@ extension CustomPopUpWithRateView {
                 }
                 guard let data = data else { return }
                 self?.cardFromListView.cardList = data
+//                self?.cardFromField.cardModel = data.first
                 self?.cardToListView.cardList = data
             }
         }
@@ -143,16 +144,17 @@ extension CustomPopUpWithRateView {
     /// Инициализация верхних карт
     private func setupListFrom() {
         cardFromListView = CardListView(onlyMy: onlyMy)
-        cardFromListView.didCardTapped = { [weak self] (card) in
-            self?.viewModel.cardFrom = card
-            self?.reversCard = ""
-            self?.cardFromField.cardModel = card
-            self?.hideView((self?.cardFromListView)!, needHide: true) {
-                self?.hideView((self?.cardToListView)!, needHide: true) {
-                    self?.seporatorView.curvedLineView.isHidden = false
-                    self?.seporatorView.straightLineView.isHidden = true
-                    self?.stackView.layoutIfNeeded()
+        cardFromListView.didCardTapped = { (card) in
+            self.viewModel.cardFrom = card
+            self.reversCard = ""
+            self.cardFromField.cardModel = card
+            self.hideView(self.cardFromListView, needHide: true) {
+                if !self.cardToListView.isHidden {
+                    self.hideView(self.cardToListView, needHide: true) { }
                 }
+                self.seporatorView.curvedLineView.isHidden = false
+                self.seporatorView.straightLineView.isHidden = true
+                self.stackView.layoutIfNeeded()
             }
         }
         cardFromListView.lastItemTap = {
@@ -162,13 +164,15 @@ extension CustomPopUpWithRateView {
             if self.onlyMy {
                 vc.onlyCard = false
             }
-            vc.didCardTapped = { [weak self] card in
-                self?.viewModel.cardFrom = card
-                self?.reversCard = ""
-                self?.cardFromField.cardModel = card
-                self?.hideView((self?.cardFromListView)!, needHide: true) {
-                    self?.hideView((self?.cardToListView)!, needHide: true) {
-                        self?.stackView.layoutIfNeeded()
+            vc.didCardTapped = { card in
+                self.viewModel.cardFrom = card
+                self.reversCard = ""
+                self.cardFromField.cardModel = card
+                if !self.cardFromListView.isHidden {
+                    self.hideView(self.cardFromListView, needHide: true) {
+                        self.hideView(self.cardToListView, needHide: true) {
+                            self.stackView.layoutIfNeeded()
+                        }
                     }
                 }
                 vc.dismiss(animated: true, completion: nil)
@@ -182,25 +186,15 @@ extension CustomPopUpWithRateView {
     /// Инициализация нижних карт
     private func setupListTo() {
         cardToListView = CardListView(onlyMy: onlyMy)
-        cardToListView.canAddNewCard = onlyMy ? false : true
-//        cardToListView.firstItemTap = { [weak self] in
-//            print("Показываем окно новой карты ")
-//            self?.view.addSubview(self?.cardView ?? UIView())
-//            self?.cardView.frame = (self?.view.bounds)!
-//            self?.cardView.autoresizingMask = [.flexibleHeight,.flexibleWidth]
-//            self?.stackView.isHidden = true
-//            self?.titleLabel.isHidden = true
-//            self?.bottomView.isHidden = true
-//          //  self?.hideAllCardList()
-//        }
-        cardToListView.didCardTapped = { [weak self] (card) in
-            self?.viewModel.cardTo = card
-            self?.reversCard = ""
-            self?.cardToField.cardModel = card
-            self?.hideView((self?.cardFromListView)!, needHide: true) {
-                self?.hideView((self?.cardToListView)!, needHide: true) {
-                    self?.stackView.layoutIfNeeded()
+        cardToListView.didCardTapped = { (card) in
+            self.viewModel.cardTo = card
+            self.reversCard = ""
+            self.cardToField.cardModel = card
+            self.hideView(self.cardToListView, needHide: true) {
+                if !self.cardFromListView.isHidden {
+                    self.hideView(self.cardFromListView, needHide: true) { }
                 }
+                self.stackView.layoutIfNeeded()
             }
         }
         cardToListView.lastItemTap = {
@@ -210,25 +204,28 @@ extension CustomPopUpWithRateView {
                 vc.onlyCard = false
                 vc.withTemplate = false
             }
-            vc.didCardTapped = { [weak self] card in
-                self?.viewModel.cardTo = card
-                self?.reversCard = ""
-                self?.cardToField.cardModel = card
-                self?.hideView((self?.cardFromListView)!, needHide: true) {
-                    self?.hideView((self?.cardToListView)!, needHide: true) {
-                        self?.stackView.layoutIfNeeded()
+            vc.didCardTapped = { card in
+                self.viewModel.cardTo = card
+                self.reversCard = ""
+                self.cardToField.cardModel = card
+                self.hideView(self.cardToListView, needHide: true) {
+                    if !self.cardFromListView.isHidden {
+                        self.hideView(self.cardFromListView, needHide: true) { }
                     }
+                    self.stackView.layoutIfNeeded()
                 }
                 vc.dismiss(animated: true, completion: nil)
             }
-            vc.didTemplateTapped = { [weak self] card in
-                self?.viewModel.customCardTo = CastomCardViewModel(cardNumber: card.numberMask ?? "", cardName: card.customName, cardId: card.id)
-                self?.cardToField.tempCardModel = card
-                self?.hideView((self?.cardFromListView)!, needHide: true) {
-                    self?.hideView((self?.cardToListView)!, needHide: true) {
-                        self?.stackView.layoutIfNeeded()
-                    }
+            vc.didTemplateTapped = { card in
+                self.viewModel.customCardTo = CastomCardViewModel(cardNumber: card.numberMask ?? "", cardName: card.customName, cardId: card.id)
+                self.cardToField.tempCardModel = card
+                if !self.cardFromListView.isHidden {
+                    self.hideView(self.cardFromListView, needHide: true) { }
                 }
+                if !self.cardToListView.isHidden {
+                    self.hideView(self.cardToListView, needHide: true) { }
+                }
+                self.stackView.layoutIfNeeded()
                 vc.dismiss(animated: true, completion: nil)
             }
             let navVc = UINavigationController(rootViewController: vc)

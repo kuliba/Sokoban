@@ -37,8 +37,7 @@ class GKHInputViewController: UIViewController {
         if !qrData.isEmpty {
             let a = qrData.filter { $0.key == "Sum"}
             bottomInputView.tempTextFieldValue = a.first?.value ?? ""
-        }
-        
+        }   
         
         bottomInputView?.isHidden = true
 

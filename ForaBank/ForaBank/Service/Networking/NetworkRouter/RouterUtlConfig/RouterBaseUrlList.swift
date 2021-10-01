@@ -116,6 +116,18 @@ enum RouterBaseUrlList: String {
     
     case getUserSettings            = "/rest/getUserSettings"
     
+    case getPhoneInfo               = "/rest/getPhoneInfo"
+    
+    case createMobileTransfer       = "/rest/transfer/createMobileTransfer"
+    
+    case getSessionTimeout          = "/getSessionTimeout"
+    
+    case getAccountStatement        = "/rest /getAccountStatement"
+    
+    case getLatestMobilePayments    = "/rest/getLatestMobilePayments"
+    
+    case getMobileList             = "/dict/getMobileList"
+    
     // MARK: - В не авторизованную зону.
     ///Обновление по serial
         

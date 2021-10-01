@@ -133,7 +133,7 @@ class MeToMeRequestController: UIViewController {
         super.viewDidLoad()
         setupUI()
         hideKeyboardWhenTappedAround()
-        
+        addCloseButton()
         let navImage = UIImage(named: "logo-spb-mini")
         let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
         self.navigationItem.rightBarButtonItem = customViewItem
@@ -226,23 +226,29 @@ class MeToMeRequestController: UIViewController {
     
     //MARK: - Actions
     @objc func doneButtonTapped() {
-        print(#function)
+//        print(#function)
         if nextStep {
             showActivity()
             createPermanentConsentMe2Me { error in
                 if error != nil {
-                    self.dismissActivity()
-                    self.showAlert(with: "Ошибка", and: error!)
+                    DispatchQueue.main.async {
+                        self.dismissActivity()
+                        self.showAlert(with: "Ошибка", and: error!) {
+                            self.dismiss(animated: true)
+                        }
+                    }
                 } else {
                     if self.viewModel?.amount != 0 {
                         self.createMe2MePullDebit { error in
-                            self.dismissActivity()
-                            if error != nil {
-                                self.showAlert(with: "Ошибка", and: error!)
-                            } else {
-                                self.showAlert(with: "Удачно", and: "Ваши деньги зачислены") {
-                                    DispatchQueue.main.async {
-                                        self.dismiss(animated: true, completion: nil)
+                            DispatchQueue.main.async {
+                                self.dismissActivity()
+                                if error != nil {
+                                    self.showAlert(with: "Ошибка", and: error!) {
+                                        self.dismiss(animated: true)
+                                    }
+                                } else {
+                                    self.showAlert(with: "Удачно", and: "Ваши деньги зачислены") {
+                                        self.dismiss(animated: true)
                                     }
                                 }
                             }
@@ -251,7 +257,7 @@ class MeToMeRequestController: UIViewController {
                         self.dismissActivity()
                         self.showAlert(with: "Готово", and: "") {
                             DispatchQueue.main.async {
-                                self.dismiss(animated: true, completion: nil)
+                                self.dismiss(animated: true)
                             }
                         }
                     }
@@ -279,32 +285,35 @@ class MeToMeRequestController: UIViewController {
         if nextStep {
             self.showActivity()
             createIsOneTimeConsentMe2Me { error in
-                if error != nil {
-                    self.dismissActivity()
-                    self.showAlert(with: "Ошибка", and: error!)
-                } else {
-                    if self.viewModel?.amount != 0 {
-                        self.createMe2MePullDebit { error in
-                            self.dismissActivity()
-                            if error != nil {
-                                self.showAlert(with: "Ошибка", and: error!)
-                            } else {
-                                self.showAlert(with: "Удачно", and: "Ваши деньги зачислены") {
-                                    DispatchQueue.main.async {
-                                        self.dismiss(animated: true, completion: nil)
+                DispatchQueue.main.async {
+                    if error != nil {
+                        self.dismissActivity()
+                        self.showAlert(with: "Ошибка", and: error!) {
+                            self.dismiss(animated: true)
+                        }
+                    } else {
+                        if self.viewModel?.amount != 0 {
+                            self.createMe2MePullDebit { error in
+                                DispatchQueue.main.async {
+                                    self.dismissActivity()
+                                    if error != nil {
+                                        self.showAlert(with: "Ошибка", and: error!){
+                                            self.dismiss(animated: true)
+                                        }
+                                    } else {
+                                        self.showAlert(with: "Удачно", and: "Ваши деньги зачислены") {
+                                            self.dismiss(animated: true, completion: nil)
+                                        }
                                     }
                                 }
                             }
-                        }
-                    } else {
-                        self.dismissActivity()
-                        self.showAlert(with: "Готово", and: "") {
-                            DispatchQueue.main.async {
+                        } else {
+                            self.dismissActivity()
+                            self.showAlert(with: "Готово", and: "") {
                                 self.dismiss(animated: true, completion: nil)
                             }
                         }
                     }
-                    
                 }
             }
         } else {
@@ -324,7 +333,7 @@ class MeToMeRequestController: UIViewController {
             options.onSuccessfulDismiss = { (mode: ALMode?) in
                 self?.nextButton.isEnabled = true
                 self?.cancelButton.isEnabled = true
-                
+
 //                if let mode = mode {
 //                    DispatchQueue.main.async { [weak self] in
 //                        print("Password \(String(describing: mode)) successfully")
@@ -421,16 +430,7 @@ class MeToMeRequestController: UIViewController {
                         if error != nil {
                             completion(error)
                         } else if model?.statusCode == 0 {
-                            
                             completion(nil)
-//                                {"statusCode":0,"errorMessage":null,"data":{"paymentOperationDetailId":2352,"documentStatus":"COMPLETE"}}
-                            
-                            //                        DispatchQueue.main.async {
-                            //                            let vc = PaymentsDetailsSuccessViewController()
-                            //                            vc.id = model.data?.paymentOperationDetailId
-                            //                            vc.printFormType = "external"
-                            //                            self.navigationController?.pushViewController(vc, animated: true)
-                            //                        }
                         } else {
                             guard let error = model?.errorMessage else { return }
                             completion(error)

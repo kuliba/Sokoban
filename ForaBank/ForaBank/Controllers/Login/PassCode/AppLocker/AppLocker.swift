@@ -14,6 +14,7 @@ import Firebase
 import FirebaseMessaging
 import CommonCrypto
 import Security
+import RealmSwift
 
 public enum ALConstants {
     static let nibName = "AppLocker"
@@ -347,8 +348,15 @@ extension AppLocker {
     
     func login(with code: String, type: BiometricType, completion: @escaping (_ error: String?) ->() ) {
         showActivity()
+        DispatchQueue.main.async {
+        AppDelegate.shared.getCSRF { error in
+            if error != nil {
+                print("DEBUG: Error getCSRF: ", error!)
+            }
+        
+        
         var serverDeviceGUID = UserDefaults.standard.object(forKey: "serverDeviceGUID")
-    
+        
         func encript(string: String) -> String?{
             do {
                 let aes = try AES(keyString: KeyFromServer.secretKey ?? Data())
@@ -403,6 +411,33 @@ extension AppLocker {
                             print("DEBUG: You are LOGGIN!!!")
                             DispatchQueue.main.async {
                                 AppDelegate.shared.isAuth = true
+                                
+                                // Обновление времени старта
+                                let currency = GetSessionTimeout()
+                                // TO Do: параметр времени надо брать из REALM
+                                currency.timeDistance = 300
+
+                            let date = Date()
+                            let dateFormatter = DateFormatter()
+                            dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
+                            let time = dateFormatter.string(from: date)
+                                // Сохраняем текущее время
+                                currency.currentTimeStamp = time
+
+                                /// Сохраняем в REALM
+                                let realm = try? Realm()
+                                do {
+                                    let b = realm?.objects(GetSessionTimeout.self)
+                                    realm?.beginWrite()
+                                    realm?.delete(b!)
+                                    realm?.add(currency)
+                                    try realm?.commitWrite()
+
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
+                                
+                                
                             }
                             self.dismissActivity()
                             completion(nil)
@@ -430,6 +465,8 @@ extension AppLocker {
                     completion(error)
                 }
             }
+        }
+        }
         }
     }
     

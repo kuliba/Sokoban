@@ -50,6 +50,9 @@ struct DownloadQueue {
 //        downloadArray.append(BanksListSaved())
 //        paramArray.append(countriesBank)
         
+        downloadArray.append(GetSessionTimeoutSaved())
+        paramArray.append(["serial": ""])
+        
         downloadArray.append(AddOperatorsList())
         paramArray.append(["serial": ""])
         

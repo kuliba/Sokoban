@@ -287,6 +287,10 @@ class FaceTouchIdViewController: UIViewController {
                 guard let statusCode = model?.statusCode else { return }
                 if statusCode == 0 {
                     
+//                    Analytics.logEvent(AnalyticsEventLogin, parameters: [
+//                        AnalyticsParameterMethod: self.method
+//                      ])
+                    
                     let bodyRegisterPush = [
                         "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
                         "pushFcmToken": Messaging.messaging().fcmToken as String?

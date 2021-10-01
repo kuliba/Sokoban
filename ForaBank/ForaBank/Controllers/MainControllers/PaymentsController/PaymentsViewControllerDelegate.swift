@@ -20,6 +20,14 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 openCountryPaymentVC(model: lastCountryPaymentModel)
             } else if let lastPhonePayment = payments[indexPath.row].lastPhonePayment {
                 openPhonePaymentVC(model: lastPhonePayment)
+            } else if let lastMobilePayment = payments[indexPath.row].lastMobilePayment {
+                let viewController = payments[indexPath.row].controllerName.getViewController() as? MobilePayViewController
+                viewController?.addCloseButton()
+                viewController?.phoneField.text =  "+7\(payments[indexPath.row].lastMobilePayment?.additionalList?[1].fieldValue ?? "")"
+                viewController?.selectNumber = "+7\(payments[indexPath.row].lastMobilePayment?.additionalList?[1].fieldValue ?? "")"
+                let navVC = UINavigationController(rootViewController: viewController ?? UIViewController())
+                navVC.modalPresentationStyle = .fullScreen
+                present(navVC, animated: true)
             } else {
                 if let viewController = payments[indexPath.row].controllerName.getViewController() {
                     viewController.addCloseButton()
@@ -31,7 +39,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
         case .transfers:
             if indexPath.row == 1 {
                 let popView = CustomPopUpWithRateView()
-                popView.onlyMy = false
+//                popView.onlyMy = false
                 popView.modalPresentationStyle = .custom
                 popView.transitioningDelegate = self
                 self.present(popView, animated: true, completion: nil)
@@ -53,7 +61,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
 //                        navController.transitioningDelegate = self
                     } else {
                         navController.modalPresentationStyle = .fullScreen
-
+                        
                     }
                     present(navController, animated: true, completion: nil)
                 }
@@ -61,57 +69,35 @@ extension PaymentsViewController: UICollectionViewDelegate {
         case .pay:
             print("DEBUG: " + #function + pay[indexPath.row].name)
        
-            if pay[indexPath.row].id == 19 {
-                #if DEBUG
-                getFastPaymentContractList { [weak self] contractList, error in
-                    DispatchQueue.main.async {
-                        if error != nil {
-                            self?.showAlert(with: "Ошибка", and: error!)
-                        } else {
-                            let contr = contractList?.first?.fastPaymentContractAttributeList?.first
-                            if contr?.flagClientAgreementIn == "NO" || contr?.flagClientAgreementOut == "NO" {
-                                let vc = MeToMeSettingViewController()
-                                if contractList != nil {
-                                    vc.model = contractList
-                                } else {
-                                    vc.model = []
-                                }
-                                vc.addCloseButton()
-                                let navVC = UINavigationController(rootViewController: vc)
-                                navVC.modalPresentationStyle = .fullScreen
-                                //                    navVC.addCloseButton()
-                                self?.present(navVC, animated: true, completion: nil)
-                            } else {
-                                
-                                guard let viewController = self?.pay[indexPath.row].controllerName.getViewController() as? MeToMeViewController else { return }
-                                viewController.meToMeContract = contractList
-                                viewController.addCloseButton()
-                                let navVC = UINavigationController(rootViewController: viewController)
-                                navVC.modalPresentationStyle = .fullScreen
-                                self?.present(navVC, animated: true)
-                            }
-                        }
-                    }
-                }
-                #endif
-            } else {
-                if let viewController = pay[indexPath.row].controllerName.getViewController() {
-                    viewController.addCloseButton()
-                    let navVC = UINavigationController(rootViewController: viewController)
-                    navVC.modalPresentationStyle = .fullScreen
-                    
-                    if indexPath.row == 2 {
-                        let gkh = GKHMainViewController.storyboardInstance()!
-                        let nc = UINavigationController(rootViewController: gkh)
-                        nc.modalPresentationStyle = .fullScreen
-                        present(nc, animated: true)
-                    } else {
-                        present(navVC, animated: true)
-                    }
-                }
+            if let viewController = pay[indexPath.row].controllerName.getViewController() {
+                viewController.addCloseButton()
+                let navVC = UINavigationController(rootViewController: viewController)
+                navVC.modalPresentationStyle = .fullScreen
+//                    present(navVC, animated: true)
+                
+//                    // ЖКХ
+                if indexPath.row == 2 {
+                    let gkh = GKHMainViewController.storyboardInstance()!
+                    let nc = UINavigationController(rootViewController: gkh)
+                    nc.modalPresentationStyle = .fullScreen
+                    present(nc, animated: true)
+                } 
+//                    // Мобильная связь
+//                    if indexPath.row == 1 {
+//                        let gkh = MobilePayViewController()
+//                        let nc = UINavigationController(rootViewController: gkh)
+//                        nc.modalPresentationStyle = .fullScreen
+//                        present(nc, animated: true)
+//                    } else {
+//                        present(navVC, animated: true)
+//                    }
+//                present(navVC, animated: true)
+                present(navVC, animated: true, completion: nil)
             }
         }
     }
+    
+    
     
     private func openPhonePaymentVC(model: GetLatestPaymentsDatum) {
         let vc = PaymentByPhoneViewController()
@@ -153,13 +139,18 @@ extension PaymentsViewController: UICollectionViewDelegate {
         let vc = ContactInputViewController()
         vc.country = model.country
         if model.phoneNumber != nil {
+            vc.typeOfPay = .mig
             vc.configure(with: model.country, byPhone: true)
             vc.selectedBank = model.bank
             let mask = StringMask(mask: "+000-0000-00-00")
             let maskPhone = mask.mask(string: model.phoneNumber)
             vc.phoneField.text = maskPhone ?? ""
         } else if model.firstName != nil, model.middleName != nil, model.surName != nil {
+            vc.typeOfPay = .contact
             vc.configure(with: model.country, byPhone: false)
+            vc.foraSwitchView.bankByPhoneSwitch.isOn = false
+            vc.foraSwitchView.bankByPhoneSwitch.layer.borderColor =  #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            vc.foraSwitchView.bankByPhoneSwitch.thumbTintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
             vc.nameField.text = model.firstName!
             vc.surnameField.text = model.surName!
             vc.secondNameField.text = model.middleName!

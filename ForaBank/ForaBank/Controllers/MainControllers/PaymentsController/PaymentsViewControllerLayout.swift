@@ -35,7 +35,7 @@ extension PaymentsViewController {
             }
         }
         let config = UICollectionViewCompositionalLayoutConfiguration()
-        config.interSectionSpacing = 16
+        config.interSectionSpacing = 0
         
         layout.configuration = config
         
@@ -46,22 +46,24 @@ extension PaymentsViewController {
     private func createPayments() -> NSCollectionLayoutSection {
         
         let item = NSCollectionLayoutItem.withEntireSize()
+        
         let groupSize = NSCollectionLayoutSize(
-            widthDimension: .absolute(88),
+            widthDimension: .absolute(80),
 //            heightDimension: .fractionalHeight(0.12))
-            heightDimension: .absolute(100))
+            heightDimension: .absolute(96))
         
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        group.contentInsets = .uniform(size: 5)
+        group.contentInsets = .uniform(size: 0)
     
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = 4
         
-        section.contentInsets = .init(horizontal: 20, vertical: 16)
+        section.contentInsets = .init(top: 16, leading: 8, bottom: 32, trailing: 20)
         
         section.orthogonalScrollingBehavior = .continuous
         
-        let sectionHeader = createSectionHeader()
+        let sectionHeader = createSectionHeader(32)
+        sectionHeader.contentInsets = .init(top: 0, leading: 12, bottom: 0, trailing: 0)
         section.boundarySupplementaryItems = [sectionHeader]
         return section
     }
@@ -82,11 +84,12 @@ extension PaymentsViewController {
         let section = NSCollectionLayoutSection(group: group)
         
         section.interGroupSpacing = 8
-        section.contentInsets = .init(horizontal: 20, vertical: 16)
+        section.contentInsets = .init(top: 16, leading: 20, bottom: 32, trailing: 20)
+
         
         section.orthogonalScrollingBehavior = .continuous
         
-        let sectionHeader = createSectionHeader()
+        let sectionHeader = createSectionHeader(24)
         section.boundarySupplementaryItems = [sectionHeader]
         return section
     }
@@ -97,7 +100,7 @@ extension PaymentsViewController {
         let item = NSCollectionLayoutItem.withEntireSize()
         var groupSize = NSCollectionLayoutSize(
 //            widthDimension: .fractionalWidth(0.73),
-            widthDimension: .fractionalWidth(0.73),
+            widthDimension: .fractionalWidth(0.81),
 //            heightDimension: .fractionalHeight(0.35))
             heightDimension: .absolute(180))
         
@@ -105,10 +108,10 @@ extension PaymentsViewController {
             layoutSize: groupSize, subitem: item, count: 3)
         
         
-        if self.view.frame.size.height > 700{
+        if self.view.frame.size.height > 900{
             groupSize = NSCollectionLayoutSize(
     //            widthDimension: .fractionalWidth(0.73),
-                widthDimension: .fractionalWidth(0.73),
+                widthDimension: .fractionalWidth(0.81),
     //            heightDimension: .fractionalHeight(0.35))
                 heightDimension: .absolute(250))
             
@@ -116,24 +119,25 @@ extension PaymentsViewController {
                 layoutSize: groupSize, subitem: item, count: 4)
         } 
         
-        group.contentInsets = .uniform(size: 5)
+        group.contentInsets = .uniform(size: 0)
         let section = NSCollectionLayoutSection(group: group)
         
         section.interGroupSpacing = 8
-        section.contentInsets = .init(horizontal: 20, vertical: 16)
+        section.contentInsets = .init(top: 10, leading: 20, bottom: 32, trailing: 20)
+
             
         section.orthogonalScrollingBehavior = .groupPaging
         
-        let sectionHeader = createSectionHeader()
+        let sectionHeader = createSectionHeader(24)
         section.boundarySupplementaryItems = [sectionHeader]
         return section
     }
 
     
-    private func createSectionHeader() -> NSCollectionLayoutBoundarySupplementaryItem{
+    private func createSectionHeader( _ size: Int) -> NSCollectionLayoutBoundarySupplementaryItem{
         let sectionHeaderSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1),
-            heightDimension:.absolute(20))
+            heightDimension:.absolute(CGFloat(size)))
 //            heightDimension: .estimated(1))
         
         let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(

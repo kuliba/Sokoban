@@ -8,7 +8,6 @@
 import UIKit
 import Firebase
 import FirebaseMessaging
-
     
 
 @main
@@ -124,12 +123,18 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         
         // Print full message.
         print(userInfo)
-        let otpCode = userInfo["body"] as! String
-        print(otpCode.components(separatedBy:  otpCode))
-        let newstring = otpCode.filter { "0"..."9" ~= $0 }
-        print(newstring)
+        if (userInfo["otp"] as? String) != nil {
+//            print(otpCode)
+            NotificationCenter.default.post(name: Notification.Name("otpCode"), object: nil, userInfo: userInfo)
+        }
+//        if otpCode.contains("СМС-код:") {
+//            print("СМС-код:")
+//        }
+//        print(otpCode.components(separatedBy:  otpCode))
+//        let newstring = otpCode.filter { "0"..."9" ~= $0 }
+//        print(newstring)
         
-        NotificationCenter.default.post(name: Notification.Name("otpCode"), object: nil, userInfo: userInfo)
+//        NotificationCenter.default.post(name: Notification.Name("otpCode"), object: nil, userInfo: userInfo)
         
         // Change this to your preferred presentation option
         completionHandler([[.alert, .sound]])
@@ -223,14 +228,14 @@ extension AppDelegate {
             KeyFromServer.privateKeyCert = certSeparator?[1].replacingOccurrences(of: "-----END CERTIFICATE-----", with: "")
             KeyFromServer.publicKey = request?.data?.pk
               
-            let pubkeyFromCert = Encription().encryptedPublicKey()
+            _ = Encription().encryptedPublicKey()
                                    
-            let shared = Encription().computeSharedSecret(ownPrivateKey: KeyPair.privateKey!, otherPublicKey: KeyFromServer.pubFromServ!)
+            _ = Encription().computeSharedSecret(ownPrivateKey: KeyPair.privateKey!, otherPublicKey: KeyFromServer.pubFromServ!)
                                    
                                
-            let ectoRsa = SecKeyCreateEncryptedData(KeyPair.publicKey!, .rsaEncryptionRaw, Data(base64Encoded: KeyFromServer.publicKey!)! as CFData, nil)
+            _ = SecKeyCreateEncryptedData(KeyPair.publicKey!, .rsaEncryptionRaw, Data(base64Encoded: KeyFromServer.publicKey!)! as CFData, nil)
 
-            let newData = Encription().encryptWithRSAKey(Data(base64Encoded: KeyFromServer.publicKey!)!, rsaKeyRef: KeyPair.privateKey!, padding: .PKCS1)
+            _ = Encription().encryptWithRSAKey(Data(base64Encoded: KeyFromServer.publicKey!)!, rsaKeyRef: KeyPair.privateKey!, padding: .PKCS1)
             
             
             CSRFToken.token = token

@@ -8,7 +8,7 @@
 import Foundation
 import RealmSwift
 
-//// MARK: - GetLatestPhonePayments
+///MARK: - GetLatestPhonePayments
 class GetLatestPhonePayments: Object {
     
     @objc dynamic var bankName: String?

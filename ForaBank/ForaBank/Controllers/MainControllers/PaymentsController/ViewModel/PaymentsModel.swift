@@ -17,6 +17,9 @@ struct PaymentsModel: Hashable {
     var lastCountryPayment: ChooseCountryHeaderViewModel? = nil
     var lastPhonePayment: GetLatestPaymentsDatum? = nil
     var productList: GetProductListDatum? = nil
+    var lastMobilePayment: GetLatestMobilePaymentsDatum? = nil
+    var lastGKHPayment: GetLatestServicePaymentsDatum? = nil
+
     
     
     
@@ -72,5 +75,23 @@ struct PaymentsModel: Hashable {
         self.controllerName = "PaymentByPhoneViewController"
         self.iconName = "smartphonegray"
     }
+    
+    init(lastMobilePayment: GetLatestMobilePaymentsDatum) {
+        self.lastMobilePayment = lastMobilePayment
+        self.id = Int.random(in: 100 ... 10000)
+        let mask = StringMask(mask: "+7 (000) 000-00-00")
+        self.name = "\(mask.mask(string: lastMobilePayment.additionalList?[1].fieldValue) ?? "")"
+        self.controllerName = "MobilePayViewController"
+        self.iconName = "smartphonegray"
+    }
+    
+    init(lastGKHPayment: GetLatestServicePaymentsDatum) {
+        self.lastGKHPayment = lastGKHPayment
+        self.id = Int.random(in: 100 ... 10000)
+        self.name = "\(lastGKHPayment.amount ?? 0.0)"
+        self.controllerName = "GKHInputViewController"
+        self.iconName = "GKH"
+    }
+
     
 }

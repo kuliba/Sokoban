@@ -8,37 +8,12 @@
 import UIKit
 
 class MainTabBarViewController: UITabBarController {
-    
-    var netAlert: NetDetectAlert!
-    var netStatus: Bool?
-    
-    private func netDetect() {
-        self.netAlert = NetDetectAlert(self.view)
-        if self.netAlert != nil {
-            self.view.addSubview(self.netAlert)
-        }
-    }
-    
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        NetStatus.shared.netStatusChangeHandler = {
-            DispatchQueue.main.async { [weak self] in
-                if NetStatus.shared.isConnected == true {
-                    self?.netStatus = true
-                    self?.netAlert?.removeFromSuperview()
-                } else {
-                    self?.netStatus = false
-                    self?.netDetect()
-                }
-            }
-        }
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-//        tabBar.barTintColor = .black
         tabBar.layer.backgroundColor = UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 0.82).cgColor
-        tabBar.tintColor = #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
+//        tabBar.tintColor = #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
+//        tabBar.tintColor = .clear
         self.tabBar.layer.borderWidth = 0.50
         self.tabBar.layer.borderColor = UIColor.clear.cgColor
         self.tabBar.clipsToBounds = true
@@ -46,7 +21,7 @@ class MainTabBarViewController: UITabBarController {
         let mainVC = MainViewController()
         let paymentsVC = PaymentsViewController()
         let historyVC = DevelopViewController()
-        let chatVC = DevelopViewController()
+        let chatVC = ChatViewController()
         
         viewControllers = [
             generateNavController(rootViewController: mainVC,
@@ -173,6 +148,15 @@ class MainTabBarViewController: UITabBarController {
             print("DEBUG: Load Payments")
         }
         
+        NetworkHelper.request(.getMobileSystem) { model, error in
+            if error != nil {
+                self.showAlert(with: "Ошибка", and: error!)
+            }
+            guard let paymentSystem = model as? [MobileList] else { return }
+            Dict.shared.mobileSystem = paymentSystem
+            print("DEBUG: Load Payments")
+        }
+        
         NetworkHelper.request(.getCurrencyList) { model, error in
             if error != nil {
                 self.showAlert(with: "Ошибка", and: error!)
@@ -183,7 +167,7 @@ class MainTabBarViewController: UITabBarController {
         }
 
         /// Add REALM
-//        AddAllUserCardtList.add() {}
+        AddAllUserCardtList.add() {}
         
         
 //        NetworkHelper.request(.getProductList) { cardList , error in

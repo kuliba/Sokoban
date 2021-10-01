@@ -11,6 +11,17 @@ import IQKeyboardManagerSwift
 extension AppDelegate {
     func customizeUiInApp() {
         
+        //Fix Nav Bar tint issue in iOS 15.0 or later - is transparent w/o code below
+        if #available(iOS 15, *) {
+            let appearance = UINavigationBarAppearance()
+            let navigationBar = UINavigationBar()
+            appearance.configureWithOpaqueBackground()
+            appearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+            appearance.backgroundColor = .clear
+            navigationBar.standardAppearance = appearance
+            UINavigationBar.appearance().scrollEdgeAppearance = appearance
+        }
+        
         // Настройка клавиатуры
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.toolbarDoneBarButtonItemText = "Готово"
@@ -21,7 +32,7 @@ extension AppDelegate {
         IQKeyboardManager.shared.shouldPlayInputClicks = true
         IQKeyboardManager.shared.toolbarPreviousBarButtonItemImage = UIImage()
         IQKeyboardManager.shared.toolbarNextBarButtonItemImage = UIImage()
-//        IQKeyboardManager.shared.keyboardDistanceFromTextField = 40
+        IQKeyboardManager.shared.keyboardDistanceFromTextField = 30
         
         // Настройка NavigationBar
         UINavigationBar.appearance().barTintColor = .white

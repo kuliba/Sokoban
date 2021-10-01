@@ -47,6 +47,7 @@ struct AddOperatorsList: DownloadQueueProtocol {
                                 let l     = LogotypeData()
                                 l.content = logotypeList.content
                                 l.name    = logotypeList.name
+                                l.code    = operators.code
                                 listPositionArray.append(l)
                             })
                             /// ИНН

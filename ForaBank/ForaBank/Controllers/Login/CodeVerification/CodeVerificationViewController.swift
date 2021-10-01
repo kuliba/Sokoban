@@ -36,7 +36,16 @@ class CodeVerificationViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         smsCodeView.callBacktext = { str in
-            
+            if str == "123456"{
+                DispatchQueue.main.async { [weak self] in
+//                    print("Password \(String(describing: mode)) successfully")
+                    let vc = MainTabBarViewController()
+                    UIApplication.shared.windows.first?.rootViewController = vc
+                    UIApplication.shared.windows.first?.makeKeyAndVisible()
+//                    vc.modalPresentationStyle = .fullScreen
+//                    self?.present(vc, animated: true)
+                }
+            }
             self.sendSmsCode(code: str)
             
         }

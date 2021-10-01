@@ -80,6 +80,12 @@ enum RouterUrlList: String {
     case getProductDetails
     case setUserSetting
     case getUserSettings
+    case getPhoneInfo
+    case createMobileTransfer
+    case getSessionTimeout
+    case getAccountStatement
+    case getLatestMobilePayments
+    case getMobileList
     
     func returnUrl () -> URLValue {
         switch self {
@@ -808,6 +814,70 @@ enum RouterUrlList: String {
                 return .failure(.urlError)
             }
             
+        case .getPhoneInfo:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getPhoneInfo.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+        case .createMobileTransfer:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.createMobileTransfer.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+
+        case .getSessionTimeout:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getSessionTimeout.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .getAccountStatement:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getAccountStatement.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .getLatestMobilePayments:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getLatestMobilePayments.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .getMobileList:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getMobileList.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
         }
     }
 

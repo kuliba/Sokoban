@@ -110,20 +110,20 @@ class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
-        self.view.addSubview(searchContact)
-        searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 48)
-        //            navigationController?.navigationBar.isHidden = true
-        searchContact.secondButton.image = UIImage(named: "Avatar")?.withRenderingMode(.alwaysTemplate)
+        navigationController?.navigationBar.isHidden = true
 
-        searchContact.secondButton.tintColor = .gray
-        searchContact.secondButton.isUserInteractionEnabled = false
-        searchContact.secondButton.alpha = 0.4
+        view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
+        
+        self.view.addSubview(searchContact)
+        searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 48)
+        
+        searchContact.secondButton.image = UIImage(named: "Avatar")?.withRenderingMode(.alwaysTemplate)
+        searchContact.secondButton.tintColor = .black
+        searchContact.secondButton.isUserInteractionEnabled = true
+        searchContact.secondButton.alpha = 1
         
         let gesture = UITapGestureRecognizer(target: self, action: #selector(openSetting))
         searchContact.secondButton.addGestureRecognizer(gesture)
-        
-        let cardList = realm?.objects(UserAllCardsModel.self)
         
         setupSearchBar()
         setupCollectionView()
@@ -131,7 +131,7 @@ class MainViewController: UIViewController {
         getCurrency()
         setupData()
         reloadData(with: nil)
-        collectionView.dataSource = dataSource
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -181,20 +181,21 @@ class MainViewController: UIViewController {
         //            pay = MockItems.returnPayments()
         //            payments = MockItems.returnPayments()
         getCardList { data, errorMessage in
-            let list = data?.sorted(by: {$0.id ?? 0 < $1.id ?? 0})
             
-            guard let listProducts = list else {return}
+            guard let listProducts = data else {return}
             
             for i in listProducts.prefix(3) {
                 self.products.append(PaymentsModel(productList: i))
             }
-            if list?.count ?? 0 < 3{
-                self.products.append(PaymentsModel(id: 32, name: "Хочу карты", iconName: "openCard", controllerName: ""))
-            } else if list?.count ?? 0 == 3{
-                self.products.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
+            if listProducts.prefix(3).count < 3{
+                self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
+            } else if listProducts.prefix(3).count == 3{
+                self.products.append(PaymentsModel(id: 32, name: "Cм.все", iconName: "openCard", controllerName: ""))
             }
             //                self.transfers = self.payments
             self.productList = data ?? []
+            
+
         }
         
         
@@ -212,10 +213,10 @@ class MainViewController: UIViewController {
         
     private func setupCollectionView() {
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createCompositionLayout())
-        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+//        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.backgroundColor = .white
         view.addSubview(collectionView)
-        collectionView.anchor(top: searchContact.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, height: UIScreen.main.bounds.height)
+        collectionView.anchor(top: searchContact.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor)
         
         collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.reuseId)
         collectionView.register(PaymentsMainCell.self, forCellWithReuseIdentifier: PaymentsMainCell.reuseId)
@@ -231,10 +232,10 @@ class MainViewController: UIViewController {
         collectionView.register(ProductCell.self, forCellWithReuseIdentifier: ProductCell.reuseId)
         collectionView.register(NewProductCell.self, forCellWithReuseIdentifier: NewProductCell.reuseId)
         
-        collectionView.contentInset = UIEdgeInsets(top: 15, left: 0, bottom: 20, right: 0)
+        collectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0)
         collectionView.isScrollEnabled = true
         collectionView.delegate = self
-        
+        collectionView.dataSource = dataSource
     }
     
     func reloadData(with searchText: String?) {

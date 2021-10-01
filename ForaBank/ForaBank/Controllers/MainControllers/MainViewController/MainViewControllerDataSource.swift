@@ -21,28 +21,30 @@ extension MainViewController {
             switch section {
                 case .products:
                     switch item.id {
-                    case 33:
-                        guard let cell = collectionView.dequeueReusableCell(
-                                withReuseIdentifier: "AllCardCell",
-                                for: indexPath) as? AllCardCell
-                        else {
-                            fatalError("Unable to dequeue \(AllCardCell.self)")
-                        }
-                        
-                        
-//                                cell.widthAnchor.constraint(equalToConstant: 112).isActive = true
-                        return cell
                     case 32:
-                        guard let cell = collectionView.dequeueReusableCell(
-                                withReuseIdentifier: "OfferCard",
-                                for: indexPath) as? OfferCard
-                        else {
-                            fatalError("Unable to dequeue \(OfferCard.self)")
+                       if item.name == "Cм.все"{
+                            guard let cell = collectionView.dequeueReusableCell(
+                                    withReuseIdentifier: "AllCardCell",
+                                    for: indexPath) as? AllCardCell
+                            else {
+                                fatalError("Unable to dequeue \(AllCardCell.self)")
+                            }
+                            
+                            
+    //                                cell.widthAnchor.constraint(equalToConstant: 112).isActive = true
+                            return cell
+                        } else {
+                            guard let cell = collectionView.dequeueReusableCell(
+                                    withReuseIdentifier: "OfferCard",
+                                    for: indexPath) as? OfferCard
+                            else {
+                                fatalError("Unable to dequeue \(OfferCard.self)")
+                            }
+                            
+                            
+    //                                cell.widthAnchor.constraint(equalToConstant: 112).isActive = true
+                            return cell
                         }
-                        
-                        
-//                                cell.widthAnchor.constraint(equalToConstant: 112).isActive = true
-                        return cell
                     default:
                         guard let cell = collectionView.dequeueReusableCell(
                                 withReuseIdentifier: ProductCell.reuseId,
@@ -133,7 +135,7 @@ extension MainViewController {
                 sectionHeader.isHidden = true
             case .products:
                 sectionHeader.configure(text: section.description(),
-                                        font: .boldSystemFont(ofSize: 18),
+                                        font: .boldSystemFont(ofSize: 20),
                                         textColor: .black, expandingIsHidden: false, seeAllIsHidden: false)
                 sectionHeader.seeAllButton.addTarget(self, action: #selector(passAllProducts), for: .touchUpInside)
                 sectionHeader.arrowButton.addTarget(self, action: #selector(expandingSection), for: .touchUpInside)
@@ -144,7 +146,7 @@ extension MainViewController {
             
             default:
                 sectionHeader.configure(text: section.description(),
-                                        font: .boldSystemFont(ofSize: 18),
+                                        font: .boldSystemFont(ofSize: 20),
                                         textColor: .black, expandingIsHidden: false, seeAllIsHidden: true)
             }
             

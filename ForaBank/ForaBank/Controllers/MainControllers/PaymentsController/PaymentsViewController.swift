@@ -8,7 +8,10 @@
 import UIKit
 
 
+
 class PaymentsViewController: UIViewController {
+    
+
     
     var payments = [PaymentsModel]() {
         didSet {
@@ -46,7 +49,7 @@ class PaymentsViewController: UIViewController {
         view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
         
         self.view.addSubview(searchContact)
-        searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 48)
+        searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 48)
         searchContact.alpha = 0.5
         searchContact.bellIcon.isHidden = true
         setupData()
@@ -56,7 +59,8 @@ class PaymentsViewController: UIViewController {
         reloadData(with: nil)
         loadLastPhonePayments()
         loadLastPayments()
-      
+        loadLastMobilePayments()
+//        loadLastGKHPayments()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -95,7 +99,7 @@ class PaymentsViewController: UIViewController {
         collectionView.backgroundColor = .white
         view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
         view.addSubview(collectionView)
-        collectionView.anchor(top: searchContact.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, height: UIScreen.main.bounds.height)
+        collectionView.anchor(top: searchContact.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor)
         collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.reuseId)
         
         collectionView.register(PaymentsCell.self, forCellWithReuseIdentifier: PaymentsCell.reuseId)
@@ -170,6 +174,72 @@ extension PaymentsViewController {
                 } else {
                     lastPaymentsList.forEach { lastPayment in
                         let payment = PaymentsModel(lastPhonePayment: lastPayment)
+                        self.payments.append(payment)
+                    }
+                }
+            } else {
+                print("DEBUG: Error: ", model.errorMessage ?? "")
+                DispatchQueue.main.async {
+                if model.errorMessage == "Пользователь не авторизован"{
+                    AppLocker.present(with: .validate)
+                }
+                }
+            }
+        }
+    }
+    
+    func loadLastGKHPayments() {
+        NetworkManager<GetLatestServicePaymentsDecodableModel>.addRequest(.getLatestServicePayments, [:], [:]) { model, error in
+            if error != nil {
+                print("DEBUG: Error: ", error ?? "")
+            }
+            guard let model = model else { return }
+            print("DEBUG: LatestPayment: ", model)
+            if model.statusCode == 0 {
+                guard let lastPaymentsList  = model.data else { return }
+                
+                if lastPaymentsList.count > 3 {
+                    let payArr = lastPaymentsList.prefix(3)
+                    payArr.forEach { lastPayment in
+                        let payment = PaymentsModel(lastGKHPayment: lastPayment)
+                        self.payments.append(payment)
+                    }
+                } else {
+                    lastPaymentsList.forEach { lastPayment in
+                        let payment = PaymentsModel(lastGKHPayment: lastPayment)
+                        self.payments.append(payment)
+                    }
+                }
+            } else {
+                print("DEBUG: Error: ", model.errorMessage ?? "")
+                DispatchQueue.main.async {
+                if model.errorMessage == "Пользователь не авторизован"{
+                    AppLocker.present(with: .validate)
+                }
+                }
+            }
+        }
+    }
+    
+    func loadLastMobilePayments() {
+        NetworkManager<GetLatestMobilePaymentsDecodableModel>.addRequest(.getLatestMobilePayments, [:], [:]) { model, error in
+            if error != nil {
+                print("DEBUG: Error: ", error ?? "")
+            }
+            guard let model = model else { return }
+            print("DEBUG: LatestPayment: ", model)
+            if model.statusCode == 0 {
+                guard let lastPaymentsList  = model.data else { return }
+                
+                if lastPaymentsList.count > 3 {
+                    let payArr = lastPaymentsList.prefix(3)
+                    payArr.forEach { lastPayment in
+                        let payment = PaymentsModel(lastMobilePayment: lastPayment)
+                        self.payments.append(payment)
+                    }
+                } else {
+                    lastPaymentsList.forEach { lastPayment in
+                        let payment = PaymentsModel(lastMobilePayment: lastPayment)
                         self.payments.append(payment)
                     }
                 }

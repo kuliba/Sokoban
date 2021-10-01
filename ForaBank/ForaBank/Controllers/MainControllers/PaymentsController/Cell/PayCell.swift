@@ -23,9 +23,14 @@ class PayCell: UICollectionViewCell, SelfConfiguringCell {
         guard let payments: PaymentsModel = value as? PaymentsModel else { return }
         paymentsName.text = payments.name
         iconImageView.image = UIImage(named: payments.iconName ?? "")
-        if paymentsName.text == "Оплата по QR" || paymentsName.text == "Мобильная связь" || paymentsName.text ==  "Интернет, ТВ" || paymentsName.text == "Штрафы" ||  paymentsName.text == "Соцсети, игры, карты" ||  paymentsName.text == "Госуслуги" ||  paymentsName.text == "Охранные системы" ||  paymentsName.text == "Прочее" {
+        if paymentsName.text == "Оплата по QR" || paymentsName.text ==  "Интернет, ТВ" || paymentsName.text == "Штрафы" ||  paymentsName.text == "Соцсети, игры, карты" ||  paymentsName.text == "Госуслуги" ||  paymentsName.text == "Охранные системы" ||  paymentsName.text == "Прочее" {
             iconImageView.alpha = 0.3
             paymentsName.alpha = 0.3
+            self.isUserInteractionEnabled = false
+        } else {
+            iconImageView.alpha = 1
+            paymentsName.alpha = 1
+            self.isUserInteractionEnabled = true
         }
     }
     
@@ -46,7 +51,7 @@ class PayCell: UICollectionViewCell, SelfConfiguringCell {
         backView.centerY(inView: self, leftAnchor: self.leftAnchor)
         iconImageView.center(inView: backView)
         iconImageView.setDimensions(height: 32, width: 32)
-        paymentsName.centerY(inView: backView, leftAnchor: backView.rightAnchor, paddingLeft: 12)
+        paymentsName.centerY(inView: backView, leftAnchor: backView.rightAnchor, paddingLeft: 16)
         paymentsName.anchor(right: self.rightAnchor, paddingRight: 8)
     }
 }
