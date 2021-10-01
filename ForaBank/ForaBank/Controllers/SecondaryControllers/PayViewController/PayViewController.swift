@@ -166,7 +166,7 @@ extension PayViewController: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         
         
-        PresentationThirdController(presentedViewController: presented, presenting: presenting)
+        PresentationController(presentedViewController: presented, presenting: presenting)
     }
 }
 
