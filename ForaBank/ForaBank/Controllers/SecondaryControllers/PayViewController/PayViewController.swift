@@ -60,15 +60,17 @@ class PayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         case 0:
             cell.titleLabel.text = "С моего счета в другом банке"
             cell.imageButton.image = UIImage(named: "sbpButton2")
-            cell.titleLabel.alpha = 0.4
-            cell.imageButton.alpha = 0.4
-            cell.alpha = 0.4
+
         case 1:
             cell.titleLabel.text = "Со своего счета"
             cell.imageButton.image = UIImage(named: "myAccountButton")
         case 2:
             cell.titleLabel.text = "С карты другого банка"
             cell.imageButton.image = UIImage(named: "otherAccountButton")
+            cell.titleLabel.alpha = 0.4
+            cell.imageButton.alpha = 0.4
+            cell.alpha = 0.4
+            cell.isUserInteractionEnabled = false
         default:
             cell.titleLabel.text = "defaul"
             cell.imageButton.image = UIImage(named: "otherAccountButton")
@@ -81,8 +83,7 @@ class PayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.row {
         case 0:
-            print("Me2Me")
-            #if DEBUG
+
             self.getFastPaymentContractList { [weak self] contractList, error in
                 DispatchQueue.main.async {
                     if error != nil {
@@ -120,7 +121,6 @@ class PayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
                     }
                 }
             }
-            #endif
         case 1:
             let popView = CustomPopUpWithRateView()
             popView.modalPresentationStyle = .custom
@@ -164,6 +164,10 @@ class PayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
 
 extension PayViewController: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-        PresentationController(presentedViewController: presented, presenting: presenting)
+        
+        
+        PresentationThirdController(presentedViewController: presented, presenting: presenting)
     }
 }
+
+
