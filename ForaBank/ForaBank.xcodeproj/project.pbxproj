@@ -49,6 +49,7 @@
 		0B37F9882680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F9872680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift */; };
 		0B3FE8E12704DBEE00CBDB4E /* GetLatestMobilePaymentsDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3FE8E02704DBEE00CBDB4E /* GetLatestMobilePaymentsDecodableModel.swift */; };
 		0B3FE8E32705C86200CBDB4E /* GetMobileListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3FE8E22705C86200CBDB4E /* GetMobileListDecodableModel.swift */; };
+		0B3FE8E62706435C00CBDB4E /* DateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3FE8E52706435C00CBDB4E /* DateExtensions.swift */; };
 		0B51D87626D959BB00FC7B6B /* ExtensionGKHInputNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B51D87526D959BB00FC7B6B /* ExtensionGKHInputNav.swift */; };
 		0B66E8D626CC5D6500FD735D /* NetDetectAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B66E8D526CC5D6500FD735D /* NetDetectAlert.swift */; };
 		0B66E8D826CC5EC400FD735D /* ExtensionDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B66E8D726CC5EC400FD735D /* ExtensionDevice.swift */; };
@@ -473,6 +474,7 @@
 		0B37F9872680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLatestPaymentsDecodableModel.swift; sourceTree = "<group>"; };
 		0B3FE8E02704DBEE00CBDB4E /* GetLatestMobilePaymentsDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLatestMobilePaymentsDecodableModel.swift; sourceTree = "<group>"; };
 		0B3FE8E22705C86200CBDB4E /* GetMobileListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMobileListDecodableModel.swift; sourceTree = "<group>"; };
+		0B3FE8E52706435C00CBDB4E /* DateExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensions.swift; sourceTree = "<group>"; };
 		0B51D87526D959BB00FC7B6B /* ExtensionGKHInputNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionGKHInputNav.swift; sourceTree = "<group>"; };
 		0B66E8D526CC5D6500FD735D /* NetDetectAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetDetectAlert.swift; sourceTree = "<group>"; };
 		0B66E8D726CC5EC400FD735D /* ExtensionDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDevice.swift; sourceTree = "<group>"; };
@@ -954,6 +956,14 @@
 				0B2A8D2D26E8DA3400651BCB /* GetLatestPhonePaymentsSaved.swift */,
 			);
 			path = GetLatestPhonePayments;
+			sourceTree = "<group>";
+		};
+		0B3FE8E42706433D00CBDB4E /* DateExtansions */ = {
+			isa = PBXGroup;
+			children = (
+				0B3FE8E52706435C00CBDB4E /* DateExtensions.swift */,
+			);
+			path = DateExtansions;
 			sourceTree = "<group>";
 		};
 		0B6081FE268DDD0800FDB8AD /* CustomCardView */ = {
@@ -2304,6 +2314,7 @@
 		EDB1451926652D090028EF5A /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				0B3FE8E42706433D00CBDB4E /* DateExtansions */,
 				0B95C3FC26B6C93C00AA57E6 /* DoubleExtensions */,
 				0B95C3FB26B6C92700AA57E6 /* StringExtensions */,
 				EDB1451A26652D1A0028EF5A /* UIKit */,
@@ -3239,6 +3250,7 @@
 				0B8BE0952670D4A300E96CAA /* GetCodeDecodebleModel.swift in Sources */,
 				ED60A1E326DC1600000F3208 /* ChangeClientConsentMe2MePullDecodableModel.swift in Sources */,
 				0B66E8DE26CC5F8900FD735D /* QRViewController.swift in Sources */,
+				0B3FE8E62706435C00CBDB4E /* DateExtensions.swift in Sources */,
 				0B797C9226E6ABC100589DBF /* GetBankList.swift in Sources */,
 				0BDE453D26E5442500B64A0A /* GetPaymentSystemSaved.swift in Sources */,
 				688B9BA526DD0DC600407A75 /* ProductTableViewCell.swift in Sources */,
@@ -3466,7 +3478,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 9;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
@@ -3492,7 +3504,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

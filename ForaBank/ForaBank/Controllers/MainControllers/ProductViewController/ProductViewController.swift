@@ -76,7 +76,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
             }
         }
     }
-    var historyArrayAccount = [GetAccountStatementDataClass](){
+    var historyArrayAccount = [GetAccountStatementDatum](){
         didSet{
             DispatchQueue.main.async {
                 self.tableView?.reloadData()
@@ -307,7 +307,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         statusBarView.backgroundColor = UIColor(hexString: "BEC1DE")
         statusBarView.layer.cornerRadius = 8
 
-        statusBarLabel.text = "Траты за август"
+        statusBarLabel.text = "Траты"
         statusBarLabel.font = UIFont(name: "", size: 16)
         statusBarLabel.anchor(left: statusBarView.leftAnchor, paddingLeft: 10)
         statusBarLabel.centerY(inView: statusBarView)
@@ -996,7 +996,7 @@ extension UIColor {
 
 extension ProductViewController: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-        PresentationController(presentedViewController: presented, presenting: presenting)
+        PresentationThirdController(presentedViewController: presented, presenting: presenting)
     }
 }
 
