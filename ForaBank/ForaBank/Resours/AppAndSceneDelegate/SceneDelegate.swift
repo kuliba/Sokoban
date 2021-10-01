@@ -12,6 +12,9 @@ import FirebaseMessaging
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
+    
+    var netAlert: NetDetectAlert!
+    var netStatus: Bool?
 
 //    static var shared: SceneDelegate { return UIApplication.shared.delegate as? SceneDelegate }
     
@@ -39,6 +42,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 self.goToRegisterVC()
             }
         window?.makeKeyAndVisible()
+        
+        NetStatus.shared.netStatusChangeHandler = {
+            DispatchQueue.main.async { [weak self] in
+                if NetStatus.shared.isConnected == true {
+                    self?.netStatus = true
+                    self?.netAlert?.removeFromSuperview()
+                } else {
+                    self?.netStatus = false
+                    self?.netDetect()
+                }
+            }
+        }
+    }
+    
+    private func netDetect() {
+        guard let vc = UIApplication.getTopViewController() else {return}
+        self.netAlert = NetDetectAlert(vc.view)
+        if self.netAlert != nil {
+            vc.view.addSubview(self.netAlert)
+        }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
