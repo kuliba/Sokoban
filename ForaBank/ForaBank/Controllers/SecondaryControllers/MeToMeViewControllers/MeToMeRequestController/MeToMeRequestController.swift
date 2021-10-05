@@ -64,7 +64,7 @@ class MeToMeRequestController: UIViewController {
     
     lazy var cardFromField: CardChooseView = {
        let cardField = CardChooseView()
-        cardField.titleLabel.text = "Счет списания"
+        cardField.titleLabel.text = "Счет зачисления"
         cardField.titleLabel.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
         cardField.imageView.isHidden = false
         cardField.choseButton.isHidden = true

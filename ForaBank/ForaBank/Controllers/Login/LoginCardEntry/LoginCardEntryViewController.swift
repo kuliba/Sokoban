@@ -102,7 +102,13 @@ extension LoginCardEntryViewController: UITextFieldDelegate {
         guard let cardNumber = textField.unmaskedText else { return }
         creditCardView.doneButton.isHidden = cardNumber.count  >= 16 ? false : true
         
-        creditCardView.cardNumberTextField.maskString = cardNumber.count >= 16 ? "00000 000 0 0000 0000000" : "0000 0000 0000 0000"
+//        creditCardView.cardNumberTextField.maskString = cardNumber.count >= 16 ? "00000 000 0 0000 0000000" : "0000 0000 0000 0000"
+        
+        if cardNumber.count <= 16{
+            creditCardView.cardNumberTextField.maskString = "0000 0000 0000 00000"
+        } else {
+            creditCardView.cardNumberTextField.maskString = "00000 000 0 0000 0000000"
+        }
         
         let newPosition = textField.endOfDocument
     }
