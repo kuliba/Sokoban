@@ -23,6 +23,8 @@ class GKHMainViewController: UIViewController {
     @IBOutlet weak var reqView: UIView!
     @IBOutlet weak var zayavka: UIView!
     
+    @IBOutlet weak var historyView: UIView!
+    
     var alertController: UIAlertController?
     
     func changeTitle(_ text: String) {
@@ -55,16 +57,47 @@ class GKHMainViewController: UIViewController {
     var operatorsList: Results<GKHOperatorsModel>? = nil
     
     lazy var realm = try? Realm()
+//    var t: NotificationToken?
+//    func updateObjectWithNotification() {
+//
+//        let object = realm?.objects(UserAllCardsModel.self)
+//        t = object?.observe { ( changes: RealmCollectionChange) in
+//            switch changes {
+//            case .initial:
+//                print("REALM Initial")
+//            case .update:
+//                print("REALM Update")
+//
+//            case .error(let error):
+//                fatalError("\(error)")
+//            }
+//        }
+//    }
+//
+//    deinit {
+//        t?.invalidate()
+//    }
+    
+    let history = GKHHistoryHeaderView()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        history.frame = historyView.frame
+        historyView.addSubview(history)
+        
+        AddAllUserCardtList.add {
+            print("AddAllUserCardtList")
+        }
+//        updateObjectWithNotification()
+        
         /// Загрузка истории операций
         AddHistoryList.add()
         
         reqView.add_CornerRadius(5)
         zayavka.add_CornerRadius(5)
         
-        tableView.register(GKHHistoryHeaderView.self, forHeaderFooterViewReuseIdentifier: "sectionHeader")
+//        tableView.register(GKHHistoryHeaderView.self, forHeaderFooterViewReuseIdentifier: "sectionHeader")
         tableView.register(UINib(nibName: "GHKCell", bundle: nil), forCellReuseIdentifier: GHKCell.reuseId)
         
         setupNavBar()

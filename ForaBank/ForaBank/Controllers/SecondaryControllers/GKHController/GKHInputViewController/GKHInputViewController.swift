@@ -99,6 +99,8 @@ class GKHInputViewController: UIViewController {
             tableView.tableFooterView = footerView
             tableView.layoutIfNeeded()
         }
+        
+        
     }
     
     @IBAction func goButton(_ sender: UIButton) {
