@@ -16,7 +16,7 @@ extension SceneDelegate: UIGestureRecognizerDelegate {
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        print("Tapped window", "Касание экрану")
+//        print("Tapped window", "Касание экрану")
         if AppDelegate.shared.isAuth ?? false {
         
         let realm = try? Realm()

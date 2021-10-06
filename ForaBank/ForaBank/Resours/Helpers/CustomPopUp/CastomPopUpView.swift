@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RealmSwift
 //import SwiftEntryKit
 
 //protocol CutomViewProtocol: UIView {
@@ -35,12 +36,39 @@ class MemeDetailVC : AddHeaderImageViewController {
     
     var stackView = UIStackView(arrangedSubviews: [])
     
+    lazy var realm = try? Realm()
+    var token: NotificationToken?
+    
+    func updateObjectWithNotification() {
+        
+        let object = realm?.objects(UserAllCardsModel.self)
+        token = object?.observe { ( changes: RealmCollectionChange) in
+            switch changes {
+            case .initial:
+                print("REALM Initial")
+                
+            case .update:
+                print("REALM Update")
+                
+            case .error(let error):
+                fatalError("\(error)")
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         setupConstraint()
         setupActions()
         setupCardViewActions()
+        /// Add REALM
+        AddAllUserCardtList.add() {}
+        updateObjectWithNotification()
+    }
+    
+    deinit {
+        token?.invalidate()
     }
     
     private func setupUI() {
@@ -431,6 +459,10 @@ class MemeDetailVC : AddHeaderImageViewController {
     
     //MARK: - API
     func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?,_ error: String?)->()) {
+        
+
+        
+        
         
         let param = ["isCard": "true", "isAccount": "\(!onlyCard)", "isDeposit": "false", "isLoan": "false"]
         
