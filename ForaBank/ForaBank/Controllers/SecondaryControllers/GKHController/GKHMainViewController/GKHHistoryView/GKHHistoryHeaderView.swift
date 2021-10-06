@@ -7,7 +7,7 @@
 
 import UIKit
 
-class GKHHistoryHeaderView: UITableViewHeaderFooterView {
+class GKHHistoryHeaderView: UIView {
     
     private var caruselCollectionView = GKHCaruselCollectionView()
     
@@ -18,9 +18,12 @@ class GKHHistoryHeaderView: UITableViewHeaderFooterView {
         return view
     }()
 
-    override init(reuseIdentifier: String?) {
-        super.init(reuseIdentifier: reuseIdentifier)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         configureContents()
+        if caruselCollectionView.cells.isEmpty {
+            self.isHidden = true
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -29,19 +32,19 @@ class GKHHistoryHeaderView: UITableViewHeaderFooterView {
     
     func configureContents() {
         caruselCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.backgroundColor = .white
-        contentView.addSubview(caruselCollectionView)
-        contentView.addSubview(lineView)
+        self.backgroundColor = .white
+        self.addSubview(caruselCollectionView)
+        self.addSubview(lineView)
         NSLayoutConstraint.activate([
     
-            caruselCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            caruselCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            caruselCollectionView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),
-            caruselCollectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0),
+            caruselCollectionView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            caruselCollectionView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            caruselCollectionView.topAnchor.constraint(equalTo: self.topAnchor, constant: 0),
+            caruselCollectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0),
 //            caruselCollectionView.heightAnchor.constraint(equalToConstant: 200),
-            lineView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            lineView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            lineView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0),
+            lineView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            lineView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            lineView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0),
             lineView.heightAnchor.constraint(equalToConstant: 1)
         ])
         caruselCollectionView.set(cells: GKHHistoryCaruselModel.fetchModel())
