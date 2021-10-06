@@ -14,5 +14,7 @@ class GetSessionTimeout: Object {
     @objc dynamic var currentTimeStamp = "0"
     @objc dynamic var lastActionTimestamp = "0"
     @objc dynamic var timeDistance = 0
+    @objc dynamic var reNewSessionTimeStamp = "0"
+    @objc dynamic var mustCheckTimeOut = true
     
 }

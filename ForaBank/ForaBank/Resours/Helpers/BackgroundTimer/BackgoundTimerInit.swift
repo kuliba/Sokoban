@@ -1,21 +1,22 @@
 //
-//  ExtensionAppDelegate.swift
+//  BackgoundTimerInit.swift
 //  ForaBank
 //
-//  Created by Константин Савялов on 28.09.2021.
+//  Created by Константин Савялов on 06.10.2021.
 //
 
-import UIKit
+import Foundation
 import RealmSwift
 
-extension SceneDelegate: UIGestureRecognizerDelegate {
+// Таймер установки общего времени в секундах
+
+class TimerTimeInit {
     
+    var timerModel = GetSessionTimeout.self
     
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
-    }
+    lazy var realm = try? Realm()
     
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+    func timeResult() {
         
         //        if AppDelegate.shared.isAuth ?? false {
         
@@ -28,39 +29,10 @@ extension SceneDelegate: UIGestureRecognizerDelegate {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
         
-        var mustCheckTimeOut = timeObject?.mustCheckTimeOut ?? true
+        let mustCheckTimeOut = timeObject?.mustCheckTimeOut ?? true
         
-        if !mustCheckTimeOut {
-            lastActionTimestamp = dateFormatter.string(from: currentTimeStamp)
-            let currency = GetSessionTimeout()
-            currency.timeDistance = maxTimeOut
-            
-            let date = Date()
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
-            let time = dateFormatter.string(from: date)
-            // Сохраняем текущее время
-            currency.currentTimeStamp = time
-            currency.reNewSessionTimeStamp = reNewSessionTimeStamp
-            currency.mustCheckTimeOut = true
-            currency.lastActionTimestamp = lastActionTimestamp
-            /// Сохраняем в REALM
-            let realm = try? Realm()
-            do {
-                let b = realm?.objects(GetSessionTimeout.self)
-                realm?.beginWrite()
-                realm?.delete(b!)
-                realm?.add(currency)
-                try realm?.commitWrite()
-                
-            } catch {
-                print(error.localizedDescription)
-            }
-            
-        }
-        
-        guard let date = dateFormatter.date(from: lastActionTimestamp) else { return false }
-        guard let reNewdateSecond = dateFormatter.date(from: reNewSessionTimeStamp) else { return false }
+        guard let date = dateFormatter.date(from: lastActionTimestamp) else { return }
+        guard let reNewdateSecond = dateFormatter.date(from: reNewSessionTimeStamp) else { return }
         let d = date.localDate()
         let r = reNewdateSecond.localDate()
         let withTimeDistance = d.addingTimeInterval(TimeInterval(maxTimeOut))
@@ -73,10 +45,6 @@ extension SceneDelegate: UIGestureRecognizerDelegate {
         
         
         if distance < 0 {
-            
-            let realm = try? Realm()
-            let timeObject = realm?.objects(GetSessionTimeout.self).first
-            mustCheckTimeOut = timeObject?.mustCheckTimeOut ?? true
             
             if mustCheckTimeOut {
                 
@@ -96,8 +64,8 @@ extension SceneDelegate: UIGestureRecognizerDelegate {
             currency.reNewSessionTimeStamp = reNewSessionTimeStamp
             currency.mustCheckTimeOut = false
             currency.lastActionTimestamp = lastActionTimestamp
-            
             /// Сохраняем в REALM
+            let realm = try? Realm()
             do {
                 let b = realm?.objects(GetSessionTimeout.self)
                 realm?.beginWrite()
@@ -109,14 +77,14 @@ extension SceneDelegate: UIGestureRecognizerDelegate {
                 print(error.localizedDescription)
             }
             
+            
         } else if (difference && difference_1) {
             // Отправляем фоновый запрос
             let request = GetSessionTimeoutSaved()
             request.add([:], [:]) {}
         }
         //        }
-        return false
+        
     }
-    
-    
 }
+
