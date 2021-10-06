@@ -64,9 +64,9 @@ class GKHMainViewController: UIViewController {
 //        t = object?.observe { ( changes: RealmCollectionChange) in
 //            switch changes {
 //            case .initial:
-//                print("REALM Initial")
+//                print("Rasd 2")
 //            case .update:
-//                print("REALM Update")
+//                print("Rasd 3")
 //
 //            case .error(let error):
 //                fatalError("\(error)")
@@ -87,7 +87,7 @@ class GKHMainViewController: UIViewController {
         historyView.addSubview(history)
         
         AddAllUserCardtList.add {
-            print("AddAllUserCardtList")
+            print("Rasd 1")
         }
 //        updateObjectWithNotification()
         

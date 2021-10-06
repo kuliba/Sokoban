@@ -32,6 +32,7 @@ struct GetSessionTimeoutSaved: DownloadQueueProtocol {
                     let time = dateFormatter.string(from: date)
                     // Сохраняем текущее время
                     currency.currentTimeStamp = time
+                    currency.reNewSessionTimeStamp = time
                     
                     /// Сохраняем в REALM
                     let realm = try? Realm()
