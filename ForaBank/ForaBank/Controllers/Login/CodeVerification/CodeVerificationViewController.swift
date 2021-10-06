@@ -35,6 +35,8 @@ class CodeVerificationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+
+        navigationController?.view.backgroundColor = .white
         smsCodeView.callBacktext = { str in
             if str == "123456"{
                 DispatchQueue.main.async { [weak self] in
@@ -95,8 +97,6 @@ class CodeVerificationViewController: UIViewController {
     //TODO: BUG: Можно ввести в поле больше символов чем есть полей
     func sendSmsCode(code: String) {
         let body = [
-//            "cryptoVersion": "1.0",
-//            "appId": "IOS",
             "verificationCode": "\(code)"
         ] as [String : AnyObject]
         
@@ -194,6 +194,12 @@ class CodeVerificationViewController: UIViewController {
                         
                     }
                 }
+            } else {
+                DispatchQueue.main.async { [weak self] in
+                    print("Неверный код")
+                    self?.smsCodeView.clearnText(error: "error")
+                    self?.showAlert(with: model.errorMessage ?? "", and: "Осталось попыток : \(model.data?.verifyOTPCount ?? 0)")
+                }
             }
         }
         
@@ -228,9 +234,11 @@ class CodeVerificationViewController: UIViewController {
                 guard let error = error else { return }
                 self.showAlert(with: "Ошибка", and: error)
             } else {
-                DispatchQueue.main.async {
+                DispatchQueue.main.async { [self] in
                     self.count = 60
                     self.resendTimer.fire()
+                    self.updateTimer()
+                    resendTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.self.updateTimer), userInfo: nil, repeats: true)
                     self.repeatCodeButton.isHidden = true
                     self.timerLabel.isHidden = false
                 }
