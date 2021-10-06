@@ -13,6 +13,10 @@ extension GKHInputViewController: UITableViewDelegate {
 
 extension GKHInputViewController: UITableViewDataSource, TableViewDelegate {
     
+//    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+//        return 200
+//    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return operatorData?.parameterList.count ?? 0
     }

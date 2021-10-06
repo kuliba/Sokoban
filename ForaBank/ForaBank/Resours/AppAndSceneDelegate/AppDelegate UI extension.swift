@@ -12,15 +12,15 @@ extension AppDelegate {
     func customizeUiInApp() {
         
         //Fix Nav Bar tint issue in iOS 15.0 or later - is transparent w/o code below
-        if #available(iOS 15, *) {
-            let appearance = UINavigationBarAppearance()
-            let navigationBar = UINavigationBar()
-            appearance.configureWithOpaqueBackground()
-            appearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
-            appearance.backgroundColor = .clear
-            navigationBar.standardAppearance = appearance
-            UINavigationBar.appearance().scrollEdgeAppearance = appearance
-        }
+//        if #available(iOS 15, *) {
+//            let appearance = UINavigationBarAppearance()
+//            let navigationBar = UINavigationBar()
+//            appearance.configureWithOpaqueBackground()
+//            appearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+//            appearance.backgroundColor = .clear
+//            navigationBar.standardAppearance = appearance
+//            UINavigationBar.appearance().scrollEdgeAppearance = appearance
+//        }
         
         // Настройка клавиатуры
         IQKeyboardManager.shared.enable = true
@@ -33,7 +33,10 @@ extension AppDelegate {
         IQKeyboardManager.shared.toolbarPreviousBarButtonItemImage = UIImage()
         IQKeyboardManager.shared.toolbarNextBarButtonItemImage = UIImage()
         IQKeyboardManager.shared.keyboardDistanceFromTextField = 30
-        
+        IQKeyboardManager.shared.disabledToolbarClasses.append(CodeVerificationViewController.self)
+        IQKeyboardManager.shared.disabledDistanceHandlingClasses.append(CodeVerificationViewController.self)
+        IQKeyboardManager.shared.disabledTouchResignedClasses.append(CodeVerificationViewController.self)
+
         // Настройка NavigationBar
         UINavigationBar.appearance().barTintColor = .white
         UINavigationBar.appearance().tintColor = .black

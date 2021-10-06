@@ -10,14 +10,14 @@ import RealmSwift
 
 extension GKHMainViewController: UITableViewDelegate {
     
-     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-       let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "sectionHeader") as! GKHHistoryHeaderView
-       return view
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 120
-    }
+//     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//       let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "sectionHeader") as! GKHHistoryHeaderView
+//       return view
+//    }
+//    
+//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+//        return 120
+//    }
     
 //    override func viewDidLayoutSubviews() {
 //        super.viewDidLayoutSubviews()
