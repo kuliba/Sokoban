@@ -57,12 +57,12 @@ extension SmsCodeView {
         width = self.frame.size.width
         height = self.frame.size.height
         textFiled = Base.textFiled
-        textFiled.becomeFirstResponder()
         textFiled.autocapitalizationType = .none
         textFiled.keyboardType = .numberPad
         addSubview(textFiled)
         
         textFiled.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+        textFiled.becomeFirstResponder()
     }
     //MARK: CreatLineView
     fileprivate func creatLineView() {
@@ -120,6 +120,7 @@ extension SmsCodeView {
             self.lineArr.forEach({ (view) in
                 view.backgroundColor = self.Base.errorlineViewColor
                 loadShakeAnimationForView(view: view)
+                clearnText(error: "error")
             })
             
             UIView.animate(withDuration: 1) {

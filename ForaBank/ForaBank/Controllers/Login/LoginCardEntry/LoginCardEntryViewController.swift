@@ -7,6 +7,7 @@
 
 import UIKit
 import AnyFormatKit
+import IQKeyboardManagerSwift
 
 class LoginCardEntryViewController: UIViewController {
     
@@ -18,6 +19,8 @@ class LoginCardEntryViewController: UIViewController {
     //MARK: - Viewlifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
         setupUI()
         hideKeyboardWhenTappedAround()
         self.creditCardView.cardNumberTextField.becomeFirstResponder()
@@ -44,7 +47,7 @@ class LoginCardEntryViewController: UIViewController {
                             print("DEBUG: Error getCSRF: ", error!)
                         }
                     
-                        LoginViewModel().checkCardNumber(with: cardNumber) { resp, error in
+                        LoginViewModel().checkCardNumber(with: cardNumber.digits) { resp, error in
                             self?.dismissActivity()
                             if error != nil {
                                 self?.showAlert(with: "Ошибка", and: error ?? "")
@@ -100,16 +103,54 @@ extension LoginCardEntryViewController: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
         guard let textField = textField as? MaskedTextField else { return }
         guard let cardNumber = textField.unmaskedText else { return }
+        formattedNumber(number: cardNumber)
         creditCardView.doneButton.isHidden = cardNumber.count  >= 16 ? false : true
-        
+
 //        creditCardView.cardNumberTextField.maskString = cardNumber.count >= 16 ? "00000 000 0 0000 0000000" : "0000 0000 0000 0000"
-        
-        if cardNumber.count <= 16{
-            creditCardView.cardNumberTextField.maskString = "0000 0000 0000 00000"
-        } else {
-            creditCardView.cardNumberTextField.maskString = "00000 000 0 0000 0000000"
-        }
-        
-        let newPosition = textField.endOfDocument
+//
+//        if cardNumber.count > 16{
+//            creditCardView.cardNumberTextField.maskString = "00000 000 0 0000 0000000"
+//        } else if cardNumber.count <= 16{
+//
+//            creditCardView.cardNumberTextField.maskString = "0000 0000 0000 0000"
+//        }
     }
+
+//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+//        guard let textField = textField as? MaskedTextField else { return false }
+//        guard let cardNumber = textField.unmaskedText else { return false}
+//        creditCardView.doneButton.isHidden = cardNumber.count  >= 16 ? false : true
+//
+//        creditCardView.cardNumberTextField.maskString = cardNumber.count >= 16 ? "00000 000 0 0000 0000000" : "0000 0000 0000 0000"
+//
+//
+//        return true
+//    }
+    func formattedNumber(number: String) -> String {
+                    let cleanPhoneNumber = number.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
+        var mask = String()
+        if cleanPhoneNumber.count <= 16{
+            mask = "#### #### #### ####"
+        } else{
+            mask = "##### #### # #### ######"
+        }
+                    var result = ""
+                    var index = cleanPhoneNumber.startIndex
+        for ch in mask where index < cleanPhoneNumber.endIndex {
+                        if ch == "#" {
+                            result.append(cleanPhoneNumber[index])
+                            index = cleanPhoneNumber.index(after: index)
+                        } else {
+                            result.append(ch)
+                        }
+                    }
+                    return result
+                }
+    
+                func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string:  String) -> Bool {
+                    guard let text = textField.text else { return false }
+                    let newString = (text as NSString).replacingCharacters(in: range, with: string)
+                    textField.text = formattedNumber(number: newString)
+                    return false
+                }
 }

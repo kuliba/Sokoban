@@ -43,10 +43,10 @@ struct SmsCodeBasicAttributes: SmsCodeProtocol {
     var codeNum: SmsCodeFloct = 0
     
     /// цвет линии под полем не введеный
-    var lineColor: UIColor = #colorLiteral(red: 0.5921568627, green: 0.5921568627, blue: 0.5921568627, alpha: 1)
+    var lineColor: UIColor = #colorLiteral(red: 0.8392156863, green: 0.8509803922, blue: 0.8745098039, alpha: 1)
     
     /// цвет линии под полем введеный
-    var lineInputColor: UIColor = #colorLiteral(red: 0.5921568627, green: 0.5921568627, blue: 0.5921568627, alpha: 1)
+    var lineInputColor: UIColor = #colorLiteral(red: 0.8392156863, green: 0.8509803922, blue: 0.8745098039, alpha: 1)
     
     /// цвет линии под полем с ошибкой
     var errorlineViewColor: UIColor = UIColor.red
@@ -55,7 +55,7 @@ struct SmsCodeBasicAttributes: SmsCodeProtocol {
     var cursorColor: UIColor = UIColor.black
     
     /// шрифт
-    var fontNum: UIFont = UIFont.systemFont(ofSize: 32)
+    var fontNum: UIFont = UIFont.boldSystemFont(ofSize: 32)
     
     /// цвет шрифта
     var textColor: UIColor = #colorLiteral(red: 0.5921568627, green: 0.5921568627, blue: 0.5921568627, alpha: 1)
