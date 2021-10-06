@@ -13,10 +13,7 @@ struct BackgroundTimer {
     let time = TimerTimeInit()
     func repeatTimer() {
         timer.eventHandler = {
-            DispatchQueue.main.async {
-                let timerRezult = self.time.timeResult()
-                
-            }
+                time.timeResult()
         }
         timer.resume()
     }
