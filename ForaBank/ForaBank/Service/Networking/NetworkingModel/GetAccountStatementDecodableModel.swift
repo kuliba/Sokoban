@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - GetAccountStatementDecodableModel
-struct GetAccountStatementDecodableModel: Codable, NetworkModelProtocol {
+struct GetAccountStatementDecodableModel: Codable {
     let data: [GetAccountStatementDatum]?
     let errorMessage: String?
     let statusCode: Int?
@@ -55,14 +55,23 @@ extension GetAccountStatementDecodableModel {
 
 // MARK: - GetAccountStatementDatum
 struct GetAccountStatementDatum: Codable {
-    let accountID: Int?
+    let mcc, accountID: Int?
     let accountNumber: String?
     let amount: Int?
     let comment: String?
     let currencyCodeNumeric: Int?
     let date: String?
     let documentID: Int?
-    let name, operationType, tranDate: String?
+    let groupName, md5Hash, merchantName, merchantNameRus: String?
+    let name, operationType, svgImage, tranDate: String?
+    let type: String?
+
+    enum CodingKeys: String, CodingKey {
+        case mcc = "MCC"
+        case accountID, accountNumber, amount, comment, currencyCodeNumeric, date, documentID, groupName
+        case md5Hash = "md5hash"
+        case merchantName, merchantNameRus, name, operationType, svgImage, tranDate, type
+    }
 }
 
 // MARK: GetAccountStatementDatum convenience initializers and mutators
@@ -84,6 +93,7 @@ extension GetAccountStatementDatum {
     }
 
     func with(
+        mcc: Int?? = nil,
         accountID: Int?? = nil,
         accountNumber: String?? = nil,
         amount: Int?? = nil,
@@ -91,11 +101,18 @@ extension GetAccountStatementDatum {
         currencyCodeNumeric: Int?? = nil,
         date: String?? = nil,
         documentID: Int?? = nil,
+        groupName: String?? = nil,
+        md5Hash: String?? = nil,
+        merchantName: String?? = nil,
+        merchantNameRus: String?? = nil,
         name: String?? = nil,
         operationType: String?? = nil,
-        tranDate: String?? = nil
+        svgImage: String?? = nil,
+        tranDate: String?? = nil,
+        type: String?? = nil
     ) -> GetAccountStatementDatum {
         return GetAccountStatementDatum(
+            mcc: mcc ?? self.mcc,
             accountID: accountID ?? self.accountID,
             accountNumber: accountNumber ?? self.accountNumber,
             amount: amount ?? self.amount,
@@ -103,9 +120,15 @@ extension GetAccountStatementDatum {
             currencyCodeNumeric: currencyCodeNumeric ?? self.currencyCodeNumeric,
             date: date ?? self.date,
             documentID: documentID ?? self.documentID,
+            groupName: groupName ?? self.groupName,
+            md5Hash: md5Hash ?? self.md5Hash,
+            merchantName: merchantName ?? self.merchantName,
+            merchantNameRus: merchantNameRus ?? self.merchantNameRus,
             name: name ?? self.name,
             operationType: operationType ?? self.operationType,
-            tranDate: tranDate ?? self.tranDate
+            svgImage: svgImage ?? self.svgImage,
+            tranDate: tranDate ?? self.tranDate,
+            type: type ?? self.type
         )
     }
 
