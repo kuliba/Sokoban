@@ -8,10 +8,10 @@
 import Foundation
 
 // MARK: - GetCardStatementDecodableModel
-struct GetCardStatementDecodableModel: Codable, NetworkModelProtocol {
-    let statusCode: Int?
+struct GetCardStatementDecodableModel: Codable {
+    let data: [GetCardStatementDatum]?
     let errorMessage: String?
-    let data: [GetCardStatementDataClass]?
+    let statusCode: Int?
 }
 
 // MARK: GetCardStatementDecodableModel convenience initializers and mutators
@@ -33,14 +33,14 @@ extension GetCardStatementDecodableModel {
     }
 
     func with(
-        statusCode: Int?? = nil,
+        data: [GetCardStatementDatum]?? = nil,
         errorMessage: String?? = nil,
-        data: [GetCardStatementDataClass]?? = nil
+        statusCode: Int?? = nil
     ) -> GetCardStatementDecodableModel {
         return GetCardStatementDecodableModel(
-            statusCode: statusCode ?? self.statusCode,
+            data: data ?? self.data,
             errorMessage: errorMessage ?? self.errorMessage,
-            data: data ?? self.data
+            statusCode: statusCode ?? self.statusCode
         )
     }
 
@@ -53,24 +53,32 @@ extension GetCardStatementDecodableModel {
     }
 }
 
-// MARK: - GetCardStatementDataClass
-struct GetCardStatementDataClass: Codable {
-    let accountID, date: Int?
-    let operationType: String?
-    let amount: Double?
-    let comment: String?
-    let documentID: Int?
+// MARK: - GetCardStatementDatum
+struct GetCardStatementDatum: Codable {
+    let mcc, accountID: Int?
     let accountNumber: String?
+    let amount: Int?
+    let comment: String?
     let currencyCodeNumeric: Int?
-    let name: String?
-    let time: String?
+    let date: String?
+    let documentID: Int?
+    let groupName, md5Hash, merchantName, merchantNameRus: String?
+    let name, operationType, svgImage, tranDate: String?
+    let type: String?
+
+    enum CodingKeys: String, CodingKey {
+        case mcc = "MCC"
+        case accountID, accountNumber, amount, comment, currencyCodeNumeric, date, documentID, groupName
+        case md5Hash = "md5hash"
+        case merchantName, merchantNameRus, name, operationType, svgImage, tranDate, type
+    }
 }
 
-// MARK: DataClass convenience initializers and mutators
+// MARK: GetCardStatementDatum convenience initializers and mutators
 
-extension GetCardStatementDataClass {
+extension GetCardStatementDatum {
     init(data: Data) throws {
-        self = try newJSONDecoder().decode(GetCardStatementDataClass.self, from: data)
+        self = try newJSONDecoder().decode(GetCardStatementDatum.self, from: data)
     }
 
     init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -85,28 +93,42 @@ extension GetCardStatementDataClass {
     }
 
     func with(
+        mcc: Int?? = nil,
         accountID: Int?? = nil,
-        date: Int?? = nil,
-        operationType: String?? = nil,
-        amount: Double?? = nil,
-        comment: String?? = nil,
-        documentID: Int?? = nil,
         accountNumber: String?? = nil,
+        amount: Int?? = nil,
+        comment: String?? = nil,
         currencyCodeNumeric: Int?? = nil,
+        date: String?? = nil,
+        documentID: Int?? = nil,
+        groupName: String?? = nil,
+        md5Hash: String?? = nil,
+        merchantName: String?? = nil,
+        merchantNameRus: String?? = nil,
         name: String?? = nil,
-        tiem: String?? = nil
-    ) -> GetCardStatementDataClass {
-        return GetCardStatementDataClass(
+        operationType: String?? = nil,
+        svgImage: String?? = nil,
+        tranDate: String?? = nil,
+        type: String?? = nil
+    ) -> GetCardStatementDatum {
+        return GetCardStatementDatum(
+            mcc: mcc ?? self.mcc,
             accountID: accountID ?? self.accountID,
-            date: date ?? self.date,
-            operationType: operationType ?? self.operationType,
+            accountNumber: accountNumber ?? self.accountNumber,
             amount: amount ?? self.amount,
             comment: comment ?? self.comment,
-            documentID: documentID ?? self.documentID,
-            accountNumber: accountNumber ?? self.accountNumber,
             currencyCodeNumeric: currencyCodeNumeric ?? self.currencyCodeNumeric,
+            date: date ?? self.date,
+            documentID: documentID ?? self.documentID,
+            groupName: groupName ?? self.groupName,
+            md5Hash: md5Hash ?? self.md5Hash,
+            merchantName: merchantName ?? self.merchantName,
+            merchantNameRus: merchantNameRus ?? self.merchantNameRus,
             name: name ?? self.name,
-            time: time ?? self.time
+            operationType: operationType ?? self.operationType,
+            svgImage: svgImage ?? self.svgImage,
+            tranDate: tranDate ?? self.tranDate,
+            type: type ?? self.type
         )
     }
 
