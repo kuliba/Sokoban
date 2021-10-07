@@ -103,29 +103,12 @@ extension LoginCardEntryViewController: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
         guard let textField = textField as? MaskedTextField else { return }
         guard let cardNumber = textField.unmaskedText else { return }
-        formattedNumber(number: cardNumber)
+//        formattedNumber(number: cardNumber)
         creditCardView.doneButton.isHidden = cardNumber.count  >= 16 ? false : true
 
-//        creditCardView.cardNumberTextField.maskString = cardNumber.count >= 16 ? "00000 000 0 0000 0000000" : "0000 0000 0000 0000"
-//
-//        if cardNumber.count > 16{
-//            creditCardView.cardNumberTextField.maskString = "00000 000 0 0000 0000000"
-//        } else if cardNumber.count <= 16{
-//
-//            creditCardView.cardNumberTextField.maskString = "0000 0000 0000 0000"
-//        }
+        creditCardView.cardNumberTextField.maskString = cardNumber.digits.count <= 16 ? "0000 0000 0000 00000"  : "00000 000 0 0000 0000000"
     }
-
-//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-//        guard let textField = textField as? MaskedTextField else { return false }
-//        guard let cardNumber = textField.unmaskedText else { return false}
-//        creditCardView.doneButton.isHidden = cardNumber.count  >= 16 ? false : true
-//
-//        creditCardView.cardNumberTextField.maskString = cardNumber.count >= 16 ? "00000 000 0 0000 0000000" : "0000 0000 0000 0000"
-//
-//
-//        return true
-//    }
+    
     func formattedNumber(number: String) -> String {
                     let cleanPhoneNumber = number.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
         var mask = String()
@@ -146,11 +129,20 @@ extension LoginCardEntryViewController: UITextFieldDelegate {
                     }
                     return result
                 }
-    
-                func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string:  String) -> Bool {
-                    guard let text = textField.text else { return false }
-                    let newString = (text as NSString).replacingCharacters(in: range, with: string)
-                    textField.text = formattedNumber(number: newString)
-                    return false
-                }
+//
+//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string:  String) -> Bool {
+//        guard let text = textField.text else {
+//                return true
+//            }
+//            let lastText = (text as NSString).replacingCharacters(in: range, with: string) as String
+//            
+//            if creditCardView.cardNumberTextField == textField,  creditCardView.cardNumberTextField.text?.digits.count ?? 0 < 16 {
+//                textField.text = lastText.format("nnnn nnnn nnnn nnnn", oldString: text)
+//                return false
+//            } else if creditCardView == textField, creditCardView.cardNumberTextField.text?.digits.count ?? 0 > 16{
+//                textField.text = lastText.format("nnnnn nnn n nnnn nnnnnnn", oldString: text)
+//                return false
+//            }
+//            return true
+//    }
 }
