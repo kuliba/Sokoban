@@ -24,8 +24,15 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
     let statusBarView = UIView()
     let statusBarLabel = UILabel()
     let amounPeriodLabel = UILabel()
-    
-    
+    var groupByCategorySorted: Dictionary<Int, Any> = [:]
+    var groupByCategory: Dictionary<Int, Any> = [:]{
+        didSet{
+//            let sortedKeys = groupByCategory.keys.sorted(by: { (firstKey, secondKey) -> Bool in
+//                return groupByCategory[firstKey] < groupByCategory[secondKey]
+//            })
+            
+        }
+    }
     var card = LargeCardCell()
     var mockItem: [PaymentsModel] = []
     var firstTimeLoad = true
@@ -44,6 +51,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
                 button4.isUserInteractionEnabled = true
             }
             backgroundView.backgroundColor = UIColor(hexString: product?.background[0] ?? "").darker()
+            navigationController?.view.backgroundColor =  UIColor(hexString: product?.background[0] ?? "").darker()
+            navigationController?.navigationBar.backgroundColor = UIColor(hexString: product?.background[0] ?? "").darker()
             tableView?.reloadData()
             loadHistoryForCard()
             guard let number = product?.numberMasked else {
@@ -69,7 +78,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
 //        button4.contentVerticalAlignment = .center
     
     
-    var historyArray = [GetCardStatementDataClass](){
+    var historyArray = [GetCardStatementDatum](){
         didSet{
             DispatchQueue.main.async {
                 self.tableView?.reloadData()
@@ -116,6 +125,10 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
     
     var buttonItem = UIButton()
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.isHidden = false
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -128,8 +141,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
             //no need to write following if checked in storyboard
             self.scrollView.bounces = false
             self.tableView?.bounces = true
-        
-        
+
         view.addSubview(scrollView)
         scrollView.addSubview(backgroundView)
         scrollView.addSubview(card)
@@ -151,6 +163,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         view.backgroundColor = .white
 //        navigationController?.view.addoverlay(color: .black, alpha: 0.2)
         navigationController?.navigationBar.barTintColor = UIColor(hexString: product?.background[0] ?? "").darker()
+        navigationController?.view.backgroundColor =  UIColor(hexString: product?.background[0] ?? "").darker()
+        navigationController?.navigationBar.backgroundColor = UIColor(hexString: product?.background[0] ?? "").darker()
 //        UINavigationBar.appearance().tintColor =  UIColor(hexString: product?.fontDesignColor ?? "000000")
         addCloseColorButton(with: UIColor(hexString: product?.fontDesignColor ?? "000000"))
 
@@ -446,11 +460,14 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
                     self.mockItem = MockItems.returnsRequisits()
                     self.mockItem[0].description =  model.data?.payeeName
                     self.mockItem[1].description =  self.product?.accountNumber
-                    self.mockItem[2].description =  self.product?.numberMasked
-                    self.mockItem[3].description = model.data?.bic
-                    self.mockItem[4].description = model.data?.corrAccount
-                    self.mockItem[5].description = model.data?.inn
-                    self.mockItem[6].description = model.data?.kpp
+                    self.mockItem[2].description = model.data?.bic
+                    self.mockItem[3].description = model.data?.corrAccount
+                    self.mockItem[4].description = model.data?.inn
+                    self.mockItem[5].description = model.data?.kpp
+                    self.mockItem[6].description = model.data?.holderName
+                    self.mockItem[7].description = model.data?.maskCardNumber
+                    self.mockItem[8].description = model.data?.expireDate
+                    viewController.addCloseButton_3()
                     viewController.mockItem =  self.mockItem
                     viewController.product = self.product
                     navController.modalPresentationStyle = .fullScreen
@@ -575,7 +592,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
             let body = ["id": product?.id
                          ] as [String : AnyObject]
             
-            NetworkManager<GetCardStatementDecodableModel>.addRequest(.getAccountStatement, [:], body) { model, error in
+            NetworkManager<GetAccountStatementDecodableModel>.addRequest(.getAccountStatement, [:], body) { model, error in
                 if error != nil {
                     print("DEBUG: Error: ", error ?? "")
                 }
@@ -584,8 +601,9 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
                 if model.statusCode == 0 {
                     DispatchQueue.main.async {
                         guard let lastPaymentsList  = model.data else { return }
-                        self.historyArray = lastPaymentsList
-                        self.historyArray.sort(by: { (a, b) -> Bool in
+                        self.historyArrayAccount = lastPaymentsList
+                        self.historyArray.removeAll()
+                        self.historyArrayAccount.sort(by: { (a, b) -> Bool in
                             if let timestamp1 = a.date, let timestamp2 = b.date {
                                 return timestamp1 > timestamp2
                             } else {
@@ -593,25 +611,27 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
                                 return true
                             }
                         })
-                        for i in self.historyArray{
-                            let timeInterval = TimeInterval(i.date ?? 0)
+                        for i in self.historyArrayAccount{
+                            let timeInterval = TimeInterval(i.tranDate ?? 0)
                             // create NSDate from Double (NSTimeInterval)
-                            let myNSDate = Date(timeIntervalSince1970: timeInterval)
+                            let myNSDate = Date(timeIntervalSince1970: timeInterval/1000)
                             print(myNSDate)
                             
-                            if let timeResult = (i.date) {
+                            if let timeResult = (i.tranDate) {
                                 let date = Date(timeIntervalSince1970: TimeInterval(timeResult))
                                 let dateFormatter = DateFormatter()
-                                dateFormatter.timeStyle = DateFormatter.Style.medium //Set time style
+                                dateFormatter.timeStyle = DateFormatter.Style.none //Set time style
                                 dateFormatter.dateStyle = DateFormatter.Style.medium //Set date style
                                 dateFormatter.timeZone = .current
                                 let localDate = dateFormatter.string(from: date)
                                 print(localDate)
                             }
                         }
+                        self.groupByCategory = Dictionary(grouping: self.historyArrayAccount) { $0.tranDate ?? 0 }
+                        
                         for i in lastPaymentsList{
                             if i.operationType == "DEBIT"{
-                                self.totalExpenses  += i.amount ?? 0.0
+                                self.totalExpenses += Double(i.amount ?? 0.0)
                             }
                         }
                         
@@ -641,6 +661,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
                 DispatchQueue.main.async {
                     guard let lastPaymentsList  = model.data else { return }
                     self.historyArray = lastPaymentsList
+                    self.historyArrayAccount.removeAll()
                     self.historyArray.sort(by: { (a, b) -> Bool in
                         if let timestamp1 = a.date, let timestamp2 = b.date {
                             return timestamp1 > timestamp2
@@ -650,24 +671,25 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
                         }
                     })
                     for i in self.historyArray{
-                        let timeInterval = TimeInterval(i.date ?? 0)
-                        // create NSDate from Double (NSTimeInterval)
-                        let myNSDate = Date(timeIntervalSince1970: timeInterval)
-                        print(myNSDate)
                         
-                        if let timeResult = (i.date) {
-                            let date = Date(timeIntervalSince1970: TimeInterval(timeResult))
+                        if let timeResult = (i.tranDate) {
+                            print(timeResult)
+                            let date = Date(timeIntervalSince1970: TimeInterval(timeResult/1000) )
                             let dateFormatter = DateFormatter()
-                            dateFormatter.timeStyle = DateFormatter.Style.medium //Set time style
+                            dateFormatter.timeStyle = DateFormatter.Style.none //Set time style
                             dateFormatter.dateStyle = DateFormatter.Style.medium //Set date style
                             dateFormatter.timeZone = .current
+                            dateFormatter.locale = Locale(identifier: "ru_RU")
                             let localDate = dateFormatter.string(from: date)
                             print(localDate)
                         }
                     }
+                    
+                    self.groupByCategory = Dictionary(grouping: self.historyArray) { $0.date ?? 0 }
+                    
                     for i in lastPaymentsList{
                         if i.operationType == "DEBIT"{
-                            self.totalExpenses  += i.amount ?? 0.0
+                            self.totalExpenses  += Double(i.amount ?? 0.0)
                         }
                     }
                     
@@ -797,25 +819,52 @@ extension ProductViewController{
 }
 
 extension ProductViewController{
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return groupByCategory.count
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return historyArray.count
+//            return groupByCategory[section].count
+        var countSection = Array<Any>()
+        
+        groupByCategory.map({
+            print(($0.value as AnyObject).count ?? 0)
+//            countSection.append(($0.value as AnyObject).count ?? 0)
+            countSection.append(($0.value as AnyObject).count ?? 0)
+        })
+        return countSection[section] as! Int
+
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "HistoryTableViewCell", for: indexPath) as? HistoryTableViewCell else { return  UITableViewCell() }
-//        if historyArray[indexPath.row].operationType == "DEBIT"{
-//            cell.amountLabel.text = "-\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
-//        } else if historyArray[indexPath.row].operationType == "CREDIT"{
-//            cell.amountLabel.textColor = UIColor(hexString: "22C183")
-//            cell.amountLabel.text =  "+\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
-//        }
-//
-//        cell.titleLable.text = historyArray[indexPath.row].comment
-        cell.operation = historyArray[indexPath.row]
-        cell.configure(currency: product?.currency ?? "RUB")
-        cell.selectionStyle = .none
-        return cell
+        switch historyArray.isEmpty{
+        case false:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "HistoryTableViewCell", for: indexPath) as? HistoryTableViewCell else { return  UITableViewCell() }
+//            let data = groupByCategory.forEach({$0.value[indexPath.row]})
+//            let section = groupByCategory[indexPath.section] as? Array<Any>
+            let data = Array(groupByCategory.values)[indexPath.section]
+            print(data)
+            cell.operation = (data as! [GetCardStatementDatum])[indexPath.row]
+//            groupByCategory[index].value[indexPath.row]
+         
+
+            cell.configure(currency: product?.currency ?? "RUB")
+            cell.selectionStyle = .none
+            return cell
+        case true:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "HistoryTableViewCell", for: indexPath) as? HistoryTableViewCell else { return  UITableViewCell() }
+    //
+    //        cell.titleLable.text = historyArray[indexPath.row].comment
+            let data = Array(groupByCategory.values)[indexPath.section]
+            print(data)
+            cell.accountOperation = (data as! [GetAccountStatementDatum])[indexPath.row]
+//            groupByCategory[index].value[indexPath.row]
+         
+            cell.configure(currency: product?.currency ?? "RUB")
+            cell.selectionStyle = .none
+            return cell
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -837,10 +886,10 @@ extension ProductViewController{
 //        }
         
         if historyArray[indexPath.row].operationType == "DEBIT"{
-            vc.confurmView.summLabel.text = "-\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
+//            vc.confurmView.summLabel.text = "-\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
         } else if historyArray[indexPath.row].operationType == "CREDIT"{
             vc.confurmView.summLabel.textColor = UIColor(hexString: "22C183")
-            vc.confurmView.summLabel.text =  "+\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
+//            vc.confurmView.summLabel.text =  "+\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
         }
         
         present(vc, animated: true, completion: nil)
@@ -849,16 +898,18 @@ extension ProductViewController{
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
-            let headerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.width, height: 0))
+            let headerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.width, height: 50))
             headerView.backgroundColor = .white
             let label = UILabel()
             label.frame = CGRect.init(x: 5, y: 5, width: headerView.frame.width-10, height: headerView.frame.height)
-            label.text = ""
-            label.font = .systemFont(ofSize: 16)
-            label.textColor = .black
-            headerView.backgroundColor = .white
-            headerView.addSubview(label)
+        
+            let index = groupByCategory.index(groupByCategory.startIndex, offsetBy: section)
+            label.text = longIntToDateString(longInt: groupByCategory[index].key.description)
+            label.font = .boldSystemFont(ofSize: 16)
             
+            label.textColor =  UIColor(hexString: "1C1C1C")
+            headerView.addSubview(label)
+            label.centerY(inView: headerView)
             return headerView
         }
   
@@ -873,6 +924,21 @@ extension ProductViewController{
     }
     
     
+    func longIntToDateString(longInt: String) -> String?{
+        
+        let date = Date(timeIntervalSince1970: TimeInterval(Int(longInt)!/1000) )
+            let dateFormatter = DateFormatter()
+            dateFormatter.timeStyle = DateFormatter.Style.none//Set time style
+            dateFormatter.dateStyle = DateFormatter.Style.long //Set date style
+            dateFormatter.timeZone = .current
+            dateFormatter.locale = Locale(identifier: "ru_RU")
+            let localDate = dateFormatter.string(from: date)
+            print(localDate)
+        
+        
+        
+        return localDate
+    }
     func getFastPaymentContractList(_ completion: @escaping (_ model: [FastPaymentContractFindListDatum]? ,_ error: String?) -> Void) {
         NetworkManager<FastPaymentContractFindListDecodableModel>.addRequest(.fastPaymentContractFindList, [:], [:]) { model, error in
             if error != nil {

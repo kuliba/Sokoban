@@ -105,6 +105,14 @@ extension UIViewController {
                                      action: #selector(onClose))
         navigationItem.rightBarButtonItem = button
     }
+    func addCloseButton_3() {
+        let button = UIBarButtonItem(image: UIImage(systemName: "back_button"),
+                                     landscapeImagePhone: nil,
+                                     style: .plain,
+                                     target: self,
+                                     action: #selector(onClose))
+        navigationItem.rightBarButtonItem = button
+    }
     
     @objc func onClose(){
         self.dismiss(animated: true, completion: nil)

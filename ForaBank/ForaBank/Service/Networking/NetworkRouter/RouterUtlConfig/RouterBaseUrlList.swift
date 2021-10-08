@@ -122,7 +122,7 @@ enum RouterBaseUrlList: String {
     
     case getSessionTimeout          = "/getSessionTimeout"
     
-    case getAccountStatement        = "/rest /getAccountStatement"
+    case getAccountStatement        = "/rest/getAccountStatement"
     
     case getLatestMobilePayments    = "/rest/getLatestMobilePayments"
     

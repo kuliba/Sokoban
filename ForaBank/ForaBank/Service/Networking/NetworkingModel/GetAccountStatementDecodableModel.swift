@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - GetAccountStatementDecodableModel
-struct GetAccountStatementDecodableModel: Codable {
+struct GetAccountStatementDecodableModel: Codable, NetworkModelProtocol{
     let data: [GetAccountStatementDatum]?
     let errorMessage: String?
     let statusCode: Int?
@@ -57,20 +57,22 @@ extension GetAccountStatementDecodableModel {
 struct GetAccountStatementDatum: Codable {
     let mcc, accountID: Int?
     let accountNumber: String?
-    let amount: Int?
+    let amount: Float?
     let comment: String?
     let currencyCodeNumeric: Int?
-    let date: String?
+    let date: Int?
     let documentID: Int?
     let groupName, md5Hash, merchantName, merchantNameRus: String?
-    let name, operationType, svgImage, tranDate: String?
+    let name, operationType, svgImage: String?
+    let tranDate: Int?
     let type: String?
-
+    var dateFormatting: String?
+    
     enum CodingKeys: String, CodingKey {
         case mcc = "MCC"
         case accountID, accountNumber, amount, comment, currencyCodeNumeric, date, documentID, groupName
         case md5Hash = "md5hash"
-        case merchantName, merchantNameRus, name, operationType, svgImage, tranDate, type
+        case merchantName, merchantNameRus, name, operationType, svgImage, tranDate, type, dateFormatting
     }
 }
 
@@ -96,10 +98,10 @@ extension GetAccountStatementDatum {
         mcc: Int?? = nil,
         accountID: Int?? = nil,
         accountNumber: String?? = nil,
-        amount: Int?? = nil,
+        amount: Float?? = nil,
         comment: String?? = nil,
         currencyCodeNumeric: Int?? = nil,
-        date: String?? = nil,
+        date: Int?? = nil,
         documentID: Int?? = nil,
         groupName: String?? = nil,
         md5Hash: String?? = nil,
@@ -108,8 +110,9 @@ extension GetAccountStatementDatum {
         name: String?? = nil,
         operationType: String?? = nil,
         svgImage: String?? = nil,
-        tranDate: String?? = nil,
-        type: String?? = nil
+        tranDate: Int?? = nil,
+        type: String?? = nil,
+        dateFormatting: String?? = nil
     ) -> GetAccountStatementDatum {
         return GetAccountStatementDatum(
             mcc: mcc ?? self.mcc,
@@ -128,7 +131,8 @@ extension GetAccountStatementDatum {
             operationType: operationType ?? self.operationType,
             svgImage: svgImage ?? self.svgImage,
             tranDate: tranDate ?? self.tranDate,
-            type: type ?? self.type
+            type: type ?? self.type,
+            dateFormatting: dateFormatting ?? self.dateFormatting
         )
     }
 

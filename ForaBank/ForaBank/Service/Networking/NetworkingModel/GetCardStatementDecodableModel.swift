@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - GetCardStatementDecodableModel
-struct GetCardStatementDecodableModel: Codable {
+struct GetCardStatementDecodableModel: Codable, NetworkModelProtocol {
     let data: [GetCardStatementDatum]?
     let errorMessage: String?
     let statusCode: Int?
@@ -57,20 +57,22 @@ extension GetCardStatementDecodableModel {
 struct GetCardStatementDatum: Codable {
     let mcc, accountID: Int?
     let accountNumber: String?
-    let amount: Int?
+    let amount: Float?
     let comment: String?
     let currencyCodeNumeric: Int?
-    let date: String?
+    let date: Int?
     let documentID: Int?
     let groupName, md5Hash, merchantName, merchantNameRus: String?
-    let name, operationType, svgImage, tranDate: String?
+    let name, operationType, svgImage: String?
+    var tranDate: Int?
     let type: String?
+    var dateFormatting: String?
 
     enum CodingKeys: String, CodingKey {
         case mcc = "MCC"
         case accountID, accountNumber, amount, comment, currencyCodeNumeric, date, documentID, groupName
         case md5Hash = "md5hash"
-        case merchantName, merchantNameRus, name, operationType, svgImage, tranDate, type
+        case merchantName, merchantNameRus, name, operationType, svgImage, tranDate, type, dateFormatting
     }
 }
 
@@ -96,10 +98,10 @@ extension GetCardStatementDatum {
         mcc: Int?? = nil,
         accountID: Int?? = nil,
         accountNumber: String?? = nil,
-        amount: Int?? = nil,
+        amount: Float?? = nil,
         comment: String?? = nil,
         currencyCodeNumeric: Int?? = nil,
-        date: String?? = nil,
+        date: Int?? = nil,
         documentID: Int?? = nil,
         groupName: String?? = nil,
         md5Hash: String?? = nil,
@@ -108,8 +110,9 @@ extension GetCardStatementDatum {
         name: String?? = nil,
         operationType: String?? = nil,
         svgImage: String?? = nil,
-        tranDate: String?? = nil,
-        type: String?? = nil
+        tranDate: Int?? = nil,
+        type: String?? = nil,
+        dateFormatting: String?? = nil
     ) -> GetCardStatementDatum {
         return GetCardStatementDatum(
             mcc: mcc ?? self.mcc,
@@ -128,7 +131,8 @@ extension GetCardStatementDatum {
             operationType: operationType ?? self.operationType,
             svgImage: svgImage ?? self.svgImage,
             tranDate: tranDate ?? self.tranDate,
-            type: type ?? self.type
+            type: type ?? self.type,
+            dateFormatting: dateFormatting ?? self.dateFormatting
         )
     }
 
