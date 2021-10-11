@@ -274,11 +274,11 @@ class MainViewController: UIViewController {
                 self.dataUSD = lastPaymentsList
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-                DispatchQueue.main.async {
-                    if model.errorMessage == "Пользователь не авторизован"{
-                        AppLocker.present(with: .validate)
-                    }
-                }
+//                DispatchQueue.main.async {
+//                    if model.errorMessage == "Пользователь не авторизован"{
+//                        AppLocker.present(with: .validate)
+//                    }
+//                }
             }
         }
         
@@ -296,11 +296,11 @@ class MainViewController: UIViewController {
                 self.dataEuro = lastPaymentsList
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-                DispatchQueue.main.async {
-                    if model.errorMessage == "Пользователь не авторизован"{
-                        AppLocker.present(with: .validate)
-                    }
-                }
+//                DispatchQueue.main.async {
+//                    if model.errorMessage == "Пользователь не авторизован"{
+//                        AppLocker.present(with: .validate)
+//                    }
+//                }
             }
         }
     }

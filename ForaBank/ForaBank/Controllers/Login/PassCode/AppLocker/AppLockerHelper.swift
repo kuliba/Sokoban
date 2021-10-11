@@ -10,7 +10,7 @@ import RealmSwift
 
 struct AppLockerHelper {
     
-    static func goVC(_ mode: ALMode, _ distanceTime: Int, _ reNewSessionTimeStamp: String) {
+    static func goVC(_ mode: ALMode) {
         guard let vc = UIApplication.getTopViewController() else {return}
         
         DispatchQueue.main.async {
@@ -19,30 +19,15 @@ struct AppLockerHelper {
             options.onSuccessfulDismiss = { (mode: ALMode?) in
                 DispatchQueue.main.async {
                     if mode != nil {
-                        let currency = GetSessionTimeout()
-                        currency.timeDistance = distanceTime
-                        
-                        let date = Date()
-                        let dateFormatter = DateFormatter()
-                        dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
-                        let time = dateFormatter.string(from: date)
-                        // Сохраняем текущее время
-                        currency.currentTimeStamp = time
-                        currency.reNewSessionTimeStamp = reNewSessionTimeStamp
-                        
-                        /// Сохраняем в REALM
                         let realm = try? Realm()
-                        do {
-                            let b = realm?.objects(GetSessionTimeout.self)
-                            realm?.beginWrite()
-                            realm?.delete(b!)
-                            realm?.add(currency)
-                            try realm?.commitWrite()
-                            guard let vcLoker = UIApplication.getTopViewController() else {return}
-                            vcLoker.navigationController?.popViewController(animated: true)
-                        } catch {
-                            print(error.localizedDescription)
+                        
+                        try? realm?.write {
+                            let counter = realm?.objects(GetSessionTimeout.self)
+                            counter?.first?.mustCheckTimeOut = true
+                            realm?.add(counter!)
                         }
+                        guard let vc_1 = UIApplication.getTopViewController() else {return}
+                        vc_1.dismiss(animated: true, completion: nil)
                     } else {
                         print("User Cancelled")
                     }

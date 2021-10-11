@@ -21,6 +21,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     static var shared: AppDelegate { return UIApplication.shared.delegate as! AppDelegate }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        /// Запуск таймера
+        let timer = BackgroundTimer()
+        timer.repeatTimer()
 
         /// FirebaseApp configure
         var filePath = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist")!
@@ -39,8 +43,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Net Detect
         NetStatus.shared.startMonitoring()
+        
+        initRealmTimerParameters()
 
         return true
+    }
+    
+    func initRealmTimerParameters() {
+        let realm = try? Realm()
+        // Сохраняем текущее время
+        let updatingTimeObject = GetSessionTimeout()
+
+        updatingTimeObject.maxTimeOut = StaticDefaultTimeOut.staticDefaultTimeOut
+        updatingTimeObject.mustCheckTimeOut = true
+        
+        do {
+            let model = realm?.objects(GetSessionTimeout.self)
+            realm?.beginWrite()
+            realm?.delete(model!)
+            realm?.add(updatingTimeObject)
+            try realm?.commitWrite()
+            print("!!!",realm?.configuration.fileURL?.absoluteString ?? "")
+        } catch {
+            print(error.localizedDescription)
+        }
+        
     }
 
     

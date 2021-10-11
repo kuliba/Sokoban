@@ -194,24 +194,24 @@ public class AppLocker: UIViewController {
     }
     
     private func validateModeAction() {
-//        if pin == savedPin {
-//            guard let pin = savedPin else { return }
-            login(with: pin, type: .pin) { error in
-                if let error = error {
-                    print(error)
-                } else {
-                    self.onSuccessfulDismiss?(self.mode)
-                }
+        //        if pin == savedPin {
+        //            guard let pin = savedPin else { return }
+        login(with: pin, type: .pin) { error in
+            if let error = error {
+                print(error)
+            } else {
+                self.onSuccessfulDismiss?(self.mode)
             }
-//        } else {
-//            onFailedAttempt?(mode)
-//            incorrectPinAnimation()
-//        }
+        }
+        //        } else {
+        //            onFailedAttempt?(mode)
+        //            incorrectPinAnimation()
+        //        }
     }
     
     private func removePin() {
         try? AppLocker.valet.removeObject(forKey: ALConstants.kPincode)
-            self.onSuccessfulDismiss?(self.mode)
+        self.onSuccessfulDismiss?(self.mode)
     }
     
     private func confirmPin() {
@@ -219,7 +219,7 @@ public class AppLocker: UIViewController {
             pinIndicators.forEach { pinIndicator in
                 pinIndicator.layer.cornerRadius = 6
                 pinIndicator.backgroundColor = UIColor(red: 0.133, green: 0.757, blue: 0.514, alpha: 1)
-                }
+            }
             savedPin = pin
             switch mode {
             case .create:
@@ -273,7 +273,7 @@ public class AppLocker: UIViewController {
     fileprivate func checkSensors() {
         if case .validate = mode {} else { return }
         guard let pin = try? AppLocker.valet.string(forKey: ALConstants.kPincode) else { return }
-
+        
         var policy: LAPolicy = .deviceOwnerAuthenticationWithBiometrics // iOS 8+ users with Biometric and Custom (Fallback button) verification
         
         // Depending the iOS version we'll need to choose the policy we are able to use
@@ -295,9 +295,9 @@ public class AppLocker: UIViewController {
                     } else {
                         DispatchQueue.main.async { [weak self] in
                             guard let `self` = self else { return }
-//                            self.dismiss(animated: true) {
-                                self.onSuccessfulDismiss?(self.mode)
-//                            }
+                            //                            self.dismiss(animated: true) {
+                            self.onSuccessfulDismiss?(self.mode)
+                            //                            }
                         }
                     }
                 }
@@ -313,8 +313,8 @@ public class AppLocker: UIViewController {
             drawing(isNeedClear: true)
         case ALConstants.button.cancel.rawValue:
             exit()
-//        self.onSuccessfulDismiss?(nil)
-    
+            //        self.onSuccessfulDismiss?(nil)
+            
         default:
             drawing(isNeedClear: false, tag: sender.tag)
         }
@@ -322,20 +322,20 @@ public class AppLocker: UIViewController {
     
     func exit() {
         clearView()
-//            dismiss(animated: true) {
+        //            dismiss(animated: true) {
         
         //TODO: Подменить root Controller убрав present
         UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
         let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
         navVC.modalPresentationStyle = .fullScreen
         self.present(navVC, animated: true, completion: nil)
-    
+        
     }
     
 }
 
 extension AppLocker {
- 
+    
     
     //MARK: - API
     func registerMyPin(with code: String, completion: @escaping (_ error: String?) ->() ) {
@@ -349,125 +349,135 @@ extension AppLocker {
     func login(with code: String, type: BiometricType, completion: @escaping (_ error: String?) ->() ) {
         showActivity()
         DispatchQueue.main.async {
-        AppDelegate.shared.getCSRF { error in
-            if error != nil {
-                print("DEBUG: Error getCSRF: ", error!)
-            }
-        
-        
-        var serverDeviceGUID = UserDefaults.standard.object(forKey: "serverDeviceGUID")
-        
-        func encript(string: String) -> String?{
-            do {
-                let aes = try AES(keyString: KeyFromServer.secretKey ?? Data())
-
-                let stringToEncrypt: String = "\(string)"
+            AppDelegate.shared.getCSRF { error in
+                if error != nil {
+                    print("DEBUG: Error getCSRF: ", error!)
+                }
                 
-                print("String to encrypt:\t\t\t\(stringToEncrypt)")
-
-                let encryptedData: Data = try aes.encrypt(stringToEncrypt)
-                print("String encrypted (base64):\t\(encryptedData.base64EncodedString())")
                 
-                let decryptedData: String = try aes.decrypt(encryptedData)
-                print("String decrypted:\t\t\t\(decryptedData)")
-                return encryptedData.base64EncodedString()
-            } catch {
-                print("Something went wrong: \(error)")
-                return nil
-            }
-        }
-        
-        let data = [
-            "appId": encript(string:"IOS" ),
-            "cryptoVersion": "1.0",
-            "pushDeviceId": encript(string: UIDevice.current.identifierForVendor!.uuidString),
-            "pushFcmToken": encript(string: Messaging.messaging().fcmToken as String? ?? ""),
-            "serverDeviceGUID" : encript(string: serverDeviceGUID as! String),
-            "loginValue": encript(string: code.sha256() ),
-            "type": encript(string: type.rawValue)
-        ] as [String : AnyObject]
-        //        print(data)
-        print("DEBUG: Start login with body: ", data)
-        NetworkManager<LoginDoCodableModel>.addRequest(.login, [:], data) { model, error in
-            if error != nil {
-                guard let error = error else { return }
-                completion(error)
-            } else {
-                guard let statusCode = model?.statusCode else { return }
-                if statusCode == 0 {
-                     
-                    let bodyRegisterPush = [
-                        "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-                        "pushFcmToken": Messaging.messaging().fcmToken as String?
-                    ] as [String : AnyObject]
-                    print("DEBUG: Start registerPushDeviceForUser with body: ", bodyRegisterPush)
-                    NetworkManager<RegisterPushDeviceDecodebleModel>.addRequest(.registerPushDeviceForUser, [:], bodyRegisterPush) { modelPush, error in
-                        if error != nil {
-                            guard let error = error else { return }
-                            self.showAlert(with: "Ошибка", and: error)
-                        }
-                        guard let mPush = modelPush else { return }
-                        if mPush.statusCode == 0 {
-                            print("DEBUG: You are LOGGIN!!!")
-                            DispatchQueue.main.async {
-                                AppDelegate.shared.isAuth = true
-                                
-                                // Обновление времени старта
-                                let currency = GetSessionTimeout()
-                                // TO Do: параметр времени надо брать из REALM
-                                currency.timeDistance = 300
-
-                            let date = Date()
-                            let dateFormatter = DateFormatter()
-                            dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
-                            let time = dateFormatter.string(from: date)
-                                // Сохраняем текущее время
-                                currency.currentTimeStamp = time
-
-                                /// Сохраняем в REALM
-                                let realm = try? Realm()
-                                do {
-                                    let b = realm?.objects(GetSessionTimeout.self)
-                                    realm?.beginWrite()
-                                    realm?.delete(b!)
-                                    realm?.add(currency)
-                                    try realm?.commitWrite()
-
-                                } catch {
-                                    print(error.localizedDescription)
+                var serverDeviceGUID = UserDefaults.standard.object(forKey: "serverDeviceGUID")
+                
+                func encript(string: String) -> String?{
+                    do {
+                        let aes = try AES(keyString: KeyFromServer.secretKey ?? Data())
+                        
+                        let stringToEncrypt: String = "\(string)"
+                        
+                        print("String to encrypt:\t\t\t\(stringToEncrypt)")
+                        
+                        let encryptedData: Data = try aes.encrypt(stringToEncrypt)
+                        print("String encrypted (base64):\t\(encryptedData.base64EncodedString())")
+                        
+                        let decryptedData: String = try aes.decrypt(encryptedData)
+                        print("String decrypted:\t\t\t\(decryptedData)")
+                        return encryptedData.base64EncodedString()
+                    } catch {
+                        print("Something went wrong: \(error)")
+                        return nil
+                    }
+                }
+                
+                let data = [
+                    "appId": encript(string:"IOS" ),
+                    "cryptoVersion": "1.0",
+                    "pushDeviceId": encript(string: UIDevice.current.identifierForVendor!.uuidString),
+                    "pushFcmToken": encript(string: Messaging.messaging().fcmToken as String? ?? ""),
+                    "serverDeviceGUID" : encript(string: serverDeviceGUID as! String),
+                    "loginValue": encript(string: code.sha256() ),
+                    "type": encript(string: type.rawValue)
+                ] as [String : AnyObject]
+                //        print(data)
+                print("DEBUG: Start login with body: ", data)
+                NetworkManager<LoginDoCodableModel>.addRequest(.login, [:], data) { model, error in
+                    if error != nil {
+                        guard let error = error else { return }
+                        completion(error)
+                    } else {
+                        guard let statusCode = model?.statusCode else { return }
+                        if statusCode == 0 {
+                            
+                            let bodyRegisterPush = [
+                                "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
+                                "pushFcmToken": Messaging.messaging().fcmToken as String?
+                            ] as [String : AnyObject]
+                            print("DEBUG: Start registerPushDeviceForUser with body: ", bodyRegisterPush)
+                            NetworkManager<RegisterPushDeviceDecodebleModel>.addRequest(.registerPushDeviceForUser, [:], bodyRegisterPush) { modelPush, error in
+                                if error != nil {
+                                    guard let error = error else { return }
+                                    self.showAlert(with: "Ошибка", and: error)
                                 }
-                                
-                                
+                                guard let mPush = modelPush else { return }
+                                if mPush.statusCode == 0 {
+                                    print("DEBUG: You are LOGGIN!!!")
+                                    DispatchQueue.main.async {
+                                        AppDelegate.shared.isAuth = true
+                                        
+                                        // Обновление времени старта
+                                        let realm = try? Realm()
+                                        let timeOutObjects = self.returnRealmModel()
+                                        
+                                        /// Сохраняем в REALM
+                                        do {
+                                            let b = realm?.objects(GetSessionTimeout.self)
+                                            realm?.beginWrite()
+                                            realm?.delete(b!)
+                                            realm?.add(timeOutObjects)
+                                            try realm?.commitWrite()
+                                            
+                                        } catch {
+                                            print(error.localizedDescription)
+                                        }
+                                        //
+                                        
+                                    }
+                                    self.dismissActivity()
+                                    completion(nil)
+                                }
                             }
-                            self.dismissActivity()
-                            completion(nil)
+                        } else if model?.statusCode == 102 {
+                            DispatchQueue.main.async {
+                                self.dismissActivity()
+                                self.onFailedAttempt?(self.mode)
+                                self.incorrectPinAnimation()
+                                if let m = model?.data?.entryCount {
+                                    self.entryCount = m
+                                    self.showAlert(with: "Ошибка", and: "\(model?.errorMessage ?? "")\n Количество попыток \(self.entryCount)")
+                                }
+                            }
+                        } else if model?.statusCode == 101 {
+                            DispatchQueue.main.async {
+                                self.dismissActivity()
+                                if (model?.data?.entryCountError) != nil {
+                                    self.exit()
+                                }
+                            }
+                        } else {
+                            guard let error = model?.errorMessage else { return }
+                            completion(error)
                         }
                     }
-                } else if model?.statusCode == 102 {
-                    DispatchQueue.main.async {
-                        self.dismissActivity()
-                        self.onFailedAttempt?(self.mode)
-                        self.incorrectPinAnimation()
-                        if let m = model?.data?.entryCount {
-                            self.entryCount = m
-                            self.showAlert(with: "Ошибка", and: "\(model?.errorMessage ?? "")\n Количество попыток \(self.entryCount)")
-                        }
-                    }
-                } else if model?.statusCode == 101 {
-                    DispatchQueue.main.async {
-                        self.dismissActivity()
-                        if (model?.data?.entryCountError) != nil {
-                            self.exit()
-                        }
-                    }
-                } else {
-                    guard let error = model?.errorMessage else { return }
-                    completion(error)
                 }
             }
         }
-        }
-        }
+    }
+    
+    func returnRealmModel() -> GetSessionTimeout {
+        let realm = try? Realm()
+        guard let timeObject = realm?.objects(GetSessionTimeout.self).first else {return GetSessionTimeout()}
+        let lastActionTimestamp = timeObject.lastActionTimestamp
+        let maxTimeOut = timeObject.maxTimeOut
+        let mustCheckTimeOut = timeObject.mustCheckTimeOut
+        
+        // Сохраняем текущее время
+        let updatingTimeObject = GetSessionTimeout()
+        
+        updatingTimeObject.currentTimeStamp = Date().localDate()
+        updatingTimeObject.lastActionTimestamp = Date().localDate()
+        updatingTimeObject.renewSessionTimeStamp = Date().localDate()
+        updatingTimeObject.mustCheckTimeOut = true
+        
+        return updatingTimeObject
+        
     }
     
     func biometricType() -> BiometricType {
@@ -507,10 +517,10 @@ public extension AppLocker {
     class func present(with mode: ALMode, and config: ALOptions? = nil, over viewController: UIViewController? = nil) {
         let vc = viewController ?? UIApplication.shared.keyWindow?.rootViewController
         guard let root = vc,
-            
-            let locker = Bundle(for: self.classForCoder()).loadNibNamed(ALConstants.nibName, owner: self, options: nil)?.first as? AppLocker else {
-                return
-        }
+              
+                let locker = Bundle(for: self.classForCoder()).loadNibNamed(ALConstants.nibName, owner: self, options: nil)?.first as? AppLocker else {
+                    return
+                }
         locker.messageLabel.text = config?.title ?? ""
         locker.submessageLabel.text = config?.subtitle ?? ""
         locker.view.backgroundColor = config?.color ?? .white
@@ -527,17 +537,18 @@ public extension AppLocker {
         } else {
             locker.photoImageView.isHidden = true
         }
-        root.navigationController?.pushViewController(locker, animated: true)
-//        root.present(locker, animated: true, completion: nil)
+//        root.navigationController?.pushViewController(locker, animated: true)
+        root.modalPresentationStyle = .fullScreen
+          root.present(locker, animated: true, completion: nil)
     }
     
     class func rootViewController(with mode: ALMode, and config: ALOptions? = nil, window: UIWindow?) {
-//        let vc = viewController ?? UIApplication.shared.keyWindow?.rootViewController
+        //        let vc = viewController ?? UIApplication.shared.keyWindow?.rootViewController
         guard //let root = vc,
             
             let locker = Bundle(for: self.classForCoder()).loadNibNamed(ALConstants.nibName, owner: self, options: nil)?.first as? AppLocker  else {
                 return
-        }
+            }
         locker.messageLabel.text = config?.title ?? ""
         locker.submessageLabel.text = config?.subtitle ?? ""
         locker.view.backgroundColor = config?.color ?? .white
@@ -556,6 +567,6 @@ public extension AppLocker {
         }
         window?.rootViewController = locker //MainTabBarViewController()
         window?.makeKeyAndVisible()
-//        root.navigationController?.pushViewController(locker, animated: true)
+        //        root.navigationController?.pushViewController(locker, animated: true)
     }
 }

@@ -565,11 +565,11 @@ class PaymentByPhoneViewController: UIViewController {
                     self?.dismissActivity()
                     self?.showAlert(with: "Ошибка", and: data.errorMessage ?? "")
                     print("DEBUG: Error: ", data.errorMessage ?? "")
-                    DispatchQueue.main.async {
-                    if data.errorMessage == "Пользователь не авторизован"{
-                        AppLocker.present(with: .validate)
-                    }
-                    }
+//                    DispatchQueue.main.async {
+//                    if data.errorMessage == "Пользователь не авторизован"{
+//                        AppLocker.present(with: .validate)
+//                    }
+//                    }
                     self?.showAlert(with: "Ошибка", and: data.errorMessage ?? "")
                     completion(
                         data.errorMessage)
@@ -682,11 +682,11 @@ class PaymentByPhoneViewController: UIViewController {
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
                 self?.showAlert(with: "Ошибка", and: error!)
-                DispatchQueue.main.async {
-                if model.errorMessage == "Пользователь не авторизован"{
-                    AppLocker.present(with: .validate)
-                }
-                }
+//                DispatchQueue.main.async {
+//                if model.errorMessage == "Пользователь не авторизован"{
+//                    AppLocker.present(with: .validate)
+//                }
+//                }
                 self?.dismissActivity()
                 self?.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
                 completion(model.errorMessage)
@@ -759,9 +759,9 @@ class PaymentByPhoneViewController: UIViewController {
             } else {
                 self?.dismissActivity()
                 self?.showAlert(with: "Ошибка", and: data.errorMessage ?? "")
-                if data.errorMessage  == "Пользователь не авторизован"{
-                    AppLocker.present(with: .validate)
-                }
+//                if data.errorMessage  == "Пользователь не авторизован"{
+//                    AppLocker.present(with: .validate)
+//                }
                 print("DEBUG: Error: ", data.errorMessage ?? "")
                 
             }

@@ -269,7 +269,7 @@ class CodeVerificationViewController: UIViewController {
             print("Failed to \(String(describing: mode))")
         }
         // LOGIN DO
-        AppLocker.present(with: mode, and: options, over: self)
+       // AppLocker.present(with: mode, and: options, over: self)
     }
 
 }
