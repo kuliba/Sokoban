@@ -62,8 +62,9 @@ func string(from image: UIImage) -> String {
             }
             qrAsString += indeedMessageString
         }
-
         return qrAsString
     }
+    
+    
 
 }

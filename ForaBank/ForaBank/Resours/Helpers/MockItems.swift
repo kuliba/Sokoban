@@ -295,12 +295,6 @@ class MockItems {
                           iconName: "promoBanner2",
                           controllerName: "https://www.forabank.ru/private/deposits/",
                         description: "Что то"),
-        
-
-            PaymentsModel(id: 5, name: "Номер карты",
-                          iconName: "PaymentsIconCarancy",
-                          controllerName: "https://www.forabank.ru/private/credits/",
-                          description: "Что то"),
             
             PaymentsModel(id: 5, name: "БИК",
                           iconName: "PaymentsIconCarancy",
@@ -320,6 +314,18 @@ class MockItems {
                           iconName: "PaymentsIconCarancy",
                           controllerName: "https://www.forabank.ru/private/strakhovanie/",
                           description: "Что то"),
+            PaymentsModel(id: 5, name: "Держатель карты",
+                          iconName: "PaymentsIconCarancy",
+                          controllerName: "https://www.forabank.ru/private/strakhovanie/",
+                          description: "Что то"),
+            PaymentsModel(id: 5, name: "Номер карты",
+                          iconName: "PaymentsIconCarancy",
+                          controllerName: "https://www.forabank.ru/private/strakhovanie/",
+                          description: "Что то"),
+            PaymentsModel(id: 5, name: "Карта действует до",
+                          iconName: "PaymentsIconCarancy",
+                          controllerName: "https://www.forabank.ru/private/strakhovanie/",
+                          description: "Что то")
         ]
     }
     

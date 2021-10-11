@@ -56,7 +56,7 @@ extension GetProductDetailsDecodableModel {
 // MARK: - GetProductDetailsDataClass
 struct GetProductDetailsDataClass: Codable {
     let payeeName, cardNumber, accountNumber, bic: String?
-    let corrAccount, inn, kpp: String?
+    let corrAccount, inn, kpp, maskCardNumber, expireDate, holderName: String?
 }
 
 // MARK: DataClass convenience initializers and mutators
@@ -84,7 +84,10 @@ extension GetProductDetailsDataClass {
         bic: String?? = nil,
         corrAccount: String?? = nil,
         inn: String?? = nil,
-        kpp: String?? = nil
+        kpp: String?? = nil,
+        maskCardNumber: String? = nil,
+        expireDate: String? = nil,
+        holderName: String? = nil
     ) -> GetProductDetailsDataClass {
         return GetProductDetailsDataClass(
             payeeName: payeeName ?? self.payeeName,
@@ -93,7 +96,11 @@ extension GetProductDetailsDataClass {
             bic: bic ?? self.bic,
             corrAccount: corrAccount ?? self.corrAccount,
             inn: inn ?? self.inn,
-            kpp: kpp ?? self.kpp
+            kpp: kpp ?? self.kpp,
+            maskCardNumber: maskCardNumber ?? self.maskCardNumber,
+            expireDate: expireDate ?? self.expireDate,
+            holderName: holderName ?? self.holderName
+            
         )
     }
 
