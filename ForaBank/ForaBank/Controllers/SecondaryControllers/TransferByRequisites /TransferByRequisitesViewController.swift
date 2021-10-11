@@ -556,11 +556,11 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
 //                }
             } else {
                 self.dismissActivity()
-                DispatchQueue.main.async {
-                if model.errorMessage == "Пользователь не авторизован"{
-                    AppLocker.present(with: .validate)
-                }
-                }
+//                DispatchQueue.main.async {
+//                if model.errorMessage == "Пользователь не авторизован"{
+//                    AppLocker.present(with: .validate)
+//                }
+//                }
                 print("DEBUG: Error: ", model.errorMessage ?? "")
             }
         }
@@ -695,13 +695,13 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                 } else {
     //                self.dismissActivity()
                     print("DEBUG: Error: ", model.errorMessage ?? "")
-                    DispatchQueue.main.async {
-                    if model.errorMessage == "Пользователь не авторизован"{
-                        AppLocker.present(with: .validate)
-                    }
+//                    DispatchQueue.main.async {
+//                    if model.errorMessage == "Пользователь не авторизован"{
+//                        AppLocker.present(with: .validate)
+//                    }
                         self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
 
-                    }
+//                    }
                 }
                 
             }
@@ -759,11 +759,11 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                 }
             } else {
                 self.dismissActivity()
-                DispatchQueue.main.async {
-                if model.errorMessage == "Пользователь не авторизован"{
-                    AppLocker.present(with: .validate)
-                }
-                }
+//                DispatchQueue.main.async {
+//                if model.errorMessage == "Пользователь не авторизован"{
+//                    AppLocker.present(with: .validate)
+//                }
+//                }
                 self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
                 print("DEBUG: Error: ", model.errorMessage ?? "")
             }

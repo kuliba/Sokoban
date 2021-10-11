@@ -105,6 +105,11 @@
 		0BA09E2E26ADEBF50065D623 /* GHKCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0BA09E2D26ADEBF50065D623 /* GHKCell.xib */; };
 		0BA09E3026ADEC300065D623 /* GHKCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA09E2F26ADEC300065D623 /* GHKCell.swift */; };
 		0BA09E3426B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA09E3326B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift */; };
+		0BA14E12270DCF750098E422 /* BackgroundTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA14E11270DCF750098E422 /* BackgroundTimer.swift */; };
+		0BA14E14270DD0BF0098E422 /* BackgroundTimerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA14E13270DD0BF0098E422 /* BackgroundTimerController.swift */; };
+		0BA14E16270DD1940098E422 /* BackgoundTimerInit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA14E15270DD1940098E422 /* BackgoundTimerInit.swift */; };
+		0BA14E18270DF8F60098E422 /* AppLockerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA14E17270DF8F60098E422 /* AppLockerHelper.swift */; };
+		0BA14E1A2712597D0098E422 /* StaticDefaultTimeOut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA14E192712597D0098E422 /* StaticDefaultTimeOut.swift */; };
 		0BA251ED26C266A400AD087A /* CreateServiceTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA251EC26C266A400AD087A /* CreateServiceTransferDecodableModel.swift */; };
 		0BA251EF26C26AE700AD087A /* AntiFraudDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA251EE26C26AE700AD087A /* AntiFraudDecodableModel.swift */; };
 		0BA251F126C26BE200AD087A /* СreateMe2MePullTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA251F026C26BE200AD087A /* СreateMe2MePullTransferDecodableModel.swift */; };
@@ -529,6 +534,11 @@
 		0BA09E2D26ADEBF50065D623 /* GHKCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GHKCell.xib; sourceTree = "<group>"; };
 		0BA09E2F26ADEC300065D623 /* GHKCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GHKCell.swift; sourceTree = "<group>"; };
 		0BA09E3326B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetFullBankInfoListDecodableModel.swift; sourceTree = "<group>"; };
+		0BA14E11270DCF750098E422 /* BackgroundTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTimer.swift; sourceTree = "<group>"; };
+		0BA14E13270DD0BF0098E422 /* BackgroundTimerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTimerController.swift; sourceTree = "<group>"; };
+		0BA14E15270DD1940098E422 /* BackgoundTimerInit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgoundTimerInit.swift; sourceTree = "<group>"; };
+		0BA14E17270DF8F60098E422 /* AppLockerHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockerHelper.swift; sourceTree = "<group>"; };
+		0BA14E192712597D0098E422 /* StaticDefaultTimeOut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticDefaultTimeOut.swift; sourceTree = "<group>"; };
 		0BA251EC26C266A400AD087A /* CreateServiceTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateServiceTransferDecodableModel.swift; sourceTree = "<group>"; };
 		0BA251EE26C26AE700AD087A /* AntiFraudDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntiFraudDecodableModel.swift; sourceTree = "<group>"; };
 		0BA251F026C26BE200AD087A /* СreateMe2MePullTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "СreateMe2MePullTransferDecodableModel.swift"; sourceTree = "<group>"; };
@@ -1115,6 +1125,17 @@
 				0B22AE9F26CDA97100B11E7F /* GKHInputViewController */,
 			);
 			path = GKHController;
+			sourceTree = "<group>";
+		};
+		0BA14E10270DCF5A0098E422 /* BackgroundTimer */ = {
+			isa = PBXGroup;
+			children = (
+				0BA14E11270DCF750098E422 /* BackgroundTimer.swift */,
+				0BA14E13270DD0BF0098E422 /* BackgroundTimerController.swift */,
+				0BA14E15270DD1940098E422 /* BackgoundTimerInit.swift */,
+				0BA14E192712597D0098E422 /* StaticDefaultTimeOut.swift */,
+			);
+			path = BackgroundTimer;
 			sourceTree = "<group>";
 		};
 		0BAC674226D418C4005AAD91 /* GKHCell */ = {
@@ -1895,6 +1916,7 @@
 		ED4FC5FE266B91360092B4AB /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				0BA14E10270DCF5A0098E422 /* BackgroundTimer */,
 				0BB24AB826F2883000DDA4F6 /* REALMHelper */,
 				0BB24AAB26F0051700DDA4F6 /* DownloadQueue */,
 				0BB8817126D6C95200015E27 /* REALMModels */,
@@ -1967,6 +1989,7 @@
 			children = (
 				ED4FC616266EA42E0092B4AB /* AppLocker.xib */,
 				ED4FC617266EA42E0092B4AB /* AppLocker.swift */,
+				0BA14E17270DF8F60098E422 /* AppLockerHelper.swift */,
 			);
 			path = AppLocker;
 			sourceTree = "<group>";
@@ -2827,7 +2850,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 1250;
+				LastUpgradeCheck = 1300;
 				TargetAttributes = {
 					EDB1437C265FDA410028EF5A = {
 						CreatedOnToolsVersion = 12.5;
@@ -3010,6 +3033,7 @@
 				0B95C40326B6CA3700AA57E6 /* CustomPopUpWithRateView.swift in Sources */,
 				68C8D57426F1FDB60076246B /* LargeCardCell.swift in Sources */,
 				687FB23326E9E551004A479F /* PaymentMainCell.swift in Sources */,
+				0BA14E1A2712597D0098E422 /* StaticDefaultTimeOut.swift in Sources */,
 				ED0B4894267B50F50037EA06 /* Int.swift in Sources */,
 				0B283FBF26FBCA0A00B5E925 /* Router.swift in Sources */,
 				0B22AEAC26CE8DD100B11E7F /* GKHDataSorted.swift in Sources */,
@@ -3194,6 +3218,7 @@
 				68FFA565269464FF002DADFA /* TransferByRequisitesConfirmViewController.swift in Sources */,
 				ED353B6A26FB5ADA00F17F00 /* SetUserSettingDecodableModel.swift in Sources */,
 				0BB24A9226EFC6AB00DDA4F6 /* GetProductTemplateList.swift in Sources */,
+				0BA14E18270DF8F60098E422 /* AppLockerHelper.swift in Sources */,
 				0BA09E3426B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift in Sources */,
 				ED84994B26A6FEE3005205C6 /* CountryListCell.swift in Sources */,
 				ED39EC93268C9AE900158E46 /* NewCardCell.swift in Sources */,
@@ -3214,6 +3239,7 @@
 				ED84994E26A85A65005205C6 /* SettingsViewController.swift in Sources */,
 				ED84995726A8831E005205C6 /* EPExtensions.swift in Sources */,
 				EDF68218266F9EC800FD5C07 /* RouterManager.swift in Sources */,
+				0BA14E14270DD0BF0098E422 /* BackgroundTimerController.swift in Sources */,
 				0B283FC32701016100B5E925 /* CreateMobileTransferDecodableModel.swift in Sources */,
 				0B66E8E326CC62DF00FD735D /* NetStatus.swift in Sources */,
 				ED84994826A6FD97005205C6 /* CountryListView.swift in Sources */,
@@ -3250,6 +3276,7 @@
 				0B8BE0952670D4A300E96CAA /* GetCodeDecodebleModel.swift in Sources */,
 				ED60A1E326DC1600000F3208 /* ChangeClientConsentMe2MePullDecodableModel.swift in Sources */,
 				0B66E8DE26CC5F8900FD735D /* QRViewController.swift in Sources */,
+				0BA14E12270DCF750098E422 /* BackgroundTimer.swift in Sources */,
 				0B3FE8E62706435C00CBDB4E /* DateExtensions.swift in Sources */,
 				0B797C9226E6ABC100589DBF /* GetBankList.swift in Sources */,
 				0BDE453D26E5442500B64A0A /* GetPaymentSystemSaved.swift in Sources */,
@@ -3282,6 +3309,7 @@
 				ED84994426A6F647005205C6 /* ChooseCountryHeaderCell.swift in Sources */,
 				EDBEEA1A26B1AEA200265683 /* FullBankInfoListViewModel.swift in Sources */,
 				0B7A18C92685BF700007CC75 /* GetPaymentSystemListDecodableModel.swift in Sources */,
+				0BA14E16270DD1940098E422 /* BackgoundTimerInit.swift in Sources */,
 				0BD1CAA826E6D5D600CFE993 /* CreatePermanentConsentMe2MePullDecodableModel.swift in Sources */,
 				EDF68212266F9EC800FD5C07 /* RequestMethod.swift in Sources */,
 				EDF68214266F9EC800FD5C07 /* URLSchemeType.swift in Sources */,
@@ -3356,6 +3384,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -3418,6 +3447,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -3478,7 +3508,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
@@ -3487,7 +3517,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 7.3;
+				MARKETING_VERSION = 7.4;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3504,7 +3534,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -3512,7 +3542,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 7.3;
+				MARKETING_VERSION = 7.4;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

@@ -15,7 +15,8 @@ class HistoryTableViewCell: UITableViewCell {
     @IBOutlet weak var subTitleLabel: UILabel!
     @IBOutlet weak var amountLabel: UILabel!
     
-    var operation: GetCardStatementDataClass?
+    var operation: GetCardStatementDatum?
+    var accountOperation: GetAccountStatementDatum?
     
     
     override func awakeFromNib() {
@@ -24,7 +25,11 @@ class HistoryTableViewCell: UITableViewCell {
     }
     override func layoutSubviews() {
         super.layoutSubviews()
-
+        logoImageView.image = UIImage()
+        logoImageView.isHidden = false
+        logoImageView.layer.masksToBounds = false
+        logoImageView.layer.cornerRadius = logoImageView.frame.height/2
+        logoImageView.clipsToBounds = true
         contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0))
     }
     
@@ -35,17 +40,87 @@ class HistoryTableViewCell: UITableViewCell {
     }
     
     func configure(currency: String){
-        titleLable.text = operation?.comment
-        guard let sum = operation?.amount else {
-            return
+        
+        
+        switch operation?.type {
+        case "OUTSIDE":
+                logoImageView.alpha = 0.3
+                if operation?.merchantNameRus != nil{
+                    titleLable.text = operation?.merchantNameRus
+                } else {
+                    titleLable.text = operation?.merchantName
+                }
+            if operation?.groupName != nil{
+                subTitleLabel.isHidden = false
+                subTitleLabel.text = operation?.groupName
+            } else {
+                subTitleLabel.isHidden = true
+            }
+
+            if operation?.svgImage != nil{
+                logoImageView.image = operation?.svgImage?.convertSVGStringToImage()
+                logoImageView.alpha = 1
+            } else if operation?.operationType == "DEBIT"{
+                logoImageView.backgroundColor = .red
+            } else if operation?.operationType == "CREDIT"{
+                logoImageView.backgroundColor = .green
+
+            }
+            
+            if operation?.operationType == "DEBIT"{
+                amountLabel.textColor = UIColor(hexString: "1C1C1C")
+                amountLabel.text = "-\(Double(operation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
+            } else if operation?.operationType == "CREDIT"{
+                amountLabel.textColor = UIColor(hexString: "22C183")
+                amountLabel.text = "+\(Double(operation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
+            }
+
+        case "INSIDE":
+            logoImageView.alpha = 0.3
+            titleLable.text = operation?.comment
+            guard let sum = operation?.amount else {
+                return
+            }
+            if operation?.operationType == "DEBIT"{
+                amountLabel.textColor = UIColor(hexString: "1C1C1C")
+                logoImageView.backgroundColor = .red
+                amountLabel.text = "-\(Double(sum).currencyFormatter(symbol: currency))"
+            } else if operation?.operationType == "CREDIT" {
+                logoImageView.backgroundColor = .green
+                amountLabel.textColor = UIColor(hexString: "22C183")
+                amountLabel.text = "+\(Double(sum).currencyFormatter(symbol: currency))"
+            }
+        case .none:
+            titleLable.text = operation?.comment
+            guard let sum = operation?.amount else {
+                return
+            }
+            if accountOperation?.operationType == "DEBIT"{
+                amountLabel.textColor = UIColor(hexString: "1C1C1C")
+                logoImageView.backgroundColor = .red
+                amountLabel.text = "-\(Double(sum).currencyFormatter(symbol: currency))"
+            } else {
+                logoImageView.backgroundColor = .green
+                amountLabel.textColor = UIColor(hexString: "22C183")
+                amountLabel.text = "+\(Double(sum).currencyFormatter(symbol: currency))"
+            }
+        case .some(_):
+            titleLable.text = operation?.comment
+            guard let sum = operation?.amount else {
+                return
+            }
+            if accountOperation?.operationType == "DEBIT"{
+                amountLabel.textColor = UIColor(hexString: "1C1C1C")
+                logoImageView.backgroundColor = .red
+                amountLabel.text = "-\(Double(sum).currencyFormatter(symbol: currency))"
+            } else {
+                logoImageView.backgroundColor = .green
+                amountLabel.textColor = UIColor(hexString: "22C183")
+                amountLabel.text = "+\(Double(sum).currencyFormatter(symbol: currency))"
+            }
         }
-        if operation?.operationType == "DEBIT"{
-            amountLabel.textColor = UIColor(hexString: "1C1C1C")
-            amountLabel.text = "-\(sum.currencyFormatter(symbol: currency))"
-        } else {
-            amountLabel.textColor = UIColor(hexString: "22C183")
-            amountLabel.text = "+\(sum.currencyFormatter(symbol: currency))"
-        }
+      
+        
     }
     
 }

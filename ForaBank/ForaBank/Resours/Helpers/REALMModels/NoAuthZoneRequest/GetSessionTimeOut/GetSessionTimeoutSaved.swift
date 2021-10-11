@@ -20,18 +20,14 @@ struct GetSessionTimeoutSaved: DownloadQueueProtocol {
                 guard let statusCode = model?.statusCode else { return }
                 if statusCode == 0 {
                     
-                    guard let model = model else { return }
-                    guard let m = model.data else { return }
+              //      guard let model = model else { return }
+             //       guard let m = model.data else { return }
                     
-                    let currency = GetSessionTimeout()
-                    currency.timeDistance = m
                     
-                    let date = Date()
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
-                    let time = dateFormatter.string(from: date)
-                    // Сохраняем текущее время
-                    currency.currentTimeStamp = time
+                    
+                    let sessionTimeOutParameters = returnRealmModel()
+                    sessionTimeOutParameters.maxTimeOut = StaticDefaultTimeOut.staticDefaultTimeOut
+                    sessionTimeOutParameters.mustCheckTimeOut = true
                     
                     /// Сохраняем в REALM
                     let realm = try? Realm()
@@ -39,7 +35,7 @@ struct GetSessionTimeoutSaved: DownloadQueueProtocol {
                         let b = realm?.objects(GetSessionTimeout.self)
                         realm?.beginWrite()
                         realm?.delete(b!)
-                        realm?.add(currency)
+                        realm?.add(sessionTimeOutParameters)
                         try realm?.commitWrite()
                         print("REALM", realm?.configuration.fileURL?.absoluteString ?? "")
                     } catch {
@@ -48,6 +44,25 @@ struct GetSessionTimeoutSaved: DownloadQueueProtocol {
                 }
             }
         }
+    }
+    
+    func returnRealmModel() -> GetSessionTimeout {
+        let realm = try? Realm()
+        guard let timeObject = realm?.objects(GetSessionTimeout.self).first else {return GetSessionTimeout()}
+        let lastActionTimestamp = timeObject.lastActionTimestamp
+        let maxTimeOut = timeObject.maxTimeOut
+        let mustCheckTimeOut = timeObject.mustCheckTimeOut
+        
+        // Сохраняем текущее время
+        let updatingTimeObject = GetSessionTimeout()
+        
+        updatingTimeObject.lastActionTimestamp = lastActionTimestamp
+        updatingTimeObject.renewSessionTimeStamp = Date().localDate()
+        updatingTimeObject.maxTimeOut = maxTimeOut
+        updatingTimeObject.mustCheckTimeOut = mustCheckTimeOut
+        
+        return updatingTimeObject
+        
     }
 }
 

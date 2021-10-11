@@ -29,24 +29,39 @@ class RequisitesViewController: UIViewController, UITableViewDataSource, UITable
 
         tableView.register(UINib(nibName: "RequisitsTableViewCell", bundle: nil), forCellReuseIdentifier: "RequisitsTableViewCell")
         
-        
+        self.tableView.rowHeight = 56
+
         // Do any additional setup after loading the view.
     }
     
     
     func setupUI(){
-        let label = UILabel()
-        label.textColor = UIColor.black
-        label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.text = "Реквизиты счета карты"
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: label)
-        self.navigationItem.leftItemsSupplementBackButton = true
-        let close = UIBarButtonItem(title: "Закрыть", style: .plain, target: self, action: #selector(backButton))
+//        let label = UILabel()
+//        label.textColor = UIColor.black
+//        label.font = UIFont.boldSystemFont(ofSize: 16)
+//        label.text = "Реквизиты счета карты"
+//        self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: label)
+//        self.navigationItem.leftItemsSupplementBackButton = true
+        title = "Рекзвизиты счета карты"
+        navigationController?.view.backgroundColor =  .white
+        let close = UIBarButtonItem(title: "", style: .plain, target: self, action: #selector(backButton))
         close.tintColor = .black
+        
+        let button: UIButton = UIButton(type: .custom)
+              //set image for button
+        button.setImage(UIImage(named: "share"), for: .normal)
+              //add function for button
+        button.addTarget(self, action: "createPdfFromTableView", for: .touchUpInside)
+            //set frame
+        button.frame = CGRect(x: 0, y: 0, width: 53, height: 31)
+
+        let barButton = UIBarButtonItem(customView: button)
+              //assign button to navigationbar
+        self.navigationItem.rightBarButtonItem = barButton
         //        self.navigationItem.setRightBarButton(close, animated: true)
         
         //        self.navigationItem.rightBarButtonItem?.action = #selector(backButton)
-        self.navigationItem.rightBarButtonItem = close
+//        self.navigationItem.rightBarButtonItem = close
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .normal)
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .highlighted)
     }
@@ -71,7 +86,7 @@ class RequisitesViewController: UIViewController, UITableViewDataSource, UITable
                 for: .touchUpInside)
         } else if cell?.nameCellLabel.text == "Кореспондентский счет"{
             cell?.rightButton.setImage(UIImage(named: "copy"), for: .normal)
-            cell?.rightButton.isHidden = false
+            cell?.rightButton.isHidden = true
             cell?.rightButton.addTarget(self,
                 action: #selector(self.copyValuePressed),
                 for: .touchUpInside)

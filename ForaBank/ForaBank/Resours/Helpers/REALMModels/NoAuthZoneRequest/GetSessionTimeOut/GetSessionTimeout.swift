@@ -11,8 +11,11 @@ import RealmSwift
 ///MARK: - GetSessionTimeout
 class GetSessionTimeout: Object {
     
-    @objc dynamic var currentTimeStamp = "0"
-    @objc dynamic var lastActionTimestamp = "0"
-    @objc dynamic var timeDistance = 0
+    @objc dynamic var currentTimeStamp = Date().localDate()
+    @objc dynamic var lastActionTimestamp = Date().localDate()
+    @objc dynamic var maxTimeOut = StaticDefaultTimeOut.staticDefaultTimeOut
+    @objc dynamic var renewSessionTimeStamp = Date().localDate()
+    @objc dynamic var mustCheckTimeOut = true
+    
     
 }
