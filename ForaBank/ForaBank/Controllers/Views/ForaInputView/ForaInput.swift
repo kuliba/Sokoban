@@ -27,6 +27,7 @@ class ForaInput: UIView {
     }
     var text: String = "" {
         didSet {
+
             viewModel.text = text
             textField.text = text
             configure()
