@@ -147,17 +147,6 @@ class MemeDetailVC : AddHeaderImageViewController {
     }
     
     func setupActions() {
-//        getCardList { [weak self] data ,error in
-//            DispatchQueue.main.async {
-//                if error != nil {
-//                    print("Ошибка", error!)
-//                }
-//                guard let data = data else { return }
-//                self?.cardFromListView.cardList = data
-//                self?.cardToListView.cardList = data
-//            }
-//        }
-        
         
         seporatorView.buttonSwitchCardTapped = { () in
             guard let tmpModelFrom = self.cardFromField.model else { return }
@@ -250,22 +239,27 @@ class MemeDetailVC : AddHeaderImageViewController {
     
     private func setupListFrom() {
         cardFromListView = CardsScrollView(onlyMy: onlyMy)
-        cardFromListView.didCardTapped = { [weak self] (card) in
-            self?.viewModel.cardFromRealm = card
-            self?.cardFromField.model = card
-            self?.bottomView.currencySymbol = card.currency?.getSymbol() ?? ""
+        cardFromListView.didCardTapped = { (cardId) in
             DispatchQueue.main.async {
-                UIView.animate(withDuration: 0.2) {
-                    self?.cardFromListView.isHidden = true
-                    
-                    self?.cardToListView.isHidden = true
-                    self?.cardFromListView.alpha = 0
-                    
-                    self?.seporatorView.curvedLineView.isHidden = false
-                    self?.seporatorView.straightLineView.isHidden = true
-                    
-                    self?.stackView.layoutIfNeeded()
-                }
+                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
+                cardList.forEach({ card in
+                    if card.id == cardId {
+                        self.viewModel.cardFromRealm = card
+                        self.cardFromField.model = card
+                        self.bottomView.currencySymbol = card.currency?.getSymbol() ?? ""
+                        UIView.animate(withDuration: 0.2) {
+                            self.cardFromListView.isHidden = true
+                            
+                            self.cardToListView.isHidden = true
+                            self.cardFromListView.alpha = 0
+                            
+                            self.seporatorView.curvedLineView.isHidden = false
+                            self.seporatorView.straightLineView.isHidden = true
+                            
+                            self.stackView.layoutIfNeeded()
+                        }
+                    }
+                })
             }
         }
         cardFromListView.lastItemTap = {
@@ -292,20 +286,27 @@ class MemeDetailVC : AddHeaderImageViewController {
         cardToListView = CardsScrollView(onlyMy: onlyMy)
         cardToListView.canAddNewCard = onlyMy ? false : true
         
-        cardToListView.firstItemTap = { [weak self] in
+        cardToListView.firstItemTap = {
             print("Показываем окно новой карты ")
-            self?.view.addSubview(self?.cardView ?? UIView())
-            self?.cardView.frame = (self?.view.bounds)!
-            self?.cardView.autoresizingMask = [.flexibleHeight,.flexibleWidth]
-            self?.stackView.isHidden = true
-            self?.titleLabel.isHidden = true
-            self?.bottomView.isHidden = true
-            self?.hideAllCardList()
+            self.view.addSubview(self.cardView)
+            self.cardView.frame = self.view.bounds
+            self.cardView.autoresizingMask = [.flexibleHeight,.flexibleWidth]
+            self.stackView.isHidden = true
+            self.titleLabel.isHidden = true
+            self.bottomView.isHidden = true
+            self.hideAllCardList()
         }
-        cardToListView.didCardTapped = { [weak self] (card) in
-            self?.viewModel.cardToRealm = card
-            self?.cardToField.model = card
-            self?.hideAllCardList()
+        cardToListView.didCardTapped = { (cardId) in
+            DispatchQueue.main.async {
+                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
+                cardList.forEach({ card in
+                    if card.id == cardId {
+                        self.viewModel.cardToRealm = card
+                        self.cardToField.model = card
+                        self.hideAllCardList()
+                    }
+                })
+            }
         }
         cardToListView.lastItemTap = {
             print("Открывать все карты ")
@@ -334,80 +335,16 @@ class MemeDetailVC : AddHeaderImageViewController {
     }
     
     private func checkModel(with model: ConfirmViewControllerModel) {
-        //     curvedLineView straightLineView changeAccountButton
         guard model.cardFromRealm != nil, model.cardToRealm != nil else { return }
         // TODO: какие условия для смены местами: счет - счет, карта - карта?
         self.seporatorView.changeAccountButton.isHidden = true // TODO: для релиза отключена кнопка
-        self.bottomView.currencySwitchButton.isHidden = (model.cardFromRealm?.currency! == model.cardToRealm?.currency!) ? true : false // Правильно true : false сейчас для теста
-        self.bottomView.currencySwitchButton.setTitle((model.cardFromRealm?.currency?.getSymbol() ?? "") + " ⇆ " + (model.cardToRealm?.currency?.getSymbol() ?? ""), for: .normal)
         /// Когда скрывается кнопка смены валют, то есть валюта одинаковая, то меняем содеожание лейбла на то, что по умолчанию
         /// Если нет, то оправляем запрос на получения курса валют
         if self.bottomView.currencySwitchButton.isHidden == true {
             self.bottomView.buttomLabel.text = "Возможна комиссия ℹ︎"
         }
-        // Запрос на курс валют и после отображение bottomView.currencySwitchButton
-//        Запрос курса валют:
-//        POST /rest/getExchangeCurrencyRates
-//        В телеге описание запроса
-
-        exchangeRate(model.cardFromRealm?.currency! ?? "", model.cardToRealm?.currency! ?? "")
-        
     }
-    
-    /// MARK - Exchange Rate
-    
-    final func exchangeRate( _ from: String, _ whereTo: String) {
-        let (fromValue, whereValue) = (from, whereTo)
-        self.bottomView.tempArray.removeAll()
-        let ru = (from == "RUB" || whereTo == "RUB")
-        
-        switch ru {
-        
-        case true:
-            /// Если одна из валют выбранной карты в рублях, то ищем которая
-            if from != whereTo {
-                switch (fromValue, whereValue) {
-                case ("RUB", let(value)):
-                    let body = [ "currencyCodeAlpha" : value] as [String: AnyObject]
-                    NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], body) { model, error in
-                        let m = model?.data
-                        self.bottomView.currencyTo = m
-                        self.bottomView.currencyFrom = nil
-                        self.bottomView.currencySymbol = "₽"
-                        self.bottomView.tempArray.append(m)
-                        self.bottomView.tempArray.append(nil)
-                    }
-                    
-                case (let(value), "RUB"):
-                    let body = [ "currencyCodeAlpha" : value] as [String: AnyObject]
-                    NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], body) { model, error in
-                        let m = model?.data
-                        self.bottomView.currencyFrom = m
-                        self.bottomView.currencyTo = nil
-                        self.bottomView.tempArray.append(m)
-                        self.bottomView.tempArray.append(nil)
-                    }
-                case (_, _):
-                    break
-                }
-            }
-        case false:
-            /// Если обе валюты в выбранных картах в рублях не в рублях
-            let bodyFrom = [ "currencyCodeAlpha" : from] as [String: AnyObject]
-            let bodyTo = [ "currencyCodeAlpha" : whereTo] as [String: AnyObject]
-            NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], bodyFrom) { model, error in
-                NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], bodyTo) { model, error in
-                    let m = model?.data
-                    self.bottomView.currencyTo = m
-                    self.bottomView.tempArray.append(m)
-                }
-                let m = model?.data
-                self.bottomView.currencyFrom = m
-                self.bottomView.tempArray.append(m)
-            }
-        }
-    }
-   
+       
     private func setupCardViewActions() {
         cardView.closeView = { [weak self] () in
 //            self?.hideCustomCardView()
@@ -476,23 +413,6 @@ class MemeDetailVC : AddHeaderImageViewController {
     }
     
     //MARK: - API
-//    func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?,_ error: String?)->()) {
-//        let param = ["isCard": "true", "isAccount": "\(!onlyCard)", "isDeposit": "false", "isLoan": "false"]
-//
-//        NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
-//            if error != nil {
-//                completion(nil, error)
-//            }
-//            guard let model = model else { return }
-//            if model.statusCode == 0 {
-//                guard let cardList = model.data else { return }
-//                completion(cardList, nil)
-//            } else {
-//                guard let error = model.errorMessage else { return }
-//                completion(nil, error)
-//            }
-//        }
-//    }
     
     func doneButtonTapped(with viewModel: ConfirmViewControllerModel, amaunt: String) {
 //        self?.viewModel.summTransction = amaunt

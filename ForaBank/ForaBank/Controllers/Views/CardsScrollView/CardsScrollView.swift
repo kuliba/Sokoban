@@ -41,7 +41,7 @@ final class CardsScrollView: UIView {
     }
     
     
-    var didCardTapped: ((UserAllCardsModel) -> Void)?
+    var didCardTapped: ((Int) -> Void)?
     
     var firstItemTap: (() -> Void)?
     var lastItemTap: (() -> Void)?
@@ -247,10 +247,10 @@ extension CardsScrollView: UICollectionViewDelegate {
             }  else {
                 if isFiltered {
                     let card = filteredCardList[indexPath.item]
-                    didCardTapped?(card)
+                    didCardTapped?(card.id)
                 } else {
                     let card = cardList[indexPath.item - 1]
-                    didCardTapped?(card)
+                    didCardTapped?(card.id)
                 }
             }
         } else {
@@ -260,10 +260,10 @@ extension CardsScrollView: UICollectionViewDelegate {
             }  else {
                 if isFiltered {
                     let card = filteredCardList[indexPath.item]
-                    didCardTapped?(card)
+                    didCardTapped?(card.id)
                 } else {
                     let card = cardList[indexPath.item]
-                    didCardTapped?(card)
+                    didCardTapped?(card.id)
                 }
             }
         }

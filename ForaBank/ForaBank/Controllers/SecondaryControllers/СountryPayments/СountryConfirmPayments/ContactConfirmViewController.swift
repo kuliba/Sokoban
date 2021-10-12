@@ -337,9 +337,9 @@ class ContactConfurmViewController: UIViewController {
             } else {
                 if model.cardFromCardId != "" || model.cardFromAccountId != "" {
                     let cardList = self.realm?.objects(UserAllCardsModel.self)
-                    cardList?.forEach({ card in
+                    let cards = cardList?.compactMap { $0 } ?? []
+                    cards.forEach({ card in
                         if String(card.id) == model.cardFromCardId || String(card.id) == model.cardFromAccountId {
-                            self.confurmVCModel?.cardFromRealm = card
                             cardFromField.model = card
                         }
                     })
