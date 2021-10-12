@@ -351,9 +351,9 @@ class MeToMeSettingViewController: UIViewController {
             } else {
                 guard let error = model.errorMessage else { return }
                 print("DEBUG: Error: ", error)
-                if model.errorMessage == "Пользователь не авторизован"{
-                    AppLocker.present(with: .validate)
-                }
+//                if model.errorMessage == "Пользователь не авторизован"{
+//                    AppLocker.present(with: .validate)
+//                }
                 completion(nil, error)
             }
         }

@@ -253,7 +253,7 @@ class CodeVerificationViewController: UIViewController {
         options.color = .white
         options.onSuccessfulDismiss = { (mode: ALMode?) in
             if let mode = mode {
-                DispatchQueue.main.async { [weak self] in
+                DispatchQueue.main.async {
                     print("Password \(String(describing: mode)) successfully")
                     let vc = MainTabBarViewController()
                     UIApplication.shared.windows.first?.rootViewController = vc

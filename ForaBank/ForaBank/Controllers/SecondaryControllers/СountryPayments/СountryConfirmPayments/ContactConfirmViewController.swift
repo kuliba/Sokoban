@@ -6,13 +6,28 @@
 //
 
 import UIKit
-
+import RealmSwift
 
 //TODO: отрефакторить под сетевые запросы, вынести в отдельный файл
 struct ConfirmViewControllerModel {
     
+    lazy var realm = try? Realm()
+    
     var type: PaymentType
     var paymentSystem: PaymentSystemList?
+    
+    var cardFromRealm: UserAllCardsModel? {
+        didSet {
+            guard let cardFrom = cardFromRealm else { return }
+            if cardFrom.productType == "CARD" {
+                cardFromCardId = "\(cardFrom.id)"
+                cardFromAccountId = ""
+            } else if cardFrom.productType == "ACCOUNT" {
+                cardFromAccountId = "\(cardFrom.id)"
+                cardFromCardId = ""
+            }
+        }
+    }
     var cardFrom: GetProductListDatum? {
         didSet {
             guard let cardFrom = cardFrom else { return }
@@ -36,6 +51,21 @@ struct ConfirmViewControllerModel {
     var cardFromAccountId = ""
     var cardFromAccountNumber = ""
     var operatorImage = ""
+    
+    var cardToRealm: UserAllCardsModel? {
+        didSet {
+            guard let cardTo = cardToRealm else { return }
+            self.customCardTo = nil
+            if cardTo.productType == "CARD" {
+                cardToCardId = "\(cardTo.id)"
+                cardToAccountId = ""
+            } else if cardTo.productType == "ACCOUNT" {
+                cardToAccountId = "\(cardTo.id)"
+                cardToCardId = ""
+            }
+        }
+    }
+    
     var cardTo: GetProductListDatum? {
         didSet {
             guard let cardTo = cardTo else { return }
@@ -174,6 +204,8 @@ struct ConfirmViewControllerModel {
 
 class ContactConfurmViewController: UIViewController {
     
+    lazy var realm = try? Realm()
+    
     var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
             guard let model = confurmVCModel else { return }
@@ -289,9 +321,36 @@ class ContactConfurmViewController: UIViewController {
             bankField.isHidden = true
             countryField.isHidden = true
             currancyTransctionField.isHidden = true
-                        
-            guard let cardModelFrom = model.cardFrom else { return }
-            cardFromField.cardModel = cardModelFrom
+            
+            cardFromField.isHidden = false
+            cardFromField.choseButton.isHidden = true
+            cardFromField.balanceLabel.isHidden = true
+            
+            var fromTitle = "Откуда"
+            if let cardModelFrom = model.cardFrom {
+                cardFromField.cardModel = cardModelFrom
+                if cardModelFrom.productType == "CARD" {
+                    fromTitle = "С карты"
+                } else if cardModelFrom.productType == "ACCOUNT" {
+                    fromTitle = "Со счета"
+                }
+            } else {
+                if model.cardFromCardId != "" || model.cardFromAccountId != "" {
+                    let cardList = self.realm?.objects(UserAllCardsModel.self)
+                    cardList?.forEach({ card in
+                        if String(card.id) == model.cardFromCardId || String(card.id) == model.cardFromAccountId {
+                            self.confurmVCModel?.cardFromRealm = card
+                            cardFromField.model = card
+                        }
+                    })
+                }
+            }
+            cardFromField.titleLabel.text = fromTitle
+            
+            
+            cardToField.isHidden = false
+            cardToField.choseButton.isHidden = true
+            cardToField.balanceLabel.isHidden = true
             
             let cardModelTo = model.cardTo
             let cardModelTemp = model.customCardTo
@@ -302,39 +361,20 @@ class ContactConfurmViewController: UIViewController {
                 cardToField.customCardModel = cardModelTemp
             }
             
-            
-            var fromTitle = "Откуда"
-            if cardModelFrom.productType == "CARD" {
-                fromTitle = "С карты"
-            } else if cardModelFrom.productType == "ACCOUNT" {
-                fromTitle = "Со счета"
-            }
-            cardFromField.titleLabel.text = fromTitle
-            
             var toTitle = "Куда"
             if cardModelTo?.productType == "CARD" {
                 toTitle = "На карту"
             } else if cardModelTo?.productType == "ACCOUNT" {
                 toTitle = "На счет"
             }
+            cardToField.titleLabel.text = toTitle
+            
             if !model.summInCurrency.isEmpty {
                 currTransctionField.isHidden = false
             }
             currTransctionField.text = model.summInCurrency
-            cardToField.titleLabel.text = toTitle
             
-            cardFromField.isHidden = false
-            cardFromField.choseButton.isHidden = true
-            cardFromField.balanceLabel.isHidden = true
             
-            cardToField.isHidden = false
-            cardToField.choseButton.isHidden = true
-            cardToField.balanceLabel.isHidden = true
-            
-//            {
-//                "paymentOperationDetailId" : 2945,
-//                "printFormType" : "internal"
-//            }
         case .phoneNumber, .phoneNumberSBP:
             cardToField.isHidden = true
             countryField.isHidden = true
@@ -569,11 +609,11 @@ class ContactConfurmViewController: UIViewController {
                 } else {
                     self.dismissActivity()
                     print("DEBUG: Error: ", model.errorMessage ?? "")
-                    DispatchQueue.main.async {
-                    if model.errorMessage == "Пользователь не авторизован"{
-                        AppLocker.present(with: .validate)
-                        }
-                    }
+//                    DispatchQueue.main.async {
+//                    if model.errorMessage == "Пользователь не авторизован"{
+//                        AppLocker.present(with: .validate)
+//                        }
+//                    }
                     self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
                 }
             }

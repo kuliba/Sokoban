@@ -262,11 +262,11 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                     }
                 })
             } else {
-                DispatchQueue.main.async {
-                    if data.errorMessage == "Пользователь не авторизован"{
-                        AppLocker.present(with: .validate)
-                    }
-                }
+//                DispatchQueue.main.async {
+//                    if data.errorMessage == "Пользователь не авторизован"{
+//                        AppLocker.present(with: .validate)
+//                    }
+//                }
                 completion(data.errorMessage)
             }
             

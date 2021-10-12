@@ -28,9 +28,9 @@ class MemeDetailVC : AddHeaderImageViewController {
     
     var cardFromField = CardChooseView()
     var seporatorView = SeparatorView()
-    var cardFromListView: CardListView!
+    var cardFromListView: CardsScrollView!
     var cardToField = CardChooseView()
-    var cardToListView: CardListView!
+    var cardToListView: CardsScrollView!
     var bottomView = BottomInputView()
     lazy var cardView = CastomCardView()
     
@@ -39,23 +39,6 @@ class MemeDetailVC : AddHeaderImageViewController {
     lazy var realm = try? Realm()
     var token: NotificationToken?
     
-    func updateObjectWithNotification() {
-        
-        let object = realm?.objects(UserAllCardsModel.self)
-        token = object?.observe { ( changes: RealmCollectionChange) in
-            switch changes {
-            case .initial:
-                print("REALM Initial")
-                
-            case .update:
-                print("REALM Update")
-                
-            case .error(let error):
-                fatalError("\(error)")
-            }
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -63,13 +46,15 @@ class MemeDetailVC : AddHeaderImageViewController {
         setupActions()
         setupCardViewActions()
         /// Add REALM
-        AddAllUserCardtList.add() {}
+        AddAllUserCardtList.add() {
+            print("REALM Add")
+        }
         updateObjectWithNotification()
     }
     
-    deinit {
-        token?.invalidate()
-    }
+//    deinit {
+//        token?.invalidate()
+//    }
     
     private func setupUI() {
         setupFieldFrom()
@@ -117,6 +102,39 @@ class MemeDetailVC : AddHeaderImageViewController {
                          right: view.rightAnchor, paddingTop: 16)
     }
     
+    func updateObjectWithNotification() {
+        let object = realm?.objects(UserAllCardsModel.self)
+        token = object?.observe { ( changes: RealmCollectionChange) in
+            switch changes {
+            case .initial:
+//                print("REALM Initial")
+                self.cardFromListView.cardList = self.updateCardsList(with: object)
+                self.cardFromField.model = self.updateCardsList(with: object).first
+                self.viewModel.cardFromRealm = self.updateCardsList(with: object).first
+                self.cardToListView.cardList = self.updateCardsList(with: object)
+            case .update:
+//                print("REALM Update")
+                self.cardFromListView.cardList = self.updateCardsList(with: object)
+                self.cardFromField.model = self.updateCardsList(with: object).first
+                self.cardToListView.cardList = self.updateCardsList(with: object)
+            case .error(let error):
+                fatalError("\(error)")
+            }
+        }
+    }
+    
+    private func updateCardsList(with result: Results<UserAllCardsModel>?) -> [UserAllCardsModel] {
+        var cardsArray = [UserAllCardsModel]()
+        result?.forEach { card in
+            if card.productType == "CARD" {
+                cardsArray.append(card)
+            } else if !onlyCard &&  card.productType == "ACCOUNT" {
+                cardsArray.append(card)
+            }
+        }
+        return cardsArray
+    }
+    
     private func createTopLabel(title: String) -> UIView {
         let view = UIView()
         let label = UILabel(text: title, font: .systemFont(ofSize: 12), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
@@ -129,25 +147,25 @@ class MemeDetailVC : AddHeaderImageViewController {
     }
     
     func setupActions() {
-        getCardList { [weak self] data ,error in
-            DispatchQueue.main.async {
-                if error != nil {
-                    print("Ошибка", error!)
-                }
-                guard let data = data else { return }
-                self?.cardFromListView.cardList = data
-                self?.cardToListView.cardList = data
-            }
-        }
+//        getCardList { [weak self] data ,error in
+//            DispatchQueue.main.async {
+//                if error != nil {
+//                    print("Ошибка", error!)
+//                }
+//                guard let data = data else { return }
+//                self?.cardFromListView.cardList = data
+//                self?.cardToListView.cardList = data
+//            }
+//        }
         
         
         seporatorView.buttonSwitchCardTapped = { () in
-            guard let tmpModelFrom = self.cardFromField.cardModel else { return }
-            guard let tmpModelTo = self.cardToField.cardModel else { return }
-            self.cardFromField.cardModel = tmpModelTo
-            self.cardToField.cardModel = tmpModelFrom
-            self.viewModel.cardFrom = tmpModelTo
-            self.viewModel.cardTo = tmpModelFrom
+            guard let tmpModelFrom = self.cardFromField.model else { return }
+            guard let tmpModelTo = self.cardToField.model else { return }
+            self.cardFromField.model = tmpModelTo
+            self.cardToField.model = tmpModelFrom
+            self.viewModel.cardFromRealm = tmpModelTo
+            self.viewModel.cardToRealm = tmpModelFrom
             
             self.bottomView.currencySymbol = tmpModelTo.currency?.getSymbol() ?? ""
             
@@ -231,10 +249,10 @@ class MemeDetailVC : AddHeaderImageViewController {
     }
     
     private func setupListFrom() {
-        cardFromListView = CardListView(onlyMy: onlyMy)
+        cardFromListView = CardsScrollView(onlyMy: onlyMy)
         cardFromListView.didCardTapped = { [weak self] (card) in
-            self?.viewModel.cardFrom = card
-            self?.cardFromField.cardModel = card
+            self?.viewModel.cardFromRealm = card
+            self?.cardFromField.model = card
             self?.bottomView.currencySymbol = card.currency?.getSymbol() ?? ""
             DispatchQueue.main.async {
                 UIView.animate(withDuration: 0.2) {
@@ -258,7 +276,7 @@ class MemeDetailVC : AddHeaderImageViewController {
                 vc.onlyCard = false
             }
             vc.didCardTapped = { [weak self] card in
-                self?.viewModel.cardFrom = card
+//                self?.viewModel.cardFromRealm = card
                 self?.cardFromField.cardModel = card
                 self?.bottomView.currencySymbol = card.currency?.getSymbol() ?? ""
                 self?.hideAllCardList()
@@ -271,7 +289,7 @@ class MemeDetailVC : AddHeaderImageViewController {
     }
     
     private func setupListTo() {
-        cardToListView = CardListView(onlyMy: onlyMy)
+        cardToListView = CardsScrollView(onlyMy: onlyMy)
         cardToListView.canAddNewCard = onlyMy ? false : true
         
         cardToListView.firstItemTap = { [weak self] in
@@ -285,8 +303,8 @@ class MemeDetailVC : AddHeaderImageViewController {
             self?.hideAllCardList()
         }
         cardToListView.didCardTapped = { [weak self] (card) in
-            self?.viewModel.cardTo = card
-            self?.cardToField.cardModel = card
+            self?.viewModel.cardToRealm = card
+            self?.cardToField.model = card
             self?.hideAllCardList()
         }
         cardToListView.lastItemTap = {
@@ -297,7 +315,7 @@ class MemeDetailVC : AddHeaderImageViewController {
                 vc.withTemplate = false
             }
             vc.didCardTapped = { [weak self] card in
-                self?.viewModel.cardTo = card
+//                self?.viewModel.cardToRealm = card
                 self?.cardToField.cardModel = card
 //                self?.bottomView.currency = card.currency?.getSymbol() ?? ""
                 self?.hideAllCardList()
@@ -317,11 +335,11 @@ class MemeDetailVC : AddHeaderImageViewController {
     
     private func checkModel(with model: ConfirmViewControllerModel) {
         //     curvedLineView straightLineView changeAccountButton
-        guard model.cardFrom != nil, model.cardTo != nil else { return }
+        guard model.cardFromRealm != nil, model.cardToRealm != nil else { return }
         // TODO: какие условия для смены местами: счет - счет, карта - карта?
         self.seporatorView.changeAccountButton.isHidden = true // TODO: для релиза отключена кнопка
-        self.bottomView.currencySwitchButton.isHidden = (model.cardFrom?.currency! == model.cardTo?.currency!) ? true : false // Правильно true : false сейчас для теста
-        self.bottomView.currencySwitchButton.setTitle((model.cardFrom?.currency?.getSymbol() ?? "") + " ⇆ " + (model.cardTo?.currency?.getSymbol() ?? ""), for: .normal)
+        self.bottomView.currencySwitchButton.isHidden = (model.cardFromRealm?.currency! == model.cardToRealm?.currency!) ? true : false // Правильно true : false сейчас для теста
+        self.bottomView.currencySwitchButton.setTitle((model.cardFromRealm?.currency?.getSymbol() ?? "") + " ⇆ " + (model.cardToRealm?.currency?.getSymbol() ?? ""), for: .normal)
         /// Когда скрывается кнопка смены валют, то есть валюта одинаковая, то меняем содеожание лейбла на то, что по умолчанию
         /// Если нет, то оправляем запрос на получения курса валют
         if self.bottomView.currencySwitchButton.isHidden == true {
@@ -332,7 +350,7 @@ class MemeDetailVC : AddHeaderImageViewController {
 //        POST /rest/getExchangeCurrencyRates
 //        В телеге описание запроса
 
-        exchangeRate(model.cardFrom?.currency! ?? "", model.cardTo?.currency! ?? "")
+        exchangeRate(model.cardFromRealm?.currency! ?? "", model.cardToRealm?.currency! ?? "")
         
     }
     
@@ -458,29 +476,23 @@ class MemeDetailVC : AddHeaderImageViewController {
     }
     
     //MARK: - API
-    func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?,_ error: String?)->()) {
-        
-
-        
-        
-        
-        let param = ["isCard": "true", "isAccount": "\(!onlyCard)", "isDeposit": "false", "isLoan": "false"]
-        
-        NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
-            if error != nil {
-                completion(nil, error)
-            }
-            guard let model = model else { return }
-            if model.statusCode == 0 {
-                guard let cardList = model.data else { return }
-                completion(cardList, nil)
-            } else {
-                guard let error = model.errorMessage else { return }
-                completion(nil, error)
-            }
-        }
-        
-    }
+//    func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?,_ error: String?)->()) {
+//        let param = ["isCard": "true", "isAccount": "\(!onlyCard)", "isDeposit": "false", "isLoan": "false"]
+//
+//        NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
+//            if error != nil {
+//                completion(nil, error)
+//            }
+//            guard let model = model else { return }
+//            if model.statusCode == 0 {
+//                guard let cardList = model.data else { return }
+//                completion(cardList, nil)
+//            } else {
+//                guard let error = model.errorMessage else { return }
+//                completion(nil, error)
+//            }
+//        }
+//    }
     
     func doneButtonTapped(with viewModel: ConfirmViewControllerModel, amaunt: String) {
 //        self?.viewModel.summTransction = amaunt

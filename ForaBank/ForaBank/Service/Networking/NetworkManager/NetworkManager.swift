@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import RealmSwift
 
-final class NetworkManager<T: NetworkModelProtocol>{
+final class NetworkManager<T: NetworkModelProtocol> {
     
     static func addRequest(_ requestType: RouterManager,
                            _ urlParametrs: [String: String],
@@ -18,6 +19,7 @@ final class NetworkManager<T: NetworkModelProtocol>{
  
         let s = RouterSassionConfiguration()
         let session = s.returnSession()
+        
         
         if let token = CSRFToken.token {
             request.allHTTPHeaderFields = ["X-XSRF-TOKEN": token]
@@ -91,6 +93,19 @@ final class NetworkManager<T: NetworkModelProtocol>{
                         return
                     }
                     print(String(data: data ?? Data(), encoding: .utf8) ?? "null")
+                    let updatingTimeObject = returnRealmModel()
+                    
+                    /// Сохраняем в REALM
+                    let r = try? Realm()
+                    do {
+                        let b = r?.objects(GetSessionTimeout.self)
+                        r?.beginWrite()
+                        r?.delete(b!)
+                        r?.add(updatingTimeObject)
+                        try r?.commitWrite()
+                    } catch {
+                        print(error.localizedDescription)
+                    }
                     do {
                         let returnValue = try T (data: data!)
                         completion(returnValue, nil)
@@ -116,6 +131,24 @@ final class NetworkManager<T: NetworkModelProtocol>{
            }
        }
     }
+    }
+
+func returnRealmModel() -> GetSessionTimeout {
+    let realm = try? Realm()
+    guard let timeObject = realm?.objects(GetSessionTimeout.self).first else {return GetSessionTimeout()}
+    let lastActionTimestamp = timeObject.lastActionTimestamp
+    let maxTimeOut = timeObject.maxTimeOut
+    let mustCheckTimeOut = timeObject.mustCheckTimeOut
+    
+    // Сохраняем текущее время
+    let updatingTimeObject = GetSessionTimeout()
+    
+    updatingTimeObject.lastActionTimestamp = lastActionTimestamp
+    updatingTimeObject.renewSessionTimeStamp = Date().localDate()
+    updatingTimeObject.maxTimeOut = maxTimeOut
+    updatingTimeObject.mustCheckTimeOut = mustCheckTimeOut
+    
+    return updatingTimeObject
     
 }
 

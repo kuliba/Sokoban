@@ -20,71 +20,53 @@ class TimerTimeInit {
         
         //        if AppDelegate.shared.isAuth ?? false {
         
+        //Читаем данные из REALM
         let realm = try? Realm()
         let timeObject = realm?.objects(GetSessionTimeout.self).first
-        var lastActionTimestamp = timeObject?.currentTimeStamp ?? ""
-        let maxTimeOut = timeObject?.timeDistance ?? 0
-        let reNewSessionTimeStamp = timeObject?.reNewSessionTimeStamp ?? ""
-        let currentTimeStamp = Date().localDate()
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
-        
+        let lastActionTimestamp = timeObject?.lastActionTimestamp ?? Date().localDate()
+        let maxTimeOut = timeObject?.maxTimeOut ?? 0
+        let renewSessionTimeStamp = timeObject?.renewSessionTimeStamp ?? Date().localDate()
         let mustCheckTimeOut = timeObject?.mustCheckTimeOut ?? true
+        // Получаем и форматируем текущее время
+        let currentTimeStamp = Date().localDate()
+        // timeOutSecondsRemaining - Расчитываем разницу по времени между последним нажатием или отправкой запроса
         
-        guard let date = dateFormatter.date(from: lastActionTimestamp) else { return }
-        guard let reNewdateSecond = dateFormatter.date(from: reNewSessionTimeStamp) else { return }
-        let d = date.localDate()
-        let r = reNewdateSecond.localDate()
-        let withTimeDistance = d.addingTimeInterval(TimeInterval(maxTimeOut))
-        let distance = withTimeDistance.seconds(from: currentTimeStamp)
-        
-        let nowReNewdateSecond = r.timeIntervalSince1970
+        let withTimeDistance = lastActionTimestamp.addingTimeInterval(TimeInterval(maxTimeOut))
+        let timeOutSecondsRemaining = withTimeDistance.seconds(from: currentTimeStamp)
+        // Расчитываем остаток времени в границах между 0.9 и 1.0 от общего времени
+        let nowReNewdateSecond = renewSessionTimeStamp.timeIntervalSince1970
         let nowCurrentTimeStampSecond = currentTimeStamp.timeIntervalSince1970
-        let difference = -(nowReNewdateSecond - nowCurrentTimeStampSecond) > 0.9 * Double(( maxTimeOut))
-        let difference_1 = -(nowReNewdateSecond - nowCurrentTimeStampSecond) <= Double(( maxTimeOut))
+        // 0.9
+        let minSessionRenewTimeOutPassed = -(nowReNewdateSecond - nowCurrentTimeStampSecond) > 0.9 * Double(( maxTimeOut))
+        // 1.0
+        let maxSessionRenewTimeOutNotPassed = -(nowReNewdateSecond - nowCurrentTimeStampSecond) <= Double(( maxTimeOut))
         
-        
-        if distance < 0 {
-            
-            if mustCheckTimeOut {
-                
-                AppLockerHelper.goVC(.validate, maxTimeOut, reNewSessionTimeStamp)
-                
+        if mustCheckTimeOut {
+            // mustCheckTimeOut = true
+            if timeOutSecondsRemaining < 0 {
+                // Блокируем всплывающее окно
+                let realm = try? Realm()
+                try? realm?.write {
+                    let counter = realm?.objects(GetSessionTimeout.self)
+                    counter?.first?.mustCheckTimeOut = false
+                    realm?.add(counter!)
+                }
+                DispatchQueue.main.async {
+                    AppLockerHelper.goVC(.validate)
+                }
+            } else {
+                if minSessionRenewTimeOutPassed  {
+                    // Остаток времени в промежутке между 0.9 и 1.0 от общего времени ожидания maxTimeOut
+                    // Отправка запроса на сервер об обновлении сессии после удачной авторизации
+                    
+                    if maxSessionRenewTimeOutNotPassed {
+                        let request = GetSessionTimeoutSaved()
+                        request.add([:], [:]) {}
+                    }
+                }
             }
-            
-            let currency = GetSessionTimeout()
-            currency.timeDistance = maxTimeOut
-            
-            let date = Date()
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
-            let time = dateFormatter.string(from: date)
-            // Сохраняем текущее время
-            currency.currentTimeStamp = time
-            currency.reNewSessionTimeStamp = reNewSessionTimeStamp
-            currency.mustCheckTimeOut = false
-            currency.lastActionTimestamp = lastActionTimestamp
-            /// Сохраняем в REALM
-            let realm = try? Realm()
-            do {
-                let b = realm?.objects(GetSessionTimeout.self)
-                realm?.beginWrite()
-                realm?.delete(b!)
-                realm?.add(currency)
-                try realm?.commitWrite()
-                
-            } catch {
-                print(error.localizedDescription)
-            }
-            
-            
-        } else if (difference && difference_1) {
-            // Отправляем фоновый запрос
-            let request = GetSessionTimeoutSaved()
-            request.add([:], [:]) {}
         }
-        //        }
-        
+        return
     }
 }
 

@@ -80,6 +80,7 @@ enum RouterManager {
     case getAccountStatement
     case getLatestMobilePayments
     case getMobileList
+    case getAllLatestPayments
 }
 
 extension RouterManager {
@@ -1156,6 +1157,21 @@ extension RouterManager {
         case .success(let url):
                 resultUrl = url.absoluteURL
         case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.get.rawValue
+            return request
+            
+        case .getAllLatestPayments:
+            let baseUrl = RouterUrlList.getAllLatestPayments.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
                 resultUrl = nil
                 debugPrint(error)
             }

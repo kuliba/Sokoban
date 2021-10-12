@@ -109,6 +109,8 @@
 		0BA14E14270DD0BF0098E422 /* BackgroundTimerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA14E13270DD0BF0098E422 /* BackgroundTimerController.swift */; };
 		0BA14E16270DD1940098E422 /* BackgoundTimerInit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA14E15270DD1940098E422 /* BackgoundTimerInit.swift */; };
 		0BA14E18270DF8F60098E422 /* AppLockerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA14E17270DF8F60098E422 /* AppLockerHelper.swift */; };
+		0BA14E1A2712597D0098E422 /* StaticDefaultTimeOut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA14E192712597D0098E422 /* StaticDefaultTimeOut.swift */; };
+		0BA14E1C2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA14E1B2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift */; };
 		0BA251ED26C266A400AD087A /* CreateServiceTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA251EC26C266A400AD087A /* CreateServiceTransferDecodableModel.swift */; };
 		0BA251EF26C26AE700AD087A /* AntiFraudDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA251EE26C26AE700AD087A /* AntiFraudDecodableModel.swift */; };
 		0BA251F126C26BE200AD087A /* СreateMe2MePullTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA251F026C26BE200AD087A /* СreateMe2MePullTransferDecodableModel.swift */; };
@@ -537,6 +539,8 @@
 		0BA14E13270DD0BF0098E422 /* BackgroundTimerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTimerController.swift; sourceTree = "<group>"; };
 		0BA14E15270DD1940098E422 /* BackgoundTimerInit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgoundTimerInit.swift; sourceTree = "<group>"; };
 		0BA14E17270DF8F60098E422 /* AppLockerHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockerHelper.swift; sourceTree = "<group>"; };
+		0BA14E192712597D0098E422 /* StaticDefaultTimeOut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticDefaultTimeOut.swift; sourceTree = "<group>"; };
+		0BA14E1B2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAllLatestPaymentsDecodableModel.swift; sourceTree = "<group>"; };
 		0BA251EC26C266A400AD087A /* CreateServiceTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateServiceTransferDecodableModel.swift; sourceTree = "<group>"; };
 		0BA251EE26C26AE700AD087A /* AntiFraudDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntiFraudDecodableModel.swift; sourceTree = "<group>"; };
 		0BA251F026C26BE200AD087A /* СreateMe2MePullTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "СreateMe2MePullTransferDecodableModel.swift"; sourceTree = "<group>"; };
@@ -1131,6 +1135,7 @@
 				0BA14E11270DCF750098E422 /* BackgroundTimer.swift */,
 				0BA14E13270DD0BF0098E422 /* BackgroundTimerController.swift */,
 				0BA14E15270DD1940098E422 /* BackgoundTimerInit.swift */,
+				0BA14E192712597D0098E422 /* StaticDefaultTimeOut.swift */,
 			);
 			path = BackgroundTimer;
 			sourceTree = "<group>";
@@ -2630,6 +2635,7 @@
 				0B283FCD2704D0D600B5E925 /* GetAccountStatementDecodableModel.swift */,
 				0B3FE8E02704DBEE00CBDB4E /* GetLatestMobilePaymentsDecodableModel.swift */,
 				0B3FE8E22705C86200CBDB4E /* GetMobileListDecodableModel.swift */,
+				0BA14E1B2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -3030,6 +3036,7 @@
 				0B95C40326B6CA3700AA57E6 /* CustomPopUpWithRateView.swift in Sources */,
 				68C8D57426F1FDB60076246B /* LargeCardCell.swift in Sources */,
 				687FB23326E9E551004A479F /* PaymentMainCell.swift in Sources */,
+				0BA14E1A2712597D0098E422 /* StaticDefaultTimeOut.swift in Sources */,
 				ED0B4894267B50F50037EA06 /* Int.swift in Sources */,
 				0B283FBF26FBCA0A00B5E925 /* Router.swift in Sources */,
 				0B22AEAC26CE8DD100B11E7F /* GKHDataSorted.swift in Sources */,
@@ -3104,6 +3111,7 @@
 				EDB165662667A741007E6030 /* ContactInputViewController.swift in Sources */,
 				0BDE453326E3EA4A00B64A0A /* ExtensionQRReadPDF.swift in Sources */,
 				EDB14533266667140028EF5A /* OrderProductsCollectionViewCell.swift in Sources */,
+				0BA14E1C2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift in Sources */,
 				0B8BE091266FDA1B00E96CAA /* CheckClientDecodebleModel.swift in Sources */,
 				EDB16595266A4438007E6030 /* DevelopViewController.swift in Sources */,
 				0B283FC72703815900B5E925 /* ExtensionSceneDelegate.swift in Sources */,
