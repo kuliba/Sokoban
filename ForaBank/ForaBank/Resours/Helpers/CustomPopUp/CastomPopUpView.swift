@@ -52,9 +52,9 @@ class MemeDetailVC : AddHeaderImageViewController {
         updateObjectWithNotification()
     }
     
-//    deinit {
-//        token?.invalidate()
-//    }
+    deinit {
+        token?.invalidate()
+    }
     
     private func setupUI() {
         setupFieldFrom()
@@ -173,16 +173,14 @@ class MemeDetailVC : AddHeaderImageViewController {
             self.checkModel(with: self.viewModel)
         }
         
-        bottomView.didDoneButtonTapped = { [weak self] (amaunt) in
-            self?.doneButtonTapped(with: self!.viewModel, amaunt: amaunt)
+        bottomView.didDoneButtonTapped = { (amaunt) in
+            self.doneButtonTapped(with: self.viewModel, amaunt: amaunt)
         }
     }
     
     private func setupFieldFrom() {
-        cardFromField.titleLabel.text = onlyMy ? "Откуда" : "С карты"
-        cardFromField.numberCardLabel.text = onlyMy
-            ? "Номер карты или счета"
-            : "Номер карты отправителя"
+        cardFromField.titleLabel.text = "С карты"
+        cardFromField.numberCardLabel.text = "Номер карты отправителя"
         cardFromField.didChooseButtonTapped = { [weak self]  () in
             DispatchQueue.main.async {
                 UIView.animate(withDuration: 0.2) {
@@ -208,10 +206,8 @@ class MemeDetailVC : AddHeaderImageViewController {
     }
     
     private func setupFieldTo() {
-        cardToField.titleLabel.text = onlyMy ? "Куда" : "На карту"
-        cardToField.numberCardLabel.text = onlyMy
-            ? "Номер карты или счета"
-            : "Номер карты получателя"
+        cardToField.titleLabel.text = "На карту"
+        cardToField.numberCardLabel.text = "Номер карты получателя"
         cardToField.didChooseButtonTapped = { [weak self]  () in
             DispatchQueue.main.async {
                 UIView.animate(withDuration: 0.2) {
@@ -249,10 +245,10 @@ class MemeDetailVC : AddHeaderImageViewController {
                         self.bottomView.currencySymbol = card.currency?.getSymbol() ?? ""
                         UIView.animate(withDuration: 0.2) {
                             self.cardFromListView.isHidden = true
-                            
-                            self.cardToListView.isHidden = true
                             self.cardFromListView.alpha = 0
-                            
+                            if self.cardToListView.isHidden == false {
+                                self.cardToListView.isHidden = true
+                            }
                             self.seporatorView.curvedLineView.isHidden = false
                             self.seporatorView.straightLineView.isHidden = true
                             
@@ -271,6 +267,7 @@ class MemeDetailVC : AddHeaderImageViewController {
             }
             vc.didCardTapped = { [weak self] card in
 //                self?.viewModel.cardFromRealm = card
+                self?.viewModel.cardFrom = card
                 self?.cardFromField.cardModel = card
                 self?.bottomView.currencySymbol = card.currency?.getSymbol() ?? ""
                 self?.hideAllCardList()
@@ -317,6 +314,7 @@ class MemeDetailVC : AddHeaderImageViewController {
             }
             vc.didCardTapped = { [weak self] card in
 //                self?.viewModel.cardToRealm = card
+                self?.viewModel.cardTo = card
                 self?.cardToField.cardModel = card
 //                self?.bottomView.currency = card.currency?.getSymbol() ?? ""
                 self?.hideAllCardList()
@@ -401,12 +399,14 @@ class MemeDetailVC : AddHeaderImageViewController {
     private func hideAllCardList() {
         DispatchQueue.main.async {
             UIView.animate(withDuration: 0.2) {
-                self.cardFromListView.isHidden = true
-                self.cardFromListView.alpha = 0
-                
-                self.cardToListView.isHidden = true
-                self.cardToListView.alpha = 0
-                
+                if self.cardFromListView.isHidden == false {
+                    self.cardFromListView.isHidden = true
+                    self.cardFromListView.alpha = 0
+                }
+                if self.cardToListView.isHidden == false {
+                    self.cardToListView.isHidden = true
+                    self.cardToListView.alpha = 0
+                }
                 self.stackView.layoutIfNeeded()
             }
         }
@@ -436,7 +436,7 @@ class MemeDetailVC : AddHeaderImageViewController {
                         "accountNumber" : viewModel.cardToAccountNumber,
                         "productCustomName" : viewModel.cardToCastomName
                      ] ] as [String : AnyObject]
-        print("DEBUG: ", #function, body)
+//        print("DEBUG: ", #function, body)
         NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer, [:], body) { [weak self] model, error in
             DispatchQueue.main.async {
                 self?.dismissActivity()
