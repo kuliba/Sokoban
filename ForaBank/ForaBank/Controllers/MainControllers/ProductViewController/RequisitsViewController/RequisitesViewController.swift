@@ -117,7 +117,7 @@ class RequisitesViewController: UIViewController, UITableViewDataSource, UITable
         button.anchor(left: footerView.leftAnchor, right: footerView.rightAnchor, height: 48)
         button.layer.cornerRadius = 8
         button.addTarget(self,
-                         action: #selector(self.sharePDF),
+                         action: #selector(self.share),
                          for: .touchUpInside)
         return footerView
     }
@@ -146,41 +146,28 @@ class RequisitesViewController: UIViewController, UITableViewDataSource, UITable
         // Pass the selected object to the new view controller.
     }
     */
-    @objc func createPdfFromTableView(){
-        let priorBounds: CGRect = self.tableView.bounds
-        let fittedSize: CGSize = self.tableView.sizeThatFits(CGSize(width: priorBounds.size.width, height: self.tableView.contentSize.height))
-        self.tableView.bounds = CGRect(x: 0, y: 0, width: fittedSize.width, height: fittedSize.height)
-        self.tableView.reloadData()
-        let pdfPageBounds: CGRect = CGRect(x: 0, y: 0, width: fittedSize.width, height: (fittedSize.height))
-        let pdfData: NSMutableData = NSMutableData()
-        UIGraphicsBeginPDFContextToData(pdfData, pdfPageBounds, nil)
-        UIGraphicsBeginPDFPageWithInfo(pdfPageBounds, nil)
-        self.tableView.layer.render(in: UIGraphicsGetCurrentContext()!)
-        UIGraphicsEndPDFContext()
-        let documentDirectories = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
-        let documentsFileName = documentDirectories! + "/" + "pdfName"
-        pdfData.write(toFile: documentsFileName, atomically: true)
-        print(documentsFileName)
-    }
     
-    @objc   func sharePDF() {
+    @objc private func share(){
        
-        let path = Bundle.main.path(forResource:  tableView.exportAsPdfFromTable(pdfName: "Requisites"),  ofType:"pdf") ?? ""
+        var textToShare = [Any?]()
         
-        let namePath = tableView.exportAsPdfFromTable(pdfName: "Requisites")
-        let fileURL = URL(fileURLWithPath: namePath)
-
-               // Create the Array which includes the files you want to share
-               var filesToShare = [Any]()
-
-               // Add the path of the file to the Array
-               filesToShare.append(fileURL)
-
-               // Make the activityViewContoller which shows the share-view
-               let activityViewController = UIActivityViewController(activityItems: filesToShare, applicationActivities: nil)
-
-               // Show the share-view
-               self.present(activityViewController, animated: true, completion: nil)
+        for i in mockItem {
+            guard let description = i.description else {
+                return
+            }
+            textToShare.append(i.name + " " + description)
+        }
+            
+            // set up activity view controller
+//            textToShare = [ text, text]
+        let activityViewController = UIActivityViewController(activityItems: textToShare as [Any], applicationActivities: nil)
+            activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
+            
+            // exclude some activity types from the list (optional)
+        activityViewController.excludedActivityTypes = [ UIActivity.ActivityType.mail, UIActivity.ActivityType.message,  UIActivity.ActivityType.airDrop, UIActivity.ActivityType.postToFacebook ]
+            
+            // present the view controller
+            self.present(activityViewController, animated: true, completion: nil)
     }
 
 }

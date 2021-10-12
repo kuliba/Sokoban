@@ -25,7 +25,7 @@ class HistoryTableViewCell: UITableViewCell {
     }
     override func layoutSubviews() {
         super.layoutSubviews()
-        logoImageView.image = UIImage()
+//        logoImageView.image = UIImage()
         logoImageView.isHidden = false
         logoImageView.layer.masksToBounds = false
         logoImageView.layer.cornerRadius = logoImageView.frame.height/2
@@ -50,6 +50,12 @@ class HistoryTableViewCell: UITableViewCell {
                 } else {
                     titleLable.text = operation?.merchantName
                 }
+            
+            if operation?.merchantNameRus == ""{
+                titleLable.text = operation?.comment
+            }
+            
+            
             if operation?.groupName != nil{
                 subTitleLabel.isHidden = false
                 subTitleLabel.text = operation?.groupName
@@ -57,14 +63,20 @@ class HistoryTableViewCell: UITableViewCell {
                 subTitleLabel.isHidden = true
             }
 
+            if operation?.operationType == "DEBIT"{
+            
+                logoImageView.backgroundColor = .red
+            
+            } else if operation?.operationType == "CREDIT"{
+                
+                logoImageView.backgroundColor = .green
+                
+            }
+            
             if operation?.svgImage != nil{
                 logoImageView.image = operation?.svgImage?.convertSVGStringToImage()
+                logoImageView.backgroundColor = .clear
                 logoImageView.alpha = 1
-            } else if operation?.operationType == "DEBIT"{
-                logoImageView.backgroundColor = .red
-            } else if operation?.operationType == "CREDIT"{
-                logoImageView.backgroundColor = .green
-
             }
             
             if operation?.operationType == "DEBIT"{
@@ -78,6 +90,8 @@ class HistoryTableViewCell: UITableViewCell {
         case "INSIDE":
             logoImageView.alpha = 0.3
             titleLable.text = operation?.comment
+            subTitleLabel.isHidden = true
+            logoImageView.image = UIImage()
             guard let sum = operation?.amount else {
                 return
             }

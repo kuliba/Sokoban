@@ -19,13 +19,14 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
             }
         }
     }
-    
+//    var sortData = Array(Dictionary<Int, [GetCardStatementDatum]>)
+    var sorted: [Dictionary<Int?, [GetCardStatementDatum]>.Element] = []
     let headerView = UIStackView()
     let statusBarView = UIView()
     let statusBarLabel = UILabel()
     let amounPeriodLabel = UILabel()
     var groupByCategorySorted: Dictionary<Int, Any> = [:]
-    var groupByCategory: Dictionary<Int, Any> = [:]{
+    var groupByCategory: Dictionary<Int, [GetCardStatementDatum]> = [:]{
         didSet{
 //            let sortedKeys = groupByCategory.keys.sorted(by: { (firstKey, secondKey) -> Bool in
 //                return groupByCategory[firstKey] < groupByCategory[secondKey]
@@ -627,13 +628,24 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
                                 print(localDate)
                             }
                         }
-                        self.groupByCategory = Dictionary(grouping: self.historyArrayAccount) { $0.tranDate ?? 0 }
+                      
+                        for (index, element) in self.groupByCategory.enumerated() {
+                            print("Index:", index, "Language:", element)
+                        }
                         
                         for i in lastPaymentsList{
                             if i.operationType == "DEBIT"{
                                 self.totalExpenses += Double(i.amount ?? 0.0)
                             }
                         }
+                        
+//                        self.groupByCategory = Dictionary(grouping: self.historyArrayAccount) { $0.tranDate ?? 0 }
+                        func sortDict(indexKey: String, countElement: Int){
+                            
+                            self.groupByCategory.index(forKey: countElement)
+                            
+                        }
+//                        self.sortData = self.groupByCategory.sorted(by:{$0.key < $1.key})
                         
                     }
     //                    self.dataUSD = lastPaymentsList
@@ -685,7 +697,37 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
                         }
                     }
                     
-                    self.groupByCategory = Dictionary(grouping: self.historyArray) { $0.date ?? 0 }
+                    
+                    self.groupByCategory = Dictionary(grouping: self.historyArray) { $0.tranDate ?? 0 }
+                    var unsortedCodeKeys = Array(self.groupByCategory.keys)
+                    let sortedCodeKeys = unsortedCodeKeys.sort(by: >)
+                    print(sortedCodeKeys)
+//                    let dict = Dictionary(grouping: lastPaymentsList, by: { $0.tranDate ?? $0.date!/1000000 })
+                    let dict = Dictionary(grouping: lastPaymentsList) { (element) -> Int in
+                        
+                        guard let tranDate =  element.tranDate else {
+                            return Int(self.longIntToDateString(longInt: element.date!/1000)?.description.prefix(2) ?? "0") ?? 0
+                        }
+                        
+                        return  Int(self.longIntToDateString(longInt: tranDate/1000)?.description.prefix(2) ?? "0") ?? 0
+                                            }
+                    
+                    self.sorted = dict.sorted(by:{ ($0.value[0].tranDate ?? $0.value[0].date) ?? 0 > $1.value[0].tranDate ?? $1.value[0].date ?? 0})
+                    
+//                    self.sorted = dict.sorted(by: { newItem1, newItem in
+//                        if newItem1.value[0].tranDate != nil{
+//                             newItem1.value[0].tranDate ?? 0 > newItem.value[0].tranDate ?? 0
+//                        } else {
+//                            newItem1.value[0].date ?? 0 > newItem.value[0].date ?? 0
+//                        }
+//                        return false
+//                    })
+
+
+//                    self.sortData = self.groupByCategory.sorted(by:{$0.key < $1.key})
+                    for (index, element) in self.groupByCategory.enumerated() {
+                        print("Index:", index, "Language:", element)
+                    }
                     
                     for i in lastPaymentsList{
                         if i.operationType == "DEBIT"{
@@ -821,19 +863,20 @@ extension ProductViewController{
 extension ProductViewController{
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return groupByCategory.count
+        return sorted.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 //            return groupByCategory[section].count
         var countSection = Array<Any>()
         
-        groupByCategory.map({
-            print(($0.value as AnyObject).count ?? 0)
+        sorted.map({
+            print(countSection.append(($0.value as AnyObject).count ?? 0))
 //            countSection.append(($0.value as AnyObject).count ?? 0)
             countSection.append(($0.value as AnyObject).count ?? 0)
         })
-        return countSection[section] as! Int
+//        sorted[section].value.count
+        return sorted[section].value.count
 
     }
     
@@ -844,8 +887,8 @@ extension ProductViewController{
 //            let data = groupByCategory.forEach({$0.value[indexPath.row]})
 //            let section = groupByCategory[indexPath.section] as? Array<Any>
             let data = Array(groupByCategory.values)[indexPath.section]
-            print(data)
-            cell.operation = (data as! [GetCardStatementDatum])[indexPath.row]
+//            sorted[indexPath.section].value[indexPath.item]
+            cell.operation = sorted[indexPath.section].value[indexPath.row]
 //            groupByCategory[index].value[indexPath.row]
          
 
@@ -872,27 +915,27 @@ extension ProductViewController{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let vc = PaymentsDetailsSuccessViewController()
-        vc.button.isHidden = true
-        vc.addCloseButton_2()
-        vc.confurmView.operatorImageView.isHidden = true
-        vc.confurmView.statusImageView.isHidden = true
-        vc.confurmView.statusLabel.text = historyArray[indexPath.row].comment
-        
+//        let vc = PaymentsDetailsSuccessViewController()
+//        vc.button.isHidden = true
+//        vc.addCloseButton_2()
+//        vc.confurmView.operatorImageView.isHidden = true
+//        vc.confurmView.statusImageView.isHidden = true
+//        vc.confurmView.statusLabel.text = historyArray[indexPath.row].comment
+//
+////        if historyArray[indexPath.row].operationType == "DEBIT"{
+////            vc.confurmView.summLabel.text = "+\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
+////        } else {
+////            vc.confurmView.summLabel.text = "-\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
+////        }
+//
 //        if historyArray[indexPath.row].operationType == "DEBIT"{
-//            vc.confurmView.summLabel.text = "+\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
-//        } else {
-//            vc.confurmView.summLabel.text = "-\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
+////            vc.confurmView.summLabel.text = "-\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
+//        } else if historyArray[indexPath.row].operationType == "CREDIT"{
+//            vc.confurmView.summLabel.textColor = UIColor(hexString: "22C183")
+////            vc.confurmView.summLabel.text =  "+\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
 //        }
-        
-        if historyArray[indexPath.row].operationType == "DEBIT"{
-//            vc.confurmView.summLabel.text = "-\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
-        } else if historyArray[indexPath.row].operationType == "CREDIT"{
-            vc.confurmView.summLabel.textColor = UIColor(hexString: "22C183")
-//            vc.confurmView.summLabel.text =  "+\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
-        }
-        
-        present(vc, animated: true, completion: nil)
+//
+//        present(vc, animated: true, completion: nil)
     }
     
     
@@ -903,8 +946,17 @@ extension ProductViewController{
             let label = UILabel()
             label.frame = CGRect.init(x: 5, y: 5, width: headerView.frame.width-10, height: headerView.frame.height)
         
-            let index = groupByCategory.index(groupByCategory.startIndex, offsetBy: section)
-            label.text = longIntToDateString(longInt: groupByCategory[index].key.description)
+            guard let tranDate = self.sorted[section].value[0].tranDate  else {
+                label.text = longIntToDateString(longInt: self.sorted[section].value[0].date!/1000)
+                label.font = .boldSystemFont(ofSize: 16)
+                
+                label.textColor =  UIColor(hexString: "1C1C1C")
+                headerView.addSubview(label)
+                label.centerY(inView: headerView)
+                return headerView
+            }
+         
+            label.text = longIntToDateString(longInt: tranDate/1000)
             label.font = .boldSystemFont(ofSize: 16)
             
             label.textColor =  UIColor(hexString: "1C1C1C")
@@ -924,9 +976,8 @@ extension ProductViewController{
     }
     
     
-    func longIntToDateString(longInt: String) -> String?{
-        
-        let date = Date(timeIntervalSince1970: TimeInterval(Int(longInt)!/1000) )
+    func longIntToDateString(longInt: Int) -> String?{
+        let date = Date(timeIntervalSince1970: TimeInterval(longInt))
             let dateFormatter = DateFormatter()
             dateFormatter.timeStyle = DateFormatter.Style.none//Set time style
             dateFormatter.dateStyle = DateFormatter.Style.long //Set date style
