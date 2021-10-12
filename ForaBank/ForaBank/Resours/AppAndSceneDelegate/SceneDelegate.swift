@@ -26,21 +26,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        window?.rootViewController = UIStoryboard(name: "LaunchScreen", bundle: nil).instantiateInitialViewController()
+        let startController = UIStoryboard(name: "LaunchScreen", bundle: nil).instantiateInitialViewController()
+        window?.rootViewController = startController
         window?.makeKeyAndVisible()
         let tapGesture = UITapGestureRecognizer(target: self, action: nil)
-            tapGesture.delegate = self
-            window?.addGestureRecognizer(tapGesture)
-            let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
-            if let userIsRegister = userIsRegister {
-                if userIsRegister {
-                    self.goToPinVC(.validate)
-                } else {
-                    self.goToRegisterVC()
-                }
+        tapGesture.delegate = self
+        window?.addGestureRecognizer(tapGesture)
+        let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
+        if let userIsRegister = userIsRegister {
+            if userIsRegister {
+                self.goToPinVC(.validate)
             } else {
                 self.goToRegisterVC()
             }
+        } else {
+            self.goToRegisterVC()
+        }
         window?.makeKeyAndVisible()
         
         NetStatus.shared.netStatusChangeHandler = {
