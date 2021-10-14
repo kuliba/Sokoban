@@ -462,19 +462,18 @@ extension AppLocker {
     }
     
     func returnRealmModel() -> GetSessionTimeout {
-        let realm = try? Realm()
-        guard let timeObject = realm?.objects(GetSessionTimeout.self).first else {return GetSessionTimeout()}
-        let lastActionTimestamp = timeObject.lastActionTimestamp
-        let maxTimeOut = timeObject.maxTimeOut
-        let mustCheckTimeOut = timeObject.mustCheckTimeOut
         
-        // Сохраняем текущее время
         let updatingTimeObject = GetSessionTimeout()
         
-        updatingTimeObject.currentTimeStamp = Date().localDate()
-        updatingTimeObject.lastActionTimestamp = Date().localDate()
-        updatingTimeObject.renewSessionTimeStamp = Date().localDate()
-        updatingTimeObject.mustCheckTimeOut = true
+        let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
+        if userIsRegister == true {
+            // Сохраняем текущее время
+            updatingTimeObject.currentTimeStamp = Date().localDate()
+            updatingTimeObject.lastActionTimestamp = Date().localDate()
+            updatingTimeObject.renewSessionTimeStamp = Date().localDate()
+            updatingTimeObject.mustCheckTimeOut = true
+            
+        }
         
         return updatingTimeObject
         

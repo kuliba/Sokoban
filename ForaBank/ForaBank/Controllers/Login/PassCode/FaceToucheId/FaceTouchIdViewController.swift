@@ -10,6 +10,7 @@ import Firebase
 import FirebaseMessaging
 import LocalAuthentication
 import Valet
+import RealmSwift
 
 
 class FaceTouchIdViewController: UIViewController {
@@ -303,6 +304,23 @@ class FaceTouchIdViewController: UIViewController {
                         }
                         guard let model = model else { return }
                         if model.statusCode == 0 {
+                            
+                            // Обновление времени старта
+                            let realm = try? Realm()
+                            let timeOutObjects = self.returnRealmModel()
+                            
+                            /// Сохраняем в REALM
+                            do {
+                                let b = realm?.objects(GetSessionTimeout.self)
+                                realm?.beginWrite()
+                                realm?.delete(b!)
+                                realm?.add(timeOutObjects)
+                                try realm?.commitWrite()
+                                
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                            
                             print("DEBUG: You are LOGGIN!!!")
                             self.dismissActivity()
                             DispatchQueue.main.async { [weak self] in
@@ -310,6 +328,7 @@ class FaceTouchIdViewController: UIViewController {
                                 vc.modalPresentationStyle = .fullScreen
                                 self?.present(vc, animated: true)
                             }
+                        
                         }
                     }
                 } else {
@@ -365,6 +384,24 @@ class FaceTouchIdViewController: UIViewController {
                            paddingTop: -100)
         skipButton.anchor(left: view.leftAnchor, right: view.rightAnchor,
                           paddingLeft: 20, paddingRight: 20, height: 44)
+        
+    }
+    
+    func returnRealmModel() -> GetSessionTimeout {
+        
+        let updatingTimeObject = GetSessionTimeout()
+        
+        let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
+        if userIsRegister == true {
+            // Сохраняем текущее время
+            updatingTimeObject.currentTimeStamp = Date().localDate()
+            updatingTimeObject.lastActionTimestamp = Date().localDate()
+            updatingTimeObject.renewSessionTimeStamp = Date().localDate()
+            updatingTimeObject.mustCheckTimeOut = true
+            
+        }
+        
+        return updatingTimeObject
         
     }
     
