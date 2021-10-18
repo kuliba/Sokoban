@@ -6,12 +6,17 @@
 //
 
 import UIKit
+import RealmSwift
 
 extension CustomPopUpWithRateView {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         setupConstraint()
+        AddAllUserCardtList.add() {
+            print("REALM Add")
+        }
+        updateObjectWithNotification()
     }
     
     override func viewDidLayoutSubviews() {
@@ -69,35 +74,70 @@ extension CustomPopUpWithRateView {
         let label = UILabel(text: title, font: .systemFont(ofSize: 12), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
         
         view.addSubview(label)
-        label.centerY(inView: view, leftAnchor: view.leftAnchor, paddingLeft: 20)
         view.anchor(height: 20)
-        
+        label.centerY(inView: view, leftAnchor: view.leftAnchor, paddingLeft: 20)
         return view
+    }
+    
+    func updateObjectWithNotification() {
+        let object = realm?.objects(UserAllCardsModel.self)
+        token = object?.observe { ( changes: RealmCollectionChange) in
+            switch changes {
+            case .initial:
+//                print("REALM Initial")
+                self.cardFromListView.cardList = self.updateCardsList(with: object)
+                self.cardFromField.model = self.updateCardsList(with: object).first
+                self.viewModel.cardFromRealm = self.updateCardsList(with: object).first
+                self.cardToListView.cardList = self.updateCardsList(with: object)
+            case .update:
+//                print("REALM Update")
+                self.cardFromListView.cardList = self.updateCardsList(with: object)
+                self.cardFromField.model = self.updateCardsList(with: object).first
+                self.viewModel.cardFromRealm = self.updateCardsList(with: object).first
+                self.cardToListView.cardList = self.updateCardsList(with: object)
+            case .error(let error):
+                print("DEBUG token fatalError:", error)
+                fatalError("\(error)")
+            }
+        }
+    }
+    
+    private func updateCardsList(with result: Results<UserAllCardsModel>?) -> [UserAllCardsModel] {
+        var cardsArray = [UserAllCardsModel]()
+        let cards = result?.compactMap { $0 } ?? []
+        cards.forEach { card in
+            if card.productType == "CARD" {
+                cardsArray.append(card)
+            } else if !onlyCard &&  card.productType == "ACCOUNT" {
+                cardsArray.append(card)
+            }
+        }
+        return cardsArray
     }
     
     func setupActions() {
         /// Получаем список карт для обеих списков карт
-        getCardList { [weak self] data ,error in
-            DispatchQueue.main.async {
-                if error != nil {
-                    print("Ошибка", error!)
-                }
-                guard let data = data else { return }
-                self?.cardFromListView.cardList = data
-//                self?.cardFromField.cardModel = data.first
-                self?.cardToListView.cardList = data
-            }
-        }
+//        getCardList { [weak self] data ,error in
+//            DispatchQueue.main.async {
+//                if error != nil {
+//                    print("Ошибка", error!)
+//                }
+//                guard let data = data else { return }
+//                self?.cardFromListView.cardList = data
+////                self?.cardFromField.cardModel = data.first
+//                self?.cardToListView.cardList = data
+//            }
+//        }
         
         /// Переворот карт
         seporatorView.buttonSwitchCardTapped = { () in
-            guard let tmpModelFrom = self.cardFromField.cardModel else { return }
-            guard let tmpModelTo = self.cardToField.cardModel else { return }
+            guard let tmpModelFrom = self.cardFromField.model else { return }
+            guard let tmpModelTo = self.cardToField.model else { return }
             
-                self.cardFromField.cardModel = tmpModelTo
-                self.cardToField.cardModel = tmpModelFrom
-                self.viewModel.cardFrom = tmpModelTo
-                self.viewModel.cardTo = tmpModelFrom
+                self.cardFromField.model = tmpModelTo
+                self.cardToField.model = tmpModelFrom
+                self.viewModel.cardFromRealm = tmpModelTo
+                self.viewModel.cardToRealm = tmpModelFrom
                 self.reversCard = ""
         }
         
@@ -143,18 +183,25 @@ extension CustomPopUpWithRateView {
     
     /// Инициализация верхних карт
     private func setupListFrom() {
-        cardFromListView = CardListView(onlyMy: onlyMy)
-        cardFromListView.didCardTapped = { (card) in
-            self.viewModel.cardFrom = card
-            self.reversCard = ""
-            self.cardFromField.cardModel = card
-            self.hideView(self.cardFromListView, needHide: true) {
-                if !self.cardToListView.isHidden {
-                    self.hideView(self.cardToListView, needHide: true) { }
-                }
-                self.seporatorView.curvedLineView.isHidden = false
-                self.seporatorView.straightLineView.isHidden = true
-                self.stackView.layoutIfNeeded()
+        cardFromListView = CardsScrollView(onlyMy: onlyMy)
+        cardFromListView.didCardTapped = { (cardId) in
+            DispatchQueue.main.async {
+                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
+                cardList.forEach({ card in
+                    if card.id == cardId {
+                        self.viewModel.cardFromRealm = card
+                        self.reversCard = ""
+                        self.cardFromField.model = card
+                        self.hideView(self.cardFromListView, needHide: true) {
+                            if !self.cardToListView.isHidden {
+                                self.hideView(self.cardToListView, needHide: true) { }
+                            }
+                            self.seporatorView.curvedLineView.isHidden = false
+                            self.seporatorView.straightLineView.isHidden = true
+                            self.stackView.layoutIfNeeded()
+                        }
+                    }
+                })
             }
         }
         cardFromListView.lastItemTap = {
@@ -185,16 +232,23 @@ extension CustomPopUpWithRateView {
     
     /// Инициализация нижних карт
     private func setupListTo() {
-        cardToListView = CardListView(onlyMy: onlyMy)
-        cardToListView.didCardTapped = { (card) in
-            self.viewModel.cardTo = card
-            self.reversCard = ""
-            self.cardToField.cardModel = card
-            self.hideView(self.cardToListView, needHide: true) {
-                if !self.cardFromListView.isHidden {
-                    self.hideView(self.cardFromListView, needHide: true) { }
-                }
-                self.stackView.layoutIfNeeded()
+        cardToListView = CardsScrollView(onlyMy: onlyMy)
+        cardToListView.didCardTapped = { (cardId) in
+            DispatchQueue.main.async {
+                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
+                cardList.forEach({ card in
+                    if card.id == cardId {
+                        self.viewModel.cardToRealm = card
+                        self.reversCard = ""
+                        self.cardToField.model = card
+                        self.hideView(self.cardToListView, needHide: true) {
+                            if !self.cardFromListView.isHidden {
+                                self.hideView(self.cardFromListView, needHide: true) { }
+                            }
+                            self.stackView.layoutIfNeeded()
+                        }
+                    }
+                })
             }
         }
         cardToListView.lastItemTap = {

@@ -9,25 +9,25 @@ import UIKit
 
 extension CustomPopUpWithRateView {
     //MARK: - API
-    func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?,_ error: String?)->()) {
-        
-        let param = ["isCard": "true", "isAccount": "\(!onlyCard)", "isDeposit": "false", "isLoan": "false"]
-        
-        NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
-            if error != nil {
-                completion(nil, error)
-            }
-            guard let model = model else { return }
-            if model.statusCode == 0 {
-                guard let cardList = model.data else { return }
-                completion(cardList, nil)
-            } else {
-                guard let error = model.errorMessage else { return }
-                completion(nil, error)
-            }
-        }
-        
-    }
+//    func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?,_ error: String?)->()) {
+//
+//        let param = ["isCard": "true", "isAccount": "\(!onlyCard)", "isDeposit": "false", "isLoan": "false"]
+//
+//        NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
+//            if error != nil {
+//                completion(nil, error)
+//            }
+//            guard let model = model else { return }
+//            if model.statusCode == 0 {
+//                guard let cardList = model.data else { return }
+//                completion(cardList, nil)
+//            } else {
+//                guard let error = model.errorMessage else { return }
+//                completion(nil, error)
+//            }
+//        }
+//
+//    }
     
     func doneButtonTapped(with viewModel: ConfirmViewControllerModel) {
         
@@ -36,7 +36,7 @@ extension CustomPopUpWithRateView {
         self.showActivity()
         bottomView.doneButtonIsEnabled(true)
         if self.bottomView.requestModel.to == ""{
-            self.bottomView.requestModel.to = viewModel.cardFrom?.currency ?? ""
+            self.bottomView.requestModel.to = viewModel.cardFromRealm?.currency ?? ""
         }
         
         let body = [ "check" : false,
