@@ -325,6 +325,7 @@ class ContactConfurmViewController: UIViewController {
             cardFromField.isHidden = false
             cardFromField.choseButton.isHidden = true
             cardFromField.balanceLabel.isHidden = true
+            cardFromField.leftTitleAncor.constant = 64
             
             var fromTitle = "Откуда"
             if let cardModelFrom = model.cardFrom {
@@ -337,10 +338,15 @@ class ContactConfurmViewController: UIViewController {
             } else {
                 if model.cardFromCardId != "" || model.cardFromAccountId != "" {
                     let cardList = self.realm?.objects(UserAllCardsModel.self)
-                    cardList?.forEach({ card in
+                    let cards = cardList?.compactMap { $0 } ?? []
+                    cards.forEach({ card in
                         if String(card.id) == model.cardFromCardId || String(card.id) == model.cardFromAccountId {
-                            self.confurmVCModel?.cardFromRealm = card
                             cardFromField.model = card
+                            if card.productType == "CARD" {
+                                fromTitle = "С карты"
+                            } else if card.productType == "ACCOUNT" {
+                                fromTitle = "Со счета"
+                            }
                         }
                     })
                 }
@@ -351,22 +357,37 @@ class ContactConfurmViewController: UIViewController {
             cardToField.isHidden = false
             cardToField.choseButton.isHidden = true
             cardToField.balanceLabel.isHidden = true
-            
-            let cardModelTo = model.cardTo
-            let cardModelTemp = model.customCardTo
-            
-            if cardModelTo != nil {
-                cardToField.cardModel = cardModelTo
-            } else if cardModelTemp != nil {
-                cardToField.customCardModel = cardModelTemp
-            }
+            cardToField.leftTitleAncor.constant = 64
             
             var toTitle = "Куда"
-            if cardModelTo?.productType == "CARD" {
+            
+            if let cardModelTo = model.cardTo {
+                cardToField.cardModel = cardModelTo
+                if cardModelTo.productType == "CARD" {
+                    toTitle = "На карту"
+                } else if cardModelTo.productType == "ACCOUNT" {
+                    toTitle = "На счет"
+                }
+            } else if let cardModelTemp = model.customCardTo {
+                cardToField.customCardModel = cardModelTemp
                 toTitle = "На карту"
-            } else if cardModelTo?.productType == "ACCOUNT" {
-                toTitle = "На счет"
+            } else {
+                if model.cardToCardId != "" || model.cardToAccountId != "" {
+                    let cardList = self.realm?.objects(UserAllCardsModel.self)
+                    let cards = cardList?.compactMap { $0 } ?? []
+                    cards.forEach({ card in
+                        if String(card.id) == model.cardToCardId || String(card.id) == model.cardToAccountId {
+                            cardToField.model = card
+                            if card.productType == "CARD" {
+                                toTitle = "На карту"
+                            } else if card.productType == "ACCOUNT" {
+                                toTitle = "На счет"
+                            }
+                        }
+                    })
+                }
             }
+            
             cardToField.titleLabel.text = toTitle
             
             if !model.summInCurrency.isEmpty {

@@ -24,6 +24,10 @@ class PresentationController: UIPresentationController {
         self.blurEffectView.addGestureRecognizer(tapGestureRecognizer)
     }
     
+    deinit {
+       print("Dissmiss PresentationController")
+    }
+    
     override var frameOfPresentedViewInContainerView: CGRect {
         CGRect(origin: CGPoint(x: 0, y: self.containerView!.frame.height - 490),
                size: CGSize(width: self.containerView!.frame.width,

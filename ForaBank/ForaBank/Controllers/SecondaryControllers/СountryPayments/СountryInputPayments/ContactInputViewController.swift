@@ -6,9 +6,11 @@
 //
 
 import UIKit
+import RealmSwift
 
 class ContactInputViewController: UIViewController {
     
+    lazy var realm = try? Realm()
     var typeOfPay: PaymentType = .contact {
         didSet {
             print("DEBUG: typeOfPay: ", typeOfPay)
@@ -222,15 +224,23 @@ class ContactInputViewController: UIViewController {
             }
         }
         
-        cardListView.didCardTapped = { card in
-            self.cardFromField.model = card
-            self.selectedCardNumber = card.number ?? ""
-            if self.bankListView.isHidden == false {
-                self.hideView(self.bankListView, needHide: true)
+        cardListView.didCardTapped = { cardId in
+            DispatchQueue.main.async {
+                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
+                cardList.forEach({ card in
+                    if card.id == cardId {
+                        self.cardFromField.model = card
+                        self.selectedCardNumber = card.number ?? ""
+                        if self.bankListView.isHidden == false {
+                            self.hideView(self.bankListView, needHide: true)
+                        }
+                        if self.cardListView.isHidden == false {
+                            self.hideView(self.cardListView, needHide: true)
+                        }
+                    }
+                })
             }
-            if self.cardListView.isHidden == false {
-                self.hideView(self.cardListView, needHide: true)
-            }            
+                      
         }
         
         cardListView.lastItemTap = {
