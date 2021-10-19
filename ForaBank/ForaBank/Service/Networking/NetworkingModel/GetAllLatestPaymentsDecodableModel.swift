@@ -59,7 +59,7 @@ struct GetAllLatestPaymentsDatum: Codable {
     let date: Int?
     let phoneNumber: String?
     let bankName, bankID: String?
-    let amount: Amount?
+    let amount: Double?
     let surName, firstName, middleName, shortName: String?
     let countryName, countryCode, puref: String?
     let additionalList: [GetAllLatestPaymentsAdditionalList]?
@@ -95,7 +95,7 @@ extension GetAllLatestPaymentsDatum {
         phoneNumber: String?? = nil,
         bankName: String?? = nil,
         bankID: String?? = nil,
-        amount: Amount?? = nil,
+        amount: Double?? = nil,
         surName: String?? = nil,
         firstName: String?? = nil,
         middleName: String?? = nil,

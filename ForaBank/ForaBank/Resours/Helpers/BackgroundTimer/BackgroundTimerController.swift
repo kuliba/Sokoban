@@ -15,7 +15,7 @@ struct BackgroundTimer {
         timer.eventHandler = {
             
             let t = Date().localDate()
-            print("TIMER", t)
+//            print(t)
                 time.timeResult()
         }
         timer.resume()

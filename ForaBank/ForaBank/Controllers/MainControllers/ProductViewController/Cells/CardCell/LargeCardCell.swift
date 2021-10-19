@@ -7,9 +7,11 @@
 
 import Foundation
 import UIKit
+import SwiftUI
 
 
 class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
+  
    
     func configure<U>(with value: U) where U : Hashable {
         guard let card = card else { return }
@@ -18,16 +20,21 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         balanceLabel.text = viewModel.balance
         maskCardLabel.text = viewModel.maskedcardNumber
         logoImageView.image = viewModel.logoImage
-        
-//        balanceLabel.text = contactInitials(model: payment.lastCountryPayment)
     }
     
     
     static var reuseId: String = "LargeCardCell"
     //MARK: - Properties
     var card: GetProductListDatum? {
-        didSet { configure() }
+        didSet {
+//            backgroundUnlockColor = card?.background[0] ?? "ffffff"
+            configure()
+            
+        }
     }
+    
+    public var backgroundUnlockColor = String()
+
     
     private let logoImageView: UIImageView = {
         let imageView = UIImageView()
@@ -66,6 +73,10 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
+    
+    
+
+    
     
     //MARK: - Lifecycle
     override init(frame: CGRect) {
@@ -121,6 +132,12 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         addSubview(maskCardLabel)
         addSubview(cardNameLabel)
         addSubview(balanceLabel)
+//        addSubview(customizeSlideToOpen)
+//
+//        customizeSlideToOpen.delegate = self
+//        customizeSlideToOpen.center(inView: self)
+//        customizeSlideToOpen.anchor(width: 167, height: 48)
+//        slideToUnlock.center(inView: self)
         
         backgroundImageView.fillSuperview()
         

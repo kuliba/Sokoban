@@ -171,6 +171,44 @@ class MainViewController: UIViewController {
         }
         
     }
+
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
+        print("viewDidAppear")
+        
+            self.getCardList { data, errorMessage in
+                self.productList.removeAll()
+                self.products.removeAll()
+                DispatchQueue.main.async {
+                guard let listProducts = data else {return}
+                
+                for i in listProducts.prefix(3) {
+                    self.products.append(PaymentsModel(productList: i))
+                }
+                 
+                    if listProducts.prefix(3).count < 3{
+                        self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
+                    } else if listProducts.prefix(3).count == 3{
+                        self.products.append(PaymentsModel(id: 32, name: "Cм.все", iconName: "openCard", controllerName: ""))
+                    }
+                    
+                self.productList = data ?? []
+                
+                self.reloadData(with: nil)
+
+            }
+        }
+    }
+    
+ 
+    
+    override func viewDidLayoutSubviews() {
+        print("view load back")
+    }
+    
+    
+    
     
     func setupData() {
         //            openProduct = MockItems.returnOpenProduct()

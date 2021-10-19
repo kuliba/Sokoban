@@ -53,6 +53,9 @@ extension MainViewController {
                             fatalError("Unable to dequeue \(ProductCell.self)")
                         }
                                 cell.card = item.productList
+//                        cell.statusPC = item.productList?.statusPC
+//                        cell.status  = item.productList?.status
+
                                 return cell
                     }
             case .offer:

@@ -18,7 +18,7 @@ struct PaymentsModel: Hashable {
     var lastPhonePayment: GetLatestPaymentsDatum? = nil
     var productList: GetProductListDatum? = nil
     var lastMobilePayment: GetLatestMobilePaymentsDatum? = nil
-    var lastGKHPayment: GetLatestServicePaymentsDatum? = nil
+    var lastGKHPayment: GetAllLatestPaymentsDatum? = nil
 
     
     
@@ -85,7 +85,7 @@ struct PaymentsModel: Hashable {
         self.iconName = "smartphonegray"
     }
     
-    init(lastGKHPayment: GetLatestServicePaymentsDatum) {
+    init(lastGKHPayment: GetAllLatestPaymentsDatum) {
         self.lastGKHPayment = lastGKHPayment
         self.id = Int.random(in: 100 ... 10000)
         self.name = "\(lastGKHPayment.amount ?? 0.0)"

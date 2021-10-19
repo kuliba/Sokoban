@@ -60,6 +60,7 @@ class PaymentsViewController: UIViewController {
         loadLastPhonePayments()
         loadLastPayments()
         loadLastMobilePayments()
+        loadAllLastMobilePayments()
 //        loadLastGKHPayments()
     }
     
@@ -188,38 +189,38 @@ extension PaymentsViewController {
         }
     }
     
-    func loadLastGKHPayments() {
-        NetworkManager<GetLatestServicePaymentsDecodableModel>.addRequest(.getLatestServicePayments, [:], [:]) { model, error in
-            if error != nil {
-                print("DEBUG: Error: ", error ?? "")
-            }
-            guard let model = model else { return }
-            print("DEBUG: LatestPayment: ", model)
-            if model.statusCode == 0 {
-                guard let lastPaymentsList  = model.data else { return }
-                
-                if lastPaymentsList.count > 3 {
-                    let payArr = lastPaymentsList.prefix(3)
-                    payArr.forEach { lastPayment in
-                        let payment = PaymentsModel(lastGKHPayment: lastPayment)
-                        self.payments.append(payment)
-                    }
-                } else {
-                    lastPaymentsList.forEach { lastPayment in
-                        let payment = PaymentsModel(lastGKHPayment: lastPayment)
-                        self.payments.append(payment)
-                    }
-                }
-            } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
-//                DispatchQueue.main.async {
-//                if model.errorMessage == "Пользователь не авторизован"{
-//                    AppLocker.present(with: .validate)
+//    func loadLastGKHPayments() {
+//        NetworkManager<GetLatestServicePaymentsDecodableModel>.addRequest(.getLatestServicePayments, [:], [:]) { model, error in
+//            if error != nil {
+//                print("DEBUG: Error: ", error ?? "")
+//            }
+//            guard let model = model else { return }
+//            print("DEBUG: LatestPayment: ", model)
+//            if model.statusCode == 0 {
+//                guard let lastPaymentsList  = model.data else { return }
+//
+//                if lastPaymentsList.count > 3 {
+//                    let payArr = lastPaymentsList.prefix(3)
+//                    payArr.forEach { lastPayment in
+//                        let payment = PaymentsModel(lastGKHPayment: lastPayment)
+//                        self.payments.append(payment)
+//                    }
+//                } else {
+//                    lastPaymentsList.forEach { lastPayment in
+//                        let payment = PaymentsModel(lastGKHPayment: lastPayment)
+//                        self.payments.append(payment)
+//                    }
 //                }
-//                }
-            }
-        }
-    }
+//            } else {
+//                print("DEBUG: Error: ", model.errorMessage ?? "")
+////                DispatchQueue.main.async {
+////                if model.errorMessage == "Пользователь не авторизован"{
+////                    AppLocker.present(with: .validate)
+////                }
+////                }
+//            }
+//        }
+//    }
     
     func loadLastMobilePayments() {
         NetworkManager<GetLatestMobilePaymentsDecodableModel>.addRequest(.getLatestMobilePayments, [:], [:]) { model, error in
@@ -242,6 +243,35 @@ extension PaymentsViewController {
                         let payment = PaymentsModel(lastMobilePayment: lastPayment)
                         self.payments.append(payment)
                     }
+                }
+            } else {
+                print("DEBUG: Error: ", model.errorMessage ?? "")
+//                DispatchQueue.main.async {
+//                if model.errorMessage == "Пользователь не авторизован"{
+//                    AppLocker.present(with: .validate)
+//                }
+//                }
+            }
+        }
+    }
+    
+    func loadAllLastMobilePayments() {
+        
+        let param = ["isPhonePayments": "true", "isCountriesPayments": "true", "isServicePayments": "true", "isMobilePayments": "true"]
+
+        NetworkManager<GetAllLatestPaymentsDecodableModel>.addRequest(.getAllLatestPayments, param, [:]) { model, error in
+            if error != nil {
+                print("DEBUG: Error: ", error ?? "")
+            }
+            guard let model = model else { return }
+            print("DEBUG: LatestPayment: ", model)
+            if model.statusCode == 0 {
+                guard let lastPaymentsList  = model.data else { return }
+                let payArr = lastPaymentsList.prefix(3)
+                payArr.forEach { lastPayment in
+                    let payment = PaymentsModel(lastGKHPayment: lastPayment)
+                    self.payments.append(payment)
+                    
                 }
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")

@@ -258,6 +258,10 @@ class MockItems {
     
     class func returnSectionInProducts() -> [PaymentsModel] {
         return [
+            PaymentsModel(id: 1, name: "Неактивированные продукты",
+                          iconName: "PaymentsIconBarcode-scanner",
+                          controllerName: "https://www.forabank.ru/private/cards/",
+                          description: "QR"),
             PaymentsModel(id: 1, name: "Карты и счета",
                           iconName: "PaymentsIconBarcode-scanner",
                           controllerName: "https://www.forabank.ru/private/cards/",

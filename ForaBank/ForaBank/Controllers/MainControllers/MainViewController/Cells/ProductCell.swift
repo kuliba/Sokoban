@@ -11,6 +11,9 @@ import UIKit
 
 class ProductCell: UICollectionViewCell, SelfConfiguringCell {
    
+//    var status: String?
+//    var statusPC: String?
+//
     func configure<U>(with value: U) where U : Hashable {
         guard let card = card else { return }
         
@@ -69,6 +72,12 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
         return imageView
     }()
     
+    private let statusImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
     //MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -103,9 +112,32 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
         maskCardLabel.text = viewModel.maskedcardNumber
         maskCardLabel.textColor = viewModel.colorText
         logoImageView.image = viewModel.logoImage
+        if card.status == "Действует" || card.status == "Выдано клиенту", card.statusPC == "17"{
+            statusImage.image = UIImage(named: "unactivated")
+            maskCardLabel.alpha = 0.5
+            cardNameLabel.alpha = 0.5
+            balanceLabel.alpha = 0.5
+            logoImageView.alpha = 0.5
+            backgroundImageView.alpha = 0.8
+        } else if card.status == "Заблокирована банком" || card.status == "Блокирована по решению Клиента", card.statusPC == "3" || card.statusPC == "5" || card.statusPC == "6" || card.statusPC == "7" || card.statusPC == "20" || card.statusPC == "21"{
+            statusImage.image = UIImage(named: "blockProduct")
+            maskCardLabel.alpha = 0.5
+            cardNameLabel.alpha = 0.5
+            balanceLabel.alpha = 0.5
+            logoImageView.alpha = 0.5
+            backgroundImageView.alpha = 0.8
+        } else {
+            statusImage.image = UIImage(named: "")
+            maskCardLabel.alpha = 1
+            cardNameLabel.alpha = 1
+            balanceLabel.alpha = 1
+            logoImageView.alpha = 1
+            backgroundImageView.alpha = 1
+        }
     }
     
     func setupUI() {
+        
         backgroundColor = .clear
         layer.cornerRadius = 8
         layer.shadowColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1).cgColor
@@ -119,12 +151,14 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
                          height: self.frame.height * 0.785))
         layer.shadowPath = shadowPath.cgPath
         
-        
         addSubview(backgroundImageView)
         addSubview(logoImageView)
         addSubview(maskCardLabel)
         addSubview(cardNameLabel)
         addSubview(balanceLabel)
+        addSubview(statusImage)
+//        addSubview(slider ?? UISlider())
+
         
         backgroundImageView.fillSuperview()
         balanceLabel.font = UIFont.boldSystemFont(ofSize: 14)
@@ -135,12 +169,16 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
                              paddingLeft: 16, width: 18, height: 18)
         
         
+        
+        statusImage.center(inView: self)
+       
         cardNameLabel.anchor(top: maskCardLabel.bottomAnchor, left: self.leftAnchor, right: self.rightAnchor,
                              paddingTop: 25, paddingLeft: 12, paddingRight: 8)
         cardNameLabel.font = UIFont.systemFont(ofSize: 14, weight: .light)
 
         balanceLabel.anchor(left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor,
                             paddingLeft: 12, paddingBottom: 11, paddingRight: 30)
+
     }
     
 }

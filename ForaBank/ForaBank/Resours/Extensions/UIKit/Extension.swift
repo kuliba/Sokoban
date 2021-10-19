@@ -102,3 +102,20 @@ extension String {
             .joined()
     }
 }
+
+protocol OptionalProtocol {
+    associatedtype Wrapped
+    var optional: Wrapped? { get }
+}
+
+extension Optional: OptionalProtocol {
+    var optional: Wrapped? {
+        return self
+    }
+}
+
+extension Sequence where Element: OptionalProtocol {
+    var removingOptionals: [Element.Wrapped] {
+        return self.compactMap { $0.optional }
+    }
+}

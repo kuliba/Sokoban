@@ -15,6 +15,7 @@ class RequisitesViewController: UIViewController, UITableViewDataSource, UITable
     var cardUnMask = false
     var mockItem: [PaymentsModel] = []
     var product: GetProductListDatum? 
+    var model: GetProductDetailsDataClass?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,7 +52,7 @@ class RequisitesViewController: UIViewController, UITableViewDataSource, UITable
               //set image for button
         button.setImage(UIImage(named: "share"), for: .normal)
               //add function for button
-        button.addTarget(self, action: "createPdfFromTableView", for: .touchUpInside)
+        button.addTarget(self, action: #selector(share), for: .touchUpInside)
             //set frame
         button.frame = CGRect(x: 0, y: 0, width: 53, height: 31)
 
@@ -79,18 +80,15 @@ class RequisitesViewController: UIViewController, UITableViewDataSource, UITable
         cell?.nameCellLabel.text = mockItem[indexPath.row].name
         cell?.titleLabel.text = mockItem[indexPath.row].description
         cell?.product = self.product
+        cell?.rightButton.imageView?.image = UIImage(named: mockItem[indexPath.row].iconName ?? "")
         if cell?.nameCellLabel.text == "Номер карты"{
             cell?.rightButton.isHidden = false
             cell?.rightButton.addTarget(self,
                 action: #selector(self.unmaskNumber),
                 for: .touchUpInside)
-        } else if cell?.nameCellLabel.text == "Кореспондентский счет"{
-            cell?.rightButton.setImage(UIImage(named: "copy"), for: .normal)
+            
+        } else {
             cell?.rightButton.isHidden = true
-            cell?.rightButton.addTarget(self,
-                action: #selector(self.copyValuePressed),
-                for: .touchUpInside)
-
         }
         cell?.selectionStyle = .none
         return cell ?? UITableViewCell()
@@ -123,7 +121,13 @@ class RequisitesViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     @objc func unmaskNumber() {
-        mockItem[2].description = product?.number
+        mockItem[7].description = product?.number
+        mockItem[7].iconName = "eye-off"
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3.0) {
+            self.mockItem[7].description = self.model?.maskCardNumber
+            self.mockItem[7].iconName = "eye"
+            self.tableView.reloadData()
+        }
         tableView.reloadData()
     }
     
@@ -149,18 +153,20 @@ class RequisitesViewController: UIViewController, UITableViewDataSource, UITable
     
     @objc private func share(){
        
-        var textToShare = [Any?]()
-        
+        var textToShare = [String]()
+        textToShare.append("")
         for i in mockItem {
             guard let description = i.description else {
                 return
             }
-            textToShare.append(i.name + " " + description)
+//            textToShare.append(i.name + " " + description + "\n")
+//            textToShare[0] +=  String(i.name + " " + description).description
+            textToShare[0].append(String(i.name + " " + description + "\n"))
         }
             
             // set up activity view controller
 //            textToShare = [ text, text]
-        let activityViewController = UIActivityViewController(activityItems: textToShare as [Any], applicationActivities: nil)
+        let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
             activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
             
             // exclude some activity types from the list (optional)

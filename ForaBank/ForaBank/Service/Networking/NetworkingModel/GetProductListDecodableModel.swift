@@ -91,6 +91,7 @@ struct GetProductListDatum: Codable{
     let id: Int?
     let background: [String?]
     let XLDesign: String?
+    let statusPC: String?
 
 }
 
@@ -143,7 +144,8 @@ extension GetProductListDatum {
         fontDesignColor: String?? = nil,
         id: Int?? = nil,
         background: [String]?? = nil,
-        XLDesign: String?? = nil
+        XLDesign: String?? = nil,
+        statusPC: String? = nil
     ) -> GetProductListDatum {
         return GetProductListDatum (
             number: number ?? self.number,
@@ -176,7 +178,8 @@ extension GetProductListDatum {
             fontDesignColor: fontDesignColor ?? self.fontDesignColor,
             id: id ?? self.id,
             background: (background ?? []) ?? self.background,
-            XLDesign: XLDesign ?? self.XLDesign
+            XLDesign: XLDesign ?? self.XLDesign,
+            statusPC: statusPC ?? self.statusPC
         )
     }
 
