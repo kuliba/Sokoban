@@ -215,8 +215,8 @@ class MockItems {
 //                          description: "QR"),
             
             PaymentsModel(id: 22, name: "Шаблоны и\nавтоплатежи",
-                          iconName: "promoBanner2",
-                          controllerName: "https://www.forabank.ru/actions/krasnaya-polyana/"),
+                          iconName: "contactTransfer",
+                          controllerName: "https://promo7.forabank.ru/?metka=kontakt_krpst1"),
             
             PaymentsModel(id: 33, name: "Перевод по\nтелефону",
                           iconName: "migBanner",
@@ -285,6 +285,10 @@ class MockItems {
                           iconName: "PaymentsIconCarancy",
                           controllerName: "https://www.forabank.ru/private/strakhovanie/",
                           description: "Что то"),
+            PaymentsModel(id: 5, name: "Заблокированные продукты",
+                          iconName: "PaymentsIconCarancy",
+                          controllerName: "https://www.forabank.ru/private/strakhovanie/",
+                          description: "Что то")
         ]
     }
     

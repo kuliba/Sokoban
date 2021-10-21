@@ -119,7 +119,7 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
             balanceLabel.alpha = 0.5
             logoImageView.alpha = 0.5
             backgroundImageView.alpha = 0.8
-        } else if card.status == "Заблокирована банком" || card.status == "Блокирована по решению Клиента", card.statusPC == "3" || card.statusPC == "5" || card.statusPC == "6" || card.statusPC == "7" || card.statusPC == "20" || card.statusPC == "21"{
+        } else if card.status == "Заблокирована банком" || card.status == "Блокирована по решению Клиента" || card.status == "Блокирована по решению Клиента" || card.status == "BLOCKED_DEBET" || card.status == "BLOCKED_CREDIT" || card.status == "BLOCKED" , card.statusPC == "3" || card.statusPC == "5" || card.statusPC == "6" || card.statusPC == "7" || card.statusPC == "20" || card.statusPC == "21" || card.statusPC == nil{
             statusImage.image = UIImage(named: "blockProduct")
             maskCardLabel.alpha = 0.5
             cardNameLabel.alpha = 0.5

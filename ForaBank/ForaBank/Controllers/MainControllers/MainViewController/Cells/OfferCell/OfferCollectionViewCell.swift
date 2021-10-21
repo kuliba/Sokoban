@@ -92,7 +92,7 @@ class OfferCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
         let viewModel = CardViewModel(card: card)
         
         backgroundImageView.image =  UIImage(named: "promoBanner2")
-
+        
         balanceLabel.text = viewModel.balance
         balanceLabel.textColor = viewModel.colorText
         cardNameLabel.text = viewModel.cardName

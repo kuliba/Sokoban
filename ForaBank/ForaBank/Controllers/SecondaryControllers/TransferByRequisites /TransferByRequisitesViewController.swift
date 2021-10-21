@@ -143,6 +143,8 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         bottomView.currencySymbol = "₽"
 
         let item = UIBarButtonItem(image: UIImage.init(imageLiteralResourceName: "scanner"), style: .plain, target: self, action: #selector(presentScanner))
+        item.tintColor = .lightGray
+        item.isEnabled = false
         self.navigationItem.setRightBarButton(item, animated: false)
 //        navigationItem.rightBarButtonItem?.action = #selector(doneButtonTapped)
         nameCompanyField.errorLabel.sizeToFit()

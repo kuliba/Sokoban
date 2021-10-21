@@ -81,7 +81,7 @@ struct GetProductListDatum: Codable{
     let accountNumber: String?
     let allowDebit, allowCredit: Bool?
     var customName: String?
-    let cardID: Int?
+    var cardID: Int?
     let accountID: Int?
     let name: String?
     let validThru: Int?

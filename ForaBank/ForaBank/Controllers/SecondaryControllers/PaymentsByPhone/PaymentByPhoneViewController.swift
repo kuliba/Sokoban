@@ -170,7 +170,20 @@ class PaymentByPhoneViewController: UIViewController {
                     self?.showAlert(with: "Ошибка", and: error!)
                 }
                 guard let data = data else { return }
-                self?.cardListView.cardList = data
+                self?.cardListView.cardList = data.filter({ item in
+                    if item.productType == "CARD"{
+                        guard  item.statusPC == "0" && item.status == "Действует" else {
+                            return false
+                        }
+                        return true
+                    } else if item.productType == "ACCOUNT"{
+                        guard  item.status == "NOT_BLOCKED" || item.status == "BLOCKED_CREDIT" else {
+                            return false
+                        }
+                        return true
+                    }
+                    return true
+                })
                 
                 if data.count > 0 {
                     self?.cardField.cardModel = data.first

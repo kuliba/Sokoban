@@ -30,6 +30,7 @@ extension MainViewController: UICollectionViewDelegate {
             default:
                 let viewController = ProductViewController()
     //            viewController.addCloseButton()
+                viewController.delegate = self
                 viewController.indexItem = indexPath.item
                 viewController.product = productList[indexPath.item]
                 
@@ -40,6 +41,7 @@ extension MainViewController: UICollectionViewDelegate {
                 } else {
                     viewController.products = productList
                     first3Elements = productList
+                    
                 }
 //                viewController.products = productList
                 

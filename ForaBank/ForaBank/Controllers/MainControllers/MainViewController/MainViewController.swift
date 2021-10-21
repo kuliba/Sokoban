@@ -8,7 +8,56 @@
 import UIKit
 import RealmSwift
 
-class MainViewController: UIViewController {
+class MainViewController: UIViewController, ChildViewControllerDelegate, FirstControllerDelegate{
+    
+    func sendData(data: [GetProductListDatum]) {
+        
+        DispatchQueue.main.async {
+         
+            self.getCardList { data, errorMessage in
+            
+            guard let listProducts = data else {return}
+            self.products.removeAll()
+            self.productList.removeAll()
+            for i in listProducts.prefix(3) {
+                self.products.append(PaymentsModel(productList: i))
+            }
+            if listProducts.prefix(3).count < 3{
+                self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
+            } else if listProducts.prefix(3).count == 3{
+                self.products.append(PaymentsModel(id: 32, name: "Cм.все", iconName: "openCard", controllerName: ""))
+            }
+            //                self.transfers = self.payments
+            self.productList = data ?? []
+            
+
+        }
+        }
+        
+//        DispatchQueue.main.async {
+//            self.products.removeAll()
+//            self.productList.removeAll()
+//        for i in data.prefix(3) {
+//            self.products.append(PaymentsModel(productList: i))
+//        }
+//
+//            if data.prefix(3).count < 3{
+//                self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
+//            } else if data.prefix(3).count == 3{
+//                self.products.append(PaymentsModel(id: 32, name: "Cм.все", iconName: "openCard", controllerName: ""))
+//            }
+//
+//            self.productList = data
+//
+//        self.reloadData(with: nil)
+//
+//        }
+       }
+    
+    func childViewControllerResponse(productList: [GetProductListDatum]) {
+        showAlert(with: "ОБновляет", and:  "")
+    }
+    
     
     var card: UserAllCardsModel?
     var sectionIndexCounter = 0
@@ -20,6 +69,7 @@ class MainViewController: UIViewController {
             }
         }
     }
+    
     var productList = [GetProductListDatum](){
         didSet{
             DispatchQueue.main.async {
@@ -108,6 +158,14 @@ class MainViewController: UIViewController {
     var dataSource: UICollectionViewDiffableDataSource<Section, PaymentsModel>?
     lazy var realm = try? Realm()
 
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+//        if self.isMovingFromParent {
+//            showAlert(with: "isMovingFromParent", and: "123")
+//        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.isHidden = true
@@ -174,34 +232,34 @@ class MainViewController: UIViewController {
 
     
     override func viewDidAppear(_ animated: Bool) {
-        
+
         print("viewDidAppear")
-        
+
             self.getCardList { data, errorMessage in
                 self.productList.removeAll()
                 self.products.removeAll()
                 DispatchQueue.main.async {
                 guard let listProducts = data else {return}
-                
+
                 for i in listProducts.prefix(3) {
                     self.products.append(PaymentsModel(productList: i))
                 }
-                 
+
                     if listProducts.prefix(3).count < 3{
                         self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
                     } else if listProducts.prefix(3).count == 3{
                         self.products.append(PaymentsModel(id: 32, name: "Cм.все", iconName: "openCard", controllerName: ""))
                     }
-                    
+
                 self.productList = data ?? []
-                
+
                 self.reloadData(with: nil)
 
             }
         }
     }
     
- 
+
     
     override func viewDidLayoutSubviews() {
         print("view load back")

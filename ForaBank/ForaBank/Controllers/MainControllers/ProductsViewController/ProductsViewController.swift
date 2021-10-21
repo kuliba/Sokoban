@@ -22,8 +22,20 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                 self.notActivated.removeAll()
                 for i in self.products{
                     self.totalMoney += i.balance ?? 0.0
-                    if i.statusPC == "17", i.status == "Действует" || i.status == "Выдано клиенту"{
-                        self.notActivated.append(i)
+                    self.blocked.removeAll()
+                    self.activeProduct.removeAll()
+                    self.notActivated.removeAll()
+                    for i in self.products {
+                        if i.statusPC == "17", i.status == "Действует" || i.status == "Выдано клиенту"{
+                            self.notActivated.append(i)
+                            continue
+                        } else if i.status == "Заблокирована банком" || i.status == "Блокирована по решению Клиента" || i.status == "BLOCKED_DEBET" || i.status == "BLOCKED_CREDIT" || i.status == "BLOCKED", i.statusPC == "3" || i.statusPC == "5" || i.statusPC == "6"  || i.statusPC == "7"  || i.statusPC == "20"  || i.statusPC == "21" || i .statusPC == nil {
+                            self.blocked.append(i)
+                            continue
+                        } else if  i.statusPC == "0" || i.statusPC == nil, i.status == "Действует" || i.status == "NOT_BLOCKED"{
+                            self.activeProduct.append(i)
+                            continue
+                        }
                         
                         
                     }
@@ -33,11 +45,26 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
             }
         }
     }
+    
+    var blocked = [GetProductListDatum](){
+        didSet{
+            
+            self.tableView?.reloadData()
+            
+        }
+    }
+    
+    var activeProduct = [GetProductListDatum](){
+        didSet{
+            self.tableView?.reloadData()
+            
+        }
+    }
+    
     var notActivated = [GetProductListDatum](){
         didSet{
-            print(notActivated)
-//            sectionData.append(PaymentsModel(id: 33, name: "Неактивированные продукты", iconName: "", controllerName: ""))
             self.tableView?.reloadData()
+            
         }
     }
     let totalMoneyView: TotalMoneyView = UIView.fromNib()
@@ -58,7 +85,9 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
     
 
     func setupUI() {
-        
+        navigationController?.navigationBar.barTintColor = .white
+        navigationController?.view.backgroundColor =  .white
+        navigationController?.navigationBar.backgroundColor = .white
         title = "Мои продукты"
         totalMoneyView.backgroundColor = .clear
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(action))
@@ -93,6 +122,11 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
         
 
         view.backgroundColor = UIColor(red: 0.965, green: 0.965, blue: 0.969, alpha: 1)
+        
+        
+        
+    
+        
     }
     @objc func action(sender: UIBarButtonItem) {
         guard let url = URL(string: "https://promo.forabank.ru" ) else { return  }
@@ -104,11 +138,14 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0{
-            return notActivated.count
-        } else if section == 1{
-            return 4
-        } else {
+        switch sectionData[section].name{
+            case "Неактивированные продукты":
+                return notActivated.count
+            case "Карты и счета":
+                return activeProduct.count
+            case "Заблокированные продукты":
+                return blocked.count
+        default:
             return 0
         }
     }
@@ -117,50 +154,51 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: ProductTableViewCell.identifier, for: indexPath) as! ProductTableViewCell
-        switch sectionData.count{
-        case 6:
-            if indexPath.section == 0, products[indexPath.row].statusPC == "17", products[indexPath.row].status == "Действует" || products[indexPath.row].status == "Выдано клиенту" {
-                let str = products[indexPath.row].numberMasked ?? ""
-                cell.titleProductLabel.text = products[indexPath.row].customName ?? products[indexPath.row].mainField
+        switch sectionData[indexPath.section].name{
+        case "Неактивированные продукты":
+            if notActivated.count > 0{
+                let str = notActivated[indexPath.row].numberMasked ?? ""
+                cell.titleProductLabel.text = notActivated[indexPath.row].customName ?? notActivated[indexPath.row].mainField
                 cell.numberProductLabel.text = "\(str.suffix(4))"
-                cell.balanceLabel.text = "\(products[indexPath.row].balance?.currencyFormatter(symbol: products[indexPath.row].currency ?? "") ?? "")"
-                cell.coverpProductImage.image = products[indexPath.row].smallDesign?.convertSVGStringToImage()
-                cell.cardTypeImage.image = products[indexPath.row].paymentSystemImage?.convertSVGStringToImage()
-                cell.typeOfProduct.text = products[indexPath.row].additionalField
-                if products[indexPath.row].paymentSystemImage == nil{
+                cell.balanceLabel.text = "\(notActivated[indexPath.row].balance?.currencyFormatter(symbol: notActivated[indexPath.row].currency ?? "") ?? "")"
+                cell.coverpProductImage.image = notActivated[indexPath.row].smallDesign?.convertSVGStringToImage()
+                cell.cardTypeImage.image = notActivated[indexPath.row].paymentSystemImage?.convertSVGStringToImage()
+                cell.typeOfProduct.text = notActivated[indexPath.row].additionalField
+                if notActivated[indexPath.row].paymentSystemImage == nil{
                     cell.cardTypeImage.isHidden = true
                 }
-            } else {
-                if indexPath.section == 1, products.count != 0, products[indexPath.row].statusPC != "17"{
-                    let str = products[indexPath.row].numberMasked ?? ""
-                    cell.titleProductLabel.text = products[indexPath.row].customName ?? products[indexPath.row].mainField
-                    cell.numberProductLabel.text = "\(str.suffix(4))"
-                    cell.balanceLabel.text = "\(products[indexPath.row].balance?.currencyFormatter(symbol: products[indexPath.row].currency ?? "") ?? "")"
-                    cell.coverpProductImage.image = products[indexPath.row].smallDesign?.convertSVGStringToImage()
-                    cell.cardTypeImage.image = products[indexPath.row].paymentSystemImage?.convertSVGStringToImage()
-                    cell.typeOfProduct.text = products[indexPath.row].additionalField
-                    if products[indexPath.row].paymentSystemImage == nil{
-                        cell.cardTypeImage.isHidden = true
-                    }
-                } else {
-                    cell.isHidden = true
+            }
+        case "Карты и счета":
+            if activeProduct.count > 0{
+                let str = activeProduct[indexPath.row].numberMasked ?? ""
+                cell.titleProductLabel.text = activeProduct[indexPath.row].customName ?? activeProduct[indexPath.row].mainField
+                cell.numberProductLabel.text = "\(str.suffix(4))"
+                cell.balanceLabel.text = "\(activeProduct[indexPath.row].balance?.currencyFormatter(symbol: activeProduct[indexPath.row].currency ?? "") ?? "")"
+                cell.coverpProductImage.image = activeProduct[indexPath.row].smallDesign?.convertSVGStringToImage()
+                cell.cardTypeImage.image = activeProduct[indexPath.row].paymentSystemImage?.convertSVGStringToImage()
+                cell.typeOfProduct.text = activeProduct[indexPath.row].additionalField
+                if activeProduct[indexPath.row].paymentSystemImage == nil{
+                    cell.cardTypeImage.isHidden = true
                 }
             }
-
-  
+        case "Заблокированные продукты":
+            if blocked.count > 0{
+                let str = blocked[indexPath.item].numberMasked ?? ""
+                cell.titleProductLabel.text = blocked[indexPath.item].customName ?? blocked[indexPath.item].mainField
+                cell.numberProductLabel.text = "\(str.suffix(4))"
+                cell.balanceLabel.text = "\(blocked[indexPath.item].balance?.currencyFormatter(symbol: blocked[indexPath.item].currency ?? "") ?? "")"
+                cell.coverpProductImage.image = blocked[indexPath.item].smallDesign?.convertSVGStringToImage()
+                cell.cardTypeImage.image = blocked[indexPath.item].paymentSystemImage?.convertSVGStringToImage()
+                cell.typeOfProduct.text = blocked[indexPath.item].additionalField
+                if blocked[indexPath.item].paymentSystemImage == nil{
+                    cell.cardTypeImage.isHidden = true
+                }
+            }
         default:
-//            let str = products[indexPath.row].numberMasked ?? ""
-//            cell.titleProductLabel.text = products[indexPath.row].customName ?? products[indexPath.row].mainField
-//            cell.numberProductLabel.text = "\(str.suffix(4))"
-//            cell.balanceLabel.text = "\(products[indexPath.row].balance?.currencyFormatter(symbol: products[indexPath.row].currency ?? "") ?? "")"
-//            cell.coverpProductImage.image = products[indexPath.row].smallDesign?.convertSVGStringToImage()
-//            cell.cardTypeImage.image = products[indexPath.row].paymentSystemImage?.convertSVGStringToImage()
-//            cell.typeOfProduct.text = products[indexPath.row].additionalField
+//            cell.backgroundColor = .blue
             print("nil")
         }
-     
-      
-        
+
         return cell
     }
     
@@ -177,26 +215,23 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
     
 
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-      
+            if indexPath.section == 0, sectionData[0].name == "Неактивированные продукты"{
+                let title = "Активировать"
 
-        if indexPath.section == 0, products.count != 0{
-        
-        }
-        
-        
-          let title = "Активировать"
+                let action = UIContextualAction(style: .normal, title: title,
+                  handler: { (action, view, completionHandler) in
+                  // Update data source when user taps action
+                    self.activateProduct(idCard: self.notActivated[indexPath.row].cardID, number: self.notActivated[indexPath.row].number)
 
-          let action = UIContextualAction(style: .normal, title: title,
-            handler: { (action, view, completionHandler) in
-            // Update data source when user taps action
-//            self.dataSource?.setFavorite(!favorite, at: indexPath)
-            completionHandler(true)
-          })
-
-        action.backgroundColor = .systemGreen
-          let configuration = UISwipeActionsConfiguration(actions: [action])
-            configuration.performsFirstActionWithFullSwipe = false
-          return configuration
+                  completionHandler(true)
+                })
+              action.backgroundColor = .systemGreen
+                let configuration = UISwipeActionsConfiguration(actions: [action])
+                  configuration.performsFirstActionWithFullSwipe = true
+                return configuration
+            } else {
+                return nil
+            }
         }
     
          func tableView(_ tableView: UITableView,
@@ -205,8 +240,48 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
           return .none
         }
     
-    private func activateProduct() {
-        print("Marked as favourite")
+    private func activateProduct(idCard: Int?, number: String?) {
+            
+            let alertController = UIAlertController(title: "Активировать карту?", message: "После активации карта будет готова к использованию", preferredStyle: .alert)
+               let doneAction = UIAlertAction(title: "OK", style: .default) { (action) in
+                   
+                   guard let idCard = idCard else { return }
+                   guard let number = number else { return }
+                   
+                   let body = [ "cardId": idCard,
+                                "cardNumber": number
+                                
+                                ] as [String : AnyObject]
+                   
+                   NetworkManager<UnBlockCardDecodableModel>.addRequest(.unblockCard, [:], body) { model, error in
+                       if error != nil {
+                           print("DEBUG: Error: ", error ?? "")
+                           self.showAlert(with: "Ошибка", and: error ?? "")
+                       }
+                       guard let model = model else { return }
+                       print("DEBUG: LatestPayment: ", model)
+                       if model.statusCode == 0 {
+                           self.showAlert(with: "Карта активирована", and: "")
+                           
+                           DispatchQueue.main.async {
+                               self.getCardList{ cardList,error in
+                                   print("")
+                               }
+
+                           }
+                       } else {
+                           self.showAlert(with: "Ошибка", and: error ?? "")
+                           print("DEBUG: Error: ", model.errorMessage ?? "")
+                       }
+                   }
+                   
+               }
+                let cancelAction = UIAlertAction(title: "Отмена", style: .default) { (action) in
+                    
+                }
+                alertController.addAction(cancelAction)
+                alertController.addAction(doneAction)
+                present(alertController, animated: true, completion: nil)
     }
     
     
@@ -220,6 +295,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
             label.text = sectionData[section].name
             label.font = .boldSystemFont(ofSize: 18)
             label.textColor = .black
+            label.alpha = 0.3
             headerView.addSubview(label)
             let button = UIButton(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
             button.setImage(UIImage(systemName: "arrow"), for: .normal)
@@ -228,16 +304,62 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
 //            button.anchor()
             headerView.addSubview(button)
             button.anchor(left: label.leftAnchor, paddingLeft: 10, width: 24, height: 24)
+            switch sectionData[section].name {
+            case "Неактивированные продукты":
+                if notActivated.count > 0 {
+                    label.alpha = 1
+                } else{
+                    label.alpha = 0.3
+                    
+                }
 
-            if section != 0{
-                headerView.alpha = 0.2
+            case "Карты и счета":
+                if activeProduct.count == 0 {
+                    label.alpha = 0.3
+                } else {
+                    label.alpha = 1
+                }
+            case "Заблокированные продукты":
+                if blocked.count > 0 {
+                    label.alpha = 1
+                } else{
+                    label.alpha = 0.3
+                }
+                
+                
+            default:
+                print("")
             }
+//            if section != 0{
+//                headerView.alpha = 0.2
+//            }
+         
 //            label.centerY(inView: headerView)
 //            headerView.anchor(paddingTop: 10)
             return headerView
+        
     }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        switch sectionData[section].name {
+        case "Неактивированные продукты":
+            if notActivated.count > 0 {
+                return 50
+            } else{
+                return 0
+            }
+
+        case "Заблокированные продукты":
+            if blocked.count > 0 {
+                return 50
+            } else{
+                return 0
+            }
+            
+            
+        default:
             return 50
+        }
+        
     }
     
     
@@ -252,7 +374,10 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
             guard let model = model else { return }
             if model.statusCode == 0 {
                 guard let cardList = model.data else { return }
+                
+
                 self.products = model.data ?? []
+                
                 
                 completion(cardList, nil)
             } else {

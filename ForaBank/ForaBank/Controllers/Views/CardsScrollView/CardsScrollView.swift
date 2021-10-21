@@ -43,6 +43,7 @@ final class CardsScrollView: UIView {
     
     var didCardTapped: ((Int) -> Void)?
     
+    
     var firstItemTap: (() -> Void)?
     var lastItemTap: (() -> Void)?
     
