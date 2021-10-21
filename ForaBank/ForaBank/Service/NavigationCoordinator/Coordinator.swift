@@ -62,3 +62,7 @@ open class Coordinator<DeepLinkType>: PresentableCoordinator<DeepLinkType>, Coor
     }
 }
 
+enum DeepLink {
+    case auth
+    case home
+}

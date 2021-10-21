@@ -111,6 +111,8 @@
 		0BA14E18270DF8F60098E422 /* AppLockerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA14E17270DF8F60098E422 /* AppLockerHelper.swift */; };
 		0BA14E1A2712597D0098E422 /* StaticDefaultTimeOut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA14E192712597D0098E422 /* StaticDefaultTimeOut.swift */; };
 		0BA14E1C2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA14E1B2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift */; };
+		0BA14E1E271F38810098E422 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA14E1D271F38810098E422 /* AppCoordinator.swift */; };
+		0BA14E20272082F10098E422 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA14E1F272082F10098E422 /* BaseViewController.swift */; };
 		0BA251ED26C266A400AD087A /* CreateServiceTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA251EC26C266A400AD087A /* CreateServiceTransferDecodableModel.swift */; };
 		0BA251EF26C26AE700AD087A /* AntiFraudDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA251EE26C26AE700AD087A /* AntiFraudDecodableModel.swift */; };
 		0BA251F126C26BE200AD087A /* СreateMe2MePullTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA251F026C26BE200AD087A /* СreateMe2MePullTransferDecodableModel.swift */; };
@@ -541,6 +543,8 @@
 		0BA14E17270DF8F60098E422 /* AppLockerHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockerHelper.swift; sourceTree = "<group>"; };
 		0BA14E192712597D0098E422 /* StaticDefaultTimeOut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticDefaultTimeOut.swift; sourceTree = "<group>"; };
 		0BA14E1B2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAllLatestPaymentsDecodableModel.swift; sourceTree = "<group>"; };
+		0BA14E1D271F38810098E422 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		0BA14E1F272082F10098E422 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		0BA251EC26C266A400AD087A /* CreateServiceTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateServiceTransferDecodableModel.swift; sourceTree = "<group>"; };
 		0BA251EE26C26AE700AD087A /* AntiFraudDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntiFraudDecodableModel.swift; sourceTree = "<group>"; };
 		0BA251F026C26BE200AD087A /* СreateMe2MePullTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "СreateMe2MePullTransferDecodableModel.swift"; sourceTree = "<group>"; };
@@ -948,6 +952,8 @@
 				0B283FBA26FBC9C800B5E925 /* Coordinator.swift */,
 				0B283FBC26FBC9F100B5E925 /* Presentable.swift */,
 				0B283FBE26FBCA0A00B5E925 /* Router.swift */,
+				0BA14E1D271F38810098E422 /* AppCoordinator.swift */,
+				0BA14E1F272082F10098E422 /* BaseViewController.swift */,
 			);
 			path = NavigationCoordinator;
 			sourceTree = "<group>";
@@ -3152,6 +3158,7 @@
 				0BD1CA9D26E6B63900CFE993 /* CountriesListSaved.swift in Sources */,
 				68FFA55B268586D3002DADFA /* HeaderBanksCollectionReusableView.swift in Sources */,
 				68C8D57026F0DF120076246B /* HistoryTableViewCell.swift in Sources */,
+				0BA14E1E271F38810098E422 /* AppCoordinator.swift in Sources */,
 				687FB23626F0189C004A479F /* ProductViewControllerDataSource.swift in Sources */,
 				EDA5637A26F386AD0093F0C8 /* SettingTableViewController.swift in Sources */,
 				68673B4F26F2F29300F67A8C /* RequisitesViewController.swift in Sources */,
@@ -3255,6 +3262,7 @@
 				ED60A1E126DC10A3000F3208 /* GetClientConsentMe2MePullDecodableModel.swift in Sources */,
 				ED4B54462703465200C87A1A /* CardsScrollModel.swift in Sources */,
 				ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */,
+				0BA14E20272082F10098E422 /* BaseViewController.swift in Sources */,
 				688B9BB426E03B3000407A75 /* TotalMoneyView.swift in Sources */,
 				ED84994526A6F647005205C6 /* ChooseCountryHeaderView.swift in Sources */,
 				EDB1655A2667A220007E6030 /* CodeVerificationViewController UI.swift in Sources */,
