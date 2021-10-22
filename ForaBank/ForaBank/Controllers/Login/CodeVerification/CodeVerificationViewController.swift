@@ -18,6 +18,8 @@ class CodeVerificationViewController: UIViewController {
     var resendTimer = Timer()
 //    var verificationType: CodeVerificationViewModel.CodeVerificationType? = .register
     
+    var cardNumber: String?
+    
     lazy var titleLabel = UILabel(text: "Введите код из сообщения",
                                   font: .boldSystemFont(ofSize: 18))
     lazy var smsCodeView: SmsCodeView = SmsCodeView()
@@ -38,7 +40,7 @@ class CodeVerificationViewController: UIViewController {
 
         navigationController?.view.backgroundColor = .white
         smsCodeView.callBacktext = { str in
-            if str == "123456"{
+            if str == "123456", self.cardNumber == "0565205123484281"{
                 DispatchQueue.main.async { [weak self] in
 //                    print("Password \(String(describing: mode)) successfully")
                     let vc = MainTabBarViewController()

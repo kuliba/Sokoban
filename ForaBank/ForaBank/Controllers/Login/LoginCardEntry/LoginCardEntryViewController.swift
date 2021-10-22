@@ -37,6 +37,7 @@ class LoginCardEntryViewController: UIViewController {
                         let resp = "+79626129268"
                         let model = CodeVerificationViewModel(phone: resp, type: .register)
                         let vc = CodeVerificationViewController(model: model)
+                        vc.cardNumber = cardNumber
                         self?.navigationController?.pushViewController(vc, animated: true)
                     }
                     
@@ -57,6 +58,7 @@ class LoginCardEntryViewController: UIViewController {
                                 DispatchQueue.main.async { [weak self] in
                                     let model = CodeVerificationViewModel(phone: resp, type: .register)
                                     let vc = CodeVerificationViewController(model: model)
+                                    vc.cardNumber = cardNumber
                                     self?.navigationController?.pushViewController(vc, animated: true)
                                 }
                             }

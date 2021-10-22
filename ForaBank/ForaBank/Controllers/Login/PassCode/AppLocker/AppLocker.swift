@@ -229,6 +229,7 @@ public class AppLocker: UIViewController {
                         print(error)
                         self.showAlert(with: "Ошибка", and: error)
                     } else {
+                        
                         self.onSuccessfulDismiss?(self.mode)
                     }
                 }

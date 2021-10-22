@@ -65,8 +65,9 @@ extension MainViewController {
                 else {
                     fatalError("Unable to dequeue \(OfferCollectionViewCell.self)")
                 }
-                cell.backgroundColor = .red
-                cell.backgroundColor = UIColor(patternImage: UIImage(named: self.offer[indexPath.row].iconName!) ?? UIImage())
+//                cell.backgroundColor = .red
+//                cell.backgroundColor = UIColor(patternImage: UIImage(named: self.offer[indexPath.row].iconName!) ?? UIImage())
+                cell.backgroundImageView.image = UIImage(named: self.offer[indexPath.row].iconName ?? "")
 
                 return cell
             case .currentsExchange:

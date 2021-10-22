@@ -987,7 +987,7 @@ extension ProductViewController{
             cell?.showSelect()
         } else {
             if indexPath.item < products.count{
-                product = products[indexPath.item]
+//                product = products[indexPath.item]
                 self.collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: .bottom)
 //                guard let cell = collectionView.cellForItem(at: indexPath) as? CardCollectionViewCell else {return}
 //                cell.showSelect()

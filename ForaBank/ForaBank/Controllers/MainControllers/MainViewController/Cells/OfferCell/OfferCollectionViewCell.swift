@@ -13,7 +13,6 @@ class OfferCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
         guard let card = card else { return }
         
         let viewModel = CardViewModel(card: card)
-        backgroundImageView.image =  UIImage(named: "promoBanner2")
         balanceLabel.text = viewModel.balance
         balanceLabel.textColor = viewModel.colorText
         cardNameLabel.text = viewModel.cardName
@@ -61,9 +60,9 @@ class OfferCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
         return label
     }()
     
-    private let backgroundImageView: UIImageView = {
+    var backgroundImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
+//        imageView.contentMode = .scaleToFill
         return imageView
     }()
     
@@ -91,8 +90,8 @@ class OfferCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
         
         let viewModel = CardViewModel(card: card)
         
-        backgroundImageView.image =  UIImage(named: "promoBanner2")
-        
+ 
+
         balanceLabel.text = viewModel.balance
         balanceLabel.textColor = viewModel.colorText
         cardNameLabel.text = viewModel.cardName
@@ -123,8 +122,12 @@ class OfferCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
         addSubview(maskCardLabel)
         addSubview(cardNameLabel)
         addSubview(balanceLabel)
+        backgroundImageView.clipsToBounds = true
+        backgroundImageView.frame = CGRect(origin: backgroundImageView.frame.origin, size: backgroundImageView.image?.size ?? CGSize(width: 288, height: 124))
+
+
+        backgroundImageView.anchor(top: self.topAnchor, left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor)
         
-        backgroundImageView.fillSuperview()
         
         maskCardLabel.anchor(top: self.topAnchor, left: self.leftAnchor, right: self.rightAnchor, paddingTop: 12, paddingLeft: 37, paddingRight: 12)
         
