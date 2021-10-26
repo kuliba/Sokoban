@@ -89,18 +89,53 @@ class HistoryTableViewCell: UITableViewCell {
 
         case "INSIDE":
             logoImageView.alpha = 0.3
-            titleLable.text = operation?.comment
+            titleLable.text = operation?.merchantNameRus
+            
+            if operation?.merchantNameRus != nil{
+                titleLable.text = operation?.merchantNameRus
+            } else {
+                titleLable.text = operation?.merchantName
+            }
+            
             subTitleLabel.isHidden = true
             logoImageView.image = UIImage()
+            logoImageView.image = operation?.svgImage?.convertSVGStringToImage()
+            if operation?.merchantNameRus == ""{
+                titleLable.text = operation?.comment
+            }
+            
             guard let sum = operation?.amount else {
                 return
             }
+            
+            if operation?.groupName != nil{
+                subTitleLabel.isHidden = false
+                subTitleLabel.text = operation?.groupName
+            } else {
+                subTitleLabel.isHidden = true
+            }
+            
+            
+            if operation?.operationType == "DEBIT"{
+            
+                logoImageView.backgroundColor = .red
+            
+            } else if operation?.operationType == "CREDIT"{
+                
+                logoImageView.backgroundColor = .green
+                
+            }
+            
+            if operation?.svgImage != nil{
+                logoImageView.image = operation?.svgImage?.convertSVGStringToImage()
+                logoImageView.backgroundColor = .clear
+                logoImageView.alpha = 1
+            }
+            
             if operation?.operationType == "DEBIT"{
                 amountLabel.textColor = UIColor(hexString: "1C1C1C")
-                logoImageView.backgroundColor = .red
                 amountLabel.text = "-\(Double(sum).currencyFormatter(symbol: currency))"
             } else if operation?.operationType == "CREDIT" {
-                logoImageView.backgroundColor = .green
                 amountLabel.textColor = UIColor(hexString: "22C183")
                 amountLabel.text = "+\(Double(sum).currencyFormatter(symbol: currency))"
             }
