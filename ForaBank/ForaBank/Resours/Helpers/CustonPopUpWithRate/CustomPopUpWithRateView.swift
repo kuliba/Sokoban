@@ -6,13 +6,13 @@
 //
 
 import UIKit
-//import RealmSwift
+import RealmSwift
 
 class CustomPopUpWithRateView : AddHeaderImageViewController {
 
     var titleLabel = UILabel(text: "Между счетами", font: .boldSystemFont(ofSize: 18), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
-//    lazy var realm = try? Realm()
-//    var token: NotificationToken?
+    lazy var realm = try? Realm()
+    var token: NotificationToken?
     var onlyMy = true
     
     var trasfer = ("", "") {
@@ -24,7 +24,7 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
     
     var onlyCard = false
     
-    var viewModel = ConfirmViewControllerModel(type: .card2card) {
+    var viewModel: ConfirmViewControllerModel! {
         didSet {
             checkModel(with: viewModel)
         }
@@ -32,18 +32,16 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
     
     var reversCard = "" {
         didSet {
-            self.trasfer = (viewModel.cardFrom?.currency ?? "", viewModel.cardTo?.currency ?? "")
+            self.trasfer = (viewModel.cardFromRealm?.currency ?? "", viewModel.cardToRealm?.currency ?? "")
         }
     }
     
     
     var cardFromField = CardChooseView()
     var seporatorView = SeparatorView()
-    var cardFromListView: CardListView!
-//    var cardFromListView: CardsScrollView!
+    var cardFromListView: CardsScrollView!
     var cardToField = CardChooseView()
-//    var cardToListView: CardsScrollView!
-    var cardToListView: CardListView!
+    var cardToListView: CardsScrollView!
 
     var bottomView = BottomInputViewWithRateView()
     lazy var cardView = CastomCardView()
@@ -51,26 +49,24 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
     var stackView = UIStackView(arrangedSubviews: [])
     
     
-//    override func viewWillDisappear(_ animated: Bool) {
-//        super.viewWillDisappear(animated)
-//        token?.invalidate()
-//    }
-//
-//    deinit {
-//        token?.invalidate()
-//    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        token?.invalidate()
+    }
+
+    deinit {
+        token?.invalidate()
+    }
     
     final func checkModel(with model: ConfirmViewControllerModel) {
-//        guard model.cardFromRealm != nil, model.cardToRealm != nil else { return }
-        guard model.cardFrom != nil, model.cardTo != nil else { return }
+        guard model.cardFromRealm != nil, model.cardToRealm != nil else { return }
+//        guard model.cardFrom != nil, model.cardTo != nil else { return }
 
         /// Отображаем кнопку для переворачивания списка карт
         
         self.seporatorView.changeAccountButton.isHidden = false
-//        self.bottomView.currencySwitchButton.isHidden = (model.cardFromRealm?.currency! == model.cardToRealm?.currency!) ? true : false // Правильно true : false сейчас для теста
-//        self.bottomView.currencySwitchButton.setTitle((model.cardFromRealm?.currency?.getSymbol() ?? "") + " ⇆ " + (model.cardToRealm?.currency?.getSymbol() ?? ""), for: .normal)
-        self.bottomView.currencySwitchButton.isHidden = (model.cardFrom?.currency! == model.cardTo?.currency!) ? true : false // Правильно true : false сейчас для теста
-        self.bottomView.currencySwitchButton.setTitle((model.cardFrom?.currency?.getSymbol() ?? "") + " ⇆ " + (model.cardTo?.currency?.getSymbol() ?? ""), for: .normal)
+        self.bottomView.currencySwitchButton.isHidden = (model.cardFromRealm?.currency! == model.cardToRealm?.currency!) ? true : false // Правильно true : false сейчас для теста
+        self.bottomView.currencySwitchButton.setTitle((model.cardFromRealm?.currency?.getSymbol() ?? "") + " ⇆ " + (model.cardToRealm?.currency?.getSymbol() ?? ""), for: .normal)
         /// Когда скрывается кнопка смены валют, то есть валюта одинаковая, то меняем содержание лейбла на то, что по умолчанию
         
         if self.bottomView.currencySwitchButton.isHidden == true {

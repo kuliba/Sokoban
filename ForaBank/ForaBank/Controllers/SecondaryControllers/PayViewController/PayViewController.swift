@@ -122,7 +122,9 @@ class PayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
                 }
             }
         case 1:
+            let model = ConfirmViewControllerModel(type: .card2card)
             let popView = CustomPopUpWithRateView()
+            popView.viewModel = model
             popView.modalPresentationStyle = .custom
             popView.transitioningDelegate = self
             self.present(popView, animated: true, completion: nil)
