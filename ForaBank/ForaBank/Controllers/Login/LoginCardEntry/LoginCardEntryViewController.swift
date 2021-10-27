@@ -26,10 +26,12 @@ class LoginCardEntryViewController: UIViewController {
         self.creditCardView.cardNumberTextField.becomeFirstResponder()
         creditCardView.cardNumberTextField.delegate = self
         creditCardView.scanerCardTapped = { self.scanCardTapped() }
+        // Срабатывает когда вводим карту
         creditCardView.enterCardNumberTapped = { [weak self] (cardNumber) in
             self?.showActivity()
             DispatchQueue.main.async {
                 
+                // Для тестировщиков AppStore
                 if cardNumber == "0565205123484281"{
                     
                     self?.dismissActivity()
@@ -41,18 +43,19 @@ class LoginCardEntryViewController: UIViewController {
                     }
                     
                 } else {
+                    // Для остальных
                     DispatchQueue.main.async {
                     AppDelegate.shared.getCSRF { error in
                         if error != nil {
                             print("DEBUG: Error getCSRF: ", error!)
                         }
-                    
+                         // Запрос на проверку карты
                         LoginViewModel().checkCardNumber(with: cardNumber.digits) { resp, error in
                             self?.dismissActivity()
                             if error != nil {
                                 self?.showAlert(with: "Ошибка", and: error ?? "")
                             } else {
-                                
+                                // Зарузка кэша
                                 DownloadQueue.download {}
                                 DispatchQueue.main.async { [weak self] in
                                     let model = CodeVerificationViewModel(phone: resp, type: .register)

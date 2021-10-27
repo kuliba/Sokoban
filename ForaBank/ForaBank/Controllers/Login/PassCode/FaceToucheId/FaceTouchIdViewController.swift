@@ -12,8 +12,14 @@ import LocalAuthentication
 import Valet
 import RealmSwift
 
+protocol FaceTouchIdViewControllerDelegate: AnyObject {
+    func selectTransition()
+}
+
 
 class FaceTouchIdViewController: UIViewController {
+    
+    weak var delegate: FaceTouchIdViewControllerDelegate?
     
     var sensor: String?
     var code: String?
@@ -208,8 +214,6 @@ class FaceTouchIdViewController: UIViewController {
                            "isActive": false ,
                            "value": encript(string:code?.sha256() ?? "")] ] ] as [String : AnyObject]
         
-        print("DEBUG: Start setDeviceSetting with body: ", data)
-        
         NetworkManager<SetDeviceSettingDecodbleModel>.addRequest(.setDeviceSetting, [:], data) { model, error in
             self.dismissActivity()
             if error != nil {
@@ -278,8 +282,6 @@ class FaceTouchIdViewController: UIViewController {
             "loginValue": encript(string: code.sha256() ),
             "type": encript(string: type.rawValue)
         ] as [String : AnyObject]
-        //        print(data)
-        print("DEBUG: Start login with body: ", data)
         NetworkManager<LoginDoCodableModel>.addRequest(.login, [:], data) { model, error in
             if error != nil {
                 guard let error = error else { return }
@@ -287,16 +289,11 @@ class FaceTouchIdViewController: UIViewController {
             } else {
                 guard let statusCode = model?.statusCode else { return }
                 if statusCode == 0 {
-                    
-//                    Analytics.logEvent(AnalyticsEventLogin, parameters: [
-//                        AnalyticsParameterMethod: self.method
-//                      ])
-                    
+
                     let bodyRegisterPush = [
                         "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
                         "pushFcmToken": Messaging.messaging().fcmToken as String?
                     ] as [String : AnyObject]
-                    print("DEBUG: Start registerPushDeviceForUser with body: ", bodyRegisterPush)
                     NetworkManager<RegisterPushDeviceDecodebleModel>.addRequest(.registerPushDeviceForUser, [:], bodyRegisterPush) { model, error in
                         if error != nil {
                             guard let error = error else { return }
@@ -320,14 +317,13 @@ class FaceTouchIdViewController: UIViewController {
                             } catch {
                                 print(error.localizedDescription)
                             }
-                            
-                            print("DEBUG: You are LOGGIN!!!")
                             self.dismissActivity()
-                            DispatchQueue.main.async { [weak self] in
-                                let vc = MainTabBarViewController()
-                                vc.modalPresentationStyle = .fullScreen
-                                self?.present(vc, animated: true)
-                            }
+                            self.delegate?.selectTransition()
+//                            DispatchQueue.main.async { [weak self] in
+//                                let vc = MainTabBarViewController()
+//                                vc.modalPresentationStyle = .fullScreen
+//                                self?.present(vc, animated: true)
+//                            }
                         
                         }
                     }

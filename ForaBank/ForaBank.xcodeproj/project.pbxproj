@@ -38,6 +38,7 @@
 		0B2A8D2926E78E5C00651BCB /* CreateMe2MePullDebitTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2A8D2826E78E5C00651BCB /* CreateMe2MePullDebitTransferDecodableModel.swift */; };
 		0B2A8D2C26E8D9B600651BCB /* GetLatestPhonePayments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2A8D2B26E8D9B600651BCB /* GetLatestPhonePayments.swift */; };
 		0B2A8D2E26E8DA3400651BCB /* GetLatestPhonePaymentsSaved.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2A8D2D26E8DA3400651BCB /* GetLatestPhonePaymentsSaved.swift */; };
+		0B3291DF2728B725005B2A7E /* MobilePayCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3291DE2728B725005B2A7E /* MobilePayCoordinator.swift */; };
 		0B37F9782678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F9772678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift */; };
 		0B37F97A2678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F9792678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift */; };
 		0B37F97C2678EC69007728FC /* AnywayPaymentDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F97B2678EC69007728FC /* AnywayPaymentDecodableModel.swift */; };
@@ -111,8 +112,8 @@
 		0BA14E18270DF8F60098E422 /* AppLockerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA14E17270DF8F60098E422 /* AppLockerHelper.swift */; };
 		0BA14E1A2712597D0098E422 /* StaticDefaultTimeOut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA14E192712597D0098E422 /* StaticDefaultTimeOut.swift */; };
 		0BA14E1C2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA14E1B2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift */; };
-		0BA14E1E271F38810098E422 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA14E1D271F38810098E422 /* AppCoordinator.swift */; };
-		0BA14E20272082F10098E422 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA14E1F272082F10098E422 /* BaseViewController.swift */; };
+		0BA14E1E271F38810098E422 /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA14E1D271F38810098E422 /* MainCoordinator.swift */; };
+		0BA14E20272082F10098E422 /* LoginCardEntryCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA14E1F272082F10098E422 /* LoginCardEntryCoordinator.swift */; };
 		0BA251ED26C266A400AD087A /* CreateServiceTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA251EC26C266A400AD087A /* CreateServiceTransferDecodableModel.swift */; };
 		0BA251EF26C26AE700AD087A /* AntiFraudDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA251EE26C26AE700AD087A /* AntiFraudDecodableModel.swift */; };
 		0BA251F126C26BE200AD087A /* СreateMe2MePullTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA251F026C26BE200AD087A /* СreateMe2MePullTransferDecodableModel.swift */; };
@@ -176,6 +177,10 @@
 		0BF3486426943DFB005138A8 /* SuggestCompanyDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF3486326943DFB005138A8 /* SuggestCompanyDecodableModel.swift */; };
 		0BF34866269444D9005138A8 /* AllCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF34865269444D9005138A8 /* AllCardCell.swift */; };
 		0BF348A1269E0CDA005138A8 /* LogoutDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF348A0269E0CDA005138A8 /* LogoutDecodableModel.swift */; };
+		0BFCDB01272876FB00FFC867 /* FaceTouchIDCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFCDB00272876FB00FFC867 /* FaceTouchIDCoordinator.swift */; };
+		0BFCDB032728774E00FFC867 /* CodeVerificationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFCDB022728774E00FFC867 /* CodeVerificationCoordinator.swift */; };
+		0BFCDB052728785F00FFC867 /* OrderProductsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFCDB042728785F00FFC867 /* OrderProductsCoordinator.swift */; };
+		0BFCDB07272878BF00FFC867 /* MainTabBarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFCDB06272878BF00FFC867 /* MainTabBarCoordinator.swift */; };
 		6822EFD226B935DB00125EEC /* BaseTableViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6822EFD126B935DB00125EEC /* BaseTableViewViewController.swift */; };
 		6822EFD626B935FF00125EEC /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6822EFD426B935FF00125EEC /* BaseTableViewCell.swift */; };
 		6822EFD726B935FF00125EEC /* BaseTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6822EFD526B935FF00125EEC /* BaseTableViewCell.xib */; };
@@ -471,6 +476,7 @@
 		0B2A8D2826E78E5C00651BCB /* CreateMe2MePullDebitTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMe2MePullDebitTransferDecodableModel.swift; sourceTree = "<group>"; };
 		0B2A8D2B26E8D9B600651BCB /* GetLatestPhonePayments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLatestPhonePayments.swift; sourceTree = "<group>"; };
 		0B2A8D2D26E8DA3400651BCB /* GetLatestPhonePaymentsSaved.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLatestPhonePaymentsSaved.swift; sourceTree = "<group>"; };
+		0B3291DE2728B725005B2A7E /* MobilePayCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilePayCoordinator.swift; sourceTree = "<group>"; };
 		0B37F9772678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentBeginDecodebleModel.swift; sourceTree = "<group>"; };
 		0B37F9792678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentMakeDecodableModel.swift; sourceTree = "<group>"; };
 		0B37F97B2678EC69007728FC /* AnywayPaymentDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentDecodableModel.swift; sourceTree = "<group>"; };
@@ -543,8 +549,8 @@
 		0BA14E17270DF8F60098E422 /* AppLockerHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockerHelper.swift; sourceTree = "<group>"; };
 		0BA14E192712597D0098E422 /* StaticDefaultTimeOut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticDefaultTimeOut.swift; sourceTree = "<group>"; };
 		0BA14E1B2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAllLatestPaymentsDecodableModel.swift; sourceTree = "<group>"; };
-		0BA14E1D271F38810098E422 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
-		0BA14E1F272082F10098E422 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		0BA14E1D271F38810098E422 /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
+		0BA14E1F272082F10098E422 /* LoginCardEntryCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginCardEntryCoordinator.swift; sourceTree = "<group>"; };
 		0BA251EC26C266A400AD087A /* CreateServiceTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateServiceTransferDecodableModel.swift; sourceTree = "<group>"; };
 		0BA251EE26C26AE700AD087A /* AntiFraudDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntiFraudDecodableModel.swift; sourceTree = "<group>"; };
 		0BA251F026C26BE200AD087A /* СreateMe2MePullTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "СreateMe2MePullTransferDecodableModel.swift"; sourceTree = "<group>"; };
@@ -606,6 +612,10 @@
 		0BF3486326943DFB005138A8 /* SuggestCompanyDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestCompanyDecodableModel.swift; sourceTree = "<group>"; };
 		0BF34865269444D9005138A8 /* AllCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllCardCell.swift; sourceTree = "<group>"; };
 		0BF348A0269E0CDA005138A8 /* LogoutDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutDecodableModel.swift; sourceTree = "<group>"; };
+		0BFCDB00272876FB00FFC867 /* FaceTouchIDCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceTouchIDCoordinator.swift; sourceTree = "<group>"; };
+		0BFCDB022728774E00FFC867 /* CodeVerificationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeVerificationCoordinator.swift; sourceTree = "<group>"; };
+		0BFCDB042728785F00FFC867 /* OrderProductsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderProductsCoordinator.swift; sourceTree = "<group>"; };
+		0BFCDB06272878BF00FFC867 /* MainTabBarCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarCoordinator.swift; sourceTree = "<group>"; };
 		6822EFD126B935DB00125EEC /* BaseTableViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewViewController.swift; sourceTree = "<group>"; };
 		6822EFD426B935FF00125EEC /* BaseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewCell.swift; sourceTree = "<group>"; };
 		6822EFD526B935FF00125EEC /* BaseTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BaseTableViewCell.xib; sourceTree = "<group>"; };
@@ -952,8 +962,8 @@
 				0B283FBA26FBC9C800B5E925 /* Coordinator.swift */,
 				0B283FBC26FBC9F100B5E925 /* Presentable.swift */,
 				0B283FBE26FBCA0A00B5E925 /* Router.swift */,
-				0BA14E1D271F38810098E422 /* AppCoordinator.swift */,
-				0BA14E1F272082F10098E422 /* BaseViewController.swift */,
+				0BA14E1D271F38810098E422 /* MainCoordinator.swift */,
+				0BFCDAFF2728766F00FFC867 /* Coordinators */,
 			);
 			path = NavigationCoordinator;
 			sourceTree = "<group>";
@@ -1341,6 +1351,19 @@
 				0B8BE0962670D53600E96CAA /* DoRegistrationDecodebleModel.swift */,
 			);
 			path = NetworkingLoginModel;
+			sourceTree = "<group>";
+		};
+		0BFCDAFF2728766F00FFC867 /* Coordinators */ = {
+			isa = PBXGroup;
+			children = (
+				0BA14E1F272082F10098E422 /* LoginCardEntryCoordinator.swift */,
+				0BFCDB00272876FB00FFC867 /* FaceTouchIDCoordinator.swift */,
+				0BFCDB022728774E00FFC867 /* CodeVerificationCoordinator.swift */,
+				0BFCDB042728785F00FFC867 /* OrderProductsCoordinator.swift */,
+				0BFCDB06272878BF00FFC867 /* MainTabBarCoordinator.swift */,
+				0B3291DE2728B725005B2A7E /* MobilePayCoordinator.swift */,
+			);
+			path = Coordinators;
 			sourceTree = "<group>";
 		};
 		6822EFD026B935A500125EEC /* DefaultTableView */ = {
@@ -3060,6 +3083,7 @@
 				0B22AEAA26CE77F100B11E7F /* GKHDataCase.swift in Sources */,
 				EDF68216266F9EC800FD5C07 /* RouterError.swift in Sources */,
 				0B216FC626D1E9EB0023C878 /* ExtensionNotificationName.swift in Sources */,
+				0BFCDB07272878BF00FFC867 /* MainTabBarCoordinator.swift in Sources */,
 				0BAC674426D41C18005AAD91 /* ExtensionGKHSearch.swift in Sources */,
 				68D06F2626C3C11700F9BE4C /* MainViewControllerDataSource.swift in Sources */,
 				0BA251F126C26BE200AD087A /* СreateMe2MePullTransferDecodableModel.swift in Sources */,
@@ -3097,6 +3121,7 @@
 				ED84995626A8831E005205C6 /* EPContactsPicker.swift in Sources */,
 				ED4FC602266C0AB50092B4AB /* ChooseCountryTableViewController.swift in Sources */,
 				0B931B4726DE2DF700CA8017 /* GKHHistoryCarusel.swift in Sources */,
+				0BFCDB032728774E00FFC867 /* CodeVerificationCoordinator.swift in Sources */,
 				EDF6821A266F9EC800FD5C07 /* RouterUrlList.swift in Sources */,
 				0BF3486426943DFB005138A8 /* SuggestCompanyDecodableModel.swift in Sources */,
 				EDB1452026661B030028EF5A /* StringMask.swift in Sources */,
@@ -3150,6 +3175,7 @@
 				0B931B1826DCD62200CA8017 /* GKHAddOperatorsList.swift in Sources */,
 				687FB22D26E65FC5004A479F /* NewProductCell.swift in Sources */,
 				0B95C40526B6CB1D00AA57E6 /* ExtensionCustomPopUpWithRateView.swift in Sources */,
+				0BFCDB052728785F00FFC867 /* OrderProductsCoordinator.swift in Sources */,
 				EDF6820F266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift in Sources */,
 				ED353B6C26FB5E8300F17F00 /* GetUserSettingDecodableModel.swift in Sources */,
 				0B931B1626DCD5F100CA8017 /* GKHParametersModel.swift in Sources */,
@@ -3158,12 +3184,13 @@
 				0BD1CA9D26E6B63900CFE993 /* CountriesListSaved.swift in Sources */,
 				68FFA55B268586D3002DADFA /* HeaderBanksCollectionReusableView.swift in Sources */,
 				68C8D57026F0DF120076246B /* HistoryTableViewCell.swift in Sources */,
-				0BA14E1E271F38810098E422 /* AppCoordinator.swift in Sources */,
+				0BA14E1E271F38810098E422 /* MainCoordinator.swift in Sources */,
 				687FB23626F0189C004A479F /* ProductViewControllerDataSource.swift in Sources */,
 				EDA5637A26F386AD0093F0C8 /* SettingTableViewController.swift in Sources */,
 				68673B4F26F2F29300F67A8C /* RequisitesViewController.swift in Sources */,
 				0B7A18AF268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift in Sources */,
 				0B37F980267A11FB007728FC /* GetOwnerPhoneNumberPhoneDecodableModel.swift in Sources */,
+				0BFCDB01272876FB00FFC867 /* FaceTouchIDCoordinator.swift in Sources */,
 				0BB24AB326F0C59900DDA4F6 /* SaveCardNameDecodableModel.swift in Sources */,
 				68FFA52C2682AF62002DADFA /* ContactCollectionViewCell.swift in Sources */,
 				0BDE452F26E2995700B64A0A /* ExtensionQRMetaData.swift in Sources */,
@@ -3262,7 +3289,7 @@
 				ED60A1E126DC10A3000F3208 /* GetClientConsentMe2MePullDecodableModel.swift in Sources */,
 				ED4B54462703465200C87A1A /* CardsScrollModel.swift in Sources */,
 				ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */,
-				0BA14E20272082F10098E422 /* BaseViewController.swift in Sources */,
+				0BA14E20272082F10098E422 /* LoginCardEntryCoordinator.swift in Sources */,
 				688B9BB426E03B3000407A75 /* TotalMoneyView.swift in Sources */,
 				ED84994526A6F647005205C6 /* ChooseCountryHeaderView.swift in Sources */,
 				EDB1655A2667A220007E6030 /* CodeVerificationViewController UI.swift in Sources */,
@@ -3312,6 +3339,7 @@
 				EDB1453E2666AF260028EF5A /* OrderProductsViewController FlowLayout.swift in Sources */,
 				0B931B1E26DCD83B00CA8017 /* GKHAdditionalListModel.swift in Sources */,
 				0BF34866269444D9005138A8 /* AllCardCell.swift in Sources */,
+				0B3291DF2728B725005B2A7E /* MobilePayCoordinator.swift in Sources */,
 				68D06F2426C3C0F300F9BE4C /* MainViewControllerLayout.swift in Sources */,
 				0B3FE8E12704DBEE00CBDB4E /* GetLatestMobilePaymentsDecodableModel.swift in Sources */,
 				EDB1452E26665AD50028EF5A /* OrderProductsViewController.swift in Sources */,

@@ -16,7 +16,7 @@ struct AppLockerHelper {
         DispatchQueue.main.async {
             var options = ALOptions()
             options.isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
-            options.onSuccessfulDismiss = { (mode: ALMode?) in
+            options.onSuccessfulDismiss = { (mode: ALMode?, _) in
                 DispatchQueue.main.async {
                     if mode != nil {
                         let realm = try? Realm()

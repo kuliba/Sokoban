@@ -16,22 +16,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var netAlert: NetDetectAlert!
     var netStatus: Bool?
     
-//    private let config: ConfigType = Config(bundle: .main, locale: .current)
-//    lazy var appStore: StoreType = Store(config: self.config)
-    lazy var appNavigationController: UINavigationController = UINavigationController()
-    lazy var appRouter: RouterType = Router(navigationController: self.appNavigationController)
-    lazy var appCoordinator: AppCoordinator = AppCoordinator(router: self.appRouter)
+    lazy var appNavigationController = UINavigationController()
+    lazy var appRouter = Router(navigationController: self.appNavigationController)
+    lazy var appCoordinator = MainCoordinator(router: self.appRouter)
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
-        // MARK: Window
-        window = UIWindow(frame: UIScreen.main.bounds)
+//        // MARK: Window
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+        window = UIWindow(frame: windowScene.coordinateSpace.bounds)
+        window?.windowScene = windowScene
         window?.rootViewController = appCoordinator.toPresentable()
-        window?.backgroundColor = .white
-        window?.makeKeyAndVisible()
-
-        // or get notification from launch options and convert it to a deep link
+        window?.backgroundColor = .red
         appCoordinator.start()
+        window?.makeKeyAndVisible()
         
 //        guard let windowScene = (scene as? UIWindowScene) else { return }
 //        window = UIWindow(frame: windowScene.coordinateSpace.bounds)
@@ -171,36 +169,35 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 extension SceneDelegate {
     
-    func goToRegisterVC() {
-        DispatchQueue.main.async { [weak self] in
-            let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
-            self?.window?.rootViewController = navVC
-        }
-        
-    }
-    
-    func goToPinVC(_ mode: ALMode) {
-        DispatchQueue.main.async { [weak self] in
-            var options = ALOptions()
-            options.isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
-            options.onSuccessfulDismiss = { (mode: ALMode?) in
-                if let mode = mode {
-                    DispatchQueue.main.async { [weak self] in
-                        print("Password \(String(describing: mode)) successfully")
-                        let vc = MainTabBarViewController()
-                        vc.modalPresentationStyle = .fullScreen
-                        self?.window?.rootViewController = vc //MainTabBarViewController()
-                    }
-                } else {
-                    print("User Cancelled")
-                }
-            }
-            options.onFailedAttempt = { (mode: ALMode?) in
-                print("Failed to \(String(describing: mode))")
-            }
-            AppLocker.rootViewController(with: mode, and: options, window: self?.window)
-        }
-    }
+//    func goToRegisterVC() {
+//        DispatchQueue.main.async { [weak self] in
+//            let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
+//            self?.window?.rootViewController = navVC
+//        }
+//    }
+//
+//    func goToPinVC(_ mode: ALMode) {
+//        DispatchQueue.main.async { [weak self] in
+//            var options = ALOptions()
+//            options.isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
+//            options.onSuccessfulDismiss = { (mode: ALMode?, _) in
+//                if let mode = mode {
+//                    DispatchQueue.main.async { [weak self] in
+//                        print("Password \(String(describing: mode)) successfully")
+//                        let vc = MainTabBarViewController()
+//                        vc.modalPresentationStyle = .fullScreen
+//                        self?.window?.rootViewController = vc //MainTabBarViewController()
+//                    }
+//                } else {
+//                    print("User Cancelled")
+//                }
+//            }
+//            options.onFailedAttempt = { (mode: ALMode?) in
+//                print("Failed to \(String(describing: mode))")
+//            }
+//            AppLocker.rootViewController(with: mode, and: options, window: self?.window)
+//        }
+//    }
 }
 
 //protocol StoreType: AnyObject {

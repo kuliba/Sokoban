@@ -7,15 +7,17 @@
 
 import UIKit
 
-class AccountCoordinator: Coordinator<DeepLink> {
-    
-    
-    let accountViewController = UIViewController()
-    
+class LoginCardEntryCoordinator: Coordinator {
+
+
+    let accountViewController = LoginCardEntryViewController()
+
     override init(router: RouterType) {
         super.init(router: router)
-        accountViewController.view.backgroundColor = .magenta
         router.setRootModule(accountViewController, hideBar: false)
+    }
+    
+    override func start() {
     }
 
 }
