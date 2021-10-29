@@ -9,7 +9,7 @@ import UIKit
 import RealmSwift
 
 //TODO: отрефакторить под сетевые запросы, вынести в отдельный файл
-struct ConfirmViewControllerModel {
+class ConfirmViewControllerModel {
     
     lazy var realm = try? Realm()
     
