@@ -20,6 +20,7 @@ class MainCoordinator: Coordinator {
     }
     
     override func start() {
+ //       self.goTabBar()
         let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
         if let userIsRegister = userIsRegister {
             if !userIsRegister {
@@ -48,22 +49,20 @@ class MainCoordinator: Coordinator {
     
     func goToPinVC(_ mode: ALMode) {
         
-        self.goTabBar()
-        
-        
-//        var options = ALOptions()
-//        options.isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
-//        options.onSuccessfulDismiss = { (mode: ALMode?, _) in
-//            if let mode = mode {
-//                self.goTabBar()
-//            } else {
-//                print("User Cancelled")
-//            }
-//        }
-//        options.onFailedAttempt = { (mode: ALMode?) in
-//            print("Failed to \(String(describing: mode))")
-//        }
-//        AppLocker.present(with: mode, and: options, over: coordinator.toPresentable())
+ //       self.goTabBar()
+        var options = ALOptions()
+        options.isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
+        options.onSuccessfulDismiss = { (mode: ALMode?, _) in
+            if let mode = mode {
+                self.goTabBar()
+            } else {
+                print("User Cancelled")
+            }
+        }
+        options.onFailedAttempt = { (mode: ALMode?) in
+            print("Failed to \(String(describing: mode))")
+        }
+        AppLocker.present(with: mode, and: options, over: coordinator.toPresentable())
     }
     
     func goTabBar() {
