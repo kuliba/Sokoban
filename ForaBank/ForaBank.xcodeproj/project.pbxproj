@@ -177,6 +177,7 @@
 		6822EFD226B935DB00125EEC /* BaseTableViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6822EFD126B935DB00125EEC /* BaseTableViewViewController.swift */; };
 		6822EFD626B935FF00125EEC /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6822EFD426B935FF00125EEC /* BaseTableViewCell.swift */; };
 		6822EFD726B935FF00125EEC /* BaseTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6822EFD526B935FF00125EEC /* BaseTableViewCell.xib */; };
+		68368BAE272FDAA200A435B1 /* OperationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68368BAD272FDAA200A435B1 /* OperationDetailViewController.swift */; };
 		684AD35A26B7D2520071C762 /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 684AD35926B7D2520071C762 /* CryptoSwift */; };
 		6863EF6B2716D095008FD522 /* MTSlideToOpenControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6863EF6A2716D095008FD522 /* MTSlideToOpenControl.swift */; };
 		68673B4F26F2F29300F67A8C /* RequisitesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68673B4E26F2F29300F67A8C /* RequisitesViewController.swift */; };
@@ -606,6 +607,7 @@
 		6822EFD126B935DB00125EEC /* BaseTableViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewViewController.swift; sourceTree = "<group>"; };
 		6822EFD426B935FF00125EEC /* BaseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewCell.swift; sourceTree = "<group>"; };
 		6822EFD526B935FF00125EEC /* BaseTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BaseTableViewCell.xib; sourceTree = "<group>"; };
+		68368BAD272FDAA200A435B1 /* OperationDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailViewController.swift; sourceTree = "<group>"; };
 		6863EF6A2716D095008FD522 /* MTSlideToOpenControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTSlideToOpenControl.swift; sourceTree = "<group>"; };
 		68673B4E26F2F29300F67A8C /* RequisitesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequisitesViewController.swift; sourceTree = "<group>"; };
 		68673B5126F2F3B900F67A8C /* RequisitsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequisitsTableViewCell.swift; sourceTree = "<group>"; };
@@ -1469,6 +1471,7 @@
 				687FB23426F016FF004A479F /* Cells */,
 				688B9BAB26DE7D7E00407A75 /* ProductViewController.swift */,
 				687FB23526F0189B004A479F /* ProductViewControllerDataSource.swift */,
+				68368BAD272FDAA200A435B1 /* OperationDetailViewController.swift */,
 			);
 			path = ProductViewController;
 			sourceTree = "<group>";
@@ -2878,6 +2881,7 @@
 			knownRegions = (
 				en,
 				ru,
+				Base,
 			);
 			mainGroup = EDB14374265FDA410028EF5A;
 			packageReferences = (
@@ -3115,6 +3119,7 @@
 				EDB165662667A741007E6030 /* ContactInputViewController.swift in Sources */,
 				0BDE453326E3EA4A00B64A0A /* ExtensionQRReadPDF.swift in Sources */,
 				EDB14533266667140028EF5A /* OrderProductsCollectionViewCell.swift in Sources */,
+				68368BAE272FDAA200A435B1 /* OperationDetailViewController.swift in Sources */,
 				0BA14E1C2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift in Sources */,
 				0B8BE091266FDA1B00E96CAA /* CheckClientDecodebleModel.swift in Sources */,
 				EDB16595266A4438007E6030 /* DevelopViewController.swift in Sources */,

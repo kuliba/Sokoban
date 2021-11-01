@@ -1155,6 +1155,10 @@ extension ProductViewController{
 //        }
 //
 //        present(vc, animated: true, completion: nil)
+        
+        let vc = OperationDetailViewController()
+        present(vc, animated: true, completion: nil)
+
     }
     
     
