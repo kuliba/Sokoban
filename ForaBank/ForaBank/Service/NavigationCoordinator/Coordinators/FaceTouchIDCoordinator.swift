@@ -7,8 +7,28 @@
 
 import Foundation
 
-class FaceTouchIDCoordinator: Coordinator, FaceTouchIdViewControllerDelegate {
-    func selectTransition() {
+protocol FaceTouchIDCoordinatorDelegate: AnyObject {
+    func goNextController()
+}
+
+class FaceTouchIDCoordinator: Coordinator {
+
+    let accountViewController = FaceTouchIdViewController()
+
+    override init(router: RouterType) {
+        super.init(router: router)
+        accountViewController.delegate = self
+        router.setRootModule(accountViewController, hideBar: false)
+    }
+    
+    override func start() {
+        
+    }
+
+}
+
+extension FaceTouchIDCoordinator: FaceTouchIDCoordinatorDelegate {
+    func goNextController() {
         let mainTabBarCoordinator = MainTabBarCoordinator(router: router)
         addChild(mainTabBarCoordinator)
         mainTabBarCoordinator.start()
@@ -16,18 +36,4 @@ class FaceTouchIDCoordinator: Coordinator, FaceTouchIdViewControllerDelegate {
             self?.removeChild(mainTabBarCoordinator)
         }
     }
-    
-
-
-    let accountViewController = FaceTouchIdViewController()
-
-    override init(router: RouterType) {
-        super.init(router: router)
-        router.setRootModule(accountViewController, hideBar: false)
-    }
-    
-    override func start() {
-        selectTransition()
-    }
-
 }

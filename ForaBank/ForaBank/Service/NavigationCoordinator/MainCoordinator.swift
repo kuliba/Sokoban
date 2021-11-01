@@ -20,17 +20,18 @@ class MainCoordinator: Coordinator {
     }
     
     override func start() {
- //       self.goTabBar()
-        let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
-        if let userIsRegister = userIsRegister {
-            if !userIsRegister {
-                self.goToPinVC(.validate)
-            } else {
-                self.goToRegisterVC()
-            }
-        } else {
-            self.goToRegisterVC()
-        }
+        
+        goTabBar()
+//        let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
+//        if let userIsRegister = userIsRegister {
+//            if userIsRegister {
+//                self.goToPinVC(.validate)
+//            } else {
+//                self.goToRegisterVC()
+//            }
+//        } else {
+//            self.goToRegisterVC()
+//        }
     }
     
 //    override func toPresentable() -> UIViewController {
@@ -48,15 +49,10 @@ class MainCoordinator: Coordinator {
     }
     
     func goToPinVC(_ mode: ALMode) {
- //       self.goTabBar()
         var options = ALOptions()
         options.isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
         options.onSuccessfulDismiss = { (mode: ALMode?, _) in
-            if let mode = mode {
                 self.goTabBar()
-            } else {
-                print("User Cancelled")
-            }
         }
         options.onFailedAttempt = { (mode: ALMode?) in
             print("Failed to \(String(describing: mode))")

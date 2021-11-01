@@ -232,6 +232,7 @@
                                 </constraints>
                             </stackView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="IDb-F1-ssh"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="qBW-Zq-bZl" secondAttribute="trailing" id="F8x-38-uMk"/>

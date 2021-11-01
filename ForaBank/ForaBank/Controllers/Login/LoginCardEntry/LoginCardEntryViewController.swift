@@ -11,6 +11,8 @@ import IQKeyboardManagerSwift
 
 class LoginCardEntryViewController: UIViewController {
     
+    weak var delegate: LoginCardEntryDelegate?
+    
     let titleLabel = UILabel(text: "Войти", font: .systemFont(ofSize: 24))
     let subTitleLabel = UILabel(text: "чтобы получить доступ к счетам и картам")
     let creditCardView = CreditCardEntryView()
@@ -39,7 +41,7 @@ class LoginCardEntryViewController: UIViewController {
                         let resp = "+79626129268"
                         let model = CodeVerificationViewModel(phone: resp, type: .register)
                         let vc = CodeVerificationViewController(model: model)
-                        vc.cardNumber = cardNumber
+//                       vc.cardNumber = cardNumber
                         self?.navigationController?.pushViewController(vc, animated: true)
                     }
                     
@@ -59,10 +61,13 @@ class LoginCardEntryViewController: UIViewController {
                                 // Зарузка кэша
                                 DownloadQueue.download {}
                                 DispatchQueue.main.async { [weak self] in
-                                    let model = CodeVerificationViewModel(phone: resp, type: .register)
-                                    let vc = CodeVerificationViewController(model: model)
-                                    vc.cardNumber = cardNumber
-                                    self?.navigationController?.pushViewController(vc, animated: true)
+                                    UserDefaults.standard.set(resp, forKey: "phone")
+                                self?.delegate?.goNextController()
+//                                DispatchQueue.main.async { [weak self] in
+//                                    let model = CodeVerificationViewModel(phone: resp, type: .register)
+//                                    let vc = CodeVerificationViewController(model: model)
+//                                    vc.cardNumber = cardNumber
+//                                    self?.navigationController?.pushViewController(vc, animated: true)
                                 }
                             }
                         }

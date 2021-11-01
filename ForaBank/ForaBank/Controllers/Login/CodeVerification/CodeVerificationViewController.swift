@@ -9,16 +9,15 @@ import UIKit
 import Firebase
 import FirebaseMessaging
 
-
 class CodeVerificationViewController: UIViewController {
     
-//    var phoneNumber: String?
+    weak var delegate: CodeVerificationDelegate?
+
     var viewModel: CodeVerificationViewModel
     var count = 60  // 60sec if you want
     var resendTimer = Timer()
-//    var verificationType: CodeVerificationViewModel.CodeVerificationType? = .register
     
-    var cardNumber: String?
+//    var cardNumber: String?
     
     lazy var titleLabel = UILabel(text: "Введите код из сообщения",
                                   font: .boldSystemFont(ofSize: 18))
@@ -62,6 +61,10 @@ class CodeVerificationViewController: UIViewController {
         
     init(model: CodeVerificationViewModel) {
         self.viewModel = model
+        let cardNumber = UserDefaults.standard.object(forKey: "phone") as? String
+        if cardNumber != nil {
+            self.viewModel.phone = cardNumber ?? ""
+        }
 //        phoneNumber = phone
         super.init(nibName: nil, bundle: nil)
     }
@@ -191,7 +194,6 @@ class CodeVerificationViewController: UIViewController {
     @objc func updateTimer() {
         if(count > 0) {
             count = count - 1
-//            print(count)
             if count < 10 {
                 timerLabel.text = "00:0\(count)"
             } else {
@@ -200,7 +202,6 @@ class CodeVerificationViewController: UIViewController {
         }
         else {
             resendTimer.invalidate()
-//            print("call your api")
             repeatCodeButton.isHidden = false
             timerLabel.isHidden = true
         }
@@ -232,10 +233,12 @@ class CodeVerificationViewController: UIViewController {
         options.onSuccessfulDismiss = { (mode: ALMode?, pinCode) in
             if let mode = mode {
                 DispatchQueue.main.async {
-                    let vc = FaceTouchIdViewController()
-                    vc.code = pinCode
-                    vc.modalPresentationStyle = .fullScreen
-                    self.present(vc, animated: true, completion: nil)
+//                    let vc = FaceTouchIdViewController()
+//                    vc.code = pinCode
+//                    vc.modalPresentationStyle = .fullScreen
+//                    self.present(vc, animated: true, completion: nil)
+                    // Переход в FaceId
+//                    self.delegate?.goNextController()
                 }
             } else {
                 print("User Cancelled")

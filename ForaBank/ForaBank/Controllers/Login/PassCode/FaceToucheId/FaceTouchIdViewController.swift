@@ -12,14 +12,10 @@ import LocalAuthentication
 import Valet
 import RealmSwift
 
-protocol FaceTouchIdViewControllerDelegate: AnyObject {
-    func selectTransition()
-}
-
 
 class FaceTouchIdViewController: UIViewController {
     
-    weak var delegate: FaceTouchIdViewControllerDelegate?
+    weak var delegate: FaceTouchIDCoordinatorDelegate?
     
     var sensor: String?
     var code: String?
@@ -41,7 +37,7 @@ class FaceTouchIdViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        biometricType()
+        _ = biometricType()
         setupUI()
         useButton.addTarget(self, action: #selector(registerMyPin), for: .touchUpInside)
         skipButton.addTarget(self, action: #selector(skipRegisterMyPin), for: .touchUpInside)
@@ -318,12 +314,12 @@ class FaceTouchIdViewController: UIViewController {
                                 print(error.localizedDescription)
                             }
                             self.dismissActivity()
-                            self.delegate?.selectTransition()
-//                            DispatchQueue.main.async { [weak self] in
-//                                let vc = MainTabBarViewController()
-//                                vc.modalPresentationStyle = .fullScreen
-//                                self?.present(vc, animated: true)
-//                            }
+//                            self.delegate?.goNextController()
+                            DispatchQueue.main.async { [weak self] in
+                                let vc = MainTabBarViewController()
+                                vc.modalPresentationStyle = .fullScreen
+                                self?.present(vc, animated: true)
+                            }
                         
                         }
                     }

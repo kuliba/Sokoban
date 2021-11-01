@@ -229,7 +229,11 @@ public class AppLocker: UIViewController {
 //
 //                        self.showAlert(with: "Ошибка", and: error)
 //                    } else {
-                        self.onSuccessfulDismiss?(self.mode, pin )
+                let vc = FaceTouchIdViewController()
+                    vc.code = pin
+                    vc.modalPresentationStyle = .fullScreen
+                     self.present(vc, animated: true, completion: nil)
+  //                      self.onSuccessfulDismiss?(self.mode, pin )
   //                  }
 //                }
             case .validate:
@@ -294,9 +298,9 @@ public class AppLocker: UIViewController {
                         self.showAlert(with: "Ошибка", and: error)
                     } else {
                         DispatchQueue.main.async { [weak self] in
-                            guard let `self` = self else { return }
+                        //    guard let `self` = self else { return }
                             
-                            self.onSuccessfulDismiss?(self.mode, nil)
+                            self?.onSuccessfulDismiss?(self?.mode, nil)
                             
                         }
                     }
@@ -516,7 +520,6 @@ public extension AppLocker {
     class func present(with mode: ALMode, and config: ALOptions? = nil, over viewController: UIViewController? = nil) {
         let vc = viewController ?? UIApplication.shared.keyWindow?.rootViewController
         guard let root = vc,
-              
                 let locker = Bundle(for: self.classForCoder()).loadNibNamed(ALConstants.nibName, owner: self, options: nil)?.first as? AppLocker else {
                     return
                 }
