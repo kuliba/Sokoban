@@ -48,7 +48,6 @@ class MainCoordinator: Coordinator {
     }
     
     func goToPinVC(_ mode: ALMode) {
-        
  //       self.goTabBar()
         var options = ALOptions()
         options.isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
