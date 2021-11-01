@@ -2,10 +2,10 @@
 //  CodeVerificationCoordinator.swift
 //  ForaBank
 //
-//  Created by Константин Савялов on 26.10.2021.
+//  Created by Mikhail on 29.10.2021.
 //
 
-import Foundation
+import UIKit
 
 class CodeVerificationCoordinator: Coordinator {
 

@@ -9,6 +9,7 @@ import UIKit
 
 protocol PaymentsViewControllerDelegate: AnyObject {
     func selectTransition(_ controller: UIViewController)
+    func goToCountryPayments()
 }
 
 
@@ -50,6 +51,8 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 popView.modalPresentationStyle = .custom
                 popView.transitioningDelegate = self
                 self.present(popView, animated: true, completion: nil)
+            } else if indexPath.row == 2 {
+                delegate?.goToCountryPayments()
                 
             } else if indexPath.row == 3 {
                 let popView = MemeDetailVC()
@@ -80,6 +83,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 let navVC = UINavigationController(rootViewController: viewController)
                 navVC.modalPresentationStyle = .fullScreen
 //                    present(navVC, animated: true)
+                
                 
 //                    // ЖКХ
                 if indexPath.row == 2 {

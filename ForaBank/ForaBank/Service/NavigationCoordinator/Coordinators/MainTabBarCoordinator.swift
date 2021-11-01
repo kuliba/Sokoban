@@ -33,4 +33,12 @@ extension MainTabBarCoordinator: PaymentsViewControllerDelegate {
         router.present(mobilePay, animated: true)
     }
     
+    func goToCountryPayments() {
+        let navigationController = UINavigationController()
+        let newRouter = Router(navigationController: navigationController)
+        let mobilePay = CountryPayCoordinator(router: newRouter)
+        addChild(mobilePay)
+        mobilePay.start()
+        router.setRootModule(mobilePay, hideBar: false) // present(mobilePay, animated: true)
+    }
 }
