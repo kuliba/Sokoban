@@ -98,8 +98,8 @@ class HistoryTableViewCell: UITableViewCell {
             }
             
             subTitleLabel.isHidden = true
-            logoImageView.image = UIImage()
-            logoImageView.image = operation?.svgImage?.convertSVGStringToImage()
+//            logoImageView.image = UIImage()
+//            logoImageView.image = operation?.svgImage?.convertSVGStringToImage()
             if operation?.merchantNameRus == ""{
                 titleLable.text = operation?.comment
             }
