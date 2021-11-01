@@ -20,16 +20,17 @@ class MainCoordinator: Coordinator {
     }
     
     override func start() {
-        let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
-        if let userIsRegister = userIsRegister {
-            if !userIsRegister {
-                self.goToPinVC(.validate)
-            } else {
-                self.goToRegisterVC()
-            }
-        } else {
-            self.goToRegisterVC()
-        }
+        self.goTabBar()
+//        let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
+//        if let userIsRegister = userIsRegister {
+//            if !userIsRegister {
+//                self.goToPinVC(.validate)
+//            } else {
+//                self.goToRegisterVC()
+//            }
+//        } else {
+//            self.goToRegisterVC()
+//        }
     }
     
 //    override func toPresentable() -> UIViewController {

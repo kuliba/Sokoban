@@ -39,6 +39,9 @@
 		0B2A8D2C26E8D9B600651BCB /* GetLatestPhonePayments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2A8D2B26E8D9B600651BCB /* GetLatestPhonePayments.swift */; };
 		0B2A8D2E26E8DA3400651BCB /* GetLatestPhonePaymentsSaved.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2A8D2D26E8DA3400651BCB /* GetLatestPhonePaymentsSaved.swift */; };
 		0B3291DF2728B725005B2A7E /* MobilePayCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3291DE2728B725005B2A7E /* MobilePayCoordinator.swift */; };
+		0B329204272EBB26005B2A7E /* BottomPopUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B329203272EBB26005B2A7E /* BottomPopUpView.swift */; };
+		0B329206272ECDEB005B2A7E /* QRScanerInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B329205272ECDEB005B2A7E /* QRScanerInfoView.swift */; };
+		0B329208272EF848005B2A7E /* QRErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B329207272EF848005B2A7E /* QRErrorViewController.swift */; };
 		0B37F9782678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F9772678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift */; };
 		0B37F97A2678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F9792678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift */; };
 		0B37F97C2678EC69007728FC /* AnywayPaymentDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37F97B2678EC69007728FC /* AnywayPaymentDecodableModel.swift */; };
@@ -477,6 +480,9 @@
 		0B2A8D2B26E8D9B600651BCB /* GetLatestPhonePayments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLatestPhonePayments.swift; sourceTree = "<group>"; };
 		0B2A8D2D26E8DA3400651BCB /* GetLatestPhonePaymentsSaved.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLatestPhonePaymentsSaved.swift; sourceTree = "<group>"; };
 		0B3291DE2728B725005B2A7E /* MobilePayCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilePayCoordinator.swift; sourceTree = "<group>"; };
+		0B329203272EBB26005B2A7E /* BottomPopUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomPopUpView.swift; sourceTree = "<group>"; };
+		0B329205272ECDEB005B2A7E /* QRScanerInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScanerInfoView.swift; sourceTree = "<group>"; };
+		0B329207272EF848005B2A7E /* QRErrorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRErrorViewController.swift; sourceTree = "<group>"; };
 		0B37F9772678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentBeginDecodebleModel.swift; sourceTree = "<group>"; };
 		0B37F9792678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentMakeDecodableModel.swift; sourceTree = "<group>"; };
 		0B37F97B2678EC69007728FC /* AnywayPaymentDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentDecodableModel.swift; sourceTree = "<group>"; };
@@ -986,6 +992,14 @@
 			path = GetLatestPhonePayments;
 			sourceTree = "<group>";
 		};
+		0B329202272EBB04005B2A7E /* BottomPopUpView */ = {
+			isa = PBXGroup;
+			children = (
+				0B329203272EBB26005B2A7E /* BottomPopUpView.swift */,
+			);
+			path = BottomPopUpView;
+			sourceTree = "<group>";
+		};
 		0B3FE8E42706433D00CBDB4E /* DateExtansions */ = {
 			isa = PBXGroup;
 			children = (
@@ -1014,6 +1028,8 @@
 				0BDE452C26E298F600B64A0A /* ExtensionQRViewController.swift */,
 				0BDE452E26E2995700B64A0A /* ExtensionQRMetaData.swift */,
 				0BDE453226E3EA4A00B64A0A /* ExtensionQRReadPDF.swift */,
+				0B329205272ECDEB005B2A7E /* QRScanerInfoView.swift */,
+				0B329207272EF848005B2A7E /* QRErrorViewController.swift */,
 			);
 			path = QR;
 			sourceTree = "<group>";
@@ -1947,6 +1963,7 @@
 		ED4FC5FE266B91360092B4AB /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				0B329202272EBB04005B2A7E /* BottomPopUpView */,
 				0BA14E10270DCF5A0098E422 /* BackgroundTimer */,
 				0BB24AB826F2883000DDA4F6 /* REALMHelper */,
 				0BB24AAB26F0051700DDA4F6 /* DownloadQueue */,
@@ -3166,6 +3183,7 @@
 				0BAC674126D408DC005AAD91 /* CreateDirectTransferDecodableModel.swift in Sources */,
 				0BF348A1269E0CDA005138A8 /* LogoutDecodableModel.swift in Sources */,
 				0B66E8E126CC62BC00FD735D /* NetDetect.swift in Sources */,
+				0B329208272EF848005B2A7E /* QRErrorViewController.swift in Sources */,
 				0B7A18D02689C51A0007CC75 /* AppHeaderProtocol.swift in Sources */,
 				ED51D6702688B287005FD655 /* SeparatorView.swift in Sources */,
 				0B2A8D2726E7837300651BCB /* IsLoginDecodableModel.swift in Sources */,
@@ -3246,11 +3264,13 @@
 				0B95C40826B6CD9000AA57E6 /* BottomInputViewWithRateView.swift in Sources */,
 				0BB24AAD26F0053A00DDA4F6 /* DownloadQueue.swift in Sources */,
 				0BE270B026B76B9700FA958C /* ExtensionCustomPopUpSetup.swift in Sources */,
+				0B329204272EBB26005B2A7E /* BottomPopUpView.swift in Sources */,
 				0BEC8939267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift in Sources */,
 				EDB1655C2667A2C8007E6030 /* LoginCardEntryViewController UI.swift in Sources */,
 				0B797C9426E6AD0700589DBF /* BanksListSaved.swift in Sources */,
 				ED0B48AF2681CC6D0037EA06 /* CodeVerificationViewModel.swift in Sources */,
 				0BB015DA26C9378200E7A85B /* GKHOperatorsModel.swift in Sources */,
+				0B329206272ECDEB005B2A7E /* QRScanerInfoView.swift in Sources */,
 				EDFFCAFD2683C18B004EE095 /* ContactInputViewController API.swift in Sources */,
 				EDB1451E26652F170028EF5A /* UIView.swift in Sources */,
 				68FFA565269464FF002DADFA /* TransferByRequisitesConfirmViewController.swift in Sources */,
