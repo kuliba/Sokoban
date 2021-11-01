@@ -15,34 +15,41 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var netAlert: NetDetectAlert!
     var netStatus: Bool?
-
-//    static var shared: SceneDelegate { return UIApplication.shared.delegate as? SceneDelegate }
+    
+    lazy var appNavigationController = UINavigationController()
+    lazy var appRouter = Router(navigationController: self.appNavigationController)
+    lazy var appCoordinator = MainCoordinator(router: self.appRouter)
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         
+//        // MARK: Window
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        let startController = UIStoryboard(name: "LaunchScreen", bundle: nil).instantiateInitialViewController()
-        window?.rootViewController = startController
+        window?.rootViewController = appCoordinator.toPresentable()
+        window?.backgroundColor = .red
+        appCoordinator.start()
         window?.makeKeyAndVisible()
-        let tapGesture = UITapGestureRecognizer(target: self, action: nil)
-        tapGesture.delegate = self
-        window?.addGestureRecognizer(tapGesture)
-        let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
-        if let userIsRegister = userIsRegister {
-            if userIsRegister {
-                self.goToPinVC(.validate)
-            } else {
-                self.goToRegisterVC()
-            }
-        } else {
-            self.goToRegisterVC()
-        }
-        window?.makeKeyAndVisible()
+        
+//        guard let windowScene = (scene as? UIWindowScene) else { return }
+//        window = UIWindow(frame: windowScene.coordinateSpace.bounds)
+//        window?.windowScene = windowScene
+//        let startController = UIStoryboard(name: "LaunchScreen", bundle: nil).instantiateInitialViewController()
+//        window?.rootViewController = startController
+////        let tapGesture = UITapGestureRecognizer(target: self, action: nil)
+////        tapGesture.delegate = self
+////        window?.addGestureRecognizer(tapGesture)
+//        let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
+//        if let userIsRegister = userIsRegister {
+//            if userIsRegister {
+//                self.goToPinVC(.validate)
+//            } else {
+//                self.goToRegisterVC()
+//            }
+//        } else {
+//            self.goToRegisterVC()
+//        }
+//        window?.makeKeyAndVisible()
         
         NetStatus.shared.netStatusChangeHandler = {
             DispatchQueue.main.async { [weak self] in
@@ -162,34 +169,125 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 extension SceneDelegate {
     
-    func goToRegisterVC() {
-        DispatchQueue.main.async { [weak self] in
-            let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
-            self?.window?.rootViewController = navVC
-        }
-        
-    }
-    
-    func goToPinVC(_ mode: ALMode) {
-        DispatchQueue.main.async { [weak self] in
-            var options = ALOptions()
-            options.isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
-            options.onSuccessfulDismiss = { (mode: ALMode?) in
-                if let mode = mode {
-                    DispatchQueue.main.async { [weak self] in
-                        print("Password \(String(describing: mode)) successfully")
-                        let vc = MainTabBarViewController()
-                        vc.modalPresentationStyle = .fullScreen
-                        self?.window?.rootViewController = vc //MainTabBarViewController()
-                    }
-                } else {
-                    print("User Cancelled")
-                }
-            }
-            options.onFailedAttempt = { (mode: ALMode?) in
-                print("Failed to \(String(describing: mode))")
-            }
-            AppLocker.rootViewController(with: mode, and: options, window: self?.window)
-        }
-    }
+//    func goToRegisterVC() {
+//        DispatchQueue.main.async { [weak self] in
+//            let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
+//            self?.window?.rootViewController = navVC
+//        }
+//    }
+//
+//    func goToPinVC(_ mode: ALMode) {
+//        DispatchQueue.main.async { [weak self] in
+//            var options = ALOptions()
+//            options.isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
+//            options.onSuccessfulDismiss = { (mode: ALMode?, _) in
+//                if let mode = mode {
+//                    DispatchQueue.main.async { [weak self] in
+//                        print("Password \(String(describing: mode)) successfully")
+//                        let vc = MainTabBarViewController()
+//                        vc.modalPresentationStyle = .fullScreen
+//                        self?.window?.rootViewController = vc //MainTabBarViewController()
+//                    }
+//                } else {
+//                    print("User Cancelled")
+//                }
+//            }
+//            options.onFailedAttempt = { (mode: ALMode?) in
+//                print("Failed to \(String(describing: mode))")
+//            }
+//            AppLocker.rootViewController(with: mode, and: options, window: self?.window)
+//        }
+//    }
 }
+
+//protocol StoreType: AnyObject {
+//    var isLoggedIn: Bool { get }
+//    var token: String? { get set }
+//    var delegate: StoreDelegate? { get set }
+//}
+//
+//protocol StoreDelegate: AnyObject {
+//    func store(_ store: StoreType, didChangeLogginState isLoggedIn: Bool)
+//}
+//
+///*
+// The point of this project is not the store much so
+// I'm making it as simple as possible. The store holds your service layer which
+// should include your network and caching layers. I would probably use reactive
+// components instead of delegation here so you can just bind your coordinator
+// to variables but I'm trying to avoid using any third party libraries in this
+// project.
+//*/
+//class Store: NSObject, StoreType {
+//
+//    weak var delegate: StoreDelegate?
+//
+//    var isLoggedIn: Bool = false {
+//        didSet {
+//            delegate?.store(self, didChangeLogginState: isLoggedIn)
+//        }
+//    }
+//
+//    var token: String? {
+//        didSet {
+//            isLoggedIn = token != nil
+//        }
+//    }
+//
+//    private let config: ConfigType
+//
+//    init(config: ConfigType) {
+//        self.config = config
+//        super.init()
+//    }
+//}
+//
+//public protocol ConfigProvidingType: AnyObject {
+//    var config: ConfigType { get }
+//}
+//
+//public protocol ConfigType {
+//    var environment: Environment { get }
+//    var appVersion: String { get }
+//    var buildNumber: String { get }
+//    var apiVersion: String { get }
+//    var apiEndpoint: String { get }
+//    var url: URL  { get }
+//    var locale: Locale { get }
+//    init(bundle: Bundle, locale: Locale)
+//}
+//
+//public class Config: ConfigType {
+//
+//    public let environment: Environment
+//    public let appVersion: String
+//    public let buildNumber: String
+//    public let apiVersion: String
+//    public let apiEndpoint: String
+//    public let locale: Locale
+//
+//    public lazy var url: URL = URL(string: "\(self.apiEndpoint)/\(self.apiVersion)")!
+//
+//    public required init(bundle: Bundle, locale: Locale) {
+//        self.locale = locale
+//
+//        let endpoints = bundle.object(forInfoDictionaryKey: "API Endpoints") as! [String: String]
+//        let env = bundle.object(forInfoDictionaryKey: "Environment") as! String
+//
+//        environment = Environment(rawValue: env.lowercased()) ?? .release
+//
+//        apiEndpoint = endpoints[env]!
+//        appVersion = bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+//
+//        buildNumber = bundle.object(forInfoDictionaryKey: "CFBundleVersion") as! String
+//        apiVersion = bundle.object(forInfoDictionaryKey: "API Version") as! String
+//    }
+//}
+//
+//public enum Environment: String {
+//    case debug
+//    case mock
+//    case dev
+//    case staging
+//    case release
+//}

@@ -29,7 +29,7 @@ public enum ALConstants {
     }
 }
 
-public typealias onSuccessfulDismissCallback = (_ mode: ALMode?) -> () // Cancel dismiss will send mode as nil
+public typealias onSuccessfulDismissCallback = (_ mode: ALMode?, _ code: String?) -> () // Cancel dismiss will send mode as nil
 public typealias onFailedAttemptCallback = (_ mode: ALMode) -> ()
 public struct ALOptions { // The structure used to display the controller
     public var title: String?
@@ -200,7 +200,7 @@ public class AppLocker: UIViewController {
             if let error = error {
                 print(error)
             } else {
-                self.onSuccessfulDismiss?(self.mode)
+                self.onSuccessfulDismiss?(self.mode, nil)
             }
         }
         //        } else {
@@ -211,7 +211,7 @@ public class AppLocker: UIViewController {
     
     private func removePin() {
         try? AppLocker.valet.removeObject(forKey: ALConstants.kPincode)
-        self.onSuccessfulDismiss?(self.mode)
+        self.onSuccessfulDismiss?(self.mode, nil)
     }
     
     private func confirmPin() {
@@ -224,26 +224,25 @@ public class AppLocker: UIViewController {
             switch mode {
             case .create:
                 guard let pin = savedPin else { return }
-                registerMyPin(with: pin) { error in
-                    if let error = error {
-                        print(error)
-                        self.showAlert(with: "Ошибка", and: error)
-                    } else {
-                        
-                        self.onSuccessfulDismiss?(self.mode)
-                    }
-                }
+//                registerMyPin(with: pin) { error in
+//                    if let error = error {
+//
+//                        self.showAlert(with: "Ошибка", and: error)
+//                    } else {
+                        self.onSuccessfulDismiss?(self.mode, pin )
+  //                  }
+//                }
             case .validate:
                 guard let pin = savedPin else { return }
                 login(with: pin, type: .pin) { error in
                     if let error = error {
                         print(error)
                     } else {
-                        self.onSuccessfulDismiss?(self.mode)
+                        self.onSuccessfulDismiss?(self.mode, nil)
                     }
                 }
             case .change, .deactive:
-                self.onSuccessfulDismiss?(self.mode)
+                self.onSuccessfulDismiss?(self.mode, nil)
             }
         } else {
             onFailedAttempt?(mode)
@@ -296,9 +295,9 @@ public class AppLocker: UIViewController {
                     } else {
                         DispatchQueue.main.async { [weak self] in
                             guard let `self` = self else { return }
-                            //                            self.dismiss(animated: true) {
-                            self.onSuccessfulDismiss?(self.mode)
-                            //                            }
+                            
+                            self.onSuccessfulDismiss?(self.mode, nil)
+                            
                         }
                     }
                 }
@@ -356,7 +355,7 @@ extension AppLocker {
                 }
                 
                 
-                var serverDeviceGUID = UserDefaults.standard.object(forKey: "serverDeviceGUID")
+                let serverDeviceGUID = UserDefaults.standard.object(forKey: "serverDeviceGUID")
                 
                 func encript(string: String) -> String?{
                     do {
@@ -463,19 +462,18 @@ extension AppLocker {
     }
     
     func returnRealmModel() -> GetSessionTimeout {
-        let realm = try? Realm()
-        guard let timeObject = realm?.objects(GetSessionTimeout.self).first else {return GetSessionTimeout()}
-        let lastActionTimestamp = timeObject.lastActionTimestamp
-        let maxTimeOut = timeObject.maxTimeOut
-        let mustCheckTimeOut = timeObject.mustCheckTimeOut
         
-        // Сохраняем текущее время
         let updatingTimeObject = GetSessionTimeout()
         
-        updatingTimeObject.currentTimeStamp = Date().localDate()
-        updatingTimeObject.lastActionTimestamp = Date().localDate()
-        updatingTimeObject.renewSessionTimeStamp = Date().localDate()
-        updatingTimeObject.mustCheckTimeOut = true
+        let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
+        if userIsRegister == true {
+            // Сохраняем текущее время
+            updatingTimeObject.currentTimeStamp = Date().localDate()
+            updatingTimeObject.lastActionTimestamp = Date().localDate()
+            updatingTimeObject.renewSessionTimeStamp = Date().localDate()
+            updatingTimeObject.mustCheckTimeOut = true
+            
+        }
         
         return updatingTimeObject
         
