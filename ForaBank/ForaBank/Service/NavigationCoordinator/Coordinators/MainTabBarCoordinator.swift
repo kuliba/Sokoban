@@ -10,11 +10,11 @@ import UIKit
 class MainTabBarCoordinator: Coordinator {
 
 
-    let accountViewController = MainTabBarViewController()
+    let mainTabBarController = MainTabBarViewController()
 
     override init(router: RouterType) {
         super.init(router: router)
-        router.setRootModule(accountViewController, hideBar: true)
+        router.setRootModule( mainTabBarController, hideBar: true)
     }
     
     override func start() {
@@ -36,9 +36,9 @@ extension MainTabBarCoordinator: PaymentsViewControllerDelegate {
     func goToCountryPayments() {
         let navigationController = UINavigationController()
         let newRouter = Router(navigationController: navigationController)
-        let mobilePay = CountryPayCoordinator(router: newRouter)
-        addChild(mobilePay)
-        mobilePay.start()
-        router.setRootModule(mobilePay, hideBar: false) // present(mobilePay, animated: true)
+        let сountryPay = CountryPayCoordinator(router: newRouter)
+        addChild(сountryPay)
+        сountryPay.start()
+        router.setRootModule(сountryPay, hideBar: false) // present(mobilePay, animated: true)
     }
 }

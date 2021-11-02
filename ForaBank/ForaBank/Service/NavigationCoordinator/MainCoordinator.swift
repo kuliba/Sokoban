@@ -21,22 +21,22 @@ class MainCoordinator: Coordinator {
     
     override func start() {
         
-        goTabBar()
-//        let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
-//        if let userIsRegister = userIsRegister {
-//            if userIsRegister {
-//                self.goToPinVC(.validate)
-//            } else {
-//                self.goToRegisterVC()
-//            }
-//        } else {
-//            self.goToRegisterVC()
-//        }
+        //       goTabBar()
+        let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
+        if let userIsRegister = userIsRegister {
+            if userIsRegister {
+                self.goToPinVC(.validate)
+            } else {
+                self.goToRegisterVC()
+            }
+        } else {
+            self.goToRegisterVC()
+        }
     }
     
-//    override func toPresentable() -> UIViewController {
-//        return viewController
-//    }
+    //    override func toPresentable() -> UIViewController {
+    //        return viewController
+    //    }
     
     func goToRegisterVC() {
         
@@ -52,20 +52,22 @@ class MainCoordinator: Coordinator {
         var options = ALOptions()
         options.isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
         options.onSuccessfulDismiss = { (mode: ALMode?, _) in
-                self.goTabBar()
+            self.goTabBar()
         }
         options.onFailedAttempt = { (mode: ALMode?) in
             print("Failed to \(String(describing: mode))")
         }
-        AppLocker.present(with: mode, and: options, over: coordinator.toPresentable())
+        AppLocker.rootViewController(with: mode, and: options, window: UIApplication.shared.windows.first)
     }
     
     func goTabBar() {
         let mainTabBarCoordinator = MainTabBarCoordinator(router: self.router)
         self.addChild(mainTabBarCoordinator)
         mainTabBarCoordinator.start()
-        self.router.push(mainTabBarCoordinator, animated: true) { [weak self, weak coordinator] in
-            self?.removeChild(coordinator)
+        DispatchQueue.main.async { [self] in
+            self.router.push(mainTabBarCoordinator, animated: true) { [weak self, weak coordinator] in
+                self?.removeChild(coordinator)
+            }
         }
     }
 }
@@ -80,8 +82,8 @@ class BaseCoordinator: Coordinator {
         viewController.view.backgroundColor = .brown
     }
     
-        override func toPresentable() -> UIViewController {
-            return viewController
-        }
+    override func toPresentable() -> UIViewController {
+        return viewController
+    }
     
 }

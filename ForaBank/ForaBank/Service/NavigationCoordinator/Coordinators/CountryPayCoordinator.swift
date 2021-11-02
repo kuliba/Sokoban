@@ -10,17 +10,17 @@ import UIKit
 class CountryPayCoordinator: Coordinator {
 
 
-    let mobilePayViewController = ContactInputViewController()
+    let сontactInputViewController = ContactInputViewController()
 
     override init(router: RouterType) {
         super.init(router: router)
-        router.setRootModule(mobilePayViewController, hideBar: true)
+        router.setRootModule(сontactInputViewController, hideBar: true)
     }
     
     override func start() {
     }
     
     override func toPresentable() -> UIViewController {
-        return mobilePayViewController
+        return сontactInputViewController
     }
 }
