@@ -10,9 +10,12 @@ import Firebase
 import FirebaseMessaging
 import LocalAuthentication
 import Valet
+import RealmSwift
 
 
 class FaceTouchIdViewController: UIViewController {
+    
+    weak var delegate: FaceTouchIDCoordinatorDelegate?
     
     var sensor: String?
     var code: String?
@@ -34,7 +37,7 @@ class FaceTouchIdViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        biometricType()
+        _ = biometricType()
         setupUI()
         useButton.addTarget(self, action: #selector(registerMyPin), for: .touchUpInside)
         skipButton.addTarget(self, action: #selector(skipRegisterMyPin), for: .touchUpInside)
@@ -207,8 +210,6 @@ class FaceTouchIdViewController: UIViewController {
                            "isActive": false ,
                            "value": encript(string:code?.sha256() ?? "")] ] ] as [String : AnyObject]
         
-        print("DEBUG: Start setDeviceSetting with body: ", data)
-        
         NetworkManager<SetDeviceSettingDecodbleModel>.addRequest(.setDeviceSetting, [:], data) { model, error in
             self.dismissActivity()
             if error != nil {
@@ -277,8 +278,6 @@ class FaceTouchIdViewController: UIViewController {
             "loginValue": encript(string: code.sha256() ),
             "type": encript(string: type.rawValue)
         ] as [String : AnyObject]
-        //        print(data)
-        print("DEBUG: Start login with body: ", data)
         NetworkManager<LoginDoCodableModel>.addRequest(.login, [:], data) { model, error in
             if error != nil {
                 guard let error = error else { return }
@@ -286,16 +285,11 @@ class FaceTouchIdViewController: UIViewController {
             } else {
                 guard let statusCode = model?.statusCode else { return }
                 if statusCode == 0 {
-                    
-//                    Analytics.logEvent(AnalyticsEventLogin, parameters: [
-//                        AnalyticsParameterMethod: self.method
-//                      ])
-                    
+
                     let bodyRegisterPush = [
                         "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
                         "pushFcmToken": Messaging.messaging().fcmToken as String?
                     ] as [String : AnyObject]
-                    print("DEBUG: Start registerPushDeviceForUser with body: ", bodyRegisterPush)
                     NetworkManager<RegisterPushDeviceDecodebleModel>.addRequest(.registerPushDeviceForUser, [:], bodyRegisterPush) { model, error in
                         if error != nil {
                             guard let error = error else { return }
@@ -303,13 +297,30 @@ class FaceTouchIdViewController: UIViewController {
                         }
                         guard let model = model else { return }
                         if model.statusCode == 0 {
-                            print("DEBUG: You are LOGGIN!!!")
+                            
+                            // Обновление времени старта
+                            let realm = try? Realm()
+                            let timeOutObjects = self.returnRealmModel()
+                            
+                            /// Сохраняем в REALM
+                            do {
+                                let b = realm?.objects(GetSessionTimeout.self)
+                                realm?.beginWrite()
+                                realm?.delete(b!)
+                                realm?.add(timeOutObjects)
+                                try realm?.commitWrite()
+                                
+                            } catch {
+                                print(error.localizedDescription)
+                            }
                             self.dismissActivity()
+//                            self.delegate?.goNextController()
                             DispatchQueue.main.async { [weak self] in
                                 let vc = MainTabBarViewController()
                                 vc.modalPresentationStyle = .fullScreen
                                 self?.present(vc, animated: true)
                             }
+                        
                         }
                     }
                 } else {
@@ -365,6 +376,24 @@ class FaceTouchIdViewController: UIViewController {
                            paddingTop: -100)
         skipButton.anchor(left: view.leftAnchor, right: view.rightAnchor,
                           paddingLeft: 20, paddingRight: 20, height: 44)
+        
+    }
+    
+    func returnRealmModel() -> GetSessionTimeout {
+        
+        let updatingTimeObject = GetSessionTimeout()
+        
+        let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
+        if userIsRegister == true {
+            // Сохраняем текущее время
+            updatingTimeObject.currentTimeStamp = Date().localDate()
+            updatingTimeObject.lastActionTimestamp = Date().localDate()
+            updatingTimeObject.renewSessionTimeStamp = Date().localDate()
+            updatingTimeObject.mustCheckTimeOut = true
+            
+        }
+        
+        return updatingTimeObject
         
     }
     

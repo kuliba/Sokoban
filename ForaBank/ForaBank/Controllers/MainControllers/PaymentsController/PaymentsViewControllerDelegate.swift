@@ -7,6 +7,13 @@
 
 import UIKit
 
+protocol PaymentsViewControllerDelegate: AnyObject {
+    func selectTransition(_ controller: UIViewController)
+    func goToCountryPayments()
+}
+
+
+
 extension PaymentsViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -21,13 +28,14 @@ extension PaymentsViewController: UICollectionViewDelegate {
             } else if let lastPhonePayment = payments[indexPath.row].lastPhonePayment {
                 openPhonePaymentVC(model: lastPhonePayment)
             } else if let lastMobilePayment = payments[indexPath.row].lastMobilePayment {
-                let viewController = payments[indexPath.row].controllerName.getViewController() as? MobilePayViewController
-                viewController?.addCloseButton()
-                viewController?.phoneField.text =  "+7\(payments[indexPath.row].lastMobilePayment?.additionalList?[1].fieldValue ?? "")"
-                viewController?.selectNumber = "+7\(payments[indexPath.row].lastMobilePayment?.additionalList?[1].fieldValue ?? "")"
-                let navVC = UINavigationController(rootViewController: viewController ?? UIViewController())
-                navVC.modalPresentationStyle = .fullScreen
-                present(navVC, animated: true)
+                let viewController = (payments[indexPath.row].controllerName.getViewController() as? MobilePayViewController)!
+//                viewController?.addCloseButton()
+//                viewController?.phoneField.text =  "+7\(payments[indexPath.row].lastMobilePayment?.additionalList?[1].fieldValue ?? "")"
+//                viewController?.selectNumber = "+7\(payments[indexPath.row].lastMobilePayment?.additionalList?[1].fieldValue ?? "")"
+//                let navVC = UINavigationController(rootViewController: viewController ?? UIViewController())
+//                navVC.modalPresentationStyle = .fullScreen
+//                present(navVC, animated: true)
+                delegate?.selectTransition(viewController)
             } else {
                 if let viewController = payments[indexPath.row].controllerName.getViewController() {
                     viewController.addCloseButton()
@@ -45,6 +53,8 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 popView.modalPresentationStyle = .custom
                 popView.transitioningDelegate = self
                 self.present(popView, animated: true, completion: nil)
+            } else if indexPath.row == 2 {
+                delegate?.goToCountryPayments()
                 
             } else if indexPath.row == 3 {
                 let popView = MemeDetailVC()
@@ -69,13 +79,13 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 }
             }
         case .pay:
-            print("DEBUG: " + #function + pay[indexPath.row].name)
        
             if let viewController = pay[indexPath.row].controllerName.getViewController() {
                 viewController.addCloseButton()
                 let navVC = UINavigationController(rootViewController: viewController)
                 navVC.modalPresentationStyle = .fullScreen
 //                    present(navVC, animated: true)
+                
                 
 //                    // ЖКХ
                 if indexPath.row == 2 {
