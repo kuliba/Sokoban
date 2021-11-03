@@ -83,7 +83,9 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         print(banks)
         let viewLine = UIView()
  
-    
+        tableView.keyboardDismissMode = .interactive
+        tableView.keyboardDismissMode = .onDrag
+
         self.delegate = self
         configureTableView()
         registerContactCell()

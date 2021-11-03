@@ -274,8 +274,8 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
             self.accountNumber.textField.maskString = "00000 000 0 0000 0000000"
             if self.accountNumber.textField.text?.replacingOccurrences(of: " ", with: "").count == 20, self.accountNumber.textField.text?.prefix(5) == "40817" || self.accountNumber.textField.text?.prefix(5) == "40820" || self.accountNumber.textField.text?.prefix(3) == "423" || self.accountNumber.textField.text?.prefix(3) == "426" {
                 self.stackView.addArrangedSubview(self.fioField)
-                self.commentField.isHidden = false
-                self.stackView.addArrangedSubview(self.commentField)
+//                self.commentField.isHidden = false
+//                self.stackView.addArrangedSubview(self.commentField)
                 self.fioField.isHidden = false
             } else if self.accountNumber.textField.text?.replacingOccurrences(of: " ", with: "").count == 20 {
                 self.fio.name.removeAll()
@@ -615,7 +615,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
     
         var body = [ "check" : false,
                      "amount" : amount,
-                     "comment" : comment,
+//                     "comment" : comment,
                      "currencyAmount" : "RUB",
                      "payer" : [
                         "cardNumber" : cardNumber

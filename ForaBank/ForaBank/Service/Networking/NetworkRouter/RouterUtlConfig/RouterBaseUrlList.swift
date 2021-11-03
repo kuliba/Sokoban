@@ -128,6 +128,9 @@ enum RouterBaseUrlList: String {
     
     case getMobileList             = "/dict/getMobileList"
     
+    case getOperationDetail        = "/rest/getOperationDetail"
+
+    
     // MARK: - В не авторизованную зону.
     ///Обновление по serial
         
