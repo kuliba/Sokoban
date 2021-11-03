@@ -15,7 +15,7 @@ class GetSessionTimeout: Object {
     @objc dynamic var lastActionTimestamp = Date().localDate()
     @objc dynamic var maxTimeOut = StaticDefaultTimeOut.staticDefaultTimeOut
     @objc dynamic var renewSessionTimeStamp = Date().localDate()
-    @objc dynamic var mustCheckTimeOut = false
+    @objc dynamic var mustCheckTimeOut = true
     
     
 }

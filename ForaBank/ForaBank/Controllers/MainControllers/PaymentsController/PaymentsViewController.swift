@@ -11,7 +11,7 @@ import UIKit
 
 class PaymentsViewController: UIViewController {
     
-    weak var delegate: PaymentsViewControllerDelegate?
+
     
     var payments = [PaymentsModel]() {
         didSet {

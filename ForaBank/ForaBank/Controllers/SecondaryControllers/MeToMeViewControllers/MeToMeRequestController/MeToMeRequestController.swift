@@ -330,7 +330,7 @@ class MeToMeRequestController: UIViewController {
         DispatchQueue.main.async { [weak self] in
             var options = ALOptions()
             options.isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
-            options.onSuccessfulDismiss = { (mode: ALMode?, _) in
+            options.onSuccessfulDismiss = { (mode: ALMode?) in
                 self?.nextButton.isEnabled = true
                 self?.cancelButton.isEnabled = true
 
