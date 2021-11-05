@@ -39,7 +39,7 @@ public struct ALOptions { // The structure used to display the controller
     public var isSensorsEnabled: Bool?
     public var onSuccessfulDismiss: onSuccessfulDismissCallback?
     public var onFailedAttempt: onFailedAttemptCallback?
-    public init() {}
+    public init() { }
 }
 
 public enum ALMode { // Modes for AppLocker
@@ -101,14 +101,15 @@ public class AppLocker: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        // https://stackoverflow.com/questions/56459329/disable-the-interactive-dismissal-of-presented-view-controller-in-ios-13
         modalPresentationStyle = .fullScreen
-        
     }
     
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.navigationBar.isHidden = true
+        let isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
+        if isSensorsEnabled ?? false {
+            checkSensors()
+        }
     }
     
      var mode: ALMode = .validate {
@@ -214,10 +215,6 @@ public class AppLocker: UIViewController {
 //                self.onSuccessfulDismiss?(self.mode, nil)
             }
         }
-        //        } else {
-        //            onFailedAttempt?(mode)
-        //            incorrectPinAnimation()
-        //        }
     }
     
     private func validateModeAction() {

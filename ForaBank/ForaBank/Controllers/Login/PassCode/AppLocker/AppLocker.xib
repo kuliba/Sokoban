@@ -22,19 +22,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="222.5"/>
                         <subviews>
                             <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hVx-18-l1J" customClass="PhotoImageView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="143.5" y="43.5" width="88" height="88"/>
+                                <rect key="frame" x="143.5" y="55" width="88" height="88"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="hVx-18-l1J" secondAttribute="height" multiplier="1:1" id="wcK-td-OD3"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Message" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BiA-iv-5oK">
-                                <rect key="frame" x="20" y="139.5" width="335" height="23"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BiA-iv-5oK">
+                                <rect key="frame" x="20" y="151" width="335" height="0.0"/>
                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="19"/>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6kS-ba-3rR">
-                                <rect key="frame" x="8" y="199" width="359" height="28"/>
+                                <rect key="frame" x="8" y="167" width="359" height="28"/>
                                 <subviews>
                                     <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="y48-OI-bV6" userLabel="first" customClass="Indicator" customModule="ForaBank" customModuleProvider="target">
                                         <rect key="frame" x="125.5" y="8" width="12" height="12"/>
@@ -81,8 +81,8 @@
                                     <constraint firstItem="EvL-fK-aNd" firstAttribute="height" secondItem="nQv-Y6-U7g" secondAttribute="height" id="qPY-vt-Y5M"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="submessage" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Yc-zm-CFr">
-                                <rect key="frame" x="8" y="170.5" width="359" height="20.5"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Yc-zm-CFr">
+                                <rect key="frame" x="8" y="159" width="359" height="0.0"/>
                                 <fontDescription key="fontDescription" type="system" weight="light" pointSize="17"/>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>

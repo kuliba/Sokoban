@@ -15,17 +15,17 @@ class MainCoordinator: Coordinator {
     
     override init(router: RouterType) {
         coordinator = BaseCoordinator(router: router)
-        router.setRootModule(coordinator.toPresentable(), hideBar: true)
         super.init(router: router)
+        router.setRootModule(coordinator.toPresentable(), hideBar: true)
     }
     
     override func start() {
         
-        //       goTabBar()
+//        goTabBar()
         let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
         if let userIsRegister = userIsRegister {
             if userIsRegister {
-                self.goToPinVC(.login)
+                self.goToPinVC()
             } else {
                 self.goToRegisterVC()
             }
@@ -48,29 +48,28 @@ class MainCoordinator: Coordinator {
         }
     }
     
-    func goToPinVC(_ mode: ALMode) {
+    func goToPinVC() {
+        let lockerCoordinator = LockerCoordinator(router: self.router)
+        self.addChild(coordinator)
+        lockerCoordinator.start()
         
-        DispatchQueue.main.async {
-            let navigationController = UINavigationController()
-            let newRouter = Router(navigationController: navigationController)
-            let coordinator = LockerCoordinator(router: newRouter)
-            coordinator.start()
-            newRouter.setRootModule(coordinator, hideBar: true)
-//            coordinator.start()
-            
-//            AppLocker.present(with: mode, over: coordinator.toPresentable())
-//        AppLocker.present(with: mode, and: options)
-        
+//        self.router.setRootModule(lockerCoordinator, hideBar: true)
+        DispatchQueue.main.async { [self] in
+//            self.router.present(lockerCoordinator, animated: true)
+            self.router.push(lockerCoordinator, animated: true) { [weak self, weak coordinator] in
+                self?.removeChild(coordinator)
+            }
         }
     }
     
     func goTabBar() {
-        DispatchQueue.main.async {
-            let navigationController = UINavigationController()
-            let newRouter = Router(navigationController: navigationController)
-            let coordinator = MainTabBarCoordinator(router: newRouter)
-            coordinator.start()
-            newRouter.setRootModule(coordinator, hideBar: true)
+        let mainTabBarCoordinator = MainTabBarCoordinator(router: self.router)
+        self.addChild(mainTabBarCoordinator)
+        mainTabBarCoordinator.start()
+        DispatchQueue.main.async { [self] in
+            self.router.push(mainTabBarCoordinator, animated: true) { [weak self, weak coordinator] in
+                self?.removeChild(coordinator)
+            }
         }
     }
 }
