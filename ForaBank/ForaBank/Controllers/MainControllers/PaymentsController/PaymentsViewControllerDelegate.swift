@@ -86,25 +86,19 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 navVC.modalPresentationStyle = .fullScreen
 //                    present(navVC, animated: true)
                 
-                
-//                    // ЖКХ
                 if indexPath.row == 2 {
+                    // ЖКХ
                     let gkh = GKHMainViewController.storyboardInstance()!
                     let nc = UINavigationController(rootViewController: gkh)
                     nc.modalPresentationStyle = .fullScreen
                     present(nc, animated: true)
-                } 
-//                    // Мобильная связь
-//                    if indexPath.row == 1 {
-//                        let gkh = MobilePayViewController()
-//                        let nc = UINavigationController(rootViewController: gkh)
-//                        nc.modalPresentationStyle = .fullScreen
-//                        present(nc, animated: true)
-//                    } else {
-//                        present(navVC, animated: true)
-//                    }
-//                present(navVC, animated: true)
-                present(navVC, animated: true, completion: nil)
+                } else if indexPath.row == 1 {
+                    // Мобильная связь
+                    delegate?.selectTransition(viewController)
+//                    present(nc, animated: true)
+                } else {
+                    present(navVC, animated: true, completion: nil)
+                }
             }
         }
     }

@@ -34,28 +34,22 @@ class MainCoordinator: Coordinator {
         }
     }
     
-    //    override func toPresentable() -> UIViewController {
-    //        return viewController
-    //    }
-    
     func goToRegisterVC() {
-        
         let loginCoordinator = LoginCardEntryCoordinator(router: router)
         addChild(loginCoordinator)
         loginCoordinator.start()
-        router.push(loginCoordinator, animated: true) { [weak self, weak coordinator] in
-            self?.removeChild(coordinator)
+        DispatchQueue.main.async { [self] in
+            router.push(loginCoordinator, animated: true) { [weak self, weak coordinator] in
+                self?.removeChild(coordinator)
+            }
         }
     }
     
     func goToPinVC() {
         let lockerCoordinator = LockerCoordinator(router: self.router)
-        self.addChild(coordinator)
+        self.addChild(lockerCoordinator)
         lockerCoordinator.start()
-        
-//        self.router.setRootModule(lockerCoordinator, hideBar: true)
         DispatchQueue.main.async { [self] in
-//            self.router.present(lockerCoordinator, animated: true)
             self.router.push(lockerCoordinator, animated: true) { [weak self, weak coordinator] in
                 self?.removeChild(coordinator)
             }
