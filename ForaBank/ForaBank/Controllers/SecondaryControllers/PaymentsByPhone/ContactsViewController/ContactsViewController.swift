@@ -649,11 +649,6 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                 }
             } else {
                 self.dismissActivity()
-//                DispatchQueue.main.async {
-//                if model.errorMessage == "Пользователь не авторизован"{
-//                    AppLocker.present(with: .validate)
-//                }
-//                }
                 print("DEBUG: Error: ", model.errorMessage ?? "")
             }
         }
@@ -677,11 +672,6 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                     self.lastPaymentsCollectionView.reloadData()
                 }
             } else {
-                if model.errorMessage == "Пользователь не авторизован"{
-//                    DispatchQueue.main.async {
-//                        AppLocker.present(with: .validate)
-//                    }
-                }
                 print("DEBUG: Error: ", model.errorMessage ?? "")
             }
         }
@@ -726,11 +716,6 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                 }
             } else {
                 self.dismissActivity()
-//                DispatchQueue.main.async {
-//                if model.errorMessage == "Пользователь не авторизован"{
-//                    AppLocker.present(with: .validate)
-//                }
-//                }
                 print("DEBUG: Error: ", model.errorMessage ?? "")
             }
         }

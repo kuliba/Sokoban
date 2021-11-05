@@ -25,7 +25,7 @@ class MainCoordinator: Coordinator {
         let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
         if let userIsRegister = userIsRegister {
             if userIsRegister {
-                self.goToPinVC(.validate)
+                self.goToPinVC(.login)
             } else {
                 self.goToRegisterVC()
             }
@@ -49,25 +49,28 @@ class MainCoordinator: Coordinator {
     }
     
     func goToPinVC(_ mode: ALMode) {
-        var options = ALOptions()
-        options.isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
-        options.onSuccessfulDismiss = { (mode: ALMode?, _) in
-            self.goTabBar()
+        
+        DispatchQueue.main.async {
+            let navigationController = UINavigationController()
+            let newRouter = Router(navigationController: navigationController)
+            let coordinator = LockerCoordinator(router: newRouter)
+            coordinator.start()
+            newRouter.setRootModule(coordinator, hideBar: true)
+//            coordinator.start()
+            
+//            AppLocker.present(with: mode, over: coordinator.toPresentable())
+//        AppLocker.present(with: mode, and: options)
+        
         }
-        options.onFailedAttempt = { (mode: ALMode?) in
-            print("Failed to \(String(describing: mode))")
-        }
-        AppLocker.rootViewController(with: mode, and: options, window: UIApplication.shared.windows.first)
     }
     
     func goTabBar() {
-        let mainTabBarCoordinator = MainTabBarCoordinator(router: self.router)
-        self.addChild(mainTabBarCoordinator)
-        mainTabBarCoordinator.start()
-        DispatchQueue.main.async { [self] in
-            self.router.push(mainTabBarCoordinator, animated: true) { [weak self, weak coordinator] in
-                self?.removeChild(coordinator)
-            }
+        DispatchQueue.main.async {
+            let navigationController = UINavigationController()
+            let newRouter = Router(navigationController: navigationController)
+            let coordinator = MainTabBarCoordinator(router: newRouter)
+            coordinator.start()
+            newRouter.setRootModule(coordinator, hideBar: true)
         }
     }
 }

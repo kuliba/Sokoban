@@ -25,7 +25,7 @@ class MainViewController: UIViewController, ChildViewControllerDelegate, FirstCo
             if listProducts.prefix(3).count < 3{
                 self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
             } else if listProducts.prefix(3).count == 3{
-                self.products.append(PaymentsModel(id: 32, name: "Cм.все", iconName: "openCard", controllerName: ""))
+                self.products.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
             }
             //                self.transfers = self.payments
             self.productList = data ?? []
@@ -127,7 +127,7 @@ class MainViewController: UIViewController, ChildViewControllerDelegate, FirstCo
         }
     }
     
-    let searchContact: NavigationBarUIView = UIView.fromNib()
+    lazy var searchContact: NavigationBarUIView = UIView.fromNib()
     
     
     enum Section: Int, CaseIterable {
@@ -248,7 +248,7 @@ class MainViewController: UIViewController, ChildViewControllerDelegate, FirstCo
                     if listProducts.prefix(3).count < 3{
                         self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
                     } else if listProducts.prefix(3).count == 3{
-                        self.products.append(PaymentsModel(id: 32, name: "Cм.все", iconName: "openCard", controllerName: ""))
+                        self.products.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
                     }
 
                 self.productList = data ?? []
@@ -286,7 +286,7 @@ class MainViewController: UIViewController, ChildViewControllerDelegate, FirstCo
             if listProducts.prefix(3).count < 3{
                 self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
             } else if listProducts.prefix(3).count == 3{
-                self.products.append(PaymentsModel(id: 32, name: "Cм.все", iconName: "openCard", controllerName: ""))
+                self.products.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
             }
             //                self.transfers = self.payments
             self.productList = data ?? []
@@ -370,11 +370,7 @@ class MainViewController: UIViewController, ChildViewControllerDelegate, FirstCo
                 self.dataUSD = lastPaymentsList
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-//                DispatchQueue.main.async {
-//                    if model.errorMessage == "Пользователь не авторизован"{
-//                        AppLocker.present(with: .validate)
-//                    }
-//                }
+
             }
         }
         
@@ -392,11 +388,7 @@ class MainViewController: UIViewController, ChildViewControllerDelegate, FirstCo
                 self.dataEuro = lastPaymentsList
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-//                DispatchQueue.main.async {
-//                    if model.errorMessage == "Пользователь не авторизован"{
-//                        AppLocker.present(with: .validate)
-//                    }
-//                }
+
             }
         }
     }

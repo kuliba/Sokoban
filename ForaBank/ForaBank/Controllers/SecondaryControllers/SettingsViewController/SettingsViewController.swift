@@ -156,11 +156,6 @@ class SettingsViewController: UIViewController {
                 completion(model.data, nil)
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-//                DispatchQueue.main.async {
-//                if model.errorMessage == "Пользователь не авторизован"{
-//                    AppLocker.present(with: .validate)
-//                }
-//                }
                 completion(nil, model.errorMessage)
             }
         }

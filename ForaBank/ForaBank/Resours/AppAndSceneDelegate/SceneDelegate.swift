@@ -28,8 +28,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.windowScene = windowScene
         window?.rootViewController = appCoordinator.toPresentable()
         window?.backgroundColor = .white
-        appCoordinator.start()
         window?.makeKeyAndVisible()
+        
+        appCoordinator.start()
         
         NetStatus.shared.netStatusChangeHandler = {
             DispatchQueue.main.async { [weak self] in
