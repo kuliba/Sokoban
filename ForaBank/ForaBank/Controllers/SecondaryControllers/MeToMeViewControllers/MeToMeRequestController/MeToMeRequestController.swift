@@ -348,7 +348,6 @@ class MeToMeRequestController: UIViewController {
             options.onFailedAttempt = { (mode: ALMode?) in
                 print("Failed to \(String(describing: mode))")
             }
-           // AppLocker.present(with: mode, and: options, over: self)
         }
     }
     

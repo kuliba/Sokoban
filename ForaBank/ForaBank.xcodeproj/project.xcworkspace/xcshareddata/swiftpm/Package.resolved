@@ -209,15 +209,6 @@
         }
       },
       {
-        "package": "SkeletonView",
-        "repositoryURL": "https://github.com/Juanpe/SkeletonView.git",
-        "state": {
-          "branch": null,
-          "revision": "ff1a7e299b20786774c1951e2cce2276ac4b8463",
-          "version": "1.25.2"
-        }
-      },
-      {
         "package": "SVGKit",
         "repositoryURL": "https://github.com/SVGKit/SVGKit.git",
         "state": {
