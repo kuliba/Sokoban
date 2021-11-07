@@ -154,11 +154,6 @@ class PhoneConfirmViewController: UIViewController {
                         self.present(vc, animated: true, completion: nil)
                     }
                 } else {
-//                    DispatchQueue.main.async {
-//                    if model.errorMessage == "Пользователь не авторизован"{
-//                        AppLocker.present(with: .validate)
-//                    }
-//                    }
                     print("DEBUG: Error: ", model.errorMessage ?? "")
                 }
             }
@@ -192,11 +187,7 @@ class PhoneConfirmViewController: UIViewController {
                    }
                } else {
                    print("DEBUG: Error: ", model.errorMessage ?? "")
-//                DispatchQueue.main.async {
-//                if model.errorMessage == "Пользователь не авторизован"{
-//                    AppLocker.present(with: .validate)
-//                }
-//                }
+
                }
            }
        }

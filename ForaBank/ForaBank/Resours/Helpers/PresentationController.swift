@@ -7,6 +7,7 @@
 
 import UIKit
 
+
 class PresentationController: UIPresentationController {
     
     let blurEffectView: UIVisualEffectView!
@@ -14,7 +15,7 @@ class PresentationController: UIPresentationController {
     var height: Int?
     
     override init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?) {
-        presentedViewController.nibName
+//        presentedViewController.nibName
         let blurEffect = UIBlurEffect(style: .dark)
         blurEffectView = UIVisualEffectView(effect: blurEffect)
         super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
@@ -77,6 +78,7 @@ extension UIView {
 }
 
 
+
 class PresentationThirdController: UIPresentationController {
     
     let blurEffectView: UIVisualEffectView!
@@ -84,7 +86,7 @@ class PresentationThirdController: UIPresentationController {
     var height: Int?
     
     override init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?) {
-        presentedViewController.nibName
+//        presentedViewController.nibName
         let blurEffect = UIBlurEffect(style: .dark)
         blurEffectView = UIVisualEffectView(effect: blurEffect)
         super.init(presentedViewController: presentedViewController, presenting: presentingViewController)

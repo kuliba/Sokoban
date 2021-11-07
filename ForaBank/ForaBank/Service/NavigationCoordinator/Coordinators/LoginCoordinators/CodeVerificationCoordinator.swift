@@ -9,16 +9,17 @@ import UIKit
 
 protocol CodeVerificationDelegate: AnyObject {
     func goNextController()
+    func goToCreatePinVC()
 }
 
 class CodeVerificationCoordinator: Coordinator {
 
-    let accountViewController = CodeVerificationViewController(model: CodeVerificationViewModel( type: .register))
+    let codeVerificationVC = CodeVerificationViewController(model: CodeVerificationViewModel(type: .register))
 
     override init(router: RouterType) {
         super.init(router: router)
-        accountViewController.delegate = self
-        router.setRootModule(accountViewController, hideBar: false)
+        codeVerificationVC.delegate = self
+        router.setRootModule(codeVerificationVC, hideBar: false)
     }
     
     override func start() {
@@ -27,6 +28,12 @@ class CodeVerificationCoordinator: Coordinator {
 
 
 extension CodeVerificationCoordinator: CodeVerificationDelegate {
+    
+    func goToCreatePinVC() {
+        let newRouter = Router()
+        let lockerCoordinator = LockerCoordinator(router: newRouter, mode: .create)
+        lockerCoordinator.start()
+    }
     
     func goNextController() {
         let navigationController = UINavigationController()

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SkeletonView
 
 class HistoryTableViewCell: UITableViewCell {
 
@@ -21,11 +22,14 @@ class HistoryTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
+        setupUI()
+        setupSkeleton()
     }
     override func layoutSubviews() {
         super.layoutSubviews()
 //        logoImageView.image = UIImage()
+   
+        
         logoImageView.isHidden = false
         logoImageView.layer.masksToBounds = false
         logoImageView.layer.cornerRadius = logoImageView.frame.height/2
@@ -39,7 +43,42 @@ class HistoryTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    private func setupUI() {
+        titleLable.text = ""
+        amountLabel.text = ""
+        subTitleLabel.text = ""
+        logoImageView.layer.cornerRadius = logoImageView.bounds.height / 2
+        logoImageView.clipsToBounds = true
+    }
+    
+    private func setupSkeleton() {
+          
+        isSkeletonable = true
+        
+          
+        titleLable.isSkeletonable = true
+        titleLable.showAnimatedGradientSkeleton()
+        titleLable.linesCornerRadius = 8
+        amountLabel.isSkeletonable = true
+        amountLabel.showAnimatedGradientSkeleton()
+        amountLabel.linesCornerRadius = 8
+        subTitleLabel.isSkeletonable = true
+        subTitleLabel.showAnimatedGradientSkeleton()
+        subTitleLabel.linesCornerRadius = 8
+        logoImageView.isSkeletonable = true
+        logoImageView.showAnimatedGradientSkeleton()
+      }
+    
     func configure(currency: String){
+//        self.isSkeletonable = false
+        titleLable.stopSkeletonAnimation()
+        subTitleLabel.stopSkeletonAnimation()
+        logoImageView.stopSkeletonAnimation()
+        amountLabel.stopSkeletonAnimation()
+        titleLable.hideSkeleton()
+        subTitleLabel.hideSkeleton()
+        logoImageView.hideSkeleton()
+        amountLabel.hideSkeleton()
         
         
         switch operation?.type {

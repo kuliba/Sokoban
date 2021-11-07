@@ -114,6 +114,16 @@ extension UIViewController {
         navigationItem.rightBarButtonItem = button
     }
     
+    func addCloseButton_xMark() {
+        let button = UIBarButtonItem(image: UIImage(systemName: "xmark"),
+                                     landscapeImagePhone: nil,
+                                     style: .done,
+                                     target: self,
+                                     action: #selector(onClose))
+        button.tintColor = .black
+        navigationItem.rightBarButtonItem = button
+    }
+    
     @objc func onClose(){
         self.dismiss(animated: true, completion: nil)
     }

@@ -187,6 +187,8 @@
 		6822EFD226B935DB00125EEC /* BaseTableViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6822EFD126B935DB00125EEC /* BaseTableViewViewController.swift */; };
 		6822EFD626B935FF00125EEC /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6822EFD426B935FF00125EEC /* BaseTableViewCell.swift */; };
 		6822EFD726B935FF00125EEC /* BaseTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6822EFD526B935FF00125EEC /* BaseTableViewCell.xib */; };
+		6833E0AB27303E8F004C070F /* GetOperationDetailDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6833E0AA27303E8F004C070F /* GetOperationDetailDecodebleModel.swift */; };
+		6833E0B027322878004C070F /* SkeletonView in Frameworks */ = {isa = PBXBuildFile; productRef = 6833E0AF27322878004C070F /* SkeletonView */; };
 		68368BAE272FDAA200A435B1 /* OperationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68368BAD272FDAA200A435B1 /* OperationDetailViewController.swift */; };
 		684AD35A26B7D2520071C762 /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 684AD35926B7D2520071C762 /* CryptoSwift */; };
 		6863EF6B2716D095008FD522 /* MTSlideToOpenControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6863EF6A2716D095008FD522 /* MTSlideToOpenControl.swift */; };
@@ -296,7 +298,6 @@
 		ED4FC60B266CD1020092B4AB /* СountryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC609266CD1020092B4AB /* СountryCell.swift */; };
 		ED4FC60C266CD1020092B4AB /* СountryCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED4FC60A266CD1020092B4AB /* СountryCell.xib */; };
 		ED4FC610266CD66F0092B4AB /* СountryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC60F266CD66F0092B4AB /* СountryModel.swift */; };
-		ED4FC619266EA42E0092B4AB /* AppLocker.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED4FC616266EA42E0092B4AB /* AppLocker.xib */; };
 		ED4FC61A266EA42E0092B4AB /* AppLocker.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC617266EA42E0092B4AB /* AppLocker.swift */; };
 		ED4FC61B266EA42E0092B4AB /* UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC618266EA42E0092B4AB /* UI.swift */; };
 		ED4FC621266EA5CD0092B4AB /* Valet in Frameworks */ = {isa = PBXBuildFile; productRef = ED4FC620266EA5CD0092B4AB /* Valet */; };
@@ -329,6 +330,8 @@
 		ED8AB45D26C2B55E006F0D03 /* SuccessMeToMeController.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED8AB45C26C2B55E006F0D03 /* SuccessMeToMeController.xib */; };
 		ED8AB46226C3EA2E006F0D03 /* MeToMeSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8AB46026C3EA2E006F0D03 /* MeToMeSettingViewController.swift */; };
 		ED92D3A226735A0A006D47B3 /* PaymentByPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED92D3A126735A0A006D47B3 /* PaymentByPhoneViewController.swift */; };
+		EDA0DCBB27356BDC0013F47E /* LockerCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA0DCBA27356BDC0013F47E /* LockerCoordinator.swift */; };
+		EDA0DCBD2735E8030013F47E /* AppLocker.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDA0DCBC2735E8030013F47E /* AppLocker.storyboard */; };
 		EDA5637726F375980093F0C8 /* SettingTableViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDA5637626F375980093F0C8 /* SettingTableViewController.storyboard */; };
 		EDA5637A26F386AD0093F0C8 /* SettingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA5637926F386AD0093F0C8 /* SettingTableViewController.swift */; };
 		EDA563AE26F881AF0093F0C8 /* BanksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA563AD26F881AF0093F0C8 /* BanksView.swift */; };
@@ -628,6 +631,7 @@
 		6822EFD126B935DB00125EEC /* BaseTableViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewViewController.swift; sourceTree = "<group>"; };
 		6822EFD426B935FF00125EEC /* BaseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewCell.swift; sourceTree = "<group>"; };
 		6822EFD526B935FF00125EEC /* BaseTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BaseTableViewCell.xib; sourceTree = "<group>"; };
+		6833E0AA27303E8F004C070F /* GetOperationDetailDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetOperationDetailDecodebleModel.swift; sourceTree = "<group>"; };
 		68368BAD272FDAA200A435B1 /* OperationDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailViewController.swift; sourceTree = "<group>"; };
 		6863EF6A2716D095008FD522 /* MTSlideToOpenControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTSlideToOpenControl.swift; sourceTree = "<group>"; };
 		68673B4E26F2F29300F67A8C /* RequisitesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequisitesViewController.swift; sourceTree = "<group>"; };
@@ -730,7 +734,6 @@
 		ED4FC609266CD1020092B4AB /* СountryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "СountryCell.swift"; sourceTree = "<group>"; };
 		ED4FC60A266CD1020092B4AB /* СountryCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "СountryCell.xib"; sourceTree = "<group>"; };
 		ED4FC60F266CD66F0092B4AB /* СountryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "СountryModel.swift"; sourceTree = "<group>"; };
-		ED4FC616266EA42E0092B4AB /* AppLocker.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AppLocker.xib; sourceTree = "<group>"; };
 		ED4FC617266EA42E0092B4AB /* AppLocker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppLocker.swift; sourceTree = "<group>"; };
 		ED4FC618266EA42E0092B4AB /* UI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UI.swift; sourceTree = "<group>"; };
 		ED51D66D2688B27E005FD655 /* SeparatorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SeparatorView.xib; sourceTree = "<group>"; };
@@ -762,6 +765,8 @@
 		ED8AB45C26C2B55E006F0D03 /* SuccessMeToMeController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SuccessMeToMeController.xib; sourceTree = "<group>"; };
 		ED8AB46026C3EA2E006F0D03 /* MeToMeSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeToMeSettingViewController.swift; sourceTree = "<group>"; };
 		ED92D3A126735A0A006D47B3 /* PaymentByPhoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentByPhoneViewController.swift; sourceTree = "<group>"; };
+		EDA0DCBA27356BDC0013F47E /* LockerCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockerCoordinator.swift; sourceTree = "<group>"; };
+		EDA0DCBC2735E8030013F47E /* AppLocker.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AppLocker.storyboard; sourceTree = "<group>"; };
 		EDA5637626F375980093F0C8 /* SettingTableViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SettingTableViewController.storyboard; sourceTree = "<group>"; };
 		EDA5637926F386AD0093F0C8 /* SettingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTableViewController.swift; sourceTree = "<group>"; };
 		EDA563AD26F881AF0093F0C8 /* BanksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BanksView.swift; sourceTree = "<group>"; };
@@ -879,6 +884,7 @@
 				68E6A28526A02C1800A1D9A1 /* AnyFormatKit in Frameworks */,
 				0BA2524926C5DB5600AD087A /* RealmSwift in Frameworks */,
 				ED39EC91268C8FA800158E46 /* SVGKit in Frameworks */,
+				6833E0B027322878004C070F /* SkeletonView in Frameworks */,
 				EDC8BA3426A5AA0E00EDB401 /* SDWebImagePDFCoder in Frameworks */,
 				ED0B4892267B4CDD0037EA06 /* IQKeyboardManagerSwift in Frameworks */,
 				0B7A18AB2681CED70007CC75 /* SwiftEntryKit in Frameworks */,
@@ -1378,9 +1384,7 @@
 		0BFCDAFF2728766F00FFC867 /* Coordinators */ = {
 			isa = PBXGroup;
 			children = (
-				0BA14E1F272082F10098E422 /* LoginCardEntryCoordinator.swift */,
-				0BFCDB00272876FB00FFC867 /* FaceTouchIDCoordinator.swift */,
-				0BFCDB022728774E00FFC867 /* CodeVerificationCoordinator.swift */,
+				EDA0DCBE27380A6D0013F47E /* LoginCoordinators */,
 				0BFCDB042728785F00FFC867 /* OrderProductsCoordinator.swift */,
 				0BFCDB06272878BF00FFC867 /* MainTabBarCoordinator.swift */,
 				0B3291DE2728B725005B2A7E /* MobilePayCoordinator.swift */,
@@ -1405,6 +1409,13 @@
 				6822EFD526B935FF00125EEC /* BaseTableViewCell.xib */,
 			);
 			path = Cell;
+			sourceTree = "<group>";
+		};
+		6833E0AD27314B69004C070F /* ButtonWithBottomTitle */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ButtonWithBottomTitle;
 			sourceTree = "<group>";
 		};
 		68673B5026F2F39E00F67A8C /* Cell */ = {
@@ -2043,7 +2054,7 @@
 		ED4FC615266EA42E0092B4AB /* AppLocker */ = {
 			isa = PBXGroup;
 			children = (
-				ED4FC616266EA42E0092B4AB /* AppLocker.xib */,
+				EDA0DCBC2735E8030013F47E /* AppLocker.storyboard */,
 				ED4FC617266EA42E0092B4AB /* AppLocker.swift */,
 				0BA14E17270DF8F60098E422 /* AppLockerHelper.swift */,
 			);
@@ -2237,6 +2248,17 @@
 			path = PaymentsByPhone;
 			sourceTree = "<group>";
 		};
+		EDA0DCBE27380A6D0013F47E /* LoginCoordinators */ = {
+			isa = PBXGroup;
+			children = (
+				0BA14E1F272082F10098E422 /* LoginCardEntryCoordinator.swift */,
+				0BFCDB022728774E00FFC867 /* CodeVerificationCoordinator.swift */,
+				0BFCDB00272876FB00FFC867 /* FaceTouchIDCoordinator.swift */,
+				EDA0DCBA27356BDC0013F47E /* LockerCoordinator.swift */,
+			);
+			path = LoginCoordinators;
+			sourceTree = "<group>";
+		};
 		EDA5637826F3784E0093F0C8 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
@@ -2265,6 +2287,7 @@
 		EDAA99AC2673AB6D00435484 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				6833E0AD27314B69004C070F /* ButtonWithBottomTitle */,
 				0B95C40626B6CD6600AA57E6 /* BottomInputViewWithRate */,
 				EDBEEA1526B1AE5500265683 /* FullBankInfoListView */,
 				ED84994626A6FD7C005205C6 /* CountryListView */,
@@ -2691,6 +2714,7 @@
 				0B3FE8E02704DBEE00CBDB4E /* GetLatestMobilePaymentsDecodableModel.swift */,
 				0B3FE8E22705C86200CBDB4E /* GetMobileListDecodableModel.swift */,
 				0BA14E1B2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift */,
+				6833E0AA27303E8F004C070F /* GetOperationDetailDecodebleModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -2860,6 +2884,7 @@
 				ED147D4E26BC1237002F66C8 /* FirebaseCrashlytics */,
 				0BA2524626C5DB5600AD087A /* Realm */,
 				0BA2524826C5DB5600AD087A /* RealmSwift */,
+				6833E0AF27322878004C070F /* SkeletonView */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -2946,6 +2971,7 @@
 				EDC8BA3226A5AA0D00EDB401 /* XCRemoteSwiftPackageReference "SDWebImagePDFCoder" */,
 				684AD35826B7D2510071C762 /* XCRemoteSwiftPackageReference "CryptoSwift" */,
 				0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa" */,
+				6833E0AE27322876004C070F /* XCRemoteSwiftPackageReference "SkeletonView" */,
 			);
 			productRefGroup = EDB1437E265FDA410028EF5A /* Products */;
 			projectDirPath = "";
@@ -2983,7 +3009,6 @@
 				EDB143CA265FDEC90028EF5A /* Roboto-LightItalic.ttf in Resources */,
 				688B9BA626DD0DC600407A75 /* ProductTableViewCell.xib in Resources */,
 				EDB1654D26678E87007E6030 /* LaunchScreen.storyboard in Resources */,
-				ED4FC619266EA42E0092B4AB /* AppLocker.xib in Resources */,
 				ED75CDF926E245EE0074F5D5 /* GoogleService-Info-test.plist in Resources */,
 				ED75CE0926E2BA6F0074F5D5 /* TarifView.xib in Resources */,
 				68B6755D26BC8A9B004DECA4 /* GoogleService-Info.plist in Resources */,
@@ -3007,6 +3032,7 @@
 				EDAA99B12673ABF200435484 /* ForaSwitchView.xib in Resources */,
 				68D06F3A26CCDE0100F9BE4C /* NavigationBarUIView.xib in Resources */,
 				0BF3484E268A455C005138A8 /* AllCardView.xib in Resources */,
+				EDA0DCBD2735E8030013F47E /* AppLocker.storyboard in Resources */,
 				ED84995826A8831E005205C6 /* EPContactCell.xib in Resources */,
 				EDB145112664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf in Resources */,
 				ED8AB45D26C2B55E006F0D03 /* SuccessMeToMeController.xib in Resources */,
@@ -3121,6 +3147,7 @@
 				0BE270B626B9DA4800FA958C /* ExtensionBottomInputViewRevers.swift in Sources */,
 				0BB24A9926EFE71C00DDA4F6 /* GetPaymentCountriesListSaved.swift in Sources */,
 				EDA563AE26F881AF0093F0C8 /* BanksView.swift in Sources */,
+				EDA0DCBB27356BDC0013F47E /* LockerCoordinator.swift in Sources */,
 				0B37F97C2678EC69007728FC /* AnywayPaymentDecodableModel.swift in Sources */,
 				0B7A18AD2681CF160007CC75 /* CastomPopUpView.swift in Sources */,
 				0BE270B826B9DC4200FA958C /* ExtensionBottomInputViewExchange.swift in Sources */,
@@ -3303,6 +3330,7 @@
 				68FFA55F268BF2D2002DADFA /* TransferByRequisitesViewController.swift in Sources */,
 				ED0B4896267B97C60037EA06 /* ContactInputViewController + UI.swift in Sources */,
 				0BB24AB126F0C3DC00DDA4F6 /* GetCardStatementDecodableModel.swift in Sources */,
+				6833E0AB27303E8F004C070F /* GetOperationDetailDecodebleModel.swift in Sources */,
 				68E6A29326A033B700A1D9A1 /* CheckCardDecodableModel.swift in Sources */,
 				6880D32D26A70585008FBCB4 /* FaceTouchIdViewController.swift in Sources */,
 				0B95C40C26B72CB100AA57E6 /* ExtensionBottomViewWithSetup.swift in Sources */,
@@ -3581,7 +3609,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
@@ -3590,7 +3618,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 7.7;
+				MARKETING_VERSION = 7.8;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3607,7 +3635,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -3615,7 +3643,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 7.7;
+				MARKETING_VERSION = 7.8;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3766,6 +3794,14 @@
 				minimumVersion = 10.14.0;
 			};
 		};
+		6833E0AE27322876004C070F /* XCRemoteSwiftPackageReference "SkeletonView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Juanpe/SkeletonView.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		684AD35826B7D2510071C762 /* XCRemoteSwiftPackageReference "CryptoSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/krzyzanowskim/CryptoSwift.git";
@@ -3863,6 +3899,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa" */;
 			productName = RealmSwift;
+		};
+		6833E0AF27322878004C070F /* SkeletonView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6833E0AE27322876004C070F /* XCRemoteSwiftPackageReference "SkeletonView" */;
+			productName = SkeletonView;
 		};
 		684AD35926B7D2520071C762 /* CryptoSwift */ = {
 			isa = XCSwiftPackageProductDependency;

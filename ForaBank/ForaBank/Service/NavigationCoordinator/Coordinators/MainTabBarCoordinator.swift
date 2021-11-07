@@ -15,6 +15,7 @@ class MainTabBarCoordinator: Coordinator {
     override init(router: RouterType) {
         super.init(router: router)
         router.setRootModule( mainTabBarController, hideBar: true)
+        mainTabBarController.paymentsVC.delegate = self
     }
     
     override func start() {
@@ -39,6 +40,7 @@ extension MainTabBarCoordinator: PaymentsViewControllerDelegate {
         let сountryPay = CountryPayCoordinator(router: newRouter)
         addChild(сountryPay)
         сountryPay.start()
-        router.setRootModule(сountryPay, hideBar: false) // present(mobilePay, animated: true)
+        router.present(сountryPay, animated: true)
+//        router.setRootModule(сountryPay, hideBar: false) // present(mobilePay, animated: true)
     }
 }

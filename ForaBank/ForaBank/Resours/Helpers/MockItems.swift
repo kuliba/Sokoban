@@ -337,4 +337,24 @@ class MockItems {
         ]
     }
     
+    class func butttonArray() -> [PaymentsModel] {
+        return [
+            PaymentsModel(id: 1, name: "+ Шаблон",
+                          iconName: "star24size",
+                          controllerName: "https://www.forabank.ru/private/cards/",
+                          description: "QR"),
+            
+            PaymentsModel(id: 2, name: "Документ",
+                          iconName: "doc",
+                          controllerName: "https://www.forabank.ru/private/deposits/",
+                        description: "Что то"),
+            
+            PaymentsModel(id: 5, name: "Детали",
+                          iconName: "info.circle",
+                          controllerName: "https://www.forabank.ru/private/credits/",
+                          description: "Что то"),
+                    
+        ]
+    }
+    
 }

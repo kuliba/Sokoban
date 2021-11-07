@@ -61,11 +61,6 @@ class ContactCollectionViewCell: UICollectionViewCell{
             } else {
                 checkOwner = false
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-//                DispatchQueue.main.async {
-//                if model.errorMessage == "Пользователь не авторизован"{
-//                    AppLocker.present(with: .validate)
-//                }
-//                }
             }
         }
         return checkOwner

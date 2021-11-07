@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--App Locker-->
+        <scene sceneID="s0d-6b-0kx">
+            <objects>
+                <viewController id="Y6W-OH-hqX" customClass="AppLocker" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="U8S-qZ-5Pu">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dQf-YT-1Za">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="298.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7fi-7Z-E1d">
+                                        <rect key="frame" x="20" y="189.5" width="374" height="0.0"/>
+                                        <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="19"/>
+                                        <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mW0-vd-BKG">
+                                        <rect key="frame" x="8" y="205.5" width="398" height="37"/>
+                                        <subviews>
+                                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Itg-oC-c7O" userLabel="first" customClass="Indicator" customModule="ForaBank" customModuleProvider="target">
+                                                <rect key="frame" x="145" y="12.5" width="12" height="12"/>
+                                                <color key="backgroundColor" red="0.86666666670000003" green="0.86666666670000003" blue="0.86666666670000003" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="Itg-oC-c7O" secondAttribute="height" multiplier="1:1" id="Mx0-1I-YFz"/>
+                                                </constraints>
+                                            </view>
+                                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dcm-MK-G8K" userLabel="second" customClass="Indicator" customModule="ForaBank" customModuleProvider="target">
+                                                <rect key="frame" x="177" y="12.5" width="12" height="12"/>
+                                                <color key="backgroundColor" red="0.86666666670000003" green="0.86666666670000003" blue="0.86666666670000003" alpha="1" colorSpace="calibratedRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="dcm-MK-G8K" secondAttribute="height" multiplier="1:1" id="Wx9-Wm-NA9"/>
+                                                </constraints>
+                                            </view>
+                                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xXU-Vm-dzf" userLabel="third" customClass="Indicator" customModule="ForaBank" customModuleProvider="target">
+                                                <rect key="frame" x="209" y="12.5" width="12" height="12"/>
+                                                <color key="backgroundColor" red="0.86666666670000003" green="0.86666666670000003" blue="0.86666666670000003" alpha="1" colorSpace="calibratedRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="xXU-Vm-dzf" secondAttribute="height" multiplier="1:1" id="yxg-Wl-YB6"/>
+                                                </constraints>
+                                            </view>
+                                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qD0-Pj-SUu" userLabel="four" customClass="Indicator" customModule="ForaBank" customModuleProvider="target">
+                                                <rect key="frame" x="241" y="12.5" width="12" height="12"/>
+                                                <color key="backgroundColor" red="0.86666666670000003" green="0.86666666670000003" blue="0.86666666670000003" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="qD0-Pj-SUu" secondAttribute="height" multiplier="1:1" id="g2O-En-qyl"/>
+                                                    <constraint firstAttribute="height" constant="12" id="gYv-ET-3vc"/>
+                                                </constraints>
+                                            </view>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstItem="Itg-oC-c7O" firstAttribute="height" secondItem="qD0-Pj-SUu" secondAttribute="height" id="2Pc-3T-XxQ"/>
+                                            <constraint firstItem="xXU-Vm-dzf" firstAttribute="leading" secondItem="mW0-vd-BKG" secondAttribute="centerX" constant="10" id="CLJ-9X-h9u"/>
+                                            <constraint firstItem="xXU-Vm-dzf" firstAttribute="centerY" secondItem="Itg-oC-c7O" secondAttribute="centerY" id="Ddm-jh-uFZ"/>
+                                            <constraint firstItem="dcm-MK-G8K" firstAttribute="centerY" secondItem="mW0-vd-BKG" secondAttribute="centerY" id="VE4-d5-UIp"/>
+                                            <constraint firstItem="qD0-Pj-SUu" firstAttribute="centerY" secondItem="Itg-oC-c7O" secondAttribute="centerY" id="W9F-5t-afw"/>
+                                            <constraint firstItem="qD0-Pj-SUu" firstAttribute="leading" secondItem="xXU-Vm-dzf" secondAttribute="trailing" constant="20" id="Xwt-xh-4br"/>
+                                            <constraint firstItem="xXU-Vm-dzf" firstAttribute="height" secondItem="qD0-Pj-SUu" secondAttribute="height" id="agR-bm-n3y"/>
+                                            <constraint firstItem="dcm-MK-G8K" firstAttribute="centerY" secondItem="Itg-oC-c7O" secondAttribute="centerY" id="dcP-AM-2QX"/>
+                                            <constraint firstItem="dcm-MK-G8K" firstAttribute="trailing" secondItem="mW0-vd-BKG" secondAttribute="centerX" constant="-10" id="hvD-k1-zWf"/>
+                                            <constraint firstItem="dcm-MK-G8K" firstAttribute="height" secondItem="qD0-Pj-SUu" secondAttribute="height" id="uVt-Fx-GVs"/>
+                                            <constraint firstItem="dcm-MK-G8K" firstAttribute="leading" secondItem="Itg-oC-c7O" secondAttribute="trailing" constant="20" id="ugE-Hn-Lcc"/>
+                                        </constraints>
+                                    </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2ww-cc-rFX">
+                                        <rect key="frame" x="8" y="197.5" width="398" height="0.0"/>
+                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="17"/>
+                                        <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="2ww-cc-rFX" firstAttribute="top" secondItem="7fi-7Z-E1d" secondAttribute="bottom" constant="8" id="7IT-mj-iMn"/>
+                                    <constraint firstItem="mW0-vd-BKG" firstAttribute="top" secondItem="2ww-cc-rFX" secondAttribute="bottom" constant="8" id="FGV-V3-B69"/>
+                                    <constraint firstItem="7fi-7Z-E1d" firstAttribute="centerY" secondItem="dQf-YT-1Za" secondAttribute="centerY" constant="40" id="Ri8-nU-jfD"/>
+                                    <constraint firstAttribute="trailing" secondItem="2ww-cc-rFX" secondAttribute="trailing" constant="8" id="Zpg-OW-yNw"/>
+                                    <constraint firstItem="mW0-vd-BKG" firstAttribute="height" secondItem="dQf-YT-1Za" secondAttribute="height" multiplier="1:8" id="h4i-G6-dih"/>
+                                    <constraint firstAttribute="trailing" secondItem="7fi-7Z-E1d" secondAttribute="trailing" constant="20" id="kwM-UB-LuR"/>
+                                    <constraint firstItem="2ww-cc-rFX" firstAttribute="leading" secondItem="dQf-YT-1Za" secondAttribute="leading" constant="8" id="mf8-Xt-h7O"/>
+                                    <constraint firstItem="7fi-7Z-E1d" firstAttribute="leading" secondItem="dQf-YT-1Za" secondAttribute="leading" constant="20" id="rdl-rz-rRQ"/>
+                                    <constraint firstAttribute="trailing" secondItem="mW0-vd-BKG" secondAttribute="trailing" constant="8" id="rrq-0a-egC"/>
+                                    <constraint firstItem="7fi-7Z-E1d" firstAttribute="centerX" secondItem="dQf-YT-1Za" secondAttribute="centerX" id="ubv-ej-gK8"/>
+                                    <constraint firstItem="mW0-vd-BKG" firstAttribute="leading" secondItem="dQf-YT-1Za" secondAttribute="leading" constant="8" id="und-Lh-K7X"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2qI-Ft-HUe" userLabel="keyboard">
+                                <rect key="frame" x="0.0" y="298.5" width="414" height="597.5"/>
+                                <subviews>
+                                    <button opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BEk-4q-fOf" customClass="PinIndicator" customModule="ForaBank" customModuleProvider="target">
+                                        <rect key="frame" x="63" y="101" width="82.5" height="83"/>
+                                        <color key="backgroundColor" red="0.97647058819999999" green="0.97647058819999999" blue="0.97647058819999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                        <state key="normal" title="1">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" red="0.66812671800000001" green="0.79767667949999999" blue="0.2358612618" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="keyboardPressed:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="ELc-g2-6JE"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rDC-xJ-5li" customClass="PinIndicator" customModule="ForaBank" customModuleProvider="target">
+                                        <rect key="frame" x="165.5" y="101" width="83" height="83"/>
+                                        <color key="backgroundColor" red="0.97647058819999999" green="0.97647058819999999" blue="0.97647058819999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="rDC-xJ-5li" secondAttribute="height" multiplier="1:1" id="mlN-hv-n7e"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                        <state key="normal" title="2">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" red="0.66812671800000001" green="0.79767667949999999" blue="0.2358612618" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="keyboardPressed:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="bTm-ur-iqB"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" clipsSubviews="YES" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IWO-Nk-cdJ" customClass="PinIndicator" customModule="ForaBank" customModuleProvider="target">
+                                        <rect key="frame" x="268.5" y="101" width="82.5" height="83"/>
+                                        <color key="backgroundColor" red="0.97647058819999999" green="0.97647058819999999" blue="0.97647058819999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                        <state key="normal" title="3">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" red="0.66812671800000001" green="0.79767667949999999" blue="0.2358612618" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="keyboardPressed:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="ydu-zq-tyW"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" clipsSubviews="YES" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fl1-00-Utr" customClass="PinIndicator" customModule="ForaBank" customModuleProvider="target">
+                                        <rect key="frame" x="63" y="200" width="82.5" height="83"/>
+                                        <color key="backgroundColor" red="0.97647058819999999" green="0.97647058819999999" blue="0.97647058819999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                        <state key="normal" title="4">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" red="0.66812671800000001" green="0.79767667949999999" blue="0.2358612618" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="keyboardPressed:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="RWQ-ho-DI7"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" clipsSubviews="YES" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dwK-Rj-vjN" customClass="PinIndicator" customModule="ForaBank" customModuleProvider="target">
+                                        <rect key="frame" x="165.5" y="200" width="83" height="83"/>
+                                        <color key="backgroundColor" red="0.97647058819999999" green="0.97647058819999999" blue="0.97647058819999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                        <state key="normal" title="5">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" red="0.66812671800000001" green="0.79767667949999999" blue="0.2358612618" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="keyboardPressed:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="XAZ-dC-CHz"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" clipsSubviews="YES" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NYe-0W-fub" customClass="PinIndicator" customModule="ForaBank" customModuleProvider="target">
+                                        <rect key="frame" x="268.5" y="200" width="82.5" height="83"/>
+                                        <color key="backgroundColor" red="0.97647058819999999" green="0.97647058819999999" blue="0.97647058819999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                        <state key="normal" title="6">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" red="0.66812671800000001" green="0.79767667949999999" blue="0.2358612618" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="keyboardPressed:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="CXI-IS-v7u"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" clipsSubviews="YES" tag="7" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="T6J-n9-OiM" customClass="PinIndicator" customModule="ForaBank" customModuleProvider="target">
+                                        <rect key="frame" x="63" y="299" width="82.5" height="82.5"/>
+                                        <color key="backgroundColor" red="0.97647058819999999" green="0.97647058819999999" blue="0.97647058819999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                        <state key="normal" title="7">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" red="0.66812671800000001" green="0.79767667949999999" blue="0.2358612618" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="keyboardPressed:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="U1m-qe-qc7"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" clipsSubviews="YES" tag="8" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OnK-fn-L91" customClass="PinIndicator" customModule="ForaBank" customModuleProvider="target">
+                                        <rect key="frame" x="165.5" y="299" width="83" height="82.5"/>
+                                        <color key="backgroundColor" red="0.97647058819999999" green="0.97647058819999999" blue="0.97647058819999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                        <state key="normal" title="8">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" red="0.66812671800000001" green="0.79767667949999999" blue="0.2358612618" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="keyboardPressed:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="5DU-qM-dye"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" clipsSubviews="YES" tag="9" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5jO-Ib-bf0" customClass="PinIndicator" customModule="ForaBank" customModuleProvider="target">
+                                        <rect key="frame" x="268.5" y="299" width="82.5" height="82.5"/>
+                                        <color key="backgroundColor" red="0.97647058819999999" green="0.97647058819999999" blue="0.97647058819999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                        <state key="normal" title="9">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" red="0.66812671800000001" green="0.79767667949999999" blue="0.2358612618" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="keyboardPressed:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="1jy-av-UBu"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" clipsSubviews="YES" tag="1000" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="48e-81-ZnL">
+                                        <rect key="frame" x="268.5" y="397.5" width="82.5" height="83"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" image="delete">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" red="0.66812671800000001" green="0.79767667949999999" blue="0.2358612618" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="keyboardPressed:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="lmv-un-95A"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hRd-rm-dh6" customClass="PinIndicator" customModule="ForaBank" customModuleProvider="target">
+                                        <rect key="frame" x="165.5" y="397.5" width="83" height="83"/>
+                                        <color key="backgroundColor" red="0.97647058819999999" green="0.97647058819999999" blue="0.97647058819999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                        <state key="normal" title="0">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" red="0.66812671800000001" green="0.79767667949999999" blue="0.2358612618" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="keyboardPressed:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="9cX-0I-O1W"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" clipsSubviews="YES" tag="1001" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="faQ-5u-5hI">
+                                        <rect key="frame" x="63" y="397.5" width="82.5" height="83"/>
+                                        <color key="backgroundColor" red="0.97647058819999999" green="0.97647058819999999" blue="0.97647058819999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <state key="normal" title="Выход">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" red="0.66812671800000001" green="0.79767667949999999" blue="0.2358612618" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="keyboardPressed:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="BXz-m9-slk"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="rDC-xJ-5li" firstAttribute="centerX" secondItem="2qI-Ft-HUe" secondAttribute="centerX" id="0bM-o7-0es"/>
+                                    <constraint firstItem="OnK-fn-L91" firstAttribute="top" secondItem="dwK-Rj-vjN" secondAttribute="bottom" constant="16" id="1VP-a5-keV"/>
+                                    <constraint firstItem="T6J-n9-OiM" firstAttribute="width" secondItem="Fl1-00-Utr" secondAttribute="width" id="59B-I1-Ht0"/>
+                                    <constraint firstItem="dwK-Rj-vjN" firstAttribute="height" secondItem="rDC-xJ-5li" secondAttribute="height" id="5lo-dW-Vsa"/>
+                                    <constraint firstItem="dwK-Rj-vjN" firstAttribute="centerX" secondItem="rDC-xJ-5li" secondAttribute="centerX" id="6c6-et-o5t"/>
+                                    <constraint firstItem="NYe-0W-fub" firstAttribute="centerX" secondItem="IWO-Nk-cdJ" secondAttribute="centerX" id="6wq-aW-6tC"/>
+                                    <constraint firstItem="dwK-Rj-vjN" firstAttribute="centerX" secondItem="2qI-Ft-HUe" secondAttribute="centerX" id="7Lh-Ur-ge7"/>
+                                    <constraint firstItem="Fl1-00-Utr" firstAttribute="top" secondItem="BEk-4q-fOf" secondAttribute="bottom" constant="16" id="8QX-gl-JsU"/>
+                                    <constraint firstItem="48e-81-ZnL" firstAttribute="width" secondItem="hRd-rm-dh6" secondAttribute="width" id="8mc-Xx-9fi"/>
+                                    <constraint firstItem="NYe-0W-fub" firstAttribute="height" secondItem="IWO-Nk-cdJ" secondAttribute="height" id="AGY-iX-a5X"/>
+                                    <constraint firstItem="hRd-rm-dh6" firstAttribute="width" secondItem="OnK-fn-L91" secondAttribute="width" id="B8H-An-7Qb"/>
+                                    <constraint firstItem="IWO-Nk-cdJ" firstAttribute="centerY" secondItem="rDC-xJ-5li" secondAttribute="centerY" id="BYu-Nf-0e6"/>
+                                    <constraint firstItem="rDC-xJ-5li" firstAttribute="leading" secondItem="BEk-4q-fOf" secondAttribute="trailing" constant="20" id="C1L-iE-Sdz"/>
+                                    <constraint firstItem="dwK-Rj-vjN" firstAttribute="width" secondItem="rDC-xJ-5li" secondAttribute="width" id="C3c-oB-V3z"/>
+                                    <constraint firstItem="T6J-n9-OiM" firstAttribute="centerX" secondItem="Fl1-00-Utr" secondAttribute="centerX" id="CDV-fc-9S5"/>
+                                    <constraint firstItem="rDC-xJ-5li" firstAttribute="centerY" secondItem="BEk-4q-fOf" secondAttribute="centerY" id="DQD-pv-hg3"/>
+                                    <constraint firstItem="OnK-fn-L91" firstAttribute="width" secondItem="dwK-Rj-vjN" secondAttribute="width" id="Jt9-SY-hQz"/>
+                                    <constraint firstItem="IWO-Nk-cdJ" firstAttribute="height" secondItem="rDC-xJ-5li" secondAttribute="height" id="MWC-JR-aib"/>
+                                    <constraint firstItem="IWO-Nk-cdJ" firstAttribute="width" secondItem="rDC-xJ-5li" secondAttribute="width" id="O0w-Ic-bwJ"/>
+                                    <constraint firstItem="hRd-rm-dh6" firstAttribute="centerX" secondItem="OnK-fn-L91" secondAttribute="centerX" id="OZK-xD-GOn"/>
+                                    <constraint firstItem="rDC-xJ-5li" firstAttribute="height" secondItem="BEk-4q-fOf" secondAttribute="height" id="P0d-R8-7fm"/>
+                                    <constraint firstItem="hRd-rm-dh6" firstAttribute="width" secondItem="faQ-5u-5hI" secondAttribute="width" id="QFm-q9-UjB"/>
+                                    <constraint firstItem="T6J-n9-OiM" firstAttribute="height" secondItem="Fl1-00-Utr" secondAttribute="height" id="Riz-lj-1MG"/>
+                                    <constraint firstItem="Fl1-00-Utr" firstAttribute="height" secondItem="BEk-4q-fOf" secondAttribute="height" id="So8-10-skS"/>
+                                    <constraint firstItem="rDC-xJ-5li" firstAttribute="width" secondItem="2qI-Ft-HUe" secondAttribute="width" multiplier="1:5" id="TZi-Lg-8qo"/>
+                                    <constraint firstItem="hRd-rm-dh6" firstAttribute="leading" secondItem="faQ-5u-5hI" secondAttribute="trailing" constant="20" id="U9E-z2-5On"/>
+                                    <constraint firstItem="hRd-rm-dh6" firstAttribute="height" secondItem="faQ-5u-5hI" secondAttribute="height" id="Vgq-Ha-JwZ"/>
+                                    <constraint firstItem="NYe-0W-fub" firstAttribute="top" secondItem="IWO-Nk-cdJ" secondAttribute="bottom" constant="16" id="X0F-R4-N8L"/>
+                                    <constraint firstItem="dwK-Rj-vjN" firstAttribute="top" secondItem="rDC-xJ-5li" secondAttribute="bottom" constant="16" id="Zv5-Kf-wiR"/>
+                                    <constraint firstItem="rDC-xJ-5li" firstAttribute="width" secondItem="BEk-4q-fOf" secondAttribute="width" id="a1i-gi-E0C"/>
+                                    <constraint firstItem="48e-81-ZnL" firstAttribute="centerY" secondItem="hRd-rm-dh6" secondAttribute="centerY" id="aM3-uW-Vss"/>
+                                    <constraint firstItem="hRd-rm-dh6" firstAttribute="height" secondItem="OnK-fn-L91" secondAttribute="height" id="dAx-vT-9rN"/>
+                                    <constraint firstItem="OnK-fn-L91" firstAttribute="height" secondItem="dwK-Rj-vjN" secondAttribute="height" id="em1-FT-zHY"/>
+                                    <constraint firstItem="48e-81-ZnL" firstAttribute="height" secondItem="hRd-rm-dh6" secondAttribute="height" id="f7g-QH-OW1"/>
+                                    <constraint firstItem="OnK-fn-L91" firstAttribute="centerX" secondItem="2qI-Ft-HUe" secondAttribute="centerX" id="ihK-aQ-W6R"/>
+                                    <constraint firstItem="dwK-Rj-vjN" firstAttribute="bottom" secondItem="2qI-Ft-HUe" secondAttribute="centerY" constant="-16" id="jMn-25-QOa"/>
+                                    <constraint firstItem="hRd-rm-dh6" firstAttribute="top" secondItem="OnK-fn-L91" secondAttribute="bottom" constant="16" id="n1k-7P-35v"/>
+                                    <constraint firstItem="T6J-n9-OiM" firstAttribute="top" secondItem="Fl1-00-Utr" secondAttribute="bottom" constant="16" id="o3m-LB-Y4q"/>
+                                    <constraint firstItem="48e-81-ZnL" firstAttribute="leading" secondItem="hRd-rm-dh6" secondAttribute="trailing" constant="20" id="oPA-Eb-ujO"/>
+                                    <constraint firstItem="hRd-rm-dh6" firstAttribute="centerY" secondItem="faQ-5u-5hI" secondAttribute="centerY" id="rad-fv-FrM"/>
+                                    <constraint firstItem="5jO-Ib-bf0" firstAttribute="height" secondItem="NYe-0W-fub" secondAttribute="height" id="reu-lR-Qf7"/>
+                                    <constraint firstItem="Fl1-00-Utr" firstAttribute="width" secondItem="BEk-4q-fOf" secondAttribute="width" id="sJA-b1-nT5"/>
+                                    <constraint firstItem="Fl1-00-Utr" firstAttribute="centerX" secondItem="BEk-4q-fOf" secondAttribute="centerX" id="swt-rx-WKc"/>
+                                    <constraint firstItem="5jO-Ib-bf0" firstAttribute="centerX" secondItem="NYe-0W-fub" secondAttribute="centerX" id="ubU-Mu-5OH"/>
+                                    <constraint firstItem="IWO-Nk-cdJ" firstAttribute="leading" secondItem="rDC-xJ-5li" secondAttribute="trailing" constant="20" id="vSL-ec-3bj"/>
+                                    <constraint firstItem="5jO-Ib-bf0" firstAttribute="width" secondItem="NYe-0W-fub" secondAttribute="width" id="vkQ-fd-CcQ"/>
+                                    <constraint firstItem="NYe-0W-fub" firstAttribute="width" secondItem="IWO-Nk-cdJ" secondAttribute="width" id="xxP-G4-gV3"/>
+                                    <constraint firstItem="5jO-Ib-bf0" firstAttribute="top" secondItem="NYe-0W-fub" secondAttribute="bottom" constant="16" id="y3D-Ek-KlJ"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="YXb-Wj-3LF"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="2qI-Ft-HUe" firstAttribute="leading" secondItem="U8S-qZ-5Pu" secondAttribute="leading" id="3CB-T0-vrd"/>
+                            <constraint firstAttribute="bottom" secondItem="2qI-Ft-HUe" secondAttribute="bottom" id="Ilc-RH-m6B"/>
+                            <constraint firstItem="dQf-YT-1Za" firstAttribute="height" secondItem="U8S-qZ-5Pu" secondAttribute="height" multiplier="1:3" id="Mex-C0-qXb"/>
+                            <constraint firstItem="dQf-YT-1Za" firstAttribute="top" secondItem="U8S-qZ-5Pu" secondAttribute="top" id="UEf-f3-KBy"/>
+                            <constraint firstAttribute="trailing" secondItem="dQf-YT-1Za" secondAttribute="trailing" id="a37-oA-24L"/>
+                            <constraint firstItem="dQf-YT-1Za" firstAttribute="leading" secondItem="U8S-qZ-5Pu" secondAttribute="leading" id="bZ1-Vt-5gp"/>
+                            <constraint firstAttribute="trailing" secondItem="2qI-Ft-HUe" secondAttribute="trailing" id="gVh-Ve-xOw"/>
+                            <constraint firstItem="2qI-Ft-HUe" firstAttribute="top" secondItem="dQf-YT-1Za" secondAttribute="bottom" id="gVm-gx-ww5"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="cancelButton" destination="faQ-5u-5hI" id="mM5-47-wVI"/>
+                        <outlet property="deleteButton" destination="48e-81-ZnL" id="kdu-3L-YqV"/>
+                        <outlet property="messageLabel" destination="7fi-7Z-E1d" id="z4v-79-0Px"/>
+                        <outlet property="submessageLabel" destination="2ww-cc-rFX" id="E9H-yU-Bvt"/>
+                        <outletCollection property="pinIndicators" destination="Itg-oC-c7O" collectionClass="NSMutableArray" id="OIF-VP-fKY"/>
+                        <outletCollection property="pinIndicators" destination="dcm-MK-G8K" collectionClass="NSMutableArray" id="zgc-Vz-Gm2"/>
+                        <outletCollection property="pinIndicators" destination="xXU-Vm-dzf" collectionClass="NSMutableArray" id="hki-F8-5nx"/>
+                        <outletCollection property="pinIndicators" destination="qD0-Pj-SUu" collectionClass="NSMutableArray" id="DRf-rH-nT2"/>
+                        <outletCollection property="buttons" destination="BEk-4q-fOf" collectionClass="NSMutableArray" id="ndB-JU-BJI"/>
+                        <outletCollection property="buttons" destination="rDC-xJ-5li" collectionClass="NSMutableArray" id="Ue3-yu-n0K"/>
+                        <outletCollection property="buttons" destination="IWO-Nk-cdJ" collectionClass="NSMutableArray" id="Ohs-4v-FVA"/>
+                        <outletCollection property="buttons" destination="Fl1-00-Utr" collectionClass="NSMutableArray" id="swD-4S-41C"/>
+                        <outletCollection property="buttons" destination="dwK-Rj-vjN" collectionClass="NSMutableArray" id="ezQ-kK-Ani"/>
+                        <outletCollection property="buttons" destination="NYe-0W-fub" collectionClass="NSMutableArray" id="WHA-Mo-uZf"/>
+                        <outletCollection property="buttons" destination="T6J-n9-OiM" collectionClass="NSMutableArray" id="Bc4-rW-c6B"/>
+                        <outletCollection property="buttons" destination="OnK-fn-L91" collectionClass="NSMutableArray" id="uVx-ia-TJ2"/>
+                        <outletCollection property="buttons" destination="5jO-Ib-bf0" collectionClass="NSMutableArray" id="bZf-QB-h2W"/>
+                        <outletCollection property="buttons" destination="hRd-rm-dh6" collectionClass="NSMutableArray" id="nDM-so-jnp"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-23" y="69"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="delete" width="45" height="45"/>
+    </resources>
+</document>

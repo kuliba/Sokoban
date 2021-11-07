@@ -11,7 +11,11 @@ import FirebaseMessaging
 
 class CodeVerificationViewController: UIViewController {
     
-    weak var delegate: CodeVerificationDelegate?
+    weak var delegate: CodeVerificationDelegate? {
+        didSet {
+            print("set CodeVerificationDelegate")
+        }
+    }
 
     var viewModel: CodeVerificationViewModel
     var count = 60  // 60sec if you want
@@ -61,10 +65,10 @@ class CodeVerificationViewController: UIViewController {
         
     init(model: CodeVerificationViewModel) {
         self.viewModel = model
-        let cardNumber = UserDefaults.standard.object(forKey: "phone") as? String
-        if cardNumber != nil {
-            self.viewModel.phone = cardNumber ?? ""
-        }
+//        let cardNumber = UserDefaults.standard.object(forKey: "phone") as? String
+//        if cardNumber != nil {
+//            self.viewModel.phone = cardNumber ?? ""
+//        }
 //        phoneNumber = phone
         super.init(nibName: nil, bundle: nil)
     }
@@ -174,7 +178,9 @@ class CodeVerificationViewController: UIViewController {
                         DispatchQueue.main.async { [weak self] in
                             self?.resendTimer.invalidate()
                             // Переход на создание пинкода
-                            self?.pin(.create)
+                            let del = self?.delegate
+                            del?.goToCreatePinVC()
+//                            self?.pin(.create)
                         }
                         
                     }
@@ -227,6 +233,9 @@ class CodeVerificationViewController: UIViewController {
     
     func pin(_ mode: ALMode) {
         
+        
+        
+        
         var options = ALOptions()
         options.isSensorsEnabled = true
         options.color = .white
@@ -248,6 +257,7 @@ class CodeVerificationViewController: UIViewController {
             print("Failed to \(String(describing: mode))")
         }
         // LOGIN DO
+        
         AppLocker.present(with: mode, and: options, over: self)
     }
 

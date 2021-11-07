@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SkeletonView
 
 protocol ChildViewControllerDelegate{
     func childViewControllerResponse(productList: [GetProductListDatum])
@@ -15,9 +16,11 @@ protocol FirstControllerDelegate: AnyObject {
     func sendData(data: [GetProductListDatum])
 }
 
-class ProductViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate, MTSlideToOpenDelegate, UITextFieldDelegate{
+class ProductViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UITableViewDelegate, SkeletonTableViewDataSource, UIScrollViewDelegate, MTSlideToOpenDelegate, UITextFieldDelegate{
     weak var delegate: FirstControllerDelegate!
 
+    var halfScreen: Bool?
+    
     func mtSlideToOpenDelegateDidFinish(_ sender: MTSlideToOpenView) {
         activateSlider.thumnailImageView.image = #imageLiteral(resourceName: "successSliderButton").imageFlippedForRightToLeftLayoutDirection()
         let alertController = UIAlertController(title: "Активировать карту?", message: "После активации карта будет готова к использованию", preferredStyle: .alert)
@@ -82,7 +85,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
     var totalExpenses = 0.0 {
         didSet{
             if totalExpenses == 0.0{
-                statusBarView.isHidden = true
+                
             } else {
                 amounPeriodLabel.text = "- \(totalExpenses.currencyFormatter(symbol: product?.currency ?? "") )"
                 statusBarView.isHidden = false
@@ -172,6 +175,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
     var historyArray = [GetCardStatementDatum](){
         didSet{
             DispatchQueue.main.async {
+//                self.tableView?.stopSkeletonAnimation()
                 self.tableView?.reloadData()
             }
         }
@@ -179,6 +183,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
     var historyArrayAccount = [GetAccountStatementDatum](){
         didSet{
             DispatchQueue.main.async {
+//                self.tableView?.stopSkeletonAnimation()
+//                self.view.hideSkeleton()
                 self.tableView?.reloadData()
             }
         }
@@ -240,6 +246,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
 //        statusBarView.isHidden = true
         
         scrollView.delegate = self
@@ -435,7 +442,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         statusBarView.anchor(left: headerView.leftAnchor, bottom: headerView.bottomAnchor, right: headerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, height: 44)
         statusBarView.backgroundColor = UIColor(hexString: "BEC1DE")
         statusBarView.layer.cornerRadius = 8
-
+        statusBarView.isSkeletonable = true
+        statusBarView.showAnimatedGradientSkeleton()
         statusBarLabel.text = "Траты"
         statusBarLabel.font = UIFont(name: "", size: 16)
         statusBarLabel.anchor(left: statusBarView.leftAnchor, paddingLeft: 10)
@@ -476,6 +484,9 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
     
     
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        tableView?.isSkeletonable = true
+        tableView?.showAnimatedGradientSkeleton()
         self.collectionView(self.collectionView ?? UICollectionView(), didSelectItemAt: IndexPath(row: 0, section: 0))
     }
     
@@ -552,11 +563,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
                 } else {
                     print("DEBUG: Error: ", model.errorMessage ?? "")
                     self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
-//                    DispatchQueue.main.async {
-//                        if model.errorMessage == "Пользователь не авторизован"{
-//                            AppLocker.present(with: .validate)
-//                        }
-//                    }
+
                 }
             }
            })
@@ -620,11 +627,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
                 self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
-//                DispatchQueue.main.async {
-//                    if model.errorMessage == "Пользователь не авторизован"{
-//                        AppLocker.present(with: .validate)
-//                    }
-//                }
+
             }
         }
 
@@ -633,6 +636,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
     @objc func showAlert(sender: AnyObject) {
         
         let viewController = PayViewController()
+        halfScreen = false
         let navController = UINavigationController(rootViewController: viewController)
         navController.modalPresentationStyle = .custom
         navController.transitioningDelegate = self
@@ -703,11 +707,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
                         print("DEBUG: Error: ", model.errorMessage ?? "")
                         self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
 
-    //                    DispatchQueue.main.async {
-    //                        if model.errorMessage == "Пользователь не авторизован"{
-    //                            AppLocker.present(with: .validate)
-    //                        }
-    //                    }
                     }
                 }
                })
@@ -786,6 +785,15 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
     }
     
     func loadHistoryForCard(){
+        historyArray.removeAll()
+        historyArrayAccount.removeAll()
+        sorted.removeAll()
+        groupByCategory.removeAll()
+        tableView?.reloadInputViews()
+        statusBarView.showAnimatedGradientSkeleton()
+        tableView?.reloadData()
+        self.tableView?.reloadRows(at: self.tableView?.indexPathsForVisibleRows ?? [IndexPath(row: 0, section: 0)], with: .automatic)
+
         if product?.productType == "ACCOUNT"{
             totalExpenses = 0.0
             let body = ["id": product?.id
@@ -843,17 +851,17 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
                             self.groupByCategory.index(forKey: countElement)
                             
                         }
-//                        self.sortData = self.groupByCategory.sorted(by:{$0.key < $1.key})
                         
+//                        self.sortData = self.groupByCategory.sorted(by:{$0.key < $1.key})
+                        self.tableView?.hideSkeleton()
+
+                        self.statusBarView.stopSkeletonAnimation()
+                        self.statusBarView.hideSkeleton()
                     }
     //                    self.dataUSD = lastPaymentsList
                 } else {
                     print("DEBUG: Error: ", model.errorMessage ?? "")
-//                    DispatchQueue.main.async {
-//                        if model.errorMessage == "Пользователь не авторизован"{
-//                            AppLocker.present(with: .validate)
-//                        }
-//                    }
+
                 }
             }
         } else {
@@ -911,7 +919,10 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
                                             }
                     
                     self.sorted = dict.sorted(by:{ ($0.value[0].tranDate ?? $0.value[0].date) ?? 0 > $1.value[0].tranDate ?? $1.value[0].date ?? 0})
-                    
+                    self.tableView?.stopSkeletonAnimation()
+                    self.tableView?.hideSkeleton()
+                    self.statusBarView.stopSkeletonAnimation()
+                    self.statusBarView.hideSkeleton()
 //                    self.sorted = dict.sorted(by: { newItem1, newItem in
 //                        if newItem1.value[0].tranDate != nil{
 //                             newItem1.value[0].tranDate ?? 0 > newItem.value[0].tranDate ?? 0
@@ -937,11 +948,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
 //                    self.dataUSD = lastPaymentsList
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-//                DispatchQueue.main.async {
-//                    if model.errorMessage == "Пользователь не авторизован"{
-//                        AppLocker.present(with: .validate)
-//                    }
-//                }
+
             }
         }
     }
@@ -979,7 +986,20 @@ extension ProductViewController{
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
+        tableView?.showAnimatedGradientSkeleton()
+        historyArray.removeAll()
+        historyArrayAccount.removeAll()
+        sorted.removeAll()
+        groupByCategory.removeAll()
+        tableView?.reloadInputViews()
+        tableView?.isSkeletonable = true
+        
+        statusBarView.showAnimatedGradientSkeleton()
+       
+        DispatchQueue.main.async {
+            self.tableView?.reloadData()
+        }
+        
         if firstTimeLoad{
             firstTimeLoad = false
             self.collectionView?.selectItem(at: IndexPath(item: indexItem ?? 0, section: 0), animated: true, scrollPosition: .bottom)
@@ -1098,6 +1118,10 @@ extension ProductViewController{
         return sorted[section].value.count
 
     }
+    func collectionSkeletonView(_ skeletonView: UITableView, cellIdentifierForRowAt indexPath: IndexPath) -> ReusableCellIdentifier {
+        return "HistoryTableViewCell"
+    }
+    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch historyArray.isEmpty{
@@ -1109,8 +1133,9 @@ extension ProductViewController{
 //            sorted[indexPath.section].value[indexPath.item]
             cell.operation = sorted[indexPath.section].value[indexPath.row]
 //            groupByCategory[index].value[indexPath.row]
-         
-
+            
+            cell.titleLable.isSkeletonable = true
+           
             cell.configure(currency: product?.currency ?? "RUB")
             cell.selectionStyle = .none
             return cell
@@ -1118,11 +1143,14 @@ extension ProductViewController{
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "HistoryTableViewCell", for: indexPath) as? HistoryTableViewCell else { return  UITableViewCell() }
     //
     //        cell.titleLable.text = historyArray[indexPath.row].comment
+      
+            
             let data = Array(groupByCategory.values)[indexPath.section]
             print(data)
 //            cell.accountOperation = (data as! [GetAccountStatementDatum])[indexPath.row]
 //            groupByCategory[index].value[indexPath.row]
-         
+            cell.titleLable.isSkeletonable = true
+
             cell.configure(currency: product?.currency ?? "RUB")
             cell.selectionStyle = .none
             return cell
@@ -1157,31 +1185,69 @@ extension ProductViewController{
 //        present(vc, animated: true, completion: nil)
         
         let vc = OperationDetailViewController()
-        present(vc, animated: true, completion: nil)
+       
+        vc.documentId = "\(sorted[indexPath.section].value[indexPath.row].documentID ?? 0)"
+        vc.categoryGroupLabel.text = sorted[indexPath.section].value[indexPath.row].groupName
+        vc.transferImage.image = sorted[indexPath.section].value[indexPath.row].svgImage?.convertSVGStringToImage()
+        if sorted[indexPath.section].value[indexPath.row].operationType == "DEBIT"{
+            vc.amount.textColor = UIColor(hexString: "1C1C1C")
+            vc.amount.text = "-\(Double(sorted[indexPath.section].value[indexPath.row].amount ?? 0.0).currencyFormatter(symbol:  product?.currency ?? "RUB"))"
+        } else if sorted[indexPath.section].value[indexPath.row].operationType == "CREDIT"{
+            vc.amount.textColor = UIColor(hexString: "1C1C1C")
+            vc.amount.text = "+\(Double(sorted[indexPath.section].value[indexPath.row].amount ?? 0.0).currencyFormatter(symbol:  product?.currency ?? "RUB"))"
+        }
+        vc.commissionLabel.text = sorted[indexPath.section].value[indexPath.row].comment
+        vc.addCloseButton_xMark()
+//        vc.modalPresentationStyle = .pageSheet
+//        vc.providesPresentationContextTransitionStyle = true
+//        vc.definesPresentationContext = true
+//        vc.transitioningDelegate = self
+////        vc.transitioningDelegate = self
+//        self.present(vc, animated: true, completion: nil)
+//        self.navigationController?.pushViewController(vc, animated: true)
+//        present(vc, animated: true, completion: nil)
+        
+        let navController = UINavigationController(rootViewController: vc)
+        navController.modalPresentationStyle = .custom
+        navController.transitioningDelegate = self
+        halfScreen = true
+        self.present(navController, animated: true, completion: nil)
 
+    }
+    
+    func collectionSkeletonView(_ skeletonView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 10
     }
     
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
+
             let headerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.width, height: 50))
+            
+            headerView.showAnimatedGradientSkeleton()
+
             headerView.backgroundColor = .white
             let label = UILabel()
             label.frame = CGRect.init(x: 5, y: 5, width: headerView.frame.width-10, height: headerView.frame.height)
         
+        if sorted.isEmpty == false{
             guard let tranDate = self.sorted[section].value[0].tranDate  else {
                 label.text = longIntToDateString(longInt: self.sorted[section].value[0].date!/1000)
                 label.font = .boldSystemFont(ofSize: 16)
-                
+
                 label.textColor =  UIColor(hexString: "1C1C1C")
                 headerView.addSubview(label)
                 label.centerY(inView: headerView)
+                headerView.hideSkeleton()
+                headerView.stopSkeletonAnimation()
                 return headerView
             }
-         
             label.text = longIntToDateString(longInt: tranDate/1000)
+
+        }
+
             label.font = .boldSystemFont(ofSize: 16)
-            
+
             label.textColor =  UIColor(hexString: "1C1C1C")
             headerView.addSubview(label)
             label.centerY(inView: headerView)
@@ -1225,11 +1291,7 @@ extension ProductViewController{
                 completion(model.data, nil)
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-//                DispatchQueue.main.async {
-//                if model.errorMessage == "Пользователь не авторизован"{
-//                    AppLocker.present(with: .validate)
-//                }
-//                }
+
                 completion(nil, model.errorMessage)
             }
         }
@@ -1336,7 +1398,13 @@ extension UIColor {
 
 extension ProductViewController: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-        PresentationThirdController(presentedViewController: presented, presenting: presenting)
+        var presenter: UIPresentationController?
+        if halfScreen == true{
+          presenter = PresentationController(presentedViewController: presented, presenting: presenting)
+        } else {
+            presenter = PresentationThirdController(presentedViewController: presented, presenting: presenting)
+        }
+        return presenter
     }
     
     func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?,_ error: String?)->()) {

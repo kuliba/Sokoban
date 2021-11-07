@@ -8,18 +8,22 @@
 import UIKit
 
 protocol LoginCardEntryDelegate: AnyObject {
-    func goNextController()
+    func toCodeVerification(phone: String?)
 }
 
 class LoginCardEntryCoordinator: Coordinator {
 
 
-    let accountViewController = LoginCardEntryViewController()
+    let loginCardEntryVC = LoginCardEntryViewController()
 
     override init(router: RouterType) {
         super.init(router: router)
-        accountViewController.delegate = self
-        router.setRootModule(accountViewController, hideBar: false)
+        loginCardEntryVC.delegate = self
+        router.setRootModule(loginCardEntryVC, hideBar: false)
+    }
+    
+    deinit {
+        print("deinit LoginCardEntryViewController")
     }
     
     override func start() {
@@ -28,13 +32,11 @@ class LoginCardEntryCoordinator: Coordinator {
 }
 
 extension LoginCardEntryCoordinator: LoginCardEntryDelegate {
-    func goNextController() {
+    func toCodeVerification(phone: String? = "") {
         
         let coordinator = CodeVerificationCoordinator(router: router)
-//        addChild(coordinator)
+        coordinator.codeVerificationVC.viewModel.phone = phone
         coordinator.start()
-//        router.push(coordinator, animated: true) { [weak self, weak coordinator] in
-//            self?.removeChild(coordinator)
-//        }
+        
     }
 }

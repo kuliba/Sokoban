@@ -118,10 +118,7 @@ struct NetworkHelper {
                     
                 } else {
                     completion(nil ,model.errorMessage)
-                    
-//                    if model.errorMessage == "Пользователь не авторизован"{
-//                        AppLocker.present(with: .validate)
-//                    }
+                   
                 }
             }
             
@@ -144,9 +141,7 @@ struct NetworkHelper {
                     
                 } else {
                     completion(nil ,model.errorMessage)
-//                    if model.errorMessage == "Пользователь не авторизован"{
-//                        AppLocker.present(with: .validate)
-//                    }
+
                 }
             }
         case .keyExchange:

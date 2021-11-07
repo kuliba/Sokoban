@@ -15,17 +15,17 @@ class MainCoordinator: Coordinator {
     
     override init(router: RouterType) {
         coordinator = BaseCoordinator(router: router)
-        router.setRootModule(coordinator.toPresentable(), hideBar: true)
         super.init(router: router)
+        router.setRootModule(coordinator.toPresentable(), hideBar: true)
     }
     
     override func start() {
         
-//               goTabBar()
+//        goTabBar()
         let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
         if let userIsRegister = userIsRegister {
             if userIsRegister {
-                self.goToPinVC(.validate)
+                self.goToPinVC()
             } else {
                 self.goToRegisterVC()
             }
@@ -34,32 +34,26 @@ class MainCoordinator: Coordinator {
         }
     }
     
-    //    override func toPresentable() -> UIViewController {
-    //        return viewController
-    //    }
-    
     func goToRegisterVC() {
-        
         let loginCoordinator = LoginCardEntryCoordinator(router: router)
         addChild(loginCoordinator)
         loginCoordinator.start()
-        router.push(loginCoordinator, animated: true) { [weak self, weak coordinator] in
-            self?.removeChild(coordinator)
+        DispatchQueue.main.async { [self] in
+            router.push(loginCoordinator, animated: true) { [weak self, weak coordinator] in
+                self?.removeChild(coordinator)
+            }
         }
     }
     
-    func goToPinVC(_ mode: ALMode) {
-        var options = ALOptions()
-        options.isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
-        options.onSuccessfulDismiss = { (mode: ALMode?, _) in
-            DispatchQueue.main.async {
-            self.goTabBar()
+    func goToPinVC() {
+        let lockerCoordinator = LockerCoordinator(router: self.router)
+        self.addChild(lockerCoordinator)
+        lockerCoordinator.start()
+        DispatchQueue.main.async { [self] in
+            self.router.push(lockerCoordinator, animated: true) { [weak self, weak coordinator] in
+                self?.removeChild(coordinator)
             }
         }
-        options.onFailedAttempt = { (mode: ALMode?) in
-            print("Failed to \(String(describing: mode))")
-        }
-        AppLocker.present(with: mode, and: options, over: coordinator.toPresentable())
     }
     
     func goTabBar() {
