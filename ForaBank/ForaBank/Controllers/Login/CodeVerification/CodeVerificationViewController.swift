@@ -11,11 +11,7 @@ import FirebaseMessaging
 
 class CodeVerificationViewController: UIViewController {
     
-    weak var delegate: CodeVerificationDelegate? {
-        didSet {
-            print("set CodeVerificationDelegate")
-        }
-    }
+    weak var delegate: CodeVerificationDelegate?
 
     var viewModel: CodeVerificationViewModel
     var count = 60  // 60sec if you want
@@ -231,34 +227,4 @@ class CodeVerificationViewController: UIViewController {
         }
     }
     
-    func pin(_ mode: ALMode) {
-        
-        
-        
-        
-        var options = ALOptions()
-        options.isSensorsEnabled = true
-        options.color = .white
-        options.onSuccessfulDismiss = { (mode: ALMode?, pinCode) in
-            if let mode = mode {
-                DispatchQueue.main.async {
-//                    let vc = FaceTouchIdViewController()
-//                    vc.code = pinCode
-//                    vc.modalPresentationStyle = .fullScreen
-//                    self.present(vc, animated: true, completion: nil)
-                    // Переход в FaceId
-//                    self.delegate?.goNextController()
-                }
-            } else {
-                print("User Cancelled")
-            }
-        }
-        options.onFailedAttempt = { (mode: ALMode?) in
-            print("Failed to \(String(describing: mode))")
-        }
-        // LOGIN DO
-        
-        AppLocker.present(with: mode, and: options, over: self)
-    }
-
 }
