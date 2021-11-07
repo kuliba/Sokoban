@@ -9,6 +9,7 @@ import UIKit
 
 protocol LockerViewControllerDelegate: AnyObject {
     func goToTabBar()
+    func goToFaceId(pin: String)
 }
 
 class LockerCoordinator: Coordinator {
@@ -19,33 +20,41 @@ class LockerCoordinator: Coordinator {
     override init(router: RouterType) {
         super.init(router: router)
         locker.mode = .login
+        locker.lockerDelegate = self
         router.setRootModule(locker, hideBar: true)
     }
     
     init(router: RouterType, mode: ALMode) {
         super.init(router: router)
         locker.mode = mode
-        router.setRootModule(locker, hideBar: true)
+        locker.lockerDelegate = self
     }
     
-    
-    
     override func start() {
-        locker.lockerDelegate = self
     }
     
 }
  
 extension LockerCoordinator: LockerViewControllerDelegate {
     
+    func goToFaceId(pin: String) {
+        DispatchQueue.main.async { [self] in
+            let faceTouchIDCoordinator = FaceTouchIDCoordinator(router: self.router)
+            faceTouchIDCoordinator.accountViewController.code = pin
+            self.addChild(faceTouchIDCoordinator)
+            faceTouchIDCoordinator.start()
+            self.router.push(faceTouchIDCoordinator.accountViewController, animated: true) { [weak self, weak faceTouchIDCoordinator] in
+                self?.removeChild(faceTouchIDCoordinator)
+            }
+        }
+        
+    }
+    
     func goToTabBar() {
         DispatchQueue.main.async { [self] in
             let mainTabBarCoordinator = MainTabBarCoordinator(router: self.router)
             self.addChild(mainTabBarCoordinator)
             mainTabBarCoordinator.start()
-            self.router.push(mainTabBarCoordinator, animated: true) { [weak self, weak mainTabBarCoordinator] in
-                self?.removeChild(mainTabBarCoordinator)
-            }
         }
     }
     

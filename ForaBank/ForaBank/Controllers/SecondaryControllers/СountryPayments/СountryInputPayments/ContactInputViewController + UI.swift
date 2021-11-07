@@ -9,6 +9,8 @@ import UIKit
 
 extension ContactInputViewController {
     func setupUI() {
+        navigationController?.isNavigationBarHidden = false
+//        addCloseButton()
         view.backgroundColor = .white
         let saveAreaView = UIView()
         saveAreaView.backgroundColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1)

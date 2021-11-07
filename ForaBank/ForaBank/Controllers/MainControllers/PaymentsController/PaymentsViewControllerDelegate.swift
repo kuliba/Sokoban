@@ -8,7 +8,7 @@
 import UIKit
 
 protocol PaymentsViewControllerDelegate: AnyObject {
-    func selectTransition(_ controller: UIViewController)
+    func toMobilePay(_ controller: UIViewController)
     func goToCountryPayments()
 }
 
@@ -35,7 +35,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
 //                let navVC = UINavigationController(rootViewController: viewController ?? UIViewController())
 //                navVC.modalPresentationStyle = .fullScreen
 //                present(navVC, animated: true)
-                delegate?.selectTransition(viewController)
+                delegate?.toMobilePay(viewController)
             } else {
                 if let viewController = payments[indexPath.row].controllerName.getViewController() {
                     viewController.addCloseButton()
@@ -94,7 +94,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
                     present(nc, animated: true)
                 } else if indexPath.row == 1 {
                     // Мобильная связь
-                    delegate?.selectTransition(viewController)
+                    delegate?.toMobilePay(viewController)
 //                    present(nc, animated: true)
                 } else {
                     present(navVC, animated: true, completion: nil)

@@ -314,12 +314,12 @@ class FaceTouchIdViewController: UIViewController {
                                 print(error.localizedDescription)
                             }
                             self.dismissActivity()
-//                            self.delegate?.goNextController()
-                            DispatchQueue.main.async { [weak self] in
-                                let vc = MainTabBarViewController()
-                                vc.modalPresentationStyle = .fullScreen
-                                self?.present(vc, animated: true)
-                            }
+                            self.delegate?.goToTabBar()
+//                            DispatchQueue.main.async { [weak self] in
+//                                let vc = MainTabBarViewController()
+//                                vc.modalPresentationStyle = .fullScreen
+//                                self?.present(vc, animated: true)
+//                            }
                         
                         }
                     }

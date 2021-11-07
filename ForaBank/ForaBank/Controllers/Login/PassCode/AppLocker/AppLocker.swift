@@ -116,6 +116,8 @@ public class AppLocker: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         modalPresentationStyle = .fullScreen
+        navigationController?.isNavigationBarHidden = true
+//        navigationController?.navigationBar.isHidden = true
         setupUI()
     }
     
@@ -260,10 +262,13 @@ public class AppLocker: UIViewController {
 //
 //                        self.showAlert(with: "Ошибка", and: error)
 //                    } else {
-                let vc = FaceTouchIdViewController()
-                vc.code = pin
-                vc.modalPresentationStyle = .fullScreen
-                self.present(vc, animated: true, completion: nil)
+                let del = lockerDelegate
+                del?.goToFaceId(pin: pin)
+                
+//                let vc = FaceTouchIdViewController()
+//                vc.code = pin
+//                vc.modalPresentationStyle = .fullScreen
+//                self.present(vc, animated: true, completion: nil)
 
             default:
                 break

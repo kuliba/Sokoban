@@ -34,6 +34,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         //        addCloseButton()
+//        navigationController?.isNavigationBarHidden = false
         setupNavBar()
         phoneField.textField.delegate = self
         phoneField.rightButton.setImage(UIImage(imageLiteralResourceName: "user-plus"), for: .normal)

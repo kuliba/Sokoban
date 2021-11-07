@@ -14,7 +14,7 @@ class MainTabBarCoordinator: Coordinator {
 
     override init(router: RouterType) {
         super.init(router: router)
-        router.setRootModule( mainTabBarController, hideBar: true)
+        router.setRootModule(mainTabBarController, hideBar: true)
         mainTabBarController.paymentsVC.delegate = self
     }
     
@@ -25,22 +25,25 @@ class MainTabBarCoordinator: Coordinator {
 
 extension MainTabBarCoordinator: PaymentsViewControllerDelegate {
     
-    func selectTransition(_ controller: UIViewController) {
-        let navigationController = UINavigationController()
-        let newRouter = Router(navigationController: navigationController)
-        let mobilePay = MobilePayCoordinator(router: newRouter)
+    func toMobilePay(_ controller: UIViewController) {
+//        let navigationController = UINavigationController()
+//        let newRouter = Router(navigationController: navigationController)
+        let mobilePay = MobilePayCoordinator(router: router)
         addChild(mobilePay)
         mobilePay.start()
+//        router.push(mobilePay, animated: true) { [weak self, weak mobilePay] in
+//            self?.removeChild(mobilePay)
+//        }
+        
         router.present(mobilePay, animated: true)
     }
     
     func goToCountryPayments() {
-        let navigationController = UINavigationController()
-        let newRouter = Router(navigationController: navigationController)
-        let сountryPay = CountryPayCoordinator(router: newRouter)
+//        let navigationController = UINavigationController()
+//        let newRouter = Router(navigationController: navigationController)
+        let сountryPay = CountryPayCoordinator(router: router)
         addChild(сountryPay)
         сountryPay.start()
         router.present(сountryPay, animated: true)
-//        router.setRootModule(сountryPay, hideBar: false) // present(mobilePay, animated: true)
     }
 }
