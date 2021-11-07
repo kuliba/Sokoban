@@ -20,8 +20,15 @@ class LockerCoordinator: Coordinator {
         super.init(router: router)
         locker.mode = .login
         router.setRootModule(locker, hideBar: true)
-        
     }
+    
+    init(router: RouterType, mode: ALMode) {
+        super.init(router: router)
+        locker.mode = mode
+        router.setRootModule(locker, hideBar: true)
+    }
+    
+    
     
     override func start() {
         locker.lockerDelegate = self

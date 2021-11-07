@@ -11,7 +11,11 @@ import IQKeyboardManagerSwift
 
 class LoginCardEntryViewController: UIViewController {
     
-    weak var delegate: LoginCardEntryDelegate?
+    weak var delegate: LoginCardEntryDelegate? {
+        didSet {
+            print("set LoginCardEntryDelegate")
+        }
+    }
     
     let titleLabel = UILabel(text: "Войти", font: .systemFont(ofSize: 24))
     let subTitleLabel = UILabel(text: "чтобы получить доступ к счетам и картам")
@@ -41,44 +45,38 @@ class LoginCardEntryViewController: UIViewController {
                         let resp = "+79626129268"
                         let model = CodeVerificationViewModel(phone: resp, type: .register)
                         let vc = CodeVerificationViewController(model: model)
-//                       vc.cardNumber = cardNumber
+                        // vc.cardNumber = cardNumber
                         self?.navigationController?.pushViewController(vc, animated: true)
                     }
                     
                 } else {
                     // Для остальных
                     DispatchQueue.main.async {
-                    AppDelegate.shared.getCSRF { error in
-                        if error != nil {
-                            print("DEBUG: Error getCSRF: ", error!)
-                        }
-                         // Запрос на проверку карты
-                        LoginViewModel().checkCardNumber(with: cardNumber.digits) { resp, error in
-                            self?.dismissActivity()
+                        AppDelegate.shared.getCSRF { error in
                             if error != nil {
-                                self?.showAlert(with: "Ошибка", and: error ?? "")
-                            } else {
-                                // Зарузка кэша
-                                DownloadQueue.download {}
-                                DispatchQueue.main.async { [weak self] in
-                                    UserDefaults.standard.set(resp, forKey: "phone")
-                                self?.delegate?.goNextController()
-//                                DispatchQueue.main.async { [weak self] in
-//                                    let model = CodeVerificationViewModel(phone: resp, type: .register)
-//                                    let vc = CodeVerificationViewController(model: model)
-//                                    vc.cardNumber = cardNumber
-//                                    self?.navigationController?.pushViewController(vc, animated: true)
+                                self?.dismissActivity()
+                                print("DEBUG: Error getCSRF: ", error!)
+                            }
+                            // Запрос на проверку карты
+                            LoginViewModel().checkCardNumber(with: cardNumber.digits) { resp, error in
+                                self?.dismissActivity()
+                                if error != nil {
+                                    self?.showAlert(with: "Ошибка", and: error ?? "")
+                                } else {
+                                    // Зарузка кэша
+                                    DownloadQueue.download {}
+                                    DispatchQueue.main.async { [weak self] in
+                                        self?.delegate?.toCodeVerification(phone: resp)
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-            }
         }
         
         orderCardView.orderCardTapped = { self.orderCardTapped() }
-        
         
     }
     

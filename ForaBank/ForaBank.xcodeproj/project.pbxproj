@@ -1384,14 +1384,11 @@
 		0BFCDAFF2728766F00FFC867 /* Coordinators */ = {
 			isa = PBXGroup;
 			children = (
-				0BA14E1F272082F10098E422 /* LoginCardEntryCoordinator.swift */,
-				0BFCDB00272876FB00FFC867 /* FaceTouchIDCoordinator.swift */,
-				0BFCDB022728774E00FFC867 /* CodeVerificationCoordinator.swift */,
+				EDA0DCBE27380A6D0013F47E /* LoginCoordinators */,
 				0BFCDB042728785F00FFC867 /* OrderProductsCoordinator.swift */,
 				0BFCDB06272878BF00FFC867 /* MainTabBarCoordinator.swift */,
 				0B3291DE2728B725005B2A7E /* MobilePayCoordinator.swift */,
 				ED02FCD2272C85EF0048950B /* CountryPayCoordinator.swift */,
-				EDA0DCBA27356BDC0013F47E /* LockerCoordinator.swift */,
 			);
 			path = Coordinators;
 			sourceTree = "<group>";
@@ -2249,6 +2246,17 @@
 				68FFA5422682DC95002DADFA /* PhoneConfirmViewController.swift */,
 			);
 			path = PaymentsByPhone;
+			sourceTree = "<group>";
+		};
+		EDA0DCBE27380A6D0013F47E /* LoginCoordinators */ = {
+			isa = PBXGroup;
+			children = (
+				0BA14E1F272082F10098E422 /* LoginCardEntryCoordinator.swift */,
+				0BFCDB022728774E00FFC867 /* CodeVerificationCoordinator.swift */,
+				0BFCDB00272876FB00FFC867 /* FaceTouchIDCoordinator.swift */,
+				EDA0DCBA27356BDC0013F47E /* LockerCoordinator.swift */,
+			);
+			path = LoginCoordinators;
 			sourceTree = "<group>";
 		};
 		EDA5637826F3784E0093F0C8 /* Cell */ = {
