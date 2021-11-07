@@ -52,7 +52,7 @@ class TimerTimeInit {
                     realm?.add(counter!)
                 }
                 DispatchQueue.main.async {
-                    AppLockerHelper.goVC(.validate)
+//                    AppLockerHelper.goVC(.validate)
                 }
             } else {
                 if minSessionRenewTimeOutPassed  {

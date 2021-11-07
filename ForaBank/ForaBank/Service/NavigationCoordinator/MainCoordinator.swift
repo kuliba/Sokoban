@@ -21,7 +21,7 @@ class MainCoordinator: Coordinator {
     
     override func start() {
         
-        //       goTabBar()
+//               goTabBar()
         let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
         if let userIsRegister = userIsRegister {
             if userIsRegister {
@@ -52,12 +52,14 @@ class MainCoordinator: Coordinator {
         var options = ALOptions()
         options.isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
         options.onSuccessfulDismiss = { (mode: ALMode?, _) in
+            DispatchQueue.main.async {
             self.goTabBar()
+            }
         }
         options.onFailedAttempt = { (mode: ALMode?) in
             print("Failed to \(String(describing: mode))")
         }
-        AppLocker.rootViewController(with: mode, and: options, window: UIApplication.shared.windows.first)
+        AppLocker.present(with: mode, and: options, over: coordinator.toPresentable())
     }
     
     func goTabBar() {
