@@ -332,6 +332,7 @@
 		ED92D3A226735A0A006D47B3 /* PaymentByPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED92D3A126735A0A006D47B3 /* PaymentByPhoneViewController.swift */; };
 		EDA0DCBB27356BDC0013F47E /* LockerCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA0DCBA27356BDC0013F47E /* LockerCoordinator.swift */; };
 		EDA0DCBD2735E8030013F47E /* AppLocker.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDA0DCBC2735E8030013F47E /* AppLocker.storyboard */; };
+		EDA0DCC22739523F0013F47E /* AccountDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA0DCC12739523F0013F47E /* AccountDetailsViewController.swift */; };
 		EDA5637726F375980093F0C8 /* SettingTableViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDA5637626F375980093F0C8 /* SettingTableViewController.storyboard */; };
 		EDA5637A26F386AD0093F0C8 /* SettingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA5637926F386AD0093F0C8 /* SettingTableViewController.swift */; };
 		EDA563AE26F881AF0093F0C8 /* BanksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA563AD26F881AF0093F0C8 /* BanksView.swift */; };
@@ -767,6 +768,7 @@
 		ED92D3A126735A0A006D47B3 /* PaymentByPhoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentByPhoneViewController.swift; sourceTree = "<group>"; };
 		EDA0DCBA27356BDC0013F47E /* LockerCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockerCoordinator.swift; sourceTree = "<group>"; };
 		EDA0DCBC2735E8030013F47E /* AppLocker.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AppLocker.storyboard; sourceTree = "<group>"; };
+		EDA0DCC12739523F0013F47E /* AccountDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailsViewController.swift; sourceTree = "<group>"; };
 		EDA5637626F375980093F0C8 /* SettingTableViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SettingTableViewController.storyboard; sourceTree = "<group>"; };
 		EDA5637926F386AD0093F0C8 /* SettingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTableViewController.swift; sourceTree = "<group>"; };
 		EDA563AD26F881AF0093F0C8 /* BanksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BanksView.swift; sourceTree = "<group>"; };
@@ -2259,6 +2261,14 @@
 			path = LoginCoordinators;
 			sourceTree = "<group>";
 		};
+		EDA0DCBF273951F80013F47E /* AccountDetails */ = {
+			isa = PBXGroup;
+			children = (
+				EDA0DCC12739523F0013F47E /* AccountDetailsViewController.swift */,
+			);
+			path = AccountDetails;
+			sourceTree = "<group>";
+		};
 		EDA5637826F3784E0093F0C8 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
@@ -2555,6 +2565,7 @@
 		EDB16593266A4317007E6030 /* SecondaryControllers */ = {
 			isa = PBXGroup;
 			children = (
+				EDA0DCBF273951F80013F47E /* AccountDetails */,
 				0B283FB426FB7CCE00B5E925 /* MobilePayController */,
 				0BA09E2A26ADD6A50065D623 /* GKHController */,
 				68673B5A26F4B82400F67A8C /* PayViewController */,
@@ -3326,6 +3337,7 @@
 				EDB1656C26681F0E007E6030 /* MainTabBarViewController.swift in Sources */,
 				ED3A96742690FC8300252857 /* BankCell.swift in Sources */,
 				68E6A29726A033F200A1D9A1 /* GetProductTemplateListDecodableModel.swift in Sources */,
+				EDA0DCC22739523F0013F47E /* AccountDetailsViewController.swift in Sources */,
 				0B283FB826FB7DD300B5E925 /* ExtensionMobilePayNav.swift in Sources */,
 				68FFA55F268BF2D2002DADFA /* TransferByRequisitesViewController.swift in Sources */,
 				ED0B4896267B97C60037EA06 /* ContactInputViewController + UI.swift in Sources */,

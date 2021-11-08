@@ -32,7 +32,7 @@ class TransferByRequisitesConfirmViewController: UIViewController {
     var summTransctionField = ForaInput(
         viewModel: ForaInputModel(
             title: "Сумма перевода",
-            image: #imageLiteral(resourceName: "coins"),
+            image: UIImage(named: "coins")!,
             isEditable: false))
     
     var taxTransctionField = ForaInput(
@@ -44,7 +44,7 @@ class TransferByRequisitesConfirmViewController: UIViewController {
     var smsCodeField = ForaInput(
         viewModel: ForaInputModel(
             title: "Введите код из СМС",
-            image: #imageLiteral(resourceName: "message-square"),
+            image: UIImage(named: "message-square")!,
             type: .smsCode))
     
     

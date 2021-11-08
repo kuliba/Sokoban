@@ -78,7 +78,7 @@ class MeToMeRequestController: UIViewController {
     lazy var summTransctionField = ForaInput(
         viewModel: ForaInputModel(
             title: "Сумма перевода",
-            image: #imageLiteral(resourceName: "coins"),
+            image: UIImage(named: "coins")!,
             isEditable: false))
     
     lazy var taxTransctionField = ForaInput(

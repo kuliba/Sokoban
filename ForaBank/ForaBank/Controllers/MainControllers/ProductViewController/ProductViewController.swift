@@ -343,7 +343,11 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         button3.backgroundColor = UIColor(hexString: "F6F6F7")
         button3.translatesAutoresizingMaskIntoConstraints = false
         
-        button3.addTarget(self, action: #selector(presentRequisitsVc), for: .touchUpInside)
+        button3.addAction(for: .touchUpInside) {
+            self.presentRequisitsVc(product: self.product!)
+        }
+        
+//        button3.addTarget(self, action: #selector(presentRequisitsVc(product: product!)), for: .touchUpInside)
 
         
         button4.setDimensions(height: 48, width: 164)
@@ -584,13 +588,13 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         present(vc, animated: true, completion: nil)
     }
     
-    @objc func presentRequisitsVc(){
+    func presentRequisitsVc(product: GetProductListDatum){
         
-        var body = [ "cardId": product?.cardID
+        var body = [ "cardId": product.cardID
                      ] as [String : AnyObject]
         
-        if product?.productType == "ACCOUNT"{
-            body = [ "accountId": product?.id
+        if product.productType == "ACCOUNT"{
+            body = [ "accountId": product.id
             ] as [String : AnyObject]
         }
         NetworkManager<GetProductDetailsDecodableModel>.addRequest(.getProductDetails, [:], body) { model, error in
