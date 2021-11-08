@@ -237,22 +237,18 @@ public class AppLocker: UIViewController {
             if let error = error {
                 print(error)
             } else {
-
-//                self.onSuccessfulDismiss?(self.mode)
-
                 
                 // свернуть и включить таймер
                 
                 self.dismiss(animated: true, completion: nil)
 //                self.lockerDelegate?.goToTabBar()
-
             }
         }
     }
     
     private func removePin() {
         try? AppLocker.valet.removeObject(forKey: ALConstants.kPincode)
-        self.onSuccessfulDismiss?(self.mode)
+        self.onSuccessfulDismiss?(self.mode, nil)
     }
     
     private func confirmPin() {
@@ -339,7 +335,6 @@ public class AppLocker: UIViewController {
                     } else {
                         DispatchQueue.main.async {
                             self.lockerDelegate?.goToTabBar()
-
                         }
                     }
                 }
@@ -374,6 +369,8 @@ public class AppLocker: UIViewController {
 }
 
 extension AppLocker {
+    
+    
     //MARK: - API
     func registerMyPin(with code: String, completion: @escaping (_ error: String?) ->() ) {
         self.dismissActivity()
@@ -391,9 +388,7 @@ extension AppLocker {
                     print("DEBUG: Error getCSRF: ", error!)
                 }
                 
-
                 let serverDeviceGUID = UserDefaults.standard.object(forKey: "serverDeviceGUID")
-
                 
                 func encript(string: String) -> String?{
                     do {
@@ -500,19 +495,25 @@ extension AppLocker {
     }
     
     func returnRealmModel() -> GetSessionTimeout {
+        
+        let updatingTimeObject = GetSessionTimeout()
+        
         let realm = try? Realm()
         guard let timeObject = realm?.objects(GetSessionTimeout.self).first else {return GetSessionTimeout()}
         let lastActionTimestamp = timeObject.lastActionTimestamp
         let maxTimeOut = timeObject.maxTimeOut
         let mustCheckTimeOut = timeObject.mustCheckTimeOut
-        
-        // Сохраняем текущее время
+        let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
+        if userIsRegister == true {
+            // Сохраняем текущее время
         let updatingTimeObject = GetSessionTimeout()
         
-        updatingTimeObject.currentTimeStamp = Date().localDate()
-        updatingTimeObject.lastActionTimestamp = Date().localDate()
-        updatingTimeObject.renewSessionTimeStamp = Date().localDate()
-        updatingTimeObject.mustCheckTimeOut = true
+            updatingTimeObject.currentTimeStamp = Date().localDate()
+            updatingTimeObject.lastActionTimestamp = Date().localDate()
+            updatingTimeObject.renewSessionTimeStamp = Date().localDate()
+            updatingTimeObject.mustCheckTimeOut = true
+            
+        }
         
         return updatingTimeObject
         

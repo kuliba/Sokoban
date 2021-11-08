@@ -58,4 +58,3 @@ open class Coordinator: PresentableCoordinator, CoordinatorType  {
         return router.toPresentable()
     }
 }
-

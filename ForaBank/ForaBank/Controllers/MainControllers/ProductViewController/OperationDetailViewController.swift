@@ -162,13 +162,6 @@ class OperationDetailViewController: UIViewController{
         default:
             print("default")
         }
-//        transferImage.image = UIImage(named: "deposit_cards_list_onhold_block_button_highlighted")
-//        nameOperationLabel.text = "Юрий Андреевич К. \n 4081781057173665439"
-//        companyImage.image = UIImage(named: "IdBank")
-//        amount.text = "- 10 000,00 ₽"
-//        commissionLabel.text = "Комиссия: \n 10.00 ₽"
-//        commentLabel.text = "Оплата по договору №285"
-//        dateLabel.text = "5 сентября 2021, 19:54"
         
         transferImage.setDimensions(height: 64, width: 64)
         

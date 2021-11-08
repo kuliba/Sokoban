@@ -71,11 +71,11 @@ class MainCoordinator: Coordinator {
 
 class BaseCoordinator: Coordinator {
     
-    var viewController = UIViewController()
+    var viewController = UIStoryboard(name: "LaunchScreen", bundle: nil).instantiateInitialViewController()!
     
     override init(router: RouterType) {
         super.init(router: router)
-        viewController.view.backgroundColor = .brown
+//        viewController.view.backgroundColor = .brown
     }
     
     override func toPresentable() -> UIViewController {
