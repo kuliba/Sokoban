@@ -50,7 +50,6 @@ public enum ALMode { // Modes for AppLocker
 }
 
 public class AppLocker: UIViewController {
-    
     // MARK: - Top view
     @IBOutlet weak var photoImageView: UIImageView!
     @IBOutlet weak var messageLabel: UILabel!
@@ -336,8 +335,6 @@ public class AppLocker: UIViewController {
 }
 
 extension AppLocker {
-    
-    
     //MARK: - API
     func registerMyPin(with code: String, completion: @escaping (_ error: String?) ->() ) {
         self.dismissActivity()

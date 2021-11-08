@@ -1212,7 +1212,13 @@ extension ProductViewController{
             vc.amount.textColor = UIColor(hexString: "1C1C1C")
             vc.amount.text = "+\(Double(sorted[indexPath.section].value[indexPath.row].amount ?? 0.0).currencyFormatter(symbol:  product?.currency ?? "RUB"))"
         }
-        vc.commissionLabel.text = sorted[indexPath.section].value[indexPath.row].comment
+//        vc.commissionLabel.text = sorted[indexPath.section].value[indexPath.row].comment
+        if sorted[indexPath.section].value[indexPath.row].merchantNameRus != nil{
+            vc.mainLabel.text = sorted[indexPath.section].value[indexPath.row].merchantNameRus
+        } else {
+            vc.mainLabel.text = sorted[indexPath.section].value[indexPath.row].merchantName
+        }
+        
         vc.addCloseButton_xMark()
 //        vc.modalPresentationStyle = .pageSheet
 //        vc.providesPresentationContextTransitionStyle = true
