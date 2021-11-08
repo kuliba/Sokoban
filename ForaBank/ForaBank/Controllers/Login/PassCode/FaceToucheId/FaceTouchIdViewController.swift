@@ -305,11 +305,10 @@ class FaceTouchIdViewController: UIViewController {
                         if model.statusCode == 0 {
                             print("DEBUG: You are LOGGIN!!!")
                             self.dismissActivity()
-                            DispatchQueue.main.async { [weak self] in
-                                let vc = MainTabBarViewController()
-                                vc.modalPresentationStyle = .fullScreen
-                                self?.present(vc, animated: true)
-                            }
+
+                            self.delegate?.goToTabBar()
+
+
                         }
                     }
                 } else {

@@ -13,25 +13,23 @@ class MainViewController: UIViewController, ChildViewControllerDelegate, FirstCo
     func sendData(data: [GetProductListDatum]) {
         
         DispatchQueue.main.async {
-         
+            
             self.getCardList { data, errorMessage in
-            
-            guard let listProducts = data else {return}
-            self.products.removeAll()
-            self.productList.removeAll()
-            for i in listProducts.prefix(3) {
-                self.products.append(PaymentsModel(productList: i))
+                
+                guard let listProducts = data else {return}
+                self.products.removeAll()
+                self.productList.removeAll()
+                for i in listProducts.prefix(3) {
+                    self.products.append(PaymentsModel(productList: i))
+                }
+                if listProducts.prefix(3).count < 3{
+                    self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
+                } else if listProducts.prefix(3).count == 3{
+                    self.products.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
+                }
+                //                self.transfers = self.payments
+                self.productList = data ?? []
             }
-            if listProducts.prefix(3).count < 3{
-                self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
-            } else if listProducts.prefix(3).count == 3{
-                self.products.append(PaymentsModel(id: 32, name: "Cм.все", iconName: "openCard", controllerName: ""))
-            }
-            //                self.transfers = self.payments
-            self.productList = data ?? []
-            
-
-        }
         }
         
 //        DispatchQueue.main.async {
@@ -127,7 +125,7 @@ class MainViewController: UIViewController, ChildViewControllerDelegate, FirstCo
         }
     }
     
-    let searchContact: NavigationBarUIView = UIView.fromNib()
+    lazy var searchBar: NavigationBarUIView = UIView.fromNib()
     
     
     enum Section: Int, CaseIterable {
@@ -172,17 +170,6 @@ class MainViewController: UIViewController, ChildViewControllerDelegate, FirstCo
 
         view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
         
-        self.view.addSubview(searchContact)
-        searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 48)
-        
-        searchContact.secondButton.image = UIImage(named: "Avatar")?.withRenderingMode(.alwaysTemplate)
-        searchContact.secondButton.tintColor = .black
-        searchContact.secondButton.isUserInteractionEnabled = true
-        searchContact.secondButton.alpha = 1
-        
-        let gesture = UITapGestureRecognizer(target: self, action: #selector(openSetting))
-        searchContact.secondButton.addGestureRecognizer(gesture)
-        
         setupSearchBar()
         setupCollectionView()
         createDataSource()
@@ -206,8 +193,21 @@ class MainViewController: UIViewController, ChildViewControllerDelegate, FirstCo
     }
     
     private func setupSearchBar() {
-        self.view.addSubview(searchContact)
-        searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 48)
+        self.view.addSubview(searchBar)
+        searchBar.secondButton.image = UIImage(named: "Avatar")?.withRenderingMode(.alwaysTemplate)
+        searchBar.bellIcon.tintColor = .black
+        searchBar.secondButton.tintColor = .black
+        searchBar.secondButton.isUserInteractionEnabled = true
+        searchBar.secondButton.alpha = 1
+        
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(openSetting))
+        searchBar.secondButton.addGestureRecognizer(gesture)
+        searchBar.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 48)
+        
+        searchBar.bellTapped = {
+            print("bellTapped")
+        }
+        
     }
     
     func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?,_ error: String?)->()) {
@@ -248,7 +248,7 @@ class MainViewController: UIViewController, ChildViewControllerDelegate, FirstCo
                     if listProducts.prefix(3).count < 3{
                         self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
                     } else if listProducts.prefix(3).count == 3{
-                        self.products.append(PaymentsModel(id: 32, name: "Cм.все", iconName: "openCard", controllerName: ""))
+                        self.products.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
                     }
 
                 self.productList = data ?? []
@@ -286,7 +286,7 @@ class MainViewController: UIViewController, ChildViewControllerDelegate, FirstCo
             if listProducts.prefix(3).count < 3{
                 self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
             } else if listProducts.prefix(3).count == 3{
-                self.products.append(PaymentsModel(id: 32, name: "Cм.все", iconName: "openCard", controllerName: ""))
+                self.products.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
             }
             //                self.transfers = self.payments
             self.productList = data ?? []
@@ -297,22 +297,13 @@ class MainViewController: UIViewController, ChildViewControllerDelegate, FirstCo
         
     }
         
-//        private func setupSearchBar() {
-////            self.view.addSubview(searchContact)
-////            searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 48)
-////            searchContact.secondButton.image = UIImage(named: "Avatar")
-//            navigationController?.navigationBar.isHidden = true
-//
-//
-//
-//        }
         
     private func setupCollectionView() {
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createCompositionLayout())
 //        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.backgroundColor = .white
         view.addSubview(collectionView)
-        collectionView.anchor(top: searchContact.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor)
+        collectionView.anchor(top: searchBar.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor)
         
         collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.reuseId)
         collectionView.register(PaymentsMainCell.self, forCellWithReuseIdentifier: PaymentsMainCell.reuseId)
@@ -370,11 +361,7 @@ class MainViewController: UIViewController, ChildViewControllerDelegate, FirstCo
                 self.dataUSD = lastPaymentsList
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-//                DispatchQueue.main.async {
-//                    if model.errorMessage == "Пользователь не авторизован"{
-//                        AppLocker.present(with: .validate)
-//                    }
-//                }
+
             }
         }
         
@@ -392,11 +379,7 @@ class MainViewController: UIViewController, ChildViewControllerDelegate, FirstCo
                 self.dataEuro = lastPaymentsList
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-//                DispatchQueue.main.async {
-//                    if model.errorMessage == "Пользователь не авторизован"{
-//                        AppLocker.present(with: .validate)
-//                    }
-//                }
+
             }
         }
     }

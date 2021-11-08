@@ -22,7 +22,7 @@ extension MobilePayViewController {
         
     }
     
-    @objc func backAction(){
+    @objc func backAction() {
         dismiss(animated: true, completion: nil)
         navigationController?.dismiss(animated: true, completion: nil)
     }

@@ -12,6 +12,8 @@ import FirebaseMessaging
 
 class CodeVerificationViewController: UIViewController {
     
+    weak var delegate: CodeVerificationDelegate?
+    
 //    var phoneNumber: String?
     var viewModel: CodeVerificationViewModel
     var count = 60  // 60sec if you want
@@ -64,7 +66,7 @@ class CodeVerificationViewController: UIViewController {
         
     init(model: CodeVerificationViewModel) {
         self.viewModel = model
-//        phoneNumber = phone
+
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -191,7 +193,11 @@ class CodeVerificationViewController: UIViewController {
                         //TODO: go to app
                         DispatchQueue.main.async { [weak self] in
                             self?.resendTimer.invalidate()
-                            self?.pin(.create)
+
+                            // Переход на создание пинкода
+                            self?.delegate?.goToCreatePinVC()
+
+
                         }
                         
                     }
@@ -247,31 +253,4 @@ class CodeVerificationViewController: UIViewController {
             }
         }
     }
-    
-    func pin(_ mode: ALMode) {
-        
-        var options = ALOptions()
-        options.isSensorsEnabled = true
-        options.color = .white
-        options.onSuccessfulDismiss = { (mode: ALMode?) in
-            if let mode = mode {
-                DispatchQueue.main.async {
-                    print("Password \(String(describing: mode)) successfully")
-                    let vc = MainTabBarViewController()
-                    UIApplication.shared.windows.first?.rootViewController = vc
-                    UIApplication.shared.windows.first?.makeKeyAndVisible()
-//                    vc.modalPresentationStyle = .fullScreen
-//                    self?.present(vc, animated: true)
-                }
-            } else {
-                print("User Cancelled")
-            }
-        }
-        options.onFailedAttempt = { (mode: ALMode?) in
-            print("Failed to \(String(describing: mode))")
-        }
-        // LOGIN DO
-        AppLocker.present(with: mode, and: options, over: self)
-    }
-
 }

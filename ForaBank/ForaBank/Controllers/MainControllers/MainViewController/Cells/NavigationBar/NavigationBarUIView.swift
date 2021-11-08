@@ -9,16 +9,15 @@ import UIKit
 
 class NavigationBarUIView: UIView {
 
+    var bellTapped: (() -> Void)?
+    
     @IBOutlet weak var secondButton: UIImageView!
     @IBOutlet weak var bellIcon: UIButton!
     @IBOutlet weak var textField: MaskedTextField!
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
+    
+    
+    @IBAction func bellButtonTapped(_ sender: Any) {
+        bellTapped?()
     }
-    */
- 
-
+    
 }

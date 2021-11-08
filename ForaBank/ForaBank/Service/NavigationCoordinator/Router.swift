@@ -73,7 +73,7 @@ final public class Router: NSObject, RouterType, UINavigationControllerDelegate 
     public func setRootModule(_ module: Presentable, hideBar: Bool = false) {
         // Call all completions so all coordinators can be deallocated
         completions.forEach { $0.value() }
-        navigationController.setViewControllers([module.toPresentable()], animated: false)
+        navigationController.setViewControllers([module.toPresentable()], animated: true)
         navigationController.isNavigationBarHidden = hideBar
     }
     

@@ -7,6 +7,12 @@
 
 import UIKit
 
+
+protocol PaymentsViewControllerDelegate: AnyObject {
+    func toMobilePay(_ controller: UIViewController)
+    func goToCountryPayments()
+}
+
 extension PaymentsViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -21,13 +27,16 @@ extension PaymentsViewController: UICollectionViewDelegate {
             } else if let lastPhonePayment = payments[indexPath.row].lastPhonePayment {
                 openPhonePaymentVC(model: lastPhonePayment)
             } else if let lastMobilePayment = payments[indexPath.row].lastMobilePayment {
-                let viewController = payments[indexPath.row].controllerName.getViewController() as? MobilePayViewController
-                viewController?.addCloseButton()
-                viewController?.phoneField.text =  "+7\(payments[indexPath.row].lastMobilePayment?.additionalList?[1].fieldValue ?? "")"
-                viewController?.selectNumber = "+7\(payments[indexPath.row].lastMobilePayment?.additionalList?[1].fieldValue ?? "")"
-                let navVC = UINavigationController(rootViewController: viewController ?? UIViewController())
-                navVC.modalPresentationStyle = .fullScreen
-                present(navVC, animated: true)
+
+                let viewController = (payments[indexPath.row].controllerName.getViewController() as? MobilePayViewController)!
+//                viewController?.addCloseButton()
+//                viewController?.phoneField.text =  "+7\(payments[indexPath.row].lastMobilePayment?.additionalList?[1].fieldValue ?? "")"
+//                viewController?.selectNumber = "+7\(payments[indexPath.row].lastMobilePayment?.additionalList?[1].fieldValue ?? "")"
+//                let navVC = UINavigationController(rootViewController: viewController ?? UIViewController())
+//                navVC.modalPresentationStyle = .fullScreen
+//                present(navVC, animated: true)
+                delegate?.toMobilePay(viewController)
+
             } else {
                 if let viewController = payments[indexPath.row].controllerName.getViewController() {
                     viewController.addCloseButton()
@@ -77,24 +86,20 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 navVC.modalPresentationStyle = .fullScreen
 //                    present(navVC, animated: true)
                 
-//                    // ЖКХ
+
                 if indexPath.row == 2 {
+                    // ЖКХ
                     let gkh = GKHMainViewController.storyboardInstance()!
                     let nc = UINavigationController(rootViewController: gkh)
                     nc.modalPresentationStyle = .fullScreen
                     present(nc, animated: true)
-                } 
-//                    // Мобильная связь
-//                    if indexPath.row == 1 {
-//                        let gkh = MobilePayViewController()
-//                        let nc = UINavigationController(rootViewController: gkh)
-//                        nc.modalPresentationStyle = .fullScreen
-//                        present(nc, animated: true)
-//                    } else {
-//                        present(navVC, animated: true)
-//                    }
-//                present(navVC, animated: true)
-                present(navVC, animated: true, completion: nil)
+                } else if indexPath.row == 1 {
+                    // Мобильная связь
+                    delegate?.toMobilePay(viewController)
+//                    present(nc, animated: true)
+                } else {
+                    present(navVC, animated: true, completion: nil)
+                }
             }
         }
     }

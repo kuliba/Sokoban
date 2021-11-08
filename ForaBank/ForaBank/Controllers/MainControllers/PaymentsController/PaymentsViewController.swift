@@ -23,7 +23,7 @@ class PaymentsViewController: UIViewController {
     var transfers = [PaymentsModel]()
     var pay = [PaymentsModel]()
     
-    let searchContact: NavigationBarUIView = UIView.fromNib()
+    lazy var searchContact: NavigationBarUIView = UIView.fromNib()
     
     enum Section: Int, CaseIterable {
         case payments, transfers, pay
@@ -180,47 +180,10 @@ extension PaymentsViewController {
                 }
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-//                DispatchQueue.main.async {
-//                if model.errorMessage == "Пользователь не авторизован"{
-//                    AppLocker.present(with: .validate)
-//                }
-//                }
+
             }
         }
     }
-    
-//    func loadLastGKHPayments() {
-//        NetworkManager<GetLatestServicePaymentsDecodableModel>.addRequest(.getLatestServicePayments, [:], [:]) { model, error in
-//            if error != nil {
-//                print("DEBUG: Error: ", error ?? "")
-//            }
-//            guard let model = model else { return }
-//            print("DEBUG: LatestPayment: ", model)
-//            if model.statusCode == 0 {
-//                guard let lastPaymentsList  = model.data else { return }
-//
-//                if lastPaymentsList.count > 3 {
-//                    let payArr = lastPaymentsList.prefix(3)
-//                    payArr.forEach { lastPayment in
-//                        let payment = PaymentsModel(lastGKHPayment: lastPayment)
-//                        self.payments.append(payment)
-//                    }
-//                } else {
-//                    lastPaymentsList.forEach { lastPayment in
-//                        let payment = PaymentsModel(lastGKHPayment: lastPayment)
-//                        self.payments.append(payment)
-//                    }
-//                }
-//            } else {
-//                print("DEBUG: Error: ", model.errorMessage ?? "")
-////                DispatchQueue.main.async {
-////                if model.errorMessage == "Пользователь не авторизован"{
-////                    AppLocker.present(with: .validate)
-////                }
-////                }
-//            }
-//        }
-//    }
     
     func loadLastMobilePayments() {
         NetworkManager<GetLatestMobilePaymentsDecodableModel>.addRequest(.getLatestMobilePayments, [:], [:]) { model, error in
@@ -246,11 +209,7 @@ extension PaymentsViewController {
                 }
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-//                DispatchQueue.main.async {
-//                if model.errorMessage == "Пользователь не авторизован"{
-//                    AppLocker.present(with: .validate)
-//                }
-//                }
+
             }
         }
     }
@@ -275,11 +234,7 @@ extension PaymentsViewController {
                 }
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-//                DispatchQueue.main.async {
-//                if model.errorMessage == "Пользователь не авторизован"{
-//                    AppLocker.present(with: .validate)
-//                }
-//                }
+
             }
         }
     }
@@ -297,9 +252,7 @@ extension PaymentsViewController {
                 completion(model.data,nil)
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-//                if model.errorMessage == "Пользователь не авторизован"{
-//                    AppLocker.present(with: .validate)
-//                }
+
                 completion(nil, model.errorMessage)
             }
         }

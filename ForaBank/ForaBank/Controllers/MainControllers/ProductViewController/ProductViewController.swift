@@ -563,11 +563,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
                 } else {
                     print("DEBUG: Error: ", model.errorMessage ?? "")
                     self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
-//                    DispatchQueue.main.async {
-//                        if model.errorMessage == "Пользователь не авторизован"{
-//                            AppLocker.present(with: .validate)
-//                        }
-//                    }
+
                 }
             }
            })
@@ -631,11 +627,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
                 self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
-//                DispatchQueue.main.async {
-//                    if model.errorMessage == "Пользователь не авторизован"{
-//                        AppLocker.present(with: .validate)
-//                    }
-//                }
+
             }
         }
 
@@ -715,11 +707,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
                         print("DEBUG: Error: ", model.errorMessage ?? "")
                         self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
 
-    //                    DispatchQueue.main.async {
-    //                        if model.errorMessage == "Пользователь не авторизован"{
-    //                            AppLocker.present(with: .validate)
-    //                        }
-    //                    }
                     }
                 }
                })
@@ -874,11 +861,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
     //                    self.dataUSD = lastPaymentsList
                 } else {
                     print("DEBUG: Error: ", model.errorMessage ?? "")
-//                    DispatchQueue.main.async {
-//                        if model.errorMessage == "Пользователь не авторизован"{
-//                            AppLocker.present(with: .validate)
-//                        }
-//                    }
+
                 }
             }
         } else {
@@ -965,6 +948,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
 //                    self.dataUSD = lastPaymentsList
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
+
             }
         }
     }
@@ -1313,11 +1297,7 @@ extension ProductViewController{
                 completion(model.data, nil)
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-//                DispatchQueue.main.async {
-//                if model.errorMessage == "Пользователь не авторизован"{
-//                    AppLocker.present(with: .validate)
-//                }
-//                }
+
                 completion(nil, model.errorMessage)
             }
         }

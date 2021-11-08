@@ -290,7 +290,6 @@
 		ED4FC60B266CD1020092B4AB /* СountryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC609266CD1020092B4AB /* СountryCell.swift */; };
 		ED4FC60C266CD1020092B4AB /* СountryCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED4FC60A266CD1020092B4AB /* СountryCell.xib */; };
 		ED4FC610266CD66F0092B4AB /* СountryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC60F266CD66F0092B4AB /* СountryModel.swift */; };
-		ED4FC619266EA42E0092B4AB /* AppLocker.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED4FC616266EA42E0092B4AB /* AppLocker.xib */; };
 		ED4FC61A266EA42E0092B4AB /* AppLocker.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC617266EA42E0092B4AB /* AppLocker.swift */; };
 		ED4FC61B266EA42E0092B4AB /* UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4FC618266EA42E0092B4AB /* UI.swift */; };
 		ED4FC621266EA5CD0092B4AB /* Valet in Frameworks */ = {isa = PBXBuildFile; productRef = ED4FC620266EA5CD0092B4AB /* Valet */; };
@@ -323,6 +322,8 @@
 		ED8AB45D26C2B55E006F0D03 /* SuccessMeToMeController.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED8AB45C26C2B55E006F0D03 /* SuccessMeToMeController.xib */; };
 		ED8AB46226C3EA2E006F0D03 /* MeToMeSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8AB46026C3EA2E006F0D03 /* MeToMeSettingViewController.swift */; };
 		ED92D3A226735A0A006D47B3 /* PaymentByPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED92D3A126735A0A006D47B3 /* PaymentByPhoneViewController.swift */; };
+		EDA0DCBB27356BDC0013F47E /* LockerCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA0DCBA27356BDC0013F47E /* LockerCoordinator.swift */; };
+		EDA0DCBD2735E8030013F47E /* AppLocker.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDA0DCBC2735E8030013F47E /* AppLocker.storyboard */; };
 		EDA5637726F375980093F0C8 /* SettingTableViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDA5637626F375980093F0C8 /* SettingTableViewController.storyboard */; };
 		EDA5637A26F386AD0093F0C8 /* SettingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA5637926F386AD0093F0C8 /* SettingTableViewController.swift */; };
 		EDA563AE26F881AF0093F0C8 /* BanksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA563AD26F881AF0093F0C8 /* BanksView.swift */; };
@@ -717,7 +718,6 @@
 		ED4FC609266CD1020092B4AB /* СountryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "СountryCell.swift"; sourceTree = "<group>"; };
 		ED4FC60A266CD1020092B4AB /* СountryCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "СountryCell.xib"; sourceTree = "<group>"; };
 		ED4FC60F266CD66F0092B4AB /* СountryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "СountryModel.swift"; sourceTree = "<group>"; };
-		ED4FC616266EA42E0092B4AB /* AppLocker.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AppLocker.xib; sourceTree = "<group>"; };
 		ED4FC617266EA42E0092B4AB /* AppLocker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppLocker.swift; sourceTree = "<group>"; };
 		ED4FC618266EA42E0092B4AB /* UI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UI.swift; sourceTree = "<group>"; };
 		ED51D66D2688B27E005FD655 /* SeparatorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SeparatorView.xib; sourceTree = "<group>"; };
@@ -749,6 +749,8 @@
 		ED8AB45C26C2B55E006F0D03 /* SuccessMeToMeController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SuccessMeToMeController.xib; sourceTree = "<group>"; };
 		ED8AB46026C3EA2E006F0D03 /* MeToMeSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeToMeSettingViewController.swift; sourceTree = "<group>"; };
 		ED92D3A126735A0A006D47B3 /* PaymentByPhoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentByPhoneViewController.swift; sourceTree = "<group>"; };
+		EDA0DCBA27356BDC0013F47E /* LockerCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockerCoordinator.swift; sourceTree = "<group>"; };
+		EDA0DCBC2735E8030013F47E /* AppLocker.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AppLocker.storyboard; sourceTree = "<group>"; };
 		EDA5637626F375980093F0C8 /* SettingTableViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SettingTableViewController.storyboard; sourceTree = "<group>"; };
 		EDA5637926F386AD0093F0C8 /* SettingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTableViewController.swift; sourceTree = "<group>"; };
 		EDA563AD26F881AF0093F0C8 /* BanksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BanksView.swift; sourceTree = "<group>"; };
@@ -1349,6 +1351,18 @@
 				0B8BE0962670D53600E96CAA /* DoRegistrationDecodebleModel.swift */,
 			);
 			path = NetworkingLoginModel;
+			sourceTree = "<group>";
+		};
+		0BFCDAFF2728766F00FFC867 /* Coordinators */ = {
+			isa = PBXGroup;
+			children = (
+				EDA0DCBE27380A6D0013F47E /* LoginCoordinators */,
+				0BFCDB042728785F00FFC867 /* OrderProductsCoordinator.swift */,
+				0BFCDB06272878BF00FFC867 /* MainTabBarCoordinator.swift */,
+				0B3291DE2728B725005B2A7E /* MobilePayCoordinator.swift */,
+				ED02FCD2272C85EF0048950B /* CountryPayCoordinator.swift */,
+			);
+			path = Coordinators;
 			sourceTree = "<group>";
 		};
 		6822EFD026B935A500125EEC /* DefaultTableView */ = {
@@ -2022,7 +2036,7 @@
 		ED4FC615266EA42E0092B4AB /* AppLocker */ = {
 			isa = PBXGroup;
 			children = (
-				ED4FC616266EA42E0092B4AB /* AppLocker.xib */,
+				EDA0DCBC2735E8030013F47E /* AppLocker.storyboard */,
 				ED4FC617266EA42E0092B4AB /* AppLocker.swift */,
 				0BA14E17270DF8F60098E422 /* AppLockerHelper.swift */,
 			);
@@ -2214,6 +2228,17 @@
 				68FFA5422682DC95002DADFA /* PhoneConfirmViewController.swift */,
 			);
 			path = PaymentsByPhone;
+			sourceTree = "<group>";
+		};
+		EDA0DCBE27380A6D0013F47E /* LoginCoordinators */ = {
+			isa = PBXGroup;
+			children = (
+				0BA14E1F272082F10098E422 /* LoginCardEntryCoordinator.swift */,
+				0BFCDB022728774E00FFC867 /* CodeVerificationCoordinator.swift */,
+				0BFCDB00272876FB00FFC867 /* FaceTouchIDCoordinator.swift */,
+				EDA0DCBA27356BDC0013F47E /* LockerCoordinator.swift */,
+			);
+			path = LoginCoordinators;
 			sourceTree = "<group>";
 		};
 		EDA5637826F3784E0093F0C8 /* Cell */ = {
@@ -2967,7 +2992,6 @@
 				EDB143CA265FDEC90028EF5A /* Roboto-LightItalic.ttf in Resources */,
 				688B9BA626DD0DC600407A75 /* ProductTableViewCell.xib in Resources */,
 				EDB1654D26678E87007E6030 /* LaunchScreen.storyboard in Resources */,
-				ED4FC619266EA42E0092B4AB /* AppLocker.xib in Resources */,
 				ED75CDF926E245EE0074F5D5 /* GoogleService-Info-test.plist in Resources */,
 				ED75CE0926E2BA6F0074F5D5 /* TarifView.xib in Resources */,
 				68B6755D26BC8A9B004DECA4 /* GoogleService-Info.plist in Resources */,
@@ -2991,6 +3015,7 @@
 				EDAA99B12673ABF200435484 /* ForaSwitchView.xib in Resources */,
 				68D06F3A26CCDE0100F9BE4C /* NavigationBarUIView.xib in Resources */,
 				0BF3484E268A455C005138A8 /* AllCardView.xib in Resources */,
+				EDA0DCBD2735E8030013F47E /* AppLocker.storyboard in Resources */,
 				ED84995826A8831E005205C6 /* EPContactCell.xib in Resources */,
 				EDB145112664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf in Resources */,
 				ED8AB45D26C2B55E006F0D03 /* SuccessMeToMeController.xib in Resources */,
@@ -3104,6 +3129,7 @@
 				0BE270B626B9DA4800FA958C /* ExtensionBottomInputViewRevers.swift in Sources */,
 				0BB24A9926EFE71C00DDA4F6 /* GetPaymentCountriesListSaved.swift in Sources */,
 				EDA563AE26F881AF0093F0C8 /* BanksView.swift in Sources */,
+				EDA0DCBB27356BDC0013F47E /* LockerCoordinator.swift in Sources */,
 				0B37F97C2678EC69007728FC /* AnywayPaymentDecodableModel.swift in Sources */,
 				0B7A18AD2681CF160007CC75 /* CastomPopUpView.swift in Sources */,
 				0BE270B826B9DC4200FA958C /* ExtensionBottomInputViewExchange.swift in Sources */,
