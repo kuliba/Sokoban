@@ -13,17 +13,12 @@ protocol LoginCardEntryDelegate: AnyObject {
 
 class LoginCardEntryCoordinator: Coordinator {
 
-
     let loginCardEntryVC = LoginCardEntryViewController()
 
     override init(router: RouterType) {
         super.init(router: router)
         loginCardEntryVC.delegate = self
         router.setRootModule(loginCardEntryVC, hideBar: false)
-    }
-    
-    deinit {
-        print("deinit LoginCardEntryViewController")
     }
     
     override func start() {
@@ -33,10 +28,14 @@ class LoginCardEntryCoordinator: Coordinator {
 
 extension LoginCardEntryCoordinator: LoginCardEntryDelegate {
     func toCodeVerification(phone: String? = "") {
-        
-        let coordinator = CodeVerificationCoordinator(router: router)
-        coordinator.codeVerificationVC.viewModel.phone = phone
-        coordinator.start()
-        
+        DispatchQueue.main.async {
+            let codeVerificationCoordinator = CodeVerificationCoordinator(router: self.router)
+            codeVerificationCoordinator.codeVerificationVC.viewModel.phone = phone
+            self.addChild(codeVerificationCoordinator)
+            codeVerificationCoordinator.start()
+            self.router.push(codeVerificationCoordinator.codeVerificationVC, animated: true) { [weak self, weak codeVerificationCoordinator] in
+                self?.removeChild(codeVerificationCoordinator)
+            }
+        }
     }
 }

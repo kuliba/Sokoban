@@ -8,7 +8,6 @@
 import UIKit
 
 protocol CodeVerificationDelegate: AnyObject {
-    func goNextController()
     func goToCreatePinVC()
 }
 
@@ -19,7 +18,6 @@ class CodeVerificationCoordinator: Coordinator {
     override init(router: RouterType) {
         super.init(router: router)
         codeVerificationVC.delegate = self
-        router.setRootModule(codeVerificationVC, hideBar: false)
     }
     
     override func start() {
@@ -30,16 +28,14 @@ class CodeVerificationCoordinator: Coordinator {
 extension CodeVerificationCoordinator: CodeVerificationDelegate {
     
     func goToCreatePinVC() {
-        let newRouter = Router()
-        let lockerCoordinator = LockerCoordinator(router: newRouter, mode: .create)
-        lockerCoordinator.start()
+        DispatchQueue.main.async {
+            let lockerCoordinator = LockerCoordinator(router: self.router, mode: .create)
+            self.addChild(lockerCoordinator)
+            lockerCoordinator.start()
+            self.router.push(lockerCoordinator.locker, animated: true) { [weak self, weak lockerCoordinator] in
+                self?.removeChild(lockerCoordinator)
+            }
+        }
     }
     
-    func goNextController() {
-        let navigationController = UINavigationController()
-        let newRouter = Router(navigationController: navigationController)
-        let coordinator = FaceTouchIDCoordinator(router: newRouter)
-        coordinator.start()
-    }
-
 }

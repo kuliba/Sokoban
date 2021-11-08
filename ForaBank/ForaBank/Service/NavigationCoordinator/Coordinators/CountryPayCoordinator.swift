@@ -10,14 +10,14 @@ import UIKit
 class CountryPayCoordinator: Coordinator {
 
 
-    let сontactInputViewController = ContactInputViewController()
+    let сontactInputViewController = UINavigationController(rootViewController: ChooseCountryTableViewController())
 
     override init(router: RouterType) {
         super.init(router: router)
-        router.setRootModule(сontactInputViewController, hideBar: true)
     }
     
     override func start() {
+        сontactInputViewController.modalPresentationStyle = .fullScreen
     }
     
     override func toPresentable() -> UIViewController {

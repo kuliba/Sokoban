@@ -116,6 +116,8 @@ public class AppLocker: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         modalPresentationStyle = .fullScreen
+        navigationController?.isNavigationBarHidden = true
+//        navigationController?.navigationBar.isHidden = true
         setupUI()
     }
     
@@ -235,7 +237,11 @@ public class AppLocker: UIViewController {
             if let error = error {
                 print(error)
             } else {
-                self.lockerDelegate?.goToTabBar()
+                
+                // свернуть и включить таймер
+                
+                self.dismiss(animated: true, completion: nil)
+//                self.lockerDelegate?.goToTabBar()
             }
         }
     }
@@ -260,10 +266,13 @@ public class AppLocker: UIViewController {
 //
 //                        self.showAlert(with: "Ошибка", and: error)
 //                    } else {
-                let vc = FaceTouchIdViewController()
-                vc.code = pin
-                vc.modalPresentationStyle = .fullScreen
-                self.present(vc, animated: true, completion: nil)
+                let del = lockerDelegate
+                del?.goToFaceId(pin: pin)
+                
+//                let vc = FaceTouchIdViewController()
+//                vc.code = pin
+//                vc.modalPresentationStyle = .fullScreen
+//                self.present(vc, animated: true, completion: nil)
 
             default:
                 break
@@ -526,66 +535,9 @@ extension AppLocker {
     }
 }
 
-
-
-
 // MARK: - CAAnimationDelegate
 extension AppLocker: CAAnimationDelegate {
     public func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
         clearView()
-    }
-}
-
-// MARK: - Present
-public extension AppLocker {
-    // Present AppLocker
-    class func present(with mode: ALMode, and config: ALOptions? = nil, over viewController: UIViewController? = nil) {
-        var options = ALOptions()
-        options.isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
-        let config = options
-        
-        let vc = viewController ?? UIApplication.shared.keyWindow?.rootViewController
-        guard let root = vc,
-              let locker = Bundle(for: self.classForCoder()).loadNibNamed(ALConstants.nibName, owner: self, options: nil)?.first as? AppLocker else {
-                  return
-              }
-        locker.messageLabel.text = config.title ?? ""
-        locker.submessageLabel.text = config.subtitle ?? ""
-        locker.view.backgroundColor = config.color ?? .white
-        locker.mode = mode
-        locker.onSuccessfulDismiss = config.onSuccessfulDismiss
-        locker.onFailedAttempt = config.onFailedAttempt
-
-        if config.isSensorsEnabled ?? false {
-            locker.checkSensors()
-        }
-
-        locker.modalPresentationStyle = .fullScreen
-        
-//        router.setRootModule(locker, hideBar: true)
-        root.present(locker, animated: true, completion: nil)
-    }
-    
-    class func rootViewController(with mode: ALMode, and config: ALOptions? = nil, window: UIWindow?) {
-        //        let vc = viewController ?? UIApplication.shared.keyWindow?.rootViewController
-        guard //let root = vc,
-            
-            let locker = Bundle(for: self.classForCoder()).loadNibNamed(ALConstants.nibName, owner: self, options: nil)?.first as? AppLocker  else {
-                return
-            }
-        locker.messageLabel.text = config?.title ?? ""
-        locker.submessageLabel.text = config?.subtitle ?? ""
-        locker.view.backgroundColor = config?.color ?? .white
-        locker.mode = mode
-        locker.onSuccessfulDismiss = config?.onSuccessfulDismiss
-        locker.onFailedAttempt = config?.onFailedAttempt
-        
-        if config?.isSensorsEnabled ?? false {
-            locker.checkSensors()
-        }
-        
-        window?.rootViewController = locker //MainTabBarViewController()
-        window?.makeKeyAndVisible()
-        //        root.navigationController?.pushViewController(locker, animated: true)
     }
 }

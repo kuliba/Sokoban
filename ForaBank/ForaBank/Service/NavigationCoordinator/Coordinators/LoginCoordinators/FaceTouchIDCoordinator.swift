@@ -8,7 +8,7 @@
 import Foundation
 
 protocol FaceTouchIDCoordinatorDelegate: AnyObject {
-    func goNextController()
+    func goToTabBar()
 }
 
 class FaceTouchIDCoordinator: Coordinator {
@@ -18,22 +18,26 @@ class FaceTouchIDCoordinator: Coordinator {
     override init(router: RouterType) {
         super.init(router: router)
         accountViewController.delegate = self
-        router.setRootModule(accountViewController, hideBar: false)
+    }
+    
+    deinit {
+        print("FaceTouchIDCoordinatorDelegate deinit")
     }
     
     override func start() {
-        
     }
 
 }
 
 extension FaceTouchIDCoordinator: FaceTouchIDCoordinatorDelegate {
-    func goNextController() {
-        let mainTabBarCoordinator = MainTabBarCoordinator(router: router)
-        addChild(mainTabBarCoordinator)
-        mainTabBarCoordinator.start()
-        router.push(mainTabBarCoordinator, animated: true) { [weak self, weak mainTabBarCoordinator] in
-            self?.removeChild(mainTabBarCoordinator)
+    func goToTabBar() {
+        DispatchQueue.main.async {
+            let mainTabBarCoordinator = MainTabBarCoordinator(router: self.router)
+            self.addChild(mainTabBarCoordinator)
+            mainTabBarCoordinator.start()
+//            self.router.push(mainTabBarCoordinator, animated: true) { [weak self, weak mainTabBarCoordinator] in
+//                self?.removeChild(mainTabBarCoordinator)
+//            }
         }
     }
 }

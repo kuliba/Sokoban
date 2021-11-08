@@ -10,14 +10,14 @@ import UIKit
 class MobilePayCoordinator: Coordinator {
 
 
-    let mobilePayViewController = MobilePayViewController()
+    let mobilePayViewController = UINavigationController(rootViewController: MobilePayViewController()) 
 
     override init(router: RouterType) {
         super.init(router: router)
-        router.setRootModule(mobilePayViewController, hideBar: true)
     }
     
     override func start() {
+        mobilePayViewController.modalPresentationStyle = .fullScreen
     }
     
     override func toPresentable() -> UIViewController {

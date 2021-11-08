@@ -587,67 +587,6 @@ class PaymentByPhoneViewController: UIViewController {
         })
         
         
-        
-        let body = ["accountID": nil,
-                    "cardID": nil,
-                    "cardNumber": card,
-                    "provider": nil,
-                    "puref": "iFora||TransferC2CSTEP"] as [String: AnyObject]
-        
-//        NetworkManager<AnywayPaymentBeginDecodebleModel>.addRequest(.anywayPaymentBegin, [:], body, completion: { [weak self] model, error in
-//            if error != nil {
-//                print("DEBUG: Error: ", error ?? "")
-//                completion(error!)
-//            }
-//            guard let model = model else { return }
-//            if model.statusCode == 0 {
-//                completion(nil)
-//                NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], [:]) { model, error in
-//
-//                    if error != nil {
-//                        self?.dismissActivity()
-//                        self?.showAlert(with: "Ошибка", and: error!)
-//                        print("DEBUG: Error: ", error ?? "")
-//                        completion(error!)
-//                    }
-//                    guard let model = model else { return }
-//                    if model.statusCode == 0 {
-//
-//                        DispatchQueue.main.async {
-//                            self?.dismissActivity()
-//                            self?.endSBPPayment(amount: self?.bottomView.amountTextField.text ?? "0") { error in
-//                                self?.showAlert(with: "Ошибка", and: error!)
-//                                print(error ?? "")
-//                            }
-//                        }
-//                        print("DEBUG: Success ")
-//                        completion(nil)
-//                    } else {
-//                        self?.dismissActivity()
-//                        self?.showAlert(with: "Ошибка", and: error!)
-//                        print("DEBUG: Error: ", model.errorMessage ?? "")
-//                        DispatchQueue.main.async {
-//                        if model.errorMessage == "Пользователь не авторизован"{
-//                            AppLocker.present(with: .validate)
-//                        }
-//                        }
-//                        self?.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
-//                        completion(model.errorMessage)
-//                    }
-//                }
-//            } else {
-//                self?.dismissActivity()
-//                self?.showAlert(with: "Ошибка", and: error!)
-//                print("DEBUG: Error: ", model.errorMessage ?? "")
-//                DispatchQueue.main.async {
-//                if model.errorMessage == "Пользователь не авторизован"{
-//                    AppLocker.present(with: .validate)
-//                }
-//                }
-//                self?.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
-//                completion(model.errorMessage)
-//            }
-//        })
     }
     
     func endSBPPayment(amount: String, completion: @escaping (_ error: String?)->()) {
