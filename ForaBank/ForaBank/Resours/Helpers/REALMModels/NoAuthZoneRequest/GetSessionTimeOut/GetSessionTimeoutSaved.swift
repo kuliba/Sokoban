@@ -12,8 +12,6 @@ struct GetSessionTimeoutSaved: DownloadQueueProtocol {
     
     func add(_ param: [String : String], _ body: [String : AnyObject], completion: @escaping () -> ()) {
         
-        let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
-        
         NetworkManager<GetSessionTimeoutDecodableModel>.addRequest(.getSessionTimeout, param, body) { model, error in
             
             if error != nil {
@@ -22,14 +20,14 @@ struct GetSessionTimeoutSaved: DownloadQueueProtocol {
                 guard let statusCode = model?.statusCode else { return }
                 if statusCode == 0 {
                     
+              //      guard let model = model else { return }
+             //       guard let m = model.data else { return }
+                    
+                    
+                    
                     let sessionTimeOutParameters = returnRealmModel()
                     sessionTimeOutParameters.maxTimeOut = StaticDefaultTimeOut.staticDefaultTimeOut
-                    
-                    if userIsRegister == true {
-                        sessionTimeOutParameters.mustCheckTimeOut = true
-                    } else {
-                        sessionTimeOutParameters.mustCheckTimeOut = false
-                    }
+                    sessionTimeOutParameters.mustCheckTimeOut = true
                     
                     /// Сохраняем в REALM
                     let realm = try? Realm()

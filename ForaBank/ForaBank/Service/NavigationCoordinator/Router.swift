@@ -51,7 +51,8 @@ final public class Router: NSObject, RouterType, UINavigationControllerDelegate 
     public func push(_ module: Presentable, animated: Bool = true, completion: (() -> Void)? = nil) {
         
         let controller = module.toPresentable()
-
+        
+        // Avoid pushing UINavigationController onto stack
         guard controller is UINavigationController == false else {
             return
         }
@@ -70,6 +71,7 @@ final public class Router: NSObject, RouterType, UINavigationControllerDelegate 
     }
     
     public func setRootModule(_ module: Presentable, hideBar: Bool = false) {
+        // Call all completions so all coordinators can be deallocated
         completions.forEach { $0.value() }
         navigationController.setViewControllers([module.toPresentable()], animated: true)
         navigationController.isNavigationBarHidden = hideBar
@@ -99,6 +101,7 @@ final public class Router: NSObject, RouterType, UINavigationControllerDelegate 
     
     public func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
         
+        // Ensure the view controller is popping
         guard let poppedViewController = navigationController.transitionCoordinator?.viewController(forKey: .from),
             !navigationController.viewControllers.contains(poppedViewController) else {
             return

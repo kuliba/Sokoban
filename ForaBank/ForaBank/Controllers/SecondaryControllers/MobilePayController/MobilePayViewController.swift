@@ -282,6 +282,7 @@ extension MobilePayViewController: EPPickerDelegate {
         func epContactPicker(_: EPContactsPicker, didSelectContact contact : EPContact) {
             let phoneFromContact = contact.phoneNumbers.first?.phoneNumber
             let numbers = phoneFromContact?.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
+//            print("Contact \(contact.displayName()) \(numbers) has been selected")
             let mask = StringMask(mask: "+000-0000-00-00")
             let maskPhone = mask.mask(string: numbers)
             phoneField.text = maskPhone ?? ""
@@ -292,6 +293,7 @@ extension MobilePayViewController: EPPickerDelegate {
         }
         
         func epContactPicker(_: EPContactsPicker, didSelectMultipleContacts contacts: [EPContact]) {
+            print("The following contacts are selected")
             for contact in contacts {
                 print("\(contact.displayName())")
             }

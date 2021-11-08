@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="wgA-FR-PPr">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="wgA-FR-PPr">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -151,100 +151,12 @@
                         <outlet property="qrView" destination="roo-Fp-kuA" id="meg-im-Xtd"/>
                         <outlet property="zap" destination="SVD-XB-ywx" id="b2i-QU-7Dc"/>
                         <segue destination="W82-dc-jAv" kind="unwind" identifier="auth" unwindAction="auth:" id="EdC-xT-Il0"/>
-                        <segue destination="gl2-Tr-wyC" kind="show" identifier="qrError" id="6Lf-cd-TK4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qdw-Sz-EVB" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="W82-dc-jAv" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="3545" y="1556"/>
-        </scene>
-        <!--Сканировать QR-код-->
-        <scene sceneID="rK1-Or-Mg7">
-            <objects>
-                <viewController title="Сканировать QR-код" id="gl2-Tr-wyC" customClass="QRErrorViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="0aJ-aQ-csq">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="71" translatesAutoresizingMaskIntoConstraints="NO" id="qBW-Zq-bZl">
-                                <rect key="frame" x="20" y="244.5" width="374" height="353.5"/>
-                                <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="AN7-Pe-619">
-                                        <rect key="frame" x="143" y="0.0" width="88" height="88"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="88" id="Cca-V1-Fko"/>
-                                            <constraint firstAttribute="width" constant="88" id="DXI-1T-6lm"/>
-                                        </constraints>
-                                    </imageView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="drH-EW-c0M">
-                                        <rect key="frame" x="0.0" y="159" width="374" height="46.5"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Не удалось распознать QR- код" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EBY-2X-NTm">
-                                                <rect key="frame" x="0.0" y="0.0" width="374" height="20.5"/>
-                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Воспользуйтесь другими способами оплаты" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lc0-Mf-tzJ">
-                                                <rect key="frame" x="0.0" y="28.5" width="374" height="18"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                    </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="7CH-NP-mnU">
-                                        <rect key="frame" x="0.0" y="276.5" width="374" height="77"/>
-                                        <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EnS-x6-Z5q">
-                                                <rect key="frame" x="0.0" y="0.0" width="374" height="34.5"/>
-                                                <color key="backgroundColor" systemColor="systemGray6Color"/>
-                                                <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="Найти поставщика в ручную">
-                                                    <fontDescription key="titleFontDescription" type="system" pointSize="17"/>
-                                                    <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                </buttonConfiguration>
-                                            </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0uY-lP-raD">
-                                                <rect key="frame" x="0.0" y="42.5" width="374" height="34.5"/>
-                                                <color key="backgroundColor" systemColor="systemGray6Color"/>
-                                                <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="Оплатить по реквизитам">
-                                                    <fontDescription key="titleFontDescription" type="system" pointSize="17"/>
-                                                    <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                </buttonConfiguration>
-                                            </button>
-                                        </subviews>
-                                        <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="0uY-lP-raD" secondAttribute="trailing" id="RVE-eY-kzz"/>
-                                            <constraint firstItem="0uY-lP-raD" firstAttribute="leading" secondItem="7CH-NP-mnU" secondAttribute="leading" id="eRW-Mk-aIA"/>
-                                            <constraint firstItem="EnS-x6-Z5q" firstAttribute="leading" secondItem="7CH-NP-mnU" secondAttribute="leading" id="gJE-Gf-jeC"/>
-                                            <constraint firstAttribute="trailing" secondItem="EnS-x6-Z5q" secondAttribute="trailing" id="vMa-8a-zdY"/>
-                                        </constraints>
-                                    </stackView>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstItem="7CH-NP-mnU" firstAttribute="leading" secondItem="qBW-Zq-bZl" secondAttribute="leading" id="MZx-MN-VAN"/>
-                                    <constraint firstItem="drH-EW-c0M" firstAttribute="leading" secondItem="qBW-Zq-bZl" secondAttribute="leading" id="X5s-De-Wog"/>
-                                    <constraint firstAttribute="trailing" secondItem="7CH-NP-mnU" secondAttribute="trailing" id="gOj-VU-qub"/>
-                                    <constraint firstAttribute="trailing" secondItem="drH-EW-c0M" secondAttribute="trailing" id="xUy-fw-ySA"/>
-                                </constraints>
-                            </stackView>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="IDb-F1-ssh"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstAttribute="trailingMargin" secondItem="qBW-Zq-bZl" secondAttribute="trailing" id="F8x-38-uMk"/>
-                            <constraint firstItem="qBW-Zq-bZl" firstAttribute="centerY" secondItem="0aJ-aQ-csq" secondAttribute="centerY" id="p1z-q4-JDX"/>
-                            <constraint firstItem="qBW-Zq-bZl" firstAttribute="leading" secondItem="0aJ-aQ-csq" secondAttribute="leadingMargin" id="ydG-Ad-BTS"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" id="0bi-Kw-avz"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="TbI-b8-hhZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="4468" y="1566"/>
         </scene>
     </scenes>
     <resources>
@@ -256,9 +168,6 @@
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemGray6Color">
-            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

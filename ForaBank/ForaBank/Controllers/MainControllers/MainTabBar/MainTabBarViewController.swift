@@ -30,17 +30,17 @@ class MainTabBarViewController: UITabBarController {
                                   title: "Главный",
                                   image: UIImage(named: "tabBar-main")!,
                                   fillImage: UIImage(named: "tabBar-main-fill")!),
-
+            
             generateNavController(rootViewController: paymentsVC,
                                   title: "Платежи",
                                   image: UIImage(named: "tabBar-card")!,
                                   fillImage: UIImage(named: "tabBar-card-fill")!),
-
+            
             generateNavController(rootViewController: historyVC,
                                   title: "История",
                                   image: UIImage(named: "tabBar-history")!,
                                   fillImage: UIImage(named: "tabBar-history-fill")!),
-
+            
             generateNavController(rootViewController: chatVC,
                                   title: "Чат",
                                   image: UIImage(named: "tabBar-chat")!,
@@ -119,6 +119,7 @@ class MainTabBarViewController: UITabBarController {
             }
             guard let countries = model as? [CountriesList] else { return }
             Dict.shared.countries = countries
+            print("DEBUG: Load Countries")
         }
         
         NetworkHelper.request(.getBanks) { model, error in
@@ -127,6 +128,7 @@ class MainTabBarViewController: UITabBarController {
             }
             guard let banks = model as? [BanksList] else { return }
             Dict.shared.banks = banks
+            print("DEBUG: Load Banks")
         }
         
         
@@ -136,6 +138,7 @@ class MainTabBarViewController: UITabBarController {
             }
             guard let banks = model as? [BankFullInfoList] else { return }
             Dict.shared.bankFullInfoList = banks
+            print("DEBUG: Load Banks")
         }
         
         NetworkHelper.request(.getPaymentSystemList) { model, error in
@@ -144,6 +147,7 @@ class MainTabBarViewController: UITabBarController {
             }
             guard let paymentSystem = model as? [PaymentSystemList] else { return }
             Dict.shared.paymentList = paymentSystem
+            print("DEBUG: Load Payments")
         }
         
         NetworkHelper.request(.getMobileSystem) { model, error in
@@ -152,6 +156,7 @@ class MainTabBarViewController: UITabBarController {
             }
             guard let paymentSystem = model as? [MobileList] else { return }
             Dict.shared.mobileSystem = paymentSystem
+            print("DEBUG: Load Payments")
         }
         
         NetworkHelper.request(.getCurrencyList) { model, error in
@@ -160,6 +165,7 @@ class MainTabBarViewController: UITabBarController {
             }
             guard let currencySystem = model as? [CurrencyList] else { return }
             Dict.shared.currencyList = currencySystem
+            print("DEBUG: Load Currency")
         }
 
         /// Add REALM
