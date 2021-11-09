@@ -117,7 +117,6 @@ public class AppLocker: UIViewController {
         super.viewDidLoad()
         modalPresentationStyle = .fullScreen
         navigationController?.isNavigationBarHidden = true
-//        navigationController?.navigationBar.isHidden = true
         setupUI()
     }
     
@@ -261,19 +260,7 @@ public class AppLocker: UIViewController {
             switch mode {
             case .create:
                 guard let pin = savedPin else { return }
-//                registerMyPin(with: pin) { error in
-//                    if let error = error {
-//
-//                        self.showAlert(with: "Ошибка", and: error)
-//                    } else {
-                let del = lockerDelegate
-                del?.goToFaceId(pin: pin)
-                
-//                let vc = FaceTouchIdViewController()
-//                vc.code = pin
-//                vc.modalPresentationStyle = .fullScreen
-//                self.present(vc, animated: true, completion: nil)
-
+                lockerDelegate?.goToFaceId(pin: pin)
             default:
                 break
             }

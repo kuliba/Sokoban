@@ -19,6 +19,7 @@ extension ContactInputViewController {
                             bottom: view.bottomAnchor, right: view.rightAnchor)
         view.addSubview(bottomView)
         bottomView.currencySymbol = "₽"
+        
         cardFromField.titleLabel.text = "Счет списания"
         cardFromField.titleLabel.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
         cardFromField.imageView.isHidden = false
@@ -119,6 +120,7 @@ extension ContactInputViewController {
         let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
         self.navigationItem.rightBarButtonItem = customViewItem
         
+        bottomView.currencySwitchButton.isHidden = false
     }
     
     

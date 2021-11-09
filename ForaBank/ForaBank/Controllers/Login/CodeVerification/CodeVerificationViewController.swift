@@ -43,7 +43,7 @@ class CodeVerificationViewController: UIViewController {
         navigationController?.view.backgroundColor = .white
         smsCodeView.callBacktext = { str in
             if str == "123456", self.cardNumber == "0565205123484281"{
-                DispatchQueue.main.async { [weak self] in
+                DispatchQueue.main.async {
 //                    print("Password \(String(describing: mode)) successfully")
                     let vc = MainTabBarViewController()
                     UIApplication.shared.windows.first?.rootViewController = vc
