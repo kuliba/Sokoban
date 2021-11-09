@@ -78,7 +78,7 @@ class MeToMeRequestController: UIViewController {
     lazy var summTransctionField = ForaInput(
         viewModel: ForaInputModel(
             title: "Сумма перевода",
-            image: #imageLiteral(resourceName: "coins"),
+            image: UIImage(named: "coins")!,
             isEditable: false))
     
     lazy var taxTransctionField = ForaInput(
@@ -329,10 +329,10 @@ class MeToMeRequestController: UIViewController {
     func goToPinVC(_ mode: ALMode) {
         DispatchQueue.main.async { [weak self] in
             var options = ALOptions()
-            options.isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
-            options.onSuccessfulDismiss = { (mode: ALMode?, _) in
-                self?.nextButton.isEnabled = true
-                self?.cancelButton.isEnabled = true
+//            options.isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
+//            options.onSuccessfulDismiss = { (mode: ALMode?) in
+//                self?.nextButton.isEnabled = true
+//                self?.cancelButton.isEnabled = true
 
 //                if let mode = mode {
 //                    DispatchQueue.main.async { [weak self] in
@@ -344,10 +344,10 @@ class MeToMeRequestController: UIViewController {
 //                } else {
 //                    print("User Cancelled")
 //                }
-            }
-            options.onFailedAttempt = { (mode: ALMode?) in
-                print("Failed to \(String(describing: mode))")
-            }
+//            }
+//            options.onFailedAttempt = { (mode: ALMode?) in
+//                print("Failed to \(String(describing: mode))")
+//            }
         }
     }
     

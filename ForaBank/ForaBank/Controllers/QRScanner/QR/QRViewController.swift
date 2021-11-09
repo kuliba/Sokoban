@@ -15,7 +15,7 @@ protocol QRProtocol: NSObject {
     func setResultOfBusinessLogic (_ qr: [String: String], _ model: GKHOperatorsModel )
 }
 
-final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate {
+final class QRViewController: UIViewController, UIDocumentPickerDelegate {
     
     
     weak var delegate: QRProtocol?
@@ -71,10 +71,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate {
     }
     
     @IBAction func info(_ sender: UIButton) {
-        let infoView = QRScanerInfoView()
-        self.showAlert(infoView)
     }
-    
     @IBAction func zap(_ sender: UIButton) {
         let device = AVCaptureDevice.default(for: .video)
         if ((device?.hasTorch) != nil) {
@@ -91,7 +88,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate {
         
         var documentPickerController: UIDocumentPickerViewController!
         
-        documentPickerController = UIDocumentPickerViewController(documentTypes: [/*"com.adobe.pdf", "public.image"*/"public.composite-content"], in: .import)
+        documentPickerController = UIDocumentPickerViewController(documentTypes: ["com.adobe.pdf"], in: .import)
         documentPickerController.delegate = self
         present(documentPickerController, animated: true, completion: nil)
     }
@@ -116,16 +113,12 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate {
         }
        
         let inn = qrData.filter { $0.key == "PayeeINN" }
-        if inn != [:] {
         operatorsList?.forEach({ operators in
             if operators.synonymList.first == inn.values.first {
                 self.operators = operators
             }
         })
         self.returnKey()
-        } else {
-           performSegue(withIdentifier: "qrError", sender: nil)
-        }
         
     }
     

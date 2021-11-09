@@ -34,6 +34,7 @@ public enum ALConstants {
 
 // Cancel dismiss will send mode as nil
 public typealias onSuccessfulDismissCallback = (_ mode: ALMode?, _ code: String?) -> ()
+
 public typealias onFailedAttemptCallback = (_ mode: ALMode) -> ()
 
 // The structure used to display the controller
@@ -58,7 +59,6 @@ public enum ALMode {
 }
 
 public class AppLocker: UIViewController {
-    
     // MARK: - Top view
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var submessageLabel: UILabel!
@@ -498,9 +498,16 @@ extension AppLocker {
         
         let updatingTimeObject = GetSessionTimeout()
         
+        let realm = try? Realm()
+        guard let timeObject = realm?.objects(GetSessionTimeout.self).first else {return GetSessionTimeout()}
+        let lastActionTimestamp = timeObject.lastActionTimestamp
+        let maxTimeOut = timeObject.maxTimeOut
+        let mustCheckTimeOut = timeObject.mustCheckTimeOut
         let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
         if userIsRegister == true {
             // Сохраняем текущее время
+        let updatingTimeObject = GetSessionTimeout()
+        
             updatingTimeObject.currentTimeStamp = Date().localDate()
             updatingTimeObject.lastActionTimestamp = Date().localDate()
             updatingTimeObject.renewSessionTimeStamp = Date().localDate()

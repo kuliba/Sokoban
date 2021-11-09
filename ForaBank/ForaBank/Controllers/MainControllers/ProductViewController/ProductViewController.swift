@@ -343,7 +343,11 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         button3.backgroundColor = UIColor(hexString: "F6F6F7")
         button3.translatesAutoresizingMaskIntoConstraints = false
         
-        button3.addTarget(self, action: #selector(presentRequisitsVc), for: .touchUpInside)
+        button3.addAction(for: .touchUpInside) {
+            self.presentRequisitsVc(product: self.product!)
+        }
+        
+//        button3.addTarget(self, action: #selector(presentRequisitsVc(product: product!)), for: .touchUpInside)
 
         
         button4.setDimensions(height: 48, width: 164)
@@ -584,52 +588,15 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         present(vc, animated: true, completion: nil)
     }
     
-    @objc func presentRequisitsVc(){
+    func presentRequisitsVc(product: GetProductListDatum) {
         
-        var body = [ "cardId": product?.cardID
-                     ] as [String : AnyObject]
-        
-        if product?.productType == "ACCOUNT"{
-            body = [ "accountId": product?.id
-            ] as [String : AnyObject]
-        }
-        NetworkManager<GetProductDetailsDecodableModel>.addRequest(.getProductDetails, [:], body) { model, error in
-            if error != nil {
-                print("DEBUG: Error: ", error ?? "")
-            }
-            guard let model = model else { return }
-            print("DEBUG: LatestPayment: ", model)
-            if model.statusCode == 0 {
-                DispatchQueue.main.async {
-                    let viewController = RequisitesViewController()
-                    let navController = UINavigationController(rootViewController: viewController)
-                    self.mockItem = MockItems.returnsRequisits()
-                    self.mockItem[0].description =  model.data?.payeeName
-                    self.mockItem[1].description =  self.product?.accountNumber
-                    self.mockItem[2].description = model.data?.bic
-                    self.mockItem[3].description = model.data?.corrAccount
-                    self.mockItem[4].description = model.data?.inn
-                    self.mockItem[5].description = model.data?.kpp
-                    self.mockItem[6].description = model.data?.holderName
-                    self.mockItem[7].description = model.data?.maskCardNumber
-                    self.mockItem[8].description = model.data?.expireDate
-                    
-                    viewController.addCloseButton_3()
-                    viewController.mockItem =  self.mockItem
-                    viewController.product = self.product
-                    viewController.model = model.data
-                    navController.modalPresentationStyle = .fullScreen
-                    viewController.addCloseButton()
-                    navController.transitioningDelegate = self
-                    self.present(navController, animated: true, completion: nil)
-                }
-                
-            } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
-                self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
-
-            }
-        }
+        let viewController = AccountDetailsViewController()
+//        halfScreen = false
+        viewController.product = product
+        let navController = UINavigationController(rootViewController: viewController)
+        navController.modalPresentationStyle = .custom
+        navController.transitioningDelegate = self
+        self.present(navController, animated: true, completion: nil)
 
     }
     
@@ -1196,7 +1163,13 @@ extension ProductViewController{
             vc.amount.textColor = UIColor(hexString: "1C1C1C")
             vc.amount.text = "+\(Double(sorted[indexPath.section].value[indexPath.row].amount ?? 0.0).currencyFormatter(symbol:  product?.currency ?? "RUB"))"
         }
-        vc.commissionLabel.text = sorted[indexPath.section].value[indexPath.row].comment
+//        vc.commissionLabel.text = sorted[indexPath.section].value[indexPath.row].comment
+        if sorted[indexPath.section].value[indexPath.row].merchantNameRus != nil{
+            vc.mainLabel.text = sorted[indexPath.section].value[indexPath.row].merchantNameRus
+        } else {
+            vc.mainLabel.text = sorted[indexPath.section].value[indexPath.row].merchantName
+        }
+        
         vc.addCloseButton_xMark()
 //        vc.modalPresentationStyle = .pageSheet
 //        vc.providesPresentationContextTransitionStyle = true
@@ -1398,11 +1371,14 @@ extension UIColor {
 
 extension ProductViewController: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-        var presenter: UIPresentationController?
-        if halfScreen == true{
-          presenter = PresentationController(presentedViewController: presented, presenting: presenting)
+//        var presenter: UIPresentationController?
+        
+        let presenter = PresentationController(presentedViewController: presented, presenting: presenting)
+        if halfScreen == true {
+            presenter.height = 490
         } else {
-            presenter = PresentationThirdController(presentedViewController: presented, presenting: presenting)
+            presenter.height = 310
+            //            presenter = PresentationThirdController(presentedViewController: presented, presenting: presenting)
         }
         return presenter
     }

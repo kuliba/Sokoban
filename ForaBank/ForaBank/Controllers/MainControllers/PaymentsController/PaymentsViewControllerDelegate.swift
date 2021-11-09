@@ -7,12 +7,11 @@
 
 import UIKit
 
+
 protocol PaymentsViewControllerDelegate: AnyObject {
     func toMobilePay(_ controller: UIViewController)
     func goToCountryPayments()
 }
-
-
 
 extension PaymentsViewController: UICollectionViewDelegate {
     
@@ -28,6 +27,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
             } else if let lastPhonePayment = payments[indexPath.row].lastPhonePayment {
                 openPhonePaymentVC(model: lastPhonePayment)
             } else if let lastMobilePayment = payments[indexPath.row].lastMobilePayment {
+
                 let viewController = (payments[indexPath.row].controllerName.getViewController() as? MobilePayViewController)!
 //                viewController?.addCloseButton()
 //                viewController?.phoneField.text =  "+7\(payments[indexPath.row].lastMobilePayment?.additionalList?[1].fieldValue ?? "")"
@@ -36,6 +36,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
 //                navVC.modalPresentationStyle = .fullScreen
 //                present(navVC, animated: true)
                 delegate?.toMobilePay(viewController)
+
             } else {
                 if let viewController = payments[indexPath.row].controllerName.getViewController() {
                     viewController.addCloseButton()
@@ -53,8 +54,6 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 popView.modalPresentationStyle = .custom
                 popView.transitioningDelegate = self
                 self.present(popView, animated: true, completion: nil)
-            } else if indexPath.row == 2 {
-                delegate?.goToCountryPayments()
                 
             } else if indexPath.row == 3 {
                 let popView = MemeDetailVC()
@@ -79,6 +78,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 }
             }
         case .pay:
+            print("DEBUG: " + #function + pay[indexPath.row].name)
        
             if let viewController = pay[indexPath.row].controllerName.getViewController() {
                 viewController.addCloseButton()
@@ -86,6 +86,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 navVC.modalPresentationStyle = .fullScreen
 //                    present(navVC, animated: true)
                 
+
                 if indexPath.row == 2 {
                     // ЖКХ
                     let gkh = GKHMainViewController.storyboardInstance()!
@@ -171,7 +172,9 @@ extension PaymentsViewController: UICollectionViewDelegate {
 
 extension PaymentsViewController: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-        PresentationController(presentedViewController: presented, presenting: presenting)
+        let presenter = PresentationController(presentedViewController: presented, presenting: presenting)
+        presenter.height = 490
+        return presenter
     }
 }
 

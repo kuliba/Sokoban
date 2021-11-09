@@ -43,7 +43,7 @@ class OperationDetailViewController: UIViewController{
     var transferImage = UIImageView()
     
     var mainLabel: UILabel  = {
-        let label = UILabel(text: "", font: .systemFont(ofSize: 16, weight: .regular), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
+        let label = UILabel(text: "", font: .systemFont(ofSize: 16, weight: .medium), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
         label.numberOfLines = 1
         label.isHidden = true
         label.textAlignment = .center
@@ -131,17 +131,20 @@ class OperationDetailViewController: UIViewController{
 //        closeButton.anchor(top: view.topAnchor, right: view.rightAnchor, paddingTop: 10, paddingRight: 10, width: 24, height: 24)
 //        closeButton.addTarget(self, action: #selector(back), for: .touchUpInside)
         
+        mainLabel.isHidden = false
         
         if  mainLabel.text == "Возврат!"{
             mainLabel.textColor = .red
         }
+        
         if commentLabel.text == nil || commentLabel.text == "F6F6F7" {
             commentView.isHidden = true
+        } else {
+            commentLabel.isHidden = true
         }
         
         switch categoryGroupLabel.text {
         case "Между своими":
-            mainLabel.text = "Между своими"
             mainLabel.isHidden = false
             companyImage.isHidden = true
             recipient.isHidden = true
@@ -153,17 +156,12 @@ class OperationDetailViewController: UIViewController{
             categoryGroupLabel.isHidden = true
             mainLabel.text = categoryGroupLabel.text
             mainLabel.isHidden = false
-        
+        case "Перевод внутри банка":
+            companyImage.isHidden = true
+            
         default:
             print("default")
         }
-//        transferImage.image = UIImage(named: "deposit_cards_list_onhold_block_button_highlighted")
-//        nameOperationLabel.text = "Юрий Андреевич К. \n 4081781057173665439"
-//        companyImage.image = UIImage(named: "IdBank")
-//        amount.text = "- 10 000,00 ₽"
-//        commissionLabel.text = "Комиссия: \n 10.00 ₽"
-//        commentLabel.text = "Оплата по договору №285"
-//        dateLabel.text = "5 сентября 2021, 19:54"
         
         transferImage.setDimensions(height: 64, width: 64)
         
@@ -249,16 +247,38 @@ class OperationDetailViewController: UIViewController{
     }
     
     @objc func openDetailVC(){
-        let vc = ContactConfurmViewController()
-        vc.confurmVCModel = confurmVCModel
-        vc.doneButton.isHidden = true
-        vc.smsCodeField.isHidden = true
+//        let vc = ContactConfurmViewController()
+////        confurmVCModel?.phone = "123"
+//        vc.confurmVCModel = confurmVCModel
+//        vc.doneButton.isHidden = true
+//        vc.smsCodeField.isHidden = true
+//        vc.addCloseButton()
+//        if operation?.printFormType == "sbp"{
+//            vc.confurmVCModel?.payToCompany = true
+//        }
+//        
+//        vc.title = "Детали операции"
+//        let navVC = UINavigationController(rootViewController: vc)
+//        self.present(navVC, animated: true)
+//        
+        let vc = DetailOperationViewController()
+//        confurmVCModel?.phone = "123"
+   
         vc.addCloseButton()
-        if operation?.printFormType == "sbp"{
-            vc.confurmVCModel?.payToCompany = true
-        }
-        vc.title = "Детали операции"
+        vc.title = "Сохранить или отправить чек"
+        vc.modalPresentationStyle = .fullScreen
+        vc.name = mainLabel.text
+        vc.amount = amount.text
+        vc.commisstion = commissionLabel.text
+        vc.date = dateLabel.text
+        vc.adress = ""
+        vc.card = operation?.payerCardNumber
+        vc.terminal = ""
+        vc.merchant = ""
+        vc.code = ""
         let navVC = UINavigationController(rootViewController: vc)
+        navVC.modalPresentationStyle = .fullScreen
+            
         self.present(navVC, animated: true)
     }
     
@@ -316,7 +336,8 @@ class OperationDetailViewController: UIViewController{
         let buttonsStack = UIStackView()
           buttonsStack.axis = .horizontal
           buttonsStack.spacing = 30
-    buttonsStack.distribution = .fillEqually
+        buttonsStack.distribution = .fillEqually
+//        buttonsStack.backgroundColor = .cyan
     
     
     // create and add 3 50-pt height buttons to the stack view
@@ -326,10 +347,11 @@ class OperationDetailViewController: UIViewController{
              stackView.axis = .vertical
             stackView.distribution = .fill
             stackView.spacing = 7
+//            stackView.backgroundColor = .yellow
 //             stackView.setDimensions(height: 92, width: 112)
              let a = UIButton()
 //                a.layer.masksToBounds = true
-             a.setDimensions(height: 56, width: 56)
+//             a.setDimensions(height: 56, width: 56)
                 a.layer.cornerRadius = 28
              a.setTitleColor(.black, for: .normal)
              a.backgroundColor = UIColor(hexString: "F6F6F7")
@@ -341,16 +363,32 @@ class OperationDetailViewController: UIViewController{
              
              let b = UIButton()
                 b.setTitle(str.name, for: [])
+//            b.setDimensions(height: 24, width: 112)
+                b.contentHorizontalAlignment = .center
              b.setTitleColor(.black, for: .normal)
              b.setTitleColor(.gray, for: .highlighted)
              b.backgroundColor = .clear
-            b.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+                b.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+//            b.setDimensions(height: 24, width: 150)
+
+            
             
              stackView.addArrangedSubview(a)
              stackView.addArrangedSubview(b)
              
+            
+            
              buttonsStack.addArrangedSubview(stackView)
-             b.heightAnchor.constraint(equalToConstant: 24).isActive = true
+            a.anchor(width: 56, height: 56)
+            
+//            b.backgroundColor = .red
+            
+
+            NSLayoutConstraint.activate([
+                b.widthAnchor.constraint(equalToConstant: 120)
+            ])
+//            b.setDimensions(height: 24, width: 150)
+
 
         if str.name == "Детали"{
             a.addTarget(self, action: #selector(openDetailVC), for: .touchUpInside)
@@ -368,6 +406,7 @@ class OperationDetailViewController: UIViewController{
 
          }
         stackView.addArrangedSubview(buttonsStack)
+//        buttonsStack.anchor(left: view.leftAnchor, right: view.rightAnchor, paddingLeft: 20, paddingRight: 20)
 
     }
     
@@ -377,6 +416,8 @@ class OperationDetailViewController: UIViewController{
 extension OperationDetailViewController: UIViewControllerTransitioningDelegate {
     
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-        PresentationController(presentedViewController: presented, presenting: presenting)
+        let presenter = PresentationController(presentedViewController: presented, presenting: presenting)
+        presenter.height = 490
+        return presenter
     }
 }

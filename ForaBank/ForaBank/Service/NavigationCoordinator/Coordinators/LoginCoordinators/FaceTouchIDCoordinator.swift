@@ -35,9 +35,6 @@ extension FaceTouchIDCoordinator: FaceTouchIDCoordinatorDelegate {
             let mainTabBarCoordinator = MainTabBarCoordinator(router: self.router)
             self.addChild(mainTabBarCoordinator)
             mainTabBarCoordinator.start()
-//            self.router.push(mainTabBarCoordinator, animated: true) { [weak self, weak mainTabBarCoordinator] in
-//                self?.removeChild(mainTabBarCoordinator)
-//            }
         }
     }
 }

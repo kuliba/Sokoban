@@ -11,12 +11,11 @@ import IQKeyboardManagerSwift
 
 class LoginCardEntryViewController: UIViewController {
     
-    weak var delegate: LoginCardEntryDelegate? {
-        didSet {
-            print("set LoginCardEntryDelegate")
-        }
-    }
+
+
+    weak var delegate: LoginCardEntryDelegate?
     
+
     let titleLabel = UILabel(text: "Войти", font: .systemFont(ofSize: 24))
     let subTitleLabel = UILabel(text: "чтобы получить доступ к счетам и картам")
     let creditCardView = CreditCardEntryView()
@@ -32,12 +31,10 @@ class LoginCardEntryViewController: UIViewController {
         self.creditCardView.cardNumberTextField.becomeFirstResponder()
         creditCardView.cardNumberTextField.delegate = self
         creditCardView.scanerCardTapped = { self.scanCardTapped() }
-        // Срабатывает когда вводим карту
         creditCardView.enterCardNumberTapped = { [weak self] (cardNumber) in
             self?.showActivity()
             DispatchQueue.main.async {
                 
-                // Для тестировщиков AppStore
                 if cardNumber == "0565205123484281"{
                     
                     self?.dismissActivity()
@@ -45,12 +42,12 @@ class LoginCardEntryViewController: UIViewController {
                         let resp = "+79626129268"
                         let model = CodeVerificationViewModel(phone: resp, type: .register)
                         let vc = CodeVerificationViewController(model: model)
-                        // vc.cardNumber = cardNumber
+                        vc.cardNumber = cardNumber
+
                         self?.navigationController?.pushViewController(vc, animated: true)
                     }
                     
                 } else {
-                    // Для остальных
                     DispatchQueue.main.async {
                         AppDelegate.shared.getCSRF { error in
                             if error != nil {
@@ -68,6 +65,7 @@ class LoginCardEntryViewController: UIViewController {
                                     DispatchQueue.main.async { [weak self] in
                                         self?.delegate?.toCodeVerification(phone: resp)
                                     }
+
                                 }
                             }
                         }

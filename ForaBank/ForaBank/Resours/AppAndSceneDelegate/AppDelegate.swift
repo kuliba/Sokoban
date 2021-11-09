@@ -50,13 +50,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func initRealmTimerParameters() {
-        
         let realm = try? Realm()
         // Сохраняем текущее время
         let updatingTimeObject = GetSessionTimeout()
 
         updatingTimeObject.maxTimeOut = StaticDefaultTimeOut.staticDefaultTimeOut
-        updatingTimeObject.mustCheckTimeOut = false
+        updatingTimeObject.mustCheckTimeOut = true
         
         do {
             let model = realm?.objects(GetSessionTimeout.self)

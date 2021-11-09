@@ -237,13 +237,13 @@ class ContactConfurmViewController: UIViewController {
     var countryField = ForaInput(
         viewModel: ForaInputModel(
             title: "Страна",
-            image: #imageLiteral(resourceName: "map-pin"),
+            image: UIImage(named: "map-pin")!,
             isEditable: false))
     
     var numberTransctionField = ForaInput(
         viewModel: ForaInputModel(
             title: "Номер перевода",
-            image: #imageLiteral(resourceName: "hash"),
+            image: UIImage(named: "hash")!,
             isEditable: false))
     
     var cardFromField = CardChooseView()
@@ -253,7 +253,7 @@ class ContactConfurmViewController: UIViewController {
     var summTransctionField = ForaInput(
         viewModel: ForaInputModel(
             title: "Сумма перевода",
-            image: #imageLiteral(resourceName: "coins"),
+            image: UIImage(named: "coins")!,
             isEditable: false))
     
     var taxTransctionField = ForaInput(
@@ -276,7 +276,7 @@ class ContactConfurmViewController: UIViewController {
     var smsCodeField = ForaInput(
         viewModel: ForaInputModel(
             title: "Введите код из СМС",
-            image: #imageLiteral(resourceName: "message-square"),
+            image: UIImage(named: "message-square")!,
             type: .smsCode))
     
     let doneButton = UIButton(title: "Оплатить")

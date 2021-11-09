@@ -9,15 +9,18 @@ import UIKit
 import Firebase
 import FirebaseMessaging
 
+
 class CodeVerificationViewController: UIViewController {
     
     weak var delegate: CodeVerificationDelegate?
-
+    
+//    var phoneNumber: String?
     var viewModel: CodeVerificationViewModel
     var count = 60  // 60sec if you want
     var resendTimer = Timer()
+//    var verificationType: CodeVerificationViewModel.CodeVerificationType? = .register
     
-//    var cardNumber: String?
+    var cardNumber: String?
     
     lazy var titleLabel = UILabel(text: "Введите код из сообщения",
                                   font: .boldSystemFont(ofSize: 18))
@@ -39,18 +42,20 @@ class CodeVerificationViewController: UIViewController {
 
         navigationController?.view.backgroundColor = .white
         smsCodeView.callBacktext = { str in
-            // Для тесторов AppStore
-            if str == "123456" {
-                DispatchQueue.main.async {
+            if str == "123456", self.cardNumber == "0565205123484281"{
+                DispatchQueue.main.async { [weak self] in
+//                    print("Password \(String(describing: mode)) successfully")
                     let vc = MainTabBarViewController()
                     UIApplication.shared.windows.first?.rootViewController = vc
                     UIApplication.shared.windows.first?.makeKeyAndVisible()
+//                    vc.modalPresentationStyle = .fullScreen
+//                    self?.present(vc, animated: true)
                 }
-            } else {
-                self.sendSmsCode(code: str)
-               }
+            }
+            self.sendSmsCode(code: str)
+            
         }
-
+//        updateTimer()
         resendTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
     }
     
@@ -61,11 +66,7 @@ class CodeVerificationViewController: UIViewController {
         
     init(model: CodeVerificationViewModel) {
         self.viewModel = model
-//        let cardNumber = UserDefaults.standard.object(forKey: "phone") as? String
-//        if cardNumber != nil {
-//            self.viewModel.phone = cardNumber ?? ""
-//        }
-//        phoneNumber = phone
+
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -103,7 +104,7 @@ class CodeVerificationViewController: UIViewController {
             "verificationCode": "\(code)"
         ] as [String : AnyObject]
         
-        // Отправляем код из СМС
+        print("DEBUG: Start verifyCode with body: ", body)
         NetworkManager<VerifyCodeDecodebleModel>.addRequest(.verifyCode, [:], body) { [weak self] model, error in
             if error != nil {
                 guard let error = error else { return }
@@ -135,7 +136,9 @@ class CodeVerificationViewController: UIViewController {
             
             guard let model = model else { return }
             if model.statusCode == 0 {
-                            
+                
+                print("DEBUG: messaging().fcmToken = ", Messaging.messaging().fcmToken)
+                
                 let body = [
                     "cryptoVersion": "1.0",
                     "model": encript(string: UIDevice().model),
@@ -144,7 +147,7 @@ class CodeVerificationViewController: UIViewController {
                     "pushFcmToken":encript(string: Messaging.messaging().fcmToken as String? ?? "")
                 ] as [String : AnyObject]
                 
-                // Если код СМС правильный, регистрируемся
+                print("DEBUG: Start doRegistration with body:", body)
                 NetworkManager<DoRegistrationDecodebleModel>.addRequest(.doRegistration, [:], body) { [weak self] model, error in
                     if error != nil {
                         guard let error = error else { return }
@@ -154,14 +157,30 @@ class CodeVerificationViewController: UIViewController {
                     
                     if model.statusCode == 0 {
                         guard let serverDeviceGUID = model.data else { return }
-                        
+                        let data = serverDeviceGUID.data(using: .utf8)
+//                        var data1 = model?.data?.phone?.base64Decoded()
                         let decodedData = Data(base64Encoded: (serverDeviceGUID))
+    //                    let decodedString = String(data: decodedData!, encoding: .utf8)!
+
+    //                    func testEnc() {
+    //
+    ////                        let aesKey = password.padding(toLength: 32, withPad: "0", startingAt: 0)
+    //
+    //                        let aes = try? AES256(key: KeyFromServer.secretKey!, iv: AES256.randomIv())
+    //
+    //                        let decryptString = try? aes?.decrypt(data)
+    //                        print(decryptString)
+    //                    }
+    //                    testEnc()
+    //                    let str = model?.data?.phone?.data
                         var decryptPhone: String?
                         do {
                             guard let key = KeyFromServer.secretKey else {
                                 return
                             }
                             let aes = try AES(keyString: key)
+    //                        let decryptedString = try AES256(key: KeyFromServer.secretKey!, iv: AES256.randomIv()).decrypt(data)
+    //                        print(decryptedString)
                             let decryptedData: String = try aes.decrypt(decodedData!)
                             print("String decrypted:\t\t\t\(decryptedData)")
                             decryptPhone = decryptedData
@@ -170,13 +189,15 @@ class CodeVerificationViewController: UIViewController {
                         }
                         UserDefaults.standard.set(decryptPhone, forKey: "serverDeviceGUID")
                         
+                        
                         //TODO: go to app
                         DispatchQueue.main.async { [weak self] in
                             self?.resendTimer.invalidate()
+
                             // Переход на создание пинкода
-                            let del = self?.delegate
-                            del?.goToCreatePinVC()
-//                            self?.pin(.create)
+                            self?.delegate?.goToCreatePinVC()
+
+
                         }
                         
                     }
@@ -189,6 +210,10 @@ class CodeVerificationViewController: UIViewController {
                 }
             }
         }
+        
+//        pin(.change)
+//        pin(.deactive)
+//        pin(.validate)
 
     }
     
@@ -196,6 +221,7 @@ class CodeVerificationViewController: UIViewController {
     @objc func updateTimer() {
         if(count > 0) {
             count = count - 1
+//            print(count)
             if count < 10 {
                 timerLabel.text = "00:0\(count)"
             } else {
@@ -204,6 +230,7 @@ class CodeVerificationViewController: UIViewController {
         }
         else {
             resendTimer.invalidate()
+//            print("call your api")
             repeatCodeButton.isHidden = false
             timerLabel.isHidden = true
         }
@@ -226,5 +253,4 @@ class CodeVerificationViewController: UIViewController {
             }
         }
     }
-    
 }

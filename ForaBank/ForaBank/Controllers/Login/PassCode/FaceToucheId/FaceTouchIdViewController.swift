@@ -210,6 +210,8 @@ class FaceTouchIdViewController: UIViewController {
                            "isActive": false ,
                            "value": encript(string:code?.sha256() ?? "")] ] ] as [String : AnyObject]
         
+        print("DEBUG: Start setDeviceSetting with body: ", data)
+        
         NetworkManager<SetDeviceSettingDecodbleModel>.addRequest(.setDeviceSetting, [:], data) { model, error in
             self.dismissActivity()
             if error != nil {
@@ -298,21 +300,22 @@ class FaceTouchIdViewController: UIViewController {
                         guard let model = model else { return }
                         if model.statusCode == 0 {
                             
-                            // Обновление времени старта
-                            let realm = try? Realm()
-                            let timeOutObjects = self.returnRealmModel()
-                            
-                            /// Сохраняем в REALM
-                            do {
-                                let b = realm?.objects(GetSessionTimeout.self)
-                                realm?.beginWrite()
-                                realm?.delete(b!)
-                                realm?.add(timeOutObjects)
-                                try realm?.commitWrite()
-                                
-                            } catch {
-                                print(error.localizedDescription)
-                            }
+//                            // Обновление времени старта
+//                            let realm = try? Realm()
+//                            let timeOutObjects = self.returnRealmModel()
+//
+//                            /// Сохраняем в REALM
+//                            do {
+//                                let b = realm?.objects(GetSessionTimeout.self)
+//                                realm?.beginWrite()
+//                                realm?.delete(b!)
+//                                realm?.add(timeOutObjects)
+//                                try realm?.commitWrite()
+//
+//                            } catch {
+//                                print(error.localizedDescription)
+//                            }
+                            print("DEBUG: You are LOGGIN!!!")
                             self.dismissActivity()
                             self.delegate?.goToTabBar()
 //                            DispatchQueue.main.async { [weak self] in
@@ -376,24 +379,6 @@ class FaceTouchIdViewController: UIViewController {
                            paddingTop: -100)
         skipButton.anchor(left: view.leftAnchor, right: view.rightAnchor,
                           paddingLeft: 20, paddingRight: 20, height: 44)
-        
-    }
-    
-    func returnRealmModel() -> GetSessionTimeout {
-        
-        let updatingTimeObject = GetSessionTimeout()
-        
-        let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
-        if userIsRegister == true {
-            // Сохраняем текущее время
-            updatingTimeObject.currentTimeStamp = Date().localDate()
-            updatingTimeObject.lastActionTimestamp = Date().localDate()
-            updatingTimeObject.renewSessionTimeStamp = Date().localDate()
-            updatingTimeObject.mustCheckTimeOut = true
-            
-        }
-        
-        return updatingTimeObject
         
     }
     

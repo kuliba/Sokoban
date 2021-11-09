@@ -19,15 +19,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     lazy var appNavigationController = UINavigationController()
     lazy var appRouter = Router(navigationController: self.appNavigationController)
     lazy var appCoordinator = MainCoordinator(router: self.appRouter)
+//    static var shared: SceneDelegate { return UIApplication.shared.delegate as? SceneDelegate }
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        
-//        // MARK: Window
+        // MARK: Window
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
+
         window?.rootViewController = appCoordinator.toPresentable()
         window?.backgroundColor = .white
+
         window?.makeKeyAndVisible()
         
         appCoordinator.start()
