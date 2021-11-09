@@ -155,11 +155,7 @@ class SettingTableViewController: UITableViewController {
             NetworkManager<LogoutDecodableModel>.addRequest(.logout, [:], [:]) { _,_  in
                 DispatchQueue.main.async {
                     self.cleanAllData()
-                    let del = self.delegate
                     self.delegate?.goLoginCardEntry()
-//                    let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
-//                    navVC.modalPresentationStyle = .fullScreen
-//                    self.present(navVC, animated: true, completion: nil)
                 }
             }
         }
@@ -167,7 +163,7 @@ class SettingTableViewController: UITableViewController {
     
     private func cleanAllData() {
         UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
-        
+        //TODO: - Написать очистку данных после выхода из приложения
         
     }
     
