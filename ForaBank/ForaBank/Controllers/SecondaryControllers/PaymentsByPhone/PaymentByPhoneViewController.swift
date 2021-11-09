@@ -30,7 +30,7 @@ class PaymentByPhoneViewController: UIViewController {
     var phoneField = ForaInput(
         viewModel: ForaInputModel(
             title: "По номеру телефона",
-            image: #imageLiteral(resourceName: "smartphonegray"),
+            image: UIImage(named: "smartphonegray")!,
             showChooseButton: true)
     )
     
@@ -57,7 +57,7 @@ class PaymentByPhoneViewController: UIViewController {
     var numberTransctionField = ForaInput(
         viewModel: ForaInputModel(
             title: "Номер перевода",
-            image: #imageLiteral(resourceName: "hash"),
+            image: UIImage(named: "hash")!,
             isEditable: false)
     )
     

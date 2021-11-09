@@ -133,7 +133,7 @@ class MockItems {
                           description: "QR"),
             
             PaymentsModel(id: 12, name: "Мобильная связь",
-                          iconName: "smartphoneBlack",
+                          iconName: "smartphone",
                           controllerName: "MobilePayViewController",
                           description: "Что то"),
             
@@ -184,7 +184,7 @@ class MockItems {
                           description: "QR"),
             
             PaymentsModel(id: 81, name: "Перевод по номеру",
-                          iconName: "smartphoneBlack",
+                          iconName: "smartphone",
                           controllerName: "ContactsViewController",
                           description: "Что то"),
             

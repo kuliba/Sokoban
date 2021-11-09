@@ -17,7 +17,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     var phoneField = ForaInput(
         viewModel: ForaInputModel(
             title: "По номеру телефона",
-            image: #imageLiteral(resourceName: "smartphonegray"),
+            image: UIImage(named: "smartphonegray")!,
             showChooseButton: true)
     )
     

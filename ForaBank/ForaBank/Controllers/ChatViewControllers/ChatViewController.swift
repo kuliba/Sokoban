@@ -78,7 +78,7 @@ class ChatViewController: UIViewController, MFMailComposeViewControllerDelegate 
         stackView.distribution  = UIStackView.Distribution.fillEqually
         stackView.alignment = UIStackView.Alignment.center
         stackView.spacing = 16
-        phoneButton = createButton(title: "8 (800) 100 9889", image: "", tintColor: "000000") //phone-outgoing
+        phoneButton = createButton(title: "8 (800) 100 9889", image: "", tintColor: "000000")
         emailButton = createButton(title: "Отправить e-mail", image: "", tintColor: "000000") //mailForChat
         stackView.addArrangedSubview(phoneButton)
         stackView.addArrangedSubview(emailButton)
