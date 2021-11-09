@@ -87,7 +87,9 @@ extension MainViewController: UICollectionViewDelegate {
 
 extension MainViewController: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-        PresentationController(presentedViewController: presented, presenting: presenting)
+        let presenter = PresentationController(presentedViewController: presented, presenting: presenting)
+        presenter.height = 490
+        return presenter
     }
 }
 

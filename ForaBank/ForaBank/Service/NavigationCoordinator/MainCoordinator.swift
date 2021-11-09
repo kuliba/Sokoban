@@ -20,8 +20,6 @@ class MainCoordinator: Coordinator {
     }
     
     override func start() {
-        
-//        goTabBar()
         let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
         if let userIsRegister = userIsRegister {
             if userIsRegister {
@@ -75,7 +73,6 @@ class BaseCoordinator: Coordinator {
     
     override init(router: RouterType) {
         super.init(router: router)
-//        viewController.view.backgroundColor = .brown
     }
     
     override func toPresentable() -> UIViewController {

@@ -123,9 +123,12 @@ class SettingsViewController: UIViewController {
         print(#function)
         
         NetworkManager<LogoutDecodableModel>.addRequest(.logout, [:], [:]) { _,_  in
-            print("Logout :", "Вышли из приложения")
+//            print("Logout :", "Вышли из приложения")
             DispatchQueue.main.async {
-                UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
+                self.cleanAllData()
+                
+                
+                
                 let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
                 navVC.modalPresentationStyle = .fullScreen
                 self.present(navVC, animated: true, completion: nil)
@@ -143,6 +146,10 @@ class SettingsViewController: UIViewController {
         
     }
     
+    private func cleanAllData() {
+        UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
+        
+    }
     
     func getFastPaymentContractList(_ completion: @escaping (_ model: [FastPaymentContractFindListDatum]? ,_ error: String?) -> Void) {
         NetworkManager<FastPaymentContractFindListDecodableModel>.addRequest(.fastPaymentContractFindList, [:], [:]) { model, error in

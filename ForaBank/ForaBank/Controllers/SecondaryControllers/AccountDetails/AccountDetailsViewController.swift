@@ -7,22 +7,13 @@
 
 import UIKit
 
-class AccountDetailsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class AccountDetailsViewController: UIViewController {
 
     let cellReuse = "PayTableViewCell"
     
     var tableView = UITableView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
     
-    let product: GetProductListDatum
-    
-    init(product: GetProductListDatum) {
-        self.product = product
-        super.init()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    var product: GetProductListDatum?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,42 +62,6 @@ class AccountDetailsViewController: UIViewController, UITableViewDelegate, UITab
 //        dismiss(animated: true, completion: nil)
 //    }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellReuse, for: indexPath) as? PayTableViewCell else { return UITableViewCell() }
-        switch indexPath.row {
-        case 0:
-            cell.titleLabel.text = "Реквизиты счета карты"
-            cell.imageButton.image = UIImage(named: "sbpButton2")
-        case 1:
-            cell.titleLabel.text = "Выписка по счету"
-            cell.imageButton.image = UIImage(named: "myAccountButton")
-        default:
-            cell.titleLabel.text = "defaul"
-            cell.imageButton.image = UIImage(named: "otherAccountButton")
-        }
-        cell.selectionStyle = .none
-        return cell
-    }
-    
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch indexPath.row {
-        case 0:
-            presentRequisitsVc(product: product)
-            
-        case 1:
-            let popView = CustomPopUpWithRateView()
-            popView.modalPresentationStyle = .custom
-            popView.transitioningDelegate = self
-            self.present(popView, animated: true, completion: nil)
-        default:
-            self.dismiss(animated: true, completion: nil)
-        }
-    }
     
     func getFastPaymentContractList(_ completion: @escaping (_ model: [FastPaymentContractFindListDatum]? ,_ error: String?) -> Void) {
         NetworkManager<FastPaymentContractFindListDecodableModel>.addRequest(.fastPaymentContractFindList, [:], [:]) { model, error in
@@ -126,12 +81,12 @@ class AccountDetailsViewController: UIViewController, UITableViewDelegate, UITab
         }
     }
     
-    func presentRequisitsVc(product: GetProductListDatum){
+    func presentRequisitsVc(product: GetProductListDatum?){
         showActivity()
-        var body = ["cardId": product.cardID] as [String : AnyObject]
+        var body = ["cardId": product?.cardID] as [String : AnyObject]
         
-        if product.productType == "ACCOUNT" {
-            body = ["accountId": product.id] as [String : AnyObject]
+        if product?.productType == "ACCOUNT" {
+            body = ["accountId": product?.id] as [String : AnyObject]
         }
         NetworkManager<GetProductDetailsDecodableModel>.addRequest(.getProductDetails, [:], body) { model, error in
             self.dismissActivity()
@@ -145,7 +100,7 @@ class AccountDetailsViewController: UIViewController, UITableViewDelegate, UITab
                     let navController = UINavigationController(rootViewController: viewController)
                     var mockItem = MockItems.returnsRequisits()
                     mockItem[0].description = model.data?.payeeName
-                    mockItem[1].description = product.accountNumber
+                    mockItem[1].description = product?.accountNumber
                     mockItem[2].description = model.data?.bic
                     mockItem[3].description = model.data?.corrAccount
                     mockItem[4].description = model.data?.inn
@@ -174,42 +129,56 @@ class AccountDetailsViewController: UIViewController, UITableViewDelegate, UITab
     
 }
 
+extension AccountDetailsViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 2
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellReuse, for: indexPath) as? PayTableViewCell else { return UITableViewCell() }
+        switch indexPath.row {
+        case 0:
+            cell.titleLabel.text = "Реквизиты счета карты"
+            cell.imageButton.image = UIImage(named: "sbpButton2")
+        case 1:
+            cell.titleLabel.text = "Выписка по счету"
+            cell.imageButton.image = UIImage(named: "myAccountButton")
+        default:
+            cell.titleLabel.text = "defaul"
+            cell.imageButton.image = UIImage(named: "otherAccountButton")
+        }
+        cell.selectionStyle = .none
+        return cell
+    }
+    
+}
+
+extension AccountDetailsViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch indexPath.row {
+        case 0:
+            presentRequisitsVc(product: product)
+            
+//        case 1:
+//            let popView = CustomPopUpWithRateView()
+//            popView.modalPresentationStyle = .custom
+//            popView.transitioningDelegate = self
+//            self.present(popView, animated: true, completion: nil)
+        default:
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
+}
+
+    
 extension AccountDetailsViewController: UIViewControllerTransitioningDelegate {
     
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-        PresentationController(presentedViewController: presented, presenting: presenting)
+        let presenter = PresentationController(presentedViewController: presented, presenting: presenting)
+        presenter.height = 490
+        return presenter
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-class ClosureSleeve {
-    let closure: () -> ()
-
-    init(attachTo: AnyObject, closure: @escaping () -> ()) {
-        self.closure = closure
-        objc_setAssociatedObject(attachTo, "[\(arc4random())]", self, .OBJC_ASSOCIATION_RETAIN)
-    }
-
-    @objc func invoke() {
-        closure()
-    }
-}
-
-extension UIControl {
-    func addAction(for controlEvents: UIControl.Event, action: @escaping () -> ()) {
-        let sleeve = ClosureSleeve(attachTo: self, closure: action)
-        addTarget(sleeve, action: #selector(ClosureSleeve.invoke), for: controlEvents)
-    }
-}

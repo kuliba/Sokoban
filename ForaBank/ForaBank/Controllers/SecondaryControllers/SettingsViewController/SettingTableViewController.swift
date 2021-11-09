@@ -7,8 +7,15 @@
 
 import UIKit
 
+protocol SettingTableViewControllerDelegate: AnyObject {
+    func goLoginCardEntry()
+}
+
+
 class SettingTableViewController: UITableViewController {
 
+    var delegate: SettingTableViewControllerDelegate?
+    
     let kHeaderViewHeight: CGFloat = 140
     
     @IBOutlet weak var nameLabel: UILabel!
@@ -147,13 +154,18 @@ class SettingTableViewController: UITableViewController {
         showAlertWithCancel(with: "Выход", and: "Вы действительно хотите выйте из учетной записи?") {
             NetworkManager<LogoutDecodableModel>.addRequest(.logout, [:], [:]) { _,_  in
                 DispatchQueue.main.async {
-                    UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
+                    self.cleanAllData()
+//                    self.delegate?.goLoginCardEntry()
                     let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
                     navVC.modalPresentationStyle = .fullScreen
                     self.present(navVC, animated: true, completion: nil)
                 }
             }
         }
+    }
+    
+    private func cleanAllData() {
+        UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
     }
     
     func getFastPaymentContractList(_ completion: @escaping (_ model: [FastPaymentContractFindListDatum]? ,_ error: String?) -> Void) {

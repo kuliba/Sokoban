@@ -332,6 +332,8 @@
 		EDA0DCD32739773A0013F47E /* MobilePayCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA0DCCB2739773A0013F47E /* MobilePayCoordinator.swift */; };
 		EDA0DCD42739773A0013F47E /* CountryPayCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA0DCCC2739773A0013F47E /* CountryPayCoordinator.swift */; };
 		EDA0DCD52739773A0013F47E /* MainTabBarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA0DCCD2739773A0013F47E /* MainTabBarCoordinator.swift */; };
+		EDA0DCD72739BAB00013F47E /* UIControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA0DCD62739BAB00013F47E /* UIControl.swift */; };
+		EDA0DCD92739C3290013F47E /* SettingViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA0DCD82739C3290013F47E /* SettingViewCoordinator.swift */; };
 		EDA5637726F375980093F0C8 /* SettingTableViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDA5637626F375980093F0C8 /* SettingTableViewController.storyboard */; };
 		EDA5637A26F386AD0093F0C8 /* SettingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA5637926F386AD0093F0C8 /* SettingTableViewController.swift */; };
 		EDA563AE26F881AF0093F0C8 /* BanksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA563AD26F881AF0093F0C8 /* BanksView.swift */; };
@@ -767,6 +769,8 @@
 		EDA0DCCB2739773A0013F47E /* MobilePayCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MobilePayCoordinator.swift; sourceTree = "<group>"; };
 		EDA0DCCC2739773A0013F47E /* CountryPayCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryPayCoordinator.swift; sourceTree = "<group>"; };
 		EDA0DCCD2739773A0013F47E /* MainTabBarCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTabBarCoordinator.swift; sourceTree = "<group>"; };
+		EDA0DCD62739BAB00013F47E /* UIControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIControl.swift; sourceTree = "<group>"; };
+		EDA0DCD82739C3290013F47E /* SettingViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewCoordinator.swift; sourceTree = "<group>"; };
 		EDA5637626F375980093F0C8 /* SettingTableViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SettingTableViewController.storyboard; sourceTree = "<group>"; };
 		EDA5637926F386AD0093F0C8 /* SettingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTableViewController.swift; sourceTree = "<group>"; };
 		EDA563AD26F881AF0093F0C8 /* BanksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BanksView.swift; sourceTree = "<group>"; };
@@ -2250,6 +2254,7 @@
 				EDA0DCC62739773A0013F47E /* LoginCoordinators */,
 				EDA0DCCB2739773A0013F47E /* MobilePayCoordinator.swift */,
 				EDA0DCCC2739773A0013F47E /* CountryPayCoordinator.swift */,
+				EDA0DCD82739C3290013F47E /* SettingViewCoordinator.swift */,
 				EDA0DCCD2739773A0013F47E /* MainTabBarCoordinator.swift */,
 			);
 			path = Coordinators;
@@ -2448,6 +2453,7 @@
 				ED302A3026D3E56600161243 /* UIImage.swift */,
 				ED75CDFA26E27F150074F5D5 /* UIApplication.swift */,
 				6863EF6A2716D095008FD522 /* MTSlideToOpenControl.swift */,
+				EDA0DCD62739BAB00013F47E /* UIControl.swift */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";
@@ -3264,6 +3270,7 @@
 				68D06F3826CCDDCA00F9BE4C /* NavigationBarUIView.swift in Sources */,
 				0B37F982267A1814007728FC /* FastPaymentBanksListDecodableModel.swift in Sources */,
 				ED75CDFD26E2AA5B0074F5D5 /* RequestMeToMeModel.swift in Sources */,
+				EDA0DCD72739BAB00013F47E /* UIControl.swift in Sources */,
 				EDB1654B26676F20007E6030 /* UIButton.swift in Sources */,
 				0B37F9782678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift in Sources */,
 				EDB1453C2666AEB90028EF5A /* AppDelegate UI extension.swift in Sources */,
@@ -3275,6 +3282,7 @@
 				0B7A18B226836A400007CC75 /* NetworkPDFManager.swift in Sources */,
 				EDA0DCD52739773A0013F47E /* MainTabBarCoordinator.swift in Sources */,
 				0B7A18CE2689C4ED0007CC75 /* AddHeaderImageViewController.swift in Sources */,
+				EDA0DCD92739C3290013F47E /* SettingViewCoordinator.swift in Sources */,
 				EDB1655826679C74007E6030 /* SmsCodeView.swift in Sources */,
 				0BB24AA126EFEE4700DDA4F6 /* GetProductListByFilter.swift in Sources */,
 				EDB14381265FDA410028EF5A /* AppDelegate.swift in Sources */,
