@@ -315,15 +315,8 @@ class FaceTouchIdViewController: UIViewController {
 //                            } catch {
 //                                print(error.localizedDescription)
 //                            }
-                            print("DEBUG: You are LOGGIN!!!")
                             self.dismissActivity()
                             self.delegate?.goToTabBar()
-//                            DispatchQueue.main.async { [weak self] in
-//                                let vc = MainTabBarViewController()
-//                                vc.modalPresentationStyle = .fullScreen
-//                                self?.present(vc, animated: true)
-//                            }
-                        
                         }
                     }
                 } else {
