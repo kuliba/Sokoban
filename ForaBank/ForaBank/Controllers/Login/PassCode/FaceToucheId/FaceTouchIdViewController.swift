@@ -32,6 +32,13 @@ class FaceTouchIdViewController: UIViewController {
     }()
     lazy var useButton = UIButton(title: "Использовать \(sensor ?? "")")
     
+    enum BiometricType: String {
+        case pin
+        case touchId
+        case faceId
+    }
+    
+    // MARK: - View LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         type = biometricType()
@@ -42,7 +49,6 @@ class FaceTouchIdViewController: UIViewController {
     
     func biometricType() -> BiometricType {
         let _ = context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: nil)
-        
         switch context.biometryType {
         case .none:
             return .pin
@@ -59,27 +65,8 @@ class FaceTouchIdViewController: UIViewController {
         }
     }
     
-    enum BiometricType: String {
-        case pin
-        case touchId
-        case faceId
-    }
-    
-    func encript(string: String?) -> String {
-        do {
-            guard let key = KeyFromServer.secretKey else { return "" }
-            let aes = try AES(keyString: key)
-            let stringToEncrypt: String = "\(string ?? "")"
-            let encryptedData: Data = try aes.encrypt(stringToEncrypt)
-            let _: String = try aes.decrypt(encryptedData)
-            return encryptedData.base64EncodedString()
-        } catch {
-            return ""
-        }
-    }
-    
     func setupUI() {
-        
+        view.addSubview(subTitleLabel)
         subTitleLabel.numberOfLines = 2
         subTitleLabel.textAlignment = .center
         subTitleLabel.text = "Вместо пароля вы можете использовать \(sensor ?? "") для входа"
@@ -89,7 +76,7 @@ class FaceTouchIdViewController: UIViewController {
         
         view.backgroundColor = .white
         view.addSubview(circleView)
-        view.addSubview(subTitleLabel)
+        
         circleView.addSubview(image)
         view.addSubview(useButton)
         view.addSubview(skipButton)
@@ -123,7 +110,21 @@ class FaceTouchIdViewController: UIViewController {
                            paddingTop: -100)
         skipButton.anchor(left: view.leftAnchor, right: view.rightAnchor,
                           paddingLeft: 20, paddingRight: 20, height: 44)
-        
+    }
+    
+    // MARK: - Helpers
+    
+    func encript(string: String?) -> String {
+        do {
+            guard let key = KeyFromServer.secretKey else { return "" }
+            let aes = try AES(keyString: key)
+            let stringToEncrypt: String = "\(string ?? "")"
+            let encryptedData: Data = try aes.encrypt(stringToEncrypt)
+            let _: String = try aes.decrypt(encryptedData)
+            return encryptedData.base64EncodedString()
+        } catch {
+            return ""
+        }
     }
     
     // MARK: - API
