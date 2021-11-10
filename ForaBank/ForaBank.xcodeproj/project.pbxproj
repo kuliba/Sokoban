@@ -335,6 +335,7 @@
 		EDA0DCC22739523F0013F47E /* AccountDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA0DCC12739523F0013F47E /* AccountDetailsViewController.swift */; };
 		EDA0DCCE2739773A0013F47E /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA0DCC42739773A0013F47E /* MainCoordinator.swift */; };
 		EDA0DCD72739BAB00013F47E /* UIControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA0DCD62739BAB00013F47E /* UIControl.swift */; };
+		EDA0DCDB273A70FD0013F47E /* SettingViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA0DCDA273A70FD0013F47E /* SettingViewCoordinator.swift */; };
 		EDA5637726F375980093F0C8 /* SettingTableViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDA5637626F375980093F0C8 /* SettingTableViewController.storyboard */; };
 		EDA5637A26F386AD0093F0C8 /* SettingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA5637926F386AD0093F0C8 /* SettingTableViewController.swift */; };
 		EDA563AE26F881AF0093F0C8 /* BanksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA563AD26F881AF0093F0C8 /* BanksView.swift */; };
@@ -773,6 +774,7 @@
 		EDA0DCC12739523F0013F47E /* AccountDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailsViewController.swift; sourceTree = "<group>"; };
 		EDA0DCC42739773A0013F47E /* MainCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
 		EDA0DCD62739BAB00013F47E /* UIControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIControl.swift; sourceTree = "<group>"; };
+		EDA0DCDA273A70FD0013F47E /* SettingViewCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewCoordinator.swift; sourceTree = "<group>"; };
 		EDA5637626F375980093F0C8 /* SettingTableViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SettingTableViewController.storyboard; sourceTree = "<group>"; };
 		EDA5637926F386AD0093F0C8 /* SettingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTableViewController.swift; sourceTree = "<group>"; };
 		EDA563AD26F881AF0093F0C8 /* BanksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BanksView.swift; sourceTree = "<group>"; };
@@ -1424,6 +1426,7 @@
 				68D099D3273A78940017D777 /* ProductCoordinators */,
 				6833E0C3273920CD004C070F /* LoginCoordinators */,
 				6833E0C8273920CD004C070F /* MobilePayCoordinator.swift */,
+				EDA0DCDA273A70FD0013F47E /* SettingViewCoordinator.swift */,
 				6833E0C9273920CD004C070F /* CountryPayCoordinator.swift */,
 				6833E0CA273920CD004C070F /* MainTabBarCoordinator.swift */,
 				68D099D1273A73C90017D777 /* SettingViewCoordinator.swift */,
@@ -3313,6 +3316,7 @@
 				0BA251EF26C26AE700AD087A /* AntiFraudDecodableModel.swift in Sources */,
 				0B22AEB026CEB80100B11E7F /* Keyboard.swift in Sources */,
 				68D099D2273A73CA0017D777 /* SettingViewCoordinator.swift in Sources */,
+				EDA0DCDB273A70FD0013F47E /* SettingViewCoordinator.swift in Sources */,
 				0BEC893B2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift in Sources */,
 				ED8AB46226C3EA2E006F0D03 /* MeToMeSettingViewController.swift in Sources */,
 				6822EFD626B935FF00125EEC /* BaseTableViewCell.swift in Sources */,

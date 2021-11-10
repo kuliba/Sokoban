@@ -155,10 +155,7 @@ class SettingTableViewController: UITableViewController {
             NetworkManager<LogoutDecodableModel>.addRequest(.logout, [:], [:]) { _,_  in
                 DispatchQueue.main.async {
                     self.cleanAllData()
-//                    self.delegate?.goLoginCardEntry()
-                    let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
-                    navVC.modalPresentationStyle = .fullScreen
-                    self.present(navVC, animated: true, completion: nil)
+                    self.delegate?.goLoginCardEntry()
                 }
             }
         }
@@ -166,6 +163,8 @@ class SettingTableViewController: UITableViewController {
     
     private func cleanAllData() {
         UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
+        //TODO: - Написать очистку данных после выхода из приложения
+        
     }
     
     func getFastPaymentContractList(_ completion: @escaping (_ model: [FastPaymentContractFindListDatum]? ,_ error: String?) -> Void) {

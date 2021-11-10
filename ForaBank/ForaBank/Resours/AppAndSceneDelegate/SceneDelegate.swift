@@ -29,7 +29,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         window?.rootViewController = appCoordinator.toPresentable()
         window?.backgroundColor = .white
-
         window?.makeKeyAndVisible()
         
         appCoordinator.start()

@@ -37,7 +37,7 @@ class PhoneConfirmViewController: UIViewController {
     var numberTransctionField = ForaInput(
         viewModel: ForaInputModel(
             title: "Номер перевода",
-            image: #imageLiteral(resourceName: "hash"),
+            image: UIImage(named: "hash")!,
             isEditable: false))
     
     var summTransctionField = ForaInput(

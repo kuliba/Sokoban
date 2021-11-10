@@ -237,13 +237,13 @@ class ContactConfurmViewController: UIViewController {
     var countryField = ForaInput(
         viewModel: ForaInputModel(
             title: "Страна",
-            image: #imageLiteral(resourceName: "map-pin"),
+            image: UIImage(named: "map-pin")!,
             isEditable: false))
     
     var numberTransctionField = ForaInput(
         viewModel: ForaInputModel(
             title: "Номер перевода",
-            image: #imageLiteral(resourceName: "hash"),
+            image: UIImage(named: "hash")!,
             isEditable: false))
     
     var cardFromField = CardChooseView()
