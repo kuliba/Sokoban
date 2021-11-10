@@ -63,7 +63,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             realm?.delete(model!)
             realm?.add(updatingTimeObject)
             try realm?.commitWrite()
-            print("!!!",realm?.configuration.fileURL?.absoluteString ?? "")
+            print("REALM File !!!",realm?.configuration.fileURL?.absoluteString ?? "")
         } catch {
             print(error.localizedDescription)
         }
