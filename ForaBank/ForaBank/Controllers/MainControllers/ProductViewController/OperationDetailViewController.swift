@@ -144,6 +144,8 @@ class OperationDetailViewController: UIViewController{
         }
         
         switch categoryGroupLabel.text {
+        case "Перевод СБП":
+            transferImage.image = UIImage(named: "sbpindetails")
         case "Между своими":
             mainLabel.isHidden = false
             companyImage.isHidden = true
@@ -237,6 +239,7 @@ class OperationDetailViewController: UIViewController{
         returnButton.translatesAutoresizingMaskIntoConstraints = false
         returnButton.sizeToFit()
         
+
     }
     
     @objc func toPrintForm(){
@@ -335,7 +338,7 @@ class OperationDetailViewController: UIViewController{
     func addButtons(){
         let buttonsStack = UIStackView()
           buttonsStack.axis = .horizontal
-          buttonsStack.spacing = 30
+          buttonsStack.spacing = 40
         buttonsStack.distribution = .fillEqually
 //        buttonsStack.backgroundColor = .cyan
     
@@ -350,8 +353,6 @@ class OperationDetailViewController: UIViewController{
 //            stackView.backgroundColor = .yellow
 //             stackView.setDimensions(height: 92, width: 112)
              let a = UIButton()
-//                a.layer.masksToBounds = true
-//             a.setDimensions(height: 56, width: 56)
                 a.layer.cornerRadius = 28
              a.setTitleColor(.black, for: .normal)
              a.backgroundColor = UIColor(hexString: "F6F6F7")
@@ -364,49 +365,50 @@ class OperationDetailViewController: UIViewController{
              let b = UIButton()
                 b.setTitle(str.name, for: [])
 //            b.setDimensions(height: 24, width: 112)
+            
                 b.contentHorizontalAlignment = .center
              b.setTitleColor(.black, for: .normal)
              b.setTitleColor(.gray, for: .highlighted)
-             b.backgroundColor = .clear
-                b.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+//             b.backgroundColor = .clear
+            
+                b.clipsToBounds = true
+            
+                b.titleLabel?.font = UIFont.systemFont(ofSize: 11)
+            
 //            b.setDimensions(height: 24, width: 150)
 
             
             
              stackView.addArrangedSubview(a)
              stackView.addArrangedSubview(b)
-             
+            b.centerX(inView: stackView)
             
             
              buttonsStack.addArrangedSubview(stackView)
-            a.anchor(width: 56, height: 56)
-            
-//            b.backgroundColor = .red
+                a.anchor(width: 56, height: 56)
             
 
-            NSLayoutConstraint.activate([
-                b.widthAnchor.constraint(equalToConstant: 120)
-            ])
-//            b.setDimensions(height: 24, width: 150)
+            
 
 
-        if str.name == "Детали"{
-            a.addTarget(self, action: #selector(openDetailVC), for: .touchUpInside)
-            b.addTarget(self, action: #selector(openDetailVC), for: .touchUpInside)
-        } else if str.name == "+ Шаблон" {
-            a.isUserInteractionEnabled = false
-            b.isUserInteractionEnabled = false
-            a.alpha = 0.3
-            b.alpha = 0.3
-        } else {
-               a.addTarget(self, action: #selector(toPrintForm), for: .touchUpInside)
-               b.addTarget(self, action: #selector(toPrintForm), for: .touchUpInside)
-        }
+                if str.name == "Детали"{
+                    a.addTarget(self, action: #selector(openDetailVC), for: .touchUpInside)
+                    b.addTarget(self, action: #selector(openDetailVC), for: .touchUpInside)
+                } else if str.name == "+ Шаблон" {
+                    a.isUserInteractionEnabled = false
+                    b.isUserInteractionEnabled = false
+                    a.alpha = 0.3
+                    b.alpha = 0.3
+                } else {
+                       a.addTarget(self, action: #selector(toPrintForm), for: .touchUpInside)
+                       b.addTarget(self, action: #selector(toPrintForm), for: .touchUpInside)
+                }
             
 
          }
+        
         stackView.addArrangedSubview(buttonsStack)
-//        buttonsStack.anchor(left: view.leftAnchor, right: view.rightAnchor, paddingLeft: 20, paddingRight: 20)
+        
 
     }
     

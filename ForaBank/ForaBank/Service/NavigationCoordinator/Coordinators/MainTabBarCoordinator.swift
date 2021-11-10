@@ -23,19 +23,20 @@ class MainTabBarCoordinator: Coordinator {
 }
 
 extension MainTabBarCoordinator: MainViewControllerDelegate {
+   
+    func goProductViewController(productIndex: Int) {
+        let productCoordinator = ProductCoordinator(router: router)
+        productCoordinator.productViewController.indexItem = productIndex
+        addChild(productCoordinator)
+        productCoordinator.start()
+        router.present(productCoordinator, animated: true)
+    }
     
     func goSettingViewController() {
         let settingCoordinator = SettingViewCoordinator(router: router)
         addChild(settingCoordinator)
         settingCoordinator.start()
         router.present(settingCoordinator, animated: true)
-    }
-    
-    func goProductViewController() {
-        let productCoordinator = ProductCoordinator(router: router)
-        addChild(productCoordinator)
-        productCoordinator.start()
-        router.present(productCoordinator, animated: true)
     }
 }
 

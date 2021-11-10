@@ -48,7 +48,7 @@ extension MainViewController: UICollectionViewDelegate {
 //                navVC.modalPresentationStyle = .fullScreen
 //                present(navVC, animated: true)
                 
-                delegate?.goProductViewController()
+                delegate?.goProductViewController(productIndex: indexPath.item)
             }
         case .offer:
             guard let url = URL(string: offer[indexPath.row].controllerName ) else { return  }
