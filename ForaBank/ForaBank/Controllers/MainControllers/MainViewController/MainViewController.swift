@@ -10,11 +10,12 @@ import RealmSwift
 
 protocol MainViewControllerDelegate: AnyObject {
     func goSettingViewController()
+    func goProductViewController()
 }
 
 class MainViewController: UIViewController {
     
-    var delegate: MainViewControllerDelegate?
+    weak var delegate: MainViewControllerDelegate?
     var card: UserAllCardsModel?
     var sectionIndexCounter = 0
     

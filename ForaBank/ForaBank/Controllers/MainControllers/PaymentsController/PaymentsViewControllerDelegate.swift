@@ -29,12 +29,6 @@ extension PaymentsViewController: UICollectionViewDelegate {
             } else if let lastMobilePayment = payments[indexPath.row].lastMobilePayment {
 
                 let viewController = (payments[indexPath.row].controllerName.getViewController() as? MobilePayViewController)!
-//                viewController?.addCloseButton()
-//                viewController?.phoneField.text =  "+7\(payments[indexPath.row].lastMobilePayment?.additionalList?[1].fieldValue ?? "")"
-//                viewController?.selectNumber = "+7\(payments[indexPath.row].lastMobilePayment?.additionalList?[1].fieldValue ?? "")"
-//                let navVC = UINavigationController(rootViewController: viewController ?? UIViewController())
-//                navVC.modalPresentationStyle = .fullScreen
-//                present(navVC, animated: true)
                 delegate?.toMobilePay(viewController)
 
             } else {

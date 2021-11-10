@@ -29,6 +29,13 @@ extension MainTabBarCoordinator: MainViewControllerDelegate {
         settingCoordinator.start()
         router.present(settingCoordinator, animated: true)
     }
+    
+    func goProductViewController() {
+        let productCoordinator = ProductCoordinator(router: router)
+        addChild(productCoordinator)
+        productCoordinator.start()
+        router.present(productCoordinator, animated: true)
+    }
 }
 
 extension MainTabBarCoordinator: PaymentsViewControllerDelegate {
@@ -46,5 +53,6 @@ extension MainTabBarCoordinator: PaymentsViewControllerDelegate {
         сountryPay.start()
         router.present(сountryPay, animated: true)
     }
+    
 }
 
