@@ -394,6 +394,10 @@ class OperationDetailViewController: UIViewController{
                 if str.name == "Детали"{
                     a.addTarget(self, action: #selector(openDetailVC), for: .touchUpInside)
                     b.addTarget(self, action: #selector(openDetailVC), for: .touchUpInside)
+                    a.isUserInteractionEnabled = false
+                    b.isUserInteractionEnabled = false
+                    a.alpha = 0.3
+                    b.alpha = 0.3
                 } else if str.name == "+ Шаблон" {
                     a.isUserInteractionEnabled = false
                     b.isUserInteractionEnabled = false
