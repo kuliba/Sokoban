@@ -6,10 +6,14 @@
 //
 
 import UIKit
-
-
+import AVFoundation
 
 class PaymentsViewController: UIViewController {
+    
+    // QR data
+    var qrData = [String: String]()
+    var operators: GKHOperatorsModel? = nil
+    var alertController: UIAlertController?
     
     weak var delegate: PaymentsViewControllerDelegate?
     
@@ -45,9 +49,7 @@ class PaymentsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.isHidden = true
-
         view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
-        
         self.view.addSubview(searchContact)
         searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 48)
         searchContact.alpha = 0.5
@@ -61,7 +63,7 @@ class PaymentsViewController: UIViewController {
         loadLastPayments()
         loadLastMobilePayments()
         loadAllLastMobilePayments()
-//        loadLastGKHPayments()
+        //        loadLastGKHPayments()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -74,23 +76,52 @@ class PaymentsViewController: UIViewController {
         transfers = MockItems.returnTransfers()
         pay = MockItems.returnPay()
     }
+
+// MARK: QR
+    @objc func openSetting() {
+        ///  Отображение экрана QR
+        self.checkCameraAccess(isAllowed: {
+                if $0 {
+                    DispatchQueue.main.async {
+                        self.delegate?.goToQRController()
+                    }
+                } else {
+                    guard self.alertController == nil else {
+                        return
+                    }
+                    self.alertController = UIAlertController(title: "Внимание", message: "Для сканирования QR кода, необходим доступ к камере", preferredStyle: .alert)
+                    guard let alert = self.alertController else {
+                        return
+                    }
+                    alert.addAction(UIAlertAction(title: "Понятно", style: .default, handler: { (action) in
+                        self.alertController = nil
+                    }))
+                    DispatchQueue.main.async {
+                        self.present(alert, animated: true, completion: nil)
+                    }
+                }
+            })
+        
+    }
     
     private func setupSearchBar() {
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(openSetting))
+        searchContact.secondButton.addGestureRecognizer(gesture)
         
-//        navigationController?.navigationBar.barTintColor = .white
-//        navigationController?.navigationBar.backgroundColor = .white
-//        navigationController?.navigationBar.shadowImage = UIImage()
-//        let searchController = UISearchController(searchResultsController: nil)
-//        navigationItem.searchController = searchController
-//        navigationItem.hidesSearchBarWhenScrolling = false
-//        searchController.hidesNavigationBarDuringPresentation = true
-//        searchController.obscuresBackgroundDuringPresentation = false
-//        searchController.automaticallyShowsCancelButton = false
-//        searchController.searchBar.delegate = self
-//        searchController.searchBar.placeholder = "Название категории, ИНН"
-//        searchController.searchBar.showsBookmarkButton = true
-//        searchController.searchBar.setImage(UIImage(named: "scanCard")?.withTintColor(.black), for: .bookmark, state: .normal)
-//        searchController.searchBar.backgroundColor = .white
+        //        navigationController?.navigationBar.barTintColor = .white
+        //        navigationController?.navigationBar.backgroundColor = .white
+        //        navigationController?.navigationBar.shadowImage = UIImage()
+        //        let searchController = UISearchController(searchResultsController: nil)
+        //        navigationItem.searchController = searchController
+        //        navigationItem.hidesSearchBarWhenScrolling = false
+        //        searchController.hidesNavigationBarDuringPresentation = true
+        //        searchController.obscuresBackgroundDuringPresentation = false
+        //        searchController.automaticallyShowsCancelButton = false
+        //        searchController.searchBar.delegate = self
+        //        searchController.searchBar.placeholder = "Название категории, ИНН"
+        //        searchController.searchBar.showsBookmarkButton = true
+        //        searchController.searchBar.setImage(UIImage(named: "scanCard")?.withTintColor(.black), for: .bookmark, state: .normal)
+        //        searchController.searchBar.backgroundColor = .white
         
     }
     
@@ -125,12 +156,12 @@ class PaymentsViewController: UIViewController {
         
     }
     
-
+    
 }
 
 //MARK: - API
 extension PaymentsViewController {
-        
+    
     func loadLastPayments() {
         NetworkManager<GetPaymentCountriesDecodableModel>.addRequest(.getPaymentCountries, [:], [:]) { model, error in
             if error != nil {
@@ -180,7 +211,7 @@ extension PaymentsViewController {
                 }
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-
+                
             }
         }
     }
@@ -209,7 +240,7 @@ extension PaymentsViewController {
                 }
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-
+                
             }
         }
     }
@@ -217,7 +248,7 @@ extension PaymentsViewController {
     func loadAllLastMobilePayments() {
         
         let param = ["isPhonePayments": "true", "isCountriesPayments": "true", "isServicePayments": "true", "isMobilePayments": "true"]
-
+        
         NetworkManager<GetAllLatestPaymentsDecodableModel>.addRequest(.getAllLatestPayments, param, [:]) { model, error in
             if error != nil {
                 print("DEBUG: Error: ", error ?? "")
@@ -234,7 +265,7 @@ extension PaymentsViewController {
                 }
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-
+                
             }
         }
     }
@@ -252,9 +283,30 @@ extension PaymentsViewController {
                 completion(model.data,nil)
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-
+                
                 completion(nil, model.errorMessage)
             }
+        }
+    }
+    
+    
+    
+    /// Проверка доступа к камере
+    func checkCameraAccess(isAllowed: @escaping (Bool) -> Void) {
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .denied:
+            // Доступ к камере не был дан
+            isAllowed(false)
+        case .restricted:
+            isAllowed(false)
+        case .authorized:
+            // Есть разрешение на доступ к камере
+            isAllowed(true)
+        case .notDetermined:
+            // Первый запрос на доступ к камере
+            AVCaptureDevice.requestAccess(for: .video) { isAllowed($0) }
+        @unknown default:
+            print()
         }
     }
 }

@@ -204,7 +204,6 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let viewController = ProductViewController()
-//            viewController.addCloseButton()
         viewController.product = products[indexPath.item]
         viewController.products = products
         viewController.indexItem = indexPath.item
@@ -301,7 +300,6 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
             button.setImage(UIImage(systemName: "arrow"), for: .normal)
                         
             headerView.backgroundColor = .white
-//            button.anchor()
             headerView.addSubview(button)
             button.anchor(left: label.leftAnchor, paddingLeft: 10, width: 24, height: 24)
             switch sectionData[section].name {
@@ -330,12 +328,6 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
             default:
                 print("")
             }
-//            if section != 0{
-//                headerView.alpha = 0.2
-//            }
-         
-//            label.centerY(inView: headerView)
-//            headerView.anchor(paddingTop: 10)
             return headerView
         
     }
@@ -362,7 +354,6 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
-    
     private func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?) ->() ) {
         
         let param = ["isCard": "true", "isAccount": "true", "isDeposit": "false", "isLoan": "false"]
@@ -374,19 +365,12 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
             guard let model = model else { return }
             if model.statusCode == 0 {
                 guard let cardList = model.data else { return }
-                
-
                 self.products = model.data ?? []
-                
-                
                 completion(cardList, nil)
             } else {
                 guard let error = model.errorMessage else { return }
                 completion(nil, error)
             }
         }
-
-        
-
 }
 }

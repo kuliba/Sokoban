@@ -19,5 +19,6 @@ class NavigationBarUIView: UIView {
     @IBAction func bellButtonTapped(_ sender: Any) {
         bellTapped?()
     }
+
     
 }

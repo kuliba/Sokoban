@@ -14,6 +14,10 @@ import UIKit
 
 class GKHInputCell: UITableViewCell, UITextFieldDelegate {
     
+    var info = ""
+    
+    var showInfoView: ((String) -> ())? = nil
+    
     weak var tableViewDelegate: TableViewDelegate?
 
     static let reuseId = "GKHInputCell"
@@ -24,6 +28,7 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
     var body = [String: String]()
     
     
+    @IBOutlet weak var infoButon: UIButton!
     @IBOutlet weak var operatorsIcon: UIImageView!
     @IBOutlet weak var showFioButton: UIButton!
     @IBOutlet weak var placeholderLable: UILabel!
@@ -59,7 +64,7 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
 //    }
 
     func setupUI (_ index: Int, _ dataModel: Parameters, _ qrData: [String: String]) {
-        
+        infoButon.isHidden = true
         self.fieldid = String(index + 1)
         fieldname = dataModel.id ?? ""
         let q = GKHDataSorted.a(dataModel.title ?? "")
@@ -83,6 +88,11 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
             showFioButton.isHidden = false
         } else {
             showFioButton.isHidden = true
+        }
+        
+        if dataModel.subTitle != nil {
+            info = dataModel.subTitle ?? ""
+            infoButon.isHidden = false
         }
     }
     @IBAction func textField(_ sender: UITextField) {
@@ -109,9 +119,6 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
         let previousText:NSString = textField.text! as NSString
         let updatedText = previousText.replacingCharacters(in: range, with: string)
         print("updatedText > ", updatedText)
-
-       //the rest of your code
-
         return true
     }
     
@@ -122,6 +129,7 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
     @IBAction func showFIOButton(_ sender: UIButton) {
     }
     @IBAction func showInfo(_ sender: UIButton) {
+        showInfoView?(info)
     }
     
 }

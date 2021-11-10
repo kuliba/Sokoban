@@ -29,7 +29,6 @@ extension MainViewController: UICollectionViewDelegate {
                 }
             default:
                 let viewController = ProductViewController()
-    //            viewController.addCloseButton()
                 viewController.delegate = self
                 viewController.indexItem = indexPath.item
                 viewController.product = productList[indexPath.item]
@@ -45,9 +44,11 @@ extension MainViewController: UICollectionViewDelegate {
                 }
 //                viewController.products = productList
                 
-                let navVC = UINavigationController(rootViewController: viewController)
-                navVC.modalPresentationStyle = .fullScreen
-                present(navVC, animated: true)
+//                let navVC = UINavigationController(rootViewController: viewController)
+//                navVC.modalPresentationStyle = .fullScreen
+//                present(navVC, animated: true)
+                
+                delegate?.goProductViewController(productIndex: indexPath.item)
             }
         case .offer:
             guard let url = URL(string: offer[indexPath.row].controllerName ) else { return  }

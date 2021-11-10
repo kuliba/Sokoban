@@ -8,7 +8,7 @@
 import UIKit
 import RealmSwift
 
-class GKHInputViewController: UIViewController {
+class GKHInputViewController: BottomPopUpViewAdapter {
     
     var bodyValue = [String : String]()
     var bodyArray = [[String : String]]()
@@ -47,7 +47,7 @@ class GKHInputViewController: UIViewController {
         goButton.add_CornerRadius(5)
         puref = operatorData?.puref ?? ""
         tableView.register(UINib(nibName: "GKHInputCell", bundle: nil), forCellReuseIdentifier: GKHInputCell.reuseId)
-        tableView.register(GKHInputFooterView.self, forHeaderFooterViewReuseIdentifier: "sectionFooter")
+//        tableView.register(GKHInputFooterView.self, forHeaderFooterViewReuseIdentifier: "sectionFooter")
         
         // Изменения символа валюты
         bottomInputView.currencySymbol = "₽"

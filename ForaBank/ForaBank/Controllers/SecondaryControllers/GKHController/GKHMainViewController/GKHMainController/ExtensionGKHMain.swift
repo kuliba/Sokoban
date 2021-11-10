@@ -9,8 +9,6 @@ import UIKit
 
 extension GKHMainViewController {
     
-      
-      
     func setTitle(title:String, subtitle:String) -> UIView {
         let titleLabel = UILabel(frame: CGRect(x: 0, y: -2, width: 0, height: 0))
         
@@ -70,19 +68,13 @@ extension GKHMainViewController {
         
     }
     @objc func backAction(){
-        dismiss(animated: true, completion: nil)
-        navigationController?.dismiss(animated: true, completion: nil)
+        self.delegate?.goToBack()
     }
     
     @objc func onQR(){
         checkCameraAccess(isAllowed: {
             if $0 {
-                    DispatchQueue.main.async {
-                        self.navigationController?.isNavigationBarHidden = true
-                        self.performSegue(withIdentifier: "qr", sender: nil)
-                        
-                        
-                    }
+                self.delegate?.goToQRController()
             } else {
                 guard self.alertController == nil else {
                         print("There is already an alert presented")

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -161,6 +161,7 @@
             </constraints>
             <connections>
                 <outlet property="errorLable" destination="GBe-0Q-3aC" id="WOO-aT-M5i"/>
+                <outlet property="infoButon" destination="QwA-rP-lhX" id="BmX-Zp-nmF"/>
                 <outlet property="lineView" destination="TRd-ac-DCS" id="4BL-Bl-u5P"/>
                 <outlet property="operatorsIcon" destination="fX2-bl-W2e" id="cm1-Xe-S1L"/>
                 <outlet property="payTypeButton" destination="eNu-4h-rjI" id="rmv-om-fp3"/>

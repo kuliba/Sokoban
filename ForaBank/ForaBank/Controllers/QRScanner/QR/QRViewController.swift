@@ -15,10 +15,10 @@ protocol QRProtocol: NSObject {
     func setResultOfBusinessLogic (_ qr: [String: String], _ model: GKHOperatorsModel )
 }
 
-final class QRViewController: UIViewController, UIDocumentPickerDelegate {
-    
+final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate {
     
     weak var delegate: QRProtocol?
+    weak var qrCoordinatorDelegate: QRCoordinatorDelegate?
     
     var qrCodeLayer = AVCaptureVideoPreviewLayer()
     let qrCodesession = AVCaptureSession()
@@ -47,7 +47,7 @@ final class QRViewController: UIViewController, UIDocumentPickerDelegate {
         pdfFile.add_CornerRadius(30)
         zap.add_CornerRadius(30)
         info.add_CornerRadius(30)
-        
+        self.navigationController?.isNavigationBarHidden = true
         
         operatorsList = realm?.objects(GKHOperatorsModel.self)
         self.setupLayer()
@@ -56,22 +56,15 @@ final class QRViewController: UIViewController, UIDocumentPickerDelegate {
         self.backButton.setupButtonRadius()
     }
     
-    
-    final func returnKey() {
-        self.qrCodesession.stopRunning()
-        self.qrView.layer.sublayers?.removeLast()
-        if operators != nil {
-            self.navigationController?.popViewController(animated: true)
-            self.delegate?.setResultOfBusinessLogic(qrData, operators!)
-        }
-    }
-    
     public func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
         controller.dismiss(animated: true)
     }
     
     @IBAction func info(_ sender: UIButton) {
+        let infoView = QRScanerInfoView()
+        self.showAlert(infoView)
     }
+    
     @IBAction func zap(_ sender: UIButton) {
         let device = AVCaptureDevice.default(for: .video)
         if ((device?.hasTorch) != nil) {
@@ -88,7 +81,7 @@ final class QRViewController: UIViewController, UIDocumentPickerDelegate {
         
         var documentPickerController: UIDocumentPickerViewController!
         
-        documentPickerController = UIDocumentPickerViewController(documentTypes: ["com.adobe.pdf"], in: .import)
+        documentPickerController = UIDocumentPickerViewController(documentTypes: ["com.adobe.pdf", /*"public.image"*/"public.composite-content"], in: .import)
         documentPickerController.delegate = self
         present(documentPickerController, animated: true, completion: nil)
     }
@@ -113,13 +106,28 @@ final class QRViewController: UIViewController, UIDocumentPickerDelegate {
         }
        
         let inn = qrData.filter { $0.key == "PayeeINN" }
+        if inn != [:] {
         operatorsList?.forEach({ operators in
             if operators.synonymList.first == inn.values.first {
                 self.operators = operators
             }
         })
         self.returnKey()
+        } else {
+            qrCoordinatorDelegate?.goToQRError()
+        }
         
+    }
+    
+    final func returnKey() {
+        self.qrCodesession.stopRunning()
+        self.qrView.layer.sublayers?.removeLast()
+        if operators != nil {
+            self.navigationController?.popViewController(animated: true)
+            self.delegate?.setResultOfBusinessLogic(qrData, operators!)
+        } else {
+            qrCoordinatorDelegate?.goToQRError()
+        }
     }
     
     @IBAction func back(_ sender: UIButton) {
@@ -128,6 +136,4 @@ final class QRViewController: UIViewController, UIDocumentPickerDelegate {
         self.navigationController?.popViewController(animated: true)
     }
     
-    
 }
-

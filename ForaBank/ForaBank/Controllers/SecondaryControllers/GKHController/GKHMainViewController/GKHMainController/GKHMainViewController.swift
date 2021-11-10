@@ -9,17 +9,14 @@ import UIKit
 import RealmSwift
 import AVFoundation
 
-class GKHMainViewController: UIViewController {
+class GKHMainViewController: UIViewController, UITableViewDelegate {
     
     // QR data
     var qrData = [String: String]()
     var operators: GKHOperatorsModel? = nil
     var token: NotificationToken?
+    weak var delegate: GKHDelegate?
     
-    public static func storyboardInstance() -> GKHMainViewController? {
-        let storyboard = UIStoryboard(name: "GKHStoryboard", bundle: nil)
-        return storyboard.instantiateViewController(withIdentifier: "GKHMain") as? GKHMainViewController
-    }
     @IBOutlet weak var reqView: UIView!
     @IBOutlet weak var zayavka: UIView!
     
@@ -57,27 +54,6 @@ class GKHMainViewController: UIViewController {
     var operatorsList: Results<GKHOperatorsModel>? = nil
     
     lazy var realm = try? Realm()
-//    var t: NotificationToken?
-//    func updateObjectWithNotification() {
-//
-//        let object = realm?.objects(UserAllCardsModel.self)
-//        t = object?.observe { ( changes: RealmCollectionChange) in
-//            switch changes {
-//            case .initial:
-//                print("Rasd 2")
-//            case .update:
-//                print("Rasd 3")
-//
-//            case .error(let error):
-//                fatalError("\(error)")
-//            }
-//        }
-//    }
-//
-//    deinit {
-//        t?.invalidate()
-//    }
-    
     let history = GKHHistoryHeaderView()
     
     
@@ -85,6 +61,8 @@ class GKHMainViewController: UIViewController {
         super.viewDidLoad()
         history.frame = historyView.frame
         historyView.addSubview(history)
+        tableView.delegate = self
+        tableView.dataSource = self
         
         AddAllUserCardtList.add {
             print("Rasd 1")
@@ -97,11 +75,9 @@ class GKHMainViewController: UIViewController {
         reqView.add_CornerRadius(5)
         zayavka.add_CornerRadius(5)
         
-//        tableView.register(GKHHistoryHeaderView.self, forHeaderFooterViewReuseIdentifier: "sectionHeader")
         tableView.register(UINib(nibName: "GHKCell", bundle: nil), forCellReuseIdentifier: GHKCell.reuseId)
         
         setupNavBar()
-//        operatorsList = realm?.objects(GKHOperatorsModel.self)
         observerRealm()
         operatorsList?.forEach({ op in
             if !op.parameterList.isEmpty {
@@ -113,6 +89,7 @@ class GKHMainViewController: UIViewController {
             self?.searching = true
             let k = value.userInfo?["key"] as? String ?? ""
             self?.searchedOrganization = (self?.organization.filter { $0.region?.lowercased().prefix(k.count) ?? "" == k.lowercased() })!
+            self?.navigationItem.titleView = self?.setTitle(title: k, subtitle: "")
         }
     }
     
@@ -137,6 +114,10 @@ class GKHMainViewController: UIViewController {
         @unknown default:
             print()
         }
+    }
+    
+    deinit {
+        print("GKH Deinit")
     }
     
 }

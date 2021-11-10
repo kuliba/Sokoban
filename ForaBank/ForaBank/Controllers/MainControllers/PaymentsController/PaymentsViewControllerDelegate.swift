@@ -11,6 +11,9 @@ import UIKit
 protocol PaymentsViewControllerDelegate: AnyObject {
     func toMobilePay(_ controller: UIViewController)
     func goToCountryPayments()
+    func goToQRController()
+    func goToGKHController()
+    func goToPaymentByPhone()
 }
 
 extension PaymentsViewController: UICollectionViewDelegate {
@@ -29,12 +32,6 @@ extension PaymentsViewController: UICollectionViewDelegate {
             } else if let lastMobilePayment = payments[indexPath.row].lastMobilePayment {
 
                 let viewController = (payments[indexPath.row].controllerName.getViewController() as? MobilePayViewController)!
-//                viewController?.addCloseButton()
-//                viewController?.phoneField.text =  "+7\(payments[indexPath.row].lastMobilePayment?.additionalList?[1].fieldValue ?? "")"
-//                viewController?.selectNumber = "+7\(payments[indexPath.row].lastMobilePayment?.additionalList?[1].fieldValue ?? "")"
-//                let navVC = UINavigationController(rootViewController: viewController ?? UIViewController())
-//                navVC.modalPresentationStyle = .fullScreen
-//                present(navVC, animated: true)
                 delegate?.toMobilePay(viewController)
 
             } else {
@@ -46,8 +43,11 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 }
             }
         case .transfers:
-            if indexPath.row == 1 {
-                let model = ConfirmViewControllerModel(type: .card2card)
+            if indexPath.row == 0 {
+                delegate?.goToPaymentByPhone()
+                
+            } else if indexPath.row == 1 {
+//                let model = ConfirmViewControllerModel(type: .card2card)
                 let popView = CustomPopUpWithRateView()
                 popView.viewModel = model
 //                popView.onlyMy = false
@@ -89,14 +89,10 @@ extension PaymentsViewController: UICollectionViewDelegate {
 
                 if indexPath.row == 2 {
                     // ЖКХ
-                    let gkh = GKHMainViewController.storyboardInstance()!
-                    let nc = UINavigationController(rootViewController: gkh)
-                    nc.modalPresentationStyle = .fullScreen
-                    present(nc, animated: true)
+                    self.delegate?.goToGKHController()
                 } else if indexPath.row == 1 {
                     // Мобильная связь
                     delegate?.toMobilePay(viewController)
-//                    present(nc, animated: true)
                 } else {
                     present(navVC, animated: true, completion: nil)
                 }
