@@ -13,6 +13,7 @@ protocol PaymentsViewControllerDelegate: AnyObject {
     func goToCountryPayments()
     func goToQRController()
     func goToGKHController()
+    func goToPaymentByPhone()
 }
 
 extension PaymentsViewController: UICollectionViewDelegate {
@@ -42,7 +43,10 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 }
             }
         case .transfers:
-            if indexPath.row == 1 {
+            if indexPath.row == 0 {
+                delegate?.goToPaymentByPhone()
+                
+            } else if indexPath.row == 1 {
 //                let model = ConfirmViewControllerModel(type: .card2card)
                 let popView = CustomPopUpWithRateView()
 //                popView.viewModel = model

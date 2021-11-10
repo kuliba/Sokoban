@@ -75,5 +75,12 @@ extension MainTabBarCoordinator: PaymentsViewControllerDelegate {
         router.present(сountryPay, animated: true)
     }
     
+    func goToPaymentByPhone() {
+        let сountryPay = PaymentByPhoneCoordiantor(router: router)
+        addChild(сountryPay)
+        сountryPay.start()
+        router.present(сountryPay, animated: true)
+    }
+    
 }
 
