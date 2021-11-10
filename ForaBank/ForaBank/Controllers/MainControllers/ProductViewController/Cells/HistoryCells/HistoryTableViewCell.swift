@@ -208,6 +208,135 @@ class HistoryTableViewCell: UITableViewCell {
             }
         }
       
+        if accountOperation != nil{
+            switch operation?.type {
+            case "OUTSIDE":
+                    logoImageView.alpha = 0.3
+                    if accountOperation?.merchantNameRus != nil{
+                        titleLable.text = accountOperation?.merchantNameRus
+                    } else {
+                        titleLable.text = accountOperation?.merchantName
+                    }
+                
+                if accountOperation?.merchantNameRus == ""{
+                    titleLable.text = accountOperation?.comment
+                }
+                
+                
+                if accountOperation?.groupName != nil{
+                    subTitleLabel.isHidden = false
+                    subTitleLabel.text = accountOperation?.groupName
+                } else {
+                    subTitleLabel.isHidden = true
+                }
+
+                if accountOperation?.operationType == "DEBIT"{
+                
+                    logoImageView.backgroundColor = .red
+                
+                } else if accountOperation?.operationType == "CREDIT"{
+                    
+                    logoImageView.backgroundColor = .green
+                    
+                }
+                
+                if accountOperation?.svgImage != nil{
+                    logoImageView.image = accountOperation?.svgImage?.convertSVGStringToImage()
+                    logoImageView.backgroundColor = .clear
+                    logoImageView.alpha = 1
+                }
+                
+                if accountOperation?.operationType == "DEBIT"{
+                    amountLabel.textColor = UIColor(hexString: "1C1C1C")
+                    amountLabel.text = "-\(Double(accountOperation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
+                } else if accountOperation?.operationType == "CREDIT"{
+                    amountLabel.textColor = UIColor(hexString: "22C183")
+                    amountLabel.text = "+\(Double(accountOperation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
+                }
+
+            case "INSIDE":
+                logoImageView.alpha = 0.3
+                titleLable.text = accountOperation?.merchantNameRus
+                
+                if accountOperation?.merchantNameRus != nil{
+                    titleLable.text = accountOperation?.merchantNameRus
+                } else {
+                    titleLable.text = accountOperation?.merchantName
+                }
+                
+                subTitleLabel.isHidden = true
+    //            logoImageView.image = UIImage()
+    //            logoImageView.image = operation?.svgImage?.convertSVGStringToImage()
+                if accountOperation?.merchantNameRus == ""{
+                    titleLable.text = accountOperation?.comment
+                }
+                
+                guard let sum = accountOperation?.amount else {
+                    return
+                }
+                
+                if accountOperation?.groupName != nil{
+                    subTitleLabel.isHidden = false
+                    subTitleLabel.text = accountOperation?.groupName
+                } else {
+                    subTitleLabel.isHidden = true
+                }
+                
+                
+                if accountOperation?.operationType == "DEBIT"{
+                
+                    logoImageView.backgroundColor = .red
+                
+                } else if accountOperation?.operationType == "CREDIT"{
+                    
+                    logoImageView.backgroundColor = .green
+                    
+                }
+                
+                if accountOperation?.svgImage != nil{
+                    logoImageView.image = accountOperation?.svgImage?.convertSVGStringToImage()
+                    logoImageView.backgroundColor = .clear
+                    logoImageView.alpha = 1
+                }
+                
+                if accountOperation?.operationType == "DEBIT"{
+                    amountLabel.textColor = UIColor(hexString: "1C1C1C")
+                    amountLabel.text = "-\(Double(sum).currencyFormatter(symbol: currency))"
+                } else if accountOperation?.operationType == "CREDIT" {
+                    amountLabel.textColor = UIColor(hexString: "22C183")
+                    amountLabel.text = "+\(Double(sum).currencyFormatter(symbol: currency))"
+                }
+            case .none:
+                titleLable.text = accountOperation?.comment
+                guard let sum = accountOperation?.amount else {
+                    return
+                }
+                if accountOperation?.operationType == "DEBIT"{
+                    amountLabel.textColor = UIColor(hexString: "1C1C1C")
+                    logoImageView.backgroundColor = .red
+                    amountLabel.text = "-\(Double(sum).currencyFormatter(symbol: currency))"
+                } else {
+                    logoImageView.backgroundColor = .green
+                    amountLabel.textColor = UIColor(hexString: "22C183")
+                    amountLabel.text = "+\(Double(sum).currencyFormatter(symbol: currency))"
+                }
+            case .some(_):
+                titleLable.text = operation?.comment
+                guard let sum = operation?.amount else {
+                    return
+                }
+                if accountOperation?.operationType == "DEBIT"{
+                    amountLabel.textColor = UIColor(hexString: "1C1C1C")
+                    logoImageView.backgroundColor = .red
+                    amountLabel.text = "-\(Double(sum).currencyFormatter(symbol: currency))"
+                } else {
+                    logoImageView.backgroundColor = .green
+                    amountLabel.textColor = UIColor(hexString: "22C183")
+                    amountLabel.text = "+\(Double(sum).currencyFormatter(symbol: currency))"
+                }
+            }
+        }
+        
         
     }
     

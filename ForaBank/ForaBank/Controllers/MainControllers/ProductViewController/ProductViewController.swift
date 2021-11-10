@@ -94,12 +94,21 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
     }
 //    var sortData = Array(Dictionary<Int, [GetCardStatementDatum]>)
     var sorted: [Dictionary<Int?, [GetCardStatementDatum]>.Element] = []
+    var sortedAccount: [Dictionary<Int?, [GetAccountStatementDatum]>.Element] = []
     let headerView = UIStackView()
     let statusBarView = UIView()
     let statusBarLabel = UILabel()
     let amounPeriodLabel = UILabel()
     var groupByCategorySorted: Dictionary<Int, Any> = [:]
     var groupByCategory: Dictionary<Int, [GetCardStatementDatum]> = [:]{
+        didSet{
+//            let sortedKeys = groupByCategory.keys.sorted(by: { (firstKey, secondKey) -> Bool in
+//                return groupByCategory[firstKey] < groupByCategory[secondKey]
+//            })
+            
+        }
+    }
+    var groupByCategoryAccount: Dictionary<Int, [GetAccountStatementDatum]> = [:]{
         didSet{
 //            let sortedKeys = groupByCategory.keys.sorted(by: { (firstKey, secondKey) -> Bool in
 //                return groupByCategory[firstKey] < groupByCategory[secondKey]
@@ -176,7 +185,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         }
         
     }
-    
+    var filterButton = UIButton()
+
     var tableViewLabel = UILabel(text: "История операций", font: UIFont.boldSystemFont(ofSize: 20), color: UIColor(hexString: "#1C1C1C"))
     
     var tableView: UITableView?
@@ -271,9 +281,10 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         
         view.backgroundColor = .white
 
-        statusBarView.isSkeletonable = true
-        statusBarView.showAnimatedGradientSkeleton()
+        filterButton.isSkeletonable = true
+        filterButton.showAnimatedGradientSkeleton()
         
+
         
 //        statusBarView.isHidden = true
         
@@ -313,7 +324,13 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
                 self?.button2.hideSkeleton()
                 self?.button3.hideSkeleton()
                 self?.button4.hideSkeleton()
+                self?.collectionView((self?.collectionView!)!, didSelectItemAt: IndexPath(row: self?.indexItem ?? 0, section: 0))
 
+                
+                self?.collectionView?.selectItem(at: IndexPath(item: self?.indexItem ?? 0, section: 0), animated: true, scrollPosition: .bottom)
+                let cell = self?.collectionView?.cellForItem(at: IndexPath(item: self?.indexItem ?? 0, section: 0)) as? CardCollectionViewCell
+                self?.product = self?.products[self?.indexItem ?? 0]
+                cell?.showSelect()
 //                _ = CardViewModel(card: (self?.product!)!)
 
             }
@@ -389,9 +406,11 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         button3.setDimensions(height: 48, width: 164)
         button3.setTitleColor(.black, for: UIControl.State.normal)
         button3.layer.cornerRadius = 10
-        button3.setTitle("Реквизиты", for: .normal)
+        button3.setTitle("Реквизиты\nи выписки", for: .normal)
+        button3.titleLabel?.lineBreakMode = .byWordWrapping
         button3.titleLabel?.font = UIFont.systemFont(ofSize: 14)
-        let btnImage3 = UIImage(named: "file-text")
+        button3.titleLabel?.textAlignment = .center
+        let btnImage3 = UIImage(named: "file-text")?.withRenderingMode(.alwaysTemplate)
         button3.tintColor = .black
         button3.setImage(btnImage3 , for: .normal)
         button3.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
@@ -500,7 +519,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         tableViewLabel.isSkeletonable = true
         tableViewLabel.showAnimatedGradientSkeleton()
         
-        let filterButton = UIButton()
         scrollView.addSubview(headerView)
         headerView.addSubview(tableViewLabel)
         headerView.addSubview(filterButton)
@@ -509,10 +527,11 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         statusBarView.addSubview(amounPeriodLabel)
         statusBarView.anchor(left: headerView.leftAnchor, bottom: headerView.bottomAnchor, right: headerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, height: 44)
         statusBarView.backgroundColor = UIColor(hexString: "BEC1DE")
-        statusBarView.layer.cornerRadius = 8
         statusBarView.isSkeletonable = true
         statusBarView.showAnimatedGradientSkeleton()
-        statusBarView.skeletonCornerRadius = 8
+        statusBarView.skeletonCornerRadius = 12
+        statusBarView.layer.cornerRadius = 8
+
         
         statusBarLabel.text = "Траты"
         statusBarLabel.font = UIFont(name: "", size: 16)
@@ -560,7 +579,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         tableView?.showAnimatedGradientSkeleton()
         
         
-        self.collectionView(self.collectionView!, didSelectItemAt: IndexPath(row: 0, section: 0))
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -662,10 +680,10 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         let viewController = AccountDetailsViewController()
 //        halfScreen = false
         viewController.product = product
-        let navController = UINavigationController(rootViewController: viewController)
-        navController.modalPresentationStyle = .custom
-        navController.transitioningDelegate = self
-        self.present(navController, animated: true, completion: nil)
+//        let navController = UINavigationController(rootViewController: viewController)
+        viewController.modalPresentationStyle = .custom
+        viewController.transitioningDelegate = self
+        self.present(viewController, animated: true, completion: nil)
 
     }
     
@@ -855,44 +873,50 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
                             }
                         })
                         for i in self.historyArrayAccount{
-                            let timeInterval = TimeInterval(i.tranDate ?? 0)
-                            // create NSDate from Double (NSTimeInterval)
-                            let myNSDate = Date(timeIntervalSince1970: timeInterval/1000)
-                            print(myNSDate)
                             
                             if let timeResult = (i.tranDate) {
-                                let date = Date(timeIntervalSince1970: TimeInterval(timeResult))
+                                print(timeResult)
+                                let date = Date(timeIntervalSince1970: TimeInterval(timeResult/1000) )
                                 let dateFormatter = DateFormatter()
                                 dateFormatter.timeStyle = DateFormatter.Style.none //Set time style
                                 dateFormatter.dateStyle = DateFormatter.Style.medium //Set date style
                                 dateFormatter.timeZone = .current
+                                dateFormatter.locale = Locale(identifier: "ru_RU")
                                 let localDate = dateFormatter.string(from: date)
                                 print(localDate)
                             }
                         }
-                      
-                        for (index, element) in self.groupByCategory.enumerated() {
-                            print("Index:", index, "Language:", element)
-                        }
+                        
+                        
+                        self.groupByCategoryAccount = Dictionary(grouping: self.historyArrayAccount) { $0.tranDate ?? 0 }
+                        var unsortedCodeKeys = Array(self.groupByCategoryAccount.keys)
+                        let sortedCodeKeys = unsortedCodeKeys.sort(by: >)
+                            print(sortedCodeKeys)
+    //                    let dict = Dictionary(grouping: lastPaymentsList, by: { $0.tranDate ?? $0.date!/1000000 })
+                        let dict = Dictionary(grouping: lastPaymentsList) { (element) -> Int in
+                            
+                            guard let tranDate =  element.tranDate else {
+                                return Int(self.longIntToDateString(longInt: element.date!/1000)?.description.prefix(2) ?? "0") ?? 0
+                            }
+                            
+                            return  Int(self.longIntToDateString(longInt: tranDate/1000)?.description.prefix(2) ?? "0") ?? 0
+                                                }
+                        
+                        self.sortedAccount = dict.sorted(by:{ ($0.value[0].tranDate ?? $0.value[0].date) ?? 0 > $1.value[0].tranDate ?? $1.value[0].date ?? 0})
+                        
+                        self.tableView?.stopSkeletonAnimation()
+                        self.tableView?.hideSkeleton()
+                        self.statusBarView.stopSkeletonAnimation()
+                        self.statusBarView.hideSkeleton()
+                        self.filterButton.hideSkeleton()
+                        self.statusBarView.layer.cornerRadius = 8
+
                         
                         for i in lastPaymentsList{
                             if i.operationType == "DEBIT"{
-                                self.totalExpenses += Double(i.amount ?? 0.0)
+                                self.totalExpenses  += Double(i.amount ?? 0.0)
                             }
                         }
-                        
-//                        self.groupByCategory = Dictionary(grouping: self.historyArrayAccount) { $0.tranDate ?? 0 }
-                        func sortDict(indexKey: String, countElement: Int){
-                            
-                            self.groupByCategory.index(forKey: countElement)
-                            
-                        }
-                        
-//                        self.sortData = self.groupByCategory.sorted(by:{$0.key < $1.key})
-                        self.tableView?.hideSkeleton()
-
-                        self.statusBarView.stopSkeletonAnimation()
-                        self.statusBarView.hideSkeleton()
                     }
     //                    self.dataUSD = lastPaymentsList
                 } else {
@@ -959,6 +983,9 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
                     self.tableView?.hideSkeleton()
                     self.statusBarView.stopSkeletonAnimation()
                     self.statusBarView.hideSkeleton()
+                    self.filterButton.hideSkeleton()
+                    self.statusBarView.layer.cornerRadius = 8
+
 //                    self.sorted = dict.sorted(by: { newItem1, newItem in
 //                        if newItem1.value[0].tranDate != nil{
 //                             newItem1.value[0].tranDate ?? 0 > newItem.value[0].tranDate ?? 0
@@ -1036,10 +1063,11 @@ extension ProductViewController{
             self.tableView?.reloadData()
         }
         
-        if firstTimeLoad{
+        if firstTimeLoad, products.count != 0{
             firstTimeLoad = false
             self.collectionView?.selectItem(at: IndexPath(item: indexItem ?? 0, section: 0), animated: true, scrollPosition: .bottom)
             let cell = collectionView.cellForItem(at: IndexPath(item: indexItem ?? 0, section: 0)) as? CardCollectionViewCell
+            product = products[self.indexItem ?? 0]
             cell?.showSelect()
         } else {
             if indexPath.item < products.count{
@@ -1116,20 +1144,37 @@ extension ProductViewController{
 extension ProductViewController{
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return sorted.count
+        if product?.productType == "ACCOUNT"{
+            return sortedAccount.count
+        } else {
+            return sorted.count
+
+        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 //            return groupByCategory[section].count
-        var countSection = Array<Any>()
-        
-        sorted.map({
-            print(countSection.append(($0.value as AnyObject).count ?? 0))
-//            countSection.append(($0.value as AnyObject).count ?? 0)
-            countSection.append(($0.value as AnyObject).count ?? 0)
-        })
-//        sorted[section].value.count
-        return sorted[section].value.count
+        if product?.productType == "ACCOUNT"{
+            var countSection = Array<Any>()
+            
+            sortedAccount.map({
+                print(countSection.append(($0.value as AnyObject).count ?? 0))
+    //            countSection.append(($0.value as AnyObject).count ?? 0)
+                countSection.append(($0.value as AnyObject).count ?? 0)
+            })
+    //        sorted[section].value.count
+            return sortedAccount[section].value.count
+        } else {
+            var countSection = Array<Any>()
+            
+            sorted.map({
+                print(countSection.append(($0.value as AnyObject).count ?? 0))
+    //            countSection.append(($0.value as AnyObject).count ?? 0)
+                countSection.append(($0.value as AnyObject).count ?? 0)
+            })
+    //        sorted[section].value.count
+            return sorted[section].value.count
+        }
 
     }
     func collectionSkeletonView(_ skeletonView: UITableView, cellIdentifierForRowAt indexPath: IndexPath) -> ReusableCellIdentifier {
@@ -1138,22 +1183,25 @@ extension ProductViewController{
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch historyArray.isEmpty{
-        case false:
+        switch product?.productType{
+        case "ACCOUNT":
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "HistoryTableViewCell", for: indexPath) as? HistoryTableViewCell else { return  UITableViewCell() }
-//            let data = groupByCategory.forEach({$0.value[indexPath.row]})
-//            let section = groupByCategory[indexPath.section] as? Array<Any>
-            let data = Array(groupByCategory.values)[indexPath.section]
-//            sorted[indexPath.section].value[indexPath.item]
-            cell.operation = sorted[indexPath.section].value[indexPath.row]
-//            groupByCategory[index].value[indexPath.row]
             
+            let data = Array(groupByCategoryAccount.values)[indexPath.section]
+            print(data)
+//            cell.accountOperation = (data as! [GetAccountStatementDatum])[indexPath.row]
+//            groupByCategory[index].value[indexPath.row]
             cell.titleLable.isSkeletonable = true
-           
+//            cell.operation = sortedAccount
+//            let data = groupByCategory.forEach({$0.value[indexPath.row]})
+            let section = groupByCategoryAccount[indexPath.section] as? Array<Any>
+//                let data = Array(groupByCategory.values)[indexPath.section]
+            //            sorted[indexPath.section].value[indexPath.item]
+            cell.accountOperation = sortedAccount[indexPath.section].value[indexPath.row]
             cell.configure(currency: product?.currency ?? "RUB")
             cell.selectionStyle = .none
             return cell
-        case true:
+        case "CARD":
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "HistoryTableViewCell", for: indexPath) as? HistoryTableViewCell else { return  UITableViewCell() }
     //
     //        cell.titleLable.text = historyArray[indexPath.row].comment
@@ -1165,9 +1213,18 @@ extension ProductViewController{
 //            groupByCategory[index].value[indexPath.row]
             cell.titleLable.isSkeletonable = true
 
+            let section = groupByCategory[indexPath.section] as? Array<Any>
+            cell.operation = sorted[indexPath.section].value[indexPath.row]
             cell.configure(currency: product?.currency ?? "RUB")
             cell.selectionStyle = .none
             return cell
+        case .none:
+            print("none case")
+            return UITableViewCell()
+        case .some(_):
+            print("some case")
+            return UITableViewCell()
+
         }
     }
     
@@ -1199,25 +1256,47 @@ extension ProductViewController{
 //        present(vc, animated: true, completion: nil)
         
         let vc = OperationDetailViewController()
-       
-        vc.documentId = "\(sorted[indexPath.section].value[indexPath.row].documentID ?? 0)"
-        vc.categoryGroupLabel.text = sorted[indexPath.section].value[indexPath.row].groupName
-        vc.transferImage.image = sorted[indexPath.section].value[indexPath.row].svgImage?.convertSVGStringToImage()
-        if sorted[indexPath.section].value[indexPath.row].operationType == "DEBIT"{
-            vc.amount.textColor = UIColor(hexString: "1C1C1C")
-            vc.amount.text = "-\(Double(sorted[indexPath.section].value[indexPath.row].amount ?? 0.0).currencyFormatter(symbol:  product?.currency ?? "RUB"))"
-        } else if sorted[indexPath.section].value[indexPath.row].operationType == "CREDIT"{
-            vc.amount.textColor = UIColor(hexString: "1C1C1C")
-            vc.amount.text = "+\(Double(sorted[indexPath.section].value[indexPath.row].amount ?? 0.0).currencyFormatter(symbol:  product?.currency ?? "RUB"))"
+        switch product?.productType {
+        case "CARD":
+            vc.documentId = "\(sorted[indexPath.section].value[indexPath.row].documentID ?? 0)"
+            vc.categoryGroupLabel.text = sorted[indexPath.section].value[indexPath.row].groupName
+            vc.transferImage.image = sorted[indexPath.section].value[indexPath.row].svgImage?.convertSVGStringToImage()
+            if sorted[indexPath.section].value[indexPath.row].operationType == "DEBIT"{
+                vc.amount.textColor = UIColor(hexString: "1C1C1C")
+                vc.amount.text = "-\(Double(sorted[indexPath.section].value[indexPath.row].amount ?? 0.0).currencyFormatter(symbol:  product?.currency ?? "RUB"))"
+            } else if sorted[indexPath.section].value[indexPath.row].operationType == "CREDIT"{
+                vc.amount.textColor = UIColor(hexString: "1C1C1C")
+                vc.amount.text = "+\(Double(sorted[indexPath.section].value[indexPath.row].amount ?? 0.0).currencyFormatter(symbol:  product?.currency ?? "RUB"))"
+            }
+    //        vc.commissionLabel.text = sorted[indexPath.section].value[indexPath.row].comment
+            if sorted[indexPath.section].value[indexPath.row].merchantNameRus != nil{
+                vc.mainLabel.text = sorted[indexPath.section].value[indexPath.row].merchantNameRus
+            } else {
+                vc.mainLabel.text = sorted[indexPath.section].value[indexPath.row].merchantName
+            }
+            
+            vc.addCloseButton_xMark()
+        default:
+            vc.documentId = "\(sortedAccount[indexPath.section].value[indexPath.row].documentID ?? 0)"
+            vc.categoryGroupLabel.text = sortedAccount[indexPath.section].value[indexPath.row].groupName
+            vc.transferImage.image = sortedAccount[indexPath.section].value[indexPath.row].svgImage?.convertSVGStringToImage()
+            if sortedAccount[indexPath.section].value[indexPath.row].operationType == "DEBIT"{
+                vc.amount.textColor = UIColor(hexString: "1C1C1C")
+                vc.amount.text = "-\(Double(sortedAccount[indexPath.section].value[indexPath.row].amount ?? 0.0).currencyFormatter(symbol:  product?.currency ?? "RUB"))"
+            } else if sortedAccount[indexPath.section].value[indexPath.row].operationType == "CREDIT"{
+                vc.amount.textColor = UIColor(hexString: "1C1C1C")
+                vc.amount.text = "+\(Double(sortedAccount[indexPath.section].value[indexPath.row].amount ?? 0.0).currencyFormatter(symbol:  product?.currency ?? "RUB"))"
+            }
+    //        vc.commissionLabel.text = sorted[indexPath.section].value[indexPath.row].comment
+            if sortedAccount[indexPath.section].value[indexPath.row].merchantNameRus != nil{
+                vc.mainLabel.text = sortedAccount[indexPath.section].value[indexPath.row].merchantNameRus
+            } else {
+                vc.mainLabel.text = sortedAccount[indexPath.section].value[indexPath.row].merchantName
+            }
+            
+            vc.addCloseButton_xMark()
         }
-//        vc.commissionLabel.text = sorted[indexPath.section].value[indexPath.row].comment
-        if sorted[indexPath.section].value[indexPath.row].merchantNameRus != nil{
-            vc.mainLabel.text = sorted[indexPath.section].value[indexPath.row].merchantNameRus
-        } else {
-            vc.mainLabel.text = sorted[indexPath.section].value[indexPath.row].merchantName
-        }
-        
-        vc.addCloseButton_xMark()
+      
 //        vc.modalPresentationStyle = .pageSheet
 //        vc.providesPresentationContextTransitionStyle = true
 //        vc.definesPresentationContext = true
@@ -1250,24 +1329,62 @@ extension ProductViewController{
             let label = UILabel()
             label.frame = CGRect.init(x: 5, y: 5, width: headerView.frame.width-10, height: headerView.frame.height)
         
-        if sorted.isEmpty == false{
-            guard let tranDate = self.sorted[section].value[0].tranDate  else {
-                label.text = longIntToDateString(longInt: self.sorted[section].value[0].date!/1000)
-                label.font = .boldSystemFont(ofSize: 16)
+        switch product?.productType {
+        case "ACCOUNT":
+            if self.sortedAccount.count != 0{
+                   guard let tranDate = self.sortedAccount[section].value[0].tranDate  else {
+                       label.text = longIntToDateString(longInt: self.sortedAccount[section].value[0].date!/1000)
+                       label.font = .boldSystemFont(ofSize: 16)
 
-                label.textColor =  UIColor(hexString: "1C1C1C")
-                headerView.addSubview(label)
-                label.centerY(inView: headerView)
-                headerView.hideSkeleton()
-                headerView.stopSkeletonAnimation()
-                return headerView
+                       label.textColor =  UIColor(hexString: "1C1C1C")
+                       headerView.addSubview(label)
+                       label.centerY(inView: headerView)
+                       headerView.hideSkeleton()
+                       headerView.stopSkeletonAnimation()
+                       return headerView
+               }
+                label.text = longIntToDateString(longInt: tranDate/1000)
+
             }
-            label.text = longIntToDateString(longInt: tranDate/1000)
+        case "CARD":
+            if self.sorted.count != 0{
+                guard let tranDate = self.sorted[section].value[0].tranDate  else {
+                    label.text = longIntToDateString(longInt: self.sorted[section].value[0].date!/1000)
+                    label.font = .boldSystemFont(ofSize: 16)
 
+                    label.textColor =  UIColor(hexString: "1C1C1C")
+                    headerView.addSubview(label)
+                    label.centerY(inView: headerView)
+                    headerView.hideSkeleton()
+                    headerView.stopSkeletonAnimation()
+                    return headerView
+                }
+                
+                label.text = longIntToDateString(longInt: tranDate/1000)
+            }
+        default:
+            print("default")
+            
         }
+        
+//        if sorted.isEmpty == false{
+//            guard let tranDate = self.sorted[section].value[0].tranDate  else {
+//                label.text = longIntToDateString(longInt: self.sorted[section].value[0].date!/1000)
+//                label.font = .boldSystemFont(ofSize: 16)
+//
+//                label.textColor =  UIColor(hexString: "1C1C1C")
+//                headerView.addSubview(label)
+//                label.centerY(inView: headerView)
+//                headerView.hideSkeleton()
+//                headerView.stopSkeletonAnimation()
+//                return headerView
+//            }
+//
+//            label.text = longIntToDateString(longInt: tranDate/1000)
+//
+//        }
 
             label.font = .boldSystemFont(ofSize: 16)
-
             label.textColor =  UIColor(hexString: "1C1C1C")
             headerView.addSubview(label)
             label.centerY(inView: headerView)
@@ -1418,14 +1535,15 @@ extension UIColor {
 
 extension ProductViewController: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-//        var presenter: UIPresentationController?
-        
+
         let presenter = PresentationController(presentedViewController: presented, presenting: presenting)
         if halfScreen == true {
             presenter.height = 490
         } else {
             presenter.height = 310
-            //            presenter = PresentationThirdController(presentedViewController: presented, presenting: presenting)
+        }
+        if presented is AccountDetailsViewController {
+            presenter.height = 220
         }
         return presenter
     }

@@ -14,11 +14,8 @@ class PayTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-//        imageButton.layer.borderWidth = 1
         imageButton.layer.masksToBounds = false
-//        imageButton.layer.borderColor = UIColor.black.cgColor
         imageButton.layer.cornerRadius = imageButton.frame.height/2
-//        imageButton.layer.backgroundColor = CGColor(red: <#T##CGFloat#>, green: <#T##CGFloat#>, blue: <#T##CGFloat#>, alpha: <#T##CGFloat#>)
         imageButton.clipsToBounds = true
         
     }

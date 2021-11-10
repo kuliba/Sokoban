@@ -2,10 +2,11 @@ import UIKit
 
 class ProductCoordinator: Coordinator {
 
-    let productViewController = UINavigationController(rootViewController: ProductViewController())
+    let productViewController: ProductViewController = ProductViewController()
 
     override init(router: RouterType) {
         super.init(router: router)
+        
     }
     
     override func start() {
@@ -13,6 +14,11 @@ class ProductCoordinator: Coordinator {
     }
     
     override func toPresentable() -> UIViewController {
-        return productViewController
+        let navVC = UINavigationController(rootViewController: productViewController)
+        navVC.modalPresentationStyle = .fullScreen
+//        navVC.addCloseButton()
+        return navVC
     }
 }
+
+

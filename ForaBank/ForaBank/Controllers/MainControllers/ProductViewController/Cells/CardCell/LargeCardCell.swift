@@ -64,7 +64,7 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         label.font = UIFont(name: "Inter-Regular", size: 14)
         label.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
         label.textAlignment = .left
-        label.text = "Зарплатная"
+        label.text = ""
         return label
     }()
     

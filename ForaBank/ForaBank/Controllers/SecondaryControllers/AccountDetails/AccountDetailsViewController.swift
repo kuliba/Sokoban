@@ -19,7 +19,6 @@ class AccountDetailsViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .white
-//        setupUI()
         setupTableView()
 
     }
@@ -39,47 +38,6 @@ class AccountDetailsViewController: UIViewController {
         tableView.rowHeight = 56
     }
     
-//    func setupUI(){
-//        let label = UILabel()
-//        label.textColor = UIColor.black
-//        label.font = UIFont.boldSystemFont(ofSize: 16)
-//        label.text = "Пополнить"
-//        navigationController?.navigationBar.barTintColor = .white
-//
-//        self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: label)
-//        self.navigationItem.leftItemsSupplementBackButton = true
-//        let close = UIBarButtonItem(title: "Закрыть", style: .plain, target: self, action: #selector(backButton))
-//        close.tintColor = .black
-//        //        self.navigationItem.setRightBarButton(close, animated: true)
-//
-//        //        self.navigationItem.rightBarButtonItem?.action = #selector(backButton)
-//        self.navigationItem.rightBarButtonItem = close
-//        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .normal)
-//        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .highlighted)
-//    }
-//
-//    @objc func backButton(){
-//        dismiss(animated: true, completion: nil)
-//    }
-    
-    
-    func getFastPaymentContractList(_ completion: @escaping (_ model: [FastPaymentContractFindListDatum]? ,_ error: String?) -> Void) {
-        NetworkManager<FastPaymentContractFindListDecodableModel>.addRequest(.fastPaymentContractFindList, [:], [:]) { model, error in
-            if error != nil {
-                print("DEBUG: Error: ", error ?? "")
-                completion(nil, error)
-            }
-            guard let model = model else { return }
-            print("DEBUG: fastPaymentContractFindList", model)
-            if model.statusCode == 0 {
-                completion(model.data, nil)
-            } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
-
-                completion(nil, model.errorMessage)
-            }
-        }
-    }
     
     func presentRequisitsVc(product: GetProductListDatum?){
         showActivity()
@@ -115,7 +73,12 @@ class AccountDetailsViewController: UIViewController {
                     viewController.model = model.data
                     navController.modalPresentationStyle = .fullScreen
                     navController.transitioningDelegate = self
-                    self.present(navController, animated: true, completion: nil)
+                    
+                    self.dismiss(animated: true) {
+                        let topvc = UIApplication.topViewController()
+                        topvc?.present(navController, animated: true)
+                    }
+//                    self.present(navController, animated: true, completion: nil)
                 }
                 
             } else {
@@ -140,14 +103,15 @@ extension AccountDetailsViewController: UITableViewDataSource {
         switch indexPath.row {
         case 0:
             cell.titleLabel.text = "Реквизиты счета карты"
-            cell.imageButton.image = UIImage(named: "sbpButton2")
+            cell.imageButton.image = UIImage(named: "file-text")?.withRenderingMode(.alwaysTemplate)
         case 1:
             cell.titleLabel.text = "Выписка по счету"
-            cell.imageButton.image = UIImage(named: "myAccountButton")
+            cell.imageButton.image = UIImage(named: "accaunt")?.withRenderingMode(.alwaysTemplate)
         default:
-            cell.titleLabel.text = "defaul"
+            cell.titleLabel.text = "default"
             cell.imageButton.image = UIImage(named: "otherAccountButton")
         }
+        cell.imageButton.tintColor = #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1)
         cell.selectionStyle = .none
         return cell
     }
@@ -160,12 +124,19 @@ extension AccountDetailsViewController: UITableViewDelegate {
         switch indexPath.row {
         case 0:
             presentRequisitsVc(product: product)
+#if DEBUG
+        case 1:
+            let controller = AccountStatementController()
+            controller.modalPresentationStyle = .fullScreen
+            controller.startProduct = product
+            let navController = UINavigationController(rootViewController: controller)
+            navController.modalPresentationStyle = .fullScreen
+            self.dismiss(animated: true) {
+                let topvc = UIApplication.topViewController()
+                topvc?.present(navController, animated: true)
+            }
             
-//        case 1:
-//            let popView = CustomPopUpWithRateView()
-//            popView.modalPresentationStyle = .custom
-//            popView.transitioningDelegate = self
-//            self.present(popView, animated: true, completion: nil)
+#endif
         default:
             self.dismiss(animated: true, completion: nil)
         }
