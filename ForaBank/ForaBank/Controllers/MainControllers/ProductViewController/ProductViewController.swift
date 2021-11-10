@@ -406,9 +406,11 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         button3.setDimensions(height: 48, width: 164)
         button3.setTitleColor(.black, for: UIControl.State.normal)
         button3.layer.cornerRadius = 10
-        button3.setTitle("Реквизиты", for: .normal)
+        button3.setTitle("Реквизиты\nи выписки", for: .normal)
+        button3.titleLabel?.lineBreakMode = .byWordWrapping
         button3.titleLabel?.font = UIFont.systemFont(ofSize: 14)
-        let btnImage3 = UIImage(named: "file-text")
+        button3.titleLabel?.textAlignment = .center
+        let btnImage3 = UIImage(named: "file-text")?.withRenderingMode(.alwaysTemplate)
         button3.tintColor = .black
         button3.setImage(btnImage3 , for: .normal)
         button3.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
@@ -678,10 +680,10 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         let viewController = AccountDetailsViewController()
 //        halfScreen = false
         viewController.product = product
-        let navController = UINavigationController(rootViewController: viewController)
-        navController.modalPresentationStyle = .custom
-        navController.transitioningDelegate = self
-        self.present(navController, animated: true, completion: nil)
+//        let navController = UINavigationController(rootViewController: viewController)
+        viewController.modalPresentationStyle = .custom
+        viewController.transitioningDelegate = self
+        self.present(viewController, animated: true, completion: nil)
 
     }
     
@@ -1533,14 +1535,15 @@ extension UIColor {
 
 extension ProductViewController: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-//        var presenter: UIPresentationController?
-        
+
         let presenter = PresentationController(presentedViewController: presented, presenting: presenting)
         if halfScreen == true {
             presenter.height = 490
         } else {
             presenter.height = 310
-            //            presenter = PresentationThirdController(presentedViewController: presented, presenting: presenting)
+        }
+        if presented is AccountDetailsViewController {
+            presenter.height = 220
         }
         return presenter
     }
