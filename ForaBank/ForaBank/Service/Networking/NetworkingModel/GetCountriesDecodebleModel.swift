@@ -105,7 +105,7 @@ extension GetCountriesDataClass {
 // MARK: - CountriesList
 struct CountriesList: Codable {
     let code, contactCode, name: String?
-    let sendCurr: SendCur?
+    let sendCurr: String?
     let md5Hash, svgImage: String?
     let paymentSystemCodeList: [String]?
 
@@ -139,7 +139,7 @@ extension CountriesList {
         code: String?? = nil,
         contactCode: String?? = nil,
         name: String?? = nil,
-        sendCurr: SendCur?? = nil,
+        sendCurr: String?? = nil,
         md5Hash: String?? = nil,
         svgImage: String?? = nil,
         paymentSystemCodeList: [String]?? = nil
@@ -162,13 +162,5 @@ extension CountriesList {
     func jsonString(encoding: String.Encoding = .utf8) throws -> String? {
         return String(data: try self.jsonData(), encoding: encoding)
     }
-}
-
-enum SendCur: String, Codable {
-    case empty = ""
-    case eur = "EUR;"
-    case rurUsdEur = "RUR;USD;EUR;"
-    case usd = "USD;"
-    case usdEur = "USD;EUR;"
 }
 
