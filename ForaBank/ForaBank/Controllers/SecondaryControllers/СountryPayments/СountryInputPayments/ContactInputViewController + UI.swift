@@ -119,10 +119,16 @@ extension ContactInputViewController {
         
         let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
         self.navigationItem.rightBarButtonItem = customViewItem
-        
-        bottomView.currencySwitchButton.isHidden = false
+#if DEBUG
+        setupCurrencyButton(system: system)
+#endif
     }
     
+    private func setupCurrencyButton(system: PaymentSystemList) {
+        bottomView.currencySwitchButton.isHidden = system.code == "CONTACT" ? false : true
+        bottomView.currencySwitchButton.setTitle("$ ∨", for: .normal)
+//        bottomView.currencySwitchButton.setTitle((model.cardFrom?.currency?.getSymbol() ?? "") + " ⇆ " + (model.cardTo?.currency?.getSymbol() ?? ""), for: .normal)
+    }
     
     func setupConstraint() {
         bottomView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
