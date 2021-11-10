@@ -47,7 +47,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 delegate?.goToPaymentByPhone()
                 
             } else if indexPath.row == 1 {
-//                let model = ConfirmViewControllerModel(type: .card2card)
+                let model = ConfirmViewControllerModel(type: .card2card)
                 let popView = CustomPopUpWithRateView()
                 popView.viewModel = model
 //                popView.onlyMy = false
