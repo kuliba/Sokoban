@@ -107,16 +107,35 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
             
         }
     }
-    var card = LargeCardCell()
+    var card = LargeCardCell(){
+        didSet{
+            card.isSkeletonable = true
+            card.showAnimatedGradientSkeleton()
+        }
+    }
     var mockItem: [PaymentsModel] = []
     var firstTimeLoad = true
     var indexItem: Int?
     var scrollView = UIScrollView()
-    var collectionView: UICollectionView?
-    var products = [GetProductListDatum]()
+    var collectionView: UICollectionView?{
+        didSet{
+            DispatchQueue.main.async {
+                
+            }
+        }
+    }
+    var products = [GetProductListDatum](){
+        didSet{
+            DispatchQueue.main.async {
+                self.collectionView?.reloadData()
+            }
+        }
+    }
     var product: GetProductListDatum? {
         didSet{
             card.card = product
+            tableViewLabel.hideSkeleton()
+            addCloseColorButton(with: UIColor(hexString: product?.fontDesignColor ?? "000000"))
             if product?.productType == "ACCOUNT"{
                 button4.alpha = 0.4
                 button4.isUserInteractionEnabled = false
@@ -157,6 +176,9 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         }
         
     }
+    
+    var tableViewLabel = UILabel(text: "История операций", font: UIFont.boldSystemFont(ofSize: 20), color: UIColor(hexString: "#1C1C1C"))
+    
     var tableView: UITableView?
     var backgroundView = UIView()
     var topStackView = UIStackView()
@@ -247,6 +269,12 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.backgroundColor = .white
+
+        statusBarView.isSkeletonable = true
+        statusBarView.showAnimatedGradientSkeleton()
+        
+        
 //        statusBarView.isHidden = true
         
         scrollView.delegate = self
@@ -270,7 +298,27 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)
 
    
-        _ = CardViewModel(card: self.product!)
+        
+        getCardList { [weak self] data ,error in
+            DispatchQueue.main.async {
+                
+                if error != nil {
+                    self?.showAlert(with: "Ошибка", and: error!)
+                }
+                guard let data = data else { return }
+                self?.product = data[0]
+                self?.products = data
+                self?.card.balanceLabel.hideSkeleton()
+                self?.button.hideSkeleton()
+                self?.button2.hideSkeleton()
+                self?.button3.hideSkeleton()
+                self?.button4.hideSkeleton()
+
+//                _ = CardViewModel(card: (self?.product!)!)
+
+            }
+        }
+        
 //        guard let number = product?.numberMasked else {
 //            return
 //        }
@@ -281,13 +329,19 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         view.backgroundColor = .white
 //        navigationController?.view.addoverlay(color: .black, alpha: 0.2)
         navigationController?.navigationBar.barTintColor = UIColor(hexString: product?.background[0] ?? "").darker()
-        navigationController?.view.backgroundColor =  UIColor(hexString: product?.background[0] ?? "").darker()
-        navigationController?.navigationBar.backgroundColor = UIColor(hexString: product?.background[0] ?? "").darker()
-//        UINavigationBar.appearance().tintColor =  UIColor(hexString: product?.fontDesignColor ?? "000000")
-        addCloseColorButton(with: UIColor(hexString: product?.fontDesignColor ?? "000000"))
+        navigationController?.view.backgroundColor =  UIColor(hexString: "BBBBBB")
+        navigationController?.navigationBar.backgroundColor = UIColor(hexString: "BBBBBB")
+        
 
         
-        backgroundView.backgroundColor = UIColor(hexString: product?.background[0] ?? "").darker()
+        card.balanceLabel.isSkeletonable = true
+        card.balanceLabel.showAnimatedGradientSkeleton()
+        
+//        UINavigationBar.appearance().tintColor =  UIColor(hexString: product?.fontDesignColor ?? "000000")
+
+        card.backgroundImageView.backgroundColor = UIColor(red: 0.667, green: 0.667, blue: 0.667, alpha: 1)
+        card.backgroundImageView.layer.cornerRadius = 12
+        backgroundView.backgroundColor = UIColor(hexString: "BBBBBB")
         backgroundView.anchor(top: scrollView.topAnchor, left: view.leftAnchor, bottom: card.centerYAnchor, right: view.rightAnchor)
 //        backgroundView.backgroundColor = UIColor(hex: "#\(product?.background[0] ?? "")")
 //        view.backgroundColor = .red
@@ -310,7 +364,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
 //        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 0  )
         button.sizeToFit()
     
-        
+        button.isSkeletonable = true
+        button.showAnimatedGradientSkeleton()
         button.addTarget(self, action: #selector(showAlert(sender:)), for: .touchUpInside)
 
         button2.setDimensions(height: 48, width: 164)
@@ -325,7 +380,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         button2.imageEdgeInsets = UIEdgeInsets(top: 0, left: -15, bottom: 0, right: 10)
         button2.backgroundColor = UIColor(hexString: "F6F6F7")
         button2.translatesAutoresizingMaskIntoConstraints = false
-        
+        button2.isSkeletonable = true
+        button2.showAnimatedGradientSkeleton()
         button2.addTarget(self, action: #selector(presentPaymentVC), for: .touchUpInside)
         
      
@@ -342,7 +398,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         button3.imageEdgeInsets = UIEdgeInsets(top: 0, left: -15, bottom: 0, right: 10)
         button3.backgroundColor = UIColor(hexString: "F6F6F7")
         button3.translatesAutoresizingMaskIntoConstraints = false
-        
+        button3.isSkeletonable = true
+        button3.showAnimatedGradientSkeleton()
         button3.addAction(for: .touchUpInside) {
             self.presentRequisitsVc(product: self.product!)
         }
@@ -364,7 +421,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         button4.translatesAutoresizingMaskIntoConstraints = false
 //        button4.moveImageLeftTextCenter(imagePadding: 10)
 //        button4.contentVerticalAlignment = .center
-        
+        button4.isSkeletonable = true
+        button4.showAnimatedGradientSkeleton()
         button4.addTarget(self, action: #selector(blockProduct), for: .touchUpInside)
         
         
@@ -408,8 +466,9 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         collectionView?.isMultipleTouchEnabled = false
         collectionView?.allowsMultipleSelection = false
         
-        scrollView.addSubview(collectionView ?? UICollectionView())
-        collectionView?.anchor(top: scrollView.topAnchor, paddingTop: 20, paddingLeft: 0, paddingBottom: 20, paddingRight: 0, width: CGFloat(products.count) * 80,  height: 65)
+        scrollView.addSubview(collectionView!)
+        collectionView?.anchor(top: scrollView.topAnchor, paddingTop: 20, paddingLeft: 0, paddingBottom: 20, paddingRight: 0, width: CGFloat(3) * 80,  height: 65)
+        
 //        collectionView?.contentInsetAdjustmentBehavior = .always
         collectionView?.centerX(inView: view)
         collectionView?.contentMode = .center
@@ -420,11 +479,13 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         card.centerX(inView: view)
         card.card = product
         card.backgroundImageView.image = product?.XLDesign?.convertSVGStringToImage()
+      
         card.addSubview(activateSlider)
         activateSlider.isHidden = true
         activateSlider.delegate = self
         activateSlider.center(inView: card)
         activateSlider.anchor(width: 167, height: 48)
+        
         
         self.card.addSubview(self.blockView)
         self.blockView.anchor(width: 64, height: 64)
@@ -434,8 +495,11 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
 
         
         // UIView
-        let tableViewLabel = UILabel(text: "История операций", font: UIFont.boldSystemFont(ofSize: 20), color: UIColor(hexString: "#1C1C1C"))
-  
+       
+        
+        tableViewLabel.isSkeletonable = true
+        tableViewLabel.showAnimatedGradientSkeleton()
+        
         let filterButton = UIButton()
         scrollView.addSubview(headerView)
         headerView.addSubview(tableViewLabel)
@@ -448,6 +512,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         statusBarView.layer.cornerRadius = 8
         statusBarView.isSkeletonable = true
         statusBarView.showAnimatedGradientSkeleton()
+        statusBarView.skeletonCornerRadius = 8
+        
         statusBarLabel.text = "Траты"
         statusBarLabel.font = UIFont(name: "", size: 16)
         statusBarLabel.anchor(left: statusBarView.leftAnchor, paddingLeft: 10)
@@ -490,8 +556,11 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         tableView?.isSkeletonable = true
+        
         tableView?.showAnimatedGradientSkeleton()
-        self.collectionView(self.collectionView ?? UICollectionView(), didSelectItemAt: IndexPath(row: 0, section: 0))
+        
+        
+        self.collectionView(self.collectionView!, didSelectItemAt: IndexPath(row: 0, section: 0))
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -514,7 +583,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
     }
     
     @objc func onCloseScreen(){
-        delegate.sendData(data: products)
+//        delegate.sendData(data: products)
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -1040,29 +1109,7 @@ extension ProductViewController{
             
         }
     }
-    
-    
 
-    
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
-//            let width = UIScreen.main.bounds.width
-//           return CGSize(width: width, height: 50)
-//       }
-
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets{
-//           return UIEdgeInsets(top: 20, left: 8, bottom: 5, right: 8)
-//       }
-    
-//    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-//
-//        let totalCellWidth = 50 * products.count
-//        let totalSpacingWidth = 5 * (products.count - 1)
-//
-//        let leftInset = (collectionView.bounds.width - CGFloat(totalCellWidth + totalSpacingWidth)) / 2
-//        let rightInset = leftInset
-//
-//        return UIEdgeInsets(top: 0, left: leftInset, bottom: 0, right: rightInset)
-//    }
     
 }
 

@@ -15,7 +15,7 @@ protocol MainViewControllerDelegate: AnyObject {
 
 class MainViewController: UIViewController {
     
-    var delegate: MainViewControllerDelegate?
+    weak var delegate: MainViewControllerDelegate?
     var card: UserAllCardsModel?
     var sectionIndexCounter = 0
     
