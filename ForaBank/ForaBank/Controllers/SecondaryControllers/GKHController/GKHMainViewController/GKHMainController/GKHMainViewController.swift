@@ -67,7 +67,8 @@ class GKHMainViewController: UIViewController, UITableViewDelegate {
         AddAllUserCardtList.add {
             print("Rasd 1")
         }
-//        updateObjectWithNotification()
+        
+        self.navigationController?.isNavigationBarHidden = false
         
         /// Загрузка истории операций
         AddHistoryList.add()

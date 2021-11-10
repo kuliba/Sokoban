@@ -8,7 +8,6 @@
 import Foundation
 import UIKit
 
-
 class MainCoordinator: Coordinator {
     
     let coordinator: Coordinator!
@@ -21,6 +20,10 @@ class MainCoordinator: Coordinator {
     
     override func start() {
         let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
+        
+        // Зарузка кэша
+        DownloadQueue.download {}
+        
         if let userIsRegister = userIsRegister {
             if userIsRegister {
                 self.goToPinVC()

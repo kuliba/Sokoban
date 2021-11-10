@@ -20,6 +20,10 @@ class MainTabBarCoordinator: Coordinator {
     
     override func start() {
     }
+    
+    deinit {
+        print("Deinit MainTabBarCoordinator")
+    }
 }
 
 extension MainTabBarCoordinator: MainViewControllerDelegate {
@@ -40,14 +44,16 @@ extension MainTabBarCoordinator: MainViewControllerDelegate {
 }
 
 extension MainTabBarCoordinator: PaymentsViewControllerDelegate {
+    
     func goToGKHController() {
         let gkhCoordinator = GKHCoordinator(router: router)
         addChild(gkhCoordinator)
         gkhCoordinator.start()
-        router.push(gkhCoordinator.toPresentable(), animated: true) {
-            [weak self, weak gkhCoordinator] in
-                self?.removeChild(gkhCoordinator)
-        }
+        router.present(gkhCoordinator, animated: true)
+//        router.push(gkhCoordinator.toPresentable(), animated: true) {
+//            [weak self, weak gkhCoordinator] in
+//                self?.removeChild(gkhCoordinator)
+//        }
     }
     
     
