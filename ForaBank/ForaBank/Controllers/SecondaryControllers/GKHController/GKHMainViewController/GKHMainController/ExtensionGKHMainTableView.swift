@@ -8,29 +8,6 @@
 import UIKit
 import RealmSwift
 
-extension GKHMainViewController: UITableViewDelegate {
-    
-//     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//       let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "sectionHeader") as! GKHHistoryHeaderView
-//       return view
-//    }
-//    
-//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//        return 120
-//    }
-    
-//    override func viewDidLayoutSubviews() {
-//        super.viewDidLayoutSubviews()
-//
-//        guard let headerView = tableView.tableHeaderView else {return}
-//        let size = headerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-//        if headerView.frame.size.height != size.height {
-//            headerView.frame.size.height = size.height
-//            tableView.tableHeaderView = headerView
-//            tableView.layoutIfNeeded()
-//        }
-//    }
-}
 
 extension GKHMainViewController: UITableViewDataSource {
     
@@ -65,7 +42,6 @@ extension GKHMainViewController: UITableViewDataSource {
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let op: GKHOperatorsModel!
-        //        guard segue.identifier == "input" else { return }
         switch segue.identifier {
         
         case "input":

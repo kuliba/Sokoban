@@ -36,11 +36,15 @@ extension GKHCitySearchController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         self.searchText = tempArray[indexPath.row]
-//        if searching {
-//            self.searchText = searchedOrganization[indexPath.row].region ?? ""
-//        } else {
-//            self.searchText = organization[indexPath.row].region ?? ""
-//        }
+       dismiss(animated: true, completion: {
+        if self.searching {
+            NotificationCenter.default.post(name: .city, object: nil, userInfo: ["key" : self.searchText])
+        } else {
+            if self.searchText != "" {
+                NotificationCenter.default.post(name: .city, object: nil, userInfo: ["key" : self.searchText])
+            }
+        }
+    })
         
     }
     

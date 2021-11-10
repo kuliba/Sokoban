@@ -29,7 +29,6 @@ extension MainViewController: UICollectionViewDelegate {
                 }
             default:
                 let viewController = ProductViewController()
-    //            viewController.addCloseButton()
                 viewController.delegate = self
                 viewController.indexItem = indexPath.item
                 viewController.product = productList[indexPath.item]
@@ -43,8 +42,7 @@ extension MainViewController: UICollectionViewDelegate {
                     first3Elements = productList
                     
                 }
-//                viewController.products = productList
-                
+
                 let navVC = UINavigationController(rootViewController: viewController)
                 navVC.modalPresentationStyle = .fullScreen
                 present(navVC, animated: true)

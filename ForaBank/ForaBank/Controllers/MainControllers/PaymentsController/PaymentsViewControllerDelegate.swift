@@ -11,6 +11,8 @@ import UIKit
 protocol PaymentsViewControllerDelegate: AnyObject {
     func toMobilePay(_ controller: UIViewController)
     func goToCountryPayments()
+    func goToQRController()
+    func goToGKHController()
 }
 
 extension PaymentsViewController: UICollectionViewDelegate {
@@ -29,12 +31,6 @@ extension PaymentsViewController: UICollectionViewDelegate {
             } else if let lastMobilePayment = payments[indexPath.row].lastMobilePayment {
 
                 let viewController = (payments[indexPath.row].controllerName.getViewController() as? MobilePayViewController)!
-//                viewController?.addCloseButton()
-//                viewController?.phoneField.text =  "+7\(payments[indexPath.row].lastMobilePayment?.additionalList?[1].fieldValue ?? "")"
-//                viewController?.selectNumber = "+7\(payments[indexPath.row].lastMobilePayment?.additionalList?[1].fieldValue ?? "")"
-//                let navVC = UINavigationController(rootViewController: viewController ?? UIViewController())
-//                navVC.modalPresentationStyle = .fullScreen
-//                present(navVC, animated: true)
                 delegate?.toMobilePay(viewController)
 
             } else {
@@ -89,14 +85,10 @@ extension PaymentsViewController: UICollectionViewDelegate {
 
                 if indexPath.row == 2 {
                     // ЖКХ
-                    let gkh = GKHMainViewController.storyboardInstance()!
-                    let nc = UINavigationController(rootViewController: gkh)
-                    nc.modalPresentationStyle = .fullScreen
-                    present(nc, animated: true)
+                    self.delegate?.goToGKHController()
                 } else if indexPath.row == 1 {
                     // Мобильная связь
                     delegate?.toMobilePay(viewController)
-//                    present(nc, animated: true)
                 } else {
                     present(navVC, animated: true, completion: nil)
                 }

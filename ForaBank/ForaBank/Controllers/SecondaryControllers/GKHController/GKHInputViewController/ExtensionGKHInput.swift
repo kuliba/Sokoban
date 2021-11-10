@@ -7,15 +7,7 @@
 
 import UIKit
 
-extension GKHInputViewController: UITableViewDelegate {
-    
-}
-
 extension GKHInputViewController: UITableViewDataSource, TableViewDelegate {
-    
-//    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-//        return 200
-//    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return operatorData?.parameterList.count ?? 0
@@ -27,6 +19,13 @@ extension GKHInputViewController: UITableViewDataSource, TableViewDelegate {
         
         cell.setupUI(indexPath.row, (operatorData?.parameterList[indexPath.row])!, qrData)
         cell.tableViewDelegate = (self as TableViewDelegate)
+        
+        cell.showInfoView = { value in
+            let infoView = GKHInfoView()
+            infoView.lable.text = value
+            self.showAlert(infoView)
+        }
+        
         return cell
         
     }

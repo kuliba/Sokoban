@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="wgA-FR-PPr">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="wgA-FR-PPr">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -151,6 +151,7 @@
                         <outlet property="qrView" destination="roo-Fp-kuA" id="meg-im-Xtd"/>
                         <outlet property="zap" destination="SVD-XB-ywx" id="b2i-QU-7Dc"/>
                         <segue destination="W82-dc-jAv" kind="unwind" identifier="auth" unwindAction="auth:" id="EdC-xT-Il0"/>
+                        <segue destination="SQy-yt-Ubh" kind="show" identifier="qrError" id="gVY-2P-yja"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qdw-Sz-EVB" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -158,16 +159,96 @@
             </objects>
             <point key="canvasLocation" x="3545" y="1556"/>
         </scene>
+        <!--Сканировать QR-код-->
+        <scene sceneID="R12-hP-mes">
+            <objects>
+                <viewController storyboardIdentifier="qrError" title="Сканировать QR-код" id="SQy-yt-Ubh" customClass="QRErrorViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="YAa-Hg-jX1">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="22" translatesAutoresizingMaskIntoConstraints="NO" id="NB2-pe-HVu">
+                                <rect key="frame" x="40" y="250" width="334" height="342.5"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="qrError" translatesAutoresizingMaskIntoConstraints="NO" id="9Vm-BV-NRd">
+                                        <rect key="frame" x="0.0" y="0.0" width="334" height="96"/>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Не удалось распознать QR-код" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wSS-T8-3oS">
+                                        <rect key="frame" x="0.0" y="118" width="334" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Воспользуйтесь другими способами оплаты" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TZc-bs-jEM">
+                                        <rect key="frame" x="0.0" y="160.5" width="334" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" systemColor="secondaryLabelColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hJ9-Gf-ttu">
+                                        <rect key="frame" x="0.0" y="200.5" width="334" height="60"/>
+                                        <color key="backgroundColor" systemColor="systemGray6Color"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="60" id="D9i-bC-9dW"/>
+                                        </constraints>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Найти поставщика в ручную">
+                                            <fontDescription key="titleFontDescription" type="system" weight="semibold" pointSize="17"/>
+                                            <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </buttonConfiguration>
+                                        <connections>
+                                            <action selector="goToTransfer:" destination="SQy-yt-Ubh" eventType="touchUpInside" id="S2q-NL-oOF"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zW1-J8-cWf">
+                                        <rect key="frame" x="0.0" y="282.5" width="334" height="60"/>
+                                        <color key="backgroundColor" systemColor="systemGray6Color"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="60" id="0DD-oF-fZz"/>
+                                        </constraints>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Оплатить по реквизитам">
+                                            <fontDescription key="titleFontDescription" type="system" weight="semibold" pointSize="17"/>
+                                            <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </buttonConfiguration>
+                                        <connections>
+                                            <action selector="goToGKH:" destination="SQy-yt-Ubh" eventType="touchUpInside" id="Tdx-m5-ifm"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="fEF-zB-O37"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="NB2-pe-HVu" firstAttribute="leading" secondItem="fEF-zB-O37" secondAttribute="leading" constant="40" id="3s6-o2-jWc"/>
+                            <constraint firstAttribute="trailing" secondItem="NB2-pe-HVu" secondAttribute="trailing" constant="40" id="FQl-lU-KM9"/>
+                            <constraint firstItem="NB2-pe-HVu" firstAttribute="centerY" secondItem="YAa-Hg-jX1" secondAttribute="centerY" id="PY8-vk-vxI"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="OJm-9w-O5K"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="I3h-JU-tnF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4493" y="1557"/>
+        </scene>
     </scenes>
     <resources>
         <image name="info" width="24" height="24"/>
         <image name="pdfFile" width="32" height="32"/>
+        <image name="qrError" width="96" height="96"/>
         <image name="zap" width="32" height="32"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGray6Color">
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

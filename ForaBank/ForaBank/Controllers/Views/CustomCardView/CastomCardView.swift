@@ -80,9 +80,6 @@ class CastomCardView: UIView, UITextFieldDelegate {
         let model = CastomCardViewModel(cardNumber: number, cardName: nameTextField.text)
         
         finishAndCloseView?(model)
-        print("DEBUG Done button tapped")
-        
-        
         bottomStackView.isHidden = true
         cardTextField.delegate = self
         nameTextField.delegate = self

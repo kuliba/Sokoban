@@ -23,15 +23,37 @@ class MainTabBarCoordinator: Coordinator {
 }
 
 extension MainTabBarCoordinator: MainViewControllerDelegate {
+    
     func goSettingViewController() {
         let settingCoordinator = SettingViewCoordinator(router: router)
         addChild(settingCoordinator)
         settingCoordinator.start()
         router.present(settingCoordinator, animated: true)
     }
+    
 }
 
 extension MainTabBarCoordinator: PaymentsViewControllerDelegate {
+    func goToGKHController() {
+        let gkhCoordinator = GKHCoordinator(router: router)
+        addChild(gkhCoordinator)
+        gkhCoordinator.start()
+        router.push(gkhCoordinator.toPresentable(), animated: true) {
+            [weak self, weak gkhCoordinator] in
+                self?.removeChild(gkhCoordinator)
+        }
+    }
+    
+    
+    func goToQRController() {
+        let qrCoordinator = QRCoordinator(router: router)
+        addChild(qrCoordinator)
+        qrCoordinator.start()
+        router.push(qrCoordinator.toPresentable(), animated: true) {
+            [weak self, weak qrCoordinator] in
+                self?.removeChild(qrCoordinator)
+        }
+    }
     
     func toMobilePay(_ controller: UIViewController) {
         let mobilePay = MobilePayCoordinator(router: router)

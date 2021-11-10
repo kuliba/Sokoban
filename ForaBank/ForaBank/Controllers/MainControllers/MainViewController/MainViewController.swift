@@ -10,6 +10,7 @@ import RealmSwift
 
 protocol MainViewControllerDelegate: AnyObject {
     func goSettingViewController()
+    func goToQRController()
 }
 
 class MainViewController: UIViewController {
@@ -129,7 +130,6 @@ class MainViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        print("viewDidAppear")
         self.getCardList { data, errorMessage in
             self.productList.removeAll()
             self.products.removeAll()
@@ -157,17 +157,8 @@ class MainViewController: UIViewController {
 //        }
     }
     
-    override func viewDidLayoutSubviews() {
-        print("view load back")
-    }
-    
     @objc func openSetting() {
         delegate?.goSettingViewController()
-//        let vc: SettingTableViewController = SettingTableViewController.loadFromStoryboard()
-//        vc.addCloseButton()
-//        let navVC = UINavigationController(rootViewController: vc)
-//        navVC.modalPresentationStyle = .fullScreen
-//        present(navVC, animated: true, completion: nil)
     }
     
     private func setupSearchBar() {
@@ -181,11 +172,7 @@ class MainViewController: UIViewController {
         let gesture = UITapGestureRecognizer(target: self, action: #selector(openSetting))
         searchBar.secondButton.addGestureRecognizer(gesture)
         searchBar.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 48)
-        
-        searchBar.bellTapped = {
-            print("bellTapped")
-        }
-        
+
     }
     
     func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?) -> () ) {
@@ -208,17 +195,11 @@ class MainViewController: UIViewController {
         
     }
 
-    
-    
-    
     func setupData() {
-        //            openProduct = MockItems.returnOpenProduct()
         offer = MockItems.returnBanner()
         currentsExchange = MockItems.returnCurrency()
         pay = MockItems.returnFastPay()
         openProduct = MockItems.returnOpenProduct()
-        //            pay = MockItems.returnPayments()
-        //            payments = MockItems.returnPayments()
         getCardList { data, errorMessage in
             
             guard let listProducts = data else {return}
@@ -231,16 +212,13 @@ class MainViewController: UIViewController {
             } else if listProducts.prefix(3).count == 3{
                 self.products.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
             }
-            //                self.transfers = self.payments
             self.productList = data ?? []
-            
         }
     }
         
         
     private func setupCollectionView() {
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createCompositionLayout())
-//        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.backgroundColor = .white
         view.addSubview(collectionView)
         collectionView.anchor(top: searchBar.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor)
@@ -249,8 +227,6 @@ class MainViewController: UIViewController {
         collectionView.register(PaymentsMainCell.self, forCellWithReuseIdentifier: PaymentsMainCell.reuseId)
         collectionView.register(AllCardCell.self, forCellWithReuseIdentifier: AllCardCell.reuseId)
         collectionView.register(OfferCard.self, forCellWithReuseIdentifier: OfferCard.reuseId)
-        
-        
         
         let nib = UINib(nibName: "CurrencyExchangeCollectionViewCell", bundle: nil)
         self.collectionView.register(nib, forCellWithReuseIdentifier: "CurrencyExchangeCollectionViewCell")
@@ -278,8 +254,6 @@ class MainViewController: UIViewController {
         snapshot.appendItems(investment, toSection: .investment)
         snapshot.appendItems(services, toSection: .services)
         
-        
-        
         dataSource?.apply(snapshot, animatingDifferences: true)
         collectionView.reloadData()
         
@@ -295,7 +269,6 @@ class MainViewController: UIViewController {
                 print("DEBUG: Error: ", error ?? "")
             }
             guard let model = model else { return }
-            print("DEBUG: LatestPayment: ", model)
             if model.statusCode == 0 {
                 guard let lastPaymentsList  = model.data else { return }
                 self.dataUSD = lastPaymentsList
@@ -350,6 +323,7 @@ extension MainViewController: FirstControllerDelegate {
 }
 
 extension MainViewController: ChildViewControllerDelegate {
+    
     func childViewControllerResponse(productList: [GetProductListDatum]) {
         showAlert(with: "ОБновляет", and:  "")
     }

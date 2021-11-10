@@ -9,7 +9,6 @@ import UIKit
 
 class CountryPayCoordinator: Coordinator {
 
-
     let сontactInputViewController = UINavigationController(rootViewController: ChooseCountryTableViewController())
 
     override init(router: RouterType) {

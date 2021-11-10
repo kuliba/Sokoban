@@ -166,9 +166,6 @@ extension MainViewController {
         }
     }
     
-    
-
-    
     @objc func passAllProducts(){
             let viewController = ProductsViewController()
             viewController.addCloseButton()
@@ -182,7 +179,6 @@ extension MainViewController {
         let item = NSCollectionLayoutItem.withEntireSize()
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .absolute(0),
-//            heightDimension: .fractionalHeight(0.2))
           heightDimension: .absolute(0))
     
         if groupSize.widthDimension == .absolute(0){
