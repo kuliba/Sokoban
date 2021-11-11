@@ -144,7 +144,7 @@ class OperationDetailViewController: UIViewController{
         }
         
         switch categoryGroupLabel.text {
-        case "Перевод СБП":
+        case "Переводы СБП":
             transferImage.image = UIImage(named: "sbpindetails")
         case "Между своими":
             mainLabel.isHidden = false
@@ -286,7 +286,6 @@ class OperationDetailViewController: UIViewController{
     }
     
     func requestOperationDetail(documentId: String){
-        
         let body = [ "documentId" : documentId
                      ] as [String : AnyObject]
         
@@ -330,7 +329,11 @@ class OperationDetailViewController: UIViewController{
                 }
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-                self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+                if documentId == "0"{
+                    
+                } else {
+                    self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+                }
             }
         }
     }

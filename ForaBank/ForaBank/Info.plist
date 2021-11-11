@@ -7,7 +7,7 @@
 		<string>forabank.ru</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<string>ru</string>
 	<key>CFBundleDisplayName</key>
 	<string>Фора - Онлайн</string>
 	<key>CFBundleExecutable</key>
