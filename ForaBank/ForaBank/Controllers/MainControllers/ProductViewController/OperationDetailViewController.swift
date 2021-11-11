@@ -144,7 +144,7 @@ class OperationDetailViewController: UIViewController{
         }
         
         switch categoryGroupLabel.text {
-        case "Перевод СБП":
+        case "Переводы СБП":
             transferImage.image = UIImage(named: "sbpindetails")
         case "Между своими":
             mainLabel.isHidden = false
@@ -286,7 +286,6 @@ class OperationDetailViewController: UIViewController{
     }
     
     func requestOperationDetail(documentId: String){
-        
         let body = [ "documentId" : documentId
                      ] as [String : AnyObject]
         
@@ -330,7 +329,11 @@ class OperationDetailViewController: UIViewController{
                 }
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-                self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+                if documentId == "0"{
+                    
+                } else {
+                    self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+                }
             }
         }
     }
@@ -394,6 +397,10 @@ class OperationDetailViewController: UIViewController{
                 if str.name == "Детали"{
                     a.addTarget(self, action: #selector(openDetailVC), for: .touchUpInside)
                     b.addTarget(self, action: #selector(openDetailVC), for: .touchUpInside)
+                    a.isUserInteractionEnabled = false
+                    b.isUserInteractionEnabled = false
+                    a.alpha = 0.3
+                    b.alpha = 0.3
                 } else if str.name == "+ Шаблон" {
                     a.isUserInteractionEnabled = false
                     b.isUserInteractionEnabled = false

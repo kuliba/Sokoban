@@ -15,6 +15,8 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
+    weak var delegateProducts: CtoBDelegate?
+
     var products = [GetProductListDatum](){
         didSet {
             DispatchQueue.main.async {
@@ -203,13 +205,28 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let viewController = ProductViewController()
-        viewController.product = products[indexPath.item]
-        viewController.products = products
-        viewController.indexItem = indexPath.item
-        let navVC = UINavigationController(rootViewController: viewController)
-        navVC.modalPresentationStyle = .fullScreen
-        present(navVC, animated: true)
+        if delegateProducts == nil {
+            let viewController = ProductViewController()
+            viewController.product = products[indexPath.item]
+            viewController.products = products
+            viewController.indexItem = indexPath.item
+            let navVC = UINavigationController(rootViewController: viewController)
+            navVC.modalPresentationStyle = .fullScreen
+            present(navVC, animated: true)
+        } else {
+            switch indexPath.section{
+                case 0:
+                delegateProducts?.sendMyDataBack(product: self.notActivated[indexPath.row])
+                case 1:
+                delegateProducts?.sendMyDataBack(product: self.activeProduct[indexPath.row])
+                case 6:
+                delegateProducts?.sendMyDataBack(product: self.blocked[indexPath.row])
+            default:
+                print("default")
+            }
+    //        delegateProducts?.sendMyDataBack(product: self.products[0])
+            dismiss(animated: true, completion: nil)
+        }
     }
     
 
@@ -374,3 +391,5 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
         }
 }
 }
+
+

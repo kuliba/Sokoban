@@ -15,12 +15,16 @@ protocol ChildViewControllerDelegate{
 protocol FirstControllerDelegate: AnyObject {
     func sendData(data: [GetProductListDatum])
 }
+protocol CtoBDelegate : AnyObject{
+    func sendMyDataBack(product: GetProductListDatum?)//pass in any arguments also
+}
 
 class ProductViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UITableViewDelegate, SkeletonTableViewDataSource, UIScrollViewDelegate, MTSlideToOpenDelegate, UITextFieldDelegate{
     weak var delegate: FirstControllerDelegate!
 
     var halfScreen: Bool?
     
+
     func mtSlideToOpenDelegateDidFinish(_ sender: MTSlideToOpenView) {
         activateSlider.thumnailImageView.image = #imageLiteral(resourceName: "successSliderButton").imageFlippedForRightToLeftLayoutDirection()
         let alertController = UIAlertController(title: "Активировать карту?", message: "После активации карта будет готова к использованию", preferredStyle: .alert)
@@ -1079,6 +1083,7 @@ extension ProductViewController{
                 self.collectionView?.deselectItem(at: indexPath, animated: true)
                 let vc = ProductsViewController()
                 vc.addCloseButton()
+                vc.delegateProducts = self
                 present(vc, animated: true, completion: nil)
             }
         }
@@ -1435,11 +1440,15 @@ extension ProductViewController{
     }
 }
 
-//extension ProductViewController: UICollectionViewDelegateFlowLayout {
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        return CGSize(width:300 , height: 50)
-//    }
-//}
+
+
+extension ProductViewController: CtoBDelegate {
+    func sendMyDataBack(product: GetProductListDatum?) {
+        self.product = product
+    }
+    
+ 
+}
 
 
 
