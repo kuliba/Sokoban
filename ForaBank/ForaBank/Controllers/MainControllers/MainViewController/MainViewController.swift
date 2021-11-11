@@ -10,7 +10,6 @@ import RealmSwift
 
 protocol MainViewControllerDelegate: AnyObject {
     func goSettingViewController()
-    func goToQRController()
     func goProductViewController(productIndex: Int)
 }
 

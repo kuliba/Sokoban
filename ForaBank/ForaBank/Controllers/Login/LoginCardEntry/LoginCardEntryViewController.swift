@@ -52,7 +52,6 @@ class LoginCardEntryViewController: UIViewController {
                         AppDelegate.shared.getCSRF { error in
                             if error != nil {
                                 self?.dismissActivity()
-                                print("DEBUG: Error getCSRF: ", error!)
                             }
                             // Запрос на проверку карты
                             LoginViewModel().checkCardNumber(with: cardNumber.digits) { resp, error in
@@ -60,8 +59,6 @@ class LoginCardEntryViewController: UIViewController {
                                 if error != nil {
                                     self?.showAlert(with: "Ошибка", and: error ?? "")
                                 } else {
-                                    // Зарузка кэша
-                                    DownloadQueue.download {}
                                     DispatchQueue.main.async { [weak self] in
                                         self?.delegate?.toCodeVerification(phone: resp)
                                     }
@@ -91,7 +88,6 @@ class LoginCardEntryViewController: UIViewController {
     
     
     fileprivate func scanCardTapped() {
-        print(#function + " Открываем экран сканера")
         
         let scannerView = CardScannerController.getScanner { card in
             guard let cardNumder = card else { return }

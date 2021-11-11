@@ -41,11 +41,9 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
         if selectNumber != nil{
             phoneField.text = selectNumber ?? ""
         }
-        view.addSubview(bottomView)
         setupUI()
-        
+        view.addSubview(bottomView)
         phoneField.didChooseButtonTapped = {() in
-            print("phoneField didChooseButtonTapped")
 //            self.dismiss(animated: true, completion: nil)
             
             let contactPickerScene = EPContactsPicker(
@@ -93,6 +91,15 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
             selectNumber = updatedText
         }
         return true
+    }
+    
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        if let textField = textField as? MaskedTextField {
+            let text = textField.unmaskedText ?? ""
+            bottomView.amountTextField.isEnabled = text.count < 11 ? false : true
+            bottomView.doneButton.isEnabled = text.count < 11 ? false : true
+            bottomView.doneButtonIsEnabled(text.count < 11 ? false : true)
+        }
     }
     
     func setupActions() {
@@ -225,7 +232,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                         completion(error)
                     }
                     if data?.statusCode == 0 {
-                        var model = ConfirmViewControllerModel(type: .mobilePayment)
+                        let model = ConfirmViewControllerModel(type: .mobilePayment)
                         
                         model.cardFrom = self?.cardField.cardModel
                         
@@ -275,28 +282,36 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
 
 extension MobilePayViewController: EPPickerDelegate {
     
-        func epContactPicker(_: EPContactsPicker, didContactFetchFailed error : NSError) {
-            print("Failed with error \(error.description)")
-        }
-        
-        func epContactPicker(_: EPContactsPicker, didSelectContact contact : EPContact) {
-            let phoneFromContact = contact.phoneNumbers.first?.phoneNumber
-            let numbers = phoneFromContact?.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
-//            print("Contact \(contact.displayName()) \(numbers) has been selected")
-            let mask = StringMask(mask: "+000-0000-00-00")
+    func epContactPicker(_: EPContactsPicker, didContactFetchFailed error : NSError) {
+        print("Failed with error \(error.description)")
+    }
+    
+    func epContactPicker(_: EPContactsPicker, didSelectContact contact : EPContact) {
+        let phoneFromContact = contact.phoneNumbers.first?.phoneNumber
+        var numbers = phoneFromContact?.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
+        if numbers?.first == "7" {
+            let mask = StringMask(mask: "+0 (000) 000-00-00")
             let maskPhone = mask.mask(string: numbers)
             phoneField.text = maskPhone ?? ""
+        } else if numbers?.first == "8" {
+            numbers?.removeFirst()
+            let mask = StringMask(mask: "+7 (000) 000-00-00")
+            let maskPhone = mask.mask(string: numbers)
+            phoneField.text = maskPhone ?? ""
+        } else {
+            
         }
-        
-        func epContactPicker(_: EPContactsPicker, didCancel error : NSError) {
-            print("User canceled the selection");
+    }
+    
+    func epContactPicker(_: EPContactsPicker, didCancel error : NSError) {
+        print("User canceled the selection");
+    }
+    
+    func epContactPicker(_: EPContactsPicker, didSelectMultipleContacts contacts: [EPContact]) {
+        print("The following contacts are selected")
+        for contact in contacts {
+            print("\(contact.displayName())")
         }
-        
-        func epContactPicker(_: EPContactsPicker, didSelectMultipleContacts contacts: [EPContact]) {
-            print("The following contacts are selected")
-            for contact in contacts {
-                print("\(contact.displayName())")
-            }
-        }
-
+    }
+    
 }

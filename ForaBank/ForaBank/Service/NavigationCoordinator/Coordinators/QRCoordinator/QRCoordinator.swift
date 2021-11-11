@@ -9,6 +9,7 @@ import UIKit
 
 protocol QRCoordinatorDelegate: AnyObject {
     func goToQRError()
+    
 }
 
 class QRCoordinator: Coordinator {
@@ -17,7 +18,7 @@ class QRCoordinator: Coordinator {
 
     override init(router: RouterType) {
         super.init(router: router)
-        qrViewController.qrCoordinatorDelegate = self
+//        qrViewController.qrCoordinatorDelegate = self
     }
     
     override func start() {

@@ -68,13 +68,21 @@ extension GKHMainViewController {
         
     }
     @objc func backAction(){
-        self.delegate?.goToBack()
+        //self.delegate?.goToBack()
+        dismiss(animated: true, completion: nil)
+        navigationController?.dismiss(animated: true, completion: nil)
     }
     
     @objc func onQR(){
         checkCameraAccess(isAllowed: {
             if $0 {
-                self.delegate?.goToQRController()
+                // self.delegate?.goToQRController()
+                DispatchQueue.main.async {
+                    self.navigationController?.isNavigationBarHidden = true
+                    self.performSegue(withIdentifier: "qr", sender: nil)
+                    
+                    
+                }
             } else {
                 guard self.alertController == nil else {
                         print("There is already an alert presented")

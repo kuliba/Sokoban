@@ -12,7 +12,7 @@ protocol GKHDelegate: AnyObject {
     func goToBack()
 }
 
-class GKHCoordinator: Coordinator {
+class GKHCoordinator: Coordinator, UINavigationControllerDelegate {
 
     let gkhViewController = UIStoryboard(name: "GKHStoryboard", bundle: nil).instantiateViewController(withIdentifier: "GKHMain") as! GKHMainViewController
 
@@ -29,6 +29,10 @@ class GKHCoordinator: Coordinator {
     override func toPresentable() -> UIViewController {
         return gkhViewController
     }
+    
+    deinit {
+        print("Deinit GKHCoordinator")
+    }
 }
 
 extension GKHCoordinator: GKHDelegate {
@@ -37,7 +41,7 @@ extension GKHCoordinator: GKHDelegate {
         let qrCoordinator = QRCoordinator(router: router)
         addChild(qrCoordinator)
         qrCoordinator.start()
-        router.push(qrCoordinator.toPresentable(), animated: true) {
+        router.push(qrCoordinator, animated: true) {
             [weak self, weak qrCoordinator] in
                 self?.removeChild(qrCoordinator)
         }

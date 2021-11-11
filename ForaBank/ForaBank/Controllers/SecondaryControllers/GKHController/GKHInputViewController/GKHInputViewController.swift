@@ -223,7 +223,7 @@ extension GKHInputViewController {
             guard let respModel = respModel else { return }
             if respModel.statusCode == 0 {
                 guard let data = respModel.data else { return }
-                var model = ConfirmViewControllerModel(type: .gkh)
+                let model = ConfirmViewControllerModel(type: .gkh)
 
                 let r = Double(data.debitAmount ?? 0)
                 

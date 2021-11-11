@@ -89,13 +89,11 @@ final public class Router: NSObject, RouterType, UINavigationControllerDelegate 
         completions.removeValue(forKey: controller)
     }
     
-    
     // MARK: Presentable
     
     public func toPresentable() -> UIViewController {
         return navigationController
     }
-    
     
     // MARK: UINavigationControllerDelegate
     
